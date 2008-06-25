@@ -1,0 +1,150 @@
+package com.reflexit.magiccards.ui.utils;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Control;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import com.reflexit.magiccards.ui.MagicUIActivator;
+
+public class SymbolConverter {
+	private static String bundleBase;
+	static Map manaMap = new HashMap();
+	static {
+		manaMap.put("{U}", "icons/mana/blue_mana.gif");
+		manaMap.put("{W}", "icons/mana/white_mana.gif");
+		manaMap.put("{B}", "icons/mana/black_mana.gif");
+		manaMap.put("{G}", "icons/mana/green_mana.gif");
+		manaMap.put("{R}", "icons/mana/red_mana.gif");
+		manaMap.put("{S}", "icons/mana/Symbol_snow_mana.gif");
+		manaMap.put("{X}", "icons/mana/Symbol_X_mana.gif");
+		manaMap.put("{Y}", "icons/mana/Symbol_Y_mana.gif");
+		manaMap.put("{Z}", "icons/mana/Symbol_Z_mana.gif");
+		manaMap.put("{0.5}", "icons/mana/Symbol_half_mana.gif");
+		manaMap.put("{1/2}", "icons/mana/Symbol_half_mana.gif");
+		manaMap.put("{R/W}", "icons/mana/Symbol_RW_mana.gif");
+		manaMap.put("{R/G}", "icons/mana/Symbol_RG_mana.gif");
+		manaMap.put("{B/R}", "icons/mana/Symbol_BR_mana.gif");
+		manaMap.put("{B/G}", "icons/mana/Symbol_BG_mana.gif");
+		manaMap.put("{G/U}", "icons/mana/Symbol_GU_mana.gif");
+		manaMap.put("{G/W}", "icons/mana/Symbol_GW_mana.gif");
+		manaMap.put("{W/U}", "icons/mana/Symbol_WU_mana.gif");
+		manaMap.put("{W/B}", "icons/mana/Symbol_WB_mana.gif");
+		manaMap.put("{U/B}", "icons/mana/Symbol_UB_mana.gif");
+		manaMap.put("{U/R}", "icons/mana/Symbol_UR_mana.gif");
+		manaMap.put("{0}", "icons/mana/Symbol_0_mana.gif");
+		manaMap.put("{1}", "icons/mana/Symbol_1_mana.gif");
+		manaMap.put("{2}", "icons/mana/Symbol_2_mana.gif");
+		manaMap.put("{3}", "icons/mana/Symbol_3_mana.gif");
+		manaMap.put("{4}", "icons/mana/Symbol_4_mana.gif");
+		manaMap.put("{5}", "icons/mana/Symbol_5_mana.gif");
+		manaMap.put("{6}", "icons/mana/Symbol_6_mana.gif");
+		manaMap.put("{7}", "icons/mana/Symbol_7_mana.gif");
+		manaMap.put("{8}", "icons/mana/Symbol_8_mana.gif");
+		manaMap.put("{9}", "icons/mana/Symbol_9_mana.gif");
+		manaMap.put("{10}", "icons/mana/Symbol_10_mana.gif");
+		manaMap.put("{11}", "icons/mana/Symbol_11_mana.gif");
+		manaMap.put("{2/W}", "icons/mana/Symbol_2W_mana.gif");
+		manaMap.put("{2/U}", "icons/mana/Symbol_2U_mana.gif");
+		manaMap.put("{2/B}", "icons/mana/Symbol_2B_mana.gif");
+		manaMap.put("{2/G}", "icons/mana/Symbol_2G_mana.gif");
+		manaMap.put("{2/R}", "icons/mana/Symbol_2R_mana.gif");
+		manaMap.put("{T}", "icons/tap.gif");
+	}
+	static {
+		// init
+		try {
+			URL url = MagicUIActivator.getDefault().getBundle().getEntry("/");
+			bundleBase = FileLocator.resolve(url).toString();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static String getHtmlStyle(Control con) {
+		FontData fontData = con.getFont().getFontData()[0];
+		int height = fontData.getHeight();
+		String fontName = fontData.getName();
+		RGB rgb = con.getBackground().getRGB();
+		String color = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+		String style = "font-size:" + height + "pt;background-color: " + color + ";font-family:" + fontName + ";";
+		return style;
+	}
+
+	public static Image buildImage(String text1) {
+		if (text1 == null || text1.length() == 0)
+			return null;
+		Image image2 = MagicUIActivator.getDefault().getImageRegistry().get(text1);
+		if (image2 != null)
+			return image2;
+		String text = text1;
+		Image image = new Image(MagicUIActivator.getDefault().getWorkbench().getDisplay(), 12 * 7, 12);
+		GC gc = new GC(image);
+		//gc.setAlpha(50);
+		int x_offset = 0;
+		while (text.length() > 0) {
+			boolean cut = false;
+			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
+				String sym = (String) iterator.next();
+				if (text.startsWith(sym)) {
+					try {
+						String im = (String) manaMap.get(sym);
+						ImageDescriptor imageDescriptor = MagicUIActivator.getImageDescriptor(im);
+						if (imageDescriptor == null) {
+							System.err.println("Cannot find images for " + im + " " + text1);
+							continue;
+						}
+						Image manaImage = imageDescriptor.createImage();
+						gc.drawImage(manaImage, x_offset, 0);
+						text = text.substring(sym.length());
+						x_offset += manaImage.getBounds().width;
+						cut = true;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			if (!cut) {
+				String letter = text.substring(0, 1);
+				text = text.substring(1);
+				if (letter.matches("\\d+")) {
+					gc.drawText(letter, x_offset, 0);
+					x_offset += gc.textExtent(letter).x;
+				}
+			}
+		}
+		gc.dispose();
+		MagicUIActivator.getDefault().getImageRegistry().put(text1, image);
+		return image;
+	}
+
+	public static String wrapHtml(String text, Control con) {
+		// URL url =
+		// Activator.getDefault().getBundle().getResource("icons/blue_mana.gif");
+		if (bundleBase != null) {
+			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext();) {
+				String sym = (String) iterator.next();
+				text = insertCostImages(text, sym, (String) manaMap.get(sym));
+			}
+		}
+		String style = getHtmlStyle(con);
+		String html = "<html>" //
+		        + "<head><base href=\"" + (bundleBase == null ? "." : bundleBase) + "\"/></head>" + //
+		        "<body style='overflow:auto;" + style + "'>" + text + "</body></html>";
+		return html;
+	}
+
+	public static String insertCostImages(String text, String sym, String icon) {
+		return text.replaceAll("\\Q" + sym, "<img src=\"" + icon + "\" alt=\"" + sym + "\">");
+	}
+}

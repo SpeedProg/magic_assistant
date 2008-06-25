@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Magic Preferences"
+            class="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+            id="com.reflexit.magiccards.ui.preferences.MagicPreferencePage">
+      </page>
+      	<page id="com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage"
+  	      	name="Gatherer Settings"
+	      	class="com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage"
+		category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage">
+   	</page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
+             name="Magic DB View">
+       </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.reflexit.magiccards.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Magic"
+            id="com.reflexit.magiccards">
+      </category>
+      <view
+            name="Magic Database"
+            icon="icons/m.gif"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.MagicDbView"
+            id="com.reflexit.magiccards.ui.views.MagicDbView">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.card.CardDescView"
+            icon="icons/color_circle.gif"
+            id="com.reflexit.magiccards.ui.views.card.CardDescView"
+            name="Card Description">
+      </view>
+      <view
+            allowMultiple="true"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.lib.LibView"
+            icon="icons/finers.gif"
+            id="com.reflexit.magiccards.ui.views.lib.LibView"
+            name="Magic Library"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
+            icon="icons/eye.gif"
+            id="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
+            name="Card Navigator">
+      </view>
+      <view
+            allowMultiple="true"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.lib.DeckView"
+            icon="icons/axe.gif"
+            id="com.reflexit.magiccards.ui.views.lib.DeckView"
+            name="Deck"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.reflexit.magiccards.ui.PerspectiveFactoryMagic"
+            fixed="false"
+            icon="icons/m.gif"
+            id="com.reflexit.magiccards.ui.perspective.magic"
+            name="Magic Cards">
+      </perspective>
+   </extension>
+
+</plugin>
