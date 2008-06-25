@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MTG Organizer Help Plug-in
+Bundle-SymbolicName: com.reflexit.magiccards.help;singleton:=true
+Bundle-Version: 1.0.2.qualifier
+Bundle-Activator: com.reflexit.magiccards.help.Activator
+Bundle-Vendor: Alena Laskavaia
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.help,
+ org.eclipse.help.ui
+Eclipse-LazyStart: true

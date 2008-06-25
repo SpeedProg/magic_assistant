@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Magic Table of Contents" topic="html/toc.html">
+   <topic label="Getting Started">
+      <anchor id="gettingstarted"/>
+   </topic>
+   <topic href="html/MagicRulebook_10E_EN.pdf" label="Magic Rulebook (10th Edition)">
+   </topic>
+</toc>
