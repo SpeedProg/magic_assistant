@@ -1,0 +1,59 @@
+Darksteel|DST
+Time Spiral|TSP
+Coldsnap|CSP
+Champions of Kamigawa|CHK
+Planar Chaos|PLC|en-us
+Limited Edition Beta|2E
+Antiquities|AQ
+Unlimited Edition|2U
+Time Spiral "Timeshifted"|TSB
+Planeshift|PS
+Fifth Edition|5E
+Odyssey|OD
+Invasion|IN
+Exodus|EX
+Chronicles|CH
+Alliances|AL
+Scourge|SCG
+Battle Royale Box Set|BR
+Ninth Edition|9ED
+Betrayers of Kamigawa|BOK
+Legends|LE
+Mirage|MI
+Promo set for Gatherer|PPR
+Apocalypse|AP
+Classic Sixth Edition|6E
+Unhinged|UNH
+Limited Edition Alpha|1E
+Tenth Edition|10E
+Weatherlight|WL
+Urza's Destiny|CG
+Lorwyn|LRW
+Mirrodin|MRD
+Visions|VI
+Nemesis|NE
+Ravnica: City of Guilds|RAV
+Stronghold|ST
+Future Sight|FUT
+Beatdown Box Set|BD
+Tempest|TE
+Urza's Legacy|GU
+Prophecy|PR
+Saviors of Kamigawa|SOK
+Fallen Empires|FE
+Masters Edition|MED
+Eighth Edition|8ED
+Morningtide|MOR
+Magic Online Promo Cards|PRM
+Urza's Saga|UZ
+Arabian Nights|AN
+Onslaught|ONS
+Judgment|JUD
+Ice Age|IA
+The Dark|DK
+Torment|TOR
+Guildpact|GPT
+Homelands|HM
+Dissension|DIS
+Revised Edition|3E
+Mercadian Masques|MM
