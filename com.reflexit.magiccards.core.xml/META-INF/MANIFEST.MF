@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MTG Organizer Xml Fragment
+Bundle-Name: Magic Assistant Xml Fragment
 Bundle-SymbolicName: com.reflexit.magiccards.core.xml
 Bundle-Version: 1.0.2.qualifier
 Bundle-Vendor: Alena Laskavaia
