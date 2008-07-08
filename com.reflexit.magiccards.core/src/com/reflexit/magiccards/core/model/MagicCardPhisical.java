@@ -11,13 +11,20 @@ public class MagicCardPhisical implements IMagicCard {
 	private String location;
 	private String condition;
 
-	public MagicCardPhisical() {
-		this.count = 1;
+	public MagicCardPhisical(IMagicCard card) {
+		if (card instanceof MagicCard) {
+			this.card = (MagicCard) card;
+			this.count = 1;
+		} else if (card instanceof MagicCardPhisical) {
+			MagicCardPhisical phi = (MagicCardPhisical) card;
+			this.card = phi.getCard();
+			this.count = 1;
+		}
 	}
 
 	public Collection getValues() {
 		ArrayList list = new ArrayList();
-		list.add(new Integer(this.card.getCardId()));
+		list.addAll(this.card.getValues());
 		list.add(new Integer(this.count));
 		list.add(new Float(this.price));
 		list.add(this.comment);
@@ -42,7 +49,7 @@ public class MagicCardPhisical implements IMagicCard {
 		}
 	}
 
-	public IMagicCard getCard() {
+	public MagicCard getCard() {
 		return this.card;
 	}
 
@@ -50,7 +57,7 @@ public class MagicCardPhisical implements IMagicCard {
 		this.card = card;
 	}
 
-	public int getMagicCount() {
+	public int getCount() {
 		return this.count;
 	}
 

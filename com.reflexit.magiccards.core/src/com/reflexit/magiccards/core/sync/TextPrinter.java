@@ -1,8 +1,10 @@
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.sync;
 
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
+
+import com.reflexit.magiccards.core.model.MagicCard;
 
 public class TextPrinter {
 	public static void printHeader(MagicCard card, PrintStream out) {

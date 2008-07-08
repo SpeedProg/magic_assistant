@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.TextPrinter;
 
 public class ParseGathererSpoiler {
 	/*-
