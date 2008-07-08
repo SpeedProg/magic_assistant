@@ -10,7 +10,8 @@ import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.nav.Deck;
-import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
 public class DeckView extends LibView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
@@ -73,7 +74,12 @@ public class DeckView extends LibView {
 	}
 
 	@Override
+	protected String getPrefenceColumnsId() {
+		return PreferenceConstants.DECKVIEW_COLS;
+	}
+
+	@Override
 	protected String getPreferencePageId() {
-		return MagicDbViewPreferencePage.class.getName();
+		return DeckViewPreferencePage.class.getName();
 	}
 }

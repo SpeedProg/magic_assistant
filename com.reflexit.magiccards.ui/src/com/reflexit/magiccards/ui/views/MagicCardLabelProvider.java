@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class MagicCardLabelProvider extends LabelProvider implements ITableLabelProvider, Listener {
@@ -21,10 +20,12 @@ public class MagicCardLabelProvider extends LabelProvider implements ITableLabel
 	public MagicCardLabelProvider() {
 	}
 
+	@Override
 	public String getText(Object obj) {
 		return null;
 	}
 
+	@Override
 	public Image getImage(Object obj) {
 		return null;
 	}
@@ -32,9 +33,6 @@ public class MagicCardLabelProvider extends LabelProvider implements ITableLabel
 	public Image getActualColumnImage(Object element, int columnIndex) {
 		if (element instanceof IMagicCard && columnIndex == 2) { // cost
 			return SymbolConverter.buildImage(((IMagicCard) element).getByIndex(columnIndex));
-		}
-		if (element instanceof MagicCardPhisical && columnIndex == 2 + 6) {
-			return SymbolConverter.buildImage(((MagicCardPhisical) element).getCard().getByIndex(columnIndex - 6));
 		}
 		return null;
 	}
@@ -50,12 +48,6 @@ public class MagicCardLabelProvider extends LabelProvider implements ITableLabel
 				return getPower(x);
 			}
 			return card.getByIndex(columnIndex);
-		} else if (element instanceof MagicCardPhisical) {
-			if (columnIndex < 6) {
-				return ((MagicCardPhisical) element).getByIndex(columnIndex);
-			} else {
-				return getActualColumnText(((MagicCardPhisical) element).getCard(), columnIndex - 6);
-			}
 		}
 		return null;
 	}
@@ -66,9 +58,6 @@ public class MagicCardLabelProvider extends LabelProvider implements ITableLabel
 
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof IMagicCard && columnIndex == 2) { // cost
-			return null;
-		}
-		if (element instanceof MagicCardPhisical && columnIndex == 2 + 6) {
 			return null;
 		}
 		return getActualColumnText(element, columnIndex);

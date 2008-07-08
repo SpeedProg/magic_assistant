@@ -6,7 +6,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class CostColumn extends ColumnManager implements Listener {
@@ -14,18 +13,17 @@ public class CostColumn extends ColumnManager implements Listener {
 		super(column);
 	}
 
+	@Override
 	public String getText(Object element) {
 		return "     ";
 	}
 
+	@Override
 	public String getColumnName() {
 		return "Cost";
 	}
 
 	public Image getActualImage(Object element) {
-		if (element instanceof MagicCardPhisical) {
-			element = ((MagicCardPhisical) element).getCard();
-		}
 		if (element instanceof IMagicCard) {
 			return SymbolConverter.buildImage(((IMagicCard) element).getByIndex(this.dataIndex));
 		}
@@ -50,15 +48,13 @@ public class CostColumn extends ColumnManager implements Listener {
 	}
 
 	private String getActualText(Object element) {
-		if (element instanceof MagicCardPhisical) {
-			element = ((MagicCardPhisical) element).getCard();
-		}
 		if (element instanceof IMagicCard) { // cost
 			return ((IMagicCard) element).getCmc() + "";
 		}
 		return null;
 	}
 
+	@Override
 	public int getColumnWidth() {
 		return 100;
 	}

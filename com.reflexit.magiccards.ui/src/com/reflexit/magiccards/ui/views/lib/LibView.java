@@ -5,8 +5,10 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionFactory;
 
 import java.util.Iterator;
 
@@ -15,7 +17,8 @@ import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
@@ -39,6 +42,8 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 				removeSelected();
 			}
 		};
+		IActionBars actionBars = getViewSite().getActionBars();
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), this.delete);
 	}
 
 	protected void removeSelected() {
@@ -49,7 +54,7 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof IMagicCard)
-						DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().removeCard(o);
+						this.manager.getFilteredStore().getCardStore().removeCard(o);
 				}
 			}
 		}
@@ -101,6 +106,11 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 
 	@Override
 	protected String getPreferencePageId() {
-		return MagicDbViewPreferencePage.class.getName();
+		return LibViewPreferencePage.class.getName();
+	}
+
+	@Override
+	protected String getPrefenceColumnsId() {
+		return PreferenceConstants.LIBVIEW_COLS;
 	}
 }

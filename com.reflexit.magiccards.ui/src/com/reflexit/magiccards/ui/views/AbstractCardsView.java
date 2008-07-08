@@ -76,11 +76,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 	IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			String property = event.getProperty();
-			if (property.equals(PreferenceConstants.DVIEW_COLS)) {
-				AbstractCardsView.this.manager.updateColumns((String) event.getNewValue());
-			}
-			;
+			AbstractCardsView.this.propertyChange(event);
 		}
 	};
 
@@ -106,7 +102,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		getSite().setSelectionProvider(this.manager.getViewer());
 		// update manager columns
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
-		String value = store.getString(PreferenceConstants.DVIEW_COLS);
+		String value = store.getString(PreferenceConstants.MDBVIEW_COLS);
 		AbstractCardsView.this.manager.updateColumns(value);
 	}
 
@@ -249,4 +245,18 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	public abstract IFilteredCardStore doGetFilteredStore();
+
+	protected void propertyChange(PropertyChangeEvent event) {
+		String property = event.getProperty();
+		if (property.equals(getPrefenceColumnsId())) {
+			this.manager.updateColumns((String) event.getNewValue());
+		}
+		;
+	}
+
+	/**
+	 * @return id of the preference for columns layout and hidings, i.e. 
+	 * @see PreferenceConstants.MDBVIEW_COLS
+	 */
+	abstract protected String getPrefenceColumnsId();
 }

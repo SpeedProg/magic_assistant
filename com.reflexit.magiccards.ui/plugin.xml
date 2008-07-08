@@ -21,7 +21,19 @@
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
-             name="Magic DB View">
+             name="Magic Database View">
+       </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
+             name="Library View">
+       </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
+             name="Deck View">
        </page>
    </extension>
    <extension

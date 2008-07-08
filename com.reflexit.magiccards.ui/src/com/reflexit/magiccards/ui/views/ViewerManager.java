@@ -26,13 +26,15 @@ import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 
 public abstract class ViewerManager extends ColumnCollection implements IDisposable {
 	protected MagicCardFilter filter;
 	private IFilteredCardStore mhandler;
 
-	protected ViewerManager(MagicCardFilter filter, IFilteredCardStore handler) {
-		this.filter = filter;
+	protected ViewerManager(IFilteredCardStore handler, String viewId) {
+		super(viewId);
+		this.filter = new MagicCardFilter();
 		this.mhandler = handler;
 	}
 

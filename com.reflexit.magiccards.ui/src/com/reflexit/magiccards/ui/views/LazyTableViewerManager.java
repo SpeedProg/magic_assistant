@@ -20,7 +20,6 @@ import org.eclipse.ui.services.IDisposable;
 
 import java.util.HashMap;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.ui.utils.MagicCardDragListener;
 import com.reflexit.magiccards.ui.utils.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.utils.MagicCardTransfer;
@@ -31,10 +30,11 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	private AbstractCardsView view;
 
 	public LazyTableViewerManager(AbstractCardsView view) {
-		super(new MagicCardFilter(), view.doGetFilteredStore());
+		super(view.doGetFilteredStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 
+	@Override
 	public ColumnViewer getViewer() {
 		return this.viewer;
 	}
@@ -43,11 +43,13 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			super(parent, style);
 		}
 
+		@Override
 		public void unmapAllElements() {
 			super.unmapAllElements();
 		}
 	}
 
+	@Override
 	public Control createContents(Composite parent) {
 		this.viewer = new MyTableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
 		// drillDownAdapter = new DrillDownAdapter(viewer);
@@ -83,6 +85,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			col.setToolTipText(man.getColumnTooltip());
 			final int coln = i;
 			col.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					sort(coln);
 				}
@@ -97,6 +100,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		this.viewer.getTable().setHeaderVisible(true);
 	}
 
+	@Override
 	protected void updateSortColumn(int index) {
 		this.viewer.getTable().setSortColumn(this.viewer.getTable().getColumn(index));
 		int sortDirection = this.viewer.getTable().getSortDirection();
@@ -113,6 +117,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		this.view.setStatus(string);
 	}
 
+	@Override
 	protected void updateViewer() {
 		updateTableHeader();
 		long time = System.currentTimeMillis();
@@ -133,10 +138,13 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	protected void updateTableHeader() {
 	}
 
+	@Override
 	public void updateColumns(String newValue) {
 		TableColumn[] acolumns = this.viewer.getTable().getColumns();
 		int order[] = new int[acolumns.length];
 		String[] indexes = newValue.split(",");
+		if (indexes.length == 0)
+			return;
 		HashMap used = new HashMap();
 		for (int i = 0; i < acolumns.length; i++) {
 			TableColumn col = acolumns[i];

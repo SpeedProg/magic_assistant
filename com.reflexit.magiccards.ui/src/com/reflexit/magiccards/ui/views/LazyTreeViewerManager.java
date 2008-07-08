@@ -14,16 +14,16 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {
 	private TreeViewer viewer;
 
 	LazyTreeViewerManager(AbstractCardsView view) {
-		super(new MagicCardFilter(), view.doGetFilteredStore());
+		super(view.doGetFilteredStore(), view.getViewSite().getId());
 	}
 
+	@Override
 	public ColumnViewer getViewer() {
 		return this.viewer;
 	}
@@ -32,11 +32,13 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			super(parent, style);
 		}
 
+		@Override
 		public void unmapAllElements() {
 			super.unmapAllElements();
 		}
 	}
 
+	@Override
 	public Control createContents(Composite parent) {
 		this.viewer = new MyTreeViewer(parent, SWT.FULL_SELECTION | SWT.VIRTUAL);
 		// drillDownAdapter = new DrillDownAdapter(viewer);
@@ -51,6 +53,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		return this.viewer.getControl();
 	}
 
+	@Override
 	protected void updateSortColumn(int index) {
 		this.viewer.getTree().setSortColumn(this.viewer.getTree().getColumn(index));
 		int sortDirection = this.viewer.getTree().getSortDirection();
@@ -63,6 +66,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		this.filter.setAscending(sortDirection == SWT.UP);
 	}
 
+	@Override
 	protected void updateViewer() {
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {
@@ -91,6 +95,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			col.setToolTipText(man.getColumnTooltip());
 			final int coln = i;
 			col.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					sort(coln);
 				}

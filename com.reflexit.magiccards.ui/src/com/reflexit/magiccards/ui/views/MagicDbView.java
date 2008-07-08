@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 
 public class MagicDbView extends AbstractCardsView {
@@ -25,14 +26,17 @@ public class MagicDbView extends AbstractCardsView {
 	public MagicDbView() {
 	}
 
+	@Override
 	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
 		return new LazyTableViewerManager(this);
 	}
 
+	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return DataManager.getCardHandler().getMagicCardHandler();
 	}
 
+	@Override
 	protected void runDoubleClick() {
 		try {
 			getViewSite().getWorkbenchWindow().getActivePage().showView(CardDescView.ID);
@@ -49,27 +53,36 @@ public class MagicDbView extends AbstractCardsView {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof IMagicCard)
-						DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().addCard((IMagicCard) o);
+						DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().addCard(o);
 				}
 			}
 		}
 	}
 
+	@Override
 	protected void makeActions() {
 		super.makeActions();
 		this.addToLib = new Action("Add to Library") {
+			@Override
 			public void run() {
 				addToLibrary();
 			}
 		};
 	}
 
+	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.addToLib);
 		super.fillContextMenu(manager);
 	}
 
+	@Override
 	protected String getPreferencePageId() {
 		return MagicDbViewPreferencePage.class.getName();
+	}
+
+	@Override
+	protected String getPrefenceColumnsId() {
+		return PreferenceConstants.MDBVIEW_COLS;
 	}
 }
