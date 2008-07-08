@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
  * @author Alena
  *
  */
-public class DeckFileCardStore extends SingleFileCardStore implements ICardDeck<IMagicCard> {
+public class DeckFileCardStore extends LibraryCardStore implements ICardDeck<IMagicCard> {
 	/**
 	 * @param file
 	 */

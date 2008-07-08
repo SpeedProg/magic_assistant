@@ -27,8 +27,8 @@ import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.TextPrinter;
 import com.reflexit.magiccards.core.sync.ParseGathererSpoiler;
+import com.reflexit.magiccards.core.sync.TextPrinter;
 
 public class XmlCardHolder implements ICardHandler {
 	public IFilteredCardStore<IMagicCard> getMagicCardHandler() {

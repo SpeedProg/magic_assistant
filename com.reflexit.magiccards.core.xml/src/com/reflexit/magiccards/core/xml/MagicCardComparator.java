@@ -15,8 +15,8 @@ public class MagicCardComparator implements Comparator {
 	}
 
 	public int compare(Object o1, Object o2) {
-		if (o1.equals(o2))
-			return 0;
+		if (o1 == o2)
+			return 0; // this is only case it is 0
 		if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
 			IMagicCard c1 = (IMagicCard) o1;
 			IMagicCard c2 = (IMagicCard) o2;

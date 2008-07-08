@@ -5,6 +5,9 @@ import org.eclipse.core.runtime.CoreException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -24,7 +27,20 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 	public void update(MagicCardFilter filter) throws MagicException {
 		initialize();
 		this.getFilteredList().clear();
-		this.getFilteredList().addAll(this.table.filterCards(filter));
+		this.getFilteredList().addAll(filterCards(filter));
+	}
+
+	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
+		initialize();
+		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortIndex(), filter.isAscending());
+		TreeSet<IMagicCard> filteredList = new TreeSet<IMagicCard>(comp);
+		for (Iterator<IMagicCard> iterator = this.table.cardsIterator(); iterator.hasNext();) {
+			IMagicCard elem = iterator.next();
+			if (!filter.isFiltered(elem)) {
+				filteredList.add(elem);
+			}
+		}
+		return filteredList;
 	}
 
 	@Override
