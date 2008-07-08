@@ -100,5 +100,41 @@
             name="Magic Cards">
       </perspective>
    </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.reflexit.magiccards.ui.commands.AddToLibraryHandler"
+            commandId="com.reflexit.magiccards.ui.commands.addToLib">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.addToLib"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="INSERT">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.reflexit.magiccards.ui.commands.category"
+            name="Magic Assistant">
+      </category>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.addToLib"
+            name="Add To Library">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="com.reflexit.magiccards.ui.context"
+            name="Magic Assistant windows"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
 
 </plugin>
