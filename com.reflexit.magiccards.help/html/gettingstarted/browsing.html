@@ -8,25 +8,37 @@
 
 <body>
 <h1>Browsing Cards</h1>
-This is application for browsing Magic The Gathering cards 
+This is application for browsing "Magic: The Gathering" &#0153; cards 
 (see <a href="http://www.wizards.com/magic">official website</a>).
 <p/>
 
 To browse Magic cards switch to Magic perspective, from Window->Open Perspective.
 If you running standalone version this is only perspective available.
 <p/>
-Magic perspective contains 2 view: Card Description and Magic Database.
-Magic Database show all available cards (loaded in local database). By default it will only
+Magic perspective contains several useful views: 
+Card Description and Magic Database.
+Magic Database shows all available cards. By default it will only
 show one instance of a card with the same name for the latest edition.
+Cards for older editions can be downloaded from the web as well, see updating database section.
+
+<h2>Card Details</h2>
+Card details are shown in Card Description view. Double click on the card to update this view.
 
 <h2>Sorting</h2>
 You can sort by any field by clicking on column header.
 If you click again sorting order is reversed.
+
+You also can sort by invisible column, click on view menu (triangle) and select Sort By->Column.
+
 <h2>Filtering</h2>
-You can filter cards in the view by opening filter. You can select one of more criteria from the filters.
+You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
+You can select one of more criteria from the filters.
+
+Currently filter dialog has two page: Basic Filter and Sets filter.
+ 
+<p/>
 Items that belong to the same group (such as Color) would be selected using logical OR. 
 Item that belong to different groups would be selected using logical AND.
-
 <p/>
 For example and you select color Blue and White and Type Creature and Enchantment, 
 you will get all creates and all enchantments that are Blue or White (including multicolors).
