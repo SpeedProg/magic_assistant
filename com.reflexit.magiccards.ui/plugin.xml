@@ -59,7 +59,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.card.CardDescView"
-            icon="icons/color_circle.gif"
+            icon="icons/back_32.jpg"
             id="com.reflexit.magiccards.ui.views.card.CardDescView"
             name="Card Description">
       </view>
@@ -67,7 +67,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.lib.LibView"
-            icon="icons/finers.gif"
+            icon="icons/Folder-Library-32x32.png"
             id="com.reflexit.magiccards.ui.views.lib.LibView"
             name="Magic Library"
             restorable="true">
@@ -76,7 +76,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
-            icon="icons/eye.gif"
+            icon="icons/sailing-ship-32x32.png"
             id="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
             name="Card Navigator">
       </view>
@@ -84,7 +84,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.lib.DeckView"
-            icon="icons/axe.gif"
+            icon="icons/Book-1-icon.gif"
             id="com.reflexit.magiccards.ui.views.lib.DeckView"
             name="Deck"
             restorable="true">
