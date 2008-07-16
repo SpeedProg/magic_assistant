@@ -87,11 +87,18 @@ public class SymbolConverter {
 		Image image2 = MagicUIActivator.getDefault().getImageRegistry().get(text1);
 		if (image2 != null)
 			return image2;
-		String text = text1;
 		Image image = new Image(MagicUIActivator.getDefault().getWorkbench().getDisplay(), 12 * 7, 12);
 		GC gc = new GC(image);
+		drawManaImage(gc, text1, 0, 0);
+		gc.dispose();
+		MagicUIActivator.getDefault().getImageRegistry().put(text1, image);
+		return image;
+	}
+
+	public static void drawManaImage(GC gc, String text1, int x, int y) {
 		//gc.setAlpha(50);
-		int x_offset = 0;
+		String text = text1;
+		int x_offset = x;
 		while (text.length() > 0) {
 			boolean cut = false;
 			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
@@ -105,10 +112,11 @@ public class SymbolConverter {
 							continue;
 						}
 						Image manaImage = imageDescriptor.createImage();
-						gc.drawImage(manaImage, x_offset, 0);
+						gc.drawImage(manaImage, x_offset, y);
 						text = text.substring(sym.length());
 						x_offset += manaImage.getBounds().width;
 						cut = true;
+						manaImage.dispose();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -118,14 +126,11 @@ public class SymbolConverter {
 				String letter = text.substring(0, 1);
 				text = text.substring(1);
 				if (letter.matches("\\d+")) {
-					gc.drawText(letter, x_offset, 0);
+					gc.drawText(letter, x_offset, y);
 					x_offset += gc.textExtent(letter).x;
 				}
 			}
 		}
-		gc.dispose();
-		MagicUIActivator.getDefault().getImageRegistry().put(text1, image);
-		return image;
 	}
 
 	public static String wrapHtml(String text, Control con) {

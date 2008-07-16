@@ -1,6 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableItem;
@@ -35,15 +37,27 @@ public class CostColumn extends ColumnManager implements Listener {
 			TableItem item = (TableItem) event.item;
 			Object row = item.getData();
 			int x = event.x, y = event.y;
-			Image image = getActualImage(row);
-			int iw = 0;
-			if (image != null) {
-				event.gc.drawImage(image, x, y);
-				iw = image.getBounds().width;
-			}
+			String cost;
+			if (row instanceof IMagicCard) {
+				cost = ((IMagicCard) row).getByIndex(this.dataIndex);
+			} else
+				return;
 			String text = getActualText(row);
-			if (text != null)
-				event.gc.drawText(text, x + iw + 5, y);
+			Point tw = null;
+			Rectangle bounds = item.getBounds(event.index);
+			int tx = 0;
+			if (text != null) {
+				tw = event.gc.textExtent(text);
+				tx = bounds.width - tw.x - 1;
+				if (tx < 0)
+					tx = 0;
+				event.gc.setClipping(x, y, tx, bounds.height);
+			}
+			SymbolConverter.drawManaImage(event.gc, cost, x, y);
+			if (text != null) {
+				event.gc.setClipping(x, y, bounds.width, bounds.height);
+				event.gc.drawText(text, x + tx, y, true);
+			}
 		}
 	}
 
