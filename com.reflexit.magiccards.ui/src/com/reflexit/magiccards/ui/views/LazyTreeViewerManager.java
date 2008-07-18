@@ -20,7 +20,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	private TreeViewer viewer;
 
 	LazyTreeViewerManager(AbstractCardsView view) {
-		super(view.doGetFilteredStore(), view.getViewSite().getId());
+		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
 	}
 
 	@Override

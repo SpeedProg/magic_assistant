@@ -42,6 +42,7 @@ import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 
 public abstract class AbstractCardsView extends ViewPart {
@@ -51,6 +52,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	private Label statusLine;
 	private MenuManager sortMenu;
 	private Action showPrefs;
+	private IPreferenceStore store;
 
 	/**
 	 * The constructor.
@@ -106,7 +108,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		getSite().setSelectionProvider(this.manager.getViewer());
 		// update manager columns
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
-		String value = store.getString(PreferenceConstants.MDBVIEW_COLS);
+		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
 	}
 
@@ -239,7 +241,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
-		Dialog cardFilterDialog = new CardFilterDialog2(getShell());
+		Dialog cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			this.manager.loadData();
 	}
@@ -263,4 +265,14 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * @see PreferenceConstants.MDBVIEW_COLS
 	 */
 	abstract protected String getPrefenceColumnsId();
+
+	/**
+	 * @return
+	 */
+	public IPreferenceStore getPreferenceStore() {
+		if (this.store == null)
+			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(),
+			        getPreferencePageId());
+		return this.store;
+	}
 }

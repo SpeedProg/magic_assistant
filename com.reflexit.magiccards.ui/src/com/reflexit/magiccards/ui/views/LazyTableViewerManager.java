@@ -30,7 +30,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	private AbstractCardsView view;
 
 	public LazyTableViewerManager(AbstractCardsView view) {
-		super(view.doGetFilteredStore(), view.getViewSite().getId());
+		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 

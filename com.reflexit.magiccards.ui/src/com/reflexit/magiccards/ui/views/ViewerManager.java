@@ -31,15 +31,17 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 public abstract class ViewerManager extends ColumnCollection implements IDisposable {
 	protected MagicCardFilter filter;
 	private IFilteredCardStore mhandler;
+	private IPreferenceStore store;
 
-	protected ViewerManager(IFilteredCardStore handler, String viewId) {
+	protected ViewerManager(IFilteredCardStore handler, IPreferenceStore store, String viewId) {
 		super(viewId);
 		this.filter = new MagicCardFilter();
 		this.mhandler = handler;
+		this.store = store;
 	}
 
 	public IPreferenceStore getPreferenceStore() {
-		return MagicUIActivator.getDefault().getPreferenceStore();
+		return this.store;
 	}
 
 	void asyncUpdateViewer(Display display) {
