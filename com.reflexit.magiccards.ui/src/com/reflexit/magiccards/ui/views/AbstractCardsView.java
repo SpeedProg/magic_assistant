@@ -38,7 +38,9 @@ import org.eclipse.ui.part.ViewPart;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -139,6 +141,15 @@ public abstract class AbstractCardsView extends ViewPart {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
+		setGlobalHandlers(bars);
+		bars.updateActionBars();
+	}
+
+	/**
+	 * @param bars
+	 */
+	protected void setGlobalHandlers(IActionBars bars) {
+		// nothing here
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
@@ -261,6 +272,10 @@ public abstract class AbstractCardsView extends ViewPart {
 		;
 	}
 
+	public IFilteredCardStore getFilteredStore() {
+		return this.manager.getFilteredStore();
+	}
+
 	/**
 	 * @return id of the preference for columns layout and hidings, i.e. 
 	 * @see PreferenceConstants.MDBVIEW_COLS
@@ -275,5 +290,21 @@ public abstract class AbstractCardsView extends ViewPart {
 			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(),
 			        getPreferencePageId());
 		return this.store;
+	}
+
+	protected void removeSelected() {
+		ICardStore cardStore = this.manager.getFilteredStore().getCardStore();
+		ISelection selection = getViewer().getSelection();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection sel = (IStructuredSelection) selection;
+			if (!sel.isEmpty()) {
+				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+					Object o = iterator.next();
+					if (o instanceof IMagicCard) {
+						cardStore.removeCard(o);
+					}
+				}
+			}
+		}
 	}
 }

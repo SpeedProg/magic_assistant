@@ -134,8 +134,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			this.viewer.setItemCount(getFilteredStore().getSize());
 			this.viewer.refresh(true);
 		}
-		setStatus("Shown " + getFilteredStore().getSize() + " items");
-		System.err.println("set input time: " + (System.currentTimeMillis() - time) + " ms");
+		setStatus("Shown " + getFilteredStore().getSize() + " items of " + getFilteredStore().getCardStore().getTotal());
+		//System.err.println("set input time: " + (System.currentTimeMillis() - time) + " ms");
 	}
 
 	protected void updateTableHeader() {

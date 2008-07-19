@@ -1,18 +1,24 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -25,7 +31,8 @@ import com.reflexit.magiccards.ui.views.ViewerManager;
 
 public class LibView extends AbstractCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.LibView";
-	Action delete;
+	protected Action delete;
+	private MenuManager addToDeck;
 
 	/**
 	 * The constructor.
@@ -42,28 +49,27 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 				removeSelected();
 			}
 		};
-		IActionBars actionBars = getViewSite().getActionBars();
-		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), this.delete);
+		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+		this.delete.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		this.addToDeck = new MenuManager("Add to Deck");
+		this.addToDeck.setRemoveAllWhenShown(true);
+		this.addToDeck.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillDeckMenu(manager);
+			}
+		});
 	}
 
-	protected void removeSelected() {
-		ISelection selection = getViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			if (!sel.isEmpty()) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					Object o = iterator.next();
-					if (o instanceof IMagicCard)
-						this.manager.getFilteredStore().getCardStore().removeCard(o);
-				}
-			}
-		}
+	@Override
+	protected void setGlobalHandlers(IActionBars bars) {
+		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), this.delete);
 	}
 
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(this.delete);
+		manager.add(this.addToDeck);
 	}
 
 	@Override
@@ -112,5 +118,52 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 	@Override
 	protected String getPrefenceColumnsId() {
 		return PreferenceConstants.LIBVIEW_COLS;
+	}
+
+	/**
+	 * @param secondaryId
+	 */
+	protected void addToDeck(String id) {
+		ISelection selection = getViewer().getSelection();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection sel = (IStructuredSelection) selection;
+			if (!sel.isEmpty()) {
+				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+					Object o = iterator.next();
+					if (o instanceof IMagicCard)
+						DataManager.getCardHandler().getDeckHandler(id).getCardStore().addCard(o);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param manager
+	 */
+	protected void fillDeckMenu(IMenuManager manager) {
+		boolean any = false;
+		IViewReference[] views = getViewSite().getWorkbenchWindow().getActivePage().getViewReferences();
+		for (int i = 0; i < views.length; i++) {
+			final IViewReference viewReference = views[i];
+			if (viewReference.getId().equals(DeckView.ID)) {
+				final String deckId = viewReference.getSecondaryId();
+				ICardDeck store = (ICardDeck) ((DeckView) viewReference.getPart(false)).getFilteredStore()
+				        .getCardStore();
+				Action ac = new Action(store.getDeckName()) {
+					@Override
+					public void run() {
+						addToDeck(deckId);
+					}
+				};
+				manager.add(ac);
+				any = true;
+			}
+		}
+		if (!any) {
+			Action ac = new Action("No Open Decks") {
+			};
+			manager.add(ac);
+			ac.setEnabled(false);
+		}
 	}
 }

@@ -115,14 +115,14 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
+		manager.add(this.addNewDeck);
 		manager.add(new Separator());
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(this.addNewDeck);
-		if (canRemove()) {
-			manager.add(this.removeDeck);
-		}
+		manager.add(this.removeDeck);
+		this.removeDeck.setEnabled(canRemove());
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
