@@ -1,6 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.EditingSupport;
 
 public abstract class ColumnManager extends ColumnLabelProvider {
 	protected int dataIndex;
@@ -28,5 +30,13 @@ public abstract class ColumnManager extends ColumnLabelProvider {
 
 	public String getColumnFullName() {
 		return getColumnName();
+	}
+
+	/**
+	 * @param viewer
+	 * @return
+	 */
+	public EditingSupport getEditingSupport(ColumnViewer viewer) {
+		return null;
 	};
 }

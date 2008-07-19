@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 public class ColumnCollection {
@@ -35,17 +34,7 @@ public class ColumnCollection {
 		this.columns.add(new GenColumn(IMagicCard.INDEX_RARITY, "Rarity"));
 		this.columns.add(new GenColumn(IMagicCard.INDEX_CTYPE, "Color Type"));
 		if (!this.id.equals(MagicDbView.ID)) {
-			this.columns.add(new GenColumn(11, "Count") {
-				@Override
-				public String getText(Object element) {
-					if (element instanceof MagicCardPhisical) {
-						MagicCardPhisical m = (MagicCardPhisical) element;
-						return m.getCount() + "";
-					} else {
-						return "";
-					}
-				}
-			});
+			this.columns.add(new CountColumn(11, "Count"));
 		}
 	}
 }

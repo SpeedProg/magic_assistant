@@ -95,6 +95,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			if (man instanceof Listener) {
 				this.viewer.getTable().addListener(SWT.PaintItem, (Listener) man);
 			}
+			;
+			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
 		this.viewer.getTable().setHeaderVisible(true);
