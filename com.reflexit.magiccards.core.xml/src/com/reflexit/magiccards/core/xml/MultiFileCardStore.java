@@ -54,7 +54,7 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 				FileInputStream is = new FileInputStream(table.file);
 				SubTable loaded = (SubTable) xstream.fromXML(is);
 				is.close();
-				this.size += table.list.size();
+				this.size += loaded.list.size();
 				this.map.put(loaded.key, loaded);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -151,6 +151,7 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 			res.file = getFile(key);
 			this.map.put(key, res);
 		}
+		this.size++;
 		return res.list.add(card);
 	}
 

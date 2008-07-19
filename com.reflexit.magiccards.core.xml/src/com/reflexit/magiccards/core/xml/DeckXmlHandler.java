@@ -60,10 +60,13 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 			if (d == null)
 				d = DataManager.getModelRoot().addDeck(filename);
 			file = d.getFile();
+			if (!d.isOpen()) {
+				d.open(new DeckFileCardStore(file, null));
+			}
+			this.table = (DeckFileCardStore) d.getStore();
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.table = new DeckFileCardStore(file, null);
 	}
 }
