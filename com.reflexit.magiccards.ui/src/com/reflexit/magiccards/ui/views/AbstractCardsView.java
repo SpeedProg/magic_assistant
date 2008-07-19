@@ -150,7 +150,6 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
-		manager.add(this.sortMenu);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -182,13 +181,15 @@ public abstract class AbstractCardsView extends ViewPart {
 		};
 		this.sortMenu = new MenuManager("Sort By");
 		Collection columns = this.manager.getColumns();
-		for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+		int i = 0;
+		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {
 			final ColumnManager man = (ColumnManager) iterator.next();
 			String name = man.getColumnFullName();
+			final int index = i;
 			Action ac = new Action(name) {
 				@Override
 				public void run() {
-					AbstractCardsView.this.manager.sort(man.getDataIndex());
+					AbstractCardsView.this.manager.sort(index);
 				}
 			};
 			this.sortMenu.add(ac);

@@ -109,7 +109,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		else
 			sortDirection = SWT.UP;
 		this.viewer.getTable().setSortDirection(sortDirection);
-		this.filter.setSortIndex(index);
+		ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
+		this.filter.setSortIndex(man.getDataIndex());
 		this.filter.setAscending(sortDirection == SWT.UP);
 	}
 
