@@ -28,30 +28,21 @@
          search-location="both"/>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.commands" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="com.reflexit.magiccards.core" version="1.0.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.help"/>
       <import plugin="org.eclipse.help.ui"/>
-      <import plugin="com.reflexit.magiccards.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.reflexit.magiccards.help" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.reflexit.magiccards.ui" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.expressions" version="3.1.0" match="compatible"/>
       <import plugin="org.eclipse.core.filesystem" version="1.1.0" match="compatible"/>
-      <import plugin="org.eclipse.equinox.common"/>
-      <import plugin="org.eclipse.equinox.registry"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.eclipse.core.filesystem" version="1.0.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.security" version="1.0.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.common" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.preferences" version="3.2.200" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.registry" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.core.runtime" version="3.3.0" match="compatible"/>
       <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.core.jobs"/>
+      <import plugin="org.eclipse.equinox.preferences" version="3.2.200" match="compatible"/>
+      <import plugin="org.eclipse.ui" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="compatible"/>
    </requires>
 
    <plugin
@@ -175,6 +166,9 @@
 
    <plugin
          id="org.eclipse.equinox.security.macosx"
+         os="macosx"
+         ws="carbon"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -190,6 +184,9 @@
 
    <plugin
          id="org.eclipse.equinox.security.win32.x86"
+         os="win32"
+         ws="win32"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"
