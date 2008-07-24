@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -40,13 +41,16 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	public class LoadCardJob extends Job {
 		ISelection sel;
 
-		public LoadCardJob() {
+		public LoadCardJob(ISelection sel) {
 			super("Loading card image");
+			this.sel = sel;
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			final IMagicCard card = getCard(this.sel);
+			setName("Loading image: " + card.getName());
+			monitor.beginTask("Loading image for " + card.getName(), 100);
 			if (CardDescView.this.panel.getCard() == card)
 				return Status.OK_STATUS;
 			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
@@ -61,8 +65,13 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					CardDescView.this.panel.reload(card);
 				}
 			});
+			monitor.worked(10);
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
 			if (card != IMagicCard.DEFAULT) {
 				final Image remoteImage = createRemoteImage(card);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (remoteImage.getBounds().width < 20) {
@@ -72,7 +81,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						}
 					}
 				});
+				monitor.worked(10);
 			}
+			monitor.done();
 			return Status.OK_STATUS;
 		}
 	}
@@ -85,7 +96,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		this.panel = new CardDescComposite(this, parent, SWT.BORDER);
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
-		this.loadCardJob = new LoadCardJob();
+		this.loadCardJob = new LoadCardJob(new StructuredSelection());
 		revealCurrentSelection();
 	}
 
@@ -139,8 +150,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	private void runLoadJob(ISelection sel) {
-		this.loadCardJob.sel = sel;
 		this.loadCardJob.cancel();
+		this.loadCardJob = new LoadCardJob(sel);
 		this.loadCardJob.schedule();
 	}
 
