@@ -10,6 +10,7 @@ public class FilterHelper {
 	public static final String SUBTYPE = "subtype";
 	public static final String TYPE_LINE = SUBTYPE;
 	public static final String TEXT_LINE = "oracleText";
+	public static final String NAME_LINE = "name";
 	public static final String TEXT_POSTFIX = "text";
 	public static final String POWER = "power";
 	public static final String NUMERIC_POSTFIX = "numeric";
@@ -44,6 +45,7 @@ public class FilterHelper {
 		ids.addAll(Editions.getInstance().getIds());
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.POWER, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TOUGHNESS, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.CCC, FilterHelper.NUMERIC_POSTFIX));

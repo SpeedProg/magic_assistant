@@ -272,6 +272,8 @@ public class MagicCardFilter {
 			res = textSearch(IMagicCard.INDEX_TYPE, value);
 		} else if (FilterHelper.TEXT_LINE.equals(requestedId)) {
 			res = textSearch(IMagicCard.INDEX_ORACLE, value);
+		} else if (FilterHelper.NAME_LINE.equals(requestedId)) {
+			res = textSearch(IMagicCard.INDEX_NAME, value);
 		} else if (FilterHelper.CCC.equals(requestedId)) {
 			res = BinaryExpr.fieldInt(IMagicCard.INDEX_CMC, value);
 		} else if (FilterHelper.POWER.equals(requestedId)) {
@@ -312,6 +314,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.SUBTYPE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_LINE), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.POWER), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.TOUGHNESS), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.CCC), expr);
