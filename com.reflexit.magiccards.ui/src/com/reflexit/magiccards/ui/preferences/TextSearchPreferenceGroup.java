@@ -14,6 +14,7 @@ public class TextSearchPreferenceGroup extends FieldEditorPreferencePage {
 		noDefaultAndApplyButton();
 	}
 
+	@Override
 	protected void createFieldEditors() {
 		//		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		//		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -26,8 +27,12 @@ public class TextSearchPreferenceGroup extends FieldEditorPreferencePage {
 		id = FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(id, "");
 		addField(new StringFieldEditor(id, "Text", getFieldEditorParent()));
+		id = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
+		getPreferenceStore().setDefault(id, "");
+		addField(new StringFieldEditor(id, "Name", getFieldEditorParent()));
 	}
 
+	@Override
 	protected void adjustGridLayout() {
 		GridLayout layout = (GridLayout) ((Composite) this.getControl()).getLayout();
 		layout.marginHeight = 5;
