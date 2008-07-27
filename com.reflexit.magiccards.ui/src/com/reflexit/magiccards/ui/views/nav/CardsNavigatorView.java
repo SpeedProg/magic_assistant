@@ -258,7 +258,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				MagicUIActivator.log(e);
 			}
 		} else {
-			showMessage("Double-click detected on " + obj.toString());
+			showMessage("Cannot open this object " + obj.toString());
 		}
 	}
 

@@ -246,9 +246,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void runDoubleClick() {
-		ISelection selection = getViewer().getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		showMessage("Double-click detected on " + obj.toString());
 	}
 
 	protected void runShowFilter() {
