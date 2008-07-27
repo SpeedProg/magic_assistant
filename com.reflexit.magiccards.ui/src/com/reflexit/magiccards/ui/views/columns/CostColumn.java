@@ -36,7 +36,8 @@ public class CostColumn extends ColumnManager implements Listener {
 		if (event.index == this.dataIndex) { // cost
 			TableItem item = (TableItem) event.item;
 			Object row = item.getData();
-			int x = event.x, y = event.y;
+			int x = event.x;
+			int y = event.y + 2;
 			String cost;
 			if (row instanceof IMagicCard) {
 				cost = ((IMagicCard) row).getByIndex(this.dataIndex);

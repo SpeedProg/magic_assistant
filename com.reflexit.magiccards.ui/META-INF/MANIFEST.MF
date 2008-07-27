@@ -11,6 +11,15 @@ Require-Bundle: org.eclipse.core.runtime,
  com.reflexit.magiccards.core,
  org.eclipse.core.resources;bundle-version="3.4.0"
 Eclipse-LazyStart: true
-Export-Package: com.reflexit.magiccards.ui
+Export-Package: com.reflexit.magiccards.ui,
+ com.reflexit.magiccards.ui.commands,
+ com.reflexit.magiccards.ui.dialogs,
+ com.reflexit.magiccards.ui.preferences,
+ com.reflexit.magiccards.ui.utils,
+ com.reflexit.magiccards.ui.views,
+ com.reflexit.magiccards.ui.views.card,
+ com.reflexit.magiccards.ui.views.columns,
+ com.reflexit.magiccards.ui.views.lib,
+ com.reflexit.magiccards.ui.views.nav
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -99,6 +99,7 @@ public class SymbolConverter {
 		//gc.setAlpha(50);
 		String text = text1;
 		int x_offset = x;
+		int y_offset = y;
 		while (text.length() > 0) {
 			boolean cut = false;
 			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
@@ -112,7 +113,7 @@ public class SymbolConverter {
 							continue;
 						}
 						Image manaImage = imageDescriptor.createImage();
-						gc.drawImage(manaImage, x_offset, y);
+						gc.drawImage(manaImage, x_offset, y_offset);
 						text = text.substring(sym.length());
 						x_offset += manaImage.getBounds().width;
 						cut = true;
@@ -126,7 +127,7 @@ public class SymbolConverter {
 				String letter = text.substring(0, 1);
 				text = text.substring(1);
 				if (letter.matches("\\d+")) {
-					gc.drawText(letter, x_offset, y);
+					gc.drawText(letter, x_offset, y_offset);
 					x_offset += gc.textExtent(letter).x;
 				}
 			}
