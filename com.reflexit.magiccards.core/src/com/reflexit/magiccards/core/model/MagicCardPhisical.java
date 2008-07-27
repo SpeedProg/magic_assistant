@@ -10,6 +10,7 @@ public class MagicCardPhisical implements IMagicCard {
 	private String comment;
 	private String location;
 	private String condition;
+	public static final int INDEX_COUNT = 11;
 
 	public MagicCardPhisical(IMagicCard card) {
 		if (card instanceof MagicCard) {
@@ -98,7 +99,7 @@ public class MagicCardPhisical implements IMagicCard {
 	}
 
 	public String getByIndex(int columnIndex) {
-		Object el = ((ArrayList) getValues()).get(columnIndex);
+		Object el = getObjectByIndex(columnIndex);
 		if (el != null)
 			return el.toString();
 		return null;
@@ -129,7 +130,7 @@ public class MagicCardPhisical implements IMagicCard {
 	}
 
 	public Object getObjectByIndex(int i) {
-		return this.card.getObjectByIndex(i);
+		return ((ArrayList) getValues()).get(i);
 	}
 
 	public String getOracleText() {
