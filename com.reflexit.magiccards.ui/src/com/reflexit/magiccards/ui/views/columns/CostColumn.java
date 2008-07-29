@@ -37,7 +37,7 @@ public class CostColumn extends ColumnManager implements Listener {
 			TableItem item = (TableItem) event.item;
 			Object row = item.getData();
 			int x = event.x;
-			int y = event.y + 2;
+			int y = event.y;
 			String cost;
 			if (row instanceof IMagicCard) {
 				cost = ((IMagicCard) row).getByIndex(this.dataIndex);
@@ -54,10 +54,13 @@ public class CostColumn extends ColumnManager implements Listener {
 					tx = 0;
 				event.gc.setClipping(x, y, tx, bounds.height);
 			}
-			SymbolConverter.drawManaImage(event.gc, cost, x, y);
+			int imageHeight = 12;
+			int yi = y + (Math.max(bounds.height - imageHeight, 2)) / 2;
+			SymbolConverter.drawManaImage(event.gc, cost, x + 2, yi);
 			if (text != null) {
-				event.gc.setClipping(x, y, bounds.width, bounds.height);
-				event.gc.drawText(text, x + tx, y, true);
+				int yt = y + bounds.height - 2 - tw.y;
+				event.gc.setClipping(x, yt, bounds.width, bounds.height);
+				event.gc.drawText(text, x + tx, yt, true);
 			}
 		}
 	}
