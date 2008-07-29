@@ -37,6 +37,8 @@ public class MagicCardComparator implements Comparator {
 				if (range != 0)
 					return range * this.dir;
 			}
+			if (c1.getCardId() != 0)
+				return c1.getCardId() - c2.getCardId();
 		}
 		return this.dir * (System.identityHashCode(o1) - System.identityHashCode(o2));
 	}
