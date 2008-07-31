@@ -20,6 +20,8 @@ import org.eclipse.ui.services.IDisposable;
 
 import java.util.HashMap;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.ui.utils.MagicCardDragListener;
 import com.reflexit.magiccards.ui.utils.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.utils.MagicCardTransfer;
@@ -134,7 +136,12 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			this.viewer.setItemCount(getFilteredStore().getSize());
 			this.viewer.refresh(true);
 		}
-		setStatus("Shown " + getFilteredStore().getSize() + " items of " + getFilteredStore().getCardStore().getTotal());
+		ICardStore cardStore = getFilteredStore().getCardStore();
+		String cardCountTotal = "";
+		if (cardStore instanceof ICardCountable) {
+			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+		}
+		setStatus("Shown " + getFilteredStore().getSize() + " items of " + cardStore.getTotal() + ". " + cardCountTotal);
 		//System.err.println("set input time: " + (System.currentTimeMillis() - time) + " ms");
 	}
 

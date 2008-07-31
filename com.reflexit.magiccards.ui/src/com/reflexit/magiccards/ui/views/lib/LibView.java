@@ -1,9 +1,11 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -13,7 +15,7 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.handlers.IHandlerService;
 
 import java.util.Iterator;
 
@@ -62,13 +64,14 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
-		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), this.delete);
+		ActionHandler deleteHandler = new ActionHandler(this.delete);
+		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		service.activateHandler("org.eclipse.ui.edit.delete", (IHandler) deleteHandler);
 	}
 
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
-		manager.add(this.delete);
 		manager.add(this.addToDeck);
 	}
 

@@ -136,5 +136,27 @@
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
+        <command
+              commandId="org.eclipse.ui.edit.delete"
+              mode="FORCE_TEXT"
+              style="push">
 
+        </command>
+
+     </menuContribution>
+          <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.DeckView">
+        <command
+              commandId="org.eclipse.ui.edit.delete"
+              mode="FORCE_TEXT"
+              style="push">
+
+        </command>
+
+     </menuContribution>
+  </extension>
 </plugin>
