@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
@@ -21,8 +22,9 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * @author Alena
  *
  */
-public class LibraryCardStore extends SingleFileCardStore {
+public class LibraryCardStore extends SingleFileCardStore implements ICardCountable {
 	private transient HashMap<Integer, IMagicCard> hash;
+	private int cardCount;
 
 	/**
 	 * @param file
@@ -30,6 +32,7 @@ public class LibraryCardStore extends SingleFileCardStore {
 	public LibraryCardStore(File file) {
 		super(file);
 		this.hash = new HashMap<Integer, IMagicCard>();
+		this.cardCount = 0;
 	}
 
 	/* (non-Javadoc)
@@ -47,6 +50,7 @@ public class LibraryCardStore extends SingleFileCardStore {
 			MagicCardPhisical p = (MagicCardPhisical) phi;
 			p.setCount(p.getCount() + 1);
 		}
+		this.cardCount++;
 		return true;
 	}
 
@@ -57,6 +61,9 @@ public class LibraryCardStore extends SingleFileCardStore {
 	public void doRemoveCard(IMagicCard card) {
 		super.doRemoveCard(card);
 		this.hash.remove(card.getCardId());
+		if (card instanceof MagicCardPhisical) {
+			this.cardCount -= ((MagicCardPhisical) card).getCount();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -69,6 +76,13 @@ public class LibraryCardStore extends SingleFileCardStore {
 		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			this.hash.put(card.getCardId(), card);
+			if (card instanceof MagicCardPhisical) {
+				this.cardCount += ((MagicCardPhisical) card).getCount();
+			}
 		}
+	}
+
+	public int getCount() {
+		return this.cardCount;
 	}
 }
