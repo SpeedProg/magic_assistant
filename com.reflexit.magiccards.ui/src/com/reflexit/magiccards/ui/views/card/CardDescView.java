@@ -101,10 +101,14 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	private void revealCurrentSelection() {
-		IViewPart dbview = getViewSite().getWorkbenchWindow().getActivePage().findView(MagicDbView.ID);
-		if (dbview != null) {
-			ISelection sel = dbview.getSite().getSelectionProvider().getSelection();
-			runLoadJob(sel);
+		try {
+			IViewPart dbview = getViewSite().getWorkbenchWindow().getActivePage().findView(MagicDbView.ID);
+			if (dbview != null) {
+				ISelection sel = dbview.getSite().getSelectionProvider().getSelection();
+				runLoadJob(sel);
+			}
+		} catch (NullPointerException e) {
+			// workbench of active window is null, just ignore then
 		}
 	}
 
