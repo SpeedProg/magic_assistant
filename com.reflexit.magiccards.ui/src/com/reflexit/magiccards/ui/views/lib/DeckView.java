@@ -69,6 +69,7 @@ public class DeckView extends AbstractCardsView implements ICardEventListener {
 
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
+		super.setGlobalHandlers(bars);
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", (IHandler) deleteHandler);

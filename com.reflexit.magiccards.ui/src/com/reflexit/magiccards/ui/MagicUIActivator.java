@@ -2,6 +2,10 @@ package com.reflexit.magiccards.ui;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import org.osgi.framework.BundleContext;
@@ -26,6 +30,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
@@ -34,6 +39,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
@@ -61,6 +67,37 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	public static void log(Throwable e) {
 		getDefault().getLog().log(
-		        new Status(Status.ERROR, MagicUIActivator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
+		        new Status(Status.ERROR, MagicUIActivator.getDefault().getBundle().getSymbolicName(), 1,
+		                e.getMessage(), e));
+	}
+
+	public Image getImage(String key) {
+		ImageRegistry registry = getImageRegistry();
+		Image image = registry.get(key);
+		if (image == null) {
+			ImageDescriptor descriptor = imageDescriptorFromPlugin(PLUGIN_ID, key);
+			if (descriptor == null) {
+				ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+				return sharedImages.getImage(key);
+			}
+			registry.put(key, descriptor);
+			image = registry.get(key);
+		}
+		return image;
+	}
+
+	/**
+	 * @param string
+	 * @param desc
+	 * @return
+	 */
+	public Image getImage(String key, ImageDescriptor desc) {
+		ImageRegistry registry = getImageRegistry();
+		Image image = registry.get(key);
+		if (image == null) {
+			registry.put(key, desc);
+			image = registry.get(key);
+		}
+		return image;
 	}
 }

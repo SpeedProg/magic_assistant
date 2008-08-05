@@ -3,7 +3,7 @@
 <plugin>
 
    <extension
-         point="org.eclipse.ui.editors">
+            point="org.eclipse.ui.editors">
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -144,19 +144,37 @@
               commandId="org.eclipse.ui.edit.delete"
               mode="FORCE_TEXT"
               style="push">
-
         </command>
-
      </menuContribution>
-          <menuContribution
+     <menuContribution
+           locationURI="menu:com.reflexit.magiccards.ui.views.lib.LibView">
+        <command
+              commandId="org.eclipse.ui.edit.findReplace"
+              label="Find...">
+        </command>
+     </menuContribution>
+     
+     <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.lib.DeckView">
         <command
               commandId="org.eclipse.ui.edit.delete"
               mode="FORCE_TEXT"
               style="push">
-
         </command>
-
+     </menuContribution>
+     <menuContribution
+           locationURI="menu:com.reflexit.magiccards.ui.views.lib.DeckView">
+        <command
+              commandId="org.eclipse.ui.edit.findReplace"
+              label="Find...">
+        </command>
+     </menuContribution>
+     <menuContribution
+           locationURI="menu:com.reflexit.magiccards.ui.views.MagicDbView">
+        <command
+              commandId="org.eclipse.ui.edit.findReplace"
+              label="Find...">
+        </command>
      </menuContribution>
   </extension>
 </plugin>

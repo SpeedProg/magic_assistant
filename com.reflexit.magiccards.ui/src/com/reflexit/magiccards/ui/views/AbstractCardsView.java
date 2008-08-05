@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views;
 
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -7,6 +8,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -18,6 +20,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -33,6 +36,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import java.util.Collection;
@@ -46,14 +50,19 @@ import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
+import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
+import com.reflexit.magiccards.ui.views.search.SearchContext;
+import com.reflexit.magiccards.ui.views.search.SearchControl;
+import com.reflexit.magiccards.ui.views.search.TableSearch;
 
 public abstract class AbstractCardsView extends ViewPart {
 	private Action showFilter;
 	private Action doubleClickAction;
+	private Action showPrefs;
+	private Action showFind;
 	protected ViewerManager manager;
 	private Label statusLine;
 	private MenuManager sortMenu;
-	private Action showPrefs;
 	private IPreferenceStore store;
 
 	/**
@@ -75,6 +84,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		composite.setLayout(gl);
 		createStatusLine(composite);
 		createMainControl(composite);
+		createSearchControl(composite);
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
@@ -87,6 +97,7 @@ public abstract class AbstractCardsView extends ViewPart {
 			AbstractCardsView.this.propertyChange(event);
 		}
 	};
+	private SearchControl searchControl;
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -112,6 +123,36 @@ public abstract class AbstractCardsView extends ViewPart {
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
+	}
+
+	/**
+	 * @param composite
+	 */
+	protected void createSearchControl(Composite composite) {
+		this.searchControl = new SearchControl(new ISearchRunnable() {
+			public void run(SearchContext context) {
+				runSearch(context);
+			}
+		});
+		this.searchControl.createFindBar(composite);
+		this.searchControl.setVisible(false);
+	}
+
+	/**
+	 * @param context
+	 */
+	protected void runSearch(SearchContext context) {
+		TableSearch.search(context, getFilteredStore());
+		if (context.status) {
+			highlightCard((IMagicCard) context.last);
+		}
+	}
+
+	/**
+	 * @param last
+	 */
+	protected void highlightCard(IMagicCard last) {
+		this.manager.getViewer().setSelection(new StructuredSelection(last), true);
 	}
 
 	public abstract ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView);
@@ -144,12 +185,16 @@ public abstract class AbstractCardsView extends ViewPart {
 		setGlobalHandlers(bars);
 		bars.updateActionBars();
 	}
+	public static final String FIND = "org.eclipse.ui.edit.findReplace";
 
 	/**
 	 * @param bars
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
-		// nothing here
+		//	this.showFind.setActionDefinitionId(FIND);
+		ActionHandler findHandler = new ActionHandler(this.showFind);
+		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		service.activateHandler(FIND, (IHandler) findHandler);
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
@@ -212,6 +257,12 @@ public abstract class AbstractCardsView extends ViewPart {
 				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id },
 				        null);
 				dialog.open();
+			}
+		};
+		this.showFind = new Action("Find...") {
+			@Override
+			public void run() {
+				AbstractCardsView.this.searchControl.setVisible(true);
 			}
 		};
 	}
