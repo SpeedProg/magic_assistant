@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import org.eclipse.core.runtime.Path;
+
 import com.reflexit.magiccards.core.model.ICardDeck;
 
 public class Deck extends CardElement {
@@ -11,6 +13,12 @@ public class Deck extends CardElement {
 
 	public ICardDeck getStore() {
 		return this.store;
+	}
+
+	public String getName() {
+		if (this.store != null)
+			return this.store.getDeckName();
+		return new Path(getFileName()).removeFileExtension().lastSegment();
 	}
 
 	public void open(ICardDeck store) {

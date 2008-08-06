@@ -54,6 +54,11 @@ public class CardElement extends EventManager {
 		return full.toFile();
 	}
 
+	public String getName() {
+		IPath path = new Path(this.filename).removeFileExtension();
+		return path.toString();
+	}
+
 	public String getFileName() {
 		return this.filename;
 	}
