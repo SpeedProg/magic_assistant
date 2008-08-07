@@ -178,9 +178,20 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
 		if (sel.isEmpty())
 			return;
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-			CardElement el = (CardElement) iterator.next();
-			DataManager.getModelRoot().removeDeck((Deck) el);
+		if (sel.size() == 1) {
+			Deck el = (Deck) sel.getFirstElement();
+			if (MessageDialog.openQuestion(getShell(), "Deck Removal Confirmation",
+			        "Are you sure you want to delete deck: " + el.getName() + "?")) {
+				DataManager.getModelRoot().removeDeck(el);
+			}
+		} else {
+			if (MessageDialog.openQuestion(getShell(), "Decks Removal Confirmation",
+			        "Are you sure you want to delete these " + sel.size() + " decks?")) {
+				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+					CardElement el = (CardElement) iterator.next();
+					DataManager.getModelRoot().removeDeck((Deck) el);
+				}
+			}
 		}
 	}
 
