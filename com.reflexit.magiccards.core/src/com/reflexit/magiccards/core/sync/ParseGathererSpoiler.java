@@ -260,4 +260,9 @@ public class ParseGathererSpoiler {
 		str = str.replaceAll("</font>", "");
 		return str;
 	}
+
+	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
+    	return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId
+    	        + ".jpg");
+    }
 }
