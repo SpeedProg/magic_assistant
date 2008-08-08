@@ -22,13 +22,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -69,7 +67,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 			if (card != IMagicCard.DEFAULT) {
-				final Image remoteImage = createRemoteImage(card);
+				final Image remoteImage = createCardImage(card);
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
@@ -159,60 +157,24 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		this.loadCardJob.schedule();
 	}
 
-	private Image createRemoteImage(IMagicCard card) {
-		try {
-			URL url;
-			String edition = card.getEdition();
-			String editionAbbr = Editions.getInstance().getAbbrByName(edition);
-			if (editionAbbr == null)
-				editionAbbr = "";
-			int cardId = card.getCardId();
-			String locale = guessLocale(cardId, edition, editionAbbr);
-			url = createImageURL(cardId, editionAbbr, locale);
-			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
-			Image remoteImage = imageDesc.createImage(getDisplay());
-			return remoteImage;
-		} catch (MalformedURLException e) {
-			MagicUIActivator.log(e);
-			return null;
-		}
-	}
-
 	public Display getDisplay() {
 		return getViewSite().getShell().getDisplay();
 	}
 
-	private String guessLocale(int cardId, String edition, String editionAbbr) throws MalformedURLException {
-		String locale = Editions.getInstance().getLocale(edition);
-		if (locale == null) {
-			URL url = null;
-			locale = "en-us";
-			url = createImageURL(cardId, editionAbbr, locale);
-			try {
-				url.openStream();
-				Editions.getInstance().addLocale(editionAbbr, locale);
-			} catch (IOException e) {
-				locale = "EN";
-				url = createImageURL(cardId, editionAbbr, locale);
-				try {
-					url.openStream();
-					Editions.getInstance().addLocale(editionAbbr, locale);
-				} catch (IOException e2) {
-					locale = "?";
-				}
-			}
-			try {
-				Editions.getInstance().save();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return locale;
+	private Image createCardImage(IMagicCard card) {
+		ImageDescriptor imageDesc = createRemoteImageDesc(card);
+		Image remoteImage = imageDesc.createImage(getDisplay());
+		return remoteImage;
 	}
 
-	private URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
-		return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId
-		        + ".jpg");
+	public static ImageDescriptor createRemoteImageDesc(IMagicCard card) {
+		try {
+			URL url = CardCache.createCardURL(card);
+			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
+			return imageDesc;
+		} catch (MalformedURLException e) {
+			MagicUIActivator.log(e);
+			return null;
+		}
 	}
 }
