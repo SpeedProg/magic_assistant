@@ -85,7 +85,7 @@ public class MagicDbView extends AbstractCardsView {
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.addToLib = new Action("Add to CollectionsContainer") {
+		this.addToLib = new Action("Add to Library") {
 			@Override
 			public void run() {
 				addToLibrary();
