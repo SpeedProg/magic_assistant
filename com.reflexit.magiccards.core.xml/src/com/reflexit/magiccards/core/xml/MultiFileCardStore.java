@@ -154,12 +154,12 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 
 	private File getFile(IMagicCard card) {
 		try {
+			String key = getKey(card);
 			if (card instanceof MagicCard) {
-				String key = ((MagicCard) card).getEdition();
 				key = key.replaceAll("[\\W]", "_");
 				return new File(XmlCardHolder.getDbFolder(), key + ".xml");
 			} else if (card instanceof MagicCardPhisical) {
-				String file = ((MagicCardPhisical) card).getLocation();
+				String file = key;
 				IResource res = DataManager.getProject().findMember(new Path(file));
 				return res.getLocation().toFile();
 			} else
@@ -173,7 +173,11 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 		if (card instanceof MagicCard) {
 			return (card).getEdition();
 		} else if (card instanceof MagicCardPhisical) {
-			return ((MagicCardPhisical) card).getLocation();
+			String loc = ((MagicCardPhisical) card).getLocation();
+			if (loc == null) {
+				loc = DataManager.getModelRoot().getDefaultLib().getPath().toPortableString();
+			}
+			return loc;
 		}
 		return "unknown";
 	}
