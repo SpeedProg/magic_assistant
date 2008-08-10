@@ -19,6 +19,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
+ * Single File store with card count and caching
  * @author Alena
  *
  */

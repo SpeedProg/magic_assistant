@@ -1,24 +1,24 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.CoreException;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 
 public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private static LibraryDataXmlHandler instance;
-	private SingleFileCardStore table;
+	private CollectionMultiFileCardStore table;
 
 	@Override
 	public int getSize() {
@@ -55,6 +55,12 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 
 	@Override
 	protected void doInitialize() throws MagicException {
+		CollectionsContainer container = DataManager.getModelRoot().getCollectionsContainer();
+		Collection<CardElement> colls = container.getAllElements();
+		// init super
+		for (CardElement elem : colls) {
+			this.table.addFile(elem.getResource().getLocation().toFile(), elem.getPath().toPortableString());
+		}
 		this.table.initialize();
 	}
 
@@ -66,13 +72,6 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 
 	private LibraryDataXmlHandler() {
 		instance = this;
-		File file = null;
-		try {
-			file = XmlCardHolder.getLibrary();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.table = new LibraryCardStore(file);
+		this.table = new CollectionMultiFileCardStore();
 	}
 }

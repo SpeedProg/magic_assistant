@@ -1,24 +1,20 @@
 package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.Activator;
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.AbstractCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.thoughtworks.xstream.XStream;
+import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class SingleFileCardStore extends AbstractCardStore<IMagicCard> {
-	protected ArrayList<IMagicCard> list;
+	private ArrayList<IMagicCard> list;
 	protected transient File file;
 
 	public SingleFileCardStore(File file) {
@@ -28,43 +24,44 @@ public class SingleFileCardStore extends AbstractCardStore<IMagicCard> {
 
 	@Override
 	protected synchronized void doInitialize() {
-		if (this.file.exists()) {
-			XStream xstream = DataManager.getXStream();
-			xstream.setClassLoader(this.getClass().getClassLoader());
-			try {
-				FileInputStream is = new FileInputStream(this.file);
-				SingleFileCardStore loaded = (SingleFileCardStore) xstream.fromXML(is);
-				is.close();
-				this.list = loaded.list;
-			} catch (Exception e) {
-				System.err.println("Cannot load file " + this.file);
-				e.printStackTrace();
-				Activator.log(e);
-				this.list = new ArrayList<IMagicCard>();
-			}
-		} else {
-			try {
-				// create empty file
-				new FileOutputStream(this.file).close();
-			} catch (IOException e) {
-				// ignore
-			}
-			this.list = new ArrayList<IMagicCard>();
+		CardCollectionStoreObject obj = null;
+		try {
+			obj = CardCollectionStoreObject.initFromFile(this.file);
+		} catch (IOException e) {
+			Activator.log(e);
 		}
+		loadFields(obj);
+	}
+
+	/**
+	 * @param obj
+	 */
+	protected void loadFields(CardCollectionStoreObject obj) {
+		if (obj.list != null)
+			this.list = obj.list;
+		else
+			this.list = new ArrayList<IMagicCard>();
+	}
+
+	/**
+	 * @param obj
+	 */
+	protected void storeFields(CardCollectionStoreObject obj) {
+		obj.list = this.getList();
 	}
 
 	public Iterator<IMagicCard> cardsIterator() {
-		return this.list.iterator();
+		return this.getList().iterator();
 	}
 
 	@Override
 	public void doRemoveCard(IMagicCard card) {
-		this.list.remove(card);
+		this.getList().remove(card);
 	}
 
 	@Override
 	public boolean doAddCard(IMagicCard card) {
-		return this.list.add(card);
+		return this.getList().add(card);
 	}
 
 	public void save() {
@@ -76,9 +73,10 @@ public class SingleFileCardStore extends AbstractCardStore<IMagicCard> {
 	}
 
 	protected synchronized void doSave() throws FileNotFoundException {
-		XStream xstream = DataManager.getXStream();
-		OutputStream out = new FileOutputStream(this.file);
-		xstream.toXML(this, out);
+		CardCollectionStoreObject obj = new CardCollectionStoreObject();
+		obj.file = this.file;
+		storeFields(obj);
+		obj.save();
 	}
 
 	@Override
@@ -90,6 +88,15 @@ public class SingleFileCardStore extends AbstractCardStore<IMagicCard> {
 	}
 
 	public int getTotal() {
-		return this.list.size();
+		return this.getList().size();
+	}
+
+	/**
+	 * @return the list
+	 */
+	public ArrayList<IMagicCard> getList() {
+		if (this.list == null)
+			doInitialize();
+		return this.list;
 	}
 }

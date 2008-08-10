@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.xml;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -11,7 +12,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,17 +49,10 @@ public class XmlCardHolder implements ICardHandler {
 		BufferedReader st = new BufferedReader(new InputStreamReader(is));
 		loadtFromFlatIntoXml(st);
 		is.close();
-		DataManager.getDbFolder().refreshLocal(1, null);
-	}
-
-	public static File getLibrary() throws CoreException {
-		File dir = DataManager.getProject().getLocation().toFile();
-		File initial = new File(dir, "library.xml");
-		return initial;
 	}
 
 	public static File getDbFolder() throws CoreException {
-		File dir = DataManager.getDbFolder().getLocation().toFile();
+		File dir = DataManager.getModelRoot().getMagicDBContainer().getContainer().getLocation().toFile();
 		return dir;
 	}
 
@@ -96,14 +89,9 @@ public class XmlCardHolder implements ICardHandler {
 	public void loadInitialIfNot(IProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
-			DataManager.getDbFolder().refreshLocal(1, new SubProgressMonitor(pm, 50));
-			IResource[] members = DataManager.getDbFolder().members();
-			File lib = getLibrary();
-			if (!lib.exists()) {
-				// create empty lib
-				//new MultiFileCardStore<MagicCardPhisical>().doSave();
-				new FileOutputStream(lib).close();
-			}
+			IContainer db = DataManager.getModelRoot().getMagicDBContainer().getContainer();
+			db.refreshLocal(1, new SubProgressMonitor(pm, 50));
+			IResource[] members = db.members();
 			if (members.length > 0)
 				return;
 			else

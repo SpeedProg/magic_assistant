@@ -1,12 +1,11 @@
 package com.reflexit.magiccards.core.xml;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -22,7 +21,8 @@ import com.reflexit.magiccards.core.model.AbstractCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.thoughtworks.xstream.XStream;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 	protected HashMap<String, SubTable> map;
@@ -32,9 +32,9 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 		this.map = new HashMap<String, SubTable>();
 	}
 
-	public synchronized void addFile(File file) {
+	public synchronized void addFile(File file, String key) {
 		SubTable table = new SubTable();
-		table.key = file.getName();
+		table.key = key;
 		table.file = file;
 		table.list = new ArrayList<IMagicCard>();
 		this.map.put(table.key, table);
@@ -43,17 +43,14 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 
 	@Override
 	protected synchronized void doInitialize() {
-		XStream xstream = DataManager.getXStream();
-		xstream.setClassLoader(this.getClass().getClassLoader());
 		ArrayList<SubTable> all = new ArrayList<SubTable>();
 		all.addAll(this.map.values());
 		this.map.clear();
 		for (Iterator<SubTable> iterator = all.iterator(); iterator.hasNext();) {
 			SubTable table = iterator.next();
 			try {
-				FileInputStream is = new FileInputStream(table.file);
-				SubTable loaded = (SubTable) xstream.fromXML(is);
-				is.close();
+				CardCollectionStoreObject obj = CardCollectionStoreObject.initFromFile(table.file);
+				SubTable loaded = new SubTable(obj);
 				this.size += loaded.list.size();
 				this.map.put(loaded.key, loaded);
 			} catch (Exception e) {
@@ -148,34 +145,37 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 			res = new SubTable();
 			res.list = new ArrayList<IMagicCard>();
 			res.key = key;
-			res.file = getFile(key);
+			res.file = getFile(card);
 			this.map.put(key, res);
 		}
 		this.size++;
 		return res.list.add(card);
 	}
 
-	private File getFile(String key) {
+	private File getFile(IMagicCard card) {
 		try {
-			if (key.equals("library")) {
-				return XmlCardHolder.getLibrary();
-			} else {
+			if (card instanceof MagicCard) {
+				String key = ((MagicCard) card).getEdition();
 				key = key.replaceAll("[\\W]", "_");
 				return new File(XmlCardHolder.getDbFolder(), key + ".xml");
-			}
+			} else if (card instanceof MagicCardPhisical) {
+				String file = ((MagicCardPhisical) card).getLocation();
+				IResource res = DataManager.getProject().findMember(new Path(file));
+				return res.getLocation().toFile();
+			} else
+				throw new MagicException("Unknown card type");
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			throw new MagicException("Can't resolve file: ", e);
 		}
 	}
 
 	protected String getKey(IMagicCard card) {
-		if (card.getClass() == MagicCard.class) {
+		if (card instanceof MagicCard) {
 			return (card).getEdition();
-		} else {
-			return "library";
+		} else if (card instanceof MagicCardPhisical) {
+			return ((MagicCardPhisical) card).getLocation();
 		}
+		return "unknown";
 	}
 
 	public void save() {
@@ -187,11 +187,10 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 	}
 
 	protected synchronized void doSave() throws FileNotFoundException {
-		XStream xstream = DataManager.getXStream();
 		for (Iterator iterator = this.map.values().iterator(); iterator.hasNext();) {
 			SubTable table = (SubTable) iterator.next();
-			OutputStream out = new FileOutputStream(table.file);
-			xstream.toXML(table, out);
+			CardCollectionStoreObject obj = table.toCardCollectionStoreObject();
+			obj.save();
 		}
 	}
 }

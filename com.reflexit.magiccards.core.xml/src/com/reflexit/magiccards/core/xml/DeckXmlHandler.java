@@ -58,7 +58,7 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 		try {
 			Deck d = DataManager.getModelRoot().getDeck(filename);
 			if (d == null)
-				d = DataManager.getModelRoot().addDeck(filename);
+				d = DataManager.getModelRoot().getDeckContainer().addDeck(filename);
 			file = d.getFile();
 			if (!d.isOpen()) {
 				d.open(new DeckFileCardStore(file, null));

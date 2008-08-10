@@ -16,6 +16,7 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 /**
  * @author Alena
@@ -37,6 +38,23 @@ public class DeckFileCardStore extends LibraryCardStore implements ICardDeck<IMa
 	}
 	protected String name;
 	protected String comment;
+
+	@Override
+	protected void loadFields(CardCollectionStoreObject obj) {
+		super.loadFields(obj);
+		// do not load name, keep default for now
+		this.comment = obj.comment;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.core.xml.SingleFileCardStore#storeFields(com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject)
+	 */
+	@Override
+	protected void storeFields(CardCollectionStoreObject obj) {
+		obj.name = this.name;
+		obj.comment = this.comment;
+		super.storeFields(obj);
+	}
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.ICardDeck#getDeckComment()
