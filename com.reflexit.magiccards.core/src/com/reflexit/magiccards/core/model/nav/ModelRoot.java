@@ -44,9 +44,9 @@ public class ModelRoot extends CardOrganizer {
 			this.fLib = new CollectionsContainer("Collections", root);
 			this.fDecks = new DecksContainer("Decks", root);
 			this.db = new MagicDbContainter(root);
+			this.fLibFile = new CardCollection("main.xml", this.fLib);
 			this.fDecks.loadChildren();
 			this.fLib.loadChildren();
-			this.fLibFile = new CardCollection("main.xml", this.fLib);
 			convertData();
 		} catch (CoreException e) {
 			Activator.log(e);

@@ -126,4 +126,12 @@ public class CardElement extends EventManager {
 	public static String nameFromFile(String filename) {
 		return new Path(filename).removeFileExtension().lastSegment();
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getName();
+	}
 }
