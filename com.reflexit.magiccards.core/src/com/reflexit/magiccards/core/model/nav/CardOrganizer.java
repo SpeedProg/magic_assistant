@@ -71,4 +71,13 @@ public class CardOrganizer extends CardElement {
 		}
 		return res;
 	}
+
+	public boolean contains(String name) {
+		for (CardElement el : getChildren()) {
+			if (el.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

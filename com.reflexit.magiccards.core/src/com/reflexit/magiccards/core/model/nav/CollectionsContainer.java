@@ -19,7 +19,8 @@ public class CollectionsContainer extends CardOrganizer {
 				con.loadChildren();
 			} else if (mem != null) {
 				if (name.endsWith(".xml")) {
-					new CardCollection(name, this);
+					if (!this.contains(name))
+						new CardCollection(name, this);
 				}
 			}
 		}

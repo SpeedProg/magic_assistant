@@ -15,8 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 
@@ -29,6 +27,7 @@ public class ModelRoot extends CardOrganizer {
 	private DecksContainer fDecks;
 	private MagicDbContainter db;
 	private CollectionsContainer fLib;
+	private CardCollection fLibFile;
 
 	/**
 	 * @param name
@@ -45,9 +44,10 @@ public class ModelRoot extends CardOrganizer {
 			this.fLib = new CollectionsContainer("Collections", root);
 			this.fDecks = new DecksContainer("Decks", root);
 			this.db = new MagicDbContainter(root);
-			convertData();
 			this.fDecks.loadChildren();
 			this.fLib.loadChildren();
+			this.fLibFile = new CardCollection("main.xml", this.fLib);
+			convertData();
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
@@ -57,25 +57,18 @@ public class ModelRoot extends CardOrganizer {
 	 * 
 	 */
 	private void convertData() {
-		// initialize default dirs
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
-			CardElement element = (CardElement) iterator.next();
-			if (element instanceof CardOrganizer) {
-				try {
-					((CardOrganizer) element).create();
-				} catch (CoreException e) {
-					Activator.log(e);
-				}
-			}
-		}
 		// move library data of 1.0.2 into Collections dir
 		try {
+			IPath newloc = this.fLibFile.getPath();
+			IResource main = this.fLibFile.getResource();
 			IResource lib = DataManager.getProject().findMember("library.xml");
 			if (lib != null && lib.exists()) {
-				IPath newloc = this.fLib.getPath().append("main.xml");
-				IResource main = this.fLib.getContainer().findMember(newloc.lastSegment().toString());
 				if (main == null || !main.exists())
 					lib.move(newloc, true, null);
+				else if (main.getLocation().toFile().length() == 0) {
+					main.delete(true, null);
+					lib.move(newloc, true, null);
+				}
 			}
 		} catch (CoreException e) {
 			Activator.log(e);
@@ -113,5 +106,12 @@ public class ModelRoot extends CardOrganizer {
 		if (instance == null)
 			instance = new ModelRoot();
 		return instance;
+	}
+
+	/**
+	 * @return
+	 */
+	public CardCollection getDefaultLib() {
+		return this.fLibFile;
 	}
 }

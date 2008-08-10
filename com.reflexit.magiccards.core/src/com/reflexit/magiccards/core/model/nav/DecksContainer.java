@@ -21,7 +21,8 @@ public class DecksContainer extends CardOrganizer {
 				con.loadChildren();
 			} else if (mem != null) {
 				if (name.endsWith(".xml")) {
-					new Deck(name, this);
+					if (!this.contains(name))
+						new Deck(name, this);
 				}
 			}
 		}
