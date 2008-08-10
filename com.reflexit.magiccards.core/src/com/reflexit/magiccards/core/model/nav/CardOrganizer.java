@@ -1,34 +1,48 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 
 public class CardOrganizer extends CardElement {
-	private java.util.Collection<CardElement> children = new ArrayList<CardElement>();
+	private Collection<CardElement> children = new ArrayList<CardElement>();
 
-	public CardOrganizer(String string, CardOrganizer parent) {
-		super(string, parent);
+	public CardOrganizer(String filename, CardOrganizer parent) {
+		super(filename, parent);
 	}
 
-	public java.util.Collection<CardElement> getChildren() {
+	public CardOrganizer(String name, IPath path, CardOrganizer parent) {
+		super(name, path, parent);
+	}
+
+	public Collection<CardElement> getChildren() {
 		return this.children;
 	}
 
 	public void addChild(CardElement a) {
 		this.children.add(a);
-		try {
-			getResource().refreshLocal(1, null);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		a.setParent(this);
 		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER));
+	}
+
+	public IContainer getContainer() {
+		return (IContainer) getResource();
+	}
+
+	public void create() throws CoreException {
+		IProject project = DataManager.getProject();
+		IFolder dir = project.getFolder(getPath());
+		if (!dir.exists())
+			dir.create(IResource.NONE, true, null);
 	}
 
 	public boolean hasChildren() {
@@ -40,15 +54,21 @@ public class CardOrganizer extends CardElement {
 	 */
 	public void removeChild(CardElement el) {
 		this.children.remove(el);
-		IPath p = el.getPath().removeFirstSegments(0);
-		try {
-			IResource mem = DataManager.getProject().findMember(p);
-			if (mem != null)
-				mem.delete(true, null);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		fireEvent(new CardEvent(el, CardEvent.REMOVE_CONTAINER));
+	}
+
+	/**
+	 * @return
+	 */
+	public Collection<CardElement> getAllElements() {
+		ArrayList<CardElement> res = new ArrayList<CardElement>();
+		for (CardElement el : getChildren()) {
+			if (el instanceof CardOrganizer) {
+				res.addAll(((CardOrganizer) el).getAllElements());
+			} else {
+				res.add(el);
+			}
+		}
+		return res;
 	}
 }

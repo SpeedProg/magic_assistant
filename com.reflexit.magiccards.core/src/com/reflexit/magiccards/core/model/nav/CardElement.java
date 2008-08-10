@@ -10,30 +10,52 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public class CardElement extends EventManager {
-	private String filename;
+	private String name; // name
+	private IPath path; // project relative path
 	private CardOrganizer parent;
 
-	public CardElement(String name, CardOrganizer parent) {
-		this.filename = name;
+	public CardElement(String name, IPath path, CardOrganizer parent) {
+		this.name = name;
+		this.path = path;
 		this.parent = parent;
+		if (parent != null) {
+			parent.addChild(this);
+		}
+		try {
+			File file = getFile();
+			if (!file.exists()) {
+				if (!(this instanceof CardOrganizer))
+					file.createNewFile();
+				else
+					file.mkdir();
+			}
+			if (parent != null && parent.getResource() != null) {
+				parent.getResource().refreshLocal(1, null);
+			}
+		} catch (Exception e) {
+			throw new MagicException(e);
+		}
+	}
+
+	public CardElement(String filename, CardOrganizer parent) {
+		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename), parent);
 	}
 
 	public IPath getPath() {
-		if (this.parent != null) {
-			IPath p = this.parent.getPath();
-			return p.append(this.filename);
-		}
-		return new Path(this.filename);
+		return this.path;
 	}
 
 	/**
 	 * @return
 	 */
 	public IResource getResource() {
+		if (this.path == null)
+			return null;
 		try {
 			return DataManager.getProject().findMember(getPath());
 		} catch (CoreException e) {
@@ -55,16 +77,7 @@ public class CardElement extends EventManager {
 	}
 
 	public String getName() {
-		IPath path = new Path(this.filename).removeFileExtension();
-		return path.toString();
-	}
-
-	public String getFileName() {
-		return this.filename;
-	}
-
-	public void setFileName(String name) {
-		this.filename = name;
+		return this.name;
 	}
 
 	public CardOrganizer getParent() {
@@ -95,5 +108,22 @@ public class CardElement extends EventManager {
 		}
 		if (this.parent != null)
 			this.parent.fireEvent(event);
+	}
+
+	public void remove() {
+		if (getParent() != null) {
+			getParent().removeChild(this);
+		}
+		if (getResource() != null) {
+			try {
+				getResource().delete(true, null);
+			} catch (CoreException e) {
+				Activator.log(e);
+			}
+		}
+	}
+
+	public static String nameFromFile(String filename) {
+		return new Path(filename).removeFileExtension().lastSegment();
 	}
 }

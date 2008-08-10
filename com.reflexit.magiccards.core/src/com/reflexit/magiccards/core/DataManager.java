@@ -10,9 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,12 +19,12 @@ import org.eclipse.core.runtime.CoreException;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.nav.LibraryRoot;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.thoughtworks.xstream.XStream;
 
 public class DataManager {
 	static ICardHandler handler;
-	private static LibraryRoot root;
+	private static ModelRoot root;
 
 	public static ICardHandler getCardHandler() {
 		if (handler != null)
@@ -50,9 +48,9 @@ public class DataManager {
 		}
 	}
 
-	public static LibraryRoot getModelRoot() {
+	public static synchronized ModelRoot getModelRoot() {
 		if (root == null) {
-			root = new LibraryRoot();
+			root = ModelRoot.getInstance();
 		}
 		return root;
 	}
@@ -68,17 +66,10 @@ public class DataManager {
 		return project;
 	}
 
-	public static IFolder getDbFolder() throws CoreException {
-		IFolder dir = getProject().getFolder("MagicDB");
-		if (!dir.exists())
-			dir.create(IResource.NONE, true, null);
-		return dir;
-	}
-
 	public static XStream getXStream() {
-    	XStream xstream = new XStream();
-    	xstream.alias("mc", MagicCard.class);
-    	xstream.alias("mcp", MagicCardPhisical.class);
-    	return xstream;
-    }
+		XStream xstream = new XStream();
+		xstream.alias("mc", MagicCard.class);
+		xstream.alias("mcp", MagicCardPhisical.class);
+		return xstream;
+	}
 }

@@ -1,24 +1,27 @@
 package com.reflexit.magiccards.core.model.nav;
 
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.IPath;
 
 import com.reflexit.magiccards.core.model.ICardDeck;
 
 public class Deck extends CardElement {
-	private ICardDeck store;
+	private transient ICardDeck store;
 
 	public Deck(String filename, CardOrganizer parent) {
 		super(filename, parent);
+	}
+
+	public Deck(String name, IPath path, CardOrganizer parent) {
+		super(name, path, parent);
 	}
 
 	public ICardDeck getStore() {
 		return this.store;
 	}
 
+	@Override
 	public String getName() {
-		if (this.store != null)
-			return this.store.getDeckName();
-		return new Path(getFileName()).removeFileExtension().lastSegment();
+		return super.getName();
 	}
 
 	public void open(ICardDeck store) {
@@ -35,5 +38,12 @@ public class Deck extends CardElement {
 
 	public boolean isOpen() {
 		return this.store != null;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getFileName() {
+		return getPath().lastSegment();
 	}
 }
