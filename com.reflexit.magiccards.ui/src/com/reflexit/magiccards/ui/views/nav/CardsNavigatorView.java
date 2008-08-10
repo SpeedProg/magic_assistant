@@ -43,9 +43,9 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.Deck;
-import com.reflexit.magiccards.core.model.nav.Library;
-import com.reflexit.magiccards.core.model.nav.LibraryRoot;
+import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -182,25 +182,25 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			Deck el = (Deck) sel.getFirstElement();
 			if (MessageDialog.openQuestion(getShell(), "Deck Removal Confirmation",
 			        "Are you sure you want to delete deck: " + el.getName() + "?")) {
-				DataManager.getModelRoot().removeDeck(el);
+				((DecksContainer) el.getParent()).removeDeck(el);
 			}
 		} else {
 			if (MessageDialog.openQuestion(getShell(), "Decks Removal Confirmation",
 			        "Are you sure you want to delete these " + sel.size() + " decks?")) {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					CardElement el = (CardElement) iterator.next();
-					DataManager.getModelRoot().removeDeck((Deck) el);
+					((DecksContainer) el.getParent()).removeDeck((Deck) el);
 				}
 			}
 		}
 	}
 
 	protected void addNewDeck() {
+		DecksContainer parent = getDeckContainer();
 		InputDialog inputDialog = new InputDialog(getShell(), "Enter name", "Enter a name for a Deck", "", null);
 		if (inputDialog.open() == InputDialog.OK) {
-			LibraryRoot modelRoot = DataManager.getModelRoot();
 			String filename = inputDialog.getValue() + ".xml";
-			Deck d = modelRoot.addDeck(filename);
+			Deck d = parent.addDeck(filename);
 			try {
 				openDeckView(d);
 			} catch (PartInitException e) {
@@ -208,6 +208,23 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private DecksContainer getDeckContainer() {
+		ISelection selection = this.manager.getViewer().getSelection();
+		DecksContainer parent = DataManager.getModelRoot().getDeckContainer();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection iss = (IStructuredSelection) selection;
+			if (!iss.isEmpty()) {
+				CardElement el = (CardElement) iss.getFirstElement();
+				if (el instanceof DecksContainer) {
+					parent = (DecksContainer) el;
+				} else if (el instanceof Deck) {
+					parent = (DecksContainer) ((Deck) el).getParent();
+				}
+			}
+		}
+		return parent;
 	}
 
 	private void hookDoubleClickAction() {
@@ -249,7 +266,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	protected void runDoubleClick() {
 		ISelection selection = getViewer().getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		if (obj instanceof Library) {
+		if (obj instanceof CollectionsContainer) {
 			try {
 				getViewSite().getWorkbenchWindow().getActivePage().showView(LibView.ID);
 			} catch (PartInitException e) {

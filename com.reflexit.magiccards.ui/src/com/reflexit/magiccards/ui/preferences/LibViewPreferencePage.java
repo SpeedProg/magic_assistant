@@ -15,7 +15,7 @@ public class LibViewPreferencePage extends FieldEditorPreferencePage implements 
 	public LibViewPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
-		setDescription("Library View Preferences");
+		setDescription("CollectionsContainer View Preferences");
 	}
 
 	@Override
