@@ -1,21 +1,12 @@
 package com.reflexit.magiccards.ui.views.lib;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 
 import java.util.Iterator;
 
@@ -23,17 +14,12 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
-import com.reflexit.magiccards.ui.views.ViewerManager;
 
-public class LibView extends AbstractCardsView implements ICardEventListener {
+public class LibView extends CollectionView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.LibView";
-	protected Action delete;
 	private MenuManager addToDeck;
 
 	/**
@@ -45,14 +31,6 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.delete = new Action("Remove") {
-			@Override
-			public void run() {
-				removeSelected();
-			}
-		};
-		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-		this.delete.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		this.addToDeck = new MenuManager("Add to Deck");
 		this.addToDeck.setRemoveAllWhenShown(true);
 		this.addToDeck.addMenuListener(new IMenuListener() {
@@ -63,55 +41,14 @@ public class LibView extends AbstractCardsView implements ICardEventListener {
 	}
 
 	@Override
-	protected void setGlobalHandlers(IActionBars bars) {
-		super.setGlobalHandlers(bars);
-		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", (IHandler) deleteHandler);
-	}
-
-	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(this.addToDeck);
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui.IViewSite)
-	 */
-	@Override
-	public void init(IViewSite site) throws PartInitException {
-		super.init(site);
-		this.manager.getFilteredStore().getCardStore().addListener(this);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#dispose()
-	 */
-	@Override
-	public void dispose() {
-		this.manager.getFilteredStore().getCardStore().removeListener(this);
-		super.dispose();
-	}
-
-	@Override
-	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new LazyTableViewerManager(this);
-	}
-
-	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return DataManager.getCardHandler().getMagicLibraryHandler();
-	}
-
-	public void handleEvent(CardEvent event) {
-		//if (event.getType() == CardEvent.ADD)
-		this.manager.loadData();
 	}
 
 	@Override
