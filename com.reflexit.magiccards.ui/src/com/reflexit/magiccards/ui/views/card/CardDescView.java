@@ -22,12 +22,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
@@ -67,13 +66,21 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 			if (card != IMagicCard.DEFAULT) {
-				final Image remoteImage = createCardImage(card);
+				Image remoteImage1 = null;
+				IOException e1 = null;
+				try {
+					remoteImage1 = createCardImage(card);
+				} catch (IOException e) {
+					e1 = e;
+				}
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
+				final Image remoteImage = remoteImage1;
+				final IOException e = e1;
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						if (remoteImage.getBounds().width < 20) {
-							CardDescView.this.panel.setImageNotFound(card);
+						if (remoteImage == null || remoteImage.getBounds().width < 20) {
+							CardDescView.this.panel.setImageNotFound(card, e);
 						} else {
 							CardDescView.this.panel.setImage(card, remoteImage);
 						}
@@ -161,20 +168,15 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		return getViewSite().getShell().getDisplay();
 	}
 
-	private Image createCardImage(IMagicCard card) {
+	private Image createCardImage(IMagicCard card) throws IOException {
 		ImageDescriptor imageDesc = createRemoteImageDesc(card);
 		Image remoteImage = imageDesc.createImage(getDisplay());
 		return remoteImage;
 	}
 
-	public static ImageDescriptor createRemoteImageDesc(IMagicCard card) {
-		try {
-			URL url = CardCache.createCardURL(card);
-			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
-			return imageDesc;
-		} catch (MalformedURLException e) {
-			MagicUIActivator.log(e);
-			return null;
-		}
+	public static ImageDescriptor createRemoteImageDesc(IMagicCard card) throws IOException {
+		URL url = CardCache.createCardURL(card);
+		ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
+		return imageDesc;
 	}
 }

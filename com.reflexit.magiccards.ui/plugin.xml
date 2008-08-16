@@ -13,7 +13,7 @@
             id="com.reflexit.magiccards.ui.preferences.MagicPreferencePage">
       </page>
       	<page id="com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage"
-  	      	name="Gatherer Settings"
+  	      	name="Update Magic Database"
 	      	class="com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage"
 		category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage">
    	</page>

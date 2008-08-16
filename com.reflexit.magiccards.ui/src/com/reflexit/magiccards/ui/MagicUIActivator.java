@@ -33,6 +33,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		// start the Netwotk plugin to set proxy
+		org.eclipse.ui.internal.net.Activator.getDefault();
 	}
 
 	/*

@@ -5,6 +5,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -33,11 +34,16 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		setDescription("Gatherer web-site settings");
 	}
 
+	@Override
 	protected void createFieldEditors() {
 		addField(new StringFieldEditor(PreferenceConstants.GATHERER_UPDATE, "Gatherer update query:",
 		        getFieldEditorParent()));
+		addField(new ComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:", new String[][] { {
+		        "Standard",
+		        "Standard" } }, getFieldEditorParent()));
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		//parent.setLayout(new GridLayout());
 		//com.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -51,6 +57,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		        .align(SWT.END, SWT.END)//
 		        .applyTo(button);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				performUpdate();
 			}
