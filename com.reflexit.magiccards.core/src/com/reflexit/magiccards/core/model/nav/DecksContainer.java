@@ -33,6 +33,11 @@ public class DecksContainer extends CardOrganizer {
 		return d;
 	}
 
+	public DecksContainer addDeckContainer(String name) {
+		DecksContainer d = new DecksContainer(name, this);
+		return d;
+	}
+
 	/**
 	 * @param id
 	 * @return

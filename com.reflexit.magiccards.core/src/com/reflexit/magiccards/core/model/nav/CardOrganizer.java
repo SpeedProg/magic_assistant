@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IPath;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -57,6 +58,23 @@ public class CardOrganizer extends CardElement {
 		fireEvent(new CardEvent(el, CardEvent.REMOVE_CONTAINER));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.core.model.nav.CardElement#remove()
+	 */
+	@Override
+	public void remove() {
+		removeChildren();
+		super.remove();
+	}
+
+	public void removeChildren() {
+		Collection children2 = new ArrayList(getChildren());
+		for (Iterator iterator = children2.iterator(); iterator.hasNext();) {
+			CardElement el = (CardElement) iterator.next();
+			el.remove();
+		}
+	}
+
 	/**
 	 * @return
 	 */
@@ -83,5 +101,27 @@ public class CardOrganizer extends CardElement {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @param path
+	 * @return
+	 */
+	public CardElement findElement(IPath p) {
+		if (p.isRoot())
+			return this;
+		String top = p.removeLastSegments(p.segmentCount() - 1).toString();
+		IPath rest = p.removeFirstSegments(1);
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+			CardElement el = (CardElement) iterator.next();
+			if (el.getPath().equals(p))
+				return el;
+			if (top.equals(el.getName()) && el instanceof CardOrganizer) {
+				if (rest == null || rest.isEmpty())
+					return el;
+				return ((CardOrganizer) el).findElement(rest);
+			}
+		}
+		return null;
 	}
 }

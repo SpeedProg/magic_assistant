@@ -109,6 +109,14 @@ public class ModelRoot extends CardOrganizer {
 	}
 
 	/**
+	 * 
+	 */
+	public void reset() {
+		getDeckContainer().removeChildren();
+		getCollectionsContainer().removeChildren();
+	}
+
+	/**
 	 * @return
 	 */
 	public CardCollection getDefaultLib() {
