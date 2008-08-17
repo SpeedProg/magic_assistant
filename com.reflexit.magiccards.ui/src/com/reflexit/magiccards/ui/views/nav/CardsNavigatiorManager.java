@@ -12,11 +12,11 @@ import com.reflexit.magiccards.core.DataManager;
 public class CardsNavigatiorManager implements IDisposable {
 	private TreeViewer viewer;
 
-	public CardsNavigatiorManager(CardsNavigatorView cardsNavigatiorView) {
+	public CardsNavigatiorManager() {
 	}
 
-	public Control createContents(Composite parent) {
-		this.viewer = new TreeViewer(parent, SWT.FULL_SELECTION | SWT.VIRTUAL);
+	public Control createContents(Composite parent, int flags) {
+		this.viewer = new TreeViewer(parent, flags | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new CardsNavigatorContentProvider());

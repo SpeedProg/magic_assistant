@@ -84,8 +84,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	private void createTable(Composite parent) {
-		this.manager = new CardsNavigatiorManager(this);
-		Control control = this.manager.createContents(parent);
+		this.manager = new CardsNavigatiorManager();
+		Control control = this.manager.createContents(parent, SWT.MULTI);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
 		// ADD the JFace Viewer as a Selection Provider to the View site.
 		getSite().setSelectionProvider(this.manager.getViewer());
@@ -199,14 +199,19 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		DecksContainer parent = getDeckContainer();
 		InputDialog inputDialog = new InputDialog(getShell(), "Enter name", "Enter a name for a Deck", "", null);
 		if (inputDialog.open() == InputDialog.OK) {
-			String filename = inputDialog.getValue() + ".xml";
-			Deck d = parent.addDeck(filename);
-			try {
-				openDeckView(d);
-			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			String name = inputDialog.getValue();
+			createNewDeckAction(parent, name, getViewSite().getWorkbenchWindow().getActivePage());
+		}
+	}
+
+	public static void createNewDeckAction(DecksContainer parent, String name, IWorkbenchPage page) {
+		String filename = name + ".xml";
+		Deck d = parent.addDeck(filename);
+		try {
+			openDeckView(d, page);
+		} catch (PartInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -281,7 +286,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		} else if (obj instanceof Deck) {
 			try {
 				Deck d = (Deck) obj;
-				openDeckView(d);
+				openDeckView(d, getViewSite().getWorkbenchWindow().getActivePage());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}
@@ -290,9 +295,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		}
 	}
 
-	protected void openDeckView(Deck d) throws PartInitException {
-		getViewSite().getWorkbenchWindow().getActivePage().showView(DeckView.ID, d.getFileName(),
-		        IWorkbenchPage.VIEW_ACTIVATE);
+	public static void openDeckView(Deck d, IWorkbenchPage page) throws PartInitException {
+		page.showView(DeckView.ID, d.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
 	}
 
 	public Shell getShell() {

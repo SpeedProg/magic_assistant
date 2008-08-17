@@ -177,4 +177,19 @@
         </command>
      </menuContribution>
   </extension>
+  <extension
+        point="org.eclipse.ui.newWizards">
+     <category
+           id="com.reflexit.magiccards.ui"
+           name="Magic">
+     </category>
+     <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           icon="icons/obj16/deck16.png"
+           id="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
+           name="Deck...">
+     </wizard>
+  </extension>
 </plugin>

@@ -31,6 +31,7 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		layout.addShowViewShortcut(MagicDbView.ID);
 		layout.addShowViewShortcut(CardsNavigatorView.ID);
 		layout.addShowViewShortcut(LibView.ID);
+		layout.addNewWizardShortcut("com.reflexit.magiccards.ui.wizards.NewDeckWizard");
 		layout.getViewLayout(MagicDbView.ID).setCloseable(false);
 		layout.getViewLayout(CardDescView.ID).setCloseable(false);
 		layout.getViewLayout(CardsNavigatorView.ID).setCloseable(false);
