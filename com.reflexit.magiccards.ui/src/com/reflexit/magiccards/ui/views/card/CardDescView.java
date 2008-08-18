@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
@@ -107,7 +108,10 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	private void revealCurrentSelection() {
 		try {
-			IViewPart dbview = getViewSite().getWorkbenchWindow().getActivePage().findView(MagicDbView.ID);
+			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
+			if (page == null)
+				return;
+			IViewPart dbview = page.findView(MagicDbView.ID);
 			if (dbview != null) {
 				ISelection sel = dbview.getSite().getSelectionProvider().getSelection();
 				runLoadJob(sel);

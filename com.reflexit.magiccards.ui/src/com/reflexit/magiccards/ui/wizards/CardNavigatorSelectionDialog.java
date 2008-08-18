@@ -102,7 +102,9 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 			getViewer().setInput(this.root);
 			getViewer().setSelection(new StructuredSelection(this.root), true);
 		}
-		((Composite) getViewer().getControl()).setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.heightHint = 200;
+		((Composite) getViewer().getControl()).setLayoutData(gd);
 		this.statusMessage = new Label(area, SWT.WRAP);
 		this.statusMessage.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.statusMessage.setText(" \n "); //$NON-NLS-1$
@@ -133,8 +135,7 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	 * @return
 	 */
 	private List getSelectionAsList() {
-		IStructuredSelection sel = getSelection();
-		return sel.toList();
+		return getSelection().toList();
 	}
 
 	/**

@@ -3,13 +3,17 @@ package com.reflexit.magiccards.ui.wizards;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.DecksContainer;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
@@ -23,13 +27,13 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
  * as a template) is registered for the same extension, it will
  * be able to open it.
  */
-public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
-	public static final String ID = "com.reflexit.magiccards.ui.wizards.NewDeckWizard";
+public class NewCardCollectionWizard extends NewCardElementWizard implements INewWizard {
+	public static final String ID = "com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard";
 
 	/**
 	 * Constructor for NewDeckWizard.
 	 */
-	public NewDeckWizard() {
+	public NewCardCollectionWizard() {
 		super();
 	}
 
@@ -38,7 +42,7 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		this.page = new NewDeckWizardPage(this.selection);
+		this.page = new NewCardCollectionWizardPage(this.selection);
 		addPage(this.page);
 	}
 
@@ -48,19 +52,26 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 	 * the editor on the newly created file.
 	 */
 	@Override
-	protected void doFinish(String containerName, final String fileName, IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(String containerName, final String name, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
-		monitor.beginTask("Creating " + fileName, 2);
+		monitor.beginTask("Creating " + name, 2);
 		ModelRoot root = DataManager.getModelRoot();
 		final CardElement resource = root.findElement(new Path(containerName));
-		if (!(resource instanceof DecksContainer)) {
+		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
 		monitor.worked(1);
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardsNavigatorView.createNewDeckAction((DecksContainer) resource, fileName, page);
+				CollectionsContainer parent = (CollectionsContainer) resource;
+				CardCollection col = new CardCollection(name + ".xml", parent);
+				try {
+					IViewPart view = page.showView(CardsNavigatorView.ID);
+					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
+				} catch (PartInitException e) {
+					//  ignore
+				}
 			}
 		});
 		monitor.worked(1);

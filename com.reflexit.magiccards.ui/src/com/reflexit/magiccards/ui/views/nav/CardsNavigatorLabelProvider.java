@@ -23,11 +23,17 @@ public class CardsNavigatorLabelProvider extends LabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof Deck || element instanceof DecksContainer) {
+		if (element instanceof Deck) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/deck16.png");
 		}
-		if (element instanceof CollectionsContainer || element instanceof CardCollection) {
+		if (element instanceof DecksContainer) {
+			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-deck.png");
+		}
+		if (element instanceof CardCollection) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/lib16.png");
+		}
+		if (element instanceof CollectionsContainer) {
+			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-lib.png");
 		}
 		if (element instanceof MagicDbContainter) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/m16.png");

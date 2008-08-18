@@ -69,7 +69,7 @@
             class="com.reflexit.magiccards.ui.views.lib.LibView"
             icon="icons/Folder-Library-32x32.png"
             id="com.reflexit.magiccards.ui.views.lib.LibView"
-            name="Magic Library"
+            name="Magic Collection"
             restorable="true">
       </view>
       <view
@@ -187,9 +187,34 @@
            category="com.reflexit.magiccards.ui"
            class="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
            finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           hasPages="true"
            icon="icons/obj16/deck16.png"
            id="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
-           name="Deck...">
+           name="Deck">
+     </wizard>
+     <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewDeckContainerWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           icon="icons/obj16/folder-deck.png"
+           id="com.reflexit.magiccards.ui.wizards.NewDeckContainerWizard"
+           name="Deck Container">
+     </wizard>
+          <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           icon="icons/obj16/lib16.png"
+           id="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
+           name="Card Collection">
+     </wizard>
+               <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           icon="icons/obj16/folder-lib.png"
+           id="com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard"
+           name="Collection Container">
      </wizard>
   </extension>
 </plugin>

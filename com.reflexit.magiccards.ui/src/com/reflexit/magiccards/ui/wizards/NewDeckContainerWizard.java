@@ -3,8 +3,11 @@ package com.reflexit.magiccards.ui.wizards;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -23,13 +26,13 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
  * as a template) is registered for the same extension, it will
  * be able to open it.
  */
-public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
-	public static final String ID = "com.reflexit.magiccards.ui.wizards.NewDeckWizard";
+public class NewDeckContainerWizard extends NewCardElementWizard implements INewWizard {
+	public static String ID = "com.reflexit.magiccards.ui.wizards.NewDeckContainerWizard";
 
 	/**
 	 * Constructor for NewDeckWizard.
 	 */
-	public NewDeckWizard() {
+	public NewDeckContainerWizard() {
 		super();
 	}
 
@@ -38,7 +41,7 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		this.page = new NewDeckWizardPage(this.selection);
+		this.page = new NewDeckContainerWizardPage(this.selection);
 		addPage(this.page);
 	}
 
@@ -60,7 +63,14 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardsNavigatorView.createNewDeckAction((DecksContainer) resource, fileName, page);
+				DecksContainer parent = (DecksContainer) resource;
+				DecksContainer con = parent.addDeckContainer(fileName);
+				try {
+					IViewPart view = page.showView(CardsNavigatorView.ID);
+					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(con));
+				} catch (PartInitException e) {
+					//  ignore
+				}
 			}
 		});
 		monitor.worked(1);
