@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui.wizards;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -14,7 +16,7 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
  * as the file name. The page will only accept file name without the extension
  * OR with the extension that matches the expected one (deck).
  */
-public class NewDeckContainerWizardPage extends NewElementWizardPage {
+public class NewDeckContainerWizardPage extends NewCardElementWizardPage {
 	/**
 	 * Constructor for SampleNewWizardPage.
 	 * 
@@ -27,7 +29,19 @@ public class NewDeckContainerWizardPage extends NewElementWizardPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.wizards.NewElementWizardPage#dialogChanged()
+	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizardPage#updateInitialSelection()
+	 */
+	@Override
+	protected void updateInitialSelection() {
+		super.updateInitialSelection();
+		Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
+		if (!(firstElement instanceof DecksContainer)) {
+			this.selection = new StructuredSelection(getRootContainer());
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizardPage#dialogChanged()
 	 */
 	@Override
 	protected void dialogChanged() {

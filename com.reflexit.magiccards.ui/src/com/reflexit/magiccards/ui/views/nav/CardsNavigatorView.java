@@ -10,19 +10,22 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.nav;
 
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,9 +35,13 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import java.util.Iterator;
@@ -43,21 +50,23 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.LibView;
+import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
 public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	public static final String ID = CardsNavigatorView.class.getName();
 	private Action doubleClickAction;
 	private CardsNavigatiorManager manager;
-	private Action addNewDeck;
-	private Action removeDeck;
+	private Action delete;
 
 	/**
 	 * The constructor.
@@ -112,17 +121,23 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
+		setGlobalHandlers();
+	}
+
+	protected void setGlobalHandlers() {
+		ActionHandler deleteHandler = new ActionHandler(this.delete);
+		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		service.activateHandler("org.eclipse.ui.edit.delete", (IHandler) deleteHandler);
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(this.addNewDeck);
+		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
 		manager.add(new Separator());
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(this.addNewDeck);
-		manager.add(this.removeDeck);
-		this.removeDeck.setEnabled(canRemove());
+		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
+		this.delete.setEnabled(canRemove());
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -138,7 +153,9 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			return false;
 		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 			CardElement el = (CardElement) iterator.next();
-			if (!(el instanceof Deck))
+			if (el.getParent() == DataManager.getModelRoot())
+				return false;
+			if (el instanceof CardOrganizer && ((CardOrganizer) el).hasChildren())
 				return false;
 		}
 		return true;
@@ -157,16 +174,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				runDoubleClick();
 			}
 		};
-		this.addNewDeck = new Action("Add New Deck...") {
+		this.delete = new Action("Delete") {
 			@Override
 			public void run() {
-				addNewDeck();
-			}
-		};
-		this.removeDeck = new Action("Remove Deck") {
-			@Override
-			public void run() {
-				removeDeck();
+				actionDelete();
 			}
 		};
 	}
@@ -174,34 +185,39 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	/**
 	 * 
 	 */
-	protected void removeDeck() {
+	protected void actionDelete() {
 		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
 		if (sel.isEmpty())
 			return;
 		if (sel.size() == 1) {
-			Deck el = (Deck) sel.getFirstElement();
-			if (MessageDialog.openQuestion(getShell(), "Deck Removal Confirmation",
-			        "Are you sure you want to delete deck: " + el.getName() + "?")) {
-				((DecksContainer) el.getParent()).removeDeck(el);
+			CardElement el = (CardElement) sel.getFirstElement();
+			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete "
+			        + el.getName() + "?")) {
+				el.remove();
 			}
 		} else {
-			if (MessageDialog.openQuestion(getShell(), "Decks Removal Confirmation",
-			        "Are you sure you want to delete these " + sel.size() + " decks?")) {
+			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these "
+			        + sel.size() + " elements?")) {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					CardElement el = (CardElement) iterator.next();
-					((DecksContainer) el.getParent()).removeDeck((Deck) el);
+					el.remove();
 				}
 			}
 		}
 	}
 
 	protected void addNewDeck() {
-		DecksContainer parent = getDeckContainer();
-		InputDialog inputDialog = new InputDialog(getShell(), "Enter name", "Enter a name for a Deck", "", null);
-		if (inputDialog.open() == InputDialog.OK) {
-			String name = inputDialog.getValue();
-			createNewDeckAction(parent, name, getViewSite().getWorkbenchWindow().getActivePage());
-		}
+		// Grab the selection out of the tree and convert it to a
+		// StructuredSelection for use by the wizard.
+		StructuredSelection currentSelection = (StructuredSelection) this.manager.getViewer().getSelection();
+		// get the wizard from the child class.
+		IWorkbenchWizard wizard = new NewDeckWizard();
+		// Get the workbench and initialize, the wizard.
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		wizard.init(workbench, currentSelection);
+		// Open the wizard dialog with the given wizard.
+		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
+		dialog.open();
 	}
 
 	public static void createNewDeckAction(DecksContainer parent, String name, IWorkbenchPage page) {

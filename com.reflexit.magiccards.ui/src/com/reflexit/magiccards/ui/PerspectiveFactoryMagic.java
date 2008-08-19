@@ -1,9 +1,15 @@
 package com.reflexit.magiccards.ui;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.BaseNewWizardMenu;
 
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
@@ -42,5 +48,25 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		layout.getViewLayout(MagicDbView.ID).setCloseable(false);
 		layout.getViewLayout(CardDescView.ID).setCloseable(false);
 		layout.getViewLayout(CardsNavigatorView.ID).setCloseable(false);
+	}
+
+	/**
+	 * Creates a "New..." menu
+	 * @param window - workbench window
+	 * @param menu 
+	 * @return 
+	 * 
+	 */
+	public static MenuManager createNewMenu(IWorkbenchWindow window) {
+		// create the New submenu, using the same id for it as the New action
+		String newText = "New...";
+		String newId = ActionFactory.NEW.getId();
+		MenuManager newMenu = new MenuManager(newText, newId);
+		newMenu.setActionDefinitionId("org.eclipse.ui.file.newQuickMenu"); //$NON-NLS-1$
+		newMenu.add(new Separator(newId));
+		BaseNewWizardMenu newWizardMenu = new BaseNewWizardMenu(window, null);
+		newMenu.add(newWizardMenu);
+		newMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		return newMenu;
 	}
 }

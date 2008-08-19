@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  */
 public abstract class NewCardElementWizard extends Wizard {
-	protected NewElementWizardPage page;
+	protected NewCardElementWizardPage page;
 	protected ISelection selection;
 
 	/**

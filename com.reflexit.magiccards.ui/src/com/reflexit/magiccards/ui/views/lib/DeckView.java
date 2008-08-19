@@ -44,6 +44,7 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	 */
 	@Override
 	public void dispose() {
+		this.deck.close();
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}

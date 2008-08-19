@@ -38,7 +38,7 @@ import com.reflexit.magiccards.core.model.nav.CardOrganizer;
  * @author Alena
  *
  */
-public abstract class NewElementWizardPage extends WizardPage {
+public abstract class NewCardElementWizardPage extends WizardPage {
 	private Text containerText;
 	private Text fileText;
 	protected ISelection selection;
@@ -46,11 +46,15 @@ public abstract class NewElementWizardPage extends WizardPage {
 	/**
 	 * @param pageName
 	 */
-	public NewElementWizardPage(ISelection selection) {
+	public NewCardElementWizardPage(ISelection selection) {
 		super("wizardPage1");
-		if (selection != null && !selection.isEmpty())
-			this.selection = selection;
-		else {
+		this.selection = selection;
+		updateInitialSelection();
+	}
+
+	protected void updateInitialSelection() {
+		if (this.selection != null && !this.selection.isEmpty()) {
+		} else {
 			this.selection = new StructuredSelection(getRootContainer());
 		}
 	}
@@ -60,7 +64,7 @@ public abstract class NewElementWizardPage extends WizardPage {
 	 * @param title
 	 * @param titleImage
 	 */
-	public NewElementWizardPage(String pageName, String title, ImageDescriptor titleImage) {
+	public NewCardElementWizardPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
 	}
 
