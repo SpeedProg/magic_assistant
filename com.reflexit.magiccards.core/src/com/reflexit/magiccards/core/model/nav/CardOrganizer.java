@@ -124,4 +124,9 @@ public class CardOrganizer extends CardElement {
 		}
 		return null;
 	}
+
+	@Override
+	public CardElement newElement(String name, CardOrganizer parent) {
+		return new CardOrganizer(name + ".xml", parent);
+	}
 }

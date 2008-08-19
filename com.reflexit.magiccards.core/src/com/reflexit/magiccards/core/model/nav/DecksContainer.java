@@ -64,4 +64,9 @@ public class DecksContainer extends CardOrganizer {
 	public void removeDeck(Deck el) {
 		el.remove();
 	}
+
+	@Override
+	public CardElement newElement(String name, CardOrganizer parent) {
+		return new DecksContainer(name + ".xml", parent);
+	}
 }

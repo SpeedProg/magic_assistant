@@ -14,7 +14,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public class CardElement extends EventManager {
+public abstract class CardElement extends EventManager {
 	private String name; // name
 	private IPath path; // project relative path
 	private CardOrganizer parent;
@@ -134,4 +134,25 @@ public class CardElement extends EventManager {
 	public String toString() {
 		return getName();
 	}
+
+	/**
+	 * @param value
+	 * @return 
+	 */
+	public CardElement rename(String value) {
+		if (getParent() != null) {
+			getParent().removeChild(this);
+		}
+		if (getResource() != null) {
+			try {
+				getResource().move(new Path(value + ".xml"), true, null);
+				return newElement(value, getParent());
+			} catch (CoreException e) {
+				Activator.log(e);
+			}
+		}
+		return null;
+	}
+
+	public abstract CardElement newElement(String name2, CardOrganizer parent2);
 }

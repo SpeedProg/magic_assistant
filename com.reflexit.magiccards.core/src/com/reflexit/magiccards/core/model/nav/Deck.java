@@ -46,4 +46,9 @@ public class Deck extends CardElement {
 	public String getFileName() {
 		return getPath().lastSegment();
 	}
+
+	@Override
+	public CardElement newElement(String name, CardOrganizer parent) {
+		return new Deck(name + ".xml", parent);
+	}
 }

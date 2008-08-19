@@ -25,4 +25,9 @@ public class CollectionsContainer extends CardOrganizer {
 			}
 		}
 	}
+
+	@Override
+	public CardElement newElement(String name, CardOrganizer parent) {
+		return new CollectionsContainer(name + ".xml", parent);
+	}
 }
