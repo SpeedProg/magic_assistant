@@ -30,6 +30,12 @@ import com.reflexit.magiccards.core.model.IMagicCard;
  *
  */
 public class CardCache {
+	private static boolean caching;
+
+	public static void setCahchingEnabled(boolean enabled) {
+		caching = enabled;
+	};
+
 	public static URL createCardURL(IMagicCard card) throws IOException {
 		String edition = card.getEdition();
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
@@ -41,13 +47,15 @@ public class CardCache {
 		URL localUrl = new URL("file:/" + file);
 		InputStream st = null;
 		if (locale != null) {
-			if (new File(file).exists()) {
-				return localUrl;
-			}
-			try {
-				st = tryLocale(cardId, locale, edition, editionAbbr);
-			} catch (IOException e1) {
-				throw e1;
+			if (caching) {
+				if (new File(file).exists()) {
+					return localUrl;
+				}
+				try {
+					st = tryLocale(cardId, locale, edition, editionAbbr);
+				} catch (IOException e1) {
+					throw e1;
+				}
 			}
 		} else {
 			try {
@@ -61,7 +69,7 @@ public class CardCache {
 			}
 			locale = Editions.getInstance().getLocale(edition);
 		}
-		if (st != null) {
+		if (caching && st != null) {
 			try {
 				saveStream(file, st);
 				st.close();
