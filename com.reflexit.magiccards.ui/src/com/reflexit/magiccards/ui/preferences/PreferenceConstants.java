@@ -13,4 +13,5 @@ public class PreferenceConstants {
 	public static final String LIBVIEW_COLS = PREFIX + ".columns.lib";
 	public static final String DECKVIEW_COLS = PREFIX + ".columns.deck";
 	public static final String GATHERER_UPDATE_SET = PREFIX + ".set";
+	public static final String CACHE_IMAGES = PREFIX + ".cacheImages";
 }

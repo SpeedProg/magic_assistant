@@ -76,6 +76,8 @@ public class RenameHandler extends AbstractHandler {
 	@Override
 	public void setEnabled(Object eo) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null)
+			return;
 		ISelection selection = window.getSelectionService().getSelection();
 		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
 			setBaseEnabled(false);

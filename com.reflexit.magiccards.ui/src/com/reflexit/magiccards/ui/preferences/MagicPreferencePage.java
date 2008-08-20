@@ -1,9 +1,11 @@
 package com.reflexit.magiccards.ui.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -23,7 +25,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	public MagicPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
-		setDescription("To set preferences please pick subcategory");
+		setDescription("To set more preferences please pick subcategory");
 	}
 
 	/**
@@ -32,7 +34,17 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	 * of preferences. Each field editor knows how to save and
 	 * restore itself.
 	 */
+	@Override
 	public void createFieldEditors() {
+		BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching",
+		        getFieldEditorParent()) {
+			@Override
+			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
+				super.fireStateChanged(property, oldValue, newValue);
+				CardCache.setCahchingEnabled(newValue);
+			}
+		};
+		addField(caching);
 	}
 
 	/* (non-Javadoc)
