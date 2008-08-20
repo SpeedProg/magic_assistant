@@ -109,7 +109,8 @@ class CardDescComposite extends Composite {
 		if (card == this.card) {
 			this.image = this.cardNotFound;
 			this.imageControl.setImage(this.image);
-			MessageDialog.openError(getShell(), "Error:", "Can't load image: " + e.getMessage());
+			if (e!=null) 
+				MessageDialog.openError(getShell(), "Error:", "Can't load image: " + e.getMessage());
 		}
 	}
 

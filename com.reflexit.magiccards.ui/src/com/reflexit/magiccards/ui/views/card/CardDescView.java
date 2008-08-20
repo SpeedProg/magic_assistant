@@ -174,7 +174,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	private Image createCardImage(IMagicCard card) throws IOException {
 		ImageDescriptor imageDesc = createRemoteImageDesc(card);
-		Image remoteImage = imageDesc.createImage(getDisplay());
+		Image remoteImage = imageDesc.createImage(false, getDisplay());
 		return remoteImage;
 	}
 
