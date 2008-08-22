@@ -107,6 +107,10 @@
             commandId="com.reflexit.magiccards.ui.commands.addToLib">
       </handler>
       <handler
+            class="com.reflexit.magiccards.ui.commands.SendBugReportHandler"
+            commandId="com.reflexit.magiccards.ui.commands.sendBug">
+      </handler>
+      <handler
             class="com.reflexit.magiccards.ui.commands.RenameHandler"
             commandId="org.eclipse.ui.edit.rename">
       </handler>
@@ -131,6 +135,11 @@
             id="com.reflexit.magiccards.ui.commands.addToLib"
             name="Add To Library">
       </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.sendBug"
+            name="Send Bug">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -142,6 +151,14 @@
    </extension>
   <extension
         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:help?after=additions">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.sendBug"
+                  mnemonic="S"
+                  id="com.reflexit.magiccards.ui.menus.sendBug">
+            </command>
+      </menuContribution>
      <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
         <command
