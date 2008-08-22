@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -9,6 +10,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import org.osgi.framework.BundleContext;
+
+import com.reflexit.magiccards.core.sync.CardCache;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -33,8 +37,13 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		activateCoreSettings();
+	}
+
+	private void activateCoreSettings() {
 		// start the Netwotk plugin to set proxy
 		org.eclipse.ui.internal.net.Activator.getDefault();
+		CardCache.setCahchingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.CACHE_IMAGES));
 	}
 
 	/*
@@ -101,5 +110,25 @@ public class MagicUIActivator extends AbstractUIPlugin {
 			image = registry.get(key);
 		}
 		return image;
+	}
+
+	public synchronized static void trace(String debugInfo) {
+		Plugin plugin = getDefault();
+		if (plugin != null && plugin.isDebugging()) {
+			printMsg(debugInfo);
+		} else {
+			printMsg(debugInfo);
+		}
+	}
+
+	private synchronized static void printMsg(String debugInfo) {
+		String msg = "<" + PLUGIN_ID + ">: ";
+		System.out.print(msg);
+		while (debugInfo.length() > 200) {
+			String partial = debugInfo.substring(0, 100);
+			debugInfo = debugInfo.substring(100);
+			System.out.println(partial + "\\"); //$NON-NLS-1$
+		}
+		System.out.println(debugInfo);
 	}
 }

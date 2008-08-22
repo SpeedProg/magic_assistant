@@ -28,6 +28,7 @@ import java.net.URL;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
@@ -173,14 +174,10 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	private Image createCardImage(IMagicCard card) throws IOException {
-		ImageDescriptor imageDesc = createRemoteImageDesc(card);
-		Image remoteImage = imageDesc.createImage(false, getDisplay());
-		return remoteImage;
-	}
-
-	public static ImageDescriptor createRemoteImageDesc(IMagicCard card) throws IOException {
 		URL url = CardCache.createCardURL(card);
 		ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
-		return imageDesc;
+		Image remoteImage = imageDesc.createImage(false, getDisplay());
+		MagicUIActivator.trace("Loading URL: " + url + (remoteImage == null ? " failed" : " success"));
+		return remoteImage;
 	}
 }
