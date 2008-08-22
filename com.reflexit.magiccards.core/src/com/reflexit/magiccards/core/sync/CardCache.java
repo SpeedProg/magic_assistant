@@ -44,7 +44,7 @@ public class CardCache {
 		int cardId = card.getCardId();
 		String locale = Editions.getInstance().getLocale(edition);
 		String file = createLocalImageFilePath(cardId, editionAbbr, locale);
-		URL localUrl = new URL("file:/" + file);
+		URL localUrl = new File(file).toURL();
 		InputStream st = null;
 		if (locale != null) {
 			if (caching) {
