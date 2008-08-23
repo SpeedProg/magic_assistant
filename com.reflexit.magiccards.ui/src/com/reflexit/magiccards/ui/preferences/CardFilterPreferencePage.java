@@ -31,29 +31,30 @@ public class CardFilterPreferencePage extends PreferencePage implements IWorkben
 		// nothing
 	}
 
+	@Override
 	public void noDefaultAndApplyButton() {
 		super.noDefaultAndApplyButton();
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		setTitle("Card Filter");
 		this.panel = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(1, false);
 		this.panel.setLayout(layout);
 		this.panel.setFont(parent.getFont());
-		Composite first = createColumnComposite(this.panel);
-		Composite second = createColumnComposite(this.panel);
+		Composite first = createColumnComposite(this.panel, 3);
+		Composite second = createColumnComposite(this.panel, 1);
 		createAndAdd(new TypesPreferenceGroup(), first);
-		createAndAdd(new SuperTypesPreferenceGroup(), first);
-		createAndAdd(new ColorsPreferenceGroup(), second);
+		createAndAdd(new ColorsPreferenceGroup(), first);
 		createAndAdd(new TextSearchPreferenceGroup(), second);
-		createAndAdd(new NumbericalPreferenceGroup(), this.panel);
+		createAndAdd(new NumbericalPreferenceGroup(), first);
 		return this.panel;
 	}
 
-	private Composite createColumnComposite(Composite parent) {
+	private Composite createColumnComposite(Composite parent, int cols) {
 		Composite sec = new Composite(parent, SWT.NONE);
-		GridLayout layout2row = new GridLayout();
+		GridLayout layout2row = new GridLayout(cols, false);
 		layout2row.marginHeight = 0;
 		layout2row.marginWidth = 0;
 		sec.setLayout(layout2row);
@@ -63,6 +64,7 @@ public class CardFilterPreferencePage extends PreferencePage implements IWorkben
 		return sec;
 	}
 
+	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		return MagicUIActivator.getDefault().getPreferenceStore();
 	}
@@ -76,6 +78,7 @@ public class CardFilterPreferencePage extends PreferencePage implements IWorkben
 		this.subPages.add(subPage);
 	}
 
+	@Override
 	public boolean performOk() {
 		for (Iterator iterator = this.subPages.iterator(); iterator.hasNext();) {
 			PreferencePage page = (PreferencePage) iterator.next();
