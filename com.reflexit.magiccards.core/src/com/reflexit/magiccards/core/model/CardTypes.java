@@ -51,4 +51,23 @@ public class CardTypes implements ISearchableProperty {
 	public String getNameById(String id) {
 		return (String) this.names.get(id);
 	}
+	public static String[] proposals = new String[] {// 
+	"Basic", "Tribal", "World", "Legendary", "Snow",
+	// 
+	        "Land",
+	        "Artifact",
+	        "Creature",
+	        //
+	        "Elf",
+	        "Goblin",
+	        "Human",
+	        "Elemental",
+	        "Kithkin" };
+
+	/**
+	 * @return
+	 */
+	public static String[] getProposals() {
+		return proposals;
+	}
 }

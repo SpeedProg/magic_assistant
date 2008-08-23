@@ -256,12 +256,7 @@ public class MagicCardFilter {
 				res = new BinaryExpr(b1, Operation.OR, b2);
 			}
 		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			if (value.equals("Artifact")) {
-				BinaryExpr b1 = BinaryExpr.fieldMatches(IMagicCard.INDEX_TYPE, ".*Artifact$");
-				BinaryExpr b2 = BinaryExpr.fieldMatches(IMagicCard.INDEX_TYPE, ".*Artifact -.*");
-				res = new BinaryExpr(b1, Operation.OR, b2);
-			} else
-				res = ignoreCase1Search(IMagicCard.INDEX_TYPE, value);
+			res = ignoreCase1Search(IMagicCard.INDEX_TYPE, value);
 		} else if (Editions.getInstance().getIdPrefix().equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(IMagicCard.INDEX_EDITION, value);
 		} else if (SuperTypes.getInstance().getIdPrefix().equals(requestedId)) {
