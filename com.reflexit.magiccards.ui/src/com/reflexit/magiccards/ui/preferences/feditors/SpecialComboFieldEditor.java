@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.preferences;
+package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;

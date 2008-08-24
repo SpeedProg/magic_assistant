@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.ui.preferences;
+package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -11,12 +11,12 @@ import org.eclipse.swt.widgets.Group;
 
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.model.Colors;
+import com.reflexit.magiccards.core.model.CardTypes;
 
-public class ColorsPreferenceGroup extends FieldEditorPreferencePage {
+public class TypesPreferenceGroup extends FieldEditorPreferencePage {
 	private Group group;
 
-	public ColorsPreferenceGroup() {
+	public TypesPreferenceGroup() {
 		super(GRID);
 		noDefaultAndApplyButton();
 	}
@@ -24,12 +24,14 @@ public class ColorsPreferenceGroup extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		this.group.setText("Color");
+		this.group.setText("Type");
 		Composite parent = this.group;
-		Colors coreColors = Colors.getInstance();
-		for (Iterator iterator = coreColors.getIds().iterator(); iterator.hasNext();) {
+		// artifact, creature, enchantment, instant, land, or sorcery.
+		// addCheckBox("Any", parent);
+		CardTypes coreTypes = CardTypes.getInstance();
+		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
-			addCheckBox(id, coreColors.getNameById(id), parent);
+			addCheckBox(id, coreTypes.getNameById(id), parent);
 		}
 	}
 

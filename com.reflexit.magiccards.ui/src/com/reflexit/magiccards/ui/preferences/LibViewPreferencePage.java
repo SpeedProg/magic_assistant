@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 import com.reflexit.magiccards.ui.views.lib.LibView;

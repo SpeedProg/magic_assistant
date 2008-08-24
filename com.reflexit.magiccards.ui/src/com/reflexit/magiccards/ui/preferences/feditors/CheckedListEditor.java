@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.preferences;
+package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.FieldEditor;
@@ -81,7 +81,7 @@ public class CheckedListEditor extends FieldEditor {
 	 * @param labelText the label text of the field editor
 	 * @param parent the parent of the field editor's control
 	 */
-	protected CheckedListEditor(String name, String labelText, Composite parent, String[] values) {
+	public CheckedListEditor(String name, String labelText, Composite parent, String[] values) {
 		init(name, labelText);
 		createControl(parent);
 		this.values = values;
@@ -90,6 +90,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		Control control = getLabelControl();
 		((GridData) control.getLayoutData()).horizontalSpan = numColumns;
@@ -130,6 +131,7 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	public void createSelectionListener() {
 		this.selectionListener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				Widget widget = event.widget;
 				if (widget == CheckedListEditor.this.upButton) {
@@ -146,6 +148,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		Control control = getLabelControl(parent);
 		GridData gd = new GridData();
@@ -166,6 +169,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoad() {
 		if (this.list != null) {
 			String s = getPreferenceStore().getString(getPreferenceName());
@@ -176,6 +180,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoadDefault() {
 		if (this.list != null) {
 			this.list.removeAll();
@@ -187,6 +192,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doStore() {
 		String s = createList();
 		if (s != null) {
@@ -254,6 +260,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
 	}
@@ -364,6 +371,7 @@ public class CheckedListEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
+	@Override
 	public void setFocus() {
 		if (this.list != null) {
 			this.list.setFocus();
@@ -404,6 +412,7 @@ public class CheckedListEditor extends FieldEditor {
 	/*
 	 * @see FieldEditor.setEnabled(boolean,Composite).
 	 */
+	@Override
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getListControl(parent).setEnabled(enabled);

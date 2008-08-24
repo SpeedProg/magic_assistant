@@ -15,6 +15,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.feditors.ColorsPreferenceGroup;
+import com.reflexit.magiccards.ui.preferences.feditors.NumbericalPreferenceGroup;
+import com.reflexit.magiccards.ui.preferences.feditors.TextSearchPreferenceGroup;
+import com.reflexit.magiccards.ui.preferences.feditors.TypesPreferenceGroup;
 
 public class CardFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private Composite panel;

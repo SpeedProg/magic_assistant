@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.ui.preferences;
+package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
