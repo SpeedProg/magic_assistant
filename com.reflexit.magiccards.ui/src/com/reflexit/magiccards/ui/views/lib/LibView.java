@@ -1,9 +1,11 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewReference;
@@ -15,7 +17,9 @@ import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
 public class LibView extends CollectionView implements ICardEventListener {
@@ -106,5 +110,14 @@ public class LibView extends CollectionView implements ICardEventListener {
 			manager.add(ac);
 			ac.setEnabled(false);
 		}
+	}
+
+	@Override
+	protected void runShowFilter() {
+		// CardFilter.open(getViewSite().getShell());
+		CardFilterDialog2 cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
+		cardFilterDialog.addNode(new PreferenceNode("locations", new LocationFilterPreferencePage()));
+		if (cardFilterDialog.open() == IStatus.OK)
+			this.manager.loadData();
 	}
 }

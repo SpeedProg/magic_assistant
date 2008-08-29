@@ -5,6 +5,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -21,14 +22,14 @@ public class CardFilterDialog2 extends PreferenceDialog implements IPreferencePa
 		else
 			this.store = store;
 		//
-		CardFilterPreferencePage basicPage = new CardFilterPreferencePage();
-		basicPage.setPreferenceStore(this.store);
-		//
-		EditionsFilterPreferencePage setsPage = new EditionsFilterPreferencePage();
-		setsPage.setPreferenceStore(this.store);
-		//
-		getPreferenceManager().addToRoot(new PreferenceNode("basic", basicPage));
-		getPreferenceManager().addToRoot(new PreferenceNode("editions", setsPage));
+		addNode(new PreferenceNode("basic", new CardFilterPreferencePage()));
+		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage()));
+	}
+
+	public void addNode(PreferenceNode node) {
+		getPreferenceManager().addToRoot(node);
+		PreferencePage page = (PreferencePage) node.getPage();
+		page.setPreferenceStore(this.store);
 	}
 
 	@Override
