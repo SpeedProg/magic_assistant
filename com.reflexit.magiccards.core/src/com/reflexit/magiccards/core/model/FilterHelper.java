@@ -17,6 +17,7 @@ public class FilterHelper {
 	public static final String TOUGHNESS = "toughness";
 	public static final String CCC = "convertedCC";
 	public static final String EDITION = "edition";
+	public static final String LOCATION = "location";
 
 	public static String toIdent(String string) {
 		String res = string.toLowerCase();

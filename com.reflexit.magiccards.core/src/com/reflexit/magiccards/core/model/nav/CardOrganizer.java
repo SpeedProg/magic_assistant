@@ -31,7 +31,6 @@ public class CardOrganizer extends CardElement {
 
 	public void addChild(CardElement a) {
 		this.children.add(a);
-		a.setParent(this);
 		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER));
 	}
 
