@@ -11,6 +11,7 @@ public class MagicCardPhisical implements IMagicCard {
 	private String location;
 	private String condition;
 	public static final int INDEX_COUNT = 11;
+	public static final int INDEX_LOCATION = 14;
 
 	public MagicCardPhisical(IMagicCard card) {
 		if (card instanceof MagicCard) {
