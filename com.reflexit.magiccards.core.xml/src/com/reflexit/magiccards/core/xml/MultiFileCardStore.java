@@ -52,12 +52,27 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 				CardCollectionStoreObject obj = CardCollectionStoreObject.initFromFile(table.file);
 				SubTable loaded = new SubTable(obj);
 				this.size += loaded.list.size();
+				setLocations(loaded.key, loaded.list);
 				this.map.put(loaded.key, loaded);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Activator.log(e);
 				this.map.put(table.key, table);
+			}
+		}
+	}
+
+	/**
+	 * @param key
+	 * @param list
+	 */
+	private void setLocations(String key, Collection list) {
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Object object = iterator.next();
+			if (object instanceof MagicCardPhisical) {
+				MagicCardPhisical mp = (MagicCardPhisical) object;
+				mp.setLocation(key);
 			}
 		}
 	}
@@ -173,9 +188,11 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 		if (card instanceof MagicCard) {
 			return (card).getEdition();
 		} else if (card instanceof MagicCardPhisical) {
-			String loc = ((MagicCardPhisical) card).getLocation();
+			MagicCardPhisical mp = (MagicCardPhisical) card;
+			String loc = mp.getLocation();
 			if (loc == null) {
 				loc = DataManager.getModelRoot().getDefaultLib().getPath().toPortableString();
+				mp.setLocation(loc);
 			}
 			return loc;
 		}
