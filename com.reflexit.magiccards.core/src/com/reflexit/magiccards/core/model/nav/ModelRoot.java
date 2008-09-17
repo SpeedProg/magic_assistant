@@ -15,6 +15,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 
@@ -121,5 +125,29 @@ public class ModelRoot extends CardOrganizer {
 	 */
 	public CardCollection getDefaultLib() {
 		return this.fLibFile;
+	}
+
+	/**
+	 * @return map from string location to tree element
+	 */
+	public Map getLocationsMap() {
+		LinkedHashMap<String, CardElement> map = new LinkedHashMap<String, CardElement>();
+		fillLocations(map, this);
+		return map;
+	}
+
+	/**
+	 * @param map
+	 * @param modelRoot
+	 */
+	private void fillLocations(LinkedHashMap<String, CardElement> map, CardElement root) {
+		map.put(root.getPath().toPortableString(), root);
+		if (root instanceof CardOrganizer) {
+			CardOrganizer org = (CardOrganizer) root;
+			for (Iterator iterator = org.getChildren().iterator(); iterator.hasNext();) {
+				CardElement el = (CardElement) iterator.next();
+				fillLocations(map, el);
+			}
+		}
 	}
 }

@@ -275,8 +275,10 @@ public class MagicCardFilter {
 			res = BinaryExpr.fieldInt(IMagicCard.INDEX_POWER, value);
 		} else if (FilterHelper.TOUGHNESS.equals(requestedId)) {
 			res = BinaryExpr.fieldInt(IMagicCard.INDEX_TOUGHNESS, value);
+		} else if (FilterHelper.LOCATION.equals(requestedId)) {
+			res = BinaryExpr.fieldEquals(MagicCardPhisical.INDEX_LOCATION, value);
 		} else {
-			//res = TRUE;
+			res = bin;
 		}
 		res.translated = true;
 		return res;
@@ -307,6 +309,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, CardTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, SuperTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
+		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.SUBTYPE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_LINE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);

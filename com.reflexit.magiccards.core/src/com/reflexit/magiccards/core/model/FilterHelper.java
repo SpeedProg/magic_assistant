@@ -44,6 +44,7 @@ public class FilterHelper {
 		ids.addAll(CardTypes.getInstance().getIds());
 		ids.addAll(SuperTypes.getInstance().getIds());
 		ids.addAll(Editions.getInstance().getIds());
+		ids.addAll(Locations.getInstance().getIds());
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX));
