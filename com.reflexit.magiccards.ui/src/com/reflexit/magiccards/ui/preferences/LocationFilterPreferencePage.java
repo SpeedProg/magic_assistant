@@ -16,13 +16,14 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.preferences.feditors.CheckedTreeSelectionComposite;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorLabelProvider;
+import com.reflexit.magiccards.ui.widgets.CheckedTreeSelectionComposite;
 
 public class LocationFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private Composite panel;
@@ -105,7 +106,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	 */
 	private void applyElement(CardElement root) {
 		boolean checked = this.treeViewer.getChecked(root) && !this.treeViewer.getGrayed(root);
-		String id = FilterHelper.getPrefConstant(FilterHelper.LOCATION, root.getName());
+		String id = Locations.getInstance().getPrefConstant(root.getPath().toPortableString());
 		IPreferenceStore store = getPreferenceStore();
 		if (checked) {
 			store.setValue(id, true);

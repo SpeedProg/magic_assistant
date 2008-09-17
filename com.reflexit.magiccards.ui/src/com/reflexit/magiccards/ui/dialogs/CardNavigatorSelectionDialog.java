@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.wizards;
+package com.reflexit.magiccards.ui.dialogs;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -28,7 +28,6 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import java.util.List;
 
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatiorManager;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 
 /**
  * @author Alena
@@ -46,6 +45,7 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	Label statusMessage;
 	//for validating the selection
 	ISelectionValidator validator;
+	private ViewerFilter[] filters;
 
 	/**
 	 * Creates a resource container selection dialog rooted at the given resource.
@@ -97,7 +97,8 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 		};
 		this.manager.createContents(area, SWT.NONE);
 		getViewer().addSelectionChangedListener(listener);
-		getViewer().setFilters(new ViewerFilter[] { CardsNavigatorContentProvider.getContainerFilter() });
+		if (this.filters != null)
+			getViewer().setFilters(this.filters);
 		if (this.root != null) {
 			getViewer().setInput(this.root);
 			getViewer().setSelection(new StructuredSelection(this.root), true);
@@ -112,7 +113,7 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 		return this.dialogArea;
 	}
 
-	private ColumnViewer getViewer() {
+	public ColumnViewer getViewer() {
 		return this.manager.getViewer();
 	}
 
@@ -145,5 +146,12 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	 */
 	public void setValidator(ISelectionValidator validator) {
 		this.validator = validator;
+	}
+
+	/**
+	 * @param viewerFilters
+	 */
+	public void setFilters(ViewerFilter[] viewerFilters) {
+		this.filters = viewerFilters;
 	}
 }

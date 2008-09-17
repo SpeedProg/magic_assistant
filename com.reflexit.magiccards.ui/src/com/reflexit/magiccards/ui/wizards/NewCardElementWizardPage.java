@@ -16,6 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
+import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 
 /**
  * @author Alena
@@ -146,6 +149,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		sup.add(root);
 		CardNavigatorSelectionDialog dialog = new CardNavigatorSelectionDialog(getShell(), sup, true,
 		        "Select a container");
+		dialog.setFilters(new ViewerFilter[] { CardsNavigatorContentProvider.getContainerFilter() });
 		if (dialog.open() == Dialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {

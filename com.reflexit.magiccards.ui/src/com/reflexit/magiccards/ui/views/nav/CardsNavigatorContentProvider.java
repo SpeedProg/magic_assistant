@@ -6,8 +6,10 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import java.util.Collection;
 
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 
 public class CardsNavigatorContentProvider implements ITreeContentProvider {
 	public void dispose() {
@@ -53,6 +55,15 @@ public class CardsNavigatorContentProvider implements ITreeContentProvider {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				return element instanceof CardOrganizer;
+			}
+		};
+	}
+
+	public static ViewerFilter getCollectorFilter() {
+		return new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				return element instanceof CardCollection || element instanceof CollectionsContainer;
 			}
 		};
 	}
