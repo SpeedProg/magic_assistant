@@ -97,7 +97,7 @@ public class LocationColumn extends GenColumn {
 								return null;
 							Object res = result[0];
 							if (res instanceof CardElement) {
-								return ((CardElement) res).getPath().toPortableString();
+								return ((CardElement) res).getLocation();
 							}
 							return null;
 						}

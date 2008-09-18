@@ -106,18 +106,19 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	 */
 	private void applyElement(CardElement root) {
 		boolean checked = this.treeViewer.getChecked(root) && !this.treeViewer.getGrayed(root);
-		String id = Locations.getInstance().getPrefConstant(root.getPath().toPortableString());
+		String id = Locations.getInstance().getPrefConstant(root.getLocation());
 		IPreferenceStore store = getPreferenceStore();
-		if (checked) {
-			store.setValue(id, true);
-		} else if (root instanceof CardOrganizer) {
-			store.setValue(id, false);
+		if (root instanceof CardOrganizer) {
 			for (Iterator iterator = ((CardOrganizer) root).getChildren().iterator(); iterator.hasNext();) {
 				CardElement el = (CardElement) iterator.next();
 				applyElement(el);
 			}
 		} else {
-			store.setValue(id, false);
+			if (checked) {
+				store.setValue(id, true);
+			} else {
+				store.setValue(id, false);
+			}
 		}
 	}
 

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.nav;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -19,6 +18,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -44,11 +44,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
@@ -57,6 +60,7 @@ import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
+import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.LibView;
@@ -127,7 +131,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	protected void setGlobalHandlers() {
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", (IHandler) deleteHandler);
+		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
@@ -289,7 +293,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		if (obj instanceof CollectionsContainer) {
 			try {
-				getViewSite().getWorkbenchWindow().getActivePage().showView(LibView.ID);
+				AbstractCardsView view = (AbstractCardsView) getViewSite().getWorkbenchWindow().getActivePage()
+				        .showView(LibView.ID);
+				setLocationFilter(view.getPreferenceStore(), ((CollectionsContainer) obj).getLocation());
+				view.reloadData();
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}
@@ -306,8 +313,34 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}
+		} else if (obj instanceof CardCollection) {
+			try {
+				AbstractCardsView view = (AbstractCardsView) getViewSite().getWorkbenchWindow().getActivePage()
+				        .showView(LibView.ID);
+				setLocationFilter(view.getPreferenceStore(), ((CardCollection) obj).getLocation());
+				view.reloadData();
+			} catch (PartInitException e) {
+				MagicUIActivator.log(e);
+			}
 		} else {
 			showMessage("Cannot open this object " + obj.toString());
+		}
+	}
+
+	/**
+	 * @param preferenceStore
+	 * @param portableString
+	 */
+	private void setLocationFilter(IPreferenceStore preferenceStore, String loc) {
+		Collection ids = Locations.getInstance().getIds();
+		String locId = Locations.getInstance().getPrefConstant(loc);
+		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
+			String id = (String) iterator.next();
+			if (id.startsWith(locId)) {
+				preferenceStore.setValue(id, true);
+			} else {
+				preferenceStore.setValue(id, false);
+			}
 		}
 	}
 

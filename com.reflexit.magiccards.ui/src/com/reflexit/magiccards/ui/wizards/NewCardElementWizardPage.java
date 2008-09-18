@@ -129,7 +129,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 					container = (CardOrganizer) obj;
 				else
 					container = ((CardElement) obj).getParent();
-				this.containerText.setText(container.getPath().toString());
+				this.containerText.setText(container.getLocation());
 			}
 		}
 		this.fileText.setText("Sample " + getElementCapitalTypeName());
@@ -154,7 +154,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
 				CardOrganizer org = (CardOrganizer) result[0];
-				this.containerText.setText(org.getPath().toPortableString());
+				this.containerText.setText(org.getLocation());
 			}
 		}
 	}

@@ -89,7 +89,7 @@ public class LocationDialog extends SelectionDialog {
 	}
 
 	private void initSelection(CardElement root) {
-		boolean checked = root.getPath().toPortableString().equals(this.iniLoc);
+		boolean checked = root.getLocation().equals(this.iniLoc);
 		if (checked) {
 			this.treeViewer.setSelection(new StructuredSelection(root), true);
 		} else if (root instanceof CardOrganizer) {
@@ -116,7 +116,7 @@ public class LocationDialog extends SelectionDialog {
 			return null;
 		Object res = result[0];
 		if (res instanceof CardOrganizer) {
-			return ((CardOrganizer) res).getPath().toPortableString();
+			return ((CardOrganizer) res).getLocation();
 		}
 		return null;
 	}

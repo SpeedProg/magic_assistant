@@ -303,8 +303,12 @@ public abstract class AbstractCardsView extends ViewPart {
 		// CardFilter.open(getViewSite().getShell());
 		Dialog cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
-			this.manager.loadData();
+	        reloadData();
 	}
+
+	public void reloadData() {
+	    this.manager.loadData();
+    }
 
 	public Shell getShell() {
 		return getViewSite().getShell();
