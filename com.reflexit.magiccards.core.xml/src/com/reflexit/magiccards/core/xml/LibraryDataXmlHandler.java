@@ -59,7 +59,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		Collection<CardElement> colls = container.getAllElements();
 		// init super
 		for (CardElement elem : colls) {
-			this.table.addFile(elem.getResource().getLocation().toFile(), elem.getPath().toPortableString());
+			this.table.addFile(elem.getResource().getLocation().toFile(), elem.getLocation());
 		}
 		this.table.initialize();
 	}

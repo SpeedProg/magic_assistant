@@ -191,7 +191,7 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 			MagicCardPhisical mp = (MagicCardPhisical) card;
 			String loc = mp.getLocation();
 			if (loc == null) {
-				loc = DataManager.getModelRoot().getDefaultLib().getPath().toPortableString();
+				loc = DataManager.getModelRoot().getDefaultLib().getLocation();
 				mp.setLocation(loc);
 			}
 			return loc;
