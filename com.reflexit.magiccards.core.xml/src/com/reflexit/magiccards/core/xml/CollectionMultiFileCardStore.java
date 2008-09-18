@@ -34,7 +34,10 @@ public class CollectionMultiFileCardStore extends MultiFileCardStore {
 		Integer key = card.getCardId();
 		IMagicCard phi = this.hash.get(key);
 		if (phi == null) {
-			phi = new MagicCardPhisical(card);
+			if (card instanceof MagicCardPhisical) {
+				phi = card;
+			} else
+				phi = new MagicCardPhisical(card);
 			super.doAddCard(phi);
 			this.hash.put(key, phi);
 		} else {
