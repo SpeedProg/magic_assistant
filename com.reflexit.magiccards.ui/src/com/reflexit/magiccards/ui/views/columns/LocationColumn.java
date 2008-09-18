@@ -121,12 +121,14 @@ public class LocationColumn extends GenColumn {
 			protected void setValue(Object element, Object value) {
 				if (element instanceof MagicCardPhisical) {
 					MagicCardPhisical card = (MagicCardPhisical) element;
-					card.setLocation((String) value);
-					viewer.update(element, null);
-					// save
+					// move
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
-					cardStore.save();
+					cardStore.removeCard(card);
+					card.setLocation((String) value);
+					cardStore.addCard(card);
+					// update
+					viewer.update(element, null);
 				}
 			}
 		};
