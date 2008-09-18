@@ -50,6 +50,10 @@ public abstract class CardElement extends EventManager {
 		return this.path;
 	}
 
+	public String getLocation() {
+		return getPath().toPortableString();
+	}
+
 	/**
 	 * @return
 	 */

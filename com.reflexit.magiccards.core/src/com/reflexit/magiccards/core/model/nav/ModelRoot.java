@@ -141,7 +141,9 @@ public class ModelRoot extends CardOrganizer {
 	 * @param modelRoot
 	 */
 	private void fillLocations(LinkedHashMap<String, CardElement> map, CardElement root) {
-		map.put(root.getPath().toPortableString(), root);
+		if (root instanceof CardCollection || root instanceof Deck) {
+			map.put(root.getLocation(), root);
+		}
 		if (root instanceof CardOrganizer) {
 			CardOrganizer org = (CardOrganizer) root;
 			for (Iterator iterator = org.getChildren().iterator(); iterator.hasNext();) {
