@@ -201,6 +201,8 @@ public class MagicCardFilter {
 				return fieldOp(index, Operation.LE, value.substring(2).trim());
 			} else if (value.startsWith("=")) {
 				return fieldOp(index, Operation.EQ, value.substring(2).trim());
+			} else if (value.equals("0")) {
+				return fieldOp(index, Operation.GE, value);
 			}
 			return null;
 		}
@@ -277,6 +279,9 @@ public class MagicCardFilter {
 			res = BinaryExpr.fieldInt(IMagicCard.INDEX_TOUGHNESS, value);
 		} else if (FilterHelper.LOCATION.equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardPhisical.INDEX_LOCATION, value);
+		} else if (FilterHelper.RARITY.equals(requestedId)) {
+			res = BinaryExpr.fieldEquals(IMagicCard.INDEX_RARITY, value);
+			// TODO: Other
 		} else {
 			res = bin;
 		}
@@ -310,6 +315,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, SuperTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
+		expr = createAndGroup(createOrGroup(map, Rarity.getInstance()), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.SUBTYPE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_LINE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);

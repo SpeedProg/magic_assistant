@@ -18,6 +18,7 @@ public class FilterHelper {
 	public static final String CCC = "convertedCC";
 	public static final String EDITION = "edition";
 	public static final String LOCATION = "location";
+	public static final String RARITY = "rarity";
 
 	public static String toIdent(String string) {
 		String res = string.toLowerCase();
@@ -44,6 +45,7 @@ public class FilterHelper {
 		ids.addAll(CardTypes.getInstance().getIds());
 		ids.addAll(SuperTypes.getInstance().getIds());
 		ids.addAll(Editions.getInstance().getIds());
+		ids.addAll(Rarity.getInstance().getIds());
 		ids.addAll(Locations.getInstance().getIds());
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX));

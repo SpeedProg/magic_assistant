@@ -1,0 +1,51 @@
+package com.reflexit.magiccards.core.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+
+public class Rarity implements ISearchableProperty {
+	private Rarity() {
+		this.names = new LinkedHashMap();
+		add("Rare");
+		add("Uncommon");
+		add("Common");
+		add("Other");
+	}
+	static Rarity instance = new Rarity();
+	private LinkedHashMap names;
+
+	private void add(String string) {
+		String id = getPrefConstant(string);
+		this.names.put(id, string);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
+	 */
+	public String getIdPrefix() {
+		return FilterHelper.RARITY;
+	}
+
+	public static Rarity getInstance() {
+		return instance;
+	}
+
+	public Collection getNames() {
+		return new ArrayList(this.names.values());
+	}
+
+	public Collection getIds() {
+		return new ArrayList(this.names.keySet());
+	}
+
+	public String getPrefConstant(String name) {
+		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+	}
+
+	public String getNameById(String id) {
+		return (String) this.names.get(id);
+	}
+}

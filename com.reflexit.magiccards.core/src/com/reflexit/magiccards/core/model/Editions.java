@@ -141,8 +141,13 @@ public class Editions implements ISearchableProperty {
 		return list;
 	}
 
-	private String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+	public String getPrefConstant(String abbr) {
+		return FilterHelper.getPrefConstant(getIdPrefix(), abbr);
+	}
+
+	public String getPrefConstantByName(String name) {
+		String abbr = (String) this.name2abbr.get(name);
+		return FilterHelper.getPrefConstant(getIdPrefix(), abbr);
 	}
 
 	public String getNameById(String id) {
