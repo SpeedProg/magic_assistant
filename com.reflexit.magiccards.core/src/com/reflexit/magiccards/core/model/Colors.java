@@ -30,6 +30,32 @@ public class Colors implements ISearchableProperty {
 		this.codes.put(id, code);
 	}
 
+	public static String getColorName(String cost) {
+		StringBuffer color = new StringBuffer();
+		addColor("B", "Black", cost, color);
+		addColor("U", "Blue", cost, color);
+		addColor("G", "Green", cost, color);
+		addColor("R", "Red", cost, color);
+		addColor("W", "White", cost, color);
+		return color.toString();
+	}
+
+	/**
+	 
+	 * @param abbr
+	 * @param name
+	 * @param cost 
+	 * @param buf
+	 */
+	private static void addColor(String abbr, String name, String cost, StringBuffer buf) {
+		if (cost.indexOf(abbr) >= 0) {
+			if (buf.length() > 0) {
+				buf.append('-');
+			}
+			buf.append(name);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
