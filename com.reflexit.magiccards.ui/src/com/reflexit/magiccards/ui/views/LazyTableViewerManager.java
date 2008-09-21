@@ -72,8 +72,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		table.setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		this.viewer.addDragSupport(ops, transfers, new MagicCardDragListener(this.viewer));
-		this.viewer.addDropSupport(ops, transfers, new MagicCardDropAdapter(this.viewer));
+		this.viewer.addDragSupport(ops, transfers, new MagicCardDragListener(this.viewer, this.view));
+		this.viewer.addDropSupport(ops, transfers, new MagicCardDropAdapter(this.viewer, this.view));
 	}
 
 	protected void createDefaultColumns() {
@@ -114,7 +114,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			sortDirection = SWT.UP;
 		this.viewer.getTable().setSortDirection(sortDirection);
 		ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
-		this.filter.setSortIndex(man.getDataIndex());
+		this.filter.setSortIndex(man.getSortIndex());
 		this.filter.setAscending(sortDirection == SWT.UP);
 	}
 

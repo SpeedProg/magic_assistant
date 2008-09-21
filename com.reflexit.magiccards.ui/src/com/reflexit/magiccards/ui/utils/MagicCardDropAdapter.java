@@ -20,17 +20,22 @@ import java.util.Arrays;
 import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
  * @author Alena
  *
  */
 public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTargetListener {
+	private AbstractCardsView view;
+
 	/**
 	 * @param viewer
+	 * @param view 
 	 */
-	public MagicCardDropAdapter(Viewer viewer) {
+	public MagicCardDropAdapter(Viewer viewer, AbstractCardsView view) {
 		super(viewer);
+		this.view = view;
 	}
 
 	@Override

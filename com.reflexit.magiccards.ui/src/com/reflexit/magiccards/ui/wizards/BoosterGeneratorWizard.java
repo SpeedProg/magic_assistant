@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.wizards;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -22,20 +23,21 @@ import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.Rarity;
-import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.ui.views.lib.LibView;
+import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 import com.reflexit.magiccards.ui.widgets.EditionsComposite;
 
-public class BoosterGeneratorWizard extends NewCardCollectionWizard implements INewWizard {
+public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard {
 	public static final String ID = "com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard";
 	static class BoosterGeneratorWizardPage extends WizardPage {
 		Spinner sp;
@@ -85,7 +87,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	public void addPages() {
 		this.page2 = new BoosterGeneratorWizardPage();
 		addPage(this.page2);
-		this.page = new NewCardCollectionWizardPage(this.selection) {
+		this.page = new NewDeckWizardPage(this.selection) {
 			@Override
 			public String getResourceNameHint() {
 				return "booster pack";
@@ -108,41 +110,50 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java.lang.String, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void doFinish(String containerName, String name, IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(final String containerName, final String name, final IProgressMonitor monitor)
+	        throws CoreException {
 		// create a sample file
-		monitor.beginTask("Creating " + name, 2);
+		monitor.beginTask("Creating " + name, 10);
 		ModelRoot root = DataManager.getModelRoot();
 		final CardElement resource = root.findElement(new Path(containerName));
-		if (!(resource instanceof CollectionsContainer)) {
+		if (!(resource instanceof CardOrganizer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
-		CollectionsContainer parent = (CollectionsContainer) resource;
-		final CardCollection col = new CardCollection(name + ".xml", parent);
-		populateLibrary(this.editionName, this.packs, col);
 		monitor.worked(1);
-		getShell().getDisplay().asyncExec(new Runnable() {
+		getShell().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
+					CardOrganizer parent = (CardOrganizer) resource;
+					final Deck col = new Deck(name + ".xml", parent);
+					populateLibrary(BoosterGeneratorWizard.this.editionName, BoosterGeneratorWizard.this.packs, col,
+					        new SubProgressMonitor(monitor, 7));
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					LibView lib = (LibView) page.showView(LibView.ID);
-					lib.setLocationFilter(col.getLocation());
+					monitor.worked(1);
+					page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
+					monitor.worked(1);
 				} catch (PartInitException e) {
 					//  ignore
 				}
 			}
 		});
-		monitor.worked(1);
+		monitor.done();
 	}
 
 	/**
 	 * @param firstElement
 	 * @param selection
-	 * @param col 
+	 * @param deck 
+	 * @param subProgressMonitor 
 	 */
-	private void populateLibrary(String editionName, int packs, CardCollection col) {
-		IFilteredCardStore library = DataManager.getCardHandler().getMagicLibraryHandler();
+	private void populateLibrary(String editionName, int packs, Deck deck, IProgressMonitor monitor) {
+		monitor.beginTask("Generating", 10);
+		if (deck.isOpen() == false) {
+			IFilteredCardStore fstore = DataManager.getCardHandler().getDeckHandler(deck.getFileName());
+		}
+		monitor.worked(1);
+		ICardStore store = deck.getStore();
 		MagicCardFilter filter = new MagicCardFilter();
 		HashMap filterset = new HashMap();
 		IFilteredCardStore dbcards = DataManager.getCardHandler().getMagicCardHandler();
@@ -153,37 +164,40 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		filterset.put(rarity, "true");
 		filter.update(filterset);
 		dbcards.update(filter);
-		generateRandom(1 * packs, dbcards, library, col);
+		generateRandom(1 * packs, dbcards, store, deck);
+		monitor.worked(3);
 		// 3*packs uncommon
 		filterset.remove(rarity);
 		rarity = Rarity.getInstance().getPrefConstant("Uncommon");
 		filterset.put(rarity, "true");
 		filter.update(filterset);
 		dbcards.update(filter);
-		generateRandom(3 * packs, dbcards, library, col);
+		generateRandom(3 * packs, dbcards, store, deck);
+		monitor.worked(3);
 		// 11*packs common
 		filterset.remove(rarity);
 		rarity = Rarity.getInstance().getPrefConstant("Common");
 		filterset.put(rarity, "true");
 		filter.update(filterset);
 		dbcards.update(filter);
-		generateRandom(11 * packs, dbcards, library, col);
+		generateRandom(11 * packs, dbcards, store, deck);
+		monitor.done();
 	}
 
 	/**
 	 * @param packs
 	 * @param dbcards
-	 * @param library
+	 * @param store
 	 * @param col
 	 */
-	private void generateRandom(int packs, IFilteredCardStore dbcards, IFilteredCardStore library, CardCollection col) {
+	private void generateRandom(int packs, IFilteredCardStore dbcards, ICardStore store, CardElement col) {
 		int rcards = dbcards.getSize();
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);
 			IMagicCard card = (IMagicCard) dbcards.getElement(index);
 			MagicCardPhisical pcard = new MagicCardPhisical(card);
 			pcard.setLocation(col.getLocation());
-			library.getCardStore().addCard(pcard);
+			store.addCard(pcard);
 		}
 	}
 }

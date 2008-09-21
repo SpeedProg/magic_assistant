@@ -38,5 +38,6 @@ public class ColumnCollection {
 			this.columns.add(new CountColumn(MagicCardPhisical.INDEX_COUNT, "Count"));
 			this.columns.add(new LocationColumn(MagicCardPhisical.INDEX_LOCATION, "Location"));
 		}
+		this.columns.add(new ColorColumn(IMagicCard.INDEX_COST));
 	}
 }

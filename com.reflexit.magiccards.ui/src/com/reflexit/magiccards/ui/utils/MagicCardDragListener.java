@@ -18,7 +18,11 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.PluginTransferData;
 
+import java.util.Iterator;
+
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 /**
  * @author Alena
@@ -26,9 +30,11 @@ import com.reflexit.magiccards.core.model.IMagicCard;
  */
 public class MagicCardDragListener implements DragSourceListener {
 	private StructuredViewer viewer;
+	AbstractCardsView view;
 
-	public MagicCardDragListener(StructuredViewer viewer) {
+	public MagicCardDragListener(StructuredViewer viewer, AbstractCardsView view) {
 		this.viewer = viewer;
+		this.view = view;
 	}
 
 	/**
@@ -39,10 +45,13 @@ public class MagicCardDragListener implements DragSourceListener {
 			return;
 		//if the gadget was moved, remove it from the source viewer
 		if (event.detail == DND.DROP_MOVE) {
-			IStructuredSelection selection = (IStructuredSelection) this.viewer.getSelection();
-			//			for (Iterator it = selection.iterator(); it.hasNext();) {
-			//				// TODO remove
-			//			}
+			if (this.view instanceof DeckView) {
+				IStructuredSelection selection = (IStructuredSelection) this.viewer.getSelection();
+				for (Iterator it = selection.iterator(); it.hasNext();) {
+					IMagicCard card = (IMagicCard) it.next();
+					((DeckView) this.view).getFilteredStore().getCardStore().removeCard(card);
+				}
+			}
 			this.viewer.refresh();
 		}
 	}

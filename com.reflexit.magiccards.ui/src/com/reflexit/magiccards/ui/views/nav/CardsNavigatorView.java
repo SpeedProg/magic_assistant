@@ -331,6 +331,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	 * @see com.reflexit.magiccards.core.model.events.ICardEventListener#handleEvent(com.reflexit.magiccards.core.model.events.CardEvent)
 	 */
 	public void handleEvent(CardEvent event) {
-		this.manager.getViewer().refresh();
+		this.manager.getViewer().refresh(true);
 	}
 }

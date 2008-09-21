@@ -28,6 +28,10 @@ public abstract class ColumnManager extends ColumnLabelProvider {
 		return this.dataIndex;
 	}
 
+	public int getSortIndex() {
+		return getDataIndex();
+	}
+
 	public String getColumnFullName() {
 		return getColumnName();
 	}

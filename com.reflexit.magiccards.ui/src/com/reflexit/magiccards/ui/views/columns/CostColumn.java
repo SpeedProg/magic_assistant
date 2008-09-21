@@ -65,6 +65,11 @@ public class CostColumn extends ColumnManager implements Listener {
 		}
 	}
 
+	@Override
+	public int getSortIndex() {
+		return IMagicCard.INDEX_CMC;
+	}
+
 	private String getActualText(Object element) {
 		if (element instanceof IMagicCard) { // cost
 			return ((IMagicCard) element).getCmc() + "";
