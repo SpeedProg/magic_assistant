@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class Rarity implements ISearchableProperty {
@@ -47,5 +48,23 @@ public class Rarity implements ISearchableProperty {
 
 	public String getNameById(String id) {
 		return (String) this.names.get(id);
+	}
+
+	/**
+	 * @param a1
+	 * @param a2
+	 * @return
+	 */
+	public static int compare(String r1, String r2) {
+		Collection values = getInstance().names.values();
+		int i1 = values.size() - 1, i2 = i1, i = 0;
+		for (Iterator iterator = values.iterator(); iterator.hasNext(); i++) {
+			String v = (String) iterator.next();
+			if (r1.equals(v))
+				i1 = i;
+			if (r2.equals(v))
+				i2 = i;
+		}
+		return i1 - i2;
 	}
 }
