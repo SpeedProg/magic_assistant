@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.Rarity;
 
 public class MagicCardComparator implements Comparator {
 	int sort = 0;
@@ -32,7 +33,13 @@ public class MagicCardComparator implements Comparator {
 				int d = Float.compare(f1, f2);
 				if (d != 0)
 					return d;
-			} else if (a1 instanceof Comparable) {
+			}
+			if (this.sort == IMagicCard.INDEX_RARITY) {
+				int d = Rarity.compare((String) a1, (String) a2);
+				if (d != 0)
+					return d;
+			}
+			if (a1 instanceof Comparable) {
 				int range = ((Comparable) a1).compareTo(a2);
 				if (range != 0)
 					return range * this.dir;
