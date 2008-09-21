@@ -48,14 +48,14 @@ public class CardFilterPreferencePage extends PreferencePage implements IWorkben
 		GridLayout layout = new GridLayout(1, false);
 		this.panel.setLayout(layout);
 		this.panel.setFont(parent.getFont());
-		Composite first = createColumnComposite(this.panel, 3);
-		Composite second = createColumnComposite(this.panel, 1);
-		createAndAdd(new TypesPreferenceGroup(), first);
-		createAndAdd(new ColorsPreferenceGroup(), first);
-		createAndAdd(new TextSearchPreferenceGroup(), second);
-		Composite right = createColumnComposite(first, 1);
-		createAndAdd(new NumbericalPreferenceGroup(), right);
-		createAndAdd(new RarityPreferenceGroup(), right);
+		Composite firstRow = createColumnComposite(this.panel, 2);
+		Composite secondRow = createColumnComposite(this.panel, 2);
+		Composite thirdRow = createColumnComposite(this.panel, 1);
+		createAndAdd(new TypesPreferenceGroup(), firstRow);
+		createAndAdd(new ColorsPreferenceGroup(), firstRow);
+		createAndAdd(new RarityPreferenceGroup(), secondRow);
+		createAndAdd(new NumbericalPreferenceGroup(), secondRow);
+		createAndAdd(new TextSearchPreferenceGroup(), thirdRow);
 		return this.panel;
 	}
 
