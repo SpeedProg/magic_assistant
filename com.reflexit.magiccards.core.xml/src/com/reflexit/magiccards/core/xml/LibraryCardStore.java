@@ -41,17 +41,22 @@ public class LibraryCardStore extends SingleFileCardStore implements ICardCounta
 	 */
 	@Override
 	public boolean doAddCard(IMagicCard card) {
+		int count = 1;
+		if (card instanceof MagicCardPhisical) {
+			count = ((MagicCardPhisical) card).getCount();
+		}
 		Integer key = card.getCardId();
-		IMagicCard phi = this.hash.get(key);
+		MagicCardPhisical phi = (MagicCardPhisical) this.hash.get(key);
 		if (phi == null) {
 			phi = new MagicCardPhisical(card);
+			phi.setCount(count);
 			super.doAddCard(phi);
 			this.hash.put(key, phi);
 		} else {
-			MagicCardPhisical p = (MagicCardPhisical) phi;
-			p.setCount(p.getCount() + 1);
+			MagicCardPhisical p = phi;
+			p.setCount(p.getCount() + count);
 		}
-		this.cardCount++;
+		this.cardCount += count;
 		return true;
 	}
 

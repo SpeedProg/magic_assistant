@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.xml;
 
 import java.util.Comparator;
 
+import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.Rarity;
@@ -22,11 +23,12 @@ public class MagicCardComparator implements Comparator {
 			IMagicCard c1 = (IMagicCard) o1;
 			IMagicCard c2 = (IMagicCard) o2;
 			int by = this.sort;
-			if (this.sort == IMagicCard.INDEX_COST) {
-				by = IMagicCard.INDEX_CMC;
-			}
 			Object a1 = c1.getObjectByIndex(by);
 			Object a2 = c2.getObjectByIndex(by);
+			if (this.sort == IMagicCard.INDEX_COST) {
+				a1 = Colors.getColorName((String) a1);
+				a2 = Colors.getColorName((String) a2);
+			}
 			if (this.sort == IMagicCard.INDEX_POWER || this.sort == IMagicCard.INDEX_TOUGHNESS) {
 				float f1 = MagicCard.convertFloat((String) a1);
 				float f2 = MagicCard.convertFloat((String) a2);
