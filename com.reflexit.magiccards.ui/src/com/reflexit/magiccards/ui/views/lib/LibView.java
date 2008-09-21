@@ -5,17 +5,20 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewReference;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
@@ -119,5 +122,24 @@ public class LibView extends CollectionView implements ICardEventListener {
 		cardFilterDialog.addNode(new PreferenceNode("locations", new LocationFilterPreferencePage()));
 		if (cardFilterDialog.open() == IStatus.OK)
 			this.manager.loadData();
+	}
+
+	/**
+	 * @param preferenceStore
+	 * @param portableString
+	 */
+	public void setLocationFilter(String loc) {
+		IPreferenceStore preferenceStore = getPreferenceStore();
+		Collection ids = Locations.getInstance().getIds();
+		String locId = Locations.getInstance().getPrefConstant(loc);
+		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
+			String id = (String) iterator.next();
+			if (id.startsWith(locId)) {
+				preferenceStore.setValue(id, true);
+			} else {
+				preferenceStore.setValue(id, false);
+			}
+		}
+		reloadData();
 	}
 }

@@ -49,6 +49,7 @@ public abstract class NewCardElementWizard extends Wizard {
 	public boolean performFinish() {
 		final String containerName = this.page.getContainerName();
 		final String fileName = this.page.getElementName();
+		beforeFinish();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
@@ -70,6 +71,13 @@ public abstract class NewCardElementWizard extends Wizard {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 
+	 */
+	protected void beforeFinish() {
+		// let wizards store values
 	}
 
 	/**

@@ -17,6 +17,7 @@ import java.util.Iterator;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.feditors.ColorsPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.NumbericalPreferenceGroup;
+import com.reflexit.magiccards.ui.preferences.feditors.RarityPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.TextSearchPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.TypesPreferenceGroup;
 
@@ -52,7 +53,9 @@ public class CardFilterPreferencePage extends PreferencePage implements IWorkben
 		createAndAdd(new TypesPreferenceGroup(), first);
 		createAndAdd(new ColorsPreferenceGroup(), first);
 		createAndAdd(new TextSearchPreferenceGroup(), second);
-		createAndAdd(new NumbericalPreferenceGroup(), first);
+		Composite right = createColumnComposite(first, 1);
+		createAndAdd(new NumbericalPreferenceGroup(), right);
+		createAndAdd(new RarityPreferenceGroup(), right);
 		return this.panel;
 	}
 

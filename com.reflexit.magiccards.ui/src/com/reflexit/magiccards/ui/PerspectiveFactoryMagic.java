@@ -16,6 +16,7 @@ import com.reflexit.magiccards.ui.views.card.CardDescView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.LibView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
+import com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard;
 import com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard;
 import com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard;
 import com.reflexit.magiccards.ui.wizards.NewDeckContainerWizard;
@@ -45,6 +46,7 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		layout.addNewWizardShortcut(NewDeckContainerWizard.ID);
 		layout.addNewWizardShortcut(NewCardCollectionWizard.ID);
 		layout.addNewWizardShortcut(NewCollectionContainerWizard.ID);
+		layout.addNewWizardShortcut(BoosterGeneratorWizard.ID);
 		layout.getViewLayout(MagicDbView.ID).setCloseable(false);
 		layout.getViewLayout(CardDescView.ID).setCloseable(false);
 		layout.getViewLayout(CardsNavigatorView.ID).setCloseable(false);

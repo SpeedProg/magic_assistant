@@ -132,7 +132,11 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 				this.containerText.setText(container.getLocation());
 			}
 		}
-		this.fileText.setText("Sample " + getElementCapitalTypeName());
+		this.fileText.setText(getResourceNameHint());
+	}
+
+	public String getResourceNameHint() {
+		return "Sample " + getElementCapitalTypeName();
 	}
 
 	public abstract String getElementTypeName();

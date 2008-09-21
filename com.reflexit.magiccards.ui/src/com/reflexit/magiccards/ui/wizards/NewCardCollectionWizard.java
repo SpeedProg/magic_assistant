@@ -60,12 +60,12 @@ public class NewCardCollectionWizard extends NewCardElementWizard implements INe
 		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
+		CollectionsContainer parent = (CollectionsContainer) resource;
+		final CardCollection col = new CardCollection(name + ".xml", parent);
 		monitor.worked(1);
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CollectionsContainer parent = (CollectionsContainer) resource;
-				CardCollection col = new CardCollection(name + ".xml", parent);
 				try {
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));

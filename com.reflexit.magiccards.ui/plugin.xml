@@ -251,5 +251,15 @@
            id="com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard"
            name="Collection Container">
      </wizard>
+               <wizard
+                     canFinishEarly="true"
+                     category="com.reflexit.magiccards.ui"
+                     class="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
+                     finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+                     hasPages="true"
+                     icon="icons/obj16/lib16.png"
+                     id="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
+                     name="Booster Pack">
+               </wizard>
   </extension>
 </plugin>
