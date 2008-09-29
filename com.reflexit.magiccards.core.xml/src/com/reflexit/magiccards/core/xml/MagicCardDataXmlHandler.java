@@ -6,7 +6,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -15,7 +14,6 @@ import com.reflexit.magiccards.core.model.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 
 public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
@@ -30,20 +28,6 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#update(com.reflexit.magiccards.core.model.MagicCardFilter)
-	 */
-	public void update(MagicCardFilter filter) throws MagicException {
-		initialize();
-		this.getFilteredList().clear();
-		this.getFilteredList().addAll(this.table.filterCards(filter));
-	}
-
-	@Override
-	protected Collection<IMagicCard> doCreateList() {
-		return new ArrayList<IMagicCard>();
 	}
 
 	private MagicCardDataXmlHandler() {
@@ -79,7 +63,7 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 		this.table.initialize();
 	}
 
-	public static IFilteredCardStore<IMagicCard> getInstance() {
+	public static IFilteredCardStore getInstance() {
 		if (instance == null)
 			new MagicCardDataXmlHandler();
 		return instance;

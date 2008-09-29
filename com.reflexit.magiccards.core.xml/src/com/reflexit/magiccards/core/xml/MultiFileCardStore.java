@@ -8,11 +8,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.TreeSet;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -20,7 +18,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.AbstractCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
@@ -75,19 +72,6 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 				mp.setLocation(key);
 			}
 		}
-	}
-
-	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
-		initialize();
-		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortIndex(), filter.isAscending());
-		TreeSet<IMagicCard> filteredList = new TreeSet<IMagicCard>(comp);
-		for (Iterator<IMagicCard> iterator = cardsIterator(); iterator.hasNext();) {
-			IMagicCard elem = iterator.next();
-			if (!filter.isFiltered(elem)) {
-				filteredList.add(elem);
-			}
-		}
-		return filteredList;
 	}
 
 	public Iterator<IMagicCard> cardsIterator() {

@@ -31,15 +31,15 @@ import com.reflexit.magiccards.core.sync.ParseGathererSpoiler;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 
 public class XmlCardHolder implements ICardHandler {
-	public IFilteredCardStore<IMagicCard> getMagicCardHandler() {
+	public IFilteredCardStore getMagicCardHandler() {
 		return MagicCardDataXmlHandler.getInstance();
 	}
 
-	public IFilteredCardStore<IMagicCard> getMagicLibraryHandler() {
+	public IFilteredCardStore getMagicLibraryHandler() {
 		return LibraryDataXmlHandler.getInstance();
 	}
 
-	public IFilteredCardStore<IMagicCard> getDeckHandler(String filename) {
+	public IFilteredCardStore getDeckHandler(String filename) {
 		return new DeckXmlHandler(filename);
 	}
 
