@@ -20,7 +20,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
  *
  */
 public class TableSearch {
-	public static void search(SearchContext context, IFilteredCardStore<IMagicCard> store) {
+	public static void search(SearchContext context, IFilteredCardStore store) {
 		IMagicCard last = (IMagicCard) context.last;
 		Object[] elements = store.getElements();
 		context.last = null;
