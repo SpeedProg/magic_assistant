@@ -8,22 +8,20 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.test.assist;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.reflexit.magiccards.core.model.MagicCard;
 
 /**
  * @author Alena
  *
  */
-public class AllTests {
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for com.reflexit.magiccards.core.test");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(CardOrganizerTest.class);
-		suite.addTestSuite(MemCardHandlerTest.class);
-		//$JUnit-END$
-		return suite;
+public class CardGenerator {
+	static int id = 33;
+
+	static public MagicCard generateRandomCard() {
+		MagicCard card = new MagicCard();
+		card.setCardId(++id);
+		return card;
 	}
 }
