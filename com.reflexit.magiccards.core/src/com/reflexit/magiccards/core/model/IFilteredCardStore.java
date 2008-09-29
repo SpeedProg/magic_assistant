@@ -2,8 +2,10 @@ package com.reflexit.magiccards.core.model;
 
 import com.reflexit.magiccards.core.MagicException;
 
-public interface IFilteredCardStore<T> {
+public interface IFilteredCardStore {
 	public void update(MagicCardFilter filter) throws MagicException;
+
+	public ICardStore getCardStore();
 
 	/**
 	 * Size of filtered list
@@ -24,5 +26,9 @@ public interface IFilteredCardStore<T> {
 	 */
 	public Object getElement(int index);
 
-	public ICardStore<T> getCardStore();
+	/**
+	 * return top level cards group if grouping is enabled or null if not enabled
+	 * @return
+	 */
+	public Object[] getCardGroups();
 }

@@ -8,6 +8,7 @@ public class MagicCardFilter {
 	private int limit = 1000;
 	private int sortIndex = 1;
 	private boolean ascending;
+	private int groupIndex = -1;
 	public static class Expr {
 		boolean translated = false;
 
@@ -404,6 +405,14 @@ public class MagicCardFilter {
 
 	public int getSortIndex() {
 		return this.sortIndex;
+	}
+
+	public int getGroupIndex() {
+		return this.groupIndex;
+	}
+
+	public void setGroupIndex(int groupIndex) {
+		this.groupIndex = groupIndex;
 	}
 
 	void setLimit(int limit) {
