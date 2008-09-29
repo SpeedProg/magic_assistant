@@ -91,17 +91,19 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	public void update(MagicCardFilter filter) throws MagicException {
 		initialize();
 		this.groupsList.clear();
-		filterCards(filter);
+		setFilteredList(null);
+		Collection filterCards = filterCards(filter);
+		getFilteredList().addAll(filterCards);
 	}
 
 	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
 		initialize();
 		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortIndex(), filter.isAscending());
-		this.filteredList = new TreeSet<IMagicCard>(comp);
+		TreeSet filteredList = new TreeSet<IMagicCard>(comp);
 		for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
 			IMagicCard elem = iterator.next();
 			if (!filter.isFiltered(elem)) {
-				this.filteredList.add(elem);
+				filteredList.add(elem);
 				if (filter.getGroupIndex() >= 0) {
 					CardGroup group = findGroupIndex(elem, filter.getGroupIndex());
 					if (group != null)
@@ -109,7 +111,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 		}
-		return this.filteredList;
+		return filteredList;
 	}
 
 	/**
