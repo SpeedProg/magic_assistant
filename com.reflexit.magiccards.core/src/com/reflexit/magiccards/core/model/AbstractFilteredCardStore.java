@@ -20,6 +20,10 @@ import com.reflexit.magiccards.core.MagicException;
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore {
+	/**
+	 * 
+	 */
+	private static final CardGroup[] EMPTY_CARD_GROUP = new CardGroup[0];
 	protected Collection filteredList = null;
 	protected Map<String, CardGroup> groupsList = new LinkedHashMap<String, CardGroup>();
 	protected boolean initialized = false;
@@ -104,10 +108,14 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			IMagicCard elem = iterator.next();
 			if (!filter.isFiltered(elem)) {
 				filteredList.add(elem);
-				if (filter.getGroupIndex() >= 0) {
-					CardGroup group = findGroupIndex(elem, filter.getGroupIndex());
-					if (group != null)
-						group.add(elem);
+			}
+		}
+		for (Iterator iterator = filteredList.iterator(); iterator.hasNext();) {
+			IMagicCard elem = (IMagicCard) iterator.next();
+			if (filter.getGroupIndex() >= 0) {
+				CardGroup group = findGroupIndex(elem, filter.getGroupIndex());
+				if (group != null) {
+					group.add(elem);
 				}
 			}
 		}
@@ -146,9 +154,13 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
 	 */
-	public Object[] getCardGroups() {
+	public CardGroup[] getCardGroups() {
 		if (this.groupsList.size() == 0)
-			return null;
-		return this.groupsList.values().toArray();
+			return EMPTY_CARD_GROUP;
+		return this.groupsList.values().toArray(new CardGroup[this.groupsList.size()]);
+	}
+
+	public CardGroup getCardGroup(int index) {
+		return getCardGroups()[index];
 	}
 }

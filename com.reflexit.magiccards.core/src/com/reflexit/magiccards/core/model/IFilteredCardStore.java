@@ -30,5 +30,7 @@ public interface IFilteredCardStore {
 	 * return top level cards group if grouping is enabled or null if not enabled
 	 * @return
 	 */
-	public Object[] getCardGroups();
+	public CardGroup[] getCardGroups();
+
+	public CardGroup getCardGroup(int index);
 }

@@ -31,13 +31,18 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public static String getColorName(String cost) {
+		if (cost.length() == 0)
+			return "No Cost";
 		StringBuffer color = new StringBuffer();
 		addColor("B", "Black", cost, color);
 		addColor("U", "Blue", cost, color);
 		addColor("G", "Green", cost, color);
 		addColor("R", "Red", cost, color);
 		addColor("W", "White", cost, color);
-		return color.toString();
+		String res = color.toString();
+		if (res.length() == 0)
+			return "Colorless";
+		return res;
 	}
 
 	/**

@@ -17,11 +17,11 @@ import java.util.Collection;
  * @author Alena
  *
  */
-public class CardGroup {
+public class CardGroup implements ICardCountable {
 	private String name;
 	private int fieldIndex;
 	private int count;
-	private Collection children;
+	private ArrayList children;
 
 	public CardGroup(int fieldIndex, String name) {
 		this.fieldIndex = fieldIndex;
@@ -55,5 +55,26 @@ public class CardGroup {
 
 	public void add(Object elem) {
 		this.children.add(elem);
+		if (elem instanceof MagicCardPhisical) {
+			this.count += ((MagicCardPhisical) elem).getCount();
+		} else {
+			this.count++;
+		}
+	}
+
+	/**
+	 * @param index
+	 */
+	public Object getChildAtIndex(int index) {
+		return this.children.get(index);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
+	 */
+	public String getFieldByIndex(int i) {
+		if (i == this.fieldIndex)
+			return this.name;
+		return "";
 	}
 }

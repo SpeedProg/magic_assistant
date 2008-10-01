@@ -19,6 +19,7 @@ public class FilterHelper {
 	public static final String EDITION = "edition";
 	public static final String LOCATION = "location";
 	public static final String RARITY = "rarity";
+	public static final String GROUP_INDEX = "group";
 
 	public static String toIdent(String string) {
 		String res = string.toLowerCase();
