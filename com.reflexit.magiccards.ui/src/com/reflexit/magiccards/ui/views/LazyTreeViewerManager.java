@@ -11,16 +11,28 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
+import java.util.HashMap;
+
+import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {
-	private TreeViewer viewer;
+	private MyTreeViewer viewer;
 
 	LazyTreeViewerManager(AbstractCardsView view) {
 		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
+	}
+
+	/**
+	 * @param filteredStore
+	 * @param view
+	 */
+	public LazyTreeViewerManager(IFilteredCardStore filteredStore, AbstractCardsView view) {
+		super(filteredStore, view.getPreferenceStore(), view.getViewSite().getId());
 	}
 
 	@Override
@@ -49,7 +61,6 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		this.viewer.getTree().setDragDetect(true);
 		// viewer.setSorter(new NameSorter());
 		createDefaultColumns();
-		loadData();
 		return this.viewer.getControl();
 	}
 
@@ -62,7 +73,8 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		else
 			sortDirection = SWT.UP;
 		this.viewer.getTree().setSortDirection(sortDirection);
-		this.filter.setSortIndex(index);
+		ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
+		this.filter.setSortIndex(man.getSortIndex());
 		this.filter.setAscending(sortDirection == SWT.UP);
 	}
 
@@ -70,10 +82,11 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	protected void updateViewer() {
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {
+		this.viewer.unmapAllElements();
 		this.viewer.setInput(this.getFilteredStore());
 		System.err.println("set input1 tree time: " + (System.currentTimeMillis() - time) + " ms");
-		int size = this.getFilteredStore().getSize();
-		System.err.println("size=" + size);
+		int size = this.getFilteredStore().getCardGroups().length;
+		//System.err.println("size=" + size);
 		this.viewer.getTree().setItemCount(size);
 		//		} else {
 		//			this.viewer.setSelection(new StructuredSelection());
@@ -105,8 +118,46 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			if (man instanceof Listener) {
 				this.viewer.getTree().addListener(SWT.PaintItem, (Listener) man);
 			}
+			;
+			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
 		this.viewer.getTree().setHeaderVisible(true);
+	}
+
+	@Override
+	public void updateColumns(String newValue) {
+		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
+		int order[] = new int[acolumns.length];
+		String[] indexes = newValue.split(",");
+		if (indexes.length == 0)
+			return;
+		HashMap used = new HashMap();
+		for (int i = 0; i < acolumns.length; i++) {
+			TreeColumn col = acolumns[i];
+			used.put(col, new Integer(i));
+		}
+		for (int i = 0; i < acolumns.length; i++) {
+			try {
+				String in = indexes[i];
+				int xcol = Integer.parseInt(in);
+				int col = xcol > 0 ? xcol - 1 : -xcol - 1;
+				TreeColumn acol = acolumns[col];
+				order[i] = col;
+				boolean checked = xcol > 0;
+				if (checked) {
+					if (acol.getWidth() <= 0)
+						acol.setWidth(((ColumnManager) this.columns.get(i)).getColumnWidth());
+				} else {
+					acol.setWidth(0);
+				}
+				used.remove(acol);
+			} catch (RuntimeException e) {
+				TableColumn acol = (TableColumn) used.keySet().iterator().next();
+				order[i] = ((Integer) used.get(acol)).intValue();
+				used.remove(acol);
+			}
+		}
+		this.viewer.getTree().setColumnOrder(order);
 	}
 }

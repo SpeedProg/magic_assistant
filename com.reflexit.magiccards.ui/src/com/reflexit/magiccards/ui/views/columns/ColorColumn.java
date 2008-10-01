@@ -10,8 +10,11 @@ public class ColorColumn extends ColumnManager {
 
 	@Override
 	public String getText(Object element) {
-		String cost = ((IMagicCard) element).getByIndex(this.dataIndex);
-		return Colors.getColorName(cost);
+		if (element instanceof IMagicCard) {
+			String cost = ((IMagicCard) element).getByIndex(this.dataIndex);
+			return Colors.getColorName(cost);
+		}
+		return super.getText(element);
 	}
 
 	@Override

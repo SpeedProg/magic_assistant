@@ -4,8 +4,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
@@ -34,7 +36,7 @@ public class CostColumn extends ColumnManager implements Listener {
 
 	public void handleEvent(Event event) {
 		if (event.index == this.dataIndex) { // cost
-			TableItem item = (TableItem) event.item;
+			Item item = (Item) event.item;
 			Object row = item.getData();
 			int x = event.x;
 			int y = event.y;
@@ -45,7 +47,13 @@ public class CostColumn extends ColumnManager implements Listener {
 				return;
 			String text = getActualText(row);
 			Point tw = null;
-			Rectangle bounds = item.getBounds(event.index);
+			Rectangle bounds;
+			if (item instanceof TableItem)
+				bounds = ((TableItem) item).getBounds(event.index);
+			else if (item instanceof TreeItem)
+				bounds = ((TreeItem) item).getBounds(event.index);
+			else
+				return;
 			int tx = 0;
 			if (text != null) {
 				tw = event.gc.textExtent(text);

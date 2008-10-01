@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardStore;
+import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.MagicCardDragListener;
 import com.reflexit.magiccards.ui.utils.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.utils.MagicCardTransfer;
@@ -33,6 +34,11 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 
 	public LazyTableViewerManager(AbstractCardsView view) {
 		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
+		this.view = view;
+	}
+
+	public LazyTableViewerManager(IFilteredCardStore fs, AbstractCardsView view) {
+		super(fs, view.getPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 
@@ -63,7 +69,6 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		addDargAndDrop();
 		// viewer.setSorter(new NameSorter());
 		createDefaultColumns();
-		loadData();
 		return this.viewer.getControl();
 	}
 

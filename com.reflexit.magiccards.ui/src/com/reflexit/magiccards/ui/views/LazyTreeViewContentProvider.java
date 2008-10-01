@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ILazyTreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 
@@ -46,10 +47,11 @@ class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 		if (element instanceof IMagicCard) {
 			this.treeViewer.setChildCount(element, 0);
 		} else if (element instanceof IFilteredCardStore) {
-			if (currentChildCount <= 0) {
-				int count = ((IFilteredCardStore) element).getSize();
-				this.treeViewer.setChildCount(element, count);
-			}
+			int count = ((IFilteredCardStore) element).getCardGroups().length;
+			this.treeViewer.setChildCount(element, count);
+		} else if (element instanceof CardGroup) {
+			int count = ((CardGroup) element).getChildren().size();
+			this.treeViewer.setChildCount(element, count);
 		}
 	}
 	// private void init(Object element) {
@@ -70,23 +72,22 @@ class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 	public void updateElement(Object parent, int index) {
 		if (parent instanceof IFilteredCardStore) {
 			IFilteredCardStore store = (IFilteredCardStore) parent;
-			int i = index;
 			{
-				System.err.println("level: " + this.level + " index " + index);
-				// int l = Math.min(index + 20,
-				// magicCardResultHandler.getSize());
-				// for (int i = index; i < l; i++) {
+				System.err.println("store: " + " index " + index);
 				try {
-					Object element = store.getElement(index);
-					// level++;
-					this.treeViewer.replace(parent, i, element);
+					Object element = store.getCardGroup(index);
+					this.treeViewer.replace(parent, index, element);
+					updateChildCount(element, -1);
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}
-			// level--;
-			// updateChildCount(element, -1);
-			// view.getViewer().setChildCount(row, 0);
+		} else if (parent instanceof CardGroup) {
+			CardGroup group = (CardGroup) parent;
+			Object child = group.getChildAtIndex(index);
+			this.treeViewer.replace(parent, index, child);
+			System.err.println("grpup: " + " index " + index);
+			//updateChildCount(child, -1);
 		}
 	}
 }

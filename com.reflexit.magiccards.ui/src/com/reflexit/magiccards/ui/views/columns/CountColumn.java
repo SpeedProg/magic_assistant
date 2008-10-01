@@ -10,6 +10,7 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -30,9 +31,9 @@ public class CountColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof MagicCardPhisical) {
-			MagicCardPhisical m = (MagicCardPhisical) element;
-			return m.getCount() + "";
+		if (element instanceof ICardCountable) {
+			ICardCountable m = (ICardCountable) element;
+			return String.valueOf(m.getCount());
 		} else {
 			return "";
 		}

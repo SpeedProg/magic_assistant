@@ -7,12 +7,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.services.IDisposable;
 
@@ -44,6 +48,10 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		return this.store;
 	}
 
+	public void setFilter(MagicCardFilter filter) {
+		this.filter = filter;
+	}
+
 	void asyncUpdateViewer(Display display) {
 		display.syncExec(new Runnable() {
 			public void run() {
@@ -52,8 +60,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		});
 	}
 
-	protected void updateViewer() {
-	}
+	protected abstract void updateViewer();
 
 	void checkInit() {
 		try {
@@ -142,4 +149,42 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	}
 
 	protected abstract void updateSortColumn(int index);
+
+	/**
+	 * @param indexCmc
+	 */
+	public void updateGroupBy(int fieldIndex) {
+		this.filter.setGroupIndex(fieldIndex);
+		loadData();
+	}
+
+	/**
+	 * @param doubleClickListener
+	 */
+	public void addDoubleClickListener(IDoubleClickListener doubleClickListener) {
+		getViewer().addDoubleClickListener(doubleClickListener);
+	}
+
+	/**
+	 * @param menuMgr
+	 */
+	public void hookContextMenu(MenuManager menuMgr) {
+		Menu menu = menuMgr.createContextMenu(getViewer().getControl());
+		getViewer().getControl().setMenu(menu);
+	}
+
+	/**
+	 * @return
+	 */
+	public ISelectionProvider getSelectionProvider() {
+		return getViewer();
+	}
+
+	/**
+	 * @return 
+	 * @return
+	 */
+	public MagicCardFilter getFilter() {
+		return this.filter;
+	}
 }

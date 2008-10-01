@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.swt.widgets.Composite;
@@ -24,7 +23,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
+import com.reflexit.magiccards.ui.views.CompositeViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 
 /**
@@ -52,7 +51,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 		super.setGlobalHandlers(bars);
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", (IHandler) deleteHandler);
+		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 
 	@Override
@@ -80,7 +79,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 
 	@Override
 	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new LazyTableViewerManager(this);
+		return new CompositeViewerManager(this);
 	}
 
 	public void handleEvent(CardEvent event) {

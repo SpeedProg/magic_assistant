@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -27,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
@@ -42,6 +40,7 @@ import org.eclipse.ui.part.ViewPart;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -63,7 +62,9 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected ViewerManager manager;
 	private Label statusLine;
 	private MenuManager sortMenu;
+	private MenuManager groupMenu;
 	private IPreferenceStore store;
+	private SearchControl searchControl;
 
 	/**
 	 * The constructor.
@@ -97,7 +98,6 @@ public abstract class AbstractCardsView extends ViewPart {
 			AbstractCardsView.this.propertyChange(event);
 		}
 	};
-	private SearchControl searchControl;
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -115,14 +115,18 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void createMainControl(Composite parent) {
+		getPreferenceStore().setDefault(FilterHelper.GROUP_INDEX, -1);
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
 		// ADD the JFace Viewer as a Selection Provider to the View site.
-		getSite().setSelectionProvider(this.manager.getViewer());
+		getSite().setSelectionProvider(this.manager.getSelectionProvider());
 		// update manager columns
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
+		int index = getPreferenceStore().getInt(FilterHelper.GROUP_INDEX);
+		this.manager.updateGroupBy(index);
+		this.manager.loadData();
 	}
 
 	/**
@@ -173,9 +177,8 @@ public abstract class AbstractCardsView extends ViewPart {
 				AbstractCardsView.this.fillContextMenu(manager);
 			}
 		});
-		Menu menu = menuMgr.createContextMenu(getViewer().getControl());
-		getViewer().getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, getViewer());
+		this.manager.hookContextMenu(menuMgr);
+		getSite().registerContextMenu(menuMgr, this.manager.getSelectionProvider());
 	}
 
 	private void contributeToActionBars() {
@@ -194,12 +197,13 @@ public abstract class AbstractCardsView extends ViewPart {
 		//	this.showFind.setActionDefinitionId(FIND);
 		ActionHandler findHandler = new ActionHandler(this.showFind);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler(FIND, (IHandler) findHandler);
+		service.activateHandler(FIND, findHandler);
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.showFilter);
 		manager.add(this.sortMenu);
+		manager.add(this.groupMenu);
 		manager.add(this.showPrefs);
 		manager.add(new Separator());
 	}
@@ -250,6 +254,25 @@ public abstract class AbstractCardsView extends ViewPart {
 			};
 			this.sortMenu.add(ac);
 		}
+		this.groupMenu = new MenuManager("Group By");
+		this.groupMenu.add(new Action("None", SWT.CHECK) {
+			@Override
+			public void run() {
+				actionGroupBy(-1);
+			}
+		});
+		this.groupMenu.add(new Action("Color", SWT.CHECK) {
+			@Override
+			public void run() {
+				actionGroupBy(IMagicCard.INDEX_COST);
+			}
+		});
+		this.groupMenu.add(new Action("CC Cost", SWT.CHECK) {
+			@Override
+			public void run() {
+				actionGroupBy(IMagicCard.INDEX_CMC);
+			}
+		});
 		this.showPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
@@ -267,10 +290,19 @@ public abstract class AbstractCardsView extends ViewPart {
 		};
 	}
 
+	/**
+	 * @param indexCost
+	 */
+	protected void actionGroupBy(int index) {
+		getPreferenceStore().setValue(FilterHelper.GROUP_INDEX, index);
+		this.manager.updateGroupBy(index);
+		this.manager.loadData();
+	}
+
 	protected abstract String getPreferencePageId();
 
 	private void hookDoubleClickAction() {
-		getViewer().addDoubleClickListener(new IDoubleClickListener() {
+		this.manager.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				AbstractCardsView.this.doubleClickAction.run();
 			}
@@ -303,12 +335,12 @@ public abstract class AbstractCardsView extends ViewPart {
 		// CardFilter.open(getViewSite().getShell());
 		Dialog cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
-	        reloadData();
+			reloadData();
 	}
 
 	public void reloadData() {
-	    this.manager.loadData();
-    }
+		this.manager.loadData();
+	}
 
 	public Shell getShell() {
 		return getViewSite().getShell();

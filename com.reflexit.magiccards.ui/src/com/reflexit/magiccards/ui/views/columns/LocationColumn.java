@@ -46,7 +46,7 @@ public class LocationColumn extends GenColumn {
 			}
 			return loc;
 		} else {
-			return "";
+			return super.getText(element);
 		}
 	}
 
