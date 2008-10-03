@@ -196,14 +196,16 @@ public class MagicCardFilter {
 		}
 
 		public static Expr fieldInt(int index, String value) {
-			if (value.startsWith(">=")) {
+			if (value.equals(">= 0")) {
+				return TRUE;
+			} else if (value.startsWith(">=")) {
 				return fieldOp(index, Operation.GE, value.substring(2).trim());
 			} else if (value.startsWith("<=")) {
 				return fieldOp(index, Operation.LE, value.substring(2).trim());
 			} else if (value.startsWith("=")) {
 				return fieldOp(index, Operation.EQ, value.substring(2).trim());
 			} else if (value.equals("0")) {
-				return fieldOp(index, Operation.GE, value);
+				return TRUE;
 			}
 			return null;
 		}
