@@ -12,7 +12,6 @@ package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -42,6 +41,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	 * arranged as: { {name1, value1}, {name2, value2}, ...}
 	 */
 	private String[][] fEntryNamesAndValues;
+	private int modifiers;
 
 	/**
 	 * Create the combo box field editor.
@@ -52,10 +52,12 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	 * arranged as: { {name1, value1}, {name2, value2}, ...}
 	 * @param parent the parent composite
 	 */
-	public SpecialComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues, Composite parent) {
+	public SpecialComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues, Composite parent,
+	        int modifiers) {
 		init(name, labelText);
 		Assert.isTrue(checkArray(entryNamesAndValues));
 		this.fEntryNamesAndValues = entryNamesAndValues;
+		this.modifiers = modifiers;
 		createControl(parent);
 	}
 
@@ -81,6 +83,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
 	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		if (numColumns > 1) {
 			Control control = getLabelControl();
@@ -102,6 +105,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
 	 */
+	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		int comboC = 1;
 		if (numColumns > 1) {
@@ -122,6 +126,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
 	 */
+	@Override
 	protected void doLoad() {
 		updateComboForValue(getPreferenceStore().getString(getPreferenceName()));
 	}
@@ -129,6 +134,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
 	 */
+	@Override
 	protected void doLoadDefault() {
 		updateComboForValue(getPreferenceStore().getDefaultString(getPreferenceName()));
 	}
@@ -136,6 +142,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditor#doStore()
 	 */
+	@Override
 	protected void doStore() {
 		if (this.fValue == null) {
 			getPreferenceStore().setToDefault(getPreferenceName());
@@ -147,8 +154,13 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
+	}
+
+	public String getStringValue() {
+		return this.fValue;
 	}
 
 	/*
@@ -156,12 +168,13 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	 */
 	private Combo getComboBoxControl(Composite parent) {
 		if (this.fCombo == null) {
-			this.fCombo = new Combo(parent, SWT.DROP_DOWN);
+			this.fCombo = new Combo(parent, this.modifiers);
 			this.fCombo.setFont(parent.getFont());
 			for (int i = 0; i < this.fEntryNamesAndValues.length; i++) {
 				this.fCombo.add(this.fEntryNamesAndValues[i][0], i);
 			}
 			this.fCombo.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent evt) {
 					String oldValue = SpecialComboFieldEditor.this.fValue;
 					String name = SpecialComboFieldEditor.this.fCombo.getText();
@@ -172,7 +185,10 @@ public class SpecialComboFieldEditor extends FieldEditor {
 			});
 			this.fCombo.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
+					String oldValue = SpecialComboFieldEditor.this.fValue;
 					SpecialComboFieldEditor.this.fValue = SpecialComboFieldEditor.this.fCombo.getText();
+					setPresentsDefaultValue(false);
+					fireValueChanged(VALUE, oldValue, SpecialComboFieldEditor.this.fValue);
 				}
 			});
 		}
@@ -207,5 +223,17 @@ public class SpecialComboFieldEditor extends FieldEditor {
 			this.fValue = this.fEntryNamesAndValues[0][1];
 			this.fCombo.setText(this.fEntryNamesAndValues[0][0]);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.preference.FieldEditor#setEnabled(boolean,
+	 *      org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+		super.setEnabled(enabled, parent);
+		getComboBoxControl(parent).setEnabled(enabled);
 	}
 }

@@ -109,6 +109,11 @@
       <handler
             class="com.reflexit.magiccards.ui.commands.SendBugReportHandler"
             commandId="com.reflexit.magiccards.ui.commands.sendBug">
+
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.UpdateDbHandler"
+            commandId="com.reflexit.magiccards.ui.commands.updateMagicDb">
       </handler>
       <handler
             class="com.reflexit.magiccards.ui.commands.RenameHandler"
@@ -140,6 +145,11 @@
             id="com.reflexit.magiccards.ui.commands.sendBug"
             name="Send Bug">
       </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.updateMagicDb"
+            name="Update Magic Cards DB">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -154,11 +164,20 @@
       <menuContribution
             locationURI="menu:help?after=additions">
             <command
+                  commandId="com.reflexit.magiccards.ui.commands.updateMagicDb"
+                  mnemonic="U"
+                  id="com.reflexit.magiccards.ui.menus.updateMagicDb">
+            </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:help?after=additions">
+            <command
                   commandId="com.reflexit.magiccards.ui.commands.sendBug"
                   mnemonic="S"
                   id="com.reflexit.magiccards.ui.menus.sendBug">
             </command>
       </menuContribution>
+
      <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
         <command
