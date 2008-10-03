@@ -147,8 +147,12 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 			res.file = getFile(card);
 			this.map.put(key, res);
 		}
-		this.size++;
-		return res.list.add(card);
+		if (!res.list.contains(card)) {
+			this.size++;
+			return res.list.add(card);
+		} else {
+			return false;
+		}
 	}
 
 	private File getFile(IMagicCard card) {
