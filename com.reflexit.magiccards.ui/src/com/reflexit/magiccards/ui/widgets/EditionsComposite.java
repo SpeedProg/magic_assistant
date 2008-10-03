@@ -134,9 +134,9 @@ public class EditionsComposite extends Composite {
 			boolean checked = getPreferenceStore().getBoolean(id);
 			if (checked) {
 				if (this.checkedTree) {
-					((CheckboxTreeViewer) this.treeViewer).setChecked(id, checked);
+					((CheckboxTreeViewer) this.treeViewer).setChecked(ed, checked);
 				} else {
-					sel.add(id);
+					sel.add(ed);
 				}
 			}
 		}

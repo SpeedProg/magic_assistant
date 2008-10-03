@@ -31,7 +31,7 @@ public class ColumnCollection {
 		this.columns.add(new PowerColumn(IMagicCard.INDEX_POWER, "P", "Power"));
 		this.columns.add(new PowerColumn(IMagicCard.INDEX_TOUGHNESS, "T", "Toughness"));
 		this.columns.add(new OracleTextColumn(IMagicCard.INDEX_ORACLE));
-		this.columns.add(new GenColumn(IMagicCard.INDEX_EDITION, "Edition"));
+		this.columns.add(new GenColumn(IMagicCard.INDEX_EDITION, "Set"));
 		this.columns.add(new GenColumn(IMagicCard.INDEX_RARITY, "Rarity"));
 		this.columns.add(new GenColumn(IMagicCard.INDEX_CTYPE, "Color Type"));
 		if (!this.id.equals(MagicDbView.ID)) {

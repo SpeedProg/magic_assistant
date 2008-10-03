@@ -27,6 +27,8 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -36,6 +38,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	protected MagicCardFilter filter;
 	private IFilteredCardStore mhandler;
 	private IPreferenceStore store;
+	protected AbstractCardsView view;
 
 	protected ViewerManager(IFilteredCardStore handler, IPreferenceStore store, String viewId) {
 		super(viewId);
@@ -186,5 +189,21 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	 */
 	public MagicCardFilter getFilter() {
 		return this.filter;
+	}
+
+	protected void setStatus(String string) {
+		this.view.setStatus(string);
+	}
+
+	protected void updateTableHeader() {
+	}
+
+	protected void updateStatus() {
+		ICardStore cardStore = getFilteredStore().getCardStore();
+		String cardCountTotal = "";
+		if (cardStore instanceof ICardCountable) {
+			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+		}
+		setStatus("Shown " + getFilteredStore().getSize() + " items of " + cardStore.getTotal() + ". " + cardCountTotal);
 	}
 }

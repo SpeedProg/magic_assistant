@@ -25,6 +25,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 
 	LazyTreeViewerManager(AbstractCardsView view) {
 		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
+		this.view = view;
 	}
 
 	/**
@@ -33,6 +34,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	 */
 	public LazyTreeViewerManager(IFilteredCardStore filteredStore, AbstractCardsView view) {
 		super(filteredStore, view.getPreferenceStore(), view.getViewSite().getId());
+		this.view = view;
 	}
 
 	@Override
@@ -80,6 +82,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 
 	@Override
 	protected void updateViewer() {
+		updateTableHeader();
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {
 		this.viewer.unmapAllElements();
@@ -95,6 +98,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		//			this.viewer.refresh(true);
 		//		}
 		System.err.println("set input2 tree time: " + (System.currentTimeMillis() - time) + " ms");
+		updateStatus();
 	}
 
 	protected void createDefaultColumns() {

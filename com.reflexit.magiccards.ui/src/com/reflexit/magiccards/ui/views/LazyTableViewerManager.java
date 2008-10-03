@@ -20,8 +20,6 @@ import org.eclipse.ui.services.IDisposable;
 
 import java.util.HashMap;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.MagicCardDragListener;
 import com.reflexit.magiccards.ui.utils.MagicCardDropAdapter;
@@ -30,7 +28,6 @@ import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 
 public class LazyTableViewerManager extends ViewerManager implements IDisposable {
 	private TableViewer viewer;
-	private AbstractCardsView view;
 
 	public LazyTableViewerManager(AbstractCardsView view) {
 		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
@@ -123,10 +120,6 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		this.filter.setAscending(sortDirection == SWT.UP);
 	}
 
-	protected void setStatus(String string) {
-		this.view.setStatus(string);
-	}
-
 	@Override
 	protected void updateViewer() {
 		updateTableHeader();
@@ -141,16 +134,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			this.viewer.setItemCount(getFilteredStore().getSize());
 			this.viewer.refresh(true);
 		}
-		ICardStore cardStore = getFilteredStore().getCardStore();
-		String cardCountTotal = "";
-		if (cardStore instanceof ICardCountable) {
-			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
-		}
-		setStatus("Shown " + getFilteredStore().getSize() + " items of " + cardStore.getTotal() + ". " + cardCountTotal);
+		updateStatus();
 		//System.err.println("set input time: " + (System.currentTimeMillis() - time) + " ms");
-	}
-
-	protected void updateTableHeader() {
 	}
 
 	@Override
