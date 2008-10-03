@@ -11,7 +11,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
@@ -157,7 +156,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 				}
 				used.remove(acol);
 			} catch (RuntimeException e) {
-				TableColumn acol = (TableColumn) used.keySet().iterator().next();
+				TreeColumn acol = (TreeColumn) used.keySet().iterator().next();
 				order[i] = ((Integer) used.get(acol)).intValue();
 				used.remove(acol);
 			}
