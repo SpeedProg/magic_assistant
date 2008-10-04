@@ -103,7 +103,17 @@ public abstract class AbstractCardsView extends ViewPart {
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		this.manager = doGetViewerManager(this);
+		initManager();
 		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
+	}
+
+	/**
+	 * 
+	 */
+	protected void initManager() {
+		getPreferenceStore().setDefault(FilterHelper.GROUP_INDEX, -1);
+		int index = getPreferenceStore().getInt(FilterHelper.GROUP_INDEX);
+		this.manager.updateGroupBy(index);
 	}
 
 	private void createStatusLine(Composite composite) {
@@ -115,7 +125,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void createMainControl(Composite parent) {
-		getPreferenceStore().setDefault(FilterHelper.GROUP_INDEX, -1);
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
 		// ADD the JFace Viewer as a Selection Provider to the View site.
@@ -124,8 +133,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
-		int index = getPreferenceStore().getInt(FilterHelper.GROUP_INDEX);
-		this.manager.updateGroupBy(index);
 		this.manager.loadData();
 	}
 
@@ -221,6 +228,24 @@ public abstract class AbstractCardsView extends ViewPart {
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 	}
+	class GroupAction extends Action {
+		int index;
+
+		GroupAction(String name, int index) {
+			super(name, Action.AS_RADIO_BUTTON);
+			this.index = index;
+			int gindex = getPreferenceStore().getInt(FilterHelper.GROUP_INDEX);
+			if (index == gindex) {
+				setChecked(true);
+			}
+		}
+
+		@Override
+		public void run() {
+			if (isChecked())
+				actionGroupBy(this.index);
+		}
+	}
 
 	protected void makeActions() {
 		this.showFilter = new Action() {
@@ -255,24 +280,9 @@ public abstract class AbstractCardsView extends ViewPart {
 			this.sortMenu.add(ac);
 		}
 		this.groupMenu = new MenuManager("Group By");
-		this.groupMenu.add(new Action("None", SWT.CHECK) {
-			@Override
-			public void run() {
-				actionGroupBy(-1);
-			}
-		});
-		this.groupMenu.add(new Action("Color", SWT.CHECK) {
-			@Override
-			public void run() {
-				actionGroupBy(IMagicCard.INDEX_COST);
-			}
-		});
-		this.groupMenu.add(new Action("CC Cost", SWT.CHECK) {
-			@Override
-			public void run() {
-				actionGroupBy(IMagicCard.INDEX_CMC);
-			}
-		});
+		this.groupMenu.add(new GroupAction("None", -1));
+		this.groupMenu.add(new GroupAction("Color", IMagicCard.INDEX_COST));
+		this.groupMenu.add(new GroupAction("Cost", IMagicCard.INDEX_CMC));
 		this.showPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
@@ -295,6 +305,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	protected void actionGroupBy(int index) {
 		getPreferenceStore().setValue(FilterHelper.GROUP_INDEX, index);
+		this.manager.filter.setSortIndex(index);
+		this.manager.filter.setAscending(false);
 		this.manager.updateGroupBy(index);
 		this.manager.loadData();
 	}

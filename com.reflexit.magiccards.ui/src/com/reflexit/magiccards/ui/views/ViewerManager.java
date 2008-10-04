@@ -158,7 +158,6 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	 */
 	public void updateGroupBy(int fieldIndex) {
 		this.filter.setGroupIndex(fieldIndex);
-		loadData();
 	}
 
 	/**

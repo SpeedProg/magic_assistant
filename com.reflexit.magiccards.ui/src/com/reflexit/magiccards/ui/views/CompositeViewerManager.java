@@ -141,7 +141,8 @@ public class CompositeViewerManager extends ViewerManager {
 			// flip to table
 			this.activeIndex = 0;
 		}
-		setActivePage(this.activeIndex);
+		if (this.stackLayout != null)
+			setActivePage(this.activeIndex);
 	}
 
 	/* (non-Javadoc)
