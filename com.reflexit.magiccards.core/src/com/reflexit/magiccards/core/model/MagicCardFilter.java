@@ -252,7 +252,7 @@ public class MagicCardFilter {
 		if (Colors.getInstance().getIdPrefix().equals(requestedId)) {
 			String en = Colors.getInstance().getEncodeByName(value);
 			if (en != null) {
-				res = BinaryExpr.fieldMatches(IMagicCard.INDEX_COST, ".*\\Q{" + en + "}\\E.*");
+				res = BinaryExpr.fieldMatches(IMagicCard.INDEX_COST, ".*" + en + ".*");
 			} else if (value.equals("Multi-Color")) {
 				res = BinaryExpr.fieldEquals(IMagicCard.INDEX_CTYPE, "multi");
 			} else if (value.equals("Colorless")) {
