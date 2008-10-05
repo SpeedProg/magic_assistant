@@ -59,6 +59,7 @@ public class SymbolConverter {
 		manaMap.put("{2/G}", "icons/mana/Symbol_2G_mana.gif");
 		manaMap.put("{2/R}", "icons/mana/Symbol_2R_mana.gif");
 		manaMap.put("{T}", "icons/tap.gif");
+		manaMap.put("{Q}", "icons/untap.gif");
 	}
 	static {
 		// init
