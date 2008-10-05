@@ -239,6 +239,7 @@ public class ParseGathererSpoiler {
 		manaMap.put("2/U Mana", "{2/U}");
 		manaMap.put("2/W Mana", "{2/W}");
 		manaMap.put("Tap", "{T}");
+		manaMap.put("Untap", "{Q}");
 	}
 
 	private static String htmlToString(String str) {
@@ -262,7 +263,7 @@ public class ParseGathererSpoiler {
 	}
 
 	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
-    	return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId
-    	        + ".jpg");
-    }
+		return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId
+		        + ".jpg");
+	}
 }
