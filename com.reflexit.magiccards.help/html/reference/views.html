@@ -15,6 +15,7 @@ You can update local database with specific set or with "Standard" format sets.
 See <a href="preferences.html#update">Update Magic Database</a>. 
 <p/>
 "Magic Database" View contains the following components:
+<a name="viewcomp"/>
 <ul>
  <li>Cards Table</li> - see <a href="#cardstable">Cards Table</a> reference.
  <li>Status Bar</li> - shows information about current card table.
@@ -22,7 +23,7 @@ See <a href="preferences.html#update">Update Magic Database</a>.
  <li>Tool Bar</li> 
   <ul>
   <li><img src="../../../com.reflexit.magiccards.ui/icons/filter.gif"/> (Open Filter) - opens a <a href="#filter">Filter dialog</a>.</li>
-  <li><a name="viewmenu"/>View Menu
+  <li><a name="viewmenu"/><img src="../../../org.eclipse.ui/icons/full/elcl16/view_menu.gif"/> (View Menu)
      <ul>
      <li>Filter...</li>
      <li>"Group By"
@@ -38,11 +39,90 @@ See <a href="preferences.html#update">Update Magic Database</a>.
   </li>
   </ul>
 </ul>
-<h2>Collection View</h2>
+<h2>Magic Collection View</h2>
+Magic Collection View shows cards from all or selected collection set. 
+To control which collections are shown you can use 
+<a href="#filterloc">Location</a> page of the view's Filter.
+For collection view components see <a href="#viewcomp">Magic Database view</a>.
+<p/>
+You can open "Collections" view by double-clicking on one of the collections or collection containers from <a href="#viewcardnav">Card Navigator</a> view.
 <h2>Deck View</h2>
+Deck view shows card from a specific deck.
+To open a Deck view double-click on a deck from <a href="#viewcardnav">Card Navigator</a> view.
+To close a Deck view click on "X" icon near the view header.
+<p/>
+For the list of view components (menus, card table, status bar) see <a href="#viewcomp">Magic Database view</a>.
+<p/>
+You can drag cards from and to Deck view. Dragging a card from a Deck view to another Deck view will move the card.
+Dragging a card from Magic Database view to a Deck view will add 1 card to the deck. You can change number of cards of the same name by editing Count cell.
+
 <h2>Card Description View</h2>
-<h2>Card Navigator View</h2>
+Card Description view shows details of the card selected in of the cards views (Magic Database, Magic Collection or Deck).
+It loads a card image from "gatherer" site, and caches it in the workspace.
+<p/>
+You can turn off card caching from <a href="preferences.html">Preferences</a> in the Magic Preferences page.
+If you need to use proxy you can set it up proxy settings from Preferences-&gt;General-&gt;Network Connections. 
+<p/>
+If image is not loaded or image quality is not acceptable card information is duplicated as a text below the image.
+<p/>
+To load card information into Card Description view selecta card (single click) from any other view that shows cards list.
+
+<h2><a name="viewcardnav"/>Card Navigator View</h2>
+Card navigator allow you to create a structure to organise your cards.
+You can create arbitrary structures to organise you collections and deck, 
+the only restriction is that deck cannot be in the same folder as collection.
+<p/>
+To add new elements in the structure you can use view context menu (right click) or main File menu,
+see details in <a href="workbench.html#new">New Menu</a>.
+<p/>
+To delete an element use context menu "Delete". Select an element, right-click on it and select menu item "Delete". 
+<p/>
+To rename an element use context menu "Rename". Select an element, right-click on it and select menu item "Rename".
 <h2>Search</h2>
-<h2>Filter Dialog</h2>
+You can search for a card with specific name using Search box. 
+You can also achieve same results using filter, but this way is more convinient when
+creating a deck from the a "real life" deck. 
+<p/>
+To open it select "view menu-&gt;Find..." or "Ctrl+F".
+To close it click on "X" button.
+To find a card enter a name or part of name and press enter (or "arrow down" button).
+You can also search backward by pressing "arrow down" button.
+To use case sensitive search press "C" button. 
+To use search where only whole word would match press "W" button.
+
+<h2><a name="filter"/>Filter Dialog</h2>
+You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
+You can select one of more criteria from the filters.
+
+Filter dialog has three page: Basic Filter, Sets Filter and Location filter (last one only available from Collections view).
+ 
+
+<h3><a name="filterasic">Basic Filter</h3>
+Basic filter has several groups such as Color, Type, Rarity etc.
+Items that belong to the same group (such as Color) would be selected using logical OR. 
+Item that belong to different groups would be selected using logical AND.
+<p/>
+For example if you select color Blue and White and Type Creature and Enchantment, 
+you will get all creates and all enchantments that are Blue or White (including multicolors).
+<p/>
+Text search fields would split you text by words and search text using AND for all worlds you enter in the same line, disregarding order.
+Text search field provide content assist, i.e. they would show possible word you want to enter while you typing.
+<p/>
+<li>Example 1: Select all Green creatures with flying - Select Green in Color, Create in Type, and type "flying" in Text field</li>
+<li>Example 2: Select Artifact Creatures with cost 0 or 1 - Select Artifact in Type, type "Creature" in Type field, select &lt;= 1 in "Converted CC" field.  
+
+<p/>To search for symbols in Text field (such as mana and tap symbols) use the following table:
+<table>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/red_mana.gif" alt="Red mana symbol"/></td><td>{R}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/black_mana.gif" alt="Black mana symbol"/></td><td>{B}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/blue_mana.gif" alt="Blue mana symbol"/></td><td>{U}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/green_mana.gif" alt="Green mana symbol"/></td><td>{G}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/white_mana.gif" alt="White mana symbol"/></td><td>{W}</td></tr>
+</table>
+<h3><a name="filterset">Set Filter</h3>
+Set filter allow to select specific set in which cards should be shown.
+<h3><a name="filterloc">Location Filter</h3>
+Location filter allow to select set of collection that would be shown in Magic Collection view.
+
 </body>
 </html>
