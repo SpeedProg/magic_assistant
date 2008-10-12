@@ -2,10 +2,9 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Reference" link_to="toc.xml#reference"> 
-	<topic label="Main Topic"  href="html/reference/maintopic.html"> 
-		<topic label="Sub Topic" href="html/reference/subtopic.html" /> 
+	<topic label="Workbench"  href="html/reference/workbench.html"> 
+		<topic label="Main Menu" href="html/reference/workbench.html#menu" /> 
 	</topic>
-	<topic label="Main Topic 2">
-		<topic label="Sub Topic 2" href="html/reference/subtopic2.html" /> 
-	</topic> 
+	<topic label="Views"  href="html/reference/views.html"/>
+	<topic label="Preferences"  href="html/reference/preferences.html"/>
 </toc>

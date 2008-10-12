@@ -5,6 +5,9 @@
    <topic label="Getting Started">
       <anchor id="gettingstarted"/>
    </topic>
+   <!-- <topic label="Reference">
+      <anchor id="reference"/>
+   </topic> -->
    <topic href="html/MagicRulebook_10E_EN.pdf" label="Magic Rulebook (10th Edition)">
    </topic>
 </toc>
