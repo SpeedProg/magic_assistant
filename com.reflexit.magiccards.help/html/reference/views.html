@@ -7,7 +7,8 @@
 </head>
 
 <body>
-<h2>Magic Database View</h2>
+<h1>Views</h1>
+<h2><a name="viewmagicdb"/>Magic Database View</h2>
 "Magic Database" view show all available cards. By default local database of cards
 contains only latest print of a card with the same name. Default 
 database is contain sets only up to last public set that was release prior to the software release.
@@ -35,18 +36,50 @@ See <a href="preferences.html#update">Update Magic Database</a>.
      </li>
      <li>"Preferences..." - opens this view <a href="preferences.html#columnpref">preferences</a>.</li>
      <li>"Find..." - opens a <a href="#search">search</a> bar.</li>
+     <li>"Sort By" - sort by specific column</li>
      </ul>
   </li>
   </ul>
 </ul>
-<h2>Magic Collection View</h2>
+
+
+<h3><a name="cardstable"/>Cards Table</h3>
+Cards table is a table (or table tree) that show cards for current view.
+It provides the following actions:
+<br/>
+<li>Select a row - show card description in <a href="#viewcard">Card Description</a> view.</li>
+<li>Hover over a cell - show a tooltip - full text of the cell if cell is to small to show it (ex. Description column).</li>
+<li>Click on column - sort by column, click again on the same column to change directions</li>
+<li>Click inside a cell - bring up cell editor - if applicable</li>
+<p/>
+This is a list of possible columns:<br/>
+<a name="columns"/>
+<li>Name - name of the card</li>
+<li>Id - id of the card (gatherer id)</li>
+<li>Cost - cost images and converted cast cost (sorts by CCC)</li>
+<li>Type - type of card</li>
+<li>P - power for creatures</li>
+<li>T - toughness for creatures and for planeswalkers</li>
+<li>Rarity - card rarity</li>
+<li>Set - card set</li>
+<li>Oracle text - text of card (oracle variant)</li>
+<li>Color - card color determined by casting cost</li>
+<li>Color type - mono, multi or hybrid</li>
+<p/>
+These only available in Deck and Collections view:
+<li>Count - Card count</li>
+<li>Location - Card location: Deck or Collection path</li>
+
+<h2><a name="viewcol"/>Magic Collection View</h2>
 Magic Collection View shows cards from all or selected collection set. 
 To control which collections are shown you can use 
 <a href="#filterloc">Location</a> page of the view's Filter.
 For collection view components see <a href="#viewcomp">Magic Database view</a>.
 <p/>
 You can open "Collections" view by double-clicking on one of the collections or collection containers from <a href="#viewcardnav">Card Navigator</a> view.
-<h2>Deck View</h2>
+
+
+<h2><a name="viewdeck"/>Deck View</h2>
 Deck view shows card from a specific deck.
 To open a Deck view double-click on a deck from <a href="#viewcardnav">Card Navigator</a> view.
 To close a Deck view click on "X" icon near the view header.
@@ -56,7 +89,7 @@ For the list of view components (menus, card table, status bar) see <a href="#vi
 You can drag cards from and to Deck view. Dragging a card from a Deck view to another Deck view will move the card.
 Dragging a card from Magic Database view to a Deck view will add 1 card to the deck. You can change number of cards of the same name by editing Count cell.
 
-<h2>Card Description View</h2>
+<h2><a name="viewcard"/>Card Description View</h2>
 Card Description view shows details of the card selected in of the cards views (Magic Database, Magic Collection or Deck).
 It loads a card image from "gatherer" site, and caches it in the workspace.
 <p/>
@@ -113,11 +146,16 @@ Text search field provide content assist, i.e. they would show possible word you
 
 <p/>To search for symbols in Text field (such as mana and tap symbols) use the following table:
 <table>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/red_mana.gif" alt="Red mana symbol"/></td><td>{R}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/black_mana.gif" alt="Black mana symbol"/></td><td>{B}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/blue_mana.gif" alt="Blue mana symbol"/></td><td>{U}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/green_mana.gif" alt="Green mana symbol"/></td><td>{G}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/white_mana.gif" alt="White mana symbol"/></td><td>{W}</td></tr>
+<tr><th>Symbol</th><th>Search as</th></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/red_mana.gif" alt="Red mana symbol"/> Red mana</td><td>{R}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/black_mana.gif" alt="Black mana symbol"/> Black mana</td><td>{B}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/blue_mana.gif" alt="Blue mana symbol"/> Blue mana</td><td>{U}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/green_mana.gif" alt="Green mana symbol"/> Green mana</td><td>{G}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/white_mana.gif" alt="White mana symbol"/> White mana</td><td>{W}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/tap.gif" alt="Tap"/> Tap</td><td>{T}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/untap.gif" alt="Untap"/> Untap</td><td>{Q}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/Symbol_1_mana.gif" alt="1"/> 1 mana</td><td>{1} also {2},{3},...,{12}</td></tr>
+<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/Symbol_BG_mana.gif" alt="Black/Green"/> Black or Green mana</td><td>{B/G} also {W/B},{U/R},...</td></tr>
 </table>
 <h3><a name="filterset">Set Filter</h3>
 Set filter allow to select specific set in which cards should be shown.
