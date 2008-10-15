@@ -305,7 +305,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	protected void actionGroupBy(int index) {
 		getPreferenceStore().setValue(FilterHelper.GROUP_INDEX, index);
-		this.manager.filter.setSortIndex(index);
+		if (index != -1)
+			this.manager.filter.setSortIndex(index);
 		this.manager.filter.setAscending(false);
 		this.manager.updateGroupBy(index);
 		this.manager.loadData();
