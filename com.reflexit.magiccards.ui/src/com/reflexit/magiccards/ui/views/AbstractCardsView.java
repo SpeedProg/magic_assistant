@@ -21,6 +21,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,6 +34,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -48,6 +52,8 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
+import com.reflexit.magiccards.ui.utils.MagicCardTransfer;
+import com.reflexit.magiccards.ui.utils.TextConvertor;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
 import com.reflexit.magiccards.ui.views.search.SearchContext;
@@ -59,6 +65,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	private Action doubleClickAction;
 	private Action showPrefs;
 	private Action showFind;
+	private Action copyText;
 	protected ViewerManager manager;
 	private Label statusLine;
 	private MenuManager sortMenu;
@@ -217,6 +224,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
+		manager.add(this.copyText);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -298,6 +306,37 @@ public abstract class AbstractCardsView extends ViewPart {
 				AbstractCardsView.this.searchControl.setVisible(true);
 			}
 		};
+		this.copyText = new Action("Copy") {
+			/* (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run() {
+				runCopy();
+			}
+		};
+	}
+
+	/**
+	 * 
+	 */
+	protected void runCopy() {
+		IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
+		if (sel.isEmpty())
+			return;
+		StringBuffer buf = new StringBuffer();
+		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			buf.append(TextConvertor.toText(card));
+			buf.append("--------------------------");
+		}
+		String textData = buf.toString();
+		if (textData.length() > 0) {
+			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+			TextTransfer textTransfer = TextTransfer.getInstance();
+			MagicCardTransfer mt = MagicCardTransfer.getInstance();
+			cb.setContents(new Object[] { textData, sel.getFirstElement() }, new Transfer[] { textTransfer, mt });
+		}
 	}
 
 	/**
