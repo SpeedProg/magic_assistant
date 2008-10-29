@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private static MagicCardDataXmlHandler instance;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MemoryCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class SingleFileCardStore extends MemoryCardStore {

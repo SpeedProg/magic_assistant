@@ -6,10 +6,10 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.Deck;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private DeckFileCardStore table;

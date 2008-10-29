@@ -4,12 +4,12 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private static LibraryDataXmlHandler instance;

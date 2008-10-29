@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.xml.DeckFileCardStore;
@@ -33,6 +34,8 @@ public class CardCollectionStoreObject {
 	public String key;
 	public String comment;
 	public String cardCount;
+	public String type;
+	public Properties properties = new Properties();
 	public ArrayList list;
 	public transient File file;
 	public transient static XStream xstream;

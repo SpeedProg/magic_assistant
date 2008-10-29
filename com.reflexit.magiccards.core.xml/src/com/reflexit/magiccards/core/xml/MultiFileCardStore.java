@@ -15,10 +15,10 @@ import java.util.NoSuchElementException;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.AbstractCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.storage.AbstractCardStore;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
