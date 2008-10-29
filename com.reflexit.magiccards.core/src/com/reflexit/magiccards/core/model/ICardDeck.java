@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model;
 
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+
 /**
  * @author Alena
  *

@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.model;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public interface ICardHandler {
 	public IFilteredCardStore getMagicCardHandler();

@@ -8,13 +8,14 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
  * @author Alena

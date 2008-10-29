@@ -1,6 +1,8 @@
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.storage;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 public interface IFilteredCardStore {
 	public void update(MagicCardFilter filter) throws MagicException;

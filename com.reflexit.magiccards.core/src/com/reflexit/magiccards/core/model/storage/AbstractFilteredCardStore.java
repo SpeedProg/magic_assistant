@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,11 @@ import java.util.TreeSet;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.Colors;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardComparator;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 /**
  * Class that implements IFilteredCardStore, it is only contains filtered filteredList

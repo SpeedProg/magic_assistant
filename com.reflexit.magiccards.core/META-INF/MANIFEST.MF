@@ -14,6 +14,8 @@ Export-Package: com.reflexit.magiccards.core,
  com.reflexit.magiccards.core.model,
  com.reflexit.magiccards.core.model.events,
  com.reflexit.magiccards.core.model.nav,
+ com.reflexit.magiccards.core.model.storage,
+ com.reflexit.magiccards.core.model.utils,
  com.reflexit.magiccards.core.sync,
  com.thoughtworks.xstream
 Bundle-ClassPath: .,
