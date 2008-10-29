@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena

@@ -23,8 +23,6 @@ import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -33,6 +31,8 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 import com.reflexit.magiccards.ui.widgets.EditionsComposite;

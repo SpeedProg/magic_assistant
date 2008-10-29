@@ -8,8 +8,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 class LazyTreeViewContentProvider implements // IStructuredContentProvider,
         ILazyTreeContentProvider {

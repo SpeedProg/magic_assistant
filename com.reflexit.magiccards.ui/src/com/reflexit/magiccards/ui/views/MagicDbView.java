@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;

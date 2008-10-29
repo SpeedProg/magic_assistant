@@ -20,7 +20,7 @@ import org.eclipse.ui.services.IDisposable;
 
 import java.util.HashMap;
 
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.MagicCardDragListener;
 import com.reflexit.magiccards.ui.utils.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.utils.MagicCardTransfer;

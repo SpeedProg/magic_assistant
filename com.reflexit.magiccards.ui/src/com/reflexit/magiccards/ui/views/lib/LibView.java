@@ -16,10 +16,10 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;

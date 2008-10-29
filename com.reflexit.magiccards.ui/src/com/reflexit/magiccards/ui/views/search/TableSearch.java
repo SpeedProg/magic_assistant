@@ -12,8 +12,8 @@ package com.reflexit.magiccards.ui.views.search;
 
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena

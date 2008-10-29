@@ -45,9 +45,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -99,6 +99,9 @@ public abstract class AbstractCardsView extends ViewPart {
 		contributeToActionBars();
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
 		IContextActivation contextActivation = contextService.activateContext("com.reflexit.magiccards.ui.context");
+		// ADD the JFace Viewer as a Selection Provider to the View site.
+		getSite().setSelectionProvider(this.manager.getSelectionProvider());
+		loadInitial();
 	}
 	IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -134,8 +137,9 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void createMainControl(Composite parent) {
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
-		// ADD the JFace Viewer as a Selection Provider to the View site.
-		getSite().setSelectionProvider(this.manager.getSelectionProvider());
+	}
+
+	protected void loadInitial() {
 		// update manager columns
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String value = store.getString(getPrefenceColumnsId());

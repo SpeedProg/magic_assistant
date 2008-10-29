@@ -16,7 +16,7 @@ import org.eclipse.ui.services.IDisposable;
 
 import java.util.HashMap;
 
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {

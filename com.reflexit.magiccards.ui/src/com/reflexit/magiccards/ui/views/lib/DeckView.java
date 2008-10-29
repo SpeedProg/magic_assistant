@@ -1,17 +1,28 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
+import com.alena.birt.ChartCanvas;
+import com.alena.birt.IChartGenerator;
+import com.alena.birt.ManaCurve;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.Deck;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
@@ -62,6 +73,34 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	}
 
 	@Override
+	protected void createMainControl(Composite parent) {
+		CTabFolder folder = new CTabFolder(parent, SWT.BORDER | SWT.BOTTOM);
+		//folder.setSimple(false);
+		CTabItem table = new CTabItem(folder, SWT.CLOSE);
+		table.setText("Table");
+		table.setShowClose(false);
+		Control control = this.manager.createContents(folder);
+		//((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
+		table.setControl(control);
+		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
+		final CTabItem mana = new CTabItem(folder, SWT.CLOSE);
+		mana.setText("Mana");
+		mana.setShowClose(false);
+		final ChartCanvas manaControl = new ChartCanvas(folder, SWT.BORDER);
+		mana.setControl(manaControl);
+		folder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.item == mana) {
+					IChartGenerator gen = new ManaCurve(buildManaCurve());
+					manaControl.setChartGenerator(gen);
+				}
+			}
+		});
+		folder.setSelection(0);
+	}
+
+	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 	}
@@ -92,5 +131,9 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	@Override
 	protected String getPreferencePageId() {
 		return DeckViewPreferencePage.class.getName();
+	}
+
+	protected int[] buildManaCurve() {
+		return CardStoreUtils.getInstance().buildManaCurve(getFilteredStore().getCardStore());
 	}
 }

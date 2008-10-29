@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class RegularViewContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parent) {

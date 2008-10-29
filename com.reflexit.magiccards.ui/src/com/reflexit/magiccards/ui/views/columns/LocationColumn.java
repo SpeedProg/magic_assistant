@@ -12,13 +12,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.Deck;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
 
 /**

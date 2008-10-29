@@ -17,9 +17,9 @@ import org.eclipse.swt.dnd.TransferData;
 
 import java.util.Arrays;
 
-import com.reflexit.magiccards.core.model.ICardStore;
-import com.reflexit.magiccards.core.model.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
