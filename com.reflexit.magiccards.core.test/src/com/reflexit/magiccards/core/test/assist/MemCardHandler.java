@@ -1,10 +1,10 @@
 package com.reflexit.magiccards.core.test.assist;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.ICardStore;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MemoryCardStore;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 
 public class MemCardHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private MemoryCardStore table;

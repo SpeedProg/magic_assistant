@@ -36,7 +36,7 @@ public class MemCardHandlerTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link com.reflexit.magiccards.core.model.AbstractFilteredCardStore#update(com.reflexit.magiccards.core.model.MagicCardFilter)}.
+	 * Test method for {@link com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore#update(com.reflexit.magiccards.core.model.MagicCardFilter)}.
 	 */
 	@Test
 	public void testGetCardGrpups() {
