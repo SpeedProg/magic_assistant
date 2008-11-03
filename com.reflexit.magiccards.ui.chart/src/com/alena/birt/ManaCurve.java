@@ -129,7 +129,7 @@ public class ManaCurve implements IChartGenerator {
 		sdX.getSeries().add(seCategory);
 		// Y-Series (1)
 		BarSeries bs1 = (BarSeries) BarSeriesImpl.create();
-		bs1.setSeriesIdentifier("Your");//$NON-NLS-1$
+		bs1.setSeriesIdentifier("This Deck");//$NON-NLS-1$
 		bs1.setDataSet(seriesOneValues);
 		bs1.setRiserOutline(null);
 		bs1.setRiser(RiserType.RECTANGLE_LITERAL);

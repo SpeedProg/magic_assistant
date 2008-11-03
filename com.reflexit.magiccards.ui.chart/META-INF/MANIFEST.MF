@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Birt Plug-in
+Bundle-Name: Magic Assistant Chart Plugin
 Bundle-SymbolicName: com.reflexit.magiccards.ui.chart;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.4.qualifier
 Bundle-Activator: com.alena.birt.Activator
-Bundle-Vendor: ALENA
+Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.birt.chart.device.swt;bundle-version="2.3.1",
@@ -13,5 +13,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.birt.chart.engine.extension;bundle-version="2.3.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: com.alena.birt,
- com.alena.birt.actions
+Export-Package: com.alena.birt
