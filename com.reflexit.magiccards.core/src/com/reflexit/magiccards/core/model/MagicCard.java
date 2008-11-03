@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.reflexit.magiccards.core.Activator;
+
 public class MagicCard implements IMagicCard {
 	int id;
 	String name;
@@ -19,8 +21,8 @@ public class MagicCard implements IMagicCard {
 	transient float ftoughness = -STAR_POWER;
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
+	 */
 	public String getCost() {
 		return this.cost;
 	}
@@ -30,8 +32,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getCardId()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCardId()
+	 */
 	public int getCardId() {
 		return this.id;
 	}
@@ -41,8 +43,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getName()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getName()
+	 */
 	public String getName() {
 		return this.name;
 	}
@@ -52,8 +54,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getOracleText()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getOracleText()
+	 */
 	public String getOracleText() {
 		return this.oracleText;
 	}
@@ -63,8 +65,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getRarity()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getRarity()
+	 */
 	public String getRarity() {
 		return this.rarity;
 	}
@@ -74,8 +76,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
+	 */
 	public String getEdition() {
 		return this.edition;
 	}
@@ -85,8 +87,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getType()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getType()
+	 */
 	public String getType() {
 		return this.type;
 	}
@@ -101,8 +103,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getPower()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getPower()
+	 */
 	public String getPower() {
 		return this.power;
 	}
@@ -112,8 +114,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getToughness()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getToughness()
+	 */
 	public String getToughness() {
 		return this.toughness;
 	}
@@ -140,7 +142,7 @@ public class MagicCard implements IMagicCard {
 			try {
 				t = Float.parseFloat(str);
 			} catch (NumberFormatException e) {
-				System.err.println("CANNOT PARSE: " + str);
+				Activator.log(e);
 				t = STAR_POWER;
 			}
 		}
@@ -164,8 +166,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
+	 */
 	public String getColorType() {
 		if (this.colorType == null)
 			setExtraFields();
@@ -177,8 +179,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
+	 */
 	public int getCmc() {
 		if (this.cmc == -1)
 			setExtraFields();
@@ -210,8 +212,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
+	 */
 	public String getByIndex(int i) {
 		Object elem = getObjectByIndex(i);
 		if (elem == null)
@@ -220,8 +222,8 @@ public class MagicCard implements IMagicCard {
 	}
 
 	/* (non-Javadoc)
-     * @see com.reflexit.magiccards.core.model.IMagicCard#getObjectByIndex(int)
-     */
+	 * @see com.reflexit.magiccards.core.model.IMagicCard#getObjectByIndex(int)
+	 */
 	public Object getObjectByIndex(int i) {
 		return ((ArrayList) getValues()).get(i);
 	}
