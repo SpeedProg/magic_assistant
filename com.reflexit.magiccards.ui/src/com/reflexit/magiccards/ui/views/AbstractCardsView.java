@@ -155,7 +155,14 @@ public abstract class AbstractCardsView extends ViewPart {
 			public void run(SearchContext context) {
 				runSearch(context);
 			}
-		});
+		}) {
+			@Override
+			public void setVisible(boolean vis) {
+				super.setVisible(vis);
+				if (AbstractCardsView.this.showFind != null)
+					AbstractCardsView.this.showFind.setEnabled(!vis);
+			}
+		};
 		this.searchControl.createFindBar(composite);
 		this.searchControl.setVisible(false);
 	}
@@ -236,6 +243,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(this.showFind);
 		manager.add(this.showFilter);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
@@ -308,8 +316,10 @@ public abstract class AbstractCardsView extends ViewPart {
 			@Override
 			public void run() {
 				AbstractCardsView.this.searchControl.setVisible(true);
+				AbstractCardsView.this.showFind.setEnabled(false);
 			}
 		};
+		this.showFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
 		this.copyText = new Action("Copy") {
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.action.Action#run()

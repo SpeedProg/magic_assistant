@@ -55,8 +55,15 @@ public class UpdateDbHandler extends AbstractHandler {
 						ICardHandler ch = DataManager.getCardHandler();
 						int rec = ch.downloadFromUrl(url, pm);
 						res[0] = new Integer(rec);
+					} catch (final InterruptedException e) {
+						shell.getDisplay().syncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openInformation(shell, "Info", "Operation Cancelled");
+							}
+						});
+						res[0] = -2; // cancelled
 					} catch (final Exception e) {
-						e.printStackTrace();
+						MagicUIActivator.log(e);
 						shell.getDisplay().syncExec(new Runnable() {
 							public void run() {
 								MessageDialog.openError(shell, "Error", e.getMessage());
@@ -82,7 +89,9 @@ public class UpdateDbHandler extends AbstractHandler {
 			MessageDialog.openInformation(shell, "Magic Db Update", "Data updated: " + rec + " new records");
 		else if (rec == 0)
 			MessageDialog.openInformation(shell, "Magic Db Update", "No new cards found for selected set");
-		else
+		else if (rec == -2) {
+			// do nothing
+		} else
 			MessageDialog.openError(shell, "Magic Db Update", "Query returned empty page");
 		return null;
 	}

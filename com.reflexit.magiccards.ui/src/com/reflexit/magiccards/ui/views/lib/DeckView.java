@@ -16,6 +16,7 @@ import com.alena.birt.ChartCanvas;
 import com.alena.birt.IChartGenerator;
 import com.alena.birt.ManaCurve;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -77,14 +78,14 @@ public class DeckView extends CollectionView implements ICardEventListener {
 		CTabFolder folder = new CTabFolder(parent, SWT.BORDER | SWT.BOTTOM);
 		//folder.setSimple(false);
 		CTabItem table = new CTabItem(folder, SWT.CLOSE);
-		table.setText("Table");
+		table.setText("Cards");
 		table.setShowClose(false);
 		Control control = this.manager.createContents(folder);
 		//((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
 		table.setControl(control);
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		final CTabItem mana = new CTabItem(folder, SWT.CLOSE);
-		mana.setText("Mana");
+		mana.setText("Mana Curve");
 		mana.setShowClose(false);
 		final ChartCanvas manaControl = new ChartCanvas(folder, SWT.BORDER);
 		mana.setControl(manaControl);
@@ -94,6 +95,15 @@ public class DeckView extends CollectionView implements ICardEventListener {
 				if (e.item == mana) {
 					IChartGenerator gen = new ManaCurve(buildManaCurve());
 					manaControl.setChartGenerator(gen);
+					// set status
+					ICardStore cardStore = getFilteredStore().getCardStore();
+					String cardCountTotal = "";
+					if (cardStore instanceof ICardCountable) {
+						cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+					}
+					setStatus(cardCountTotal);
+				} else {
+					DeckView.this.manager.updateStatus();
 				}
 			}
 		});

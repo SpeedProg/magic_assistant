@@ -73,7 +73,7 @@ class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 		if (parent instanceof IFilteredCardStore) {
 			IFilteredCardStore store = (IFilteredCardStore) parent;
 			{
-				System.err.println("store: " + " index " + index);
+				//System.err.println("store: " + " index " + index);
 				try {
 					Object element = store.getCardGroup(index);
 					this.treeViewer.replace(parent, index, element);
@@ -86,7 +86,7 @@ class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 			CardGroup group = (CardGroup) parent;
 			Object child = group.getChildAtIndex(index);
 			this.treeViewer.replace(parent, index, child);
-			System.err.println("grpup: " + " index " + index);
+			//System.err.println("grpup: " + " index " + index);
 			//updateChildCount(child, -1);
 		}
 	}

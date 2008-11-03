@@ -197,7 +197,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	protected void updateTableHeader() {
 	}
 
-	protected void updateStatus() {
+	public void updateStatus() {
 		ICardStore cardStore = getFilteredStore().getCardStore();
 		String cardCountTotal = "";
 		if (cardStore instanceof ICardCountable) {

@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Control;
  */
 public class CompositeViewerManager extends ViewerManager {
 	ViewerManager managers[];
-	AbstractCardsView view;
 	int activeIndex = 0;
 	private StackLayout stackLayout;
 	private Composite comp;
