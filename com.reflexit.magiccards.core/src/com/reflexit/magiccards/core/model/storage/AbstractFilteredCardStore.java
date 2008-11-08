@@ -107,17 +107,23 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
 		initialize();
-		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortIndex(), filter.isAscending());
-		TreeSet filteredList = new TreeSet<IMagicCard>(comp);
+		Collection<IMagicCard> filteredList;
+		if (filter.getSortIndex() < 0) {
+			filteredList = new ArrayList<IMagicCard>();
+		} else {
+			Comparator<IMagicCard> comp = MagicCardComparator
+			        .getComparator(filter.getSortIndex(), filter.isAscending());
+			filteredList = new TreeSet<IMagicCard>(comp);
+		}
 		for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
 			IMagicCard elem = iterator.next();
 			if (!filter.isFiltered(elem)) {
 				filteredList.add(elem);
 			}
 		}
-		for (Iterator iterator = filteredList.iterator(); iterator.hasNext();) {
-			IMagicCard elem = (IMagicCard) iterator.next();
-			if (filter.getGroupIndex() >= 0) {
+		if (filter.getGroupIndex() >= 0) {
+			for (Iterator iterator = filteredList.iterator(); iterator.hasNext();) {
+				IMagicCard elem = (IMagicCard) iterator.next();
 				CardGroup group = findGroupIndex(elem, filter.getGroupIndex());
 				if (group != null) {
 					group.add(elem);

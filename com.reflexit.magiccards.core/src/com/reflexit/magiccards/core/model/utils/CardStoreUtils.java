@@ -10,10 +10,14 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Random;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
@@ -59,6 +63,35 @@ public class CardStoreUtils {
 				System.err.println("mana curve: cost:" + elem.getCost());
 		}
 		return bars;
+	}
+
+	public static Collection<IMagicCard> randomize(ICardStore store) {
+		ArrayList<IMagicCard> filteredList = new ArrayList<IMagicCard>();
+		for (Iterator<IMagicCard> iterator = store.cardsIterator(); iterator.hasNext();) {
+			IMagicCard elem = iterator.next();
+			int count = 1;
+			if (elem instanceof ICardCountable) {
+				ICardCountable card = (ICardCountable) elem;
+				count = card.getCount();
+				for (int i = 0; i < count; i++) {
+					MagicCardPhisical nc = new MagicCardPhisical(elem);
+					nc.setCount(1);
+					filteredList.add(nc);
+				}
+			} else {
+				filteredList.add(elem);
+			}
+		}
+		ArrayList<IMagicCard> another = new ArrayList<IMagicCard>();
+		another = filteredList;
+		filteredList = new ArrayList<IMagicCard>(another.size());
+		Random r = new Random(System.currentTimeMillis() * another.hashCode());
+		while (another.size() > 0) {
+			int index = r.nextInt(another.size());
+			filteredList.add(another.get(index));
+			another.remove(index);
+		}
+		return filteredList;
 	}
 
 	private CardStoreUtils() {
