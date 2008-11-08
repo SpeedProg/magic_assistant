@@ -10,6 +10,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private String comment;
 	private String location;
 	private String condition;
+	private boolean personal;
 	public static final int INDEX_COUNT = 11;
 	public static final int INDEX_LOCATION = 14;
 
@@ -152,5 +153,13 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 
 	public String getType() {
 		return this.card.getType();
+	}
+
+	public boolean isPersonal() {
+		return this.personal;
+	}
+
+	public void setPersonal(boolean personal) {
+		this.personal = personal;
 	}
 }
