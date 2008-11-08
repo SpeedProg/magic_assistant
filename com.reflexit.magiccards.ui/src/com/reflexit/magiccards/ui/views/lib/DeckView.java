@@ -1,6 +1,8 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -26,10 +28,12 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.views.analyzers.HandView;
 
 public class DeckView extends CollectionView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	Deck deck;
+	private Action shuffle;
 
 	/**
 	 * The constructor.
@@ -49,6 +53,33 @@ public class DeckView extends CollectionView implements ICardEventListener {
 			throw new IllegalArgumentException("Bad store");
 		}
 		DataManager.getModelRoot().addListener(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.ui.views.lib.CollectionView#makeActions()
+	 */
+	@Override
+	protected void makeActions() {
+		super.makeActions();
+		this.shuffle = new Action("Shuffle") {
+			@Override
+			public void run() {
+				runShuffle();
+			}
+		};
+	}
+
+	/**
+	 * 
+	 */
+	protected void runShuffle() {
+		try {
+			HandView view = (HandView) getViewSite().getWorkbenchWindow().getActivePage().showView(HandView.ID);
+			view.selectionChanged(this, new StructuredSelection(this.deck));
+		} catch (PartInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -113,6 +144,15 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(org.eclipse.jface.action.IMenuManager)
+	 */
+	@Override
+	protected void fillLocalPullDown(IMenuManager manager) {
+		super.fillLocalPullDown(manager);
+		manager.add(this.shuffle);
 	}
 
 	@Override

@@ -67,16 +67,22 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 
 	@Override
 	protected void updateSortColumn(int index) {
-		this.viewer.getTree().setSortColumn(this.viewer.getTree().getColumn(index));
-		int sortDirection = this.viewer.getTree().getSortDirection();
-		if (sortDirection != SWT.DOWN)
-			sortDirection = SWT.DOWN;
-		else
-			sortDirection = SWT.UP;
-		this.viewer.getTree().setSortDirection(sortDirection);
-		ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
-		this.filter.setSortIndex(man.getSortIndex());
-		this.filter.setAscending(sortDirection == SWT.UP);
+		boolean sort = index >= 0;
+		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
+		this.viewer.getTree().setSortColumn(column);
+		if (sort) {
+			int sortDirection = this.viewer.getTree().getSortDirection();
+			if (sortDirection != SWT.DOWN)
+				sortDirection = SWT.DOWN;
+			else
+				sortDirection = SWT.UP;
+			this.viewer.getTree().setSortDirection(sortDirection);
+			this.filter.setAscending(sortDirection == SWT.UP);
+			ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
+			this.filter.setSortIndex(man.getSortIndex());
+		} else {
+			this.filter.setSortIndex(index);
+		}
 	}
 
 	@Override

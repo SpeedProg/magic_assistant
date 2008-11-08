@@ -108,16 +108,22 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 
 	@Override
 	protected void updateSortColumn(int index) {
-		this.viewer.getTable().setSortColumn(this.viewer.getTable().getColumn(index));
-		int sortDirection = this.viewer.getTable().getSortDirection();
-		if (sortDirection != SWT.DOWN)
-			sortDirection = SWT.DOWN;
-		else
-			sortDirection = SWT.UP;
-		this.viewer.getTable().setSortDirection(sortDirection);
-		ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
-		this.filter.setSortIndex(man.getSortIndex());
-		this.filter.setAscending(sortDirection == SWT.UP);
+		boolean sort = index >= 0;
+		TableColumn column = sort ? this.viewer.getTable().getColumn(index) : null;
+		this.viewer.getTable().setSortColumn(column);
+		if (sort) {
+			int sortDirection = this.viewer.getTable().getSortDirection();
+			if (sortDirection != SWT.DOWN)
+				sortDirection = SWT.DOWN;
+			else
+				sortDirection = SWT.UP;
+			this.viewer.getTable().setSortDirection(sortDirection);
+			this.filter.setAscending(sortDirection == SWT.UP);
+			ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
+			this.filter.setSortIndex(man.getSortIndex());
+		} else {
+			this.filter.setSortIndex(index);
+		}
 	}
 
 	@Override

@@ -61,15 +61,15 @@ import com.reflexit.magiccards.ui.views.search.SearchControl;
 import com.reflexit.magiccards.ui.views.search.TableSearch;
 
 public abstract class AbstractCardsView extends ViewPart {
-	private Action showFilter;
-	private Action doubleClickAction;
-	private Action showPrefs;
-	private Action showFind;
-	private Action copyText;
+	protected Action showFilter;
+	protected Action doubleClickAction;
+	protected Action showPrefs;
+	protected Action showFind;
+	protected Action copyText;
 	protected ViewerManager manager;
 	private Label statusLine;
-	private MenuManager sortMenu;
-	private MenuManager groupMenu;
+	protected MenuManager sortMenu;
+	protected MenuManager groupMenu;
 	private IPreferenceStore store;
 	private SearchControl searchControl;
 

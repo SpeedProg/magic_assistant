@@ -200,9 +200,25 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	public void updateStatus() {
 		ICardStore cardStore = getFilteredStore().getCardStore();
 		String cardCountTotal = "";
+		int filSize = getFilteredStore().getSize();
+		int totalSize = cardStore.getTotal();
+		int diff = totalSize - filSize;
 		if (cardStore instanceof ICardCountable) {
-			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+			cardCountTotal = "Cards: " + ((ICardCountable) cardStore).getCount();
+		} else {
+			cardCountTotal = "Unique Cards: " + filSize;
 		}
-		setStatus("Shown " + getFilteredStore().getSize() + " items of " + cardStore.getTotal() + ". " + cardCountTotal);
+		String diffStr = "";
+		if (diff > 0) {
+			diffStr = " (filtered " + diff + " unique)";
+		}
+		setStatus(cardCountTotal + diffStr);
+	}
+
+	/**
+	 * 
+	 */
+	public void shuffle() {
+		sort(-2);
 	}
 }
