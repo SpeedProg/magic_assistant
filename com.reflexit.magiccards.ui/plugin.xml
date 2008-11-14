@@ -95,7 +95,7 @@
             class="com.reflexit.magiccards.ui.views.analyzers.HandView"
             icon="icons/Book-1-icon.gif"
             id="com.reflexit.magiccards.ui.views.analyzers.HandView"
-            name="Randomizer"
+            name="Draw"
             restorable="true">
       </view>
    </extension>
