@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.Comparator;
 
-
 public class MagicCardComparator implements Comparator {
 	int sort = 0;
 	int dir = 1;
@@ -42,8 +41,11 @@ public class MagicCardComparator implements Comparator {
 				if (range != 0)
 					return range * this.dir;
 			}
-			if (c1.getCardId() != 0)
-				return c1.getCardId() - c2.getCardId();
+			if (c1.getCardId() != 0) {
+				int idd = c1.getCardId() - c2.getCardId();
+				if (idd != 0)
+					return idd;
+			}
 		}
 		return this.dir * (System.identityHashCode(o1) - System.identityHashCode(o2));
 	}
