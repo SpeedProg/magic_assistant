@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.xml;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
@@ -20,7 +21,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * @author Alena
  *
  */
-public class CollectionMultiFileCardStore extends MultiFileCardStore {
+public class CollectionMultiFileCardStore extends MultiFileCardStore implements ICardCountable {
 	private transient HashMap<Integer, IMagicCard> hash;
 	private int cardCount;
 
@@ -55,8 +56,8 @@ public class CollectionMultiFileCardStore extends MultiFileCardStore {
 	public void doRemoveCard(IMagicCard card) {
 		super.doRemoveCard(card);
 		this.hash.remove(card.getCardId());
-		if (card instanceof MagicCardPhisical) {
-			this.cardCount -= ((MagicCardPhisical) card).getCount();
+		if (card instanceof ICardCountable) {
+			this.cardCount -= ((ICardCountable) card).getCount();
 		}
 	}
 
@@ -70,8 +71,8 @@ public class CollectionMultiFileCardStore extends MultiFileCardStore {
 		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			this.hash.put(card.getCardId(), card);
-			if (card instanceof MagicCardPhisical) {
-				this.cardCount += ((MagicCardPhisical) card).getCount();
+			if (card instanceof ICardCountable) {
+				this.cardCount += ((ICardCountable) card).getCount();
 			}
 		}
 	}
