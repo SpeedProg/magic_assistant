@@ -151,7 +151,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		loadData();
 	}
 
-	protected abstract void updateSortColumn(int index);
+	public abstract void updateSortColumn(int index);
 
 	/**
 	 * @param indexCmc
@@ -202,15 +202,22 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		String cardCountTotal = "";
 		int filSize = getFilteredStore().getSize();
 		int totalSize = cardStore.getTotal();
+		if (totalSize == 0)
+			return;
 		int diff = totalSize - filSize;
 		if (cardStore instanceof ICardCountable) {
-			cardCountTotal = "Cards: " + ((ICardCountable) cardStore).getCount();
+			int count = ((ICardCountable) cardStore).getCount();
+			if (count == totalSize) {
+				cardCountTotal = "Cards: " + count;
+			} else {
+				cardCountTotal = "Cards: " + count + ", unique cards " + totalSize;
+			}
 		} else {
-			cardCountTotal = "Unique Cards: " + filSize;
+			cardCountTotal = "Unique Cards: " + totalSize;
 		}
 		String diffStr = "";
 		if (diff > 0) {
-			diffStr = " (filtered " + diff + " unique)";
+			diffStr = " (filtered " + diff + ")";
 		}
 		setStatus(cardCountTotal + diffStr);
 	}

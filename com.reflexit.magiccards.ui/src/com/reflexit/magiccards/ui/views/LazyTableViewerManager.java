@@ -107,7 +107,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	}
 
 	@Override
-	protected void updateSortColumn(int index) {
+    public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TableColumn column = sort ? this.viewer.getTable().getColumn(index) : null;
 		this.viewer.getTable().setSortColumn(column);

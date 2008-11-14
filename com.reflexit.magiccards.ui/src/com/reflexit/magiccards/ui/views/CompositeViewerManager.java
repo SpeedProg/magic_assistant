@@ -106,7 +106,7 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateSortColumn(int)
 	 */
 	@Override
-	protected void updateSortColumn(int index) {
+    public void updateSortColumn(int index) {
 		for (int i = 0; i < this.managers.length; i++) {
 			ViewerManager m = this.managers[i];
 			m.updateSortColumn(index);

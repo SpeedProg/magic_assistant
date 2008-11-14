@@ -79,6 +79,10 @@ public abstract class AbstractCardsView extends ViewPart {
 	public AbstractCardsView() {
 	}
 
+	public ViewerManager getManager() {
+		return this.manager;
+	}
+
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.

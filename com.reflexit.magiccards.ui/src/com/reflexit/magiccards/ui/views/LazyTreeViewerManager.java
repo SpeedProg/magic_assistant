@@ -66,7 +66,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	}
 
 	@Override
-	protected void updateSortColumn(int index) {
+    public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
 		this.viewer.getTree().setSortColumn(column);
