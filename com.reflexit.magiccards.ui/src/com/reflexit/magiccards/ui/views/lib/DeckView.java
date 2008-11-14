@@ -61,7 +61,7 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.shuffle = new Action("Shuffle") {
+		this.shuffle = new Action("Emulate Draw") {
 			@Override
 			public void run() {
 				runShuffle();

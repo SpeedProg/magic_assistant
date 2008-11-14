@@ -25,7 +25,7 @@ import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
-import com.reflexit.magiccards.core.model.storage.RandomDeck;
+import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -39,8 +39,9 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
  */
 public class HandView extends AbstractCardsView implements ISelectionListener {
 	public static final String ID = HandView.class.getName();
-	protected RandomDeck store = new RandomDeck(new MemoryCardStore());
+	protected PlayingDeck store = new PlayingDeck(new MemoryCardStore());
 	private IAction shuffle;
+	private Action draw;
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#doGetFilteredStore()
@@ -72,6 +73,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(this.shuffle);
+		manager.add(this.draw);
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +85,17 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		this.shuffle = new Action("Shuffle") {
 			@Override
 			public void run() {
-				HandView.this.manager.loadData();
+				getManager().updateSortColumn(-1);
+				HandView.this.store.shuffle();
+				HandView.this.store.draw(7);
+				getManager().loadData();
+			}
+		};
+		this.draw = new Action("Draw") {
+			@Override
+			public void run() {
+				HandView.this.store.draw(1);
+				getManager().loadData();
 			}
 		};
 	}
@@ -120,8 +132,18 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 			if (deck.isOpen()) {
 				ICardDeck store2 = deck.getStore();
 				this.store.setStore(store2);
-				this.manager.loadData();
+				HandView.this.store.draw(7);
+				getManager().loadData();
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#loadInitial()
+	 */
+	@Override
+	protected void loadInitial() {
+		setStatus("To populate this view use 'Emulate Draw' command from a Deck view");
+		super.loadInitial();
 	}
 }
