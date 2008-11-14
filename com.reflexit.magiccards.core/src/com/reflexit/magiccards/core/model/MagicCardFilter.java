@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class MagicCardFilter {
 	private Expr root;
-	private int limit = 1000;
+	private int limit = Integer.MAX_VALUE;
 	private int sortIndex = 1;
 	private boolean ascending;
 	private int groupIndex = -1;
@@ -417,7 +417,9 @@ public class MagicCardFilter {
 		this.groupIndex = groupIndex;
 	}
 
-	void setLimit(int limit) {
+	public void setLimit(int limit) {
+		if (limit < 0)
+			throw new IllegalArgumentException("Invalid value for limit (must be >=0)");
 		this.limit = limit;
 	}
 

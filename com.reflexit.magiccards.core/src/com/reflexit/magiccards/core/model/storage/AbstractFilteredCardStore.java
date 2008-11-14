@@ -110,15 +110,27 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		Collection<IMagicCard> filteredList;
 		if (filter.getSortIndex() < 0) {
 			filteredList = new ArrayList<IMagicCard>();
+			for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
+				IMagicCard elem = iterator.next();
+				if (!filter.isFiltered(elem)) {
+					filteredList.add(elem);
+				}
+				if (filteredList.size() >= filter.getLimit()) {
+					break;
+				}
+			}
 		} else {
-			Comparator<IMagicCard> comp = MagicCardComparator
-			        .getComparator(filter.getSortIndex(), filter.isAscending());
+			Comparator<IMagicCard> comp = getSortComparator(filter);
 			filteredList = new TreeSet<IMagicCard>(comp);
-		}
-		for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
-			IMagicCard elem = iterator.next();
-			if (!filter.isFiltered(elem)) {
-				filteredList.add(elem);
+			for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
+				IMagicCard elem = iterator.next();
+				if (!filter.isFiltered(elem)) {
+					filteredList.add(elem);
+				}
+				if (filteredList.size() > filter.getLimit()) {
+					Object last = ((TreeSet) filteredList).last();
+					filteredList.remove(last);
+				}
 			}
 		}
 		if (filter.getGroupIndex() >= 0) {
@@ -132,6 +144,12 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 		return filteredList;
 	}
+
+	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
+	    Comparator<IMagicCard> comp = MagicCardComparator
+	            .getComparator(filter.getSortIndex(), filter.isAscending());
+	    return comp;
+    }
 
 	/**
 	 * @param elem
