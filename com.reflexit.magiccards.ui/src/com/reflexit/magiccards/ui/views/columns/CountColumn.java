@@ -82,11 +82,11 @@ public class CountColumn extends GenColumn {
 					MagicCardPhisical card = (MagicCardPhisical) element;
 					int count = value == null ? 0 : Integer.parseInt(value.toString());
 					card.setCount(count);
-					viewer.update(element, null);
+					//viewer.update(element, null);
 					// save
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
-					cardStore.save();
+					cardStore.updateCard(card);
 				}
 			}
 		};
