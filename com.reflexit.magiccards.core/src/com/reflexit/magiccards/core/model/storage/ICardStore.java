@@ -43,4 +43,14 @@ public interface ICardStore<T> {
 	public void setAutoSave(boolean value);
 
 	public void save();
+
+	/**
+	 * card values were updated
+	 * @param card
+	 */
+	public void updateCard(T card);
+
+	public void setMergeOnAdd(boolean v);
+
+	public boolean getMergeOnAdd();
 }

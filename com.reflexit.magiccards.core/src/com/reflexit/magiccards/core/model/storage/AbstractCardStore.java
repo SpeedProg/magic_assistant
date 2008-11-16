@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T> {
 	protected transient boolean initialized = false;
 	protected transient boolean autocommit = true;
+	protected boolean mergeOnAdd = true;
 
 	public void addListener(ICardEventListener lis) {
 		addListenerObject(lis);
@@ -67,6 +68,14 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return true;
 	}
 
+	public void updateCard(T card) {
+		initialize();
+		if (this.autocommit)
+			save();
+		fireEvent(new CardEvent(card, CardEvent.UPDATE));
+		return;
+	}
+
 	public void removeCard(T o) {
 		initialize();
 		doRemoveCard(o);
@@ -77,6 +86,14 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	public void setAutoSave(boolean value) {
 		this.autocommit = value;
+	}
+
+	public void setMergeOnAdd(boolean v) {
+		this.mergeOnAdd = v;
+	}
+
+	public boolean getMergeOnAdd() {
+		return this.mergeOnAdd;
 	}
 
 	protected abstract boolean doAddCard(T card);
