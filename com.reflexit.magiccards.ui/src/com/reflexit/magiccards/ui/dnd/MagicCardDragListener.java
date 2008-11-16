@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.utils;
+package com.reflexit.magiccards.ui.dnd;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -21,8 +21,9 @@ import org.eclipse.ui.part.PluginTransferData;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
+import com.reflexit.magiccards.ui.views.lib.CollectionView;
 
 /**
  * @author Alena
@@ -41,15 +42,16 @@ public class MagicCardDragListener implements DragSourceListener {
 	 * Method declared on DragSourceListener
 	 */
 	public void dragFinished(DragSourceEvent event) {
-		if (!event.doit)
+		if (!event.doit || event.detail == DND.DROP_NONE)
 			return;
-		//if the gadget was moved, remove it from the source viewer
+		//if the card was moved, remove it from the collection or deck
 		if (event.detail == DND.DROP_MOVE) {
-			if (this.view instanceof DeckView) {
+			if (this.view instanceof CollectionView) {
 				IStructuredSelection selection = (IStructuredSelection) this.viewer.getSelection();
+				ICardStore store = ((CollectionView) this.view).getFilteredStore().getCardStore();
 				for (Iterator it = selection.iterator(); it.hasNext();) {
 					IMagicCard card = (IMagicCard) it.next();
-					((DeckView) this.view).getFilteredStore().getCardStore().removeCard(card);
+					store.removeCard(card);
 				}
 			}
 			this.viewer.refresh();
@@ -61,12 +63,12 @@ public class MagicCardDragListener implements DragSourceListener {
 	 */
 	public void dragSetData(DragSourceEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) this.viewer.getSelection();
-		IMagicCard[] gadgets = (IMagicCard[]) selection.toList().toArray(new IMagicCard[selection.size()]);
+		IMagicCard[] cards = (IMagicCard[]) selection.toList().toArray(new IMagicCard[selection.size()]);
 		if (MagicCardTransfer.getInstance().isSupportedType(event.dataType)) {
-			event.data = gadgets;
+			event.data = cards;
 		} else if (PluginTransfer.getInstance().isSupportedType(event.dataType)) {
-			byte[] data = MagicCardTransfer.getInstance().toByteArray(gadgets);
-			event.data = new PluginTransferData("org.eclipse.ui.examples.gdt.gadgetDrop", data);
+			byte[] data = MagicCardTransfer.getInstance().toByteArray(cards);
+			event.data = new PluginTransferData("com.reflexit.ui.drop", data);
 		}
 	}
 

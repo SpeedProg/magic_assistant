@@ -17,7 +17,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -46,13 +45,12 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
+import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
-import com.reflexit.magiccards.ui.utils.MagicCardTransfer;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
@@ -444,21 +442,5 @@ public abstract class AbstractCardsView extends ViewPart {
 			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(),
 			        getPreferencePageId());
 		return this.store;
-	}
-
-	protected void removeSelected() {
-		ICardStore cardStore = this.manager.getFilteredStore().getCardStore();
-		ISelection selection = getViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			if (!sel.isEmpty()) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					Object o = iterator.next();
-					if (o instanceof IMagicCard) {
-						cardStore.removeCard(o);
-					}
-				}
-			}
-		}
 	}
 }
