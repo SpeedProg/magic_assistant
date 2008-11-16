@@ -10,9 +10,10 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private String comment;
 	private String location;
 	private String condition;
-	private boolean personal;
+	private boolean ownership;
 	public static final int INDEX_COUNT = 11;
 	public static final int INDEX_LOCATION = 14;
+	public static final int INDEX_OWNERSHIP = 16;
 
 	public MagicCardPhisical(IMagicCard card) {
 		if (card instanceof MagicCard) {
@@ -33,23 +34,20 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		list.add(this.comment);
 		list.add(this.location);
 		list.add(this.condition);
+		list.add(new Boolean(this.ownership));
 		return list;
 	}
 
 	public void setValues(String[] fields) {
 		this.card = new MagicCard();
-		this.card.setCardId(Integer.parseInt(fields[0]));
-		this.count = Integer.parseInt(fields[1]);
-		this.price = Float.parseFloat(fields[2]);
-		this.comment = fields[3];
-		this.location = fields[4];
-		this.condition = fields[5];
-		if (fields.length > 6) {
-			int rem = fields.length - 6;
-			String dest[] = new String[rem];
-			System.arraycopy(fields, 6, dest, 0, rem);
-			this.card.setValues(dest);
-		}
+		this.card.setValues(fields);
+		int i = INDEX_COUNT;
+		this.card.setCardId(Integer.parseInt(fields[i + 0]));
+		this.count = Integer.parseInt(fields[i + 1]);
+		this.price = Float.parseFloat(fields[i + 2]);
+		this.comment = fields[i + 3];
+		this.location = fields[i + 4];
+		this.condition = fields[i + 5];
 	}
 
 	public MagicCard getCard() {
@@ -155,11 +153,11 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		return this.card.getType();
 	}
 
-	public boolean isPersonal() {
-		return this.personal;
+	public boolean isOwn() {
+		return this.ownership;
 	}
 
-	public void setPersonal(boolean personal) {
-		this.personal = personal;
+	public void setOwn(boolean ownership) {
+		this.ownership = ownership;
 	}
 }
