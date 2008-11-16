@@ -39,5 +39,8 @@ public class ColumnCollection {
 			this.columns.add(new LocationColumn(MagicCardPhisical.INDEX_LOCATION, "Location"));
 		}
 		this.columns.add(new ColorColumn(IMagicCard.INDEX_COST));
+		if (!this.id.equals(MagicDbView.ID)) {
+			this.columns.add(new OwnershipColumn(MagicCardPhisical.INDEX_OWNERSHIP, "O"));
+		}
 	}
 }
