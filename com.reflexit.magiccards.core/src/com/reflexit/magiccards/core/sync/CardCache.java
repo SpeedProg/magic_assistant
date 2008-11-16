@@ -14,10 +14,8 @@ import org.eclipse.core.runtime.IPath;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -71,7 +69,7 @@ public class CardCache {
 		}
 		if (caching && st != null) {
 			try {
-				saveStream(file, st);
+				ImageCache.saveStream(file, st);
 				st.close();
 				return localUrl;
 			} catch (IOException e) {
@@ -80,17 +78,6 @@ public class CardCache {
 		}
 		URL remoteUrl = ParseGathererSpoiler.createImageURL(cardId, editionAbbr, locale == null ? "EN" : locale);
 		return remoteUrl;
-	}
-
-	private static void saveStream(String file, InputStream openStream) throws IOException {
-		new File(file).getParentFile().mkdirs();
-		OutputStream st = new FileOutputStream(file);
-		byte[] bytes = new byte[1024 * 4];
-		int k;
-		while ((k = openStream.read(bytes)) > 0) {
-			st.write(bytes, 0, k);
-		}
-		st.close();
 	}
 
 	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
