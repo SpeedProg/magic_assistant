@@ -33,20 +33,42 @@ public class CollectionMultiFileCardStore extends MultiFileCardStore implements 
 	@Override
 	public boolean doAddCard(IMagicCard card) {
 		Integer key = card.getCardId();
-		IMagicCard phi = this.hash.get(key);
-		if (phi == null) {
-			if (card instanceof MagicCardPhisical) {
-				phi = card;
-			} else
-				phi = new MagicCardPhisical(card);
-			super.doAddCard(phi);
-			this.hash.put(key, phi);
+		if (getMergeOnAdd()) {
+			IMagicCard phi = this.hash.get(key);
+			if (phi == null) {
+				phi = doAddCardNoMerge(card);
+				this.hash.put(key, phi);
+				super.doAddCard(phi);
+			} else {
+				int count = 1;
+				if (card instanceof MagicCardPhisical) {
+					count = ((MagicCardPhisical) card).getCount();
+				}
+				MagicCardPhisical p = (MagicCardPhisical) phi;
+				p.setCount(p.getCount() + count);
+				this.cardCount += count;
+				updateCard(p);
+			}
 		} else {
-			MagicCardPhisical p = (MagicCardPhisical) phi;
-			p.setCount(p.getCount() + 1);
+			IMagicCard phi = doAddCardNoMerge(card);
+			this.hash.put(key, phi);
+			super.doAddCard(phi);
 		}
-		this.cardCount++;
 		return true;
+	}
+
+	protected IMagicCard doAddCardNoMerge(IMagicCard card) {
+		IMagicCard phi;
+		int count = 1;
+		if (card instanceof MagicCardPhisical) {
+			phi = new MagicCardPhisical(card);
+			count = ((MagicCardPhisical) card).getCount();
+			((MagicCardPhisical) phi).setCount(count);
+		} else {
+			phi = new MagicCardPhisical(card);
+		}
+		this.cardCount += count;
+		return phi;
 	}
 
 	/* (non-Javadoc)
