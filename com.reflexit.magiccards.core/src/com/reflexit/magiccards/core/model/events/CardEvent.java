@@ -5,6 +5,7 @@ public class CardEvent {
 	public static final int REMOVE = 2;
 	public static final int ADD_CONTAINER = 3;
 	public static final int REMOVE_CONTAINER = 4;
+	public static final int UPDATE = 5;
 	private Object source;
 	private int type;
 
