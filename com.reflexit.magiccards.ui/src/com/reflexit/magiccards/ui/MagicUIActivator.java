@@ -112,6 +112,22 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		return image;
 	}
 
+	/**
+	 * Puts image in a registy using key
+	 * @param key
+	 * @param desc
+	 * @return
+	 */
+	public Image getImage(String key, Image desc) {
+		ImageRegistry registry = getImageRegistry();
+		Image image = registry.get(key);
+		if (image == null) {
+			registry.put(key, desc);
+			image = registry.get(key);
+		}
+		return image;
+	}
+
 	public synchronized static void trace(String debugInfo) {
 		Plugin plugin = getDefault();
 		if (plugin != null && plugin.isDebugging()) {
