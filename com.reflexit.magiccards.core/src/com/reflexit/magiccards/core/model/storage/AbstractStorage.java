@@ -66,7 +66,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	protected abstract boolean doAddCard(T card);
 
-	public void setAutoSave(boolean value) {
+	public void setAutoCommit(boolean value) {
 		this.autocommit = value;
 	}
 

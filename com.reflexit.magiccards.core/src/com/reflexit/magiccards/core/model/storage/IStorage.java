@@ -35,7 +35,7 @@ public interface IStorage<T> {
 
 	public Iterator<T> cardsIterator();
 
-	public void setAutoSave(boolean value);
+	public void setAutoCommit(boolean value);
 
 	public boolean isAutoCommit();
 
