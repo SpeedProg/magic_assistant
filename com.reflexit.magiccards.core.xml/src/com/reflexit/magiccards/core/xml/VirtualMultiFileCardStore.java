@@ -66,13 +66,13 @@ public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMag
 			hash.add(card);
 		}
 		boolean old = this.storage.isAutoCommit();
-		this.storage.setAutoSave(false);
+		this.storage.setAutoCommit(false);
 		for (Iterator iterator = duplicates.iterator(); iterator.hasNext();) {
 			IMagicCard name = (IMagicCard) iterator.next();
 			this.storage.removeCard(name);
 		}
 		System.err.println("removed " + duplicates.size() + " duplicates");
-		this.storage.setAutoSave(old);
+		this.storage.setAutoCommit(old);
 		this.storage.save();
 	}
 }
