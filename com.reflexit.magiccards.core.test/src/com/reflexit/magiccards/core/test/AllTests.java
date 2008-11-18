@@ -23,6 +23,8 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(CardOrganizerTest.class);
 		suite.addTestSuite(MemCardHandlerTest.class);
+		suite.addTestSuite(DeckStoreTest.class);
+		suite.addTestSuite(CollectionStoreTest.class);
 		//$JUnit-END$
 		return suite;
 	}
