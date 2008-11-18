@@ -15,40 +15,29 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
+ * ArrayList based implementation for AbstractCardStore
  * @author Alena
  *
  */
-public class MemoryCardStore extends AbstractCardStore<IMagicCard> {
-	protected ArrayList<IMagicCard> list;
+public class MemoryCardStore<T> extends AbstractCardStore<T> {
+	protected ArrayList<T> list;
 
 	/**
-	 * 
+	 * creates empty card store
 	 */
 	public MemoryCardStore() {
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.model.AbstractCardStore#doInitialize()
-	 */
 	@Override
 	protected void doInitialize() throws MagicException {
-		this.list = new ArrayList<IMagicCard>();
+		this.list = new ArrayList<T>();
 	}
 
-	public Iterator<IMagicCard> cardsIterator() {
+	public Iterator<T> cardsIterator() {
 		return this.getList().iterator();
-	}
-
-	@Override
-	protected void doAddAll(Collection cards) {
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			IMagicCard object = (IMagicCard) iterator.next();
-			doAddCard(object);
-		}
 	}
 
 	public int getTotal() {
@@ -56,25 +45,25 @@ public class MemoryCardStore extends AbstractCardStore<IMagicCard> {
 	}
 
 	@Override
-	public void doRemoveCard(IMagicCard card) {
-		this.getList().remove(card);
+	public boolean doRemoveCard(T card) {
+		return this.getList().remove(card);
 	}
 
 	@Override
-	public boolean doAddCard(IMagicCard card) {
+	public boolean doAddCard(T card) {
 		return this.getList().add(card);
 	}
 
 	/**
 	 * @return the list
 	 */
-	public ArrayList<IMagicCard> getList() {
+	public Collection<T> getList() {
 		if (this.list == null)
 			doInitialize();
 		return this.list;
 	}
 
-	public void save() {
-		// do nothing
+	public void setList(ArrayList<T> list) {
+		this.list = list;
 	}
 }

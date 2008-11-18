@@ -4,9 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public interface ICardStore<T> {
+public interface IStorage<T> {
 	/**
 	 * Total number of cards
 	 * @return
@@ -32,21 +31,15 @@ public interface ICardStore<T> {
 	 * @param card
 	 * @return
 	 */
-	public void removeCard(T o);
+	public boolean removeCard(T o);
 
 	public Iterator<T> cardsIterator();
 
-	public void addListener(ICardEventListener lis);
+	public void setAutoSave(boolean value);
 
-	public void removeListener(ICardEventListener lis);
+	public boolean isAutoCommit();
 
-	/**
-	 * card values were updated
-	 * @param card
-	 */
-	public void updateCard(T card);
+	public void save();
 
-	public void setMergeOnAdd(boolean v);
-
-	public boolean getMergeOnAdd();
+	public void initialize();
 }

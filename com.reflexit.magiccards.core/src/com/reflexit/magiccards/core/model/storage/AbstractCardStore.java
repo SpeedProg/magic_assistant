@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.model.storage;
 import org.eclipse.core.commands.common.EventManager;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
@@ -11,7 +12,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T> {
 	protected transient boolean initialized = false;
-	protected transient boolean autocommit = true;
 	protected boolean mergeOnAdd = true;
 
 	public void addListener(ICardEventListener lis) {
@@ -46,46 +46,45 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		}
 	}
 
-	protected void doInitialize() throws MagicException {
-	}
+	protected abstract void doInitialize() throws MagicException;
 
 	public void addAll(Collection<T> cards) {
 		initialize();
 		doAddAll(cards);
-		if (this.autocommit)
-			save();
 		fireEvent(new CardEvent(this, CardEvent.ADD));
 	}
 
-	protected abstract void doAddAll(Collection cards);
+	protected synchronized void doAddAll(Collection<T> col) {
+		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
+			T card = (T) iterator.next();
+			doAddCard(card);
+		}
+	}
 
 	public boolean addCard(T card) {
 		initialize();
-		doAddCard(card);
-		if (this.autocommit)
-			save();
+		synchronized (this) {
+			if (!doAddCard(card))
+				return false;
+		}
 		fireEvent(new CardEvent(this, CardEvent.ADD));
 		return true;
 	}
 
 	public void updateCard(T card) {
 		initialize();
-		if (this.autocommit)
-			save();
 		fireEvent(new CardEvent(card, CardEvent.UPDATE));
 		return;
 	}
 
 	public void removeCard(T o) {
 		initialize();
-		doRemoveCard(o);
-		if (this.autocommit)
-			save();
-		fireEvent(new CardEvent(this, CardEvent.REMOVE));
-	}
-
-	public void setAutoSave(boolean value) {
-		this.autocommit = value;
+		boolean res;
+		synchronized (this) {
+			res = doRemoveCard(o);
+		}
+		if (res)
+			fireEvent(new CardEvent(this, CardEvent.REMOVE));
 	}
 
 	public void setMergeOnAdd(boolean v) {
@@ -98,5 +97,5 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	protected abstract boolean doAddCard(T card);
 
-	protected abstract void doRemoveCard(T card);
+	protected abstract boolean doRemoveCard(T card);
 }

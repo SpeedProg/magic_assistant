@@ -19,10 +19,15 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;
+			this.ownership = false;
 		} else if (card instanceof MagicCardPhisical) {
 			MagicCardPhisical phi = (MagicCardPhisical) card;
 			this.card = phi.getCard();
-			this.count = 1;
+			this.count = phi.getCount();
+			this.comment = phi.getComment();
+			this.condition = phi.getCondition();
+			this.price = phi.getPrice();
+			this.ownership = phi.ownership;
 		}
 	}
 
@@ -159,5 +164,62 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 
 	public void setOwn(boolean ownership) {
 		this.ownership = ownership;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.card.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj instanceof MagicCardPhisical) {
+			MagicCardPhisical phi = (MagicCardPhisical) obj;
+			if (this.getCount() != phi.getCount())
+				return false;
+			if (!this.matching(phi))
+				return false;
+			if (!eqNull(this.getLocation(), phi.getLocation()))
+				return false;
+			return true;
+		}
+		if (obj instanceof IMagicCard)
+			return this.card.equals(obj);
+		return false;
+	}
+
+	/**
+	 * Kind of equals by ignores count and location
+	 * @param phi2
+	 * @return
+	 */
+	public boolean matching(MagicCardPhisical phi2) {
+		MagicCardPhisical phi1 = this;
+		if (!phi1.card.equals(phi2.card))
+			return false;
+		if (phi1.isOwn() != phi2.isOwn())
+			return false;
+		if (Math.abs(phi1.price - phi2.price) >= 0.01)
+			return false;
+		if (!eqNull(phi1.getCondition(), phi2.getCondition()))
+			return false;
+		if (!eqNull(phi1.getComment(), phi2.getComment()))
+			return false;
+		return true;
+	}
+
+	public static boolean eqNull(String a, String b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return a.equals(b);
+	}
+
+	@Override
+	public String toString() {
+		return this.card.toString() + " x " + this.count;
 	}
 }
