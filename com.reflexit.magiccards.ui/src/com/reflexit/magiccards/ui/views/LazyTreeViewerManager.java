@@ -59,14 +59,14 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		this.viewer.setContentProvider(new LazyTreeViewContentProvider());
 		//	this.viewer.setLabelProvider(new MagicCardLabelProvider());
 		this.viewer.setUseHashlookup(true);
-		this.viewer.getTree().setDragDetect(true);
 		// viewer.setSorter(new NameSorter());
+		addDargAndDrop();
 		createDefaultColumns();
 		return this.viewer.getControl();
 	}
 
 	@Override
-    public void updateSortColumn(int index) {
+	public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
 		this.viewer.getTree().setSortColumn(column);

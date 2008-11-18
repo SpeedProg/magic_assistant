@@ -7,23 +7,17 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.services.IDisposable;
 
 import java.util.HashMap;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 
 public class LazyTableViewerManager extends ViewerManager implements IDisposable {
@@ -69,15 +63,6 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		return this.viewer.getControl();
 	}
 
-	public void addDargAndDrop() {
-		final Table table = this.viewer.getTable();
-		table.setDragDetect(true);
-		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		this.viewer.addDragSupport(ops, transfers, new MagicCardDragListener(this.viewer, this.view));
-		this.viewer.addDropSupport(ops, transfers, new MagicCardDropAdapter(this.viewer, this.view));
-	}
-
 	protected void createDefaultColumns() {
 		createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
@@ -107,7 +92,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	}
 
 	@Override
-    public void updateSortColumn(int index) {
+	public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TableColumn column = sort ? this.viewer.getTable().getColumn(index) : null;
 		this.viewer.getTable().setSortColumn(column);

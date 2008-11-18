@@ -232,6 +232,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 	public void handleEvent(CardEvent event) {
 		if (event.getType() == CardEvent.UPDATE) {
 			this.manager.getViewer().update(event.getSource(), null);
+			getManager().updateStatus();
 		} else {
 			this.manager.loadData();
 		}

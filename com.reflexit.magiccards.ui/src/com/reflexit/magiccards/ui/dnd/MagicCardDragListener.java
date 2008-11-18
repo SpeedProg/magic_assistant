@@ -32,6 +32,7 @@ import com.reflexit.magiccards.ui.views.lib.CollectionView;
 public class MagicCardDragListener implements DragSourceListener {
 	private StructuredViewer viewer;
 	AbstractCardsView view;
+	IStructuredSelection selection;
 
 	public MagicCardDragListener(StructuredViewer viewer, AbstractCardsView view) {
 		this.viewer = viewer;
@@ -47,9 +48,8 @@ public class MagicCardDragListener implements DragSourceListener {
 		//if the card was moved, remove it from the collection or deck
 		if (event.detail == DND.DROP_MOVE) {
 			if (this.view instanceof CollectionView) {
-				IStructuredSelection selection = (IStructuredSelection) this.viewer.getSelection();
 				ICardStore store = ((CollectionView) this.view).getFilteredStore().getCardStore();
-				for (Iterator it = selection.iterator(); it.hasNext();) {
+				for (Iterator it = this.selection.iterator(); it.hasNext();) {
 					IMagicCard card = (IMagicCard) it.next();
 					store.removeCard(card);
 				}
@@ -62,8 +62,8 @@ public class MagicCardDragListener implements DragSourceListener {
 	 * Method declared on DragSourceListener
 	 */
 	public void dragSetData(DragSourceEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) this.viewer.getSelection();
-		IMagicCard[] cards = (IMagicCard[]) selection.toList().toArray(new IMagicCard[selection.size()]);
+		this.selection = (IStructuredSelection) this.viewer.getSelection();
+		IMagicCard[] cards = (IMagicCard[]) this.selection.toList().toArray(new IMagicCard[this.selection.size()]);
 		if (MagicCardTransfer.getInstance().isSupportedType(event.dataType)) {
 			event.data = cards;
 		} else if (PluginTransfer.getInstance().isSupportedType(event.dataType)) {
