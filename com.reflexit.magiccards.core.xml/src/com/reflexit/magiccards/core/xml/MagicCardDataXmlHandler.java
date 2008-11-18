@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private static MagicCardDataXmlHandler instance;
 	private ArrayList<File> files;
-	private MultiFileCardStore table;
+	private VirtualMultiFileCardStore table;
 
 	@Override
 	public int getSize() {
@@ -32,7 +32,7 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 
 	private MagicCardDataXmlHandler() {
 		instance = this;
-		this.table = new MultiFileCardStore();
+		this.table = new VirtualMultiFileCardStore();
 	}
 
 	@Override

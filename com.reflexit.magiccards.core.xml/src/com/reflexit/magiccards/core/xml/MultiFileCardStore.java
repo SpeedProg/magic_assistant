@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,17 +11,18 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.reflexit.magiccards.core.Activator;
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.AbstractCardStore;
+import com.reflexit.magiccards.core.model.storage.AbstractStorage;
+import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
+public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements IStorage<IMagicCard> {
 	protected HashMap<String, SubTable> map;
 	protected int size;
+	protected String defKey;
 
 	public MultiFileCardStore() {
 		this.map = new HashMap<String, SubTable>();
@@ -39,7 +38,7 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 	}
 
 	@Override
-	protected synchronized void doInitialize() {
+	public synchronized void doInitialize() {
 		ArrayList<SubTable> all = new ArrayList<SubTable>();
 		all.addAll(this.map.values());
 		this.map.clear();
@@ -120,20 +119,14 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 	}
 
 	@Override
-	protected synchronized void doAddAll(Collection col) {
-		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			doAddCard(card);
-		}
-	}
-
-	@Override
-	public void doRemoveCard(IMagicCard card) {
+	public boolean doRemoveCard(IMagicCard card) {
 		String key = getKey(card);
 		SubTable res = this.map.get(key);
 		if (res != null) {
-			res.list.remove(card);
+			this.size--;
+			return res.list.remove(card);
 		}
+		return false;
 	}
 
 	@Override
@@ -147,12 +140,12 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 			res.file = getFile(card);
 			this.map.put(key, res);
 		}
-		if (!res.list.contains(card)) {
-			this.size++;
-			return res.list.add(card);
-		} else {
-			return false;
-		}
+		//		if (!res.list.contains(card)) {
+		this.size++;
+		return res.list.add(card);
+		//		} else {
+		//			return false;
+		//		}
 	}
 
 	private File getFile(IMagicCard card) {
@@ -162,9 +155,8 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 				key = key.replaceAll("[\\W]", "_");
 				return new File(XmlCardHolder.getDbFolder(), key + ".xml");
 			} else if (card instanceof MagicCardPhisical) {
-				String file = key;
-				IResource res = DataManager.getProject().findMember(new Path(file));
-				return res.getLocation().toFile();
+				SubTable subTable = this.map.get(key);
+				return subTable.file;
 			} else
 				throw new MagicException("Unknown card type");
 		} catch (CoreException e) {
@@ -179,7 +171,7 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 			MagicCardPhisical mp = (MagicCardPhisical) card;
 			String loc = mp.getLocation();
 			if (loc == null) {
-				loc = DataManager.getModelRoot().getDefaultLib().getLocation();
+				loc = this.defKey;
 				mp.setLocation(loc);
 			}
 			return loc;
@@ -187,19 +179,19 @@ public class MultiFileCardStore extends AbstractCardStore<IMagicCard> {
 		return "unknown";
 	}
 
-	public void save() {
-		try {
-			doSave();
-		} catch (FileNotFoundException e) {
-			throw new MagicException(e);
-		}
-	}
-
+	@Override
 	protected synchronized void doSave() throws FileNotFoundException {
 		for (Iterator iterator = this.map.values().iterator(); iterator.hasNext();) {
 			SubTable table = (SubTable) iterator.next();
 			CardCollectionStoreObject obj = table.toCardCollectionStoreObject();
 			obj.save();
 		}
+	}
+
+	/**
+	 * @param location
+	 */
+	public void setDefault(String location) {
+		this.defKey = location;
 	}
 }

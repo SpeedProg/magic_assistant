@@ -5,6 +5,7 @@ import java.util.Collection;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
@@ -24,9 +25,11 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		CollectionsContainer container = DataManager.getModelRoot().getCollectionsContainer();
 		Collection<CardElement> colls = container.getAllElements();
 		// init super
+		CardCollection def = DataManager.getModelRoot().getDefaultLib();
 		for (CardElement elem : colls) {
 			this.table.addFile(elem.getResource().getLocation().toFile(), elem.getLocation());
 		}
+		this.table.setDefault(def.getLocation());
 		this.table.initialize();
 	}
 

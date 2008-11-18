@@ -16,65 +16,77 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 /**
  * @author Alena
  *
  */
-public class DeckFileCardStore extends LibraryCardStore implements ICardDeck<IMagicCard> {
+public class DeckFileCardStore extends CollectionCardStore implements ICardDeck<IMagicCard> {
+	static class DeckExtra extends SingleFileCardStore {
+		String name;
+		String comment;
+
+		/**
+		 * @param file
+		 */
+		public DeckExtra(File file) {
+			super(file);
+		}
+
+		@Override
+		protected void loadFields(CardCollectionStoreObject obj) {
+			super.loadFields(obj);
+			// do not load name, keep default for now
+			this.comment = obj.comment;
+		}
+
+		@Override
+		protected void storeFields(CardCollectionStoreObject obj) {
+			obj.name = this.name;
+			obj.comment = this.comment;
+			super.storeFields(obj);
+		}
+	}
+
 	/**
 	 * @param file
 	 */
 	public DeckFileCardStore(File file, String name) {
-		super(file);
+		super(new DeckExtra(file));
 		if (name != null)
-			this.name = name;
+			setDeckName(name);
 		else {
 			String base = file.getName();
 			base = new Path(base).removeFileExtension().toString();
-			this.name = base;
+			setDeckName(base);
 		}
-	}
-	protected String name;
-	protected String comment;
-
-	@Override
-	protected void loadFields(CardCollectionStoreObject obj) {
-		super.loadFields(obj);
-		// do not load name, keep default for now
-		this.comment = obj.comment;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.xml.SingleFileCardStore#storeFields(com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject)
-	 */
-	@Override
-	protected void storeFields(CardCollectionStoreObject obj) {
-		obj.name = this.name;
-		obj.comment = this.comment;
-		super.storeFields(obj);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.ICardDeck#getDeckComment()
 	 */
 	public String getDeckComment() {
-		return this.comment;
+		return getDeckExtra().comment;
 	}
 
 	public void setDeckName(String name) {
-		this.name = name;
+		getDeckExtra().name = name;
+	}
+
+	protected DeckExtra getDeckExtra() {
+		return (DeckExtra) this.storage;
 	}
 
 	public void setDeckComment(String comment) {
-		this.comment = comment;
+		getDeckExtra().comment = comment;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.ICardDeck#getDeckName()
 	 */
 	public String getDeckName() {
-		return this.name;
+		return getDeckExtra().name;
 	}
 }

@@ -16,26 +16,15 @@ import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
+ * Single File store with card count and caching
  * @author Alena
  *
  */
-public class CollectionMultiFileCardStore extends CollectionCardStore implements ICardCountable {
-	public CollectionMultiFileCardStore() {
-		super(new MultiFileCardStore());
-	}
-
+public class CollectionSingleFileCardStore extends CollectionCardStore implements ICardCountable {
 	/**
 	 * @param file
-	 * @param location
 	 */
-	public void addFile(File file, String location) {
-		((MultiFileCardStore) this.storage).addFile(file, location);
-	}
-
-	/**
-	 * @param location
-	 */
-	public void setDefault(String location) {
-		((MultiFileCardStore) this.storage).setDefault(location);
+	public CollectionSingleFileCardStore(File file) {
+		super(new SingleFileCardStore(file));
 	}
 }
