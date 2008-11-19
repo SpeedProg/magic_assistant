@@ -12,6 +12,7 @@ package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -37,21 +38,27 @@ public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMag
 	}
 
 	@Override
-	protected boolean doAddCard(IMagicCard card) {
+	protected synchronized boolean doAddCard(IMagicCard card) {
 		return this.storage.addCard(card);
 	}
 
 	@Override
-	protected boolean doRemoveCard(IMagicCard card) {
+	protected synchronized boolean doRemoveCard(IMagicCard card) {
 		return this.storage.removeCard(card);
 	}
 
 	@Override
-	protected void doInitialize() throws MagicException {
+	protected synchronized void doInitialize() throws MagicException {
 		this.storage.initialize();
 		pruneDuplicates();
 	}
 
+	@Override
+	protected synchronized void doAddAll(Collection<IMagicCard> col) {
+		this.storage.setAutoCommit(false);
+		super.doAddAll(col);
+		this.storage.setAutoCommit(true);
+	}
 	/**
 	 * 
 	 */
