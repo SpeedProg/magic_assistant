@@ -1,34 +1,34 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import org.eclipse.core.commands.common.EventManager;
-
 import java.util.Collection;
-import java.util.Iterator;
+
+import org.eclipse.core.commands.common.EventManager;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T> {
-	protected transient boolean initialized = false;
-	protected boolean mergeOnAdd = true;
+public abstract class AbstractCardStore<T> extends EventManager implements
+		ICardStore<T> {
+	protected transient boolean	initialized	= false;
+	protected boolean			mergeOnAdd	= true;
 
-	public void addListener(ICardEventListener lis) {
+	public void addListener(final ICardEventListener lis) {
 		addListenerObject(lis);
 	}
 
-	public void removeListener(ICardEventListener lis) {
+	public void removeListener(final ICardEventListener lis) {
 		removeListenerObject(lis);
 	}
 
-	protected void fireEvent(CardEvent event) {
-		Object[] listeners = getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			ICardEventListener lis = (ICardEventListener) listeners[i];
+	protected void fireEvent(final CardEvent event) {
+		final Object[] listeners = getListeners();
+		for (final Object listener : listeners) {
+			final ICardEventListener lis = (ICardEventListener) listener;
 			try {
 				lis.handleEvent(event);
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				Activator.log(t);
 			}
 		}
@@ -38,7 +38,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		if (this.initialized == false) {
 			try {
 				doInitialize();
-			} catch (MagicException e) {
+			} catch (final MagicException e) {
 				Activator.log(e);
 			} finally {
 				this.initialized = true;
@@ -48,20 +48,20 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	protected abstract void doInitialize() throws MagicException;
 
-	public void addAll(Collection<T> cards) {
+	public void addAll(final Collection<T> cards) {
 		initialize();
 		doAddAll(cards);
 		fireEvent(new CardEvent(this, CardEvent.ADD));
 	}
 
-	protected synchronized void doAddAll(Collection<T> col) {
-		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
-			T card = (T) iterator.next();
+	protected synchronized void doAddAll(final Collection<T> col) {
+		for (final Object element : col) {
+			final T card = (T) element;
 			doAddCard(card);
 		}
 	}
 
-	public boolean addCard(T card) {
+	public boolean addCard(final T card) {
 		initialize();
 		synchronized (this) {
 			if (!doAddCard(card))
@@ -71,13 +71,13 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return true;
 	}
 
-	public void updateCard(T card) {
+	public void updateCard(final T card) {
 		initialize();
 		fireEvent(new CardEvent(card, CardEvent.UPDATE));
 		return;
 	}
 
-	public void removeCard(T o) {
+	public void removeCard(final T o) {
 		initialize();
 		boolean res;
 		synchronized (this) {
@@ -87,7 +87,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 			fireEvent(new CardEvent(this, CardEvent.REMOVE));
 	}
 
-	public void setMergeOnAdd(boolean v) {
+	public void setMergeOnAdd(final boolean v) {
 		this.mergeOnAdd = v;
 	}
 

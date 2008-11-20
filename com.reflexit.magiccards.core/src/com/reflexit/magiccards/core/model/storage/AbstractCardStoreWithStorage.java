@@ -10,19 +10,23 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
+import java.util.Collection;
 import java.util.Iterator;
+
+import com.reflexit.magiccards.core.MagicException;
 
 /**
  * @author Alena
- *
+ * 
  */
-public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> {
-	protected IStorage<T> storage;
+public abstract class AbstractCardStoreWithStorage<T> extends
+		AbstractCardStore<T> {
+	protected IStorage<T>	storage;
 
 	/**
 	 * 
 	 */
-	public AbstractCardStoreWithStorage(IStorage<T> storage) {
+	public AbstractCardStoreWithStorage(final IStorage<T> storage) {
 		super();
 		this.storage = storage;
 	}
@@ -33,5 +37,25 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 
 	public int getTotal() {
 		return this.storage.getTotal();
+	}
+
+	@Override
+	protected synchronized boolean doAddCard(final T card) {
+		return this.storage.addCard(card);
+	}
+
+	@Override
+	protected synchronized boolean doRemoveCard(final T card) {
+		return this.storage.removeCard(card);
+	}
+
+	@Override
+	protected synchronized void doAddAll(final Collection<T> col) {
+		this.storage.addAll(col);
+	}
+
+	@Override
+	protected synchronized void doInitialize() throws MagicException {
+		this.storage.initialize();
 	}
 }
