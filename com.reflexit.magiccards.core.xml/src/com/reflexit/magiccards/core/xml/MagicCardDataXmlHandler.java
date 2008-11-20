@@ -1,11 +1,11 @@
 package com.reflexit.magiccards.core.xml;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -16,10 +16,11 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
-	private static MagicCardDataXmlHandler instance;
-	private ArrayList<File> files;
-	private VirtualMultiFileCardStore table;
+public class MagicCardDataXmlHandler extends
+		AbstractFilteredCardStore<IMagicCard> {
+	private static MagicCardDataXmlHandler	instance;
+	private ArrayList<File>					files;
+	private VirtualMultiFileCardStore		table;
 
 	@Override
 	public int getSize() {
@@ -41,10 +42,10 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 		IResource[] members;
 		try {
 			new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
-			MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
+			MagicDbContainter con = DataManager.getModelRoot()
+					.getMagicDBContainer();
 			members = con.getContainer().members();
-			for (int i = 0; i < members.length; i++) {
-				IResource resource = members[i];
+			for (IResource resource : members) {
 				File file = resource.getLocation().toFile();
 				if (file.getName().endsWith(".xml"))
 					this.files.add(file);
@@ -58,7 +59,7 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 		}
 		// init super
 		for (File file : this.files) {
-			this.table.addFile(file, file.getName());
+			this.table.addFile(file, file.getName().replaceAll("\\.xml$", ""));
 		}
 		this.table.initialize();
 	}

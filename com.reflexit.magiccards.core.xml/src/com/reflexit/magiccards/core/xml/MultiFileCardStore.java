@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.CoreException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,6 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.eclipse.core.runtime.CoreException;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
@@ -19,19 +19,21 @@ import com.reflexit.magiccards.core.model.storage.AbstractStorage;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements IStorage<IMagicCard> {
-	protected HashMap<String, SubTable> map;
-	protected int size;
-	protected String defKey;
+public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements
+		IStorage<IMagicCard> {
+	protected HashMap<String, SubTable>	map;
+	protected int						size;
+	protected String					defKey;
 
 	public MultiFileCardStore() {
 		this.map = new HashMap<String, SubTable>();
 	}
 
-	public synchronized void addFile(File file, String key) {
+	public synchronized void addFile(final File file, final String key) {
 		SubTable table = new SubTable();
 		table.key = key;
 		table.file = file;
+		// System.err.println(key + "=" + file);
 		table.list = new ArrayList<IMagicCard>();
 		this.map.put(table.key, table);
 		this.initialized = false;
@@ -42,10 +44,11 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 		ArrayList<SubTable> all = new ArrayList<SubTable>();
 		all.addAll(this.map.values());
 		this.map.clear();
-		for (Iterator<SubTable> iterator = all.iterator(); iterator.hasNext();) {
-			SubTable table = iterator.next();
+		this.size = 0;
+		for (SubTable table : all) {
 			try {
-				CardCollectionStoreObject obj = CardCollectionStoreObject.initFromFile(table.file);
+				CardCollectionStoreObject obj = CardCollectionStoreObject
+						.initFromFile(table.file);
 				SubTable loaded = new SubTable(obj);
 				this.size += loaded.list.size();
 				setLocations(loaded.key, loaded.list);
@@ -63,7 +66,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 	 * @param key
 	 * @param list
 	 */
-	private void setLocations(String key, Collection list) {
+	private void setLocations(final String key, final Collection list) {
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
 			if (object instanceof MagicCardPhisical) {
@@ -76,7 +79,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 	public Iterator<IMagicCard> cardsIterator() {
 		final Iterator<SubTable> iter = this.map.values().iterator();
 		return new Iterator<IMagicCard>() {
-			Iterator<IMagicCard> cur;
+			Iterator<IMagicCard>	cur;
 			{
 				if (iter.hasNext())
 					this.cur = (iter.next()).list.iterator();
@@ -118,8 +121,19 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 		return this.size;
 	}
 
+	public int getHardTotal() {
+		int s = 0;
+		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
+			iterator.next();
+			s++;
+		}
+		if (size != s)
+			System.err.println("Size mismatch: " + s + " " + size);
+		return s;
+	}
+
 	@Override
-	public boolean doRemoveCard(IMagicCard card) {
+	public synchronized boolean doRemoveCard(final IMagicCard card) {
 		String key = getKey(card);
 		SubTable res = this.map.get(key);
 		if (res != null) {
@@ -130,7 +144,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 	}
 
 	@Override
-	public boolean doAddCard(IMagicCard card) {
+	public synchronized boolean doAddCard(final IMagicCard card) {
 		String key = getKey(card);
 		SubTable res = this.map.get(key);
 		if (res == null) {
@@ -140,19 +154,14 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 			res.file = getFile(card);
 			this.map.put(key, res);
 		}
-		//		if (!res.list.contains(card)) {
 		this.size++;
 		return res.list.add(card);
-		//		} else {
-		//			return false;
-		//		}
 	}
 
-	private File getFile(IMagicCard card) {
+	private File getFile(final IMagicCard card) {
 		try {
 			String key = getKey(card);
 			if (card instanceof MagicCard) {
-				key = key.replaceAll("[\\W]", "_");
 				return new File(XmlCardHolder.getDbFolder(), key + ".xml");
 			} else if (card instanceof MagicCardPhisical) {
 				SubTable subTable = this.map.get(key);
@@ -164,9 +173,11 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 		}
 	}
 
-	protected String getKey(IMagicCard card) {
+	protected String getKey(final IMagicCard card) {
 		if (card instanceof MagicCard) {
-			return (card).getEdition();
+			String key = (card).getEdition();
+			key = key.replaceAll("[\\W]", "_");
+			return key;
 		} else if (card instanceof MagicCardPhisical) {
 			MagicCardPhisical mp = (MagicCardPhisical) card;
 			String loc = mp.getLocation();
@@ -181,8 +192,8 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 
 	@Override
 	protected synchronized void doSave() throws FileNotFoundException {
-		for (Iterator iterator = this.map.values().iterator(); iterator.hasNext();) {
-			SubTable table = (SubTable) iterator.next();
+		for (Object element : this.map.values()) {
+			SubTable table = (SubTable) element;
 			CardCollectionStoreObject obj = table.toCardCollectionStoreObject();
 			obj.save();
 		}
@@ -191,7 +202,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 	/**
 	 * @param location
 	 */
-	public void setDefault(String location) {
+	public void setDefault(final String location) {
 		this.defKey = location;
 	}
 }

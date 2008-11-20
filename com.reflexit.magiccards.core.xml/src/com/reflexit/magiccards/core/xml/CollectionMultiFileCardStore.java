@@ -17,9 +17,10 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
-public class CollectionMultiFileCardStore extends CollectionCardStore implements ICardCountable {
+public class CollectionMultiFileCardStore extends CollectionCardStore implements
+		ICardCountable {
 	public CollectionMultiFileCardStore() {
 		super(new MultiFileCardStore());
 	}
@@ -28,14 +29,15 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 	 * @param file
 	 * @param location
 	 */
-	public void addFile(File file, String location) {
+	public void addFile(final File file, final String location) {
 		((MultiFileCardStore) this.storage).addFile(file, location);
+		initialized = true;
 	}
 
 	/**
 	 * @param location
 	 */
-	public void setDefault(String location) {
+	public void setDefault(final String location) {
 		((MultiFileCardStore) this.storage).setDefault(location);
 	}
 }

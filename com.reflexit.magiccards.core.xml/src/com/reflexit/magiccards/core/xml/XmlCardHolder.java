@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -26,6 +27,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererSpoiler;
 import com.reflexit.magiccards.core.sync.TextPrinter;
@@ -57,11 +59,14 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	private int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
-		int init = getMagicCardHandler().getCardStore().getTotal();
+		ICardStore store = getMagicCardHandler().getCardStore();
+		int init = store.getTotal();
 		ArrayList<IMagicCard> list = loadFromFlat(st);
 		boolean hasAny = list.size() > 0;
-		getMagicCardHandler().getCardStore().addAll(list);
-		int rec = getMagicCardHandler().getCardStore().getTotal() - init;
+		store.addAll(list);
+		
+	
+		int rec = store.getTotal() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 
@@ -69,6 +74,7 @@ public class XmlCardHolder implements ICardHandler {
 		String line;
 		st.readLine(); // header ignore for now
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+		HashSet<Integer> hash = new HashSet<Integer>();
 		while ((line = st.readLine()) != null) {
 			String[] fields = line.split("\\Q" + TextPrinter.SEPARATOR);
 			for (int i = 0; i < fields.length; i++) {
@@ -83,6 +89,8 @@ public class XmlCardHolder implements ICardHandler {
 				TextPrinter.print(card, System.err);
 				continue;
 			}
+			if (hash.contains(id)) continue;
+			hash.add(id);
 			list.add(card);
 		}
 		return list;
