@@ -31,6 +31,14 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	@Override
+	protected synchronized void doAddAll(final Collection<IMagicCard> col) {
+		for (Object element : col) {
+			IMagicCard magicCard = (IMagicCard) element;
+			doAddCard(magicCard);
+		}
+	}
+
+	@Override
 	public boolean doAddCard(IMagicCard card) {
 		if (getMergeOnAdd()) {
 			IMagicCard phi = this.hashpart.getCard(card);
