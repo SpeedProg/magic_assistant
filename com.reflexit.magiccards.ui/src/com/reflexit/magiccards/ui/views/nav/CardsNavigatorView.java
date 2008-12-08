@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.nav;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -44,6 +42,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -329,9 +329,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 
 	public void handleEvent(final CardEvent event) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
 			public void run() {
-				manager.getViewer().refresh(true);
+				CardsNavigatorView.this.manager.getViewer().refresh(true);
 			}
 		});
 	}
