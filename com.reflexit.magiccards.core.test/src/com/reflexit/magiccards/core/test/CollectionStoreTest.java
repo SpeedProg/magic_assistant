@@ -17,13 +17,13 @@ import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CollectionStoreTest extends DeckStoreTest {
 	@Override
 	protected void setUp() throws Exception {
 		String name = "aaa";
-		File tempFile = File.createTempFile("deck", ".xml");
+		File tempFile = File.createTempFile("coll", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new CollectionMultiFileCardStore();
 		((CollectionMultiFileCardStore) this.store).addFile(tempFile, name);

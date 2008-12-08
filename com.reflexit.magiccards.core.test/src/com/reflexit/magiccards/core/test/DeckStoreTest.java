@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.core.test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
@@ -24,7 +25,7 @@ import com.reflexit.magiccards.core.xml.DeckFileCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class DeckStoreTest extends TestCase {
 	CollectionCardStore store;
@@ -51,6 +52,18 @@ public class DeckStoreTest extends TestCase {
 		MagicCard a = CardGenerator.generateRandomCard();
 		this.store.addCard(a);
 		assertEquals(this.store.getTotal(), 1);
+		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			assertEquals(a.getCardId(), card.getCardId());
+		}
+	}
+
+	public void testAddAll() {
+		MagicCard a = CardGenerator.generateRandomCard();
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+		list.add(a);
+		this.store.addAll(list);
+		assertEquals(1, this.store.getTotal());
 		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			assertEquals(a.getCardId(), card.getCardId());
