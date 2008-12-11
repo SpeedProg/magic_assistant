@@ -32,6 +32,15 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	protected Collection filteredList = null;
 	protected Map<String, CardGroup> groupsList = new LinkedHashMap<String, CardGroup>();
 	protected boolean initialized = false;
+	protected MagicCardFilter filter;
+
+	public MagicCardFilter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(MagicCardFilter filter) {
+		this.filter = filter;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getSize()
@@ -98,10 +107,17 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	public void update(MagicCardFilter filter) throws MagicException {
+		setFilter(filter);
+		update();
+	}
+
+	public void update() {
 		initialize();
+		if (filter == null)
+			return;
 		this.groupsList.clear();
 		setFilteredList(null);
-		Collection filterCards = filterCards(filter);
+		Collection filterCards = filterCards(this.filter);
 		getFilteredList().addAll(filterCards);
 	}
 
@@ -134,8 +150,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			}
 		}
 		if (filter.getGroupIndex() >= 0) {
-			for (Iterator iterator = filteredList.iterator(); iterator.hasNext();) {
-				IMagicCard elem = (IMagicCard) iterator.next();
+			for (Object element : filteredList) {
+				IMagicCard elem = (IMagicCard) element;
 				CardGroup group = findGroupIndex(elem, filter.getGroupIndex());
 				if (group != null) {
 					group.add(elem);
@@ -146,10 +162,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
-	    Comparator<IMagicCard> comp = MagicCardComparator
-	            .getComparator(filter.getSortIndex(), filter.isAscending());
-	    return comp;
-    }
+		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortIndex(), filter.isAscending());
+		return comp;
+	}
 
 	/**
 	 * @param elem
