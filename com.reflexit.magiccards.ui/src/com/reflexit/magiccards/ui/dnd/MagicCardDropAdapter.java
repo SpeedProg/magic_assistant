@@ -10,16 +10,18 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.dnd;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TransferData;
 
-import java.util.Arrays;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
@@ -44,11 +46,26 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
-		//TableViewer viewer = (TableViewer) getViewer();
-		ICardStore<IMagicCard> cardStore = target.getCardStore();
-		cardStore.addAll(Arrays.asList(toDropArray));
-		//viewer.reveal(toDropArray[0]);
-		return true;
+		try {
+			//TableViewer viewer = (TableViewer) getViewer();
+			ICardStore<IMagicCard> cardStore = target.getCardStore();
+			if (cardStore instanceof ILocatable && target instanceof ILocatable) {
+				ILocatable ms = (ILocatable) cardStore;
+				String old = ms.getLocation();
+				String filter = ((ILocatable) target).getLocation();
+				if (filter != null)
+					ms.setLocation(filter);
+				cardStore.addAll(Arrays.asList(toDropArray));
+				ms.setLocation(old);
+			} else {
+				cardStore.addAll(Arrays.asList(toDropArray));
+			}
+			//viewer.reveal(toDropArray[0]);
+			return true;
+		} catch (Exception e) {
+			MagicUIActivator.log(e);
+			return false;
+		}
 	}
 
 	@Override
