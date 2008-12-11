@@ -27,7 +27,7 @@ public class CollectionStoreTest extends DeckStoreTest {
 		tempFile.deleteOnExit();
 		this.store = new CollectionMultiFileCardStore();
 		((CollectionMultiFileCardStore) this.store).addFile(tempFile, name);
-		((CollectionMultiFileCardStore) this.store).setDefault(name);
+		((CollectionMultiFileCardStore) this.store).setLocation(name);
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
 		this.m2 = CardGenerator.generateRandomCard();
