@@ -14,13 +14,13 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
  * @author Alena
  * 
  */
-public class CollectionMultiFileCardStore extends CollectionCardStore implements
-		ICardCountable {
+public class CollectionMultiFileCardStore extends CollectionCardStore implements ICardCountable, ILocatable {
 	public CollectionMultiFileCardStore() {
 		super(new MultiFileCardStore());
 	}
@@ -37,7 +37,11 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 	/**
 	 * @param location
 	 */
-	public void setDefault(final String location) {
-		((MultiFileCardStore) this.storage).setDefault(location);
+	public void setLocation(final String location) {
+		((MultiFileCardStore) this.storage).setLocation(location);
+	}
+
+	public String getLocation() {
+		return ((MultiFileCardStore) this.storage).getLocation();
 	}
 }

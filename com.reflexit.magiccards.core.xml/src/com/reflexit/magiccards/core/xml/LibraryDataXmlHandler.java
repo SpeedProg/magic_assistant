@@ -5,14 +5,18 @@ import java.util.Collection;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
+import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
+import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 
-public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
+public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable {
 	private static LibraryDataXmlHandler instance;
 	private CollectionMultiFileCardStore table;
 
@@ -29,7 +33,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		for (CardElement elem : colls) {
 			this.table.addFile(elem.getResource().getLocation().toFile(), elem.getLocation());
 		}
-		this.table.setDefault(def.getLocation());
+		this.table.setLocation(def.getLocation());
 		this.table.initialize();
 	}
 
@@ -42,5 +46,33 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 	private LibraryDataXmlHandler() {
 		instance = this;
 		this.table = new CollectionMultiFileCardStore();
+	}
+
+	public String getLocation() {
+		Expr root = getFilter().getRoot();
+		String loc = findLocationFilter(root);
+		if (loc != null)
+			return loc;
+		return null;
+	}
+
+	private String findLocationFilter(Expr root) {
+		if (root instanceof BinaryExpr) {
+			BinaryExpr bin = ((BinaryExpr) root);
+			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals("location")) {
+				return bin.getRight().toString();
+			}
+			String loc = findLocationFilter(bin.getLeft());
+			if (loc != null)
+				return loc;
+			loc = findLocationFilter(bin.getRight());
+			if (loc != null)
+				return loc;
+		}
+		return null;
+	}
+
+	public void setLocation(String key) {
+		throw new UnsupportedOperationException("setLocation is not supported");
 	}
 }

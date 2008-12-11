@@ -16,14 +16,14 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.AbstractStorage;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements
-		IStorage<IMagicCard> {
-	protected HashMap<String, SubTable>	map;
-	protected int						size;
-	protected String					defKey;
+public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements ILocatable, IStorage<IMagicCard> {
+	protected HashMap<String, SubTable> map;
+	protected int size;
+	protected String defKey;
 
 	public MultiFileCardStore() {
 		this.map = new HashMap<String, SubTable>();
@@ -47,8 +47,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements
 		this.size = 0;
 		for (SubTable table : all) {
 			try {
-				CardCollectionStoreObject obj = CardCollectionStoreObject
-						.initFromFile(table.file);
+				CardCollectionStoreObject obj = CardCollectionStoreObject.initFromFile(table.file);
 				SubTable loaded = new SubTable(obj);
 				this.size += loaded.list.size();
 				setLocations(loaded.key, loaded.list);
@@ -79,7 +78,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements
 	public Iterator<IMagicCard> cardsIterator() {
 		final Iterator<SubTable> iter = this.map.values().iterator();
 		return new Iterator<IMagicCard>() {
-			Iterator<IMagicCard>	cur;
+			Iterator<IMagicCard> cur;
 			{
 				if (iter.hasNext())
 					this.cur = (iter.next()).list.iterator();
@@ -202,7 +201,15 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements
 	/**
 	 * @param location
 	 */
-	public void setDefault(final String location) {
+	public void setLocation(final String location) {
+		if (map.size() > 0) {
+			if (map.get(location) == null)
+				throw new IllegalArgumentException("key is invalid");
+		}
 		this.defKey = location;
+	}
+
+	public String getLocation() {
+		return defKey;
 	}
 }
