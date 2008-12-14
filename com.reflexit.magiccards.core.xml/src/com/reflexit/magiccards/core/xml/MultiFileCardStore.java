@@ -94,7 +94,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 			void checkNext() {
 				if (this.cur == null)
 					return;
-				if (!this.cur.hasNext()) {
+				while (cur != null && !this.cur.hasNext()) {
 					if (iter.hasNext()) {
 						this.cur = (iter.next()).list.iterator();
 					} else {

@@ -31,7 +31,7 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 	 */
 	public void addFile(final File file, final String location) {
 		((MultiFileCardStore) this.storage).addFile(file, location);
-		initialized = true;
+		initialized = false;
 	}
 
 	/**
