@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -26,8 +28,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -165,6 +165,8 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 					if (o instanceof MagicCardPhisical) {
 						MagicCardPhisical card = (MagicCardPhisical) o;
 						int count = card.getCount();
+						if (count == 1)
+							continue;
 						int left = type;
 						if (left >= count)
 							continue;
