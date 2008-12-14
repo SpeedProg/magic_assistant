@@ -30,18 +30,40 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 	 * @param location
 	 */
 	public void addFile(final File file, final String location) {
-		((MultiFileCardStore) this.storage).addFile(file, location);
-		initialized = false;
+		addFile(file, location, true);
+	}
+
+	public void addFile(final File file, final String location, boolean reload) {
+		getStorage().addFile(file, location);
+		if (reload)
+			setInitialized(false);
+	}
+
+	private MultiFileCardStore getStorage() {
+		return ((MultiFileCardStore) this.storage);
 	}
 
 	/**
 	 * @param location
 	 */
 	public void setLocation(final String location) {
-		((MultiFileCardStore) this.storage).setLocation(location);
+		getStorage().setLocation(location);
 	}
 
 	public String getLocation() {
-		return ((MultiFileCardStore) this.storage).getLocation();
+		return getStorage().getLocation();
+	}
+
+	public void removeFile(String location) {
+		getStorage().removeFile(location);
+	}
+
+	public void clear() {
+		getStorage().clear();
+		super.clear();
+	}
+
+	public void renameLocation(String oldLocation, String newLocation) {
+		getStorage().renameLocation(oldLocation, newLocation);
 	}
 }

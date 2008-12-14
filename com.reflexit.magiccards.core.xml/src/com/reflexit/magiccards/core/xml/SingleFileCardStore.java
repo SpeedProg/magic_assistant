@@ -85,4 +85,10 @@ public class SingleFileCardStore extends AbstractStorage<IMagicCard> {
 	public int getTotal() {
 		return this.store.getTotal();
 	}
+
+	@Override
+	public void clear() {
+		this.store = new MemoryCardStore<IMagicCard>();
+		this.store.initialize();
+	}
 }

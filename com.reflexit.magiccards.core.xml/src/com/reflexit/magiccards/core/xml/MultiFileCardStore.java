@@ -39,12 +39,20 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 		this.initialized = false;
 	}
 
+	public void clear() {
+		size = 0;
+		map.clear();
+	}
+
+	public void removeFile(String location) {
+		this.map.remove(location);
+	}
+
 	@Override
 	public synchronized void doInitialize() {
 		ArrayList<SubTable> all = new ArrayList<SubTable>();
 		all.addAll(this.map.values());
-		this.map.clear();
-		this.size = 0;
+		clear();
 		for (SubTable table : all) {
 			try {
 				CardCollectionStoreObject obj = CardCollectionStoreObject.initFromFile(table.file);
@@ -216,5 +224,14 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 
 	public String getLocation() {
 		return defKey;
+	}
+
+	public void renameLocation(String oldLocation, String newLocation) {
+		SubTable loaded = map.get(oldLocation);
+		loaded.key = newLocation;
+		setLocations(loaded.key, loaded.list);
+		map.remove(oldLocation);
+		map.put(newLocation, loaded);
+		save();
 	}
 }
