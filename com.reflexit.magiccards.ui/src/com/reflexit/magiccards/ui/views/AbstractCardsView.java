@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -39,9 +42,6 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -344,7 +344,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			buf.append(TextConvertor.toText(card));
-			buf.append("--------------------------");
+			buf.append("--------------------------\n");
 		}
 		String textData = buf.toString();
 		if (textData.length() > 0) {
