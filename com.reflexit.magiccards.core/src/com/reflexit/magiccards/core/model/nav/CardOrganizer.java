@@ -1,15 +1,15 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -31,7 +31,7 @@ public class CardOrganizer extends CardElement {
 
 	public void addChild(CardElement a) {
 		this.children.add(a);
-		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER));
+		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER, a));
 	}
 
 	public IContainer getContainer() {
@@ -54,7 +54,7 @@ public class CardOrganizer extends CardElement {
 	 */
 	public void removeChild(CardElement el) {
 		this.children.remove(el);
-		fireEvent(new CardEvent(el, CardEvent.REMOVE_CONTAINER));
+		fireEvent(new CardEvent(this, CardEvent.REMOVE_CONTAINER, el));
 	}
 
 	/* (non-Javadoc)
@@ -111,8 +111,8 @@ public class CardOrganizer extends CardElement {
 			return this;
 		String top = p.removeLastSegments(p.segmentCount() - 1).toString();
 		IPath rest = p.removeFirstSegments(1);
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
-			CardElement el = (CardElement) iterator.next();
+		for (Object element : getChildren()) {
+			CardElement el = (CardElement) element;
 			if (el.getPath().equals(p))
 				return el;
 			if (top.equals(el.getName()) && el instanceof CardOrganizer) {

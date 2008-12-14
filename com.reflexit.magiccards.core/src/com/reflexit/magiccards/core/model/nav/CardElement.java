@@ -1,12 +1,12 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.File;
+
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-import java.io.File;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -102,8 +102,8 @@ public abstract class CardElement extends EventManager {
 
 	protected void fireEvent(CardEvent event) {
 		Object[] listeners = getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			ICardEventListener lis = (ICardEventListener) listeners[i];
+		for (Object listener : listeners) {
+			ICardEventListener lis = (ICardEventListener) listener;
 			try {
 				lis.handleEvent(event);
 			} catch (Throwable t) {
@@ -144,18 +144,20 @@ public abstract class CardElement extends EventManager {
 	 * @return 
 	 */
 	public CardElement rename(String value) {
+		String oldName = getLocation();
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
 		if (getResource() != null) {
 			try {
 				getResource().move(new Path(value + ".xml"), true, null);
-				return newElement(value, getParent());
 			} catch (CoreException e) {
 				Activator.log(e);
 			}
 		}
-		return null;
+		CardElement x = newElement(value, getParent());
+		fireEvent(new CardEvent(x, CardEvent.RENAME_CONTAINER, oldName));
+		return x;
 	}
 
 	public abstract CardElement newElement(String name2, CardOrganizer parent2);

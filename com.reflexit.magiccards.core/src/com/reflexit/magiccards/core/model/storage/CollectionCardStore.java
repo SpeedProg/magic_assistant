@@ -139,6 +139,8 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	 */
 	@Override
 	protected synchronized void doInitialize() {
+		cardCount = 0;
+		this.hashpart = new HashCollectionPart();
 		this.storage.initialize();
 		// load in hash
 		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
@@ -162,5 +164,10 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 
 	public int getCount() {
 		return this.cardCount;
+	}
+
+	public void clear() {
+		cardCount = 0;
+		this.hashpart = new HashCollectionPart();
 	}
 }

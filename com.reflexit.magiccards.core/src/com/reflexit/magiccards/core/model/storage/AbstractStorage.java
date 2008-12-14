@@ -12,7 +12,6 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.io.FileNotFoundException;
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
 
@@ -30,6 +29,8 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	public AbstractStorage() {
 		super();
 	}
+
+	public abstract void clear();
 
 	public synchronized void initialize() {
 		if (this.initialized)
@@ -57,8 +58,8 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	protected abstract void doSave() throws FileNotFoundException;
 
 	public void addAll(Collection<T> list) throws MagicException {
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			T card = (T) iterator.next();
+		for (Object element : list) {
+			T card = (T) element;
 			doAddCard(card);
 		}
 		autoSave();
