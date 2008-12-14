@@ -50,6 +50,8 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 				CardCollectionStoreObject obj = CardCollectionStoreObject.initFromFile(table.file);
 				SubTable loaded = new SubTable(obj);
 				this.size += loaded.list.size();
+				if (obj.key == null && table.key != null)
+					loaded.key = table.key;
 				setLocations(loaded.key, loaded.list);
 				this.map.put(loaded.key, loaded);
 			} catch (Exception e) {
@@ -95,6 +97,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 				if (this.cur == null)
 					return;
 				while (cur != null && !this.cur.hasNext()) {
+					//if (!this.cur.hasNext()) {
 					if (iter.hasNext()) {
 						this.cur = (iter.next()).list.iterator();
 					} else {
@@ -164,6 +167,8 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 				return new File(XmlCardHolder.getDbFolder(), key + ".xml");
 			} else if (card instanceof MagicCardPhisical) {
 				SubTable subTable = this.map.get(key);
+				if (subTable == null)
+					throw new MagicException("Invalid Key: " + key);
 				return subTable.file;
 			} else
 				throw new MagicException("Unknown card type");
