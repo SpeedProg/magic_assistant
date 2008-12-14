@@ -29,6 +29,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -215,6 +216,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		this.manager.getFilteredStore().getCardStore().addListener(this);
+		DataManager.getModelRoot().addListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -223,6 +225,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 	@Override
 	public void dispose() {
 		this.manager.getFilteredStore().getCardStore().removeListener(this);
+		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}
 
@@ -232,9 +235,12 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 	}
 
 	public void handleEvent(CardEvent event) {
-		if (event.getType() == CardEvent.UPDATE) {
+		int type = event.getType();
+		if (type == CardEvent.UPDATE) {
 			this.manager.getViewer().update(event.getSource(), null);
 			getManager().updateStatus();
+		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
+			this.manager.loadData();
 		} else {
 			this.manager.loadData();
 		}
