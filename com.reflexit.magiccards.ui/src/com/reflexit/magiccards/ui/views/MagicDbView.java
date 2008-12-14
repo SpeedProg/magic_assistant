@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -8,8 +10,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
-
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
@@ -23,7 +23,6 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public class MagicDbView extends AbstractCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.MagicDbView";
-	Action addToLib;
 	MenuManager addToDeck;
 
 	/**
@@ -51,20 +50,6 @@ public class MagicDbView extends AbstractCardsView {
 		}
 	}
 
-	protected void addToLibrary() {
-		ISelection selection = getViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			if (!sel.isEmpty()) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					Object o = iterator.next();
-					if (o instanceof IMagicCard)
-						DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().addCard(o);
-				}
-			}
-		}
-	}
-
 	/**
 	 * @param secondaryId
 	 */
@@ -85,12 +70,6 @@ public class MagicDbView extends AbstractCardsView {
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.addToLib = new Action("Add to Library") {
-			@Override
-			public void run() {
-				addToLibrary();
-			}
-		};
 		this.addToDeck = new MenuManager("Add to Deck");
 		this.addToDeck.setRemoveAllWhenShown(true);
 		this.addToDeck.addMenuListener(new IMenuListener() {
@@ -106,8 +85,7 @@ public class MagicDbView extends AbstractCardsView {
 	protected void fillDeckMenu(IMenuManager manager) {
 		boolean any = false;
 		IViewReference[] views = getViewSite().getWorkbenchWindow().getActivePage().getViewReferences();
-		for (int i = 0; i < views.length; i++) {
-			final IViewReference viewReference = views[i];
+		for (final IViewReference viewReference : views) {
 			if (viewReference.getId().equals(DeckView.ID)) {
 				final String deckId = viewReference.getSecondaryId();
 				ICardDeck store = (ICardDeck) ((DeckView) viewReference.getPart(false)).getFilteredStore()
@@ -132,9 +110,8 @@ public class MagicDbView extends AbstractCardsView {
 
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
-		manager.add(this.addToLib);
-		manager.add(this.addToDeck);
 		super.fillContextMenu(manager);
+		manager.add(this.addToDeck);
 	}
 
 	@Override
