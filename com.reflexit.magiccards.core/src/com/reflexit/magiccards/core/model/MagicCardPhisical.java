@@ -28,6 +28,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			this.condition = phi.getCondition();
 			this.price = phi.getPrice();
 			this.ownership = phi.ownership;
+			this.location = phi.location;
 		}
 	}
 
