@@ -20,7 +20,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		for (int i = 0; i < 10; i++) {
 			File tempFile1 = File.createTempFile("coll" + i, ".xml");
 			tempFile1.deleteOnExit();
-			((CollectionMultiFileCardStore) this.store).addFile(tempFile1, "coll" + i);
+			((CollectionMultiFileCardStore) this.store).addFile(tempFile1, "coll" + i, false);
 		}
 		((CollectionMultiFileCardStore) this.store).setLocation("coll5");
 		this.m1 = CardGenerator.generateRandomCard();
