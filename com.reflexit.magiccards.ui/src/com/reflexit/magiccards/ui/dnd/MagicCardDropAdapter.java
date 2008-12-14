@@ -12,11 +12,14 @@ package com.reflexit.magiccards.ui.dnd;
 
 import java.util.Arrays;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -62,6 +65,10 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 			}
 			//viewer.reveal(toDropArray[0]);
 			return true;
+		} catch (MagicException e) {
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
+			        "Cannot perform this operation");
+			return false;
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
 			return false;
