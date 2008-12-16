@@ -21,10 +21,12 @@ public class CardFilterDialog extends TitleAreaDialog implements IPreferencePage
 		// getShell();
 	}
 
+	@Override
 	protected boolean isResizable() {
 		return true;
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Filter Cards...");
 		this.cardFilterPreference = new CardFilterPreferencePage();
@@ -42,6 +44,7 @@ public class CardFilterDialog extends TitleAreaDialog implements IPreferencePage
 		return MagicUIActivator.getDefault().getPreferenceStore();
 	}
 
+	@Override
 	protected void okPressed() {
 		this.cardFilterPreference.performOk();
 		super.okPressed();

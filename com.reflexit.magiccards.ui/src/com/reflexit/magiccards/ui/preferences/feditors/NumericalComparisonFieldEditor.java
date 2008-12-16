@@ -110,7 +110,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	protected void adjustForNumColumns(int numColumns) {
+	@Override
+    protected void adjustForNumColumns(int numColumns) {
 		GridData gd = (GridData) this.textField.getLayoutData();
 		gd.horizontalSpan = numColumns > 2 ? numColumns - 2 : 1;
 		// We only grab excess space if we have to
@@ -179,7 +180,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * but must call <code>super.doFillIntoGrid</code>.
 	 * </p>
 	 */
-	protected void doFillIntoGrid(Composite parent, int numColumns) {
+	@Override
+    protected void doFillIntoGrid(Composite parent, int numColumns) {
 		getLabelControl(parent);
 		this.operationControl = getOperationControl(parent);
 		this.operationControl.setLayoutData(new GridData());
@@ -225,7 +227,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	protected void doLoad() {
+	@Override
+    protected void doLoad() {
 		if (this.textField != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
 			String number;
@@ -253,7 +256,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	protected void doLoadDefault() {
+	@Override
+    protected void doLoadDefault() {
 		if (this.textField != null) {
 			String value = getPreferenceStore().getDefaultString(getPreferenceName());
 			this.textField.setText(value);
@@ -264,7 +268,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	protected void doStore() {
+	@Override
+    protected void doStore() {
 		String number = getStringValue().trim();
 		String op = getOperation();
 		String res = op + " " + number;
@@ -284,7 +289,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	public int getNumberOfControls() {
+	@Override
+    public int getNumberOfControls() {
 		return 3;
 	}
 
@@ -329,23 +335,27 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 					/* (non-Javadoc)
 					 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
 					 */
-					public void keyReleased(KeyEvent e) {
+					@Override
+                    public void keyReleased(KeyEvent e) {
 						valueChanged();
 					}
 				});
 				break;
 			case VALIDATE_ON_FOCUS_LOST:
 				this.textField.addKeyListener(new KeyAdapter() {
-					public void keyPressed(KeyEvent e) {
+					@Override
+                    public void keyPressed(KeyEvent e) {
 						clearErrorMessage();
 					}
 				});
 				this.textField.addFocusListener(new FocusAdapter() {
-					public void focusGained(FocusEvent e) {
+					@Override
+                    public void focusGained(FocusEvent e) {
 						refreshValidState();
 					}
 
-					public void focusLost(FocusEvent e) {
+					@Override
+                    public void focusLost(FocusEvent e) {
 						valueChanged();
 						clearErrorMessage();
 					}
@@ -382,14 +392,16 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	public boolean isValid() {
+	@Override
+    public boolean isValid() {
 		return this.isValid;
 	}
 
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	protected void refreshValidState() {
+	@Override
+    protected void refreshValidState() {
 		this.isValid = checkState();
 	}
 
@@ -416,7 +428,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 		if (this.textField != null) {
 			this.textField.setFocus();
 		}
@@ -505,7 +518,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/*
 	 * @see FieldEditor.setEnabled(boolean,Composite).
 	 */
-	public void setEnabled(boolean enabled, Composite parent) {
+	@Override
+    public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getTextControl(parent).setEnabled(enabled);
 		getOperationControl(parent).setEnabled(enabled);

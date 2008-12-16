@@ -8,11 +8,13 @@ public class PowerColumn extends GenColumn {
 		this.fullname = fullname;
 	}
 
-	public String getColumnFullName() {
+	@Override
+    public String getColumnFullName() {
 		return this.fullname;
 	}
 
-	public int getColumnWidth() {
+	@Override
+    public int getColumnWidth() {
 		return 30;
 	}
 }

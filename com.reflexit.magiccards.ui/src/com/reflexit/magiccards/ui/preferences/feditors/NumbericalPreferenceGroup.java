@@ -13,6 +13,7 @@ public class NumbericalPreferenceGroup extends FieldEditorPreferencePage {
 		noDefaultAndApplyButton();
 	}
 
+	@Override
 	protected void createFieldEditors() {
 		//		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		//		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -30,6 +31,7 @@ public class NumbericalPreferenceGroup extends FieldEditorPreferencePage {
 		addField(new NumericalComparisonFieldEditor(id, "Converted CC", getFieldEditorParent()));
 	}
 
+	@Override
 	protected void adjustGridLayout() {
 		GridLayout layout = (GridLayout) ((Composite) this.getControl()).getLayout();
 		layout.marginHeight = 5;

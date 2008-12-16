@@ -5,7 +5,8 @@ public class TypeColumn extends GenColumn {
 		super(dataIndex, "Type");
 	}
 
-	public int getColumnWidth() {
+	@Override
+    public int getColumnWidth() {
 		return 200;
 	}
 }

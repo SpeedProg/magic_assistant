@@ -7,13 +7,15 @@ public class OracleTextColumn extends GenColumn {
 		super(dataIndex, "Oracle Text");
 	}
 
-	public String getToolTipText(Object element) {
+	@Override
+    public String getToolTipText(Object element) {
 		String text = getText(element);
 		text = text.replaceAll("<br>", "\n");
 		return text;
 	}
 
-	public Color getToolTipBackgroundColor(Object object) {
+	@Override
+    public Color getToolTipBackgroundColor(Object object) {
 		return super.getToolTipBackgroundColor(object);
 	}
 }

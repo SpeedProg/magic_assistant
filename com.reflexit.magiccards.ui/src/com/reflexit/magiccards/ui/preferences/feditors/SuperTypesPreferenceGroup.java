@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -8,8 +10,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.SuperTypes;
 
@@ -21,6 +21,7 @@ public class SuperTypesPreferenceGroup extends FieldEditorPreferencePage {
 		noDefaultAndApplyButton();
 	}
 
+	@Override
 	protected void createFieldEditors() {
 		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -39,6 +40,7 @@ public class SuperTypesPreferenceGroup extends FieldEditorPreferencePage {
 		return editor;
 	}
 
+	@Override
 	protected void adjustGridLayout() {
 		GridLayout layout = (GridLayout) this.group.getLayout();
 		layout.marginHeight = 5;

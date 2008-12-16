@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -91,7 +92,7 @@ public class LocationColumn extends GenColumn {
 								return null;
 							}
 						});
-						if (d.open() == Dialog.OK) {
+						if (d.open() == Window.OK) {
 							Object[] result = d.getResult();
 							if (result.length == 0)
 								return null;
