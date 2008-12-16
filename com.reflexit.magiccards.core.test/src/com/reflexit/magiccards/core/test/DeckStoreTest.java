@@ -37,7 +37,7 @@ public class DeckStoreTest extends TestCase {
 		String name = "aaa";
 		File tempFile = File.createTempFile("deck", ".xml");
 		tempFile.deleteOnExit();
-		this.store = new DeckFileCardStore(tempFile, name);
+		this.store = new DeckFileCardStore(tempFile, name, "Decks/" + name + ".xml");
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
 		this.m2 = CardGenerator.generateRandomCard();
