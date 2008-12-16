@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 public class VirtualMultiFileCardStore extends
 		AbstractCardStoreWithStorage<IMagicCard> {
 	public VirtualMultiFileCardStore() {
-		super(new MultiFileCardStore());
+		super(new MultiFileCardStorage());
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class VirtualMultiFileCardStore extends
 	 * @param location
 	 */
 	public void addFile(final File file, final String location) {
-		((MultiFileCardStore) this.storage).addFile(file, location);
+		((MultiFileCardStorage) this.storage).addFile(file, location);
 		initialized = false;
 	}
 

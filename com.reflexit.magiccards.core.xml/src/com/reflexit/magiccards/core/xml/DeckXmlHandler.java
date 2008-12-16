@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.CoreException;
-
 import java.io.File;
+
+import org.eclipse.core.runtime.CoreException;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -31,7 +31,7 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 				d = DataManager.getModelRoot().getDeckContainer().addDeck(filename);
 			file = d.getFile();
 			if (!d.isOpen()) {
-				d.open(new DeckFileCardStore(file, null));
+				d.open(new DeckFileCardStore(file, null, d.getLocation()));
 			}
 			this.table = (DeckFileCardStore) d.getStore();
 		} catch (CoreException e) {

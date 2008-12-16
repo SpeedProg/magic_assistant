@@ -9,18 +9,27 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.AbstractStorage;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class SingleFileCardStore extends AbstractStorage<IMagicCard> {
+public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implements ILocatable {
 	protected transient File file;
 	protected MemoryCardStore store;
+	protected String location;
 
-	public SingleFileCardStore(File file) {
+	public SingleFileCardStorage(File file, String location) {
+		this(file, location, false);
+	}
+
+	public SingleFileCardStorage(File file, String location, boolean initialized) {
 		this.file = file;
 		this.store = new MemoryCardStore<IMagicCard>();
 		this.store.initialize();
+		this.location = location;
+		this.initialized = initialized;
 	}
 
 	@Override
@@ -32,6 +41,19 @@ public class SingleFileCardStore extends AbstractStorage<IMagicCard> {
 			Activator.log(e);
 		}
 		loadFields(obj);
+		updateLocations();
+	}
+
+	void updateLocations() {
+		if (getLocation() == null)
+			return;
+		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
+			Object object = iterator.next();
+			if (object instanceof MagicCardPhisical) {
+				MagicCardPhisical mp = (MagicCardPhisical) object;
+				mp.setLocation(getLocation());
+			}
+		}
 	}
 
 	/**
@@ -42,6 +64,8 @@ public class SingleFileCardStore extends AbstractStorage<IMagicCard> {
 			this.store.setList(obj.list);
 		else
 			this.store.setList(new ArrayList<IMagicCard>());
+		if (obj.key != null)
+			setLocation(obj.key);
 	}
 
 	/**
@@ -49,6 +73,7 @@ public class SingleFileCardStore extends AbstractStorage<IMagicCard> {
 	 */
 	protected void storeFields(CardCollectionStoreObject obj) {
 		obj.list = (ArrayList) this.store.getList();
+		obj.key = getLocation();
 	}
 
 	@Override
@@ -90,5 +115,15 @@ public class SingleFileCardStore extends AbstractStorage<IMagicCard> {
 	public void clear() {
 		this.store = new MemoryCardStore<IMagicCard>();
 		this.store.initialize();
+	}
+
+	@Override
+	public String getLocation() {
+		return location;
+	}
+
+	@Override
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }

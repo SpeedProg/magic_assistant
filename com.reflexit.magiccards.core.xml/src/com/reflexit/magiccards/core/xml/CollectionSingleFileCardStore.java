@@ -24,7 +24,7 @@ public class CollectionSingleFileCardStore extends CollectionCardStore implement
 	/**
 	 * @param file
 	 */
-	public CollectionSingleFileCardStore(File file) {
-		super(new SingleFileCardStore(file));
+	public CollectionSingleFileCardStore(File file, String location) {
+		super(new SingleFileCardStorage(file, location));
 	}
 }

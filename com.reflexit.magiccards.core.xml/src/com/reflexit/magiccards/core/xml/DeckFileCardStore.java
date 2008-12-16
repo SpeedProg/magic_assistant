@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.Path;
-
 import java.io.File;
+
+import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -24,69 +24,85 @@ import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
  *
  */
 public class DeckFileCardStore extends CollectionCardStore implements ICardDeck<IMagicCard> {
-	static class DeckExtra extends SingleFileCardStore {
-		String name;
-		String comment;
+	static class DeckFileStorage extends SingleFileCardStorage {
+		private String name;
+		private String comment;
 
 		/**
 		 * @param file
 		 */
-		public DeckExtra(File file) {
-			super(file);
+		public DeckFileStorage(File file, String location) {
+			super(file, location);
+			setName(new Path(new Path(location).lastSegment()).removeFileExtension().toString());
 		}
 
 		@Override
 		protected void loadFields(CardCollectionStoreObject obj) {
 			super.loadFields(obj);
-			// do not load name, keep default for now
-			this.comment = obj.comment;
+			if (obj.name != null)
+				this.setName(obj.name);
+			this.setComment(obj.comment);
+			if (getLocation() == null) {
+				setLocation("Decks/" + getName() + ".xml");
+			}
 		}
 
 		@Override
 		protected void storeFields(CardCollectionStoreObject obj) {
-			obj.name = this.name;
-			obj.comment = this.comment;
+			obj.name = this.getName();
+			obj.comment = this.getComment();
 			super.storeFields(obj);
 		}
+
+		void setComment(String comment) {
+	        this.comment = comment;
+        }
+
+		String getComment() {
+	        return comment;
+        }
+
+		void setName(String name) {
+	        this.name = name;
+        }
+
+		String getName() {
+	        return name;
+        }
 	}
 
 	/**
 	 * @param file
 	 */
-	public DeckFileCardStore(File file, String name) {
-		super(new DeckExtra(file));
+	public DeckFileCardStore(File file, String name, String location) {
+		super(new DeckFileStorage(file, location));
 		if (name != null)
 			setDeckName(name);
-		else {
-			String base = file.getName();
-			base = new Path(base).removeFileExtension().toString();
-			setDeckName(base);
-		}
 	}
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.ICardDeck#getDeckComment()
 	 */
 	public String getDeckComment() {
-		return getDeckExtra().comment;
+		return getDeckFileStorage().getComment();
 	}
 
 	public void setDeckName(String name) {
-		getDeckExtra().name = name;
+		getDeckFileStorage().setName(name);
 	}
 
-	protected DeckExtra getDeckExtra() {
-		return (DeckExtra) this.storage;
+	protected DeckFileStorage getDeckFileStorage() {
+		return (DeckFileStorage) getStorage();
 	}
 
 	public void setDeckComment(String comment) {
-		getDeckExtra().comment = comment;
+		getDeckFileStorage().setComment(comment);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.ICardDeck#getDeckName()
 	 */
 	public String getDeckName() {
-		return getDeckExtra().name;
+		return getDeckFileStorage().getName();
 	}
 }

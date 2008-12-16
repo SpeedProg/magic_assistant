@@ -21,7 +21,6 @@ import java.util.Properties;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.xml.DeckFileCardStore;
-import com.reflexit.magiccards.core.xml.SubTable;
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -42,7 +41,6 @@ public class CardCollectionStoreObject {
 		xstream = DataManager.getXStream();
 		xstream.alias("com.reflexit.magiccards.core.xml.LibraryCardStore", CardCollectionStoreObject.class);
 		xstream.alias(DeckFileCardStore.class.getName(), CardCollectionStoreObject.class);
-		xstream.alias(SubTable.class.getName(), CardCollectionStoreObject.class);
 		xstream.alias("cards", CardCollectionStoreObject.class);
 		xstream.setClassLoader(CardCollectionStoreObject.class.getClassLoader());
 	}

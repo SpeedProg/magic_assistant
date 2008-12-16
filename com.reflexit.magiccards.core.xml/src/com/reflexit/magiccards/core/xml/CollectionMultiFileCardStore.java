@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
  */
 public class CollectionMultiFileCardStore extends CollectionCardStore implements ICardCountable, ILocatable {
 	public CollectionMultiFileCardStore() {
-		super(new MultiFileCardStore());
+		super(new MultiFileCardStorage());
 	}
 
 	/**
@@ -34,37 +34,37 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 	}
 
 	public void addFile(final File file, final String location, boolean reload) {
-		getStorage().addFile(file, location);
+		getMStorage().addFile(file, location);
 		if (reload)
 			setInitialized(false);
 	}
 
-	private MultiFileCardStore getStorage() {
-		return ((MultiFileCardStore) this.storage);
+	private MultiFileCardStorage getMStorage() {
+		return ((MultiFileCardStorage) this.storage);
 	}
 
 	/**
 	 * @param location
 	 */
 	public void setLocation(final String location) {
-		getStorage().setLocation(location);
+		getMStorage().setLocation(location);
 	}
 
 	public String getLocation() {
-		return getStorage().getLocation();
+		return getMStorage().getLocation();
 	}
 
 	public void removeFile(String location) {
-		getStorage().removeFile(location);
+		getMStorage().removeFile(location);
 	}
 
 	@Override
 	public void clear() {
-		getStorage().clear();
+		getMStorage().clear();
 		super.clear();
 	}
 
 	public void renameLocation(String oldLocation, String newLocation) {
-		getStorage().renameLocation(oldLocation, newLocation);
+		getMStorage().renameLocation(oldLocation, newLocation);
 	}
 }
