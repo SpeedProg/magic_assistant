@@ -41,9 +41,14 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	@Override
 	public boolean doAddCard(IMagicCard card) {
 		if (getMergeOnAdd()) {
-			IMagicCard phi = this.hashpart.getCard(card);
-			if (phi == null) {
-				phi = doAddCardNoMerge(card);
+			MagicCardPhisical phi = (MagicCardPhisical) this.hashpart.getCard(card);
+			String loc = null;
+			if (this instanceof ILocatable)
+				loc = ((ILocatable) this).getLocation();
+			if (phi == null || loc != null && !loc.equals(phi.getLocation())) {
+				phi = (MagicCardPhisical) doAddCardNoMerge(card);
+				if (phi.getLocation() == null)
+					phi.setLocation(loc);
 				this.hashpart.storeCard(phi);
 				if (this.storage.addCard(phi))
 					return true;
@@ -57,7 +62,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 					count = ((ICardCountable) card).getCount();
 				}
 				MagicCardPhisical add = new MagicCardPhisical(card);
-				MagicCardPhisical old = (MagicCardPhisical) phi;
+				MagicCardPhisical old = phi;
 				add.setCount(old.getCount() + count);
 				removeCard(old);
 				this.cardCount += add.getCount();
