@@ -19,9 +19,8 @@ import com.reflexit.magiccards.core.MagicException;
  * @author Alena
  * 
  */
-public abstract class AbstractCardStoreWithStorage<T> extends
-		AbstractCardStore<T> {
-	protected IStorage<T>	storage;
+public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> {
+	protected IStorage<T> storage;
 
 	/**
 	 * 
@@ -57,5 +56,9 @@ public abstract class AbstractCardStoreWithStorage<T> extends
 	@Override
 	protected synchronized void doInitialize() throws MagicException {
 		this.storage.initialize();
+	}
+
+	protected IStorage<T> getStorage() {
+		return storage;
 	}
 }
