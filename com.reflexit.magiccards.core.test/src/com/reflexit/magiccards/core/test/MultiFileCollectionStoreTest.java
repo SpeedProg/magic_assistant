@@ -16,6 +16,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	protected MagicCard m1;
 	protected MagicCard m2;
 
+	@Override
 	protected void setUp() throws Exception {
 		this.store = new CollectionMultiFileCardStore();
 		for (int i = 0; i < 10; i++) {
