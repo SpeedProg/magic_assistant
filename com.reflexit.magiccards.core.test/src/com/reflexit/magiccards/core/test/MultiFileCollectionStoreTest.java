@@ -7,6 +7,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
 
@@ -56,5 +57,28 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 			found = true;
 		}
 		assertTrue("Card not found", found);
+	}
+
+	public void testAddCardWithLocation2() {
+		MagicCardPhisical a = new MagicCardPhisical(m1);
+		a.setLocation("coll1");
+		this.store.addCard(a);
+		((ILocatable) this.store).setLocation("coll2");
+		this.store.addCard(m1);
+		assertEquals(this.store.getTotal(), 2);
+		Iterator iterator = this.store.cardsIterator();
+		IMagicCard card = (IMagicCard) iterator.next();
+		assertEquals(a.getCardId(), card.getCardId());
+		IMagicCard card2 = (IMagicCard) iterator.next();
+		assertEquals(a.getCardId(), card2.getCardId());
+		String loc1 = ((MagicCardPhisical) card).getLocation();
+		String loc2 = ((MagicCardPhisical) card2).getLocation();
+		if (loc1.equals("coll1")) {
+			assertEquals("coll1", loc1);
+			assertEquals("coll2", loc2);
+		} else {
+			assertEquals("coll1", loc2);
+			assertEquals("coll2", loc1);
+		}
 	}
 }
