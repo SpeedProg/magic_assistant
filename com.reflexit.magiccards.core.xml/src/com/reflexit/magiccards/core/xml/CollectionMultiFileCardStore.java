@@ -58,6 +58,7 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 		getStorage().removeFile(location);
 	}
 
+	@Override
 	public void clear() {
 		getStorage().clear();
 		super.clear();

@@ -39,6 +39,7 @@ public class MultiFileCardStore extends AbstractStorage<IMagicCard> implements I
 		this.initialized = false;
 	}
 
+	@Override
 	public void clear() {
 		size = 0;
 		map.clear();
