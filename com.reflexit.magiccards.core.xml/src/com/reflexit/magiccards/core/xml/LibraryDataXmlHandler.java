@@ -88,7 +88,6 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		throw new UnsupportedOperationException("setLocation is not supported");
 	}
 
-	@Override
 	public void handleEvent(CardEvent event) {
 		if (event.getData() instanceof CardCollection) {
 			CardCollection elem = (CardCollection) event.getData();
