@@ -10,8 +10,9 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 
-public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
+public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable {
 	private DeckFileCardStore table;
 
 	public ICardStore<IMagicCard> getCardStore() {
@@ -38,5 +39,15 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String getLocation() {
+		return table.getLocation();
+	}
+
+	@Override
+	public void setLocation(String location) {
+		table.setLocation(location);
 	}
 }
