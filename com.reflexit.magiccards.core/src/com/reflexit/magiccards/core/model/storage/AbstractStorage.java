@@ -65,8 +65,10 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	public boolean add(T card) {
 		boolean modified = doAddCard(card);
-		if (modified)
+		if (modified) {
+			setNeedToSave(true);
 			autoSave();
+		}
 		return modified;
 	}
 
@@ -119,6 +121,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	public boolean remove(T card) {
 		if (!doRemoveCard(card))
 			return false;
+		setNeedToSave(true);
 		autoSave();
 		return true;
 	}
