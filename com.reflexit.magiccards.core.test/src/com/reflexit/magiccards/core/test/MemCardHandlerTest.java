@@ -44,8 +44,8 @@ public class MemCardHandlerTest extends TestCase {
 		card1.setCost("{B}");
 		MagicCard card2 = CardGenerator.generateRandomCard();
 		card2.setCost("{R}");
-		this.deck.getCardStore().addCard(card1);
-		this.deck.getCardStore().addCard(card2);
+		this.deck.getCardStore().add(card1);
+		this.deck.getCardStore().add(card2);
 		this.filter.setSortIndex(IMagicCard.INDEX_COST);
 		this.filter.setGroupIndex(IMagicCard.INDEX_COST);
 		this.deck.update(this.filter);

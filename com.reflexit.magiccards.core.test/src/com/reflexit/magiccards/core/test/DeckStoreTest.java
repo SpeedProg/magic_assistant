@@ -50,9 +50,9 @@ public class DeckStoreTest extends TestCase {
 
 	public void testAddCard() {
 		MagicCard a = CardGenerator.generateRandomCard();
-		this.store.addCard(a);
-		assertEquals(this.store.getTotal(), 1);
-		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
+		this.store.add(a);
+		assertEquals(this.store.size(), 1);
+		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			assertEquals(a.getCardId(), card.getCardId());
 		}
@@ -63,8 +63,8 @@ public class DeckStoreTest extends TestCase {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		list.add(a);
 		this.store.addAll(list);
-		assertEquals(1, this.store.getTotal());
-		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
+		assertEquals(1, this.store.size());
+		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			assertEquals(a.getCardId(), card.getCardId());
 		}
@@ -72,9 +72,9 @@ public class DeckStoreTest extends TestCase {
 
 	public void testAddCardMCP() {
 		MagicCardPhisical a = new MagicCardPhisical(this.m1);
-		this.store.addCard(a);
-		assertEquals(this.store.getTotal(), 1);
-		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
+		this.store.add(a);
+		assertEquals(this.store.size(), 1);
+		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			assertEquals(a.getCardId(), card.getCardId());
 		}
@@ -82,45 +82,45 @@ public class DeckStoreTest extends TestCase {
 
 	public void testAddCardMCP_2() {
 		MagicCardPhisical a1 = new MagicCardPhisical(this.m1);
-		this.store.addCard(a1);
+		this.store.add(a1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m2);
-		assertEquals(this.store.getTotal(), 1);
-		this.store.addCard(a2);
-		assertEquals(this.store.getTotal(), 2);
+		assertEquals(this.store.size(), 1);
+		this.store.add(a2);
+		assertEquals(this.store.size(), 2);
 	}
 
 	public void testAddCardMCP_2Merge() {
 		MagicCardPhisical a1 = new MagicCardPhisical(this.m1);
-		this.store.addCard(a1);
+		this.store.add(a1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m1);
-		assertEquals(1, this.store.getTotal());
-		this.store.addCard(a2);
-		assertEquals(1, this.store.getTotal());
+		assertEquals(1, this.store.size());
+		this.store.add(a2);
+		assertEquals(1, this.store.size());
 		MagicCardPhisical a3 = (MagicCardPhisical) this.store.getCard(this.m1.getCardId());
 		assertEquals(2, a3.getCount());
 	}
 
 	public void testRemoveCard() {
 		MagicCardPhisical a1 = new MagicCardPhisical(this.m1);
-		this.store.addCard(a1);
+		this.store.add(a1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m2);
-		assertEquals(1, this.store.getTotal());
-		this.store.addCard(a2);
-		assertEquals(2, this.store.getTotal());
-		this.store.removeCard(a2);
-		assertEquals(1, this.store.getTotal());
+		assertEquals(1, this.store.size());
+		this.store.add(a2);
+		assertEquals(2, this.store.size());
+		this.store.remove(a2);
+		assertEquals(1, this.store.size());
 	}
 
 	public void testRemoveCard2() {
 		MagicCardPhisical a1 = new MagicCardPhisical(this.m1);
-		this.store.addCard(a1);
+		this.store.add(a1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m2);
-		assertEquals(1, this.store.getTotal());
-		this.store.addCard(a2);
-		assertEquals(2, this.store.getTotal());
+		assertEquals(1, this.store.size());
+		this.store.add(a2);
+		assertEquals(2, this.store.size());
 		MagicCardPhisical a3 = (MagicCardPhisical) this.store.getCard(this.m2.getCardId());
-		this.store.removeCard(a3);
-		assertEquals(1, this.store.getTotal());
+		this.store.remove(a3);
+		assertEquals(1, this.store.size());
 	}
 
 	public void testSelfDragAndDrop() {
@@ -128,17 +128,17 @@ public class DeckStoreTest extends TestCase {
 		a1.setCount(1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m2);
 		a2.setCount(3);
-		this.store.addCard(a1);
-		assertEquals(1, this.store.getTotal());
-		this.store.addCard(a2);
-		assertEquals(2, this.store.getTotal());
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
+		this.store.add(a2);
+		assertEquals(2, this.store.size());
 		assertEquals(4, this.store.getCount());
 		MagicCardPhisical a3 = (MagicCardPhisical) this.store.getCard(this.m2.getCardId());
-		this.store.addCard(a3);
-		assertEquals(2, this.store.getTotal());
+		this.store.add(a3);
+		assertEquals(2, this.store.size());
 		assertEquals(7, this.store.getCount());
-		this.store.removeCard(a3);
-		assertEquals(2, this.store.getTotal());
+		this.store.remove(a3);
+		assertEquals(2, this.store.size());
 		assertEquals(4, this.store.getCount());
 	}
 
@@ -147,31 +147,31 @@ public class DeckStoreTest extends TestCase {
 		a1.setCount(1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m1);
 		a2.setCount(3);
-		this.store.addCard(a1);
-		assertEquals(1, this.store.getTotal());
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
 		this.store.setMergeOnAdd(false);
-		this.store.addCard(a2);
+		this.store.add(a2);
 		this.store.setMergeOnAdd(true);
-		assertEquals(2, this.store.getTotal());
+		assertEquals(2, this.store.size());
 		assertEquals(4, this.store.getCount());
-		this.store.removeCard(a2);
+		this.store.remove(a2);
 		assertEquals(1, this.store.getCount());
-		this.store.addCard(a2);
-		assertEquals(1, this.store.getTotal());
+		this.store.add(a2);
+		assertEquals(1, this.store.size());
 		assertEquals(4, this.store.getCount());
 	}
 
 	public void testSelfDragAndDropMerge2() {
 		MagicCardPhisical a1 = new MagicCardPhisical(this.m1);
 		a1.setCount(1);
-		this.store.addCard(a1);
-		assertEquals(1, this.store.getTotal());
-		this.store.addCard(a1);
-		assertEquals(1, this.store.getTotal());
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
 		assertEquals(2, this.store.getCount());
-		this.store.removeCard(a1);
+		this.store.remove(a1);
 		assertEquals(1, this.store.getCount());
-		assertEquals(1, this.store.getTotal());
+		assertEquals(1, this.store.size());
 	}
 
 	public void testAddMint() {
@@ -180,10 +180,10 @@ public class DeckStoreTest extends TestCase {
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m1);
 		a2.setCount(1);
 		a2.setCondition("mint");
-		this.store.addCard(a1);
-		assertEquals(1, this.store.getTotal());
-		this.store.addCard(a2);
-		assertEquals(2, this.store.getTotal());
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
+		this.store.add(a2);
+		assertEquals(2, this.store.size());
 		assertEquals(2, this.store.getCount());
 	}
 }

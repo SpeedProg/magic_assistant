@@ -33,10 +33,10 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 
 	public void testAddCardFromDB() {
 		MagicCard a = CardGenerator.generateRandomCard();
-		this.store.addCard(a);
-		assertEquals(this.store.getTotal(), 1);
+		this.store.add(a);
+		assertEquals(this.store.size(), 1);
 		boolean found = false;
-		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
+		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			assertEquals(a.getCardId(), card.getCardId());
 			assertEquals("coll5", ((MagicCardPhisical) card).getLocation());
@@ -48,10 +48,10 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	public void testAddCardWithLocation() {
 		MagicCardPhisical a = new MagicCardPhisical(m1);
 		a.setLocation("coll2");
-		this.store.addCard(a);
-		assertEquals(this.store.getTotal(), 1);
+		this.store.add(a);
+		assertEquals(this.store.size(), 1);
 		boolean found = false;
-		for (Iterator iterator = this.store.cardsIterator(); iterator.hasNext();) {
+		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			assertEquals(a.getCardId(), card.getCardId());
 			assertEquals("coll2", ((MagicCardPhisical) card).getLocation());
@@ -63,11 +63,11 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	public void testAddCardWithLocation2() {
 		MagicCardPhisical a = new MagicCardPhisical(m1);
 		a.setLocation("coll1");
-		this.store.addCard(a);
+		this.store.add(a);
 		((ILocatable) this.store).setLocation("coll2");
-		this.store.addCard(m1);
-		assertEquals(this.store.getTotal(), 2);
-		Iterator iterator = this.store.cardsIterator();
+		this.store.add(m1);
+		assertEquals(this.store.size(), 2);
+		Iterator iterator = this.store.iterator();
 		IMagicCard card = (IMagicCard) iterator.next();
 		assertEquals(a.getCardId(), card.getCardId());
 		IMagicCard card2 = (IMagicCard) iterator.next();
