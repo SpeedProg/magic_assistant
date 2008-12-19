@@ -30,7 +30,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	MemoryCardStore library;
 	static class DrawDeck extends MemoryCardStore implements ICardCountable {
 		public int getCount() {
-			return getTotal();
+			return size();
 		}
 	};
 
@@ -63,9 +63,9 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 
 	public void draw(int cards) {
 		int i = 0;
-		for (Iterator iterator = this.library.cardsIterator(); iterator.hasNext() && i < cards; i++) {
+		for (Iterator iterator = this.library.iterator(); iterator.hasNext() && i < cards; i++) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			this.hand.addCard(card);
+			this.hand.add(card);
 			iterator.remove();
 		}
 	}

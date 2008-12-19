@@ -47,20 +47,25 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	protected abstract void doInitialize() throws MagicException;
 
-	public void addAll(final Collection<T> cards) {
+	public boolean addAll(final Collection<? extends T> cards) {
 		initialize();
-		doAddAll(cards);
-		fireEvent(new CardEvent(this, CardEvent.ADD, cards));
+		boolean modified = doAddAll(cards);
+		if (modified)
+			fireEvent(new CardEvent(this, CardEvent.ADD, cards));
+		return modified;
 	}
 
-	protected synchronized void doAddAll(final Collection<T> col) {
+	protected synchronized boolean doAddAll(final Collection<? extends T> col) {
+		boolean modified = false;
 		for (final Object element : col) {
 			final T card = (T) element;
-			doAddCard(card);
+			if (doAddCard(card))
+				modified = true;
 		}
+		return modified;
 	}
 
-	public boolean addCard(final T card) {
+	public boolean add(final T card) {
 		initialize();
 		synchronized (this) {
 			if (!doAddCard(card))
@@ -70,13 +75,13 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return true;
 	}
 
-	public void updateCard(final T card) {
+	public void update(final T card) {
 		initialize();
 		fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
 		return;
 	}
 
-	public void removeCard(final T o) {
+	public boolean remove(final T o) {
 		initialize();
 		boolean res;
 		synchronized (this) {
@@ -84,6 +89,41 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		}
 		if (res)
 			fireEvent(new CardEvent(this, CardEvent.REMOVE, o));
+		return res;
+	}
+
+	public boolean removeAll(Collection<?> list) {
+		initialize();
+		boolean modified = doRemoveAll(list);
+		if (modified)
+			fireEvent(new CardEvent(this, CardEvent.REMOVE, list));
+		return modified;
+	}
+
+	public boolean removeAll() {
+		initialize();
+		boolean modified = doRemoveAll();
+		if (modified)
+			fireEvent(new CardEvent(this, CardEvent.REMOVE, null));
+		return modified;
+	}
+
+	protected boolean doRemoveAll() {
+		boolean modified = false;
+		for (T t : this) {
+			if (doRemoveCard(t))
+				modified = true;
+		}
+		return modified;
+	}
+
+	protected boolean doRemoveAll(Collection<?> list) {
+		boolean modified = false;
+		for (Object t : list) {
+			if (doRemoveCard((T) t))
+				modified = true;
+		}
+		return modified;
 	}
 
 	public void setMergeOnAdd(final boolean v) {

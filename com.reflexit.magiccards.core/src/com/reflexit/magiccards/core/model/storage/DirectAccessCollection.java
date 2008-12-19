@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.ArrayList;
 
-public class DirectAccessCollection<T> extends ArrayList<T> {
+public class DirectAccessCollection<T> extends ArrayList<T> implements ICardSet<T> {
 	private static final long serialVersionUID = 2220293238430511165L;
 
 	@Override
@@ -14,5 +14,12 @@ public class DirectAccessCollection<T> extends ArrayList<T> {
 			}
 		}
 		return super.set(index, card);
+	}
+
+	public boolean removeAll() {
+		if (isEmpty())
+			return false;
+		clear();
+		return true;
 	}
 }

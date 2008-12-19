@@ -1,45 +1,21 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import com.reflexit.magiccards.core.MagicException;
-
-public interface IStorage<T> {
-	/**
-	 * Total number of cards
-	 * @return
-	 */
-	public int getTotal();
-
-	/**
-	 * Add a card to physical media 
-	 * @param card
-	 * @return
-	 */
-	public boolean addCard(T card);
-
-	/**
-	 * Add cards to a physical media 
-	 * @param card
-	 * @return
-	 */
-	public void addAll(Collection<T> list) throws MagicException;
-
-	/**
-	 * Remove a card from a physical media 
-	 * @param card
-	 * @return
-	 */
-	public boolean removeCard(T o);
-
-	public Iterator<T> cardsIterator();
-
-	public void setAutoCommit(boolean value);
-
+public interface IStorage<T> extends ICardSet<T> {
 	public boolean isAutoCommit();
 
+	/**
+	 * Save syncs memory cached data with physical media (from mem to physical).
+	 * Save would called automatically after each data editing operation unless autoCommit is off.
+	 */
 	public void save();
 
-	public void initialize();
+	public boolean isNeedToBeSaved();
+
+	/**
+	 * Load syncs memory cashed data with physical media (from physical to mem). 
+	 * Load would called automatically upon first data access if has not been loaded yet.
+	 */
+	public void load();
+
+	public boolean isLoaded();
 }

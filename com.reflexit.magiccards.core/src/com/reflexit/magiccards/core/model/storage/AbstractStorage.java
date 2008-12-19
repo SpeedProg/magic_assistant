@@ -20,8 +20,9 @@ import com.reflexit.magiccards.core.MagicException;
  *
  */
 public abstract class AbstractStorage<T> implements IStorage<T> {
-	protected boolean initialized;
+	private boolean loaded = false;
 	private boolean autocommit = true;
+	private boolean needToSave = false;
 
 	/**
 	 * 
@@ -30,39 +31,83 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		super();
 	}
 
-	public abstract void clear();
-
-	public synchronized void initialize() {
-		if (this.initialized)
+	public synchronized void load() {
+		if (isLoaded())
 			return;
-		this.initialized = true;
-		doInitialize();
+		setLoaded(true);
+		clearCache();
+		doLoad();
 	}
 
-	protected abstract void doInitialize();
+	public synchronized void reload() {
+		setLoaded(false);
+		load();
+	};
 
-	public void save() {
+	public synchronized void unload() {
+		setLoaded(false);
+		clearCache();
+	};
+
+	public abstract void clearCache();
+
+	protected abstract void doLoad();
+
+	public synchronized void save() {
 		try {
-			doSave();
+			if (isNeedToBeSaved())
+				doSave();
+			setNeedToSave(false);
 		} catch (FileNotFoundException e) {
 			throw new MagicException(e);
 		}
 	}
 
-	public boolean addCard(T card) {
-		doAddCard(card);
-		autoSave();
-		return true;
+	public boolean add(T card) {
+		boolean modified = doAddCard(card);
+		if (modified)
+			autoSave();
+		return modified;
 	}
 
 	protected abstract void doSave() throws FileNotFoundException;
 
-	public void addAll(Collection<T> list) throws MagicException {
+	public boolean addAll(Collection<? extends T> list) {
+		boolean modified = false;
+		for (T element : list) {
+			if (doAddCard(element)) {
+				modified = true;
+				setNeedToSave(true);
+			}
+		}
+		if (modified)
+			autoSave();
+		return modified;
+	}
+
+	public boolean removeAll(Collection<?> list) {
+		boolean modified = false;
 		for (Object element : list) {
-			T card = (T) element;
-			doAddCard(card);
+			if (doRemoveCard((T) element)) {
+				modified = true;
+				setNeedToSave(true);
+			}
+		}
+		if (modified)
+			autoSave();
+		return modified;
+	}
+
+	public boolean removeAll() {
+		boolean modified = false;
+		for (T element : this) {
+			if (doRemoveCard(element)) {
+				modified = true;
+				setNeedToSave(true);
+			}
 		}
 		autoSave();
+		return modified;
 	}
 
 	protected abstract boolean doAddCard(T card);
@@ -71,7 +116,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		this.autocommit = value;
 	}
 
-	public boolean removeCard(T card) {
+	public boolean remove(T card) {
 		if (!doRemoveCard(card))
 			return false;
 		autoSave();
@@ -87,5 +132,23 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	public void autoSave() {
 		if (isAutoCommit())
 			save();
+		else
+			setNeedToSave(true);
+	}
+
+	public boolean isNeedToBeSaved() {
+		return needToSave;
+	}
+
+	protected void setNeedToSave(boolean value) {
+		needToSave = value;
+	}
+
+	protected void setLoaded(boolean value) {
+		this.loaded = value;
+	}
+
+	public boolean isLoaded() {
+		return loaded;
 	}
 }

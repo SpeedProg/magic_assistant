@@ -126,7 +126,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		Collection<IMagicCard> filteredList;
 		if (filter.getSortIndex() < 0) {
 			filteredList = new ArrayList<IMagicCard>();
-			for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
+			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
 				IMagicCard elem = iterator.next();
 				if (!filter.isFiltered(elem)) {
 					filteredList.add(elem);
@@ -138,7 +138,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		} else {
 			Comparator<IMagicCard> comp = getSortComparator(filter);
 			filteredList = new TreeSet<IMagicCard>(comp);
-			for (Iterator<IMagicCard> iterator = getCardStore().cardsIterator(); iterator.hasNext();) {
+			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
 				IMagicCard elem = iterator.next();
 				if (!filter.isFiltered(elem)) {
 					filteredList.add(elem);

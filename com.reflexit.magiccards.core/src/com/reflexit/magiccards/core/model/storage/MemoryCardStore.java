@@ -36,11 +36,11 @@ public class MemoryCardStore<T> extends AbstractCardStore<T> {
 		this.list = new ArrayList<T>();
 	}
 
-	public Iterator<T> cardsIterator() {
+	public Iterator<T> iterator() {
 		return this.getList().iterator();
 	}
 
-	public int getTotal() {
+	public int size() {
 		return this.getList().size();
 	}
 

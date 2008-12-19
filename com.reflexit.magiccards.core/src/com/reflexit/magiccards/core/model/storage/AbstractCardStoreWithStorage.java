@@ -30,35 +30,45 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 		this.storage = storage;
 	}
 
-	public Iterator<T> cardsIterator() {
-		return this.storage.cardsIterator();
+	public Iterator<T> iterator() {
+		return this.storage.iterator();
 	}
 
-	public int getTotal() {
-		return this.storage.getTotal();
+	public int size() {
+		return this.storage.size();
 	}
 
 	@Override
 	protected synchronized boolean doAddCard(final T card) {
-		return this.storage.addCard(card);
+		return this.storage.add(card);
 	}
 
 	@Override
 	protected synchronized boolean doRemoveCard(final T card) {
-		return this.storage.removeCard(card);
+		return this.storage.remove(card);
 	}
 
 	@Override
-	protected synchronized void doAddAll(final Collection<T> col) {
-		this.storage.addAll(col);
+	protected synchronized boolean doAddAll(Collection<? extends T> col) {
+		return this.storage.addAll(col);
+	}
+
+	@Override
+	protected boolean doRemoveAll(Collection<?> list) {
+		return this.storage.removeAll(list);
+	}
+
+	@Override
+	protected boolean doRemoveAll() {
+		return this.storage.removeAll();
 	}
 
 	@Override
 	protected synchronized void doInitialize() throws MagicException {
-		this.storage.initialize();
+		this.storage.load();
 	}
 
-	protected IStorage<T> getStorage() {
+	protected ICardSet<T> getStorage() {
 		return storage;
 	}
 }

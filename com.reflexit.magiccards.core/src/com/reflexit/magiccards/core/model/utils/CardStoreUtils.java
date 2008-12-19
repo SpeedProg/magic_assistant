@@ -42,7 +42,7 @@ public class CardStoreUtils {
 	 */
 	public int[] buildManaCurve(ICardStore store) {
 		int bars[] = new int[9];
-		for (Iterator iterator = store.cardsIterator(); iterator.hasNext();) {
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard elem = (IMagicCard) iterator.next();
 			int cost = elem.getCmc();
 			if (elem.getCost().length() == 0)
@@ -67,7 +67,7 @@ public class CardStoreUtils {
 
 	public static Collection<IMagicCard> randomize(ICardStore store) {
 		ArrayList<IMagicCard> filteredList = new ArrayList<IMagicCard>();
-		for (Iterator<IMagicCard> iterator = store.cardsIterator(); iterator.hasNext();) {
+		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard elem = iterator.next();
 			int count = 1;
 			if (elem instanceof ICardCountable) {

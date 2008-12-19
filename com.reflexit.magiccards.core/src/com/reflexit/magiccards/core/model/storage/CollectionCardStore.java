@@ -21,21 +21,14 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * @author Alena
  *
  */
-public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements ICardCountable {
+public class CollectionCardStore extends AbstractCardStore<IMagicCard> implements ICardCountable {
 	protected HashCollectionPart hashpart;
 	protected int cardCount;
+	protected IStorage<IMagicCard> storage;
 
 	public CollectionCardStore(IStorage<IMagicCard> storage) {
-		super(storage);
+		this.storage = storage;
 		this.hashpart = new HashCollectionPart();
-	}
-
-	@Override
-	protected synchronized void doAddAll(final Collection<IMagicCard> col) {
-		for (Object element : col) {
-			IMagicCard magicCard = (IMagicCard) element;
-			doAddCard(magicCard);
-		}
 	}
 
 	@Override
@@ -50,7 +43,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				if (phi.getLocation() == null)
 					phi.setLocation(loc);
 				this.hashpart.storeCard(phi);
-				if (this.storage.addCard(phi))
+				if (this.storage.add(phi))
 					return true;
 				else {
 					this.hashpart.removeCard(phi);
@@ -64,10 +57,10 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				MagicCardPhisical add = new MagicCardPhisical(card);
 				MagicCardPhisical old = phi;
 				add.setCount(old.getCount() + count);
-				removeCard(old);
+				remove(old);
 				this.cardCount += add.getCount();
 				this.hashpart.storeCard(add);
-				if (this.storage.addCard(add))
+				if (this.storage.add(add))
 					return true;
 				else {
 					return false;
@@ -76,7 +69,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		}
 		IMagicCard phi = doAddCardNoMerge(card);
 		this.hashpart.storeCard(phi);
-		if (this.storage.addCard(phi))
+		if (this.storage.add(phi))
 			return true;
 		else {
 			return false;
@@ -120,7 +113,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 			}
 		}
 		if (found != null) {
-			this.storage.removeCard(found);
+			this.storage.remove(found);
 			this.hashpart.removeCard(found);
 			this.cardCount -= found.getCount();
 			return true;
@@ -131,10 +124,10 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				return false;
 			MagicCardPhisical add = new MagicCardPhisical(max);
 			add.setCount(max.getCount() - phi.getCount());
-			this.storage.removeCard(max);
+			this.storage.remove(max);
 			this.hashpart.removeCard(max);
 			this.cardCount -= max.getCount();
-			addCard(add);
+			add(add);
 			return true;
 		}
 	}
@@ -146,10 +139,10 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	protected synchronized void doInitialize() {
 		cardCount = 0;
 		this.hashpart = new HashCollectionPart();
-		this.storage.initialize();
+		this.storage.load();
 		// load in hash
-		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this) {
+			IMagicCard card = (IMagicCard) element;
 			this.hashpart.storeCard(card);
 			if (card instanceof ICardCountable) {
 				this.cardCount += ((ICardCountable) card).getCount();
@@ -174,5 +167,17 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	public void clear() {
 		cardCount = 0;
 		this.hashpart = new HashCollectionPart();
+	}
+
+	public Iterator<IMagicCard> iterator() {
+		return this.storage.iterator();
+	}
+
+	public int size() {
+		return this.storage.size();
+	}
+
+	public IStorage<IMagicCard> getStorage() {
+		return storage;
 	}
 }
