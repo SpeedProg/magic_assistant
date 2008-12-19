@@ -24,16 +24,18 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 		this(file, location, false);
 	}
 
-	public SingleFileCardStorage(File file, String location, boolean initialized) {
+	public SingleFileCardStorage(File file, String location, boolean initialize) {
 		this.file = file;
-		this.store = new MemoryCardStore<IMagicCard>();
-		this.store.initialize();
 		this.location = location;
-		this.initialized = initialized;
+		clearCache();
+		if (initialize) {
+			this.store.initialize();
+			load();
+		}
 	}
 
 	@Override
-	protected synchronized void doInitialize() {
+	protected synchronized void doLoad() {
 		CardCollectionStoreObject obj = null;
 		try {
 			obj = CardCollectionStoreObject.initFromFile(this.file);
@@ -47,8 +49,7 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 	void updateLocations() {
 		if (getLocation() == null)
 			return;
-		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
-			Object object = iterator.next();
+		for (Object object : this) {
 			if (object instanceof MagicCardPhisical) {
 				MagicCardPhisical mp = (MagicCardPhisical) object;
 				mp.setLocation(getLocation());
@@ -103,18 +104,12 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 		return this.store.doRemoveCard(card);
 	}
 
-	public Iterator<IMagicCard> cardsIterator() {
-		return this.store.cardsIterator();
+	public Iterator<IMagicCard> iterator() {
+		return this.store.iterator();
 	}
 
-	public int getTotal() {
-		return this.store.getTotal();
-	}
-
-	@Override
-	public void clear() {
-		this.store = new MemoryCardStore<IMagicCard>();
-		this.store.initialize();
+	public int size() {
+		return this.store.size();
 	}
 
 	@Override
@@ -125,5 +120,20 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 	@Override
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	@Override
+	public boolean removeAll() {
+		if (store.size() == 0)
+			return false;
+		clearCache();
+		setNeedToSave(true);
+		autoSave();
+		return true;
+	}
+
+	@Override
+	public void clearCache() {
+		this.store = new MemoryCardStore<IMagicCard>();
 	}
 }

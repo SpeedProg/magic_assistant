@@ -34,7 +34,7 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 	}
 
 	public void addFile(final File file, final String location, boolean reload) {
-		getMStorage().addFile(file, location);
+		getMStorage().addFile(file, location, reload);
 		if (reload)
 			setInitialized(false);
 	}
@@ -60,7 +60,7 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 
 	@Override
 	public void clear() {
-		getMStorage().clear();
+		getMStorage().reload();
 		super.clear();
 	}
 

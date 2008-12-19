@@ -16,11 +16,10 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class MagicCardDataXmlHandler extends
-		AbstractFilteredCardStore<IMagicCard> {
-	private static MagicCardDataXmlHandler	instance;
-	private ArrayList<File>					files;
-	private VirtualMultiFileCardStore		table;
+public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
+	private static MagicCardDataXmlHandler instance;
+	private ArrayList<File> files;
+	private VirtualMultiFileCardStore table;
 
 	@Override
 	public int getSize() {
@@ -42,8 +41,7 @@ public class MagicCardDataXmlHandler extends
 		IResource[] members;
 		try {
 			new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
-			MagicDbContainter con = DataManager.getModelRoot()
-					.getMagicDBContainer();
+			MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
 			members = con.getContainer().members();
 			for (IResource resource : members) {
 				File file = resource.getLocation().toFile();
@@ -59,7 +57,7 @@ public class MagicCardDataXmlHandler extends
 		}
 		// init super
 		for (File file : this.files) {
-			this.table.addFile(file, file.getName().replaceAll("\\.xml$", ""));
+			this.table.addFile(file, file.getName().replaceAll("\\.xml$", ""), true);
 		}
 		this.table.initialize();
 	}

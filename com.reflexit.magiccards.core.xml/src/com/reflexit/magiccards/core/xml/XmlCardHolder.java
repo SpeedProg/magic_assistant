@@ -60,13 +60,13 @@ public class XmlCardHolder implements ICardHandler {
 
 	private int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
 		ICardStore store = getMagicCardHandler().getCardStore();
-		int init = store.getTotal();
+		int init = store.size();
 		ArrayList<IMagicCard> list = loadFromFlat(st);
 		boolean hasAny = list.size() > 0;
 		store.addAll(list);
 		
 	
-		int rec = store.getTotal() - init;
+		int rec = store.size() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 

@@ -27,30 +27,22 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		this.map = new HashMap<String, SingleFileCardStorage>();
 	}
 
-	public synchronized void addFile(final File file, final String location) {
-		SingleFileCardStorage table = new SingleFileCardStorage(file, location);
+	public synchronized void addFile(final File file, final String location, boolean initialize) {
+		SingleFileCardStorage table = new SingleFileCardStorage(file, location, initialize);
 		this.map.put(table.getLocation(), table);
-		this.initialized = false;
 	}
 
-	@Override
-	public void clear() {
-		size = 0;
-		map.clear();
-	}
-
-	public void removeFile(String location) {
+	public synchronized void removeFile(String location) {
 		this.map.remove(location);
 	}
 
 	@Override
-	public synchronized void doInitialize() {
+	public synchronized void doLoad() {
 		ArrayList<SingleFileCardStorage> all = new ArrayList<SingleFileCardStorage>();
 		all.addAll(this.map.values());
-		clear();
 		for (SingleFileCardStorage table : all) {
 			try {
-				table.initialize();
+				table.load();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Activator.log(e);
@@ -59,13 +51,13 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		}
 	}
 
-	public Iterator<IMagicCard> cardsIterator() {
+	public Iterator<IMagicCard> iterator() {
 		final Iterator<SingleFileCardStorage> iter = this.map.values().iterator();
 		return new Iterator<IMagicCard>() {
 			Iterator<IMagicCard> cur;
 			{
 				if (iter.hasNext())
-					this.cur = (iter.next()).cardsIterator();
+					this.cur = (iter.next()).iterator();
 				else
 					this.cur = null;
 			}
@@ -81,7 +73,7 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 				while (cur != null && !this.cur.hasNext()) {
 					//if (!this.cur.hasNext()) {
 					if (iter.hasNext()) {
-						this.cur = (iter.next()).cardsIterator();
+						this.cur = (iter.next()).iterator();
 					} else {
 						this.cur = null;
 					}
@@ -101,14 +93,13 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		};
 	}
 
-	public int getTotal() {
+	public int size() {
 		return this.size;
 	}
 
-	public int getHardTotal() {
+	public int getDeepSize() {
 		int s = 0;
-		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
-			iterator.next();
+		for (Object element : this) {
 			s++;
 		}
 		if (size != s)
@@ -121,8 +112,10 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		String key = getKey(card);
 		SingleFileCardStorage res = this.map.get(key);
 		if (res != null) {
-			this.size--;
-			return res.removeCard(card);
+			int oldSize = res.size();
+			boolean modified = res.doRemoveCard(card);
+			this.size -= oldSize - res.size();
+			return modified;
 		}
 		return false;
 	}
@@ -135,8 +128,10 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 			res = new SingleFileCardStorage(getFile(card), key);
 			this.map.put(key, res);
 		}
-		this.size++;
-		return res.addCard(card);
+		this.size -= res.size();
+		boolean modified = res.doAddCard(card);
+		this.size += res.size();
+		return modified;
 	}
 
 	private File getFile(final IMagicCard card) {
@@ -202,5 +197,24 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		map.remove(oldLocation);
 		map.put(newLocation, loaded);
 		save();
+	}
+
+	@Override
+	public boolean removeAll() {
+		boolean modified = false;
+		for (SingleFileCardStorage table : map.values()) {
+			if (table.removeAll()) {
+				modified = true;
+			}
+		}
+		return modified;
+	}
+
+	@Override
+	public void clearCache() {
+		size = 0;
+		for (SingleFileCardStorage table : this.map.values()) {
+			table.clearCache();
+		}
 	}
 }

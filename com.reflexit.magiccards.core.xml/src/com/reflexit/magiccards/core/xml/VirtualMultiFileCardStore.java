@@ -14,7 +14,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
@@ -23,8 +22,7 @@ import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
  * @author Alena
  * 
  */
-public class VirtualMultiFileCardStore extends
-		AbstractCardStoreWithStorage<IMagicCard> {
+public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	public VirtualMultiFileCardStore() {
 		super(new MultiFileCardStorage());
 	}
@@ -33,15 +31,17 @@ public class VirtualMultiFileCardStore extends
 	 * @param file
 	 * @param location
 	 */
-	public void addFile(final File file, final String location) {
-		((MultiFileCardStorage) this.storage).addFile(file, location);
-		initialized = false;
+	public void addFile(final File file, final String location, boolean initialize) {
+		((MultiFileCardStorage) this.storage).addFile(file, location, initialize);
+		if (initialize)
+			initialized = initialize;
 	}
 
 	@Override
-	protected synchronized void doAddAll(final Collection<IMagicCard> col) {
-		this.storage.addAll(col);
+	protected synchronized boolean doAddAll(Collection<? extends IMagicCard> col) {
+		boolean modified = super.doAddAll(col);
 		pruneDuplicates();
+		return modified;
 	}
 
 	/**
@@ -50,22 +50,13 @@ public class VirtualMultiFileCardStore extends
 	public void pruneDuplicates() {
 		HashSet<Integer> hash = new HashSet<Integer>();
 		ArrayList<IMagicCard> duplicates = new ArrayList<IMagicCard>();
-		for (Iterator iterator = cardsIterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this) {
+			IMagicCard card = (IMagicCard) element;
 			if (hash.contains(card.getCardId())) {
 				duplicates.add(card);
 			}
 			hash.add(card.getCardId());
 		}
-		boolean old = this.storage.isAutoCommit();
-		this.storage.setAutoCommit(false);
-		// System.err.println("removed " + duplicates.size() + " duplicates");
-		for (Object element : duplicates) {
-			IMagicCard name = (IMagicCard) element;
-			this.storage.removeCard(name);
-		}
-		this.storage.setAutoCommit(old);
-		if (duplicates.size() > 0)
-			this.storage.save();
+		this.storage.removeAll(duplicates);
 	}
 }
