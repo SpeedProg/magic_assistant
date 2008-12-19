@@ -206,7 +206,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		ICardStore cardStore = getFilteredStore().getCardStore();
 		String cardCountTotal = "";
 		int filSize = getFilteredStore().getSize();
-		int totalSize = cardStore.getTotal();
+		int totalSize = cardStore.size();
 		if (totalSize == 0)
 			return;
 		int diff = totalSize - filSize;

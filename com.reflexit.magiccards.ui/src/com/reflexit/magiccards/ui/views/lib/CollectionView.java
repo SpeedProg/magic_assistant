@@ -103,7 +103,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 					Object o = iterator.next();
 					if (o instanceof MagicCardPhisical) {
 						((MagicCardPhisical) o).setOwn(b);
-						cardStore.updateCard(o);
+						cardStore.update(o);
 					}
 				}
 			}
@@ -119,7 +119,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof IMagicCard) {
-						cardStore.removeCard(o);
+						cardStore.remove(o);
 					}
 				}
 			}
@@ -175,10 +175,10 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 							left = count / 2;
 						MagicCardPhisical card2 = new MagicCardPhisical(card);
 						card.setCount(left);
-						cardStore.updateCard(card);
+						cardStore.update(card);
 						card2.setCount(count - left);
 						cardStore.setMergeOnAdd(false);
-						cardStore.addCard(card2);
+						cardStore.add(card2);
 						cardStore.setMergeOnAdd(true);
 					}
 				}

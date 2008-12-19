@@ -87,8 +87,8 @@ public class CountColumn extends GenColumn {
 					// save
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
-					cardStore.removeCard(card);
-					cardStore.addCard(add);
+					cardStore.remove(card);
+					cardStore.add(add);
 				}
 			}
 		};

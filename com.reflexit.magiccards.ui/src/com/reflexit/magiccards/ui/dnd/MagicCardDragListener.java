@@ -51,7 +51,7 @@ public class MagicCardDragListener implements DragSourceListener {
 				ICardStore store = ((CollectionView) this.view).getFilteredStore().getCardStore();
 				for (Iterator it = this.selection.iterator(); it.hasNext();) {
 					IMagicCard card = (IMagicCard) it.next();
-					store.removeCard(card);
+					store.remove(card);
 				}
 			}
 			this.viewer.refresh();

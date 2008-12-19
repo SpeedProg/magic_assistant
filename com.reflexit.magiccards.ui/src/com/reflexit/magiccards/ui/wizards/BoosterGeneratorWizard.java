@@ -197,7 +197,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			IMagicCard card = (IMagicCard) dbcards.getElement(index);
 			MagicCardPhisical pcard = new MagicCardPhisical(card);
 			pcard.setLocation(col.getLocation());
-			store.addCard(pcard);
+			store.add(pcard);
 		}
 	}
 }

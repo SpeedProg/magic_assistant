@@ -79,7 +79,7 @@ public class LibView extends CollectionView implements ICardEventListener {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof IMagicCard)
-						DataManager.getCardHandler().getDeckHandler(id).getCardStore().addCard(o);
+						DataManager.getCardHandler().getDeckHandler(id).getCardStore().add(o);
 				}
 			}
 		}

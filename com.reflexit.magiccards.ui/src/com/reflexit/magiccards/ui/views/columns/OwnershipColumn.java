@@ -107,7 +107,7 @@ public class OwnershipColumn extends GenColumn {
 					} else
 						card.setOwn(false);
 					// update
-					cardStore.updateCard(card);
+					cardStore.update(card);
 					//viewer.update(element, null);
 				}
 			}

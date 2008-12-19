@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -54,6 +55,14 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
+		for (int i = 0; i < toDropArray.length; i++) {
+			IMagicCard magicCard = toDropArray[i];
+			if (magicCard instanceof MagicCardPhisical) {
+				MagicCardPhisical phi = new MagicCardPhisical(magicCard);
+				phi.setLocation(null);
+				toDropArray[i] = phi;
+			}
+		}
 		ICardStore<IMagicCard> cardStore;
 		if (idata instanceof Deck) {
 			cardStore = ((Deck) idata).getStore();
