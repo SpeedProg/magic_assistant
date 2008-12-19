@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.HashMap;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -13,8 +15,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
-
-import java.util.HashMap;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.columns.ColumnManager;
@@ -53,7 +53,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 
 	@Override
 	public Control createContents(Composite parent) {
-		this.viewer = new MyTreeViewer(parent, SWT.FULL_SELECTION | SWT.VIRTUAL);
+		this.viewer = new MyTreeViewer(parent, SWT.FULL_SELECTION | SWT.VIRTUAL | SWT.MULTI);
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new LazyTreeViewContentProvider());
