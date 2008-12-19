@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
@@ -22,7 +23,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable,
-        ICardEventListener {
+        ICardEventListener, ICardCountable {
 	private static LibraryDataXmlHandler instance;
 	private CollectionMultiFileCardStore table;
 
@@ -116,5 +117,18 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		this.table.setInitialized(false);
 		super.reload();
 		update();
+	}
+
+	@Override
+	public int getCount() {
+		int count = 0;
+		Collection<IMagicCard> list = getFilteredList();
+		for (Object element : list) {
+			IMagicCard magicCard = (IMagicCard) element;
+			if (magicCard instanceof ICardCountable) {
+				count += ((ICardCountable) magicCard).getCount();
+			}
+		}
+		return count;
 	}
 }

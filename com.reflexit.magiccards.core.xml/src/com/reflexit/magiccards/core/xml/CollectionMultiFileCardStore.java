@@ -39,7 +39,7 @@ public class CollectionMultiFileCardStore extends CollectionCardStore implements
 			setInitialized(false);
 	}
 
-	private MultiFileCardStorage getMStorage() {
+	public MultiFileCardStorage getMStorage() {
 		return ((MultiFileCardStorage) this.storage);
 	}
 
