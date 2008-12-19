@@ -12,7 +12,6 @@ package com.reflexit.magiccards.core.test;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -20,8 +19,10 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.DeckFileCardStore;
+import com.reflexit.magiccards.core.xml.SingleFileCardStorage;
 
 /**
  * @author Alena
@@ -31,11 +32,12 @@ public class DeckStoreTest extends TestCase {
 	CollectionCardStore store;
 	protected MagicCard m1;
 	protected MagicCard m2;
+	protected File tempFile;
 
 	@Override
 	protected void setUp() throws Exception {
 		String name = "aaa";
-		File tempFile = File.createTempFile("deck", ".xml");
+		tempFile = File.createTempFile("deck", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new DeckFileCardStore(tempFile, name, "Decks/" + name + ".xml");
 		this.m1 = CardGenerator.generateRandomCard();
@@ -52,8 +54,8 @@ public class DeckStoreTest extends TestCase {
 		MagicCard a = CardGenerator.generateRandomCard();
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
-		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this.store) {
+			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
 		}
 	}
@@ -64,8 +66,8 @@ public class DeckStoreTest extends TestCase {
 		list.add(a);
 		this.store.addAll(list);
 		assertEquals(1, this.store.size());
-		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this.store) {
+			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
 		}
 	}
@@ -74,8 +76,8 @@ public class DeckStoreTest extends TestCase {
 		MagicCardPhisical a = new MagicCardPhisical(this.m1);
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
-		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this.store) {
+			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
 		}
 	}
@@ -185,5 +187,22 @@ public class DeckStoreTest extends TestCase {
 		this.store.add(a2);
 		assertEquals(2, this.store.size());
 		assertEquals(2, this.store.getCount());
+	}
+
+	public void testAddCardCheckSaved() {
+		MagicCard a = CardGenerator.generateRandomCard();
+		this.store.add(a);
+		String def = ((ILocatable) this.store).getLocation();
+		File tempFile1 = tempFile;
+		SingleFileCardStorage loaded = new SingleFileCardStorage(tempFile1, def, true);
+		assertEquals(1, loaded.size());
+		boolean found = false;
+		for (Object element : loaded) {
+			IMagicCard card = (IMagicCard) element;
+			assertEquals(a.getCardId(), card.getCardId());
+			assertEquals(def, ((MagicCardPhisical) card).getLocation());
+			found = true;
+		}
+		assertTrue("Card not found", found);
 	}
 }

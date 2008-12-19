@@ -6,13 +6,13 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
+import com.reflexit.magiccards.core.xml.SingleFileCardStorage;
 
 public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
-	CollectionCardStore store;
+	CollectionMultiFileCardStore store;
 	protected MagicCard m1;
 	protected MagicCard m2;
 
@@ -22,9 +22,9 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		for (int i = 0; i < 10; i++) {
 			File tempFile1 = File.createTempFile("coll" + i, ".xml");
 			tempFile1.deleteOnExit();
-			((CollectionMultiFileCardStore) this.store).addFile(tempFile1, "coll" + i, false);
+			(this.store).addFile(tempFile1, "coll" + i, false);
 		}
-		((CollectionMultiFileCardStore) this.store).setLocation("coll5");
+		(this.store).setLocation("coll5");
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
 		this.m2 = CardGenerator.generateRandomCard();
@@ -36,10 +36,27 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
 		boolean found = false;
-		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this.store) {
+			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
 			assertEquals("coll5", ((MagicCardPhisical) card).getLocation());
+			found = true;
+		}
+		assertTrue("Card not found", found);
+	}
+
+	public void testAddCardCheckSaved() {
+		MagicCard a = CardGenerator.generateRandomCard();
+		this.store.add(a);
+		String def = this.store.getLocation();
+		File tempFile1 = store.getMStorage().getFile(def);
+		SingleFileCardStorage loaded = new SingleFileCardStorage(tempFile1, def, true);
+		assertEquals(1, loaded.size());
+		boolean found = false;
+		for (Object element : loaded) {
+			IMagicCard card = (IMagicCard) element;
+			assertEquals(a.getCardId(), card.getCardId());
+			assertEquals(def, ((MagicCardPhisical) card).getLocation());
 			found = true;
 		}
 		assertTrue("Card not found", found);
@@ -51,8 +68,8 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
 		boolean found = false;
-		for (Iterator iterator = this.store.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Object element : this.store) {
+			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
 			assertEquals("coll2", ((MagicCardPhisical) card).getLocation());
 			found = true;
