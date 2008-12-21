@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.Collection;
-
 import org.eclipse.core.commands.common.EventManager;
+
+import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
@@ -77,9 +77,15 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	public void update(final T card) {
 		initialize();
+		synchronized (this) {
+			if (!doUpdate(card))
+				return;
+		}
 		fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
 		return;
 	}
+
+	protected abstract boolean doUpdate(T card);
 
 	public boolean remove(final T o) {
 		initialize();

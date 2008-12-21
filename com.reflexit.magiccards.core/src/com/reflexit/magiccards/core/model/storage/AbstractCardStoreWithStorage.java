@@ -59,6 +59,12 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 	}
 
 	@Override
+	protected boolean doUpdate(T card) {
+		storage.save();
+		return true;
+	}
+
+	@Override
 	protected boolean doRemoveAll() {
 		return this.storage.removeAll();
 	}

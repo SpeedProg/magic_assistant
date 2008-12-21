@@ -37,6 +37,8 @@ public class MagicCardComparator implements Comparator {
 					return d;
 			}
 			if (a1 instanceof Comparable) {
+				if (a2 == null)
+					return this.dir;
 				int range = ((Comparable) a1).compareTo(a2);
 				if (range != 0)
 					return range * this.dir;

@@ -12,6 +12,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private String condition;
 	private boolean ownership;
 	public static final int INDEX_COUNT = 11;
+	public static final int INDEX_PRICE = 12;
+	public static final int INDEX_COMMENT = 13;
 	public static final int INDEX_LOCATION = 14;
 	public static final int INDEX_OWNERSHIP = 16;
 

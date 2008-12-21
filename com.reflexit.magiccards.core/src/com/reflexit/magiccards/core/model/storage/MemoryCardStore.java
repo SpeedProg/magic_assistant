@@ -54,6 +54,10 @@ public class MemoryCardStore<T> extends AbstractCardStore<T> {
 		return this.getList().add(card);
 	}
 
+	protected boolean doUpdate(T card) {
+		return true;
+	};
+
 	/**
 	 * @return the list
 	 */
