@@ -10,14 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -29,12 +28,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
+import java.util.Iterator;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.CompositeViewerManager;
@@ -48,6 +50,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 	protected Action delete;
 	protected MenuManager ownership;
 	private Action split;
+	private Action edit;
 
 	@Override
 	protected void makeActions() {
@@ -71,6 +74,12 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 			@Override
 			public void run() {
 				splitSelected();
+			}
+		};
+		this.split = new Action("Edit...") {
+			@Override
+			public void run() {
+				editSelected();
 			}
 		};
 	}
@@ -243,6 +252,92 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 			this.manager.loadData();
 		} else {
 			this.manager.loadData();
+		}
+	}
+
+	protected void editSelected() {
+		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		if (selection.isEmpty())
+			return;
+		PreferenceStore store = new PreferenceStore();
+		boolean first = true;
+		String un = "<unchanged>";
+		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
+			String count = card.getCount() + "";
+			String comment = card.getComment();
+			if (comment == null)
+				comment = "";
+			String ownshership = card.isOwn() ? "Own" : "Not Own";
+			if (first) {
+				store.setDefault(EditCardsPropertiesDialog.COUNT_FIELD, count);
+				store.setDefault(EditCardsPropertiesDialog.COMMENT_FIELD, comment);
+				store.setDefault(EditCardsPropertiesDialog.OWNERSHIP_FIELD, ownshership);
+				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, card.getName());
+				first = false;
+			} else {
+				if (!count.equals(store.getDefaultString(EditCardsPropertiesDialog.COUNT_FIELD))) {
+					store.setDefault(EditCardsPropertiesDialog.COUNT_FIELD, un);
+				}
+				if (!ownshership.equals(store.getDefaultString(EditCardsPropertiesDialog.OWNERSHIP_FIELD))) {
+					store.setDefault(EditCardsPropertiesDialog.OWNERSHIP_FIELD, un);
+				}
+				if (!comment.equals(store.getDefaultString(EditCardsPropertiesDialog.COMMENT_FIELD))) {
+					store.setDefault(EditCardsPropertiesDialog.COMMENT_FIELD, un);
+				}
+				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>");
+			}
+		}
+		new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
+		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
+			editCard(card, store);
+		}
+	}
+
+	private void editCard(MagicCardPhisical card, PreferenceStore store) {
+		String un = "<unchanged>";
+		boolean modified = false;
+		String count = card.getCount() + "";
+		String comment = card.getComment();
+		if (comment == null)
+			comment = "";
+		String ownshership = card.isOwn() ? "Own" : "Not Own";
+		String ecount = store.getString(EditCardsPropertiesDialog.COUNT_FIELD);
+		if (!un.equals(ecount) && !ecount.equals(count)) {
+			try {
+				int x = Integer.parseInt(ecount);
+				card.setCount(x);
+				modified = true;
+			} catch (NumberFormatException e) {
+				// was bad value
+			}
+		}
+		String ecomment = store.getString(EditCardsPropertiesDialog.COMMENT_FIELD);
+		if (!un.equals(ecomment) && !ecomment.equals(comment)) {
+			if (ecomment.trim().length() == 0) {
+				if (card.getComment() != null) {
+					card.setComment(null);
+					modified = true;
+				}
+			} else {
+				card.setComment(ecomment);
+				modified = true;
+			}
+		}
+		String eown = store.getString(EditCardsPropertiesDialog.OWNERSHIP_FIELD);
+		if (!un.equals(eown) && !eown.equals(ownshership)) {
+			if (eown.equals("Own")) {
+				card.setOwn(true);
+				modified = true;
+			}
+			if (eown.equals("Not Own")) {
+				card.setOwn(false);
+				modified = true;
+			}
+		}
+		if (modified) {
+			this.manager.getFilteredStore().getCardStore().update(card);
 		}
 	}
 }
