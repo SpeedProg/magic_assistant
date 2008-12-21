@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.Path;
+
+import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -107,12 +107,10 @@ public class DeckFileCardStore extends CollectionCardStore implements ICardDeck<
 		return getDeckFileStorage().getName();
 	}
 
-	@Override
 	public String getLocation() {
 		return getDeckFileStorage().getLocation();
 	}
 
-	@Override
 	public void setLocation(String location) {
 		getDeckFileStorage().setLocation(location);
 	}

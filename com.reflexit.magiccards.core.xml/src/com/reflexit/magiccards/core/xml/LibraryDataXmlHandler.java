@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.xml;
 
-import java.util.Collection;
-
 import org.eclipse.core.runtime.CoreException;
+
+import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -119,7 +119,6 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		update();
 	}
 
-	@Override
 	public int getCount() {
 		int count = 0;
 		Collection<IMagicCard> list = getFilteredList();

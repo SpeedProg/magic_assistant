@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.xml;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.CoreException;
+
+import java.io.File;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -41,12 +41,10 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implem
 		}
 	}
 
-	@Override
 	public String getLocation() {
 		return table.getLocation();
 	}
 
-	@Override
 	public void setLocation(String location) {
 		table.setLocation(location);
 	}
