@@ -298,4 +298,12 @@
                      name="Booster Pack">
                </wizard>
   </extension>
+  <extension
+        point="org.eclipse.ui.exportWizards">
+     <wizard
+           class="com.reflexit.magiccards.ui.exportWizards.DeckExportWizard"
+           id="com.reflexit.magiccards.ui.exportWizards.DeckExportWizard"
+           name="Export Deck/Collection">
+     </wizard>
+  </extension>
 </plugin>

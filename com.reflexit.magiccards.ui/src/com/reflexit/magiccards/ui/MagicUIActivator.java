@@ -1,15 +1,19 @@
 package com.reflexit.magiccards.ui;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 import org.osgi.framework.BundleContext;
+
+import java.io.File;
+import java.io.IOException;
 
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -146,5 +150,23 @@ public class MagicUIActivator extends AbstractUIPlugin {
 			System.out.println(partial + "\\"); //$NON-NLS-1$
 		}
 		System.out.println(debugInfo);
+	}
+
+	public DialogSettings getDialogSettings(String id) throws IOException {
+		IPath path = getDefault().getStateLocation();
+		String filename = path.append("settings.txt").toOSString();
+		DialogSettings settings = new DialogSettings(id);
+		if (new File(filename).exists()) {
+			settings.load(filename);
+		} else {
+			// empty settings
+		}
+		return settings;
+	}
+
+	public void saveDialogSetting(DialogSettings dialogSettings) throws IOException {
+		IPath path = getDefault().getStateLocation();
+		String filename = path.append("settings.txt").toOSString();
+		dialogSettings.save(filename);
 	}
 }

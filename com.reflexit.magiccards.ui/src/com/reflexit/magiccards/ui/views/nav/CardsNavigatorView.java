@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.nav;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -24,6 +22,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -47,6 +46,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
+import java.util.Iterator;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -61,6 +62,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.dnd.MagicNavDropAdapter;
+import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.LibView;
@@ -71,6 +73,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action doubleClickAction;
 	private CardsNavigatiorManager manager;
 	private Action delete;
+	private Action export;
 
 	/**
 	 * The constructor.
@@ -150,6 +153,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
 		this.delete.setEnabled(canRemove());
 		manager.add(new Separator());
+		manager.add(export);
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -191,6 +195,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				actionDelete();
 			}
 		};
+		this.export = new ExportAction();
+		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.export);
 	}
 
 	/**
