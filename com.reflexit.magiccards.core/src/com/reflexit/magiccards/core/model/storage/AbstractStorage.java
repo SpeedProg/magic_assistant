@@ -55,8 +55,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	public synchronized void save() {
 		try {
-			if (isNeedToBeSaved())
-				doSave();
+			doSave();
 			setNeedToSave(false);
 		} catch (FileNotFoundException e) {
 			throw new MagicException(e);

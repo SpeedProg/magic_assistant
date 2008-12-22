@@ -46,6 +46,18 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		return list;
 	}
 
+	public Collection getHeaderNames() {
+		ArrayList list = new ArrayList();
+		list.addAll(this.card.getHeaderNames());
+		list.add("count");
+		list.add("price");
+		list.add("comment");
+		list.add("location");
+		list.add("custom");
+		list.add("ownership");
+		return list;
+	}
+
 	public void setValues(String[] fields) {
 		this.card = new MagicCard();
 		this.card.setValues(fields);

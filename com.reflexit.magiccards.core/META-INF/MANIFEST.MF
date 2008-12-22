@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.commands;bundle-version="3.4.0",
  org.eclipse.core.resources;bundle-version="3.4.0"
 Export-Package: com.reflexit.magiccards.core,
+ com.reflexit.magiccards.core.exports,
  com.reflexit.magiccards.core.model,
  com.reflexit.magiccards.core.model.events,
  com.reflexit.magiccards.core.model.nav,

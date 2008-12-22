@@ -134,7 +134,6 @@ public class CollectionCardStore extends AbstractCardStore<IMagicCard> implement
 
 	@Override
 	protected boolean doUpdate(IMagicCard card) {
-		((AbstractStorage<IMagicCard>) storage).setNeedToSave(true);
 		storage.save();
 		return true;
 	}
