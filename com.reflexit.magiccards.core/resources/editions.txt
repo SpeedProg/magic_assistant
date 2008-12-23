@@ -62,3 +62,11 @@ Antiquities|AQ
 Fifth Dawn|5DN|en-us
 Shards of Alara|ALA|EN
 Portal Three Kingdoms|PK|en-us
+Portal|PO|en-us
+Portal Second Age|P2|en-us 
+Seventh Edition|7E|en-us
+Fourth Edition|4E|en-us
+Unglued|UG|en-us
+Legions|LGN|en-us
+Starter 1999|P3|en-us
+Starter 2000|P4|en-us

@@ -6,12 +6,11 @@ import org.eclipse.core.runtime.Path;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +46,7 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public void addAbbr(String name, String abbr) {
-		if (!this.name2abbr.containsKey(name)) {
+		if (abbr != null && abbr.length() > 0) {
 			this.name2abbr.put(name, abbr);
 		}
 	}
@@ -76,10 +75,18 @@ public class Editions implements ISearchableProperty {
 	public void load() throws IOException {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		String strfile = path.toOSString();
+		InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/"
+		        + EDITIONS_FILE), true);
+		loadEditions(ist);
 		if (!new File(strfile).exists()) {
-			copyInitial();
+			save();
 		}
-		BufferedReader r = new BufferedReader(new FileReader(strfile));
+		InputStream st = new FileInputStream(strfile);
+		loadEditions(st);
+	}
+
+	private void loadEditions(InputStream st) throws IOException {
+		BufferedReader r = new BufferedReader(new InputStreamReader(st));
 		try {
 			String line;
 			while ((line = r.readLine()) != null) {
@@ -89,28 +96,6 @@ public class Editions implements ISearchableProperty {
 		} finally {
 			r.close();
 		}
-	}
-
-	private void copyInitial() {
-		try {
-			InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/"
-			        + EDITIONS_FILE), true);
-			IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
-			OutputStream ost = new FileOutputStream(path.toPortableString());
-			int k;
-			do {
-				byte[] bytes = new byte[1024 * 4];
-				k = ist.read(bytes);
-				if (k > 0)
-					ost.write(bytes, 0, k);
-			} while (k >= 0);
-			ost.close();
-			ist.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// TODO Auto-generated method stub
 	}
 
 	public void save() throws FileNotFoundException {
