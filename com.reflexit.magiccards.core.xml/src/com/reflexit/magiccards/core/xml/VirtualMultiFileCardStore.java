@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 
@@ -54,8 +55,12 @@ public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMag
 			IMagicCard card = (IMagicCard) element;
 			if (hash.contains(card.getCardId())) {
 				duplicates.add(card);
+				continue;
 			}
 			hash.add(card.getCardId());
+			if (Editions.getInstance().getAbbrByName(card.getEdition()) == null) {
+				System.err.println("Failed to find set: " + card.getEdition());
+			}
 		}
 		this.storage.removeAll(duplicates);
 	}

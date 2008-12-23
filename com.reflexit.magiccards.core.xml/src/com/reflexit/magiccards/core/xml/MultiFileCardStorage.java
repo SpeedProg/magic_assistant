@@ -1,13 +1,13 @@
 package com.reflexit.magiccards.core.xml;
 
+import org.eclipse.core.runtime.CoreException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.eclipse.core.runtime.CoreException;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
@@ -46,6 +46,7 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 
 	@Override
 	public synchronized void doLoad() {
+		this.size = 0;
 		ArrayList<SingleFileCardStorage> all = new ArrayList<SingleFileCardStorage>();
 		all.addAll(this.map.values());
 		for (SingleFileCardStorage table : all) {
@@ -103,7 +104,7 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 	}
 
 	public int size() {
-		getDeepSize();
+		//		getDeepSize();
 		return this.size;
 	}
 
@@ -112,8 +113,10 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		for (Object element : this) {
 			s++;
 		}
-		if (size != s)
+		if (size != s) {
 			System.err.println("Size mismatch: " + s + " " + size);
+			size = s;
+		}
 		return s;
 	}
 

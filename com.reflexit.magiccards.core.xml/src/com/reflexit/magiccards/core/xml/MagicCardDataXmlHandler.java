@@ -1,11 +1,11 @@
 package com.reflexit.magiccards.core.xml;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -37,29 +37,30 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 
 	@Override
 	protected void doInitialize() throws MagicException {
-		this.files = new ArrayList<File>();
-		IResource[] members;
-		try {
-			new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
-			MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
-			members = con.getContainer().members();
-			for (IResource resource : members) {
-				File file = resource.getLocation().toFile();
-				if (file.getName().endsWith(".xml"))
-					this.files.add(file);
+		new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
+		if (!this.table.isInitialized()) {
+			this.files = new ArrayList<File>();
+			IResource[] members;
+			try {
+				MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
+				members = con.getContainer().members();
+				for (IResource resource : members) {
+					File file = resource.getLocation().toFile();
+					if (file.getName().endsWith(".xml"))
+						this.files.add(file);
+				}
+			} catch (CoreException e) {
+				Activator.log(e);
+				return;
+			} catch (MagicException e) {
+				Activator.log(e);
+				return;
 			}
-		} catch (CoreException e) {
-			Activator.log(e);
-			return;
-		} catch (MagicException e) {
-			Activator.log(e);
-			return;
+			this.table.initialize();
+			for (File file : this.files) {
+				this.table.addFile(file, file.getName().replaceAll("\\.xml$", ""), true);
+			}
 		}
-		// init super
-		for (File file : this.files) {
-			this.table.addFile(file, file.getName().replaceAll("\\.xml$", ""), true);
-		}
-		this.table.initialize();
 	}
 
 	public static IFilteredCardStore getInstance() {
