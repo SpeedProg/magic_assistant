@@ -325,6 +325,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		listViewer.setLabelProvider(new CardsNavigatorLabelProvider());
 		listViewer.addCheckStateListener(this);
 		listViewer.setInput(DataManager.getModelRoot());
+		listViewer.expandToLevel(2);
 	}
 
 	public void checkStateChanged(final CheckStateChangedEvent event) {
