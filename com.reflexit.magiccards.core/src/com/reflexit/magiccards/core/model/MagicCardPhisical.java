@@ -15,7 +15,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	public static final int INDEX_PRICE = 12;
 	public static final int INDEX_COMMENT = 13;
 	public static final int INDEX_LOCATION = 14;
-	public static final int INDEX_CUSTOM = 14;
+	public static final int INDEX_CUSTOM = 15;
 	public static final int INDEX_OWNERSHIP = 16;
 
 	public MagicCardPhisical(IMagicCard card) {
