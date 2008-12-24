@@ -10,26 +10,26 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class ExportWorker implements ICoreRunnableWithProgress {
 	File file;
 	boolean header;
-	ICardStore<IMagicCard> elem;
+	IFilteredCardStore<IMagicCard> elem;
 	CsvExporter exporter;
 
-	public ExportWorker(File file, boolean header, ICardStore<IMagicCard> elem) {
+	public ExportWorker(File file, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
 		super();
 		this.file = file;
 		this.header = header;
-		this.elem = elem;
+		this.elem = filteredLibrary;
 	}
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		try {
 			if (monitor == null)
 				monitor = new NullProgressMonitor();
-			monitor.beginTask("Exporting...", elem.size());
+			monitor.beginTask("Exporting...", elem.getSize());
 			exporter = new CsvExporter(new FileOutputStream(file));
 			if (header) {
 				for (IMagicCard magicCard : elem) {

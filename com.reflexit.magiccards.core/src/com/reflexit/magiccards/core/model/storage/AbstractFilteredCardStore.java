@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
  *
  * @param <T>
  */
-public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore {
+public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	/**
 	 * 
 	 */
@@ -48,6 +48,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	public int getSize() {
 		initialize();
 		return getFilteredList().size();
+	}
+
+	public Iterator<T> iterator() {
+		return getFilteredList().iterator();
 	}
 
 	public T getCard(int index) {

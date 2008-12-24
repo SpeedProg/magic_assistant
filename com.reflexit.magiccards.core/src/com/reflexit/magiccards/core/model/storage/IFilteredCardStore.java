@@ -1,11 +1,15 @@
 package com.reflexit.magiccards.core.model.storage;
 
+import java.util.Iterator;
+
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
-public interface IFilteredCardStore {
+public interface IFilteredCardStore<T> extends Iterable<T> {
 	public void update(MagicCardFilter filter) throws MagicException;
+
+	public MagicCardFilter getFilter();
 
 	public ICardStore getCardStore();
 
@@ -20,6 +24,8 @@ public interface IFilteredCardStore {
 	 * @return
 	 */
 	public Object[] getElements();
+
+	public Iterator<T> iterator();
 
 	/**
 	 * Returns given element in filtered list
