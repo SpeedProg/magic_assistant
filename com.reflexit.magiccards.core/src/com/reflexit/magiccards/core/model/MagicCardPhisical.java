@@ -9,12 +9,13 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private float price;
 	private String comment;
 	private String location;
-	private String condition;
+	private String custom;
 	private boolean ownership;
 	public static final int INDEX_COUNT = 11;
 	public static final int INDEX_PRICE = 12;
 	public static final int INDEX_COMMENT = 13;
 	public static final int INDEX_LOCATION = 14;
+	public static final int INDEX_CUSTOM = 14;
 	public static final int INDEX_OWNERSHIP = 16;
 
 	public MagicCardPhisical(IMagicCard card) {
@@ -27,7 +28,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			this.card = phi.getCard();
 			this.count = phi.getCount();
 			this.comment = phi.getComment();
-			this.condition = phi.getCondition();
+			this.custom = phi.getCustom();
 			this.price = phi.getPrice();
 			this.ownership = phi.ownership;
 			this.location = phi.location;
@@ -41,7 +42,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		list.add(new Float(this.price));
 		list.add(this.comment);
 		list.add(this.location);
-		list.add(this.condition);
+		list.add(this.custom);
 		list.add(new Boolean(this.ownership));
 		return list;
 	}
@@ -67,7 +68,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		this.price = Float.parseFloat(fields[i + 2]);
 		this.comment = fields[i + 3];
 		this.location = fields[i + 4];
-		this.condition = fields[i + 5];
+		this.custom = fields[i + 5];
 	}
 
 	public MagicCard getCard() {
@@ -110,12 +111,12 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		this.location = location;
 	}
 
-	public String getCondition() {
-		return this.condition;
+	public String getCustom() {
+		return this.custom;
 	}
 
-	public void setCondition(String condition) {
-		this.condition = condition;
+	public void setCustom(String cutom) {
+		this.custom = cutom;
 	}
 
 	public String getByIndex(int columnIndex) {
@@ -218,7 +219,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			return false;
 		if (Math.abs(phi1.price - phi2.price) >= 0.01)
 			return false;
-		if (!eqNull(phi1.getCondition(), phi2.getCondition()))
+		if (!eqNull(phi1.getCustom(), phi2.getCustom()))
 			return false;
 		if (!eqNull(phi1.getComment(), phi2.getComment()))
 			return false;
