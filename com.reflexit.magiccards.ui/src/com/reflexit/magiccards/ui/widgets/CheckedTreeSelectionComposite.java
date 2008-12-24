@@ -163,7 +163,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 	 * @return the tree viewer
 	 */
 	protected CheckboxTreeViewer createTreeViewer(Composite parent) {
-		this.fViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER);
+		this.fViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER | SWT.SCROLL_PAGE);
 		this.fViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateOKStatus();
@@ -230,8 +230,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 		if (elements.length > 0) {
 			ViewerFilter[] filters = this.fViewer.getFilters();
 			if (filters != null) {
-				for (int i = 0; i < filters.length; i++) {
-					ViewerFilter curr = filters[i];
+				for (ViewerFilter curr : filters) {
 					elements = curr.filter(this.fViewer, input, elements);
 				}
 			}

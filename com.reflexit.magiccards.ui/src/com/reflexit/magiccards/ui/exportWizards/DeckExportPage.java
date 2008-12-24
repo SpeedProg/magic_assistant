@@ -2,10 +2,11 @@ package com.reflexit.magiccards.ui.exportWizards;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.DialogSettings;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -13,9 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -25,21 +23,24 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ExportWorker;
 import com.reflexit.magiccards.core.exports.FileUtils;
+import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorLabelProvider;
+import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 
 /**
  * First and only page of Deck Export Wizard
@@ -53,19 +54,18 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	private String fileName;
 	private IStructuredSelection initialResourceSelection;
 	private CheckboxTreeViewer listViewer;
-	private Button selectButton;
-	private Button deselectButton;
 	private Button includeHeader;
 	private Button exportXml;
 	private final ArrayList typeButtons = new ArrayList();
 	private static final String ID = DeckExportPage.class.getName();
-	private final static String SELECT_ALL_TITLE = "Select All";
-	private final static String DESELECT_ALL_TITLE = "Deselect All";
 	private ReportType reportType;
+	private PreferenceStore store;
+	private LocationFilterPreferencePage locPage;
 
 	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
 		initialResourceSelection = selection;
+		store = new PreferenceStore();
 	}
 
 	public boolean saveFile() {
@@ -82,13 +82,22 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			//			        fileName, //
 			//			        reportType, includeHeader.getSelection(), getTimeUnitsName());
 			if (reportType == reportType.CSV) {
+				locPage.performOk();
 				// TODO: export selection only
 				final boolean header = includeHeader.getSelection();
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						ExportWorker exportWorker = new ExportWorker(new File(fileName), header, DataManager
-						        .getCardHandler().getMagicLibraryHandler().getCardStore());
-						exportWorker.run(monitor);
+						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMagicLibraryHandler();
+						MagicCardFilter old = filteredLibrary.getFilter();
+						try {
+							MagicCardFilter locFilter = new MagicCardFilter();
+							locFilter.update(storeToMap());
+							filteredLibrary.update(locFilter);
+							ExportWorker exportWorker = new ExportWorker(new File(fileName), header, filteredLibrary);
+							exportWorker.run(monitor);
+						} finally {
+							filteredLibrary.update(old); // restore filter
+						}
 					}
 				};
 				getRunnableContext().run(true, true, work);
@@ -113,6 +122,25 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			displayErrorDialog("Export cancelled");
 		}
 		return res;
+	}
+
+	private HashMap storeToMap() {
+		IPreferenceStore store = getPreferenceStore();
+		HashMap map = new HashMap();
+		Collection col = FilterHelper.getAllIds();
+		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
+			String id = (String) iterator.next();
+			String value = store.getString(id);
+			if (value != null && value.length() > 0) {
+				map.put(id, value);
+				//System.err.println(id + "=" + value);
+			}
+		}
+		return map;
+	}
+
+	protected IPreferenceStore getPreferenceStore() {
+		return store;
 	}
 
 	protected IRunnableContext getRunnableContext() {
@@ -205,37 +233,6 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	 *            the parent control
 	 */
 	protected final void createButtonsGroup(final Composite parent) {
-		Font font = parent.getFont();
-		// top level group
-		Composite buttonComposite = new Composite(parent, SWT.NONE);
-		buttonComposite.setFont(parent.getFont());
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.makeColumnsEqualWidth = true;
-		buttonComposite.setLayout(layout);
-		buttonComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
-		selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false);
-		SelectionAdapter listener = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectAll();
-				updatePageCompletion();
-			}
-		};
-		selectButton.addSelectionListener(listener);
-		selectButton.setFont(font);
-		setButtonLayoutData(selectButton);
-		deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, DESELECT_ALL_TITLE, false);
-		listener = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				deselectAll();
-				updatePageCompletion();
-			}
-		};
-		deselectButton.addSelectionListener(listener);
-		deselectButton.setFont(font);
-		setButtonLayoutData(deselectButton);
 	}
 
 	private void defaultPrompt() {
@@ -264,6 +261,8 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			String type = dialogSettings.get(REPORT_TYPE_SETTING);
 			if (type != null)
 				selectTypeButtons(type);
+			else
+				selectTypeButtons(ReportType.CSV.toString());
 			if (dialogSettings.get(INCLUDE_HEADER_SETTING) != null) {
 				includeHeader.setSelection(dialogSettings.getBoolean(INCLUDE_HEADER_SETTING));
 			}
@@ -314,18 +313,17 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		}
 	}
 
-	private void createResourcesGroup(final Composite parent) {
-		listViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER | SWT.SCROLL_PAGE);
+	protected void createResourcesGroup(final Composite parent) {
+		locPage = new LocationFilterPreferencePage();
+		locPage.noDefaultAndApplyButton();
+		locPage.setPreferenceStore(store);
+		locPage.createControl(parent);
+		listViewer = locPage.getViewer();
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 200;
 		data.widthHint = 300;
 		listViewer.getControl().setLayoutData(data);
-		listViewer.getControl().setFont(parent.getFont());
-		listViewer.setContentProvider(new CardsNavigatorContentProvider());
-		listViewer.setLabelProvider(new CardsNavigatorLabelProvider());
 		listViewer.addCheckStateListener(this);
-		listViewer.setInput(DataManager.getModelRoot());
-		listViewer.expandToLevel(2);
 	}
 
 	public void checkStateChanged(final CheckStateChangedEvent event) {
@@ -368,6 +366,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	private void setCheckedSession(final CardElement session) {
+		//store.putValue(Locations.getInstance().getPrefConstant(session.getName()), "true");
 		listViewer.setChecked(session, true);
 	}
 
@@ -395,10 +394,11 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		buttonComposite.setLayout(layout1);
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// csv
-		Object exportCsv = createTypeChoice(buttonComposite, "Export to CSV", ReportType.CSV);
+		Button exportCsv = createTypeChoice(buttonComposite, "Export to CSV", ReportType.CSV);
+		exportCsv.setSelection(true);
 		// xml type
 		exportXml = createTypeChoice(buttonComposite, "Export XML", ReportType.XML);
-		exportXml.setSelection(true);
+		exportXml.setSelection(false);
 		reportType = ReportType.XML;
 		// options to include header
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
@@ -495,22 +495,6 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 
 	@Override
 	protected void updateWidgetEnablements() {
-		// disableAll/enableAll
-		int size = listViewer.getTree().getItemCount();
-		if (size == 0) {
-			selectButton.setEnabled(false);
-			deselectButton.setEnabled(false);
-		} else {
-			int checked = listViewer.getCheckedElements().length;
-			if (checked == size)
-				selectButton.setEnabled(false);
-			else
-				selectButton.setEnabled(true);
-			if (checked == 0)
-				deselectButton.setEnabled(false);
-			else
-				deselectButton.setEnabled(true);
-		}
 		// type
 		includeHeader.setEnabled(isExportCsvFlag());
 		// file extension

@@ -13,7 +13,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
@@ -82,7 +81,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	 * @param top
 	 */
 	private void initSelection(CardElement root) {
-		String id = FilterHelper.getPrefConstant(FilterHelper.LOCATION, root.getName());
+		String id = Locations.getInstance().getPrefConstant(root.getName());
 		boolean checked = getPreferenceStore().getBoolean(id);
 		if (checked) {
 			this.treeViewer.setChecked(root, checked);

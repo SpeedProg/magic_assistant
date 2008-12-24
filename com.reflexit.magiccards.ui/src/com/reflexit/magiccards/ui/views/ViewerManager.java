@@ -80,7 +80,12 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	}
 
 	protected void updateFilter() {
-		IPreferenceStore store = getPreferenceStore();
+		HashMap map = storeToMap();
+		this.filter.update(map);
+	}
+
+	private HashMap storeToMap() {
+	    IPreferenceStore store = getPreferenceStore();
 		HashMap map = new HashMap();
 		Collection col = FilterHelper.getAllIds();
 		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
@@ -91,8 +96,8 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 				//System.err.println(id + "=" + value);
 			}
 		}
-		this.filter.update(map);
-	}
+	    return map;
+    }
 
 	public abstract Control createContents(Composite parent);
 
