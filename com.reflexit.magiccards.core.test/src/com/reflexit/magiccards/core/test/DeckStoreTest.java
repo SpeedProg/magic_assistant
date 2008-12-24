@@ -181,7 +181,7 @@ public class DeckStoreTest extends TestCase {
 		a1.setCount(1);
 		MagicCardPhisical a2 = new MagicCardPhisical(this.m1);
 		a2.setCount(1);
-		a2.setCondition("mint");
+		a2.setCustom("mint");
 		this.store.add(a1);
 		assertEquals(1, this.store.size());
 		this.store.add(a2);
