@@ -12,8 +12,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.Locations;
@@ -47,6 +45,8 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	protected Control createContents(Composite parent) {
 		this.panel = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(3, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
 		this.panel.setLayout(layout);
 		this.panel.setFont(parent.getFont());
 		this.treeViewerComp = new CheckedTreeSelectionComposite(this.panel);
@@ -69,9 +69,13 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		top.addChild(mroot.getDeckContainer());
 		this.treeViewer.setInput(root);
 		this.treeViewer.setChecked(root, true);
-		this.treeViewer.setExpandedState(top, true);
+		treeViewer.expandToLevel(3);
 		// load preferences
 		initSelection(top);
+	}
+
+	public CheckboxTreeViewer getViewer() {
+		return treeViewer;
 	}
 
 	/**
@@ -83,8 +87,8 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		if (checked) {
 			this.treeViewer.setChecked(root, checked);
 		} else if (root instanceof CardOrganizer) {
-			for (Iterator iterator = ((CardOrganizer) root).getChildren().iterator(); iterator.hasNext();) {
-				CardElement el = (CardElement) iterator.next();
+			for (Object element : ((CardOrganizer) root).getChildren()) {
+				CardElement el = (CardElement) element;
 				initSelection(el);
 			}
 		}
@@ -95,8 +99,8 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		if (this.treeViewer == null)
 			return;
 		CardOrganizer root = (CardOrganizer) this.treeViewer.getInput();
-		for (Iterator iterator = root.getChildren().iterator(); iterator.hasNext();) {
-			CardElement el = (CardElement) iterator.next();
+		for (Object element : root.getChildren()) {
+			CardElement el = (CardElement) element;
 			applyElement(el);
 		}
 	}
@@ -109,8 +113,8 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		String id = Locations.getInstance().getPrefConstant(root.getLocation());
 		IPreferenceStore store = getPreferenceStore();
 		if (root instanceof CardOrganizer) {
-			for (Iterator iterator = ((CardOrganizer) root).getChildren().iterator(); iterator.hasNext();) {
-				CardElement el = (CardElement) iterator.next();
+			for (Object element : ((CardOrganizer) root).getChildren()) {
+				CardElement el = (CardElement) element;
 				applyElement(el);
 			}
 		} else {
