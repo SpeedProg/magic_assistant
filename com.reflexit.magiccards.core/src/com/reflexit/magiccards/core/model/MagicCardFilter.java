@@ -100,6 +100,9 @@ public class MagicCardFilter {
 
 		@Override
 		public String toString() {
+			if (this.op == Operation.NOT) {
+				return this.op + " (" + this.left + ")";
+			}
 			return this.left + " " + this.op + " " + this.right;
 		}
 
@@ -144,7 +147,7 @@ public class MagicCardFilter {
 				return !res;
 			}
 			if (!this.translated) {
-				return translate(this).evaluate(o);
+				return translate(this, true).evaluate(o);
 			}
 			if (this.op == Operation.EQUALS) {
 				Object x = this.left.getFieldValue(o);
@@ -211,41 +214,53 @@ public class MagicCardFilter {
 		}
 	}
 
-	static BinaryExpr ignoreCase1Search(int field, String value) {
-		String altValue = value;
+	static BinaryExpr ignoreCase1Search(int field, String value, boolean regex) {
 		char c = value.charAt(0);
-		if (Character.isUpperCase(c)) {
-			altValue = Character.toLowerCase(c) + value.substring(1);
-		} else if (Character.isLowerCase(c)) {
-			altValue = Character.toUpperCase(c) + value.substring(1);
+		if (Character.isLetter(c)) {
+			if (regex) {
+				BinaryExpr res = BinaryExpr.fieldMatches(field, ".*(?i)\\b\\Q" + value + "\\E\\b.*");
+				return res;
+			} else {
+				String altValue = value.replaceAll("['\"%]", "_");
+				if (Character.isUpperCase(c)) {
+					altValue = Character.toLowerCase(c) + value.substring(1);
+				} else if (Character.isLowerCase(c)) {
+					altValue = Character.toUpperCase(c) + value.substring(1);
+				}
+				BinaryExpr b1 = BinaryExpr.fieldMatches(field, "%" + value + "%");
+				BinaryExpr b2 = BinaryExpr.fieldMatches(field, "%" + altValue + "%");
+				BinaryExpr res = new BinaryExpr(b1, Operation.OR, b2);
+				return res;
+			}
+		} else {
+			if (regex) {
+				return BinaryExpr.fieldMatches(field, ".*(?i)\\Q" + value + "\\E.*");
+			} else {
+				return BinaryExpr.fieldMatches(field, "%" + value + "%");
+			}
 		}
-		BinaryExpr b1 = BinaryExpr.fieldMatches(field, ".*\\Q" + value + "\\E.*");
-		BinaryExpr b2 = BinaryExpr.fieldMatches(field, ".*\\Q" + altValue + "\\E.*");
-		BinaryExpr res = new BinaryExpr(b1, Operation.OR, b2);
-		return res;
 	}
 
-	static Expr textSearch(int field, String text) {
+	static Expr textSearch(int field, String text, boolean regex) {
 		text = text.trim();
 		text = text.replaceAll("\\s\\s*", " ");
-		text = text.replaceAll("['\"%]", "_");
 		String[] split = text.split(" ");
 		Expr res = null;
-		for (int i = 0; i < split.length; i++) {
-			String value = split[i];
+		for (String value : split) {
 			BinaryExpr cur;
 			if (value.startsWith("-") && value.length() > 1) {
 				value = value.substring(1);
-				cur = ignoreCase1Search(field, value);
+				cur = ignoreCase1Search(field, value, regex);
 				cur = new BinaryExpr(cur, Operation.NOT, null);
+			} else {
+				cur = ignoreCase1Search(field, value, regex);
 			}
-			cur = ignoreCase1Search(field, value);
 			res = createAndGroup(res, cur);
 		}
 		return res;
 	}
 
-	private static Expr translate(BinaryExpr bin) {
+	private static Expr translate(BinaryExpr bin, boolean regex) {
 		Expr res = bin;
 		String requestedId = bin.getLeft().toString();
 		String value = bin.getRight().toString();
@@ -261,7 +276,7 @@ public class MagicCardFilter {
 				res = new BinaryExpr(b1, Operation.OR, b2);
 			}
 		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			res = ignoreCase1Search(IMagicCard.INDEX_TYPE, value);
+			res = ignoreCase1Search(IMagicCard.INDEX_TYPE, value, regex);
 		} else if (Editions.getInstance().getIdPrefix().equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(IMagicCard.INDEX_EDITION, value);
 		} else if (SuperTypes.getInstance().getIdPrefix().equals(requestedId)) {
@@ -269,11 +284,11 @@ public class MagicCardFilter {
 			BinaryExpr b2 = BinaryExpr.fieldMatches(IMagicCard.INDEX_TYPE, ".*" + value + " -.*");
 			res = new BinaryExpr(b1, Operation.AND, new BinaryExpr(b2, Operation.NOT, null));
 		} else if (FilterHelper.SUBTYPE.equals(requestedId)) {
-			res = textSearch(IMagicCard.INDEX_TYPE, value);
+			res = textSearch(IMagicCard.INDEX_TYPE, value, regex);
 		} else if (FilterHelper.TEXT_LINE.equals(requestedId)) {
-			res = textSearch(IMagicCard.INDEX_ORACLE, value);
+			res = textSearch(IMagicCard.INDEX_ORACLE, value, regex);
 		} else if (FilterHelper.NAME_LINE.equals(requestedId)) {
-			res = textSearch(IMagicCard.INDEX_NAME, value);
+			res = textSearch(IMagicCard.INDEX_NAME, value, regex);
 		} else if (FilterHelper.CCC.equals(requestedId)) {
 			res = BinaryExpr.fieldInt(IMagicCard.INDEX_CMC, value);
 		} else if (FilterHelper.POWER.equals(requestedId)) {
