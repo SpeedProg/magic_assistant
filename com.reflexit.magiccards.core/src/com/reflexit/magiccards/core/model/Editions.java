@@ -91,7 +91,7 @@ public class Editions implements ISearchableProperty {
 			String line;
 			while ((line = r.readLine()) != null) {
 				String[] attrs = line.split("\\|");
-				addAbbrLocale(attrs[0], attrs[1], attrs.length >= 3 ? attrs[2] : null);
+				addAbbrLocale(attrs[0].trim(), attrs[1].trim(), attrs.length >= 3 ? attrs[2].trim() : null);
 			}
 		} finally {
 			r.close();

@@ -63,7 +63,7 @@ Fifth Dawn|5DN|en-us
 Shards of Alara|ALA|EN
 Portal Three Kingdoms|PK|en-us
 Portal|PO|en-us
-Portal Second Age|P2|en-us 
+Portal Second Age|P2|en-us
 Seventh Edition|7E|en-us
 Fourth Edition|4E|en-us
 Unglued|UG|en-us
