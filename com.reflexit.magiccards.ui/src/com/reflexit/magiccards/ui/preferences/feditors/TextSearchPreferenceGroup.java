@@ -32,19 +32,33 @@ public class TextSearchPreferenceGroup extends FieldEditorPreferencePage {
 		String id;
 		id = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(id, "");
-		addField(new StringFieldEditor(id, "Name", getFieldEditorParent()));
+		StringFieldEditor nameSfe = new StringFieldEditor(id, "Name", getFieldEditorParent());
+		addField(nameSfe);
+		String toolTip = "Search expression can contain words separated by spaces,\n"
+		        + "which would be searched using AND connector.\n" // 
+		        + "Adding '-' in front of the word makes it NOT.\n"
+		        + "Special symbols can be search using {X} type syntax (i.e. {T} for tap).\n" // 
+		        + "See help for details.";
+		addTooltip(nameSfe, toolTip);
 		// type
 		String typeId = FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(typeId, "");
 		StringFieldEditor sfe = new StringFieldEditor(typeId, "Type", getFieldEditorParent());
 		addContextAssist(sfe, CardTypes.getProposals());
 		addField(sfe);
+		addTooltip(sfe, toolTip);
 		// text
 		String textId = FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(textId, "");
 		StringFieldEditor textSfe = new StringFieldEditor(textId, "Text", getFieldEditorParent());
 		addContextAssist(textSfe, getTextProposals());
 		addField(textSfe);
+		addTooltip(textSfe, toolTip);
+	}
+
+	private void addTooltip(StringFieldEditor nameSfe, String string) {
+		Text textControl = nameSfe.getTextControl(getFieldEditorParent());
+		textControl.setToolTipText(string);
 	}
 	static String[] textProposals = new String[] {
 	        "Flying",
