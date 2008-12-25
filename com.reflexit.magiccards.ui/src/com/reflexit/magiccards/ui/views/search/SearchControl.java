@@ -17,6 +17,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -38,6 +40,7 @@ public class SearchControl {
 	private SearchContext context;
 	private Label status;
 	private Label statusImage;
+	private boolean searchAsYouType;
 
 	/**
 	 * 
@@ -45,7 +48,11 @@ public class SearchControl {
 	public SearchControl(ISearchRunnable runnable) {
 		this.runnable = runnable;
 		this.context = new SearchContext();
-		this.context.wrapAround = true;
+		this.context.setWrapAround(true);
+	}
+
+	public void setSearchAsYouType(boolean value) {
+		searchAsYouType = value;
 	}
 
 	public void setVisible(boolean vis) {
@@ -107,12 +114,17 @@ public class SearchControl {
 		this.searchText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.searchText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				SearchControl.this.searchText.setBackground(SearchControl.this.parent.getDisplay().getSystemColor(
-				        SWT.COLOR_WHITE));
-				SearchControl.this.searchText.setForeground(SearchControl.this.parent.getDisplay().getSystemColor(
-				        SWT.COLOR_BLACK));
-				SearchControl.this.searchText.redraw();
-				SearchControl.this.context.text = SearchControl.this.searchText.getText();
+				Color white = SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+				if (searchText.getBackground() != white) {
+					searchText.setBackground(white);
+					searchText.setForeground(SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+					searchText.redraw();
+				}
+				context.setCancelled(true);
+				context.setText(SearchControl.this.searchText.getText());
+				if (searchAsYouType) {
+					search();
+				}
 			}
 		});
 		this.searchText.addSelectionListener(new SelectionAdapter() {
@@ -131,7 +143,7 @@ public class SearchControl {
 		next.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SearchControl.this.context.forward = true;
+				SearchControl.this.context.setForward(true);
 				search();
 			}
 		});
@@ -142,7 +154,7 @@ public class SearchControl {
 		prev.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SearchControl.this.context.forward = false;
+				SearchControl.this.context.setForward(false);
 				search();
 			}
 		});
@@ -153,7 +165,7 @@ public class SearchControl {
 		csCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SearchControl.this.context.matchCase = csCheck.getSelection();
+				SearchControl.this.context.setMatchCase(csCheck.getSelection());
 			}
 		});
 		// word check
@@ -163,7 +175,7 @@ public class SearchControl {
 		wordCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SearchControl.this.context.wholeWord = wordCheck.getSelection();
+				SearchControl.this.context.setWholeWord(wordCheck.getSelection());
 			}
 		});
 		// status
@@ -183,28 +195,53 @@ public class SearchControl {
 	 * 
 	 */
 	protected void search() {
-		if (this.context.text == null)
+		if (this.context.getText() == null)
 			return;
-		// System.err.println("search " + context.text + " forward=" + context.forward + " case=" + context.matchCase);
-		this.context.status = false;
-		this.context.didWrap = false;
-		this.status.setText("");
-		this.statusImage.setImage(null);
-		this.runnable.run(this.context);
-		if (this.context.didWrap) {
-			this.status.setText("Wrap around");
-			this.statusImage.setImage(getPlugin().getImage("icons/clcl16/wrap_around.png"));
+		preRunnable();
+		new Thread("Searching " + context.getText()) {
+			@Override
+			public void run() {
+				try {
+					context.setFound(false);
+					context.setDidWrap(false);
+					context.setCancelled(false);
+					runnable.run(context);
+				} finally {
+					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							postRunnable();
+						}
+					});
+				}
+			}
+		}.start();
+	}
+
+	private void preRunnable() {
+		synchronized (context) {
+			// System.err.println("search " + context.text + " forward=" + context.forward + " case=" + context.matchCase);
+			this.status.setText("");
+			this.statusImage.setImage(null);
 		}
-		if (this.context.status == false) {
-			this.status.setText("String not found");
-			this.statusImage.setImage(getPlugin().getImage("icons/clcl16/showwarn_tsk.gif"));
-			this.searchText.setBackground(this.parent.getDisplay().getSystemColor(SWT.COLOR_RED));
-			this.searchText.setForeground(this.parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+	}
+
+	protected void postRunnable() {
+		synchronized (context) {
+			if (this.context.isDidWrap()) {
+				this.status.setText("Wrap around");
+				this.statusImage.setImage(getPlugin().getImage("icons/clcl16/wrap_around.png"));
+			}
+			if (this.context.isFound() == false) {
+				this.status.setText("String not found");
+				this.statusImage.setImage(getPlugin().getImage("icons/clcl16/showwarn_tsk.gif"));
+				this.searchText.setBackground(this.parent.getDisplay().getSystemColor(SWT.COLOR_RED));
+				this.searchText.setForeground(this.parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+			}
 		}
 	}
 
 	public void findNext() {
-		this.context.forward = true;
+		this.context.setForward(true);
 		search();
 	}
 
@@ -217,13 +254,13 @@ public class SearchControl {
 	 * @param forward
 	 */
 	public SearchContext search(String text, boolean matchCase, boolean wholeWord, boolean forward) {
-		this.context.text = text;
+		this.context.setText(text);
 		this.searchText.setText(text);
-		this.context.status = false;
-		this.context.didWrap = false;
-		this.context.matchCase = matchCase;
-		this.context.wholeWord = wholeWord;
-		this.context.forward = forward;
+		this.context.setFound(false);
+		this.context.setDidWrap(false);
+		this.context.setMatchCase(matchCase);
+		this.context.setWholeWord(wholeWord);
+		this.context.setForward(forward);
 		search();
 		return this.context;
 	}

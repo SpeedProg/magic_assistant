@@ -21,16 +21,26 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  */
 public class TableSearch {
 	public static void search(SearchContext context, IFilteredCardStore store) {
-		IMagicCard last = (IMagicCard) context.last;
+		IMagicCard last;
+		String inputText;
+		boolean wholeWord;
+		boolean matchCase;
+		boolean needWrap;
+		synchronized (context) {
+			inputText = context.getText();
+			last = (IMagicCard) context.getLast();
+			wholeWord = context.isWholeWord();
+			matchCase = context.isMatchCase();
+			needWrap = context.isWrapAround();
+			context.setFound(false); // don't reset last yet
+			context.setDidWrap(false);
+		}
 		Object[] elements = store.getElements();
-		context.last = null;
-		context.status = false;
-		context.didWrap = false;
-		String pattern = ".*\\Q" + context.text + "\\E.*";
-		if (context.wholeWord)
-			pattern = ".*\\b\\Q" + context.text + "\\E\\b.*";
+		String pattern = ".*\\Q" + inputText + "\\E.*";
+		if (wholeWord)
+			pattern = ".*\\b\\Q" + inputText + "\\E\\b.*";
 		int flags = Pattern.CASE_INSENSITIVE;
-		if (context.matchCase)
+		if (matchCase)
 			flags = 0;
 		Pattern pat = Pattern.compile(pattern, flags);
 		int lastIndex = -1;
@@ -43,25 +53,27 @@ public class TableSearch {
 				}
 			}
 		}
-		if (context.forward) {
+		if (context.isForward()) {
 			lastIndex++;
 			for (int i = lastIndex; i < elements.length; i++) {
 				IMagicCard card = (IMagicCard) elements[i];
 				if (match(pat, card)) {
-					context.last = card;
-					context.status = true;
+					context.setFound(true, card);
 					break;
 				}
+				if (context.isCancelled())
+					return;
 			}
-			if (!context.status) {
-				context.didWrap = true;
+			if (needWrap && !context.isFound()) {
+				context.setDidWrap(true);
 				for (int i = 0; i <= lastIndex; i++) {
 					IMagicCard card = (IMagicCard) elements[i];
 					if (match(pat, card)) {
-						context.last = card;
-						context.status = true;
+						context.setFound(true, card);
 						break;
 					}
+					if (context.isCancelled())
+						return;
 				}
 			}
 		} else {
@@ -72,21 +84,23 @@ public class TableSearch {
 			for (int i = lastIndex; i >= 0; i--) {
 				IMagicCard card = (IMagicCard) elements[i];
 				if (match(pat, card)) {
-					context.last = card;
-					context.status = true;
+					context.setFound(true, card);
 					break;
 				}
+				if (context.isCancelled())
+					return;
 			}
-			if (!context.status) {
-				context.didWrap = true;
+			if (needWrap && !context.isFound()) {
+				context.setDidWrap(true);
 				for (int i = elements.length - 1; i >= lastIndex; i--) {
 					IMagicCard card = (IMagicCard) elements[i];
 					if (match(pat, card)) {
-						context.last = card;
-						context.status = true;
+						context.setFound(true, card);
 						break;
 					}
 				}
+				if (context.isCancelled())
+					return;
 			}
 		}
 	}

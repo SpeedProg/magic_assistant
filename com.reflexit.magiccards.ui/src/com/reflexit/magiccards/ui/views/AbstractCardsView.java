@@ -1,8 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -42,6 +39,9 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -167,15 +167,20 @@ public abstract class AbstractCardsView extends ViewPart {
 		};
 		this.searchControl.createFindBar(composite);
 		this.searchControl.setVisible(false);
+		this.searchControl.setSearchAsYouType(true);
 	}
 
 	/**
 	 * @param context
 	 */
-	protected void runSearch(SearchContext context) {
+	protected void runSearch(final SearchContext context) {
 		TableSearch.search(context, getFilteredStore());
-		if (context.status) {
-			highlightCard((IMagicCard) context.last);
+		if (context.isFound()) {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					highlightCard((IMagicCard) context.getLast());
+				}
+			});
 		}
 	}
 
