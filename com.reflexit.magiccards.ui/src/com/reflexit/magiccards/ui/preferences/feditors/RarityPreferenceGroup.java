@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -13,13 +12,8 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.Rarity;
 
-public class RarityPreferenceGroup extends FieldEditorPreferencePage {
+public class RarityPreferenceGroup extends MFieldEditorPreferencePage {
 	private Group group;
-
-	public RarityPreferenceGroup() {
-		super(GRID);
-		noDefaultAndApplyButton();
-	}
 
 	@Override
 	protected void createFieldEditors() {

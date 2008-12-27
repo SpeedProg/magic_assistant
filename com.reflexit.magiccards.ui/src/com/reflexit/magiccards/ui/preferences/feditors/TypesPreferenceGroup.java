@@ -1,25 +1,19 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import java.util.Iterator;
+
 import com.reflexit.magiccards.core.model.CardTypes;
 
-public class TypesPreferenceGroup extends FieldEditorPreferencePage {
+public class TypesPreferenceGroup extends MFieldEditorPreferencePage {
 	private Group group;
-
-	public TypesPreferenceGroup() {
-		super(GRID);
-		noDefaultAndApplyButton();
-	}
 
 	@Override
 	protected void createFieldEditors() {

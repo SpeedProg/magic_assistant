@@ -10,8 +10,12 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.preferences;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Alena
@@ -23,6 +27,33 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		this.store.addPropertyChangeListener(listener);
+	}
+
+	public String[] preferenceNames() {
+		String res[] = null;
+		if (store instanceof PreferenceStore) {
+			res = ((PreferenceStore) store).preferenceNames();
+		} else if (store instanceof ScopedPreferenceStore) {
+			IEclipsePreferences[] preferenceNodes = ((ScopedPreferenceStore) store).getPreferenceNodes(false);
+			try {
+				if (preferenceNodes.length > 0)
+					res = preferenceNodes[0].keys();
+			} catch (BackingStoreException e) {
+				res = null;
+			}
+		}
+		if (res == null)
+			return null;
+		String arr[] = new String[res.length];
+		int l = prefix.length() + 1;
+		for (int i = 0; i < res.length; i++) {
+			String full = res[i];
+			if (full.length() > l)
+				arr[i] = full.substring(l);
+			else
+				arr[i] = full; // should not happened
+		}
+		return arr;
 	}
 
 	public boolean contains(String name) {
@@ -83,10 +114,6 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 
 	public boolean isDefault(String name) {
 		return this.store.isDefault(getPropertyName(name));
-	}
-
-	private String getPropertyName(String name) {
-		return (this.prefix + "." + name).intern();
 	}
 
 	public boolean needsSaving() {
@@ -151,6 +178,11 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 
 	public void setValue(String name, String value) {
 		this.store.setValue(getPropertyName(name), value);
+	}
+
+	private String getPropertyName(String name) {
+		String id = (this.prefix + "." + name).intern();
+		return id;
 	}
 
 	/**

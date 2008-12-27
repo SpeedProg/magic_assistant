@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.widgets.EditionsComposite;
 
 public class EditionsFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -46,6 +45,18 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
-		return MagicUIActivator.getDefault().getPreferenceStore();
+		throw new UnsupportedOperationException("Unspecified preference store");
+	}
+
+	@Override
+	public void performDefaults() {
+		IPreferenceStore store = getPreferenceStore();
+		if (store instanceof PrefixedPreferenceStore) {
+			String[] preferenceNames = ((PrefixedPreferenceStore) store).preferenceNames();
+			for (String id : preferenceNames) {
+				store.setToDefault(id);
+			}
+		}
+		super.performDefaults();
 	}
 }

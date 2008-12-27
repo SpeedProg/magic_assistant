@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorLabelProvider;
 import com.reflexit.magiccards.ui.widgets.CheckedTreeSelectionComposite;
@@ -60,6 +59,19 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		return this.panel;
 	}
 
+	@Override
+	public void performDefaults() {
+		IPreferenceStore store = getPreferenceStore();
+		if (store instanceof PrefixedPreferenceStore) {
+			String[] preferenceNames = ((PrefixedPreferenceStore) store).preferenceNames();
+			for (String id : preferenceNames) {
+				store.setToDefault(id);
+			}
+		}
+		initializeTree();
+		super.performDefaults();
+	}
+
 	private void initializeTree() {
 		CardOrganizer root = new CardOrganizer("fake", null);
 		CardOrganizer top = new CardOrganizer("All Cards", root);
@@ -81,7 +93,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	 * @param top
 	 */
 	private void initSelection(CardElement root) {
-		String id = Locations.getInstance().getPrefConstant(root.getName());
+		String id = Locations.getInstance().getPrefConstant(root.getLocation());
 		boolean checked = getPreferenceStore().getBoolean(id);
 		if (checked) {
 			this.treeViewer.setChecked(root, checked);
@@ -133,6 +145,6 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
-		return MagicUIActivator.getDefault().getPreferenceStore();
+		throw new UnsupportedOperationException("Unspecified preference store");
 	}
 }

@@ -1,18 +1,12 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
 
-public class NumbericalPreferenceGroup extends FieldEditorPreferencePage {
+public class NumbericalPreferenceGroup extends MFieldEditorPreferencePage {
 	//private Group group;
-	public NumbericalPreferenceGroup() {
-		super(GRID);
-		noDefaultAndApplyButton();
-	}
-
 	@Override
 	protected void createFieldEditors() {
 		//		this.group = new Group(getFieldEditorParent(), SWT.NONE);

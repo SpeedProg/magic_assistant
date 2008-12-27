@@ -9,7 +9,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -380,10 +379,6 @@ public abstract class AbstractCardsView extends ViewPart {
 				AbstractCardsView.this.doubleClickAction.run();
 			}
 		});
-	}
-
-	private void showMessage(String message) {
-		MessageDialog.openInformation(getViewSite().getShell(), "Magic Cards", message);
 	}
 
 	@Override

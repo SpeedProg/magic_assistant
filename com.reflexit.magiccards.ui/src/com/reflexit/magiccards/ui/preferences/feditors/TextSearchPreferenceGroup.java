@@ -4,7 +4,6 @@ import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -15,13 +14,8 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.FilterHelper;
 
-public class TextSearchPreferenceGroup extends FieldEditorPreferencePage {
+public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 	//private Group group;
-	public TextSearchPreferenceGroup() {
-		super(GRID);
-		noDefaultAndApplyButton();
-	}
-
 	@Override
 	protected void createFieldEditors() {
 		//		this.group = new Group(getFieldEditorParent(), SWT.NONE);
