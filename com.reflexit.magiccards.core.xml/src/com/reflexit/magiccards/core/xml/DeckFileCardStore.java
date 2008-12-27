@@ -52,6 +52,7 @@ public class DeckFileCardStore extends CollectionCardStore implements ICardDeck<
 		protected void storeFields(CardCollectionStoreObject obj) {
 			obj.name = this.getName();
 			obj.comment = this.getComment();
+			obj.type = "deck";
 			super.storeFields(obj);
 		}
 
