@@ -63,10 +63,11 @@ public class ChartCanvas extends Canvas {
 
 	public void setChart(Chart chart) {
 		this.chart = chart;
+		this.cachedImage = null;
 	}
 
 	public void setChartGenerator(IChartGenerator chart) {
-		this.chart = chart.create();
+		setChart(chart.create());
 	}
 
 	private void buildChart() {
