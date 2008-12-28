@@ -57,7 +57,7 @@ public class CardStoreUtils {
 				bars[8] += count;
 			else if (cost < 7 && cost >= 0)
 				bars[cost] += count;
-			else if (cost > 7)
+			else if (cost >= 7)
 				bars[7] += count;
 			else
 				System.err.println("mana curve: cost:" + elem.getCost());
