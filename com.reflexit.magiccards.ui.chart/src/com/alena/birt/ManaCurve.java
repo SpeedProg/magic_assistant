@@ -12,26 +12,27 @@ package com.alena.birt;
 
 import org.eclipse.birt.chart.model.Chart;
 import org.eclipse.birt.chart.model.ChartWithAxes;
+import org.eclipse.birt.chart.model.attribute.ActionType;
 import org.eclipse.birt.chart.model.attribute.AxisType;
 import org.eclipse.birt.chart.model.attribute.LineAttributes;
 import org.eclipse.birt.chart.model.attribute.LineStyle;
 import org.eclipse.birt.chart.model.attribute.Marker;
 import org.eclipse.birt.chart.model.attribute.MarkerType;
 import org.eclipse.birt.chart.model.attribute.RiserType;
+import org.eclipse.birt.chart.model.attribute.TriggerCondition;
 import org.eclipse.birt.chart.model.attribute.impl.ColorDefinitionImpl;
+import org.eclipse.birt.chart.model.attribute.impl.TooltipValueImpl;
 import org.eclipse.birt.chart.model.component.Axis;
 import org.eclipse.birt.chart.model.component.Series;
 import org.eclipse.birt.chart.model.component.impl.SeriesImpl;
-import org.eclipse.birt.chart.model.data.BaseSampleData;
-import org.eclipse.birt.chart.model.data.DataFactory;
 import org.eclipse.birt.chart.model.data.NumberDataSet;
-import org.eclipse.birt.chart.model.data.OrthogonalSampleData;
-import org.eclipse.birt.chart.model.data.SampleData;
 import org.eclipse.birt.chart.model.data.SeriesDefinition;
 import org.eclipse.birt.chart.model.data.TextDataSet;
+import org.eclipse.birt.chart.model.data.impl.ActionImpl;
 import org.eclipse.birt.chart.model.data.impl.NumberDataSetImpl;
 import org.eclipse.birt.chart.model.data.impl.SeriesDefinitionImpl;
 import org.eclipse.birt.chart.model.data.impl.TextDataSetImpl;
+import org.eclipse.birt.chart.model.data.impl.TriggerImpl;
 import org.eclipse.birt.chart.model.impl.ChartWithAxesImpl;
 import org.eclipse.birt.chart.model.layout.Legend;
 import org.eclipse.birt.chart.model.layout.Plot;
@@ -72,13 +73,13 @@ public class ManaCurve implements IChartGenerator {
 		//p.getClientArea().setBackground(ColorDefinitionImpl.create(255, 255, 225));
 		// Legend
 		Legend lg = this.cwaBar.getLegend();
-		LineAttributes lia = lg.getOutline();
+		LineAttributes legendOutlineLine = lg.getOutline();
 		lg.getText().getFont().setSize(16);
-		lia.setStyle(LineStyle.SOLID_LITERAL);
+		legendOutlineLine.setStyle(LineStyle.SOLID_LITERAL);
 		lg.getInsets().setLeft(10);
 		lg.getInsets().setRight(10);
 		// Title
-		this.cwaBar.getTitle().getLabel().getCaption().setValue("Mana Curve: " + this.count);//$NON-NLS-1$
+		this.cwaBar.getTitle().getLabel().getCaption().setValue("Mana Curve: " + this.count + " spells");//$NON-NLS-1$
 		// X-Axis
 		Axis xAxisPrimary = this.cwaBar.getPrimaryBaseAxes()[0];
 		xAxisPrimary.setType(AxisType.TEXT_LITERAL);
@@ -108,19 +109,6 @@ public class ManaCurve implements IChartGenerator {
 		TextDataSet categoryValues = TextDataSetImpl.create(this.sa);
 		NumberDataSet seriesOneValues = NumberDataSetImpl.create(this.da1);
 		NumberDataSet seriesTwoValues = NumberDataSetImpl.create(this.da2);
-		SampleData sd = DataFactory.eINSTANCE.createSampleData();
-		BaseSampleData sdBase = DataFactory.eINSTANCE.createBaseSampleData();
-		//sdBase.setDataSetRepresentation("");//$NON-NLS-1$
-		sd.getBaseSampleData().add(sdBase);
-		OrthogonalSampleData sdOrthogonal1 = DataFactory.eINSTANCE.createOrthogonalSampleData();
-		//sdOrthogonal1.setDataSetRepresentation("");//$NON-NLS-1$
-		sdOrthogonal1.setSeriesDefinitionIndex(0);
-		sd.getOrthogonalSampleData().add(sdOrthogonal1);
-		OrthogonalSampleData sdOrthogonal2 = DataFactory.eINSTANCE.createOrthogonalSampleData();
-		//sdOrthogonal2.setDataSetRepresentation("");//$NON-NLS-1$
-		sdOrthogonal2.setSeriesDefinitionIndex(1);
-		sd.getOrthogonalSampleData().add(sdOrthogonal2);
-		this.cwaBar.setSampleData(sd);
 		// X-Series
 		Series seCategory = SeriesImpl.create();
 		seCategory.setDataSet(categoryValues);
@@ -133,6 +121,12 @@ public class ManaCurve implements IChartGenerator {
 		bs1.setDataSet(seriesOneValues);
 		bs1.setRiserOutline(null);
 		bs1.setRiser(RiserType.RECTANGLE_LITERAL);
+		//		bs1.getTriggers().add(
+		//		        TriggerImpl.create(TriggerCondition.ONCLICK_LITERAL, ActionImpl.create(ActionType.HIGHLIGHT_LITERAL,
+		//		                SeriesValueImpl.create(String.valueOf(bs1.getSeriesIdentifier())))));
+		bs1.getTriggers().add(
+		        TriggerImpl.create(TriggerCondition.ONMOUSEOVER_LITERAL, ActionImpl.create(
+		                ActionType.SHOW_TOOLTIP_LITERAL, TooltipValueImpl.create(500, "dph.getDisplayValue()"))));
 		// Y-Series (2)
 		LineSeries ls1 = (LineSeries) LineSeriesImpl.create();
 		ls1.setSeriesIdentifier("Average");//$NON-NLS-1$

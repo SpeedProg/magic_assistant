@@ -10,12 +10,14 @@
  *******************************************************************************/
 package com.alena.birt;
 
+import org.eclipse.birt.chart.device.ICallBackNotifier;
 import org.eclipse.birt.chart.device.IDeviceRenderer;
 import org.eclipse.birt.chart.exception.ChartException;
 import org.eclipse.birt.chart.factory.GeneratedChartState;
 import org.eclipse.birt.chart.factory.Generator;
 import org.eclipse.birt.chart.model.Chart;
 import org.eclipse.birt.chart.model.attribute.Bounds;
+import org.eclipse.birt.chart.model.attribute.CallBackValue;
 import org.eclipse.birt.chart.model.attribute.impl.BoundsImpl;
 import org.eclipse.birt.chart.util.PluginSettings;
 import org.eclipse.swt.events.PaintEvent;
@@ -27,6 +29,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * @author Alena
@@ -37,13 +40,17 @@ public class ChartCanvas extends Canvas {
 	protected Image cachedImage;
 	private Chart chart;
 	private GeneratedChartState state;
+	private IChartGenerator gen;
+	private CallBackNotifier notifier;
 
 	public ChartCanvas(Composite parent, int style) {
 		super(parent, style);
+		notifier = new CallBackNotifier();
 		// initialize the SWT rendering device
 		try {
 			PluginSettings ps = PluginSettings.instance();
 			this.render = ps.getDevice("dv.SWT");
+			render.setProperty(IDeviceRenderer.UPDATE_NOTIFIER, notifier);
 		} catch (ChartException pex) {
 			Activator.log(pex);
 		}
@@ -66,8 +73,9 @@ public class ChartCanvas extends Canvas {
 		this.cachedImage = null;
 	}
 
-	public void setChartGenerator(IChartGenerator chart) {
-		setChart(chart.create());
+	public void setChartGenerator(IChartGenerator gen) {
+		this.gen = gen;
+		setChart(gen.create());
 	}
 
 	private void buildChart() {
@@ -78,12 +86,13 @@ public class ChartCanvas extends Canvas {
 		try {
 			Generator gr = Generator.instance();
 			this.state = gr.build(this.render.getDisplayServer(), this.chart, bo, null, null, null);
+			this.state.getRunTimeContext().setActionRenderer(new ManaCurveActionRenderer());
 		} catch (ChartException ex) {
 			Activator.log(ex);
 		}
 	}
 
-	public void drawToCachedImage(Rectangle size) {
+	public synchronized void drawToCachedImage(Rectangle size) {
 		GC gc = null;
 		try {
 			if (this.chart == null)
@@ -101,6 +110,34 @@ public class ChartCanvas extends Canvas {
 		} finally {
 			if (gc != null)
 				gc.dispose();
+		}
+	}
+	class CallBackNotifier implements ICallBackNotifier {
+		public Chart getDesignTimeModel() {
+			return chart;
+		}
+
+		public void callback(Object arg0, Object arg1, CallBackValue value) {
+			MessageBox mb = new MessageBox(getShell());
+			mb.setMessage(value.getIdentifier());
+			mb.open();
+		}
+
+		public Chart getRunTimeModel() {
+			return state.getChartModel();
+		}
+
+		public Object peerInstance() {
+			return ChartCanvas.this;
+		}
+
+		public void regenerateChart() {
+			setChartGenerator(gen);
+			redraw();
+		}
+
+		public void repaintChart() {
+			redraw();
 		}
 	}
 }
