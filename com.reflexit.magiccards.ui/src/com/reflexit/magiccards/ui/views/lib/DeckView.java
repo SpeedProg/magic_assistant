@@ -116,13 +116,13 @@ public class DeckView extends CollectionView implements ICardEventListener {
 		mana.setText("Mana Curve");
 		mana.setShowClose(false);
 		manaControl = new ManaCurveControl(folder, SWT.BORDER);
-		mana.setControl(manaControl);
+		mana.setControl(manaControl.getControl());
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem sel = folder.getSelection();
-				if (sel.getControl() == manaControl) {
+				if (sel.getControl() == manaControl.getControl()) {
 					if (manaControl.getCardStore() == null) {
 						// lazy initialize
 						manaControl.setFilteredStore(getFilteredStore());
@@ -138,7 +138,7 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	@Override
 	protected void updateStatus() {
 		CTabItem sel = folder.getSelection();
-		if (sel.getControl() == manaControl) {
+		if (sel.getControl() == manaControl.getControl()) {
 			setStatus(manaControl.getStatusMessage());
 		} else if (sel.getControl() == manager.getControl()) {
 			setStatus(manager.getStatusMessage());

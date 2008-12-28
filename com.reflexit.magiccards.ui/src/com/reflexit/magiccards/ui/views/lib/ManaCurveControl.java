@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.alena.birt.ChartCanvas;
 import com.alena.birt.IChartGenerator;
@@ -10,11 +11,14 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
-public class ManaCurveControl extends ChartCanvas {
+public class ManaCurveControl {
+	ChartCanvas canvas;
+	//SwtInteractivityViewer canvas;
 	ICardStore store;
 
 	public ManaCurveControl(Composite parent, int style) {
-		super(parent, style);
+		canvas = new ChartCanvas(parent, style);
+		//canvas = new SwtInteractivityViewer(parent, style);
 	}
 
 	public void setFilteredStore(IFilteredCardStore store) {
@@ -27,8 +31,12 @@ public class ManaCurveControl extends ChartCanvas {
 
 	public void updateChart() {
 		IChartGenerator gen = new ManaCurve(buildManaCurve());
-		setChartGenerator(gen);
-		redraw();
+		canvas.setChartGenerator(gen);
+		canvas.redraw();
+	}
+
+	public Control getControl() {
+		return canvas;
 	}
 
 	protected int[] buildManaCurve() {
