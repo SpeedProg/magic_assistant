@@ -14,18 +14,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
-import com.alena.birt.ChartCanvas;
-import com.alena.birt.IChartGenerator;
-import com.alena.birt.ManaCurve;
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
@@ -34,6 +29,8 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	Deck deck;
 	private Action shuffle;
+	private ManaCurveControl manaControl;
+	private CTabFolder folder;
 
 	/**
 	 * The constructor.
@@ -106,39 +103,46 @@ public class DeckView extends CollectionView implements ICardEventListener {
 
 	@Override
 	protected void createMainControl(Composite parent) {
-		CTabFolder folder = new CTabFolder(parent, SWT.BORDER | SWT.BOTTOM);
-		//folder.setSimple(false);
-		CTabItem table = new CTabItem(folder, SWT.CLOSE);
-		table.setText("Cards");
-		table.setShowClose(false);
-		Control control = this.manager.createContents(folder);
-		//((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
-		table.setControl(control);
+		folder = new CTabFolder(parent, SWT.BORDER | SWT.BOTTOM);
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// Cards List
+		final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
+		cardsList.setText("Cards");
+		cardsList.setShowClose(false);
+		Control control = this.manager.createContents(folder);
+		cardsList.setControl(control);
+		// Mana Curve
 		final CTabItem mana = new CTabItem(folder, SWT.CLOSE);
 		mana.setText("Mana Curve");
 		mana.setShowClose(false);
-		final ChartCanvas manaControl = new ChartCanvas(folder, SWT.BORDER);
+		manaControl = new ManaCurveControl(folder, SWT.BORDER);
 		mana.setControl(manaControl);
+		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (e.item == mana) {
-					IChartGenerator gen = new ManaCurve(buildManaCurve());
-					manaControl.setChartGenerator(gen);
-					// set status
-					ICardStore cardStore = getFilteredStore().getCardStore();
-					String cardCountTotal = "";
-					if (cardStore instanceof ICardCountable) {
-						cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+				CTabItem sel = folder.getSelection();
+				if (sel.getControl() == manaControl) {
+					if (manaControl.getCardStore() == null) {
+						// lazy initialize
+						manaControl.setFilteredStore(getFilteredStore());
+						manaControl.updateChart();
 					}
-					setStatus(cardCountTotal);
-				} else {
-					DeckView.this.manager.updateStatus();
 				}
+				updateStatus();
 			}
 		});
 		folder.setSelection(0);
+	}
+
+	@Override
+	protected void updateStatus() {
+		CTabItem sel = folder.getSelection();
+		if (sel.getControl() == manaControl) {
+			setStatus(manaControl.getStatusMessage());
+		} else if (sel.getControl() == manager.getControl()) {
+			setStatus(manager.getStatusMessage());
+		}
 	}
 
 	@Override
@@ -163,14 +167,18 @@ public class DeckView extends CollectionView implements ICardEventListener {
 
 	@Override
 	public void handleEvent(CardEvent event) {
+		super.handleEvent(event);
 		if (event.getType() == CardEvent.REMOVE_CONTAINER) {
 			if (DataManager.getModelRoot().getDeck(this.deck.getFileName()) == null) {
 				this.deck.close();
 				getViewSite().getPage().hideView(this);
 				return;
 			}
+		} else if (event.getType() == CardEvent.ADD_CONTAINER) {
+			// ignore
+		} else {
+			manaControl.updateChart();
 		}
-		super.handleEvent(event);
 	}
 
 	@Override
@@ -181,9 +189,5 @@ public class DeckView extends CollectionView implements ICardEventListener {
 	@Override
 	protected String getPreferencePageId() {
 		return DeckViewPreferencePage.class.getName();
-	}
-
-	protected int[] buildManaCurve() {
-		return CardStoreUtils.getInstance().buildManaCurve(getFilteredStore().getCardStore());
 	}
 }

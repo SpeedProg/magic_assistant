@@ -42,6 +42,7 @@ public class ColumnCollection {
 		if (!this.id.equals(MagicDbView.ID)) {
 			this.columns.add(new OwnershipColumn(MagicCardPhisical.INDEX_OWNERSHIP, "O"));
 			this.columns.add(new CommentColumn(MagicCardPhisical.INDEX_COMMENT, "Comment"));
+			this.columns.add(new PriceColumn(MagicCardPhisical.INDEX_PRICE, "Price"));
 		}
 	}
 }

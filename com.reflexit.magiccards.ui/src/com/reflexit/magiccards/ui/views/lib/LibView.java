@@ -121,7 +121,7 @@ public class LibView extends CollectionView implements ICardEventListener {
 		CardFilterDialog2 cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
 		cardFilterDialog.addNode(new PreferenceNode("locations", new LocationFilterPreferencePage()));
 		if (cardFilterDialog.open() == IStatus.OK)
-			this.manager.loadData();
+			this.manager.loadData(null);
 	}
 
 	/**

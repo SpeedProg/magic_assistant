@@ -44,6 +44,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	private IFilteredCardStore mhandler;
 	private IPreferenceStore store;
 	protected AbstractCardsView view;
+	private String statusMessage;
 
 	protected ViewerManager(IFilteredCardStore handler, IPreferenceStore store, String viewId) {
 		super(viewId);
@@ -85,7 +86,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	}
 
 	private HashMap storeToMap() {
-	    IPreferenceStore store = getPreferenceStore();
+		IPreferenceStore store = getPreferenceStore();
 		HashMap map = new HashMap();
 		Collection col = FilterHelper.getAllIds();
 		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
@@ -96,8 +97,8 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 				//System.err.println(id + "=" + value);
 			}
 		}
-	    return map;
-    }
+		return map;
+	}
 
 	public abstract Control createContents(Composite parent);
 
@@ -109,7 +110,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		// TODO Auto-generated method stub
 	}
 
-	public void loadData() {
+	public void loadData(final Runnable postLoad) {
 		updateFilter();
 		final Display display = getShell().getDisplay();
 		Job job = new Job("Loading cards") {
@@ -139,7 +140,10 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				asyncUpdateViewer(display);
+				if (postLoad != null)
+					display.syncExec(postLoad);
+				else
+					asyncUpdateViewer(display);
 				super.done(event);
 			}
 		});
@@ -158,7 +162,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 
 	protected void sort(int index) {
 		updateSortColumn(index);
-		loadData();
+		loadData(null);
 	}
 
 	public abstract void updateSortColumn(int index);
@@ -208,12 +212,16 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	}
 
 	public void updateStatus() {
+		statusMessage = getStatusMessage();
+	}
+
+	public String getStatusMessage() {
 		ICardStore cardStore = getFilteredStore().getCardStore();
 		String cardCountTotal = "";
 		int filSize = getFilteredStore().getSize();
 		int totalSize = cardStore.size();
 		if (totalSize == 0)
-			return;
+			return "";
 		int diff = totalSize - filSize;
 		if (cardStore instanceof ICardCountable) {
 			int count = ((ICardCountable) cardStore).getCount();
@@ -229,7 +237,8 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		if (diff > 0) {
 			diffStr = " (filtered " + diff + ")";
 		}
-		setStatus(cardCountTotal + diffStr);
+		String res = cardCountTotal + diffStr;
+		return res;
 	}
 
 	/**
@@ -245,5 +254,9 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
 		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer(), this.view));
 		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer(), this.view));
+	}
+
+	public Control getControl() {
+		return getViewer().getControl();
 	}
 }

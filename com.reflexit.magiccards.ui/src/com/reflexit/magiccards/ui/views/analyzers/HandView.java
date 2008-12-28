@@ -88,14 +88,14 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 				getManager().updateSortColumn(-1);
 				HandView.this.store.shuffle();
 				HandView.this.store.draw(7);
-				getManager().loadData();
+				getManager().loadData(null);
 			}
 		};
 		this.draw = new Action("Draw") {
 			@Override
 			public void run() {
 				HandView.this.store.draw(1);
-				getManager().loadData();
+				getManager().loadData(null);
 			}
 		};
 	}
@@ -133,7 +133,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 				ICardDeck store2 = deck.getStore();
 				this.store.setStore(store2);
 				HandView.this.store.draw(7);
-				getManager().loadData();
+				getManager().loadData(null);
 			}
 		}
 	}

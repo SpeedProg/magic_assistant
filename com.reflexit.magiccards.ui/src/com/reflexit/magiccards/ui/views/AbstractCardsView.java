@@ -69,11 +69,17 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected MenuManager groupMenu;
 	private IPreferenceStore store;
 	private SearchControl searchControl;
+	private Runnable updateViewer;
 
 	/**
 	 * The constructor.
 	 */
 	public AbstractCardsView() {
+		updateViewer = new Runnable() {
+			public void run() {
+				updateViewer();
+			}
+		};
 	}
 
 	public ViewerManager getManager() {
@@ -145,7 +151,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
-		this.manager.loadData();
+		reloadData();
 	}
 
 	/**
@@ -300,7 +306,8 @@ public abstract class AbstractCardsView extends ViewPart {
 			Action ac = new Action(name) {
 				@Override
 				public void run() {
-					AbstractCardsView.this.manager.sort(index);
+					manager.updateSortColumn(index);
+					reloadData();
 				}
 			};
 			this.sortMenu.add(ac);
@@ -368,7 +375,7 @@ public abstract class AbstractCardsView extends ViewPart {
 			this.manager.filter.setSortIndex(index);
 		this.manager.filter.setAscending(false);
 		this.manager.updateGroupBy(index);
-		this.manager.loadData();
+		reloadData();
 	}
 
 	protected abstract String getPreferencePageId();
@@ -407,7 +414,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	public void reloadData() {
-		this.manager.loadData();
+		this.manager.loadData(updateViewer);
 	}
 
 	public Shell getShell() {
@@ -426,6 +433,18 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	public IFilteredCardStore getFilteredStore() {
 		return this.manager.getFilteredStore();
+	}
+
+	/**
+	 * Update view in UI thread after data load is finished
+	 */
+	protected void updateViewer() {
+		manager.updateViewer();
+		updateStatus();
+	}
+
+	protected void updateStatus() {
+		setStatus(manager.getStatusMessage());
 	}
 
 	/**

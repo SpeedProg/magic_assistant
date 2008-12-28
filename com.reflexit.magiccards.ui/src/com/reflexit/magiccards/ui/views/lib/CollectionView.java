@@ -247,11 +247,11 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {
 			this.manager.getViewer().update(event.getSource(), null);
-			getManager().updateStatus();
+			updateStatus();
 		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
-			this.manager.loadData();
+			reloadData();
 		} else {
-			this.manager.loadData();
+			reloadData();
 		}
 	}
 
@@ -269,11 +269,13 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 			if (comment == null)
 				comment = "";
 			String ownshership = card.isOwn() ? "Own" : "Not Own";
+			String price = card.getPrice() + "";
 			if (first) {
 				store.setDefault(EditCardsPropertiesDialog.COUNT_FIELD, count);
 				store.setDefault(EditCardsPropertiesDialog.COMMENT_FIELD, comment);
 				store.setDefault(EditCardsPropertiesDialog.OWNERSHIP_FIELD, ownshership);
 				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, card.getName());
+				store.setDefault(EditCardsPropertiesDialog.PRICE_FIELD, price);
 				first = false;
 			} else {
 				if (!count.equals(store.getDefaultString(EditCardsPropertiesDialog.COUNT_FIELD))) {
@@ -284,6 +286,9 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 				}
 				if (!comment.equals(store.getDefaultString(EditCardsPropertiesDialog.COMMENT_FIELD))) {
 					store.setDefault(EditCardsPropertiesDialog.COMMENT_FIELD, un);
+				}
+				if (!price.equals(store.getDefaultString(EditCardsPropertiesDialog.PRICE_FIELD))) {
+					store.setDefault(EditCardsPropertiesDialog.PRICE_FIELD, un);
 				}
 				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>");
 			}
@@ -300,6 +305,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 		boolean modified = false;
 		String count = card.getCount() + "";
 		String comment = card.getComment();
+		String price = card.getPrice() + "";
 		if (comment == null)
 			comment = "";
 		String ownshership = card.isOwn() ? "Own" : "Not Own";
@@ -311,6 +317,18 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 				modified = true;
 			} catch (NumberFormatException e) {
 				// was bad value
+				MessageDialog.openError(getShell(), "Error", "Invalid value for count: " + ecount);
+			}
+		}
+		String eprice = store.getString(EditCardsPropertiesDialog.PRICE_FIELD);
+		if (!un.equals(eprice) && !eprice.equals(price)) {
+			try {
+				float x = Float.parseFloat(eprice);
+				card.setPrice(x);
+				modified = true;
+			} catch (NumberFormatException e) {
+				// was bad value
+				MessageDialog.openError(getShell(), "Error", "Invalid value for price: " + eprice);
 			}
 		}
 		String ecomment = store.getString(EditCardsPropertiesDialog.COMMENT_FIELD);

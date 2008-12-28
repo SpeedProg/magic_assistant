@@ -43,14 +43,12 @@ public class CompositeViewerManager extends ViewerManager {
 		this.managers[0] = new LazyTableViewerManager(getFilteredStore(), view);
 		this.managers[1] = new LazyTreeViewerManager(getFilteredStore(), view);
 		this.view = view;
-		for (int i = 0; i < this.managers.length; i++) {
-			ViewerManager m = this.managers[i];
+		for (ViewerManager m : this.managers) {
 			m.setFilter(this.filter);
 		}
 		this.selectionProvider = new ISelectionProvider() {
 			public void addSelectionChangedListener(ISelectionChangedListener listener) {
-				for (int i = 0; i < CompositeViewerManager.this.managers.length; i++) {
-					ViewerManager m = CompositeViewerManager.this.managers[i];
+				for (ViewerManager m : CompositeViewerManager.this.managers) {
 					m.getViewer().addSelectionChangedListener(listener);
 				}
 			}
@@ -60,8 +58,7 @@ public class CompositeViewerManager extends ViewerManager {
 			}
 
 			public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-				for (int i = 0; i < CompositeViewerManager.this.managers.length; i++) {
-					ViewerManager m = CompositeViewerManager.this.managers[i];
+				for (ViewerManager m : CompositeViewerManager.this.managers) {
 					m.getViewer().removeSelectionChangedListener(listener);
 				}
 			}
@@ -80,8 +77,7 @@ public class CompositeViewerManager extends ViewerManager {
 		this.comp = new Composite(parent, SWT.NONE);
 		this.stackLayout = new StackLayout();
 		this.comp.setLayout(this.stackLayout);
-		for (int i = 0; i < this.managers.length; i++) {
-			ViewerManager m = this.managers[i];
+		for (ViewerManager m : this.managers) {
 			Control control = m.createContents(this.comp);
 		}
 		setActivePage(this.activeIndex);
@@ -106,9 +102,8 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateSortColumn(int)
 	 */
 	@Override
-    public void updateSortColumn(int index) {
-		for (int i = 0; i < this.managers.length; i++) {
-			ViewerManager m = this.managers[i];
+	public void updateSortColumn(int index) {
+		for (ViewerManager m : this.managers) {
 			m.updateSortColumn(index);
 		}
 	}
@@ -118,8 +113,7 @@ public class CompositeViewerManager extends ViewerManager {
 	 */
 	@Override
 	public void updateColumns(String newValue) {
-		for (int i = 0; i < this.managers.length; i++) {
-			ViewerManager m = this.managers[i];
+		for (ViewerManager m : this.managers) {
 			m.updateColumns(newValue);
 		}
 	}
@@ -155,16 +149,14 @@ public class CompositeViewerManager extends ViewerManager {
 
 	@Override
 	public void addDoubleClickListener(IDoubleClickListener doubleClickListener) {
-		for (int i = 0; i < this.managers.length; i++) {
-			ViewerManager m = this.managers[i];
+		for (ViewerManager m : this.managers) {
 			m.addDoubleClickListener(doubleClickListener);
 		}
 	}
 
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
-		for (int i = 0; i < this.managers.length; i++) {
-			ViewerManager m = this.managers[i];
+		for (ViewerManager m : this.managers) {
 			m.hookContextMenu(menuMgr);
 		}
 	}
@@ -172,5 +164,10 @@ public class CompositeViewerManager extends ViewerManager {
 	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return this.selectionProvider;
+	}
+
+	@Override
+	public Control getControl() {
+		return comp;
 	}
 }

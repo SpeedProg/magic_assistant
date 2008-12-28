@@ -21,6 +21,7 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 	public static final String OWNERSHIP_FIELD = "ownership";
 	public static final String COUNT_FIELD = "count";
 	public static final String NAME_FIELD = "name";
+	public static final String PRICE_FIELD = "price";
 	private PreferenceStore store;
 
 	public EditCardsPropertiesDialog(Shell parentShell, PreferenceStore store) {
@@ -51,6 +52,17 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 			}
 		});
 		count.setText(store.getString(COUNT_FIELD));
+		// Count
+		createTextLabel(area, "Price");
+		final Text price = new Text(area, SWT.BORDER);
+		price.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		price.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				price.setFocus();
+				store.setValue(PRICE_FIELD, price.getText());
+			}
+		});
+		price.setText(store.getString(PRICE_FIELD));
 		// ownership
 		createTextLabel(area, "Ownership");
 		final Combo ownership = new Combo(area, SWT.READ_ONLY);

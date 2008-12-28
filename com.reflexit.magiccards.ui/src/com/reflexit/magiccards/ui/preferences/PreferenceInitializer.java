@@ -21,8 +21,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.GATHERER_UPDATE,
 		        "http://ww2.wizards.com/gatherer/index.aspx?output=Spoiler&setfilter=Standard");
 		store.setDefault(PreferenceConstants.MDBVIEW_COLS, "1,-2,3,4,5,6,-7,-8,-9,-10");
-		store.setDefault(PreferenceConstants.LIBVIEW_COLS, "1,-2,3,4,5,6,-7,-8,-9,-10,11");
-		store.setDefault(PreferenceConstants.DECKVIEW_COLS, "1,-2,3,4,-5,-6,-7,-8,-9,-10,11");
+		store.setDefault(PreferenceConstants.LIBVIEW_COLS, "1,-2,3,4,5,6,-7,-8,-9,-10,11,-12,-12,-14,-15,-16");
+		store.setDefault(PreferenceConstants.DECKVIEW_COLS, "1,-2,3,4,-5,-6,-7,-8,-9,-10,11,-12,-12,-14,-15,-16");
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
 	}
 }
