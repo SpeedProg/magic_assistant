@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.test;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
+import junit.framework.TestCase;
+
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
@@ -44,14 +44,18 @@ public class MemCardHandlerTest extends TestCase {
 		card1.setCost("{B}");
 		MagicCard card2 = CardGenerator.generateRandomCard();
 		card2.setCost("{R}");
+		MagicCard card3 = CardGenerator.generateRandomCard();
+		card3.setCost("{W}");
 		this.deck.getCardStore().add(card1);
 		this.deck.getCardStore().add(card2);
-		this.filter.setSortIndex(IMagicCard.INDEX_COST);
-		this.filter.setGroupIndex(IMagicCard.INDEX_COST);
+		this.deck.getCardStore().add(card3);
+		this.filter.setSortField(MagicCardField.COST);
+		this.filter.setGroupField(MagicCardField.COST);
 		this.deck.update(this.filter);
 		Object[] cardGroups = this.deck.getCardGroups();
-		assertEquals(2, cardGroups.length);
+		assertEquals(3, cardGroups.length);
 		assertEquals("Black", ((CardGroup) cardGroups[0]).getName());
 		assertEquals("Red", ((CardGroup) cardGroups[1]).getName());
+		assertEquals("White", ((CardGroup) cardGroups[2]).getName());
 	}
 }
