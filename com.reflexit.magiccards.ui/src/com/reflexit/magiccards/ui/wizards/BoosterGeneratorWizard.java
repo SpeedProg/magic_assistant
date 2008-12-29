@@ -157,31 +157,36 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 		MagicCardFilter filter = new MagicCardFilter();
 		HashMap filterset = new HashMap();
 		IFilteredCardStore dbcards = DataManager.getCardHandler().getMagicCardHandler();
-		String editionId = Editions.getInstance().getPrefConstantByName(editionName);
-		filterset.put(editionId, "true");
-		// 1*packs rare cards
-		String rarity = Rarity.getInstance().getPrefConstant("Rare");
-		filterset.put(rarity, "true");
-		filter.update(filterset);
-		dbcards.update(filter);
-		generateRandom(1 * packs, dbcards, store, deck);
-		monitor.worked(3);
-		// 3*packs uncommon
-		filterset.remove(rarity);
-		rarity = Rarity.getInstance().getPrefConstant("Uncommon");
-		filterset.put(rarity, "true");
-		filter.update(filterset);
-		dbcards.update(filter);
-		generateRandom(3 * packs, dbcards, store, deck);
-		monitor.worked(3);
-		// 11*packs common
-		filterset.remove(rarity);
-		rarity = Rarity.getInstance().getPrefConstant("Common");
-		filterset.put(rarity, "true");
-		filter.update(filterset);
-		dbcards.update(filter);
-		generateRandom(11 * packs, dbcards, store, deck);
-		monitor.done();
+		MagicCardFilter oldFilter = dbcards.getFilter();
+		try {
+			String editionId = Editions.getInstance().getPrefConstantByName(editionName);
+			filterset.put(editionId, "true");
+			// 1*packs rare cards
+			String rarity = Rarity.getInstance().getPrefConstant("Rare");
+			filterset.put(rarity, "true");
+			filter.update(filterset);
+			dbcards.update(filter);
+			generateRandom(1 * packs, dbcards, store, deck);
+			monitor.worked(3);
+			// 3*packs uncommon
+			filterset.remove(rarity);
+			rarity = Rarity.getInstance().getPrefConstant("Uncommon");
+			filterset.put(rarity, "true");
+			filter.update(filterset);
+			dbcards.update(filter);
+			generateRandom(3 * packs, dbcards, store, deck);
+			monitor.worked(3);
+			// 11*packs common
+			filterset.remove(rarity);
+			rarity = Rarity.getInstance().getPrefConstant("Common");
+			filterset.put(rarity, "true");
+			filter.update(filterset);
+			dbcards.update(filter);
+			generateRandom(11 * packs, dbcards, store, deck);
+		} finally {
+			monitor.done();
+			dbcards.update(oldFilter);
+		}
 	}
 
 	/**
