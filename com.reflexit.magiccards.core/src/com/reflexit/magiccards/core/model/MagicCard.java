@@ -265,18 +265,44 @@ public class MagicCard implements IMagicCard {
 	}
 
 	public Collection getHeaderNames() {
+		MagicCardField[] values = MagicCardField.values();
 		ArrayList list = new ArrayList();
-		list.add("id");
-		list.add("name");
-		list.add("cost");
-		list.add("type");
-		list.add("power");
-		list.add("toughness");
-		list.add("oracleText");
-		list.add("edition");
-		list.add("rarity");
-		list.add("colorType");
-		list.add("cmc");
+		for (MagicCardField magicCardField : values) {
+			list.add(magicCardField.toString());
+		}
 		return list;
+	}
+
+	public Object getObjectByField(ICardField field) {
+		if (!(field instanceof MagicCardField))
+			return null;
+		MagicCardField mf = (MagicCardField) field;
+		switch (mf) {
+		case ID:
+			return Integer.valueOf(getCardId());
+		case NAME:
+			return (this.name);
+		case COST:
+			return (this.cost);
+		case TYPE:
+			return (this.type);
+		case POWER:
+			return (this.power);
+		case TOUGHNESS:
+			return (this.toughness);
+		case ORACLE:
+			return (this.oracleText);
+		case EDITION:
+			return (this.edition);
+		case RARITY:
+			return (this.rarity);
+		case CTYPE:
+			return (getColorType());
+		case CMC:
+			return (new Integer(getCmc()));
+		default:
+			break;
+		}
+		return null;
 	}
 }

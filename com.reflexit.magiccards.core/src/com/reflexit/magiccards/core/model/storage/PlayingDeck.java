@@ -43,7 +43,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 
 	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
 	    Comparator<IMagicCard> comp = MagicCardComparator
-	            .getComparator(filter.getSortIndex(), filter.isAscending());
+	            .getComparator(filter.getSortField(), filter.isAscending());
 	    return comp;
     }
 	

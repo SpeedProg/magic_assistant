@@ -19,12 +19,12 @@ import java.util.Collection;
  */
 public class CardGroup implements ICardCountable {
 	private String name;
-	private int fieldIndex;
+	private ICardField groupField;
 	private int count;
 	private ArrayList children;
 
-	public CardGroup(int fieldIndex, String name) {
-		this.fieldIndex = fieldIndex;
+	public CardGroup(ICardField fieldIndex, String name) {
+		this.groupField = fieldIndex;
 		this.name = name;
 		this.children = new ArrayList();
 	}
@@ -45,8 +45,8 @@ public class CardGroup implements ICardCountable {
 		this.count = count;
 	}
 
-	public int getFieldIndex() {
-		return this.fieldIndex;
+	public ICardField getFieldIndex() {
+		return this.groupField;
 	}
 
 	public Collection<IMagicCard> getChildren() {
@@ -72,8 +72,8 @@ public class CardGroup implements ICardCountable {
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
 	 */
-	public String getFieldByIndex(int i) {
-		if (i == this.fieldIndex)
+	public String getLabelByField(ICardField f) {
+		if (f == this.groupField)
 			return this.name;
 		return "";
 	}

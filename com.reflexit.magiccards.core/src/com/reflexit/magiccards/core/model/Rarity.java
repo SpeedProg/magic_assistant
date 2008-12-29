@@ -66,6 +66,6 @@ public class Rarity implements ISearchableProperty {
 			if (r2.equals(v))
 				i2 = i;
 		}
-		return i1 - i2;
+		return i2 - i1;
 	}
 }

@@ -13,8 +13,10 @@ import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 /**
@@ -128,7 +130,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
 		initialize();
 		Collection<IMagicCard> filteredList;
-		if (filter.getSortIndex() < 0) {
+		if (filter.getSortField() == null) {
 			filteredList = new ArrayList<IMagicCard>();
 			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
 				IMagicCard elem = iterator.next();
@@ -153,10 +155,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 		}
-		if (filter.getGroupIndex() >= 0) {
+		if (filter.getGroupField() != null) {
 			for (Object element : filteredList) {
 				IMagicCard elem = (IMagicCard) element;
-				CardGroup group = findGroupIndex(elem, filter.getGroupIndex());
+				CardGroup group = findGroupIndex(elem, filter.getGroupField());
 				if (group != null) {
 					group.add(elem);
 				}
@@ -166,20 +168,20 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
-		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortIndex(), filter.isAscending());
+		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortField(), filter.isAscending());
 		return comp;
 	}
 
 	/**
 	 * @param elem
-	 * @param groupIndex
+	 * @param cardField
 	 * @return
 	 */
-	private CardGroup findGroupIndex(IMagicCard elem, int groupIndex) {
+	private CardGroup findGroupIndex(IMagicCard elem, ICardField cardField) {
 		String name = null;
-		if (groupIndex == IMagicCard.INDEX_COST) {
+		if (cardField == MagicCardField.COST) {
 			name = Colors.getColorName(elem.getCost());
-		} else if (groupIndex == IMagicCard.INDEX_CMC) {
+		} else if (cardField == MagicCardField.CMC) {
 			int ccc = elem.getCmc();
 			if (ccc == 0 && elem.getType().contains("Land")) {
 				name = "Land";
@@ -189,7 +191,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 		CardGroup g = this.groupsList.get(name);
 		if (g == null && name != null) {
-			g = new CardGroup(groupIndex, name);
+			g = new CardGroup(cardField, name);
 			this.groupsList.put(name, g);
 		}
 		return g;

@@ -11,12 +11,6 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private String location;
 	private String custom;
 	private boolean ownership;
-	public static final int INDEX_COUNT = 11;
-	public static final int INDEX_PRICE = 12;
-	public static final int INDEX_COMMENT = 13;
-	public static final int INDEX_LOCATION = 14;
-	public static final int INDEX_CUSTOM = 15;
-	public static final int INDEX_OWNERSHIP = 16;
 
 	public MagicCardPhisical(IMagicCard card) {
 		if (card instanceof MagicCard) {
@@ -62,7 +56,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	public void setValues(String[] fields) {
 		this.card = new MagicCard();
 		this.card.setValues(fields);
-		int i = INDEX_COUNT;
+		int i = card.getValues().size();
 		this.card.setCardId(Integer.parseInt(fields[i + 0]));
 		this.count = Integer.parseInt(fields[i + 1]);
 		this.price = Float.parseFloat(fields[i + 2]);
@@ -237,5 +231,30 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	@Override
 	public String toString() {
 		return this.card.toString() + " x " + this.count;
+	}
+
+	public Object getObjectByField(ICardField field) {
+		Object x = card.getObjectByField(field);
+		if (x != null)
+			return x;
+		if (!(field instanceof MagicCardFieldPhysical))
+			return null;
+		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
+		switch (pfield) {
+		case COUNT:
+			return getCount();
+		case PRICE:
+			return getPrice();
+		case COMMENT:
+			return getComment();
+		case LOCATION:
+			return getLocation();
+		case CUSTOM:
+			return getCustom();
+		case OWNERSHIP:
+			return isOwn();
+		}
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

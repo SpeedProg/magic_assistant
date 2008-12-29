@@ -6,9 +6,9 @@ import java.util.Iterator;
 public class MagicCardFilter {
 	private Expr root;
 	private int limit = Integer.MAX_VALUE;
-	private int sortIndex = 1;
+	private ICardField sortField = null;
 	private boolean ascending;
-	private int groupIndex = -1;
+	private ICardField groupField = null;
 	public static class Expr {
 		boolean translated = false;
 
@@ -58,21 +58,21 @@ public class MagicCardFilter {
 		}
 	}
 	public static class Field extends Expr {
-		int num;
+		ICardField field;
 
-		Field(int index) {
-			this.num = index;
+		Field(ICardField field) {
+			this.field = field;
 		}
 
 		@Override
 		public String toString() {
-			return "f" + this.num;
+			return "f" + this.field;
 		}
 
 		@Override
 		public Object getFieldValue(Object o) {
 			if (o instanceof IMagicCard) {
-				return ((IMagicCard) o).getObjectByIndex(this.num);
+				return ((IMagicCard) o).getObjectByField(field);
 			}
 			return null;
 		}
@@ -118,16 +118,16 @@ public class MagicCardFilter {
 			return this.op;
 		}
 
-		public static BinaryExpr fieldEquals(int index, String value) {
-			return new BinaryExpr(new Field(index), Operation.EQUALS, new Value(value));
+		public static BinaryExpr fieldEquals(ICardField field, String value) {
+			return new BinaryExpr(new Field(field), Operation.EQUALS, new Value(value));
 		}
 
-		public static BinaryExpr fieldMatches(int index, String value) {
-			return new BinaryExpr(new Field(index), Operation.MATCHES, new Value(value));
+		public static BinaryExpr fieldMatches(ICardField field, String value) {
+			return new BinaryExpr(new Field(field), Operation.MATCHES, new Value(value));
 		}
 
-		public static BinaryExpr fieldOp(int index, Operation op, String value) {
-			return new BinaryExpr(new Field(index), op, new Value(value));
+		public static BinaryExpr fieldOp(ICardField field, Operation op, String value) {
+			return new BinaryExpr(new Field(field), op, new Value(value));
 		}
 
 		@Override
@@ -198,15 +198,15 @@ public class MagicCardFilter {
 			return true;
 		}
 
-		public static Expr fieldInt(int index, String value) {
+		public static Expr fieldInt(ICardField field, String value) {
 			if (value.equals(">= 0")) {
 				return TRUE;
 			} else if (value.startsWith(">=")) {
-				return fieldOp(index, Operation.GE, value.substring(2).trim());
+				return fieldOp(field, Operation.GE, value.substring(2).trim());
 			} else if (value.startsWith("<=")) {
-				return fieldOp(index, Operation.LE, value.substring(2).trim());
+				return fieldOp(field, Operation.LE, value.substring(2).trim());
 			} else if (value.startsWith("=")) {
-				return fieldOp(index, Operation.EQ, value.substring(2).trim());
+				return fieldOp(field, Operation.EQ, value.substring(2).trim());
 			} else if (value.equals("0")) {
 				return TRUE;
 			}
@@ -214,7 +214,7 @@ public class MagicCardFilter {
 		}
 	}
 
-	static BinaryExpr ignoreCase1Search(int field, String value, boolean regex) {
+	static BinaryExpr ignoreCase1Search(ICardField field, String value, boolean regex) {
 		char c = value.charAt(0);
 		if (Character.isLetter(c)) {
 			if (regex) {
@@ -241,7 +241,7 @@ public class MagicCardFilter {
 		}
 	}
 
-	static Expr textSearch(int field, String text, boolean regex) {
+	static Expr textSearch(ICardField field, String text, boolean regex) {
 		text = text.trim();
 		text = text.replaceAll("\\s\\s*", " ");
 		String[] split = text.split(" ");
@@ -267,38 +267,38 @@ public class MagicCardFilter {
 		if (Colors.getInstance().getIdPrefix().equals(requestedId)) {
 			String en = Colors.getInstance().getEncodeByName(value);
 			if (en != null) {
-				res = BinaryExpr.fieldMatches(IMagicCard.INDEX_COST, ".*" + en + ".*");
+				res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
 			} else if (value.equals("Multi-Color")) {
-				res = BinaryExpr.fieldEquals(IMagicCard.INDEX_CTYPE, "multi");
+				res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "multi");
 			} else if (value.equals("Colorless")) {
-				BinaryExpr b1 = BinaryExpr.fieldEquals(IMagicCard.INDEX_CTYPE, "colorless");
-				BinaryExpr b2 = BinaryExpr.fieldEquals(IMagicCard.INDEX_CTYPE, "land");
+				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
+				BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "land");
 				res = new BinaryExpr(b1, Operation.OR, b2);
 			}
 		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			res = ignoreCase1Search(IMagicCard.INDEX_TYPE, value, regex);
+			res = ignoreCase1Search(MagicCardField.TYPE, value, regex);
 		} else if (Editions.getInstance().getIdPrefix().equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(IMagicCard.INDEX_EDITION, value);
+			res = BinaryExpr.fieldEquals(MagicCardField.EDITION, value);
 		} else if (SuperTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			BinaryExpr b1 = BinaryExpr.fieldMatches(IMagicCard.INDEX_TYPE, ".*" + value + " .*");
-			BinaryExpr b2 = BinaryExpr.fieldMatches(IMagicCard.INDEX_TYPE, ".*" + value + " -.*");
+			BinaryExpr b1 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " .*");
+			BinaryExpr b2 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " -.*");
 			res = new BinaryExpr(b1, Operation.AND, new BinaryExpr(b2, Operation.NOT, null));
 		} else if (FilterHelper.SUBTYPE.equals(requestedId)) {
-			res = textSearch(IMagicCard.INDEX_TYPE, value, regex);
+			res = textSearch(MagicCardField.TYPE, value, regex);
 		} else if (FilterHelper.TEXT_LINE.equals(requestedId)) {
-			res = textSearch(IMagicCard.INDEX_ORACLE, value, regex);
+			res = textSearch(MagicCardField.ORACLE, value, regex);
 		} else if (FilterHelper.NAME_LINE.equals(requestedId)) {
-			res = textSearch(IMagicCard.INDEX_NAME, value, regex);
+			res = textSearch(MagicCardField.NAME, value, regex);
 		} else if (FilterHelper.CCC.equals(requestedId)) {
-			res = BinaryExpr.fieldInt(IMagicCard.INDEX_CMC, value);
+			res = BinaryExpr.fieldInt(MagicCardField.CMC, value);
 		} else if (FilterHelper.POWER.equals(requestedId)) {
-			res = BinaryExpr.fieldInt(IMagicCard.INDEX_POWER, value);
+			res = BinaryExpr.fieldInt(MagicCardField.POWER, value);
 		} else if (FilterHelper.TOUGHNESS.equals(requestedId)) {
-			res = BinaryExpr.fieldInt(IMagicCard.INDEX_TOUGHNESS, value);
+			res = BinaryExpr.fieldInt(MagicCardField.TOUGHNESS, value);
 		} else if (FilterHelper.LOCATION.equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardPhisical.INDEX_LOCATION, value);
+			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.LOCATION, value);
 		} else if (FilterHelper.RARITY.equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(IMagicCard.INDEX_RARITY, value);
+			res = BinaryExpr.fieldEquals(MagicCardField.RARITY, value);
 			// TODO: Other
 		} else {
 			res = bin;
@@ -412,24 +412,24 @@ public class MagicCardFilter {
 	}
 
 	/**
-	 * sort index column, starting at 1
+	 * sort field
 	 * 
-	 * @param sortIndex
+	 * @param sortField
 	 */
-	public void setSortIndex(int sortIndex) {
-		this.sortIndex = sortIndex;
+	public void setSortField(ICardField sortField) {
+		this.sortField = sortField;
 	}
 
-	public int getSortIndex() {
-		return this.sortIndex;
+	public ICardField getSortField() {
+		return this.sortField;
 	}
 
-	public int getGroupIndex() {
-		return this.groupIndex;
+	public ICardField getGroupField() {
+		return this.groupField;
 	}
 
-	public void setGroupIndex(int groupIndex) {
-		this.groupIndex = groupIndex;
+	public void setGroupField(ICardField groupField) {
+		this.groupField = groupField;
 	}
 
 	public void setLimit(int limit) {

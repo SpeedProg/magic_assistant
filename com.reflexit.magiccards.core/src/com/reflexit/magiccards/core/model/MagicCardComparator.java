@@ -3,11 +3,11 @@ package com.reflexit.magiccards.core.model;
 import java.util.Comparator;
 
 public class MagicCardComparator implements Comparator {
-	int sort = 0;
+	ICardField sort;
 	int dir = 1;
 
-	public MagicCardComparator(int sortIndex, boolean asc) {
-		this.sort = sortIndex;
+	public MagicCardComparator(ICardField field, boolean asc) {
+		this.sort = field;
 		this.dir = asc ? -1 : 1;
 	}
 
@@ -17,42 +17,36 @@ public class MagicCardComparator implements Comparator {
 		if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
 			IMagicCard c1 = (IMagicCard) o1;
 			IMagicCard c2 = (IMagicCard) o2;
-			int by = this.sort;
-			Object a1 = c1.getObjectByIndex(by);
-			Object a2 = c2.getObjectByIndex(by);
-			if (this.sort == IMagicCard.INDEX_COST) {
+			ICardField sby = this.sort;
+			Object a1 = c1.getObjectByField(sby);
+			Object a2 = c2.getObjectByField(sby);
+			int d = 0;
+			if (this.sort == MagicCardField.COST) {
 				a1 = Colors.getColorName((String) a1);
 				a2 = Colors.getColorName((String) a2);
 			}
-			if (this.sort == IMagicCard.INDEX_POWER || this.sort == IMagicCard.INDEX_TOUGHNESS) {
+			if (this.sort == MagicCardField.POWER || this.sort == MagicCardField.TOUGHNESS) {
 				float f1 = MagicCard.convertFloat((String) a1);
 				float f2 = MagicCard.convertFloat((String) a2);
-				int d = Float.compare(f1, f2);
-				if (d != 0)
-					return d;
-			}
-			if (this.sort == IMagicCard.INDEX_RARITY) {
-				int d = Rarity.compare((String) a1, (String) a2);
-				if (d != 0)
-					return d;
-			}
-			if (a1 instanceof Comparable) {
+				d = Float.compare(f1, f2);
+			} else if (this.sort == MagicCardField.RARITY) {
+				d = Rarity.compare((String) a1, (String) a2);
+			} else if (a1 instanceof Comparable) {
 				if (a2 == null)
-					return this.dir;
-				int range = ((Comparable) a1).compareTo(a2);
-				if (range != 0)
-					return range * this.dir;
+					d = 1;
+				else
+					d = ((Comparable) a1).compareTo(a2);
 			}
-			if (c1.getCardId() != 0) {
-				int idd = c1.getCardId() - c2.getCardId();
-				if (idd != 0)
-					return idd;
+			if (d == 0 && c1.getCardId() != 0) {
+				d = c1.getCardId() - c2.getCardId();
 			}
+			if (d != 0)
+				return this.dir * d;
 		}
 		return this.dir * (System.identityHashCode(o1) - System.identityHashCode(o2));
 	}
 
-	public static Comparator getComparator(int sortIndex, boolean asc) {
-		return new MagicCardComparator(sortIndex, asc);
+	public static Comparator getComparator(ICardField field, boolean asc) {
+		return new MagicCardComparator(field, asc);
 	}
 }
