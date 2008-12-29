@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -67,6 +66,7 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	private SelectionListener selectionListener;
 	private String[] values;
+	private String[] keys;
 
 	/**
 	 * Creates a new list field editor 
@@ -82,9 +82,14 @@ public class CheckedListEditor extends FieldEditor {
 	 * @param parent the parent of the field editor's control
 	 */
 	public CheckedListEditor(String name, String labelText, Composite parent, String[] values) {
+		this(name, labelText, parent, values, values);
+	}
+
+	public CheckedListEditor(String name, String labelText, Composite parent, String[] values, String[] keys) {
 		init(name, labelText);
 		createControl(parent);
 		this.values = values;
+		this.keys = keys;
 	}
 
 	/* (non-Javadoc)
@@ -306,25 +311,22 @@ public class CheckedListEditor extends FieldEditor {
 	 * @see #createList
 	 */
 	protected void loadFromString(String stringList) {
-		String[] indexes = stringList.split(",");
-		HashSet used = new HashSet();
-		used.addAll(Arrays.asList(this.values));
-		for (int i = 0; i < this.values.length; i++) {
-			String val;
+		String[] prefValues = stringList.split(",");
+		HashSet prefs = new HashSet();
+		prefs.addAll(Arrays.asList(prefValues));
+		for (int i = 0; i < keys.length; i++) {
+			String value = keys[i];
 			boolean checked;
-			try {
-				String in = indexes[i];
-				int xcol = Integer.parseInt(in);
-				int col = xcol > 0 ? xcol - 1 : -xcol - 1;
-				val = this.values[col];
-				checked = xcol > 0;
-			} catch (RuntimeException e) {
-				val = (String) used.iterator().next();
+			if (prefs.contains(value)) {
+				checked = true;
+			} else if (prefs.contains("-" + value)) {
 				checked = false;
+			} else {
+				checked = true;
 			}
-			used.remove(val);
 			TableItem item = new TableItem(this.list, SWT.NONE);
-			item.setText(val);
+			item.setData(value);
+			item.setText(values[i]);
 			item.setChecked(checked);
 		}
 	}
@@ -340,19 +342,17 @@ public class CheckedListEditor extends FieldEditor {
 	 * @see #parseString
 	 */
 	protected String createList() {
-		HashMap va = new HashMap();
-		for (int i = 0; i < this.values.length; i++) {
-			String v = this.values[i];
-			va.put(v, new Integer(i));
-		}
 		String res = "";
 		TableItem[] items = this.list.getItems();
-		for (int i = 0; i < items.length; i++) {
-			TableItem tableItem = items[i];
-			String text = tableItem.getText();
-			Integer in = (Integer) va.get(text);
+		for (TableItem tableItem : items) {
+			String text;
+			if (tableItem.getData() != null) {
+				text = tableItem.getData().toString();
+			} else {
+				text = tableItem.getText();
+			}
 			res += tableItem.getChecked() ? "" : "-";
-			res += (in.intValue() + 1);
+			res += text;
 			res += ",";
 		}
 		return res;

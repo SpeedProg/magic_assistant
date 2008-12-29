@@ -43,7 +43,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
@@ -51,7 +54,7 @@ import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
-import com.reflexit.magiccards.ui.views.columns.ColumnManager;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
 import com.reflexit.magiccards.ui.views.search.SearchContext;
 import com.reflexit.magiccards.ui.views.search.SearchControl;
@@ -128,9 +131,9 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * 
 	 */
 	protected void initManager() {
-		getPreferenceStore().setDefault(FilterHelper.GROUP_INDEX, -1);
-		int index = getPreferenceStore().getInt(FilterHelper.GROUP_INDEX);
-		this.manager.updateGroupBy(index);
+		getPreferenceStore().setDefault(FilterHelper.GROUP_FIELD, "");
+		String field = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
+		this.manager.updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
 	}
 
 	private void createStatusLine(Composite composite) {
@@ -261,13 +264,13 @@ public abstract class AbstractCardsView extends ViewPart {
 		// drillDownAdapter.addNavigationActions(manager);
 	}
 	class GroupAction extends Action {
-		int index;
+		ICardField field;
 
-		GroupAction(String name, int index) {
+		GroupAction(String name, ICardField field) {
 			super(name, Action.AS_RADIO_BUTTON);
-			this.index = index;
-			int gindex = getPreferenceStore().getInt(FilterHelper.GROUP_INDEX);
-			if (index == gindex) {
+			this.field = field;
+			String val = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
+			if (field == null && val.length() == 0 || field != null && field.toString().equals(val)) {
 				setChecked(true);
 			}
 		}
@@ -275,7 +278,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		@Override
 		public void run() {
 			if (isChecked())
-				actionGroupBy(this.index);
+				actionGroupBy(this.field);
 		}
 	}
 
@@ -300,7 +303,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		Collection columns = this.manager.getColumns();
 		int i = 0;
 		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {
-			final ColumnManager man = (ColumnManager) iterator.next();
+			final AbstractColumn man = (AbstractColumn) iterator.next();
 			String name = man.getColumnFullName();
 			final int index = i;
 			Action ac = new Action(name) {
@@ -313,9 +316,9 @@ public abstract class AbstractCardsView extends ViewPart {
 			this.sortMenu.add(ac);
 		}
 		this.groupMenu = new MenuManager("Group By");
-		this.groupMenu.add(new GroupAction("None", -1));
-		this.groupMenu.add(new GroupAction("Color", IMagicCard.INDEX_COST));
-		this.groupMenu.add(new GroupAction("Cost", IMagicCard.INDEX_CMC));
+		this.groupMenu.add(new GroupAction("None", null));
+		this.groupMenu.add(new GroupAction("Color", MagicCardField.COST));
+		this.groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
 		this.showPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
@@ -369,12 +372,12 @@ public abstract class AbstractCardsView extends ViewPart {
 	/**
 	 * @param indexCost
 	 */
-	protected void actionGroupBy(int index) {
-		getPreferenceStore().setValue(FilterHelper.GROUP_INDEX, index);
-		if (index != -1)
-			this.manager.filter.setSortIndex(index);
+	protected void actionGroupBy(ICardField field) {
+		getPreferenceStore().setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
+		if (field != null)
+			this.manager.filter.setSortField(field);
 		this.manager.filter.setAscending(false);
-		this.manager.updateGroupBy(index);
+		this.manager.updateGroupBy(field);
 		reloadData();
 	}
 

@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -18,11 +19,10 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  */
 public class CommentColumn extends GenColumn {
 	/**
-	 * @param i
 	 * @param columnName
 	 */
-	public CommentColumn(int i, String columnName) {
-		super(i, columnName);
+	public CommentColumn() {
+		super(MagicCardFieldPhysical.COMMENT, "Comment");
 	}
 
 	@Override

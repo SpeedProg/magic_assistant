@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -21,11 +22,10 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  */
 public class PriceColumn extends GenColumn {
 	/**
-	 * @param i
 	 * @param columnName
 	 */
-	public PriceColumn(int i, String columnName) {
-		super(i, columnName);
+	public PriceColumn() {
+		super(MagicCardFieldPhysical.PRICE, "Price");
 	}
 
 	@Override

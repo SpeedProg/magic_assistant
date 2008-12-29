@@ -2,17 +2,20 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
-public class ColorColumn extends ColumnManager {
-	public ColorColumn(int column) {
-		super(column);
+public class ColorColumn extends AbstractColumn {
+	public ColorColumn() {
+		super(MagicCardField.COST);
 	}
 
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IMagicCard) {
-			String cost = ((IMagicCard) element).getByIndex(this.dataIndex);
-			return Colors.getColorName(cost);
+			Object cost = ((IMagicCard) element).getCost();
+			if (cost == null)
+				return "";
+			return Colors.getColorName(cost.toString());
 		}
 		return super.getText(element);
 	}

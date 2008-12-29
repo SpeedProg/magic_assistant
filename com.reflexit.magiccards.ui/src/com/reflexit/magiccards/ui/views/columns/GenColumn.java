@@ -1,11 +1,12 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import com.reflexit.magiccards.core.model.ICardField;
 
-public class GenColumn extends ColumnManager {
+public class GenColumn extends AbstractColumn {
 	private String colName;
 
-	public GenColumn(int i, String columnName) {
-		super(i);
+	public GenColumn(ICardField field, String columnName) {
+		super(field);
 		this.colName = columnName;
 	}
 

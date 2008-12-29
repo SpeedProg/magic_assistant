@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -20,11 +21,10 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  */
 public class OwnershipColumn extends GenColumn {
 	/**
-	 * @param i
 	 * @param columnName
 	 */
-	public OwnershipColumn(int i, String columnName) {
-		super(i, columnName);
+	public OwnershipColumn() {
+		super(MagicCardFieldPhysical.OWNERSHIP, "O");
 	}
 
 	@Override

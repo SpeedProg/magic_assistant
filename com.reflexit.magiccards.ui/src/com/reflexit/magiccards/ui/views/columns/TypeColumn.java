@@ -1,12 +1,14 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import com.reflexit.magiccards.core.model.MagicCardField;
+
 public class TypeColumn extends GenColumn {
-	public TypeColumn(int dataIndex) {
-		super(dataIndex, "Type");
+	public TypeColumn() {
+		super(MagicCardField.TYPE, "Type");
 	}
 
 	@Override
-    public int getColumnWidth() {
+	public int getColumnWidth() {
 		return 200;
 	}
 }

@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.HashMap;
-
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -16,8 +14,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.views.columns.ColumnManager;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {
 	private MyTreeViewer viewer;
@@ -78,10 +79,10 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 				sortDirection = SWT.UP;
 			this.viewer.getTree().setSortDirection(sortDirection);
 			this.filter.setAscending(sortDirection == SWT.UP);
-			ColumnManager man = (ColumnManager) this.viewer.getLabelProvider(index);
-			this.filter.setSortIndex(man.getSortIndex());
+			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
+			this.filter.setSortField(man.getSortField());
 		} else {
-			this.filter.setSortIndex(index);
+			this.filter.setSortField(null);
 		}
 	}
 
@@ -109,7 +110,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	protected void createDefaultColumns() {
 		createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
-			ColumnManager man = (ColumnManager) this.columns.get(i);
+			AbstractColumn man = (AbstractColumn) this.columns.get(i);
 			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
 			TreeColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
@@ -138,33 +139,51 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	public void updateColumns(String newValue) {
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		int order[] = new int[acolumns.length];
-		String[] indexes = newValue.split(",");
-		if (indexes.length == 0)
+		String[] prefValues = newValue.split(",");
+		if (prefValues.length == 0)
 			return;
-		HashMap used = new HashMap();
-		for (int i = 0; i < acolumns.length; i++) {
-			TreeColumn col = acolumns[i];
-			used.put(col, new Integer(i));
+		HashMap<String, Integer> colOrger = new HashMap();
+		HashSet<Integer> orderGaps = new HashSet();
+		for (int i = 0; i < prefValues.length; i++) {
+			Integer integer = Integer.valueOf(i);
+			colOrger.put(prefValues[i], integer);
+			orderGaps.add(integer);
 		}
 		for (int i = 0; i < acolumns.length; i++) {
-			try {
-				String in = indexes[i];
-				int xcol = Integer.parseInt(in);
-				int col = xcol > 0 ? xcol - 1 : -xcol - 1;
-				TreeColumn acol = acolumns[col];
-				order[i] = col;
-				boolean checked = xcol > 0;
-				if (checked) {
-					if (acol.getWidth() <= 0)
-						acol.setWidth(((ColumnManager) this.columns.get(i)).getColumnWidth());
-				} else {
-					acol.setWidth(0);
-				}
-				used.remove(acol);
-			} catch (RuntimeException e) {
-				TreeColumn acol = (TreeColumn) used.keySet().iterator().next();
-				order[i] = ((Integer) used.get(acol)).intValue();
-				used.remove(acol);
+			TreeColumn acol = acolumns[i];
+			AbstractColumn mcol = (AbstractColumn) columns.get(i);
+			boolean checked = true;
+			String key = mcol.getColumnFullName();
+			Integer pos = colOrger.get(key);
+			if (pos == null) {
+				pos = colOrger.get("-" + key);
+				if (pos != null)
+					checked = false;
+			}
+			if (pos != null) {
+				order[i] = pos.intValue();
+				Integer ipos = Integer.valueOf(pos.intValue());
+				if (orderGaps.contains(ipos))
+					orderGaps.remove(ipos);
+				else
+					order[i] = -1; // duplicate keys!!
+			} else {
+				order[i] = -1;
+			}
+			if (checked) {
+				if (acol.getWidth() <= 0)
+					acol.setWidth(((AbstractColumn) this.columns.get(i)).getColumnWidth());
+			} else {
+				acol.setWidth(0);
+			}
+		}
+		//fill order for columns which were not in the properly list
+		for (int i = 0; i < order.length; i++) {
+			int pos = order[i];
+			if (pos < 0) {
+				Integer next = orderGaps.iterator().next();
+				orderGaps.remove(next);
+				order[i] = next.intValue();
 			}
 		}
 		this.viewer.getTree().setColumnOrder(order);

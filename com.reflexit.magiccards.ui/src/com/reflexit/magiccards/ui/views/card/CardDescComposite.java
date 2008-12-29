@@ -16,8 +16,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
-import com.reflexit.magiccards.ui.views.MagicCardLabelProvider;
+import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
 class CardDescComposite extends Composite {
 	/**
@@ -32,14 +33,14 @@ class CardDescComposite extends Composite {
 	private Browser textValue;
 	private Label rarityValue;
 	private Label setValue;
-	private MagicCardLabelProvider provider;
 	private IMagicCard card;
 	private Image loadingImage;
 	private Image cardNotFound;
+	private PowerColumn powerProvider;
+	private PowerColumn toughProvider;
 
 	public CardDescComposite(CardDescView cardDescView, Composite parent, int style) {
 		super(parent, style);
-		this.provider = new MagicCardLabelProvider();
 		// UI
 		this.cardDescView = cardDescView;
 		Composite panel = this;
@@ -70,6 +71,8 @@ class CardDescComposite extends Composite {
 		        .span(2, 0) //
 		        .applyTo(this.textValue);
 		createImages();
+		this.powerProvider = new PowerColumn(MagicCardField.POWER, null, null);
+		this.toughProvider = new PowerColumn(MagicCardField.TOUGHNESS, null, null);
 		this.reload(IMagicCard.DEFAULT);
 	}
 
@@ -109,7 +112,7 @@ class CardDescComposite extends Composite {
 		if (card == this.card) {
 			this.image = this.cardNotFound;
 			this.imageControl.setImage(this.image);
-			if (e!=null) 
+			if (e != null)
 				MessageDialog.openError(getShell(), "Error:", "Can't load image: " + e.getMessage());
 		}
 	}
@@ -143,7 +146,7 @@ class CardDescComposite extends Composite {
 			this.typeValue.setText(card.getType());
 			String pt = "";
 			if (card.getToughness().length() > 0) {
-				pt = this.provider.getColumnText(card, 4) + "/" + this.provider.getColumnText(card, 5);
+				pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
 			}
 			this.powerValue.setText(pt);
 			this.setValue.setText(card.getEdition());

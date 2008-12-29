@@ -2,9 +2,9 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 public class ColumnCollection {
@@ -24,25 +24,50 @@ public class ColumnCollection {
 	}
 
 	public void createColumnLabelProviders() {
-		this.columns.add(new NameColumn(IMagicCard.INDEX_NAME));
-		this.columns.add(new IdColumn(IMagicCard.INDEX_ID));
-		this.columns.add(new CostColumn(IMagicCard.INDEX_COST));
-		this.columns.add(new TypeColumn(IMagicCard.INDEX_TYPE));
-		this.columns.add(new PowerColumn(IMagicCard.INDEX_POWER, "P", "Power"));
-		this.columns.add(new PowerColumn(IMagicCard.INDEX_TOUGHNESS, "T", "Toughness"));
-		this.columns.add(new OracleTextColumn(IMagicCard.INDEX_ORACLE));
-		this.columns.add(new GenColumn(IMagicCard.INDEX_EDITION, "Set"));
-		this.columns.add(new GenColumn(IMagicCard.INDEX_RARITY, "Rarity"));
-		this.columns.add(new GenColumn(IMagicCard.INDEX_CTYPE, "Color Type"));
+		this.columns.add(new NameColumn());
+		this.columns.add(new IdColumn());
+		this.columns.add(new CostColumn());
+		this.columns.add(new TypeColumn());
+		this.columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
+		this.columns.add(new PowerColumn(MagicCardField.TOUGHNESS, "T", "Toughness"));
+		this.columns.add(new OracleTextColumn());
+		this.columns.add(new GenColumn(MagicCardField.EDITION, "Set"));
+		this.columns.add(new GenColumn(MagicCardField.RARITY, "Rarity"));
+		this.columns.add(new GenColumn(MagicCardField.CTYPE, "Color Type"));
 		if (!this.id.equals(MagicDbView.ID)) {
-			this.columns.add(new CountColumn(MagicCardPhisical.INDEX_COUNT, "Count"));
-			this.columns.add(new LocationColumn(MagicCardPhisical.INDEX_LOCATION, "Location"));
+			this.columns.add(new CountColumn());
+			this.columns.add(new LocationColumn());
 		}
-		this.columns.add(new ColorColumn(IMagicCard.INDEX_COST));
+		this.columns.add(new ColorColumn());
 		if (!this.id.equals(MagicDbView.ID)) {
-			this.columns.add(new OwnershipColumn(MagicCardPhisical.INDEX_OWNERSHIP, "O"));
-			this.columns.add(new CommentColumn(MagicCardPhisical.INDEX_COMMENT, "Comment"));
-			this.columns.add(new PriceColumn(MagicCardPhisical.INDEX_PRICE, "Price"));
+			this.columns.add(new OwnershipColumn());
+			this.columns.add(new CommentColumn());
+			this.columns.add(new PriceColumn());
 		}
+		int j = 0;
+		for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+			AbstractColumn col = (AbstractColumn) iterator.next();
+			col.setColumnIndex(j++);
+		}
+	}
+
+	public String[] getColumnNames() {
+		int i = 0;
+		String[] columnNames = new String[getColumnsNumber()];
+		for (Iterator iterator = getColumns().iterator(); iterator.hasNext();) {
+			AbstractColumn col = (AbstractColumn) iterator.next();
+			columnNames[i++] = col.getColumnFullName();
+		}
+		return columnNames;
+	}
+
+	public String[] getColumnIds() {
+		int i = 0;
+		String[] columnNames = new String[getColumnsNumber()];
+		for (Iterator iterator = getColumns().iterator(); iterator.hasNext();) {
+			AbstractColumn col = (AbstractColumn) iterator.next();
+			columnNames[i++] = col.getDataField().toString();
+		}
+		return columnNames;
 	}
 }

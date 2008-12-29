@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -14,6 +13,7 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -28,11 +28,10 @@ import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
  */
 public class LocationColumn extends GenColumn {
 	/**
-	 * @param i
 	 * @param columnName
 	 */
-	public LocationColumn(int i, String columnName) {
-		super(i, columnName);
+	public LocationColumn() {
+		super(MagicCardFieldPhysical.LOCATION, "Location");
 	}
 
 	@Override

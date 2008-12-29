@@ -4,12 +4,9 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import java.util.Iterator;
-
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
-import com.reflexit.magiccards.ui.views.columns.ColumnManager;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public class DeckViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
@@ -23,14 +20,8 @@ public class DeckViewPreferencePage extends FieldEditorPreferencePage implements
 	protected void createFieldEditors() {
 		ColumnCollection columnCollection = new ColumnCollection(DeckView.ID);
 		columnCollection.createColumnLabelProviders();
-		int i = 0;
-		String[] columnNames = new String[columnCollection.getColumnsNumber()];
-		for (Iterator iterator = columnCollection.getColumns().iterator(); iterator.hasNext();) {
-			ColumnManager col = (ColumnManager) iterator.next();
-			columnNames[i++] = col.getColumnFullName();
-		}
 		addField(new CheckedListEditor(PreferenceConstants.DECKVIEW_COLS, "Visible Columns and Order",
-		        getFieldEditorParent(), columnNames));
+		        getFieldEditorParent(), columnCollection.getColumnNames()));
 	}
 
 	public void init(IWorkbench workbench) {

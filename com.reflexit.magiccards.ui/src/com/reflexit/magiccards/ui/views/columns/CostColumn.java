@@ -9,12 +9,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
-public class CostColumn extends ColumnManager implements Listener {
-	public CostColumn(int column) {
-		super(column);
+public class CostColumn extends AbstractColumn implements Listener {
+	public CostColumn() {
+		super(MagicCardField.COST);
 	}
 
 	@Override
@@ -29,20 +31,20 @@ public class CostColumn extends ColumnManager implements Listener {
 
 	public Image getActualImage(Object element) {
 		if (element instanceof IMagicCard) {
-			return SymbolConverter.buildImage(((IMagicCard) element).getByIndex(this.dataIndex));
+			return SymbolConverter.buildImage(((IMagicCard) element).getCost());
 		}
 		return null;
 	}
 
 	public void handleEvent(Event event) {
-		if (event.index == this.dataIndex) { // cost
+		if (event.index == this.columnIndex) { // cost
 			Item item = (Item) event.item;
 			Object row = item.getData();
 			int x = event.x;
 			int y = event.y;
 			String cost;
 			if (row instanceof IMagicCard) {
-				cost = ((IMagicCard) row).getByIndex(this.dataIndex);
+				cost = ((IMagicCard) row).getCost();
 			} else
 				return;
 			String text = getActualText(row);
@@ -74,8 +76,8 @@ public class CostColumn extends ColumnManager implements Listener {
 	}
 
 	@Override
-	public int getSortIndex() {
-		return IMagicCard.INDEX_CMC;
+	public ICardField getSortField() {
+		return MagicCardField.CMC;
 	}
 
 	private String getActualText(Object element) {

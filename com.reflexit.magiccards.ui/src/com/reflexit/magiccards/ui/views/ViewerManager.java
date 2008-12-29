@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -170,8 +171,8 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	/**
 	 * @param indexCmc
 	 */
-	public void updateGroupBy(int fieldIndex) {
-		this.filter.setGroupIndex(fieldIndex);
+	public void updateGroupBy(ICardField fieldIndex) {
+		this.filter.setGroupField(fieldIndex);
 	}
 
 	/**

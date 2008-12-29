@@ -1,10 +1,11 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class NameColumn extends GenColumn {
-	public NameColumn(int dataIndex) {
-		super(dataIndex, "Name");
+	public NameColumn() {
+		super(MagicCardField.NAME, "Name");
 	}
 
 	@Override

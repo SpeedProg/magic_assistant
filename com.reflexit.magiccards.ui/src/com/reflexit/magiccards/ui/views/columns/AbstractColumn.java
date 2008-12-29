@@ -5,12 +5,22 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 
-public abstract class ColumnManager extends ColumnLabelProvider {
-	protected int dataIndex;
+public abstract class AbstractColumn extends ColumnLabelProvider {
+	protected final ICardField dataIndex;
+	protected int columnIndex = -1;
 
-	public ColumnManager(int dataIndex) {
+	public int getColumnIndex() {
+		return columnIndex;
+	}
+
+	public void setColumnIndex(int columnIndex) {
+		this.columnIndex = columnIndex;
+	}
+
+	public AbstractColumn(ICardField dataIndex) {
 		this.dataIndex = dataIndex;
 	}
 
@@ -19,12 +29,17 @@ public abstract class ColumnManager extends ColumnLabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardGroup) {
-			return ((CardGroup) element).getFieldByIndex(getDataIndex());
+			ICardField field = getDataField();
+			return ((CardGroup) element).getLabelByField(field);
 		}
 		if (element instanceof IMagicCard) {
 			IMagicCard card = (IMagicCard) element;
 			try {
-				return card.getByIndex(getDataIndex());
+				ICardField field = this.dataIndex;
+				Object value = card.getObjectByField(field);
+				if (value == null)
+					return "";
+				return value.toString();
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "n/a";
 			}
@@ -43,12 +58,12 @@ public abstract class ColumnManager extends ColumnLabelProvider {
 		return 100;
 	}
 
-	public int getDataIndex() {
+	public ICardField getDataField() {
 		return this.dataIndex;
 	}
 
-	public int getSortIndex() {
-		return getDataIndex();
+	public ICardField getSortField() {
+		return getDataField();
 	}
 
 	public String getColumnFullName() {

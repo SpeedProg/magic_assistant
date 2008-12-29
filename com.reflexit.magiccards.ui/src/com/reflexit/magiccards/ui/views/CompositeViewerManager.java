@@ -21,6 +21,8 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.reflexit.magiccards.core.model.ICardField;
+
 /**
  * @author Alena
  *
@@ -122,15 +124,15 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @param indexCmc
 	 */
 	@Override
-	public void updateGroupBy(int fieldIndex) {
-		int oldIndex = this.filter.getGroupIndex();
+	public void updateGroupBy(ICardField fieldIndex) {
+		ICardField oldIndex = this.filter.getGroupField();
 		if (oldIndex == fieldIndex)
 			return;
-		this.filter.setGroupIndex(fieldIndex);
-		if (oldIndex < 0 && fieldIndex >= 0) {
+		this.filter.setGroupField(fieldIndex);
+		if (oldIndex == null && fieldIndex != null) {
 			// flip to tree
 			this.activeIndex = 1;
-		} else if (oldIndex >= 0 && fieldIndex < 0) {
+		} else if (oldIndex != null && fieldIndex == null) {
 			// flip to table
 			this.activeIndex = 0;
 		}
