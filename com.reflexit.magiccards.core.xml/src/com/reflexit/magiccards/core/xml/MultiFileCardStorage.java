@@ -166,7 +166,7 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 
 	protected String getKey(final IMagicCard card) {
 		if (card instanceof MagicCard) {
-			String key = (card).getEdition();
+			String key = (card).getSet();
 			key = key.replaceAll("[\\W]", "_");
 			return key;
 		} else if (card instanceof MagicCardPhisical) {

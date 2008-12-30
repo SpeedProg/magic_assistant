@@ -58,8 +58,8 @@ public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMag
 				continue;
 			}
 			hash.add(card.getCardId());
-			if (Editions.getInstance().getAbbrByName(card.getEdition()) == null) {
-				System.err.println("Failed to find set: " + card.getEdition());
+			if (Editions.getInstance().getAbbrByName(card.getSet()) == null) {
+				System.err.println("Failed to find set: " + card.getSet());
 			}
 		}
 		this.storage.removeAll(duplicates);

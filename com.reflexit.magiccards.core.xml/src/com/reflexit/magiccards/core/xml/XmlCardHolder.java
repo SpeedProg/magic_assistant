@@ -81,7 +81,19 @@ public class XmlCardHolder implements ICardHandler {
 				fields[i] = fields[i].trim();
 			}
 			MagicCard card = new MagicCard();
-			card.setValues(fields);
+			card.setId(fields[0]);
+            card.setName(fields[1]);
+            card.setCost(fields[2]);
+            card.setType(fields[3]);
+            card.setPower(fields[4]);
+            card.setToughness(fields[5]);
+            card.setOracleText(fields[6]);
+            card.setSet(fields[7]);
+            card.setRarity(fields[8]);
+            if (fields.length > 9)
+            	card.setColorType(fields[9]);
+            if (fields.length > 10)
+            	card.setCmc(fields[10]);
 			card.setExtraFields();
 			int id = card.getCardId();
 			if (id == 0) {
