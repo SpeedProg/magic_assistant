@@ -1,42 +1,18 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Super class for CSV exporting
  */
-public class CsvExporter {
-	protected PrintStream exportStream;
-	final static String SEP = ",";
-
+public class CsvExporter extends TableExporter {
 	public CsvExporter(final OutputStream exportStream) {
-		this.exportStream = new PrintStream(exportStream);
+		super(exportStream, ",");
 	}
 
-	public void printLine(final Collection<?> list) {
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
-			Object element = iter.next();
-			exportStream.print(excelEscape(element));
-			if (iter.hasNext())
-				exportStream.print(SEP);
-		}
-		exportStream.println();
-	}
-
-	/**
-	 * @param els
-	 */
-	public void printLine(Object[] els) {
-		for (int i = 0; i < els.length; i++) {
-			Object element = els[i];
-			exportStream.print(excelEscape(element));
-			if (i + 1 < els.length)
-				exportStream.print(SEP);
-		}
-		exportStream.println();
+	@Override
+	protected String escape(String element) {
+		return excelEscape(element);
 	}
 
 	public static String excelEscape(Object el) {
@@ -57,9 +33,5 @@ public class CsvExporter {
 		if (str.startsWith(" ") || str.endsWith(" "))
 			return "\"" + str + "\"";
 		return str;
-	}
-
-	public void close() {
-		exportStream.close();
 	}
 }

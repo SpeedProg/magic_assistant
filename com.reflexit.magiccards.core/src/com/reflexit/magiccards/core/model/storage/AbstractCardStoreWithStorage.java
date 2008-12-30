@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.MagicException;
  * @author Alena
  * 
  */
-public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> {
+public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements IStorageContainer<T> {
 	protected IStorage<T> storage;
 
 	/**
@@ -60,7 +60,8 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 
 	@Override
 	protected boolean doUpdate(T card) {
-		storage.save();
+		if (storage.isAutoCommit())
+			storage.save();
 		return true;
 	}
 
@@ -74,7 +75,7 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 		this.storage.load();
 	}
 
-	protected ICardSet<T> getStorage() {
+	public IStorage<T> getStorage() {
 		return storage;
 	}
 }

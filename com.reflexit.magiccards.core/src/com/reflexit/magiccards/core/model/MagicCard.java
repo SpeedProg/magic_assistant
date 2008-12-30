@@ -15,6 +15,8 @@ public class MagicCard implements IMagicCard {
 	String edition;
 	String rarity;
 	String oracleText;
+	float dbprice;
+	String lang;
 	transient String colorType = null;
 	transient int cmc = -1;
 	transient float fpower = -STAR_POWER;
@@ -78,12 +80,12 @@ public class MagicCard implements IMagicCard {
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
 	 */
-	public String getEdition() {
+	public String getSet() {
 		return this.edition;
 	}
 
-	public void setEdition(String setAbbr) {
-		this.edition = setAbbr;
+	public void setSet(String setName) {
+		this.edition = setName;
 	}
 
 	/* (non-Javadoc)
@@ -195,39 +197,6 @@ public class MagicCard implements IMagicCard {
 		setCmc(Integer.parseInt(cmc));
 	}
 
-	public void setValues(String[] fields) {
-		setId(fields[0]);
-		setName(fields[1]);
-		setCost(fields[2]);
-		setType(fields[3]);
-		setPower(fields[4]);
-		setToughness(fields[5]);
-		setOracleText(fields[6]);
-		setEdition(fields[7]);
-		setRarity(fields[8]);
-		if (fields.length > 9)
-			setColorType(fields[9]);
-		if (fields.length > 10)
-			setCmc(fields[10]);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
-	 */
-	public String getByIndex(int i) {
-		Object elem = getObjectByIndex(i);
-		if (elem == null)
-			return null;
-		return elem.toString();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getObjectByIndex(int)
-	 */
-	public Object getObjectByIndex(int i) {
-		return ((ArrayList) getValues()).get(i);
-	}
-
 	@Override
 	public int hashCode() {
 		if (this.id != 0)
@@ -300,9 +269,29 @@ public class MagicCard implements IMagicCard {
 			return (getColorType());
 		case CMC:
 			return (new Integer(getCmc()));
+		case DBPRICE:
+			return getDbPrice();
+		case LANG:
+			return getLanguage();
 		default:
 			break;
 		}
 		return null;
+	}
+
+	public float getDbPrice() {
+		return dbprice;
+	}
+
+	public void setDbPrice(float dbprice) {
+		this.dbprice = dbprice;
+	}
+
+	public String getLanguage() {
+		return lang;
+	}
+
+	public void setLanguage(String lang) {
+		this.lang = lang;
 	}
 }

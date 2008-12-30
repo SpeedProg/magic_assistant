@@ -15,7 +15,7 @@ public interface IMagicCard extends ICard {
 
 	public abstract String getRarity();
 
-	public abstract String getEdition();
+	public abstract String getSet();
 
 	public abstract String getType();
 
@@ -26,7 +26,9 @@ public interface IMagicCard extends ICard {
 	public abstract String getColorType();
 
 	public abstract int getCmc();
+
 	//	public abstract String getByIndex(int i);
 	//
 	//	public abstract Object getObjectByIndex(int i);
+	public abstract float getDbPrice();
 }

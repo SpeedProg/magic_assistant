@@ -21,7 +21,8 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * @author Alena
  *
  */
-public class CollectionCardStore extends AbstractCardStore<IMagicCard> implements ICardCountable {
+public class CollectionCardStore extends AbstractCardStore<IMagicCard> implements ICardCountable,
+        IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
 	protected int cardCount;
 	protected IStorage<IMagicCard> storage;

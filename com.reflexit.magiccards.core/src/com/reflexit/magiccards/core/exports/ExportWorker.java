@@ -7,49 +7,92 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class ExportWorker implements ICoreRunnableWithProgress {
 	File file;
 	boolean header;
-	IFilteredCardStore<IMagicCard> elem;
-	CsvExporter exporter;
+	IFilteredCardStore<IMagicCard> store;
 
 	public ExportWorker(File file, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
 		super();
 		this.file = file;
 		this.header = header;
-		this.elem = filteredLibrary;
+		this.store = filteredLibrary;
 	}
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		runCsvExport(monitor);
+	}
+
+	public void runCsvExport(IProgressMonitor monitor) throws InvocationTargetException {
+		CsvExporter exporter = null;
 		try {
-			if (monitor == null)
-				monitor = new NullProgressMonitor();
-			monitor.beginTask("Exporting...", elem.getSize());
 			exporter = new CsvExporter(new FileOutputStream(file));
-			if (header) {
-				for (IMagicCard magicCard : elem) {
-					IMagicCard card = magicCard;
-					if (card instanceof MagicCardPhisical)
-						exporter.printLine(((MagicCardPhisical) card).getHeaderNames());
-					break;
-				}
-			}
-			for (IMagicCard magicCard : elem) {
-				IMagicCard card = magicCard;
-				if (card instanceof MagicCardPhisical)
-					exporter.printLine(((MagicCardPhisical) card).getValues());
-				monitor.worked(1);
-			}
+			exportToTable(monitor, store, exporter, header);
 		} catch (FileNotFoundException e) {
 			throw new InvocationTargetException(e);
 		} finally {
+			if (exporter != null)
+				exporter.close();
+		}
+	}
+
+	public void runTablePipeExport(IProgressMonitor monitor) throws InvocationTargetException {
+		TableExporter exporter = null;
+		try {
+			exporter = new TableExporter(new FileOutputStream(file), "|");
+			exportToTable(monitor, store, exporter, header);
+		} catch (FileNotFoundException e) {
+			throw new InvocationTargetException(e);
+		} finally {
+			if (exporter != null)
+				exporter.close();
+		}
+	}
+
+	public static void exportToTable(IProgressMonitor monitor, IFilteredCardStore<IMagicCard> store,
+	        TableExporter exporter, boolean header) {
+		try {
+			if (monitor == null)
+				monitor = new NullProgressMonitor();
+			monitor.beginTask("Exporting...", store.getSize());
+			Collection<ICardField> fields = new ArrayList<ICardField>();
+			for (IMagicCard magicCard : store) {
+				IMagicCard card = magicCard;
+				if (card instanceof MagicCardPhisical) {
+					Collection<String> names = ((MagicCardPhisical) card).getHeaderNames();
+					if (header) {
+						exporter.printLine(names);
+					}
+					for (String name : names) {
+						ICardField field = MagicCardFieldPhysical.fieldByName(name);
+						fields.add(field);
+					}
+					break;
+				}
+			}
+			for (IMagicCard magicCard : store) {
+				IMagicCard card = magicCard;
+				if (card instanceof MagicCardPhisical) {
+					MagicCardPhisical mc = (MagicCardPhisical) card;
+					ArrayList line = new ArrayList();
+					for (ICardField field : fields) {
+						line.add(mc.getObjectByField(field));
+					}
+					exporter.printLine(line);
+				}
+				monitor.worked(1);
+			}
+		} finally {
 			monitor.done();
-			exporter.close();
 		}
 	}
 }

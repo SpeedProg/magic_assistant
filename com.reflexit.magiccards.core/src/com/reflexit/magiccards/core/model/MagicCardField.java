@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-
 public enum MagicCardField implements ICardField {
 	ID(Integer.class),
 	NAME,
@@ -12,7 +11,9 @@ public enum MagicCardField implements ICardField {
 	EDITION,
 	RARITY,
 	CTYPE(String.class, true),
-	CMC(Integer.class, true);
+	CMC(Integer.class, true),
+	DBPRICE(Float.class),
+	LANG, ;
 	// fields
 	private final Class type;
 	private final boolean transientField;

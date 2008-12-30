@@ -29,40 +29,18 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		}
 	}
 
-	public Collection getValues() {
-		ArrayList list = new ArrayList();
-		list.addAll(this.card.getValues());
-		list.add(new Integer(this.count));
-		list.add(new Float(this.price));
-		list.add(this.comment);
-		list.add(this.location);
-		list.add(this.custom);
-		list.add(new Boolean(this.ownership));
-		return list;
+	public float getDbPrice() {
+		return card.getDbPrice();
 	}
 
 	public Collection getHeaderNames() {
 		ArrayList list = new ArrayList();
 		list.addAll(this.card.getHeaderNames());
-		list.add("count");
-		list.add("price");
-		list.add("comment");
-		list.add("location");
-		list.add("custom");
-		list.add("ownership");
+		MagicCardFieldPhysical[] values = MagicCardFieldPhysical.values();
+		for (MagicCardFieldPhysical magicCardField : values) {
+			list.add(magicCardField.toString());
+		}
 		return list;
-	}
-
-	public void setValues(String[] fields) {
-		this.card = new MagicCard();
-		this.card.setValues(fields);
-		int i = card.getValues().size();
-		this.card.setCardId(Integer.parseInt(fields[i + 0]));
-		this.count = Integer.parseInt(fields[i + 1]);
-		this.price = Float.parseFloat(fields[i + 2]);
-		this.comment = fields[i + 3];
-		this.location = fields[i + 4];
-		this.custom = fields[i + 5];
 	}
 
 	public MagicCard getCard() {
@@ -113,13 +91,6 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		this.custom = cutom;
 	}
 
-	public String getByIndex(int columnIndex) {
-		Object el = getObjectByIndex(columnIndex);
-		if (el != null)
-			return el.toString();
-		return null;
-	}
-
 	public int getCardId() {
 		return this.card.getCardId();
 	}
@@ -136,16 +107,12 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		return this.card.getCost();
 	}
 
-	public String getEdition() {
-		return this.card.getEdition();
+	public String getSet() {
+		return this.card.getSet();
 	}
 
 	public String getName() {
 		return this.card.getName();
-	}
-
-	public Object getObjectByIndex(int i) {
-		return ((ArrayList) getValues()).get(i);
 	}
 
 	public String getOracleText() {
@@ -256,5 +223,9 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		}
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setDbPrice(Float price2) {
+		card.setDbPrice(price2);
 	}
 }

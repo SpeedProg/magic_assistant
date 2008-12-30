@@ -188,14 +188,14 @@ public class ParseGathererSpoiler {
 			if (id.equals(card.getCardId() + "")) {
 				String edition = getMatch(editionPattern, set);
 				String[] er = edition.split("[\\(\\)]");
-				card.setEdition(er[0].trim());
+				card.setSet(er[0].trim());
 				if (er.length > 1)
 					card.setRarity(er[1].trim());
 				else
 					card.setRarity("Unknown");
 				// http://resources.wizards.com/Magic/Images/Expsym/exp_sym_TSB_P.gif
 				String edAddr = getMatch(edAbbrPattern, set);
-				handler.edition(card.getEdition(), edAddr);
+				handler.edition(card.getSet(), edAddr);
 			}
 		}
 		// print

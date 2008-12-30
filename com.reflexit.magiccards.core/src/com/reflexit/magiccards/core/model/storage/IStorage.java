@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model.storage;
 public interface IStorage<T> extends ICardSet<T> {
 	public boolean isAutoCommit();
 
+	public void setAutoCommit(boolean value);
+
 	/**
 	 * Save syncs memory cached data with physical media (from mem to physical).
 	 * Save would called automatically after each data editing operation unless autoCommit is off.

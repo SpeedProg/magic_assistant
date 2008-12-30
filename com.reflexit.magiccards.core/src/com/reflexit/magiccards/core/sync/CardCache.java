@@ -35,7 +35,7 @@ public class CardCache {
 	};
 
 	public static URL createCardURL(IMagicCard card) throws IOException {
-		String edition = card.getEdition();
+		String edition = card.getSet();
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
 		if (editionAbbr == null)
 			return null;
