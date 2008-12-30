@@ -44,7 +44,7 @@ public class CardTypes implements ISearchableProperty {
 		return new ArrayList(this.names.keySet());
 	}
 
-	private String getPrefConstant(String name) {
+	public String getPrefConstant(String name) {
 		return FilterHelper.getPrefConstant(getIdPrefix(), name);
 	}
 

@@ -82,7 +82,7 @@ public class Colors implements ISearchableProperty {
 		return new ArrayList(this.names.keySet());
 	}
 
-	private String getPrefConstant(String name) {
+	public String getPrefConstant(String name) {
 		return FilterHelper.getPrefConstant(getIdPrefix(), name);
 	}
 
@@ -99,8 +99,7 @@ public class Colors implements ISearchableProperty {
 			return "land";
 		String[] manas = manasplit(cost);
 		Map colors = new HashMap();
-		for (int i = 0; i < manas.length; i++) {
-			String x = manas[i];
+		for (String x : manas) {
 			if (x.equals("X") || x.equals("Y") || x.equals("Z")) {
 				continue;
 			}
@@ -128,8 +127,7 @@ public class Colors implements ISearchableProperty {
 			return 0;
 		String[] manas = manasplit(cost);
 		int res = 0;
-		for (int i = 0; i < manas.length; i++) {
-			String x = manas[i];
+		for (String x : manas) {
 			if (x.equals("X") || x.equals("Y") || x.equals("Z")) {
 				res += 0;
 				continue;
