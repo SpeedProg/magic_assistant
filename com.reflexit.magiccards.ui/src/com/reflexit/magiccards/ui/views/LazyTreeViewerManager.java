@@ -147,6 +147,9 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		for (int i = 0; i < prefValues.length; i++) {
 			Integer integer = Integer.valueOf(i);
 			colOrger.put(prefValues[i], integer);
+		}
+		for (int i = 0; i < acolumns.length; i++) {
+			Integer integer = Integer.valueOf(i);
 			orderGaps.add(integer);
 		}
 		for (int i = 0; i < acolumns.length; i++) {

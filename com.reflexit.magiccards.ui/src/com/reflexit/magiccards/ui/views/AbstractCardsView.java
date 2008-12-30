@@ -1,6 +1,9 @@
 package com.reflexit.magiccards.ui.views;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -39,6 +42,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -48,6 +52,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -66,6 +71,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected Action showPrefs;
 	protected Action showFind;
 	protected Action copyText;
+	protected Action loadPrices;
 	protected ViewerManager manager;
 	private Label statusLine;
 	protected MenuManager sortMenu;
@@ -245,12 +251,14 @@ public abstract class AbstractCardsView extends ViewPart {
 		manager.add(this.sortMenu);
 		manager.add(this.groupMenu);
 		manager.add(this.showPrefs);
+		manager.add(loadPrices);
 		manager.add(new Separator());
 	}
 
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
 		manager.add(this.copyText);
+		manager.add(loadPrices);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -337,14 +345,40 @@ public abstract class AbstractCardsView extends ViewPart {
 		};
 		this.showFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
 		this.copyText = new Action("Copy") {
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
 			@Override
 			public void run() {
 				runCopy();
 			}
 		};
+		this.loadPrices = new Action("Load Seller's Prices...") {
+			@Override
+			public void run() {
+				runLoadPrices();
+			}
+		};
+	}
+
+	protected void runLoadPrices() {
+		Job loadingPrices = new Job("Loading prices") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				ParseMtgFanaticPrices parser = new ParseMtgFanaticPrices();
+				try {
+					parser.updateStore(getFilteredStore(), monitor);
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							reloadData();
+						}
+					});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		loadingPrices.setUser(true);
+		loadingPrices.schedule();
 	}
 
 	/**

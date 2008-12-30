@@ -243,11 +243,15 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 		return new CompositeViewerManager(this);
 	}
 
-	public void handleEvent(CardEvent event) {
+	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {
-			this.manager.getViewer().update(event.getSource(), null);
-			updateStatus();
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					manager.getViewer().update(event.getSource(), null);
+					updateStatus();
+				}
+			});
 		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
 			reloadData();
 		} else {

@@ -25,7 +25,7 @@ public class TextConvertor {
 		buf.append("\n");
 		buf.append(card.getType());
 		buf.append(" [");
-		buf.append(card.getEdition() + " - " + card.getRarity());
+		buf.append(card.getSet() + " - " + card.getRarity());
 		buf.append("]");
 		buf.append("\n");
 		buf.append(card.getOracleText());

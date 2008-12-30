@@ -44,6 +44,7 @@ public class ColumnCollection {
 			this.columns.add(new CommentColumn());
 			this.columns.add(new PriceColumn());
 		}
+		this.columns.add(new SellerPriceColumn());
 		int j = 0;
 		for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
 			AbstractColumn col = (AbstractColumn) iterator.next();

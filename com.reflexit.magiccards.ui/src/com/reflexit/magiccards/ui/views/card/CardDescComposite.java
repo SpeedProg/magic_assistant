@@ -149,7 +149,7 @@ class CardDescComposite extends Composite {
 				pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
 			}
 			this.powerValue.setText(pt);
-			this.setValue.setText(card.getEdition());
+			this.setValue.setText(card.getSet());
 			this.rarityValue.setText(card.getRarity());
 			String text = card.getOracleText();
 			this.textValue.setText(SymbolConverter.wrapHtml(text, this));

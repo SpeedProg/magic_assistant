@@ -142,6 +142,9 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		for (int i = 0; i < prefValues.length; i++) {
 			Integer integer = Integer.valueOf(i);
 			colOrger.put(prefValues[i], integer);
+		}
+		for (int i = 0; i < acolumns.length; i++) {
+			Integer integer = Integer.valueOf(i);
 			orderGaps.add(integer);
 		}
 		for (int i = 0; i < acolumns.length; i++) {
@@ -175,11 +178,12 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		//fill order for columns which were not in the properly list
 		for (int i = 0; i < order.length; i++) {
 			int pos = order[i];
-			if (pos < 0) {
-				Integer next = orderGaps.iterator().next();
-				orderGaps.remove(next);
-				order[i] = next.intValue();
-			}
+			if (pos < 0)
+				if (orderGaps.size() > 0) {
+					Integer next = orderGaps.iterator().next();
+					orderGaps.remove(next);
+					order[i] = next.intValue();
+				}
 		}
 		this.viewer.getTable().setColumnOrder(order);
 	}

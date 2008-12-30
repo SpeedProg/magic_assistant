@@ -30,6 +30,8 @@ public class ManaCurveControl {
 	}
 
 	public void updateChart() {
+		if (store == null)
+			return;
 		IChartGenerator gen = new ManaCurve(buildManaCurve());
 		canvas.setChartGenerator(gen);
 		canvas.redraw();
