@@ -25,7 +25,7 @@ import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
-public class LibView extends CollectionView implements ICardEventListener {
+public class LibView extends MyCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.LibView";
 	private MenuManager addToDeck;
 

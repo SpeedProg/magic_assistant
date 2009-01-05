@@ -23,7 +23,7 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.lib.CollectionView;
+import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 
 /**
  * @author Alena
@@ -47,8 +47,8 @@ public class MagicCardDragListener implements DragSourceListener {
 			return;
 		//if the card was moved, remove it from the collection or deck
 		if (event.detail == DND.DROP_MOVE) {
-			if (this.view instanceof CollectionView) {
-				ICardStore store = ((CollectionView) this.view).getFilteredStore().getCardStore();
+			if (this.view instanceof MyCardsView) {
+				ICardStore store = ((MyCardsView) this.view).getFilteredStore().getCardStore();
 				for (Iterator it = this.selection.iterator(); it.hasNext();) {
 					IMagicCard card = (IMagicCard) it.next();
 					store.remove(card);

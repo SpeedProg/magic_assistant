@@ -25,7 +25,7 @@ import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
 
-public class DeckView extends CollectionView implements ICardEventListener {
+public class DeckView extends MyCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	Deck deck;
 	private Action shuffle;

@@ -43,10 +43,11 @@ import com.reflexit.magiccards.ui.views.CompositeViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 
 /**
+ * Cards view for personal cards (decks and collections)
  * @author Alena
  *
  */
-public abstract class CollectionView extends AbstractCardsView implements ICardEventListener {
+public abstract class MyCardsView extends AbstractCardsView implements ICardEventListener {
 	protected Action delete;
 	protected MenuManager ownership;
 	private Action split;
@@ -76,7 +77,7 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 				splitSelected();
 			}
 		};
-		this.split = new Action("Edit...") {
+		this.edit = new Action("Edit...") {
 			@Override
 			public void run() {
 				editSelected();
@@ -211,11 +212,17 @@ public abstract class CollectionView extends AbstractCardsView implements ICardE
 		super.fillContextMenu(manager);
 		manager.add(this.ownership);
 		manager.add(this.split);
+		manager.add(this.edit);
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
+	}
+
+	@Override
+	protected void runDoubleClick() {
+		edit.run();
 	}
 
 	/* (non-Javadoc)
