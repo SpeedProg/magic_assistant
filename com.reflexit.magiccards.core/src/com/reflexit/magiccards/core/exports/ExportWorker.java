@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -67,17 +68,22 @@ public class ExportWorker implements ICoreRunnableWithProgress {
 			Collection<ICardField> fields = new ArrayList<ICardField>();
 			for (IMagicCard magicCard : store) {
 				IMagicCard card = magicCard;
+				Collection<String> names;
 				if (card instanceof MagicCardPhisical) {
-					Collection<String> names = ((MagicCardPhisical) card).getHeaderNames();
-					if (header) {
-						exporter.printLine(names);
-					}
-					for (String name : names) {
-						ICardField field = MagicCardFieldPhysical.fieldByName(name);
+					names = ((MagicCardPhisical) card).getHeaderNames();
+				} else if (card instanceof MagicCard) {
+					names = ((MagicCard) card).getHeaderNames();
+				} else
+					continue;
+				for (String name : names) {
+					ICardField field = MagicCardFieldPhysical.fieldByName(name);
+					if (!field.isTransient())
 						fields.add(field);
-					}
-					break;
 				}
+				break;
+			}
+			if (header) {
+				exporter.printLine(fields);
 			}
 			for (IMagicCard magicCard : store) {
 				IMagicCard card = magicCard;

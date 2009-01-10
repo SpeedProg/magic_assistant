@@ -278,7 +278,7 @@ public class MagicCardFilter {
 		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
 			res = ignoreCase1Search(MagicCardField.TYPE, value, regex);
 		} else if (Editions.getInstance().getIdPrefix().equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardField.EDITION, value);
+			res = BinaryExpr.fieldEquals(MagicCardField.SET, value);
 		} else if (SuperTypes.getInstance().getIdPrefix().equals(requestedId)) {
 			BinaryExpr b1 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " .*");
 			BinaryExpr b2 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " -.*");

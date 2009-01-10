@@ -261,7 +261,7 @@ public class MagicCard implements IMagicCard {
 			return (this.toughness);
 		case ORACLE:
 			return (this.oracleText);
-		case EDITION:
+		case SET:
 			return (this.edition);
 		case RARITY:
 			return (this.rarity);
@@ -293,5 +293,55 @@ public class MagicCard implements IMagicCard {
 
 	public void setLanguage(String lang) {
 		this.lang = lang;
+	}
+
+	public boolean setObjectByField(ICardField field, String value) {
+		if (!(field instanceof MagicCardField))
+			return false;
+		MagicCardField mf = (MagicCardField) field;
+		switch (mf) {
+		case ID:
+			setCardId(Integer.parseInt(value));
+			break;
+		case NAME:
+			setName(value);
+			break;
+		case COST:
+			setCost(value);
+			break;
+		case TYPE:
+			setType(value);
+			break;
+		case POWER:
+			setPower(value);
+			break;
+		case TOUGHNESS:
+			setToughness(value);
+			break;
+		case ORACLE:
+			setOracleText(value);
+			break;
+		case SET:
+			setSet(value);
+			break;
+		case RARITY:
+			setRarity(value);
+			break;
+		case CTYPE:
+			setColorType(value);
+			break;
+		case CMC:
+			setCmc(Integer.parseInt(value));
+			break;
+		case DBPRICE:
+			setDbPrice(Float.parseFloat(value));
+			break;
+		case LANG:
+			setLanguage(value);
+			break;
+		default:
+			return false;
+		}
+		return true;
 	}
 }

@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.ArrayList;
+
 public enum MagicCardFieldPhysical implements ICardField {
 	COUNT(Integer.class),
 	PRICE(Float.class),
@@ -30,6 +32,30 @@ public enum MagicCardFieldPhysical implements ICardField {
 
 	public boolean isTransient() {
 		return transientField;
+	}
+
+	public static ICardField[] allFields() {
+		MagicCardField[] values = MagicCardField.values();
+		MagicCardFieldPhysical[] values2 = values();
+		ICardField[] res = new ICardField[values.length + values2.length];
+		System.arraycopy(values, 0, res, 0, values.length);
+		System.arraycopy(values2, 0, res, values.length, values2.length);
+		return res;
+	}
+
+	public static ICardField[] allNonTransientFields() {
+		MagicCardField[] values = MagicCardField.values();
+		MagicCardFieldPhysical[] values2 = values();
+		ArrayList<ICardField> res = new ArrayList<ICardField>();
+		for (MagicCardField f : values) {
+			if (!f.isTransient())
+				res.add(f);
+		}
+		for (MagicCardFieldPhysical f : values2) {
+			if (!f.isTransient())
+				res.add(f);
+		}
+		return res.toArray(new ICardField[res.size()]);
 	}
 
 	public static ICardField fieldByName(String field) {

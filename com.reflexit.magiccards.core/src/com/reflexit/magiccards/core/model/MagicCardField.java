@@ -8,7 +8,7 @@ public enum MagicCardField implements ICardField {
 	POWER,
 	TOUGHNESS,
 	ORACLE,
-	EDITION,
+	SET,
 	RARITY,
 	CTYPE(String.class, true),
 	CMC(Integer.class, true),

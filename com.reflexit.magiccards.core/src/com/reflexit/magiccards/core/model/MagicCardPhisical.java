@@ -200,6 +200,38 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		return this.card.toString() + " x " + this.count;
 	}
 
+	public boolean setObjectByField(ICardField field, String value) {
+		boolean is = card.setObjectByField(field, value);
+		if (is == true)
+			return true;
+		if (!(field instanceof MagicCardFieldPhysical))
+			return false;
+		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
+		switch (pfield) {
+		case COUNT:
+			setCount(Integer.parseInt(value));
+			break;
+		case PRICE:
+			setPrice(Float.parseFloat(value));
+			break;
+		case COMMENT:
+			setComment(value);
+			break;
+		case LOCATION:
+			setLocation(value);
+			break;
+		case CUSTOM:
+			setCustom(value);
+			break;
+		case OWNERSHIP:
+			setOwn(Boolean.parseBoolean(value));
+			break;
+		default:
+			return false;
+		}
+		return true;
+	}
+
 	public Object getObjectByField(ICardField field) {
 		Object x = card.getObjectByField(field);
 		if (x != null)
@@ -221,7 +253,6 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		case OWNERSHIP:
 			return isOwn();
 		}
-		// TODO Auto-generated method stub
 		return null;
 	}
 
