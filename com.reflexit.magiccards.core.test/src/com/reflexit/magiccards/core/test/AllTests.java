@@ -26,6 +26,7 @@ public class AllTests {
 		suite.addTestSuite(MemCardHandlerTest.class);
 		suite.addTestSuite(DeckStoreTest.class);
 		suite.addTestSuite(CollectionStoreTest.class);
+		suite.addTestSuite(DeckParserTest.class);
 		//$JUnit-END$
 		return suite;
 	}
