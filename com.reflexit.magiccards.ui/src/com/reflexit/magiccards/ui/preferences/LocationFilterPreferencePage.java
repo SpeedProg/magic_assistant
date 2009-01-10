@@ -2,7 +2,11 @@ package com.reflexit.magiccards.ui.preferences;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -11,6 +15,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Locations;
@@ -23,11 +32,17 @@ import com.reflexit.magiccards.ui.widgets.CheckedTreeSelectionComposite;
 
 public class LocationFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private Composite panel;
-	private CheckboxTreeViewer treeViewer;
-	private CheckedTreeSelectionComposite treeViewerComp;
+	private TreeViewer treeViewer;
+	private int mode;
+	private CardOrganizer top;
 
-	public LocationFilterPreferencePage() {
+	/**
+	 * 
+	 * @param mode {@link SWT.SINGLE}, {@link SWT.MULTI}
+	 */
+	public LocationFilterPreferencePage(int mode) {
 		setTitle("Location Filter");
+		this.mode = mode;
 	}
 
 	public void init(IWorkbench workbench) {
@@ -47,14 +62,18 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		layout.marginWidth = 0;
 		this.panel.setLayout(layout);
 		this.panel.setFont(parent.getFont());
-		this.treeViewerComp = new CheckedTreeSelectionComposite(this.panel);
-		this.treeViewer = this.treeViewerComp.getTreeViewer();
+		if (mode == SWT.MULTI) {
+			CheckedTreeSelectionComposite treeViewerComp = new CheckedTreeSelectionComposite(this.panel);
+			this.treeViewer = treeViewerComp.getTreeViewer();
+		} else {
+			this.treeViewer = new TreeViewer(panel);
+		}
 		this.treeViewer.setLabelProvider(new CardsNavigatorLabelProvider());
 		this.treeViewer.setContentProvider(new CardsNavigatorContentProvider());
 		this.treeViewer.setComparator(new ViewerComparator());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 400;
-		this.treeViewerComp.setLayoutData(gd);
+		this.treeViewer.getControl().setLayoutData(gd);
 		initializeTree();
 		return this.panel;
 	}
@@ -74,18 +93,21 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 
 	private void initializeTree() {
 		CardOrganizer root = new CardOrganizer("fake", null);
-		CardOrganizer top = new CardOrganizer("All Cards", root);
+		top = new CardOrganizer("All Cards", root);
 		ModelRoot mroot = DataManager.getModelRoot();
 		top.addChild(mroot.getCollectionsContainer());
 		top.addChild(mroot.getDeckContainer());
 		this.treeViewer.setInput(root);
-		this.treeViewer.setChecked(root, true);
 		treeViewer.expandToLevel(3);
 		// load preferences
+		load();
+	}
+
+	public void load() {
 		initSelection(top);
 	}
 
-	public CheckboxTreeViewer getViewer() {
+	public TreeViewer getViewer() {
 		return treeViewer;
 	}
 
@@ -96,12 +118,21 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		String id = Locations.getInstance().getPrefConstant(root.getLocation());
 		boolean checked = getPreferenceStore().getBoolean(id);
 		if (checked) {
-			this.treeViewer.setChecked(root, checked);
+			setChecked(root, checked);
 		} else if (root instanceof CardOrganizer) {
 			for (Object element : ((CardOrganizer) root).getChildren()) {
 				CardElement el = (CardElement) element;
 				initSelection(el);
 			}
+		}
+	}
+
+	protected void setChecked(CardElement root, boolean checked) {
+		if (treeViewer instanceof CheckboxTreeViewer) {
+			((CheckboxTreeViewer) treeViewer).setChecked(root, checked);
+		} else {
+			if (checked)
+				treeViewer.setSelection(new StructuredSelection(root));
 		}
 	}
 
@@ -116,11 +147,37 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		}
 	}
 
+	public boolean isChecked() {
+		return treeViewer instanceof CheckboxTreeViewer;
+	}
+
+	public void loadPreferenceFromSelection(IStructuredSelection sel) {
+		IPreferenceStore store = getPreferenceStore();
+		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+			CardElement el = (CardElement) iterator.next();
+			String id = Locations.getInstance().getPrefConstant(el.getLocation());
+			store.setValue(id, true);
+		}
+	}
+
 	/**
 	 * @param el
 	 */
 	private void applyElement(CardElement root) {
-		boolean checked = this.treeViewer.getChecked(root) && !this.treeViewer.getGrayed(root);
+		boolean checked = false;
+		if (isChecked()) {
+			CheckboxTreeViewer box = (CheckboxTreeViewer) treeViewer;
+			checked = box.getChecked(root) && !box.getGrayed(root);
+		} else {
+			IStructuredSelection sel = (IStructuredSelection) treeViewer.getSelection();
+			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+				CardElement el = (CardElement) iterator.next();
+				if (el.equals(root)) {
+					checked = true;
+					break;
+				}
+			}
+		}
 		String id = Locations.getInstance().getPrefConstant(root.getLocation());
 		IPreferenceStore store = getPreferenceStore();
 		if (root instanceof CardOrganizer) {
@@ -146,5 +203,33 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		throw new UnsupportedOperationException("Unspecified preference store");
+	}
+
+	public String getMemento() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			((PreferenceStore) getPreferenceStore()).save(out, "");
+		} catch (IOException e) {
+			// nope
+		}
+		return out.toString();
+	}
+
+	public void loadFromMemento(String ids) {
+		ByteArrayInputStream in = new ByteArrayInputStream(ids.getBytes());
+		try {
+			((PreferenceStore) getPreferenceStore()).load(in);
+		} catch (IOException e) {
+			// not happening
+		}
+	}
+
+	public boolean isEmptySelection() {
+		if (isChecked()) {
+			CheckboxTreeViewer box = (CheckboxTreeViewer) treeViewer;
+			return box.getCheckedElements().length == 0;
+		} else {
+			return treeViewer.getSelection().isEmpty();
+		}
 	}
 }

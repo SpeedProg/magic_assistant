@@ -143,14 +143,14 @@ class CardDescComposite extends Composite {
 			ld.widthHint = ld.minimumWidth;
 			ld.heightHint = ld.minimumHeight;
 			this.nameValue.setText(card.getName());
-			this.typeValue.setText(card.getType());
+			this.typeValue.setText(card.getType() + "");
 			String pt = "";
-			if (card.getToughness().length() > 0) {
+			if (card.getToughness() != null && card.getToughness().length() > 0) {
 				pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
 			}
 			this.powerValue.setText(pt);
-			this.setValue.setText(card.getSet());
-			this.rarityValue.setText(card.getRarity());
+			this.setValue.setText(card.getSet() + "");
+			this.rarityValue.setText(card.getRarity() + "");
 			String text = card.getOracleText();
 			this.textValue.setText(SymbolConverter.wrapHtml(text, this));
 			this.layout(true, true);

@@ -63,6 +63,7 @@ import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.dnd.MagicNavDropAdapter;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
+import com.reflexit.magiccards.ui.exportWizards.ImportAction;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.LibView;
@@ -74,6 +75,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private CardsNavigatiorManager manager;
 	private Action delete;
 	private Action export;
+	private Action importa;
 
 	/**
 	 * The constructor.
@@ -154,6 +156,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		this.delete.setEnabled(canRemove());
 		manager.add(new Separator());
 		manager.add(export);
+		manager.add(importa);
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -196,7 +199,9 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			}
 		};
 		this.export = new ExportAction();
+		this.importa = new ImportAction();
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.export);
+		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.importa);
 	}
 
 	/**

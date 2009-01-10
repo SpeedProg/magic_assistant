@@ -31,7 +31,7 @@ public class ColumnCollection {
 		this.columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
 		this.columns.add(new PowerColumn(MagicCardField.TOUGHNESS, "T", "Toughness"));
 		this.columns.add(new OracleTextColumn());
-		this.columns.add(new GenColumn(MagicCardField.EDITION, "Set"));
+		this.columns.add(new GenColumn(MagicCardField.SET, "Set"));
 		this.columns.add(new GenColumn(MagicCardField.RARITY, "Rarity"));
 		this.columns.add(new GenColumn(MagicCardField.CTYPE, "Color Type"));
 		if (!this.id.equals(MagicDbView.ID)) {

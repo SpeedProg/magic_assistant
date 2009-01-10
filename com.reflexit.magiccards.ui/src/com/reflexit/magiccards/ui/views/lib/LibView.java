@@ -9,6 +9,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IViewReference;
 
 import java.util.Collection;
@@ -91,8 +92,7 @@ public class LibView extends MyCardsView implements ICardEventListener {
 	protected void fillDeckMenu(IMenuManager manager) {
 		boolean any = false;
 		IViewReference[] views = getViewSite().getWorkbenchWindow().getActivePage().getViewReferences();
-		for (int i = 0; i < views.length; i++) {
-			final IViewReference viewReference = views[i];
+		for (final IViewReference viewReference : views) {
 			if (viewReference.getId().equals(DeckView.ID)) {
 				final String deckId = viewReference.getSecondaryId();
 				ICardDeck store = (ICardDeck) ((DeckView) viewReference.getPart(false)).getFilteredStore()
@@ -119,7 +119,7 @@ public class LibView extends MyCardsView implements ICardEventListener {
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
 		CardFilterDialog2 cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
-		cardFilterDialog.addNode(new PreferenceNode("locations", new LocationFilterPreferencePage()));
+		cardFilterDialog.addNode(new PreferenceNode("locations", new LocationFilterPreferencePage(SWT.MULTI)));
 		if (cardFilterDialog.open() == IStatus.OK)
 			this.manager.loadData(null);
 	}

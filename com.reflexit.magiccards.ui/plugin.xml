@@ -306,4 +306,12 @@
            name="Export Deck/Collection">
      </wizard>
   </extension>
+  <extension
+        point="org.eclipse.ui.importWizards">
+     <wizard
+           class="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
+           id="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
+           name="Import Deck/Collection">
+     </wizard>
+  </extension>
 </plugin>

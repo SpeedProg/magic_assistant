@@ -2,30 +2,39 @@ package com.reflexit.magiccards.ui.exportWizards;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,12 +42,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.exports.ExportWorker;
-import com.reflexit.magiccards.core.exports.FileUtils;
+import com.reflexit.magiccards.core.exports.ImportWorker;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
@@ -46,56 +55,71 @@ import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 /**
  * First and only page of Deck Export Wizard
  */
-public class DeckExportPage extends WizardDataTransferPage implements ICheckStateListener {
-	private static final String EXPORTED_RESOURCES_SETTING = "exportedResources"; //$NON-NLS-1$
-	private static final String OUTPUT_FILE_SETTING = "outputFile"; //$NON-NLS-1$
+public class DeckImportPage extends WizardDataTransferPage {
+	private static final String IMPORTED_RESOURCES_SETTING = "importedResources"; //$NON-NLS-1$
+	private static final String IMPUT_FILE_SETTING = "outputFile"; //$NON-NLS-1$
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
-	private static final String INCLUDE_HEADER_SETTING = "includeHeader"; //$NON-NLS-1$
+	private static final String IMPORT_HEADER_SETTING = "headerRow"; //$NON-NLS-1$
+	private static final String IMPORT_CLIPBOARD = "clipboard"; //$NON-NLS-1$
 	FileFieldEditor editor;
 	private String fileName;
 	private IStructuredSelection initialResourceSelection;
 	private TreeViewer listViewer;
 	private Button includeHeader;
-	private Button exportXml;
-	private final ArrayList typeButtons = new ArrayList();
-	private static final String ID = DeckExportPage.class.getName();
+	private Button importOverride;
+	private final ArrayList importOptionButtons = new ArrayList();
+	private static final String ID = DeckImportPage.class.getName();
 	private ReportType reportType;
 	private PreferenceStore store;
 	private LocationFilterPreferencePage locPage;
+	private boolean clipboard;
+	private Combo typeCombo;
+	private Button fileRadio;
+	private Button clipboardRadio;
+	private Composite fileSelectionArea;
 
-	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
+	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
 		initialResourceSelection = selection;
 		store = new PreferenceStore();
 	}
 
-	public boolean saveFile() {
-		if (new File(fileName).exists()) {
-			String res = queryOverwrite(fileName);
-			if (res == CANCEL)
-				return false;
-			if (res == NO)
-				return false;
-		}
+	public boolean performFinish() {
 		boolean res = false;
 		try {
 			//			final ExportWork work = new ExportWork(listViewer.getCheckedElements(), // 
 			//			        fileName, //
 			//			        reportType, includeHeader.getSelection(), getTimeUnitsName());
-			if (reportType == reportType.CSV) {
+			if (reportType == reportType.TEXT_DECK_CLASSIC) {
 				locPage.performOk();
-				// TODO: export selection only
 				final boolean header = includeHeader.getSelection();
+				final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+				final Object clipboardText = cb.getContents(TextTransfer.getInstance());
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMagicLibraryHandler();
+						IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicCardHandler();
+						((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
 						MagicCardFilter old = filteredLibrary.getFilter();
 						try {
 							MagicCardFilter locFilter = new MagicCardFilter();
 							locFilter.update(storeToMap());
 							filteredLibrary.update(locFilter);
-							ExportWorker exportWorker = new ExportWorker(new File(fileName), header, filteredLibrary);
-							exportWorker.run(monitor);
+							InputStream st = null;
+							if (clipboard) {
+								if (clipboardText != null)
+									st = new ByteArrayInputStream(clipboardText.toString().getBytes());
+							} else
+								st = new FileInputStream(fileName);
+							if (st != null) {
+								ImportWorker exportWorker = new ImportWorker(st, filteredLibrary, reportType,
+								        magicDbHandler.getCardStore());
+								exportWorker.run(monitor);
+								st.close();
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						} finally {
 							filteredLibrary.update(old); // restore filter
 						}
@@ -103,24 +127,11 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 				};
 				getRunnableContext().run(true, true, work);
 			} else {
-				// TODO: export multiple files? zip?
-				Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
-				CardElement ce = (CardElement) el[0];
-				try {
-					FileUtils.copyFile(ce.getFile(), new File(fileName));
-				} catch (Exception e) {
-					throw new InvocationTargetException(e);
-				}
+				MessageDialog.openError(getShell(), "Error", "Not implemented yet");
 			}
 			return true;
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			if (e.getTargetException() instanceof InterruptedException) {
-				displayErrorDialog("Export cancelled");
-			} else
-				displayErrorDialog(e.getCause());
-		} catch (InterruptedException e) {
-			displayErrorDialog("Export cancelled");
+		} catch (Exception e) {
+			displayErrorDialog(e);
 		}
 		return res;
 	}
@@ -149,29 +160,21 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	protected void createDestinationGroup(final Composite parent) {
-		Composite fileSelectionArea = new Composite(parent, SWT.NONE);
-		GridData fileSelectionData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-		fileSelectionArea.setLayoutData(fileSelectionData);
-		GridLayout fileSelectionLayout = new GridLayout();
-		fileSelectionLayout.numColumns = 3;
-		fileSelectionLayout.makeColumnsEqualWidth = false;
-		fileSelectionLayout.marginWidth = 0;
-		fileSelectionLayout.marginHeight = 0;
-		fileSelectionArea.setLayout(fileSelectionLayout);
-		editor = new FileFieldEditor("fileSelect", "Select output file", fileSelectionArea); // NON-NLS-1
-		// //NON-NLS-2
-		// //$NON-NLS-1$
-		editor.getTextControl(fileSelectionArea).addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				File file = new File(editor.getStringValue());
-				setFileName(file.getPath());
+		locPage = new LocationFilterPreferencePage(SWT.SINGLE);
+		locPage.noDefaultAndApplyButton();
+		locPage.setPreferenceStore(store);
+		locPage.createControl(parent);
+		listViewer = locPage.getViewer();
+		GridData data = new GridData(GridData.FILL_BOTH);
+		data.heightHint = 200;
+		data.widthHint = 300;
+		listViewer.getControl().setLayoutData(data);
+		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
 				updatePageCompletion();
+				updateWidgetEnablements();
 			}
 		});
-		String[] extensions = new String[] { "*.csv" }; // NON-NLS-1 //$NON-NLS-1$
-		editor.setFileExtensions(extensions);
-		setFileName("");
-		// fileSelectionArea.moveAbove(null);
 	}
 
 	protected void setFileName(final String string) {
@@ -184,14 +187,12 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	public void handleEvent(final Event event) {
-		if (event.widget instanceof Button) {
-			if (event.type == SWT.Selection) {
-				Object data = event.widget.getData();
-				if (data instanceof ReportType
-				// && ((Button) event.widget).getSelection()
-				) {
-					reportType = (ReportType) data;
-				}
+		if (event.type == SWT.Selection && event.widget instanceof Combo) {
+			Object data = event.widget.getData(((Combo) event.widget).getText());
+			if (data instanceof ReportType
+			// && ((Button) event.widget).getSelection()
+			) {
+				reportType = (ReportType) data;
 			}
 		}
 		updateWidgetEnablements();
@@ -208,9 +209,9 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 		composite.setFont(parent.getFont());
 		createResourcesGroup(composite);
+		createOptionsGroup(composite);
 		// WizardExportResourcesPage page;
 		createButtonsGroup(composite);
-		createOptionsGroup(composite);
 		createDestinationGroup(composite);
 		// restoreResourceSpecificationWidgetValues(); // ie.- local
 		restoreWidgetValues(); // ie.- subclass hook
@@ -218,7 +219,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			setupBasedOnInitialSelections();
 		}
 		updateWidgetEnablements();
-		setTitle("Export");
+		setTitle("Import to a Deck or Collection");
 		defaultPrompt();
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
@@ -238,9 +239,11 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 
 	private void defaultPrompt() {
 		if (reportType == ReportType.XML)
-			setMessage("Export to XML");
+			setMessage("Import from XML");
 		else if (reportType == ReportType.CSV)
-			setMessage("Export to SCV");
+			setMessage("Import from CSV, e.g. 'Name,Set,Count'");
+		else
+			setMessage("Import from text, e.g. 'Name x 4'");
 	}
 
 	@Override
@@ -249,13 +252,16 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		try {
 			DialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
 			// restore file
-			String file = dialogSettings.get(OUTPUT_FILE_SETTING);
+			String file = dialogSettings.get(IMPUT_FILE_SETTING);
 			if (file != null) {
 				setFileName(file);
 				editor.setStringValue(file);
 			}
+			clipboard = dialogSettings.getBoolean(IMPORT_CLIPBOARD);
+			fileRadio.setSelection(!clipboard);
+			clipboardRadio.setSelection(clipboard);
 			// restore selection
-			String ids = dialogSettings.get(EXPORTED_RESOURCES_SETTING);
+			String ids = dialogSettings.get(IMPORTED_RESOURCES_SETTING);
 			if (ids != null) {
 				locPage.loadFromMemento(ids);
 				locPage.load();
@@ -263,33 +269,22 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			// restore options
 			String type = dialogSettings.get(REPORT_TYPE_SETTING);
 			if (type != null)
-				selectTypeButtons(type);
+				selectReportType(ReportType.valueOf(type));
 			else
-				selectTypeButtons(ReportType.CSV.toString());
-			if (dialogSettings.get(INCLUDE_HEADER_SETTING) != null) {
-				includeHeader.setSelection(dialogSettings.getBoolean(INCLUDE_HEADER_SETTING));
+				selectReportType(ReportType.TEXT_DECK_CLASSIC);
+			if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {
+				includeHeader.setSelection(dialogSettings.getBoolean(IMPORT_HEADER_SETTING));
 			}
+			updateWidgetEnablements();
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
 		}
 	}
 
-	private void selectTypeButtons(final String type) {
-		if ((type == null) || (type.length() == 0))
+	private void selectReportType(final ReportType type) {
+		if (type == null)
 			return;
-		for (Iterator<Button> iter = typeButtons.iterator(); iter.hasNext();) {
-			Button element = iter.next();
-			Object data = element.getData();
-			if (data instanceof ReportType) {
-				ReportType rt = (ReportType) data;
-				if (rt.toString().equals(type)) {
-					element.setSelection(true);
-					reportType = rt;
-				} else {
-					element.setSelection(false);
-				}
-			}
-		}
+		typeCombo.setText(type.getLabel());
 	}
 
 	@Override
@@ -297,15 +292,15 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		try {
 			DialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
 			// save file name
-			dialogSettings.put(OUTPUT_FILE_SETTING, fileName);
-			// save selection
+			dialogSettings.put(IMPUT_FILE_SETTING, fileName);
+			dialogSettings.put(IMPORT_CLIPBOARD, clipboard);
 			// save selection
 			locPage.performOk();
 			String ids = locPage.getMemento();
-			dialogSettings.put(EXPORTED_RESOURCES_SETTING, ids);
+			dialogSettings.put(IMPORTED_RESOURCES_SETTING, ids);
 			// save options
 			dialogSettings.put(REPORT_TYPE_SETTING, reportType.toString());
-			dialogSettings.put(INCLUDE_HEADER_SETTING, includeHeader.getSelection());
+			dialogSettings.put(IMPORT_HEADER_SETTING, includeHeader.getSelection());
 			// save into file
 			MagicUIActivator.getDefault().saveDialogSetting(dialogSettings);
 		} catch (IOException e) {
@@ -314,29 +309,54 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	protected void createResourcesGroup(final Composite parent) {
-		locPage = new LocationFilterPreferencePage(SWT.MULTI);
-		locPage.noDefaultAndApplyButton();
-		locPage.setPreferenceStore(store);
-		locPage.createControl(parent);
-		listViewer = locPage.getViewer();
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = 200;
-		data.widthHint = 300;
-		listViewer.getControl().setLayoutData(data);
-		((CheckboxTreeViewer) listViewer).addCheckStateListener(this);
-	}
-
-	public void checkStateChanged(final CheckStateChangedEvent event) {
-		// in case we need some restrictions on checked elements, for
-		// example only one at a time allowed
-		// Object[] data = listViewer.getCheckedElements();
-		// for (int i = 0; i < data.length; ++i) {
-		// listViewer.setChecked(data[i], false);
-		// }
-		// listViewer.setCheckedElements(NO_OBJECTS);
-		// event.getCheckable().setChecked(event.getElement(), true);
-		updatePageCompletion();
-		updateWidgetEnablements();
+		fileSelectionArea = new Composite(parent, SWT.NONE);
+		GridData fileSelectionData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+		fileSelectionArea.setLayoutData(fileSelectionData);
+		GridLayout fileSelectionLayout = new GridLayout();
+		fileSelectionLayout.numColumns = 3;
+		fileSelectionLayout.makeColumnsEqualWidth = false;
+		fileSelectionLayout.marginWidth = 0;
+		fileSelectionLayout.marginHeight = 0;
+		fileSelectionArea.setLayout(fileSelectionLayout);
+		fileRadio = new Button(fileSelectionArea, SWT.RADIO | SWT.LEFT);
+		fileRadio.setText("File");
+		fileRadio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				clipboard = false;
+				updateWidgetEnablements();
+				updatePageCompletion();
+			}
+		});
+		fileRadio.setSelection(true);
+		clipboard = false;
+		clipboardRadio = new Button(fileSelectionArea, SWT.RADIO | SWT.LEFT);
+		clipboardRadio.setText("Clipboard");
+		clipboardRadio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				clipboard = true;
+				updateWidgetEnablements();
+				updatePageCompletion();
+			}
+		});
+		GridData bgd = new GridData();
+		bgd.horizontalSpan = 2;
+		clipboardRadio.setLayoutData(bgd);
+		editor = new FileFieldEditor("fileSelect", "Select input file", fileSelectionArea); // NON-NLS-1
+		// //NON-NLS-2
+		// 
+		editor.getTextControl(fileSelectionArea).addModifyListener(new ModifyListener() {
+			public void modifyText(final ModifyEvent e) {
+				File file = new File(editor.getStringValue());
+				setFileName(file.getPath());
+				updatePageCompletion();
+			}
+		});
+		String[] extensions = new String[] { "*" }; // NON-NLS-1 //$NON-NLS-1$
+		editor.setFileExtensions(extensions);
+		setFileName("");
+		// fileSelectionArea.moveAbove(null);
 	}
 
 	/**
@@ -356,26 +376,45 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		layout1.numColumns = 2;
 		layout1.makeColumnsEqualWidth = true;
 		buttonComposite.setLayout(layout1);
-		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// csv
-		Button exportCsv = createTypeChoice(buttonComposite, "Export to CSV", ReportType.CSV);
-		exportCsv.setSelection(true);
-		// xml type
-		exportXml = createTypeChoice(buttonComposite, "Export XML", ReportType.XML);
-		exportXml.setSelection(false);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		buttonComposite.setLayoutData(gd);
+		// create report type
+		Label label = new Label(buttonComposite, SWT.NONE);
+		label.setText("Import Type:");
+		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
+		addComboType(ReportType.XML);
+		addComboType(ReportType.CSV);
+		addComboType(ReportType.TEXT_DECK_CLASSIC);
+		addComboType(ReportType.USER_DEFINED);
+		selectReportType(ReportType.TEXT_DECK_CLASSIC);
+		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
+		gd1.horizontalSpan = 1;
+		typeCombo.setLayoutData(gd1);
+		// append
+		Button importAppend = createImportChoice(buttonComposite, "Append", 1);
+		importAppend.setSelection(false);
+		// override
+		importOverride = createImportChoice(buttonComposite, "Override", 2);
+		importOverride.setSelection(true);
 		reportType = ReportType.XML;
 		// options to include header
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
-		includeHeader.setText("Generate header row");
+		includeHeader.setText("Data has a header row");
 		includeHeader.setSelection(true);
 	}
 
-	private Button createTypeChoice(final Composite optionsGroup, final String text, final ReportType reportType) {
+	private void addComboType(ReportType reportType) {
+		typeCombo.add(reportType.getLabel());
+		typeCombo.setData(reportType.toString(), reportType);
+		typeCombo.addListener(SWT.Selection, this);
+	}
+
+	private Button createImportChoice(final Composite optionsGroup, final String text, final int value) {
 		Button button = new Button(optionsGroup, SWT.RADIO | SWT.LEFT);
 		button.setText(text);
-		button.setData(reportType);
+		button.setData(new Integer(value));
 		button.addListener(SWT.Selection, this);
-		typeButtons.add(button);
+		importOptionButtons.add(button);
 		return button;
 	}
 
@@ -385,26 +424,19 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	@Override
-	protected boolean validateSourceGroup() {
+	protected boolean validateDestinationGroup() {
 		if (locPage.isEmptySelection()) {
-			setMessage("Select an element to export");
+			setMessage("Select an element to import to or parent element");
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	protected boolean validateDestinationGroup() {
-		if ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0)) {
-			setMessage("File not selected");
-			return false;
-		}
-		if (isExportCsvFlag() && !(fileName.endsWith(".csv"))) { //$NON-NLS-1$
-			setErrorMessage("File should have .csv extension");
-			return false;
-		}
-		if (!isExportCsvFlag() && !(fileName.endsWith(".xml"))) { //$NON-NLS-1$
-			setErrorMessage("File should have .xml extension");
+	protected boolean validateSourceGroup() {
+		if (clipboard == false
+		        && ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0))) {
+			setMessage("Imput file is not selected");
 			return false;
 		}
 		return true;
@@ -461,23 +493,11 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	protected void updateWidgetEnablements() {
 		// type
 		includeHeader.setEnabled(isExportCsvFlag());
-		// file extension
-		if (isExportCsvFlag() && fileName.endsWith(".xml")) { //$NON-NLS-1$
-			fileName = fileName.replaceAll(".xml$", ".csv"); //$NON-NLS-1$ //$NON-NLS-2$
-			editor.setStringValue(fileName);
-		} else if (!isExportCsvFlag() && fileName.endsWith(".csv")) { //$NON-NLS-1$
-			fileName = fileName.replaceAll(".csv$", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
-			editor.setStringValue(fileName);
-		}
-		if (isExportCsvFlag()) {
-			editor.setFileExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
-		} else {
-			editor.setFileExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
-		}
+		editor.setEnabled(!clipboard, fileSelectionArea);
 	}
 
 	private boolean isExportCsvFlag() {
-		return !exportXml.getSelection();
+		return getReportType() == ReportType.CSV || getReportType() == ReportType.TABLE_PIPED;
 	}
 
 	public ReportType getReportType() {

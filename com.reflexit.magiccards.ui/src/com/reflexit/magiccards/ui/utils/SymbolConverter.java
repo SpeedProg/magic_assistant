@@ -152,6 +152,8 @@ public class SymbolConverter {
 	}
 
 	public static String insertCostImages(String text, String sym, String icon) {
+		if (text == null)
+			return "";
 		return text.replaceAll("\\Q" + sym, "<img src=\"" + icon + "\" alt=\"" + sym + "\">");
 	}
 }
