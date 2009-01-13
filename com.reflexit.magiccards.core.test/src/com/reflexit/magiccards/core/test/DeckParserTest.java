@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.test;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -39,10 +41,10 @@ public class DeckParserTest extends junit.framework.TestCase {
 	}
 
 	private void parse() {
-		this.worker = new ImportWorker(new ByteArrayInputStream(line.getBytes()), deck, ReportType.TEXT_DECK_CLASSIC,
-		        null);
+		this.worker = new ImportWorker(ReportType.TEXT_DECK_CLASSIC, new ByteArrayInputStream(line.getBytes()), false,
+		        deck, null);
 		try {
-			worker.runDeckImport(null);
+			worker.runDeckImport(new NullProgressMonitor());
 		} catch (InvocationTargetException e) {
 			fail(e.getCause().getMessage());
 		}
