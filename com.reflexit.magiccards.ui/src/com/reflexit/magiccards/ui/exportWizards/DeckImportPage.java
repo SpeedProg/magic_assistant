@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.exportWizards;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.DialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -33,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -44,6 +44,7 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportWorker;
 import com.reflexit.magiccards.core.exports.ReportType;
+import com.reflexit.magiccards.core.exports.ImportWorker.PreviewResult;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -66,7 +67,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private IStructuredSelection initialResourceSelection;
 	private TreeViewer listViewer;
 	private Button includeHeader;
-	private Button importOverride;
 	private final ArrayList importOptionButtons = new ArrayList();
 	private static final String ID = DeckImportPage.class.getName();
 	private ReportType reportType;
@@ -77,6 +77,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button fileRadio;
 	private Button clipboardRadio;
 	private Composite fileSelectionArea;
+	private PreviewResult previewResult;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -84,56 +85,67 @@ public class DeckImportPage extends WizardDataTransferPage {
 		store = new PreferenceStore();
 	}
 
-	public boolean performFinish() {
+	public boolean performImport(final boolean preview) {
 		boolean res = false;
 		try {
 			//			final ExportWork work = new ExportWork(listViewer.getCheckedElements(), // 
 			//			        fileName, //
 			//			        reportType, includeHeader.getSelection(), getTimeUnitsName());
-			if (reportType == reportType.TEXT_DECK_CLASSIC) {
-				locPage.performOk();
-				final boolean header = includeHeader.getSelection();
-				final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-				final Object clipboardText = cb.getContents(TextTransfer.getInstance());
+			locPage.performOk();
+			final boolean header = includeHeader.getSelection();
+			final InputStream st = openInputStream();
+			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMagicLibraryHandler();
-						IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicCardHandler();
-						((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
-						MagicCardFilter old = filteredLibrary.getFilter();
-						try {
-							MagicCardFilter locFilter = new MagicCardFilter();
-							locFilter.update(storeToMap());
-							filteredLibrary.update(locFilter);
-							InputStream st = null;
-							if (clipboard) {
-								if (clipboardText != null)
-									st = new ByteArrayInputStream(clipboardText.toString().getBytes());
-							} else
-								st = new FileInputStream(fileName);
-							if (st != null) {
-								ImportWorker exportWorker = new ImportWorker(st, filteredLibrary, reportType,
-								        magicDbHandler.getCardStore());
-								exportWorker.run(monitor);
-								st.close();
+						if (preview) {
+							ImportWorker worker;
+							worker = new ImportWorker(reportType, st, header);
+							worker.run(monitor);
+							previewResult = worker.getPreview();
+							((DeckImportWizard) getWizard()).setData(previewResult);
+						} else {
+							IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMagicLibraryHandler();
+							IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicCardHandler();
+							((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
+							MagicCardFilter old = filteredLibrary.getFilter();
+							try {
+								MagicCardFilter locFilter = new MagicCardFilter();
+								locFilter.update(storeToMap());
+								filteredLibrary.update(locFilter);
+								if (st != null) {
+									ImportWorker worker;
+									worker = new ImportWorker(reportType, st, header, filteredLibrary, magicDbHandler
+									        .getCardStore());
+									worker.run(monitor);
+								}
+							} finally {
+								filteredLibrary.update(old); // restore filter
 							}
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} finally {
-							filteredLibrary.update(old); // restore filter
 						}
 					}
 				};
 				getRunnableContext().run(true, true, work);
-			} else {
-				MessageDialog.openError(getShell(), "Error", "Not implemented yet");
+			} finally {
+				if (st != null)
+					st.close();
 			}
 			return true;
 		} catch (Exception e) {
 			displayErrorDialog(e);
 		}
 		return res;
+	}
+
+	InputStream openInputStream() throws FileNotFoundException {
+		InputStream st = null;
+		if (clipboard) {
+			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+			final Object clipboardText = cb.getContents(TextTransfer.getInstance());
+			if (clipboardText != null)
+				st = new ByteArrayInputStream(clipboardText.toString().getBytes());
+		} else
+			st = new FileInputStream(fileName);
+		return st;
 	}
 
 	private HashMap storeToMap() {
@@ -225,7 +237,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		setErrorMessage(null); // should not initially have error message
 		setControl(composite);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
-		        MagicUIActivator.getDefault().PLUGIN_ID + ".export"); //$NON-NLS-1$
+		        MagicUIActivator.getDefault().PLUGIN_ID + ".export");
 	}
 
 	/**
@@ -238,12 +250,13 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private void defaultPrompt() {
+		String mess = "Import into selected deck or collection. Empty deck or collection has to be created in advance. ";
 		if (reportType == ReportType.XML)
-			setMessage("Import from XML");
+			setMessage(mess + "You have selected XML format");
 		else if (reportType == ReportType.CSV)
-			setMessage("Import from CSV, e.g. 'Name,Set,Count'");
+			setMessage(mess + "You have selected CSV format, e.g. 'Name,Set,Count'");
 		else
-			setMessage("Import from text, e.g. 'Name x 4'");
+			setMessage(mess + "You have selected text format, e.g. 'Name x 4'");
 	}
 
 	@Override
@@ -284,6 +297,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private void selectReportType(final ReportType type) {
 		if (type == null)
 			return;
+		reportType = type;
 		typeCombo.setText(type.getLabel());
 	}
 
@@ -390,13 +404,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
 		gd1.horizontalSpan = 1;
 		typeCombo.setLayoutData(gd1);
-		// append
-		Button importAppend = createImportChoice(buttonComposite, "Append", 1);
-		importAppend.setSelection(false);
-		// override
-		importOverride = createImportChoice(buttonComposite, "Override", 2);
-		importOverride.setSelection(true);
-		reportType = ReportType.XML;
 		// options to include header
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
 		includeHeader.setText("Data has a header row");
@@ -407,15 +414,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 		typeCombo.add(reportType.getLabel());
 		typeCombo.setData(reportType.toString(), reportType);
 		typeCombo.addListener(SWT.Selection, this);
-	}
-
-	private Button createImportChoice(final Composite optionsGroup, final String text, final int value) {
-		Button button = new Button(optionsGroup, SWT.RADIO | SWT.LEFT);
-		button.setText(text);
-		button.setData(new Integer(value));
-		button.addListener(SWT.Selection, this);
-		importOptionButtons.add(button);
-		return button;
 	}
 
 	@Override
