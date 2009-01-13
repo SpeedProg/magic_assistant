@@ -21,10 +21,15 @@ public class DeckParser implements Closeable {
 		lineSep = System.getProperty("line.separator");
 	}
 	private LinkedHashMap<Pattern, ICardField[]> patternList = new LinkedHashMap<Pattern, ICardField[]>();
+	private ICardField[] currentFields;
 
 	public void addPattern(Pattern p, ICardField fieldsMap[]) {
 		patternList.put(p, fieldsMap);
 	}
+
+	public ICardField[] getCurrentFields() {
+		return currentFields;
+	};
 
 	public MagicCardPhisical readLine(MagicCardPhisical res) throws IOException {
 		nextline: do {
@@ -47,6 +52,7 @@ public class DeckParser implements Closeable {
 							// nothing
 						}
 					}
+					currentFields = cardFields;
 					break;
 				}
 				if (found)

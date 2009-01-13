@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -30,13 +31,33 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	private ReportType type;
 	private ICardField[] fields;
 	private ICardStore lookupStore;
+	private boolean previewMode = false;
+	private PreviewResult result;
+	private int line;
+	public static class PreviewResult {
+		public ArrayList<String[]> values = new ArrayList<String[]>();
+		public ICardField[] fields;
+		public ReportType type;
+	}
 
-	public ImportWorker(InputStream st, IFilteredCardStore<IMagicCard> store, ReportType type, ICardStore lookupStore) {
+	public ImportWorker(ReportType type, InputStream st, boolean header, IFilteredCardStore<IMagicCard> store,
+	        ICardStore lookupStore) {
 		super();
 		this.stream = st;
 		this.saveStore = store;
 		this.type = type;
 		this.lookupStore = lookupStore;
+		this.header = header;
+		result = new PreviewResult();
+	}
+
+	public ImportWorker(ReportType type, InputStream st, boolean header) {
+		super();
+		this.stream = st;
+		this.type = type;
+		this.header = header;
+		this.previewMode = true;
+		result = new PreviewResult();
 	}
 
 	public void setHeader(boolean header) {
@@ -48,16 +69,26 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	}
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		if (type == ReportType.CSV)
-			runCsvImport(monitor);
-		else if (type == ReportType.TEXT_DECK_CLASSIC) {
-			runDeckImport(monitor);
-		} else if (type == ReportType.TABLE_PIPED) {
-			runTablePipedImport(monitor);
+		monitor.beginTask("Importing...", 100);
+		try {
+			if (type == ReportType.CSV)
+				runCsvImport(monitor);
+			else if (type == ReportType.TEXT_DECK_CLASSIC) {
+				runDeckImport(monitor);
+			} else if (type == ReportType.TABLE_PIPED) {
+				runTablePipedImport(monitor);
+			}
+		} finally {
+			monitor.done();
 		}
 	}
 
+	public PreviewResult getPreview() {
+		return result;
+	}
+
 	public void runDeckImport(IProgressMonitor monitor) throws InvocationTargetException {
+		result.type = type;
 		DeckParser parser = new DeckParser(stream);
 		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] {
 		        MagicCardField.NAME,
@@ -66,12 +97,17 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"),
 		        new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
 		do {
+			line++;
 			try {
 				MagicCardPhisical card = createDefaultCard();
 				card = parser.readLine(card);
+				result.fields = parser.getCurrentFields();
 				if (card == null)
 					break;
 				importCard(card);
+				if (previewMode && line >= 10)
+					break;
+				monitor.worked(1);
 			} catch (IOException e) {
 				throw new InvocationTargetException(e);
 			}
@@ -89,10 +125,20 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	}
 
 	protected void importCard(MagicCardPhisical card) {
-		MagicCard ref = findRef(card.getCard());
-		if (ref != null)
-			card.setMagicCard(ref);
-		saveStore.getCardStore().add(card);
+		if (previewMode) {
+			String[] res = new String[result.fields.length];
+			for (int i = 0; i < result.fields.length; i++) {
+				ICardField fi = result.fields[i];
+				Object o = card.getObjectByField(fi);
+				res[i] = o == null ? null : o.toString();
+			}
+			result.values.add(res);
+		} else {
+			MagicCard ref = findRef(card.getCard());
+			if (ref != null)
+				card.setMagicCard(ref);
+			saveStore.getCardStore().add(card);
+		}
 	}
 
 	protected MagicCard findRef(MagicCard card) {
@@ -117,17 +163,25 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	public void runCsvImport(IProgressMonitor monitor) throws InvocationTargetException {
 		try {
+			result.type = type;
 			CsvImporter importer = null;
 			if (fields == null)
 				fields = getNonTransientFeilds();
+			result.fields = fields;
 			try {
 				importer = new CsvImporter(stream);
 				do {
+					line++;
 					List<String> list = importer.readLine();
 					if (list == null)
 						break;
+					if (header && line == 1)
+						continue;
 					MagicCardPhisical card = createCard(list);
 					importCard(card);
+					if (previewMode && line >= 10)
+						break;
+					monitor.worked(1);
 				} while (true);
 			} catch (FileNotFoundException e) {
 				throw new InvocationTargetException(e);
@@ -164,20 +218,26 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	public void runTablePipedImport(IProgressMonitor monitor) throws InvocationTargetException {
 		try {
+			result.type = type;
 			if (fields == null)
 				fields = getNonTransientFeilds();
+			result.fields = fields;
 			BufferedReader importer = null;
 			try {
 				importer = new BufferedReader(new InputStreamReader(stream));
 				do {
-					String line = importer.readLine();
-					if (line == null)
+					line++;
+					String input = importer.readLine();
+					if (input == null)
 						break;
-					String[] split = line.split("|");
+					String[] split = input.split("|");
 					if (split.length > 0) {
 						MagicCardPhisical card = createCard(Arrays.asList(split));
 						importCard(card);
 					}
+					if (previewMode && line >= 10)
+						break;
+					monitor.worked(1);
 				} while (true);
 			} catch (FileNotFoundException e) {
 				throw new InvocationTargetException(e);
