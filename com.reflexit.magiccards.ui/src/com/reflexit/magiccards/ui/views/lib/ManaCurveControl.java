@@ -7,6 +7,7 @@ import com.alena.birt.ChartCanvas;
 import com.alena.birt.IChartGenerator;
 import com.alena.birt.ManaCurve;
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -25,7 +26,7 @@ public class ManaCurveControl {
 		this.store = store.getCardStore();
 	};
 
-	public ICardStore getCardStore() {
+	public ICardEventManager getCardStore() {
 		return store;
 	}
 
@@ -46,7 +47,7 @@ public class ManaCurveControl {
 	}
 
 	public String getStatusMessage() {
-		ICardStore cardStore = store;
+		ICardEventManager cardStore = store;
 		String cardCountTotal = "";
 		if (cardStore instanceof ICardCountable) {
 			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();

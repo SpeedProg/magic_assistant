@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.Deck;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -49,7 +49,7 @@ public class DeckView extends MyCardsView implements ICardEventListener {
 		if (this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
-		DataManager.getModelRoot().addListener(this);
+		DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().addListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +85,7 @@ public class DeckView extends MyCardsView implements ICardEventListener {
 	@Override
 	public void dispose() {
 		this.deck.close();
-		DataManager.getModelRoot().removeListener(this);
+		DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().removeListener(this);
 		super.dispose();
 	}
 
@@ -94,7 +94,7 @@ public class DeckView extends MyCardsView implements ICardEventListener {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		ICardStore s = this.manager.getFilteredStore().getCardStore();
+		ICardEventManager s = this.manager.getFilteredStore().getCardStore();
 		if (s instanceof ICardDeck) {
 			setPartName("Deck: " + ((ICardDeck) s).getDeckName());
 		}

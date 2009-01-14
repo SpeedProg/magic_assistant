@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.services.IDisposable;
 
 import java.util.Collection;
@@ -113,7 +114,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 
 	public void loadData(final Runnable postLoad) {
 		updateFilter();
-		final Display display = getShell().getDisplay();
+		final Display display = PlatformUI.getWorkbench().getDisplay();
 		Job job = new Job("Loading cards") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
