@@ -21,9 +21,11 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
 public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable,
-        ICardEventListener, ICardCountable {
+        ICardEventListener, ICardCountable, IStorageContainer<IMagicCard> {
 	private static LibraryDataXmlHandler instance;
 	private CollectionMultiFileCardStore table;
 
@@ -129,5 +131,14 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 			}
 		}
 		return count;
+	}
+
+	public IStorage<IMagicCard> getStorage() {
+		return table.getStorage();
+	}
+
+	public SingleFileCardStorage getStorage(String location) {
+		initialize();
+		return table.getMStorage().getStorage(location);
 	}
 }

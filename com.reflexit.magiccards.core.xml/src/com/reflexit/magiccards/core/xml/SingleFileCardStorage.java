@@ -4,21 +4,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Properties;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.AbstractStorage;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implements ILocatable {
+public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable {
 	protected transient File file;
-	protected MemoryCardStore store;
 	protected String location;
+	protected String name;
+	protected String comment;
+	protected String type;
+	protected Properties properties = new Properties();
 
 	public SingleFileCardStorage(File file, String location) {
 		this(file, location, false);
@@ -27,9 +29,7 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 	public SingleFileCardStorage(File file, String location, boolean initialize) {
 		this.file = file;
 		this.location = location;
-		clearCache();
 		if (initialize) {
-			this.store.initialize();
 			load();
 		}
 	}
@@ -62,19 +62,28 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 	 */
 	protected void loadFields(CardCollectionStoreObject obj) {
 		if (obj.list != null)
-			this.store.setList(obj.list);
+			this.setList(obj.list);
 		else
-			this.store.setList(new ArrayList<IMagicCard>());
+			this.setList(new ArrayList<IMagicCard>());
 		if (obj.key != null)
 			setLocation(obj.key);
+		if (obj.name != null)
+			this.name = obj.name;
+		this.comment = obj.comment;
+		this.properties = obj.properties;
+		this.type = obj.type;
 	}
 
 	/**
 	 * @param obj
 	 */
 	protected void storeFields(CardCollectionStoreObject obj) {
-		obj.list = (ArrayList) this.store.getList();
+		obj.list = (ArrayList) this.getList();
 		obj.key = getLocation();
+		obj.name = getName();
+		obj.comment = getComment();
+		obj.type = getType();
+		obj.properties = properties;
 	}
 
 	@Override
@@ -94,24 +103,6 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 		obj.save();
 	}
 
-	@Override
-	protected boolean doAddCard(IMagicCard card) {
-		return this.store.doAddCard(card);
-	}
-
-	@Override
-	protected boolean doRemoveCard(IMagicCard card) {
-		return this.store.doRemoveCard(card);
-	}
-
-	public Iterator<IMagicCard> iterator() {
-		return this.store.iterator();
-	}
-
-	public int size() {
-		return this.store.size();
-	}
-
 	public String getLocation() {
 		return location;
 	}
@@ -122,7 +113,7 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 
 	@Override
 	public boolean removeAll() {
-		if (store.size() == 0)
+		if (size() == 0)
 			return false;
 		clearCache();
 		setNeedToSave(true);
@@ -130,8 +121,27 @@ public class SingleFileCardStorage extends AbstractStorage<IMagicCard> implement
 		return true;
 	}
 
-	@Override
-	public void clearCache() {
-		this.store = new MemoryCardStore<IMagicCard>();
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
