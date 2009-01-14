@@ -10,19 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
-import com.reflexit.magiccards.core.MagicException;
-
 /**
  * ArrayList based implementation for AbstractCardStore
  * @author Alena
  *
  */
-public class MemoryCardStore<T> extends AbstractCardStore<T> {
-	protected ArrayList<T> list;
+public class MemoryCardStore<T> extends MemoryCardStorage<T> implements ICardStore<T> {
+	protected boolean mergeOnAdd = true;
 
 	/**
 	 * creates empty card store
@@ -31,43 +25,11 @@ public class MemoryCardStore<T> extends AbstractCardStore<T> {
 		super();
 	}
 
-	@Override
-	protected void doInitialize() throws MagicException {
-		this.list = new ArrayList<T>();
+	public void setMergeOnAdd(final boolean v) {
+		this.mergeOnAdd = v;
 	}
 
-	public Iterator<T> iterator() {
-		return this.getList().iterator();
-	}
-
-	public int size() {
-		return this.getList().size();
-	}
-
-	@Override
-	public boolean doRemoveCard(T card) {
-		return this.getList().remove(card);
-	}
-
-	@Override
-	public boolean doAddCard(T card) {
-		return this.getList().add(card);
-	}
-
-	protected boolean doUpdate(T card) {
-		return true;
-	};
-
-	/**
-	 * @return the list
-	 */
-	public Collection<T> getList() {
-		if (this.list == null)
-			doInitialize();
-		return this.list;
-	}
-
-	public void setList(ArrayList<T> list) {
-		this.list = list;
+	public boolean getMergeOnAdd() {
+		return this.mergeOnAdd;
 	}
 }

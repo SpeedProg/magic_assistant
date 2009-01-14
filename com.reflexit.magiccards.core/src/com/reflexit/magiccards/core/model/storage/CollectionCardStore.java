@@ -21,14 +21,13 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * @author Alena
  *
  */
-public class CollectionCardStore extends AbstractCardStore<IMagicCard> implements ICardCountable,
+public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements ICardCountable,
         IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
 	protected int cardCount;
-	protected IStorage<IMagicCard> storage;
 
 	public CollectionCardStore(IStorage<IMagicCard> storage) {
-		this.storage = storage;
+		super(storage, true);
 		this.hashpart = new HashCollectionPart();
 	}
 
@@ -91,9 +90,6 @@ public class CollectionCardStore extends AbstractCardStore<IMagicCard> implement
 		return phi;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.xml.SingleFileCardStore#doRemoveCard(com.reflexit.magiccards.core.model.IMagicCard)
-	 */
 	@Override
 	public boolean doRemoveCard(IMagicCard card) {
 		if (!(card instanceof MagicCardPhisical))
@@ -102,17 +98,18 @@ public class CollectionCardStore extends AbstractCardStore<IMagicCard> implement
 		Collection cards = this.hashpart.getCards(card.getCardId());
 		MagicCardPhisical found = null;
 		MagicCardPhisical max = null;
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			MagicCardPhisical candy = (MagicCardPhisical) iterator.next();
-			if (phi.matching(candy)) {
-				if (phi.getCount() == candy.getCount()) {
-					found = candy;
-					break;
+		if (cards != null)
+			for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+				MagicCardPhisical candy = (MagicCardPhisical) iterator.next();
+				if (phi.matching(candy)) {
+					if (phi.getCount() == candy.getCount()) {
+						found = candy;
+						break;
+					}
+					if (max == null || max.getCount() < candy.getCount())
+						max = candy;
 				}
-				if (max == null || max.getCount() < candy.getCount())
-					max = candy;
 			}
-		}
 		if (found != null) {
 			this.storage.remove(found);
 			this.hashpart.removeCard(found);
@@ -131,12 +128,6 @@ public class CollectionCardStore extends AbstractCardStore<IMagicCard> implement
 			add(add);
 			return true;
 		}
-	}
-
-	@Override
-	protected boolean doUpdate(IMagicCard card) {
-		storage.save();
-		return true;
 	}
 
 	/* (non-Javadoc)
@@ -174,17 +165,5 @@ public class CollectionCardStore extends AbstractCardStore<IMagicCard> implement
 	public void clear() {
 		cardCount = 0;
 		this.hashpart = new HashCollectionPart();
-	}
-
-	public Iterator<IMagicCard> iterator() {
-		return this.storage.iterator();
-	}
-
-	public int size() {
-		return this.storage.size();
-	}
-
-	public IStorage<IMagicCard> getStorage() {
-		return storage;
 	}
 }

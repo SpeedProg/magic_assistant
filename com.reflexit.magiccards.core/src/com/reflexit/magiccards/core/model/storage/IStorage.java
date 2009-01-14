@@ -1,6 +1,6 @@
 package com.reflexit.magiccards.core.model.storage;
 
-public interface IStorage<T> extends ICardSet<T> {
+public interface IStorage<T> extends ICardSet<T>, ICardEventManager<T> {
 	public boolean isAutoCommit();
 
 	public void setAutoCommit(boolean value);

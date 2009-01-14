@@ -42,11 +42,10 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	}
 
 	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
-	    Comparator<IMagicCard> comp = MagicCardComparator
-	            .getComparator(filter.getSortField(), filter.isAscending());
-	    return comp;
-    }
-	
+		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortField(), filter.isAscending());
+		return comp;
+	}
+
 	public void setStore(ICardStore store) {
 		if (this.deck != store) {
 			this.deck = store;

@@ -14,68 +14,83 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 /**
  * @author Alena
  * 
  */
-public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements IStorageContainer<T> {
+public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>,
+        IStorageContainer<T> {
 	protected IStorage<T> storage;
+	protected boolean wrapped;
 
 	/**
 	 * 
 	 */
-	public AbstractCardStoreWithStorage(final IStorage<T> storage) {
+	public AbstractCardStoreWithStorage(final IStorage<T> storage, boolean wrapped) {
 		super();
 		this.storage = storage;
-	}
-
-	public Iterator<T> iterator() {
-		return this.storage.iterator();
-	}
-
-	public int size() {
-		return this.storage.size();
-	}
-
-	@Override
-	protected synchronized boolean doAddCard(final T card) {
-		return this.storage.add(card);
-	}
-
-	@Override
-	protected synchronized boolean doRemoveCard(final T card) {
-		return this.storage.remove(card);
-	}
-
-	@Override
-	protected synchronized boolean doAddAll(Collection<? extends T> col) {
-		return this.storage.addAll(col);
-	}
-
-	@Override
-	protected boolean doRemoveAll(Collection<?> list) {
-		return this.storage.removeAll(list);
-	}
-
-	@Override
-	protected boolean doUpdate(T card) {
-		if (storage.isAutoCommit())
-			storage.save();
-		return true;
-	}
-
-	@Override
-	protected boolean doRemoveAll() {
-		return this.storage.removeAll();
-	}
-
-	@Override
-	protected synchronized void doInitialize() throws MagicException {
-		this.storage.load();
+		this.wrapped = wrapped;
 	}
 
 	public IStorage<T> getStorage() {
 		return storage;
+	}
+
+	protected boolean doAddAll(Collection<? extends T> list) {
+		if (wrapped)
+			return super.doAddAll(list);
+		else
+			return storage.addAll(list);
+	}
+
+	public Iterator<T> iterator() {
+		return storage.iterator();
+	}
+
+	public boolean doRemoveAll() {
+		if (wrapped)
+			return super.doRemoveAll();
+		else
+			return storage.removeAll();
+	}
+
+	public boolean doRemoveAll(Collection<?> list) {
+		if (wrapped)
+			return super.doRemoveAll(list);
+		else
+			return storage.removeAll(list);
+	}
+
+	public int size() {
+		return storage.size();
+	}
+
+	@Override
+	protected boolean doAddCard(T card) {
+		return storage.add(card);
+	}
+
+	@Override
+	protected void doInitialize() throws MagicException {
+		storage.load();
+	}
+
+	@Override
+	protected boolean doRemoveCard(T card) {
+		return storage.remove(card);
+	}
+
+	public void addListener(ICardEventListener lis) {
+		storage.addListener(lis);
+	}
+
+	public void removeListener(ICardEventListener lis) {
+		storage.removeListener(lis);
+	}
+
+	public void update(T card) {
+		storage.update(card);
 	}
 }
