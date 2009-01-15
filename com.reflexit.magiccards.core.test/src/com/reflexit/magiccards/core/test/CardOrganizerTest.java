@@ -11,10 +11,9 @@
 package com.reflexit.magiccards.core.test;
 
 import org.eclipse.core.runtime.Path;
+import org.junit.Test;
 
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -44,14 +43,14 @@ public class CardOrganizerTest extends TestCase {
 	 */
 	@Test
 	public void testFindElement() {
-		CardElement element = this.root.findElement(new Path("Decks"));
+		CardElement element = this.root.findElement(new Path("My Cards/Decks"));
 		assertEquals(this.root.getDeckContainer(), element);
 	}
 
 	public void testFindElement2() {
 		DecksContainer decks = this.root.getDeckContainer();
 		DecksContainer con = decks.addDeckContainer("con");
-		CardElement element = this.root.findElement(new Path("Decks/con"));
+		CardElement element = this.root.findElement(new Path("My Cards/Decks/con"));
 		assertEquals(con, element);
 	}
 
