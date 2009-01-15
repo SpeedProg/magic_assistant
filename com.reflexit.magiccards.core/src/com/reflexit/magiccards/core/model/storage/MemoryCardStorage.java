@@ -67,6 +67,7 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	@Override
 	public void clearCache() {
 		list.clear();
+		setLoaded(false);
 	}
 
 	@Override

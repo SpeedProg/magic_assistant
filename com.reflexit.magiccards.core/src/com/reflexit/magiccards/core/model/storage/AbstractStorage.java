@@ -39,8 +39,8 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 	public synchronized void load() {
 		if (isLoaded())
 			return;
-		setLoaded(true);
 		clearCache();
+		setLoaded(true);
 		doLoad();
 	}
 

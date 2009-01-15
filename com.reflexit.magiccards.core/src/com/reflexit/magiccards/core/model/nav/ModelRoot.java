@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,6 +31,7 @@ public class ModelRoot extends CardOrganizer {
 	private MagicDbContainter db;
 	private CollectionsContainer fLib;
 	private CardCollection fLibFile;
+	private CardOrganizer fMyCards;
 
 	/**
 	 * @param name
@@ -45,8 +45,9 @@ public class ModelRoot extends CardOrganizer {
 	private void initRoot() {
 		try {
 			CardOrganizer root = this;
-			this.fLib = new CollectionsContainer("Collections", root);
-			this.fDecks = new DecksContainer("Decks", root);
+			this.fMyCards = new CardOrganizer("My Cards", root.getPath(), root);
+			this.fLib = new CollectionsContainer("Collections", fMyCards);
+			this.fDecks = new DecksContainer("Decks", fMyCards);
 			this.db = new MagicDbContainter(root);
 			this.fLibFile = new CardCollection("main.xml", this.fLib);
 			this.fDecks.loadChildren();
@@ -146,8 +147,8 @@ public class ModelRoot extends CardOrganizer {
 		}
 		if (root instanceof CardOrganizer) {
 			CardOrganizer org = (CardOrganizer) root;
-			for (Iterator iterator = org.getChildren().iterator(); iterator.hasNext();) {
-				CardElement el = (CardElement) iterator.next();
+			for (Object element : org.getChildren()) {
+				CardElement el = (CardElement) element;
 				fillLocations(map, el);
 			}
 		}

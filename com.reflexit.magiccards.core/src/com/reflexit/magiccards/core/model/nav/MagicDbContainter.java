@@ -4,6 +4,6 @@ import org.eclipse.core.runtime.Path;
 
 public class MagicDbContainter extends CardOrganizer {
 	public MagicDbContainter(CardOrganizer parent) {
-		super("All Cards", new Path("MagicDB"), parent);
+		super("MTG Database", new Path("MagicDB"), parent);
 	}
 }

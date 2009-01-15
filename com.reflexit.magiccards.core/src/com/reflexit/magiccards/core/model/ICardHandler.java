@@ -2,15 +2,21 @@ package com.reflexit.magiccards.core.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import java.util.Collection;
+
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public interface ICardHandler {
-	public IFilteredCardStore getMagicCardHandler();
+	public IFilteredCardStore getDatabaseHandler();
 
-	public IFilteredCardStore getMagicLibraryHandler();
+	public IFilteredCardStore getMyCardsHandler();
 
 	public IFilteredCardStore getDeckHandler(String id);
+
+	public boolean copyCards(Collection cards, String to);
+
+	public boolean moveCards(Collection cards, String from, String to);
 
 	public int downloadFromUrl(String url, IProgressMonitor pm) throws MagicException, InterruptedException;
 

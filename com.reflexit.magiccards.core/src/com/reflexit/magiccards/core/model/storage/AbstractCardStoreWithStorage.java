@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 /**
@@ -24,6 +25,12 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
         IStorageContainer<T> {
 	protected IStorage<T> storage;
 	protected boolean wrapped;
+	private ICardEventListener lis = new ICardEventListener() {
+		// event in underline storage should case to reinitialize
+		public void handleEvent(CardEvent event) {
+			doInitialize();
+		}
+	};
 
 	/**
 	 * 
@@ -32,6 +39,7 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 		super();
 		this.storage = storage;
 		this.wrapped = wrapped;
+		this.storage.addListener(lis);
 	}
 
 	public IStorage<T> getStorage() {
