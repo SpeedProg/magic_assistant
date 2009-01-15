@@ -31,6 +31,9 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 	}
 
 	public synchronized void addFile(final File file, final String location, boolean initialize) {
+		if (location != null && map.containsKey(location)) {
+			return;
+		}
 		SingleFileCardStorage table = new SingleFileCardStorage(file, location, initialize);
 		addCardStore(table);
 		this.size += table.size();
@@ -63,6 +66,7 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 		ArrayList<SingleFileCardStorage> all = new ArrayList<SingleFileCardStorage>();
 		all.addAll(this.map.values());
 		for (SingleFileCardStorage table : all) {
+			removeFile(table.getLocation());
 			try {
 				table.load();
 				this.size += table.size();
@@ -247,6 +251,7 @@ public class MultiFileCardStorage extends AbstractStorage<IMagicCard> implements
 
 	public void handleEvent(CardEvent event) {
 		// Propagate event from sub storages
+		doLoad();
 		fireEvent(event);
 	}
 }

@@ -33,7 +33,7 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implem
 			file = d.getFile();
 			if (!d.isOpen()) {
 				LibraryDataXmlHandler magicLibraryHandler = (LibraryDataXmlHandler) DataManager.getCardHandler()
-				        .getMagicLibraryHandler();
+				        .getMyCardsHandler();
 				magicLibraryHandler.doInitialize();
 				d.open(new DeckFileCardStore(magicLibraryHandler.getStorage(d.getLocation())));
 			}

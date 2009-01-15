@@ -18,7 +18,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -27,17 +29,18 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererSpoiler;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 
 public class XmlCardHolder implements ICardHandler {
-	public IFilteredCardStore getMagicCardHandler() {
+	public IFilteredCardStore getDatabaseHandler() {
 		return MagicCardDataXmlHandler.getInstance();
 	}
 
-	public IFilteredCardStore getMagicLibraryHandler() {
+	public IFilteredCardStore getMyCardsHandler() {
 		return LibraryDataXmlHandler.getInstance();
 	}
 
@@ -59,13 +62,11 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	private int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
-		ICardStore store = getMagicCardHandler().getCardStore();
+		ICardStore store = getDatabaseHandler().getCardStore();
 		int init = store.size();
 		ArrayList<IMagicCard> list = loadFromFlat(st);
 		boolean hasAny = list.size() > 0;
 		store.addAll(list);
-		
-	
 		int rec = store.size() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
@@ -82,18 +83,18 @@ public class XmlCardHolder implements ICardHandler {
 			}
 			MagicCard card = new MagicCard();
 			card.setId(fields[0]);
-            card.setName(fields[1]);
-            card.setCost(fields[2]);
-            card.setType(fields[3]);
-            card.setPower(fields[4]);
-            card.setToughness(fields[5]);
-            card.setOracleText(fields[6]);
-            card.setSet(fields[7]);
-            card.setRarity(fields[8]);
-            if (fields.length > 9)
-            	card.setColorType(fields[9]);
-            if (fields.length > 10)
-            	card.setCmc(fields[10]);
+			card.setName(fields[1]);
+			card.setCost(fields[2]);
+			card.setType(fields[3]);
+			card.setPower(fields[4]);
+			card.setToughness(fields[5]);
+			card.setOracleText(fields[6]);
+			card.setSet(fields[7]);
+			card.setRarity(fields[8]);
+			if (fields.length > 9)
+				card.setColorType(fields[9]);
+			if (fields.length > 10)
+				card.setCmc(fields[10]);
 			card.setExtraFields();
 			int id = card.getCardId();
 			if (id == 0) {
@@ -101,7 +102,8 @@ public class XmlCardHolder implements ICardHandler {
 				TextPrinter.print(card, System.err);
 				continue;
 			}
-			if (hash.contains(id)) continue;
+			if (hash.contains(id))
+				continue;
 			hash.add(id);
 			list.add(card);
 		}
@@ -160,5 +162,50 @@ public class XmlCardHolder implements ICardHandler {
 		} catch (IOException e) {
 			throw new MagicException(e);
 		}
+	}
+
+	public boolean copyCards(Collection cards, String to) {
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			MagicCardPhisical phi = new MagicCardPhisical(card);
+			phi.setLocation(to);
+			list.add(phi);
+		}
+		SingleFileCardStorage storage = LibraryDataXmlHandler.getInstance().getStorage(to);
+		if (storage == null)
+			return false;
+		return storage.addAll(cards);
+	}
+
+	public boolean moveCards(Collection cards, String from, String to) {
+		SingleFileCardStorage sto = LibraryDataXmlHandler.getInstance().getStorage(to);
+		if (sto == null)
+			return false;
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			MagicCardPhisical phi = new MagicCardPhisical(card);
+			phi.setLocation(to);
+			list.add(phi);
+		}
+		boolean res = sto.addAll(list);
+		if (res) {
+			if (from == null) {
+				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+					IMagicCard card = (IMagicCard) iterator.next();
+					if (!(card instanceof MagicCardPhisical))
+						continue;
+					String from2 = ((MagicCardPhisical) card).getLocation();
+					if (from2 != null) {
+						from = from2;
+						break;
+					}
+				}
+				SingleFileCardStorage sfrom2 = LibraryDataXmlHandler.getInstance().getStorage(from);
+				sfrom2.removeAll(cards);
+			}
+		}
+		return res;
 	}
 }

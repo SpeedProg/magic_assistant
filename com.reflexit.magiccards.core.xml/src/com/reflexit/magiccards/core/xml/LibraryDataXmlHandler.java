@@ -19,7 +19,6 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
@@ -52,7 +51,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		container.addListener(this);
 	}
 
-	public static IFilteredCardStore getInstance() {
+	public static LibraryDataXmlHandler getInstance() {
 		if (instance == null)
 			new LibraryDataXmlHandler();
 		return instance;
@@ -139,6 +138,8 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 
 	public SingleFileCardStorage getStorage(String location) {
 		initialize();
+		if (location == null)
+			return table.getMStorage().getStorage(table.getMStorage().getLocation());
 		return table.getMStorage().getStorage(location);
 	}
 }

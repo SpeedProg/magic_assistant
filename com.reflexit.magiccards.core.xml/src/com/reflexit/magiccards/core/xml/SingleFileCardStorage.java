@@ -29,9 +29,15 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	public SingleFileCardStorage(File file, String location, boolean initialize) {
 		this.file = file;
 		this.location = location;
+		//System.err.println("Create sin store " + location + " 0x" + Integer.toHexString(System.identityHashCode(this)));
 		if (initialize) {
 			load();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return location + " 0x" + Integer.toHexString(System.identityHashCode(this));
 	}
 
 	@Override
