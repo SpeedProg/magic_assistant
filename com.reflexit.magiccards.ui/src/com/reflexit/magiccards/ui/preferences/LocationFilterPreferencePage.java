@@ -7,7 +7,9 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,6 +27,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorLabelProvider;
@@ -71,6 +74,14 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		this.treeViewer.setLabelProvider(new CardsNavigatorLabelProvider());
 		this.treeViewer.setContentProvider(new CardsNavigatorContentProvider());
 		this.treeViewer.setComparator(new ViewerComparator());
+		this.treeViewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (element instanceof MagicDbContainter)
+					return false;
+				return true;
+			}
+		});
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 400;
 		this.treeViewer.getControl().setLayoutData(gd);
@@ -92,12 +103,9 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	}
 
 	private void initializeTree() {
-		CardOrganizer root = new CardOrganizer("fake", null);
-		top = new CardOrganizer("All Cards", root);
 		ModelRoot mroot = DataManager.getModelRoot();
-		top.addChild(mroot.getCollectionsContainer());
-		top.addChild(mroot.getDeckContainer());
-		this.treeViewer.setInput(root);
+		top = mroot;
+		this.treeViewer.setInput(mroot);
 		treeViewer.expandToLevel(3);
 		// load preferences
 		load();

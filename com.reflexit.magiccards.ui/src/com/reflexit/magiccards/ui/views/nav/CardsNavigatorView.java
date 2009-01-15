@@ -54,7 +54,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
@@ -66,7 +65,7 @@ import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.exportWizards.ImportAction;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.lib.LibView;
+import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
 public class CardsNavigatorView extends ViewPart implements ICardEventListener {
@@ -309,14 +308,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	protected void runDoubleClick() {
 		ISelection selection = getViewer().getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		if (obj instanceof CollectionsContainer) {
-			try {
-				LibView view = (LibView) getViewSite().getWorkbenchWindow().getActivePage().showView(LibView.ID);
-				view.setLocationFilter(((CollectionsContainer) obj).getLocation());
-			} catch (PartInitException e) {
-				MagicUIActivator.log(e);
-			}
-		} else if (obj instanceof MagicDbContainter) {
+		if (obj instanceof MagicDbContainter) {
 			try {
 				getViewSite().getWorkbenchWindow().getActivePage().showView(MagicDbView.ID);
 			} catch (PartInitException e) {
@@ -331,8 +323,15 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			}
 		} else if (obj instanceof CardCollection) {
 			try {
-				LibView view = (LibView) getViewSite().getWorkbenchWindow().getActivePage().showView(LibView.ID);
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
 				view.setLocationFilter(((CardCollection) obj).getLocation());
+			} catch (PartInitException e) {
+				MagicUIActivator.log(e);
+			}
+		} else if (obj instanceof CardOrganizer) {
+			try {
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
+				view.setLocationFilter(((CardOrganizer) obj).getLocation());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}

@@ -104,8 +104,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 							previewResult = worker.getPreview();
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
-							IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMagicLibraryHandler();
-							IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicCardHandler();
+							IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
+							IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
 							((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
 							MagicCardFilter old = filteredLibrary.getFilter();
 							try {

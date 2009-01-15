@@ -156,7 +156,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 		ICardStore store = deck.getStore();
 		MagicCardFilter filter = new MagicCardFilter();
 		HashMap filterset = new HashMap();
-		IFilteredCardStore dbcards = DataManager.getCardHandler().getMagicCardHandler();
+		IFilteredCardStore dbcards = DataManager.getCardHandler().getDatabaseHandler();
 		MagicCardFilter oldFilter = dbcards.getFilter();
 		try {
 			String editionId = Editions.getInstance().getPrefConstantByName(editionName);

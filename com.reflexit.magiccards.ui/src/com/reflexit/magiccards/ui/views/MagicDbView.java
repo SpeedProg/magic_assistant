@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -10,6 +8,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
+
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardDeck;
@@ -38,7 +38,7 @@ public class MagicDbView extends AbstractCardsView {
 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
-		return DataManager.getCardHandler().getMagicCardHandler();
+		return DataManager.getCardHandler().getDatabaseHandler();
 	}
 
 	@Override
@@ -88,8 +88,10 @@ public class MagicDbView extends AbstractCardsView {
 		for (final IViewReference viewReference : views) {
 			if (viewReference.getId().equals(DeckView.ID)) {
 				final String deckId = viewReference.getSecondaryId();
-				ICardDeck store = (ICardDeck) ((DeckView) viewReference.getPart(false)).getFilteredStore()
-				        .getCardStore();
+				DeckView deckView = (DeckView) viewReference.getPart(false);
+				if (deckView == null)
+					continue;
+				ICardDeck store = (ICardDeck) deckView.getFilteredStore().getCardStore();
 				Action ac = new Action(store.getDeckName()) {
 					@Override
 					public void run() {

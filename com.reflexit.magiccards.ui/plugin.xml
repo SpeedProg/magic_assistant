@@ -45,11 +45,11 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Magic"
+            name="Magic Assistant"
             id="com.reflexit.magiccards">
       </category>
       <view
-            name="Magic Database"
+            name="MTG Database"
             icon="icons/m.gif"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.MagicDbView"
@@ -61,15 +61,15 @@
             class="com.reflexit.magiccards.ui.views.card.CardDescView"
             icon="icons/back_32.jpg"
             id="com.reflexit.magiccards.ui.views.card.CardDescView"
-            name="Card Description">
+            name="Card Info">
       </view>
       <view
             allowMultiple="true"
             category="com.reflexit.magiccards"
-            class="com.reflexit.magiccards.ui.views.lib.LibView"
+            class="com.reflexit.magiccards.ui.views.lib.MyCardsView"
             icon="icons/Folder-Library-32x32.png"
             id="com.reflexit.magiccards.ui.views.lib.LibView"
-            name="Magic Collection"
+            name="My Cards"
             restorable="true">
       </view>
       <view

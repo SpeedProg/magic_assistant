@@ -257,12 +257,12 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
-		manager.add(this.copyText);
 		manager.add(loadPrices);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(this.copyText);
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
@@ -399,7 +399,8 @@ public abstract class AbstractCardsView extends ViewPart {
 			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 			TextTransfer textTransfer = TextTransfer.getInstance();
 			MagicCardTransfer mt = MagicCardTransfer.getInstance();
-			cb.setContents(new Object[] { textData, sel.getFirstElement() }, new Transfer[] { textTransfer, mt });
+			IMagicCard[] cards = (IMagicCard[]) sel.toList().toArray(new IMagicCard[sel.size()]);
+			cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
 		}
 	}
 

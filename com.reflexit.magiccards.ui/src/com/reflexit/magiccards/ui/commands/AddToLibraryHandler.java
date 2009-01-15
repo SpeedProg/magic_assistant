@@ -33,7 +33,7 @@ public class AddToLibraryHandler extends AbstractHandler {
 			return null;
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().addAll(iss.toList());
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore().addAll(iss.toList());
 		return null;
 	}
 }

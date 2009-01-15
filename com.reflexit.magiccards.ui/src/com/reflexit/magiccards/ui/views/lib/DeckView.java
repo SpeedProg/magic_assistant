@@ -25,7 +25,7 @@ import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
 
-public class DeckView extends MyCardsView implements ICardEventListener {
+public class DeckView extends AbstractMyCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	Deck deck;
 	private Action shuffle;
@@ -49,7 +49,7 @@ public class DeckView extends MyCardsView implements ICardEventListener {
 		if (this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
-		DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().addListener(this);
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore().addListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +85,7 @@ public class DeckView extends MyCardsView implements ICardEventListener {
 	@Override
 	public void dispose() {
 		this.deck.close();
-		DataManager.getCardHandler().getMagicLibraryHandler().getCardStore().removeListener(this);
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore().removeListener(this);
 		super.dispose();
 	}
 

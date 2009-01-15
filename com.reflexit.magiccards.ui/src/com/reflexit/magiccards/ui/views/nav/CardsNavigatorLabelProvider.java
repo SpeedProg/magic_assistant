@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Image;
 
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.DecksContainer;
@@ -37,6 +38,9 @@ public class CardsNavigatorLabelProvider extends LabelProvider {
 		}
 		if (element instanceof MagicDbContainter) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/m16.png");
+		}
+		if (element instanceof CardOrganizer) {
+			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-lib.png");
 		}
 		return null;
 	}

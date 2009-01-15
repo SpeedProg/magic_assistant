@@ -18,12 +18,8 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.PluginTransferData;
 
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 
 /**
  * @author Alena
@@ -45,15 +41,8 @@ public class MagicCardDragListener implements DragSourceListener {
 	public void dragFinished(DragSourceEvent event) {
 		if (!event.doit || event.detail == DND.DROP_NONE)
 			return;
-		//if the card was moved, remove it from the collection or deck
+		// refresh viewer maybe?
 		if (event.detail == DND.DROP_MOVE) {
-			if (this.view instanceof MyCardsView) {
-				ICardStore store = ((MyCardsView) this.view).getFilteredStore().getCardStore();
-				for (Iterator it = this.selection.iterator(); it.hasNext();) {
-					IMagicCard card = (IMagicCard) it.next();
-					store.remove(card);
-				}
-			}
 			this.viewer.refresh();
 		}
 	}

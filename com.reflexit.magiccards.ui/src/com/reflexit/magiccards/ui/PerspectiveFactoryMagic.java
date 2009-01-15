@@ -14,7 +14,7 @@ import org.eclipse.ui.actions.BaseNewWizardMenu;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.lib.LibView;
+import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 import com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard;
 import com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard;
@@ -34,14 +34,14 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		left.addView(CardDescView.ID);
 		left.addView(CardsNavigatorView.ID);
 		right.addView(MagicDbView.ID);
-		right.addView(LibView.ID);
+		right.addView(MyCardsView.ID);
 		pf.addPlaceholder(DeckView.ID + ":*");
 		// layout.addStandaloneView(MagicDbView.ID, false, IPageLayout.LEFT,
 		// 1.0f, editorArea);
 		layout.addShowViewShortcut(CardDescView.ID);
 		layout.addShowViewShortcut(MagicDbView.ID);
 		layout.addShowViewShortcut(CardsNavigatorView.ID);
-		layout.addShowViewShortcut(LibView.ID);
+		layout.addShowViewShortcut(MyCardsView.ID);
 		layout.addNewWizardShortcut(NewDeckWizard.ID);
 		layout.addNewWizardShortcut(NewDeckContainerWizard.ID);
 		layout.addNewWizardShortcut(NewCardCollectionWizard.ID);

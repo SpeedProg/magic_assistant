@@ -88,7 +88,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 				final boolean header = includeHeader.getSelection();
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMagicLibraryHandler();
+						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
 						MagicCardFilter old = filteredLibrary.getFilter();
 						try {
 							MagicCardFilter locFilter = new MagicCardFilter();
