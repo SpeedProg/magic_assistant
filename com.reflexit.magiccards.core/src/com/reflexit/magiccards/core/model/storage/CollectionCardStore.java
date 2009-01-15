@@ -60,7 +60,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				remove(old);
 				this.cardCount += add.getCount();
 				this.hashpart.storeCard(add);
-				if (this.storage.add(add))
+				if (storageAdd(add))
 					return true;
 				else {
 					return false;
@@ -69,10 +69,19 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		}
 		IMagicCard phi = doAddCardNoMerge(card);
 		this.hashpart.storeCard(phi);
-		if (this.storage.add(phi))
+		if (storageAdd(phi))
 			return true;
 		else {
 			return false;
+		}
+	}
+
+	private boolean storageAdd(IMagicCard card) {
+		processStorageEvents = false;
+		try {
+			return this.storage.add(card);
+		} finally {
+			processStorageEvents = true;
 		}
 	}
 
@@ -111,7 +120,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				}
 			}
 		if (found != null) {
-			this.storage.remove(found);
+			storageRemove(found);
 			this.hashpart.removeCard(found);
 			this.cardCount -= found.getCount();
 			return true;
@@ -122,11 +131,20 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				return false;
 			MagicCardPhisical add = new MagicCardPhisical(max);
 			add.setCount(max.getCount() - phi.getCount());
-			this.storage.remove(max);
+			storageRemove(max);
 			this.hashpart.removeCard(max);
 			this.cardCount -= max.getCount();
 			add(add);
 			return true;
+		}
+	}
+
+	private void storageRemove(IMagicCard card) {
+		processStorageEvents = false;
+		try {
+			this.storage.remove(card);
+		} finally {
+			processStorageEvents = true;
 		}
 	}
 

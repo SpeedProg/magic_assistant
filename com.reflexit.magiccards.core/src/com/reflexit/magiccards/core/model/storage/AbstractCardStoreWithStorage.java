@@ -25,10 +25,12 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
         IStorageContainer<T> {
 	protected IStorage<T> storage;
 	protected boolean wrapped;
+	protected boolean processStorageEvents = true;
 	private ICardEventListener lis = new ICardEventListener() {
 		// event in underline storage should case to reinitialize
 		public void handleEvent(CardEvent event) {
-			doInitialize();
+			if (processStorageEvents)
+				doInitialize();
 		}
 	};
 
