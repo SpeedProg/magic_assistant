@@ -147,6 +147,8 @@ public class ModelRoot extends CardOrganizer {
 		}
 		if (root instanceof CardOrganizer) {
 			CardOrganizer org = (CardOrganizer) root;
+			if (org.getChildren() == null)
+				return;
 			for (Object element : org.getChildren()) {
 				CardElement el = (CardElement) element;
 				fillLocations(map, el);

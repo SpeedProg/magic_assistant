@@ -1,15 +1,15 @@
 package com.reflexit.magiccards.core.model.nav;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -119,6 +119,12 @@ public class CardOrganizer extends CardElement {
 				if (rest == null || rest.isEmpty())
 					return el;
 				return ((CardOrganizer) el).findElement(rest);
+			}
+		}
+		for (Object element : getChildren()) {
+			CardElement el = (CardElement) element;
+			if (el instanceof CardOrganizer) {
+				return ((CardOrganizer) el).findElement(p);
 			}
 		}
 		return null;
