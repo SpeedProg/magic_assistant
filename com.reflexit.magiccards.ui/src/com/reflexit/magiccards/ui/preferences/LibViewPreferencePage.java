@@ -13,7 +13,7 @@ public class LibViewPreferencePage extends FieldEditorPreferencePage implements 
 	public LibViewPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
-		setDescription("Magic Library View Preferences");
+		setDescription("My Cards View Preferences");
 	}
 
 	@Override

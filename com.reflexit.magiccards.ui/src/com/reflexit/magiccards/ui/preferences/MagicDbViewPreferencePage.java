@@ -13,7 +13,7 @@ public class MagicDbViewPreferencePage extends FieldEditorPreferencePage impleme
 	public MagicDbViewPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
-		setDescription("Magic Database View Preferences");
+		setDescription("MTG Database View Preferences");
 	}
 
 	@Override
