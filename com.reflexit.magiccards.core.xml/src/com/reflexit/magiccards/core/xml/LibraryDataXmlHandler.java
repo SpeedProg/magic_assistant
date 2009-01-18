@@ -67,7 +67,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		String loc = findLocationFilter(root);
 		if (loc != null)
 			return loc;
-		return null;
+		return table.getLocation();
 	}
 
 	private String findLocationFilter(Expr root) {
