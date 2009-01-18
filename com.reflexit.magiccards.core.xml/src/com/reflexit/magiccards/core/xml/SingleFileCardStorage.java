@@ -11,10 +11,11 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable {
+public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable, IStorageInfo {
 	protected transient File file;
 	protected String location;
 	protected String name;
@@ -141,6 +142,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	public void setComment(String comment) {
 		this.comment = comment;
+		autoSave();
 	}
 
 	public String getType() {
@@ -149,5 +151,10 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	public void setType(String type) {
 		this.type = type;
+		autoSave();
+	}
+
+	public String getProperty(String key) {
+		return properties.getProperty(key);
 	}
 }
