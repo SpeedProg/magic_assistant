@@ -117,6 +117,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		mana.setShowClose(false);
 		manaControl = new ManaCurveControl(folder, SWT.BORDER);
 		mana.setControl(manaControl.getControl());
+		// Info
+		final CTabItem info = new CTabItem(folder, SWT.CLOSE);
+		info.setShowClose(false);
+		info.setText("Info");
+		InfoControl infoControl = new InfoControl(folder);
+		info.setControl(infoControl);
+		infoControl.setFilteredStore(getFilteredStore());
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
