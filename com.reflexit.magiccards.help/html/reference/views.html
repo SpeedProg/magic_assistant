@@ -8,14 +8,14 @@
 
 <body>
 <h1>Views</h1>
-<h2><a name="viewmagicdb"/>Magic Database View</h2>
-"Magic Database" view show all available cards. By default local database of cards
+<h2><a name="viewmagicdb"/>MTG Database View</h2>
+"MTG Database" view show all available cards. By default local database of cards
 contains only latest print of a card with the same name. Default 
-database is contain sets only up to last public set that was release prior to the software release.
+database contains sets only up to the last public set that was released prior to the software release.
 You can update local database with specific set or with "Standard" format sets. 
 See <a href="preferences.html#update">Update Magic Database</a>. 
 <p/>
-"Magic Database" View contains the following components:
+"MTG Database" View contains the following components:
 <a name="viewcomp"/>
 <ul>
  <li>Cards Table</li> - see <a href="#cardstable">Cards Table</a> reference.
@@ -65,32 +65,39 @@ This is a list of possible columns:<br/>
 <li>Oracle text - text of card (oracle variant)</li>
 <li>Color - card color determined by casting cost</li>
 <li>Color type - mono, multi or hybrid</li>
+<li>Seller Price - price of single card from selected MTG seller</li>
 <p/>
-These only available in Deck and Collections view:
+These only available in Deck and My Cards view:
 <li>Count - Card count</li>
 <li>Location - Card location: Deck or Collection path</li>
+<li>Comment - card comment</li>
+<li>Price - personal price per card</li>
 
-<h2><a name="viewcol"/>Magic Collection View</h2>
-Magic Collection View shows cards from all or selected collection set. 
+<h2><a name="viewcol"/>My Cards View</h2>
+My Cards View shows cards from all your decks or collections (or from selected ones). 
 To control which collections are shown you can use 
 <a href="#filterloc">Location</a> page of the view's Filter.
-For collection view components see <a href="#viewcomp">Magic Database view</a>.
+For My Cards View see <a href="#viewcomp">MTG Database view</a>.
 <p/>
-You can open "Collections" view by double-clicking on one of the collections or collection containers from <a href="#viewcardnav">Card Navigator</a> view.
+You can open "My Cards" view by double-clicking on one of the collections or collection containers from <a href="#viewcardnav">Card Navigator</a> view.
 
 
 <h2><a name="viewdeck"/>Deck View</h2>
-Deck view shows card from a specific deck.
+Deck view shows cards from a specific deck.
 To open a Deck view double-click on a deck from <a href="#viewcardnav">Card Navigator</a> view.
 To close a Deck view click on "X" icon near the view header.
 <p/>
-For the list of view components (menus, card table, status bar) see <a href="#viewcomp">Magic Database view</a>.
+For the list of view components (menus, card table, status bar) see <a href="#viewcomp">MTG Database view</a>.
 <p/>
-You can drag cards from and to Deck view. Dragging a card from a Deck view to another Deck view will move the card.
-Dragging a card from Magic Database view to a Deck view will add 1 card to the deck. You can change number of cards of the same name by editing Count cell.
+You can drag cards from and to Deck view. Dragging a card from a Deck view to another deck or collection will move the card.
+Dragging a card from MTG Database view to a Deck view will add 1 card to the deck. 
+You can change number of cards of the same name by editing Count cell or edit mupiple cards by selecting them and select "Edit..." from context menu.
 
-<h2><a name="viewcard"/>Card Description View</h2>
-Card Description view shows details of the card selected in of the cards views (Magic Database, Magic Collection or Deck).
+Deck view also has Mana Curve tab, and Info tab where you can edit deck description.
+To try what hands you can get with this deck you can run command "Emulate Draw" from view menu (triangle icon).
+
+<h2><a name="viewcard"/>Card Info View</h2>
+Card Description view shows details of the card selected in of the cards views (MTG Database, My Cards or Deck).
 It loads a card image from "gatherer" site, and caches it in the workspace.
 <p/>
 You can turn off card caching from <a href="preferences.html">Preferences</a> in the Magic Preferences page.
@@ -98,11 +105,11 @@ If you need to use proxy you can set it up proxy settings from Preferences-&gt;G
 <p/>
 If image is not loaded or image quality is not acceptable card information is duplicated as a text below the image.
 <p/>
-To load card information into Card Description view selecta card (single click) from any other view that shows cards list.
+To load card information into Card Info view select a card (single click) from any other view that shows cards list.
 
 <h2><a name="viewcardnav"/>Card Navigator View</h2>
 Card navigator allow you to create a structure to organise your cards.
-You can create arbitrary structures to organise you collections and deck, 
+You can create arbitrary structures to organise you collections and decks, 
 the only restriction is that deck cannot be in the same folder as collection.
 <p/>
 To add new elements in the structure you can use view context menu (right click) or main File menu,
@@ -113,12 +120,12 @@ To delete an element use context menu "Delete". Select an element, right-click o
 To rename an element use context menu "Rename". Select an element, right-click on it and select menu item "Rename".
 <h2>Search</h2>
 You can search for a card with specific name using Search box. 
-You can also achieve same results using filter, but this way is more convinient when
+You can also achieve same results using filter, but this way is more convenient when
 creating a deck from the a "real life" deck. 
 <p/>
 To open it select "view menu-&gt;Find..." or "Ctrl+F".
 To close it click on "X" button.
-To find a card enter a name or part of name and press enter (or "arrow down" button).
+To find a card enter a name or part of name, search starts as soon as you start typing.
 You can also search backward by pressing "arrow down" button.
 To use case sensitive search press "C" button. 
 To use search where only whole word would match press "W" button.
@@ -127,7 +134,7 @@ To use search where only whole word would match press "W" button.
 You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
 You can select one of more criteria from the filters.
 
-Filter dialog has three page: Basic Filter, Sets Filter and Location filter (last one only available from Collections view).
+Filter dialog has three page: Basic Filter, Sets Filter and Location filter (last one only available from My Cards view).
  
 
 <h3><a name="filterasic">Basic Filter</h3>
