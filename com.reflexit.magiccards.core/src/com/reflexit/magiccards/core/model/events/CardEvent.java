@@ -28,4 +28,9 @@ public class CardEvent {
 	public final int getType() {
 		return this.type;
 	}
+
+	@Override
+	public String toString() {
+		return "event: " + type + " from " + source + " data " + data;
+	}
 }
