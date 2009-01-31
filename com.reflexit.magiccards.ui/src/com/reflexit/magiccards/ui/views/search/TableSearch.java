@@ -92,6 +92,8 @@ public class TableSearch {
 			}
 			if (needWrap && !context.isFound()) {
 				context.setDidWrap(true);
+				if (elements.length == 0)
+					return;
 				for (int i = elements.length - 1; i >= lastIndex; i--) {
 					IMagicCard card = (IMagicCard) elements[i];
 					if (match(pat, card)) {

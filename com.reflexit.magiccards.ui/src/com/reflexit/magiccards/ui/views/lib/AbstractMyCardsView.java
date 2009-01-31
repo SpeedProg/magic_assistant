@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Composite;
@@ -29,6 +30,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -264,15 +266,26 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	public void handleEvent(final CardEvent event) {
+		System.err.println("handle event " + event);
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					manager.getViewer().update(event.getSource(), null);
 					updateStatus();
+					getViewer().setSelection(new StructuredSelection(event.getSource()), true);
 				}
 			});
 		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
+			reloadData();
+		} else if (type == CardEvent.ADD) {
+			if (event.getData() instanceof List) {
+				List arr = (List) event.getData();
+				if (arr.size() == 1)
+					revealSelection = new StructuredSelection(arr);
+			} else if (event.getData() instanceof IMagicCard) {
+				revealSelection = new StructuredSelection(event.getData());
+			}
 			reloadData();
 		} else {
 			reloadData();

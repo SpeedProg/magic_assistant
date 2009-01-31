@@ -19,6 +19,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -79,6 +80,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	private IPreferenceStore store;
 	private SearchControl searchControl;
 	private Runnable updateViewer;
+	protected ISelection revealSelection;
 
 	/**
 	 * The constructor.
@@ -477,8 +479,17 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * Update view in UI thread after data load is finished
 	 */
 	protected void updateViewer() {
+		ISelection selection = manager.getViewer().getSelection();
 		manager.updateViewer();
 		updateStatus();
+		if (revealSelection != null) {
+			// set desired selection
+			getViewer().setSelection(revealSelection, true);
+			revealSelection = null;
+		} else {
+			// restore selection
+			getViewer().setSelection(selection, true);
+		}
 	}
 
 	protected void updateStatus() {

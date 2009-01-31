@@ -79,7 +79,10 @@ public class CountColumn extends GenColumn {
 			protected void setValue(Object element, Object value) {
 				if (element instanceof MagicCardPhisical) {
 					MagicCardPhisical card = (MagicCardPhisical) element;
+					int oldCount = card.getCount();
 					int count = value == null ? 0 : Integer.parseInt(value.toString());
+					if (oldCount == count)
+						return;
 					MagicCardPhisical add = new MagicCardPhisical(card);
 					add.setCount(count);
 					//viewer.update(element, null);
