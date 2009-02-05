@@ -202,8 +202,10 @@ public class XmlCardHolder implements ICardHandler {
 						break;
 					}
 				}
-				SingleFileCardStorage sfrom2 = LibraryDataXmlHandler.getInstance().getStorage(from);
-				sfrom2.removeAll(cards);
+				if (from != null) {
+					SingleFileCardStorage sfrom2 = LibraryDataXmlHandler.getInstance().getStorage(from);
+					sfrom2.removeAll(cards);
+				}
 			}
 		}
 		return res;
