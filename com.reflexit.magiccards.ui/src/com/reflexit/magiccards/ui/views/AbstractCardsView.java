@@ -479,7 +479,12 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * Update view in UI thread after data load is finished
 	 */
 	protected void updateViewer() {
-		ISelection selection = manager.getViewer().getSelection();
+		ISelection selection;
+		try {
+			selection = manager.getViewer().getSelection();
+		} catch (Exception e) {
+			selection = new StructuredSelection();
+		}
 		manager.updateViewer();
 		updateStatus();
 		if (revealSelection != null) {
