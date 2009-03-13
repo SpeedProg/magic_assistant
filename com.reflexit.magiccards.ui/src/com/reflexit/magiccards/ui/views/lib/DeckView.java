@@ -15,11 +15,12 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardDeck;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -95,8 +96,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	@Override
 	public void createPartControl(Composite parent) {
 		ICardEventManager s = this.manager.getFilteredStore().getCardStore();
-		if (s instanceof ICardDeck) {
-			setPartName("Deck: " + ((ICardDeck) s).getDeckName());
+		if (s instanceof ICardStore) {
+			setPartName("Deck: " + ((ICardStore<IMagicCard>) s).getName());
 		}
 		super.createPartControl(parent);
 	}

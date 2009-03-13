@@ -12,8 +12,8 @@ import org.eclipse.ui.PartInitException;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
@@ -91,8 +91,8 @@ public class MagicDbView extends AbstractCardsView {
 				DeckView deckView = (DeckView) viewReference.getPart(false);
 				if (deckView == null)
 					continue;
-				ICardDeck store = (ICardDeck) deckView.getFilteredStore().getCardStore();
-				Action ac = new Action(store.getDeckName()) {
+				ICardStore<IMagicCard> store = deckView.getFilteredStore().getCardStore();
+				Action ac = new Action(store.getName()) {
 					@Override
 					public void run() {
 						addToDeck(deckId);

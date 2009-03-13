@@ -21,8 +21,9 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 
-import com.reflexit.magiccards.core.model.ICardDeck;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.Deck;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
@@ -130,7 +131,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		if (sel.getFirstElement() instanceof Deck) {
 			Deck deck = (Deck) sel.getFirstElement();
 			if (deck.isOpen()) {
-				ICardDeck store2 = deck.getStore();
+				ICardStore<IMagicCard> store2 = deck.getStore();
 				this.store.setStore(store2);
 				HandView.this.store.draw(7);
 				getManager().loadData(null);

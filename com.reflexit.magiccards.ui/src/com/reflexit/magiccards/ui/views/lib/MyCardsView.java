@@ -17,10 +17,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardDeck;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
@@ -103,8 +103,8 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 				final String deckId = viewReference.getSecondaryId();
 				DeckView deckView = (DeckView) viewReference.getPart(false);
 				if (deckView != null) {
-					ICardDeck store = (ICardDeck) deckView.getFilteredStore().getCardStore();
-					Action ac = new Action(store.getDeckName()) {
+					ICardStore<IMagicCard> store = deckView.getFilteredStore().getCardStore();
+					Action ac = new Action(store.getName()) {
 						@Override
 						public void run() {
 							addToDeck(deckId);
