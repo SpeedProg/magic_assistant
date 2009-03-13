@@ -10,21 +10,16 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
-import org.eclipse.core.commands.common.EventManager;
-
 import java.io.FileNotFoundException;
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.events.CardEvent;
-import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 /**
  * @author Alena
  *
  */
-public abstract class AbstractStorage<T> extends EventManager implements IStorage<T> {
+public abstract class AbstractStorage<T> implements IStorage<T> {
 	private boolean loaded = false;
 	private boolean autocommit = true;
 	private boolean needToSave = false;
@@ -77,9 +72,6 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 				autoSave();
 			}
 		}
-		if (modified) {
-			fireEvent(new CardEvent(this, CardEvent.ADD, card));
-		}
 		return modified;
 	}
 
@@ -98,9 +90,6 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 			if (modified)
 				autoSave();
 		}
-		if (modified) {
-			fireEvent(new CardEvent(this, CardEvent.ADD, list));
-		}
 		return modified;
 	}
 
@@ -117,9 +106,6 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 			if (modified)
 				autoSave();
 		}
-		if (modified) {
-			fireEvent(new CardEvent(this, CardEvent.REMOVE, list));
-		}
 		return modified;
 	}
 
@@ -134,9 +120,6 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 				}
 			}
 			autoSave();
-		}
-		if (modified) {
-			fireEvent(new CardEvent(this, CardEvent.REMOVE, null));
 		}
 		return modified;
 	}
@@ -155,7 +138,6 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 			setNeedToSave(true);
 			autoSave();
 		}
-		fireEvent(new CardEvent(this, CardEvent.REMOVE, card));
 		return true;
 	}
 
@@ -186,40 +168,5 @@ public abstract class AbstractStorage<T> extends EventManager implements IStorag
 
 	public boolean isLoaded() {
 		return loaded;
-	}
-
-	public void addListener(final ICardEventListener lis) {
-		addListenerObject(lis);
-	}
-
-	public void removeListener(final ICardEventListener lis) {
-		removeListenerObject(lis);
-	}
-
-	protected void fireEvent(final CardEvent event) {
-		final Object[] listeners = getListeners();
-		for (final Object listener : listeners) {
-			final ICardEventListener lis = (ICardEventListener) listener;
-			try {
-				lis.handleEvent(event);
-			} catch (final Throwable t) {
-				Activator.log(t);
-			}
-		}
-	}
-
-	public void update(final T card) {
-		load();
-		synchronized (this) {
-			if (!doUpdate(card))
-				return;
-			autoSave();
-		}
-		fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
-		return;
-	}
-
-	protected boolean doUpdate(T card) {
-		return true;
 	}
 }

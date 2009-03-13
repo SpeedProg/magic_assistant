@@ -14,8 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.events.CardEvent;
-import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 /**
  * @author Alena
@@ -25,14 +23,6 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
         IStorageContainer<T> {
 	protected IStorage<T> storage;
 	protected boolean wrapped;
-	protected boolean processStorageEvents = true;
-	private ICardEventListener lis = new ICardEventListener() {
-		// event in underline storage should case to reinitialize
-		public void handleEvent(CardEvent event) {
-			if (processStorageEvents)
-				doInitialize();
-		}
-	};
 
 	/**
 	 * 
@@ -41,7 +31,6 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 		super();
 		this.storage = storage;
 		this.wrapped = wrapped;
-		this.storage.addListener(lis);
 	}
 
 	public IStorage<T> getStorage() {
@@ -92,15 +81,23 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 		return storage.remove(card);
 	}
 
-	public void addListener(ICardEventListener lis) {
-		storage.addListener(lis);
+	public String getLocation() {
+		return storage.getLocation();
 	}
 
-	public void removeListener(ICardEventListener lis) {
-		storage.removeListener(lis);
+	public void setLocation(String location) {
+		storage.setLocation(location);
 	}
 
-	public void update(T card) {
-		storage.update(card);
+	public String getComment() {
+		return storage.getComment();
+	}
+
+	public String getName() {
+		return storage.getName();
+	}
+
+	public void setName(String name) {
+		throw new UnsupportedOperationException();
 	}
 }

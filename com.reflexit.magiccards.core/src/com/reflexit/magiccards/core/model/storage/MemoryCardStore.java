@@ -15,14 +15,14 @@ package com.reflexit.magiccards.core.model.storage;
  * @author Alena
  *
  */
-public class MemoryCardStore<T> extends MemoryCardStorage<T> implements ICardStore<T> {
+public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardStore<T> {
 	protected boolean mergeOnAdd = true;
 
 	/**
 	 * creates empty card store
 	 */
 	public MemoryCardStore() {
-		super();
+		super(new MemoryCardStorage<T>(), false);
 	}
 
 	public void setMergeOnAdd(final boolean v) {

@@ -2,10 +2,11 @@ package com.reflexit.magiccards.core.model.nav;
 
 import org.eclipse.core.runtime.IPath;
 
-import com.reflexit.magiccards.core.model.ICardDeck;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class Deck extends CardElement {
-	private transient ICardDeck store;
+	private transient ICardStore<IMagicCard> store;
 
 	public Deck(String filename, CardOrganizer parent) {
 		super(filename, parent);
@@ -15,7 +16,7 @@ public class Deck extends CardElement {
 		super(name, path, parent);
 	}
 
-	public ICardDeck getStore() {
+	public ICardStore<IMagicCard> getStore() {
 		return this.store;
 	}
 
@@ -24,7 +25,7 @@ public class Deck extends CardElement {
 		return super.getName();
 	}
 
-	public void open(ICardDeck store) {
+	public void open(ICardStore<IMagicCard> store) {
 		if (this.store == null) {
 			this.store = store;
 		} else {

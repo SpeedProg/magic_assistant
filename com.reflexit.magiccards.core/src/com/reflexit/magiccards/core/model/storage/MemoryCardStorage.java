@@ -79,4 +79,20 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	protected void doSave() throws FileNotFoundException {
 		// nothing
 	}
+
+	public String getLocation() {
+		return "mem";
+	}
+
+	public void setLocation(String location) {
+		throw new UnsupportedOperationException();
+	}
+
+	public String getComment() {
+		return null;
+	}
+
+	public String getName() {
+		return "mem";
+	}
 }

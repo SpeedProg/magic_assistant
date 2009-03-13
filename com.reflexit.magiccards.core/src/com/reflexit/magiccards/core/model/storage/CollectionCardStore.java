@@ -21,13 +21,17 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * @author Alena
  *
  */
-public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements ICardCountable,
-        IStorageContainer<IMagicCard> {
+public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements
+        ICardCollection<IMagicCard>, IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
 	protected int cardCount;
 
 	public CollectionCardStore(IStorage<IMagicCard> storage) {
-		super(storage, true);
+		this(storage, true);
+	}
+
+	public CollectionCardStore(IStorage<IMagicCard> storage, boolean wrapped) {
+		super(storage, wrapped);
 		this.hashpart = new HashCollectionPart();
 	}
 
@@ -57,7 +61,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				MagicCardPhisical add = new MagicCardPhisical(card);
 				MagicCardPhisical old = phi;
 				add.setCount(old.getCount() + count);
-				remove(old);
+				doRemoveCard(old);
 				this.cardCount += add.getCount();
 				this.hashpart.storeCard(add);
 				if (storageAdd(add))
@@ -77,12 +81,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	private boolean storageAdd(IMagicCard card) {
-		processStorageEvents = false;
-		try {
-			return this.storage.add(card);
-		} finally {
-			processStorageEvents = true;
-		}
+		return this.storage.add(card);
 	}
 
 	protected IMagicCard doAddCardNoMerge(IMagicCard card) {
@@ -134,18 +133,13 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 			storageRemove(max);
 			this.hashpart.removeCard(max);
 			this.cardCount -= max.getCount();
-			add(add);
+			doAddCard(add);
 			return true;
 		}
 	}
 
 	private void storageRemove(IMagicCard card) {
-		processStorageEvents = false;
-		try {
-			this.storage.remove(card);
-		} finally {
-			processStorageEvents = true;
-		}
+		this.storage.remove(card);
 	}
 
 	/* (non-Javadoc)

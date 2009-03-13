@@ -1,11 +1,15 @@
 package com.reflexit.magiccards.core.model.storage;
 
+import org.eclipse.core.commands.common.EventManager;
+
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.events.CardEvent;
+import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public abstract class AbstractCardStore<T> implements ICardStore<T> {
+public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T>, ILocatable {
 	protected transient boolean initialized = false;
 	protected boolean mergeOnAdd = true;
 
@@ -25,7 +29,11 @@ public abstract class AbstractCardStore<T> implements ICardStore<T> {
 
 	public boolean addAll(final Collection<? extends T> cards) {
 		initialize();
-		return doAddAll(cards);
+		boolean modified = doAddAll(cards);
+		if (modified) {
+			fireEvent(new CardEvent(this, CardEvent.ADD, cards));
+		}
+		return modified;
 	}
 
 	protected synchronized boolean doAddAll(final Collection<? extends T> col) {
@@ -44,6 +52,7 @@ public abstract class AbstractCardStore<T> implements ICardStore<T> {
 			if (!doAddCard(card))
 				return false;
 		}
+		fireEvent(new CardEvent(this, CardEvent.ADD, card));
 		return true;
 	}
 
@@ -53,18 +62,26 @@ public abstract class AbstractCardStore<T> implements ICardStore<T> {
 		synchronized (this) {
 			res = doRemoveCard(o);
 		}
+		if (res)
+			fireEvent(new CardEvent(this, CardEvent.REMOVE, o));
 		return res;
 	}
 
 	public boolean removeAll(Collection<?> list) {
 		initialize();
 		boolean modified = doRemoveAll(list);
+		if (modified) {
+			fireEvent(new CardEvent(this, CardEvent.REMOVE, list));
+		}
 		return modified;
 	}
 
 	public boolean removeAll() {
 		initialize();
 		boolean modified = doRemoveAll();
+		if (modified) {
+			fireEvent(new CardEvent(this, CardEvent.REMOVE, null));
+		}
 		return modified;
 	}
 
@@ -105,4 +122,38 @@ public abstract class AbstractCardStore<T> implements ICardStore<T> {
 	protected abstract boolean doAddCard(T card);
 
 	protected abstract boolean doRemoveCard(T card);
+
+	public void addListener(final ICardEventListener lis) {
+		addListenerObject(lis);
+	}
+
+	public void removeListener(final ICardEventListener lis) {
+		removeListenerObject(lis);
+	}
+
+	protected void fireEvent(final CardEvent event) {
+		final Object[] listeners = getListeners();
+		for (final Object listener : listeners) {
+			final ICardEventListener lis = (ICardEventListener) listener;
+			try {
+				lis.handleEvent(event);
+			} catch (final Throwable t) {
+				Activator.log(t);
+			}
+		}
+	}
+
+	public void update(final T card) {
+		initialize();
+		synchronized (this) {
+			if (!doUpdate(card))
+				return;
+		}
+		fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
+		return;
+	}
+
+	protected boolean doUpdate(T card) {
+		return true;
+	}
 }
