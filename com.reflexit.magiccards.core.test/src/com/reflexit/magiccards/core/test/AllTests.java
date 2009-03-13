@@ -21,6 +21,7 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magiccards.core.test");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(VirtualMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
 		suite.addTestSuite(CardOrganizerTest.class);
 		suite.addTestSuite(MemCardHandlerTest.class);

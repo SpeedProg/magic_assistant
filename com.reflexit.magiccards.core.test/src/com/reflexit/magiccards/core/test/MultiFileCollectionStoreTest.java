@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
-import com.reflexit.magiccards.core.xml.SingleFileCardStorage;
+import com.reflexit.magiccards.core.xml.CollectionSingleFileCardStore;
 
 public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	CollectionMultiFileCardStore store;
@@ -46,11 +46,11 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	}
 
 	public void testAddCardCheckSaved() {
+		String def = this.store.getLocation();
+		File tempFile1 = store.getFile(def);
 		MagicCard a = CardGenerator.generateRandomCard();
 		this.store.add(a);
-		String def = this.store.getLocation();
-		File tempFile1 = store.getMStorage().getFile(def);
-		SingleFileCardStorage loaded = new SingleFileCardStorage(tempFile1, def, true);
+		CollectionSingleFileCardStore loaded = new CollectionSingleFileCardStore(tempFile1, def, true);
 		assertEquals(1, loaded.size());
 		boolean found = false;
 		for (Object element : loaded) {

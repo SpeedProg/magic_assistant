@@ -18,18 +18,17 @@ import junit.framework.TestCase;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardCollection;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
-import com.reflexit.magiccards.core.xml.DeckFileCardStore;
-import com.reflexit.magiccards.core.xml.SingleFileCardStorage;
+import com.reflexit.magiccards.core.xml.CollectionSingleFileCardStore;
 
 /**
  * @author Alena
  * 
  */
 public class DeckStoreTest extends TestCase {
-	CollectionCardStore store;
+	ICardCollection<IMagicCard> store;
 	protected MagicCard m1;
 	protected MagicCard m2;
 	protected File tempFile;
@@ -39,7 +38,9 @@ public class DeckStoreTest extends TestCase {
 		String name = "aaa";
 		tempFile = File.createTempFile("deck", ".xml");
 		tempFile.deleteOnExit();
-		this.store = new DeckFileCardStore(tempFile, name, "Decks/" + name + ".xml");
+		this.store = new CollectionSingleFileCardStore(tempFile, "Decks/" + name + ".xml");
+		//((CollectionSingleFileCardStore) this.store).setName(name);
+		((CollectionSingleFileCardStore) this.store).setType(CollectionSingleFileCardStore.DECK_TYPE);
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
 		this.m2 = CardGenerator.generateRandomCard();
@@ -47,7 +48,7 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testName() {
-		assertEquals("aaa", ((DeckFileCardStore) this.store).getDeckName());
+		assertEquals("aaa", this.store.getName());
 	}
 
 	public void testAddCard() {
@@ -194,7 +195,7 @@ public class DeckStoreTest extends TestCase {
 		this.store.add(a);
 		String def = ((ILocatable) this.store).getLocation();
 		File tempFile1 = tempFile;
-		SingleFileCardStorage loaded = new SingleFileCardStorage(tempFile1, def, true);
+		CollectionSingleFileCardStore loaded = new CollectionSingleFileCardStore(tempFile1, def, true);
 		assertEquals(1, loaded.size());
 		boolean found = false;
 		for (Object element : loaded) {
