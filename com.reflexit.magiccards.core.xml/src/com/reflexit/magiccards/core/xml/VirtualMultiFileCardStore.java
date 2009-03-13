@@ -18,24 +18,33 @@ import java.util.HashSet;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
+import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
  * @author Alena
  * 
  */
-public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
+public class VirtualMultiFileCardStore extends CollectionMultiFileCardStore {
 	public VirtualMultiFileCardStore() {
-		super(new MultiFileCardStorage(), false);
+		super();
 	}
 
-	/**
-	 * @param file
-	 * @param location
-	 */
-	public void addFile(final File file, final String location, boolean initialize) {
-		((MultiFileCardStorage) this.storage).addFile(file, location, initialize);
+	@Override
+	public synchronized void addFile(final File file, final String location, boolean initialize) {
+		if (location != null && map.containsKey(location)) {
+			return;
+		}
+		CollectionCardStore store = new DbFileCardStore(file, location, initialize);
+		addCardStore(store);
 		if (initialize)
 			initialized = initialize;
+	}
+
+	@Override
+	protected AbstractCardStoreWithStorage newStorage(IMagicCard card) {
+		DbFileCardStore store = new DbFileCardStore(getFile(card), getLocation(card), false);
+		store.getStorage().setAutoCommit(getStorage().isAutoCommit());
+		return store;
 	}
 
 	@Override
@@ -62,6 +71,6 @@ public class VirtualMultiFileCardStore extends AbstractCardStoreWithStorage<IMag
 				System.err.println("Failed to find set: " + card.getSet());
 			}
 		}
-		this.storage.removeAll(duplicates);
+		this.removeAll(duplicates);
 	}
 }

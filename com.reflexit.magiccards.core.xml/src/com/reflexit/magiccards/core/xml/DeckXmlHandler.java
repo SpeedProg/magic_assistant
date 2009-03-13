@@ -13,7 +13,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable {
-	private DeckFileCardStore table;
+	private CollectionSingleFileCardStore table;
 
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
@@ -32,12 +32,14 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implem
 				d = DataManager.getModelRoot().getDeckContainer().addDeck(filename);
 			file = d.getFile();
 			if (!d.isOpen()) {
+				//CollectionSingleFileCardStore deckFileCardStore = new DeckFileCardStore(file, null, d.getLocation());
 				LibraryDataXmlHandler magicLibraryHandler = (LibraryDataXmlHandler) DataManager.getCardHandler()
 				        .getMyCardsHandler();
 				magicLibraryHandler.doInitialize();
-				d.open(new DeckFileCardStore(magicLibraryHandler.getStorage(d.getLocation())));
+				d.open(magicLibraryHandler.getStore(d.getLocation()));
 			}
-			this.table = (DeckFileCardStore) d.getStore();
+			this.table = (CollectionSingleFileCardStore) d.getStore();
+			this.table.setType(CollectionSingleFileCardStore.DECK_TYPE);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

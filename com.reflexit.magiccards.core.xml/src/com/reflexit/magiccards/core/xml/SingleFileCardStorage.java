@@ -23,17 +23,21 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	protected String type;
 	protected Properties properties = new Properties();
 
-	public SingleFileCardStorage(File file, String location) {
+	SingleFileCardStorage(File file, String location) {
 		this(file, location, false);
 	}
 
-	public SingleFileCardStorage(File file, String location, boolean initialize) {
+	SingleFileCardStorage(File file, String location, boolean initialize) {
 		this.file = file;
 		this.location = location;
 		//System.err.println("Create sin store " + location + " 0x" + Integer.toHexString(System.identityHashCode(this)));
 		if (initialize) {
 			load();
 		}
+	}
+
+	public File getFile() {
+		return file;
 	}
 
 	@Override
@@ -110,10 +114,12 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		obj.save();
 	}
 
+	@Override
 	public String getLocation() {
 		return location;
 	}
 
+	@Override
 	public void setLocation(String location) {
 		this.location = location;
 	}
@@ -128,6 +134,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		return true;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -136,6 +143,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		this.name = name;
 	}
 
+	@Override
 	public String getComment() {
 		return comment;
 	}

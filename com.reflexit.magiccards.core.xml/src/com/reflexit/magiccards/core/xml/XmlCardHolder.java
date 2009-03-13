@@ -172,14 +172,14 @@ public class XmlCardHolder implements ICardHandler {
 			phi.setLocation(to);
 			list.add(phi);
 		}
-		SingleFileCardStorage storage = LibraryDataXmlHandler.getInstance().getStorage(to);
-		if (storage == null)
+		ICardStore<IMagicCard> store = LibraryDataXmlHandler.getInstance().getStore(to);
+		if (store == null)
 			return false;
-		return storage.addAll(cards);
+		return store.addAll(cards);
 	}
 
 	public boolean moveCards(Collection cards, String from, String to) {
-		SingleFileCardStorage sto = LibraryDataXmlHandler.getInstance().getStorage(to);
+		ICardStore<IMagicCard> sto = LibraryDataXmlHandler.getInstance().getStore(to);
 		if (sto == null)
 			return false;
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
@@ -203,8 +203,9 @@ public class XmlCardHolder implements ICardHandler {
 					}
 				}
 				if (from != null) {
-					SingleFileCardStorage sfrom2 = LibraryDataXmlHandler.getInstance().getStorage(from);
-					sfrom2.removeAll(cards);
+					ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler.getInstance().getStore(from);
+					if (sfrom2 != null)
+						sfrom2.removeAll(cards);
 				}
 			}
 		}

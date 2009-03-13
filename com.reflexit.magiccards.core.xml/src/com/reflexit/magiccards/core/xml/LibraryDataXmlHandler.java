@@ -20,11 +20,9 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
 public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable,
-        ICardEventListener, ICardCountable, IStorageContainer<IMagicCard> {
+        ICardEventListener, ICardCountable {
 	private static LibraryDataXmlHandler instance;
 	private CollectionMultiFileCardStore table;
 
@@ -91,8 +89,8 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 	}
 
 	public void handleEvent(CardEvent event) {
-		if (event.getData() instanceof CardCollection) {
-			CardCollection elem = (CardCollection) event.getData();
+		if (event.getData() instanceof CardElement) {
+			CardElement elem = (CardElement) event.getData();
 			if (event.getType() == CardEvent.ADD_CONTAINER) {
 				try {
 					this.table.addFile(elem.getFile(), elem.getLocation());
@@ -101,11 +99,11 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 				}
 				reload();
 			} else if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-				this.table.removeFile(elem.getLocation());
+				this.table.removeLocation(elem.getLocation());
 				reload();
 			}
-		} else if (event.getSource() instanceof CardCollection) {
-			CardCollection elem = (CardCollection) event.getSource();
+		} else if (event.getSource() instanceof CardElement) {
+			CardElement elem = (CardElement) event.getSource();
 			if (event.getType() == CardEvent.RENAME_CONTAINER) {
 				this.table.renameLocation((String) event.getData(), elem.getLocation());
 				reload();
@@ -132,14 +130,10 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		return count;
 	}
 
-	public IStorage<IMagicCard> getStorage() {
-		return table.getStorage();
-	}
-
-	public SingleFileCardStorage getStorage(String location) {
+	public ICardStore<IMagicCard> getStore(String location) {
 		initialize();
 		if (location == null)
-			return table.getMStorage().getStorage(table.getMStorage().getLocation());
-		return table.getMStorage().getStorage(location);
+			return table.getStore(table.getLocation());
+		return table.getStore(location);
 	}
 }

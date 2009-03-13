@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
+import org.eclipse.core.runtime.Path;
+
 import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -21,10 +23,39 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
  *
  */
 public class CollectionSingleFileCardStore extends CollectionCardStore implements ICardCountable {
+	public static final String DECK_TYPE = "deck";
+
 	/**
 	 * @param file
 	 */
 	public CollectionSingleFileCardStore(File file, String location) {
-		super(new SingleFileCardStorage(file, location));
+		this(file, location, false);
+	}
+
+	public CollectionSingleFileCardStore(File file, String location, boolean initialize) {
+		super(new SingleFileCardStorage(file, location, initialize));
+		getFileStorage().setName(
+		        new Path(new Path(storage.getLocation()).lastSegment()).removeFileExtension().toString());
+	}
+
+	public static CollectionCardStore create(File file, String location, boolean initialize) {
+		return new CollectionSingleFileCardStore(file, location, initialize);
+	}
+
+	public void setType(String type) {
+		getFileStorage().setType(type);
+	}
+
+	@Override
+	public void setName(String name) {
+		getFileStorage().setName(name);
+	}
+
+	public void setComment(String comment) {
+		getFileStorage().setComment(comment);
+	}
+
+	protected SingleFileCardStorage getFileStorage() {
+		return (SingleFileCardStorage) getStorage();
 	}
 }
