@@ -49,8 +49,8 @@ public class CardOrganizerTest extends TestCase {
 
 	public void testFindElement2() {
 		DecksContainer decks = this.root.getDeckContainer();
-		DecksContainer con = decks.addDeckContainer("con");
-		CardElement element = this.root.findElement(new Path("My Cards/Decks/con"));
+		DecksContainer con = decks.addDeckContainer("cox");
+		CardElement element = this.root.findElement(new Path("My Cards/Decks/cox"));
 		assertEquals(con, element);
 	}
 
