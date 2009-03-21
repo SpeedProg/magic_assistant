@@ -50,11 +50,11 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		CardCollectionStoreObject obj = null;
 		try {
 			obj = CardCollectionStoreObject.initFromFile(this.file);
+			loadFields(obj);
+			updateLocations();
 		} catch (IOException e) {
 			Activator.log(e);
 		}
-		loadFields(obj);
-		updateLocations();
 	}
 
 	void updateLocations() {

@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -93,7 +94,8 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 			CardElement elem = (CardElement) event.getData();
 			if (event.getType() == CardEvent.ADD_CONTAINER) {
 				try {
-					this.table.addFile(elem.getFile(), elem.getLocation());
+					if (!(elem instanceof CardOrganizer))
+						this.table.addFile(elem.getFile(), elem.getLocation());
 				} catch (CoreException e) {
 					Activator.log(e);
 				}
