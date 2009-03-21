@@ -298,7 +298,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		}
 
 		public int size() {
-			throw new UnsupportedOperationException();
+			return size;
 		}
 
 		public String getLocation() {

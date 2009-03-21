@@ -59,6 +59,8 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 					count = ((ICardCountable) card).getCount();
 				}
 				MagicCardPhisical add = new MagicCardPhisical(card);
+				if (add.getLocation() == null)
+					add.setLocation(loc);
 				MagicCardPhisical old = phi;
 				add.setCount(old.getCount() + count);
 				doRemoveCard(old);

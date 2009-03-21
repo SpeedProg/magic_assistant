@@ -14,6 +14,10 @@ public interface ICardHandler {
 
 	public IFilteredCardStore getDeckHandler(String id);
 
+	public IFilteredCardStore getActiveDeckHandler();
+
+	public void setActiveDeckHandler(IFilteredCardStore store);
+
 	public boolean copyCards(Collection cards, String to);
 
 	public boolean moveCards(Collection cards, String from, String to);
