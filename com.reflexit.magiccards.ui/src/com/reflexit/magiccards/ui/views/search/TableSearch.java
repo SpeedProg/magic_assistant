@@ -36,9 +36,11 @@ public class TableSearch {
 			context.setDidWrap(false);
 		}
 		Object[] elements = store.getElements();
-		String pattern = ".*\\Q" + inputText + "\\E.*";
+		String escapedInput = escapeAndCamelCase(inputText);
+		String pattern = escapedInput;
 		if (wholeWord)
-			pattern = ".*\\b\\Q" + inputText + "\\E\\b.*";
+			pattern = "\\b" + escapedInput + "\\b";
+		pattern = ".*" + pattern + ".*";
 		int flags = Pattern.CASE_INSENSITIVE;
 		if (matchCase)
 			flags = 0;
@@ -105,6 +107,25 @@ public class TableSearch {
 					return;
 			}
 		}
+	}
+
+	private static String escapeAndCamelCase(String inputText) {
+		char[] charArray = inputText.toCharArray();
+		StringBuffer res = new StringBuffer();
+		for (int i = 0; i < charArray.length; i++) {
+			char c = charArray[i];
+			if (!(Character.isLetter(c) || c == ',' || c == ' ')) {
+				res.append('.');
+				continue;
+			}
+			if (Character.isUpperCase(c)) {
+				if (i > 0)
+					res.append(".*");
+				res.append("\\b");
+			}
+			res.append(c);
+		}
+		return res.toString();
 	}
 
 	/**
