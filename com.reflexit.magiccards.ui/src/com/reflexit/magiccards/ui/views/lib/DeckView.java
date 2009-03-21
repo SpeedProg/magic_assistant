@@ -11,6 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
@@ -32,6 +33,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	private Action shuffle;
 	private ManaCurveControl manaControl;
 	private CTabFolder folder;
+	private IPartListener2 partListener;
 
 	/**
 	 * The constructor.
@@ -51,6 +53,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			throw new IllegalArgumentException("Bad store");
 		}
 		DataManager.getCardHandler().getMyCardsHandler().getCardStore().addListener(this);
+		site.getPage().addPartListener(partListener = new PartListener());
 	}
 
 	/* (non-Javadoc)
@@ -87,6 +90,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	public void dispose() {
 		this.deck.close();
 		DataManager.getCardHandler().getMyCardsHandler().getCardStore().removeListener(this);
+		getSite().getPage().removePartListener(partListener);
 		super.dispose();
 	}
 

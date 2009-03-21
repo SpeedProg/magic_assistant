@@ -116,6 +116,10 @@
             commandId="com.reflexit.magiccards.ui.commands.addToLib">
       </handler>
       <handler
+            class="com.reflexit.magiccards.ui.commands.AddToActiveDeckHandler"
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck">
+      </handler>
+      <handler
             class="com.reflexit.magiccards.ui.commands.SendBugReportHandler"
             commandId="com.reflexit.magiccards.ui.commands.sendBug">
 
@@ -137,6 +141,18 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="INSERT">
       </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="=">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="NUMPAD_ADD">
+      </key>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -148,6 +164,11 @@
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.addToLib"
             name="Add to Default Collection">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.addToDeck"
+            name="Add to Active Deck">
       </command>
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
@@ -210,6 +231,11 @@
               mode="FORCE_TEXT"
               style="push">
         </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+              label="Increase"
+              >
+        </command>
      </menuContribution>
      <menuContribution
            locationURI="menu:com.reflexit.magiccards.ui.views.lib.DeckView">
@@ -217,6 +243,7 @@
               commandId="org.eclipse.ui.edit.findReplace"
               label="Find...">
         </command>
+
      </menuContribution>
      <menuContribution
            locationURI="menu:com.reflexit.magiccards.ui.views.MagicDbView">
@@ -230,6 +257,10 @@
            locationURI="popup:com.reflexit.magiccards.ui.views.MagicDbView">
         <command
               commandId="com.reflexit.magiccards.ui.commands.addToLib"
+              >
+        </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.addToDeck"
               >
         </command>
      </menuContribution>
