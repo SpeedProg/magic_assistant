@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model.nav;
 
-import org.eclipse.core.runtime.IPath;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
@@ -10,10 +8,6 @@ public class Deck extends CardElement {
 
 	public Deck(String filename, CardOrganizer parent) {
 		super(filename, parent);
-	}
-
-	public Deck(String name, IPath path, CardOrganizer parent) {
-		super(name, path, parent);
 	}
 
 	public ICardStore<IMagicCard> getStore() {

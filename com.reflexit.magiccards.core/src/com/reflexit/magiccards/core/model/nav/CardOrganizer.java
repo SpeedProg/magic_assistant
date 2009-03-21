@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,14 +16,16 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 
 public class CardOrganizer extends CardElement {
-	private Collection<CardElement> children = new ArrayList<CardElement>();
+	private final Collection<CardElement> children = new ArrayList<CardElement>();
 
 	public CardOrganizer(String filename, CardOrganizer parent) {
-		super(filename, parent);
+		super(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename));
+		setParentInit(parent);
 	}
 
 	public CardOrganizer(String name, IPath path, CardOrganizer parent) {
-		super(name, path, parent);
+		super(name, path);
+		setParentInit(parent);
 	}
 
 	public Collection<CardElement> getChildren() {

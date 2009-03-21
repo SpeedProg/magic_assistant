@@ -1,12 +1,13 @@
 package com.reflexit.magiccards.core.model.nav;
 
-import java.io.File;
-
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+
+import java.io.File;
+import java.io.IOException;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -19,31 +20,39 @@ public abstract class CardElement extends EventManager {
 	private IPath path; // project relative path
 	private CardOrganizer parent;
 
-	public CardElement(String name, IPath path, CardOrganizer parent) {
+	public CardElement(String name, IPath path) {
 		this.name = name;
 		this.path = path;
-		this.parent = parent;
-		if (parent != null) {
-			parent.addChild(this);
-		}
 		try {
 			File file = getFile();
 			if (!file.exists()) {
 				if (!(this instanceof CardOrganizer))
 					file.createNewFile();
-				else
-					file.mkdir();
-			}
-			if (parent != null && parent.getResource() != null) {
-				parent.getResource().refreshLocal(1, null);
+				else if (file.mkdir() == false)
+					throw new IOException("Directory name " + file + " is invalid");
 			}
 		} catch (Exception e) {
 			throw new MagicException(e);
 		}
 	}
 
+	protected void setParentInit(CardOrganizer parent) {
+		this.parent = parent;
+		if (parent != null) {
+			parent.addChild(this);
+		}
+		if (parent != null && parent.getResource() != null) {
+			try {
+				parent.getResource().refreshLocal(1, null);
+			} catch (Exception e) {
+				throw new MagicException(e);
+			}
+		}
+	}
+
 	public CardElement(String filename, CardOrganizer parent) {
-		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename), parent);
+		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename));
+		setParentInit(parent);
 	}
 
 	public IPath getPath() {
