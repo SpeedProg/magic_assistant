@@ -41,6 +41,11 @@ public class VirtualMultiFileCardStore extends CollectionMultiFileCardStore {
 	}
 
 	@Override
+	public int getCount() {
+		return getStorage().size();
+	}
+
+	@Override
 	protected AbstractCardStoreWithStorage newStorage(IMagicCard card) {
 		DbFileCardStore store = new DbFileCardStore(getFile(card), getLocation(card), false);
 		store.getStorage().setAutoCommit(getStorage().isAutoCommit());

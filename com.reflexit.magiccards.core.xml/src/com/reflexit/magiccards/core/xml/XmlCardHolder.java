@@ -36,6 +36,8 @@ import com.reflexit.magiccards.core.sync.ParseGathererSpoiler;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 
 public class XmlCardHolder implements ICardHandler {
+	private IFilteredCardStore activeDeck;
+
 	public IFilteredCardStore getDatabaseHandler() {
 		return MagicCardDataXmlHandler.getInstance();
 	}
@@ -210,5 +212,13 @@ public class XmlCardHolder implements ICardHandler {
 			}
 		}
 		return res;
+	}
+
+	public IFilteredCardStore getActiveDeckHandler() {
+		return this.activeDeck;
+	}
+
+	public void setActiveDeckHandler(IFilteredCardStore store) {
+		this.activeDeck = store;
 	}
 }
