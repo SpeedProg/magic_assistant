@@ -38,7 +38,12 @@ public class PartListener implements IPartListener2 {
 	}
 
 	public void partOpened(IWorkbenchPartReference partRef) {
-		// TODO Auto-generated method stub
+		IWorkbenchPart part = partRef.getPart(false);
+		if (part instanceof DeckView) {
+			DeckView deckView = (DeckView) part;
+			IFilteredCardStore store = deckView.getFilteredStore();
+			DataManager.getCardHandler().setActiveDeckHandler(store);
+		}
 	}
 
 	public void partVisible(IWorkbenchPartReference partRef) {
