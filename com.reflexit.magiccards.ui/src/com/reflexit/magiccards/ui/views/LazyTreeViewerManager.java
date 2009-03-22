@@ -91,12 +91,15 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		updateTableHeader();
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {
-		this.viewer.unmapAllElements();
-		this.viewer.setInput(this.getFilteredStore());
+		if (this.viewer.getInput() != this.getFilteredStore()) {
+			this.viewer.unmapAllElements();
+			this.viewer.setInput(this.getFilteredStore());
+		}
 		//System.err.println("set input1 tree time: " + (System.currentTimeMillis() - time) + " ms");
 		int size = this.getFilteredStore().getCardGroups().length;
 		//System.err.println("size=" + size);
 		this.viewer.getTree().setItemCount(size);
+		this.viewer.refresh(true);
 		//		} else {
 		//			this.viewer.setSelection(new StructuredSelection());
 		//			this.viewer.getTree().clearAll(true);
