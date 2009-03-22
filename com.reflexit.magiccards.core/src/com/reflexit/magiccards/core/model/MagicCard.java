@@ -184,7 +184,7 @@ public class MagicCard implements IMagicCard {
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
 	 */
 	public int getCmc() {
-		if (this.cmc == -1)
+		if (this.colorType == null)
 			setExtraFields();
 		return this.cmc;
 	}
@@ -223,7 +223,7 @@ public class MagicCard implements IMagicCard {
 		return this.id + ": " + this.name;
 	}
 
-	public void setExtraFields() {
+	public synchronized void setExtraFields() {
 		try {
 			this.cost = this.cost == null ? "" : this.cost.trim();
 			setColorType(Colors.getInstance().getColorType(this.cost));

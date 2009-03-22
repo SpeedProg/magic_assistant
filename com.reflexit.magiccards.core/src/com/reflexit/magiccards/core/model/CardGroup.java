@@ -77,4 +77,17 @@ public class CardGroup implements ICardCountable {
 			return this.name;
 		return "";
 	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object arg0) {
+		if (arg0 instanceof CardGroup) {
+			return name.equals(((CardGroup) arg0).name);
+		}
+		return false;
+	}
 }

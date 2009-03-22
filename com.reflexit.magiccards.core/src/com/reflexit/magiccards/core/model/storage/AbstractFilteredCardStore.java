@@ -112,7 +112,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return this.filteredList;
 	}
 
-	public void update(MagicCardFilter filter) throws MagicException {
+	public synchronized void update(MagicCardFilter filter) throws MagicException {
 		setFilter(filter);
 		update();
 	}
@@ -121,7 +121,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		initialize();
 		if (filter == null)
 			return;
-		this.groupsList.clear();
+		for (CardGroup g : groupsList.values()) {
+			g.getChildren().clear();
+			g.setCount(0);
+		}
 		setFilteredList(null);
 		Collection filterCards = filterCards(this.filter);
 		getFilteredList().addAll(filterCards);
@@ -161,6 +164,12 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				CardGroup group = findGroupIndex(elem, filter.getGroupField());
 				if (group != null) {
 					group.add(elem);
+				}
+			}
+			for (Iterator iterator = groupsList.values().iterator(); iterator.hasNext();) {
+				CardGroup g = (CardGroup) iterator.next();
+				if (g.getChildren().size() == 0) {
+					iterator.remove();
 				}
 			}
 		}
