@@ -22,7 +22,7 @@ public interface ICardHandler {
 
 	public boolean moveCards(Collection cards, String from, String to);
 
-	public int downloadFromUrl(String url, IProgressMonitor pm) throws MagicException, InterruptedException;
+	public int downloadUpdates(String set, IProgressMonitor pm) throws MagicException, InterruptedException;
 
 	public void loadInitialIfNot(IProgressMonitor nullProgressMonitor) throws MagicException;
 }

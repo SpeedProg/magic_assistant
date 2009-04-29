@@ -2,14 +2,15 @@ package com.reflexit.magiccards.core.sync;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -102,8 +103,7 @@ public class ParseGathererSpoiler {
 		if (to != null)
 			out = new PrintStream(new File(to));
 		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
-		for (int i = 0; i < urls.length; i++) {
-			String string = urls[i];
+		for (String string : urls) {
 			System.err.println("Loading " + string);
 			loadUrl(new URL(string), new OutputHandler(out));
 		}
@@ -118,7 +118,8 @@ public class ParseGathererSpoiler {
 	}
 
 	public static void loadFile(File file, ILoadCardHander handler) throws IOException {
-		BufferedReader st = new BufferedReader(new FileReader(file));
+		Charset encoding = Charset.forName("utf-8");
+		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
 		processFile(st, handler);
 		st.close();
 	}

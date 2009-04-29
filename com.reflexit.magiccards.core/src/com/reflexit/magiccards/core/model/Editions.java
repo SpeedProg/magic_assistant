@@ -46,8 +46,13 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public void addAbbr(String name, String abbr) {
-		if (abbr != null && abbr.length() > 0) {
-			this.name2abbr.put(name, abbr);
+		String guessed = name.replaceAll("\\W", "_");
+		if (!name2abbr.containsKey(name) || name2abbr.get(name).equals(guessed)) {
+			if (abbr != null)
+				this.name2abbr.put(name, abbr);
+			else {
+				this.name2abbr.put(name, guessed);
+			}
 		}
 	}
 
@@ -75,9 +80,11 @@ public class Editions implements ISearchableProperty {
 	public void load() throws IOException {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		String strfile = path.toOSString();
-		InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/"
-		        + EDITIONS_FILE), true);
-		loadEditions(ist);
+		if (Activator.getDefault() != null) {
+			InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/"
+			        + EDITIONS_FILE), true);
+			loadEditions(ist);
+		}
 		if (!new File(strfile).exists()) {
 			save();
 		}

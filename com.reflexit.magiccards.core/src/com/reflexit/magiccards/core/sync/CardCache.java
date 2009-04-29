@@ -76,13 +76,12 @@ public class CardCache {
 				Activator.log(e);
 			}
 		}
-		URL remoteUrl = ParseGathererSpoiler.createImageURL(cardId, editionAbbr, locale == null ? "EN" : locale);
+		URL remoteUrl = createImageURL(cardId, editionAbbr, locale == null ? "EN" : locale);
 		return remoteUrl;
 	}
 
 	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
-		return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId
-		        + ".jpg");
+		return ParseGathererNewVisualSpoiler.createImageURL(cardId, editionAbbr, locale);
 	}
 
 	public static String createLocalImageFilePath(int cardId, String editionAbbr, String locale)
@@ -96,7 +95,7 @@ public class CardCache {
 	private static InputStream tryLocale(int cardId, String locale, String edition, String editionAbbr)
 	        throws MalformedURLException, IOException {
 		String oldLocale = Editions.getInstance().getLocale(edition);
-		URL url = ParseGathererSpoiler.createImageURL(cardId, editionAbbr, locale);
+		URL url = createImageURL(cardId, editionAbbr, locale);
 		InputStream st = url.openStream();
 		if (oldLocale == null || !oldLocale.equals(locale)) {
 			Editions.getInstance().addLocale(edition, locale);
