@@ -130,6 +130,8 @@ public class EditionsComposite extends Composite {
 		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
 			String ed = (String) iterator.next();
 			String abbr = Editions.getInstance().getAbbrByName(ed);
+			if (abbr == null)
+				abbr = ed.replaceAll("\\W", "_");
 			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
 			boolean checked = getPreferenceStore().getBoolean(id);
 			if (checked) {

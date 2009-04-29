@@ -134,8 +134,8 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 				try {
 					;
 					HashMap parameters = new HashMap();
-					parameters.put(PreferenceConstants.GATHERER_UPDATE, getPreferenceStore().getString(
-					        PreferenceConstants.GATHERER_UPDATE));
+					parameters.put(PreferenceConstants.GATHERER_UPDATE_SET, getPreferenceStore().getString(
+					        PreferenceConstants.GATHERER_UPDATE_SET));
 					new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null,
 					        MagicGathererPreferencePage.this.service.getCurrentState()));
 				} catch (ExecutionException e1) {

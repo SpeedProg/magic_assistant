@@ -123,7 +123,7 @@ class CardDescComposite extends Composite {
 			this.image = null;
 		}
 		{
-			Image full = drawBorder(remoteImage);
+			Image full = remoteImage;
 			this.image = full;
 		}
 		this.imageControl.setImage(this.image);

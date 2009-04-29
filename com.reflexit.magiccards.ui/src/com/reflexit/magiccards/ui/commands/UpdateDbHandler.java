@@ -41,19 +41,18 @@ public class UpdateDbHandler extends AbstractHandler {
 		IWorkbench wb = PlatformUI.getWorkbench();
 		final Shell shell = wb != null ? wb.getActiveWorkbenchWindow().getShell() : new Shell();
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
-		String u1 = event.getParameter(PreferenceConstants.GATHERER_UPDATE);
+		String u1 = event.getParameter(PreferenceConstants.GATHERER_UPDATE_SET);
 		if (u1 == null) {
-			u1 = store.getString(PreferenceConstants.GATHERER_UPDATE);
-			u1 = u1.replaceAll("setfilter=[^&]*", "setfilter=Standard");
+			u1 = "Standard";
 		}
-		final String url = u1;
+		final String set = u1;
 		final Integer res[] = new Integer[1];
 		try {
 			IRunnableWithProgress op = new IRunnableWithProgress() {
 				public void run(IProgressMonitor pm) {
 					try {
 						ICardHandler ch = DataManager.getCardHandler();
-						int rec = ch.downloadFromUrl(url, pm);
+						int rec = ch.downloadUpdates(set, pm);
 						res[0] = new Integer(rec);
 					} catch (final InterruptedException e) {
 						shell.getDisplay().syncExec(new Runnable() {
