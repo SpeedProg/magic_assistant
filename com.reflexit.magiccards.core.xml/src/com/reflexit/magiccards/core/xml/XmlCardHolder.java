@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.sync.ParseGathererSpoiler;
+import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 
 public class XmlCardHolder implements ICardHandler {
@@ -53,7 +54,7 @@ public class XmlCardHolder implements ICardHandler {
 	public void loadInitial() throws MagicException, CoreException, IOException {
 		InputStream is = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/all.txt"),
 		        false);
-		BufferedReader st = new BufferedReader(new InputStreamReader(is));
+		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 		loadtFromFlatIntoXml(st);
 		is.close();
 	}
@@ -129,15 +130,15 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public String download(String url, IProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
+	public String download(String set, IProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
 	        IOException {
 		IPath path = Activator.getStateLocationAlways().append("downloaded.txt");
 		String file = path.toPortableString();
-		ParseGathererSpoiler.parseFileOrUrl(url, file);
+		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, pm);
 		return file;
 	}
 
-	public int downloadFromUrl(String url, IProgressMonitor pm) throws MagicException, InterruptedException {
+	public int downloadUpdates(String set, IProgressMonitor pm) throws MagicException, InterruptedException {
 		int rec;
 		try {
 			pm.beginTask("Downloading", 100);
@@ -146,10 +147,9 @@ public class XmlCardHolder implements ICardHandler {
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Downloading cards...");
-			String file = download(url, pm);
+			String file = download(set, new SubProgressMonitor(pm, 30));
 			if (pm.isCanceled())
 				throw new InterruptedException();
-			pm.worked(30);
 			pm.subTask("Updating database...");
 			BufferedReader st = new BufferedReader(new FileReader(file));
 			rec = loadtFromFlatIntoXml(st);
