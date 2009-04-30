@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -70,7 +71,7 @@ public class CardCollectionStoreObject {
 
 	public void save() throws FileNotFoundException {
 		OutputStream out = new FileOutputStream(this.file);
-		xstream.toXML(this, out);
+		xstream.toXML(this, new OutputStreamWriter(out, Charset.forName("utf-8")));
 	}
 
 	/**
