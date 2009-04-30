@@ -61,6 +61,7 @@ Unlimited Edition|2U
 Antiquities|AQ
 Fifth Dawn|5DN|en-us
 Shards of Alara|ALA|EN
+Alara Reborn|ARB|EN
 Portal Three Kingdoms|PK|en-us
 Portal|PO|en-us
 Portal Second Age|P2|en-us
