@@ -20,7 +20,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,21 +43,21 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	protected void createFieldEditors() {
-		addField(this.fUrl = new StringFieldEditor(PreferenceConstants.GATHERER_UPDATE, "Gatherer update query:",
-		        getFieldEditorParent()) {
-			@Override
-			protected boolean checkState() {
-				if (!super.checkState())
-					return false;
-				try {
-					new URL(getStringValue());
-					return true;
-				} catch (Exception e) {
-					setErrorMessage(e.getMessage());
-					return false;
-				}
-			}
-		});
+		//		addField(this.fUrl = new StringFieldEditor(PreferenceConstants.GATHERER_UPDATE, "Gatherer update query:",
+		//		        getFieldEditorParent()) {
+		//			@Override
+		//			protected boolean checkState() {
+		//				if (!super.checkState())
+		//					return false;
+		//				try {
+		//					new URL(getStringValue());
+		//					return true;
+		//				} catch (Exception e) {
+		//					setErrorMessage(e.getMessage());
+		//					return false;
+		//				}
+		//			}
+		//		});
 		String[][] array = createSetArray();
 		addField(this.fSet = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:", array,
 		        getFieldEditorParent(), SWT.DROP_DOWN));
@@ -86,10 +85,10 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getSource() == this.fSet) {
-			updateUrl();
-			this.fUrl.load();
-		}
+		//		if (event.getSource() == this.fSet) {
+		//			updateUrl();
+		//			this.fUrl.load();
+		//		}
 		super.propertyChange(event);
 	}
 
