@@ -96,4 +96,24 @@ public class CardStoreUtils {
 
 	private CardStoreUtils() {
 	}
+
+	public int[] buildTypeStats(ICardStore store) {
+		int bars[] = new int[3]; // land, creatures, non-creatures
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			IMagicCard elem = (IMagicCard) iterator.next();
+			String type = elem.getType();
+			int count = 1;
+			if (elem instanceof ICardCountable) {
+				count = ((ICardCountable) elem).getCount();
+			}
+			if (type.contains("Land")) {
+				bars[0] += count;
+			} else if (type.contains("Creature") || type.contains("Summon")) {
+				bars[1] += count;
+			} else {
+				bars[2] += count;
+			}
+		}
+		return bars;
+	}
 }
