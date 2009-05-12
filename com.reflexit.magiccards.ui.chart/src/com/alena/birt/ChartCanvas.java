@@ -57,13 +57,15 @@ public class ChartCanvas extends Canvas {
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				Composite co = (Composite) e.getSource();
-				final Rectangle rect = co.getClientArea();
-				if (ChartCanvas.this.cachedImage == null) {
-					drawToCachedImage(rect);
+				final Rectangle chartBounds = co.getClientArea();
+				if (ChartCanvas.this.cachedImage != null) {
+					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
 				}
-				if (ChartCanvas.this.cachedImage != null)
-					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0, ChartCanvas.this.cachedImage.getBounds().width,
-					        ChartCanvas.this.cachedImage.getBounds().height, 0, 0, rect.width, rect.height);
+				if (ChartCanvas.this.cachedImage == null
+				        || (cachedImage.getBounds().width != chartBounds.width || cachedImage.getBounds().height != chartBounds.height)) {
+					drawToCachedImage(chartBounds, e.gc);
+					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
+				}
 			}
 		});
 	}
@@ -92,7 +94,7 @@ public class ChartCanvas extends Canvas {
 		}
 	}
 
-	public synchronized void drawToCachedImage(Rectangle size) {
+	public synchronized void drawToCachedImage(Rectangle size, GC gcOrig) {
 		GC gc = null;
 		try {
 			if (this.chart == null)
@@ -101,6 +103,11 @@ public class ChartCanvas extends Canvas {
 				this.cachedImage.dispose();
 			this.cachedImage = new Image(Display.getCurrent(), size);
 			gc = new GC(this.cachedImage);
+			gc.setBackground(gcOrig.getBackground());
+			gc.setForeground(gcOrig.getForeground());
+			gc.setFont(gcOrig.getFont());
+			// Fills background. 
+			gc.fillRectangle(0, 0, size.width + 1, size.height + 1);
 			this.render.setProperty(IDeviceRenderer.GRAPHICS_CONTEXT, gc);
 			Generator gr = Generator.instance();
 			buildChart();
