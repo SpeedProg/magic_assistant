@@ -266,7 +266,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	public void handleEvent(final CardEvent event) {
-		System.err.println("handle event " + event);
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
