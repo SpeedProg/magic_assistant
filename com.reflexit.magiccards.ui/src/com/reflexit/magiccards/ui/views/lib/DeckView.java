@@ -124,7 +124,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		mana.setControl(manaControl.getControl());
 		// Mana Curve
 		final CTabItem types = new CTabItem(folder, SWT.CLOSE);
-		types.setText("Types Stats");
+		types.setText("Card Types");
 		types.setShowClose(false);
 		final TypeStatsControl typesControl = new TypeStatsControl(folder, SWT.BORDER);
 		types.setControl(typesControl.getControl());
@@ -140,18 +140,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem sel = folder.getSelection();
+				// refresh contents when selected
 				if (sel.getControl() == manaControl.getControl()) {
-					if (manaControl.getCardStore() == null) {
-						// lazy initialize
-						manaControl.setFilteredStore(getFilteredStore());
-						manaControl.updateChart();
-					}
+					manaControl.setFilteredStore(getFilteredStore());
+					manaControl.updateChart();
 				} else if (sel.getControl() == typesControl.getControl()) {
-					if (typesControl.getCardStore() == null) {
-						// lazy initialize
-						typesControl.setFilteredStore(getFilteredStore());
-						typesControl.updateChart();
-					}
+					typesControl.setFilteredStore(getFilteredStore());
+					typesControl.updateChart();
 				}
 				updateStatus();
 			}

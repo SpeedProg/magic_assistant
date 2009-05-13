@@ -87,7 +87,10 @@ class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 			Object child = group.getChildAtIndex(index);
 			this.treeViewer.replace(parent, index, child);
 			//System.err.println("grpup: " + " index " + index);
-			//updateChildCount(child, -1);
+			if (child instanceof CardGroup)
+				updateChildCount(child, -1);
+			else
+				updateChildCount(child, 0);
 		}
 	}
 }

@@ -329,6 +329,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.groupMenu.add(new GroupAction("None", null));
 		this.groupMenu.add(new GroupAction("Color", MagicCardField.COST));
 		this.groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
+		this.groupMenu.add(new GroupAction("Type", MagicCardField.TYPE));
 		this.showPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
