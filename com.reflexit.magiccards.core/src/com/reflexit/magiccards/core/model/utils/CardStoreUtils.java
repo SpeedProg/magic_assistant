@@ -15,8 +15,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
@@ -115,5 +117,70 @@ public class CardStoreUtils {
 			}
 		}
 		return bars;
+	}
+
+	public CardGroup buildTypeGroups(Iterable iterable) {
+		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, "Spell");
+		CardGroup landNode = new CardGroup(MagicCardField.TYPE, "Land");
+		CardGroup basic = new CardGroup(MagicCardField.TYPE, "Basic");
+		landNode.add(basic);
+		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, "Non-Creature");
+		spellNode.add(noncreatureNode);
+		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, "Creature");
+		spellNode.add(creatureNode);
+		CardGroup instant = new CardGroup(MagicCardField.TYPE, "Instant");
+		noncreatureNode.add(instant);
+		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, "Sorcery");
+		noncreatureNode.add(sorcery);
+		CardGroup ench = new CardGroup(MagicCardField.TYPE, "Enchantment");
+		noncreatureNode.add(ench);
+		CardGroup artifact = new CardGroup(MagicCardField.TYPE, "Artifact");
+		noncreatureNode.add(artifact);
+		CardGroup walker = new CardGroup(MagicCardField.TYPE, "Planeswalker");
+		noncreatureNode.add(walker);
+		int total = 0;
+		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
+			IMagicCard elem = (IMagicCard) iterator.next();
+			String type = elem.getType();
+			int count = 1;
+			if (elem instanceof ICardCountable) {
+				count = ((ICardCountable) elem).getCount();
+			}
+			if (type.contains("Land")) {
+				if (type.contains(basic.getName())) {
+					basic.add(elem);
+					landNode.addCount(count);
+				} else {
+					landNode.add(elem);
+				}
+			} else {
+				spellNode.addCount(count);
+				if (type.contains(creatureNode.getName()) || type.contains("Summon")) {
+					creatureNode.add(elem);
+				} else {
+					noncreatureNode.addCount(count);
+					if (type.contains(instant.getName()) || type.contains("Interrupt")) {
+						instant.add(elem);
+					} else if (type.contains(ench.getName())) {
+						ench.add(elem);
+					} else if (type.contains(sorcery.getName())) {
+						sorcery.add(elem);
+					} else if (type.contains(artifact.getName())) {
+						artifact.add(elem);
+					} else if (type.contains(walker.getName())) {
+						walker.add(elem);
+					} else {
+						noncreatureNode.addCount(-count);
+						noncreatureNode.add(elem);
+					}
+				}
+			}
+			total += count;
+		}
+		CardGroup root = new CardGroup(MagicCardField.TYPE, "");
+		root.setCount(total);
+		root.add(landNode);
+		root.add(spellNode);
+		return root;
 	}
 }

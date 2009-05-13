@@ -18,6 +18,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
  * Class that implements IFilteredCardStore, it is only contains filtered filteredList
@@ -159,15 +160,31 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			}
 		}
 		if (filter.getGroupField() != null) {
-			for (Object element : filteredList) {
-				IMagicCard elem = (IMagicCard) element;
-				CardGroup group = findGroupIndex(elem, filter.getGroupField());
-				if (group != null) {
-					group.add(elem);
+			if (groupsList.size() > 0) {
+				CardGroup g = groupsList.values().iterator().next();
+				if (g.getFieldIndex() != filter.getGroupField())
+					groupsList.clear();
+			}
+			if (filter.getGroupField() == MagicCardField.TYPE) {
+				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
+				for (Object o : buildTypeGroups.getChildren()) {
+					if (o instanceof CardGroup) {
+						CardGroup gr = (CardGroup) o;
+						groupsList.put(gr.getName(), gr);
+					}
+				}
+			} else {
+				for (Object element : filteredList) {
+					IMagicCard elem = (IMagicCard) element;
+					CardGroup group = findGroupIndex(elem, filter.getGroupField());
+					if (group != null) {
+						group.add(elem);
+					}
 				}
 			}
 			for (Iterator iterator = groupsList.values().iterator(); iterator.hasNext();) {
 				CardGroup g = (CardGroup) iterator.next();
+				g.removeEmptyChildren();
 				if (g.getChildren().size() == 0) {
 					iterator.remove();
 				}

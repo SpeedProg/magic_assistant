@@ -12,6 +12,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Alena
@@ -45,6 +46,10 @@ public class CardGroup implements ICardCountable {
 		this.count = count;
 	}
 
+	public void addCount(int count) {
+		this.count += count;
+	}
+
 	public ICardField getFieldIndex() {
 		return this.groupField;
 	}
@@ -55,8 +60,10 @@ public class CardGroup implements ICardCountable {
 
 	public void add(Object elem) {
 		this.children.add(elem);
-		if (elem instanceof MagicCardPhisical) {
-			this.count += ((MagicCardPhisical) elem).getCount();
+		if (elem instanceof CardGroup)
+			return;
+		if (elem instanceof ICardCountable) {
+			this.count += ((ICardCountable) elem).getCount();
 		} else {
 			this.count++;
 		}
@@ -89,5 +96,17 @@ public class CardGroup implements ICardCountable {
 			return name.equals(((CardGroup) arg0).name);
 		}
 		return false;
+	}
+
+	public void removeEmptyChildren() {
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup) {
+				((CardGroup) o).removeEmptyChildren();
+				if (((CardGroup) o).getChildren().size() == 0) {
+					iterator.remove();
+				}
+			}
+		}
 	}
 }
