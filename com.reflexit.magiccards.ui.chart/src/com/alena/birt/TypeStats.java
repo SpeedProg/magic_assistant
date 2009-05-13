@@ -78,7 +78,7 @@ public class TypeStats implements IChartGenerator {
 		sdCity.getSeries().add(sePie);
 		sePie.setTranslucent(true); // set transparency
 		// format labels
-		sePie.setLabelPosition(Position.OUTSIDE_LITERAL);
+		sePie.setLabelPosition(Position.INSIDE_LITERAL);
 		DataPoint dataPoint = sePie.getDataPoint();
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
