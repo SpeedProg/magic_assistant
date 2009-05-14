@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -299,7 +300,14 @@ public class ParseGathererNewVisualSpoiler {
 			return byteToHex(hi) + byteToHex(lo);
 		}
 	} // class
-	private static String LONG_MINUS = new String(new byte[] { (byte) 0xe2, (byte) 0x80, (byte) 0x94 }, UTF_8);
+	private static String LONG_MINUS;
+	static {
+		try {
+			LONG_MINUS = new String(new byte[] { (byte) 0xe2, (byte) 0x80, (byte) 0x94 }, UTF_8.name());
+		} catch (UnsupportedEncodingException e) {
+			// hmm
+		}
+	}
 
 	private static String htmlToString(String str) {
 		str = str.replaceAll("\\Q " + LONG_MINUS, "-");
