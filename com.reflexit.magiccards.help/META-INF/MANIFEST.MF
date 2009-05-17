@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.help,
- org.eclipse.help.ui
+ org.eclipse.help.ui,
+ org.eclipse.equinox.http.registry;bundle-version="1.0.100"
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -6,10 +6,10 @@
 		<topic label="Main Menu" href="html/reference/workbench.html#menu" /> 
 	</topic>
 	<topic label="Views"  href="html/reference/views.html">
-		<topic label="Magic Database" href="html/reference/views.html#viewmagicdb" />
-		<topic label="Magic Collection" href="html/reference/views.html#viewcol" />
+		<topic label="MTG Database" href="html/reference/views.html#viewmagicdb" />
+		<topic label="My Cards" href="html/reference/views.html#viewcol" />
 		<topic label="Deck" href="html/reference/views.html#viewdeck" /> 
-		<topic label="Card Descriptio" href="html/reference/views.html#viewcard" /> 
+		<topic label="Card Info" href="html/reference/views.html#viewcard" /> 
 		<topic label="Cadr Navigator" href="html/reference/views.html#viewcardnav" /> 
 	</topic>
 	<topic label="Preferences"  href="html/reference/preferences.html"/>
