@@ -111,7 +111,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    protected void adjustForNumColumns(int numColumns) {
+	protected void adjustForNumColumns(int numColumns) {
 		GridData gd = (GridData) this.textField.getLayoutData();
 		gd.horizontalSpan = numColumns > 2 ? numColumns - 2 : 1;
 		// We only grab excess space if we have to
@@ -181,7 +181,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * </p>
 	 */
 	@Override
-    protected void doFillIntoGrid(Composite parent, int numColumns) {
+	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		getLabelControl(parent);
 		this.operationControl = getOperationControl(parent);
 		this.operationControl.setLayoutData(new GridData());
@@ -224,29 +224,36 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 		return this.operationControl.getText();
 	}
 
+	protected Object[] prefValues(String value) {
+		String number;
+		int op = 0;
+		if (value.startsWith("= ")) {
+			number = value.substring(2);
+		} else if (value.startsWith("<= ")) {
+			number = value.substring(3);
+			op = 1;
+		} else if (value.startsWith(">= ")) {
+			number = value.substring(3);
+			op = 2;
+		} else if (value.length() == 0) {
+			number = "";
+		} else {
+			op = 2;
+			number = "0";
+		}
+		return new Object[] { number, op };
+	}
+
 	/* (non-Javadoc)
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    protected void doLoad() {
+	protected void doLoad() {
 		if (this.textField != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
-			String number;
-			int op = 0;
-			if (value.startsWith("= ")) {
-				number = value.substring(2);
-			} else if (value.startsWith("<= ")) {
-				number = value.substring(3);
-				op = 1;
-			} else if (value.startsWith(">= ")) {
-				number = value.substring(3);
-				op = 2;
-			} else if (value.length() == 0) {
-				number = "";
-			} else {
-				op = 2;
-				number = "0";
-			}
+			Object res[] = prefValues(value);
+			String number = (String) res[0];
+			int op = (Integer) res[1];
 			getTextControl().setText(number);
 			this.operationControl.select(op);
 			this.oldValue = number;
@@ -257,10 +264,14 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    protected void doLoadDefault() {
+	protected void doLoadDefault() {
 		if (this.textField != null) {
 			String value = getPreferenceStore().getDefaultString(getPreferenceName());
-			this.textField.setText(value);
+			Object res[] = prefValues(value);
+			String number = (String) res[0];
+			int op = (Integer) res[1];
+			getTextControl().setText(number);
+			this.operationControl.select(op);
 		}
 		valueChanged();
 	}
@@ -269,7 +280,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    protected void doStore() {
+	protected void doStore() {
 		String number = getStringValue().trim();
 		String op = getOperation();
 		String res = op + " " + number;
@@ -290,7 +301,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    public int getNumberOfControls() {
+	public int getNumberOfControls() {
 		return 3;
 	}
 
@@ -336,7 +347,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 					 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
 					 */
 					@Override
-                    public void keyReleased(KeyEvent e) {
+					public void keyReleased(KeyEvent e) {
 						valueChanged();
 					}
 				});
@@ -344,18 +355,18 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 			case VALIDATE_ON_FOCUS_LOST:
 				this.textField.addKeyListener(new KeyAdapter() {
 					@Override
-                    public void keyPressed(KeyEvent e) {
+					public void keyPressed(KeyEvent e) {
 						clearErrorMessage();
 					}
 				});
 				this.textField.addFocusListener(new FocusAdapter() {
 					@Override
-                    public void focusGained(FocusEvent e) {
+					public void focusGained(FocusEvent e) {
 						refreshValidState();
 					}
 
 					@Override
-                    public void focusLost(FocusEvent e) {
+					public void focusLost(FocusEvent e) {
 						valueChanged();
 						clearErrorMessage();
 					}
@@ -393,7 +404,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    public boolean isValid() {
+	public boolean isValid() {
 		return this.isValid;
 	}
 
@@ -401,7 +412,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    protected void refreshValidState() {
+	protected void refreshValidState() {
 		this.isValid = checkState();
 	}
 
@@ -429,7 +440,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Method declared on FieldEditor.
 	 */
 	@Override
-    public void setFocus() {
+	public void setFocus() {
 		if (this.textField != null) {
 			this.textField.setFocus();
 		}
@@ -519,7 +530,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * @see FieldEditor.setEnabled(boolean,Composite).
 	 */
 	@Override
-    public void setEnabled(boolean enabled, Composite parent) {
+	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getTextControl(parent).setEnabled(enabled);
 		getOperationControl(parent).setEnabled(enabled);
