@@ -40,6 +40,8 @@ public class ParseMtgFanaticPrices {
 		monitor.worked(10);
 		for (String set : sets) {
 			String id = findSetId(set, parseSets);
+			if (monitor.isCanceled())
+				return;
 			if (id != null) {
 				System.err.println("found " + set + " " + id);
 				HashMap<String, Float> prices = parse(id);
@@ -51,6 +53,8 @@ public class ParseMtgFanaticPrices {
 					}
 					try {
 						for (IMagicCard magicCard : fstore) {
+							if (monitor.isCanceled())
+								return;
 							String set2 = magicCard.getSet();
 							if (set2.equals(set)) {
 								if (prices.containsKey(magicCard.getName())) {
