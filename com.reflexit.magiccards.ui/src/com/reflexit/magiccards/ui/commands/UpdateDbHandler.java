@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -38,9 +37,13 @@ public class UpdateDbHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		performUpdate(event);
+		return null;
+	}
+
+	public void performUpdate(ExecutionEvent event) {
 		IWorkbench wb = PlatformUI.getWorkbench();
 		final Shell shell = wb != null ? wb.getActiveWorkbenchWindow().getShell() : new Shell();
-		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String u1 = event.getParameter(PreferenceConstants.GATHERER_UPDATE_SET);
 		if (u1 == null) {
 			u1 = "Standard";
@@ -79,7 +82,6 @@ public class UpdateDbHandler extends AbstractHandler {
 			//ps.busyCursorWhile(op);
 		} catch (InvocationTargetException e) {
 			MessageDialog.openError(shell, "Error", e.getMessage());
-			return null;
 		} catch (InterruptedException e) {
 			// cancel
 		}
@@ -92,10 +94,6 @@ public class UpdateDbHandler extends AbstractHandler {
 			// do nothing
 		} else
 			MessageDialog.openError(shell, "Magic Db Update", "Query returned empty page");
-		return null;
-	}
-
-	protected void performUpdate() {
 	}
 
 	@Override

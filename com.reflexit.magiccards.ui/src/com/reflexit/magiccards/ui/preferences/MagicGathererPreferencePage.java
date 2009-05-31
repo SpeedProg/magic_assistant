@@ -5,7 +5,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,14 +30,18 @@ import com.reflexit.magiccards.ui.commands.UpdateDbHandler;
 import com.reflexit.magiccards.ui.preferences.feditors.SpecialComboFieldEditor;
 
 public class MagicGathererPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	private static final String ALL = "All";
-	private StringFieldEditor fUrl;
 	private SpecialComboFieldEditor fSet;
+	private IHandlerService service;
 
 	public MagicGathererPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
-		setDescription("Gatherer web-site settings");
+		//setDescription("Update settings");
+	}
+
+	@Override
+	public void noDefaultAndApplyButton() {
+		super.noDefaultAndApplyButton();
 	}
 
 	@Override
@@ -144,7 +147,6 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		});
 		return com;
 	}
-	IHandlerService service;
 
 	public void init(IWorkbench wb) {
 		if (wb != null) {

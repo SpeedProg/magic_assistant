@@ -132,6 +132,10 @@
             class="com.reflexit.magiccards.ui.commands.RenameHandler"
             commandId="org.eclipse.ui.edit.rename">
       </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.UpdateDbDialogHandler"
+            commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -178,7 +182,12 @@
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.updateMagicDb"
-            name="Update Magic Cards DB">
+            name="Update Magic Cards Database to Standard">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
+            name="Update Magic Cards Database...">
       </command>
    </extension>
    <extension
@@ -194,9 +203,9 @@
       <menuContribution
             locationURI="menu:help?after=additions">
             <command
-                  commandId="com.reflexit.magiccards.ui.commands.updateMagicDb"
+                  commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
                   mnemonic="U"
-                  id="com.reflexit.magiccards.ui.menus.updateMagicDb">
+                  id="com.reflexit.magiccards.ui.menus.updateMagicDbDialog">
             </command>
       </menuContribution>
       <menuContribution
