@@ -111,7 +111,13 @@ public class SearchControl {
 			}
 		});
 		// search field
-		this.searchText = new Text(toolbar, SWT.BORDER);
+		String os = System.getProperty("osgi.os", "");
+		if (os.equals("macosx")) {
+			this.searchText = new Text(toolbar, SWT.NONE); // bug in eclipse - text is too shallow
+		} else {
+			this.searchText = new Text(toolbar, SWT.BORDER);
+		}
+		// for Mac OS remove the border
 		this.searchText.setText("search...");
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		this.searchText.setLayoutData(td);
