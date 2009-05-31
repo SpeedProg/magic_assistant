@@ -60,7 +60,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			Composite a = new Composite(parent, SWT.NONE);
 			a.setLayout(new GridLayout(2, false));
 			createAmountControl(a);
-			this.edi = new EditionsComposite(a, SWT.BORDER);
+			this.edi = new EditionsComposite(a, SWT.BORDER, false);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
 			this.edi.setLayoutData(gd);

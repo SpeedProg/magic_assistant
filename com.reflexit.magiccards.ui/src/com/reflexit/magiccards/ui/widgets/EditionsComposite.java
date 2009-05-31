@@ -20,8 +20,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -48,16 +51,19 @@ import com.reflexit.magiccards.core.model.FilterHelper;
  *
  */
 public class EditionsComposite extends Composite {
+	private boolean buttons;
+
 	public EditionsComposite(Composite parent) {
-		this(parent, SWT.CHECK | SWT.BORDER);
+		this(parent, SWT.CHECK | SWT.BORDER, true);
 	}
 
 	/**
 	 * @param parent
 	 * @param treeStyle
 	 */
-	public EditionsComposite(Composite parent, int treeStyle) {
+	public EditionsComposite(Composite parent, int treeStyle, boolean buttons) {
 		super(parent, SWT.NONE);
+		this.buttons = buttons;
 		this.setLayout(new GridLayout());
 		Composite one = (Composite) createContents(this, treeStyle);
 		one.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -101,6 +107,8 @@ public class EditionsComposite extends Composite {
 	private Composite panel;
 	private IPreferenceStore prefStore;
 	private boolean checkedTree = false;
+	private Button selAll;
+	private Button deselAll;
 
 	protected Control createContents(Composite parent, int treeStyle) {
 		this.panel = new Composite(parent, SWT.NONE);
@@ -120,8 +128,46 @@ public class EditionsComposite extends Composite {
 		this.treeViewer.setInput(Editions.getInstance());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 300;
+		gd.horizontalSpan = 3;
 		this.treeViewer.getTree().setLayoutData(gd);
+		// buttons
+		if (buttons) {
+			this.selAll = new Button(panel, SWT.PUSH);
+			this.selAll.setText("Select All");
+			this.selAll.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					selectAll();
+				}
+			});
+			this.deselAll = new Button(panel, SWT.PUSH);
+			this.deselAll.setText("Deselect All");
+			this.deselAll.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					deselectAll();
+				}
+			});
+		}
 		return this.panel;
+	}
+
+	protected void deselectAll() {
+		IPreferenceStore store = getPreferenceStore();
+		String ids[] = getIds();
+		for (String id : ids) {
+			store.setValue(id, false);
+		}
+		initialize();
+	}
+
+	protected void selectAll() {
+		IPreferenceStore store = getPreferenceStore();
+		String ids[] = getIds();
+		for (String id : ids) {
+			store.setValue(id, true);
+		}
+		initialize();
 	}
 
 	public void initialize() {
@@ -139,6 +185,10 @@ public class EditionsComposite extends Composite {
 					((CheckboxTreeViewer) this.treeViewer).setChecked(ed, checked);
 				} else {
 					sel.add(ed);
+				}
+			} else {
+				if (this.checkedTree) {
+					((CheckboxTreeViewer) this.treeViewer).setChecked(ed, checked);
 				}
 			}
 		}
@@ -185,5 +235,28 @@ public class EditionsComposite extends Composite {
 
 	public IStructuredSelection getSelection() {
 		return (IStructuredSelection) this.treeViewer.getSelection();
+	}
+
+	private String[] getIds() {
+		Collection names = Editions.getInstance().getNames();
+		ArrayList res = new ArrayList();
+		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
+			String ed = (String) iterator.next();
+			String abbr = Editions.getInstance().getAbbrByName(ed);
+			if (abbr == null)
+				abbr = ed.replaceAll("\\W", "_");
+			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
+			res.add(id);
+		}
+		return (String[]) res.toArray(new String[res.size()]);
+	}
+
+	public void setToDefaults() {
+		IPreferenceStore store = getPreferenceStore();
+		String ids[] = getIds();
+		for (String id : ids) {
+			store.setToDefault(id);
+		}
+		initialize();
 	}
 }

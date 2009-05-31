@@ -30,7 +30,7 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 
 	@Override
 	protected Control createContents(Composite parent) {
-		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER);
+		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER, true);
 		this.comp.setPreferenceStore(getPreferenceStore());
 		this.comp.initialize();
 		return this.comp;
@@ -50,13 +50,7 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 
 	@Override
 	public void performDefaults() {
-		IPreferenceStore store = getPreferenceStore();
-		if (store instanceof PrefixedPreferenceStore) {
-			String[] preferenceNames = ((PrefixedPreferenceStore) store).preferenceNames();
-			for (String id : preferenceNames) {
-				store.setToDefault(id);
-			}
-		}
+		comp.setToDefaults();
 		super.performDefaults();
 	}
 }
