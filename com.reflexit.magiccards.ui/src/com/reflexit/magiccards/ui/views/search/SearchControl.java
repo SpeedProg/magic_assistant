@@ -60,6 +60,7 @@ public class SearchControl {
 			this.gridData.heightHint = 0;
 		else {
 			this.gridData.heightHint = SWT.DEFAULT;
+			this.gridData.minimumHeight = 32;
 			setFocus();
 			this.searchText.setSelection(0, this.searchText.getText().length());
 		}
@@ -99,6 +100,7 @@ public class SearchControl {
 		bar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// toolbar
 		ToolBar toolbar = new ToolBar(bar, SWT.FLAT);
+		toolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// hide
 		ToolItem hideButton = new ToolItem(toolbar, SWT.PUSH);
 		hideButton.setImage(getPlugin().getImage("icons/clcl16/delete_obj.gif"));
@@ -111,7 +113,8 @@ public class SearchControl {
 		// search field
 		this.searchText = new Text(toolbar, SWT.BORDER);
 		this.searchText.setText("search...");
-		this.searchText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData td = new GridData(GridData.FILL_HORIZONTAL);
+		this.searchText.setLayoutData(td);
 		this.searchText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				Color white = SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);

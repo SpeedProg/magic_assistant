@@ -70,7 +70,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 			if (text != null) {
 				int yt = y + bounds.height - 2 - tw.y;
 				event.gc.setClipping(x, yt, bounds.width, bounds.height);
-				event.gc.drawText(text, x + tx, yt, true);
+				event.gc.drawText(text, x + tx - 5, yt, true);
 			}
 		}
 	}
