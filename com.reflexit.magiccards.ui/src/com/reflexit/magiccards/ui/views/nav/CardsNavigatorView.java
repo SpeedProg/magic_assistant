@@ -148,6 +148,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
 		manager.add(new Separator());
+		manager.add(export);
+		manager.add(importa);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -179,6 +181,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(export);
+		manager.add(importa);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 	}
@@ -323,14 +327,16 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			}
 		} else if (obj instanceof CardCollection) {
 			try {
-				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(
+				        MyCardsView.ID);
 				view.setLocationFilter(((CardCollection) obj).getLocation());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}
 		} else if (obj instanceof CardOrganizer) {
 			try {
-				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(
+				        MyCardsView.ID);
 				view.setLocationFilter(((CardOrganizer) obj).getLocation());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
