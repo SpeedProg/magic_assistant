@@ -15,7 +15,7 @@ database contains sets only up to the last public set that was released prior to
 You can update local database with specific set or with "Standard" format sets. 
 See <a href="preferences.html#update">Update Magic Database</a>. 
 <p/>
-MT Database View specific context menu actions:
+MTG Database View specific context menu actions:
 
 <li>Copy - copy card to clipboard</li>
 <li>Add to Active Deck (hotkey + or =) - menu to move card to active deck. Active deck if the deck you focused in last time</li>
@@ -35,7 +35,7 @@ MT Database View specific context menu actions:
  <li>Tool Bar</li> 
   <ul>
   <li><img src="../../../com.reflexit.magiccards.ui/icons/filter.gif"/> (Open Filter) - opens a <a href="#filter">Filter dialog</a>.</li>
-  <li><a name="viewmenu"/><img src="../../../org.eclipse.ui/icons/full/elcl16/view_menu.gif"/> (View Menu)
+  <li><a name="viewmenu"/><img src="../screenshots/icons/view_menu.gif"/> (View Menu)
      <ul>
      <li>Filter... - opens a <a href="#filter">Filter Dialog</a></li>
      <li>"Group By" menu
@@ -62,10 +62,10 @@ It provides the following actions:
 <br/>
 <li>Select a row - show card description in <a href="#viewcard">Card Info</a> view.</li>
 <li>Hover over a cell - show a tooltip - full text of the cell if cell is to small to show it (ex. Description column).</li>
-<li>Click on column - sort by column, click again on the same column to change directions</li>
-<li>Click inside a cell - bring up cell editor - if applicable</li>
+<li>Click on column header - sort by column, click again on the same column header to change direction of a sort</li>
+<li>Click inside a cell - bring up cell editor (if applicable, ex. Count column)</li>
 <p/>
-This is a list of possible columns:<br/>
+This is a list of all possible columns:<br/>
 <a name="columns"/>
 <li>Name - name of the card</li>
 <li>Id - id of the card (gatherer id)</li>
@@ -97,12 +97,12 @@ For the list of view components (menus, card table, status bar) see <a href="#vi
 You can open "My Cards" view by double-clicking on one of the collections or containers from <a href="#viewcardnav">Card Navigator</a> view.
 <p/>
 Context menu actions:
-<li>Delete - delete a card pile</li>
+<li>Delete - delete a cards pile (one row which usually groups cards with the same name)</li>
 <li>Copy - copy card to clipboard</li>
 <li>Paste - paste card from clipboard</li>
-<li>Split pile... - split cards in pile (cards with the same name) into 2 piles</li>
+<li>Split pile... - split cards in pile (cards with the same name) into 2 piles (opens a dialog that allow to select number of cards in each)</li>
 <li>Edit Card... - edit card properties, note: card count can be edited right in the cell</li>
-<li>Move to Deck - menu to move card to selected deck. Deck must be open to show up in the menu.</li>
+<li>Move to Deck - menu to move card to selected deck. Deck must be opened to show up in this menu.</li>
 
 <h2><a name="viewdeck"/>Deck View</h2>
 Deck view shows cards from a specific deck.
@@ -122,16 +122,16 @@ Context menu actions:
 You can drag cards from and to Deck view. Dragging a card from a Deck view to another deck or collection will move the card.
 Dragging a card from MTG Database view to a Deck view will add 1 card to the deck. 
 <p/>
-You can change number of cards of the same name by editing Count cell or edit multiple cards by selecting them and select "Edit..." from context menu.
+You can change number of cards of the same name by editing Count cell or edit multiple cards by selecting them and using "Edit..." from context menu.
 <p/>
 Deck view also has Mana Curve tab - to show mana curve, Card Types type - to show chart of type distribution and types info,
 and Info tab where you can edit deck description.
 
 <p/>
-To try what hands you can get with this deck you can run command "Emulate Draw" from view menu (triangle icon).
+To try what hands you can get with this deck you can run command "Emulate Draw" from the view menu (triangle icon).
 
 <h2><a name="viewcard"/>Card Info View</h2>
-Card Description view shows details of the card selected in of the cards views (MTG Database, My Cards or Deck).
+Card Info view shows details of the card selected in one of the cards views (MTG Database, My Cards or Deck).
 It loads a card image from "gatherer" site, and caches it in the workspace.
 <p/>
 You can turn off card caching from <a href="preferences.html">Preferences</a> in the Magic Preferences page.
@@ -139,10 +139,10 @@ If you need to use proxy you can set it up proxy settings from Preferences-&gt;G
 <p/>
 If image is not loaded or image quality is not acceptable card information is duplicated as a text below the image.
 <p/>
-To load card information into Card Info view select a card (single click) from any other view that shows cards list.
+To load card information into Card Info view select a card (single click) from any other views that shows cards list.
 
 <h2><a name="viewcardnav"/>Card Navigator View</h2>
-Card navigator allow you to create a structure to organise your cards.
+Card navigator allows you to create a structure to organise your cards.
 You can create arbitrary structures to organise you collections and decks, 
 the only restriction is that deck cannot be in the same folder as collection.
 <p/>
@@ -152,7 +152,8 @@ see details in <a href="workbench.html#new">New Menu</a>.
 To delete an element use context menu "Delete". Select an element, right-click on it and select menu item "Delete". 
 <p/>
 To rename an element use context menu "Rename". Select an element, right-click on it and select menu item "Rename".
-<h2>Search</h2>
+
+<h2><a name="search">Search</a></h2>
 You can search for a card with specific name using Search box. 
 You can also achieve same results using filter, but this way is more convenient when
 creating a deck from the a "real life" deck. 
@@ -160,9 +161,15 @@ creating a deck from the a "real life" deck.
 To open it select "view menu-&gt;Find..." or "Ctrl+F".
 To close it click on "X" button.
 To find a card enter a name or part of name, search starts as soon as you start typing.
+If card name consists of several words, you can type only first letters of each word in capital letters (called Camel Case search), for example
+to find "Shield of the Righteous" type SOTR in the search field. If it is not your card you can keep typing 
+(for example ShOTRig) 
+until full name is typed or press Enter to cycle through search results. 
+
 You can also search backward by pressing "arrow down" button.
-To use case sensitive search press "C" button. 
+To use case sensitive search press "C" button (In this case Camel Case search won't work). 
 To use search where only whole word would match press "W" button.
+
 
 <h2><a name="filter"/>Filter Dialog</h2>
 You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
@@ -184,9 +191,6 @@ you will get all creates and all enchantments that are Blue or White (including 
 <p/>
 Text search fields would split you text by words and search text using AND for all worlds you enter in the same line, disregarding order.
 Text search field provide content assist, i.e. they would show possible word you want to enter while you typing.
-<p/>
-<li>Example 1: Select all Green creatures with flying - Select Green in Color, Create in Type, and type "flying" in Text field</li>
-<li>Example 2: Select Artifact Creatures with cost 0 or 1 - Select Artifact in Type, type "Creature" in Type field, select &lt;= 1 in "Converted CC" field.  
 
 <p/>To search for symbols in Text field (such as mana and tap symbols) use the following table:
 <table>
@@ -201,6 +205,11 @@ Text search field provide content assist, i.e. they would show possible word you
 <tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/Symbol_1_mana.gif"/> 1 mana</td><td>{1} also {2},{3},...,{12}</td></tr>
 <tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/Symbol_BG_mana.gif"/> Black or Green mana</td><td>{B/G} also {W/B},{U/R},...</td></tr>
 </table>
+<p/>
+<li>Example 1: Select all Green creatures with flying - Select Green in Color, Create in Type, and type "flying" in Text field</li>
+<li>Example 2: Select Artifact Creatures with cost 0 or 1 - Select Artifact in Type, type "Creature" in Type field, select &lt;= 1 in "Converted CC" field.  
+<li>Example 3: Select Creatures that can tap for mana - Select "Creature" in Type group, type "{T} mana pool" in Text field.  
+
 <h3><a name="filterset">Set Filter</h3>
 Set filter allows to select specific set in which cards should be shown.
 <h3><a name="filterloc">Location Filter</h3>
