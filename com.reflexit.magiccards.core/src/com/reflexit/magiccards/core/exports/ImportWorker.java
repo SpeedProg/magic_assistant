@@ -87,6 +87,13 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		return result;
 	}
 
+	/**
+	 * format:
+	 *   Card Name (Set) x4
+	 *   4 x Card Name (Set)
+	 * @param monitor
+	 * @throws InvocationTargetException
+	 */
 	public void runDeckImport(IProgressMonitor monitor) throws InvocationTargetException {
 		result.type = type;
 		DeckParser parser = new DeckParser(stream);
