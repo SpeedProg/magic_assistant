@@ -27,17 +27,13 @@ class CardDescComposite extends Composite {
 	private Image image;
 	private Label imageControl;
 	private final CardDescView cardDescView;
-	private Label nameValue;
-	private Label typeValue;
-	private Label powerValue;
 	private Browser textValue;
-	private Label rarityValue;
-	private Label setValue;
 	private IMagicCard card;
 	private Image loadingImage;
 	private Image cardNotFound;
 	private PowerColumn powerProvider;
 	private PowerColumn toughProvider;
+	int width = 223, hight = 310;
 
 	public CardDescComposite(CardDescView cardDescView, Composite parent, int style) {
 		super(parent, style);
@@ -51,17 +47,7 @@ class CardDescComposite extends Composite {
 		        .grab(true, false) //
 		        .align(SWT.CENTER, SWT.BEGINNING)//
 		        .span(2, 0) //
-		        .hint(200, 285).applyTo(this.imageControl);
-		GridDataFactory labelLayout = GridDataFactory.fillDefaults() //
-		        .align(SWT.BEGINNING, SWT.CENTER);
-		GridDataFactory valueLayout = GridDataFactory.fillDefaults() //
-		        .align(SWT.FILL, SWT.CENTER)//
-		        .grab(true, false);
-		this.nameValue = createLabeledField("Name", panel, labelLayout, valueLayout);
-		this.typeValue = createLabeledField("Type", panel, labelLayout, valueLayout);
-		this.setValue = createLabeledField("Set", panel, labelLayout, valueLayout);
-		this.rarityValue = createLabeledField("Rarity", panel, labelLayout, valueLayout);
-		this.powerValue = createLabeledField("P/T", panel, labelLayout, valueLayout);
+		        .hint(width, hight).applyTo(this.imageControl);
 		this.textValue = new Browser(panel, SWT.WRAP | SWT.INHERIT_DEFAULT);
 		this.textValue.setFont(panel.getFont());
 		this.textValue.setBackground(panel.getBackground());
@@ -77,29 +63,21 @@ class CardDescComposite extends Composite {
 	}
 
 	private void createImages() {
+		int border = 10;
 		{
-			Image im = new Image(getDisplay(), 200, 285);
+			Image im = new Image(getDisplay(), width - 2 * border, hight - 2 * border);
 			GC gc = new GC(im);
 			gc.drawText("Loading...", 10, 10);
 			gc.dispose();
-			this.loadingImage = drawBorder(im);
+			this.loadingImage = drawBorder(im, border);
 		}
 		{
-			Image im = new Image(getDisplay(), 200, 285);
+			Image im = new Image(getDisplay(), width - 2 * border, hight - 2 * border);
 			GC gc = new GC(im);
 			gc.drawText("Can't find image", 10, 10);
 			gc.dispose();
-			this.cardNotFound = drawBorder(im);
+			this.cardNotFound = drawBorder(im, border);
 		}
-	}
-
-	private Label createLabeledField(String title, Composite panel, GridDataFactory right, GridDataFactory left) {
-		Label name = new Label(panel, SWT.NONE);
-		right.applyTo(name);
-		name.setText(title + ":");
-		Label nameValue = new Label(panel, SWT.NONE);
-		left.applyTo(nameValue);
-		return nameValue;
 	}
 
 	public void setImage(IMagicCard card, Image remoteImage) {
@@ -126,6 +104,7 @@ class CardDescComposite extends Composite {
 			Image full = remoteImage;
 			this.image = full;
 		}
+		System.err.println(this.image.getBounds());
 		this.imageControl.setImage(this.image);
 	}
 
@@ -142,17 +121,9 @@ class CardDescComposite extends Composite {
 			ld.minimumHeight = this.image.getBounds().height + 1;
 			ld.widthHint = ld.minimumWidth;
 			ld.heightHint = ld.minimumHeight;
-			this.nameValue.setText(card.getName());
-			this.typeValue.setText(card.getType() + "");
-			String pt = "";
-			if (card.getToughness() != null && card.getToughness().length() > 0) {
-				pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
-			}
-			this.powerValue.setText(pt);
-			this.setValue.setText(card.getSet() + "");
-			this.rarityValue.setText(card.getRarity() + "");
+			String data = getCardDataHtml(card);
 			String text = card.getOracleText();
-			this.textValue.setText(SymbolConverter.wrapHtml(text, this));
+			this.textValue.setText(SymbolConverter.wrapHtml(data + text, this));
 			this.layout(true, true);
 		} catch (RuntimeException e) {
 			// TODO Auto-generated catch block
@@ -160,9 +131,21 @@ class CardDescComposite extends Composite {
 		}
 	}
 
-	private Image drawBorder(Image remoteImage) {
+	private String getCardDataHtml(IMagicCard card) {
+	    String pt = "";
+	    if (card.getToughness() != null && card.getToughness().length() > 0) {
+	    	pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
+	    }
+	    String data = card.getName() + "<br/>" + card.getType();
+	    if (pt.length() > 0) {
+	    	data += " (" + pt + ")";
+	    }
+	    data += "<br/>" + card.getSet() + " (" + card.getRarity() + ")<p/>";
+	    return data;
+    }
+
+	private Image drawBorder(Image remoteImage, int border) {
 		Rectangle bounds = remoteImage.getBounds();
-		int border = 10;
 		Image full = new Image(getDisplay(), bounds.width + border * 2, bounds.height + border * 2);
 		GC gc = new GC(full);
 		gc.setBackground(getBackground());
