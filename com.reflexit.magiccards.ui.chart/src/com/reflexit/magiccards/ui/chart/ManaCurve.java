@@ -14,6 +14,7 @@ import org.eclipse.birt.chart.model.Chart;
 import org.eclipse.birt.chart.model.ChartWithAxes;
 import org.eclipse.birt.chart.model.attribute.ActionType;
 import org.eclipse.birt.chart.model.attribute.AxisType;
+import org.eclipse.birt.chart.model.attribute.Fill;
 import org.eclipse.birt.chart.model.attribute.LineAttributes;
 import org.eclipse.birt.chart.model.attribute.LineStyle;
 import org.eclipse.birt.chart.model.attribute.Marker;
@@ -23,7 +24,9 @@ import org.eclipse.birt.chart.model.attribute.TriggerCondition;
 import org.eclipse.birt.chart.model.attribute.impl.ColorDefinitionImpl;
 import org.eclipse.birt.chart.model.attribute.impl.TooltipValueImpl;
 import org.eclipse.birt.chart.model.component.Axis;
+import org.eclipse.birt.chart.model.component.CurveFitting;
 import org.eclipse.birt.chart.model.component.Series;
+import org.eclipse.birt.chart.model.component.impl.CurveFittingImpl;
 import org.eclipse.birt.chart.model.component.impl.SeriesImpl;
 import org.eclipse.birt.chart.model.data.NumberDataSet;
 import org.eclipse.birt.chart.model.data.SeriesDefinition;
@@ -44,7 +47,7 @@ import org.eclipse.birt.chart.model.type.impl.LineSeriesImpl;
 public class ManaCurve implements IChartGenerator {
 	String[] sa = { "0", "1", "2", "3", "4", "5", "6", "7+", "X" };
 	double[] da1;// { 0, 2, 4, 10, 10, 4, 6, 0, 1 };
-	double[] koeff = { 0.2, 4, 7.2, 10, 8, 4, 2, 0.2, 0.4 };
+	double[] koeff = { 0.2, 4, 8, 9.2, 8, 4.6, 1.6, 0.2, 0.2 };
 	double[] da2;
 	ChartWithAxes cwaBar;
 	int count;
@@ -62,6 +65,7 @@ public class ManaCurve implements IChartGenerator {
 			this.da2[i] = Math.round(mul * this.koeff[i]);
 		}
 	}
+	final Fill[] colorPalette = { ColorDefinitionImpl.BLUE(), ColorDefinitionImpl.RED() };
 
 	public final Chart create() {
 		this.cwaBar = ChartWithAxesImpl.create();
@@ -116,31 +120,57 @@ public class ManaCurve implements IChartGenerator {
 		xAxisPrimary.getSeriesDefinitions().add(sdX);
 		sdX.getSeries().add(seCategory);
 		// Y-Series (1)
+		BarSeries bs1 = createBarSeries(seriesOneValues, "This Deck");
+		// Y-Series (2)
+		BarSeries bs2 = createBarSeries(seriesTwoValues, "Average");
+		//LineSeries ls1 = createLineSeries(seriesTwoValues);
+		// sd 2
+		//		Axis yAxis2 = AxisImpl.create(Axis.ORTHOGONAL);
+		//		yAxis2.setType(AxisType.LINEAR_LITERAL);
+		//		xAxisPrimary.getAssociatedAxes().add(yAxis2);
+		SeriesDefinition sdY2 = SeriesDefinitionImpl.create();
+		//sdY2.getSeriesPalette().getEntries().clear();
+		//		sdY2.getSeriesPalette().getEntries().add(ColorDefinitionImpl.BLUE());
+		//		sdY2.getSeriesPalette().getEntries().add(ColorDefinitionImpl.RED());
+		sdY2.getSeriesPalette().shift(0);
+		bs1.getCurveFitting().getLineAttributes().setColor(ColorDefinitionImpl.BLUE());
+		bs2.getCurveFitting().getLineAttributes().setColor(ColorDefinitionImpl.RED());
+		yAxisPrimary.getSeriesDefinitions().add(sdY2);
+		sdY2.getSeries().add(bs1);
+		sdY2.getSeries().add(bs2);
+		return this.cwaBar;
+	}
+
+	private LineSeries createLineSeries(NumberDataSet seriesTwoValues) {
+		LineSeries ls1 = (LineSeries) LineSeriesImpl.create();
+		ls1.setSeriesIdentifier("Average");//$NON-NLS-1$
+		ls1.setDataSet(seriesTwoValues);
+		//ls1.getLineAttributes().setColor(ColorDefinitionImpl.RED());
+		for (int i = 0; i < ls1.getMarkers().size(); i++) {
+			((Marker) ls1.getMarkers().get(i)).setType(MarkerType.BOX_LITERAL);
+		}
+		ls1.setCurve(true);
+		ls1.getTriggers().add(
+		        TriggerImpl.create(TriggerCondition.ONMOUSEOVER_LITERAL, ActionImpl.create(
+		                ActionType.SHOW_TOOLTIP_LITERAL, TooltipValueImpl.create(500, "dph.getDisplayValue()"))));
+		return ls1;
+	}
+
+	private BarSeries createBarSeries(NumberDataSet seriesOneValues, String name) {
 		BarSeries bs1 = (BarSeries) BarSeriesImpl.create();
-		bs1.setSeriesIdentifier("This Deck");//$NON-NLS-1$
+		bs1.setSeriesIdentifier(name);
 		bs1.setDataSet(seriesOneValues);
 		bs1.setRiserOutline(null);
 		bs1.setRiser(RiserType.RECTANGLE_LITERAL);
+		bs1.setTranslucent(true);
+		CurveFitting fitting = CurveFittingImpl.create();
+		bs1.setCurveFitting(fitting);
 		//		bs1.getTriggers().add(
 		//		        TriggerImpl.create(TriggerCondition.ONCLICK_LITERAL, ActionImpl.create(ActionType.HIGHLIGHT_LITERAL,
 		//		                SeriesValueImpl.create(String.valueOf(bs1.getSeriesIdentifier())))));
 		bs1.getTriggers().add(
 		        TriggerImpl.create(TriggerCondition.ONMOUSEOVER_LITERAL, ActionImpl.create(
 		                ActionType.SHOW_TOOLTIP_LITERAL, TooltipValueImpl.create(500, "dph.getDisplayValue()"))));
-		// Y-Series (2)
-		LineSeries ls1 = (LineSeries) LineSeriesImpl.create();
-		ls1.setSeriesIdentifier("Average");//$NON-NLS-1$
-		ls1.setDataSet(seriesTwoValues);
-		ls1.getLineAttributes().setColor(ColorDefinitionImpl.GREEN());
-		for (int i = 0; i < ls1.getMarkers().size(); i++) {
-			((Marker) ls1.getMarkers().get(i)).setType(MarkerType.BOX_LITERAL);
-		}
-		ls1.setCurve(true);
-		SeriesDefinition sdY = SeriesDefinitionImpl.create();
-		yAxisPrimary.getSeriesDefinitions().add(sdY);
-		sdY.getSeriesPalette().shift(0);
-		sdY.getSeries().add(bs1);
-		sdY.getSeries().add(ls1);
-		return this.cwaBar;
+		return bs1;
 	}
 }

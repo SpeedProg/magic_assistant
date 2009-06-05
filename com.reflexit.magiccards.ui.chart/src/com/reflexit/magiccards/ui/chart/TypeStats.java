@@ -80,12 +80,12 @@ public class TypeStats implements IChartGenerator {
 		sdCity.getSeries().add(sePie);
 		sePie.setTranslucent(true); // set transparency
 		// format labels
-		sePie.setLabelPosition(Position.INSIDE_LITERAL);
+		sePie.setLabelPosition(Position.OUTSIDE_LITERAL);
 		DataPoint dataPoint = sePie.getDataPoint();
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
 		DataPointComponent dpc1 = DataPointComponentImpl.create(DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
-		        JavaNumberFormatSpecifierImpl.create(": 0"));//$NON-NLS-1$
+		        JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
 		DataPointComponent dpc2 = DataPointComponentImpl.create(
 		        DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL, JavaNumberFormatSpecifierImpl
 		                .create(" (##.##%)")); //$NON-NLS-1$
