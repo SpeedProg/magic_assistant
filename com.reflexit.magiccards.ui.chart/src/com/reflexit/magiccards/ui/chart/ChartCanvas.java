@@ -42,6 +42,8 @@ public class ChartCanvas extends Canvas {
 	private GeneratedChartState state;
 	private IChartGenerator gen;
 	private CallBackNotifier notifier;
+	private boolean needRebuild = false;
+	private boolean needRender = false;
 
 	public ChartCanvas(Composite parent, int style) {
 		super(parent, style);
@@ -60,9 +62,14 @@ public class ChartCanvas extends Canvas {
 				final Rectangle chartBounds = co.getClientArea();
 				if (ChartCanvas.this.cachedImage != null) {
 					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
+					if (cachedImage.getBounds().width != chartBounds.width
+					        || cachedImage.getBounds().height != chartBounds.height) {
+						needRebuild = true;
+					}
+				} else {
+					needRebuild = true;
 				}
-				if (ChartCanvas.this.cachedImage == null
-				        || (cachedImage.getBounds().width != chartBounds.width || cachedImage.getBounds().height != chartBounds.height)) {
+				if (needRebuild || needRender) {
 					drawToCachedImage(chartBounds, e.gc);
 					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
 				}
@@ -99,19 +106,29 @@ public class ChartCanvas extends Canvas {
 		try {
 			if (this.chart == null)
 				return;
+			// prepare image
 			if (this.cachedImage != null)
 				this.cachedImage.dispose();
+			else
+				needRebuild = true;
 			this.cachedImage = new Image(Display.getCurrent(), size);
+			// prepare gc
 			gc = new GC(this.cachedImage);
 			gc.setBackground(gcOrig.getBackground());
 			gc.setForeground(gcOrig.getForeground());
 			gc.setFont(gcOrig.getFont());
 			// Fills background. 
 			gc.fillRectangle(0, 0, size.width + 1, size.height + 1);
+			// rebuild
 			this.render.setProperty(IDeviceRenderer.GRAPHICS_CONTEXT, gc);
+			if (needRebuild) {
+				buildChart();
+				needRebuild = false;
+			}
+			// render
 			Generator gr = Generator.instance();
-			buildChart();
 			gr.render(this.render, this.state);
+			needRender = false;
 		} catch (ChartException ex) {
 			Activator.log(ex);
 		} finally {
@@ -139,11 +156,12 @@ public class ChartCanvas extends Canvas {
 		}
 
 		public void regenerateChart() {
-			setChartGenerator(gen);
+			needRebuild = true;
 			redraw();
 		}
 
 		public void repaintChart() {
+			needRender = true;
 			redraw();
 		}
 	}

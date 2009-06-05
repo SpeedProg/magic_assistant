@@ -15,6 +15,8 @@ import org.eclipse.birt.chart.model.ChartWithAxes;
 import org.eclipse.birt.chart.model.attribute.ActionType;
 import org.eclipse.birt.chart.model.attribute.AxisType;
 import org.eclipse.birt.chart.model.attribute.Fill;
+import org.eclipse.birt.chart.model.attribute.Interactivity;
+import org.eclipse.birt.chart.model.attribute.LegendBehaviorType;
 import org.eclipse.birt.chart.model.attribute.LineAttributes;
 import org.eclipse.birt.chart.model.attribute.LineStyle;
 import org.eclipse.birt.chart.model.attribute.Marker;
@@ -22,6 +24,7 @@ import org.eclipse.birt.chart.model.attribute.MarkerType;
 import org.eclipse.birt.chart.model.attribute.RiserType;
 import org.eclipse.birt.chart.model.attribute.TriggerCondition;
 import org.eclipse.birt.chart.model.attribute.impl.ColorDefinitionImpl;
+import org.eclipse.birt.chart.model.attribute.impl.InteractivityImpl;
 import org.eclipse.birt.chart.model.attribute.impl.TooltipValueImpl;
 import org.eclipse.birt.chart.model.component.Axis;
 import org.eclipse.birt.chart.model.component.CurveFitting;
@@ -82,6 +85,9 @@ public class ManaCurve implements IChartGenerator {
 		legendOutlineLine.setStyle(LineStyle.SOLID_LITERAL);
 		lg.getInsets().setLeft(10);
 		lg.getInsets().setRight(10);
+		Interactivity li = InteractivityImpl.create();
+		li.setLegendBehavior(LegendBehaviorType.TOGGLE_SERIE_VISIBILITY_LITERAL);
+		cwaBar.setInteractivity(li);
 		// Title
 		this.cwaBar.getTitle().getLabel().getCaption().setValue("Mana Curve: " + this.count + " spells");//$NON-NLS-1$
 		// X-Axis
