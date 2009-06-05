@@ -43,6 +43,8 @@ public class TypeStats implements IChartGenerator {
 		cwoaPie.setSubType("Standard Pie Chart"); //$NON-NLS-1$
 		// Plot
 		cwoaPie.setSeriesThickness(5);
+		cwoaPie.setMinSlice(0.1);
+		cwoaPie.setMinSliceLabel("Other");
 		// Legend
 		Legend lg = cwoaPie.getLegend();
 		lg.setVisible(false);
