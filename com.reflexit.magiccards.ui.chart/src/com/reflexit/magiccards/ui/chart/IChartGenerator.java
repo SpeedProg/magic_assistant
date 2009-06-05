@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.alena.birt;
+package com.reflexit.magiccards.ui.chart;
 
 import org.eclipse.birt.chart.model.Chart;
 

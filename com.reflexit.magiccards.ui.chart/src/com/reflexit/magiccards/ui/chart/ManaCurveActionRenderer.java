@@ -1,4 +1,4 @@
-package com.alena.birt;
+package com.reflexit.magiccards.ui.chart;
 
 import org.eclipse.birt.chart.computation.DataPointHints;
 import org.eclipse.birt.chart.event.StructureSource;
