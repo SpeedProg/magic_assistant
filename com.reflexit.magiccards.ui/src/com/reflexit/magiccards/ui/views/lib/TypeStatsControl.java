@@ -13,9 +13,6 @@ import org.eclipse.swt.widgets.Control;
 
 import java.text.DecimalFormat;
 
-import com.alena.birt.ChartCanvas;
-import com.alena.birt.IChartGenerator;
-import com.alena.birt.TypeStats;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -23,6 +20,9 @@ import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
+import com.reflexit.magiccards.ui.chart.ChartCanvas;
+import com.reflexit.magiccards.ui.chart.IChartGenerator;
+import com.reflexit.magiccards.ui.chart.TypeStats;
 
 public class TypeStatsControl {
 	ChartCanvas canvas;

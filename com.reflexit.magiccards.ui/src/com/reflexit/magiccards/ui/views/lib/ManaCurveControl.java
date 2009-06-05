@@ -3,14 +3,14 @@ package com.reflexit.magiccards.ui.views.lib;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.alena.birt.ChartCanvas;
-import com.alena.birt.IChartGenerator;
-import com.alena.birt.ManaCurve;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
+import com.reflexit.magiccards.ui.chart.ChartCanvas;
+import com.reflexit.magiccards.ui.chart.IChartGenerator;
+import com.reflexit.magiccards.ui.chart.ManaCurve;
 
 public class ManaCurveControl {
 	ChartCanvas canvas;
