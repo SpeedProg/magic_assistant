@@ -43,7 +43,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
  */
 public abstract class NewCardElementWizardPage extends WizardPage {
 	private Text containerText;
-	private Text fileText;
+	private Text nameText;
 	protected ISelection selection;
 
 	/**
@@ -80,11 +80,24 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		container.setLayout(layout);
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
+		// name
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Parent &Container:");
-		this.containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		label.setText("&Name:");
+		this.nameText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		this.containerText.setLayoutData(gd);
+		gd.horizontalSpan = 2;
+		this.nameText.setLayoutData(gd);
+		this.nameText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				dialogChanged();
+			}
+		});
+		// parent
+		Label label2 = new Label(container, SWT.NULL);
+		label2.setText("Parent &Container:");
+		this.containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL);
+		this.containerText.setLayoutData(gd2);
 		this.containerText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
@@ -98,19 +111,11 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 				handleBrowse();
 			}
 		});
-		label = new Label(container, SWT.NULL);
-		label.setText("&Name:");
-		this.fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		this.fileText.setLayoutData(gd);
-		this.fileText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
 		initialize();
 		dialogChanged();
 		setControl(container);
+		setErrorMessage(null);
+		this.nameText.setFocus();
 	}
 
 	/**
@@ -132,11 +137,11 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 				this.containerText.setText(container.getLocation());
 			}
 		}
-		this.fileText.setText(getResourceNameHint());
+		this.nameText.setText(getResourceNameHint());
 	}
 
 	public String getResourceNameHint() {
-		return "Sample " + getElementCapitalTypeName();
+		return "";
 	}
 
 	public abstract String getElementTypeName();
@@ -196,6 +201,6 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 	}
 
 	public String getElementName() {
-		return this.fileText.getText();
+		return this.nameText.getText();
 	}
 }

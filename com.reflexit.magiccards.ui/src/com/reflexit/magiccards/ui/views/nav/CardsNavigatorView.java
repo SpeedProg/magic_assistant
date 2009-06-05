@@ -75,6 +75,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action delete;
 	private Action export;
 	private Action importa;
+	private Action newDeckWizard;
 
 	/**
 	 * The constructor.
@@ -181,6 +182,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(newDeckWizard);
 		manager.add(export);
 		manager.add(importa);
 		manager.add(new Separator());
@@ -203,6 +205,23 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		};
 		this.export = new ExportAction();
 		this.importa = new ImportAction();
+		this.newDeckWizard = new Action("New Deck") {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/deck16.png"));
+			}
+
+			@Override
+			public void run() {
+				// Instantiates and initializes the wizard
+				NewDeckWizard wizard = new NewDeckWizard();
+				wizard.init(getSite().getWorkbenchWindow().getWorkbench(), (IStructuredSelection) getViewer()
+				        .getSelection());
+				// Instantiates the wizard container with the wizard and opens it
+				WizardDialog dialog = new WizardDialog(getShell(), wizard);
+				dialog.create();
+				dialog.open();
+			}
+		};
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.export);
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.importa);
 	}
