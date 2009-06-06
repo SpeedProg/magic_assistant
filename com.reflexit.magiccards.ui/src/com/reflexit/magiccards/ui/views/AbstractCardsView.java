@@ -79,14 +79,14 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected MenuManager groupMenu;
 	private IPreferenceStore store;
 	private SearchControl searchControl;
-	private Runnable updateViewer;
+	protected Runnable updateViewerRunnable;
 	protected ISelection revealSelection;
 
 	/**
 	 * The constructor.
 	 */
 	public AbstractCardsView() {
-		updateViewer = new Runnable() {
+		updateViewerRunnable = new Runnable() {
 			public void run() {
 				updateViewer();
 			}
@@ -455,7 +455,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	public void reloadData() {
-		this.manager.loadData(updateViewer);
+		this.manager.loadData(updateViewerRunnable);
 	}
 
 	public Shell getShell() {

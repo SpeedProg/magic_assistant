@@ -71,7 +71,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		});
 	}
 
-	protected abstract void updateViewer();
+	public abstract void updateViewer();
 
 	void checkInit() {
 		try {

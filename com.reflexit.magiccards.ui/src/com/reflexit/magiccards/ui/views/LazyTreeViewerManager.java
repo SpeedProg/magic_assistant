@@ -87,7 +87,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	}
 
 	@Override
-	protected void updateViewer() {
+    public void updateViewer() {
 		updateTableHeader();
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {

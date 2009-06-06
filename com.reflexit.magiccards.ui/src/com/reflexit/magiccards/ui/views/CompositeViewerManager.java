@@ -144,7 +144,7 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateViewer()
 	 */
 	@Override
-	protected void updateViewer() {
+    public void updateViewer() {
 		this.managers[this.activeIndex].updateViewer();
 		this.comp.layout();
 	}
