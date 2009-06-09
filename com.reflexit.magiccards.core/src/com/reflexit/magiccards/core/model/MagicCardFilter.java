@@ -2,6 +2,9 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Pattern;
+
+import com.reflexit.magiccards.core.model.MagicCardFilter.SearchToken.TokenType;
 
 public class MagicCardFilter {
 	private Expr root;
@@ -126,6 +129,10 @@ public class MagicCardFilter {
 			return new BinaryExpr(new Field(field), Operation.MATCHES, new Value(value));
 		}
 
+		public static BinaryExpr fieldLike(ICardField field, String value) {
+			return new BinaryExpr(new Field(field), Operation.LIKE, new Value(value));
+		}
+
 		public static BinaryExpr fieldOp(ICardField field, Operation op, String value) {
 			return new BinaryExpr(new Field(field), op, new Value(value));
 		}
@@ -165,9 +172,13 @@ public class MagicCardFilter {
 				if (x == null || y == null)
 					return false;
 				if (x instanceof String && y instanceof String) {
-					return ((String) x).matches((String) y);
+					String pattern = (String) y;
+					String text = (String) x;
+					return Pattern.compile(pattern).matcher(text).find();
 				}
 				return false;
+			} else if (this.op == Operation.LIKE) {
+				return true; // processed by DB
 			} else if (this.op == Operation.EQ || this.op == Operation.LE || this.op == Operation.GE) {
 				Object x = this.left.getFieldValue(o);
 				Object y = this.right.getFieldValue(o);
@@ -213,47 +224,163 @@ public class MagicCardFilter {
 			return null;
 		}
 	}
+	static class SearchToken {
+		static enum TokenType {
+			WORD,
+			QUOTED,
+			REGEX,
+			NOT;
+		}
 
-	static BinaryExpr ignoreCase1Search(ICardField field, String value, boolean regex) {
-		char c = value.charAt(0);
-		if (Character.isLetter(c)) {
-			if (regex) {
-				BinaryExpr res = BinaryExpr.fieldMatches(field, ".*(?i)\\b\\Q" + value + "\\E\\b.*");
-				return res;
-			} else {
-				String altValue = value.replaceAll("['\"%]", "_");
-				if (Character.isUpperCase(c)) {
-					altValue = Character.toLowerCase(c) + value.substring(1);
-				} else if (Character.isLowerCase(c)) {
-					altValue = Character.toUpperCase(c) + value.substring(1);
+		public TokenType getType() {
+			return type;
+		}
+
+		public String getValue() {
+			return value;
+		}
+		private TokenType type;
+		private String value;;
+
+		SearchToken(TokenType type, String value) {
+			this.type = type;
+			this.value = value;
+		}
+	}
+	public static class SearchStringTokenizer {
+		static enum State {
+			INIT,
+			IN_QUOTE,
+			IN_REG
+		};
+		private CharSequence seq;
+		private int cur;
+		private State state;
+
+		public void init(CharSequence seq) {
+			this.seq = seq;
+			this.cur = 0;
+			this.state = State.INIT;
+		}
+		boolean tokenReady = false;
+		StringBuffer str;
+		SearchToken token = null;
+
+		public SearchToken nextToken() {
+			tokenReady = false;
+			str = new StringBuffer();
+			token = null;
+			while (tokenReady == false && cur <= seq.length()) {
+				char c = cur < seq.length() ? seq.charAt(cur) : 0;
+				switch (state) {
+				case INIT:
+					switch (c) {
+					case '"':
+						pushToken(TokenType.WORD);
+						state = State.IN_QUOTE;
+						break;
+					case 'm':
+						if (cur + 1 < seq.length() && seq.charAt(cur + 1) == '/') {
+							pushToken(TokenType.WORD);
+							state = State.IN_REG;
+							cur++;
+						}
+						break;
+					case '-':
+						pushToken(TokenType.WORD);
+						str.append('-');
+						pushToken(TokenType.NOT);
+						break;
+					case ' ':
+					case 0:
+						pushToken(TokenType.WORD);
+						break;
+					default:
+						str.append(c);
+						break;
+					}
+					break;
+				case IN_REG:
+					if (c == '/' || c == 0) {
+						pushToken(TokenType.REGEX);
+						state = State.INIT;
+					} else {
+						str.append(c);
+					}
+					break;
+				case IN_QUOTE:
+					if (c == '"' || c == 0) {
+						pushToken(TokenType.QUOTED);
+						state = State.INIT;
+					} else {
+						str.append(c);
+					}
+					break;
 				}
-				BinaryExpr b1 = BinaryExpr.fieldMatches(field, "%" + value + "%");
-				BinaryExpr b2 = BinaryExpr.fieldMatches(field, "%" + altValue + "%");
-				BinaryExpr res = new BinaryExpr(b1, Operation.OR, b2);
-				return res;
+				cur++;
 			}
-		} else {
-			if (regex) {
-				return BinaryExpr.fieldMatches(field, ".*(?i)\\Q" + value + "\\E.*");
-			} else {
-				return BinaryExpr.fieldMatches(field, "%" + value + "%");
+			return token;
+		}
+
+		private void pushToken(TokenType type) {
+			if (str.length() > 0) {
+				token = new SearchToken(type, str.toString());
+				str.delete(0, str.length());
+				tokenReady = true;
 			}
 		}
 	}
 
-	static Expr textSearch(ICardField field, String text, boolean regex) {
-		text = text.trim();
-		text = text.replaceAll("\\s\\s*", " ");
-		String[] split = text.split(" ");
+	static BinaryExpr ignoreCase1SearchDb(ICardField field, String value) {
+		char c = value.charAt(0);
+		if (Character.isLetter(c)) {
+			String altValue = value.replaceAll("['\"%]", "_");
+			if (Character.isUpperCase(c)) {
+				altValue = Character.toLowerCase(c) + value.substring(1);
+			} else if (Character.isLowerCase(c)) {
+				altValue = Character.toUpperCase(c) + value.substring(1);
+			}
+			BinaryExpr b1 = BinaryExpr.fieldLike(field, "%" + value + "%");
+			BinaryExpr b2 = BinaryExpr.fieldLike(field, "%" + altValue + "%");
+			BinaryExpr res = new BinaryExpr(b1, Operation.OR, b2);
+			return res;
+		} else {
+			return BinaryExpr.fieldLike(field, "%" + value + "%");
+		}
+	}
+
+	public static BinaryExpr tokenSearch(ICardField field, SearchToken token, boolean regex) {
+		if (token.getType() == TokenType.REGEX) {
+			return BinaryExpr.fieldMatches(field, token.getValue());
+		} else {
+			if (!regex)
+				return ignoreCase1SearchDb(field, token.getValue());
+			String value = token.getValue();
+			char c = value.charAt(0);
+			if (Character.isLetter(c) && token.getType() != TokenType.QUOTED) {
+				BinaryExpr res = BinaryExpr.fieldMatches(field, "(?i)\\b\\Q" + value + "\\E\\b");
+				return res;
+			} else {
+				return BinaryExpr.fieldMatches(field, "(?i)\\Q" + value + "\\E");
+			}
+		}
+	}
+
+	static public Expr textSearch(ICardField field, String text, boolean regex) {
+		SearchStringTokenizer tokenizer = new SearchStringTokenizer();
+		tokenizer.init(text);
+		SearchToken token;
 		Expr res = null;
-		for (String value : split) {
+		while ((token = tokenizer.nextToken()) != null) {
 			BinaryExpr cur;
-			if (value.startsWith("-") && value.length() > 1) {
-				value = value.substring(1);
-				cur = ignoreCase1Search(field, value, regex);
+			if (token.getType() == TokenType.NOT) {
+				token = tokenizer.nextToken();
+				if (token == null)
+					break;
+				cur = tokenSearch(field, token, regex);
 				cur = new BinaryExpr(cur, Operation.NOT, null);
 			} else {
-				cur = ignoreCase1Search(field, value, regex);
+				cur = tokenSearch(field, token, regex);
 			}
 			res = createAndGroup(res, cur);
 		}
@@ -276,7 +403,7 @@ public class MagicCardFilter {
 				res = new BinaryExpr(b1, Operation.OR, b2);
 			}
 		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			res = ignoreCase1Search(MagicCardField.TYPE, value, regex);
+			res = textSearch(MagicCardField.TYPE, value, regex);
 		} else if (Editions.getInstance().getIdPrefix().equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardField.SET, value);
 		} else if (SuperTypes.getInstance().getIdPrefix().equals(requestedId)) {
@@ -315,6 +442,7 @@ public class MagicCardFilter {
 		public static final Operation GE = new Operation(">=");
 		public static final Operation LE = new Operation("<=");
 		public static final Operation EQ = new Operation("==");
+		public static final Operation LIKE = new Operation("LIKE");
 		String name;
 
 		Operation(String name) {
