@@ -28,6 +28,7 @@ public class AllTests {
 		suite.addTestSuite(DeckStoreTest.class);
 		suite.addTestSuite(CollectionStoreTest.class);
 		suite.addTestSuite(DeckParserTest.class);
+		suite.addTestSuite(MagicCardFilterTest.class);
 		//$JUnit-END$
 		return suite;
 	}
