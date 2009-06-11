@@ -20,8 +20,14 @@ import org.eclipse.birt.chart.model.attribute.Bounds;
 import org.eclipse.birt.chart.model.attribute.CallBackValue;
 import org.eclipse.birt.chart.model.attribute.impl.BoundsImpl;
 import org.eclipse.birt.chart.util.PluginSettings;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.ImageTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -29,6 +35,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 
 /**
@@ -56,6 +64,7 @@ public class ChartCanvas extends Canvas {
 		} catch (ChartException pex) {
 			Activator.log(pex);
 		}
+		createCopyImageMenu();
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				Composite co = (Composite) e.getSource();
@@ -73,6 +82,24 @@ public class ChartCanvas extends Canvas {
 					drawToCachedImage(chartBounds, e.gc);
 					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
 				}
+			}
+		});
+	}
+
+	public void createCopyImageMenu() {
+		Menu menu = new Menu(this);
+		this.setMenu(menu);
+		MenuItem item = new MenuItem(menu, SWT.NONE);
+		item.setText("Copy Image");
+		item.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Image image = getImage();
+				if (image == null)
+					return;
+				Clipboard clipboard = new Clipboard(Display.getDefault());
+				ImageTransfer imageTransfer = ImageTransfer.getInstance();
+				clipboard.setContents(new Object[] { image.getImageData() }, new Transfer[] { imageTransfer });
 			}
 		});
 	}
@@ -164,5 +191,9 @@ public class ChartCanvas extends Canvas {
 			needRender = true;
 			redraw();
 		}
+	}
+
+	public Image getImage() {
+		return cachedImage;
 	}
 }
