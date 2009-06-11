@@ -6,19 +6,10 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.ImageTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 
 import java.text.DecimalFormat;
 
@@ -84,7 +75,6 @@ public class TypeStatsControl {
 		area.setLayout(new GridLayout(2, true));
 		canvas = new ChartCanvas(area, style);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createCopyImageMenu();
 		stats = new TreeViewer(area);
 		stats.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		TreeViewerColumn col1 = new TreeViewerColumn(stats, SWT.NONE);
@@ -126,22 +116,6 @@ public class TypeStatsControl {
 				final int total = ((CardGroup) stats.getInput()).getCount();
 				float per = count / (float) total;
 				return new DecimalFormat("00.00%").format(per);
-			}
-		});
-	}
-
-	private void createCopyImageMenu() {
-		Menu menu = new Menu(canvas);
-		canvas.setMenu(menu);
-		MenuItem item = new MenuItem(menu, SWT.NONE);
-		item.setText("Copy Image");
-		item.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Image image = canvas.getImage();
-				Clipboard clipboard = new Clipboard(Display.getDefault());
-				ImageTransfer imageTransfer = ImageTransfer.getInstance();
-				clipboard.setContents(new Object[] { image.getImageData() }, new Transfer[] { imageTransfer });
 			}
 		});
 	}
