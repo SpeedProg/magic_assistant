@@ -24,5 +24,6 @@ Export-Package: com.reflexit.magiccards.ui,
  com.reflexit.magiccards.ui.views.columns,
  com.reflexit.magiccards.ui.views.lib,
  com.reflexit.magiccards.ui.views.nav
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ imagetransfer.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

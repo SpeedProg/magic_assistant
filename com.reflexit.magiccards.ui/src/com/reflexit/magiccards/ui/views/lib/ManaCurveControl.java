@@ -1,7 +1,17 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.ImageTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
@@ -19,8 +29,24 @@ public class ManaCurveControl {
 
 	public ManaCurveControl(Composite parent, int style) {
 		canvas = new ChartCanvas(parent, style);
-		//canvas = new SwtInteractivityViewer(parent, style);
+		createCopyImageMenu();
 	}
+
+	private void createCopyImageMenu() {
+	    Menu menu = new Menu(canvas);
+		canvas.setMenu(menu);
+		MenuItem item = new MenuItem(menu, SWT.NONE);
+		item.setText("Copy Image");
+		item.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Image image = canvas.getImage();
+				Clipboard clipboard = new Clipboard(Display.getDefault());
+				ImageTransfer imageTransfer = ImageTransfer.getInstance();
+				clipboard.setContents(new Object[] { image.getImageData() }, new Transfer[] { imageTransfer });
+			}
+		});
+    }
 
 	public void setFilteredStore(IFilteredCardStore store) {
 		this.store = store.getCardStore();
