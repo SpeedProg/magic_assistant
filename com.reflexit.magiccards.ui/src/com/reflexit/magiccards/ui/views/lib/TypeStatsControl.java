@@ -24,9 +24,9 @@ import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.TypeStats;
 
-public class TypeStatsControl {
+public class TypeStatsControl implements IDeckPage {
 	ChartCanvas canvas;
-	//SwtInteractivityViewer canvas;
+	//SwtInteractivityViewer spellColorCanvas;
 	ICardStore store;
 	private Composite area;
 	private TreeViewer stats;
@@ -128,7 +128,7 @@ public class TypeStatsControl {
 		return store;
 	}
 
-	public void updateChart() {
+	public void updateFromStore() {
 		if (store == null)
 			return;
 		IChartGenerator gen = new TypeStats(buildTypeStats());

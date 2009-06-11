@@ -6,6 +6,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -15,7 +16,7 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
-public class InfoControl extends Composite {
+public class InfoControl extends Composite implements IDeckPage {
 	private Text text;
 	private ICardStore store;
 
@@ -42,7 +43,7 @@ public class InfoControl extends Composite {
 
 	public void setFilteredStore(IFilteredCardStore store) {
 		this.store = store.getCardStore();
-		updateData();
+		updateFromStore();
 	}
 
 	private IStorageInfo getInfo() {
@@ -56,12 +57,20 @@ public class InfoControl extends Composite {
 		return null;
 	}
 
-	private void updateData() {
+	public Control getControl() {
+		return this;
+	}
+
+	public void updateFromStore() {
 		IStorageInfo si = getInfo();
 		if (si != null) {
 			String comment = si.getComment();
 			if (comment != null)
 				text.setText(comment);
 		}
+	}
+
+	public String getStatusMessage() {
+		return "";
 	};
 }

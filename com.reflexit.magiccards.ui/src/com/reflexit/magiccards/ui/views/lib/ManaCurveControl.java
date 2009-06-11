@@ -12,9 +12,9 @@ import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.ManaCurve;
 
-public class ManaCurveControl {
+public class ManaCurveControl implements IDeckPage {
 	ChartCanvas canvas;
-	//SwtInteractivityViewer canvas;
+	//SwtInteractivityViewer spellColorCanvas;
 	ICardStore store;
 
 	public ManaCurveControl(Composite parent, int style) {
@@ -29,7 +29,7 @@ public class ManaCurveControl {
 		return store;
 	}
 
-	public void updateChart() {
+	public void updateFromStore() {
 		if (store == null)
 			return;
 		IChartGenerator gen = new ManaCurve(buildManaCurve());

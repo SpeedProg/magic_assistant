@@ -15,6 +15,8 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
+import java.util.ArrayList;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -31,14 +33,15 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	Deck deck;
 	private Action shuffle;
-	private ManaCurveControl manaControl;
 	private CTabFolder folder;
 	private IPartListener2 partListener;
+	private ArrayList<IDeckPage> pages;
 
 	/**
 	 * The constructor.
 	 */
 	public DeckView() {
+		pages = new ArrayList<IDeckPage>();
 	}
 
 	/* (non-Javadoc)
@@ -116,37 +119,22 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		cardsList.setShowClose(false);
 		Control control = this.manager.createContents(folder);
 		cardsList.setControl(control);
-		// Mana Curve
-		final CTabItem mana = new CTabItem(folder, SWT.CLOSE);
-		mana.setText("Mana Curve");
-		mana.setShowClose(false);
-		manaControl = new ManaCurveControl(folder, SWT.BORDER);
-		mana.setControl(manaControl.getControl());
-		// Mana Curve
-		final CTabItem types = new CTabItem(folder, SWT.CLOSE);
-		types.setText("Card Types");
-		types.setShowClose(false);
-		final TypeStatsControl typesControl = new TypeStatsControl(folder, SWT.BORDER);
-		types.setControl(typesControl.getControl());
-		// Info
-		final CTabItem info = new CTabItem(folder, SWT.CLOSE);
-		info.setShowClose(false);
-		info.setText("Info");
-		InfoControl infoControl = new InfoControl(folder);
-		info.setControl(infoControl);
-		infoControl.setFilteredStore(getFilteredStore());
+		// Pages
+		createDeckTab("Mana Curve", new ManaCurveControl(folder, SWT.BORDER));
+		createDeckTab("Card Types", new TypeStatsControl(folder, SWT.BORDER));
+		createDeckTab("Colors", new ColorControl(folder, SWT.BORDER));
+		createDeckTab("Info", new InfoControl(folder));
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem sel = folder.getSelection();
-				// refresh contents when selected
-				if (sel.getControl() == manaControl.getControl()) {
-					manaControl.setFilteredStore(getFilteredStore());
-					manaControl.updateChart();
-				} else if (sel.getControl() == typesControl.getControl()) {
-					typesControl.setFilteredStore(getFilteredStore());
-					typesControl.updateChart();
+				for (IDeckPage deckPage : pages) {
+					IDeckPage page = deckPage;
+					if (sel.getControl() == page.getControl()) {
+						page.setFilteredStore(getFilteredStore());
+						page.updateFromStore();
+					}
 				}
 				updateStatus();
 			}
@@ -154,13 +142,26 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		folder.setSelection(0);
 	}
 
+	private void createDeckTab(String name, final IDeckPage page) {
+		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
+		item.setText(name);
+		item.setShowClose(false);
+		item.setControl(page.getControl());
+		pages.add(page);
+	}
+
 	@Override
 	protected void updateStatus() {
 		CTabItem sel = folder.getSelection();
-		if (sel.getControl() == manaControl.getControl()) {
-			setStatus(manaControl.getStatusMessage());
-		} else if (sel.getControl() == manager.getControl()) {
+		if (sel.getControl() == manager.getControl()) {
 			setStatus(manager.getStatusMessage());
+		} else {
+			for (IDeckPage deckPage : pages) {
+				IDeckPage page = deckPage;
+				if (sel.getControl() == page.getControl()) {
+					setStatus(page.getStatusMessage());
+				}
+			}
 		}
 	}
 
@@ -196,7 +197,10 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 			// ignore
 		} else {
-			manaControl.updateChart();
+			for (IDeckPage deckPage : pages) {
+				IDeckPage page = deckPage;
+				page.updateFromStore();
+			}
 		}
 	}
 
