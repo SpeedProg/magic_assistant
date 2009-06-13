@@ -157,7 +157,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			String value = store.getString(id);
 			if (value != null && value.length() > 0) {
 				map.put(id, value);
-				//System.err.println(id + "=" + value);
+				System.err.println(id + "=" + value);
 			}
 		}
 		return map;
