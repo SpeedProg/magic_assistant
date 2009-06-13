@@ -517,6 +517,11 @@ public class MagicCardFilter {
 			BinaryExpr or = null;
 			if (value != null && value.equals("true")) {
 				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
+			} else if (value == null || value.equals("false")) {
+				// skip
+				or = null;
+				//				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
+				//				or = new BinaryExpr(or, Operation.NOT, null);
 			} else if (value != null && value.length() > 0) {
 				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Value(value));
 			}

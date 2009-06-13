@@ -124,10 +124,6 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	protected MagicCardPhisical createDefaultCard() {
 		MagicCardPhisical card = new MagicCardPhisical(new MagicCard());
-		String location = getLocation();
-		if (location != null) {
-			card.setLocation(location);
-		}
 		return card;
 	}
 
@@ -208,6 +204,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 			String value = list.get(i);
 			card.setObjectByField(f, value);
 		}
+		card.setLocation(getLocation());
 		return card;
 	}
 
