@@ -47,7 +47,7 @@ public class XmlCardHolder implements ICardHandler {
 		return LibraryDataXmlHandler.getInstance();
 	}
 
-	public IFilteredCardStore getDeckHandler(String filename) {
+	public IFilteredCardStore getCardCollectionHandler(String filename) {
 		return new DeckXmlHandler(filename);
 	}
 

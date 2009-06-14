@@ -122,6 +122,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	@Override
 	public void setLocation(String location) {
 		this.location = location;
+		autoSave();
 	}
 
 	@Override
@@ -141,6 +142,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	public void setName(String name) {
 		this.name = name;
+		autoSave();
 	}
 
 	@Override

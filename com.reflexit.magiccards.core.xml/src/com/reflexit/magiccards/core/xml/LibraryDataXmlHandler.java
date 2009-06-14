@@ -16,11 +16,13 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
 public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable,
         ICardEventListener, ICardCountable {
@@ -94,8 +96,15 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 			CardElement elem = (CardElement) event.getData();
 			if (event.getType() == CardEvent.ADD_CONTAINER) {
 				try {
-					if (!(elem instanceof CardOrganizer))
-						this.table.addFile(elem.getFile(), elem.getLocation());
+					if (elem instanceof CardCollection) {
+						CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
+						IStorage storage = store.getStorage();
+						if (storage instanceof IStorageInfo) {
+							((IStorageInfo) storage).setType(((CardCollection) elem).isDeck()
+							        ? IStorageInfo.DECK_TYPE
+							        : null);
+						}
+					}
 				} catch (CoreException e) {
 					Activator.log(e);
 				}

@@ -39,16 +39,17 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	 * @param file
 	 * @param location
 	 */
-	public void addFile(final File file, final String location) {
-		addFile(file, location, true);
+	public CollectionCardStore addFile(final File file, final String location) {
+		return addFile(file, location, true);
 	}
 
-	public synchronized void addFile(final File file, final String location, boolean initialize) {
+	public synchronized CollectionCardStore addFile(final File file, final String location, boolean initialize) {
 		if (location != null && map.containsKey(location)) {
-			return;
+			return (CollectionCardStore) map.get(location);
 		}
 		CollectionCardStore store = CollectionSingleFileCardStore.create(file, location, initialize);
 		addCardStore(store);
+		return store;
 	}
 
 	@Override

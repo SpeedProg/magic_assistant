@@ -72,6 +72,11 @@ public class CardCollectionStoreObject {
 	public void save() throws FileNotFoundException {
 		OutputStream out = new FileOutputStream(this.file);
 		xstream.toXML(this, new OutputStreamWriter(out, Charset.forName("utf-8")));
+		try {
+			out.close();
+		} catch (IOException e) {
+			// ignore
+		}
 	}
 
 	/**

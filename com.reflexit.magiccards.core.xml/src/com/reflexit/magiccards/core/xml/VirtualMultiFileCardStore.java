@@ -30,14 +30,15 @@ public class VirtualMultiFileCardStore extends CollectionMultiFileCardStore {
 	}
 
 	@Override
-	public synchronized void addFile(final File file, final String location, boolean initialize) {
+	public synchronized CollectionCardStore addFile(final File file, final String location, boolean initialize) {
 		if (location != null && map.containsKey(location)) {
-			return;
+			return (CollectionCardStore) map.get(location);
 		}
 		CollectionCardStore store = new DbFileCardStore(file, location, initialize);
 		addCardStore(store);
 		if (initialize)
 			initialized = initialize;
+		return store;
 	}
 
 	@Override

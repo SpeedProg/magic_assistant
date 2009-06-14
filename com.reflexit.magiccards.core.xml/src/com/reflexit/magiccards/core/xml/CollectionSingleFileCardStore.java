@@ -23,8 +23,6 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
  *
  */
 public class CollectionSingleFileCardStore extends CollectionCardStore implements ICardCountable {
-	public static final String DECK_TYPE = "deck";
-
 	/**
 	 * @param file
 	 */
