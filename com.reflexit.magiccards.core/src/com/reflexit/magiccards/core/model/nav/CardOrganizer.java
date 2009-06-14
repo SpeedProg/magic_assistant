@@ -8,24 +8,39 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 
 public class CardOrganizer extends CardElement {
 	private final Collection<CardElement> children = new ArrayList<CardElement>();
 
 	public CardOrganizer(String filename, CardOrganizer parent) {
-		super(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename));
-		setParentInit(parent);
+		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename), parent);
 	}
 
 	public CardOrganizer(String name, IPath path, CardOrganizer parent) {
 		super(name, path);
+		createDir();
 		setParentInit(parent);
+	}
+
+	private void createDir() {
+		try {
+			File file = getFile();
+			if (!file.exists()) {
+				if (file.mkdir() == false)
+					throw new IOException("Directory name " + file + " is invalid");
+			}
+		} catch (Exception e) {
+			throw new MagicException(e);
+		}
 	}
 
 	public Collection<CardElement> getChildren() {
@@ -128,6 +143,26 @@ public class CardOrganizer extends CardElement {
 			CardElement el = (CardElement) element;
 			if (el instanceof CardOrganizer) {
 				return ((CardOrganizer) el).findElement(p);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public CardCollection findCardCollectionById(String id) {
+		for (Object element : this.getChildren()) {
+			CardElement o = (CardElement) element;
+			if (o instanceof CardCollection) {
+				CardCollection d = (CardCollection) o;
+				if (d.getFileName().equals(id))
+					return d;
+			} else if (o instanceof CardOrganizer) {
+				CardCollection d = ((CardOrganizer) o).findCardCollectionById(id);
+				if (d != null)
+					return d;
 			}
 		}
 		return null;

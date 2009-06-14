@@ -1,6 +1,8 @@
 package com.reflexit.magiccards.core.model.storage;
 
 public interface IStorageInfo {
+	public static final String DECK_TYPE = "deck";
+
 	public String getComment();
 
 	public String getProperty(String key);
@@ -8,4 +10,6 @@ public interface IStorageInfo {
 	public String getType();
 
 	public void setComment(String text);
+
+	public void setType(String string);
 }

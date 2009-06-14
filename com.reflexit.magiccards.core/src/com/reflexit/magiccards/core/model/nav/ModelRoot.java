@@ -80,10 +80,6 @@ public class ModelRoot extends CardOrganizer {
 		}
 	}
 
-	public Deck getDeck(String id) {
-		return getDeckContainer().findDeck(id);
-	}
-
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#getPath()
 	 */
@@ -142,7 +138,7 @@ public class ModelRoot extends CardOrganizer {
 	 * @param modelRoot
 	 */
 	private void fillLocations(LinkedHashMap<String, CardElement> map, CardElement root) {
-		if (root instanceof CardCollection || root instanceof Deck) {
+		if (root instanceof CardCollection) {
 			map.put(root.getLocation(), root);
 		}
 		if (root instanceof CardOrganizer) {

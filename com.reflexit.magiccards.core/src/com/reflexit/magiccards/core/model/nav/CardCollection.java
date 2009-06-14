@@ -1,12 +1,84 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.File;
+
+import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageContainer;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
+
 public class CardCollection extends CardElement {
+	private transient ICardStore<IMagicCard> store;
+	protected transient boolean deck;
+
 	public CardCollection(String filename, CardOrganizer parent) {
-		super(filename, parent);
+		this(filename, parent, false);
+	}
+
+	public CardCollection(String filename, CardOrganizer parent, boolean deck) {
+		super(filename, parent, false);
+		this.deck = deck;
+		createFile();
+		setParentInit(parent);
+	}
+
+	private void createFile() {
+		try {
+			File file = getFile();
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+		} catch (Exception e) {
+			throw new MagicException(e);
+		}
 	}
 
 	@Override
 	public CardElement newElement(String name, CardOrganizer parent) {
-		return new CardCollection(name + ".xml", parent);
+		return new CardCollection(name + ".xml", parent, isDeck());
+	}
+
+	public ICardStore<IMagicCard> getStore() {
+		return this.store;
+	}
+
+	@Override
+	public String getName() {
+		return super.getName();
+	}
+
+	public void open(ICardStore<IMagicCard> store) {
+		if (this.store == null) {
+			this.store = store;
+			if (store instanceof IStorageContainer) {
+				IStorage storage = ((IStorageContainer) store).getStorage();
+				if (storage instanceof IStorageInfo) {
+					deck = IStorageInfo.DECK_TYPE.equals(((IStorageInfo) storage).getType());
+				}
+			}
+		} else {
+			throw new IllegalArgumentException("Already open");
+		}
+	}
+
+	public boolean isDeck() {
+		return deck;
+	}
+
+	public void close() {
+		this.store = null;
+	}
+
+	public boolean isOpen() {
+		return this.store != null;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getFileName() {
+		return getPath().lastSegment();
 	}
 }

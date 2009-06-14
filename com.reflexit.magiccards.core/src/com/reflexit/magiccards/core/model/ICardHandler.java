@@ -12,7 +12,7 @@ public interface ICardHandler {
 
 	public IFilteredCardStore getMyCardsHandler();
 
-	public IFilteredCardStore getDeckHandler(String id);
+	public IFilteredCardStore getCardCollectionHandler(String id);
 
 	public IFilteredCardStore getActiveDeckHandler();
 

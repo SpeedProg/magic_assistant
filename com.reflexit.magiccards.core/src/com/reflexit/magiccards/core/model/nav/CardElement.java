@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -23,17 +22,6 @@ public abstract class CardElement extends EventManager {
 	public CardElement(String name, IPath path) {
 		this.name = name;
 		this.path = path;
-		try {
-			File file = getFile();
-			if (!file.exists()) {
-				if (!(this instanceof CardOrganizer))
-					file.createNewFile();
-				else if (file.mkdir() == false)
-					throw new IOException("Directory name " + file + " is invalid");
-			}
-		} catch (Exception e) {
-			throw new MagicException(e);
-		}
 	}
 
 	protected void setParentInit(CardOrganizer parent) {
@@ -50,9 +38,10 @@ public abstract class CardElement extends EventManager {
 		}
 	}
 
-	public CardElement(String filename, CardOrganizer parent) {
+	public CardElement(String filename, CardOrganizer parent, boolean addToParent) {
 		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename));
-		setParentInit(parent);
+		if (addToParent)
+			setParentInit(parent);
 	}
 
 	public IPath getPath() {
