@@ -74,7 +74,7 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	/**
 	 * @param secondaryId
 	 */
-	protected void addToDeck(String id) {
+	protected void addToCardCollection(String id) {
 		ISelection selection = getViewer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
@@ -85,8 +85,8 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 					if (o instanceof IMagicCard)
 						list.add((IMagicCard) o);
 				}
-				String location = ((ILocatable) DataManager.getCardHandler().getDeckHandler(id).getCardStore())
-				        .getLocation();
+				String location = ((ILocatable) DataManager.getCardHandler().getCardCollectionHandler(id)
+				        .getCardStore()).getLocation();
 				DataManager.getCardHandler().moveCards(list, null, location);
 			}
 		}
@@ -107,7 +107,7 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 					Action ac = new Action(store.getName()) {
 						@Override
 						public void run() {
-							addToDeck(deckId);
+							addToCardCollection(deckId);
 						}
 					};
 					manager.add(ac);

@@ -53,7 +53,7 @@ public class MagicDbView extends AbstractCardsView {
 	/**
 	 * @param secondaryId
 	 */
-	protected void addToDeck(String id) {
+	protected void addToCardCollection(String id) {
 		ISelection selection = getViewer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
@@ -61,7 +61,7 @@ public class MagicDbView extends AbstractCardsView {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof IMagicCard)
-						DataManager.getCardHandler().getDeckHandler(id).getCardStore().add(o);
+						DataManager.getCardHandler().getCardCollectionHandler(id).getCardStore().add(o);
 				}
 			}
 		}
@@ -95,7 +95,7 @@ public class MagicDbView extends AbstractCardsView {
 				Action ac = new Action(store.getName()) {
 					@Override
 					public void run() {
-						addToDeck(deckId);
+						addToCardCollection(deckId);
 					}
 				};
 				manager.add(ac);

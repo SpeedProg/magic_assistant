@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.core.model.nav.Deck;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -31,7 +31,7 @@ import com.reflexit.magiccards.ui.views.analyzers.HandView;
 
 public class DeckView extends AbstractMyCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
-	Deck deck;
+	CardCollection deck;
 	private Action shuffle;
 	private CTabFolder folder;
 	private IPartListener2 partListener;
@@ -51,7 +51,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		String secondaryId = getViewSite().getSecondaryId();
-		this.deck = DataManager.getModelRoot().getDeck(secondaryId);
+		this.deck = DataManager.getModelRoot().findCardCollectionById(secondaryId);
 		if (this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
@@ -104,7 +104,11 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	public void createPartControl(Composite parent) {
 		ICardEventManager s = this.manager.getFilteredStore().getCardStore();
 		if (s instanceof ICardStore) {
-			setPartName("Deck: " + ((ICardStore<IMagicCard>) s).getName());
+			String name = ((ICardStore<IMagicCard>) s).getName();
+			if (deck.isDeck())
+				setPartName("Deck: " + name);
+			else
+				setPartName("Collection: " + name);
 		}
 		super.createPartControl(parent);
 	}
@@ -182,14 +186,14 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		String secondaryId = getViewSite().getSecondaryId();
-		return DataManager.getCardHandler().getDeckHandler(secondaryId);
+		return DataManager.getCardHandler().getCardCollectionHandler(secondaryId);
 	}
 
 	@Override
 	public void handleEvent(CardEvent event) {
 		super.handleEvent(event);
 		if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-			if (DataManager.getModelRoot().getDeck(this.deck.getFileName()) == null) {
+			if (DataManager.getModelRoot().findCardCollectionById(this.deck.getFileName()) == null) {
 				this.deck.close();
 				getViewSite().getPage().hideView(this);
 				return;

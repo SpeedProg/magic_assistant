@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
@@ -83,8 +82,6 @@ public class LocationColumn extends GenColumn {
 										return "Only one location can be chosen";
 									Object el = iss.getFirstElement();
 									if (el instanceof CardCollection)
-										return null;
-									if (el instanceof Deck)
 										return null;
 									return "Invalid location: Select Collection or Deck";
 								}

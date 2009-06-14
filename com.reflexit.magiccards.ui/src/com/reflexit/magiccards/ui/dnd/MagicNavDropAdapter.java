@@ -26,7 +26,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -50,7 +49,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 		if (dropLocation != LOCATION_ON)
 			return false;
 		Object idata = getCurrentTarget();
-		if (!(idata instanceof CardCollection) && !(idata instanceof Deck)) {
+		if (!(idata instanceof CardCollection)) {
 			return false;
 		}
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
@@ -80,7 +79,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 
 	@Override
 	public boolean validateDrop(Object target, int op, TransferData type) {
-		if (!(target instanceof CardCollection) && !(target instanceof Deck)) {
+		if (!(target instanceof CardCollection)) {
 			return false;
 		}
 		if (getCurrentLocation() != LOCATION_ON)

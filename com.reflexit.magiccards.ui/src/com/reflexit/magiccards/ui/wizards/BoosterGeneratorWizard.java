@@ -27,9 +27,9 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.Rarity;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -125,7 +125,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
 					CardOrganizer parent = (CardOrganizer) resource;
-					final Deck col = new Deck(name + ".xml", parent);
+					final CardCollection col = new CardCollection(name + ".xml", parent, true);
 					populateLibrary(BoosterGeneratorWizard.this.editionName, BoosterGeneratorWizard.this.packs, col,
 					        new SubProgressMonitor(monitor, 7));
 					IViewPart view = page.showView(CardsNavigatorView.ID);
@@ -144,16 +144,16 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 	/**
 	 * @param firstElement
 	 * @param selection
-	 * @param deck 
+	 * @param col 
 	 * @param subProgressMonitor 
 	 */
-	private void populateLibrary(String editionName, int packs, Deck deck, IProgressMonitor monitor) {
+	private void populateLibrary(String editionName, int packs, CardCollection col, IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 10);
-		if (deck.isOpen() == false) {
-			IFilteredCardStore fstore = DataManager.getCardHandler().getDeckHandler(deck.getFileName());
+		if (col.isOpen() == false) {
+			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionHandler(col.getFileName());
 		}
 		monitor.worked(1);
-		ICardStore store = deck.getStore();
+		ICardStore store = col.getStore();
 		MagicCardFilter filter = new MagicCardFilter();
 		HashMap filterset = new HashMap();
 		IFilteredCardStore dbcards = DataManager.getCardHandler().getDatabaseHandler();
@@ -166,7 +166,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			filterset.put(rarity, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
-			generateRandom(1 * packs, dbcards, store, deck);
+			generateRandom(1 * packs, dbcards, store, col);
 			monitor.worked(3);
 			// 3*packs uncommon
 			filterset.remove(rarity);
@@ -174,7 +174,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			filterset.put(rarity, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
-			generateRandom(3 * packs, dbcards, store, deck);
+			generateRandom(3 * packs, dbcards, store, col);
 			monitor.worked(3);
 			// 11*packs common
 			filterset.remove(rarity);
@@ -182,7 +182,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			filterset.put(rarity, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
-			generateRandom(11 * packs, dbcards, store, deck);
+			generateRandom(11 * packs, dbcards, store, col);
 		} finally {
 			monitor.done();
 			dbcards.update(oldFilter);

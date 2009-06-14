@@ -7,7 +7,6 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -24,14 +23,14 @@ public class CardsNavigatorLabelProvider extends LabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof Deck) {
-			return MagicUIActivator.getDefault().getImage("icons/obj16/deck16.png");
+		if (element instanceof CardCollection) {
+			if (((CardCollection) element).isDeck())
+				return MagicUIActivator.getDefault().getImage("icons/obj16/deck16.png");
+			else
+				return MagicUIActivator.getDefault().getImage("icons/obj16/lib16.png");
 		}
 		if (element instanceof DecksContainer) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-deck.png");
-		}
-		if (element instanceof CardCollection) {
-			return MagicUIActivator.getDefault().getImage("icons/obj16/lib16.png");
 		}
 		if (element instanceof CollectionsContainer) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-lib.png");

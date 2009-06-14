@@ -6,9 +6,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
@@ -52,7 +52,7 @@ public class NewDeckWizardPage extends NewCardElementWizardPage {
 			return;
 		}
 		String fileName = getElementName();
-		Deck old = DataManager.getModelRoot().getDeckContainer().findDeck(fileName + ".xml");
+		CardCollection old = DataManager.getModelRoot().findCardCollectionById(fileName + ".xml");
 		if (old != null) {
 			updateStatus("Deck with this name already exists");
 			return;

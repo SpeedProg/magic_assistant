@@ -54,7 +54,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.core.model.nav.DecksContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -76,6 +75,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action export;
 	private Action importa;
 	private Action newDeckWizard;
+	private Action openInDeckView;
+	private Action openInMyCardsView;
 
 	/**
 	 * The constructor.
@@ -159,6 +160,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		manager.add(new Separator());
 		manager.add(export);
 		manager.add(importa);
+		manager.add(openInDeckView);
+		openInDeckView.setEnabled(openInDeckView.isEnabled());
+		manager.add(openInMyCardsView);
+		openInMyCardsView.setEnabled(openInMyCardsView.isEnabled());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -224,6 +229,51 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		};
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.export);
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.importa);
+		openInDeckView = new Action("Open in Deck View") {
+			@Override
+			public void run() {
+				if (isEnabled())
+					runDoubleClick();
+			}
+
+			@Override
+			public boolean isEnabled() {
+				ISelection selection = getViewer().getSelection();
+				if (selection.isEmpty() || ((IStructuredSelection) selection).size() > 1)
+					return false;
+				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				if (obj instanceof CardCollection) {
+					return true;
+				}
+				return false;
+			}
+		};
+		openInMyCardsView = new Action("Open in My Cards View") {
+			@Override
+			public void run() {
+				if (isEnabled()) {
+					ISelection selection = getViewer().getSelection();
+					Object obj = ((IStructuredSelection) selection).getFirstElement();
+					MyCardsView view;
+					try {
+						view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
+						        .showView(MyCardsView.ID);
+						view.setLocationFilter(((CardElement) obj).getLocation());
+					} catch (PartInitException e) {
+						// error
+					}
+				}
+			}
+
+			@Override
+			public boolean isEnabled() {
+				ISelection selection = getViewer().getSelection();
+				if (selection.isEmpty() || ((IStructuredSelection) selection).size() != 1)
+					return false;
+				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				return (obj instanceof CardElement && !(obj instanceof MagicDbContainter));
+			}
+		};
 	}
 
 	/**
@@ -266,30 +316,13 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 
 	public static void createNewDeckAction(DecksContainer parent, String name, IWorkbenchPage page) {
 		String filename = name + ".xml";
-		Deck d = parent.addDeck(filename);
+		CardCollection d = parent.addDeck(filename);
 		try {
 			openDeckView(d, page);
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	private DecksContainer getDeckContainer() {
-		ISelection selection = this.manager.getViewer().getSelection();
-		DecksContainer parent = DataManager.getModelRoot().getDeckContainer();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection iss = (IStructuredSelection) selection;
-			if (!iss.isEmpty()) {
-				CardElement el = (CardElement) iss.getFirstElement();
-				if (el instanceof DecksContainer) {
-					parent = (DecksContainer) el;
-				} else if (el instanceof Deck) {
-					parent = (DecksContainer) ((Deck) el).getParent();
-				}
-			}
-		}
-		return parent;
 	}
 
 	private void hookDoubleClickAction() {
@@ -337,18 +370,13 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}
-		} else if (obj instanceof Deck) {
-			try {
-				Deck d = (Deck) obj;
-				openDeckView(d, getViewSite().getWorkbenchWindow().getActivePage());
-			} catch (PartInitException e) {
-				MagicUIActivator.log(e);
-			}
 		} else if (obj instanceof CardCollection) {
 			try {
-				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(
-				        MyCardsView.ID);
-				view.setLocationFilter(((CardCollection) obj).getLocation());
+				//				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(
+				//				        MyCardsView.ID);
+				//				view.setLocationFilter(((CardCollection) obj).getLocation());
+				CardCollection d = (CardCollection) obj;
+				openDeckView(d, getViewSite().getWorkbenchWindow().getActivePage());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
 			}
@@ -365,7 +393,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		}
 	}
 
-	public static void openDeckView(Deck d, IWorkbenchPage page) throws PartInitException {
+	public static void openDeckView(CardCollection d, IWorkbenchPage page) throws PartInitException {
 		page.showView(DeckView.ID, d.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
 	}
 

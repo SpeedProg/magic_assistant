@@ -24,8 +24,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.Deck;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -51,15 +51,15 @@ public class RenameHandler extends AbstractHandler {
 			return null;
 		}
 		boolean wasOpen = false;
-		if (f instanceof Deck) {
-			wasOpen = ((Deck) f).isOpen();
+		if (f instanceof CardCollection) {
+			wasOpen = ((CardCollection) f).isOpen();
 		}
 		InputDialog inputDialog = new InputDialog(window.getShell(), "Rename", "New Name", f.getName(), null);
 		if (inputDialog.open() == Dialog.OK && !f.getName().equals(inputDialog.getValue())) {
 			CardElement el = f.rename(inputDialog.getValue());
-			if (wasOpen && el instanceof Deck) {
+			if (wasOpen && el instanceof CardCollection) {
 				try {
-					window.getActivePage().showView(DeckView.ID, ((Deck) el).getFileName(),
+					window.getActivePage().showView(DeckView.ID, ((CardCollection) el).getFileName(),
 					        IWorkbenchPage.VIEW_ACTIVATE);
 				} catch (PartInitException e) {
 					MagicUIActivator.log(e);
