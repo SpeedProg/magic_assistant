@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.test;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import java.io.ByteArrayInputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -45,8 +44,8 @@ public class DeckParserTest extends junit.framework.TestCase {
 		        deck, null);
 		try {
 			worker.runDeckImport(new NullProgressMonitor());
-		} catch (InvocationTargetException e) {
-			fail(e.getCause().getMessage());
+		} catch (Exception e) {
+			fail(e.getMessage());
 		}
 		ArrayList<IMagicCard> res = extractStorageCards();
 		resSize = res.size();
