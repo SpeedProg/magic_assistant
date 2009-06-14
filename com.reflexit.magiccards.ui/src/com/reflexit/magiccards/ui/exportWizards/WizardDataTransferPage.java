@@ -377,8 +377,12 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	 *
 	 * @param message the error message
 	 */
-	protected void displayErrorDialog(String message) {
-		MessageDialog.openError(getContainer().getShell(), getErrorDialogTitle(), message);
+	protected void displayErrorDialog(final String message) {
+		getContainer().getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openError(getContainer().getShell(), getErrorDialogTitle(), message);
+			}
+		});
 	}
 
 	/**

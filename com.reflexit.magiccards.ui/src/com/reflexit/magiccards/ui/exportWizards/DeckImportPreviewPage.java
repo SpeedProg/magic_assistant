@@ -53,9 +53,12 @@ public class DeckImportPreviewPage extends WizardPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible == true) {
+			DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
+			setDescription("Import preview (First 10 rows). "
+			        + (startingPage.hasHeaderRow() ? "Header row." : "No header row.") + " Format "
+			        + startingPage.getReportType() + ".");
 			setErrorMessage(null);
 			DeckImportWizard wizard = (DeckImportWizard) getWizard();
-			DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
 			try {
 				InputStream st = startingPage.openInputStream();
 				BufferedReader b = new BufferedReader(new InputStreamReader(st));
@@ -88,7 +91,9 @@ public class DeckImportPreviewPage extends WizardPage {
 				}
 			if (result.values.size() > 0)
 				tableViewer.setInput(result.values);
-			else
+			if (result.error != null)
+				setErrorMessage("Cannot parse data file: " + result.error.getMessage());
+			else if (result.values.size() == 0)
 				setErrorMessage("Cannot parse data file");
 		}
 	}

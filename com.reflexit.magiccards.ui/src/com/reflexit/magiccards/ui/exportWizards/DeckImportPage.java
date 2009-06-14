@@ -100,10 +100,15 @@ public class DeckImportPage extends WizardDataTransferPage {
 						if (preview) {
 							ImportWorker worker;
 							worker = new ImportWorker(reportType, st, header);
-							worker.run(monitor);
+							// init preview
 							previewResult = worker.getPreview();
 							((DeckImportWizard) getWizard()).setData(previewResult);
+							worker.run(monitor);
+							// if error occurs previewResult.error would be set to exception
 						} else {
+							// because we support both deck and collection it is trying to import using my cards handler
+							// with specific filter set on which deck/collection it is. It is really ugly and card should 
+							// have location set otherwise it is not adding them properly
 							IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
 							IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
 							((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
@@ -250,13 +255,18 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private void defaultPrompt() {
-		String mess = "Import into selected deck or collection. Empty deck or collection has to be created in advance. ";
+		String mess = "Import into selected exising deck or collection. ";
 		if (reportType == ReportType.XML)
 			setMessage(mess + "You have selected XML format");
 		else if (reportType == ReportType.CSV)
-			setMessage(mess + "You have selected CSV format, e.g. 'Name,Set,Count'");
-		else
-			setMessage(mess + "You have selected text format, e.g. 'Name x 4'");
+			setMessage(mess
+			        + "You have selected CSV format, columns order 'ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT'");
+		else if (reportType == ReportType.TEXT_DECK_CLASSIC)
+			setMessage(mess
+			        + "You have selected Deck Classic format, lines like 'Quagmire Druid x 3' or 'Diabolic Tutor (Tenth Edition) x4'");
+		else if (reportType == ReportType.TABLE_PIPED)
+			setMessage(mess
+			        + "You have selected Table Piped format: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT'");
 	}
 
 	@Override
@@ -399,7 +409,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		addComboType(ReportType.XML);
 		addComboType(ReportType.CSV);
 		addComboType(ReportType.TEXT_DECK_CLASSIC);
-		addComboType(ReportType.USER_DEFINED);
+		addComboType(ReportType.TABLE_PIPED);
 		selectReportType(ReportType.TEXT_DECK_CLASSIC);
 		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
 		gd1.horizontalSpan = 1;
@@ -496,6 +506,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	private boolean isExportCsvFlag() {
 		return getReportType() == ReportType.CSV || getReportType() == ReportType.TABLE_PIPED;
+	}
+
+	public boolean hasHeaderRow() {
+		return includeHeader.getSelection();
 	}
 
 	public ReportType getReportType() {
