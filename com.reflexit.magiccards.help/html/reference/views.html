@@ -3,7 +3,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>Views</title>
+
+		<title>Views</title>
 </head>
 
 <body>
@@ -31,13 +32,13 @@ MTG Database View specific context menu actions:
 <ul>
  <li>Cards Table</li> - see <a href="#cardstable">Cards Table</a> reference.
  <li>Status Bar</li> - shows information about current card table.
- <li>Search Bar (Optional)</li> - see <a href="#search">Search</a>.
+ <li>Search Bar (Optional)</li> - see <a href="search_bar.html#search">Search</a>.
  <li>Tool Bar</li> 
   <ul>
-  <li><img src="../../../com.reflexit.magiccards.ui/icons/filter.gif"/> (Open Filter) - opens a <a href="#filter">Filter dialog</a>.</li>
+  <li><img src="../../../com.reflexit.magiccards.ui/icons/filter.gif"/> (Open Filter) - opens a <a href="filter_dialog.html">Filter dialog</a>.</li>
   <li><a name="viewmenu"/><img src="../screenshots/icons/view_menu.gif"/> (View Menu)
      <ul>
-     <li>Filter... - opens a <a href="#filter">Filter Dialog</a></li>
+     <li>Filter... - opens a <a href="filter_dialog.html">Filter Dialog</a></li>
      <li>"Group By" menu
      <ul>
       <li>None - no grouping</li>
@@ -47,7 +48,7 @@ MTG Database View specific context menu actions:
      </ul>
      </li>
      <li>"Preferences..." - opens this view <a href="preferences.html#columnpref">preferences</a>.</li>
-     <li>"Find..." - opens a <a href="#search">search</a> bar.</li>
+     <li>"Find..." - opens a <a href="search_bar.html#search">search</a> bar.</li>
      <li>"Sort By" - sorts by specific column</li>
      <li>"Load Seller's prices" - loads prices of selected cards from internet, to see them you need to enable Seller Price column from preferences.</li>
      </ul>
@@ -91,7 +92,7 @@ These only available in Deck and My Cards view:
 <h2><a name="viewcol"/>My Cards View</h2>
 My Cards View shows cards from all your decks or collections (or from selected ones). 
 To control which collections are shown you can use 
-<a href="#filterloc">Location</a> page of the view's Filter.
+<a href="filter_dialog.html#filterloc">Location</a> page of the view's Filter.
 For the list of view components (menus, card table, status bar) see <a href="#viewcomp">MTG Database view</a>.
 <p/>
 You can open "My Cards" view by double-clicking on one of the collections or containers from <a href="#viewcardnav">Card Navigator</a> view.
@@ -153,67 +154,8 @@ To delete an element use context menu "Delete". Select an element, right-click o
 <p/>
 To rename an element use context menu "Rename". Select an element, right-click on it and select menu item "Rename".
 
-<h2><a name="search">Search</a></h2>
-You can search for a card with specific name using Search box. 
-You can also achieve same results using filter, but this way is more convenient when
-creating a deck from the a "real life" deck. 
-<p/>
-To open it select "view menu-&gt;Find..." or "Ctrl+F".
-To close it click on "X" button.
-To find a card enter a name or part of name, search starts as soon as you start typing.
-If card name consists of several words, you can type only first letters of each word in capital letters (called Camel Case search), for example
-to find "Shield of the Righteous" type SOTR in the search field. If it is not your card you can keep typing 
-(for example ShOTRig) 
-until full name is typed or press Enter to cycle through search results. 
-
-You can also search backward by pressing "arrow down" button.
-To use case sensitive search press "C" button (In this case Camel Case search won't work). 
-To use search where only whole word would match press "W" button.
 
 
-<h2><a name="filter"/>Filter Dialog</h2>
-You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
-You can select one of more criteria from the filters.
-
-Filter dialog has three page: Basic Filter, Sets Filter and Location filter (last one only available from My Cards view).
- 
-
-<h3><a name="filterasic">Basic Filter</h3>
-Basic filter has several groups such as Color, Type, Rarity etc.
-Items that belong to the same group (such as Color) would be selected using logical OR. 
-Item that belong to different groups would be selected using logical AND.
-<p>
-<img src="../screenshots/dialogs/basic_filter.png" alt="basic filter dialog image"/>
-</p>
-<p/>
-For example if you select color Blue and White and Type Creature and Enchantment, 
-you will get all creates and all enchantments that are Blue or White (including multicolors).
-<p/>
-Text search fields would split you text by words and search text using AND for all worlds you enter in the same line, disregarding order.
-Text search field provide content assist, i.e. they would show possible word you want to enter while you typing.
-
-<p/>To search for symbols in Text field (such as mana and tap symbols) use the following table:
-<table>
-<tr><th>Symbol</th><th>Search as</th></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/red_mana.gif"/> Red mana</td><td>{R}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/black_mana.gif"/> Black mana</td><td>{B}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/blue_mana.gif"/> Blue mana</td><td>{U}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/green_mana.gif"/> Green mana</td><td>{G}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/white_mana.gif"/> White mana</td><td>{W}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/tap.gif"/> Tap</td><td>{T}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/untap.gif"/> Untap</td><td>{Q}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/Symbol_1_mana.gif"/> 1 mana</td><td>{1} also {2},{3},...,{12}</td></tr>
-<tr><td><img src="../../../com.reflexit.magiccards.ui/icons/mana/Symbol_BG_mana.gif"/> Black or Green mana</td><td>{B/G} also {W/B},{U/R},...</td></tr>
-</table>
-<p/>
-<li>Example 1: Select all Green creatures with flying - Select Green in Color, Create in Type, and type "flying" in Text field</li>
-<li>Example 2: Select Artifact Creatures with cost 0 or 1 - Select Artifact in Type, type "Creature" in Type field, select &lt;= 1 in "Converted CC" field.  
-<li>Example 3: Select Creatures that can tap for mana - Select "Creature" in Type group, type "{T} mana pool" in Text field.  
-
-<h3><a name="filterset">Set Filter</h3>
-Set filter allows to select specific set in which cards should be shown.
-<h3><a name="filterloc">Location Filter</h3>
-Location filter allow to select set of decks/collection that would be shown in My Cards view.
 
 </body>
 </html>

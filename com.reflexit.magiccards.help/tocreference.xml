@@ -3,7 +3,9 @@
 
 <toc label="Reference" link_to="toc.xml#reference"> 
 	<topic label="Workbench"  href="html/reference/workbench.html"> 
-		<topic label="Main Menu" href="html/reference/workbench.html#menu" /> 
+	    <topic label="Concepts" href="html/reference/workbench.html#concepts" />
+		<topic label="Main Menu" href="html/reference/workbench.html#menu" />
+		<topic label="New Menu" href="html/reference/workbench.html#new" />  
 	</topic>
 	<topic label="Views"  href="html/reference/views.html">
 		<topic label="MTG Database" href="html/reference/views.html#viewmagicdb" />

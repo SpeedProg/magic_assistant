@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Creating and Populating a deck</title>
+</head>
+
+<body>
+<h1>Creating and Populating a Deck or Collection</h1>
+
+The following tasks describing how to create and populate a Deck. For collection use same procedure but replace
+word Deck with word Collection (until end of the turn).
+
+<h2><a name="#create_deck">Create a new Deck</a></h2>
+To create a deck:
+<li>Open a <a href="../reference/views.html#viewcardnav">Card Navigator</a>View by clicking on its header.</li>
+<li>Select a parent Deck folder.</li> 
+<li>Select New...-&gt; Deck from the context menu (Right click).</li>
+<li>Type a name of the deck in the Name field. Click Finish. </li>
+
+Empty deck will be automatically open.
+
+<h2><a name="#populate_manual">Populate a deck from printed cards</a></h2>
+<p/>
+This is procedure of how to populate a deck from the printed cards deck. If you have your deck in electronic format you 
+may choose to use a <a href="#import_deck">deck import</a> instead.
+<p/>
+To populate a deck.
+<li>Open a new empty deck, by double clicking on it in the <a href="../reference/views.html#viewcardnav">Card Navigator</a>View. 
+Deck view should open in the top part of the window</li>
+<li>Activate a <a href="../reference/views.html#viewmagicdb">MTG Database</a> View. It should open in the bottom of the window. 
+If deck and database view overlap each other drag one or another up to 
+make sure they arrange properly.</li>
+<li>Activate Card Info view to see card image. It should be on the left</li>
+<li> 
+If your deck is made from limited number of sets, it is better to select them in the filter,
+to simplify the search. To do that click on Filter button on the view header (Or select Filter... from view or context menu),
+switch to Set Filter on the left and select one or more sets. 
+</li>
+<li>
+Now type Ctrl-F or select Find... from the view menu (triangle button in the view header). <a href="../reference/search_bar.html#search">Search panel</a> will be open.
+</li>
+
+<li>
+Type name of card in the search field, you don't have to type whole name, search would show up cards as you type.
+If card name consists of several words, you can type only first letters of each word in capital letters, for example
+to find "Shield of the Righteous" type SOTR in the search field. If it is not your card you can keep typing until full name
+is typed or press Enter to cycle through search results. 
+</li>
+<li>If you have filter by sets enabled and card is not found, it may be because by default database contains only latest print of the same
+card, if you want exact set for you card you need to update database with this set. See <a href="../tasks/updatingdb.html">Updating database</a>.
+<li> 
+When can is found press "+" button (Or select Add to Active Deck from context menu Or Drag a card to your deck). 
+Card will be added to your deck.
+</li>
+<li>
+If you want to enter number of cards (card count) you can either press "+" several times to achieve needed number, 
+or double click on card in the deck and edit count of cards directly. You also can edit count in the Count cell itself.
+</li>
+
+<h2><a name="import_deck">Populate a deck using import</a></h2>
+<h3>Importing from text format</h3>
+If you have a deck content in an electronic form you can import it using Deck import.
+Select a new empty deck and select Import... from a context menu (right click menu).
+Select a file or clipboard option and press Next. Select "Deck Classic" as a format. 
+You will see a preview of your deck import.
+Click Finish to finish the importing. 
+<p/>
+Example 1 (Deck Classic, Count last):
+<pre>
+Diabolic Tutor (Tenth Edition) x4
+Quagmire Druid x 3
+</pre>
+<p/>
+Example 2 (Deck Classic, Count first):
+<pre>
+4 x Diabolic Tutor 
+3 x Quagmire Druid
+</pre>
+<h3>Importing from csv format or excel</h3>
+If you have you cards in excel you can import them in the Magic Assistant deck or collection.
+To do that, first re-arrange the columns to match the following order:
+<pre>
+ID,NAME,COST,TYPE,POWER,TOUGHNESS,ORACLE,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT,LOCATION,CUSTOM,OWNERSHIP
+</pre>
+This is actually Magic Assistant CSV export format.  
+The only columns which are used are NAME, SET and user data such as COUNT, PRICE and COMMENT.
+All columns except NAME can be empty, but they still must present to keep the order.
+Export data from excel into .csv file with "," separator and import it into Magic Assistant.
+When importing select "CSV" format. 
+If data file has header row check "Data has a header row" checkbox, otherwise uncheck it.
+Preview would show if format is matching.
+
+<p/>
+Example 3 (CSV format, no header row):
+<pre>
+,Diabolic Tutor,,,,,,Tenth Edition,,,,4,1.99,Signed by Artist,
+,Quagmire Druid,,,,,,Apocalypse,,,,2,0.15,,
+,Swamp,,,,,,Tenth Edition,,,,16,0.15,,
+</pre>
+Example 4 (CSV format, header row):
+<pre>
+ID,NAME,COST,TYPE,POWER,TOUGHNESS,ORACLE,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT,LOCATION,CUSTOM,OWNERSHIP
+129525,Diabolic Tutor,{2}{B}{B},Sorcery,,,Search your library for a card and put that card into your hand. Then shuffle your library.,Tenth Edition,Uncommon,1.99,,4,0.0,,,,false
+27188,Quagmire Druid,{2}{B},Creature - Zombie Druid,2,2,"{G}, {T}, Sacrifice a creature: Destroy target enchantment.",Apocalypse,Common,0.15,,2,0.0,,,,false
+129757,Swamp,,Basic Land - Swamp,,,[B],Tenth Edition,BasicLand,0.15,,16,0.0,,Decks/Thrull Breader & Demon.xml,,false
+</pre>
+Note that for CSV format if field has "," it is it has to be in quotes.
+<p/>
+Piped Table format is the same as CSV but using | as separator and ignoring the quotes.
+<p> 
+Example 5 (Table Piped format, no header row):
+<pre>
+|Diabolic Tutor||||||Tenth Edition||||4
+|Quagmire Druid||||||Apocalypse||||2
+</pre>
+</body>
+</html>

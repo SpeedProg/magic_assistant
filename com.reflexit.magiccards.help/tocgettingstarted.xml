@@ -2,10 +2,6 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Getting Started" link_to="toc.xml#gettingstarted"> 
-	<topic label="Browsing Cards"  href="html/gettingstarted/browsing.html"> 
-	</topic>
-	<topic href="html/gettingstarted/updatingdb.html" label="Updating Cards Database">
-	</topic>
-	<topic href="html/gettingstarted/creatingdeck.html" label="Creating a Deck">
+	<topic label="Basic Tutorial"  href="html/gettingstarted/basic_tutorial.html"> 
 	</topic>
 </toc>

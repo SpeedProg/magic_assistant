@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Basic Tutorial</title>
+</head>
+
+<body>
+<h1>Basic Tutorial</h1>
+<h2> Overview </h2>
+Magic Assistant is application for browsing "Magic: The Gathering" &#0153; cards 
+(see <a href="http://www.wizards.com/magic">official website</a>) 
+and organising cards into decks and library collections.
+<p/>
+To start playing with Magic Assistant if you using it as eclipse plugin 
+switch to Magic perspective, from Window->Open Perspective.
+<p/>
+If you running standalone version this is only perspective available.
+<p/>
+
+Magic perspective contains several views: <br/>
+<a href="../reference/views.html#viewmagicdb">MTG Database</a> - To browse existing mtg cards, <br/> 
+<a href="../reference/views.html#viewcard">Card Info</a> - To view detailed card information and picture,<br/> 
+<a href="../reference/views.html#viewcardnav">Card Navigator</a> - To browse your own decks and collections, <br/> 
+<a href="../reference/views.html#viewcol">My Cards View</a> - To browse All Your personal cards, and <br/> 
+<a href="../reference/views.html#viewdeck">Deck view</a>s - To look at the cards in each deck.
+<p/>
+
+You can changes layout of your views but dragging them around by the header. If you get lost you can reset to original layout using 
+menu "Window-&gt;Reset Perspective...".
+<p/>
+If you are not familiar with eclipse please note that some actions are available from the "view menu", this is
+small triangle at the top right corner of each view. Context sensitive actions are available from context menu, which
+is invoked by "mouse right click".
+
+<p/>
+
+MTG Database View shows all available cards. By default it will only
+show one instance of a card with the same name for the latest edition.
+Cards for older editions can be downloaded from the internet, see <a href="../tasks/updatingdb.html">updating database</a> section.
+<p/>
+Card details and scanned card picture are shown in the <a href="../reference/views.html#viewcard">Card Info</a> view.
+It shows card image if available (downloads it from internet), and also shows card name, description and type below the image. 
+Click on the card in any of the tables to see card info in this view. See more details in <a href="../reference/views.html#viewcard">Card Info View</a> 
+reference.
+
+<h2> Browsing and Searching </h2>
+To browse cards you can use sorting and filtering: 
+<p/>
+You can sort by any column by clicking on the column header in the views that display card tables.
+If you click again sorting order is reversed. You can also see more columns, control is available from "Preferences..."
+menu of the view menu <img src="../screenshots/icons/view_menu.gif" alt="triangle button"/>.
+<p/>
+You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
+You can select one of more criteria from the filters.
+See details in 
+<a href="../reference/filter_dialog.html">Filter Dialog</a> reference.
+
+<p>
+You can bring up search control using Ctrl-F key or using view menu "Find...".
+It allows you to find a card in the view by name (or part of name). 
+See details in 
+<a href="../reference/search_bar.html">Search Bar</a> reference.
+<h2> Building a deck </h2>
+To build a deck you need <a href="../reference/views.html#viewcardnav">Card Navigator</a> view,
+from there you can add a new deck and place it in the desired folder. After deck is created you can populate
+it by moving cards from database or from other decks or collection, or using deck import.
+See more details in <a href="../tasks/creatingdeck.html">Creating and Populating a Deck or Collection</a>.
+<p/>
+You can edit cards in your decks and collections. To edit card properties you can select or more cards from the
+table and choose "Edit..." from context menu (or double click on a card). Editable card properties currently are:
+ count, comment, ownership and price.
+<p/>
+You can analyse you deck using some tools: Mana Curve, Colors, Card Types - these are tabs at the bottom of the
+deck view. Also you can group cards to achieve same statistics in the main table tab using Group By menu (from the view menu).
+
+<h2> Other stuff </h2>
+Some other actions available from main menu, context menu (right click) or from view menu (triangle button in the view header  <img src="../screenshots/icons/view_menu.gif" alt="triangle button"/>).
+See also <a href="../reference/views.html#viewmagicdb">MTG Database View</a> reference.
+
+<p/>
+<img src="../screenshots/views/mtg_database.png" alt="MTG Database"/>.
+</body>
+</html>

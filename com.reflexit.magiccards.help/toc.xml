@@ -5,6 +5,9 @@
    <topic label="Getting Started">
       <anchor id="gettingstarted"/>
    </topic>
+   <topic label="Tasks">
+      <anchor id="tasks"/>
+   </topic>
     <topic label="Reference">
       <anchor id="reference"/>
    </topic>
