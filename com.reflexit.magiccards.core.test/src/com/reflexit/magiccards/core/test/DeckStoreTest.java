@@ -20,6 +20,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionSingleFileCardStore;
 
@@ -40,7 +41,7 @@ public class DeckStoreTest extends TestCase {
 		tempFile.deleteOnExit();
 		this.store = new CollectionSingleFileCardStore(tempFile, "Decks/" + name + ".xml");
 		//((CollectionSingleFileCardStore) this.store).setName(name);
-		((CollectionSingleFileCardStore) this.store).setType(CollectionSingleFileCardStore.DECK_TYPE);
+		((CollectionSingleFileCardStore) this.store).setType(IStorageInfo.DECK_TYPE);
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
 		this.m2 = CardGenerator.generateRandomCard();
