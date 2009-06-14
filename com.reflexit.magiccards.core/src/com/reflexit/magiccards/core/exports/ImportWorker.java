@@ -36,8 +36,9 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	private int line;
 	public static class PreviewResult {
 		public ArrayList<String[]> values = new ArrayList<String[]>();
-		public ICardField[] fields;
+		public ICardField[] fields = getNonTransientFeilds();
 		public ReportType type;
+		public Exception error;
 	}
 
 	public ImportWorker(ReportType type, InputStream st, boolean header, IFilteredCardStore<IMagicCard> store,
@@ -77,7 +78,11 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 				runDeckImport(monitor);
 			} else if (type == ReportType.TABLE_PIPED) {
 				runTablePipedImport(monitor);
+			} else {
+				throw new IllegalArgumentException("Format is not supported: " + type);
 			}
+		} catch (Exception e) {
+			result.error = e;
 		} finally {
 			monitor.done();
 		}
@@ -92,9 +97,10 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	 *   Card Name (Set) x4
 	 *   4 x Card Name (Set)
 	 * @param monitor
+	 * @throws IOException 
 	 * @throws InvocationTargetException
 	 */
-	public void runDeckImport(IProgressMonitor monitor) throws InvocationTargetException {
+	public void runDeckImport(IProgressMonitor monitor) throws IOException {
 		result.type = type;
 		DeckParser parser = new DeckParser(stream);
 		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] {
@@ -116,7 +122,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 					break;
 				monitor.worked(1);
 			} catch (IOException e) {
-				throw new InvocationTargetException(e);
+				throw e;
 			}
 		} while (true);
 		parser.close();
@@ -124,6 +130,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	protected MagicCardPhisical createDefaultCard() {
 		MagicCardPhisical card = new MagicCardPhisical(new MagicCard());
+		card.setLocation(getLocation());
 		return card;
 	}
 
@@ -164,7 +171,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		return cand;
 	}
 
-	public void runCsvImport(IProgressMonitor monitor) throws InvocationTargetException {
+	public void runCsvImport(IProgressMonitor monitor) throws IOException {
 		try {
 			result.type = type;
 			CsvImporter importer = null;
@@ -187,22 +194,32 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 					monitor.worked(1);
 				} while (true);
 			} catch (FileNotFoundException e) {
-				throw new InvocationTargetException(e);
+				throw e;
 			} finally {
 				if (importer != null)
 					importer.close();
 			}
 		} catch (IOException e) {
-			throw new InvocationTargetException(e);
+			throw e;
 		}
 	}
 
 	private MagicCardPhisical createCard(List<String> list) {
 		MagicCardPhisical card = createDefaultCard();
-		for (int i = 0; i < fields.length; i++) {
+		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
 			String value = list.get(i);
-			card.setObjectByField(f, value);
+			if (value != null && value.length() > 0) {
+				try {
+					card.setObjectByField(f, value);
+				} catch (Exception e) {
+					throw new IllegalArgumentException("Error: Line " + line + ",Field " + (i + 1) + ": Expecting " + f
+					        + ", text was: " + value);
+				}
+			}
+		}
+		if (card.getName() == null || card.getName().trim().length() == 0) {
+			throw new IllegalArgumentException("Error: Line " + line + ", Field 2: Expected NAME value is empty");
 		}
 		card.setLocation(getLocation());
 		return card;
@@ -216,11 +233,11 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		return null;
 	}
 
-	private ICardField[] getNonTransientFeilds() {
+	private static ICardField[] getNonTransientFeilds() {
 		return MagicCardFieldPhysical.allNonTransientFields();
 	}
 
-	public void runTablePipedImport(IProgressMonitor monitor) throws InvocationTargetException {
+	public void runTablePipedImport(IProgressMonitor monitor) throws IOException {
 		try {
 			result.type = type;
 			if (fields == null)
@@ -234,23 +251,26 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 					String input = importer.readLine();
 					if (input == null)
 						break;
-					String[] split = input.split("|");
-					if (split.length > 0) {
+					String[] split = input.split("\\|");
+					if (split.length > 1) {
 						MagicCardPhisical card = createCard(Arrays.asList(split));
 						importCard(card);
+					} else {
+						throw new IllegalArgumentException("Error: Line " + line
+						        + ". Fields seprated by | are not found: " + input);
 					}
 					if (previewMode && line >= 10)
 						break;
 					monitor.worked(1);
 				} while (true);
 			} catch (FileNotFoundException e) {
-				throw new InvocationTargetException(e);
+				throw e;
 			} finally {
 				if (importer != null)
 					importer.close();
 			}
 		} catch (IOException e) {
-			throw new InvocationTargetException(e);
+			throw e;
 		}
 	}
 }
