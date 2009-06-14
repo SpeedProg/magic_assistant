@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.nav;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -22,6 +23,8 @@ public class CardsNavigatiorManager implements IDisposable {
 		this.viewer.setContentProvider(new CardsNavigatorContentProvider());
 		this.viewer.setLabelProvider(new CardsNavigatorLabelProvider());
 		this.viewer.setUseHashlookup(true);
+		this.viewer.setSorter(new ViewerSorter() {
+		});
 		this.viewer.setInput(DataManager.getModelRoot());
 		return this.viewer.getControl();
 	}
