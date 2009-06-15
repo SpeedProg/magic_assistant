@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.DecksContainer;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
 /**
@@ -48,8 +48,8 @@ public class CardOrganizerTest extends TestCase {
 	}
 
 	public void testFindElement2() {
-		DecksContainer decks = this.root.getDeckContainer();
-		DecksContainer con = decks.addDeckContainer("cox");
+		CollectionsContainer decks = this.root.getDeckContainer();
+		CollectionsContainer con = decks.addCollectionsContainer("cox");
 		CardElement element = this.root.findElement(new Path("My Cards/Decks/cox"));
 		assertEquals(con, element);
 	}
@@ -60,7 +60,7 @@ public class CardOrganizerTest extends TestCase {
 	@Test
 	public void testFireEvent() {
 		final boolean res[] = new boolean[1];
-		DecksContainer deckContainer = this.root.getDeckContainer();
+		CollectionsContainer deckContainer = this.root.getDeckContainer();
 		deckContainer.addListener(new ICardEventListener() {
 			public void handleEvent(CardEvent event) {
 				res[0] = true;
