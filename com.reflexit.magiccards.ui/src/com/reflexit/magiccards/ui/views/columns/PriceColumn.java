@@ -10,6 +10,8 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import java.text.DecimalFormat;
+
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -21,6 +23,8 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  *
  */
 public class PriceColumn extends GenColumn {
+	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+
 	/**
 	 * @param columnName
 	 */
@@ -32,7 +36,7 @@ public class PriceColumn extends GenColumn {
 	public String getText(Object element) {
 		if (element instanceof MagicCardPhisical) {
 			MagicCardPhisical m = (MagicCardPhisical) element;
-			return String.valueOf(m.getPrice());
+			return "$" + decimalFormat.format(m.getPrice());
 		} else {
 			return "";
 		}
