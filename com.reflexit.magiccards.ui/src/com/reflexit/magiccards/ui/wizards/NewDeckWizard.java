@@ -9,7 +9,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.DecksContainer;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
@@ -53,14 +53,14 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 		monitor.beginTask("Creating " + fileName, 2);
 		ModelRoot root = DataManager.getModelRoot();
 		final CardElement resource = root.findElement(new Path(containerName));
-		if (!(resource instanceof DecksContainer)) {
+		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
 		monitor.worked(1);
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardsNavigatorView.createNewDeckAction((DecksContainer) resource, fileName, page);
+				CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, fileName, page);
 			}
 		});
 		monitor.worked(1);

@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.DecksContainer;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
 /**
@@ -33,7 +33,7 @@ public class NewDeckWizardPage extends NewCardElementWizardPage {
 	protected void updateInitialSelection() {
 		super.updateInitialSelection();
 		Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
-		if (!(firstElement instanceof DecksContainer)) {
+		if (!(firstElement instanceof CollectionsContainer)) {
 			this.selection = new StructuredSelection(getRootContainer());
 		}
 	}
@@ -47,14 +47,14 @@ public class NewDeckWizardPage extends NewCardElementWizardPage {
 		ModelRoot root = DataManager.getModelRoot();
 		String containerName = getContainerName();
 		CardElement parent = root.findElement(new Path(containerName));
-		if (!(parent instanceof DecksContainer)) {
-			updateStatus("Parent folder is not a deck container");
+		if (!(parent instanceof CollectionsContainer)) {
+			updateStatus("Parent folder is not a proper container");
 			return;
 		}
 		String fileName = getElementName();
 		CardCollection old = DataManager.getModelRoot().findCardCollectionById(fileName + ".xml");
 		if (old != null) {
-			updateStatus("Deck with this name already exists");
+			updateStatus("Deck or Collection with this name already exists");
 			return;
 		}
 	}
@@ -71,7 +71,7 @@ public class NewDeckWizardPage extends NewCardElementWizardPage {
 
 	@Override
 	protected CardOrganizer getRootContainer() {
-		DecksContainer root = DataManager.getModelRoot().getDeckContainer();
+		CollectionsContainer root = DataManager.getModelRoot().getDeckContainer();
 		return root;
 	}
 }

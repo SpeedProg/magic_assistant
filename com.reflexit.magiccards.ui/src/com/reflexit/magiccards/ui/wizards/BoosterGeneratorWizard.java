@@ -4,10 +4,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -19,6 +23,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -37,7 +42,7 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 import com.reflexit.magiccards.ui.widgets.EditionsComposite;
 
-public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard {
+public class BoosterGeneratorWizard extends NewCardCollectionWizard implements INewWizard {
 	public static final String ID = "com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard";
 	static class BoosterGeneratorWizardPage extends WizardPage {
 		Spinner sp;
@@ -60,11 +65,17 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			Composite a = new Composite(parent, SWT.NONE);
 			a.setLayout(new GridLayout(2, false));
 			createAmountControl(a);
-			this.edi = new EditionsComposite(a, SWT.BORDER, false);
+			this.edi = new EditionsComposite(a, SWT.BORDER | SWT.MULTI, true);
+			this.edi.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					pageChanged();
+				}
+			});
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
 			this.edi.setLayoutData(gd);
 			setControl(a);
+			pageChanged();
 		}
 
 		private void createAmountControl(Composite a) {
@@ -74,10 +85,28 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 			this.sp.setMinimum(1);
 			this.sp.setMaximum(50);
 			this.sp.setSelection(3);
+			this.sp.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					pageChanged();
+				}
+			});
+		}
+
+		protected void pageChanged() {
+			IStructuredSelection sel = edi.getSelection();
+			if (sel.isEmpty())
+				updateStatus("Select one or more sets");
+			else
+				updateStatus(null);
+		}
+
+		protected void updateStatus(String message) {
+			setErrorMessage(message);
+			setPageComplete(message == null);
 		}
 	}
 	private BoosterGeneratorWizardPage page2;
-	private String editionName;
+	private ArrayList<String> sets;
 	private int packs;
 
 	/* (non-Javadoc)
@@ -87,10 +116,10 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 	public void addPages() {
 		this.page2 = new BoosterGeneratorWizardPage();
 		addPage(this.page2);
-		this.page = new NewDeckWizardPage(this.selection) {
+		this.page = new NewCardCollectionWizardPage(this.selection) {
 			@Override
 			public String getResourceNameHint() {
-				return "booster pack";
+				return "";
 			}
 		};
 		addPage(this.page);
@@ -102,7 +131,8 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 	@Override
 	protected void beforeFinish() {
 		IStructuredSelection sel = this.page2.edi.getSelection();
-		this.editionName = (String) sel.getFirstElement();
+		this.sets = new ArrayList<String>();
+		sets.addAll(sel.toList());
 		this.packs = this.page2.sp.getSelection();
 	}
 
@@ -125,8 +155,8 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
 					CardOrganizer parent = (CardOrganizer) resource;
-					final CardCollection col = new CardCollection(name + ".xml", parent, true);
-					populateLibrary(BoosterGeneratorWizard.this.editionName, BoosterGeneratorWizard.this.packs, col,
+					final CardCollection col = new CardCollection(name + ".xml", parent, false);
+					populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
 					        new SubProgressMonitor(monitor, 7));
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
@@ -147,7 +177,7 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 	 * @param col 
 	 * @param subProgressMonitor 
 	 */
-	private void populateLibrary(String editionName, int packs, CardCollection col, IProgressMonitor monitor) {
+	private void populateLibrary(ArrayList<String> sets, int packs, CardCollection col, IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 10);
 		if (col.isOpen() == false) {
 			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionHandler(col.getFileName());
@@ -159,8 +189,11 @@ public class BoosterGeneratorWizard extends NewDeckWizard implements INewWizard 
 		IFilteredCardStore dbcards = DataManager.getCardHandler().getDatabaseHandler();
 		MagicCardFilter oldFilter = dbcards.getFilter();
 		try {
-			String editionId = Editions.getInstance().getPrefConstantByName(editionName);
-			filterset.put(editionId, "true");
+			for (Object element : sets) {
+				String editionName = (String) element;
+				String editionId = Editions.getInstance().getPrefConstantByName(editionName);
+				filterset.put(editionId, "true");
+			}
 			// 1*packs rare cards
 			String rarity = Rarity.getInstance().getPrefConstant("Rare");
 			filterset.put(rarity, "true");

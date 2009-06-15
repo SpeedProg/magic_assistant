@@ -49,12 +49,12 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 		String containerName = getContainerName();
 		CardElement parent = root.findElement(new Path(containerName));
 		if (!(parent instanceof CollectionsContainer)) {
-			updateStatus("Parent folder is not a collection container");
+			updateStatus("Parent folder is not a proper container");
 			return;
 		}
 		String name = getElementName();
-		if (((CollectionsContainer) parent).findElement(new Path(name + ".xml")) != null) {
-			updateStatus("Collection with this name already exists");
+		if (root.findCardCollectionById(name + ".xml") != null) {
+			updateStatus("Collection or Deck with this name already exists");
 			return;
 		}
 	}

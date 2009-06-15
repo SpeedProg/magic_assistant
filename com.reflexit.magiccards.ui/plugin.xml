@@ -303,14 +303,6 @@
            id="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
            name="Deck">
      </wizard>
-     <wizard
-           category="com.reflexit.magiccards.ui"
-           class="com.reflexit.magiccards.ui.wizards.NewDeckContainerWizard"
-           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
-           icon="icons/obj16/folder-deck.png"
-           id="com.reflexit.magiccards.ui.wizards.NewDeckContainerWizard"
-           name="Deck Container">
-     </wizard>
           <wizard
            category="com.reflexit.magiccards.ui"
            class="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
@@ -325,7 +317,7 @@
            finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
            icon="icons/obj16/folder-lib.png"
            id="com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard"
-           name="Collection Container">
+           name="Container">
      </wizard>
                <wizard
                      canFinishEarly="true"

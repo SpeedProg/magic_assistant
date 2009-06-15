@@ -155,19 +155,35 @@ public class EditionsComposite extends Composite {
 	protected void deselectAll() {
 		IPreferenceStore store = getPreferenceStore();
 		String ids[] = getIds();
-		for (String id : ids) {
-			store.setValue(id, false);
+		if (store != null) {
+			for (String id : ids) {
+				store.setValue(id, false);
+			}
+			initialize();
+		} else {
+			if (this.treeViewer instanceof CheckboxTreeViewer) {
+				((CheckboxTreeViewer) this.treeViewer).setAllChecked(false);
+			} else {
+				this.treeViewer.getTree().deselectAll();
+			}
 		}
-		initialize();
 	}
 
 	protected void selectAll() {
 		IPreferenceStore store = getPreferenceStore();
 		String ids[] = getIds();
-		for (String id : ids) {
-			store.setValue(id, true);
+		if (store != null) {
+			for (String id : ids) {
+				store.setValue(id, true);
+			}
+			initialize();
+		} else {
+			if (this.treeViewer instanceof CheckboxTreeViewer) {
+				((CheckboxTreeViewer) this.treeViewer).setAllChecked(true);
+			} else {
+				this.treeViewer.getTree().selectAll();
+			}
 		}
-		initialize();
 	}
 
 	public void initialize() {
@@ -249,6 +265,10 @@ public class EditionsComposite extends Composite {
 			res.add(id);
 		}
 		return (String[]) res.toArray(new String[res.size()]);
+	}
+
+	public Viewer getViewer() {
+		return treeViewer;
 	}
 
 	public void setToDefaults() {

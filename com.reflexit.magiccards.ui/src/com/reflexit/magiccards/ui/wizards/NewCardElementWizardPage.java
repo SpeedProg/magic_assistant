@@ -134,7 +134,11 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 					container = (CardOrganizer) obj;
 				else
 					container = ((CardElement) obj).getParent();
-				this.containerText.setText(container.getLocation());
+				String loc = container.getLocation();
+				if (loc.length() == 0)
+					this.containerText.setText(container.getName()); // only fake ones
+				else
+					this.containerText.setText(loc);
 			}
 		}
 		this.nameText.setText(getResourceNameHint());

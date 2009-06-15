@@ -54,7 +54,7 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.DecksContainer;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
@@ -314,7 +314,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		dialog.open();
 	}
 
-	public static void createNewDeckAction(DecksContainer parent, String name, IWorkbenchPage page) {
+	public static void createNewDeckAction(CollectionsContainer parent, String name, IWorkbenchPage page) {
 		String filename = name + ".xml";
 		CardCollection d = parent.addDeck(filename);
 		try {
