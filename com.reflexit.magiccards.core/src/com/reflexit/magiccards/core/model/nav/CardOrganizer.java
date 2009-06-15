@@ -108,16 +108,20 @@ public class CardOrganizer extends CardElement {
 	}
 
 	public boolean contains(String name) {
+		return findChieldByName(name) != null;
+	}
+
+	public CardElement findChieldByName(String name) {
 		for (CardElement el : getChildren()) {
 			try {
 				if (el.getFile().getName().equals(name)) {
-					return true;
+					return el;
 				}
 			} catch (CoreException e) {
 				continue;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -133,10 +137,12 @@ public class CardOrganizer extends CardElement {
 			CardElement el = (CardElement) element;
 			if (el.getPath().equals(p))
 				return el;
-			if (top.equals(el.getName()) && el instanceof CardOrganizer) {
-				if (rest == null || rest.isEmpty())
-					return el;
-				return ((CardOrganizer) el).findElement(rest);
+			if (top.equals(el.getName())) {
+				if (el instanceof CardOrganizer) {
+					if (rest == null || rest.isEmpty())
+						return el;
+					return ((CardOrganizer) el).findElement(rest);
+				}
 			}
 		}
 		for (Object element : getChildren()) {

@@ -27,11 +27,11 @@ import com.reflexit.magiccards.core.DataManager;
  */
 public class ModelRoot extends CardOrganizer {
 	private static ModelRoot instance;
-	private DecksContainer fDecks;
+	private CollectionsContainer fDecks;
 	private MagicDbContainter db;
 	private CollectionsContainer fLib;
 	private CardCollection fLibFile;
-	private CardOrganizer fMyCards;
+	private CollectionsContainer fMyCards;
 
 	/**
 	 * @param name
@@ -45,17 +45,21 @@ public class ModelRoot extends CardOrganizer {
 	private void initRoot() {
 		try {
 			CardOrganizer root = this;
-			this.fMyCards = new CardOrganizer("My Cards", root.getPath(), root);
+			this.fMyCards = new CollectionsContainer("My Cards", root.getPath(), root);
 			this.fLib = new CollectionsContainer("Collections", fMyCards);
-			this.fDecks = new DecksContainer("Decks", fMyCards);
+			this.fDecks = new CollectionsContainer("Decks", fMyCards);
 			this.db = new MagicDbContainter(root);
 			this.fLibFile = new CardCollection("main.xml", this.fLib);
-			this.fDecks.loadChildren();
-			this.fLib.loadChildren();
+			refresh();
 			convertData();
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
+	}
+
+	public void refresh() throws CoreException {
+		this.fMyCards.loadChildren();
+		//this.fLib.loadChildren();
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class ModelRoot extends CardOrganizer {
 		return new Path("");
 	}
 
-	public DecksContainer getDeckContainer() {
+	public CollectionsContainer getDeckContainer() {
 		return this.fDecks;
 	}
 
@@ -98,6 +102,10 @@ public class ModelRoot extends CardOrganizer {
 
 	public CollectionsContainer getCollectionsContainer() {
 		return this.fLib;
+	}
+
+	public CollectionsContainer getMyCardsContainer() {
+		return this.fMyCards;
 	}
 
 	/**

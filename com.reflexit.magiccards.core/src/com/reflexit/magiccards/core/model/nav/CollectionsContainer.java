@@ -3,27 +3,81 @@ package com.reflexit.magiccards.core.model.nav;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+
+import java.io.InputStream;
+import java.net.URI;
 
 public class CollectionsContainer extends CardOrganizer {
 	public CollectionsContainer(String name, CardOrganizer parent) {
 		super(name, parent);
 	}
 
+	public CollectionsContainer(String name, IPath path, CardOrganizer parent) {
+		super(name, path, parent);
+	}
+
 	public void loadChildren() throws CoreException {
 		IResource[] members = getContainer().members();
-		for (int i = 0; i < members.length; i++) {
-			IResource mem = members[i];
+		for (IResource mem : members) {
 			String name = mem.getName();
+			if (name.equals("MagicDB"))
+				continue; // skip this ones
+			CardElement el = findChieldByName(name);
 			if (mem instanceof IContainer) {
-				CollectionsContainer con = new CollectionsContainer(name, this);
-				con.loadChildren();
+				if (el == null) {
+					CollectionsContainer con = new CollectionsContainer(name, this);
+					con.loadChildren();
+				} else {
+					if (el instanceof CollectionsContainer) {
+						((CollectionsContainer) el).loadChildren();
+					}
+				}
 			} else if (mem != null) {
 				if (name.endsWith(".xml")) {
-					if (!this.contains(name))
-						new CardCollection(name, this);
+					if (el == null) {
+						boolean deck = checkType(mem);
+						new CardCollection(name, this, deck);
+					}
 				}
 			}
 		}
+	}
+
+	private boolean checkType(IResource mem) {
+		URI locationURI = mem.getLocationURI();
+		try {
+			byte[] headerBytes = new byte[1000];
+			InputStream openStream = locationURI.toURL().openStream();
+			try {
+				openStream.read(headerBytes);
+				String header = new String(headerBytes);
+				if (header.contains("<type>deck</type"))
+					return true;
+			} finally {
+				openStream.close();
+			}
+		} catch (Exception e) {
+			// skip
+		}
+		return false;
+	}
+
+	public CollectionsContainer addCollectionsContainer(String name) {
+		CollectionsContainer d = new CollectionsContainer(name, this);
+		return d;
+	}
+
+	public CardCollection addDeck(String name) {
+		CardCollection d = new CardCollection(name, this, true);
+		return d;
+	}
+
+	/**
+	 * @param el
+	 */
+	public void removeDeck(CardCollection el) {
+		el.remove();
 	}
 
 	@Override
