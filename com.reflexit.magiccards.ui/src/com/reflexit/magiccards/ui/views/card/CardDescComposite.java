@@ -104,7 +104,6 @@ class CardDescComposite extends Composite {
 			Image full = remoteImage;
 			this.image = full;
 		}
-		System.err.println(this.image.getBounds());
 		this.imageControl.setImage(this.image);
 	}
 
@@ -132,17 +131,27 @@ class CardDescComposite extends Composite {
 	}
 
 	private String getCardDataHtml(IMagicCard card) {
-	    String pt = "";
-	    if (card.getToughness() != null && card.getToughness().length() > 0) {
-	    	pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
-	    }
-	    String data = card.getName() + "<br/>" + card.getType();
-	    if (pt.length() > 0) {
-	    	data += " (" + pt + ")";
-	    }
-	    data += "<br/>" + card.getSet() + " (" + card.getRarity() + ")<p/>";
-	    return data;
-    }
+		String pt = "";
+		if (card.getToughness() != null && card.getToughness().length() > 0) {
+			pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
+		}
+		String data = card.getName() + "<br/>" + card.getType();
+		if (pt.length() > 0) {
+			data += " (" + pt + ")";
+		}
+		//		String img = "";
+		//		try {
+		//			String edition = card.getSet();
+		//			String editionAbbr = Editions.getInstance().getAbbrByName(edition);
+		//			URL url = CardCache.createSetImageRemoteURL(editionAbbr, card.getRarity());
+		//			img = url == null ? "" : "<img align=middle alt=\"\" height=12 src=\"" + url.toExternalForm() + "\"/>";
+		//		} catch (IOException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
+		data += "<br/>" + card.getSet() + " (" + card.getRarity() + ") " + "<p/>";
+		return data;
+	}
 
 	private Image drawBorder(Image remoteImage, int border) {
 		Rectangle bounds = remoteImage.getBounds();
