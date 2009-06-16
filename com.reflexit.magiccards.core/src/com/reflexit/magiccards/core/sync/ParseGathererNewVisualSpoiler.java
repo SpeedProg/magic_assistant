@@ -329,6 +329,12 @@ public class ParseGathererNewVisualSpoiler {
 		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
 	}
 
+	public static URL createSetImageURL(String editionAbbr, String rarity) throws MalformedURLException {
+		String rarLetter = rarity.substring(0, 1).toUpperCase();
+		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr
+		        + "&size=small&rarity=" + rarLetter);
+	}
+
 	public static void downloadUpdates(String set, String file, IProgressMonitor pm) throws FileNotFoundException,
 	        MalformedURLException, IOException {
 		String url;

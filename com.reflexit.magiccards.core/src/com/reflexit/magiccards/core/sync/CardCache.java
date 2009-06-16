@@ -80,14 +80,49 @@ public class CardCache {
 		return remoteUrl;
 	}
 
+	public static URL createSetImageURL(IMagicCard card, boolean upload) throws IOException {
+		String edition = card.getSet();
+		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
+		String rarity = card.getRarity();
+		if (editionAbbr == null)
+			return null;
+		String file = createLocalSetImageFilePath(editionAbbr, rarity);
+		URL localUrl = new File(file).toURL();
+		if (upload == false)
+			return localUrl;
+		if (new File(file).exists()) {
+			return localUrl;
+		}
+		try {
+			URL url = createSetImageRemoteURL(editionAbbr, rarity);
+			InputStream st = url.openStream();
+			ImageCache.saveStream(file, st);
+			st.close();
+		} catch (IOException e1) {
+			throw e1;
+		}
+		return localUrl;
+	}
+
 	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
 		return ParseGathererNewVisualSpoiler.createImageURL(cardId, editionAbbr, locale);
+	}
+
+	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) throws MalformedURLException {
+		return ParseGathererNewVisualSpoiler.createSetImageURL(editionAbbr, rarity);
 	}
 
 	public static String createLocalImageFilePath(int cardId, String editionAbbr, String locale)
 	        throws MalformedURLException {
 		IPath path = Activator.getStateLocationAlways();
 		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
+		String file = path.append(part).toPortableString();
+		return file;
+	}
+
+	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) throws MalformedURLException {
+		IPath path = Activator.getStateLocationAlways();
+		String part = "Sets/" + editionAbbr + "-" + rarity + ".jpg";
 		String file = path.append(part).toPortableString();
 		return file;
 	}
