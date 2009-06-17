@@ -42,6 +42,7 @@ class CardDescComposite extends Composite {
 		Composite panel = this;
 		panel.setFont(parent.getFont());
 		panel.setLayout(new GridLayout(2, false));
+		panel.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		this.imageControl = new Label(panel, SWT.NONE);
 		GridDataFactory.fillDefaults() //
 		        .grab(true, false) //
