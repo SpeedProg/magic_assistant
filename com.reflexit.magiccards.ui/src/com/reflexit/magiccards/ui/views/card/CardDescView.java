@@ -54,13 +54,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				return Status.OK_STATUS;
 			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					if (card == IMagicCard.DEFAULT || card == null) {
-						CardDescView.this.panel.setVisible(false);
-						CardDescView.this.message.setVisible(true);
-						return;
-					}
-					CardDescView.this.message.setVisible(false);
-					CardDescView.this.panel.setVisible(true);
+					boolean nocard = (card == IMagicCard.DEFAULT);
+					CardDescView.this.panel.setVisible(!nocard);
+					CardDescView.this.message.setVisible(nocard);
 					CardDescView.this.panel.reload(card);
 				}
 			});
