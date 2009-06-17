@@ -116,8 +116,12 @@
             commandId="com.reflexit.magiccards.ui.commands.addToLib">
       </handler>
       <handler
-            class="com.reflexit.magiccards.ui.commands.AddToActiveDeckHandler"
-            commandId="com.reflexit.magiccards.ui.commands.addToDeck">
+            class="com.reflexit.magiccards.ui.commands.DecreaseCardCountHandler"
+            commandId="com.reflexit.magiccards.ui.commands.decreaseCount">
+      </handler>
+            <handler
+            class="com.reflexit.magiccards.ui.commands.IncreaseCardCountHandler"
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount">
       </handler>
       <handler
             class="com.reflexit.magiccards.ui.commands.SendBugReportHandler"
@@ -146,13 +150,25 @@
             sequence="INSERT">
       </key>
       <key
-            commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+            commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="-">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="NUMPAD_SUB">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount"
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="=">
       </key>
       <key
-            commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount"
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="NUMPAD_ADD">
@@ -171,8 +187,13 @@
       </command>
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
-            id="com.reflexit.magiccards.ui.commands.addToDeck"
-            name="Add to Active Deck">
+            id="com.reflexit.magiccards.ui.commands.decreaseCount"
+            name="Decrease">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.increaseCount"
+            name="Increase">
       </command>
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
@@ -241,8 +262,13 @@
               style="push">
         </command>
         <command
-              commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+              commandId="com.reflexit.magiccards.ui.commands.increaseCount"
               label="Increase"
+              >
+        </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+              label="Decrease"
               >
         </command>
      </menuContribution>
@@ -264,14 +290,9 @@
      
      <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.MagicDbView">
-        <command
-              commandId="com.reflexit.magiccards.ui.commands.addToLib"
-              >
-        </command>
-        <command
-              commandId="com.reflexit.magiccards.ui.commands.addToDeck"
-              >
-        </command>
+       <!-- <command  commandId="com.reflexit.magiccards.ui.commands.addToLib" /> -->
+        <command  commandId="com.reflexit.magiccards.ui.commands.increaseCount" label="Add to Active Deck/Collection"/>
+       
      </menuContribution>
      
      <menuContribution

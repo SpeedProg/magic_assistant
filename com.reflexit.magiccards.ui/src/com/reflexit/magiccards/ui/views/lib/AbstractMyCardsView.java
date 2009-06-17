@@ -11,7 +11,9 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -28,6 +30,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +60,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private Action split;
 	private Action edit;
 	private Action paste;
+	private MenuManager moveToDeckMenu;
 
 	@Override
 	protected void makeActions() {
@@ -87,7 +91,33 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				editSelected();
 			}
 		};
+		this.moveToDeckMenu = new MenuManager("Move to Deck");
+		this.moveToDeckMenu.setRemoveAllWhenShown(true);
+		this.moveToDeckMenu.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillDeckMenu(manager, moveToDeck);
+			}
+		});
 	}
+	protected IDeckAction moveToDeck = new IDeckAction() {
+		public void run(String id) {
+			ISelection selection = getViewer().getSelection();
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection sel = (IStructuredSelection) selection;
+				if (!sel.isEmpty()) {
+					ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+						Object o = iterator.next();
+						if (o instanceof IMagicCard)
+							list.add((IMagicCard) o);
+					}
+					String location = ((ILocatable) DataManager.getCardHandler().getCardCollectionHandler(id)
+					        .getCardStore()).getLocation();
+					DataManager.getCardHandler().moveCards(list, null, location);
+				}
+			}
+		}
+	};
 
 	protected void runPaste() {
 		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
@@ -225,7 +255,9 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
+		manager.add(this.copyText);
 		manager.add(this.paste);
+		manager.add(this.moveToDeckMenu);
 		manager.add(this.split);
 		manager.add(this.edit);
 	}

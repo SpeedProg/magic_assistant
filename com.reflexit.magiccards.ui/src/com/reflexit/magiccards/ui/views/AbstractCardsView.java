@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
@@ -47,11 +48,13 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -61,6 +64,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
 import com.reflexit.magiccards.ui.views.search.SearchContext;
 import com.reflexit.magiccards.ui.views.search.SearchControl;
@@ -259,12 +263,11 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
-		manager.add(loadPrices);
+		//	manager.add(loadPrices);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(this.copyText);
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
@@ -516,5 +519,47 @@ public abstract class AbstractCardsView extends ViewPart {
 			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(),
 			        getPreferencePageId());
 		return this.store;
+	}
+	public static interface IDeckAction {
+		public void run(String id);
+	};
+
+	/**
+	 * @param manager
+	 */
+	protected void fillDeckMenu(IMenuManager manager, final IDeckAction deckAction) {
+		boolean any = false;
+		IViewReference[] views = getViewSite().getWorkbenchWindow().getActivePage().getViewReferences();
+		for (final IViewReference viewReference : views) {
+			if (viewReference.getId().equals(DeckView.ID)) {
+				final String deckId = viewReference.getSecondaryId();
+				DeckView deckView = (DeckView) viewReference.getPart(false);
+				if (deckView == null)
+					continue;
+				CardCollection cardCollection = deckView.getCardCollection();
+				String active = "";
+				if (DataManager.getCardHandler().getActiveDeckHandler().getCardStore() == cardCollection.getStore()) {
+					active = " (Active)";
+				}
+				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName()
+				        + active;
+				Action ac = new Action(name) {
+					@Override
+					public void run() {
+						deckAction.run(deckId);
+					}
+				};
+				if (deckView == this)
+					ac.setEnabled(false);
+				manager.add(ac);
+				any = true;
+			}
+		}
+		if (!any) {
+			Action ac = new Action("No Open Decks") {
+			};
+			manager.add(ac);
+			ac.setEnabled(false);
+		}
 	}
 }

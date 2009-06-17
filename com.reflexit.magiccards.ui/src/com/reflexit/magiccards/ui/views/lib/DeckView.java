@@ -217,4 +217,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	protected String getPreferencePageId() {
 		return DeckViewPreferencePage.class.getName();
 	}
+
+	public CardCollection getCardCollection() {
+		return deck;
+	}
 }

@@ -138,7 +138,9 @@ class CardDescComposite extends Composite {
 		}
 		String data = card.getName() + "<br/>" + card.getType();
 		if (pt.length() > 0) {
-			data += " (" + pt + ")";
+			data += "<br/>" + pt;
+		} else {
+			data += "<br/>";
 		}
 		//		String img = "";
 		//		try {

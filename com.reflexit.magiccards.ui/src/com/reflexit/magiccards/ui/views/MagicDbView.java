@@ -1,25 +1,21 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
 
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public class MagicDbView extends AbstractCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.MagicDbView";
@@ -49,71 +45,39 @@ public class MagicDbView extends AbstractCardsView {
 			MagicUIActivator.log(e);
 		}
 	}
-
-	/**
-	 * @param secondaryId
-	 */
-	protected void addToCardCollection(String id) {
-		ISelection selection = getViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			if (!sel.isEmpty()) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					Object o = iterator.next();
-					if (o instanceof IMagicCard)
-						DataManager.getCardHandler().getCardCollectionHandler(id).getCardStore().add(o);
+	protected IDeckAction copyToDeck = new IDeckAction() {
+		public void run(String id) {
+			ISelection selection = getViewer().getSelection();
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection sel = (IStructuredSelection) selection;
+				if (!sel.isEmpty()) {
+					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+						Object o = iterator.next();
+						if (o instanceof IMagicCard)
+							DataManager.getCardHandler().getCardCollectionHandler(id).getCardStore().add(o);
+					}
 				}
 			}
 		}
-	}
+	};
 
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.addToDeck = new MenuManager("Add to Deck");
+		this.addToDeck = new MenuManager("Add to");
 		this.addToDeck.setRemoveAllWhenShown(true);
 		this.addToDeck.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				fillDeckMenu(manager);
+				fillDeckMenu(manager, copyToDeck);
 			}
 		});
-	}
-
-	/**
-	 * @param manager
-	 */
-	protected void fillDeckMenu(IMenuManager manager) {
-		boolean any = false;
-		IViewReference[] views = getViewSite().getWorkbenchWindow().getActivePage().getViewReferences();
-		for (final IViewReference viewReference : views) {
-			if (viewReference.getId().equals(DeckView.ID)) {
-				final String deckId = viewReference.getSecondaryId();
-				DeckView deckView = (DeckView) viewReference.getPart(false);
-				if (deckView == null)
-					continue;
-				ICardStore<IMagicCard> store = deckView.getFilteredStore().getCardStore();
-				Action ac = new Action(store.getName()) {
-					@Override
-					public void run() {
-						addToCardCollection(deckId);
-					}
-				};
-				manager.add(ac);
-				any = true;
-			}
-		}
-		if (!any) {
-			Action ac = new Action("No Open Decks") {
-			};
-			manager.add(ac);
-			ac.setEnabled(false);
-		}
 	}
 
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(this.addToDeck);
+		manager.add(this.copyText);
 	}
 
 	@Override
