@@ -17,12 +17,12 @@ You can update local database with specific set or with "Standard" format sets.
 See <a href="preferences.html#update">Update Magic Database</a>. 
 <p/>
 MTG Database View specific context menu actions:
-
+<li>Filter... - opens a <a href="filter_dialog.html">Filter Dialog</a></li>
 <li>Copy - copy card to clipboard</li>
-<li>Add to Active Deck (hotkey + or =) - menu to move card to active deck. Active deck if the deck you focused in last time</li>
-<li>Add to Deck - add card to selected deck. Deck must be open to show up in the menu.</li>
-<li>Add to Default Collection (hotkey Insert) - add card to "main" collection</li>
-
+<li>Add to Active Deck/Collection (hotkey + or =) - menu to move card to active collection (or deck). 
+    Active collection is the collection that was active last time</li>
+<li>Add to - add card to selected deck/collection. Collection must be open to show up in the menu.</li>
+<li>Add to Default Collection (hotkey Insert) - add card to "main" collection (action is not visible in the menu)</li>
 <p/>
 <p>
 <img src="../screenshots/views/mtg_database.png" alt="mtg database view image"/>
@@ -98,12 +98,14 @@ For the list of view components (menus, card table, status bar) see <a href="#vi
 You can open "My Cards" view by double-clicking on one of the collections or containers from <a href="#viewcardnav">Card Navigator</a> view.
 <p/>
 Context menu actions:
+<li>Filter... - opens a <a href="filter_dialog.html">Filter Dialog</a></li>
 <li>Delete - delete a cards pile (one row which usually groups cards with the same name)</li>
 <li>Copy - copy card to clipboard</li>
 <li>Paste - paste card from clipboard</li>
+<li>Move to - menu to move card to selected collection/deck. Collection must be opened to show up in this menu.</li>
 <li>Split pile... - split cards in pile (cards with the same name) into 2 piles (opens a dialog that allow to select number of cards in each)</li>
 <li>Edit Card... - edit card properties, note: card count can be edited right in the cell</li>
-<li>Move to Deck - menu to move card to selected deck. Deck must be opened to show up in this menu.</li>
+
 
 <h2><a name="viewdeck"/>Deck View</h2>
 Deck view shows cards from a specific deck.
@@ -113,19 +115,25 @@ To close a Deck view click on "X" icon near the view header.
 For the list of view components (menus, card table, status bar) see <a href="#viewcomp">MTG Database view</a>.
 <p/>
 Context menu actions:
+<li>Filter... - opens a <a href="filter_dialog.html">Filter Dialog</a></li>
 <li>Delete - delete a card pile</li>
+<li>Increase (hotkey + or =) - increase count of the cards for selected card piles</li>
+<li>Decrease (hotkey -) - decrease count of the cards for selected card piles</li>
 <li>Copy - copy card to clipboard</li>
 <li>Paste - paste card from clipboard</li>
+<li>Move to - menu to move card to selected collection/deck. Collection must be opened to show up in this menu.</li>
 <li>Split pile... - split cards in pile (cards with the same name) into 2 piles</li>
 <li>Edit Card... - edit card properties, note: card count can be edited right in the cell</li>
-<li>Increase (hotkey + or =) - increase count of the cards for selected card piles</li>
+
 <p/>
 You can drag cards from and to Deck view. Dragging a card from a Deck view to another deck or collection will move the card.
 Dragging a card from MTG Database view to a Deck view will add 1 card to the deck. 
 <p/>
 You can change number of cards of the same name by editing Count cell or edit multiple cards by selecting them and using "Edit..." from context menu.
 <p/>
-Deck view also has Mana Curve tab - to show mana curve, Card Types type - to show chart of type distribution and types info,
+Deck view also has Mana Curve tab - to show mana curve, 
+Card Types type - to show chart of type distribution and types info,
+Colors - to show chart of colors distribution for spells,
 and Info tab where you can edit deck description.
 
 <p/>
