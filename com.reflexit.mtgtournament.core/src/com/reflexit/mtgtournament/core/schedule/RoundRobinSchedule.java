@@ -51,7 +51,7 @@ other opponents in those rounds.
  */
 public class RoundRobinSchedule {
 	public void schedule(Tournament t) {
-		int pn = t.getPlayers().size();
+		int pn = t.getPlayersInfo().size();
 		int tables = pn / 2 + pn % 2;
 		int pna = tables * 2; // with odd number add dummy
 		int positions[] = new int[pna];
@@ -69,7 +69,7 @@ public class RoundRobinSchedule {
 			}
 			Round r = new Round(i);
 			t.addRound(r);
-			r.init(t.getPlayers());
+			r.init(t.getPlayersInfo());
 			for (int j = 0; j < tables; j++) {
 				int n = (j + i) % tables;
 				PlayerRoundInfo p1 = r.getPlayerInfo(positions[n]);

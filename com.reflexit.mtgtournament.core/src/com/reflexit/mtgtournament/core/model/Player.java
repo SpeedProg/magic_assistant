@@ -5,7 +5,8 @@ public class Player {
 	private String id;
 	private String name;
 	private String note;
-	private int rank;
+	private int points = 0;
+	private int games = 0;
 
 	public Player(String id, String name) {
 		this.id = id;
@@ -23,5 +24,13 @@ public class Player {
 
 	public String getId() {
 		return id;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public int getGames() {
+		return games;
 	}
 }

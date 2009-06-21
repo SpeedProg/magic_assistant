@@ -14,13 +14,12 @@ public class Round {
 		this.number = number;
 	}
 
-	public void init(List<Player> players) {
-		for (Object element : players) {
-			Player player = (Player) element;
-			PlayerRoundInfo info = new PlayerRoundInfo(player, this);
+	public void init(List<PlayerTourInfo> list) {
+		for (PlayerTourInfo player : list) {
+			PlayerRoundInfo info = new PlayerRoundInfo(player.getPlayer(), this);
 			playerInfo.add(info);
 		}
-		if (players.size() % 2 != 0) {
+		if (list.size() % 2 != 0) {
 			PlayerRoundInfo info = new PlayerRoundInfo(Player.DUMMY, this);
 			playerInfo.add(info);
 		}

@@ -13,7 +13,7 @@ public class Tournament {
 	private Date dateStart;
 	private Date dateEnd;
 	private String comment;
-	private List<Player> players = new ArrayList<Player>();
+	private List<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>();
 	private List<Round> rounds = new ArrayList<Round>();
 	private int numberOfRounds;
 	private TournamentType type;
@@ -45,12 +45,12 @@ public class Tournament {
 	public void generatePlayers(int num) {
 		players.clear();
 		for (int i = 0; i < num; i++) {
-			getPlayers().add(new Player("f" + i, "Player " + (i + 1)));
+			addPlayer(new Player("f" + i, "Player " + (i + 1)));
 		}
 	}
 
 	public void schedule() {
-		if (getPlayers().size() < 2) {
+		if (getPlayersInfo().size() < 2) {
 			throw new IllegalStateException("Not enought players");
 		}
 		if (isScheduled())
@@ -106,11 +106,7 @@ public class Tournament {
 		return draftRound;
 	}
 
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-
-	public List<Player> getPlayers() {
+	public List<PlayerTourInfo> getPlayersInfo() {
 		return players;
 	}
 
@@ -150,7 +146,9 @@ public class Tournament {
 	}
 
 	public void addPlayer(Player player) {
-		players.add(player);
+		PlayerTourInfo playerTourInfo = new PlayerTourInfo(player);
+		players.add(playerTourInfo);
+		playerTourInfo.setTournament(this);
 	}
 
 	public void setCube(Cube cube) {
