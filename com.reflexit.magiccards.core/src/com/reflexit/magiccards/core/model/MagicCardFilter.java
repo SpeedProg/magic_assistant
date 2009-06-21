@@ -284,6 +284,8 @@ public class MagicCardFilter {
 							pushToken(TokenType.WORD);
 							state = State.IN_REG;
 							cur++;
+						} else {
+							str.append(c);
 						}
 						break;
 					case '-':
