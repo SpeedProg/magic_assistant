@@ -8,16 +8,17 @@ import java.util.List;
 import com.reflexit.mtgtournament.core.schedule.RoundRobinSchedule;
 
 public class Tournament {
-	String name;
-	Date dateStart;
-	Date dateEnd;
-	String comment;
+	private transient Cube cube;
+	private String name;
+	private Date dateStart;
+	private Date dateEnd;
+	private String comment;
 	private List<Player> players = new ArrayList<Player>();
-	List<Round> rounds = new ArrayList<Round>();
+	private List<Round> rounds = new ArrayList<Round>();
 	private int numberOfRounds;
-	TournamentType type;
+	private TournamentType type;
 	private boolean draftRound;
-	transient Cube cube;
+	private boolean scheduled;
 	static public enum TournamentType {
 		ROUND_ROBIN,
 		SWISS,
@@ -34,6 +35,8 @@ public class Tournament {
 	 * @param draft - is there draft round
 	 */
 	public void setType(TournamentType type, int rounds, boolean draft) {
+		if (isScheduled())
+			throw new IllegalStateException("Cannot modify type when tournament is already scheduled");
 		this.type = type;
 		this.draftRound = draft;
 		this.setNumberOfRounds(rounds);
@@ -47,8 +50,15 @@ public class Tournament {
 	}
 
 	public void schedule() {
+		if (getPlayers().size() < 2) {
+			throw new IllegalStateException("Not enought players");
+		}
+		if (isScheduled())
+			throw new IllegalStateException("Cannot schedule - tournament is already scheduled");
 		if (type == TournamentType.ROUND_ROBIN) {
+			rounds.clear();
 			new RoundRobinSchedule().schedule(this);
+			this.setScheduled(true);
 		}
 	}
 
@@ -113,7 +123,8 @@ public class Tournament {
 	}
 
 	public void addRound(Round r) {
-		r.tournament = this;
+		if (r != null)
+			r.tournament = this;
 		rounds.add(r);
 	}
 
@@ -148,5 +159,25 @@ public class Tournament {
 
 	public Cube getCube() {
 		return cube;
+	}
+
+	public TournamentType getType() {
+		return type;
+	}
+
+	/**
+	 * @param scheduled - the scheduled to set
+	 */
+	public void setScheduled(boolean scheduled) {
+		this.scheduled = scheduled;
+		if (scheduled == false)
+			rounds.clear();
+	}
+
+	/**
+	 * @return the scheduled
+	 */
+	public boolean isScheduled() {
+		return scheduled;
 	}
 }
