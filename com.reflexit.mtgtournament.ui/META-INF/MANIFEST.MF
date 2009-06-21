@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tournament Organizer
+Bundle-SymbolicName: com.reflexit.mtgtournament.ui;singleton:=true
+Bundle-Version: 1.0.5.qualifier
+Bundle-Activator: com.reflexit.mtgtournament.ui.tour.Activator
+Bundle-Vendor: Alena Laskavaia
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.reflexit.mtgtournament.core;bundle-version="1.0.5",
+ org.eclipse.ui.forms;bundle-version="3.3.101"
+Bundle-ActivationPolicy: lazy
+Export-Package: com.reflexit.mtgtournament.ui.tour,
+ com.reflexit.mtgtournament.ui.tour.views

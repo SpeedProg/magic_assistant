@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Magic Assistant"
+            id="com.reflexit.magiccards">
+      </category>
+      <view
+            name="Tournament Navigator"
+            icon="icons/sample.gif"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView"
+            id="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView">
+      </view>
+      <view
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
+            id="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
+            name="Tournament"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.reflexit.mtgtournament.ui.tour.PerspectiveFactoryTournament"
+            fixed="false"
+            id="com.reflexit.mtgtournament.ui.perspective.tournament"
+            name="MTG Tournament">
+      </perspective>
+   </extension>
+</plugin>
