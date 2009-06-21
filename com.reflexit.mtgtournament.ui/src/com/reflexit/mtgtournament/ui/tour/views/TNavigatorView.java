@@ -109,6 +109,9 @@ public class TNavigatorView extends ViewPart {
 		cube.addTournament(test2);
 		cube.addPlayer(new Player("id1", "Alena"));
 		cube.addPlayer(new Player("id2", "David"));
+		for (int i = 3; i < 20; i++) {
+			cube.addPlayer(new Player("id" + i, "Name " + i));
+		}
 	}
 
 	/**

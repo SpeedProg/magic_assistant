@@ -93,7 +93,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 				}
 			}
 		});
-		Button del = toolkit.createButton(buttons, "Delete", SWT.PUSH);
+		Button del = toolkit.createButton(buttons, "Remove", SWT.PUSH);
 		del.setLayoutData(hor.create());
 		del.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -112,6 +112,12 @@ public class RegisteredPlayersSection extends TSectionPart {
 				tournament.removePlayer((Player) object);
 			}
 		}
+	}
+
+	@Override
+	public void refresh() {
+		plComp.getViewer().refresh(true);
+		super.refresh();
 	}
 
 	@Override

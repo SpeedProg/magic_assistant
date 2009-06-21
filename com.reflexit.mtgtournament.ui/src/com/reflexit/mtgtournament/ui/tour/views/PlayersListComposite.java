@@ -80,9 +80,10 @@ public class PlayersListComposite extends Composite {
 	protected void createBody(Composite parent) {
 		// players table
 		this.viewer = (new TableViewer(parent, treeStyle | SWT.H_SCROLL | SWT.V_SCROLL));
-		getViewer().setContentProvider(new ViewContentProvider());
-		getViewer().setLabelProvider(new ViewLabelProvider());
+		this.viewer.setContentProvider(new ViewContentProvider());
+		this.viewer.setLabelProvider(new ViewLabelProvider());
 		if (hasColumns) {
+			this.viewer.getTable().setHeaderVisible(true);
 			createColumn(0, "Name", 120);
 			createColumn(1, "PIN", 120);
 		}

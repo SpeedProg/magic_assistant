@@ -120,8 +120,16 @@ public class RoundSection extends TSectionPart {
 	}
 
 	@Override
+	public void refresh() {
+		viewer.refresh(true);
+		getManagedForm().getForm().reflow(false);
+		super.refresh();
+	}
+
+	@Override
 	public boolean setFormInput(Object input) {
 		viewer.setInput(input);
+		markStale();
 		return true;
 	}
 }

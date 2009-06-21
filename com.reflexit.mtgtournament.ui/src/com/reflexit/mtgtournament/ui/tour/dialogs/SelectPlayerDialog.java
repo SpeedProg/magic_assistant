@@ -51,6 +51,7 @@ public class SelectPlayerDialog extends TrayDialog {
 	public SelectPlayerDialog(Shell shell) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
+		filter = new PlayerViewerFilter();
 	}
 
 	@Override
@@ -66,6 +67,14 @@ public class SelectPlayerDialog extends TrayDialog {
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		pinFilter = createLabelText(comp, "PIN:");
 		pinFilter.setLayoutData(hor.create());
+		pinFilter.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String text = pinFilter.getText();
+				filter.pin = text;
+				playersListComposite.getViewer().setFilters(new ViewerFilter[] { filter });
+				playersListComposite.getViewer().refresh();
+			}
+		});
 		nameFilter = createLabelText(comp, "Name:");
 		nameFilter.setLayoutData(hor.create());
 		nameFilter.addModifyListener(new ModifyListener() {
