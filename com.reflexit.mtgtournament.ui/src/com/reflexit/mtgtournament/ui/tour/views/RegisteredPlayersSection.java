@@ -33,7 +33,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 
 	private void createBody() {
 		Section section = this.getSection();
-		section.setText("Registered Players");
+		section.setText("Registered Players and Tournament Standings");
 		//section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);

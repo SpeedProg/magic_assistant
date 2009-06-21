@@ -105,11 +105,11 @@ public class RoundSection extends TSectionPart {
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTable().setHeaderVisible(true);
-		createColumn(0, "Table", 20);
-		createColumn(1, "Player 1", 80);
-		createColumn(2, "Player 2", 80);
-		createColumn(3, "Result 1", 40);
-		createColumn(4, "Result 2", 40);
+		createColumn(0, "Table", 60);
+		createColumn(1, "Player 1", 120);
+		createColumn(2, "Player 2", 120);
+		createColumn(3, "Result 1", 60);
+		createColumn(4, "Result 2", 60);
 		createColumn(5, "Round", 80);
 	}
 

@@ -14,11 +14,12 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.reflexit.mtgtournament.core.model.Cube;
 import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 
 public class PlayersListComposite extends Composite {
 	private TableViewer viewer;
-	private boolean hasColumns;
+	private boolean forTournamentStanding;
 	private int treeStyle;
 	class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -30,7 +31,7 @@ public class PlayersListComposite extends Composite {
 		public Object[] getElements(Object parent) {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
-				return t.getPlayers().toArray();
+				return t.getPlayersInfo().toArray();
 			}
 			if (parent instanceof Cube) {
 				return ((Cube) parent).getPlayers().toArray();
@@ -60,6 +61,33 @@ public class PlayersListComposite extends Composite {
 					return getText(element);
 				case 1:
 					return p.getId();
+				case 2:
+					return "";
+				case 3:
+					return String.valueOf(p.getPoints());
+				case 4:
+					return "";
+				case 5:
+					return String.valueOf(p.getGames());
+				default:
+					break;
+				}
+			} else if (element instanceof PlayerTourInfo) {
+				PlayerTourInfo pi = (PlayerTourInfo) element;
+				Player p = pi.getPlayer();
+				switch (columnIndex) {
+				case 0:
+					return p.getName();
+				case 1:
+					return p.getId();
+				case 2:
+					return String.valueOf(pi.getPlace());
+				case 3:
+					return String.valueOf(pi.getPoints());
+				case 4:
+					return getStats(pi);
+				case 5:
+					return String.valueOf(pi.getGames());
 				default:
 					break;
 				}
@@ -71,10 +99,14 @@ public class PlayersListComposite extends Composite {
 	public PlayersListComposite(Composite parent, int style, boolean hasColumns) {
 		super(parent, SWT.NONE);
 		this.treeStyle = style;
-		this.hasColumns = hasColumns;
+		this.forTournamentStanding = hasColumns;
 		setLayout(new GridLayout());
 		createBody(this);
 		getViewer().getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+	}
+
+	public String getStats(PlayerTourInfo pi) {
+		return pi.getWin() + "-" + pi.getDraw() + "-" + pi.getLoose();
 	}
 
 	protected void createBody(Composite parent) {
@@ -82,10 +114,14 @@ public class PlayersListComposite extends Composite {
 		this.viewer = (new TableViewer(parent, treeStyle | SWT.H_SCROLL | SWT.V_SCROLL));
 		this.viewer.setContentProvider(new ViewContentProvider());
 		this.viewer.setLabelProvider(new ViewLabelProvider());
-		if (hasColumns) {
-			this.viewer.getTable().setHeaderVisible(true);
-			createColumn(0, "Name", 120);
-			createColumn(1, "PIN", 120);
+		this.viewer.getTable().setHeaderVisible(true);
+		createColumn(0, "Name", 140);
+		createColumn(1, "PIN", 120);
+		if (forTournamentStanding) {
+			createColumn(2, "Place", 60);
+			createColumn(3, "Points", 60);
+			createColumn(4, "Stats", 60);
+			createColumn(5, "Games", 60);
 		}
 	}
 

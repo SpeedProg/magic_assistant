@@ -85,7 +85,7 @@ public class SelectPlayerDialog extends TrayDialog {
 				playersListComposite.getViewer().refresh();
 			}
 		});
-		playersListComposite = new PlayersListComposite(comp, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER, true);
+		playersListComposite = new PlayersListComposite(comp, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER, false);
 		playersListComposite.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				setSelection((IStructuredSelection) event.getSelection());
