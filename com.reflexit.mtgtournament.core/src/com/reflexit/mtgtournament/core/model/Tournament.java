@@ -17,7 +17,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.reflexit.mtgtournament.core.schedule.RandomSchedule;
 import com.reflexit.mtgtournament.core.schedule.RoundRobinSchedule;
+import com.reflexit.mtgtournament.core.schedule.SwissSchedule;
 
 public class Tournament {
 	private transient Cube cube;
@@ -62,10 +64,27 @@ public class Tournament {
 		}
 		if (isScheduled())
 			throw new IllegalStateException("Cannot schedule - tournament is already scheduled");
+		rounds.clear();
 		if (type == TournamentType.ROUND_ROBIN) {
-			rounds.clear();
 			new RoundRobinSchedule().schedule(this);
-			this.setScheduled(true);
+		} else if (type == TournamentType.SWISS) {
+			new SwissSchedule().schedule(this);
+		} else if (type == TournamentType.RANDOM) {
+			new RandomSchedule().schedule(this);
+		}
+		this.setScheduled(true);
+	}
+
+	/**
+	 * @param round
+	 */
+	public void schedule(Round round) {
+		if (round.getType() == TournamentType.ROUND_ROBIN) {
+			throw new IllegalStateException("Cannot schedule - tournament is already scheduled");
+		} else if (round.getType() == TournamentType.SWISS) {
+			new SwissSchedule().schedule(round);
+		} else if (round.getType() == TournamentType.RANDOM) {
+			new RandomSchedule().schedule(round);
 		}
 	}
 
@@ -76,9 +95,10 @@ public class Tournament {
 	public void printSchedule(PrintStream st) {
 		for (Round round : rounds) {
 			if (round != null) {
-				if (round.getNumber() == 0)
-					st.println("Draft" + ": ");
-				else
+				if (round.getNumber() == 0) {
+					if (isDraftRound())
+						st.println("Draft" + ": ");
+				} else
 					st.println("Round " + round.getNumber() + ": ");
 				round.printSchedule(st);
 			}
@@ -220,6 +240,10 @@ public class Tournament {
 					pt.addGameResult(pi.getResult());
 			}
 		}
+		updatePlace();
+	}
+
+	public PlayerTourInfo[] updatePlace() {
 		PlayerTourInfo[] pti = players.toArray(new PlayerTourInfo[players.size()]);
 		Arrays.sort(pti, new Comparator<PlayerTourInfo>() {
 			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
@@ -236,6 +260,7 @@ public class Tournament {
 			}
 			ti.setPlace(place);
 		}
+		return pti;
 	}
 
 	protected int comparePlayers(PlayerTourInfo a, PlayerTourInfo b) {
@@ -246,5 +271,12 @@ public class Tournament {
 		if (a.getWin() != b.getWin())
 			return b.getWin() - a.getWin();
 		return 0;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getNumberOfPlayers() {
+		return players.size();
 	}
 }

@@ -13,5 +13,31 @@ package com.reflexit.mtgtournament.core.model;
 public enum TournamentType {
 	ROUND_ROBIN,
 	SWISS,
-	ELIMINATION
+	ELIMINATION,
+	RANDOM,
+	COMPOSITE;
+	/**
+	 * @return
+	 */
+	public static String[] stringValues() {
+		TournamentType[] values = values();
+		String res[] = new String[values.length];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = values[i].name();
+		}
+		return res;
+	}
+
+	/**
+	 * @param intValue
+	 * @return
+	 */
+	public static TournamentType valueOf(int intValue) {
+		TournamentType[] values = values();
+		for (TournamentType tt : values) {
+			if (tt.ordinal() == intValue)
+				return tt;
+		}
+		return null;
+	}
 }

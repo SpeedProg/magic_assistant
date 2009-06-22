@@ -14,6 +14,7 @@ import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
   A round-robin tournament or all-play-all tournament is a type of group tournament 
@@ -61,7 +62,7 @@ other opponents in those rounds.
  */
 public class RoundRobinSchedule {
 	public void schedule(Tournament t) {
-		int pn = t.getPlayersInfo().size();
+		int pn = t.getNumberOfPlayers();
 		int tables = pn / 2 + pn % 2;
 		int pna = tables * 2; // with odd number add dummy
 		int positions[] = new int[pna];
@@ -73,13 +74,14 @@ public class RoundRobinSchedule {
 			t.setNumberOfRounds(pna - 1); // plus draft
 		}
 		for (int i = 0; i <= t.getNumberOfRounds(); i++) {
-			if ((!t.isDraftRound()) && i == 0) {
-				t.addRound(null);
-				continue;
-			}
 			Round r = new Round(i);
 			t.addRound(r);
 			r.setType(t.getType());
+			if (i == 0) {
+				r.setType(TournamentType.RANDOM);
+				r.schedule();
+				continue;
+			}
 			r.init(t.getPlayersInfo());
 			for (int j = 0; j < tables; j++) {
 				int n = (j + i) % tables;

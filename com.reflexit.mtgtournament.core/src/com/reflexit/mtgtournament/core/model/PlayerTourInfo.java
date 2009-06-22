@@ -20,7 +20,7 @@ public class PlayerTourInfo {
 	private int loose = 0;
 	private int points = 0;
 	private int games = 0;
-	private boolean active;
+	private boolean active = true;
 	private int place;
 
 	public PlayerTourInfo(Player player) {

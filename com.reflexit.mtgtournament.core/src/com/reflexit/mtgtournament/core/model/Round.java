@@ -12,6 +12,7 @@ package com.reflexit.mtgtournament.core.model;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,13 +35,26 @@ public class Round {
 
 	public void init(List<PlayerTourInfo> list) {
 		for (PlayerTourInfo player : list) {
-			PlayerRoundInfo info = new PlayerRoundInfo(player.getPlayer(), this);
-			playerInfo.add(info);
+			addPlayer(player);
 		}
 		if (list.size() % 2 != 0) {
-			PlayerRoundInfo info = new PlayerRoundInfo(Player.DUMMY, this);
-			playerInfo.add(info);
+			addDummy();
 		}
+	}
+
+	public PlayerRoundInfo addDummy() {
+		PlayerRoundInfo info = new PlayerRoundInfo(Player.DUMMY, this);
+		playerInfo.add(info);
+		return info;
+	}
+
+	public PlayerRoundInfo addPlayer(PlayerTourInfo player) {
+		if (player.isActive()) {
+			PlayerRoundInfo info = new PlayerRoundInfo(player.getPlayer(), this);
+			playerInfo.add(info);
+			return info;
+		}
+		return null;
 	}
 
 	public int getPlayersNumber() {
@@ -152,6 +166,16 @@ public class Round {
 	}
 
 	public void schedule() {
-		// TODO Auto-generated method stub
+		getTournament().schedule(this);
+	}
+
+	/**
+	 * 
+	 */
+	public void close() {
+		setDateEnd(Calendar.getInstance().getTime());
+		if (dateStart == null)
+			dateStart = dateEnd;
+		getTournament().updateStandings();
 	}
 }
