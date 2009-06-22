@@ -4,7 +4,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import com.reflexit.mtgtournament.core.model.Tournament.TournamentType;
 
 public class ScheduleTest extends TestCase {
 	private void checkPlayedBefore(Tournament tour, int tP) {
