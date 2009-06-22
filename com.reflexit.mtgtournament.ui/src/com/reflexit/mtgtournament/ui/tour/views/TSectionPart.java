@@ -44,6 +44,11 @@ public class TSectionPart extends SectionPart {
 		section.setTextClient(info);
 	}
 
+	public void reload() {
+		getManagedForm().setInput(getManagedForm().getInput());
+		getManagedForm().refresh();
+	}
+
 	@Override
 	public boolean setFormInput(Object input) {
 		return super.setFormInput(input);

@@ -15,16 +15,19 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -34,6 +37,7 @@ import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.Round;
+import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
@@ -103,7 +107,12 @@ public class RoundScheduleSection extends TSectionPart {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
 				List<Round> rounds = t.getRounds();
-				return rounds.toArray();
+				if (t.isDraftRound() || rounds.size() == 0)
+					return rounds.toArray();
+				else
+					return rounds.subList(1, rounds.size()).toArray();
+			} else if (parent instanceof Round[]) {
+				return ((Object[]) parent);
 			} else if (parent instanceof Object[]) {
 				return fillElements((Object[]) parent);
 			} else if (parent instanceof Round) {
@@ -135,7 +144,7 @@ public class RoundScheduleSection extends TSectionPart {
 			return getElements(element).length > 0;
 		}
 	}
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
+	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
@@ -173,6 +182,55 @@ public class RoundScheduleSection extends TSectionPart {
 				}
 			}
 			return "";
+		}
+		private Color systemColorYellow;
+		private Color systemColorGray;
+		private Color systemColorBlue;
+		{
+			systemColorYellow = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
+			systemColorGray = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+			systemColorBlue = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+		}
+
+		public Color getBackground(Object element, int columnIndex) {
+			Round round;
+			TableInfo tableInfo = null;
+			if (element instanceof Round) {
+				round = (Round) element;
+			} else if (element instanceof TableInfo) {
+				tableInfo = (TableInfo) element;
+				round = tableInfo.getRound();
+			} else {
+				return null;
+			}
+			RoundState state = round.getState();
+			switch (state) {
+			case IN_PROGRESS:
+				if (tableInfo == null || tableInfo.getP1().getResult() == null)
+					return systemColorYellow;
+			default:
+				return null;
+			}
+		}
+
+		public Color getForeground(Object element, int columnIndex) {
+			Round round;
+			TableInfo tableInfo = null;
+			if (element instanceof Round) {
+				round = (Round) element;
+			} else if (element instanceof TableInfo) {
+				tableInfo = (TableInfo) element;
+				round = tableInfo.getRound();
+			} else {
+				return null;
+			}
+			RoundState state = round.getState();
+			switch (state) {
+			case CLOSED:
+				return systemColorGray;
+			default:
+				return null;
+			}
 		}
 	}
 

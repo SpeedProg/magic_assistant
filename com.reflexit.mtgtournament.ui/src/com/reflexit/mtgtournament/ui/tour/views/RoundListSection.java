@@ -13,6 +13,7 @@ package com.reflexit.mtgtournament.ui.tour.views;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
@@ -42,8 +43,11 @@ import java.util.List;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.core.model.TournamentType;
 
 public class RoundListSection extends TSectionPart {
+	private static final int SCHEDULE_COL = 1;
+	private static final int ACTION_COL = 2;
 	private TableViewer viewer;
 
 	public RoundListSection(ManagedForm managedForm) {
@@ -61,7 +65,10 @@ public class RoundListSection extends TSectionPart {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
 				List<Round> rounds = t.getRounds();
-				return rounds.toArray();
+				if (t.isDraftRound() || rounds.size() == 0)
+					return rounds.toArray();
+				else
+					return rounds.subList(1, rounds.size()).toArray();
 			} else if (parent instanceof Object[]) {
 				return ((Object[]) parent);
 			}
@@ -71,9 +78,11 @@ public class RoundListSection extends TSectionPart {
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 		private Color systemColorYellow;
 		private Color systemColorGray;
+		private Color systemColorBlue;
 		{
 			systemColorYellow = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
 			systemColorGray = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+			systemColorBlue = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		}
 
 		public Image getColumnImage(Object element, int columnIndex) {
@@ -89,9 +98,9 @@ public class RoundListSection extends TSectionPart {
 					if (number == 0)
 						return "Draft";
 					return "Round " + String.valueOf(number);
-				case 1:
+				case SCHEDULE_COL:
 					return round.getType().name();
-				case 2:
+				case ACTION_COL:
 					return getAction(round);
 				case 3:
 					return toDate(round.getDateStart());
@@ -131,6 +140,9 @@ public class RoundListSection extends TSectionPart {
 			if (element instanceof Round) {
 				Round round = (Round) element;
 				RoundState action = round.getState();
+				if (columnIndex == ACTION_COL && action != RoundState.CLOSED && action != RoundState.NOT_READY) {
+					return systemColorBlue;
+				}
 				switch (action) {
 				case CLOSED:
 					return systemColorGray;
@@ -173,9 +185,8 @@ public class RoundListSection extends TSectionPart {
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_VERTICAL));
 		viewer.getTable().setHeaderVisible(true);
 		createColumn(0, "Round", 80);
-		createColumn(1, "Schedule", 100);
-		TableViewerColumn c = createColumn(2, "Action", 80);
-		c.setEditingSupport(new RoundActionEditingSupport(viewer, 2));
+		createColumn(SCHEDULE_COL, "Schedule", 100);
+		createColumn(ACTION_COL, "Action", 80);
 		createColumn(3, "Start", 80);
 		createColumn(4, "End", 80);
 		createColumn(5, "State", 100);
@@ -192,13 +203,16 @@ public class RoundListSection extends TSectionPart {
 			this.column = column;
 			// Create the correct editor based on the column index
 			switch (column) {
-			case 2:
+			case ACTION_COL:
 				editor = new CheckboxCellEditor(((TableViewer) viewer).getTable(), SWT.CHECK | SWT.READ_ONLY) {
 					@Override
 					protected Control createControl(Composite parent) {
 						return null;
 					}
 				};
+				break;
+			case SCHEDULE_COL:
+				editor = new ComboBoxCellEditor(((TableViewer) viewer).getTable(), TournamentType.stringValues());
 				break;
 			default:
 				editor = null;
@@ -207,8 +221,21 @@ public class RoundListSection extends TSectionPart {
 
 		@Override
 		protected boolean canEdit(Object element) {
-			if (column == 2 && element instanceof Round)
-				return true;
+			if (element instanceof Round) {
+				Round round = (Round) element;
+				switch (column) {
+				case ACTION_COL:
+					return true;
+				case SCHEDULE_COL:
+					if (round.getTournament().getType() == TournamentType.COMPOSITE) {
+						return true;
+					}
+					return false;
+				default:
+					break;
+				}
+				return false;
+			}
 			return false;
 		}
 
@@ -221,8 +248,10 @@ public class RoundListSection extends TSectionPart {
 		protected Object getValue(Object element) {
 			Round round = (Round) element;
 			switch (this.column) {
-			case 2:
+			case ACTION_COL:
 				return round.getState() != RoundState.CLOSED;
+			case SCHEDULE_COL:
+				return round.getType().ordinal();
 			default:
 				break;
 			}
@@ -233,18 +262,22 @@ public class RoundListSection extends TSectionPart {
 		protected void setValue(Object element, Object value) {
 			Round round = (Round) element;
 			switch (this.column) {
-			case 2:
+			case ACTION_COL:
 				RoundState state = round.getState();
 				if (state == RoundState.NOT_SCHEDULED) {
 					round.schedule();
+					reload();
 				} else if (state == RoundState.READY) {
 					round.setDateStart(Calendar.getInstance().getTime());
+					reload();
 				} else if (state == RoundState.IN_PROGRESS) {
 					round.setDateEnd(Calendar.getInstance().getTime());
 					round.getTournament().updateStandings();
-					getManagedForm().setInput(round.getTournament());
-					getManagedForm().refresh();
+					reload();
 				}
+				break;
+			case SCHEDULE_COL:
+				round.setType(TournamentType.valueOf(((Integer) value).intValue()));
 				break;
 			default:
 				break;
@@ -258,6 +291,7 @@ public class RoundListSection extends TSectionPart {
 		col.setText(name);
 		col.setWidth(width);
 		TableViewerColumn colv = new TableViewerColumn(viewer, col);
+		colv.setEditingSupport(new RoundActionEditingSupport(viewer, i));
 		return colv;
 	}
 

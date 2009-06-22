@@ -97,8 +97,9 @@ public class TNavigatorView extends ViewPart {
 		test1.setType(TournamentType.ROUND_ROBIN, 4, true);
 		test1.generatePlayers(6);
 		test1.schedule();
-		test2.setType(TournamentType.SWISS, 6, true);
+		test2.setType(TournamentType.SWISS, 3, true);
 		test2.setName("test 2");
+		test2.generatePlayers(7);
 		Cube cube = new Cube();
 		cube.addTournament(test1);
 		cube.addTournament(test2);

@@ -109,16 +109,14 @@ public class OverviewSection extends TSectionPart {
 				if (e.getHref().equals("schedule")) {
 					try {
 						tournament.schedule();
-						getManagedForm().setInput(tournament);
-						getManagedForm().refresh();
+						reload();
 					} catch (Exception ex) {
 						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
 					}
 				} else if (e.getHref().equals("unschedule")) {
 					try {
 						tournament.setScheduled(false);
-						getManagedForm().setInput(tournament);
-						getManagedForm().refresh();
+						reload();
 					} catch (Exception ex) {
 						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
 					}
