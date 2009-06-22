@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Alena Laskavaia.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alena Laskavaia - initial API and implementation
+ *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -9,9 +19,9 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.ManagedForm;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
-import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -23,7 +33,8 @@ public class TournamentView extends ViewPart {
 	private OverviewSection overviewSectionPart;
 	private RegisteredPlayersSection regPlayersSectionPart;
 	private ManagedForm managedForm;
-	private RoundSection roundSectionPart;
+	private RoundScheduleSection roundSectionPart;
+	private RoundListSection roundListSectionPart;
 
 	/**
 	 * The constructor.
@@ -74,17 +85,28 @@ public class TournamentView extends ViewPart {
 		managedForm = new ManagedForm(parent);
 		form = managedForm.getForm();
 		form.setText("Tournament: xxx");
-		ColumnLayout layout = new ColumnLayout();
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
 		form.getBody().setLayout(layout);
 		overviewSectionPart = new OverviewSection(managedForm);
-		overviewSectionPart.getSection().setLayoutData(new ColumnLayoutData());
 		managedForm.addPart(overviewSectionPart);
+		roundListSectionPart = new RoundListSection(managedForm);
+		managedForm.addPart(roundListSectionPart);
 		regPlayersSectionPart = new RegisteredPlayersSection(managedForm);
-		regPlayersSectionPart.getSection().setLayoutData(new ColumnLayoutData());
 		managedForm.addPart(regPlayersSectionPart);
-		roundSectionPart = new RoundSection(managedForm);
-		//roundSectionPart.getSection().setLayoutData(new ColumnLayoutData());
+		roundSectionPart = new RoundScheduleSection(managedForm);
 		managedForm.addPart(roundSectionPart);
+		// layout
+		overviewSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL, 1));
+		roundListSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL, 1));
+		regPlayersSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL_GRAB, 2));
+		roundSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL_GRAB, 2));
+	}
+
+	private TableWrapData twd(int style, int grab) {
+		TableWrapData tableWrapData = new TableWrapData(style);
+		tableWrapData.colspan = grab;
+		return tableWrapData;
 	}
 
 	/**
