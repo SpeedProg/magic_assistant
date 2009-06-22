@@ -15,13 +15,22 @@ public class PlayerRoundInfo {
 	transient TableInfo tableInfo;
 	Player p;
 	int w = -1;
-	int r = -1;
+	PlayerGameResult r = null;
+	public enum PlayerGameResult {
+		WIN,
+		LOOSE,
+		DRAW
+	}
 
-	public int getResult() {
+	public PlayerGameResult getResult() {
 		return r;
 	}
 
-	public void setResult(int r) {
+	public void setWinGames(int w) {
+		this.w = w;
+	}
+
+	public void setResult(PlayerGameResult r) {
 		this.r = r;
 	}
 
@@ -36,13 +45,13 @@ public class PlayerRoundInfo {
 		return p + " " + s + "(" + (w == -1 ? "_" : w) + ")";
 	}
 
-	public static String getWinStr(int result) {
+	public static String getWinStr(PlayerGameResult result) {
 		String s = "_";
-		if (result == 0)
+		if (result == PlayerGameResult.LOOSE)
 			s = "L";
-		else if (result == 1)
+		else if (result == PlayerGameResult.DRAW)
 			s = "D";
-		else if (result == 2)
+		else if (result == PlayerGameResult.WIN)
 			s = "W";
 		return s;
 	}

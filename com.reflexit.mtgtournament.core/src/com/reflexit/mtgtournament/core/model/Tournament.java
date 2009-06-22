@@ -12,6 +12,8 @@ package com.reflexit.mtgtournament.core.model;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -182,5 +184,67 @@ public class Tournament {
 	 */
 	public boolean isScheduled() {
 		return scheduled;
+	}
+
+	/**
+	 * @param player
+	 */
+	public void playerDropped(Player player) {
+		PlayerTourInfo info = findPlayerTourInfo(player);
+		if (info != null)
+			info.setActive(false);
+	}
+
+	/**
+	 * @param player
+	 * @return
+	 */
+	public PlayerTourInfo findPlayerTourInfo(Player player) {
+		for (PlayerTourInfo pi : players) {
+			if (pi.getPlayer().equals(player))
+				return pi;
+		}
+		return null;
+	}
+
+	public void updateStandings() {
+		for (PlayerTourInfo ti : players) {
+			ti.resetPoints();
+		}
+		for (Round r : rounds) {
+			int pn = r.getPlayersNumber();
+			for (int i = 0; i < pn; i++) {
+				PlayerRoundInfo pi = r.getPlayerInfo(i);
+				PlayerTourInfo pt = findPlayerTourInfo(pi.getPlayer());
+				if (pi.getResult() != null)
+					pt.addGameResult(pi.getResult());
+			}
+		}
+		PlayerTourInfo[] pti = players.toArray(new PlayerTourInfo[players.size()]);
+		Arrays.sort(pti, new Comparator<PlayerTourInfo>() {
+			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
+				return comparePlayers(a, b);
+			}
+		});
+		int place = 1;
+		for (int i = 0; i < pti.length; i++) {
+			PlayerTourInfo ti = pti[i];
+			if (i > 0) {
+				if (comparePlayers(ti, pti[i - 1]) != 0) {
+					place++;
+				}
+			}
+			ti.setPlace(place);
+		}
+	}
+
+	protected int comparePlayers(PlayerTourInfo a, PlayerTourInfo b) {
+		if (a.getPoints() != b.getPoints())
+			return b.getPoints() - a.getPoints();
+		if (a.getGames() != b.getGames())
+			return a.getGames() - b.getGames();
+		if (a.getWin() != b.getWin())
+			return b.getWin() - a.getWin();
+		return 0;
 	}
 }

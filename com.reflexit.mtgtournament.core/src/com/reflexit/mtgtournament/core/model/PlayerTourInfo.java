@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.model;
 
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
+
 public class PlayerTourInfo {
 	transient private Tournament tournament;
 	private Player p;
@@ -126,5 +128,46 @@ public class PlayerTourInfo {
 	 */
 	public int getPlace() {
 		return place;
+	}
+
+	/**
+	 * @param result
+	 */
+	public void addGameResult(PlayerGameResult result) {
+		if (result == null)
+			return;
+		games++;
+		switch (result) {
+		case WIN:
+			win++;
+			break;
+		case LOOSE:
+			loose++;
+			break;
+		case DRAW:
+			draw++;
+			break;
+		default:
+			break;
+		}
+		updatePoints();
+	}
+
+	/**
+	 * 
+	 */
+	private void updatePoints() {
+		points = win * 2 + draw * 1 + loose * 0;
+	}
+
+	/**
+	 * 
+	 */
+	public void resetPoints() {
+		win = 0;
+		loose = 0;
+		draw = 0;
+		games = 0;
+		points = 0;
 	}
 }
