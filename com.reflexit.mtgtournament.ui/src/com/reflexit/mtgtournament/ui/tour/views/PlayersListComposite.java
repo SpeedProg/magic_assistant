@@ -15,7 +15,10 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -31,6 +34,7 @@ public class PlayersListComposite extends Composite {
 	private TableViewer viewer;
 	private boolean forTournamentStanding;
 	private int treeStyle;
+	private TableSorter tableSorter;
 	class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -133,12 +137,102 @@ public class PlayersListComposite extends Composite {
 			createColumn(4, "Stats", 60);
 			createColumn(5, "Games", 60);
 		}
+		// Set the sorter for the table
+		tableSorter = new TableSorter();
+		viewer.setSorter(tableSorter);
+	}
+	public class TableSorter extends ViewerSorter {
+		private int propertyIndex;
+		// private static final int ASCENDING = 0;
+		private static final int DESCENDING = 1;
+		private int direction = DESCENDING;
+
+		public TableSorter() {
+			this.propertyIndex = 0;
+			direction = DESCENDING;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = 1 - direction;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = DESCENDING;
+			}
+		}
+
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			int rc = 0;
+			if (e1 instanceof Player && e2 instanceof Player) {
+				Player p1 = (Player) e1;
+				Player p2 = (Player) e2;
+				switch (propertyIndex) {
+				case 0:
+					rc = p1.getName().compareTo(p2.getName());
+					break;
+				case 1:
+					rc = p1.getId().compareTo(p2.getId());
+					break;
+				default:
+					rc = 0;
+				}
+			} else if (e1 instanceof PlayerTourInfo && e2 instanceof PlayerTourInfo) {
+				PlayerTourInfo p1 = (PlayerTourInfo) e1;
+				PlayerTourInfo p2 = (PlayerTourInfo) e2;
+				switch (propertyIndex) {
+				case 0:
+					rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
+					break;
+				case 1:
+					rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
+					break;
+				case 2:
+					rc = p1.getPlace() - p2.getPlace();
+					break;
+				case 3:
+					rc = p1.getPoints() - p2.getPoints();
+					break;
+				case 4:
+					rc = p1.getWin() - p2.getWin();
+					break;
+				case 5:
+					rc = p1.getGames() - p2.getGames();
+					break;
+				default:
+					rc = 0;
+				}
+			}
+			// If descending order, flip the direction
+			if (direction == DESCENDING) {
+				rc = -rc;
+			}
+			return rc;
+		}
 	}
 
-	private void createColumn(int i, String name, int width) {
-		TableColumn col = new TableColumn(viewer.getTable(), SWT.NONE, i);
-		col.setText(name);
-		col.setWidth(width);
+	private void createColumn(final int index, String name, int width) {
+		final TableColumn column = new TableColumn(viewer.getTable(), SWT.NONE, index);
+		column.setText(name);
+		column.setWidth(width);
+		// Setting the right sorter
+		column.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableSorter.setColumn(index);
+				int dir = viewer.getTable().getSortDirection();
+				if (viewer.getTable().getSortColumn() == column) {
+					dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+				} else {
+					dir = SWT.DOWN;
+				}
+				viewer.getTable().setSortDirection(dir);
+				viewer.getTable().setSortColumn(column);
+				viewer.refresh();
+			}
+		});
 	}
 
 	public TableViewer getViewer() {

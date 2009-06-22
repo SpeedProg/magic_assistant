@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -32,6 +36,8 @@ import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
+import com.reflexit.mtgtournament.ui.tour.dialogs.GameResultDialog;
 
 public class RoundScheduleSection extends TSectionPart {
 	private TreeViewer viewer;
@@ -39,6 +45,52 @@ public class RoundScheduleSection extends TSectionPart {
 	public RoundScheduleSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
 		createBody();
+		hookDoubleClickAction();
+	}
+
+	private void hookDoubleClickAction() {
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				if (selection.isEmpty())
+					return;
+				editResult(selection.getFirstElement());
+			}
+		});
+	}
+
+	/**
+	 * @param firstElement
+	 */
+	protected void editResult(Object element) {
+		if (element instanceof TableInfo) {
+			TableInfo tinfo = (TableInfo) element;
+			if (tinfo.getRound().getNumber() == 0)
+				return; // cannot edit draft
+			GameResultDialog d = new GameResultDialog(viewer.getControl().getShell());
+			d.setInput(tinfo);
+			if (d.open() == Dialog.OK) {
+				tinfo.getP1().setWinGames(d.getWin1());
+				tinfo.getP2().setWinGames(d.getWin2());
+				if (d.getWin1() > d.getWin2()) {
+					tinfo.getP1().setResult(PlayerGameResult.WIN);
+					tinfo.getP2().setResult(PlayerGameResult.LOOSE);
+				} else if (d.getWin1() < d.getWin2()) {
+					tinfo.getP1().setResult(PlayerGameResult.LOOSE);
+					tinfo.getP2().setResult(PlayerGameResult.WIN);
+				} else {
+					tinfo.getP1().setResult(PlayerGameResult.DRAW);
+					tinfo.getP2().setResult(PlayerGameResult.DRAW);
+				}
+				if (d.isDrop1()) {
+					tinfo.getRound().getTournament().playerDropped(tinfo.getP1().getPlayer());
+				}
+				if (d.isDrop2()) {
+					tinfo.getRound().getTournament().playerDropped(tinfo.getP2().getPlayer());
+				}
+				viewer.refresh(true);
+			}
+		}
 	}
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {

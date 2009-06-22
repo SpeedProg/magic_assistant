@@ -52,8 +52,8 @@ public class GameResultDialog extends TrayDialog {
 	protected Control createDialogArea(Composite parent) {
 		parent.getShell().setText("Game Result");
 		Composite comp = (Composite) super.createDialogArea(parent);
-		comp.setLayout(new GridLayout(3, false));
-		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
+		comp.setLayout(new GridLayout(4, false));
+		GridDataFactory hor = GridDataFactory.fillDefaults();
 		win1 = createLabelText(comp, input.getP1().getPlayer().getName());
 		win1.setLayoutData(hor.create());
 		win1.addModifyListener(new ModifyListener() {
@@ -110,7 +110,10 @@ public class GameResultDialog extends TrayDialog {
 	private Text createLabelText(Composite comp, String string) {
 		Label label = new Label(comp, SWT.NONE);
 		label.setText(string);
+		Label label2 = new Label(comp, SWT.NONE);
+		label2.setText("W:");
 		Text text = new Text(comp, SWT.BORDER);
+		text.setTextLimit(2);
 		return text;
 	}
 

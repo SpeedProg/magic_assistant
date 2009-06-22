@@ -234,14 +234,16 @@ public class RoundListSection extends TSectionPart {
 			Round round = (Round) element;
 			switch (this.column) {
 			case 2:
-				RoundState action = round.getState();
-				if (action == RoundState.NOT_SCHEDULED) {
+				RoundState state = round.getState();
+				if (state == RoundState.NOT_SCHEDULED) {
 					round.schedule();
-				} else if (action == RoundState.READY) {
+				} else if (state == RoundState.READY) {
 					round.setDateStart(Calendar.getInstance().getTime());
-				} else if (action == RoundState.IN_PROGRESS) {
+				} else if (state == RoundState.IN_PROGRESS) {
 					round.setDateEnd(Calendar.getInstance().getTime());
-					refresh();
+					round.getTournament().updateStandings();
+					getManagedForm().setInput(round.getTournament());
+					getManagedForm().refresh();
 				}
 				break;
 			default:
