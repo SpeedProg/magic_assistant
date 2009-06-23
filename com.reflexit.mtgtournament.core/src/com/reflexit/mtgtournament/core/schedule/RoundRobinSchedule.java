@@ -10,7 +10,13 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.schedule;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
+import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -60,7 +66,7 @@ other opponents in those rounds.
  * @author Alena
  *
  */
-public class RoundRobinSchedule {
+public class RoundRobinSchedule implements IScheduler {
 	public void schedule(Tournament t) {
 		int pn = t.getNumberOfPlayers();
 		int tables = pn / 2 + pn % 2;
@@ -73,6 +79,8 @@ public class RoundRobinSchedule {
 		if (t.getNumberOfRounds() == 0) {
 			t.setNumberOfRounds(pna - 1); // plus draft
 		}
+		List<Player> array = init(t.getPlayersInfo());
+		Collections.shuffle(array);
 		for (int i = 0; i <= t.getNumberOfRounds(); i++) {
 			Round r = new Round(i);
 			t.addRound(r);
@@ -82,16 +90,28 @@ public class RoundRobinSchedule {
 				r.schedule();
 				continue;
 			}
-			r.init(t.getPlayersInfo());
 			for (int j = 0; j < tables; j++) {
 				int n = (j + i) % tables;
-				PlayerRoundInfo p1 = r.getPlayerInfo(positions[n]);
-				PlayerRoundInfo p2 = r.getPlayerInfo(positions[n + tables]);
+				PlayerRoundInfo p1 = r.makePlayer(array.get(positions[n]));
+				PlayerRoundInfo p2 = r.makePlayer(array.get(positions[n + tables]));
 				TableInfo tableInfo = new TableInfo(j, r, p1, p2);
 				r.addTable(tableInfo);
 			}
 			rotateRR(positions);
 		}
+	}
+
+	public List<Player> init(List<PlayerTourInfo> list) {
+		ArrayList<Player> res = new ArrayList<Player>();
+		for (PlayerTourInfo player : list) {
+			if (player.isActive()) {
+				res.add(player.getPlayer());
+			}
+		}
+		if (res.size() % 2 != 0) {
+			res.add(Player.DUMMY);
+		}
+		return res;
 	}
 
 	private void rotate(int[] positions, int start, int end, int shift) {
@@ -118,5 +138,12 @@ public class RoundRobinSchedule {
 		int x = positions[1];
 		positions[1] = positions[positions.length - 1];
 		positions[positions.length - 1] = x;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.reflexit.mtgtournament.core.schedule.IScheduler#schedule(com.reflexit.mtgtournament.core.model.Round)
+	 */
+	public void schedule(Round r) {
+		throw new IllegalStateException("Cannot schedule a single round for Round Robin");
 	}
 }

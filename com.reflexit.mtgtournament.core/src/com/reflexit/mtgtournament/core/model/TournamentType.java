@@ -10,12 +10,31 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.model;
 
+import com.reflexit.mtgtournament.core.schedule.CompositeScheduler;
+import com.reflexit.mtgtournament.core.schedule.EliminationScheduler;
+import com.reflexit.mtgtournament.core.schedule.IScheduler;
+import com.reflexit.mtgtournament.core.schedule.PseudoRandomSchedule;
+import com.reflexit.mtgtournament.core.schedule.RandomSchedule;
+import com.reflexit.mtgtournament.core.schedule.RoundRobinSchedule;
+import com.reflexit.mtgtournament.core.schedule.SwissSchedule;
+
 public enum TournamentType {
-	ROUND_ROBIN,
-	SWISS,
-	ELIMINATION,
-	RANDOM,
-	COMPOSITE;
+	ROUND_ROBIN(new RoundRobinSchedule()),
+	SWISS(new SwissSchedule()),
+	ELIMINATION(new EliminationScheduler()),
+	RANDOM(new RandomSchedule()),
+	PSEUDO_RANDOM(new PseudoRandomSchedule()),
+	COMPOSITE(new CompositeScheduler());
+	private IScheduler scheduler;
+
+	TournamentType(IScheduler scheduler) {
+		this.scheduler = scheduler;
+	};
+
+	public IScheduler getScheduler() {
+		return scheduler;
+	}
+
 	/**
 	 * @return
 	 */

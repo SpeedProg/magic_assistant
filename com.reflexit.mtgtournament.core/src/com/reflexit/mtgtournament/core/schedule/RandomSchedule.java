@@ -13,11 +13,9 @@ package com.reflexit.mtgtournament.core.schedule;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
+import com.reflexit.mtgtournament.core.edit.ComAddTable;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
-import com.reflexit.mtgtournament.core.model.RoundState;
-import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
@@ -25,57 +23,40 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
  * @author Alena
  *
  */
-public class RandomSchedule {
+public class RandomSchedule extends AbstractScheduler implements IScheduler {
+	@Override
 	public void schedule(Tournament t) {
-		int x = t.getNumberOfRounds();
-		if (x == 0) {
-			int p = t.getNumberOfPlayers();
-			x = p - 2;
-			if (x < 1)
-				x = 1;
-			t.setNumberOfRounds(x);
-		}
+		super.schedule(t);
 		for (int i = 0; i <= t.getNumberOfRounds(); i++) {
-			Round r = new Round(i);
-			t.addRound(r);
-			r.setType(t.getType());
+			Round r = t.getRound(i);
 			schedule(r);
 		}
 	}
 
-	public void schedule(Round r) {
-		if (r.getType() != TournamentType.RANDOM) {
-			throw new IllegalStateException("Bad scheduler");
-		}
-		if (r.getState() != RoundState.NOT_SCHEDULED) {
-			throw new IllegalStateException("Round is not ready or already scheduled");
-		}
-		Tournament t = r.getTournament();
-		ArrayList<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>(t.getPlayersInfo());
-		Collections.shuffle(players);
-		int table = 0;
+	@Override
+	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
+		int table = 1;
+		// this method has even number of players always
 		while (players.size() > 1) {
 			PlayerTourInfo pti1 = players.get(0);
-			if (!pti1.isActive())
-				continue;
 			PlayerTourInfo pti2 = players.get(1);
-			if (!pti2.isActive())
-				continue;
-			PlayerRoundInfo pr1 = r.addPlayer(pti1);
-			PlayerRoundInfo pr2 = r.addPlayer(pti2);
-			TableInfo tableInfo = new TableInfo(table, r, pr1, pr2);
+			ComAddTable com = new ComAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
+			com.execute();
 			table++;
-			r.addTable(tableInfo);
 			players.remove(pti1);
 			players.remove(pti2);
 		}
-		if (players.size() > 0) {
-			PlayerRoundInfo dummy = r.addDummy();
-			PlayerTourInfo pti3 = players.get(0);
-			PlayerRoundInfo pr = r.addPlayer(pti3);
-			TableInfo tableInfo = new TableInfo(table, r, pr, dummy);
-			table++;
-			r.addTable(tableInfo);
+	}
+
+	@Override
+	protected void sortForScheduling(ArrayList<PlayerTourInfo> players) {
+		Collections.shuffle(players);
+	}
+
+	@Override
+	protected void checkType(Round r) {
+		if (r.getType() != TournamentType.RANDOM) {
+			throw new IllegalStateException("Bad scheduler");
 		}
 	}
 }

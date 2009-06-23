@@ -17,10 +17,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import com.reflexit.mtgtournament.core.schedule.RandomSchedule;
-import com.reflexit.mtgtournament.core.schedule.RoundRobinSchedule;
-import com.reflexit.mtgtournament.core.schedule.SwissSchedule;
-
 public class Tournament {
 	private transient Cube cube;
 	private String name;
@@ -44,7 +40,7 @@ public class Tournament {
 	 * @param draft - is there draft round
 	 */
 	public void setType(TournamentType type, int rounds, boolean draft) {
-		if (isScheduled())
+		if (isScheduled() && (this.type != type || this.draftRound != draft || this.numberOfRounds != rounds))
 			throw new IllegalStateException("Cannot modify type when tournament is already scheduled");
 		this.type = type;
 		this.draftRound = draft;
@@ -65,13 +61,7 @@ public class Tournament {
 		if (isScheduled())
 			throw new IllegalStateException("Cannot schedule - tournament is already scheduled");
 		rounds.clear();
-		if (type == TournamentType.ROUND_ROBIN) {
-			new RoundRobinSchedule().schedule(this);
-		} else if (type == TournamentType.SWISS) {
-			new SwissSchedule().schedule(this);
-		} else if (type == TournamentType.RANDOM) {
-			new RandomSchedule().schedule(this);
-		}
+		getType().getScheduler().schedule(this);
 		this.setScheduled(true);
 	}
 
@@ -79,13 +69,7 @@ public class Tournament {
 	 * @param round
 	 */
 	public void schedule(Round round) {
-		if (round.getType() == TournamentType.ROUND_ROBIN) {
-			throw new IllegalStateException("Cannot schedule - tournament is already scheduled");
-		} else if (round.getType() == TournamentType.SWISS) {
-			new SwissSchedule().schedule(round);
-		} else if (round.getType() == TournamentType.RANDOM) {
-			new RandomSchedule().schedule(round);
-		}
+		round.getType().getScheduler().schedule(round);
 	}
 
 	public Round getRound(int i) {
@@ -232,15 +216,21 @@ public class Tournament {
 			ti.resetPoints();
 		}
 		for (Round r : rounds) {
-			int pn = r.getPlayersNumber();
-			for (int i = 0; i < pn; i++) {
-				PlayerRoundInfo pi = r.getPlayerInfo(i);
-				PlayerTourInfo pt = findPlayerTourInfo(pi.getPlayer());
-				if (pi.getResult() != null)
-					pt.addGameResult(pi.getResult());
+			for (Object element : r.getTables()) {
+				TableInfo t = (TableInfo) element;
+				updateInfo(t.getP1());
+				updateInfo(t.getP2());
 			}
 		}
 		updatePlace();
+	}
+
+	private void updateInfo(PlayerRoundInfo pi) {
+		if (pi.getPlayer() == Player.DUMMY)
+			return;
+		PlayerTourInfo pt = findPlayerTourInfo(pi.getPlayer());
+		if (pi.getResult() != null)
+			pt.addGameResult(pi.getResult());
 	}
 
 	public PlayerTourInfo[] updatePlace() {
@@ -263,7 +253,7 @@ public class Tournament {
 		return pti;
 	}
 
-	protected int comparePlayers(PlayerTourInfo a, PlayerTourInfo b) {
+	public static int comparePlayers(PlayerTourInfo a, PlayerTourInfo b) {
 		if (a.getPoints() != b.getPoints())
 			return b.getPoints() - a.getPoints();
 		if (a.getGames() != b.getGames())

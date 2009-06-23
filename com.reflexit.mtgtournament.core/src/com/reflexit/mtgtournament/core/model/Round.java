@@ -20,7 +20,6 @@ public class Round {
 	private transient Tournament tournament;
 	private transient int number;
 	private TournamentType type;
-	private List<PlayerRoundInfo> playerInfo = new ArrayList<PlayerRoundInfo>();
 	private List<TableInfo> tables = new ArrayList<TableInfo>();
 	private Date dateStart;
 	private Date dateEnd;
@@ -33,38 +32,14 @@ public class Round {
 		return tables.size() > 0;
 	}
 
-	public void init(List<PlayerTourInfo> list) {
-		for (PlayerTourInfo player : list) {
-			addPlayer(player);
-		}
-		if (list.size() % 2 != 0) {
-			addDummy();
-		}
-	}
-
-	public PlayerRoundInfo addDummy() {
+	public PlayerRoundInfo makeDummy() {
 		PlayerRoundInfo info = new PlayerRoundInfo(Player.DUMMY, this);
-		playerInfo.add(info);
 		return info;
 	}
 
-	public PlayerRoundInfo addPlayer(PlayerTourInfo player) {
-		if (player.isActive()) {
-			PlayerRoundInfo info = new PlayerRoundInfo(player.getPlayer(), this);
-			playerInfo.add(info);
-			return info;
-		}
-		return null;
-	}
-
-	public int getPlayersNumber() {
-		return playerInfo.size();
-	}
-
-	public PlayerRoundInfo getPlayerInfo(int j) {
-		if (j < 0 || j >= getPlayersNumber())
-			return null;
-		return playerInfo.get(j);
+	public PlayerRoundInfo makePlayer(Player player) {
+		PlayerRoundInfo info = new PlayerRoundInfo(player, this);
+		return info;
 	}
 
 	public void addTable(TableInfo t) {
