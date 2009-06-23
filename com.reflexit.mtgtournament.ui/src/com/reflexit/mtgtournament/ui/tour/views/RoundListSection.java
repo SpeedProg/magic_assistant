@@ -227,10 +227,11 @@ public class RoundListSection extends TSectionPart {
 				case ACTION_COL:
 					return true;
 				case SCHEDULE_COL:
-					if (round.getTournament().getType() == TournamentType.COMPOSITE) {
-						return true;
-					}
-					return false;
+					//if (round.getTournament().getType() != TournamentType.ROUND_ROBIN) 
+				{
+					return true;
+				}
+					//return false;
 				default:
 					break;
 				}

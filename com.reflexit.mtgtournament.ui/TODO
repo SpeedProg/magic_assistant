@@ -1,0 +1,15 @@
+* Tournament Management
+** Add
+** Delete
+** Rename
+* Persistence
+** Load/Store to xml
+* Print
+** Schedule
+** Standings
+* Undo
+* Round flow
+** Re-schedule
+** Re-open, edit start/stop
+** Context menu
+** Dialog editor
