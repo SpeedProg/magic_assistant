@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -18,6 +19,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapData;
@@ -25,6 +27,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.core.xml.TournamentManager;
 
 public class TournamentView extends ViewPart {
 	public static final String ID = TournamentView.class.getName();
@@ -74,6 +77,11 @@ public class TournamentView extends ViewPart {
 			managedForm.setInput(t);
 			managedForm.reflow(true);
 		}
+		updateEnablement();
+	}
+
+	private void showError(String message) {
+		MessageDialog.openError(getViewSite().getShell(), "Error", message);
 	}
 
 	/**
@@ -82,9 +90,21 @@ public class TournamentView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		managedForm = new ManagedForm(parent);
+		managedForm = new ManagedForm(parent) {
+			@Override
+			public void commit(boolean onSave) {
+				Object x = managedForm.getInput();
+				if (x instanceof Tournament) {
+					try {
+						TournamentManager.save((Tournament) x);
+					} catch (Exception e) {
+						showError(e.getMessage());
+					}
+				}
+			}
+		};
 		form = managedForm.getForm();
-		form.setText("Tournament: xxx");
+		form.setText("Tournament (Select a Tournament)");
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		form.getBody().setLayout(layout);
@@ -101,6 +121,29 @@ public class TournamentView extends ViewPart {
 		roundListSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL, 1));
 		regPlayersSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL_GRAB, 2));
 		roundSectionPart.getSection().setLayoutData(twd(TableWrapData.FILL_GRAB, 2));
+		setInitial();
+		updateEnablement();
+	}
+
+	/**
+	 * 
+	 */
+	private void setInitial() {
+		ISelection selection = getSite().getWorkbenchWindow().getSelectionService().getSelection(TNavigatorView.ID);
+		if (selection != null) {
+			setInput(selection);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void updateEnablement() {
+		boolean enabled = (managedForm.getInput() != null);
+		IFormPart[] parts = managedForm.getParts();
+		for (IFormPart formPart : parts) {
+			((TSectionPart) formPart).getSection().setEnabled(enabled);
+		}
 	}
 
 	private TableWrapData twd(int style, int grab) {

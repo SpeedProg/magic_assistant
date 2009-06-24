@@ -101,7 +101,8 @@ public class SelectPlayerDialog extends TrayDialog {
 				setSelection((IStructuredSelection) event.getSelection());
 			}
 		});
-		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).create());
+		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).hint(SWT.DEFAULT,
+		        300).create());
 		playersListComposite.getViewer().setInput(input);
 		return comp;
 	}

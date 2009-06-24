@@ -267,18 +267,19 @@ public class RoundListSection extends TSectionPart {
 				RoundState state = round.getState();
 				if (state == RoundState.NOT_SCHEDULED) {
 					round.schedule();
-					reload();
+					modelUpdated();
 				} else if (state == RoundState.READY) {
 					round.setDateStart(Calendar.getInstance().getTime());
-					reload();
+					modelUpdated();
 				} else if (state == RoundState.IN_PROGRESS) {
 					round.setDateEnd(Calendar.getInstance().getTime());
 					round.getTournament().updateStandings();
-					reload();
+					modelUpdated();
 				}
 				break;
 			case SCHEDULE_COL:
 				round.setType(TournamentType.valueOf(((Integer) value).intValue()));
+				modelUpdated();
 				break;
 			default:
 				break;
@@ -301,6 +302,11 @@ public class RoundListSection extends TSectionPart {
 		viewer.refresh(true);
 		getManagedForm().getForm().reflow(false);
 		super.refresh();
+	}
+
+	protected void modelUpdated() {
+		save();
+		reload();
 	}
 
 	@Override

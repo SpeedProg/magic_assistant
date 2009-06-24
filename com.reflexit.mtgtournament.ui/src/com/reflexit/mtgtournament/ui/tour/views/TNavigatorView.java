@@ -10,22 +10,25 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -34,24 +37,31 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Cube;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
+import com.reflexit.mtgtournament.core.xml.TournamentManager;
+import com.reflexit.mtgtournament.ui.tour.Activator;
 
 /**
  */
 public class TNavigatorView extends ViewPart {
 	public static final String ID = TNavigatorView.class.getName();
 	private TableViewer viewer;
-	private Action action1;
-	private Action action2;
+	private Action addTour;
+	private Action deleteTour;
+	private Action sortAlpha;
 	private Action doubleClickAction;
-	private Tournament test1 = new Tournament();
-	private Tournament test2 = new Tournament();
+	private Cube cube;
 	/*
 	 * The content provider class is responsible for
 	 * providing objects to the view. It can wrap
@@ -69,7 +79,10 @@ public class TNavigatorView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
-			return new Object[] { test1, test2 };
+			if (cube == null)
+				return new Object[0];
+			List list = cube.getTournamens();
+			return list.toArray();
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -93,22 +106,9 @@ public class TNavigatorView extends ViewPart {
 	 * The constructor.
 	 */
 	public TNavigatorView() {
-		test1.setName("test 1");
-		test1.setType(TournamentType.ROUND_ROBIN, 4, true);
-		test1.generatePlayers(6);
-		test1.schedule();
-		test2.setType(TournamentType.SWISS, 3, true);
-		test2.setName("test 2");
-		test2.generatePlayers(7);
-		Cube cube = new Cube();
-		cube.addTournament(test1);
-		cube.addTournament(test2);
-		cube.addPlayer(new Player("id1", "Alena"));
-		cube.addPlayer(new Player("id2", "David"));
-		for (int i = 3; i < 20; i++) {
-			cube.addPlayer(new Player("id" + i, "Name " + i));
-		}
 	}
+	private ViewerComparator alphaSorter = new ViewerComparator();
+	private ViewerComparator dateSorter = null;
 
 	/**
 	 * This is a callback that will allow us
@@ -119,13 +119,43 @@ public class TNavigatorView extends ViewPart {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
+		viewer.setComparator(alphaSorter);
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
 		getViewSite().setSelectionProvider(viewer);
+		createModel();
+		viewer.setInput(getViewSite());
+	}
+
+	void createModel() {
+		Tournament test1 = new Tournament();
+		Tournament test2 = new Tournament();
+		test1.setName("test 1");
+		test1.setType(TournamentType.ROUND_ROBIN, 4, true);
+		test1.generatePlayers(6);
+		test1.schedule();
+		test2.setType(TournamentType.SWISS, 3, true);
+		test2.setName("test 2");
+		test2.generatePlayers(7);
+		cube = null;
+		try {
+			cube = TournamentManager.getCube();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cube.addTournament(test1);
+		cube.addTournament(test2);
+		cube.addPlayer(new Player("id1", "Alena"));
+		cube.addPlayer(new Player("id2", "David"));
+		for (int i = 3; i < 20; i++) {
+			cube.addPlayer(new Player("id" + i, "Name " + i));
+		}
 	}
 
 	private void hookContextMenu() {
@@ -148,52 +178,104 @@ public class TNavigatorView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
+		//manager.add(addTour);
+		//manager.add(deleteTour);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		manager.add(addTour);
+		manager.add(deleteTour);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		manager.add(addTour);
+		manager.add(deleteTour);
+		manager.add(sortAlpha);
 	}
 
 	private void makeActions() {
-		action1 = new Action() {
+		addTour = new Action() {
 			@Override
 			public void run() {
-				showMessage("Action 1 executed");
+				addTournament();
 			}
 		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-		        ISharedImages.IMG_OBJS_INFO_TSK));
-		action2 = new Action() {
+		addTour.setText("Add Tournament");
+		addTour.setImageDescriptor(Activator.getImageDescriptor("icons/add.gif"));
+		deleteTour = new Action() {
 			@Override
 			public void run() {
-				showMessage("Action 2 executed");
+				deleteTournaments();
 			}
 		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-		        ISharedImages.IMG_OBJS_INFO_TSK));
+		deleteTour.setText("Remove Tournament");
+		deleteTour.setImageDescriptor(Activator.getImageDescriptor("icons/delete.gif"));
+		sortAlpha = new Action("Sort Aphabetically", Action.AS_CHECK_BOX) {
+			{
+				setImageDescriptor(Activator.getImageDescriptor("icons/sort.gif"));
+			}
+
+			@Override
+			public void run() {
+				if (sortAlpha.isChecked())
+					viewer.setComparator(alphaSorter);
+				else
+					viewer.setComparator(dateSorter);
+			}
+		};
 		doubleClickAction = new Action() {
 			@Override
 			public void run() {
-				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				showMessage("Double-click detected on " + obj.toString());
+				try {
+					getSite().getWorkbenchWindow().getActivePage().showView(TournamentView.ID);
+				} catch (PartInitException e) {
+					showMessage(e.getMessage());
+				}
 			}
 		};
+	}
+
+	/**
+	 * 
+	 */
+	protected void deleteTournaments() {
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+		if (selection.isEmpty())
+			return;
+		boolean delQuestion = MessageDialog.openQuestion(viewer.getControl().getShell(), "?", "You are deleting "
+		        + selection.size() + " tournaments.");
+		if (delQuestion) {
+			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+				Tournament t = (Tournament) iterator.next();
+				cube.remove(t);
+				try {
+					TournamentManager.save(t);
+					viewer.refresh(true);
+				} catch (Exception e) {
+					showMessage(e.getMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	protected void addTournament() {
+		InputDialog dialog = new InputDialog(getSite().getShell(), "Toutnament name", "Enter a tournament name", "",
+		        null);
+		if (dialog.open() == Dialog.OK) {
+			Tournament t = new Tournament(dialog.getValue());
+			cube.addTournament(t);
+			try {
+				TournamentManager.save(t);
+				viewer.refresh(true);
+			} catch (Exception e) {
+				showMessage(e.getMessage());
+			}
+		}
 	}
 
 	private void hookDoubleClickAction() {

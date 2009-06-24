@@ -186,6 +186,7 @@ public class OverviewSection extends TSectionPart {
 	protected void updateTournament() {
 		try {
 			tournament.setType(getType(), getRounds(), hasDraft());
+			save();
 		} catch (Exception e) {
 			MessageDialog.openError(new Shell(), "Error", e.getMessage());
 		}

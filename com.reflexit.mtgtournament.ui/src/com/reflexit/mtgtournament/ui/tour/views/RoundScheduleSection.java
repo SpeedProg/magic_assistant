@@ -92,7 +92,7 @@ public class RoundScheduleSection extends TSectionPart {
 				if (d.isDrop2()) {
 					tinfo.getRound().getTournament().playerDropped(tinfo.getP2().getPlayer());
 				}
-				viewer.refresh(true);
+				modelUpdated();
 			}
 		}
 	}
@@ -262,6 +262,11 @@ public class RoundScheduleSection extends TSectionPart {
 		TreeColumn col = new TreeColumn(viewer.getTree(), SWT.NONE, i);
 		col.setText(name);
 		col.setWidth(width);
+	}
+
+	protected void modelUpdated() {
+		save();
+		reload();
 	}
 
 	@Override

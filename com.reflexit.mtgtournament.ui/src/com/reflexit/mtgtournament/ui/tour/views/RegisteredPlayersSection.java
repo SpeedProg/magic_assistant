@@ -72,7 +72,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 					Player player = dialog.getPlayer();
 					if (player != null) {
 						tournament.addPlayer(player);
-						plComp.getViewer().refresh(true);
+						modelUpdated();
 					}
 				}
 			}
@@ -99,7 +99,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 					String value = inputDialog.getValue();
 					int num = Integer.parseInt(value);
 					tournament.generatePlayers(num);
-					plComp.getViewer().refresh(true);
+					modelUpdated();
 				}
 			}
 		});
@@ -110,7 +110,6 @@ public class RegisteredPlayersSection extends TSectionPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) plComp.getViewer().getSelection();
 				deletePlayers(sel.toList());
-				plComp.getViewer().refresh(true);
 			}
 		});
 	}
@@ -122,6 +121,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 				tournament.removePlayer((Player) object);
 			}
 		}
+		modelUpdated();
 	}
 
 	@Override
@@ -137,5 +137,10 @@ public class RegisteredPlayersSection extends TSectionPart {
 		}
 		plComp.getViewer().setInput(input);
 		return true;
+	}
+
+	protected void modelUpdated() {
+		save();
+		plComp.getViewer().refresh(true);
 	}
 }
