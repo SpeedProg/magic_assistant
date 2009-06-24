@@ -159,7 +159,7 @@
             commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="NUMPAD_SUB">
+            sequence="NUMPAD_SUBTRACT">
       </key>
       <key
             commandId="com.reflexit.magiccards.ui.commands.increaseCount"
