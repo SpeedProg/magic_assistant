@@ -11,4 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.reflexit.mtgtournament.core,
- com.reflexit.mtgtournament.core.model
+ com.reflexit.mtgtournament.core.edit,
+ com.reflexit.mtgtournament.core.model,
+ com.reflexit.mtgtournament.core.schedule,
+ com.reflexit.mtgtournament.core.xml

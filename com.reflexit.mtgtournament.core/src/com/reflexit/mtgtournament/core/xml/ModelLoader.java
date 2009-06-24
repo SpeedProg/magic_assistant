@@ -20,13 +20,24 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
+import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
+import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
+import com.reflexit.mtgtournament.core.model.Round;
+import com.reflexit.mtgtournament.core.model.TableInfo;
+import com.reflexit.mtgtournament.core.model.Tournament;
 import com.thoughtworks.xstream.XStream;
 
 public class ModelLoader {
 	public transient static XStream xstream;
 	static {
 		xstream = new XStream();
-		//xstream.alias("mc", MagicCard.class);
+		xstream.alias("player", Player.class);
+		xstream.alias("pRound", PlayerRoundInfo.class);
+		xstream.alias("pTour", PlayerTourInfo.class);
+		xstream.alias("table", TableInfo.class);
+		xstream.alias("round", Round.class);
+		xstream.alias("tournament", Tournament.class);
 		xstream.setClassLoader(ModelLoader.class.getClassLoader());
 	}
 

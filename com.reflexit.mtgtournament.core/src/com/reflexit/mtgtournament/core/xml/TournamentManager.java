@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Cube;
 import com.reflexit.mtgtournament.core.model.Player;
@@ -38,12 +39,32 @@ public class TournamentManager {
 			IResource[] members = getProject().members();
 			for (IResource resource : members) {
 				if (resource.getFullPath().lastSegment().endsWith(".tour.xml")) {
-					Tournament ts = (Tournament) loadFromFile(resource.getFullPath().toOSString(), new Tournament());
+					Tournament ts = (Tournament) loadFromFile(resource.getProjectRelativePath().lastSegment(),
+					        new Tournament());
+					ts.updateLinks(); // restore transient fields
 					root.addTournament(ts);
 				}
 			}
 		}
 		return root;
+	}
+
+	public static void save() throws FileNotFoundException, CoreException {
+		List<Tournament> tournamens = root.getTournamens();
+		for (Object element : tournamens) {
+			Tournament tournament = (Tournament) element;
+			save(tournament);
+		}
+	}
+
+	public static void save(Tournament tournament) throws CoreException, FileNotFoundException {
+		String file = tournament.getName() + ".tour.xml";
+		saveToFile(file, tournament);
+	}
+
+	public static void saveToFile(String file, Object obj) throws CoreException, FileNotFoundException {
+		IFile newFile = getProject().getFile(file);
+		ModelLoader.save(obj, newFile.getLocation().toFile());
 	}
 
 	private static Object loadFromFile(String file, Object initObject) throws CoreException, FileNotFoundException,

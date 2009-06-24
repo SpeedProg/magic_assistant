@@ -20,16 +20,18 @@ import com.reflexit.mtgtournament.core.model.TableInfo;
  */
 public class ComAddTable implements ITCommand {
 	private TableInfo tableInfo;
+	private Round round;
 
 	public ComAddTable(Round round, int table, Player p1, Player p2) {
 		super();
 		PlayerRoundInfo pr1 = round.makePlayer(p1);
 		PlayerRoundInfo pr2 = round.makePlayer(p2);
-		tableInfo = new TableInfo(table, round, pr1, pr2);
+		this.round = round;
+		tableInfo = new TableInfo(table, pr1, pr2);
 	}
 
 	public boolean execute() {
-		tableInfo.getRound().addTable(tableInfo);
+		round.addTable(tableInfo);
 		return true;
 	}
 

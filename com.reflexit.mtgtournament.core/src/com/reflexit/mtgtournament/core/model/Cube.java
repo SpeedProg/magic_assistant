@@ -23,6 +23,8 @@ public class Cube {
 	}
 
 	public void addTournament(Tournament ts) {
+		if (tournaments.contains(ts))
+			return;
 		tournaments.add(ts);
 		ts.setCube(this);
 	}
@@ -33,5 +35,19 @@ public class Cube {
 
 	public Collection<Player> getPlayers() {
 		return players;
+	}
+
+	/**
+	 * @return
+	 */
+	public List<Tournament> getTournamens() {
+		return tournaments;
+	}
+
+	/**
+	 * @param t
+	 */
+	public void remove(Tournament t) {
+		tournaments.remove(t);
 	}
 }

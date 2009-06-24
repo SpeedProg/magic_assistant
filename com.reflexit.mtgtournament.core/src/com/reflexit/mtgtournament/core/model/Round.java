@@ -44,6 +44,7 @@ public class Round {
 
 	public void addTable(TableInfo t) {
 		tables.add(t);
+		t.setRound(this);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class Round {
 	public void printSchedule(PrintStream st) {
 		for (Object element : tables) {
 			TableInfo table = (TableInfo) element;
-			st.println("Table " + table.table + ": " + table.p1.p + " vs " + table.p2.p);
+			st.println("Table " + table.getTableNumber() + ": " + table.getP1().p + " vs " + table.getP2().p);
 		}
 	}
 
@@ -152,5 +153,21 @@ public class Round {
 		if (dateStart == null)
 			dateStart = dateEnd;
 		getTournament().updateStandings();
+	}
+
+	/**
+	 * 
+	 */
+	public void updateLinks() {
+		for (TableInfo t : tables) {
+			t.setRound(this);
+		}
+	}
+
+	/**
+	 * @param i
+	 */
+	public void setNumber(int i) {
+		this.number = i;
 	}
 }

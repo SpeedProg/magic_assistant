@@ -11,22 +11,21 @@
 package com.reflexit.mtgtournament.core.model;
 
 public class TableInfo {
-	transient int table;
-	transient Round round;
-	PlayerRoundInfo p1;
-	PlayerRoundInfo p2;
+	private transient Round round;
+	private int table;
+	private PlayerRoundInfo p1;
+	private PlayerRoundInfo p2;
 
-	public TableInfo(int table, Round round, PlayerRoundInfo p1, PlayerRoundInfo p2) {
+	public TableInfo(int table, PlayerRoundInfo p1, PlayerRoundInfo p2) {
 		super();
 		this.table = table;
-		this.round = round;
-		this.p1 = p1;
-		this.p2 = p2;
+		this.setP1(p1);
+		this.setP2(p2);
 	}
 
 	@Override
 	public String toString() {
-		return table + ": " + p1 + " vs " + p2;
+		return table + ": " + getP1() + " vs " + getP2();
 	}
 
 	public int getTableNumber() {
@@ -44,4 +43,25 @@ public class TableInfo {
 	public PlayerRoundInfo getP2() {
 		return p2;
 	}
+
+	/**
+	 * @param round the round to set
+	 */
+	public void setRound(Round round) {
+		this.round = round;
+	}
+
+	/**
+     * @param p1 the p1 to set
+     */
+    public void setP1(PlayerRoundInfo p1) {
+	    this.p1 = p1;
+    }
+
+	/**
+     * @param p2 the p2 to set
+     */
+    public void setP2(PlayerRoundInfo p2) {
+	    this.p2 = p2;
+    }
 }

@@ -33,6 +33,26 @@ public class Tournament {
 	public Tournament() {
 	}
 
+	public Tournament(String name) {
+		this.name = name;
+		this.type = TournamentType.ROUND_ROBIN;
+		this.numberOfRounds = 0;
+		this.draftRound = true;
+	}
+
+	public void updateLinks() {
+		int i = 0;
+		for (Round r : rounds) {
+			r.setTournament(this);
+			r.setNumber(i);
+			r.updateLinks();
+			i++;
+		}
+		for (PlayerTourInfo pt : players) {
+			pt.setTournament(this);
+		}
+	}
+
 	/**
 	 * 
 	 * @param type -type of the scheduler, @see {@link TournamentType}
@@ -93,9 +113,9 @@ public class Tournament {
 		List<TableInfo> tables = r.getTables();
 		for (Object element : tables) {
 			TableInfo tableInfo = (TableInfo) element;
-			if (tableInfo.p1.p == p1 && tableInfo.p2.p == p2)
+			if (tableInfo.getP1().p == p1 && tableInfo.getP2().p == p2)
 				return true;
-			if (tableInfo.p1.p == p2 && tableInfo.p2.p == p1)
+			if (tableInfo.getP1().p == p2 && tableInfo.getP2().p == p1)
 				return true;
 		}
 		return false;
@@ -130,8 +150,7 @@ public class Tournament {
 	}
 
 	public void addRound(Round r) {
-		if (r != null)
-			r.setTournament(this);
+		r.setTournament(this);
 		rounds.add(r);
 	}
 
@@ -268,5 +287,29 @@ public class Tournament {
 	 */
 	public int getNumberOfPlayers() {
 		return players.size();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Tournament))
+			return false;
+		Tournament other = (Tournament) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+			return super.equals(obj);
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 }
