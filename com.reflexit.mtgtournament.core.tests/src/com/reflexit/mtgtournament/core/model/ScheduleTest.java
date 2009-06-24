@@ -15,8 +15,8 @@ public class ScheduleTest extends TestCase {
 			List<TableInfo> tables = r.getTables();
 			for (Object element : tables) {
 				TableInfo tableInfo = (TableInfo) element;
-				Player p1 = tableInfo.p1.p;
-				Player p2 = tableInfo.p2.p;
+				Player p1 = tableInfo.getP1().p;
+				Player p2 = tableInfo.getP2().p;
 				boolean has = tour.hasPlayed(p1, p2, i - 1);
 				if (has) {
 					if (i != tP)
