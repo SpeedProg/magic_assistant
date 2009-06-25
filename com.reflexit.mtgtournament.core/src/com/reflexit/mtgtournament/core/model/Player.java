@@ -18,6 +18,14 @@ public class Player {
 	private int points = 0;
 	private int games = 0;
 
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
 	public Player(String id, String name) {
 		this.id = id;
 		this.name = name;
@@ -76,4 +84,32 @@ public class Player {
 	public int getGames() {
 		return games;
 	}
+
+	/**
+	 * @param text
+	 */
+	public void setName(String text) {
+		name = text;
+	}
+
+	/**
+	 * @param text
+	 */
+	public void setId(String text) {
+		this.id = text;
+	}
+
+	/**
+     * @param games the games to set
+     */
+    public void setGames(int games) {
+	    this.games = games;
+    }
+
+	/**
+     * @param points the points to set
+     */
+    public void setPoints(int points) {
+	    this.points = points;
+    }
 }

@@ -20,12 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Cube;
-import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerList;
 import com.reflexit.mtgtournament.core.model.Tournament;
 
 public class TournamentManager {
@@ -34,8 +32,8 @@ public class TournamentManager {
 	public static synchronized Cube getCube() throws IOException, CoreException {
 		if (root == null) {
 			root = new Cube();
-			Collection<Player> players = (Collection<Player>) loadFromFile("players.xml", new ArrayList<Player>());
-			root.addAllPlayers(players);
+			PlayerList players = (PlayerList) loadFromFile("players.xml", new PlayerList());
+			root.getPlayerList().addAllPlayers(players.getPlayers());
 			IResource[] members = getProject().members();
 			for (IResource resource : members) {
 				if (resource.getFullPath().lastSegment().endsWith(".tour.xml")) {
@@ -55,6 +53,12 @@ public class TournamentManager {
 			Tournament tournament = (Tournament) element;
 			save(tournament);
 		}
+		save(root.getPlayerList());
+	}
+
+	public static void save(PlayerList list) throws CoreException, FileNotFoundException {
+		String file = "players.xml";
+		saveToFile(file, list);
 	}
 
 	public static void save(Tournament tournament) throws CoreException, FileNotFoundException {
@@ -70,7 +74,7 @@ public class TournamentManager {
 	private static Object loadFromFile(String file, Object initObject) throws CoreException, FileNotFoundException,
 	        IOException {
 		IResource resource = getProject().findMember(file);
-		if (resource == null) {
+		if (resource == null || !resource.exists()) {
 			IFile newFile = getProject().getFile(file);
 			ModelLoader.save(initObject, newFile.getLocation().toFile());
 			return initObject;

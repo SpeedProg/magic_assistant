@@ -11,15 +11,14 @@
 package com.reflexit.mtgtournament.core.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Cube {
-	Collection<Player> players = new ArrayList<Player>();
-	List<Tournament> tournaments = new ArrayList<Tournament>();
+	private PlayerList playerList = new PlayerList();
+	private List<Tournament> tournaments = new ArrayList<Tournament>();
 
-	public void addAllPlayers(Collection<Player> players) {
-		this.players.addAll(players);
+	public PlayerList getPlayerList() {
+		return playerList;
 	}
 
 	public void addTournament(Tournament ts) {
@@ -27,14 +26,6 @@ public class Cube {
 			return;
 		tournaments.add(ts);
 		ts.setCube(this);
-	}
-
-	public void addPlayer(Player player) {
-		players.add(player);
-	}
-
-	public Collection<Player> getPlayers() {
-		return players;
 	}
 
 	/**
@@ -47,7 +38,7 @@ public class Cube {
 	/**
 	 * @param t
 	 */
-	public void remove(Tournament t) {
+	public void removeTournament(Tournament t) {
 		tournaments.remove(t);
 	}
 }

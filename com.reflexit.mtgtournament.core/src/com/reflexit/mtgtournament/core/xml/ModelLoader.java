@@ -21,6 +21,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerList;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -38,6 +39,7 @@ public class ModelLoader {
 		xstream.alias("table", TableInfo.class);
 		xstream.alias("round", Round.class);
 		xstream.alias("tournament", Tournament.class);
+		xstream.alias("playerList", PlayerList.class);
 		xstream.setClassLoader(ModelLoader.class.getClassLoader());
 	}
 

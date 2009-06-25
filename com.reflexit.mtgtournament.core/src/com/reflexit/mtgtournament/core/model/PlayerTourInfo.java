@@ -14,7 +14,7 @@ import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 
 public class PlayerTourInfo {
 	transient private Tournament tournament;
-	private Player p;
+	private Player player;
 	private int win = 0;
 	private int draw = 0;
 	private int loose = 0;
@@ -24,16 +24,39 @@ public class PlayerTourInfo {
 	private int place;
 
 	public PlayerTourInfo(Player player) {
-		this.p = player;
+		this.player = player;
 	}
 
 	@Override
 	public String toString() {
-		return p + " " + points;
+		return player + " " + points;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof PlayerTourInfo))
+			return false;
+		PlayerTourInfo other = (PlayerTourInfo) obj;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
+		return true;
 	}
 
 	public Player getPlayer() {
-		return p;
+		return player;
 	}
 
 	public int getLoose() {

@@ -171,14 +171,17 @@ public class Tournament {
 		return rounds;
 	}
 
-	public void removePlayer(Player object) {
+	public void removePlayer(PlayerTourInfo object) {
 		players.remove(object);
 	}
 
-	public void addPlayer(Player player) {
+	public boolean addPlayer(Player player) {
 		PlayerTourInfo playerTourInfo = new PlayerTourInfo(player);
+		if (players.contains(playerTourInfo))
+			return false;
 		players.add(playerTourInfo);
 		playerTourInfo.setTournament(this);
+		return true;
 	}
 
 	public void setCube(Cube cube) {
