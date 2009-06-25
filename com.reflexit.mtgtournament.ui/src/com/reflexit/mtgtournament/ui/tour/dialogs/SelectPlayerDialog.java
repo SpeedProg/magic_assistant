@@ -10,25 +10,35 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.dialogs;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import java.io.FileNotFoundException;
+
 import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerList;
+import com.reflexit.mtgtournament.core.xml.TournamentManager;
 import com.reflexit.mtgtournament.ui.tour.Activator;
 import com.reflexit.mtgtournament.ui.tour.views.PlayersListComposite;
 
@@ -104,6 +114,35 @@ public class SelectPlayerDialog extends TrayDialog {
 		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).hint(SWT.DEFAULT,
 		        300).create());
 		playersListComposite.getViewer().setInput(input);
+		Button add = new Button(comp, SWT.PUSH);
+		add.setText("New Player...");
+		add.setLayoutData(hor.create());
+		add.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				NewPlayerDialog dialog = new NewPlayerDialog(getShell());
+				if (dialog.open() == Dialog.OK) {
+					Player player = new Player(dialog.getPin(), dialog.getName());
+					if (input instanceof PlayerList) {
+						PlayerList list = ((PlayerList) input);
+						list.addPlayer(player);
+						try {
+							TournamentManager.save(list);
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (CoreException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						playersListComposite.getViewer().setInput(list);
+						StructuredSelection selection = new StructuredSelection(player);
+						setSelection(selection);
+						playersListComposite.getViewer().setSelection(selection);
+					}
+				}
+			}
+		});
 		return comp;
 	}
 

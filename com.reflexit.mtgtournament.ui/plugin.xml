@@ -16,10 +16,19 @@
             id="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView">
       </view>
       <view
+            allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
             id="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
             name="Tournament"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.tour.views.PlayersView"
+            id="com.reflexit.mtgtournament.ui.tour.views.PlayersView"
+            name="Players"
             restorable="true">
       </view>
    </extension>

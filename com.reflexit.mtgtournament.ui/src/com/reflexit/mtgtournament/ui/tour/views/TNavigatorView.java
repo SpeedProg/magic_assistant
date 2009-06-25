@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -41,14 +40,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Cube;
-import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.Tournament;
-import com.reflexit.mtgtournament.core.model.TournamentType;
 import com.reflexit.mtgtournament.core.xml.TournamentManager;
 import com.reflexit.mtgtournament.ui.tour.Activator;
 
@@ -130,31 +126,12 @@ public class TNavigatorView extends ViewPart {
 	}
 
 	void createModel() {
-		Tournament test1 = new Tournament();
-		Tournament test2 = new Tournament();
-		test1.setName("test 1");
-		test1.setType(TournamentType.ROUND_ROBIN, 4, true);
-		test1.generatePlayers(6);
-		test1.schedule();
-		test2.setType(TournamentType.SWISS, 3, true);
-		test2.setName("test 2");
-		test2.generatePlayers(7);
 		cube = null;
 		try {
 			cube = TournamentManager.getCube();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		cube.addTournament(test1);
-		cube.addTournament(test2);
-		cube.addPlayer(new Player("id1", "Alena"));
-		cube.addPlayer(new Player("id2", "David"));
-		for (int i = 3; i < 20; i++) {
-			cube.addPlayer(new Player("id" + i, "Name " + i));
+		} catch (Exception e) {
+			showMessage("Cannot load: " + e.getMessage());
+			cube = new Cube();
 		}
 	}
 
@@ -249,7 +226,7 @@ public class TNavigatorView extends ViewPart {
 		if (delQuestion) {
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 				Tournament t = (Tournament) iterator.next();
-				cube.remove(t);
+				cube.removeTournament(t);
 				try {
 					TournamentManager.save(t);
 					viewer.refresh(true);

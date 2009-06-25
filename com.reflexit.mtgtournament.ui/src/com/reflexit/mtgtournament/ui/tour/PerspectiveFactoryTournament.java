@@ -10,6 +10,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseNewWizardMenu;
 
+import com.reflexit.mtgtournament.ui.tour.views.PlayersView;
 import com.reflexit.mtgtournament.ui.tour.views.TNavigatorView;
 import com.reflexit.mtgtournament.ui.tour.views.TournamentView;
 
@@ -25,7 +26,9 @@ public class PerspectiveFactoryTournament implements IPerspectiveFactory {
 		layout.addShowViewShortcut(TNavigatorView.ID);
 		right.addView(TournamentView.ID);
 		layout.addShowViewShortcut(TournamentView.ID);
-		//		layout.getViewLayout(MagicDbView.ID).setCloseable(false);
+		right.addView(PlayersView.ID);
+		layout.addShowViewShortcut(PlayersView.ID);
+		//layout.getViewLayout(PlayersView.ID).setCloseable(false);
 	}
 
 	/**

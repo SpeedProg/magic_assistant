@@ -25,8 +25,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.reflexit.mtgtournament.core.model.Cube;
 import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerList;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 
@@ -47,8 +47,8 @@ public class PlayersListComposite extends Composite {
 				Tournament t = (Tournament) parent;
 				return t.getPlayersInfo().toArray();
 			}
-			if (parent instanceof Cube) {
-				return ((Cube) parent).getPlayers().toArray();
+			if (parent instanceof PlayerList) {
+				return ((PlayerList) parent).getPlayers().toArray();
 			}
 			return new Object[0];
 		}

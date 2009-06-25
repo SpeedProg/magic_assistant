@@ -11,8 +11,6 @@
 package com.reflexit.mtgtournament.ui.tour.views;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,22 +28,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Player;
-import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
-import com.reflexit.mtgtournament.core.model.Tournament;
-import com.reflexit.mtgtournament.ui.tour.dialogs.SelectPlayerDialog;
+import com.reflexit.mtgtournament.core.model.PlayerList;
+import com.reflexit.mtgtournament.ui.tour.dialogs.NewPlayerDialog;
 
-public class RegisteredPlayersSection extends TSectionPart {
-	private Tournament tournament;
+public class MasterPlayersSection extends TSectionPart {
+	private PlayerList plist;
 	private PlayersListComposite plComp;
 
-	public RegisteredPlayersSection(ManagedForm managedForm) {
+	public MasterPlayersSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
 		createBody();
 	}
 
 	private void createBody() {
 		Section section = this.getSection();
-		section.setText("Registered Players and Tournament Standings");
+		section.setText("Players Listing");
 		//section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
@@ -53,13 +50,16 @@ public class RegisteredPlayersSection extends TSectionPart {
 		sectionClient.setLayout(layout);
 		// players table
 		plComp = new PlayersListComposite(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER, true);
-		plComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		plComp.setLayoutData(layoutData);
 		// buttons
 		createButtons(sectionClient);
 	}
 
 	protected void createButtons(Composite sectionClient) {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
+		buttons.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.BEGINNING)
+		        .create());
 		GridLayout layout = new GridLayout(1, true);
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
@@ -68,40 +68,13 @@ public class RegisteredPlayersSection extends TSectionPart {
 		add.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SelectPlayerDialog dialog = new SelectPlayerDialog(plComp.getShell());
-				dialog.setInput(tournament.getCube().getPlayerList());
+				NewPlayerDialog dialog = new NewPlayerDialog(plComp.getShell());
 				if (dialog.open() == Dialog.OK) {
-					Player player = dialog.getPlayer();
+					Player player = new Player(dialog.getPin(), dialog.getName());
 					if (player != null) {
-						tournament.addPlayer(player);
+						plist.addPlayer(player);
 						modelUpdated();
 					}
-				}
-			}
-		});
-		Button gen = toolkit.createButton(buttons, "Generate...", SWT.PUSH);
-		gen.setLayoutData(hor.create());
-		gen.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				InputDialog inputDialog = new InputDialog(plComp.getViewer().getControl().getShell(), "Enter Players",
-				        "Enter number of players to generate", "4", new IInputValidator() {
-					        public String isValid(String newText) {
-						        try {
-							        int x = Integer.parseInt(newText);
-							        if (x <= 0)
-								        return "No players?";
-						        } catch (NumberFormatException e) {
-							        return "Invalid number";
-						        }
-						        return null;
-					        }
-				        });
-				if (inputDialog.open() == Dialog.OK) {
-					String value = inputDialog.getValue();
-					int num = Integer.parseInt(value);
-					tournament.generatePlayers(num);
-					modelUpdated();
 				}
 			}
 		});
@@ -119,8 +92,8 @@ public class RegisteredPlayersSection extends TSectionPart {
 	protected void deletePlayers(List list) {
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
-			if (object instanceof PlayerTourInfo) {
-				tournament.removePlayer((PlayerTourInfo) object);
+			if (object instanceof Player) {
+				plist.removePlayer((Player) object);
 			}
 		}
 		modelUpdated();
@@ -134,16 +107,23 @@ public class RegisteredPlayersSection extends TSectionPart {
 
 	@Override
 	public boolean setFormInput(Object input) {
-		if (input instanceof Tournament) {
-			this.tournament = (Tournament) input;
+		if (input instanceof PlayerList) {
+			this.plist = (PlayerList) input;
+			if (plist.size() > 20) {
+				plComp.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 400).create());
+			} else {
+				plComp.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+			}
+			plComp.getViewer().setInput(input);
+			getManagedForm().reflow(true);
 		}
-		plComp.getViewer().setInput(input);
 		return true;
 	}
 
 	protected void modelUpdated() {
 		save();
 		plComp.getViewer().refresh(true);
+		getManagedForm().reflow(true);
 	}
 
 	/**

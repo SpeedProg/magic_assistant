@@ -1,9 +1,5 @@
 * Tournament Management
-** Add
-** Delete
 ** Rename
-* Persistence
-** Load/Store to xml
 * Print
 ** Schedule
 ** Standings
