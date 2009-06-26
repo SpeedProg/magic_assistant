@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Stack;
 
-import com.reflexit.mtgtournament.core.edit.ComAddTable;
+import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -32,7 +32,7 @@ public class SwissSchedule extends AbstractScheduler {
 		ArrayList<PlayerTourInfo> players;
 		int table;
 		int cand;
-		public ComAddTable command;
+		public CmdAddTable command;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class SwissSchedule extends AbstractScheduler {
 				Player p2 = pti2.getPlayer();
 				if (!t.hasPlayed(p1, p2, r.getNumber() - 1)) {
 					// command to schedule a table
-					ComAddTable com = new ComAddTable(r, table, p1, p2);
+					CmdAddTable com = new CmdAddTable(r, table, p1, p2);
 					// save backtracking info
 					StateInfo info = new StateInfo();
 					info.players = (ArrayList<PlayerTourInfo>) players.clone();
@@ -98,7 +98,7 @@ public class SwissSchedule extends AbstractScheduler {
 		for (Iterator iterator = unmatched.iterator(); iterator.hasNext();) {
 			PlayerTourInfo pti1 = (PlayerTourInfo) iterator.next();
 			PlayerTourInfo pti2 = (PlayerTourInfo) iterator.next();
-			ComAddTable com = new ComAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
+			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
 			com.execute();
 			//System.err.println("Scheduled (conf): " + pti1.getPlayer() + " vs " + pti2.getPlayer());
 		}

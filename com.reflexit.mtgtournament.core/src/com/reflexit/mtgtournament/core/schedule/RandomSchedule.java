@@ -13,7 +13,7 @@ package com.reflexit.mtgtournament.core.schedule;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.reflexit.mtgtournament.core.edit.ComAddTable;
+import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -40,7 +40,7 @@ public class RandomSchedule extends AbstractScheduler implements IScheduler {
 		while (players.size() > 1) {
 			PlayerTourInfo pti1 = players.get(0);
 			PlayerTourInfo pti2 = players.get(1);
-			ComAddTable com = new ComAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
+			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
 			com.execute();
 			table++;
 			players.remove(pti1);

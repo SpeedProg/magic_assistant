@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.reflexit.mtgtournament.core.edit.ComAddTable;
+import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -91,7 +91,7 @@ public class RoundRobinSchedule implements IScheduler {
 			}
 			for (int j = 0; j < tables; j++) {
 				int n = (j + i) % tables;
-				ComAddTable comAddTable = new ComAddTable(r, j, array.get(positions[n]), array
+				CmdAddTable comAddTable = new CmdAddTable(r, j, array.get(positions[n]), array
 				        .get(positions[n + tables]));
 				comAddTable.execute();
 			}

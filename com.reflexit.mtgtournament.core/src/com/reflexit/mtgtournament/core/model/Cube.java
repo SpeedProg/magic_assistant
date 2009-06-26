@@ -21,11 +21,12 @@ public class Cube {
 		return playerList;
 	}
 
-	public void addTournament(Tournament ts) {
+	public boolean addTournament(Tournament ts) {
 		if (tournaments.contains(ts))
-			return;
+			return false;
 		tournaments.add(ts);
 		ts.setCube(this);
+		return true;
 	}
 
 	/**

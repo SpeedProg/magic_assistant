@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.reflexit.mtgtournament.core.edit.ComAddTable;
+import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -81,7 +81,7 @@ public class EliminationScheduler extends AbstractScheduler {
 		while (players.size() > 0) {
 			PlayerTourInfo pti1 = players.get(0);
 			PlayerTourInfo pti2 = players.get(players.size() - 1);
-			ComAddTable com = new ComAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
+			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
 			com.execute();
 			table++;
 			players.remove(pti1);

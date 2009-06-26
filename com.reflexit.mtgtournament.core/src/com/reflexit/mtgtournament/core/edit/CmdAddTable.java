@@ -18,11 +18,11 @@ import com.reflexit.mtgtournament.core.model.TableInfo;
 /**
  * Command to add Round Table Scheduling into the round
  */
-public class ComAddTable implements ITCommand {
+public class CmdAddTable implements ITCommand {
 	private TableInfo tableInfo;
 	private Round round;
 
-	public ComAddTable(Round round, int table, Player p1, Player p2) {
+	public CmdAddTable(Round round, int table, Player p1, Player p2) {
 		super();
 		PlayerRoundInfo pr1 = round.makePlayer(p1);
 		PlayerRoundInfo pr2 = round.makePlayer(p2);

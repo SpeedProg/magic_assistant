@@ -16,7 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Round {
+import com.reflexit.mtgtournament.core.edit.CmdCommitRounds;
+
+public class Round implements Cloneable {
 	private transient Tournament tournament;
 	private transient int number;
 	private TournamentType type;
@@ -152,7 +154,7 @@ public class Round {
 		setDateEnd(Calendar.getInstance().getTime());
 		if (dateStart == null)
 			dateStart = dateEnd;
-		getTournament().updateStandings();
+		new CmdCommitRounds(tournament, getNumber()).execute();
 	}
 
 	/**
@@ -169,5 +171,29 @@ public class Round {
 	 */
 	public void setNumber(int i) {
 		this.number = i;
+	}
+
+	@Override
+	public Object clone() {
+		Round r;
+		try {
+			r = (Round) super.clone();
+			r.tables = (List<TableInfo>) ((ArrayList<TableInfo>) this.tables).clone();
+			return r;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * @param roundNew
+	 */
+	public void copyFrom(Round roundNew) {
+		this.tournament = roundNew.tournament;
+		this.number = roundNew.number;
+		this.type = roundNew.type;
+		this.tables = (List<TableInfo>) ((ArrayList<TableInfo>) roundNew.tables).clone();
+		this.dateStart = roundNew.dateStart;
+		this.dateEnd = roundNew.dateEnd;
 	}
 }

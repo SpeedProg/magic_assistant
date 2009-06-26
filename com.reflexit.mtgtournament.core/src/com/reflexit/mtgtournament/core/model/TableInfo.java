@@ -36,6 +36,14 @@ public class TableInfo {
 		return round;
 	}
 
+	public PlayerRoundInfo getPlayerInfo(int i) {
+		if (i == 1)
+			return p1;
+		if (i == 2)
+			return p2;
+		return null;
+	}
+
 	public PlayerRoundInfo getP1() {
 		return p1;
 	}
@@ -52,16 +60,16 @@ public class TableInfo {
 	}
 
 	/**
-     * @param p1 the p1 to set
-     */
-    public void setP1(PlayerRoundInfo p1) {
-	    this.p1 = p1;
-    }
+	 * @param p1 the p1 to set
+	 */
+	public void setP1(PlayerRoundInfo p1) {
+		this.p1 = p1;
+	}
 
 	/**
-     * @param p2 the p2 to set
-     */
-    public void setP2(PlayerRoundInfo p2) {
-	    this.p2 = p2;
-    }
+	 * @param p2 the p2 to set
+	 */
+	public void setP2(PlayerRoundInfo p2) {
+		this.p2 = p2;
+	}
 }
