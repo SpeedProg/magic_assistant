@@ -11,6 +11,7 @@
 package com.reflexit.mtgtournament.ui.tour.views;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -22,10 +23,13 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -41,6 +45,7 @@ import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
+import com.reflexit.mtgtournament.ui.tour.dialogs.CubePrintDialog;
 import com.reflexit.mtgtournament.ui.tour.dialogs.GameResultDialog;
 
 public class RoundScheduleSection extends TSectionPart {
@@ -240,8 +245,19 @@ public class RoundScheduleSection extends TSectionPart {
 		//section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(1, false);
 		sectionClient.setLayout(layout);
+		// print link
+		Button printButton = new Button(sectionClient, SWT.NONE);
+		printButton.setText("Print...");
+		printButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				CubePrintDialog dialog = new CubePrintDialog(getSection().getShell(), viewer.getInput());
+				dialog.open();
+			};
+		});
+		printButton.setLayoutData(GridDataFactory.defaultsFor(sectionClient).align(SWT.END, SWT.CENTER).create());
 		// players table
 		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
 		        | SWT.BORDER);

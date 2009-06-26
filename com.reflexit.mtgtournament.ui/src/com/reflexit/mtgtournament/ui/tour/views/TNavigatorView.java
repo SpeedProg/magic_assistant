@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -122,7 +123,10 @@ public class TNavigatorView extends ViewPart {
 		contributeToActionBars();
 		getViewSite().setSelectionProvider(viewer);
 		createModel();
-		viewer.setInput(getViewSite());
+		viewer.setInput(cube);
+		// we have at least one
+		Tournament t = cube.getTournamens().get(cube.getTournamens().size() - 1);
+		viewer.setSelection(new StructuredSelection(t));
 	}
 
 	void createModel() {
@@ -133,6 +137,8 @@ public class TNavigatorView extends ViewPart {
 			showMessage("Cannot load: " + e.getMessage());
 			cube = new Cube();
 		}
+		Tournament t = new Tournament("Tournament 1");
+		cube.addTournament(t);
 	}
 
 	private void hookContextMenu() {

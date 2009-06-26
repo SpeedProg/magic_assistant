@@ -11,6 +11,7 @@
 package com.reflexit.mtgtournament.ui.tour.views;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
@@ -63,5 +64,9 @@ public class TSectionPart extends SectionPart {
 	@Override
 	public boolean setFormInput(Object input) {
 		return super.setFormInput(input);
+	}
+
+	protected void showError(String message) {
+		MessageDialog.openError(getSection().getShell(), "Error", message);
 	}
 }

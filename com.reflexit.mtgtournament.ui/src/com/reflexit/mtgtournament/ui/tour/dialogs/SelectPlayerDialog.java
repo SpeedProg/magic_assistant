@@ -12,6 +12,7 @@ package com.reflexit.mtgtournament.ui.tour.dialogs;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -85,7 +86,7 @@ public class SelectPlayerDialog extends TrayDialog {
 		Composite comp = (Composite) super.createDialogArea(parent);
 		comp.setLayout(new GridLayout(2, false));
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
-		pinFilter = createLabelText(comp, "PIN:");
+		pinFilter = createLabelText(comp, "By PIN:");
 		pinFilter.setLayoutData(hor.create());
 		pinFilter.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -95,7 +96,7 @@ public class SelectPlayerDialog extends TrayDialog {
 				playersListComposite.getViewer().refresh();
 			}
 		});
-		nameFilter = createLabelText(comp, "Name:");
+		nameFilter = createLabelText(comp, "By Name:");
 		nameFilter.setLayoutData(hor.create());
 		nameFilter.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -109,6 +110,7 @@ public class SelectPlayerDialog extends TrayDialog {
 		playersListComposite.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				setSelection((IStructuredSelection) event.getSelection());
+				updateButtonsEnablement();
 			}
 		});
 		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).hint(SWT.DEFAULT,
@@ -144,6 +146,20 @@ public class SelectPlayerDialog extends TrayDialog {
 			}
 		});
 		return comp;
+	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Control con = super.createContents(parent);
+		updateButtonsEnablement();
+		return con;
+	}
+
+	/**
+	 * 
+	 */
+	protected void updateButtonsEnablement() {
+		getButton(IDialogConstants.OK_ID).setEnabled(!(sel == null || sel.isEmpty()));
 	}
 
 	public void setInput(Object input) {

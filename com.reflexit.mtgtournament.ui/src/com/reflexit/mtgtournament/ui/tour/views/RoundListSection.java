@@ -10,12 +10,15 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -23,10 +26,13 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -37,6 +43,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -44,11 +51,16 @@ import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
+import com.reflexit.mtgtournament.ui.tour.dialogs.RoundEditorDialog;
 
 public class RoundListSection extends TSectionPart {
 	private static final int SCHEDULE_COL = 1;
 	private static final int ACTION_COL = 2;
 	private TableViewer viewer;
+	private Tournament tournament;
+	private Button add;
+	private Button del;
+	private Button edit;
 
 	public RoundListSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -164,7 +176,7 @@ public class RoundListSection extends TSectionPart {
 		case IN_PROGRESS:
 			return "End";
 		case CLOSED:
-			return "Reset";
+			return "";
 		default:
 			return null;
 		}
@@ -193,6 +205,112 @@ public class RoundListSection extends TSectionPart {
 		viewer.setContentProvider(new ViewContentProvider());
 		ViewLabelProvider labelProvider = new ViewLabelProvider();
 		viewer.setLabelProvider(labelProvider);
+		createButtons(sectionClient);
+		updateEnablement();
+	}
+
+	/**
+	 * 
+	 */
+	private void updateEnablement() {
+		boolean enabled = false;
+		if (tournament != null) {
+			if (tournament.isScheduled())
+				enabled = true;
+		}
+		add.setEnabled(enabled);
+		del.setEnabled(enabled);
+	}
+
+	protected void createButtons(Composite sectionClient) {
+		Composite buttons = new Composite(sectionClient, SWT.NONE);
+		GridLayout layout = new GridLayout(1, true);
+		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
+		buttons.setLayout(layout);
+		add = toolkit.createButton(buttons, "Add", SWT.PUSH);
+		add.setLayoutData(hor.create());
+		add.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent ev) {
+				try {
+					addRound();
+				} catch (Exception e) {
+					showError(e.getMessage());
+				}
+				modelUpdated();
+			}
+		});
+		edit = toolkit.createButton(buttons, "Edit...", SWT.PUSH);
+		edit.setLayoutData(hor.create());
+		edit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent ev) {
+				try {
+					IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+					editRounds(sel.toList());
+				} catch (Exception e) {
+					showError(e.getMessage());
+				}
+				modelUpdated();
+			}
+		});
+		del = toolkit.createButton(buttons, "Remove", SWT.PUSH);
+		del.setLayoutData(hor.create());
+		del.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent ev) {
+				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+				try {
+					deleteRounds(sel.toList());
+				} catch (Exception e) {
+					showError(e.getMessage());
+				}
+				modelUpdated();
+			}
+		});
+	}
+
+	protected void editRounds(List<Round> list) {
+		if (list.size() == 0)
+			throw new IllegalArgumentException("Round is not selected");
+		RoundEditorDialog d = new RoundEditorDialog(getSection().getShell(), list.get(0));
+		if (d.open() == Dialog.OK) {
+			// well...
+		}
+	}
+
+	/**
+	 * @param list
+	 */
+	protected void deleteRounds(List<Round> list) {
+		Collections.reverse(list);
+		for (Round round : list) {
+			deleteRound(round);
+		}
+	}
+
+	protected void deleteRound(Round round) {
+		Tournament t = round.getTournament();
+		int n = t.getNumberOfRounds();
+		if (round.getNumber() != n) {
+			throw new IllegalStateException("Cannot delete non last round");
+		}
+		if (round.getState() == RoundState.IN_PROGRESS || round.getState() == RoundState.CLOSED) {
+			throw new IllegalStateException("Cannot delete in-progress or complete round");
+		}
+		if (t.removeRound(round))
+			t.setNumberOfRounds(n - 1);
+	}
+
+	/**
+	 * 
+	 */
+	protected void addRound() {
+		int n = tournament.getNumberOfRounds();
+		Round r = new Round(n + 1);
+		tournament.addRound(r);
+		r.setType(tournament.getType());
+		tournament.setNumberOfRounds(n + 1);
 	}
 	class RoundActionEditingSupport extends EditingSupport {
 		private CellEditor editor;
@@ -272,8 +390,7 @@ public class RoundListSection extends TSectionPart {
 					round.setDateStart(Calendar.getInstance().getTime());
 					modelUpdated();
 				} else if (state == RoundState.IN_PROGRESS) {
-					round.setDateEnd(Calendar.getInstance().getTime());
-					round.getTournament().updateStandings();
+					round.close();
 					modelUpdated();
 				}
 				break;
@@ -311,8 +428,12 @@ public class RoundListSection extends TSectionPart {
 
 	@Override
 	public boolean setFormInput(Object input) {
+		if (input instanceof Tournament) {
+			this.tournament = (Tournament) input;
+		}
 		viewer.setInput(input);
 		markStale();
+		updateEnablement();
 		return true;
 	}
 }
