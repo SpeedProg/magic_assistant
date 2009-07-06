@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -36,13 +36,13 @@ public class CardCollectionStoreObject {
 	public String cardCount;
 	public String type;
 	public Properties properties = new Properties();
-	public ArrayList list;
+	public List list;
 	public transient File file;
 	public transient static XStream xstream;
 	static {
 		xstream = DataManager.getXStream();
 		xstream.alias("com.reflexit.magiccards.core.xml.LibraryCardStore", CardCollectionStoreObject.class);
-		xstream.alias(" com.reflexit.magiccards.core.xml.DeckFileCardStore", CardCollectionStoreObject.class);
+		xstream.alias("com.reflexit.magiccards.core.xml.DeckFileCardStore", CardCollectionStoreObject.class);
 		xstream.alias("cards", CardCollectionStoreObject.class);
 		xstream.setClassLoader(CardCollectionStoreObject.class.getClassLoader());
 	}
