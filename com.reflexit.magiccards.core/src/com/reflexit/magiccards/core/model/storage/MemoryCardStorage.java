@@ -13,7 +13,9 @@ package com.reflexit.magiccards.core.model.storage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * ArrayList based implementation for AbstractCardStore
@@ -21,14 +23,14 @@ import java.util.Iterator;
  *
  */
 public class MemoryCardStorage<T> extends AbstractStorage<T> {
-	protected ArrayList<T> list;
+	protected List<T> list;
 
 	/**
 	 * creates empty card store
 	 */
 	public MemoryCardStorage() {
 		super();
-		this.list = new ArrayList<T>();
+		this.list = Collections.synchronizedList(new ArrayList<T>());
 	}
 
 	public Iterator<T> iterator() {
@@ -60,8 +62,8 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		return this.list;
 	}
 
-	public void setList(ArrayList<T> list) {
-		this.list = list;
+	public void setList(List<T> list) {
+		this.list = Collections.synchronizedList(list);
 	}
 
 	@Override

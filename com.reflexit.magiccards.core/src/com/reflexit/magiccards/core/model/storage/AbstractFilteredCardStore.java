@@ -118,7 +118,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		update();
 	}
 
-	public void update() {
+	public synchronized void update() {
 		initialize();
 		if (filter == null)
 			return;
