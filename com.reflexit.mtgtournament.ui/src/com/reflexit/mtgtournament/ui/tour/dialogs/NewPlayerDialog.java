@@ -10,13 +10,16 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.dialogs;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -25,11 +28,11 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.mtgtournament.ui.tour.Activator;
 
-public class NewPlayerDialog extends TrayDialog {
+public class NewPlayerDialog extends TitleAreaDialog {
 	private Text pinText;
 	private Text nameText;
-	private String name;
-	private String pin;
+	private String name = "";
+	private String pin = "";
 
 	public NewPlayerDialog(Shell shell) {
 		super(shell);
@@ -43,27 +46,61 @@ public class NewPlayerDialog extends TrayDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		parent.getShell().setText("Find Player");
-		Composite comp = (Composite) super.createDialogArea(parent);
+		parent.getShell().setText("New Player");
+		setTitle("Add a new player");
+		setMessage("Enter player's name and PIN (Player Identification Number). PIN must be uniqueue.");
+		Composite comp1 = (Composite) super.createDialogArea(parent);
+		Composite comp = new Composite(comp1, SWT.NONE);
+		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 		comp.setLayout(new GridLayout(2, false));
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
-		pinText = createLabelText(comp, "PIN:");
-		pinText.setLayoutData(hor.create());
-		pinText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String text = pinText.getText();
-				pin = text;
-			}
-		});
 		nameText = createLabelText(comp, "Name:");
 		nameText.setLayoutData(hor.create());
 		nameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String text = nameText.getText();
 				name = text;
+				validate();
 			}
 		});
-		return comp;
+		pinText = createLabelText(comp, "PIN:");
+		pinText.setLayoutData(hor.create());
+		pinText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String text = pinText.getText();
+				pin = text;
+				validate();
+			}
+		});
+		pinText.setText(pin);
+		return comp1;
+	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Control x = super.createContents(parent);
+		setErrorMessage(null);
+		getButton(IDialogConstants.OK_ID).setEnabled(false); // name is not entered
+		return x;
+	}
+
+	/**
+	 * 
+	 */
+	protected void validate() {
+		boolean error = false;
+		if (pin.isEmpty()) {
+			setErrorMessage("Player's PID (id) cannot be empty. Enter any unique id.");
+			error = true;
+		} else if (name.isEmpty()) {
+			setErrorMessage("Player's name cannot be empty");
+			error = true;
+		}
+		if (!error)
+			setErrorMessage(null);
+		Button button = getButton(IDialogConstants.OK_ID);
+		if (button != null)
+			button.setEnabled(!error);
 	}
 
 	private Text createLabelText(Composite comp, String string) {
@@ -85,5 +122,13 @@ public class NewPlayerDialog extends TrayDialog {
 	 */
 	public String getPin() {
 		return pin;
+	}
+
+	/**
+	 * sets default pin (id)
+	 * @param pin
+	 */
+	public void setPin(String pin) {
+		this.pin = pin;
 	}
 }

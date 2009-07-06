@@ -69,6 +69,7 @@ public class MasterPlayersSection extends TSectionPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				NewPlayerDialog dialog = new NewPlayerDialog(plComp.getShell());
+				dialog.setPin(plist.getNewId());
 				if (dialog.open() == Dialog.OK) {
 					Player player = new Player(dialog.getPin(), dialog.getName());
 					if (player != null) {

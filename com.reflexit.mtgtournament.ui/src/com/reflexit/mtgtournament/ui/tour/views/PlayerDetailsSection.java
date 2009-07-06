@@ -59,6 +59,7 @@ public class PlayerDetailsSection extends TSectionPart {
 			public void modifyText(ModifyEvent e) {
 				Text text = (Text) e.widget;
 				textModified((String) text.getData("id"), text.getText());
+				reload();
 			}
 		};
 		// fields
