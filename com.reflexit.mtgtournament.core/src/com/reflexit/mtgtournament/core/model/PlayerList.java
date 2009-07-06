@@ -18,6 +18,7 @@ import java.util.Collection;
  *
  */
 public class PlayerList {
+	transient int maxId = 0;
 	private Collection<Player> players = new ArrayList<Player>();
 
 	public void addAllPlayers(Collection<Player> players) {
@@ -53,5 +54,34 @@ public class PlayerList {
 	 */
 	public int size() {
 		return players.size();
+	}
+
+	/**
+	 * @return
+	 */
+	public String getNewId() {
+		if (maxId == 0)
+			setMaxId();
+		maxId++;
+		return "id" + maxId;
+	}
+
+	/**
+	 * 
+	 */
+	private void setMaxId() {
+		for (Player player : players) {
+			String id = player.getId();
+			if (id.startsWith("id")) {
+				String snum = id.substring(2);
+				try {
+					int num = Integer.parseInt(snum);
+					if (num > maxId)
+						maxId = num;
+				} catch (NumberFormatException e) {
+					continue;
+				}
+			}
+		}
 	}
 }
