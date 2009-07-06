@@ -86,6 +86,11 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		                e.getMessage(), e));
 	}
 
+	public static void log(String s) {
+		getDefault().getLog().log(
+		        new Status(Status.ERROR, MagicUIActivator.getDefault().getBundle().getSymbolicName(), s));
+	}
+
 	public Image getImage(String key) {
 		ImageRegistry registry = getImageRegistry();
 		Image image = registry.get(key);

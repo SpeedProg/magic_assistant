@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -64,7 +65,7 @@ public class NameColumn extends GenColumn {
 	public Image getImage(Object element) {
 		if (element instanceof IMagicCard) {
 			IMagicCard card = (IMagicCard) element;
-			URL url;
+			URL url = null;
 			try {
 				url = CardCache.createSetImageURL(card, false);
 				String key = url.toExternalForm();
@@ -84,6 +85,10 @@ public class NameColumn extends GenColumn {
 				} else {
 					return image;
 				}
+			} catch (SWTException e) {
+				// failed to create image
+				MagicUIActivator.log("Failed to create an image: " + url);
+				MagicUIActivator.log(e);
 			} catch (IOException e) {
 				// huh
 			}
