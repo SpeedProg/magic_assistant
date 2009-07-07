@@ -36,12 +36,35 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return modified;
 	}
 
+	public boolean isAutoCommit() {
+		if (this instanceof IStorageContainer) {
+			IStorage storage = ((IStorageContainer) this).getStorage();
+			return storage.isAutoCommit();
+		}
+		return false;
+	}
+
+	public void setAutoCommit(boolean commit) {
+		if (this instanceof IStorageContainer) {
+			IStorage storage = ((IStorageContainer) this).getStorage();
+			storage.setAutoCommit(commit);
+			if (commit)
+				storage.save();
+		}
+	}
+
 	protected synchronized boolean doAddAll(final Collection<? extends T> col) {
 		boolean modified = false;
-		for (final Object element : col) {
-			final T card = (T) element;
-			if (doAddCard(card))
-				modified = true;
+		boolean commit = isAutoCommit();
+		setAutoCommit(false);
+		try {
+			for (final Object element : col) {
+				final T card = (T) element;
+				if (doAddCard(card))
+					modified = true;
+			}
+		} finally {
+			setAutoCommit(commit);
 		}
 		return modified;
 	}
@@ -87,20 +110,32 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	protected boolean doRemoveAll() {
 		boolean modified = false;
-		for (T t : this) {
-			if (doRemoveCard(t))
-				modified = true;
+		boolean commit = isAutoCommit();
+		setAutoCommit(false);
+		try {
+			for (T t : this) {
+				if (doRemoveCard(t))
+					modified = true;
+			}
+			return modified;
+		} finally {
+			setAutoCommit(commit);
 		}
-		return modified;
 	}
 
 	protected boolean doRemoveAll(Collection<?> list) {
 		boolean modified = false;
-		for (Object t : list) {
-			if (doRemoveCard((T) t))
-				modified = true;
+		boolean commit = isAutoCommit();
+		setAutoCommit(false);
+		try {
+			for (Object t : list) {
+				if (doRemoveCard((T) t))
+					modified = true;
+			}
+			return modified;
+		} finally {
+			setAutoCommit(commit);
 		}
-		return modified;
 	}
 
 	public void setMergeOnAdd(final boolean v) {

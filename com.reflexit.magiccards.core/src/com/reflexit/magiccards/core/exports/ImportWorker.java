@@ -33,6 +33,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	private ICardStore lookupStore;
 	private boolean previewMode = false;
 	private PreviewResult result;
+	private ArrayList<IMagicCard> toImport;
 	private int line;
 	public static class PreviewResult {
 		public ArrayList<String[]> values = new ArrayList<String[]>();
@@ -72,6 +73,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask("Importing...", 100);
 		try {
+			toImport = new ArrayList<IMagicCard>();
 			if (type == ReportType.CSV)
 				runCsvImport(monitor);
 			else if (type == ReportType.TEXT_DECK_CLASSIC) {
@@ -80,6 +82,10 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 				runTablePipedImport(monitor);
 			} else {
 				throw new IllegalArgumentException("Format is not supported: " + type);
+			}
+			if (!previewMode) {
+				ICardStore cardStore = saveStore.getCardStore();
+				cardStore.addAll(toImport);
 			}
 		} catch (Exception e) {
 			result.error = e;
@@ -147,7 +153,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 			MagicCard ref = findRef(card.getCard());
 			if (ref != null)
 				card.setMagicCard(ref);
-			saveStore.getCardStore().add(card);
+			toImport.add(card);
 		}
 	}
 
