@@ -15,8 +15,8 @@ public class ScheduleTest extends TestCase {
 			List<TableInfo> tables = r.getTables();
 			for (Object element : tables) {
 				TableInfo tableInfo = (TableInfo) element;
-				Player p1 = tableInfo.getP1().p;
-				Player p2 = tableInfo.getP2().p;
+				Player p1 = tableInfo.getPlayerInfo(1).getPlayer();
+				Player p2 = tableInfo.getPlayerInfo(2).getPlayer();
 				boolean has = tour.hasPlayed(p1, p2, i - 1);
 				if (has) {
 					if (i != tP)
@@ -63,20 +63,22 @@ public class ScheduleTest extends TestCase {
 		Random ra = new Random();
 		for (TableInfo ti : r.getTables()) {
 			int pw = ra.nextInt(2);
-			if (ti.getP1().getPlayer() == Player.DUMMY) {
+			PlayerRoundInfo p1 = ti.getPlayerInfo(1);
+			if (p1.getPlayer() == Player.DUMMY) {
 				pw = 1;
 			}
-			if (ti.getP2().getPlayer() == Player.DUMMY) {
+			PlayerRoundInfo p2 = ti.getPlayerInfo(2);
+			if (p2.getPlayer() == Player.DUMMY) {
 				pw = 0;
 			}
 			if (pw == 0) {
-				ti.getP1().setResult(PlayerGameResult.WIN);
-				ti.getP2().setResult(PlayerGameResult.LOOSE);
-				ti.getP1().setWinGames(1);
+				p1.setResult(PlayerGameResult.WIN);
+				p2.setResult(PlayerGameResult.LOOSE);
+				p1.setWinGames(1);
 			} else {
-				ti.getP2().setResult(PlayerGameResult.WIN);
-				ti.getP1().setResult(PlayerGameResult.LOOSE);
-				ti.getP2().setWinGames(1);
+				p2.setResult(PlayerGameResult.WIN);
+				p1.setResult(PlayerGameResult.LOOSE);
+				p2.setWinGames(1);
 			}
 		}
 	}
