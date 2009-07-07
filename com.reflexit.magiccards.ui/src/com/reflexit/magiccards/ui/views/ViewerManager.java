@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.MenuManager;
@@ -47,6 +48,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	private IPreferenceStore store;
 	protected AbstractCardsView view;
 	private String statusMessage;
+	private Job loadingJob;
 
 	protected ViewerManager(IFilteredCardStore handler, IPreferenceStore store, String viewId) {
 		super(viewId);
@@ -111,35 +113,65 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
+	private String jobFamility = "loading";
+	private ISchedulingRule jobRule = new ISchedulingRule() {
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+	};
 
 	public void loadData(final Runnable postLoad) {
-		updateFilter();
+		Job[] jobs = Job.getJobManager().find(jobFamility);
+		if (jobs.length >= 2)
+			return;
 		final Display display = PlatformUI.getWorkbench().getDisplay();
-		Job job = new Job("Loading cards") {
+		loadingJob = new Job("Loading cards") {
+			@Override
+			public boolean belongsTo(Object family) {
+				return family == jobFamility;
+			}
+
+			@Override
+			public boolean shouldSchedule() {
+				Job[] jobs = Job.getJobManager().find(jobFamility);
+				if (jobs.length >= 2)
+					return false;
+				return super.shouldSchedule();
+			}
+
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					setName("Initialising database");
-					checkInit();
-					if (monitor.isCanceled())
-						return Status.CANCEL_STATUS;
-					setName("Loading cards");
-					monitor.subTask("Loading cards...");
-					getFilteredStore().update(ViewerManager.this.filter);
-				} catch (final Exception e) {
-					display.syncExec(new Runnable() {
-						public void run() {
-							MessageDialog.openError(getViewer().getControl().getShell(), "Error", e.getMessage());
-						}
-					});
-					MagicUIActivator.log(e);
+				synchronized (jobFamility) {
+					try {
+						setName("Loading cards");
+						checkInit();
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						monitor.subTask("Loading cards...");
+						updateFilter();
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						getFilteredStore().update(ViewerManager.this.filter);
+					} catch (final Exception e) {
+						display.syncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(getViewer().getControl().getShell(), "Error", e.getMessage());
+							}
+						});
+						MagicUIActivator.log(e);
+						return Status.OK_STATUS;
+					}
+					//asyncUpdateViewer();
 					return Status.OK_STATUS;
 				}
-				//asyncUpdateViewer();
-				return Status.OK_STATUS;
 			}
 		};
-		job.addJobChangeListener(new JobChangeAdapter() {
+		//loadingJob.setRule(jobRule);
+		loadingJob.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
 				if (postLoad != null)
@@ -149,7 +181,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 				super.done(event);
 			}
 		});
-		job.schedule();
+		loadingJob.schedule(100);
 	}
 
 	public abstract ColumnViewer getViewer();

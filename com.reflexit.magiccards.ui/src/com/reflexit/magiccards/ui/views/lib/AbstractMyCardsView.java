@@ -171,12 +171,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					Object o = iterator.next();
-					if (o instanceof IMagicCard) {
-						cardStore.remove(o);
-					}
-				}
+				cardStore.removeAll(sel.toList());
 			}
 		}
 	}
