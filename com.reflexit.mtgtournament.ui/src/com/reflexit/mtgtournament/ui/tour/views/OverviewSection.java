@@ -31,6 +31,10 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.Section;
 
+import java.util.List;
+
+import com.reflexit.mtgtournament.core.edit.CmdCommitTournament;
+import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
@@ -41,6 +45,7 @@ public class OverviewSection extends TSectionPart {
 	private Combo tournamentTypeCombo;
 	private Tournament tournament;
 	private FormText scheduleLink;
+	private FormText endLink;
 
 	public OverviewSection(IManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -100,18 +105,10 @@ public class OverviewSection extends TSectionPart {
 				updateTournament();
 			}
 		});
-		scheduleLink = createScheduleLink(sectionClient);
+		scheduleLink = createLink(sectionClient);
 		scheduleLink.setLayoutData(span2.create());
-	}
-
-	private FormText createScheduleLink(Composite sectionClient) {
-		FormText formText = toolkit.createFormText(sectionClient, true);
-		formText.setWhitespaceNormalized(true);
-		//	formText.setImage("image", FormArticlePlugin.getDefault().getImageRegistry().get(FormArticlePlugin.IMG_SAMPLE));
-		formText.setColor("header", toolkit.getColors().getColor(IFormColors.TITLE));
-		formText.setFont("header", JFaceResources.getHeaderFont());
-		formText.setFont("code", JFaceResources.getTextFont());
-		formText.addHyperlinkListener(new HyperlinkAdapter() {
+		scheduleLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (e.getHref().equals("schedule")) {
 					try {
@@ -130,16 +127,67 @@ public class OverviewSection extends TSectionPart {
 				}
 			}
 		});
+		endLink = createLink(sectionClient);
+		endLink.setLayoutData(span2.create());
+		endLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				if (e.getHref().equals("end")) {
+					try {
+						boolean openQuestion = MessageDialog.openQuestion(getSection().getShell(), "Confirmation",
+						        "This action would terminate all unfinished rounds "
+						                + "and propagate tournament score table into players score table. "
+						                + "Do you want to proceed?");
+						if (openQuestion) {
+							List<Round> rounds = tournament.getRounds();
+							for (Object element : rounds) {
+								Round round = (Round) element;
+								round.close();
+							}
+							new CmdCommitTournament(tournament).execute();
+							reload();
+						}
+					} catch (Exception ex) {
+						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
+					}
+				} else if (e.getHref().equals("undo")) {
+					try {
+						new CmdCommitTournament(tournament).undo();
+						reload();
+					} catch (Exception ex) {
+						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
+					}
+				}
+			}
+		});
+	}
+
+	private FormText createLink(Composite sectionClient) {
+		FormText formText = toolkit.createFormText(sectionClient, true);
+		formText.setWhitespaceNormalized(true);
+		//	formText.setImage("image", FormArticlePlugin.getDefault().getImageRegistry().get(FormArticlePlugin.IMG_SAMPLE));
+		formText.setColor("header", toolkit.getColors().getColor(IFormColors.TITLE));
+		formText.setFont("header", JFaceResources.getHeaderFont());
+		formText.setFont("code", JFaceResources.getTextFont());
 		return formText;
 	}
 
 	protected void updateScheduleLink() {
 		String text1 = "<form><p><a href=\"schedule\">Schedule the tournament</a></p></form>";
 		String text2 = "<form><p>Tournament is scheduled. <a href=\"unschedule\">Reset.</a></p></form>";
-		if (tournament == null || !tournament.isScheduled())
+		if (tournament == null || !tournament.isScheduled()) {
 			scheduleLink.setText(text1, true, false);
-		else
-			scheduleLink.setText(text2, true, false);
+			endLink.setText("", false, false);
+		} else {
+			if (!tournament.isClosed()) {
+				endLink.setText("<form><p><a href=\"end\">End</a> the tournament and propagate score</p></form>", true,
+				        false);
+				scheduleLink.setText(text2, true, false);
+			} else {
+				scheduleLink.setText("Tournament is closed.", false, false);
+				endLink.setText("<form><p><a href=\"undo\">Undo</a> propagate score</p></form>", true, false);
+			}
+		}
 	}
 
 	protected boolean hasDraft() {

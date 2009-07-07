@@ -38,6 +38,7 @@ public class TournamentView extends ViewPart {
 	private ManagedForm managedForm;
 	private RoundScheduleSection roundSectionPart;
 	private RoundListSection roundListSectionPart;
+	private PartListenerAdapter partListener;
 
 	/**
 	 * The constructor.
@@ -53,7 +54,17 @@ public class TournamentView extends ViewPart {
 				setInput(selection);
 			}
 		};
+		partListener = new PartListenerAdapter() {
+			@Override
+			public void partActivated(IWorkbenchPart part) {
+				if (part == getSite().getPart()) {
+					managedForm.setInput(managedForm.getInput());
+					managedForm.reflow(true);
+				}
+			}
+		};
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(TNavigatorView.ID, selListener);
+		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
 	}
 
 	/**
@@ -62,6 +73,7 @@ public class TournamentView extends ViewPart {
 	@Override
 	public void dispose() {
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(TNavigatorView.ID, selListener);
+		getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
 		super.dispose();
 	}
 

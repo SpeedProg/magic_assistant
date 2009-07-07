@@ -14,8 +14,10 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,6 +40,9 @@ import com.reflexit.mtgtournament.ui.tour.dialogs.SelectPlayerDialog;
 public class RegisteredPlayersSection extends TSectionPart {
 	private Tournament tournament;
 	private PlayersListComposite plComp;
+	private Button add;
+	private Button gen;
+	private Button del;
 
 	public RegisteredPlayersSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -52,8 +58,13 @@ public class RegisteredPlayersSection extends TSectionPart {
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		plComp = new PlayersListComposite(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER, true);
+		plComp = new PlayersListComposite(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER, true);
 		plComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+		plComp.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateButtonsEnablement();
+			}
+		});
 		// buttons
 		createButtons(sectionClient);
 	}
@@ -63,7 +74,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 		GridLayout layout = new GridLayout(1, true);
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
-		Button add = toolkit.createButton(buttons, "Add...", SWT.PUSH);
+		add = toolkit.createButton(buttons, "Add...", SWT.PUSH);
 		add.setLayoutData(hor.create());
 		add.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -71,15 +82,15 @@ public class RegisteredPlayersSection extends TSectionPart {
 				SelectPlayerDialog dialog = new SelectPlayerDialog(plComp.getShell());
 				dialog.setInput(tournament.getCube().getPlayerList());
 				if (dialog.open() == Dialog.OK) {
-					Player player = dialog.getPlayer();
-					if (player != null) {
+					Collection<Player> players = dialog.getPlayers();
+					for (Player player : players) {
 						tournament.addPlayer(player);
-						modelUpdated();
 					}
+					modelUpdated();
 				}
 			}
 		});
-		Button gen = toolkit.createButton(buttons, "Generate...", SWT.PUSH);
+		gen = toolkit.createButton(buttons, "Generate...", SWT.PUSH);
 		gen.setLayoutData(hor.create());
 		gen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -105,7 +116,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 				}
 			}
 		});
-		Button del = toolkit.createButton(buttons, "Remove", SWT.PUSH);
+		del = toolkit.createButton(buttons, "Remove", SWT.PUSH);
 		del.setLayoutData(hor.create());
 		del.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -114,6 +125,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 				deletePlayers(sel.toList());
 			}
 		});
+		updateButtonsEnablement();
 	}
 
 	protected void deletePlayers(List list) {
@@ -138,12 +150,21 @@ public class RegisteredPlayersSection extends TSectionPart {
 			this.tournament = (Tournament) input;
 		}
 		plComp.getViewer().setInput(input);
+		updateButtonsEnablement();
 		return true;
 	}
 
 	protected void modelUpdated() {
 		save();
 		plComp.getViewer().refresh(true);
+	}
+
+	protected void updateButtonsEnablement() {
+		boolean closed = tournament == null || tournament.isClosed();
+		IStructuredSelection sel = (IStructuredSelection) plComp.getViewer().getSelection();
+		del.setEnabled(!(sel == null || sel.isEmpty()) && !closed);
+		add.setEnabled(!closed);
+		gen.setEnabled(!closed);
 	}
 
 	/**

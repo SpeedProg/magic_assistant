@@ -215,11 +215,12 @@ public class RoundListSection extends TSectionPart {
 	private void updateEnablement() {
 		boolean enabled = false;
 		if (tournament != null) {
-			if (tournament.isScheduled())
+			if (tournament.isScheduled() && !tournament.isClosed())
 				enabled = true;
 		}
 		add.setEnabled(enabled);
 		del.setEnabled(enabled);
+		edit.setEnabled(enabled);
 	}
 
 	protected void createButtons(Composite sectionClient) {

@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import java.io.FileNotFoundException;
+import java.util.Collection;
 
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerList;
@@ -106,7 +107,7 @@ public class SelectPlayerDialog extends TrayDialog {
 				playersListComposite.getViewer().refresh();
 			}
 		});
-		playersListComposite = new PlayersListComposite(comp, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER, false);
+		playersListComposite = new PlayersListComposite(comp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER, false);
 		playersListComposite.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				setSelection((IStructuredSelection) event.getSelection());
@@ -170,10 +171,8 @@ public class SelectPlayerDialog extends TrayDialog {
 		this.sel = selection;
 	}
 
-	public Player getPlayer() {
-		if (sel.isEmpty())
-			return null;
-		return (Player) sel.getFirstElement();
+	public Collection<Player> getPlayers() {
+		return sel.toList();
 	}
 
 	private Text createLabelText(Composite comp, String string) {

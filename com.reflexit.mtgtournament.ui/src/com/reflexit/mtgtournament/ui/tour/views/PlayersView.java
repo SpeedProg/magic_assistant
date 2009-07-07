@@ -38,6 +38,7 @@ public class PlayersView extends ViewPart {
 	private MasterPlayersSection playerListSection;
 	private ManagedForm managedForm;
 	private PlayerDetailsSection detailsSection;
+	private PartListenerAdapter partListener;
 
 	/**
 	 * The constructor.
@@ -60,6 +61,16 @@ public class PlayersView extends ViewPart {
 			}
 		};
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(ID, selListener);
+		partListener = new PartListenerAdapter() {
+			@Override
+			public void partActivated(IWorkbenchPart part) {
+				if (part == PlayersView.this) {
+					managedForm.setInput(managedForm.getInput());
+					managedForm.reflow(true);
+				}
+			}
+		};
+		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
 	}
 
 	/**
@@ -68,6 +79,7 @@ public class PlayersView extends ViewPart {
 	@Override
 	public void dispose() {
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(ID, selListener);
+		getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
 		super.dispose();
 	}
 

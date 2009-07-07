@@ -234,7 +234,7 @@ public class TNavigatorView extends ViewPart {
 				Tournament t = (Tournament) iterator.next();
 				cube.removeTournament(t);
 				try {
-					TournamentManager.save(t);
+					TournamentManager.remove(t);
 					viewer.refresh(true);
 				} catch (Exception e) {
 					showMessage(e.getMessage());

@@ -79,23 +79,25 @@ public class RoundScheduleSection extends TSectionPart {
 			GameResultDialog d = new GameResultDialog(viewer.getControl().getShell());
 			d.setInput(tinfo);
 			if (d.open() == Dialog.OK) {
-				tinfo.getP1().setWinGames(d.getWin1());
-				tinfo.getP2().setWinGames(d.getWin2());
+				PlayerRoundInfo p1 = tinfo.getPlayerInfo(1);
+				p1.setWinGames(d.getWin1());
+				PlayerRoundInfo p2 = tinfo.getPlayerInfo(2);
+				p2.setWinGames(d.getWin2());
 				if (d.getWin1() > d.getWin2()) {
-					tinfo.getP1().setResult(PlayerGameResult.WIN);
-					tinfo.getP2().setResult(PlayerGameResult.LOOSE);
+					p1.setResult(PlayerGameResult.WIN);
+					p2.setResult(PlayerGameResult.LOOSE);
 				} else if (d.getWin1() < d.getWin2()) {
-					tinfo.getP1().setResult(PlayerGameResult.LOOSE);
-					tinfo.getP2().setResult(PlayerGameResult.WIN);
+					p1.setResult(PlayerGameResult.LOOSE);
+					p2.setResult(PlayerGameResult.WIN);
 				} else {
-					tinfo.getP1().setResult(PlayerGameResult.DRAW);
-					tinfo.getP2().setResult(PlayerGameResult.DRAW);
+					p1.setResult(PlayerGameResult.DRAW);
+					p2.setResult(PlayerGameResult.DRAW);
 				}
 				if (d.isDrop1()) {
-					tinfo.getRound().getTournament().playerDropped(tinfo.getP1().getPlayer());
+					tinfo.getRound().getTournament().playerDropped(p1.getPlayer());
 				}
 				if (d.isDrop2()) {
-					tinfo.getRound().getTournament().playerDropped(tinfo.getP2().getPlayer());
+					tinfo.getRound().getTournament().playerDropped(p2.getPlayer());
 				}
 				modelUpdated();
 			}
@@ -161,13 +163,13 @@ public class RoundScheduleSection extends TSectionPart {
 				case 1:
 					return String.valueOf(pinfo.getTableNumber());
 				case 2:
-					return pinfo.getP1().getPlayer().getName();
+					return pinfo.getPlayerInfo(1).getPlayer().getName();
 				case 3:
-					return pinfo.getP2().getPlayer().getName();
+					return pinfo.getPlayerInfo(2).getPlayer().getName();
 				case 4:
-					return PlayerRoundInfo.getWinStr(pinfo.getP1().getResult());
+					return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(1).getResult());
 				case 5:
-					return PlayerRoundInfo.getWinStr(pinfo.getP2().getResult());
+					return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(2).getResult());
 				case 0:
 					int number = pinfo.getRound().getNumber();
 					if (number == 0)
@@ -211,7 +213,7 @@ public class RoundScheduleSection extends TSectionPart {
 			RoundState state = round.getState();
 			switch (state) {
 			case IN_PROGRESS:
-				if (tableInfo == null || tableInfo.getP1().getResult() == null)
+				if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
 					return systemColorYellow;
 			default:
 				return null;

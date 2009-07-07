@@ -54,7 +54,7 @@ public class GameResultDialog extends TrayDialog {
 		Composite comp = (Composite) super.createDialogArea(parent);
 		comp.setLayout(new GridLayout(4, false));
 		GridDataFactory hor = GridDataFactory.fillDefaults();
-		win1 = createLabelText(comp, input.getP1().getPlayer().getName());
+		win1 = createLabelText(comp, input.getPlayerInfo(1).getPlayer().getName());
 		win1.setLayoutData(hor.create());
 		win1.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -69,7 +69,7 @@ public class GameResultDialog extends TrayDialog {
 				drop1 = dropBut1.getSelection();
 			}
 		});
-		win2 = createLabelText(comp, input.getP2().getPlayer().getName());
+		win2 = createLabelText(comp, input.getPlayerInfo(2).getPlayer().getName());
 		win2.setLayoutData(hor.create());
 		win2.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
