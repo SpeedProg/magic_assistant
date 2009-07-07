@@ -13,9 +13,9 @@ package com.reflexit.mtgtournament.core.model;
 public class PlayerRoundInfo {
 	transient Round round;
 	transient TableInfo tableInfo;
-	Player p;
-	int w = -1;
-	PlayerGameResult r = null;
+	private Player p;
+	private int w = -1;
+	private PlayerGameResult r = null;
 	public enum PlayerGameResult {
 		WIN,
 		LOOSE,
@@ -27,7 +27,7 @@ public class PlayerRoundInfo {
 	}
 
 	public void setWinGames(int w) {
-		this.w = w;
+		this.setWin(w);
 	}
 
 	public void setResult(PlayerGameResult r) {
@@ -35,14 +35,14 @@ public class PlayerRoundInfo {
 	}
 
 	public PlayerRoundInfo(Player player, Round round) {
-		this.p = player;
+		this.setPlayer(player);
 		this.round = round;
 	}
 
 	@Override
 	public String toString() {
-		String s = getWinStr(r);
-		return p + " " + s + "(" + (w == -1 ? "_" : w) + ")";
+		String s = getWinStr(getResult());
+		return getPlayer() + " " + s + "(" + (getWin() == -1 ? "_" : getWin()) + ")";
 	}
 
 	public static String getWinStr(PlayerGameResult result) {
@@ -58,5 +58,28 @@ public class PlayerRoundInfo {
 
 	public Player getPlayer() {
 		return p;
+	}
+
+	/**
+	 * @param np
+	 */
+	public void setPlayer(Player np) {
+		if (np == null)
+			throw new NullPointerException();
+		this.p = np;
+	}
+
+	/**
+	 * @param w the w to set
+	 */
+	void setWin(int w) {
+		this.w = w;
+	}
+
+	/**
+	 * @return the w
+	 */
+	int getWin() {
+		return w;
 	}
 }

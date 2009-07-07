@@ -84,4 +84,15 @@ public class PlayerList {
 			}
 		}
 	}
+
+	/**
+	 * @param player
+	 */
+	public Player findPlayer(Player player) {
+		for (Player p : players) {
+			if (p.equals(player))
+				return p;
+		}
+		return null;
+	}
 }

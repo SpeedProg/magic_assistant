@@ -28,12 +28,15 @@ public class CmdCommitTournament implements ITCommand {
 	}
 
 	public boolean execute() {
+		if (t.isClosed())
+			throw new IllegalStateException("Tournament is closed");
 		List<PlayerTourInfo> playersInfo = t.getPlayersInfo();
 		for (PlayerTourInfo pt : playersInfo) {
 			Player player = pt.getPlayer();
 			player.setPoints(player.getPoints() + pt.getPoints());
 			player.setGames(player.getGames() + pt.getGames());
 		}
+		t.setClosed(true);
 		return true;
 	}
 
@@ -44,6 +47,7 @@ public class CmdCommitTournament implements ITCommand {
 			player.setPoints(player.getPoints() - pt.getPoints());
 			player.setGames(player.getGames() - pt.getGames());
 		}
+		t.setClosed(false);
 		return true;
 	}
 }

@@ -63,7 +63,7 @@ public class Round implements Cloneable {
 					return RoundState.NOT_READY;
 			}
 		}
-		if (!round.isScheduled())
+		if (!round.isScheduled() && round.getDateEnd() == null)
 			return RoundState.NOT_SCHEDULED;
 		if (round.getDateStart() == null)
 			return RoundState.READY;
@@ -75,7 +75,8 @@ public class Round implements Cloneable {
 	public void printSchedule(PrintStream st) {
 		for (Object element : tables) {
 			TableInfo table = (TableInfo) element;
-			st.println("Table " + table.getTableNumber() + ": " + table.getP1().p + " vs " + table.getP2().p);
+			st.println("Table " + table.getTableNumber() + ": " + table.getPlayerInfo(1).getPlayer() + " vs "
+			        + table.getPlayerInfo(2).getPlayer());
 		}
 	}
 
@@ -163,6 +164,7 @@ public class Round implements Cloneable {
 	public void updateLinks() {
 		for (TableInfo t : tables) {
 			t.setRound(this);
+			t.updateLinks();
 		}
 	}
 

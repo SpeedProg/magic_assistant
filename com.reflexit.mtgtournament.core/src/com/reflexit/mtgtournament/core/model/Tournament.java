@@ -27,6 +27,7 @@ public class Tournament {
 	private TournamentType type;
 	private boolean draftRound;
 	private boolean scheduled;
+	private boolean closed;
 
 	public Tournament() {
 	}
@@ -48,6 +49,9 @@ public class Tournament {
 		}
 		for (PlayerTourInfo pt : players) {
 			pt.setTournament(this);
+			Player np = cube.getPlayerList().findPlayer(pt.getPlayer());
+			if (np != null)
+				pt.setPlayer(np);
 		}
 	}
 
@@ -66,7 +70,6 @@ public class Tournament {
 	}
 
 	public void generatePlayers(int num) {
-		players.clear();
 		for (int i = 0; i < num; i++) {
 			addPlayer(new Player("f" + i, "Player " + (i + 1)));
 		}
@@ -111,9 +114,15 @@ public class Tournament {
 		List<TableInfo> tables = r.getTables();
 		for (Object element : tables) {
 			TableInfo tableInfo = (TableInfo) element;
-			if (tableInfo.getP1().p == p1 && tableInfo.getP2().p == p2)
-				return true;
-			if (tableInfo.getP1().p == p2 && tableInfo.getP2().p == p1)
+			int count = 0;
+			for (int i = 0; i < tableInfo.getPlayerRoundInfo().length; i++) {
+				PlayerRoundInfo pi = tableInfo.getPlayerRoundInfo()[i];
+				if (pi.getPlayer() == p1)
+					count++;
+				else if (pi.getPlayer() == p2)
+					count++;
+			}
+			if (count == 2)
 				return true;
 		}
 		return false;
@@ -278,5 +287,16 @@ public class Tournament {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isClosed() {
+		return closed;
+	}
+
+	public void setClosed(boolean closed) {
+		this.closed = closed;
 	}
 }

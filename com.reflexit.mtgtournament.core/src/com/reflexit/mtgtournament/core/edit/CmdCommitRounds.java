@@ -55,15 +55,17 @@ public class CmdCommitRounds implements ITCommand {
 				break;
 			for (Object element : r.getTables()) {
 				TableInfo t = (TableInfo) element;
-				updateInfo(t.getP1());
-				updateInfo(t.getP2());
+				for (int i = 0; i < t.getPlayerRoundInfo().length; i++) {
+					PlayerRoundInfo pi = t.getPlayerRoundInfo()[i];
+					updateInfo(pi);
+				}
 			}
 		}
 		updatePlace();
 	}
 
 	private void updateInfo(PlayerRoundInfo pi) {
-		if (pi.getPlayer() == Player.DUMMY)
+		if (pi.getPlayer().equals(Player.DUMMY))
 			return;
 		PlayerTourInfo pt = t.findPlayerTourInfo(pi.getPlayer());
 		if (pi.getResult() != null)

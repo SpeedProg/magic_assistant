@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import com.reflexit.mtgtournament.core.Activator;
 import com.reflexit.mtgtournament.core.model.Cube;
 import com.reflexit.mtgtournament.core.model.PlayerList;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -39,8 +40,8 @@ public class TournamentManager {
 				if (resource.getFullPath().lastSegment().endsWith(".tour.xml")) {
 					Tournament ts = (Tournament) loadFromFile(resource.getProjectRelativePath().lastSegment(),
 					        new Tournament());
-					ts.updateLinks(); // restore transient fields
 					root.addTournament(ts);
+					ts.updateLinks(); // restore transient fields
 				}
 			}
 		}
@@ -92,5 +93,18 @@ public class TournamentManager {
 		if (!project.isOpen())
 			project.open(null);
 		return project;
+	}
+
+	/**
+	 * @param t
+	 */
+	public static void remove(Tournament tournament) {
+		String file = tournament.getName() + ".tour.xml";
+		try {
+			IFile newFile = getProject().getFile(file);
+			newFile.delete(true, null);
+		} catch (CoreException e) {
+			Activator.log(e);
+		}
 	}
 }

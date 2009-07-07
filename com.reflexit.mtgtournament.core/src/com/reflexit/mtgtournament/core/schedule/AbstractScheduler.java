@@ -12,13 +12,17 @@ package com.reflexit.mtgtournament.core.schedule;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Player;
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
+import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 
 /**
  * @author Alena
@@ -76,6 +80,36 @@ public abstract class AbstractScheduler implements IScheduler {
 			players.add(new PlayerTourInfo(Player.DUMMY));
 		}
 		scheduleRound(r, players);
+		dummyLooses(r);
+	}
+
+	/**
+	 * @param r 
+	 * 
+	 */
+	protected void dummyLooses(Round r) {
+		List<TableInfo> tables = r.getTables();
+		for (TableInfo tableInfo : tables) {
+			PlayerRoundInfo[] playerRoundInfo = tableInfo.getPlayerRoundInfo();
+			if (playerRoundInfo.length != 2)
+				continue;
+			boolean hasDummy = false;
+			for (PlayerRoundInfo pi : playerRoundInfo) {
+				if (pi.getPlayer() == Player.DUMMY) {
+					hasDummy = true;
+					pi.setResult(PlayerGameResult.LOOSE);
+					break;
+				}
+			}
+			if (hasDummy)
+				for (PlayerRoundInfo pi : playerRoundInfo) {
+					if (pi.getPlayer() != Player.DUMMY) {
+						pi.setWinGames(1);
+						pi.setResult(PlayerGameResult.WIN);
+						break;
+					}
+				}
+		}
 	}
 
 	protected abstract void scheduleRound(Round r, ArrayList<PlayerTourInfo> players);

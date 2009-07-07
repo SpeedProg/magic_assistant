@@ -24,7 +24,7 @@ public class PlayerTourInfo {
 	private int place;
 
 	public PlayerTourInfo(Player player) {
-		this.player = player;
+		setPlayer(player);
 	}
 
 	@Override
@@ -192,5 +192,14 @@ public class PlayerTourInfo {
 		draw = 0;
 		games = 0;
 		points = 0;
+	}
+
+	/**
+	 * @param np
+	 */
+	public void setPlayer(Player np) {
+		if (np == null)
+			throw new NullPointerException();
+		this.player = np;
 	}
 }

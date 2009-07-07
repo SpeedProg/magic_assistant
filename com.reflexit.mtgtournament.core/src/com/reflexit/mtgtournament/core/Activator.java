@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -47,5 +49,20 @@ public class Activator extends Plugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	public static void log(Throwable e) {
+		log(new Status(Status.ERROR, PLUGIN_ID, 1, e.getMessage(), e));
+	}
+
+	public static void log(String s) {
+		log(new Status(Status.ERROR, PLUGIN_ID, s));
+	}
+
+	public static void log(IStatus status) {
+		if (getDefault() != null)
+			getDefault().getLog().log(status);
+		else
+			System.err.println(status);
 	}
 }

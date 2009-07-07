@@ -13,19 +13,22 @@ package com.reflexit.mtgtournament.core.model;
 public class TableInfo {
 	private transient Round round;
 	private int table;
-	private PlayerRoundInfo p1;
-	private PlayerRoundInfo p2;
+	private PlayerRoundInfo[] pi;
 
 	public TableInfo(int table, PlayerRoundInfo p1, PlayerRoundInfo p2) {
 		super();
 		this.table = table;
-		this.setP1(p1);
-		this.setP2(p2);
+		pi = new PlayerRoundInfo[2];
+		this.setPlayerInfo(1, p1);
+		this.setPlayerInfo(2, p2);
 	}
 
 	@Override
 	public String toString() {
-		return table + ": " + getP1() + " vs " + getP2();
+		if (pi.length == 2)
+			return table + ": " + getPlayerInfo(1) + " vs " + getPlayerInfo(2);
+		else
+			return table + ": " + pi;
 	}
 
 	public int getTableNumber() {
@@ -37,19 +40,7 @@ public class TableInfo {
 	}
 
 	public PlayerRoundInfo getPlayerInfo(int i) {
-		if (i == 1)
-			return p1;
-		if (i == 2)
-			return p2;
-		return null;
-	}
-
-	public PlayerRoundInfo getP1() {
-		return p1;
-	}
-
-	public PlayerRoundInfo getP2() {
-		return p2;
+		return pi[i - 1];
 	}
 
 	/**
@@ -62,14 +53,22 @@ public class TableInfo {
 	/**
 	 * @param p1 the p1 to set
 	 */
-	public void setP1(PlayerRoundInfo p1) {
-		this.p1 = p1;
+	public void setPlayerInfo(int i, PlayerRoundInfo p1) {
+		this.pi[i - 1] = p1;
 	}
 
 	/**
-	 * @param p2 the p2 to set
+	 * 
 	 */
-	public void setP2(PlayerRoundInfo p2) {
-		this.p2 = p2;
+	public void updateLinks() {
+		for (PlayerRoundInfo pp : pi) {
+			Player np = round.getTournament().getCube().getPlayerList().findPlayer(pp.getPlayer());
+			if (np != null)
+				pp.setPlayer(np);
+		}
+	}
+
+	public PlayerRoundInfo[] getPlayerRoundInfo() {
+		return pi;
 	}
 }
