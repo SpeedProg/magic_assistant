@@ -43,7 +43,7 @@ public class DeckParserTest extends junit.framework.TestCase {
 		this.worker = new ImportWorker(ReportType.TEXT_DECK_CLASSIC, new ByteArrayInputStream(line.getBytes()), false,
 		        deck, null);
 		try {
-			worker.runDeckImport(new NullProgressMonitor());
+			worker.run(new NullProgressMonitor());
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
