@@ -34,7 +34,10 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	}
 
 	public Iterator<T> iterator() {
-		return this.getList().iterator();
+		synchronized (list) {
+			ArrayList x = new ArrayList(list);
+			return x.iterator();
+		}
 	}
 
 	public int size() {

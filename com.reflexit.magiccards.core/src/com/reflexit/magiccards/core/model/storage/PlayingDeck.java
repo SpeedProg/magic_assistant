@@ -65,7 +65,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		for (Iterator iterator = this.library.iterator(); iterator.hasNext() && i < cards; i++) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			this.hand.add(card);
-			iterator.remove();
+			this.library.remove(card);
 		}
 	}
 

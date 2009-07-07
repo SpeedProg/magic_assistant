@@ -44,5 +44,8 @@ public interface ICardSet<T> extends Iterable<T> {
 	 */
 	public abstract boolean removeAll();
 
+	/**
+	 * Read-only iterator
+	 */
 	public abstract Iterator<T> iterator();
 }
