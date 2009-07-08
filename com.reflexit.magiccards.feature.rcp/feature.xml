@@ -2,7 +2,7 @@
 <feature
       id="com.reflexit.magiccards.feature.rcp"
       label="Magic Assistant Feature"
-      version="1.0.5.qualifier"
+      version="1.0.6.qualifier"
       provider-name="Alena Laskavaia"
       plugin="com.reflexit.magiccards_rcp">
 
