@@ -39,6 +39,7 @@ import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
@@ -104,9 +105,16 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 				getRunnableContext().run(true, true, work);
 			} else {
 				// TODO: export multiple files? zip?
-				Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
-				CardElement ce = (CardElement) el[0];
 				try {
+					Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
+					CardElement ce = null;
+					for (Object object : el) {
+						if (object instanceof CardOrganizer)
+							continue;
+						if (ce != null)
+							throw new Exception("Select only one element");
+						ce = (CardElement) object;
+					}
 					FileUtils.copyFile(ce.getFile(), new File(fileName));
 				} catch (Exception e) {
 					throw new InvocationTargetException(e);
