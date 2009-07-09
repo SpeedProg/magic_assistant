@@ -65,7 +65,7 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		return this.list;
 	}
 
-	public void setList(List<T> list) {
+	protected void doSetList(List<T> list) {
 		this.list = Collections.synchronizedList(list);
 	}
 

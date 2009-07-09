@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public interface ICardHandler {
@@ -15,6 +16,8 @@ public interface ICardHandler {
 	public IFilteredCardStore getCardCollectionHandler(String id);
 
 	public IFilteredCardStore getActiveDeckHandler();
+
+	public ICardStore loadFromXml(String filename);
 
 	public void setActiveDeckHandler(IFilteredCardStore store);
 

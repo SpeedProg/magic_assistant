@@ -18,9 +18,13 @@ public class CollectionsContainer extends CardOrganizer {
 	}
 
 	public void loadChildren() throws CoreException {
+		getContainer().refreshLocal(IResource.DEPTH_ONE, null);
 		IResource[] members = getContainer().members();
 		for (IResource mem : members) {
+			if (!mem.exists() || mem.isPhantom())
+				continue;
 			String name = mem.getName();
+			//System.err.println(this + "/" + name);
 			if (name.equals("MagicDB"))
 				continue; // skip this ones
 			CardElement el = findChieldByName(name);

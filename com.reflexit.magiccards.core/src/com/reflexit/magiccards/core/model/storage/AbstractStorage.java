@@ -68,7 +68,6 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		synchronized (this) {
 			modified = doAddCard(card);
 			if (modified) {
-				setNeedToSave(true);
 				autoSave();
 			}
 		}
@@ -84,7 +83,6 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 			for (T element : list) {
 				if (doAddCard(element)) {
 					modified = true;
-					setNeedToSave(true);
 				}
 			}
 			if (modified)
@@ -100,7 +98,6 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 			for (Object element : list) {
 				if (doRemoveCard((T) element)) {
 					modified = true;
-					setNeedToSave(true);
 				}
 			}
 			if (modified)
@@ -116,10 +113,10 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 			for (T element : this) {
 				if (doRemoveCard(element)) {
 					modified = true;
-					setNeedToSave(true);
 				}
 			}
-			autoSave();
+			if (modified)
+				autoSave();
 		}
 		return modified;
 	}
@@ -135,7 +132,6 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		synchronized (this) {
 			if (!doRemoveCard(card))
 				return false;
-			setNeedToSave(true);
 			autoSave();
 		}
 		return true;

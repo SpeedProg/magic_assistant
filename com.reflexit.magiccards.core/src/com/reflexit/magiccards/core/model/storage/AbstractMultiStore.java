@@ -74,9 +74,15 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		ArrayList<AbstractCardStoreWithStorage> all = new ArrayList<AbstractCardStoreWithStorage>();
 		all.addAll(this.map.values());
 		for (AbstractCardStoreWithStorage table : all) {
-			removeLocation(table.getLocation());
+			String oldLocation = table.getLocation();
+			removeLocation(oldLocation);
 			try {
 				table.initialize();
+				String newLocation = table.getLocation();
+				if (!newLocation.equals(oldLocation)) {
+					System.err.println("Key conflict - fixing: " + newLocation + " -> " + oldLocation);
+					table.setLocation(oldLocation);
+				}
 				this.size += table.size();
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.exports;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -80,6 +82,8 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 				runDeckImport(monitor);
 			} else if (type == ReportType.TABLE_PIPED) {
 				runTablePipedImport(monitor);
+			} else if (type == ReportType.XML) {
+				runXmlImport(monitor);
 			} else {
 				throw new IllegalArgumentException("Format is not supported: " + type);
 			}
@@ -91,6 +95,43 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 			result.error = e;
 		} finally {
 			monitor.done();
+		}
+	}
+
+	/**
+	 * @param monitor
+	 * @throws IOException 
+	 */
+	protected void runXmlImport(IProgressMonitor monitor) throws IOException {
+		try {
+			result.type = type;
+			result.fields = fields = getNonTransientFeilds();
+			File tmp = File.createTempFile("magic", "xml");
+			tmp.deleteOnExit();
+			try {
+				FileUtils.copyFile(stream, tmp);
+				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
+				Iterator iterator = store.iterator();
+				while (iterator.hasNext()) {
+					line++;
+					Object next = iterator.next();
+					if (next instanceof MagicCardPhisical) {
+						MagicCardPhisical card = (MagicCardPhisical) next;
+						importCard(card);
+						card.setLocation(getLocation());
+					} else if (next instanceof IMagicCard)
+						importCard(new MagicCardPhisical((IMagicCard) next));
+					if (previewMode && line >= 10)
+						break;
+					monitor.worked(1);
+				}
+			} catch (IOException e) {
+				throw e;
+			} finally {
+				tmp.delete();
+			}
+		} catch (IOException e) {
+			throw e;
 		}
 	}
 
