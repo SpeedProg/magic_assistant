@@ -50,6 +50,8 @@ public class MasterPlayersSection extends TSectionPart {
 		sectionClient.setLayout(layout);
 		// players table
 		plComp = new PlayersListComposite(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER, true);
+		plComp.getViewer().getTable().getColumn(2).setWidth(0); // hide place
+		plComp.getViewer().getTable().getColumn(4).setWidth(0); // hide stats
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		plComp.setLayoutData(layoutData);
 		// buttons

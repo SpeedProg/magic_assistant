@@ -176,6 +176,12 @@ public class PlayersListComposite extends Composite {
 				case 1:
 					rc = p1.getId().compareTo(p2.getId());
 					break;
+				case 3:
+					rc = p1.getPoints() - p2.getPoints();
+					break;
+				case 5:
+					rc = p1.getGames() - p2.getGames();
+					break;
 				default:
 					rc = 0;
 				}
