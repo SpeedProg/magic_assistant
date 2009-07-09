@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.Path;
-
 import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -32,8 +30,6 @@ public class CollectionSingleFileCardStore extends CollectionCardStore implement
 
 	public CollectionSingleFileCardStore(File file, String location, boolean initialize) {
 		super(new SingleFileCardStorage(file, location, initialize));
-		getFileStorage().setName(
-		        new Path(new Path(storage.getLocation()).lastSegment()).removeFileExtension().toString());
 	}
 
 	public static CollectionCardStore create(File file, String location, boolean initialize) {

@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.xml;
 
+import org.eclipse.core.runtime.Path;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.Activator;
-import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
@@ -16,12 +17,12 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable, IStorageInfo {
-	protected transient File file;
-	protected String location;
-	protected String name;
-	protected String comment;
-	protected String type;
-	protected Properties properties = new Properties();
+	private transient File file;
+	private String location;
+	private String name;
+	private String comment;
+	private String type;
+	private Properties properties = new Properties();
 
 	SingleFileCardStorage(File file, String location) {
 		this(file, location, false);
@@ -30,6 +31,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	SingleFileCardStorage(File file, String location, boolean initialize) {
 		this.file = file;
 		this.location = location;
+		if (location != null)
+			this.name = new Path(new Path(location).lastSegment()).removeFileExtension().toString();
 		//System.err.println("Create sin store " + location + " 0x" + Integer.toHexString(System.identityHashCode(this)));
 		if (initialize) {
 			load();
@@ -57,7 +60,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		}
 	}
 
-	void updateLocations() {
+	protected void updateLocations() {
 		if (getLocation() == null)
 			return;
 		for (Object object : this) {
@@ -73,11 +76,11 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	 */
 	protected void loadFields(CardCollectionStoreObject obj) {
 		if (obj.list != null)
-			this.setList(obj.list);
+			this.doSetList(obj.list);
 		else
-			this.setList(new ArrayList<IMagicCard>());
+			this.doSetList(new ArrayList<IMagicCard>());
 		if (obj.key != null)
-			setLocation(obj.key);
+			this.location = obj.key;
 		if (obj.name != null)
 			this.name = obj.name;
 		this.comment = obj.comment;
@@ -98,15 +101,6 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	@Override
-	public void save() {
-		try {
-			doSave();
-		} catch (FileNotFoundException e) {
-			throw new MagicException(e);
-		}
-	}
-
-	@Override
 	protected synchronized void doSave() throws FileNotFoundException {
 		CardCollectionStoreObject obj = new CardCollectionStoreObject();
 		obj.file = this.file;
@@ -121,8 +115,13 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	@Override
 	public void setLocation(String location) {
-		this.location = location;
+		doSetLocation(location);
+		updateLocations();
 		autoSave();
+	}
+
+	protected final void doSetLocation(String location) {
+		this.location = location;
 	}
 
 	@Override
@@ -130,7 +129,6 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		if (size() == 0)
 			return false;
 		clearCache();
-		setNeedToSave(true);
 		autoSave();
 		return true;
 	}
@@ -141,8 +139,12 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		doSetName(name);
 		autoSave();
+	}
+
+	protected final void doSetName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -151,8 +153,12 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	public void setComment(String comment) {
-		this.comment = comment;
+		doSetComment(comment);
 		autoSave();
+	}
+
+	protected final void doSetComment(String comment) {
+		this.comment = comment;
 	}
 
 	public String getType() {
@@ -160,8 +166,12 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		doSetType(type);
 		autoSave();
+	}
+
+	protected final void doSetType(String type) {
+		this.type = type;
 	}
 
 	public String getProperty(String key) {

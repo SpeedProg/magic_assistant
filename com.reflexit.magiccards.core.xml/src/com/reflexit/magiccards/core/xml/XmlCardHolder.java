@@ -51,6 +51,11 @@ public class XmlCardHolder implements ICardHandler {
 		return new DeckXmlHandler(filename);
 	}
 
+	public ICardStore loadFromXml(String filename) {
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), filename, true);
+		return store;
+	}
+
 	public void loadInitial() throws MagicException, CoreException, IOException {
 		InputStream is = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/all.txt"),
 		        false);
