@@ -55,7 +55,7 @@ public class SpellColors implements IChartGenerator {
 		lg.setVisible(true);
 		lg.getOutline().setVisible(false);
 		// Title
-		cwoaPie.getTitle().getLabel().getCaption().setValue("Card Types");//$NON-NLS-1$
+		cwoaPie.getTitle().getLabel().getCaption().setValue("Colours");//$NON-NLS-1$
 		// Data Set
 		TextDataSet categoryValues = TextDataSetImpl.create(labels);
 		NumberDataSet seriesOneValues = NumberDataSetImpl.create(series);
