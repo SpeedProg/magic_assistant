@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.MultiStatus;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,19 +34,37 @@ public class TournamentManager {
 	public static synchronized Cube getCube() throws IOException, CoreException {
 		if (root == null) {
 			root = new Cube();
-			PlayerList players = (PlayerList) loadFromFile("players.xml", new PlayerList());
-			root.getPlayerList().addAllPlayers(players.getPlayers());
-			IResource[] members = getProject().members();
-			for (IResource resource : members) {
+			loadPlayers();
+			loadTournaments();
+		}
+		return root;
+	}
+
+	private static void loadTournaments() throws CoreException, FileNotFoundException, IOException {
+		MultiStatus mstatus = new MultiStatus(Activator.PLUGIN_ID, 1, "Errors Loading Tournaments", null);
+		getProject().refreshLocal(IResource.DEPTH_ONE, null);
+		IResource[] members = getProject().members();
+		for (IResource resource : members) {
+			try {
 				if (resource.getFullPath().lastSegment().endsWith(".tour.xml")) {
 					Tournament ts = (Tournament) loadFromFile(resource.getProjectRelativePath().lastSegment(),
 					        new Tournament());
 					root.addTournament(ts);
 					ts.updateLinks(); // restore transient fields
 				}
+			} catch (Exception e) {
+				mstatus.add(new MultiStatus(Activator.PLUGIN_ID, 1, e.getMessage(), e));
 			}
 		}
-		return root;
+		if (mstatus.getChildren().length == 1)
+			throw new CoreException(mstatus.getChildren()[0]);
+		if (mstatus.getChildren().length > 0)
+			throw new CoreException(mstatus);
+	}
+
+	private static void loadPlayers() throws CoreException, FileNotFoundException, IOException {
+		PlayerList players = (PlayerList) loadFromFile("players.xml", new PlayerList());
+		root.getPlayerList().addAllPlayers(players.getPlayers());
 	}
 
 	public static void save() throws FileNotFoundException, CoreException {

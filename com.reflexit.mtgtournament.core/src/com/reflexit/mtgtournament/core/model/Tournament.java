@@ -35,7 +35,7 @@ public class Tournament {
 	public Tournament(String name) {
 		this.name = name;
 		this.type = TournamentType.ROUND_ROBIN;
-		this.numberOfRounds = 0;
+		this.numberOfRounds = 4;
 		this.draftRound = true;
 	}
 
@@ -56,10 +56,7 @@ public class Tournament {
 	}
 
 	/**
-	 * 
 	 * @param type -type of the scheduler, @see {@link TournamentType}
-	 * @param rounds - number of round, 0 if optimal (max for RR)
-	 * @param draft - is there draft round
 	 */
 	public void setType(TournamentType type) {
 		if (isScheduled() && this.type != type)
@@ -69,15 +66,21 @@ public class Tournament {
 
 	/**
 	 * 
-	 * @param type -type of the scheduler, @see {@link TournamentType}
 	 * @param rounds - number of round, 0 if optimal (max for RR)
-	 * @param draft - is there draft round
 	 */
-	public void setNumberOfRounds(int rounds, boolean draft) {
-		if (isScheduled() && (this.draftRound != draft || this.numberOfRounds != rounds))
-			throw new IllegalStateException("Cannot modify type when tournament is already scheduled");
+	public void setNumberOfRounds(int rounds) {
+		if (isScheduled() && this.numberOfRounds != rounds)
+			throw new IllegalStateException("Cannot modify rounds when tournament is already scheduled");
+		doSetNumberOfRounds(rounds);
+	}
+
+	/**
+	* @param draft - is there draft round
+	*/
+	public void setDraft(boolean draft) {
+		if (isScheduled() && this.draftRound != draft)
+			throw new IllegalStateException("Cannot modify draft when tournament is already scheduled");
 		this.draftRound = draft;
-		this.setNumberOfRounds(rounds);
 	}
 
 	public void generatePlayers(int num) {
@@ -157,10 +160,6 @@ public class Tournament {
 
 	public List<PlayerTourInfo> getPlayersInfo() {
 		return players;
-	}
-
-	public void setNumberOfRounds(int numberOfRounds) {
-		this.numberOfRounds = numberOfRounds;
 	}
 
 	public int getNumberOfRounds() {
@@ -309,5 +308,12 @@ public class Tournament {
 
 	public void setClosed(boolean closed) {
 		this.closed = closed;
+	}
+
+	/**
+	 * @param i
+	 */
+	public void doSetNumberOfRounds(int i) {
+		this.numberOfRounds = i;
 	}
 }
