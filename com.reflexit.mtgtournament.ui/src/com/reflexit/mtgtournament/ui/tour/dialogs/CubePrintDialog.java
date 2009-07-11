@@ -333,7 +333,7 @@ public class CubePrintDialog extends Dialog {
 			Printer printer = new Printer(printerData);
 			try {
 				// Print the contents of the file
-				//new WrappingPrinter(printer, getHeader(), textToPrint).print();
+				new WrappingPrinter(printer, getHeader(), textToPrint).print();
 				MessageDialog.openInformation(getShell(), "Info", "Sent to printer");
 			} catch (Exception e) {
 				MessageDialog.openError(getShell(), "Error", e.getMessage());
