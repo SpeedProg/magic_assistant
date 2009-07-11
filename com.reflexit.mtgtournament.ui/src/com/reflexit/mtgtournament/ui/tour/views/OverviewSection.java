@@ -12,23 +12,15 @@ package com.reflexit.mtgtournament.ui.tour.views;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.Section;
 
 import java.util.List;
@@ -39,16 +31,29 @@ import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
 public class OverviewSection extends TSectionPart {
-	private static final String OPTIMAL_ROUNDS = "Optimal";
+	private static final String SCHEDULE_ACTION_TEXT = "Schedule";
+	private static final String UNDO_CLOSE_TOUR_ACTION_TEXT = "Re-open";
+	private static final String CLOSE_TOUR_ACTION_TEXT = "Close";
+	private static final String RE_SCHEDULE_ACTION_TEXT = "Reset";
+	//
 	private Combo roundsCombo;
 	private Button hasDraftButton;
 	private Combo tournamentTypeCombo;
 	private Tournament tournament;
-	private FormText scheduleLink;
-	private FormText endLink;
+	private Button scheduleButton;
+	private Button closeButton;
+	private PanelAction scheduleAction;
+	private PanelAction reScheduleAction;
+	private PanelAction closeTourAction;
+	private PanelAction undoCloseTourAction;
+	private PanelAction updateTourAction;
+	private Label statusText;
+	private Button reScheduleButton;
+	private Button undoCloseButton;
 
 	public OverviewSection(IManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
+		makeActions();
 		createBody();
 	}
 
@@ -60,134 +65,150 @@ public class OverviewSection extends TSectionPart {
 		section.setClient(sectionClient);
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
+		Composite settings = createSettingsComposite(sectionClient);
+		settings.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).create());
+		Composite buttons = createButtonsComposite(sectionClient);
+		buttons.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
+	}
+
+	private Composite createSettingsComposite(Composite comp1) {
+		Composite comp = new Composite(comp1, SWT.BORDER);
+		comp.setLayout(new GridLayout(2, false));
 		// tour type
-		Label label1 = toolkit.createLabel(sectionClient, "Scheduling type: ");
-		tournamentTypeCombo = new Combo(sectionClient, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.createLabel(comp, "Scheduling type: ");
+		tournamentTypeCombo = new Combo(comp, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(tournamentTypeCombo, true, true);
 		TournamentType[] values = TournamentType.values();
 		for (TournamentType tournamentType : values) {
 			tournamentTypeCombo.add(tournamentType.name());
 		}
-		tournamentTypeCombo.setText(TournamentType.ROUND_ROBIN.name());
-		tournamentTypeCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateTournament();
-			}
-		});
+		//tournamentTypeCombo.setText(TournamentType.SWISS.name());
+		updateTourAction.attach(tournamentTypeCombo);
 		// rounds combo
-		Label label = toolkit.createLabel(sectionClient, "Total Rounds: ");
-		roundsCombo = new Combo(sectionClient, SWT.FLAT);
+		toolkit.createLabel(comp, "Total Rounds: ");
+		roundsCombo = new Combo(comp, SWT.FLAT);
 		toolkit.adapt(roundsCombo, true, true);
-		roundsCombo.add(OPTIMAL_ROUNDS);
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 9; i++) {
 			roundsCombo.add(String.valueOf(i));
 		}
-		roundsCombo.setText("6");
-		roundsCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateTournament();
-			}
-		});
-		roundsCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateTournament();
-			}
-		});
+		//roundsCombo.setText("4");
+		updateTourAction.attach(roundsCombo);
+		// status
+		GridDataFactory span2 = GridDataFactory.swtDefaults().span(2, 1).align(SWT.FILL, SWT.FILL);
+		statusText = toolkit.createLabel(comp, ".");
+		statusText.setLayoutData(span2.create());
 		// has draft check
-		GridDataFactory span2 = GridDataFactory.fillDefaults().span(2, 1);
-		hasDraftButton = toolkit.createButton(sectionClient, "Has a draft round", SWT.CHECK);
+		hasDraftButton = toolkit.createButton(comp, "Has a draft round", SWT.CHECK);
 		hasDraftButton.setLayoutData(span2.create());
-		hasDraftButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateTournament();
-			}
-		});
-		scheduleLink = createLink(sectionClient);
-		scheduleLink.setLayoutData(span2.create());
-		scheduleLink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if (e.getHref().equals("schedule")) {
-					try {
-						tournament.schedule();
-						reload();
-					} catch (Exception ex) {
-						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
-					}
-				} else if (e.getHref().equals("unschedule")) {
-					try {
-						tournament.setScheduled(false);
-						reload();
-					} catch (Exception ex) {
-						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
-					}
-				}
-			}
-		});
-		endLink = createLink(sectionClient);
-		endLink.setLayoutData(span2.create());
-		endLink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if (e.getHref().equals("end")) {
-					try {
-						boolean openQuestion = MessageDialog.openQuestion(getSection().getShell(), "Confirmation",
-						        "This action would terminate all unfinished rounds "
-						                + "and propagate tournament score table into players score table. "
-						                + "Do you want to proceed?");
-						if (openQuestion) {
-							List<Round> rounds = tournament.getRounds();
-							for (Object element : rounds) {
-								Round round = (Round) element;
-								round.close();
-							}
-							new CmdCommitTournament(tournament).execute();
-							reload();
-						}
-					} catch (Exception ex) {
-						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
-					}
-				} else if (e.getHref().equals("undo")) {
-					try {
-						new CmdCommitTournament(tournament).undo();
-						reload();
-					} catch (Exception ex) {
-						MessageDialog.openError(new Shell(), "Error", ex.getMessage());
-					}
-				}
-			}
-		});
+		updateTourAction.attach(hasDraftButton);
+		return comp;
 	}
 
-	private FormText createLink(Composite sectionClient) {
-		FormText formText = toolkit.createFormText(sectionClient, true);
-		formText.setWhitespaceNormalized(true);
-		//	formText.setImage("image", FormArticlePlugin.getDefault().getImageRegistry().get(FormArticlePlugin.IMG_SAMPLE));
-		formText.setColor("header", toolkit.getColors().getColor(IFormColors.TITLE));
-		formText.setFont("header", JFaceResources.getHeaderFont());
-		formText.setFont("code", JFaceResources.getTextFont());
-		return formText;
+	private Composite createButtonsComposite(Composite comp1) {
+		Composite comp = new Composite(comp1, SWT.NONE);
+		comp.setLayout(new GridLayout(1, true));
+		// other actions
+		GridDataFactory fill = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL);
+		scheduleButton = toolkit.createButton(comp, SCHEDULE_ACTION_TEXT, SWT.PUSH);
+		reScheduleButton = toolkit.createButton(comp, RE_SCHEDULE_ACTION_TEXT, SWT.PUSH);
+		closeButton = toolkit.createButton(comp, CLOSE_TOUR_ACTION_TEXT, SWT.PUSH);
+		undoCloseButton = toolkit.createButton(comp, UNDO_CLOSE_TOUR_ACTION_TEXT, SWT.PUSH);
+		// actions
+		scheduleAction.attach(scheduleButton);
+		reScheduleAction.attach(reScheduleButton);
+		closeTourAction.attach(closeButton);
+		undoCloseTourAction.attach(undoCloseButton);
+		// tooltips
+		scheduleButton.setToolTipText("Schedule the tournament - creates rounds, and schedules if possible");
+		closeButton.setToolTipText("Close the tournament and propagate score");
+		reScheduleButton
+		        .setToolTipText("Clear all the data and resets the tournament to initial state (not scheduled)");
+		undoCloseButton.setToolTipText("Undo score propagation and re-open the tournament for modifications");
+		// layout
+		scheduleButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		reScheduleButton.setLayoutData(fill.create());
+		closeButton.setLayoutData(fill.create());
+		undoCloseButton.setLayoutData(fill.create());
+		return comp;
+	}
+	private boolean initializing = false;
+
+	/**
+	 * 
+	 */
+	protected void makeActions() {
+		updateTourAction = new PanelAction() {
+			@Override
+			protected boolean execute() {
+				if (!initializing)
+					updateTournament();
+				return false;
+			}
+		};
+		scheduleAction = new PanelAction(SCHEDULE_ACTION_TEXT) {
+			@Override
+			protected boolean execute() {
+				tournament.schedule();
+				return true;
+			}
+		};
+		reScheduleAction = new PanelAction(RE_SCHEDULE_ACTION_TEXT) {
+			@Override
+			protected boolean execute() {
+				boolean openQuestion = MessageDialog.openQuestion(getSection().getShell(), "Confirmation",
+				        "This action would erase all rounds and players standings in the tournament."
+				                + "Do you want to proceed?");
+				if (openQuestion) {
+					tournament.setScheduled(false);
+				}
+				return true;
+			}
+		};
+		closeTourAction = new PanelAction(CLOSE_TOUR_ACTION_TEXT) {
+			@Override
+			protected boolean execute() {
+				boolean openQuestion = MessageDialog.openQuestion(getSection().getShell(), "Confirmation",
+				        "This action would terminate all unfinished rounds "
+				                + "and propagate tournament score table into players score table. "
+				                + "Do you want to proceed?");
+				if (openQuestion) {
+					List<Round> rounds = tournament.getRounds();
+					for (Object element : rounds) {
+						Round round = (Round) element;
+						round.close();
+					}
+					new CmdCommitTournament(tournament).execute();
+					return true;
+				}
+				return false;
+			}
+		};
+		undoCloseTourAction = new PanelAction(UNDO_CLOSE_TOUR_ACTION_TEXT) {
+			@Override
+			protected boolean execute() {
+				new CmdCommitTournament(tournament).undo();
+				return true;
+			}
+		};
 	}
 
-	protected void updateScheduleLink() {
-		String text1 = "<form><p><a href=\"schedule\">Schedule the tournament</a></p></form>";
-		String text2 = "<form><p>Tournament is scheduled. <a href=\"unschedule\">Reset.</a></p></form>";
+	protected void updateButtonsEnablement() {
+		scheduleButton.setEnabled(false);
+		reScheduleButton.setEnabled(false);
+		closeButton.setEnabled(false);
+		undoCloseButton.setEnabled(false);
 		if (tournament == null || !tournament.isScheduled()) {
-			scheduleLink.setText(text1, true, false);
-			endLink.setText("", false, false);
+			statusText.setText("Tournament is not started.");
+			scheduleButton.setEnabled(true);
+		} else if (!tournament.isClosed()) {
+			statusText.setText("Tournament has started.");
+			closeButton.setEnabled(true);
+			reScheduleButton.setEnabled(true);
 		} else {
-			if (!tournament.isClosed()) {
-				endLink.setText("<form><p><a href=\"end\">End</a> the tournament and propagate score</p></form>", true,
-				        false);
-				scheduleLink.setText(text2, true, false);
-			} else {
-				scheduleLink.setText("Tournament is closed.", false, false);
-				endLink.setText("<form><p><a href=\"undo\">Undo</a> propagate score</p></form>", true, false);
-			}
+			statusText.setText("Tournament is closed.");
+			undoCloseButton.setEnabled(true);
 		}
+		scheduleButton.getParent().layout(true);
 	}
 
 	protected boolean hasDraft() {
@@ -196,8 +217,6 @@ public class OverviewSection extends TSectionPart {
 
 	protected int getRounds() {
 		String text = roundsCombo.getText();
-		if (text.equals(OPTIMAL_ROUNDS))
-			return 0;
 		try {
 			return Integer.parseInt(text);
 		} catch (NumberFormatException e) {
@@ -210,10 +229,15 @@ public class OverviewSection extends TSectionPart {
 	public boolean setFormInput(Object input) {
 		if (input instanceof Tournament) {
 			this.tournament = (Tournament) input;
-			hasDraftButton.setSelection(tournament.isDraftRound());
-			tournamentTypeCombo.setText(tournament.getType().name());
-			int rounds = tournament.getNumberOfRounds();
-			roundsCombo.setText(rounds == 0 ? OPTIMAL_ROUNDS : String.valueOf(rounds));
+			initializing = true;
+			try {
+				hasDraftButton.setSelection(tournament.isDraftRound());
+				tournamentTypeCombo.setText(tournament.getType().name());
+				int rounds = tournament.getNumberOfRounds();
+				roundsCombo.setText(String.valueOf(rounds));
+			} finally {
+				initializing = false;
+			}
 			updateEnablement();
 		}
 		return super.setFormInput(input);
@@ -224,7 +248,7 @@ public class OverviewSection extends TSectionPart {
 		hasDraftButton.setEnabled(vis);
 		tournamentTypeCombo.setEnabled(vis);
 		roundsCombo.setEnabled(vis);
-		updateScheduleLink();
+		updateButtonsEnablement();
 	}
 
 	protected TournamentType getType() {
@@ -233,7 +257,10 @@ public class OverviewSection extends TSectionPart {
 
 	protected void updateTournament() {
 		try {
-			tournament.setType(getType(), getRounds(), hasDraft());
+			int newRounds = getRounds();
+			tournament.setType(getType());
+			tournament.setNumberOfRounds(newRounds);
+			tournament.setDraft(hasDraft());
 			save();
 		} catch (Exception e) {
 			MessageDialog.openError(new Shell(), "Error", e.getMessage());

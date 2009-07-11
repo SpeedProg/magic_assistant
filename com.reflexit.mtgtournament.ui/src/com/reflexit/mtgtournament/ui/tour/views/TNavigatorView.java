@@ -135,7 +135,11 @@ public class TNavigatorView extends ViewPart {
 			cube = TournamentManager.getCube();
 		} catch (Exception e) {
 			showMessage("Cannot load: " + e.getMessage());
-			cube = new Cube();
+			try {
+				cube = TournamentManager.getCube();
+			} catch (Exception e1) {
+				// no
+			}
 		}
 		Tournament t = new Tournament("Tournament 1");
 		cube.addTournament(t);

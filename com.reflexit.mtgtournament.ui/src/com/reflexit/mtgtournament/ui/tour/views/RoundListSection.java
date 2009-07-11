@@ -17,11 +17,13 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -55,12 +57,13 @@ import com.reflexit.mtgtournament.ui.tour.dialogs.RoundEditorDialog;
 
 public class RoundListSection extends TSectionPart {
 	private static final int SCHEDULE_COL = 1;
-	private static final int ACTION_COL = 2;
+	private static final int ACTION_COL = 5;
 	private TableViewer viewer;
 	private Tournament tournament;
 	private Button add;
 	private Button del;
 	private Button edit;
+	private Button action;
 
 	public RoundListSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -114,11 +117,11 @@ public class RoundListSection extends TSectionPart {
 					return round.getType().name();
 				case ACTION_COL:
 					return getAction(round);
-				case 3:
+				case 2:
 					return toDate(round.getDateStart());
-				case 4:
+				case 3:
 					return toDate(round.getDateEnd());
-				case 5:
+				case 4:
 					return round.getState().name();
 				default:
 					return "";
@@ -191,20 +194,35 @@ public class RoundListSection extends TSectionPart {
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		Table table = toolkit.createTable(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
+		Table table = toolkit.createTable(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
 		        | SWT.BORDER);
 		viewer = new TableViewer(table);
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_VERTICAL));
 		viewer.getTable().setHeaderVisible(true);
 		createColumn(0, "Round", 80);
 		createColumn(SCHEDULE_COL, "Schedule", 100);
+		createColumn(2, "Start", 80);
+		createColumn(3, "End", 80);
+		createColumn(4, "State", 100);
 		createColumn(ACTION_COL, "Action", 80);
-		createColumn(3, "Start", 80);
-		createColumn(4, "End", 80);
-		createColumn(5, "State", 100);
 		viewer.setContentProvider(new ViewContentProvider());
 		ViewLabelProvider labelProvider = new ViewLabelProvider();
 		viewer.setLabelProvider(labelProvider);
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				if (!selection.isEmpty()) {
+					Round round = (Round) selection.getFirstElement();
+					String text = getAction(round);
+					if (text != null && text.length() > 0) {
+						action.setText(text);
+						action.setEnabled(true);
+					} else {
+						action.setEnabled(false);
+					}
+				}
+			}
+		});
 		createButtons(sectionClient);
 		updateEnablement();
 	}
@@ -226,15 +244,21 @@ public class RoundListSection extends TSectionPart {
 	protected void createButtons(Composite sectionClient) {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
+		buttons.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
-		add = toolkit.createButton(buttons, "Add", SWT.PUSH);
-		add.setLayoutData(hor.create());
-		add.addSelectionListener(new SelectionAdapter() {
+		//
+		action = toolkit.createButton(buttons, "Action", SWT.PUSH);
+		action.setLayoutData(hor.create());
+		action.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {
 				try {
-					addRound();
+					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+					if (!selection.isEmpty()) {
+						Round round = (Round) selection.getFirstElement();
+						runRoundAction(round);
+					}
 				} catch (Exception e) {
 					showError(e.getMessage());
 				}
@@ -249,6 +273,19 @@ public class RoundListSection extends TSectionPart {
 				try {
 					IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 					editRounds(sel.toList());
+				} catch (Exception e) {
+					showError(e.getMessage());
+				}
+				modelUpdated();
+			}
+		});
+		add = toolkit.createButton(buttons, "Add", SWT.PUSH);
+		add.setLayoutData(hor.create());
+		add.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent ev) {
+				try {
+					addRound();
 				} catch (Exception e) {
 					showError(e.getMessage());
 				}
@@ -299,8 +336,9 @@ public class RoundListSection extends TSectionPart {
 		if (round.getState() == RoundState.IN_PROGRESS || round.getState() == RoundState.CLOSED) {
 			throw new IllegalStateException("Cannot delete in-progress or complete round");
 		}
-		if (t.removeRound(round))
-			t.setNumberOfRounds(n - 1);
+		if (t.removeRound(round)) {
+			t.doSetNumberOfRounds(n - 1);
+		}
 	}
 
 	/**
@@ -383,17 +421,7 @@ public class RoundListSection extends TSectionPart {
 			Round round = (Round) element;
 			switch (this.column) {
 			case ACTION_COL:
-				RoundState state = round.getState();
-				if (state == RoundState.NOT_SCHEDULED) {
-					round.schedule();
-					modelUpdated();
-				} else if (state == RoundState.READY) {
-					round.setDateStart(Calendar.getInstance().getTime());
-					modelUpdated();
-				} else if (state == RoundState.IN_PROGRESS) {
-					round.close();
-					modelUpdated();
-				}
+				runRoundAction(round);
 				break;
 			case SCHEDULE_COL:
 				round.setType(TournamentType.valueOf(((Integer) value).intValue()));
@@ -403,6 +431,20 @@ public class RoundListSection extends TSectionPart {
 				break;
 			}
 			getViewer().update(element, null);
+		}
+	}
+
+	protected void runRoundAction(Round round) {
+		RoundState state = round.getState();
+		if (state == RoundState.NOT_SCHEDULED) {
+			round.schedule();
+			modelUpdated();
+		} else if (state == RoundState.READY) {
+			round.setDateStart(Calendar.getInstance().getTime());
+			modelUpdated();
+		} else if (state == RoundState.IN_PROGRESS) {
+			round.close();
+			modelUpdated();
 		}
 	}
 
