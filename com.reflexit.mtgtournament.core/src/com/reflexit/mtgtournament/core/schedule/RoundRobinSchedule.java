@@ -91,8 +91,9 @@ public class RoundRobinSchedule implements IScheduler {
 			}
 			for (int j = 0; j < tables; j++) {
 				int n = (j + i) % tables;
-				CmdAddTable comAddTable = new CmdAddTable(r, j, array.get(positions[n]), array
-				        .get(positions[n + tables]));
+				int pos1 = positions[n];
+				int pos2 = positions[n + tables];
+				CmdAddTable comAddTable = new CmdAddTable(r, j, array.get(pos1), array.get(pos2));
 				comAddTable.execute();
 			}
 			rotateRR(positions);
@@ -112,7 +113,27 @@ public class RoundRobinSchedule implements IScheduler {
 		return res;
 	}
 
+	/**
+	 * Cyclic shift right. For example 1 2 3 4 becomes 4 1 2 3 (for shift 1). 
+	 * @param positions - array
+	 * @param start - from index
+	 * @param end - to index exclusive
+	 * @param shift - number of shifts
+	 */
 	private void rotate(int[] positions, int start, int end, int shift) {
+		if (positions == null)
+			throw new NullPointerException();
+		if (positions.length <= 2 || shift == 0)
+			return;
+		if (start < 0 || start >= positions.length)
+			throw new ArrayIndexOutOfBoundsException(start);
+		if (end <= 0 || end > positions.length)
+			throw new ArrayIndexOutOfBoundsException(end);
+		if (end <= start)
+			throw new IllegalArgumentException("Start index should be less or equal end index: " + start + " <= " + end);
+		if (shift < 0)
+			throw new IllegalArgumentException("Shift cannot be negative");
+		shift = shift % (end - start);
 		while (shift-- > 0) {
 			int x = positions[start];
 			for (int i = start; i < end; i++) {
@@ -127,12 +148,14 @@ public class RoundRobinSchedule implements IScheduler {
 	}
 
 	private void rotateRR(int[] positions) {
-		// 0 . 1 2 . 5 4 3
+		// 0 . 1 2 
+		// . 5 4 3
 		// becomes
-		// 0 . 5 1 . 4 3 2
+		// 0 . 5 1 
+		// . 4 3 2
 		int h = positions.length / 2;
 		rotate(positions, 1, h, 1);
-		rotate(positions, 3, positions.length, h - 1);
+		rotate(positions, h, positions.length, h - 1);
 		int x = positions[1];
 		positions[1] = positions[positions.length - 1];
 		positions[positions.length - 1] = x;

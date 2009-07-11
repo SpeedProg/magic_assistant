@@ -61,10 +61,21 @@ public class Tournament {
 	 * @param rounds - number of round, 0 if optimal (max for RR)
 	 * @param draft - is there draft round
 	 */
-	public void setType(TournamentType type, int rounds, boolean draft) {
-		if (isScheduled() && (this.type != type || this.draftRound != draft || this.numberOfRounds != rounds))
+	public void setType(TournamentType type) {
+		if (isScheduled() && this.type != type)
 			throw new IllegalStateException("Cannot modify type when tournament is already scheduled");
 		this.type = type;
+	}
+
+	/**
+	 * 
+	 * @param type -type of the scheduler, @see {@link TournamentType}
+	 * @param rounds - number of round, 0 if optimal (max for RR)
+	 * @param draft - is there draft round
+	 */
+	public void setNumberOfRounds(int rounds, boolean draft) {
+		if (isScheduled() && (this.draftRound != draft || this.numberOfRounds != rounds))
+			throw new IllegalStateException("Cannot modify type when tournament is already scheduled");
 		this.draftRound = draft;
 		this.setNumberOfRounds(rounds);
 	}
