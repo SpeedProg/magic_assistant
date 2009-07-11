@@ -46,7 +46,8 @@ public class ScheduleTest extends TestCase {
 		for (int i = 4; i < 10; i++) {
 			Tournament tour = new Tournament();
 			tour.setType(TournamentType.ROUND_ROBIN);
-			tour.setNumberOfRounds(i - 1, false);
+			tour.setNumberOfRounds(i - 1);
+			tour.setDraft(false);
 			tour.generatePlayers(i);
 			tour.schedule();
 			//tour.printSchedule(System.out);
@@ -57,7 +58,7 @@ public class ScheduleTest extends TestCase {
 	public void testRoundRoubin_MoreRounds() {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.ROUND_ROBIN);
-		tour.setNumberOfRounds(4, true);
+		tour.setNumberOfRounds(4);
 		tour.generatePlayers(4);
 		tour.schedule();
 		//tour.printSchedule(System.out);
@@ -67,7 +68,7 @@ public class ScheduleTest extends TestCase {
 	public void testSwiss() {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.SWISS);
-		tour.setNumberOfRounds(5, true);
+		tour.setNumberOfRounds(5);
 		tour.generatePlayers(6);
 		scheduleAll(tour);
 	}
@@ -102,7 +103,7 @@ public class ScheduleTest extends TestCase {
 	public void testSwiss_odd() {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.SWISS);
-		tour.setNumberOfRounds(6, true);
+		tour.setNumberOfRounds(6);
 		tour.generatePlayers(7);
 		scheduleAll(tour);
 	}
@@ -110,7 +111,7 @@ public class ScheduleTest extends TestCase {
 	public void testSwiss_More() {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.SWISS);
-		tour.setNumberOfRounds(6, true);
+		tour.setNumberOfRounds(6);
 		tour.generatePlayers(30);
 		scheduleAll(tour);
 	}
@@ -118,7 +119,7 @@ public class ScheduleTest extends TestCase {
 	public void testElimination_8() {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.ELIMINATION);
-		tour.setNumberOfRounds(3, true);
+		tour.setNumberOfRounds(3);
 		tour.generatePlayers(8);
 		scheduleAll(tour);
 	}
@@ -127,7 +128,8 @@ public class ScheduleTest extends TestCase {
 		tour.schedule();
 		for (int i = 0; i <= tour.getNumberOfRounds(); i++) {
 			Round r = tour.getRound(i);
-			r.schedule();
+			if (i > 0 || !r.isScheduled())
+				r.schedule();
 			if (i > 0) {
 				generateWinnigs(r);
 			}
@@ -164,7 +166,7 @@ public class ScheduleTest extends TestCase {
 	public void testElimination_10() {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.ELIMINATION);
-		tour.setNumberOfRounds(3, true);
+		tour.setNumberOfRounds(3);
 		tour.generatePlayers(10);
 		scheduleAll(tour);
 	}
