@@ -25,14 +25,16 @@ public class ScheduleTest extends TestCase {
 						return;
 				}
 			}
+			if (i == tP)
+				return;
 		}
 		if (tP >= 0)
-			fail("Cannot find tour");
+			fail("Cannot find round " + tP);
 	}
 
 	public void testRoundRoubin() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ROUND_ROBIN, 0, true);
+		tour.setType(TournamentType.ROUND_ROBIN);
 		tour.generatePlayers(6);
 		tour.schedule();
 		assertEquals(5, tour.getNumberOfRounds());
@@ -40,18 +42,32 @@ public class ScheduleTest extends TestCase {
 		checkPlayedBefore(tour, -1);
 	}
 
+	public void testRoundRoubin_OptRounds() {
+		for (int i = 4; i < 10; i++) {
+			Tournament tour = new Tournament();
+			tour.setType(TournamentType.ROUND_ROBIN);
+			tour.setNumberOfRounds(i - 1, false);
+			tour.generatePlayers(i);
+			tour.schedule();
+			//tour.printSchedule(System.out);
+			checkPlayedBefore(tour, -1);
+		}
+	}
+
 	public void testRoundRoubin_MoreRounds() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ROUND_ROBIN, 4, true);
+		tour.setType(TournamentType.ROUND_ROBIN);
+		tour.setNumberOfRounds(4, true);
 		tour.generatePlayers(4);
 		tour.schedule();
 		//tour.printSchedule(System.out);
-		checkPlayedBefore(tour, 2);
+		checkPlayedBefore(tour, 3);
 	}
 
 	public void testSwiss() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.SWISS, 5, true);
+		tour.setType(TournamentType.SWISS);
+		tour.setNumberOfRounds(5, true);
 		tour.generatePlayers(6);
 		scheduleAll(tour);
 	}
@@ -85,21 +101,24 @@ public class ScheduleTest extends TestCase {
 
 	public void testSwiss_odd() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.SWISS, 6, true);
+		tour.setType(TournamentType.SWISS);
+		tour.setNumberOfRounds(6, true);
 		tour.generatePlayers(7);
 		scheduleAll(tour);
 	}
 
 	public void testSwiss_More() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.SWISS, 6, true);
+		tour.setType(TournamentType.SWISS);
+		tour.setNumberOfRounds(6, true);
 		tour.generatePlayers(30);
 		scheduleAll(tour);
 	}
 
 	public void testElimination_8() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ELIMINATION, 3, true);
+		tour.setType(TournamentType.ELIMINATION);
+		tour.setNumberOfRounds(3, true);
 		tour.generatePlayers(8);
 		scheduleAll(tour);
 	}
@@ -114,13 +133,13 @@ public class ScheduleTest extends TestCase {
 			}
 			r.close();
 		}
-		tour.printSchedule(System.out);
+		//tour.printSchedule(System.out);
 		checkPlayedBefore(tour, -1);
 	}
 
 	public void testElimination_Opt8() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ELIMINATION, 0, true);
+		tour.setType(TournamentType.ELIMINATION);
 		tour.generatePlayers(8);
 		tour.schedule();
 		assertEquals(3, tour.getNumberOfRounds());
@@ -128,7 +147,7 @@ public class ScheduleTest extends TestCase {
 
 	public void testElimination_Opt7() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ELIMINATION, 0, true);
+		tour.setType(TournamentType.ELIMINATION);
 		tour.generatePlayers(7);
 		tour.schedule();
 		assertEquals(3, tour.getNumberOfRounds());
@@ -136,7 +155,7 @@ public class ScheduleTest extends TestCase {
 
 	public void testElimination_Opt9() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ELIMINATION, 0, true);
+		tour.setType(TournamentType.ELIMINATION);
 		tour.generatePlayers(9);
 		tour.schedule();
 		assertEquals(4, tour.getNumberOfRounds());
@@ -144,7 +163,8 @@ public class ScheduleTest extends TestCase {
 
 	public void testElimination_10() {
 		Tournament tour = new Tournament();
-		tour.setType(TournamentType.ELIMINATION, 3, true);
+		tour.setType(TournamentType.ELIMINATION);
+		tour.setNumberOfRounds(3, true);
 		tour.generatePlayers(10);
 		scheduleAll(tour);
 	}
