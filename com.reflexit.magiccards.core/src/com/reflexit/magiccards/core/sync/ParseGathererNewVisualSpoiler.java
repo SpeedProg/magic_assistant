@@ -207,7 +207,7 @@ public class ParseGathererNewVisualSpoiler {
 	static Pattern spanPattern = Pattern.compile("class=[^>]*>(.*)</span>");
 	static Pattern divPattern = Pattern.compile("class=[^>]*>(.*?)</div>");
 	static Pattern idPattern = Pattern.compile("href=.*/Card/Details.aspx\\?multiverseid=(\\d+)");
-	static Pattern setPattern = Pattern.compile("title=\"(.*) \\((.*)\\)\" src=");
+	static Pattern setPattern = Pattern.compile("title=\"(.*) \\((.*)\\)\" src=.*set=(\\w+)");
 	static Pattern namePattern = Pattern.compile(".*>(.*)</a></span>");
 	static Pattern powPattern = Pattern.compile("\\((\\d+/)?(\\d+)\\)");
 
@@ -234,11 +234,12 @@ public class ParseGathererNewVisualSpoiler {
 		for (String set : sets) {
 			String edition = getMatch(setPattern, set, 1);
 			String rarity = getMatch(setPattern, set, 2);
+			String abbr = getMatch(setPattern, set, 3);
 			if (edition.length() <= 1)
 				continue;
 			card.setSet(edition.trim());
 			card.setRarity(rarity.trim());
-			handler.edition(edition, null);
+			handler.edition(edition, abbr);
 			break; // TODO this would remember only first set
 		}
 		// print
