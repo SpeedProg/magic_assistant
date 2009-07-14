@@ -19,7 +19,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
-            icon="icons/tour_icon_16.png"
+            icon="icons/tour.png"
             id="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
             name="Tournament"
             restorable="true">
