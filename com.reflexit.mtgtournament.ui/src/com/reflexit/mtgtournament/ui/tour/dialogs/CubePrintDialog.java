@@ -18,6 +18,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.printing.PrintDialog;
@@ -36,6 +38,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
+import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -106,6 +109,9 @@ public class CubePrintDialog extends Dialog {
 		td.horizontalSpan = 2;
 		td.heightHint = 600;
 		text.setLayoutData(td);
+		FontData origData = text.getFont().getFontData()[0];
+		FontData defaultFont = new FontData("Courier", origData.getHeight(), origData.getStyle());
+		text.setFont(new Font(text.getDisplay(), defaultFont));
 		generatePreview();
 		return comp;
 	}
@@ -237,8 +243,19 @@ public class CubePrintDialog extends Dialog {
 	 * @return
 	 */
 	private String tournamentResults() {
-		// TODO Auto-generated method stub
-		return "not implemented";
+		List<PlayerTourInfo> playersInfo = new ArrayList<PlayerTourInfo>(tournament.getPlayersInfo());
+		Collections.sort(playersInfo, new Comparator<PlayerTourInfo>() {
+			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
+				return Tournament.comparePlayers(a, b);
+			}
+		});
+		StringBuffer buf = new StringBuffer();
+		buf.append(String.format("%2s %-20s %s\n", "Place", "Name", "Stats (Points)"));
+		for (PlayerTourInfo pi : playersInfo) {
+			buf.append(String.format("%5d %-20s %d-%d-%d (%2d)\n", pi.getPlace(), pi.getPlayer().getName(),
+			        pi.getWin(), pi.getDraw(), pi.getLoose(), pi.getPoints()));
+		}
+		return buf.toString();
 	}
 
 	/**
@@ -309,12 +326,11 @@ public class CubePrintDialog extends Dialog {
 		PlayerRoundInfo pi2 = ti.getPlayerInfo((x + 1) % 2 + 1);
 		String name1 = pi1.getPlayer().getName();
 		String name2 = pi2.getPlayer().getName();
-		String tableNumber = "[table " + ti.getTableNumber() + "]";
 		if (results == false)
-			return tableNumber + " " + name1 + " - " + name2;
+			return String.format("[%3d] %-20s - %-20s", ti.getTableNumber(), name1, name2);
 		else {
-			return tableNumber + " " + name1 + " " + PlayerRoundInfo.getWinStr(pi1.getResult()) + " - " + name2 + " "
-			        + PlayerRoundInfo.getWinStr(pi2.getResult());
+			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1, PlayerRoundInfo.getWinStr(pi1
+			        .getResult()), name2, PlayerRoundInfo.getWinStr(pi2.getResult()));
 		}
 	}
 
