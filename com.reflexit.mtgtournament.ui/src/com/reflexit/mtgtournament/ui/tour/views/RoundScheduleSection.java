@@ -247,19 +247,8 @@ public class RoundScheduleSection extends TSectionPart {
 		//section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
-		GridLayout layout = new GridLayout(1, false);
+		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
-		// print link
-		Button printButton = new Button(sectionClient, SWT.NONE);
-		printButton.setText("Print...");
-		printButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				CubePrintDialog dialog = new CubePrintDialog(getSection().getShell(), viewer.getInput());
-				dialog.open();
-			};
-		});
-		printButton.setLayoutData(GridDataFactory.defaultsFor(sectionClient).align(SWT.END, SWT.CENTER).create());
 		// players table
 		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
 		        | SWT.BORDER);
@@ -274,6 +263,24 @@ public class RoundScheduleSection extends TSectionPart {
 		createColumn(3, "Player 2", 120);
 		createColumn(4, "Result 1", 60);
 		createColumn(5, "Result 2", 60);
+		// buttons
+		createButtonsComposite(sectionClient);
+	}
+
+	private void createButtonsComposite(Composite parent) {
+		Composite buttons = new Composite(parent, SWT.NONE);
+		buttons.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).create());
+		buttons.setLayout(new GridLayout());
+		Button printButton = new Button(buttons, SWT.NONE);
+		printButton.setText("Print...");
+		printButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				CubePrintDialog dialog = new CubePrintDialog(getSection().getShell(), viewer.getInput());
+				dialog.open();
+			};
+		});
+		printButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
 	}
 
 	private void createColumn(int i, String name, int width) {

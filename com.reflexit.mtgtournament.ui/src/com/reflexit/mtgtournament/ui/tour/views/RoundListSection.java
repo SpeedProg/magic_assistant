@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -213,13 +214,7 @@ public class RoundListSection extends TSectionPart {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (!selection.isEmpty()) {
 					Round round = (Round) selection.getFirstElement();
-					String text = getAction(round);
-					if (text != null && text.length() > 0) {
-						action.setText(text);
-						action.setEnabled(true);
-					} else {
-						action.setEnabled(false);
-					}
+					updateActionButton(round);
 				}
 			}
 		});
@@ -239,6 +234,21 @@ public class RoundListSection extends TSectionPart {
 		add.setEnabled(enabled);
 		del.setEnabled(enabled);
 		edit.setEnabled(enabled);
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+		if (!selection.isEmpty()) {
+			Round round = (Round) selection.getFirstElement();
+			updateActionButton(round);
+		}
+	}
+
+	protected void updateActionButton(Round round) {
+		String text = getAction(round);
+		if (text != null && text.length() > 0) {
+			action.setText(text);
+			action.setEnabled(true);
+		} else {
+			action.setEnabled(false);
+		}
 	}
 
 	protected void createButtons(Composite sectionClient) {
@@ -258,6 +268,7 @@ public class RoundListSection extends TSectionPart {
 					if (!selection.isEmpty()) {
 						Round round = (Round) selection.getFirstElement();
 						runRoundAction(round);
+						updateActionButton(round);
 					}
 				} catch (Exception e) {
 					showError(e.getMessage());
@@ -445,6 +456,9 @@ public class RoundListSection extends TSectionPart {
 		} else if (state == RoundState.IN_PROGRESS) {
 			round.close();
 			modelUpdated();
+			Round r = round.getNextRound();
+			if (r != null)
+				viewer.setSelection(new StructuredSelection(r), true);
 		}
 	}
 
