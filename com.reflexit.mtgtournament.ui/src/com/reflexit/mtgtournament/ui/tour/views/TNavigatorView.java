@@ -35,10 +35,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import java.util.Iterator;
@@ -93,7 +91,7 @@ public class TNavigatorView extends ViewPart {
 
 		@Override
 		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+			return Activator.getDefault().getImage("icons/tour_icon_16.png");
 		}
 	}
 	class NameSorter extends ViewerSorter {
@@ -189,7 +187,8 @@ public class TNavigatorView extends ViewPart {
 				addTournament();
 			}
 		};
-		addTour.setText("Add Tournament");
+		addTour.setText("New Tournament");
+		addTour.setToolTipText("Add a New Tournament");
 		addTour.setImageDescriptor(Activator.getImageDescriptor("icons/add.gif"));
 		deleteTour = new Action() {
 			@Override
@@ -197,7 +196,8 @@ public class TNavigatorView extends ViewPart {
 				deleteTournaments();
 			}
 		};
-		deleteTour.setText("Remove Tournament");
+		deleteTour.setText("Delete Tournament");
+		deleteTour.setToolTipText("Delete selected tournaments");
 		deleteTour.setImageDescriptor(Activator.getImageDescriptor("icons/delete.gif"));
 		sortAlpha = new Action("Sort Aphabetically", Action.AS_CHECK_BOX) {
 			{
@@ -231,8 +231,8 @@ public class TNavigatorView extends ViewPart {
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		if (selection.isEmpty())
 			return;
-		boolean delQuestion = MessageDialog.openQuestion(viewer.getControl().getShell(), "?", "You are deleting "
-		        + selection.size() + " tournaments.");
+		boolean delQuestion = MessageDialog.openQuestion(viewer.getControl().getShell(), "Confirmation",
+		        "You are deleting " + selection.size() + " tournament(s): " + selection + ". Proceed?");
 		if (delQuestion) {
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 				Tournament t = (Tournament) iterator.next();

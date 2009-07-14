@@ -1,6 +1,10 @@
 package com.reflexit.mtgtournament.ui.tour;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -49,5 +53,20 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	public Image getImage(String key) {
+		ImageRegistry registry = getImageRegistry();
+		Image image = registry.get(key);
+		if (image == null) {
+			ImageDescriptor descriptor = imageDescriptorFromPlugin(PLUGIN_ID, key);
+			if (descriptor == null) {
+				ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+				return sharedImages.getImage(key);
+			}
+			registry.put(key, descriptor);
+			image = registry.get(key);
+		}
+		return image;
 	}
 }

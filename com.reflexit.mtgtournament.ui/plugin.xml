@@ -10,7 +10,7 @@
       </category>
       <view
             name="Tournament Navigator"
-            icon="icons/sample.gif"
+            icon="icons/tour_nav_16.png"
             category="com.reflexit.magiccards"
             class="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView"
             id="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView">
@@ -19,6 +19,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
+            icon="icons/tour_icon_16.png"
             id="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
             name="Tournament"
             restorable="true">
@@ -27,6 +28,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.mtgtournament.ui.tour.views.PlayersView"
+            icon="icons/People.png"
             id="com.reflexit.mtgtournament.ui.tour.views.PlayersView"
             name="Players"
             restorable="true">
@@ -37,6 +39,7 @@
       <perspective
             class="com.reflexit.mtgtournament.ui.tour.PerspectiveFactoryTournament"
             fixed="false"
+            icon="icons/tour_icon_16.png"
             id="com.reflexit.mtgtournament.ui.perspective.tournament"
             name="MTG Tournament">
       </perspective>
