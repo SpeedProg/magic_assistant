@@ -198,4 +198,13 @@ public class Round implements Cloneable {
 		this.dateStart = roundNew.dateStart;
 		this.dateEnd = roundNew.dateEnd;
 	}
+
+	/**
+	 * @return
+	 */
+	public Round getNextRound() {
+		if (getTournament().getNumberOfRounds() > getNumber())
+			return getTournament().getRound(getNumber() + 1);
+		return null;
+	}
 }
