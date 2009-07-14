@@ -88,6 +88,8 @@ public abstract class AbstractScheduler implements IScheduler {
 	 * 
 	 */
 	protected void dummyLooses(Round r) {
+		if (r.getNumber() == 0)
+			return;
 		List<TableInfo> tables = r.getTables();
 		for (TableInfo tableInfo : tables) {
 			PlayerRoundInfo[] playerRoundInfo = tableInfo.getPlayerRoundInfo();
