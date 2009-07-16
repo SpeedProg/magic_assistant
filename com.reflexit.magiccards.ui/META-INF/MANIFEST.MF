@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Magic Assistant UI
+Bundle-Name: Magic Assistant Card Organizer
 Bundle-SymbolicName: com.reflexit.magiccards.ui;singleton:=true
 Bundle-Version: 1.0.5.qualifier
 Bundle-Activator: com.reflexit.magiccards.ui.MagicUIActivator
