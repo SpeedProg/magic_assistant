@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tournament Organizer
+Bundle-Name: Magic Assistant Tournament Organizer
 Bundle-SymbolicName: com.reflexit.mtgtournament.ui;singleton:=true
 Bundle-Version: 1.0.6.qualifier
 Bundle-Activator: com.reflexit.mtgtournament.ui.tour.Activator

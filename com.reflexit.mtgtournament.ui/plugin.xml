@@ -44,4 +44,17 @@
             name="MTG Tournament">
       </perspective>
    </extension>
+   <extension
+         id="tour"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            icon="icons/tour.png"
+            thread="main"
+            visible="true">
+         <run
+               class="com.reflexit.mtgtournament.ui.app.TournamentOrganizerApplication">
+         </run>
+      </application>
+   </extension>
 </plugin>
