@@ -68,6 +68,8 @@ public class NameColumn extends GenColumn {
 			URL url = null;
 			try {
 				url = CardCache.createSetImageURL(card, false);
+				if (url == null)
+					return null;
 				String key = url.toExternalForm();
 				Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
 				File file = new File(url.getFile());
