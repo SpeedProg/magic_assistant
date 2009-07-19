@@ -115,6 +115,10 @@ public class CardCache {
 	public static String createLocalImageFilePath(int cardId, String editionAbbr, String locale)
 	        throws MalformedURLException {
 		IPath path = Activator.getStateLocationAlways();
+		if (editionAbbr.equals("CON")) {
+			// special hack for windows, which cannot create CON directory
+			editionAbbr = "CONFL";
+		}
 		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
 		String file = path.append(part).toPortableString();
 		return file;
