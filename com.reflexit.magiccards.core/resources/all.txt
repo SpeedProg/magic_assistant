@@ -12135,3 +12135,237 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 179590|Wildfield Borderpost|{1}{G}{W}|Artifact| | |You may pay {1} and return a basic land you control to its owner's hand rather than pay Wildfield Borderpost's mana cost.<br>Wildfield Borderpost comes into play tapped.<br>{T}: Add {G} or {W} to your mana pool.|Alara Reborn|Common|multi|3
 179603|Winged Coatl|{1}{G}{U}|Creature - Snake|1|1|Flash<br>Flying<br>Deathtouch <i>(Whenever this creature deals damage to a creature, destroy that creature.)</i>|Alara Reborn|Common|multi|3
 179575|Zealous Persecution|{W}{B}|Instant| | |Until end of turn, creatures you control get +1/+1 and creatures your opponents control get -1/-1.|Alara Reborn|Uncommon|multi|2
+189880|Acidic Slime|{3}{G}{G}|Creature - Ooze|2|2|Deathtouch <i>(Creatures dealt damage by this creature are destroyed. You can divide this creature's combat damage among any of the creatures blocking or blocked by it.)</i><br>When Acidic Slime enters the battlefield, destroy target artifact, enchantment, or land.|Magic 2010|Uncommon|mono|5
+190579|Acolyte of Xathrid|{B}|Creature - Human Cleric|0|1|{1}{B}, {T}: Target player loses 1 life.|Magic 2010|Common|mono|1
+191082|Act of Treason|{2}{R}|Sorcery| | |Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn. <i>(It can attack and {T} this turn.)</i>|Magic 2010|Uncommon|mono|3
+189884|Air Elemental|{3}{U}{U}|Creature - Elemental|4|4|Flying|Magic 2010|Uncommon|mono|5
+191239|Ajani Goldmane|{2}{W}{W}|Planeswalker - Ajani| |4|+1: You gain 2 life.<br>-1: Put a +1/+1 counter on each creature you control. Those creatures gain vigilance until end of turn.<br>-6: Put a white Avatar creature token onto the battlefield. It has "This creature's power and toughness are each equal to your life total."|Magic 2010|Mythic Rare|mono|4
+189894|Alluring Siren|{1}{U}|Creature - Siren|1|1|{T}: Target creature an opponent controls attacks you this turn if able.|Magic 2010|Uncommon|mono|2
+191245|Angel's Feather|{2}|Artifact| | |Whenever a player casts a white spell, you may gain 1 life.|Magic 2010|Uncommon|colorless|2
+190549|Angel's Mercy|{2}{W}{W}|Instant| | |You gain 7 life.|Magic 2010|Common|mono|4
+191063|Ant Queen|{3}{G}{G}|Creature - Insect|5|5|{1}{G}: Put a 1/1 green Insect creature token onto the battlefield.|Magic 2010|Rare|mono|5
+193738|Armored Ascension|{3}{W}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature gets +1/+1 for each Plains you control and has flying.|Magic 2010|Uncommon|mono|4
+193745|Assassinate|{2}{B}|Sorcery| | |Destroy target tapped creature.|Magic 2010|Common|mono|3
+189907|Awakener Druid|{2}{G}|Creature - Human Druid|1|1|When Awakener Druid enters the battlefield, target Forest becomes a 4/5 green Treefolk creature for as long as Awakener Druid is on the battlefield. It's still a land.|Magic 2010|Uncommon|mono|3
+191393|Ball Lightning|{R}{R}{R}|Creature - Elemental|6|1|Trample <i>(If this creature would deal enough damage to its blockers to destroy them, you may have it deal the rest of its damage to defending player or planeswalker.)</i><br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i><br>At the beginning of the end step, sacrifice Ball Lightning.|Magic 2010|Rare|mono|3
+191065|Baneslayer Angel|{3}{W}{W}|Creature - Angel|5|5|Flying, first strike, lifelink, protection from Demons and from Dragons|Magic 2010|Mythic Rare|mono|5
+191071|Berserkers of Blood Ridge|{4}{R}|Creature - Human Berserker|4|4|Berserkers of Blood Ridge attacks each turn if able.|Magic 2010|Common|mono|5
+191080|Birds of Paradise|{G}|Creature - Bird|0|1|Flying<br>{T}: Add one mana of any color to your mana pool.|Magic 2010|Rare|mono|1
+190540|Black Knight|{B}{B}|Creature - Human Knight|2|2|First strike <i>(This creature deals combat damage before creatures without first strike.)</i><br>Protection from white <i>(This creature can't be blocked, targeted, dealt damage, or enchanted by anything white.)</i>|Magic 2010|Uncommon|mono|2
+190195|Blinding Mage|{1}{W}|Creature - Human Wizard|1|2|{W}, {T}: Tap target creature.|Magic 2010|Common|mono|2
+190165|Bog Wraith|{3}{B}|Creature - Wraith|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Magic 2010|Uncommon|mono|4
+191340|Bogardan Hellkite|{6}{R}{R}|Creature - Dragon|5|5|Flash <i>(You may cast this spell any time you could cast an instant.)</i><br>Flying<br>When Bogardan Hellkite enters the battlefield, it deals 5 damage divided as you choose among any number of target creatures and/or players.|Magic 2010|Mythic Rare|mono|8
+189905|Borderland Ranger|{2}{G}|Creature - Human Scout|2|2|When Borderland Ranger enters the battlefield, you may search your library for a basic land card, reveal it, and put it into your hand. If you do, shuffle your library.|Magic 2010|Common|mono|3
+189913|Bountiful Harvest|{4}{G}|Sorcery| | |You gain 1 life for each land you control.|Magic 2010|Common|mono|5
+189915|Bramble Creeper|{4}{G}|Creature - Elemental|0|3|Whenever Bramble Creeper attacks, it gets +5/+0 until end of turn.|Magic 2010|Common|mono|5
+191096|Burning Inquiry|{R}|Sorcery| | |Each player draws three cards, then discards three cards at random.|Magic 2010|Common|mono|1
+191061|Burst of Speed|{R}|Sorcery| | |Creatures you control gain haste until end of turn. <i>(They can attack and {T} even if they just came under your control.)</i>|Magic 2010|Common|mono|1
+189918|Cancel|{1}{U}{U}|Instant| | |Counter target spell.|Magic 2010|Common|mono|3
+191059|Canyon Minotaur|{3}{R}|Creature - Minotaur Warrior|3|3||Magic 2010|Common|mono|4
+189914|Capricious Efreet|{4}{R}{R}|Creature - Efreet|6|4|At the beginning of your upkeep, choose target nonland permanent you control and up to two target nonland permanents you don't control. Destroy one of them at random.|Magic 2010|Rare|mono|6
+191070|Captain of the Watch|{4}{W}{W}|Creature - Human Soldier|3|3|Vigilance <i>(Attacking doesn't cause this creature to tap.)</i><br>Other Soldier creatures you control get +1/+1 and have vigilance.<br>When Captain of the Watch enters the battlefield, put three 1/1 white Soldier creature tokens onto the battlefield.|Magic 2010|Rare|mono|6
+191595|Celestial Purge|{1}{W}|Instant| | |Exile target black or red permanent.|Magic 2010|Uncommon|mono|2
+190193|Cemetery Reaper|{1}{B}{B}|Creature - Zombie|2|2|Other Zombie creatures you control get +1/+1.<br>{2}{B}, {T}: Exile target creature card from a graveyard. Put a 2/2 black Zombie creature token onto the battlefield.|Magic 2010|Rare|mono|3
+189883|Centaur Courser|{2}{G}|Creature - Centaur Warrior|3|3||Magic 2010|Common|mono|3
+191242|Chandra Nalaar|{3}{R}{R}|Planeswalker - Chandra| |6|+1: Chandra Nalaar deals 1 damage to target player.<br>-X: Chandra Nalaar deals X damage to target creature.<br>-8: Chandra Nalaar deals 10 damage to target player and each creature he or she controls.|Magic 2010|Mythic Rare|mono|5
+191068|Child of Night|{1}{B}|Creature - Vampire|2|1|Lifelink <i>(Damage dealt by this creature also causes you to gain that much life.)</i>|Magic 2010|Common|mono|2
+191321|Clone|{3}{U}|Creature - Shapeshifter|0|0|You may have Clone enter the battlefield as a copy of any creature on the battlefield.|Magic 2010|Rare|mono|4
+191314|Coat of Arms|{5}|Artifact| | |Each creature gets +1/+1 for each other creature on the battlefield that shares at least one creature type with it. <i>(For example, if two Goblin Warriors and a Goblin Shaman are on the battlefield, each gets +2/+2.)</i>|Magic 2010|Rare|colorless|5
+189893|Consume Spirit|{X}{1}{B}|Sorcery| | |Spend only black mana on X. <br>Consume Spirit deals X damage to target creature or player and you gain X life.|Magic 2010|Uncommon|mono|2
+190161|Convincing Mirage|{1}{U}|Enchantment - Aura| | |Enchant land<br>As Convincing Mirage enters the battlefield, choose a basic land type.<br>Enchanted land is the chosen type.|Magic 2010|Common|mono|2
+193749|Coral Merfolk|{1}{U}|Creature - Merfolk|2|1||Magic 2010|Common|mono|2
+189903|Craw Wurm|{4}{G}{G}|Creature - Wurm|6|4||Magic 2010|Common|mono|6
+189898|Cudgel Troll|{2}{G}{G}|Creature - Troll|4|3|{G}: Regenerate Cudgel Troll. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Magic 2010|Uncommon|mono|4
+191312|Darksteel Colossus|{1/1}|Artifact Creature - Golem|11|11|Trample<br>Darksteel Colossus is indestructible.<br>If Darksteel Colossus would be put into a graveyard from anywhere, reveal Darksteel Colossus and shuffle it into its owner's library instead.|Magic 2010|Mythic Rare|hybrid|1
+189924|Deadly Recluse|{1}{G}|Creature - Spider|1|2|Reach <i>(This creature can block creatures with flying.)</i><br>Deathtouch <i>(Creatures dealt damage by this creature are destroyed. You can divide this creature's combat damage among any of the creatures blocking or blocked by it.)</i>|Magic 2010|Common|mono|2
+190581|Deathmark|{B}|Sorcery| | |Destroy target green or white creature.|Magic 2010|Uncommon|mono|1
+191247|Demon's Horn|{2}|Artifact| | |Whenever a player casts a black spell, you may gain 1 life.|Magic 2010|Uncommon|colorless|2
+190533|Diabolic Tutor|{2}{B}{B}|Sorcery| | |Search your library for a card and put that card into your hand. Then shuffle your library.|Magic 2010|Uncommon|mono|4
+190559|Disentomb|{B}|Sorcery| | |Return target creature card from your graveyard to your hand.|Magic 2010|Common|mono|1
+190171|Disorient|{3}{U}|Instant| | |Target creature gets -7/-0 until end of turn.|Magic 2010|Common|mono|4
+190172|Divination|{2}{U}|Sorcery| | |Draw two cards.|Magic 2010|Common|mono|3
+189912|Divine Verdict|{3}{W}|Instant| | |Destroy target attacking or blocking creature.|Magic 2010|Common|mono|4
+190198|Djinn of Wishes|{3}{U}{U}|Creature - Djinn|4|4|Flying<br>Djinn of Wishes enters the battlefield with three wish counters on it.<br>{2}{U}{U}, Remove a wish counter from Djinn of Wishes: Reveal the top card of your library. You may play that card without paying its mana cost. If you don't, exile it.|Magic 2010|Rare|mono|5
+190535|Doom Blade|{1}{B}|Instant| | |Destroy target nonblack creature.|Magic 2010|Common|mono|2
+191060|Dragon Whelp|{2}{R}{R}|Creature - Dragon|2|3|Flying<br>{R}: Dragon Whelp gets +1/+0 until end of turn. If this ability has been activated four or more times this turn, sacrifice Dragon Whelp at the beginning of the next end step.|Magic 2010|Uncommon|mono|4
+191244|Dragon's Claw|{2}|Artifact| | |Whenever a player casts a red spell, you may gain 1 life.|Magic 2010|Uncommon|colorless|2
+191091|Dragonskull Summit| |Land| | |Dragonskull Summit enters the battlefield tapped unless you control a Swamp or a Mountain.<br>{T}: Add {B} or {R} to your mana pool.|Magic 2010|Rare|land|0
+190575|Dread Warlock|{1}{B}{B}|Creature - Human Wizard|2|2|Dread Warlock can't be blocked except by black creatures.|Magic 2010|Common|mono|3
+191067|Drowned Catacomb| |Land| | |Drowned Catacomb enters the battlefield tapped unless you control an Island or a Swamp.<br>{T}: Add {U} or {B} to your mana pool.|Magic 2010|Rare|land|0
+190552|Drudge Skeletons|{1}{B}|Creature - Skeleton|1|1|{B}: Regenerate Drudge Skeletons. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Magic 2010|Common|mono|2
+190580|Duress|{B}|Sorcery| | |Target opponent reveals his or her hand. You choose a noncreature, nonland card from it. That player discards that card.|Magic 2010|Common|mono|1
+190551|Earthquake|{X}{R}|Sorcery| | |Earthquake deals X damage to each creature without flying and each player.|Magic 2010|Rare|mono|1
+189902|Elite Vanguard|{W}|Creature - Human Soldier|2|1||Magic 2010|Uncommon|mono|1
+191392|Elvish Archdruid|{1}{G}{G}|Creature - Elf Druid|2|2|Other Elf creatures you control get +1/+1.<br>{T}: Add {G} to your mana pool for each Elf you control.|Magic 2010|Rare|mono|3
+191317|Elvish Piper|{3}{G}|Creature - Elf Shaman|1|1|{G}, {T}: You may put a creature card from your hand onto the battlefield.|Magic 2010|Rare|mono|4
+194424|Elvish Visionary|{1}{G}|Creature - Elf Shaman|1|1|When Elvish Visionary enters the battlefield, draw a card.|Magic 2010|Common|mono|2
+189890|Emerald Oryx|{3}{G}|Creature - Antelope|2|3|Forestwalk <i>(This creature is unblockable as long as defending player controls a Forest.)</i>|Magic 2010|Common|mono|4
+189882|Enormous Baloth|{6}{G}|Creature - Beast|7|7||Magic 2010|Uncommon|mono|7
+189901|Entangling Vines|{3}{G}|Enchantment - Aura| | |Enchant tapped creature<br>Enchanted creature doesn't untap during its controller's untap step.|Magic 2010|Common|mono|4
+193742|Essence Scatter|{1}{U}|Instant| | |Counter target creature spell.|Magic 2010|Common|mono|2
+190173|Excommunicate|{2}{W}|Sorcery| | |Put target creature on top of its owner's library.|Magic 2010|Common|mono|3
+189876|Fabricate|{2}{U}|Sorcery| | |Search your library for an artifact card, reveal it, and put it into your hand. Then shuffle your library.|Magic 2010|Uncommon|mono|3
+191075|Fiery Hellhound|{1}{R}{R}|Creature - Elemental Hound|2|2|{R}: Fiery Hellhound gets +1/+0 until end of turn.|Magic 2010|Common|mono|3
+191076|Fireball|{X}{R}|Sorcery| | |Fireball deals X damage divided evenly, rounded down, among any number of target creatures and/or players.<br>Fireball costs {1} more to cast for each target beyond the first.|Magic 2010|Uncommon|mono|1
+191079|Firebreathing|{R}|Enchantment - Aura| | |Enchant creature<br>{R}: Enchanted creature gets +1/+0 until end of turn.|Magic 2010|Common|mono|1
+190168|Flashfreeze|{1}{U}|Instant| | |Counter target red or green spell.|Magic 2010|Uncommon|mono|2
+189919|Fog|{G}|Instant| | |Prevent all combat damage that would be dealt this turn.|Magic 2010|Common|mono|1
+191407|Forest| |Basic Land - Forest| | |G|Magic 2010|Land|land|0
+193754|Gargoyle Castle| |Land| | |{T}: Add {1} to your mana pool.<br>{5}, {T}, Sacrifice Gargoyle Castle: Put a 3/4 colorless Gargoyle artifact creature token with flying onto the battlefield.|Magic 2010|Rare|land|0
+191243|Garruk Wildspeaker|{2}{G}{G}|Planeswalker - Garruk| |3|+1: Untap two target lands.<br>-1: Put a 3/3 green Beast creature token onto the battlefield.<br>-4: Creatures you control get +3/+3 and gain trample until end of turn.|Magic 2010|Mythic Rare|mono|4
+189879|Giant Growth|{G}|Instant| | |Target creature gets +3/+3 until end of turn.|Magic 2010|Common|mono|1
+189895|Giant Spider|{3}{G}|Creature - Spider|2|4|Reach <i>(This creature can block creatures with flying.)</i>|Magic 2010|Common|mono|4
+190562|Glacial Fortress| |Land| | |Glacial Fortress enters the battlefield tapped unless you control a Plains or an Island.<br>{T}: Add {W} or {U} to your mana pool.|Magic 2010|Rare|land|0
+190196|Glorious Charge|{1}{W}|Instant| | |Creatures you control get +1/+1 until end of turn.|Magic 2010|Common|mono|2
+191092|Goblin Artillery|{1}{R}{R}|Creature - Goblin Warrior|1|3|{T}: Goblin Artillery deals 2 damage to target creature or player and 3 damage to you.|Magic 2010|Uncommon|mono|3
+190558|Goblin Chieftain|{1}{R}{R}|Creature - Goblin|2|2|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i><br>Other Goblin creatures you control get +1/+1 and have haste.|Magic 2010|Rare|mono|3
+191074|Goblin Piker|{1}{R}|Creature - Goblin Warrior|2|1||Magic 2010|Common|mono|2
+191597|Gorgon Flail|{2}|Artifact - Equipment| | |Equipped creature gets +1/+1 and has deathtouch. <i>(Creatures dealt damage by this creature are destroyed. You can divide its combat damage among any of the creatures blocking or blocked by it.)</i><br>Equip {2} <i>({2}: Attach to target creature you control. Equip only as a sorcery.)</i>|Magic 2010|Uncommon|colorless|2
+190570|Gravedigger|{3}{B}|Creature - Zombie|2|2|When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|Magic 2010|Common|mono|4
+193759|Great Sable Stag|{1}{G}{G}|Creature - Elk|3|3|Great Sable Stag can't be countered.<br>Protection from blue and from black <i>(This creature can't be blocked, targeted, dealt damage, or enchanted by anything blue or black.)</i>|Magic 2010|Rare|mono|3
+190170|Griffin Sentinel|{2}{W}|Creature - Griffin|1|3|Flying<br>Vigilance <i>(Attacking doesn't cause this creature to tap.)</i>|Magic 2010|Common|mono|3
+193766|Guardian Seraph|{2}{W}{W}|Creature - Angel|3|4|Flying<br>If a source an opponent controls would deal damage to you, prevent 1 of that damage.|Magic 2010|Rare|mono|4
+190166|Harm's Way|{W}|Instant| | |The next 2 damage that a source of your choice would deal to you or a permanent you control this turn is dealt to target creature or player instead.|Magic 2010|Uncommon|mono|1
+190577|Haunting Echoes|{3}{B}{B}|Sorcery| | |Exile all cards from target player's graveyard other than basic land cards. For each card exiled this way, search that player's library for all cards with the same name as that card and exile them. Then that player shuffles his or her library.|Magic 2010|Rare|mono|5
+190556|Hive Mind|{5}{U}|Enchantment| | |Whenever a player casts an instant or sorcery spell, each other player copies that spell. Each of those players may choose new targets for his or her copy.|Magic 2010|Rare|mono|6
+190538|Holy Strength|{W}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature gets +1/+2.|Magic 2010|Common|mono|1
+191058|Honor of the Pure|{1}{W}|Enchantment| | |White creatures you control get +1/+1.|Magic 2010|Rare|mono|2
+190178|Horned Turtle|{2}{U}|Creature - Turtle|1|4||Magic 2010|Common|mono|3
+189908|Howl of the Night Pack|{6}{G}|Sorcery| | |Put a 2/2 green Wolf creature token onto the battlefield for each Forest you control.|Magic 2010|Uncommon|mono|7
+190548|Howling Banshee|{2}{B}{B}|Creature - Spirit|3|3|Flying<br>When Howling Banshee enters the battlefield, each player loses 3 life.|Magic 2010|Uncommon|mono|4
+191315|Howling Mine|{2}|Artifact| | |At the beginning of each player's draw step, if Howling Mine is untapped, that player draws an additional card.|Magic 2010|Rare|colorless|2
+190566|Hypnotic Specter|{1}{B}{B}|Creature - Specter|2|2|Flying<br>Whenever Hypnotic Specter deals damage to an opponent, that player discards a card at random.|Magic 2010|Rare|mono|3
+189920|Ice Cage|{1}{U}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature can't attack or block, and its activated abilities can't be activated.<br>When enchanted creature becomes the target of a spell or ability, destroy Ice Cage.|Magic 2010|Common|mono|2
+190544|Ignite Disorder|{1}{R}|Instant| | |Ignite Disorder deals 3 damage divided as you choose among any number of target white and/or blue creatures.|Magic 2010|Uncommon|mono|2
+189897|Illusionary Servant|{1}{U}{U}|Creature - Illusion|3|4|Flying<br>When Illusionary Servant becomes the target of a spell or ability, sacrifice it.|Magic 2010|Common|mono|3
+190568|Indestructibility|{3}{W}|Enchantment - Aura| | |Enchant permanent<br>Enchanted permanent is indestructible. <i>(Effects that say "destroy" don't destroy that permanent. An indestructible creature can't be destroyed by damage.)</i>|Magic 2010|Rare|mono|4
+191090|Inferno Elemental|{4}{R}{R}|Creature - Elemental|4|4|Whenever Inferno Elemental blocks or becomes blocked by a creature, Inferno Elemental deals 3 damage to that creature.|Magic 2010|Uncommon|mono|6
+191387|Island| |Basic Land - Island| | |U|Magic 2010|Land|land|0
+191240|Jace Beleren|{1}{U}{U}|Planeswalker - Jace| |3|+2: Each player draws a card.<br>-1: Target player draws a card.<br>-10: Target player puts the top twenty cards of his or her library into his or her graveyard.|Magic 2010|Mythic Rare|mono|3
+191073|Jackal Familiar|{R}|Creature - Hound|2|2|Jackal Familiar can't attack or block alone.|Magic 2010|Common|mono|1
+193743|Jump|{U}|Instant| | |Target creature gains flying until end of turn.|Magic 2010|Common|mono|1
+191394|Kalonian Behemoth|{5}{G}{G}|Creature - Beast|9|9|Shroud <i>(This creature can't be the target of spells or abilities.)</i>|Magic 2010|Rare|mono|7
+190536|Kelinore Bat|{2}{B}|Creature - Bat|2|1|Flying|Magic 2010|Common|mono|3
+193741|Kindled Fury|{R}|Instant| | |Target creature gets +1/+0 and gains first strike until end of turn. <i>(It deals combat damage before creatures without first strike.)</i>|Magic 2010|Common|mono|1
+191246|Kraken's Eye|{2}|Artifact| | |Whenever a player casts a blue spell, you may gain 1 life.|Magic 2010|Uncommon|colorless|2
+191084|Lava Axe|{4}{R}|Sorcery| | |Lava Axe deals 5 damage to target player.|Magic 2010|Common|mono|5
+190191|Levitation|{2}{U}{U}|Enchantment| | |Creatures you control have flying.|Magic 2010|Uncommon|mono|4
+190180|Lifelink|{W}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature has lifelink. <i>(Damage dealt by the creature also causes its controller to gain that much life.)</i>|Magic 2010|Common|mono|1
+191089|Lightning Bolt|{R}|Instant| | |Lightning Bolt deals 3 damage to target creature or player.|Magic 2010|Common|mono|1
+191054|Lightning Elemental|{3}{R}|Creature - Elemental|4|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Magic 2010|Common|mono|4
+193763|Lightwielder Paladin|{3}{W}{W}|Creature - Human Knight|4|4|First strike <i>(This creature deals combat damage before creatures without first strike.)</i><br>Whenever Lightwielder Paladin deals combat damage to a player, you may exile target black or red permanent that player controls.|Magic 2010|Rare|mono|5
+191241|Liliana Vess|{3}{B}{B}|Planeswalker - Liliana| |5|+1: Target player discards a card.<br>-2: Search your library for a card, then shuffle your library and put that card on top of it.<br>-8: Put all creature cards in all graveyards onto the battlefield under your control.|Magic 2010|Mythic Rare|mono|5
+189878|Llanowar Elves|{G}|Creature - Elf Druid|1|1|{T}: Add {G} to your mana pool.|Magic 2010|Common|mono|1
+190550|Looming Shade|{2}{B}|Creature - Shade|1|1|{B}: Looming Shade gets +1/+1 until end of turn.|Magic 2010|Common|mono|3
+191388|Lurking Predators|{4}{G}{G}|Enchantment| | |Whenever an opponent casts a spell, reveal the top card of your library. If it's a creature card, put it onto the battlefield. Otherwise, you may put that card on the bottom of your library.|Magic 2010|Rare|mono|6
+191591|Magebane Armor|{3}|Artifact - Equipment| | |Equipped creature gets +2/+4 and loses flying.<br>Prevent all noncombat damage that would be dealt to equipped creature.<br>Equip {2} <i>({2}: Attach to target creature you control. Equip only as a sorcery.)</i>|Magic 2010|Rare|colorless|3
+191397|Magma Phoenix|{3}{R}{R}|Creature - Phoenix|3|3|Flying<br>When Magma Phoenix is put into a graveyard from the battlefield, it deals 3 damage to each creature and each player.<br>{3}{R}{R}: Return Magma Phoenix from your graveyard to your hand.|Magic 2010|Rare|mono|5
+193748|Manabarbs|{3}{R}|Enchantment| | |Whenever a player taps a land for mana, Manabarbs deals 1 damage to that player.|Magic 2010|Rare|mono|4
+191064|Master of the Wild Hunt|{2}{G}{G}|Creature - Human Shaman|3|3|At the beginning of your upkeep, put a 2/2 green Wolf creature token onto the battlefield.<br>{T}: Tap all untapped Wolf creatures you control. Each Wolf tapped this way deals damage equal to its power to target creature. That creature deals damage equal to its power divided as its controller chooses among any number of those Wolves.|Magic 2010|Mythic Rare|mono|4
+189904|Megrim|{2}{B}|Enchantment| | |Whenever an opponent discards a card, Megrim deals 2 damage to that player.|Magic 2010|Uncommon|mono|3
+190174|Merfolk Looter|{1}{U}|Creature - Merfolk Rogue|1|1|{T}: Draw a card, then discard a card.|Magic 2010|Common|mono|2
+191087|Merfolk Sovereign|{1}{U}{U}|Creature - Merfolk|2|2|Other Merfolk creatures you control get +1/+1.<br>{T}: Target Merfolk creature is unblockable this turn.|Magic 2010|Rare|mono|3
+191378|Mesa Enchantress|{1}{W}{W}|Creature - Human Druid|0|2|Whenever you cast an enchantment spell, you may draw a card.|Magic 2010|Rare|mono|3
+191316|Might of Oaks|{3}{G}|Instant| | |Target creature gets +7/+7 until end of turn.|Magic 2010|Rare|mono|4
+190197|Mind Control|{3}{U}{U}|Enchantment - Aura| | |Enchant creature<br>You control enchanted creature.|Magic 2010|Uncommon|mono|5
+190555|Mind Rot|{2}{B}|Sorcery| | |Target player discards two cards.|Magic 2010|Common|mono|3
+191324|Mind Shatter|{X}{B}{B}|Sorcery| | |Target player discards X cards at random.|Magic 2010|Rare|mono|2
+191323|Mind Spring|{X}{U}{U}|Sorcery| | |Draw X cards.|Magic 2010|Rare|mono|2
+193878|Mirror of Fate|{5}|Artifact| | |{T}, Sacrifice Mirror of Fate: Choose up to seven face-up exiled cards you own. Exile all the cards from your library, then put the chosen cards on top of your library.|Magic 2010|Rare|colorless|5
+189921|Mist Leopard|{3}{G}|Creature - Cat|3|2|Shroud <i>(This creature can't be the target of spells or abilities.)</i>|Magic 2010|Common|mono|4
+189909|Mold Adder|{G}|Creature - Fungus Snake|1|1|Whenever an opponent casts a blue or black spell, you may put a +1/+1 counter on Mold Adder.|Magic 2010|Uncommon|mono|1
+191402|Mountain| |Basic Land - Mountain| | |R|Magic 2010|Land|land|0
+189896|Naturalize|{1}{G}|Instant| | |Destroy target artifact or enchantment.|Magic 2010|Common|mono|2
+189917|Nature's Spiral|{1}{G}|Sorcery| | |Return target permanent card from your graveyard to your hand. <i>(A permanent card is an artifact, creature, enchantment, land, or planeswalker card.)</i>|Magic 2010|Uncommon|mono|2
+190164|Negate|{1}{U}|Instant| | |Counter target noncreature spell.|Magic 2010|Common|mono|2
+191319|Nightmare|{5}{B}|Creature - Nightmare Horse| | |Flying<br>Nightmare's power and toughness are each equal to the number of Swamps you control.|Magic 2010|Rare|mono|6
+189922|Oakenform|{2}{G}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature gets +3/+3.|Magic 2010|Common|mono|3
+193877|Open the Vaults|{4}{W}{W}|Sorcery| | |Return all artifact and enchantment cards from all graveyards to the battlefield under their owners' control. <i>(Auras with nothing to enchant remain in graveyards.)</i>|Magic 2010|Rare|mono|6
+191337|Ornithopter|{0}|Artifact Creature - Thopter|0|2|Flying|Magic 2010|Uncommon|colorless|0
+189906|Overrun|{2}{G}{G}{G}|Sorcery| | |Creatures you control get +3/+3 and gain trample until end of turn. <i>(If a creature you control would deal enough damage to its blockers to destroy them, you may have it deal the rest of its damage to defending player or planeswalker.)</i>|Magic 2010|Uncommon|mono|5
+190574|Pacifism|{1}{W}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature can't attack or block.|Magic 2010|Common|mono|2
+190534|Palace Guard|{2}{W}|Creature - Human Soldier|1|4|Palace Guard can block any number of creatures.|Magic 2010|Common|mono|3
+191081|Panic Attack|{2}{R}|Sorcery| | |Up to three target creatures can't block this turn.|Magic 2010|Common|mono|3
+189892|Phantom Warrior|{1}{U}{U}|Creature - Illusion Warrior|2|2|Phantom Warrior is unblockable.|Magic 2010|Uncommon|mono|3
+191592|Pithing Needle|{1}|Artifact| | |As Pithing Needle enters the battlefield, name a card.<br>Activated abilities of sources with the chosen name can't be activated unless they're mana abilities.|Magic 2010|Rare|colorless|1
+191382|Plains| |Basic Land - Plains| | |W|Magic 2010|Land|land|0
+191599|Planar Cleansing|{3}{W}{W}{W}|Sorcery| | |Destroy all nonland permanents.|Magic 2010|Rare|mono|6
+191313|Platinum Angel|{7}|Artifact Creature - Angel|4|4|Flying<br>You can't lose the game and your opponents can't win the game.|Magic 2010|Mythic Rare|colorless|7
+191380|Polymorph|{3}{U}|Sorcery| | |Destroy target creature. It can't be regenerated. Its controller reveals cards from the top of his or her library until he or she reveals a creature card. The player puts that card onto the battlefield, then shuffles all other cards revealed this way into his or her library.|Magic 2010|Rare|mono|4
+190159|Ponder|{U}|Sorcery| | |Look at the top three cards of your library, then put them back in any order. You may shuffle your library.<br>Draw a card.|Magic 2010|Common|mono|1
+189900|Prized Unicorn|{3}{G}|Creature - Unicorn|2|2|All creatures able to block Prized Unicorn do so.|Magic 2010|Uncommon|mono|4
+191102|Prodigal Pyromancer|{2}{R}|Creature - Human Wizard|1|1|{T}: Prodigal Pyromancer deals 1 damage to target creature or player.|Magic 2010|Uncommon|mono|3
+193753|Protean Hydra|{X}{G}|Creature - Hydra|0|0|Protean Hydra enters the battlefield with X +1/+1 counters on it.<br>If damage would be dealt to Protean Hydra, prevent that damage and remove that many +1/+1 counters from it.<br>Whenever a +1/+1 counter is removed from Protean Hydra, put two +1/+1 counters on it at the beginning of the next end step.|Magic 2010|Mythic Rare|mono|1
+194425|Pyroclasm|{1}{R}|Sorcery| | |Pyroclasm deals 2 damage to each creature.|Magic 2010|Uncommon|mono|2
+191056|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Magic 2010|Common|mono|1
+189887|Rampant Growth|{1}{G}|Sorcery| | |Search your library for a basic land card and put that card onto the battlefield tapped. Then shuffle your library.|Magic 2010|Common|mono|2
+189891|Razorfoot Griffin|{3}{W}|Creature - Griffin|2|2|Flying<br>First strike <i>(This creature deals combat damage before creatures without first strike.)</i>|Magic 2010|Common|mono|4
+193739|Regenerate|{1}{G}|Instant| | |Regenerate target creature. <i>(The next time that creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Magic 2010|Common|mono|2
+191336|Relentless Rats|{1}{B}{B}|Creature - Rat|2|2|Relentless Rats gets +1/+1 for each other creature on the battlefield named Relentless Rats.<br>A deck can have any number of cards named Relentless Rats.|Magic 2010|Uncommon|mono|3
+190576|Rhox Pikemaster|{2}{W}{W}|Creature - Rhino Soldier|3|3|First strike <i>(This creature deals combat damage before creatures without first strike.)</i><br>Other Soldier creatures you control have first strike.|Magic 2010|Uncommon|mono|4
+191341|Righteousness|{W}|Instant| | |Target blocking creature gets +7/+7 until end of turn.|Magic 2010|Uncommon|mono|1
+190192|Rise from the Grave|{4}{B}|Sorcery| | |Put target creature card in a graveyard onto the battlefield under your control. That creature is a black Zombie in addition to its other colors and types.|Magic 2010|Uncommon|mono|5
+191339|Rod of Ruin|{4}|Artifact| | |{3}, {T}: Rod of Ruin deals 1 damage to target creature or player.|Magic 2010|Uncommon|colorless|4
+191057|Rootbound Crag| |Land| | |Rootbound Crag enters the battlefield tapped unless you control a Mountain or a Forest.<br>{T}: Add {R} or {G} to your mana pool.|Magic 2010|Rare|land|0
+191318|Royal Assassin|{1}{B}{B}|Creature - Human Assassin|1|1|{T}: Destroy target tapped creature.|Magic 2010|Rare|mono|3
+189888|Runeclaw Bear|{1}{G}|Creature - Bear|2|2||Magic 2010|Common|mono|2
+190176|Safe Passage|{2}{W}|Instant| | |Prevent all damage that would be dealt to you and creatures you control this turn.|Magic 2010|Common|mono|3
+190188|Sage Owl|{1}{U}|Creature - Bird|1|1|Flying<br>When Sage Owl enters the battlefield, look at the top four cards of your library, then put them back in any order.|Magic 2010|Common|mono|2
+190190|Sanguine Bond|{3}{B}{B}|Enchantment| | |Whenever you gain life, target opponent loses that much life.|Magic 2010|Rare|mono|5
+191095|Seismic Strike|{2}{R}|Instant| | |Seismic Strike deals damage to target creature equal to the number of Mountains you control.|Magic 2010|Common|mono|3
+190169|Serpent of the Endless Sea|{4}{U}|Creature - Serpent| | |Serpent of the Endless Sea's power and toughness are each equal to the number of Islands you control.<br>Serpent of the Endless Sea can't attack unless defending player controls an Island.|Magic 2010|Common|mono|5
+193767|Serra Angel|{3}{W}{W}|Creature - Angel|4|4|Flying<br>Vigilance <i>(Attacking doesn't cause this creature to tap.)</i>|Magic 2010|Uncommon|mono|5
+191086|Shatter|{1}{R}|Instant| | |Destroy target artifact.|Magic 2010|Common|mono|2
+191320|Shivan Dragon|{4}{R}{R}|Creature - Dragon|5|5|Flying<br>{R}: Shivan Dragon gets +1/+0 until end of turn.|Magic 2010|Rare|mono|6
+193931|Siege Mastodon|{4}{W}|Creature - Elephant|3|5||Magic 2010|Common|mono|5
+193751|Siege-Gang Commander|{3}{R}{R}|Creature - Goblin|2|2|When Siege-Gang Commander enters the battlefield, put three 1/1 red Goblin creature tokens onto the battlefield.<br>{1}{R}, Sacrifice a Goblin: Siege-Gang Commander deals 2 damage to target creature or player.|Magic 2010|Rare|mono|5
+190537|Sign in Blood|{B}{B}|Sorcery| | |Target player draws two cards and loses 2 life.|Magic 2010|Common|mono|2
+191083|Silence|{W}|Instant| | |Your opponents can't cast spells this turn. <i>(Spells cast before this resolves are unaffected.)</i>|Magic 2010|Rare|mono|1
+193750|Silvercoat Lion|{1}{W}|Creature - Cat|2|2||Magic 2010|Common|mono|2
+190186|Sleep|{2}{U}{U}|Sorcery| | |Tap all creatures target player controls. Those creatures don't untap during that player's next untap step.|Magic 2010|Uncommon|mono|4
+190163|Snapping Drake|{3}{U}|Creature - Drake|3|2|Flying|Magic 2010|Common|mono|4
+189875|Solemn Offering|{2}{W}|Sorcery| | |Destroy target artifact or enchantment. You gain 4 life.|Magic 2010|Common|mono|3
+190557|Soul Bleed|{2}{B}|Enchantment - Aura| | |Enchant creature<br>At the beginning of the upkeep of enchanted creature's controller, that player loses 1 life.|Magic 2010|Common|mono|3
+190571|Soul Warden|{W}|Creature - Human Cleric|1|1|Whenever another creature enters the battlefield, you gain 1 life.|Magic 2010|Common|mono|1
+191053|Sparkmage Apprentice|{1}{R}|Creature - Human Wizard|1|1|When Sparkmage Apprentice enters the battlefield, it deals 1 damage to target creature or player.|Magic 2010|Common|mono|2
+191338|Spellbook|{0}|Artifact| | |You have no maximum hand size.|Magic 2010|Uncommon|colorless|0
+191098|Sphinx Ambassador|{5}{U}{U}|Creature - Sphinx|5|5|Flying<br>Whenever Sphinx Ambassador deals combat damage to a player, search that player's library for a card, then that player names a card. If you searched for a creature card that isn't the named card, you may put it onto the battlefield under your control. Then that player shuffles his or her library.|Magic 2010|Mythic Rare|mono|7
+189899|Stampeding Rhino|{4}{G}|Creature - Rhino|4|4|Trample <i>(If this creature would deal enough damage to its blockers to destroy them, you may have it deal the rest of its damage to defending player or planeswalker.)</i>|Magic 2010|Common|mono|5
+191094|Stone Giant|{2}{R}{R}|Creature - Giant|3|4|{T}: Target creature you control with toughness less than Stone Giant's power gains flying until end of turn. Destroy that creature at the beginning of the next end step.|Magic 2010|Uncommon|mono|4
+190543|Stormfront Pegasus|{1}{W}|Creature - Pegasus|2|1|Flying|Magic 2010|Common|mono|2
+191100|Sunpetal Grove| |Land| | |Sunpetal Grove enters the battlefield tapped unless you control a Forest or a Plains.<br>{T}: Add {G} or {W} to your mana pool.|Magic 2010|Rare|land|0
+191398|Swamp| |Basic Land - Swamp| | |B|Magic 2010|Land|land|0
+189910|Telepathy|{U}|Enchantment| | |Your opponents play with their hands revealed.|Magic 2010|Uncommon|mono|1
+190564|Tempest of Light|{2}{W}|Instant| | |Destroy all enchantments.|Magic 2010|Uncommon|mono|3
+193744|Tendrils of Corruption|{3}{B}|Instant| | |Tendrils of Corruption deals X damage to target creature and you gain X life, where X is the number of Swamps you control.|Magic 2010|Common|mono|4
+190560|Terramorphic Expanse| |Land| | |{T}, Sacrifice Terramorphic Expanse: Search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.|Magic 2010|Common|land|0
+191379|Time Warp|{3}{U}{U}|Sorcery| | |Target player takes an extra turn after this one.|Magic 2010|Mythic Rare|mono|5
+191598|Tome Scour|{U}|Sorcery| | |Target player puts the top five cards of his or her library into his or her graveyard.|Magic 2010|Common|mono|1
+190177|Traumatize|{3}{U}{U}|Sorcery| | |Target player puts the top half of his or her library, rounded down, into his or her graveyard.|Magic 2010|Rare|mono|5
+191077|Trumpet Blast|{2}{R}|Instant| | |Attacking creatures get +2/+0 until end of turn.|Magic 2010|Common|mono|3
+191322|Twincast|{U}{U}|Instant| | |Copy target instant or sorcery spell. You may choose new targets for the copy.|Magic 2010|Rare|mono|2
+190582|Undead Slayer|{2}{W}|Creature - Human Cleric|2|2|{W}, {T}: Exile target Skeleton, Vampire, or Zombie.|Magic 2010|Uncommon|mono|3
+191343|Underworld Dreams|{B}{B}{B}|Enchantment| | |Whenever an opponent draws a card, Underworld Dreams deals 1 damage to him or her.|Magic 2010|Rare|mono|3
+190546|Unholy Strength|{B}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature gets +2/+1.|Magic 2010|Common|mono|1
+190183|Unsummon|{U}|Instant| | |Return target creature to its owner's hand.|Magic 2010|Common|mono|1
+190563|Vampire Aristocrat|{2}{B}|Creature - Vampire Rogue|2|2|Sacrifice a creature: Vampire Aristocrat gets +2/+2 until end of turn.|Magic 2010|Common|mono|3
+191384|Vampire Nocturnus|{1}{B}{B}{B}|Creature - Vampire|3|3|Play with the top card of your library revealed.<br>As long as the top card of your library is black, Vampire Nocturnus and other Vampire creatures you control get +2/+1 and have flying.|Magic 2010|Mythic Rare|mono|4
+189923|Veteran Armorsmith|{W}{W}|Creature - Human Soldier|2|3|Other Soldier creatures you control get +0/+1.|Magic 2010|Common|mono|2
+190194|Veteran Swordsmith|{2}{W}|Creature - Human Soldier|3|2|Other Soldier creatures you control get +1/+0.|Magic 2010|Common|mono|3
+191072|Viashino Spearhunter|{2}{R}|Creature - Viashino Warrior|2|1|First strike <i>(This creature deals combat damage before creatures without first strike.)</i>|Magic 2010|Common|mono|3
+190578|Wall of Bone|{2}{B}|Creature - Skeleton Wall|1|4|Defender <i>(This creature can't attack.)</i><br>{B}: Regenerate Wall of Bone. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Magic 2010|Uncommon|mono|3
+190182|Wall of Faith|{3}{W}|Creature - Wall|0|5|Defender <i>(This creature can't attack.)</i><br>{W}: Wall of Faith gets +0/+1 until end of turn.|Magic 2010|Common|mono|4
+194423|Wall of Fire|{1}{R}{R}|Creature - Wall|0|5|Defender <i>(This creature can't attack.)</i><br>{R}: Wall of Fire gets +1/+0 until end of turn.|Magic 2010|Uncommon|mono|3
+190160|Wall of Frost|{1}{U}{U}|Creature - Wall|0|7|Defender <i>(This creature can't attack.)</i><br>Whenever Wall of Frost blocks a creature, that creature doesn't untap during its controller's next untap step.|Magic 2010|Uncommon|mono|3
+190187|Warp World|{5}{R}{R}{R}|Sorcery| | |Each player shuffles all permanents he or she owns into his or her library, then reveals that many cards from the top of his or her library. Each player puts all artifact, creature, and land cards revealed this way onto the battlefield, then does the same for enchantment cards, then puts all cards revealed this way that weren't put onto the battlefield on the bottom of his or her library.|Magic 2010|Rare|mono|8
+193740|Warpath Ghoul|{2}{B}|Creature - Zombie|3|2||Magic 2010|Common|mono|3
+190539|Weakness|{B}|Enchantment - Aura| | |Enchant creature<br>Enchanted creature gets -2/-1.|Magic 2010|Common|mono|1
+191078|Whispersilk Cloak|{3}|Artifact - Equipment| | |Equipped creature is unblockable.<br>Equipped creature has shroud. <i>(It can't be the target of spells or abilities.)</i><br>Equip {2} <i>({2}: Attach to target creature you control. Equip only as a sorcery.)</i>|Magic 2010|Uncommon|colorless|3
+189877|White Knight|{W}{W}|Creature - Human Knight|2|2|First strike <i>(This creature deals combat damage before creatures without first strike.)</i><br>Protection from black <i>(This creature can't be blocked, targeted, dealt damage, or enchanted by anything black.)</i>|Magic 2010|Uncommon|mono|2
+193962|Wind Drake|{2}{U}|Creature - Drake|2|2|Flying|Magic 2010|Common|mono|3
+191596|Windstorm|{X}{G}|Instant| | |Windstorm deals X damage to each creature with flying.|Magic 2010|Uncommon|mono|1
+191248|Wurm's Tooth|{2}|Artifact| | |Whenever a player casts a green spell, you may gain 1 life.|Magic 2010|Uncommon|colorless|2
+189885|Xathrid Demon|{3}{B}{B}{B}|Creature - Demon|7|7|Flying, trample<br>At the beginning of your upkeep, sacrifice a creature other than Xathrid Demon, then each opponent loses life equal to the sacrificed creature's power. If you can't sacrifice a creature, tap Xathrid Demon and you lose 7 life.|Magic 2010|Mythic Rare|mono|6
+191088|Yawning Fissure|{4}{R}|Sorcery| | |Each opponent sacrifices a land.|Magic 2010|Common|mono|5
+190167|Zephyr Sprite|{U}|Creature - Faerie|1|1|Flying|Magic 2010|Common|mono|1
+190545|Zombie Goliath|{4}{B}|Creature - Zombie Giant|4|3||Magic 2010|Common|mono|5
