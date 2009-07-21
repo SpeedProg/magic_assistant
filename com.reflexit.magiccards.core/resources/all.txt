@@ -1978,9 +1978,9 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 129554|Earth Elemental|{3}{R}{R}|Creature - Elemental|4|5| |Tenth Edition|Uncommon|mono|5
 129557|Wild Griffin|{2}{W}|Creature - Griffin|2|2|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Tenth Edition |Common|null|0
 129557|Wild Griffin|{2}{W}|Creature - Griffin|2|2|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Tenth Edition|Common|mono|3
-129559|Forest| |Basic Land - Forest| | |[G]|Tenth Edition|BasicLand|land|0
+129559|Forest| |Basic Land - Forest| | |[G]|Tenth Edition|Land|land|0
 12955|Karmic Guide|{3}{W}{W}|Creature - Angel Spirit|2|2|Flying, protection from black <br>Echo {3}{W}{W} <i>(At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)</i> <br>When Karmic Guide comes into play, return target creature card from your graveyard to play.|Urza's Legacy |Rare|null|0
-129562|Forest| |Basic Land - Forest| | |[G]|Tenth Edition |BasicLand|null|0
+129562|Forest| |Basic Land - Forest| | |[G]|Tenth Edition |Land|null|0
 129564|Highway Robber|{2}{B}{B}|Creature - Human Rogue Mercenary|2|2|When Highway Robber comes into play, target opponent loses 2 life and you gain 2 life.|Tenth Edition |Common|null|0
 129564|Highway Robber|{2}{B}{B}|Creature - Human Rogue Mercenary|2|2|When Highway Robber comes into play, target opponent loses 2 life and you gain 2 life.|Tenth Edition|Common|mono|4
 129566|Furnace of Rath|{1}{R}{R}{R}|Enchantment| | |If a source would deal damage to a creature or player, it deals double that damage to that creature or player instead.|Tenth Edition|Rare|mono|4
@@ -2021,7 +2021,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 129601|Icy Manipulator|{4}|Artifact| | |{1}, {T}: Tap target artifact, creature, or land.|Tenth Edition|Uncommon|colorless|4
 129604|Tundra Wolves|{W}|Creature - Wolf|1|1|First strike <i>(This creature deals combat damage before creatures without first strike.)</i>|Tenth Edition |Common|null|0
 129604|Tundra Wolves|{W}|Creature - Wolf|1|1|First strike <i>(This creature deals combat damage before creatures without first strike.)</i>|Tenth Edition|Common|mono|1
-129608|Island| |Basic Land - Island| | |[U]|Tenth Edition|BasicLand|land|0
+129608|Island| |Basic Land - Island| | |[U]|Tenth Edition|Land|land|0
 129610|True Believer|{W}{W}|Creature - Human Cleric|2|2|You have shroud. <i>(You can't be the target of spells or abilities.)</i>|Tenth Edition |Rare|null|0
 129610|True Believer|{W}{W}|Creature - Human Cleric|2|2|You have shroud. <i>(You can't be the target of spells or abilities.)</i>|Tenth Edition|Rare|mono|2
 129614|Karplusan Forest| |Land| | |{T}: Add {1} to your mana pool. <br>{T}: Add {R} or {G} to your mana pool. Karplusan Forest deals 1 damage to you.|Tenth Edition|Rare|land|0
@@ -2052,7 +2052,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 129645|Mind Rot|{2}{B}|Sorcery| | |Target player discards two cards.|Tenth Edition|Common|mono|3
 129648|Mortivore|{2}{B}{B}|Creature - Lhurgoyf|*|*|Mortivore's power and toughness are each equal to the number of creature cards in all graveyards. <br>{B}: Regenerate Mortivore. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Tenth Edition |Rare|null|0
 129648|Mortivore|{2}{B}{B}|Creature - Lhurgoyf|*|*|Mortivore's power and toughness are each equal to the number of creature cards in all graveyards. <br>{B}: Regenerate Mortivore. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Tenth Edition|Rare|mono|4
-129649|Mountain| |Basic Land - Mountain| | |[R]|Tenth Edition|BasicLand|land|0
+129649|Mountain| |Basic Land - Mountain| | |[R]|Tenth Edition|Land|land|0
 129653|Nantuko Husk|{2}{B}|Creature - Zombie Insect|2|2|Sacrifice a creature: Nantuko Husk gets +2/+2 until end of turn.|Tenth Edition |Uncommon|null|0
 129653|Nantuko Husk|{2}{B}|Creature - Zombie Insect|2|2|Sacrifice a creature: Nantuko Husk gets +2/+2 until end of turn.|Tenth Edition|Uncommon|mono|3
 129655|Natural Spring|{3}{G}{G}|Sorcery| | |Target player gains 8 life.|Tenth Edition |Common|null|0
@@ -2074,7 +2074,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 129678|Plague Beetle|{B}|Creature - Insect|1|1|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Tenth Edition|Common|mono|1
 129679|Plague Wind|{7}{B}{B}|Sorcery| | |Destroy all creatures you don't control. They can't be regenerated.|Tenth Edition |Rare|null|0
 129679|Plague Wind|{7}{B}{B}|Sorcery| | |Destroy all creatures you don't control. They can't be regenerated.|Tenth Edition|Rare|mono|9
-129680|Plains| |Basic Land - Plains| | |[W]|Tenth Edition|BasicLand|land|0
+129680|Plains| |Basic Land - Plains| | |[W]|Tenth Edition|Land|land|0
 129685|Puppeteer|{2}{U}|Creature - Human Wizard|1|2|{U}, {T}: You may tap or untap target creature.|Tenth Edition |Uncommon|null|0
 129685|Puppeteer|{2}{U}|Creature - Human Wizard|1|2|{U}, {T}: You may tap or untap target creature.|Tenth Edition|Uncommon|mono|3
 129687|Quicksand| |Land| | |{T}: Add {1} to your mana pool. <br>{T}, Sacrifice Quicksand: Target attacking creature without flying gets -1/-2 until end of turn.|Tenth Edition |Uncommon|null|0
@@ -2133,7 +2133,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 129751|Sulfurous Springs| |Land| | |{T}: Add {1} to your mana pool. <br>{T}: Add {B} or {R} to your mana pool. Sulfurous Springs deals 1 damage to you.|Tenth Edition|Rare|land|0
 129753|Suntail Hawk|{W}|Creature - Bird|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Tenth Edition |Common|null|0
 129753|Suntail Hawk|{W}|Creature - Bird|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Tenth Edition|Common|mono|1
-129757|Swamp| |Basic Land - Swamp| | |[B]|Tenth Edition|BasicLand|land|0
+129757|Swamp| |Basic Land - Swamp| | |[B]|Tenth Edition|Land|land|0
 12975|Trained Orgg|{6}{R}|Creature - Orgg|6|6| |Seventh Edition |Rare|null|0
 129761|Telepathy|{U}|Enchantment| | |Your opponents play with their hands revealed.|Tenth Edition|Uncommon|mono|1
 129764|Thieving Magpie|{2}{U}{U}|Creature - Bird|1|3|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>  <br>Whenever Thieving Magpie deals damage to an opponent, you draw a card.|Tenth Edition|Uncommon|mono|4
@@ -5450,7 +5450,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 2231|Nafs Asp|{G}|Creature - Snake|1|1|Whenever Nafs Asp deals damage to a player, that player loses 1 life at the beginning of his or her next draw step unless he or she pays {1} before that draw step.|Fourth Edition |Common|null|0
 22320|Silkenfist Fighter|{1}{W}|Creature - Kor Soldier|1|3|Whenever Silkenfist Fighter becomes blocked, untap it.|Nemesis |Common|null|0
 22338|Silkenfist Order|{3}{W}{W}|Creature - Kor Soldier|3|5|Whenever Silkenfist Order becomes blocked, untap it.|Nemesis |Uncommon|null|0
-22344|Mountain| |Basic Land - Mountain| | |[R]|Battle Royale Box Set |BasicLand|null|0
+22344|Mountain| |Basic Land - Mountain| | |[R]|Battle Royale Box Set |Land|null|0
 2234|Rebirth|{3}{G}{G}{G}|Sorcery| | |Remove Rebirth from your deck before playing if you're not playing for ante. <br> <br>Each player may put the top card of his or her library into the ante. If a player does, his or her life total becomes 20.|Fourth Edition |Rare|null|0
 2236|Sandstorm|{G}|Instant| | |Sandstorm deals 1 damage to each attacking creature.|Fourth Edition |Common|null|0
 22377|Air Bladder|{U}|Enchantment - Aura| | |Enchant creature <br>Enchanted creature has flying. <br>Enchanted creature can block only creatures with flying.|Nemesis |Common|null|0
@@ -6210,7 +6210,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 25954|Sinister Strength|{1}{B}|Enchantment - Aura| | |Enchant creature <br>Enchanted creature gets +3/+1 and is black.|Planeshift |Common|null|0
 25956|Penumbra Kavu|{4}{G}|Creature - Kavu|3|3|When Penumbra Kavu is put into a graveyard from play, put a 3/3 black Kavu creature token into play.|Apocalypse |Uncommon|null|0
 2595|Touch of Vitae|{2}{G}|Instant| | |Target creature gains haste and "{0}: Untap this creature. Play this ability only once." until end of turn. <br> <br>Draw a card at the beginning of the next turn's upkeep.|Ice Age |Uncommon|null|0
-25964|Island| |Basic Land - Island| | |[U]|Invasion |BasicLand|null|0
+25964|Island| |Basic Land - Island| | |[U]|Invasion |Land|null|0
 2596|Trailblazer|{2}{G}{G}|Instant| | |Target creature is unblockable this turn.|Ice Age |Rare|null|0
 25971|Savage Gorilla|{4}{G}|Creature - Ape|3|3|{U}{B}, {T}, Sacrifice Savage Gorilla: Target creature gets -3/-3 until end of turn. Draw a card.|Apocalypse |Common|null|0
 25974|Wormfang Drake|{2}{U}|Creature - Nightmare Drake|3|4|Flying <br>When Wormfang Drake comes into play, sacrifice it unless you remove a creature you control other than Wormfang Drake from the game. <br>When Wormfang Drake leaves play, return the removed card to play under its owner's control.|Judgment |Common|null|0
@@ -6461,7 +6461,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 27229|Shriek of Dread|{1}{B}|Instant| | |Target creature gains fear until end of turn.|Planeshift |Common|null|0
 2722|Elemental Augury|{U}{B}{R}|Enchantment| | |{3}: Look at the top three cards of target player's library and put them back on top of that player's library in any order.|Ice Age |Rare|null|0
 27231|Last Stand|{W}{U}{B}{R}{G}|Sorcery| | |Target opponent loses 2 life for each Swamp you control. Last Stand deals damage equal to the number of Mountains you control to target creature. Put a 1/1 green Saproling creature token into play for each Forest you control. You gain 2 life for each Plains you control. Draw a card for each Island you control, then discard that many cards.|Apocalypse |Rare|null|0
-27234|Swamp| |Basic Land - Swamp| | |[B]|Beatdown Box Set |BasicLand|null|0
+27234|Swamp| |Basic Land - Swamp| | |[B]|Beatdown Box Set |Land|null|0
 2723|Essence Vortex|{1}{U}{B}|Instant| | |Destroy target creature unless its controller pays life equal to its toughness. A creature destroyed this way can't be regenerated.|Ice Age |Uncommon|null|0
 27245|Bone Harvest|{2}{B}|Instant| | |Put any number of target creature cards from your graveyard on top of your library. <br>Draw a card at the beginning of the next turn's upkeep.|Beatdown Box Set |Common|null|0
 27249|Crash of Rhinos|{6}{G}{G}|Creature - Rhino|8|4|Trample|Beatdown Box Set |Common|null|0
@@ -6517,9 +6517,9 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 27671|Whirlpool Drake|{3}{U}|Creature - Drake|2|2|Flying <br>When Whirlpool Drake comes into play, shuffle the cards from your hand into your library, then draw that many cards. <br>When Whirlpool Drake is put into a graveyard from play, shuffle the cards from your hand into your library, then draw that many cards.|Apocalypse |Uncommon|null|0
 27672|Whirlpool Warrior|{2}{U}|Creature - Merfolk Warrior|2|2|When Whirlpool Warrior comes into play, shuffle the cards from your hand into your library, then draw that many cards. <br>{R}, Sacrifice Whirlpool Warrior: Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|Apocalypse |Rare|null|0
 27674|Shield of Duty and Reason|{W}|Enchantment - Aura| | |Enchant creature <br>Enchanted creature has protection from green and from blue.|Apocalypse |Common|null|0
-2770|Snow-Covered Island| |Basic Snow Land - Island| | |[U]|Ice Age |BasicLand|null|0
+2770|Snow-Covered Island| |Basic Snow Land - Island| | |[U]|Ice Age |Land|null|0
 27714|Confound|{1}{U}|Instant| | |Counter target spell that targets one or more creatures. <br> <br>Draw a card.|Planeshift |Common|null|0
-2774|Snow-Covered Plains| |Basic Snow Land - Plains| | |[W]|Ice Age |BasicLand|null|0
+2774|Snow-Covered Plains| |Basic Snow Land - Plains| | |[W]|Ice Age |Land|null|0
 27760|Kavu Mauler|{4}{G}{G}|Creature - Kavu|4|4|Trample <br>Whenever Kavu Mauler attacks, it gets +1/+1 until end of turn for each other attacking Kavu.|Apocalypse |Rare|null|0
 2780|Bronze Horse|{7}|Artifact Creature - Horse|4|4|Trample <br>If you control another creature, prevent all damage that would be dealt to Bronze Horse by spells that target it.|Chronicles |Rare|null|0
 2784|Horn of Deafening|{4}|Artifact| | |{2}, {T}: Prevent all combat damage that would be dealt by target creature this turn.|Chronicles |Rare|null|0
@@ -10611,7 +10611,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 78989|Sosuke, Son of Seshiro|{2}{G}{G}|Legendary Creature - Snake Warrior|3|4|Other Snake creatures you control get +1/+0. <br>Whenever a Warrior you control deals combat damage to a creature, destroy that creature at end of combat.|Champions of Kamigawa |Uncommon|null|0
 78991|Night of Souls' Betrayal|{2}{B}{B}|Legendary Enchantment| | |All creatures get -1/-1.|Champions of Kamigawa |Rare|null|0
 78|Raise Dead|{B}|Sorcery| | |Return target creature card from your graveyard to your hand.|Limited Edition Alpha |Common|null|0
-79072|Plains| |Basic Land - Plains| | |[W]|Champions of Kamigawa |BasicLand|null|0
+79072|Plains| |Basic Land - Plains| | |[W]|Champions of Kamigawa |Land|null|0
 79080|Lantern-Lit Graveyard| |Land| | |{T}: Add {1} to your mana pool. <br>{T}: Add {B} or {R} to your mana pool. Lantern-Lit Graveyard doesn't untap during your next untap step.|Champions of Kamigawa |Uncommon|null|0
 79084|Lava Spike|{R}|Sorcery - Arcane| | |Lava Spike deals 3 damage to target player.|Champions of Kamigawa |Common|null|0
 79088|Gutwrencher Oni|{3}{B}{B}|Creature - Demon Spirit|5|4|Trample <br>At the beginning of your upkeep, discard a card if you don't control an Ogre.|Champions of Kamigawa |Uncommon|null|0
@@ -11627,7 +11627,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 174814|Cloudheath Drake|{4}{U}|Artifact Creature - Drake|3|3|Flying <br>{1}{W}: Cloudheath Drake gains vigilance until end of turn.|Shards of Alara|Common|mono|5
 174816|Glaze Fiend|{1}{B}|Artifact Creature - Illusion|0|1|Flying <br>Whenever another artifact comes into play under your control, Glaze Fiend gets +2/+2 until end of turn.|Shards of Alara|Common|mono|2
 174817|Banewasp Affliction|{1}{B}|Enchantment - Aura| | |Enchant creature <br>When enchanted creature is put into a graveyard, that creature's controller loses life equal to its toughness.|Shards of Alara|Common|mono|2
-174818|Lich's Mirror|{5}|Artifact| | |If you would lose the game, instead shuffle your hand, your graveyard, and all permanents you own into your library, then draw seven cards and your life total becomes 20.|Shards of Alara|MythicRare|colorless|5
+174818|Lich's Mirror|{5}|Artifact| | |If you would lose the game, instead shuffle your hand, your graveyard, and all permanents you own into your library, then draw seven cards and your life total becomes 20.|Shards of Alara|Mythic Rare|colorless|5
 174821|Bloodthorn Taunter|{1}{R}|Creature - Human Scout|1|1|Haste <br>{T}: Target creature with power 5 or greater gains haste until end of turn.|Shards of Alara|Common|mono|2
 174822|Godtoucher|{3}{G}|Creature - Elf Cleric|2|2|{1}{W}, {T}: Prevent all damage that would be dealt to target creature with power 5 or greater this turn.|Shards of Alara|Common|mono|4
 174823|Ranger of Eos|{3}{W}|Creature - Human Soldier|3|2|When Ranger of Eos comes into play, you may search your library for up to two creature cards with converted mana cost 1 or less, reveal them, and put them into your hand. If you do, shuffle your library.|Shards of Alara|Rare|mono|4
@@ -11645,9 +11645,9 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 174845|Scourge Devil|{4}{R}|Creature - Devil|3|3|When Scourge Devil comes into play, creatures you control get +1/+0 until end of turn. <br>Unearth {2}{R} <i>({2}{R}: Return this card from your graveyard to play. It gains haste. Remove it from the game at end of turn or if it would leave play. Unearth only as a sorcery.)</i>|Shards of Alara|Uncommon|mono|5
 174847|Archdemon of Unx|{5}{B}{B}|Creature - Demon|6|6|Flying, trample <br>At the beginning of your upkeep, sacrifice a non-Zombie creature, then put a 2/2 black Zombie creature token into play.|Shards of Alara|Rare|mono|7
 174848|Dreg Reaver|{4}{B}|Creature - Zombie Beast|4|3| |Shards of Alara|Common|mono|5
-174852|Ajani Vengeant|{2}{R}{W}|Planeswalker - Ajani| |3|+1: Target permanent doesn't untap during its controller's next untap step. <br>-2: Ajani Vengeant deals 3 damage to target creature or player and you gain 3 life. <br>-7: Destroy all lands target player controls.|Shards of Alara|MythicRare|multi|4
+174852|Ajani Vengeant|{2}{R}{W}|Planeswalker - Ajani| |3|+1: Target permanent doesn't untap during its controller's next untap step. <br>-2: Ajani Vengeant deals 3 damage to target creature or player and you gain 3 life. <br>-7: Destroy all lands target player controls.|Shards of Alara|Mythic Rare|multi|4
 174853|Scourglass|{3}{W}{W}|Artifact| | |{T}, Sacrifice Scourglass: Destroy all permanents except for artifacts and lands. Play this ability only during your upkeep.|Shards of Alara|Rare|mono|5
-174859|Elspeth, Knight-Errant|{2}{W}{W}|Planeswalker - Elspeth| |4|+1: Put a 1/1 white Soldier creature token into play. <br>+1: Target creature gets +3/+3 and gains flying until end of turn. <br>-8: For the rest of the game, artifacts, creatures, enchantments, and lands you control are indestructible.|Shards of Alara|MythicRare|mono|4
+174859|Elspeth, Knight-Errant|{2}{W}{W}|Planeswalker - Elspeth| |4|+1: Put a 1/1 white Soldier creature token into play. <br>+1: Target creature gets +3/+3 and gains flying until end of turn. <br>-8: For the rest of the game, artifacts, creatures, enchantments, and lands you control are indestructible.|Shards of Alara|Mythic Rare|mono|4
 174863|Sprouting Thrinax|{B}{R}{G}|Creature - Lizard|3|3|When Sprouting Thrinax is put into a graveyard from play, put three 1/1 green Saproling creature tokens into play.|Shards of Alara|Uncommon|multi|3
 174867|Sigil of Distinction|{X}|Artifact - Equipment| | |Sigil of Distinction comes into play with X charge counters on it. <br>Equipped creature gets +1/+1 for each charge counter on Sigil of Distinction. <br>Equip-Remove a charge counter from Sigil of Distinction.|Shards of Alara|Rare|colorless|0
 174868|Grixis Battlemage|{2}{B}|Creature - Human Wizard|2|2|{U}, {T}: Draw a card, then discard a card. <br>{R}, {T}: Target creature can't block this turn.|Shards of Alara|Uncommon|mono|3
@@ -11656,7 +11656,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 174871|Fleshbag Marauder|{2}{B}|Creature - Zombie Warrior|3|1|When Fleshbag Marauder comes into play, each player sacrifices a creature.|Shards of Alara|Uncommon|mono|3
 174872|Esper Battlemage|{2}{U}|Artifact Creature - Human Wizard|2|2|{W}, {T}: Prevent the next 2 damage that would be dealt to you this turn. <br>{B}, {T}: Target creature gets -1/-1 until end of turn.|Shards of Alara|Uncommon|mono|3
 174873|Hissing Iguanar|{2}{R}|Creature - Lizard|3|1|Whenever another creature is put into a graveyard from play, you may have Hissing Iguanar deal 1 damage to target player.|Shards of Alara|Common|mono|3
-174876|Kresh the Bloodbraided|{2}{B}{R}{G}|Legendary Creature - Human Warrior|3|3|Whenever another creature is put into a graveyard from play, you may put X +1/+1 counters on Kresh the Bloodbraided, where X is that creature's power.|Shards of Alara|MythicRare|multi|5
+174876|Kresh the Bloodbraided|{2}{B}{R}{G}|Legendary Creature - Human Warrior|3|3|Whenever another creature is put into a graveyard from play, you may put X +1/+1 counters on Kresh the Bloodbraided, where X is that creature's power.|Shards of Alara|Mythic Rare|multi|5
 174877|Savage Lands| |Land| | |Savage Lands comes into play tapped. <br>{T}: Add {B}, {R}, or {G} to your mana pool.|Shards of Alara|Uncommon|land|0
 174881|Sharding Sphinx|{4}{U}{U}|Artifact Creature - Sphinx|4|4|Flying <br>Whenever an artifact creature you control deals combat damage to a player, you may put a 1/1 blue Thopter artifact creature token with flying into play.|Shards of Alara|Rare|mono|6
 174882|Kederekt Leviathan|{6}{U}{U}|Creature - Leviathan|5|5|When Kederekt Leviathan comes into play, return all other nonland permanents to their owners' hands. <br>Unearth {6}{U} <i>({6}{U}: Return this card from your graveyard to play. It gains haste. Remove it from the game at end of turn or if it would leave play. Unearth only as a sorcery.)</i>|Shards of Alara|Rare|mono|8
@@ -11673,14 +11673,14 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 174903|Druid of the Anima|{1}{G}|Creature - Elf Druid|1|1|{T}: Add {R}, {G}, or {W} to your mana pool.|Shards of Alara|Common|mono|2
 174906|Obelisk of Esper|{3}|Artifact| | |{T}: Add {W}, {U}, or {B} to your mana pool.|Shards of Alara|Common|colorless|3
 174909|Oblivion Ring|{2}{W}|Enchantment| | |When Oblivion Ring comes into play, remove another target nonland permanent from the game.  <br>When Oblivion Ring leaves play, return the removed card to play under its owner's control.|Shards of Alara|Common|mono|3
-174912|Tezzeret the Seeker|{3}{U}{U}|Planeswalker - Tezzeret| |4|+1: Untap up to two target artifacts. <br>-X: Search your library for an artifact card with converted mana cost X or less and put it into play. Then shuffle your library. <br>-5: Artifacts you control become 5/5 artifact creatures until end of turn.|Shards of Alara|MythicRare|mono|5
+174912|Tezzeret the Seeker|{3}{U}{U}|Planeswalker - Tezzeret| |4|+1: Untap up to two target artifacts. <br>-X: Search your library for an artifact card with converted mana cost X or less and put it into play. Then shuffle your library. <br>-5: Artifacts you control become 5/5 artifact creatures until end of turn.|Shards of Alara|Mythic Rare|mono|5
 174915|Ad Nauseam|{3}{B}{B}|Instant| | |Reveal the top card of your library and put that card into your hand. You lose life equal to its converted mana cost. You may repeat this process any number of times.|Shards of Alara|Rare|mono|5
 174916|Spearbreaker Behemoth|{5}{G}{G}|Creature - Beast|5|5|Spearbreaker Behemoth is indestructible. <br>{1}: Target creature with power 5 or greater is indestructible this turn.|Shards of Alara|Rare|mono|7
 174917|Blightning|{1}{B}{R}|Sorcery| | |Blightning deals 3 damage to target player. That player discards two cards.|Shards of Alara|Common|multi|3
 174922|Vithian Stinger|{2}{R}|Creature - Human Shaman|0|1|{T}: Vithian Stinger deals 1 damage to target creature or player. <br>Unearth {1}{R} <i>({1}{R}: Return this card from your graveyard to play. It gains haste. Remove it from the game at end of turn or if it would leave play. Unearth only as a sorcery.)</i>|Shards of Alara|Common|mono|3
 174924|Tower Gargoyle|{1}{W}{U}{B}|Artifact Creature - Gargoyle|4|4|Flying|Shards of Alara|Uncommon|multi|4
 174925|Sanctum Gargoyle|{3}{W}|Artifact Creature - Gargoyle|2|3|Flying <br>When Sanctum Gargoyle comes into play, you may return target artifact card from your graveyard to your hand.|Shards of Alara|Common|mono|4
-174927|Forest| |Basic Land - Forest| | |[G]|Shards of Alara|BasicLand|land|0
+174927|Forest| |Basic Land - Forest| | |[G]|Shards of Alara|Land|land|0
 174931|Ethersworn Canonist|{1}{W}|Artifact Creature - Human Cleric|2|2|Each player who has played a nonartifact spell this turn can't play additional nonartifact spells.|Shards of Alara|Rare|mono|2
 174935|Cylian Elf|{1}{G}|Creature - Elf Scout|2|2| |Shards of Alara|Common|mono|2
 174936|Dragon Fodder|{1}{R}|Sorcery| | |Put two 1/1 red Goblin creature tokens into play.|Shards of Alara|Common|mono|2
@@ -11689,7 +11689,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 174941|Savage Hunger|{2}{G}|Enchantment - Aura| | |Enchant creature <br>Enchanted creature gets +1/+0 and has trample. <br>Cycling {2} <i>({2}, Discard this card: Draw a card.)</i>|Shards of Alara|Common|mono|3
 174943|Drumhunter|{3}{G}|Creature - Human Druid Warrior|2|2|At the end of your turn, if you control a creature with power 5 or greater, you may draw a card. <br>{T}: Add {1} to your mana pool.|Shards of Alara|Uncommon|mono|4
 174944|Naya Battlemage|{2}{G}|Creature - Human Shaman|2|2|{R}, {T}: Target creature gets +2/+0 until end of turn. <br>{W}, {T}: Tap target creature.|Shards of Alara|Uncommon|mono|3
-174948|Rafiq of the Many|{1}{G}{W}{U}|Legendary Creature - Human Knight|3|3|Exalted <i>(Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.)</i> <br>Whenever a creature you control attacks alone, it gains double strike until end of turn.|Shards of Alara|MythicRare|multi|4
+174948|Rafiq of the Many|{1}{G}{W}{U}|Legendary Creature - Human Knight|3|3|Exalted <i>(Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.)</i> <br>Whenever a creature you control attacks alone, it gains double strike until end of turn.|Shards of Alara|Mythic Rare|multi|4
 174950|Seaside Citadel| |Land| | |Seaside Citadel comes into play tapped. <br>{T}: Add {G}, {W}, or {U} to your mana pool.|Shards of Alara|Uncommon|land|0
 174951|Soul's Fire|{2}{R}|Instant| | |Target creature you control in play deals damage equal to its power to target creature or player.|Shards of Alara|Common|mono|3
 174952|Bull Cerodon|{4}{R}{W}|Creature - Beast|5|5|Vigilance, haste|Shards of Alara|Uncommon|multi|6
@@ -11705,8 +11705,8 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 174973|Feral Hydra|{X}{G}|Creature - Hydra Beast|0|0|Feral Hydra comes into play with X +1/+1 counters on it. <br>{3}: Put a +1/+1 counter on Feral Hydra. Any player may play this ability.|Shards of Alara|Rare|mono|1
 174975|Mycoloth|{3}{G}{G}|Creature - Fungus|4|4|Devour 2 <i>(As this comes into play, you may sacrifice any number of creatures. This creature comes into play with twice that many +1/+1 counters on it.)</i> <br>At the beginning of your upkeep, put a 1/1 green Saproling creature token into play for each +1/+1 counter on Mycoloth.|Shards of Alara|Rare|mono|5
 174976|Kiss of the Amesha|{4}{W}{U}|Sorcery| | |Target player gains 7 life and draws two cards.|Shards of Alara|Uncommon|multi|6
-174979|Island| |Basic Land - Island| | |[U]|Shards of Alara|BasicLand|land|0
-174983|Sarkhan Vol|{2}{R}{G}|Planeswalker - Sarkhan| |4|+1: Creatures you control get +1/+1 and gain haste until end of turn. <br>-2: Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn. <br>-6: Put five 4/4 red Dragon creature tokens with flying into play.|Shards of Alara|MythicRare|multi|4
+174979|Island| |Basic Land - Island| | |[U]|Shards of Alara|Land|land|0
+174983|Sarkhan Vol|{2}{R}{G}|Planeswalker - Sarkhan| |4|+1: Creatures you control get +1/+1 and gain haste until end of turn. <br>-2: Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn. <br>-6: Put five 4/4 red Dragon creature tokens with flying into play.|Shards of Alara|Mythic Rare|multi|4
 174985|Resounding Silence|{3}{W}|Instant| | |Remove target attacking creature from the game. <br>Cycling {5}{G}{W}{U} <i>({5}{G}{W}{U}, Discard this card: Draw a card.)</i> <br>When you cycle Resounding Silence, remove up to two target attacking creatures from the game.|Shards of Alara|Common|mono|4
 174986|Algae Gharial|{3}{G}|Creature - Crocodile|1|1|Shroud <br>Whenever another creature is put into a graveyard from play, you may put a +1/+1 counter on Algae Gharial.|Shards of Alara|Uncommon|mono|4
 174987|Scavenger Drake|{3}{B}|Creature - Drake|1|1|Flying <br>Whenever another creature is put into a graveyard from play, you may put a +1/+1 counter on Scavenger Drake.|Shards of Alara|Uncommon|mono|4
@@ -11723,10 +11723,10 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 175012|Puppet Conjurer|{1}{B}|Artifact Creature - Human Wizard|1|2|{U}, {T}: Put a 0/1 blue Homunculus artifact creature token into play. <br>At the beginning of your upkeep, sacrifice a Homunculus.|Shards of Alara|Uncommon|mono|2
 175014|Windwright Mage|{W}{U}{B}|Artifact Creature - Human Wizard|2|2|Lifelink <i>(Whenever this creature deals damage, you gain that much life.)</i> <br>Windwright Mage has flying as long as an artifact card is in your graveyard.|Shards of Alara|Common|multi|3
 175015|Tidehollow Strix|{U}{B}|Artifact Creature - Bird|2|1|Flying <br>Deathtouch <i>(Whenever this creature deals damage to a creature, destroy that creature.)</i>|Shards of Alara|Common|multi|2
-175018|Mountain| |Basic Land - Mountain| | |[R]|Shards of Alara|BasicLand|land|0
+175018|Mountain| |Basic Land - Mountain| | |[R]|Shards of Alara|Land|land|0
 175023|Necrogenesis|{B}{G}|Enchantment| | |{2}: Remove target creature card in a graveyard from the game. Put a 1/1 green Saproling creature token into play.|Shards of Alara|Uncommon|multi|2
 175024|Rockcaster Platoon|{5}{W}{W}|Creature - Rhino Soldier|5|7|{4}{G}: Rockcaster Platoon deals 2 damage to each creature with flying and each player.|Shards of Alara|Uncommon|mono|7
-175029|Plains| |Basic Land - Plains| | |[W]|Shards of Alara|BasicLand|land|0
+175029|Plains| |Basic Land - Plains| | |[W]|Shards of Alara|Land|land|0
 175033|Keeper of Progenitus|{3}{G}|Creature - Elf Druid|1|3|Whenever a player taps a Mountain, Forest, or Plains for mana, that player adds one mana to his or her mana pool of any type that land produced.|Shards of Alara|Rare|mono|4
 175036|Gift of the Gargantuan|{2}{G}|Sorcery| | |Look at the top four cards of your library. You may reveal a creature card and/or a land card from among them and put the revealed cards into your hand. Put the rest on the bottom of your library in any order.|Shards of Alara|Common|mono|3
 175038|Spell Snip|{2}{U}|Instant| | |Counter target spell unless its controller pays {1}. <br>Cycling {2} <i>({2}, Discard this card: Draw a card.)</i>|Shards of Alara|Common|mono|3
@@ -11740,8 +11740,8 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 175052|Agony Warp|{U}{B}|Instant| | |Target creature gets -3/-0 until end of turn. <br>Target creature gets -0/-3 until end of turn.|Shards of Alara|Common|multi|2
 175053|Call to Heel|{1}{U}|Instant| | |Return target creature to its owner's hand. Its controller draws a card.|Shards of Alara|Common|mono|2
 175054|Tidehollow Sculler|{W}{B}|Artifact Creature - Zombie|2|2|When Tidehollow Sculler comes into play, target opponent reveals his or her hand and you choose a nonland card from it. Remove that card from the game. <br>When Tidehollow Sculler leaves play, return the removed card to its owner's hand.|Shards of Alara|Uncommon|multi|2
-175057|Hellkite Overlord|{4}{B}{R}{R}{G}|Creature - Dragon|8|8|Flying, trample, haste <br>{R}: Hellkite Overlord gets +1/+0 until end of turn. <br>{B}{G}: Regenerate Hellkite Overlord.|Shards of Alara|MythicRare|multi|8
-175058|Mayael the Anima|{R}{G}{W}|Legendary Creature - Elf Shaman|2|3|{3}{R}{G}{W}, {T}: Look at the top five cards of your library. You may put a creature card with power 5 or greater from among them into play. Put the rest on the bottom of your library in any order.|Shards of Alara|MythicRare|multi|3
+175057|Hellkite Overlord|{4}{B}{R}{R}{G}|Creature - Dragon|8|8|Flying, trample, haste <br>{R}: Hellkite Overlord gets +1/+0 until end of turn. <br>{B}{G}: Regenerate Hellkite Overlord.|Shards of Alara|Mythic Rare|multi|8
+175058|Mayael the Anima|{R}{G}{W}|Legendary Creature - Elf Shaman|2|3|{3}{R}{G}{W}, {T}: Look at the top five cards of your library. You may put a creature card with power 5 or greater from among them into play. Put the rest on the bottom of your library in any order.|Shards of Alara|Mythic Rare|multi|3
 175060|Jungle Shrine| |Land| | |Jungle Shrine comes into play tapped. <br>{T}: Add {R}, {G}, or {W} to your mana pool.|Shards of Alara|Uncommon|land|0
 175061|Obelisk of Naya|{3}|Artifact| | |{T}: Add {R}, {G}, or {W} to your mana pool.|Shards of Alara|Common|colorless|3
 175062|Woolly Thoctar|{R}{G}{W}|Creature - Beast|5|4| |Shards of Alara|Uncommon|multi|3
@@ -11752,19 +11752,19 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 175078|Yoked Plowbeast|{5}{W}{W}|Creature - Beast|5|5|Cycling {2} <i>({2}, Discard this card: Draw a card.)</i>|Shards of Alara|Common|mono|7
 175079|Cruel Ultimatum|{U}{U}{B}{B}{B}{R}{R}|Sorcery| | |Target opponent sacrifices a creature, discards three cards, then loses 5 life. You return a creature card from your graveyard to your hand, draw three cards, then gain 5 life.|Shards of Alara|Rare|multi|7
 175085|Dawnray Archer|{2}{U}|Creature - Human Archer|1|1|Exalted <i>(Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.)</i> <br>{W}, {T}: Dawnray Archer deals 1 damage to target attacking or blocking creature.|Shards of Alara|Uncommon|mono|3
-175089|Swamp| |Basic Land - Swamp| | |[B]|Shards of Alara|BasicLand|land|0
+175089|Swamp| |Basic Land - Swamp| | |[B]|Shards of Alara|Land|land|0
 175097|Viashino Skeleton|{3}{R}|Creature - Viashino Skeleton|2|1|{1}{B}, Discard a card: Regenerate Viashino Skeleton.|Shards of Alara|Common|mono|4
 175098|Resounding Wave|{2}{U}|Instant| | |Return target permanent to its owner's hand. <br>Cycling {5}{W}{U}{B} <i>({5}{W}{U}{B}, Discard this card: Draw a card.)</i> <br>When you cycle Resounding Wave, return two target permanents to their owners' hands.|Shards of Alara|Common|mono|3
 175100|Blood Cultist|{1}{B}{R}|Creature - Human Wizard|1|1|{T}: Blood Cultist deals 1 damage to target creature. <br>Whenever a creature dealt damage by Blood Cultist this turn is put into a graveyard, put a +1/+1 counter on Blood Cultist.|Shards of Alara|Uncommon|multi|3
 175101|Tar Fiend|{5}{B}|Creature - Elemental|4|4|Devour 2 <i>(As this comes into play, you may sacrifice any number of creatures. This creature comes into play with twice that many +1/+1 counters on it.)</i> <br>When Tar Fiend comes into play, target player discards a card for each creature it devoured.|Shards of Alara|Rare|mono|6
 175102|Obelisk of Bant|{3}|Artifact| | |{T}: Add {G}, {W}, or {U} to your mana pool.|Shards of Alara|Common|colorless|3
 175103|Guardians of Akrasa|{2}{W}|Creature - Human Soldier|0|4|Defender <br>Exalted <i>(Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.)</i>|Shards of Alara|Common|mono|3
-175104|Empyrial Archangel|{4}{G}{W}{W}{U}|Creature - Angel|5|8|Flying, shroud <br>All damage that would be dealt to you is dealt to Empyrial Archangel instead.|Shards of Alara|MythicRare|multi|8
-175105|Godsire|{4}{R}{G}{G}{W}|Creature - Beast|8|8|Vigilance <br>{T}: Put an 8/8 Beast creature token into play that's red, green, and white.|Shards of Alara|MythicRare|multi|8
-175106|Prince of Thralls|{4}{U}{B}{B}{R}|Creature - Demon|7|7|Whenever a permanent an opponent controls is put into a graveyard, put that card into play under your control unless that opponent pays 3 life.|Shards of Alara|MythicRare|multi|8
-175107|Sphinx Sovereign|{4}{W}{U}{U}{B}|Artifact Creature - Sphinx|6|6|Flying <br>At the end of your turn, you gain 3 life if Sphinx Sovereign is untapped. Otherwise, each opponent loses 3 life.|Shards of Alara|MythicRare|multi|8
+175104|Empyrial Archangel|{4}{G}{W}{W}{U}|Creature - Angel|5|8|Flying, shroud <br>All damage that would be dealt to you is dealt to Empyrial Archangel instead.|Shards of Alara|Mythic Rare|multi|8
+175105|Godsire|{4}{R}{G}{G}{W}|Creature - Beast|8|8|Vigilance <br>{T}: Put an 8/8 Beast creature token into play that's red, green, and white.|Shards of Alara|Mythic Rare|multi|8
+175106|Prince of Thralls|{4}{U}{B}{B}{R}|Creature - Demon|7|7|Whenever a permanent an opponent controls is put into a graveyard, put that card into play under your control unless that opponent pays 3 life.|Shards of Alara|Mythic Rare|multi|8
+175107|Sphinx Sovereign|{4}{W}{U}{U}{B}|Artifact Creature - Sphinx|6|6|Flying <br>At the end of your turn, you gain 3 life if Sphinx Sovereign is untapped. Otherwise, each opponent loses 3 life.|Shards of Alara|Mythic Rare|multi|8
 175108|Memory Erosion|{1}{U}{U}|Enchantment| | |Whenever an opponent plays a spell, that player puts the top two cards of his or her library into his or her graveyard.|Shards of Alara|Rare|mono|3
-175111|Sedris, the Traitor King|{3}{U}{B}{R}|Legendary Creature - Zombie Warrior|5|5|Each creature card in your graveyard has unearth {2}{B}. <i>({2}{B}: Return the card to play. The creature gains haste. Remove it from the game at end of turn or if it would leave play. Unearth only as a sorcery.)</i>|Shards of Alara|MythicRare|multi|6
+175111|Sedris, the Traitor King|{3}{U}{B}{R}|Legendary Creature - Zombie Warrior|5|5|Each creature card in your graveyard has unearth {2}{B}. <i>({2}{B}: Return the card to play. The creature gains haste. Remove it from the game at end of turn or if it would leave play. Unearth only as a sorcery.)</i>|Shards of Alara|Mythic Rare|multi|6
 175112|Crumbling Necropolis| |Land| | |Crumbling Necropolis comes into play tapped. <br>{T}: Add {U}, {B}, or {R} to your mana pool.|Shards of Alara|Uncommon|land|0
 175113|Metallurgeon|{1}{W}|Artifact Creature - Human Artificer|1|2|{W}, {T}: Regenerate target artifact.|Shards of Alara|Uncommon|mono|2
 175114|Master of Etherium|{2}{U}|Artifact Creature - Vedalken Wizard|*|*|Master of Etherium's power and toughness are each equal to the number of artifacts you control. <br>Other artifact creatures you control get +1/+1.|Shards of Alara|Rare|mono|3
@@ -11776,7 +11776,7 @@ id|name|cost|type|power|toughness|oracleText|edition|rarity|colorType|cmc
 175123|Bant Battlemage|{2}{W}|Creature - Human Wizard|2|2|{G}, {T}: Target creature gains trample until end of turn. <br>{U}, {T}: Target creature gains flying until end of turn.|Shards of Alara|Uncommon|mono|3
 175124|Elvish Visionary|{1}{G}|Creature - Elf Shaman|1|1|When Elvish Visionary comes into play, draw a card.|Shards of Alara|Common|mono|2
 175125|Immortal Coil|{2}{B}{B}|Artifact| | |{T}, Remove two cards in your graveyard from the game: Draw a card. <br>If damage would be dealt to you, prevent that damage. Remove a card in your graveyard from the game for each 1 damage prevented this way. <br>When there are no cards in your graveyard, you lose the game.|Shards of Alara|Rare|mono|4
-175127|Sharuum the Hegemon|{3}{W}{U}{B}|Legendary Artifact Creature - Sphinx|5|5|Flying <br>When Sharuum the Hegemon comes into play, you may return target artifact card from your graveyard to play.|Shards of Alara|MythicRare|multi|6
+175127|Sharuum the Hegemon|{3}{W}{U}{B}|Legendary Artifact Creature - Sphinx|5|5|Flying <br>When Sharuum the Hegemon comes into play, you may return target artifact card from your graveyard to play.|Shards of Alara|Mythic Rare|multi|6
 175128|Arcane Sanctum| |Land| | |Arcane Sanctum comes into play tapped. <br>{T}: Add {W}, {U}, or {B} to your mana pool.|Shards of Alara|Uncommon|land|0
 175134|Steward of Valeron|{G}{W}|Creature - Human Druid Knight|2|2|Vigilance <br>{T}: Add {G} to your mana pool.|Shards of Alara|Common|multi|2
 175135|Violent Ultimatum|{B}{B}{R}{R}{R}{G}{G}|Sorcery| | |Destroy three target permanents.|Shards of Alara|Rare|multi|7

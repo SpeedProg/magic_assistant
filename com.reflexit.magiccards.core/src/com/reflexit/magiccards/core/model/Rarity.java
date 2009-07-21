@@ -8,10 +8,11 @@ import java.util.LinkedHashMap;
 public class Rarity implements ISearchableProperty {
 	private Rarity() {
 		this.names = new LinkedHashMap();
-		add("MythicRare");
+		add("Mythic Rare");
 		add("Rare");
 		add("Uncommon");
 		add("Common");
+		add("Land");
 		add("Other");
 	}
 	static Rarity instance = new Rarity();
