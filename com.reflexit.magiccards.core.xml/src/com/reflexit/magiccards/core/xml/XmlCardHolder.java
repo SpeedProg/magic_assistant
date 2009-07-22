@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Properties;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -69,7 +70,7 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
+	private synchronized int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
 		ICardStore store = getDatabaseHandler().getCardStore();
 		int init = store.size();
 		ArrayList<IMagicCard> list = loadFromFlat(st);
@@ -135,15 +136,16 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public String download(String set, IProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
-	        IOException {
+	public String download(String set, Properties options, IProgressMonitor pm) throws FileNotFoundException,
+	        MalformedURLException, IOException {
 		IPath path = Activator.getStateLocationAlways().append("downloaded.txt");
 		String file = path.toPortableString();
-		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, pm);
+		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, options, pm);
 		return file;
 	}
 
-	public int downloadUpdates(String set, IProgressMonitor pm) throws MagicException, InterruptedException {
+	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException,
+	        InterruptedException {
 		int rec;
 		try {
 			pm.beginTask("Downloading", 100);
@@ -152,7 +154,7 @@ public class XmlCardHolder implements ICardHandler {
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Downloading cards...");
-			String file = download(set, new SubProgressMonitor(pm, 30));
+			String file = download(set, options, new SubProgressMonitor(pm, 30));
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Updating database...");
