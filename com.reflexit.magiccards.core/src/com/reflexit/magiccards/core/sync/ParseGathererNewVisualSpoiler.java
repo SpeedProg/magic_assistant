@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,8 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 
 public class ParseGathererNewVisualSpoiler {
+	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
+	public static final String UPDATE_OTHER_PRINTINGS = "other.printings";
 	private static Charset UTF_8 = Charset.forName("utf-8");
 	/*-
 	  <tr class="cardItem evenItem">
@@ -68,13 +71,19 @@ public class ParseGathererNewVisualSpoiler {
 	public static interface ILoadCardHander {
 		void handle(MagicCard card);
 
+		void handleSecondary(MagicCard primary, MagicCard secondary);
+
 		void edition(String edition, String edAddr);
 	}
 	public static class OutputHandler implements ILoadCardHander {
 		private PrintStream out;
+		private boolean loadLandPrintings;
+		private boolean loadOtherPrintings;
 
-		public OutputHandler(PrintStream st) {
+		public OutputHandler(PrintStream st, boolean loadLandPrintings, boolean loadOtherPrintings) {
 			this.out = st;
+			this.loadLandPrintings = loadLandPrintings;
+			this.loadOtherPrintings = loadOtherPrintings;
 		}
 
 		public void handle(MagicCard card) {
@@ -83,6 +92,14 @@ public class ParseGathererNewVisualSpoiler {
 
 		public void edition(String edition, String edAddr) {
 			Editions.getInstance().addAbbrLocale(edition, edAddr, null);
+		}
+
+		public void handleSecondary(MagicCard primary, MagicCard secondary) {
+			if (loadLandPrintings && primary.getSet() != null && primary.getSet().equals(secondary.getSet())) {
+				handle(secondary);
+			} else if (loadOtherPrintings) {
+				handle(secondary);
+			}
 		}
 	}
 	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard";
@@ -100,23 +117,33 @@ public class ParseGathererNewVisualSpoiler {
 		if (args.length > 1) {
 			to = args[1];
 		}
+		Properties options = new Properties();
 		if (from.equals("updateAll")) {
-			updateAll(to, updateAll);
+			updateAll(to, updateAll, options);
 		} else
-			parseFileOrUrl(from, to, new NullProgressMonitor());
+			parseFileOrUrl(from, to, options, new NullProgressMonitor());
 		Editions.getInstance().save();
 	}
 
-	private static void updateAll(String to, String[] urls) throws MalformedURLException, IOException {
+	private static void updateAll(String to, String[] urls, Properties options) throws MalformedURLException,
+	        IOException {
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new File(to));
 		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
 		for (String string : urls) {
 			System.err.println("Loading " + string);
-			loadUrl(new URL(string), new OutputHandler(out));
+			loadUrl(new URL(string), createOutputHandler(out, options));
 		}
 		out.close();
+	}
+
+	private static OutputHandler createOutputHandler(PrintStream out, Properties options) {
+		String land = (String) options.get(UPDATE_BASIC_LAND_PRINTINGS);
+		boolean bland = "true".equals(land);
+		String other = (String) options.get(UPDATE_OTHER_PRINTINGS);
+		boolean bother = "true".equals(other);
+		return new OutputHandler(out, bland, bother);
 	}
 
 	public static boolean loadUrl(URL url, ILoadCardHander handler) throws IOException {
@@ -133,15 +160,15 @@ public class ParseGathererNewVisualSpoiler {
 		st.close();
 	}
 
-	public static void parseFileOrUrl(String from, String to, IProgressMonitor pm) throws FileNotFoundException,
-	        MalformedURLException, IOException {
+	public static void parseFileOrUrl(String from, String to, Properties options, IProgressMonitor pm)
+	        throws FileNotFoundException, MalformedURLException, IOException {
 		monitor = pm;
 		monitor.beginTask("Downloading", 100);
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new FileOutputStream(new File(to)), true, UTF_8.toString());
 		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
-		OutputHandler handler = new OutputHandler(out);
+		OutputHandler handler = createOutputHandler(out, options);
 		try {
 			countCards = 0;
 			if (from.startsWith("http:")) {
@@ -216,7 +243,8 @@ public class ParseGathererNewVisualSpoiler {
 		// split by td
 		String[] rows = line.split("<td");
 		String[] fields = rows[2].split("<span|<div");
-		card.setId(getMatch(idPattern, fields[3]));
+		String id = getMatch(idPattern, fields[3]);
+		card.setId(id);
 		card.setName(getMatch(namePattern, fields[3]));
 		String cost = getMatch(spanPattern, fields[4]);
 		card.setCost(cost);
@@ -230,17 +258,28 @@ public class ParseGathererNewVisualSpoiler {
 		card.setOracleText(text);
 		card.setPower(pow);
 		card.setToughness(tou);
-		String[] sets = rows[3].split("<img");
+		String[] sets = rows[3].split("<a onclick");
 		for (String set : sets) {
 			String edition = getMatch(setPattern, set, 1);
 			String rarity = getMatch(setPattern, set, 2);
 			String abbr = getMatch(setPattern, set, 3);
+			String setId = getMatch(idPattern, set, 1);
 			if (edition.length() <= 1)
 				continue;
-			card.setSet(edition.trim());
-			card.setRarity(rarity.trim());
-			handler.edition(edition, abbr);
-			break; // TODO this would remember only first set
+			edition = edition.trim();
+			if (id.equals(setId)) {
+				card.setSet(edition);
+				card.setRarity(rarity.trim());
+				handler.edition(edition, abbr);
+			} else {
+				// other printings
+				MagicCard card2 = (MagicCard) card.clone();
+				card2.setId(setId);
+				card2.setSet(edition);
+				card2.setRarity(rarity.trim());
+				handler.edition(edition, abbr);
+				handler.handleSecondary(card, card2);
+			}
 		}
 		// print
 		handler.handle(card);
@@ -336,8 +375,8 @@ public class ParseGathererNewVisualSpoiler {
 		        + "&size=small&rarity=" + rarLetter);
 	}
 
-	public static void downloadUpdates(String set, String file, IProgressMonitor pm) throws FileNotFoundException,
-	        MalformedURLException, IOException {
+	public static void downloadUpdates(String set, String file, Properties options, IProgressMonitor pm)
+	        throws FileNotFoundException, MalformedURLException, IOException {
 		String url;
 		if (set == null || set.equals("Standard")) {
 			url = updateLatest[0];
@@ -345,6 +384,6 @@ public class ParseGathererNewVisualSpoiler {
 			set = set.replaceAll(" ", "%20");
 			url = base + "&set=[%22" + set + "%22]";
 		}
-		parseFileOrUrl(url, file, pm);
+		parseFileOrUrl(url, file, options, pm);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
 
-public class MagicCard implements IMagicCard {
+public class MagicCard implements IMagicCard, Cloneable {
 	int id;
 	String name;
 	String cost;
@@ -343,5 +343,14 @@ public class MagicCard implements IMagicCard {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
 	}
 }

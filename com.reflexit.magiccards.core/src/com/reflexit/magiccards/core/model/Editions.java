@@ -45,7 +45,7 @@ public class Editions implements ISearchableProperty {
 		return this.name2abbr.keySet();
 	}
 
-	public void addAbbr(String name, String abbr) {
+	public synchronized void addAbbr(String name, String abbr) {
 		String guessed = name.replaceAll("\\W", "_");
 		if (!name2abbr.containsKey(name) || name2abbr.get(name).equals(guessed)) {
 			if (abbr != null)
@@ -56,7 +56,7 @@ public class Editions implements ISearchableProperty {
 		}
 	}
 
-	public void addLocale(String name, String locale) {
+	public synchronized void addLocale(String name, String locale) {
 		this.name2locale.put(name, locale);
 	}
 
@@ -77,7 +77,7 @@ public class Editions implements ISearchableProperty {
 		return null;
 	}
 
-	public void load() throws IOException {
+	public synchronized void load() throws IOException {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		String strfile = path.toOSString();
 		if (Activator.getDefault() != null) {
@@ -92,7 +92,7 @@ public class Editions implements ISearchableProperty {
 		loadEditions(st);
 	}
 
-	private void loadEditions(InputStream st) throws IOException {
+	private synchronized void loadEditions(InputStream st) throws IOException {
 		BufferedReader r = new BufferedReader(new InputStreamReader(st));
 		try {
 			String line;
@@ -105,7 +105,7 @@ public class Editions implements ISearchableProperty {
 		}
 	}
 
-	public void save() throws FileNotFoundException {
+	public synchronized void save() throws FileNotFoundException {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		PrintStream st = new PrintStream(path.toPortableString());
 		try {
