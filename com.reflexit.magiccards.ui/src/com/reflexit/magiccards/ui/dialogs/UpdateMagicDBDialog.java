@@ -36,6 +36,7 @@ public class UpdateMagicDBDialog extends TitleAreaDialog implements IPreferenceP
 		this.updatePreference.setContainer(this);
 		this.updatePreference.init(PlatformUI.getWorkbench());
 		this.updatePreference.noDefaultAndApplyButton();
+		this.updatePreference.noUpdateButton();
 		this.updatePreference.createControl(parent);
 		this.updatePreference.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		// Build the separator line
@@ -49,13 +50,19 @@ public class UpdateMagicDBDialog extends TitleAreaDialog implements IPreferenceP
 	}
 
 	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		super.createButtonsForButtonBar(parent);
+		getOKButton().setText("Update");
+		getCancelButton().setText("Close");
+	}
+
+	@Override
 	protected void okPressed() {
-		this.updatePreference.performOk();
+		this.updatePreference.performUpdate();
 		super.okPressed();
 	}
 
 	public void updateButtons() {
-		// TODO Auto-generated method stub
 	}
 
 	public void updateMessage() {

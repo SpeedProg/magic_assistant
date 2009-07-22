@@ -4,6 +4,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -14,13 +15,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -32,6 +36,7 @@ import com.reflexit.magiccards.ui.preferences.feditors.SpecialComboFieldEditor;
 public class MagicGathererPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	private SpecialComboFieldEditor fSet;
 	private IHandlerService service;
+	private boolean hasUpdateButton = true;
 
 	public MagicGathererPreferencePage() {
 		super(GRID);
@@ -42,6 +47,10 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 	@Override
 	public void noDefaultAndApplyButton() {
 		super.noDefaultAndApplyButton();
+	}
+
+	public void noUpdateButton() {
+		hasUpdateButton = false;
 	}
 
 	@Override
@@ -64,13 +73,19 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		String[][] array = createSetArray();
 		addField(this.fSet = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:", array,
 		        getFieldEditorParent(), SWT.DROP_DOWN));
+		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_LAND,
+		        "Load all versions of art for basic lands", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_PRINT,
+		        "Load all printed versions of the same card (vs only version for latest set)", getFieldEditorParent()));
 	}
 
 	/**
 	 * @return
 	 */
 	private String[][] createSetArray() {
-		Collection names = Editions.getInstance().getNames();
+		Collection names1 = Editions.getInstance().getNames();
+		ArrayList names = new ArrayList(names1);
+		Collections.sort(names);
 		String[][] res = new String[names.size() + 1][2];
 		int i = 1;
 		res[0][0] = "Standard";
@@ -124,27 +139,19 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		com.setLayout(new GridLayout());
 		Control fields = super.createContents(com);
 		fields.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Button button = new Button(com, SWT.PUSH);
-		button.setText("Update Now...");
-		GridDataFactory.fillDefaults()//
-		        .align(SWT.END, SWT.END)//
-		        .applyTo(button);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				performApply();
-				try {
-					;
-					HashMap parameters = new HashMap();
-					parameters.put(PreferenceConstants.GATHERER_UPDATE_SET, getPreferenceStore().getString(
-					        PreferenceConstants.GATHERER_UPDATE_SET));
-					new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null,
-					        MagicGathererPreferencePage.this.service.getCurrentState()));
-				} catch (ExecutionException e1) {
-					MessageDialog.openError(parent.getShell(), "Error", e1.getMessage());
+		if (hasUpdateButton) {
+			Button button = new Button(com, SWT.PUSH);
+			button.setText("Update Now...");
+			GridDataFactory.fillDefaults()//
+			        .align(SWT.END, SWT.END)//
+			        .applyTo(button);
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					performUpdate();
 				}
-			}
-		});
+			});
+		}
 		return com;
 	}
 
@@ -154,6 +161,24 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 			if (serviceObject != null) {
 				this.service = (IHandlerService) serviceObject;
 			}
+		}
+	}
+
+	private void propagateParam(HashMap parameters, String prop) {
+		parameters.put(prop, getPreferenceStore().getString(prop));
+	}
+
+	public void performUpdate() {
+		performApply();
+		try {
+			HashMap parameters = new HashMap();
+			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_SET);
+			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_PRINT);
+			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_LAND);
+			new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null,
+			        MagicGathererPreferencePage.this.service.getCurrentState()));
+		} catch (ExecutionException e1) {
+			MessageDialog.openError(new Shell(), "Error", e1.getMessage());
 		}
 	}
 }
