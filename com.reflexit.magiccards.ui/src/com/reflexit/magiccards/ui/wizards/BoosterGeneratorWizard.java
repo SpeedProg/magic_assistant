@@ -150,14 +150,20 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
 		monitor.worked(1);
-		getShell().getDisplay().syncExec(new Runnable() {
+		CardOrganizer parent = (CardOrganizer) resource;
+		final CardCollection col = new CardCollection(name + ".xml", parent, false);
+		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
+		        new SubProgressMonitor(monitor, 7));
+		monitor.worked(1);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// ignore
+		}
+		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
-					CardOrganizer parent = (CardOrganizer) resource;
-					final CardCollection col = new CardCollection(name + ".xml", parent, false);
-					populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
-					        new SubProgressMonitor(monitor, 7));
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
 					monitor.worked(1);
@@ -195,15 +201,18 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 				filterset.put(editionId, "true");
 			}
 			// 1*packs rare cards
-			String rarity = Rarity.getInstance().getPrefConstant("Rare");
+			String rarity = Rarity.getInstance().getPrefConstant(Rarity.RARE);
 			filterset.put(rarity, "true");
+			String rarity1 = Rarity.getInstance().getPrefConstant(Rarity.MYTHIC_RARE);
+			filterset.put(rarity1, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
 			generateRandom(1 * packs, dbcards, store, col);
 			monitor.worked(3);
 			// 3*packs uncommon
 			filterset.remove(rarity);
-			rarity = Rarity.getInstance().getPrefConstant("Uncommon");
+			filterset.remove(rarity1);
+			rarity = Rarity.getInstance().getPrefConstant(Rarity.UNCOMMON);
 			filterset.put(rarity, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
@@ -211,7 +220,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			monitor.worked(3);
 			// 11*packs common
 			filterset.remove(rarity);
-			rarity = Rarity.getInstance().getPrefConstant("Common");
+			rarity = Rarity.getInstance().getPrefConstant(Rarity.COMMON);
 			filterset.put(rarity, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
