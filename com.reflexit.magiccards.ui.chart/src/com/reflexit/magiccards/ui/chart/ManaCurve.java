@@ -49,8 +49,8 @@ import org.eclipse.birt.chart.model.type.impl.LineSeriesImpl;
 
 public class ManaCurve implements IChartGenerator {
 	String[] sa = { "0", "1", "2", "3", "4", "5", "6", "7+", "X" };
-	double[] da1;// { 0, 2, 4, 10, 10, 4, 6, 0, 1 };
-	double[] koeff = { 0.2, 4, 8, 9.2, 8, 4.6, 1.6, 0.2, 0.2 };
+	double[] da1;
+	double[] koeff = { 0.2, 6, 9, 9.6, 7, 2.6, 0.6, 0.2, 0.2 }; //{ 0.2, 4, 8, 9.2, 8, 4.6, 1.6, 0.2, 0.2 };
 	double[] da2;
 	ChartWithAxes cwaBar;
 	int count;
