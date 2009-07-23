@@ -6,12 +6,17 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class Rarity implements ISearchableProperty {
+	public static final String COMMON = "Common";
+	public static final String UNCOMMON = "Uncommon";
+	public static final String RARE = "Rare";
+	public static final String MYTHIC_RARE = "Mythic Rare";
+
 	private Rarity() {
 		this.names = new LinkedHashMap();
-		add("Mythic Rare");
-		add("Rare");
-		add("Uncommon");
-		add("Common");
+		add(MYTHIC_RARE);
+		add(RARE);
+		add(UNCOMMON);
+		add(COMMON);
 		add("Land");
 		add("Other");
 	}
