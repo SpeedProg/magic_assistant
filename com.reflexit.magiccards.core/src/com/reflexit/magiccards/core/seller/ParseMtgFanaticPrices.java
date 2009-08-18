@@ -82,6 +82,9 @@ public class ParseMtgFanaticPrices {
 	}
 
 	private String findSetId(String set, HashMap<String, String> parseSets) {
+		if (set.contains("vs.")) {
+			set = set.replaceAll("vs\\.", "vs");
+		}
 		String id = parseSets.get(set);
 		if (id != null)
 			return id;
@@ -107,6 +110,16 @@ public class ParseMtgFanaticPrices {
 			return parseSets.get("Portal: Second Age");
 		if (set.equals("Portal Three Kingdoms"))
 			return parseSets.get("Portal: Three Kingdoms");
+		if (set.equals("Limited Edition Alpha"))
+			return parseSets.get("Alpha");
+		if (set.equals("Limited Edition Beta"))
+			return parseSets.get("Beta");
+		if (set.equals("Time Spiral \"Timeshifted\""))
+			return parseSets.get("Time Spiral (Timeshifted)");
+		if (set.endsWith(" Box Set"))
+			return parseSets.get(set.replaceAll(" Box Set", ""));
+		if (set.endsWith(" Edition"))
+			return parseSets.get(set.replaceAll(" Edition", ""));
 		System.err.println("Cannot find prices for " + set);
 		return null;
 	}
@@ -159,8 +172,8 @@ public class ParseMtgFanaticPrices {
 		}
 	}
 	private static final Pattern setLinePattern = Pattern.compile("class=\"clMenu\"");
-	private static final Pattern setItemPattern = Pattern
-	        .compile("<li><a href=\"/store/default.aspx.CatID=(\\d+)\">\\s*(.*?)</a></li>");
+	private static Pattern setItemPattern = Pattern
+	        .compile("<li><a href=\"/store/ViewProducts.aspx\\?CatID=(\\d+)\">\\s*(.*?)</a></li>");
 
 	public HashMap<String, String> parseSets() throws IOException {
 		HashMap<String, String> res = new HashMap<String, String>();
