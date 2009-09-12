@@ -13,6 +13,7 @@ import org.eclipse.ui.actions.BaseNewWizardMenu;
 import com.reflexit.mtgtournament.ui.tour.views.PlayersView;
 import com.reflexit.mtgtournament.ui.tour.views.TNavigatorView;
 import com.reflexit.mtgtournament.ui.tour.views.TournamentView;
+import com.reflexit.mtgtournament.ui.views.TimerView;
 
 public class PerspectiveFactoryTournament implements IPerspectiveFactory {
 	public static String PERSPECTIVE_ID = "com.reflexit.mtgtournament.ui.perspective.tournament";
@@ -22,7 +23,9 @@ public class PerspectiveFactoryTournament implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.25, editorArea);
 		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea);
+		IFolderLayout leftB = layout.createFolder("leftB", IPageLayout.BOTTOM, (float) 0.65, "left");
 		left.addView(TNavigatorView.ID);
+		leftB.addView(TimerView.ID);
 		layout.addShowViewShortcut(TNavigatorView.ID);
 		right.addView(TournamentView.ID);
 		layout.addShowViewShortcut(TournamentView.ID);

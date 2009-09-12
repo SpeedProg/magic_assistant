@@ -33,6 +33,14 @@
             name="Players"
             restorable="true">
       </view>
+      <view
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.views.TimerView"
+            icon="icons/launch_profile.gif"
+            id="com.reflexit.mtgtournament.ui.views.TimerView"
+            name="Timer View"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
