@@ -38,7 +38,7 @@
             class="com.reflexit.mtgtournament.ui.views.TimerView"
             icon="icons/launch_profile.gif"
             id="com.reflexit.mtgtournament.ui.views.TimerView"
-            name="Timer View"
+            name="Timer"
             restorable="true">
       </view>
    </extension>

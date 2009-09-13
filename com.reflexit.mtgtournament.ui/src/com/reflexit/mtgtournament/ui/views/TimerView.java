@@ -67,6 +67,7 @@ public class TimerView extends ViewPart {
 	private long timeZero;
 	private long lastTime;
 	private boolean paused = false;
+	private String lastTimerValue = "00:30:00";
 	private Thread thread = new Thread("Tournament Timer") {
 		@Override
 		public void run() {
@@ -92,7 +93,7 @@ public class TimerView extends ViewPart {
 	public TimerView() {
 		try {
 			timeZero = timerFormat.parse("00:00:00").getTime();
-			timeLeft = timerFormat.parse("00:00:10").getTime();
+			timeLeft = timerFormat.parse(lastTimerValue).getTime();
 			lastTime = System.currentTimeMillis();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -116,12 +117,14 @@ public class TimerView extends ViewPart {
 		area.setLayoutData(new GridData(GridData.FILL_BOTH));
 		area.setLayout(new GridLayout());
 		clockLabel = new Label(area, SWT.NONE);
+		clockLabel.setToolTipText("Local time clock can be adjusted using computer clock");
 		clockLabel.setFont(new Font(area.getDisplay(), area.getFont().getFontData()));
 		clockLabel.setForeground(area.getDisplay().getSystemColor(SWT.COLOR_GRAY));
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL);
 		ld.horizontalAlignment = SWT.CENTER;
 		clockLabel.setLayoutData(ld);
 		timerLabel = new Label(area, SWT.NONE);
+		timerLabel.setToolTipText("Double click on it to set timer");
 		GridData ld1 = new GridData(GridData.FILL_HORIZONTAL);
 		ld1.horizontalAlignment = SWT.CENTER;
 		timerLabel.setLayoutData(ld1);
@@ -178,8 +181,8 @@ public class TimerView extends ViewPart {
 				TimerView.this.fillContextMenu(manager);
 			}
 		});
-		Menu menu = menuMgr.createContextMenu(area);
-		area.setMenu(menu);
+		Menu menu = menuMgr.createContextMenu(timerLabel);
+		timerLabel.setMenu(menu);
 		//getSite().registerContextMenu(menuMgr, viewer);
 	}
 
@@ -190,15 +193,16 @@ public class TimerView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(pause);
-		manager.add(play);
-		manager.add(setTimer);
-		manager.add(new Separator());
+		//		manager.add(pause);
+		//		manager.add(play);
+		//		manager.add(setTimer);
+		//		manager.add(new Separator());
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(pause);
 		manager.add(play);
+		manager.add(setTimer);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -210,8 +214,12 @@ public class TimerView extends ViewPart {
 	}
 
 	protected void updateActionsEnablement() {
-		pause.setEnabled(!paused);
-		play.setEnabled(paused);
+		pause.setEnabled(!paused && isTimerSet());
+		play.setEnabled(paused && isTimerSet());
+	}
+
+	private boolean isTimerSet() {
+		return timeLeft > timeZero;
 	}
 
 	private void makeActions() {
@@ -251,12 +259,15 @@ public class TimerView extends ViewPart {
 	}
 
 	protected void setTimer() {
-		InputDialog d = new InputDialog(area.getShell(), "Set Timer", "Enter timer value hh:mm:ss", "00:30:00", null);
+		InputDialog d = new InputDialog(area.getShell(), "Set Timer",
+		        "Enter timer value hh:mm:ss. After timer is set press \"Play\" button to start the countdown.",
+		        lastTimerValue, null);
 		if (d.open() == Dialog.OK) {
 			pause.run();
 			String t = d.getValue();
 			try {
 				long tt = timerFormat.parse(t).getTime();
+				lastTimerValue = t;
 				timeLeft = tt;
 				timerLabel.setText(timerFormat.format(new Date(timeLeft)));
 			} catch (ParseException e) {
