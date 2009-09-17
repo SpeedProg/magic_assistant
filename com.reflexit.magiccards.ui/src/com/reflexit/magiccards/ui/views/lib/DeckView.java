@@ -1,5 +1,9 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -16,6 +20,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -25,6 +30,7 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
@@ -36,12 +42,48 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	private CTabFolder folder;
 	private IPartListener2 partListener;
 	private ArrayList<IDeckPage> pages;
+	static class DeckPageExtension {
+		String deckPageClass;
+		String name;
+		String id;
+
+		public static Collection<DeckPageExtension> parseElement(IConfigurationElement el) {
+			Collection<DeckPageExtension> res = new ArrayList<DeckPageExtension>();
+			IConfigurationElement[] children = el.getChildren();
+			for (IConfigurationElement elp : children) {
+				res.add(parsePage(elp));
+			}
+			return res;
+		}
+
+		public static DeckPageExtension parsePage(IConfigurationElement elp) {
+			DeckPageExtension page = new DeckPageExtension();
+			page.id = elp.getAttribute("id");
+			page.name = elp.getAttribute("name");
+			page.deckPageClass = elp.getAttribute("class");
+			return page;
+		}
+	}
+	private static ArrayList<DeckPageExtension> extensionPages;
+	static {
+		loadExtensions();
+	}
 
 	/**
 	 * The constructor.
 	 */
 	public DeckView() {
 		pages = new ArrayList<IDeckPage>();
+	}
+
+	private static void loadExtensions() {
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint extensionPoint = registry.getExtensionPoint(MagicUIActivator.PLUGIN_ID + ".deckPage");
+		IConfigurationElement points[] = extensionPoint.getConfigurationElements();
+		extensionPages = new ArrayList<DeckPageExtension>();
+		for (IConfigurationElement el : points) {
+			extensionPages.add(DeckPageExtension.parsePage(el));
+		}
 	}
 
 	/* (non-Javadoc)
@@ -124,29 +166,35 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		Control control = this.manager.createContents(folder);
 		cardsList.setControl(control);
 		// Pages
-		createDeckTab("Mana Curve", new ManaCurveControl(folder, SWT.BORDER));
-		createDeckTab("Card Types", new TypeStatsControl(folder, SWT.BORDER));
-		createDeckTab("Colors", new ColorControl(folder, SWT.BORDER));
-		createDeckTab("Info", new InfoControl(folder));
+		createDeckTab("Mana Curve", new ManaCurveControl());
+		createDeckTab("Card Types", new TypeStatsControl());
+		createDeckTab("Colors", new ColorControl());
+		createExtendedTabs();
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				CTabItem sel = folder.getSelection();
-				for (IDeckPage deckPage : pages) {
-					IDeckPage page = deckPage;
-					if (sel.getControl() == page.getControl()) {
-						page.setFilteredStore(getFilteredStore());
-						page.updateFromStore();
-					}
-				}
-				updateStatus();
+				refreshActivePage();
 			}
 		});
 		folder.setSelection(0);
 	}
 
+	protected void createExtendedTabs() {
+		for (Object element : extensionPages) {
+			DeckPageExtension ex = (DeckPageExtension) element;
+			try {
+				Class z = DeckView.class.getClassLoader().loadClass(ex.deckPageClass);
+				IDeckPage page = (IDeckPage) z.newInstance();
+				createDeckTab(ex.name, page);
+			} catch (Exception e) {
+				MagicUIActivator.log(e);
+			}
+		}
+	}
+
 	private void createDeckTab(String name, final IDeckPage page) {
+		page.createContents(folder);
 		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
 		item.setText(name);
 		item.setShowClose(false);
@@ -220,5 +268,21 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	public CardCollection getCardCollection() {
 		return deck;
+	}
+
+	protected void refresh() {
+		refreshActivePage();
+	}
+
+	protected void refreshActivePage() {
+		CTabItem sel = folder.getSelection();
+		for (IDeckPage deckPage : pages) {
+			IDeckPage page = deckPage;
+			if (sel.getControl() == page.getControl()) {
+				page.setFilteredStore(getFilteredStore());
+				page.updateFromStore();
+			}
+		}
+		updateStatus();
 	}
 }

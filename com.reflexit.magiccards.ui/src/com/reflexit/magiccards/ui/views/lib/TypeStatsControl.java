@@ -70,10 +70,10 @@ public class TypeStatsControl implements IDeckPage {
 		}
 	}
 
-	public TypeStatsControl(Composite parent, int style) {
+	public Composite createContents(Composite parent) {
 		area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(2, true));
-		canvas = new ChartCanvas(area, style);
+		canvas = new ChartCanvas(area, SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		stats = new TreeViewer(area);
 		stats.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -118,6 +118,7 @@ public class TypeStatsControl implements IDeckPage {
 				return new DecimalFormat("00.00%").format(per);
 			}
 		});
+		return area;
 	}
 
 	public void setFilteredStore(IFilteredCardStore store) {

@@ -28,11 +28,12 @@ public class ColorControl implements IDeckPage {
 	ICardStore store;
 	private Composite area;
 
-	public ColorControl(Composite parent, int style) {
+	public Composite createContents(Composite parent) {
 		area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(2, false));
-		spellColorCanvas = new ChartCanvas(area, style);
+		spellColorCanvas = new ChartCanvas(area, SWT.BORDER);
 		spellColorCanvas.setLayoutData(new GridData(GridData.FILL_BOTH));
+		return area;
 	}
 
 	public void setFilteredStore(IFilteredCardStore store) {

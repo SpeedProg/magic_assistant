@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -17,8 +18,9 @@ public class ManaCurveControl implements IDeckPage {
 	//SwtInteractivityViewer spellColorCanvas;
 	ICardStore store;
 
-	public ManaCurveControl(Composite parent, int style) {
-		canvas = new ChartCanvas(parent, style);
+	public Composite createContents(Composite parent) {
+		canvas = new ChartCanvas(parent, SWT.BORDER);
+		return canvas;
 	}
 
 	public void setFilteredStore(IFilteredCardStore store) {

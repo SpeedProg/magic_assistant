@@ -13,6 +13,7 @@ package com.reflexit.magiccards.ui.views.lib;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -43,6 +44,7 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -60,6 +62,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private Action split;
 	private Action edit;
 	private Action paste;
+	private Action refresh;
 	private MenuManager moveToDeckMenu;
 
 	@Override
@@ -98,6 +101,17 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				fillDeckMenu(manager, moveToDeck);
 			}
 		});
+		this.refresh = new Action("Refresh") {
+			@Override
+			public void run() {
+				refresh();
+			}
+		};
+		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+	}
+
+	protected void refresh() {
+		reloadData();
 	}
 	protected IDeckAction moveToDeck = new IDeckAction() {
 		public void run(String id) {
@@ -244,6 +258,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 
+	@Override
+	protected void fillLocalPullDown(IMenuManager manager) {
+		manager.add(this.refresh);
+		super.fillLocalPullDown(manager);
+	}
+
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
 	 */
@@ -255,6 +275,11 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		manager.add(this.moveToDeckMenu);
 		manager.add(this.split);
 		manager.add(this.edit);
+	}
+
+	@Override
+	protected void fillLocalToolBar(IToolBarManager manager) {
+		super.fillLocalToolBar(manager);
 	}
 
 	@Override

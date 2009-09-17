@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -31,6 +32,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewReference;
@@ -130,6 +132,7 @@ public abstract class AbstractCardsView extends ViewPart {
 			AbstractCardsView.this.propertyChange(event);
 		}
 	};
+	private Action groupMenuButton;
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -263,6 +266,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
+		manager.add(this.showPrefs);
 		//	manager.add(loadPrices);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
@@ -271,6 +275,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(this.groupMenuButton);
+		manager.add(this.showPrefs);
 		manager.add(this.showFind);
 		manager.add(this.showFilter);
 		manager.add(new Separator());
@@ -328,11 +334,40 @@ public abstract class AbstractCardsView extends ViewPart {
 			};
 			this.sortMenu.add(ac);
 		}
-		this.groupMenu = new MenuManager("Group By");
-		this.groupMenu.add(new GroupAction("None", null));
-		this.groupMenu.add(new GroupAction("Color", MagicCardField.COST));
-		this.groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
-		this.groupMenu.add(new GroupAction("Type", MagicCardField.TYPE));
+		this.groupMenuButton = new Action("Group By", Action.AS_DROP_DOWN_MENU) {
+			@Override
+			public void run() {
+				String group = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
+				if (group == null || group.length() == 0)
+					actionGroupBy(MagicCardField.CMC);
+				else
+					actionGroupBy(null);
+			}
+			{
+				setMenuCreator(new IMenuCreator() {
+					private Menu listMenu;
+
+					public void dispose() {
+						if (listMenu != null)
+							listMenu.dispose();
+					}
+
+					public Menu getMenu(Control parent) {
+						if (listMenu != null)
+							listMenu.dispose();
+						listMenu = createGroupMenu().createContextMenu(parent);
+						return listMenu;
+					}
+
+					public Menu getMenu(Menu parent) {
+						return null;
+					}
+				});
+			}
+		};
+		this.groupMenuButton.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
+		this.groupMenu = createGroupMenu();
+		//this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.showPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
@@ -342,6 +377,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				dialog.open();
 			}
 		};
+		this.showPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
 		this.showFind = new Action("Find...") {
 			@Override
 			public void run() {
@@ -362,6 +398,15 @@ public abstract class AbstractCardsView extends ViewPart {
 				runLoadPrices();
 			}
 		};
+	}
+
+	protected MenuManager createGroupMenu() {
+		MenuManager groupMenu = new MenuManager("Group By");
+		groupMenu.add(new GroupAction("None", null));
+		groupMenu.add(new GroupAction("Color", MagicCardField.COST));
+		groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
+		groupMenu.add(new GroupAction("Type", MagicCardField.TYPE));
+		return groupMenu;
 	}
 
 	protected void runLoadPrices() {
