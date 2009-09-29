@@ -375,5 +375,11 @@
         id="info"
         class="com.reflexit.magiccards.ui.views.lib.InfoControl"
         />
+                <page
+        name="Legality"
+        id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
+        class="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
+        />
   </extension>
+
 </plugin>
