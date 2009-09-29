@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -22,6 +23,7 @@ import org.eclipse.ui.PartInitException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -43,9 +45,9 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	private IPartListener2 partListener;
 	private ArrayList<IDeckPage> pages;
 	static class DeckPageExtension {
-		String deckPageClass;
-		String name;
 		String id;
+		String name;
+		private IDeckPage page;
 
 		public static Collection<DeckPageExtension> parseElement(IConfigurationElement el) {
 			Collection<DeckPageExtension> res = new ArrayList<DeckPageExtension>();
@@ -60,7 +62,11 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			DeckPageExtension page = new DeckPageExtension();
 			page.id = elp.getAttribute("id");
 			page.name = elp.getAttribute("name");
-			page.deckPageClass = elp.getAttribute("class");
+			try {
+				page.page = (IDeckPage) elp.createExecutableExtension("class");
+			} catch (CoreException e) {
+				Activator.log(e);
+			}
 			return page;
 		}
 	}
@@ -184,8 +190,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		for (Object element : extensionPages) {
 			DeckPageExtension ex = (DeckPageExtension) element;
 			try {
-				Class z = DeckView.class.getClassLoader().loadClass(ex.deckPageClass);
-				IDeckPage page = (IDeckPage) z.newInstance();
+				IDeckPage page = ex.page;
 				createDeckTab(ex.name, page);
 			} catch (Exception e) {
 				MagicUIActivator.log(e);
