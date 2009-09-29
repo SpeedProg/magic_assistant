@@ -275,11 +275,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		return deck;
 	}
 
+	@Override
 	protected void refresh() {
 		refreshActivePage();
 	}
 
 	protected void refreshActivePage() {
+		reloadData();
 		CTabItem sel = folder.getSelection();
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;
