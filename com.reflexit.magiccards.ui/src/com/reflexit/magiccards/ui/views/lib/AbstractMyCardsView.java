@@ -298,7 +298,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		this.manager.getFilteredStore().getCardStore().addListener(this);
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore().addListener(this);
 		DataManager.getModelRoot().addListener(this);
 	}
 
@@ -307,7 +307,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 */
 	@Override
 	public void dispose() {
-		this.manager.getFilteredStore().getCardStore().removeListener(this);
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore().removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}
@@ -337,6 +337,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			} else if (event.getData() instanceof IMagicCard) {
 				revealSelection = new StructuredSelection(event.getData());
 			}
+			//	System.err.println("Card added: " + revealSelection + " on " + getPartName());
 			reloadData();
 		} else {
 			reloadData();

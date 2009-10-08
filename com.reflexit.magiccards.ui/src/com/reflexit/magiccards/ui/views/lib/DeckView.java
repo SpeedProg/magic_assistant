@@ -103,7 +103,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		if (this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
-		DataManager.getCardHandler().getMyCardsHandler().getCardStore().addListener(this);
 		site.getPage().addPartListener(partListener = new PartListener());
 	}
 
@@ -140,7 +139,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	@Override
 	public void dispose() {
 		this.deck.close();
-		DataManager.getCardHandler().getMyCardsHandler().getCardStore().removeListener(this);
 		getSite().getPage().removePartListener(partListener);
 		super.dispose();
 	}

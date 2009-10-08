@@ -113,7 +113,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
-	private String jobFamility = "loading";
+	private Object jobFamility = new Object();
 	private ISchedulingRule jobRule = new ISchedulingRule() {
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule == this;
@@ -126,8 +126,10 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 
 	public void loadData(final Runnable postLoad) {
 		Job[] jobs = Job.getJobManager().find(jobFamility);
-		if (jobs.length >= 2)
+		if (jobs.length >= 2) {
+			System.err.println(jobs.length + " already running skipping refresh");
 			return;
+		}
 		final Display display = PlatformUI.getWorkbench().getDisplay();
 		loadingJob = new Job("Loading cards") {
 			@Override
