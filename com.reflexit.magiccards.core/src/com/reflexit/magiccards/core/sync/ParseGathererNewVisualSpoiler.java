@@ -306,8 +306,8 @@ public class ParseGathererNewVisualSpoiler {
 	static Map manaMap = new LinkedHashMap();
 	static {
 		manaMap.put("\\Q{500}", "{0.5}");
-		manaMap.put("\\{(\\d)(\\w)\\}", "{$1/$2}");
-		manaMap.put("\\{(\\w)(\\w)\\}", "{$1/$2}");
+		manaMap.put("\\{(\\d)([BUGRW])\\}", "{$1/$2}");
+		manaMap.put("\\{([BUGRW])([BUGRW])\\}", "{$1/$2}");
 		manaMap.put("\\Q{tap}", "{T}");
 		manaMap.put("\\Q{untap}", "{Q}");
 	}
