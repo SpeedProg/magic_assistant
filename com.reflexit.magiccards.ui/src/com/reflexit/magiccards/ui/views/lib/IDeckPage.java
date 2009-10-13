@@ -17,6 +17,11 @@ public interface IDeckPage {
 	public void setFilteredStore(IFilteredCardStore store);
 
 	/**
+	 * Sets parent deck view
+	 */
+	public void setDeckView(DeckView view);
+
+	/**
 	 * Method is called when page is activate and store is set
 	 */
 	public void updateFromStore();

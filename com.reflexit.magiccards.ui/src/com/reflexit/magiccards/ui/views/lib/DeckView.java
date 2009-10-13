@@ -198,6 +198,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	private void createDeckTab(String name, final IDeckPage page) {
 		page.createContents(folder);
+		page.setDeckView(this);
 		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
 		item.setText(name);
 		item.setShowClose(false);

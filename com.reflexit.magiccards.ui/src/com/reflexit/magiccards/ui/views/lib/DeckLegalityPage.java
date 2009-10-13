@@ -11,6 +11,11 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -30,7 +35,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -40,17 +44,13 @@ import java.util.Map;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
 
 /**
  * Page for deck legality
  */
-public class DeckLegalityPage implements IDeckPage {
-	private Composite control;
+public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 	private static final String NOT_PRESENT = "Not Legal";
-	private ICardStore<IMagicCard> cardStore;
 	private TableViewer legalityTableViewer;
 	private Button updateButton;
 	private TableViewer cardList;
@@ -58,27 +58,12 @@ public class DeckLegalityPage implements IDeckPage {
 	private Map<Integer, Map<String, String>> cardLegalities; // map card id->(map format->legaity)
 	private String selectedFormat = null;
 
+	@Override
 	public Composite createContents(Composite parent) {
-		control = new Composite(parent, SWT.NONE);
-		control.setLayout(new GridLayout(2, false));
-		createGui(control);
-		return control;
-	}
-
-	public Control getControl() {
-		return control;
-	}
-
-	public String getStatusMessage() {
-		return "";
-	}
-
-	public void setFilteredStore(IFilteredCardStore store) {
-		setCardStore(store.getCardStore());
-	}
-
-	public void updateFromStore() {
-		// nothing?
+		super.createContents(parent);
+		area.setLayout(new GridLayout(2, false));
+		createGui(area);
+		return area;
 	}
 
 	private void createGui(Composite parent) {
@@ -218,7 +203,7 @@ public class DeckLegalityPage implements IDeckPage {
 				} else {
 					selectedFormat = null;
 				}
-				cardList.setInput(cardStore);
+				cardList.setInput(store);
 			}
 		});
 		cardList.setLabelProvider(new CardTableLabelProvider());
@@ -232,15 +217,23 @@ public class DeckLegalityPage implements IDeckPage {
 			}
 
 			public Object[] getElements(Object inputElement) {
-				Object[] cards = new Object[cardStore.size()];
+				Object[] cards = new Object[store.size()];
 				int i = 0;
-				for (Object object : cardStore) {
+				for (Object object : store) {
 					cards[i++] = object;
 				}
 				return cards;
 			}
 		});
 		cardList.setFilters(new ViewerFilter[] { formatFilter });
+		cardList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+				if (!sel.isEmpty()) {
+					view.getSite().getSelectionProvider().setSelection(sel);
+				}
+			}
+		});
 	}
 
 	private void createUpdateButton(Composite parent) {
@@ -261,34 +254,56 @@ public class DeckLegalityPage implements IDeckPage {
 	}
 
 	protected void performUpdate() {
-		if (cardStore != null) {
-			cardLegalities = calculateDeckLegalities();
-			deckInput = calculateDeckLegality(cardLegalities);
-			legalityTableViewer.setInput(deckInput);
-			if (deckInput.size() > 0) {
-				legalityTableViewer.setSelection(new StructuredSelection(deckInput.keySet().iterator().next()));
-			}
+		if (store != null) {
+			Job job = new Job("Calculating Legality") {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask("Calculating Legality", 100);
+					cardLegalities = calculateDeckLegalities(new SubProgressMonitor(monitor, 50));
+					deckInput = calculateDeckLegality(cardLegalities, new SubProgressMonitor(monitor, 50));
+					getControl().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							legalityTableViewer.setInput(deckInput);
+							if (deckInput.size() > 0) {
+								legalityTableViewer.setSelection(new StructuredSelection(deckInput.keySet().iterator()
+								        .next()));
+							}
+						}
+					});
+					monitor.done();
+					return Status.OK_STATUS;
+				}
+			};
+			job.setUser(true);
+			job.schedule();
 		}
 	}
 
-	private Map<Integer, Map<String, String>> calculateDeckLegalities() {
+	private Map<Integer, Map<String, String>> calculateDeckLegalities(IProgressMonitor monitor) {
 		try {
-			return ParseGathererLegality.cardSetLegality(cardStore);
+			monitor.beginTask("", 100);
+			monitor.worked(10);
+			return ParseGathererLegality.cardSetLegality(store);
 		} catch (IOException e) {
-			MessageDialog.openError(control.getShell(), "Error", e.getMessage());
+			MessageDialog.openError(getControl().getShell(), "Error", e.getMessage());
 			return null;
 		}
 	}
 	private String formats[] = { "Standard", "Extended", "Legacy", "Vintage" };
 
-	private Map<String, String> calculateDeckLegality(Map<Integer, Map<String, String>> cardLegalities) {
+	private Map<String, String> calculateDeckLegality(Map<Integer, Map<String, String>> cardLegalities,
+	        IProgressMonitor monitor) {
+		monitor.beginTask("", cardLegalities.size() + 1);
 		Map<String, String> deckLegalityRestrictions = new LinkedHashMap<String, String>();
 		for (String format : formats) {
 			deckLegalityRestrictions.put(format, null);
 		}
+		monitor.worked(1);
 		for (Map.Entry<Integer, Map<String, String>> cardLegalityEntry : cardLegalities.entrySet()) {
 			updateDeckLegality(deckLegalityRestrictions, cardLegalityEntry.getValue());
+			monitor.worked(1);
 		}
+		monitor.done();
 		return deckLegalityRestrictions;
 	}
 
@@ -326,13 +341,5 @@ public class DeckLegalityPage implements IDeckPage {
 		if (leg.equals("Legal"))
 			return 10;
 		return 0;
-	}
-
-	public void setCardStore(ICardStore<IMagicCard> cardStore) {
-		this.cardStore = cardStore;
-	}
-
-	public ICardStore<?> getCardStore() {
-		return cardStore;
 	}
 }

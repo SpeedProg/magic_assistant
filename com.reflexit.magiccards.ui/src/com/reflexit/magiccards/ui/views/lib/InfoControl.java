@@ -6,34 +6,30 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
-public class InfoControl implements IDeckPage {
+public class InfoControl extends AbstractDeckPage implements IDeckPage {
 	private Text text;
-	private ICardStore store;
-	private Composite control;
 
+	@Override
 	public Composite createContents(Composite parent) {
-		control = new Composite(parent, SWT.NONE);
-		control.setLayout(new GridLayout());
-		Label label = new Label(control, SWT.NONE);
+		area = super.createContents(parent);
+		area.setLayout(new GridLayout());
+		Label label = new Label(area, SWT.NONE);
 		label.setText("Description:");
-		text = new Text(control, SWT.WRAP | SWT.BORDER);
+		text = new Text(area, SWT.WRAP | SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.FILL_BOTH));
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				setComment(text.getText());
 			}
 		});
-		return control;
+		return area;
 	}
 
 	protected void setComment(String text2) {
@@ -41,11 +37,6 @@ public class InfoControl implements IDeckPage {
 		if (si == null)
 			return;
 		si.setComment(text2);
-	}
-
-	public void setFilteredStore(IFilteredCardStore store) {
-		this.store = store.getCardStore();
-		updateFromStore();
 	}
 
 	private IStorageInfo getInfo() {
@@ -59,10 +50,7 @@ public class InfoControl implements IDeckPage {
 		return null;
 	}
 
-	public Control getControl() {
-		return control;
-	}
-
+	@Override
 	public void updateFromStore() {
 		IStorageInfo si = getInfo();
 		if (si != null) {
@@ -71,8 +59,4 @@ public class InfoControl implements IDeckPage {
 				text.setText(comment);
 		}
 	}
-
-	public String getStatusMessage() {
-		return "";
-	};
 }

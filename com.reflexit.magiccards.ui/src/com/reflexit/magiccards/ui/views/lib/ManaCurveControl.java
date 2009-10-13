@@ -6,31 +6,21 @@ import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.ManaCurve;
 
-public class ManaCurveControl implements IDeckPage {
+public class ManaCurveControl extends AbstractDeckPage implements IDeckPage {
 	ChartCanvas canvas;
-	//SwtInteractivityViewer spellColorCanvas;
-	ICardStore store;
 
+	@Override
 	public Composite createContents(Composite parent) {
 		canvas = new ChartCanvas(parent, SWT.BORDER);
 		return canvas;
 	}
 
-	public void setFilteredStore(IFilteredCardStore store) {
-		this.store = store.getCardStore();
-	};
-
-	public ICardEventManager getCardStore() {
-		return store;
-	}
-
+	@Override
 	public void updateFromStore() {
 		if (store == null)
 			return;
@@ -39,6 +29,7 @@ public class ManaCurveControl implements IDeckPage {
 		canvas.redraw();
 	}
 
+	@Override
 	public Control getControl() {
 		return canvas;
 	}
@@ -47,6 +38,7 @@ public class ManaCurveControl implements IDeckPage {
 		return CardStoreUtils.getInstance().buildManaCurve(store);
 	}
 
+	@Override
 	public String getStatusMessage() {
 		ICardEventManager cardStore = store;
 		String cardCountTotal = "";

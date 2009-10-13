@@ -9,7 +9,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import java.text.DecimalFormat;
 
@@ -17,18 +16,13 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.TypeStats;
 
-public class TypeStatsControl implements IDeckPage {
+public class TypeStatsControl extends AbstractDeckPage implements IDeckPage {
 	ChartCanvas canvas;
-	//SwtInteractivityViewer spellColorCanvas;
-	ICardStore store;
-	private Composite area;
 	private TreeViewer stats;
 	static class TypesContentProider implements ITreeContentProvider {
 		public Object[] getChildren(Object element) {
@@ -70,8 +64,9 @@ public class TypeStatsControl implements IDeckPage {
 		}
 	}
 
+	@Override
 	public Composite createContents(Composite parent) {
-		area = new Composite(parent, SWT.NONE);
+		area = super.createContents(parent);
 		area.setLayout(new GridLayout(2, true));
 		canvas = new ChartCanvas(area, SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -121,14 +116,7 @@ public class TypeStatsControl implements IDeckPage {
 		return area;
 	}
 
-	public void setFilteredStore(IFilteredCardStore store) {
-		this.store = store.getCardStore();
-	};
-
-	public ICardEventManager getCardStore() {
-		return store;
-	}
-
+	@Override
 	public void updateFromStore() {
 		if (store == null)
 			return;
@@ -143,14 +131,11 @@ public class TypeStatsControl implements IDeckPage {
 		return CardStoreUtils.getInstance().buildTypeGroups(store);
 	}
 
-	public Control getControl() {
-		return area;
-	}
-
 	protected int[] buildTypeStats() {
 		return CardStoreUtils.getInstance().buildTypeStats(store);
 	}
 
+	@Override
 	public String getStatusMessage() {
 		ICardEventManager cardStore = store;
 		String cardCountTotal = "";
