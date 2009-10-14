@@ -41,8 +41,8 @@ public class FilterHelper {
 
 	public static Collection getAllIds() {
 		ArrayList ids = new ArrayList();
-		Colors colors = Colors.getInstance();
-		ids.addAll(colors.getIds());
+		ids.addAll(Colors.getInstance().getIds());
+		ids.addAll(ColorTypes.getInstance().getIds());
 		ids.addAll(CardTypes.getInstance().getIds());
 		ids.addAll(SuperTypes.getInstance().getIds());
 		ids.addAll(Editions.getInstance().getIds());

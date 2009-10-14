@@ -399,6 +399,12 @@ public class MagicCardFilter {
 				res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
 			} else if (value.equals("Multi-Color")) {
 				res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "multi");
+			} else if (value.equals("Mono-Color")) {
+				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
+				BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "mono");
+				res = new BinaryExpr(b1, Operation.OR, b2);
+			} else if (value.equals("Hybrid")) {
+				res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "hybrid");
 			} else if (value.equals("Colorless")) {
 				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
 				BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "land");
@@ -458,7 +464,14 @@ public class MagicCardFilter {
 	}
 
 	public void update(HashMap map) {
-		Expr expr = createOrGroup(map, Colors.getInstance());
+		Expr expr;
+		if (map.containsKey(ColorTypes.AND_ID)) {
+			map.remove(ColorTypes.AND_ID);
+			expr = createAndGroup(map, Colors.getInstance());
+		} else {
+			expr = createOrGroup(map, Colors.getInstance());
+		}
+		expr = createAndGroup(createOrGroup(map, ColorTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, CardTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, SuperTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
@@ -512,6 +525,14 @@ public class MagicCardFilter {
 	}
 
 	private Expr createOrGroup(HashMap map, ISearchableProperty sp) {
+		return createGroup(map, sp, true);
+	}
+
+	private Expr createAndGroup(HashMap map, ISearchableProperty sp) {
+		return createGroup(map, sp, false);
+	}
+
+	private Expr createGroup(HashMap map, ISearchableProperty sp, boolean orOp) {
 		Expr res = null;
 		for (Iterator iterator = sp.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
@@ -529,7 +550,10 @@ public class MagicCardFilter {
 			}
 			if (or == null)
 				continue;
-			res = createOrGroup(or, res);
+			if (orOp)
+				res = createOrGroup(or, res);
+			else
+				res = createAndGroup(or, res);
 		}
 		return res;
 	}

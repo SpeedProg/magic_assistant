@@ -20,7 +20,6 @@ public class Colors implements ISearchableProperty {
 		add("Red", "R");
 		add("Blue", "U");
 		add("Green", "G");
-		add("Multi-Color", null);
 		add("Colorless", null);
 	};
 
