@@ -15,14 +15,18 @@ Filter dialog has three page: Basic Filter, Sets Filter and Location filter (las
 
 <h3><a name="filterasic">Basic Filter</h3>
 Basic filter has several groups such as Color, Type, Rarity etc.
-Items that belong to the same group (such as Color) would be selected using logical OR. 
+Items that belong to the same group (such as Type) would be selected using logical OR. 
 Item that belong to different groups would be selected using logical AND.
+<p>
+Color group has two columns - basic colors, and color types and modifiers. Basic colors selected using OR,
+unless you check "And". If you check "Only" unchecked colors would be excluded. For example to select Red and Blue Hybrid cards
+you need to check Red, Blue, Hybrid and Only (If you don't select Only you will get all hybrids with Red or Blue, for example Blue/White).
 <p>
 <img src="../screenshots/dialogs/basic_filter.png" alt="basic filter dialog image"/>
 </p>
 <p/>
-For example if you select color Blue and White and Type Creature and Enchantment, 
-you will get all creates and all enchantments that are Blue or White (including multicolors).
+Another example: if you select color Blue and White and Type Creature and Enchantment, 
+you will get all creates and all enchantments that are Blue or White (including multicolored).
 <p/>
 Text search fields would split you text by words and search text using AND for all worlds you enter in the same line, disregarding order.
 Text search field provide content assist, i.e. they would show possible word you want to enter while you typing.
@@ -46,14 +50,16 @@ You can also search quoted text (will be searched as is including spaces), for e
 If you add "-" right before the word it would mean "not" for example "life -loose", means search for text "life" exclude ones with "loose" in it.
 By default text search is case insensitive, if you need case sensitive search or more advanced search you can use regular expressions.
 Regular expressions are recognised in text as m/expression/, for example m/Flying/ will search with Flying starting with capital F.
+Regular expressions are very powerful, google java regular expression for help on how to write them.
 
-
-<li>Example 1: Select all Green creatures with flying - Select Green in Color, Create in Type, and type "flying" in Text field</li>
-<li>Example 2: Select Artifact Creatures with cost 0 or 1 - Select Artifact in Type, type "Creature" in Type field, select &lt;= 1 in "Converted CC" field.  
-<li>Example 3: Select Creatures that can tap for mana - Select "Creature" in Type group, type "{T} mana pool" in Text field.  
-<li>Example 4: Look for only Flying creatures - Type "m/Flying/" in the text field, without quotes.
-<li>Example 5: Look for creates with no abilities - Select "Creature" in Type group, Type "m/^$/" in the text field, without quotes.
-
+<p/>
+<li>Example 1: Select all Green creatures with flying - Select Green in Color, Create in Type, and type <tt>flying</tt> in Text field</li>
+<li>Example 2: Select Artifact Creatures with cost 0 or 1 - Select Artifact in Type, type <tt>Creature</tt> in Type field, select &lt;= 1 in "Converted CC" field.  
+<li>Example 3: Select Creatures that can tap for mana - Select "Creature" in Type group, type <tt>{T} mana pool</tt> in Text field.  
+<li>Example 4: Look for only Flying creatures - Type <tt>m/Flying/</tt> in the text field.
+<li>Example 5: Look for creates with no abilities - Select "Creature" in Type group, Type <tt>m/^$/</tt> in the text field.
+<li>Example 6: Find cards with "destroy all" or "return all" in text - Enter <tt>m/([Dd]estroy|[Rr]eturn) all/</tt> in text search field</li>
+<li>Example 7: Find cards with ability to pull other cards from your graveyard - Type <tt>m/return .*from your graveyard/</tt> in text field</li>
 
 <h3><a name="filterset">Set Filter</a></h3>
 Set filter allows to select specific set in which cards should be shown.
