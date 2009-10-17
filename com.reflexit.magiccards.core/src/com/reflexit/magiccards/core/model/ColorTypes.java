@@ -8,6 +8,7 @@ public class ColorTypes implements ISearchableProperty {
 	static ColorTypes instance = new ColorTypes();
 	private LinkedHashMap names;
 	static public String AND_ID = getInstance().getPrefConstant("And");
+	static public String ONLY_ID = getInstance().getPrefConstant("Only");
 
 	private ColorTypes() {
 		this.names = new LinkedHashMap();
@@ -15,6 +16,7 @@ public class ColorTypes implements ISearchableProperty {
 		add("Mono-Color");
 		add("Hybrid");
 		add("And");
+		add("Only");
 	};
 
 	private void add(String string) {

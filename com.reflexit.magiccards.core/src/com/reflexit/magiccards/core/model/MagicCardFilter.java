@@ -468,6 +468,9 @@ public class MagicCardFilter {
 		if (map.containsKey(ColorTypes.AND_ID)) {
 			map.remove(ColorTypes.AND_ID);
 			expr = createAndGroup(map, Colors.getInstance());
+		} else if (map.containsKey(ColorTypes.ONLY_ID)) {
+			map.remove(ColorTypes.ONLY_ID);
+			expr = createAndNotGroup(map, Colors.getInstance());
 		} else {
 			expr = createOrGroup(map, Colors.getInstance());
 		}
@@ -525,14 +528,18 @@ public class MagicCardFilter {
 	}
 
 	private Expr createOrGroup(HashMap map, ISearchableProperty sp) {
-		return createGroup(map, sp, true);
+		return createGroup(map, sp, true, false);
 	}
 
 	private Expr createAndGroup(HashMap map, ISearchableProperty sp) {
-		return createGroup(map, sp, false);
+		return createGroup(map, sp, false, false);
 	}
 
-	private Expr createGroup(HashMap map, ISearchableProperty sp, boolean orOp) {
+	private Expr createAndNotGroup(HashMap map, ISearchableProperty sp) {
+		return createGroup(map, sp, false, true);
+	}
+
+	private Expr createGroup(HashMap map, ISearchableProperty sp, boolean orOp, boolean notOp) {
 		Expr res = null;
 		for (Iterator iterator = sp.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
@@ -541,15 +548,19 @@ public class MagicCardFilter {
 			if (value != null && value.equals("true")) {
 				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
 			} else if (value == null || value.equals("false")) {
-				// skip
-				or = null;
-				//				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
-				//				or = new BinaryExpr(or, Operation.NOT, null);
+				if (notOp) {
+					or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
+					or = new BinaryExpr(or, Operation.NOT, null);
+				} else {
+					// skip
+					or = null;
+				}
 			} else if (value != null && value.length() > 0) {
 				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Value(value));
 			}
-			if (or == null)
+			if (or == null) {
 				continue;
+			}
 			if (orOp)
 				res = createOrGroup(or, res);
 			else
