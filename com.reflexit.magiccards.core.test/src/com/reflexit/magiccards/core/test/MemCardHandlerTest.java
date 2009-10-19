@@ -119,7 +119,7 @@ public class MemCardHandlerTest extends TestCase {
 	public void testFilterByTypeText() {
 		add3cards();
 		HashMap map = new HashMap();
-		String typeId = FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX);
+		String typeId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
 		map.put(typeId, "Elf");
 		this.filter.update(map);
 		this.deck.update(this.filter);
