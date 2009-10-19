@@ -163,7 +163,10 @@ public class MagicCardFilter {
 					return true;
 				if (x == null || y == null)
 					return false;
-				return x.equals(y);
+				if (x instanceof String && y instanceof String)
+					return x.equals(y);
+				else
+					return x.toString().equals(y.toString());
 			} else if (this.op == Operation.MATCHES) {
 				Object x = this.left.getFieldValue(o);
 				Object y = this.right.getFieldValue(o);
@@ -418,7 +421,7 @@ public class MagicCardFilter {
 			BinaryExpr b1 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " .*");
 			BinaryExpr b2 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " -.*");
 			res = new BinaryExpr(b1, Operation.AND, new BinaryExpr(b2, Operation.NOT, null));
-		} else if (FilterHelper.SUBTYPE.equals(requestedId)) {
+		} else if (FilterHelper.TYPE_LINE.equals(requestedId)) {
 			res = textSearch(MagicCardField.TYPE, value, regex);
 		} else if (FilterHelper.TEXT_LINE.equals(requestedId)) {
 			res = textSearch(MagicCardField.ORACLE, value, regex);
@@ -434,6 +437,16 @@ public class MagicCardFilter {
 			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.LOCATION, value);
 		} else if (FilterHelper.RARITY.equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardField.RARITY, value);
+		} else if (FilterHelper.COUNT.equals(requestedId)) {
+			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.COUNT, value);
+		} else if (FilterHelper.PRICE.equals(requestedId)) {
+			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
+			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
+			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
+		} else if (FilterHelper.COMMENT.equals(requestedId)) {
+			res = textSearch(MagicCardFieldPhysical.COMMENT, value, regex);
+		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
+			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, "true");
 			// TODO: Other
 		} else {
 			res = bin;
@@ -480,12 +493,16 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Rarity.getInstance()), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.SUBTYPE), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.TYPE_LINE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_LINE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.POWER), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.TOUGHNESS), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.CCC), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterHelper.COUNT), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterHelper.PRICE), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.COMMENT), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
 		this.root = expr;
 	}
 

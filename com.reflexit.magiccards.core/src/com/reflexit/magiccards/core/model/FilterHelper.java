@@ -7,19 +7,22 @@ import com.reflexit.magiccards.core.Activator;
 
 public class FilterHelper {
 	private static final String PREFIX = Activator.PLUGIN_ID;
-	public static final String SUBTYPE = "subtype";
-	public static final String TYPE_LINE = SUBTYPE;
-	public static final String TEXT_LINE = "oracleText";
-	public static final String NAME_LINE = "name";
 	public static final String TEXT_POSTFIX = "text";
-	public static final String POWER = "power";
 	public static final String NUMERIC_POSTFIX = "numeric";
-	public static final String TOUGHNESS = "toughness";
-	public static final String CCC = "convertedCC";
-	public static final String EDITION = "edition";
-	public static final String LOCATION = "location";
-	public static final String RARITY = "rarity";
 	public static final String GROUP_FIELD = "group_field";
+	public static final String TYPE_LINE = MagicCardField.TYPE.name();
+	public static final String TEXT_LINE = MagicCardField.ORACLE.name();
+	public static final String NAME_LINE = MagicCardField.NAME.name();
+	public static final String POWER = MagicCardField.POWER.name();
+	public static final String TOUGHNESS = MagicCardField.TOUGHNESS.name();
+	public static final String CCC = MagicCardField.CMC.name();
+	public static final String EDITION = MagicCardField.SET.name();
+	public static final String RARITY = MagicCardField.RARITY.name();
+	public static final String LOCATION = MagicCardFieldPhysical.LOCATION.name();
+	public static final String PRICE = MagicCardFieldPhysical.PRICE.name();
+	public static final String COUNT = MagicCardFieldPhysical.COUNT.name();
+	public static final String COMMENT = MagicCardFieldPhysical.COMMENT.name();
+	public static final String OWNERSHIP = MagicCardFieldPhysical.OWNERSHIP.name();
 
 	public static String toIdent(String string) {
 		String res = string.toLowerCase();
@@ -48,12 +51,15 @@ public class FilterHelper {
 		ids.addAll(Editions.getInstance().getIds());
 		ids.addAll(Rarity.getInstance().getIds());
 		ids.addAll(Locations.getInstance().getIds());
-		ids.add(FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.POWER, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TOUGHNESS, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.CCC, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.COUNT, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.PRICE, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.COMMENT, FilterHelper.TEXT_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX));
 		// TODO add the rest
 		return ids;
 	}
