@@ -1,24 +1,35 @@
 package com.reflexit.magiccards.ui.dialogs;
 
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.IPreferencePageContainer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CardFilterPreferencePage;
+import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 
-public class CardFilterDialog extends TitleAreaDialog implements IPreferencePageContainer {
-	private CardFilterPreferencePage cardFilterPreference;
+public class CardFilterDialog extends PreferenceDialog implements IPreferencePageContainer {
+	private IPreferenceStore store;
 
-	public CardFilterDialog(Shell parentShell) {
-		super(parentShell);
-		// getShell();
+	public CardFilterDialog(Shell parentShell, IPreferenceStore store) {
+		super(parentShell, new PreferenceManager());
+		if (store == null)
+			this.store = MagicUIActivator.getDefault().getPreferenceStore();
+		else
+			this.store = store;
+		//
+		addNode(new PreferenceNode("basic", new CardFilterPreferencePage()));
+		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage()));
+	}
+
+	public void addNode(PreferenceNode node) {
+		getPreferenceManager().addToRoot(node);
+		PreferencePage page = (PreferencePage) node.getPage();
+		page.setPreferenceStore(this.store);
 	}
 
 	@Override
@@ -27,46 +38,7 @@ public class CardFilterDialog extends TitleAreaDialog implements IPreferencePage
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Filter Cards...");
-		this.cardFilterPreference = new CardFilterPreferencePage();
-		this.cardFilterPreference.setContainer(this);
-		this.cardFilterPreference.noDefaultAndApplyButton();
-		this.cardFilterPreference.createControl(parent);
-		this.cardFilterPreference.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-		// Build the separator line
-		Label titleBarSeparator = new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR);
-		titleBarSeparator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		return this.cardFilterPreference.getControl();
-	}
-
 	public IPreferenceStore getPreferenceStore() {
-		return MagicUIActivator.getDefault().getPreferenceStore();
-	}
-
-	@Override
-	protected void okPressed() {
-		this.cardFilterPreference.performOk();
-		super.okPressed();
-	}
-
-	public void updateButtons() {
-		// TODO Auto-generated method stub
-	}
-
-	public void updateMessage() {
-		String message = null;
-		String errorMessage = null;
-		if (this.cardFilterPreference != null) {
-			message = this.cardFilterPreference.getMessage();
-			errorMessage = this.cardFilterPreference.getErrorMessage();
-		}
-		setMessage(message);
-		setErrorMessage(errorMessage);
-	}
-
-	public void updateTitle() {
-		if (this.cardFilterPreference != null)
-			setTitle(this.cardFilterPreference.getTitle());
+		return this.store;
 	}
 }

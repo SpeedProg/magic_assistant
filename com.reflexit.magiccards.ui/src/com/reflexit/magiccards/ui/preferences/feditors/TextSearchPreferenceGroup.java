@@ -35,7 +35,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		        + "See help for details.";
 		addTooltip(nameSfe, toolTip);
 		// type
-		String typeId = FilterHelper.getPrefConstant(FilterHelper.SUBTYPE, FilterHelper.TEXT_POSTFIX);
+		String typeId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(typeId, "");
 		StringFieldEditor sfe = new StringFieldEditor(typeId, "Type", getFieldEditorParent());
 		addContextAssist(sfe, CardTypes.getProposals());
@@ -48,11 +48,6 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		addContextAssist(textSfe, getTextProposals());
 		addField(textSfe);
 		addTooltip(textSfe, toolTip);
-	}
-
-	private void addTooltip(StringFieldEditor nameSfe, String string) {
-		Text textControl = nameSfe.getTextControl(getFieldEditorParent());
-		textControl.setToolTipText(string);
 	}
 	static String[] textProposals = new String[] {
 	        "Flying",

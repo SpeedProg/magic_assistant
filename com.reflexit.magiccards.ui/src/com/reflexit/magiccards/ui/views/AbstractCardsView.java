@@ -60,7 +60,7 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dialogs.CardFilterDialog2;
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
@@ -497,7 +497,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
-		Dialog cardFilterDialog = new CardFilterDialog2(getShell(), getPreferenceStore());
+		Dialog cardFilterDialog = new CardFilterDialog(getShell(), getPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			reloadData();
 	}
