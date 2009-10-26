@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant Core Plug-in
 Bundle-SymbolicName: com.reflexit.magiccards.core;singleton:=true
-Bundle-Version: 1.0.5.qualifier
+Bundle-Version: 1.0.7.qualifier
 Bundle-Activator: com.reflexit.magiccards.core.Activator
 Bundle-Vendor: Alena Laskavaia
 Bundle-Localization: plugin
