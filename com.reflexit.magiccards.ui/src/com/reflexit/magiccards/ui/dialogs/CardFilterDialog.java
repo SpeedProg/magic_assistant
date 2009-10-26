@@ -9,6 +9,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.AbilitiesFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.CardFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 
@@ -24,6 +25,7 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		//
 		addNode(new PreferenceNode("basic", new CardFilterPreferencePage()));
 		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage()));
+		addNode(new PreferenceNode("abilities", new AbilitiesFilterPreferencePage()));
 	}
 
 	public void addNode(PreferenceNode node) {

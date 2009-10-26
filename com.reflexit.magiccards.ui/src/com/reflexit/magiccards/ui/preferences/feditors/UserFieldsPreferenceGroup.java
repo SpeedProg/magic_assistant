@@ -26,7 +26,7 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		addTooltip(nameSfe, toolTip);
 		//		id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
 		//		getPreferenceStore().setDefault(id, Boolean.FALSE);
-		//		BooleanFieldEditor x = new BooleanFieldEditor(id, "Own", getFieldEditorParent());
+		//		BooleanFieldEditor x = new BooleanFieldEditor(id, "Only Own", getFieldEditorParent());
 		//		addField(x);
 	}
 
