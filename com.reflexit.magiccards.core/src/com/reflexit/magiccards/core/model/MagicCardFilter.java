@@ -423,8 +423,6 @@ public class MagicCardFilter {
 			res = new BinaryExpr(b1, Operation.AND, new BinaryExpr(b2, Operation.NOT, null));
 		} else if (FilterHelper.TYPE_LINE.equals(requestedId)) {
 			res = textSearch(MagicCardField.TYPE, value, regex);
-		} else if (FilterHelper.TEXT_LINE.equals(requestedId)) {
-			res = textSearch(MagicCardField.ORACLE, value, regex);
 		} else if (FilterHelper.NAME_LINE.equals(requestedId)) {
 			res = textSearch(MagicCardField.NAME, value, regex);
 		} else if (FilterHelper.CCC.equals(requestedId)) {
@@ -447,6 +445,11 @@ public class MagicCardFilter {
 			res = textSearch(MagicCardFieldPhysical.COMMENT, value, regex);
 		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, "true");
+		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
+			res = textSearch(MagicCardField.ORACLE, value, regex);
+			if (requestedId.contains("_exclude_")) {
+				res = new BinaryExpr(res, Operation.NOT, null);
+			}
 			// TODO: Other
 		} else {
 			res = bin;
@@ -494,7 +497,6 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Rarity.getInstance()), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.TYPE_LINE), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_LINE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.POWER), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.TOUGHNESS), expr);
@@ -503,6 +505,14 @@ public class MagicCardFilter {
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.PRICE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.COMMENT), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
+		// text fields
+		Expr text = createTextSearch(map, FilterHelper.TEXT_LINE);
+		text = createOrGroup(text, createTextSearch(map, FilterHelper.TEXT_LINE_2));
+		text = createOrGroup(text, createTextSearch(map, FilterHelper.TEXT_LINE_3));
+		expr = createAndGroup(expr, text);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_NOT_1), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_NOT_2), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_NOT_3), expr);
 		this.root = expr;
 	}
 
@@ -538,7 +548,7 @@ public class MagicCardFilter {
 	private Expr createOrGroup(Expr or, Expr res) {
 		if (res == null) {
 			res = or;
-		} else {
+		} else if (or != null) {
 			res = new BinaryExpr(or, Operation.OR, res);
 		}
 		return res;
