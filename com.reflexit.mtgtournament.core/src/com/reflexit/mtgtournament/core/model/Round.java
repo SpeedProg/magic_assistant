@@ -58,7 +58,7 @@ public class Round implements Cloneable {
 		Round round = this;
 		if (round.getNumber() > 0) {
 			Round prev = round.getTournament().getRound(round.getNumber() - 1);
-			if (prev != null) {
+			if (prev != null && !(round.getNumber() == 1 && round.getTournament().isDraftRound() == false)) {
 				if (prev.getState() != RoundState.CLOSED)
 					return RoundState.NOT_READY;
 			}
