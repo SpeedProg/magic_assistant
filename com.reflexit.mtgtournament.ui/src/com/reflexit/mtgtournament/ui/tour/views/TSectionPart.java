@@ -76,11 +76,11 @@ public class TSectionPart extends SectionPart {
 			reload();
 		}
 
-		public void attach(final Button control) {
+		public void attach(final Button control, final boolean checkText) {
 			control.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (control.getText().equals(getText()))
+					if (checkText == false || control.getText().equals(getText()))
 						run();
 				}
 			});

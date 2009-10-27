@@ -215,9 +215,9 @@ public class RoundScheduleSection extends TSectionPart {
 			case IN_PROGRESS:
 				if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
 					return systemColorYellow;
-			default:
-				return null;
+				break;
 			}
+			return null;
 		}
 
 		public Color getForeground(Object element, int columnIndex) {
@@ -256,7 +256,6 @@ public class RoundScheduleSection extends TSectionPart {
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTree().setHeaderVisible(true);
-		viewer.setAutoExpandLevel(2);
 		createColumn(0, "Round", 80);
 		createColumn(1, "Table", 60);
 		createColumn(2, "Player 1", 120);
@@ -297,13 +296,25 @@ public class RoundScheduleSection extends TSectionPart {
 	@Override
 	public void refresh() {
 		viewer.refresh(true);
+		Tournament t = (Tournament) viewer.getInput();
+		List<Round> rounds = t.getRounds();
+		for (Round round : rounds) {
+			if (round.getState() == RoundState.IN_PROGRESS) {
+				viewer.setExpandedState(round, true);
+			}
+		}
 		getManagedForm().getForm().reflow(false);
 		super.refresh();
 	}
 
 	@Override
 	public boolean setFormInput(Object input) {
-		viewer.setInput(input);
+		if (viewer.getInput() != input) {
+			viewer.setInput(input);
+			viewer.expandAll();
+		} else {
+			viewer.refresh(true);
+		}
 		markStale();
 		return true;
 	}

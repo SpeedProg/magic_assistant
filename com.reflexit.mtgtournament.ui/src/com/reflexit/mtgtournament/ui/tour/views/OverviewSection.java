@@ -100,7 +100,7 @@ public class OverviewSection extends TSectionPart {
 		// has draft check
 		hasDraftButton = toolkit.createButton(comp, "Has a draft round", SWT.CHECK);
 		hasDraftButton.setLayoutData(span2.create());
-		updateTourAction.attach(hasDraftButton);
+		updateTourAction.attach(hasDraftButton, false);
 		return comp;
 	}
 
@@ -114,10 +114,10 @@ public class OverviewSection extends TSectionPart {
 		closeButton = toolkit.createButton(comp, CLOSE_TOUR_ACTION_TEXT, SWT.PUSH);
 		undoCloseButton = toolkit.createButton(comp, UNDO_CLOSE_TOUR_ACTION_TEXT, SWT.PUSH);
 		// actions
-		scheduleAction.attach(scheduleButton);
-		reScheduleAction.attach(reScheduleButton);
-		closeTourAction.attach(closeButton);
-		undoCloseTourAction.attach(undoCloseButton);
+		scheduleAction.attach(scheduleButton, true);
+		reScheduleAction.attach(reScheduleButton, true);
+		closeTourAction.attach(closeButton, true);
+		undoCloseTourAction.attach(undoCloseButton, true);
 		// tooltips
 		scheduleButton.setToolTipText("Schedule the tournament - creates rounds, and schedules if possible");
 		closeButton.setToolTipText("Close the tournament and propagate score");
