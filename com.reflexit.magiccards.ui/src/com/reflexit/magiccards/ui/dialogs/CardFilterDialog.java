@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.dialogs;
 
+import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferencePageContainer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -12,6 +13,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.AbilitiesFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.CardFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
+import com.reflexit.magiccards.ui.preferences.SaveFilterPreferencePage;
 
 public class CardFilterDialog extends PreferenceDialog implements IPreferencePageContainer {
 	private IPreferenceStore store;
@@ -26,6 +28,11 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		addNode(new PreferenceNode("basic", new CardFilterPreferencePage()));
 		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage()));
 		addNode(new PreferenceNode("abilities", new AbilitiesFilterPreferencePage()));
+		addSavePage();
+	}
+
+	protected void addSavePage() {
+		addNode(new PreferenceNode("save", new SaveFilterPreferencePage(this)));
 	}
 
 	public void addNode(PreferenceNode node) {
@@ -42,5 +49,13 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 	@Override
 	public IPreferenceStore getPreferenceStore() {
 		return this.store;
+	}
+
+	public void refresh() {
+		IPreferenceNode[] rootSubNodes = getPreferenceManager().getRootSubNodes();
+		for (IPreferenceNode node : rootSubNodes) {
+			PreferencePage page = (PreferencePage) node.getPage();
+			page.setPreferenceStore(this.store);
+		}
 	}
 }

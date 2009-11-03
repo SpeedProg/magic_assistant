@@ -29,6 +29,13 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 	}
 
 	@Override
+	public void setPreferenceStore(IPreferenceStore store) {
+		super.setPreferenceStore(store);
+		if (comp != null)
+			comp.initialize();
+	}
+
+	@Override
 	protected Control createContents(Composite parent) {
 		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER, true);
 		this.comp.setPreferenceStore(getPreferenceStore());

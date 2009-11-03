@@ -53,6 +53,13 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	}
 
 	@Override
+	public void setPreferenceStore(IPreferenceStore store) {
+		super.setPreferenceStore(store);
+		if (panel != null)
+			initializeTree();
+	}
+
+	@Override
 	public void noDefaultAndApplyButton() {
 		super.noDefaultAndApplyButton();
 	}

@@ -25,8 +25,13 @@ public abstract class MFieldEditorPreferencePage extends FieldEditorPreferencePa
 		super.performDefaults();
 	}
 
+	@Override
+	public void initialize() {
+		super.initialize();
+	}
+
 	protected void addTooltip(StringFieldEditor nameSfe, String string) {
-    	Text textControl = nameSfe.getTextControl(getFieldEditorParent());
-    	textControl.setToolTipText(string);
-    }
+		Text textControl = nameSfe.getTextControl(getFieldEditorParent());
+		textControl.setToolTipText(string);
+	}
 }

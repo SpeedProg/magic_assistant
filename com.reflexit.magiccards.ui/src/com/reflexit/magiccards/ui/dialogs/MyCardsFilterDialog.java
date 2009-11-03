@@ -26,5 +26,11 @@ public class MyCardsFilterDialog extends CardFilterDialog {
 		super(parentShell, store);
 		addNode(new PreferenceNode("locations", new LocationFilterPreferencePage(SWT.MULTI)));
 		addNode(new PreferenceNode("user", new UserFilterPreferencePage()));
+		super.addSavePage();
+	}
+
+	@Override
+	protected void addSavePage() {
+		// overload not add here
 	}
 }
