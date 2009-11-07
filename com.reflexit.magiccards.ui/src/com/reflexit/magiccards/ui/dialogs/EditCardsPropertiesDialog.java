@@ -87,6 +87,7 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 			}
 		});
 		comm.setText(store.getString(COMMENT_FIELD));
+		count.setFocus();
 		return area;
 	}
 
