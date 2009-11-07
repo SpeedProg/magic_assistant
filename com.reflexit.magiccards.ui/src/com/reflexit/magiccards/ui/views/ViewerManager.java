@@ -127,7 +127,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	public void loadData(final Runnable postLoad) {
 		Job[] jobs = Job.getJobManager().find(jobFamility);
 		if (jobs.length >= 2) {
-			System.err.println(jobs.length + " already running skipping refresh");
+			//System.err.println(jobs.length + " already running skipping refresh");
 			return;
 		}
 		final Display display = PlatformUI.getWorkbench().getDisplay();
