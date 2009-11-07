@@ -24,7 +24,6 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements
         ICardCollection<IMagicCard>, IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
-	protected int cardCount;
 
 	public CollectionCardStore(IStorage<IMagicCard> storage) {
 		this(storage, true);
@@ -64,7 +63,6 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				MagicCardPhisical old = phi;
 				add.setCount(old.getCount() + count);
 				doRemoveCard(old);
-				this.cardCount += add.getCount();
 				this.hashpart.storeCard(add);
 				if (storageAdd(add))
 					return true;
@@ -96,7 +94,6 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		} else {
 			phi = new MagicCardPhisical(card);
 		}
-		this.cardCount += count;
 		return phi;
 	}
 
@@ -123,7 +120,6 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		if (found != null) {
 			storageRemove(found);
 			this.hashpart.removeCard(found);
-			this.cardCount -= found.getCount();
 			return true;
 		} else {
 			if (max == null)
@@ -134,7 +130,6 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 			add.setCount(max.getCount() - phi.getCount());
 			storageRemove(max);
 			this.hashpart.removeCard(max);
-			this.cardCount -= max.getCount();
 			doAddCard(add);
 			return true;
 		}
@@ -149,18 +144,12 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	 */
 	@Override
 	protected synchronized void doInitialize() {
-		cardCount = 0;
 		this.hashpart = new HashCollectionPart();
 		this.storage.load();
 		// load in hash
 		for (Object element : this) {
 			IMagicCard card = (IMagicCard) element;
 			this.hashpart.storeCard(card);
-			if (card instanceof ICardCountable) {
-				this.cardCount += ((ICardCountable) card).getCount();
-			} else {
-				this.cardCount += 1;
-			}
 		}
 	}
 
@@ -173,11 +162,20 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	public int getCount() {
-		return this.cardCount;
+		//return this.cardCount;
+		return getRealCount();
+	}
+
+	public int getRealCount() {
+		int count = 0;
+		for (Object element : getStorage()) {
+			ICardCountable card = (ICardCountable) element;
+			count += card.getCount();
+		}
+		return count;
 	}
 
 	public void clear() {
-		cardCount = 0;
 		this.hashpart = new HashCollectionPart();
 	}
 }
