@@ -73,3 +73,4 @@ Legions|LGN|en-us
 Starter 1999|P3|en-us
 Starter 2000|P4|en-us
 Magic 2010|M10|EN
+Zendikar|ZEN|EN
