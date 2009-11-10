@@ -9,6 +9,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
@@ -17,6 +18,7 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -50,6 +52,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		this.table.setLocation(def.getLocation());
 		this.table.initialize();
 		container.addListener(this);
+		table.addListener(this);
 	}
 
 	public static LibraryDataXmlHandler getInstance() {
@@ -118,6 +121,16 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 			if (event.getType() == CardEvent.RENAME_CONTAINER) {
 				this.table.renameLocation((String) event.getData(), elem.getLocation());
 				reload();
+			}
+		} else if (event.getType() == CardEvent.UPDATE) {
+			// need to save xml
+			if (event.getData() instanceof MagicCardPhisical) {
+				MagicCardPhisical c = (MagicCardPhisical) event.getData();
+				String location = c.getLocation();
+				AbstractCardStoreWithStorage storage = table.getStorage(location);
+				if (storage != null) {
+					storage.getStorage().save();
+				}
 			}
 		}
 	}
