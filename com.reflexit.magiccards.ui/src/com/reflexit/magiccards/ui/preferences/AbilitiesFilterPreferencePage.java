@@ -13,7 +13,9 @@ public class AbilitiesFilterPreferencePage extends AbstractFilterPreferencePage 
 	public AbilitiesFilterPreferencePage() {
 		this.subPages = new ArrayList();
 		setTitle("Abilities Filter");
-		setDescription("This filter allows to perform adavnced abilities search using oracle text. To search for two abilities (using and) enter them on the same line, for alternative abilities (or) use different lines, use 'Excluding' line to remove some cards from search result.");
+		setDescription("This filter allows to perform advanced abilities search using card oracle text. "
+		        + "To search for two abilities (using and) enter them on the same line, for alternative abilities (or) "
+		        + "use different lines, use 'Excluding' line to remove some cards from the search result.");
 		// setDescription("A demonstration of a preference page
 		// implementation");
 	}
