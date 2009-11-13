@@ -321,7 +321,10 @@ public abstract class PickListEditor extends FieldEditor {
 	}
 
 	public String getSelected() {
-		return list.getItem(list.getSelectionIndex());
+		int i = list.getSelectionIndex();
+		if (i < 0)
+			return null;
+		return list.getItem(i);
 	}
 
 	/**
