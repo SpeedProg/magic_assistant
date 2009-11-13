@@ -65,6 +65,27 @@ Regular expressions are very powerful, google java regular expression for help o
 Set filter allows to select specific set in which cards should be shown.
 <h3><a name="filterloc">Location Filter</a></h3>
 Location filter allow to select set of decks/collection that would be shown in My Cards view.
-
+<h3><a name="filterabilities">Abilities Filter</a></h3>
+Abilities filter - is a filter on a card text (oracle version), but allows more control. In dialog fields you can 
+use simple word search, 
+quoted text or regular expressions, see Text search in Basic Filter help.
+<p>
+<img src="../screenshots/dialogs/abilities_filter.png" alt="Abilities Filter Page"/>
+</p>
+<h3><a name="filtersave">Save/Load Filter</a></h3>
+This page allows to save existing filter and reuse later, which is handy if you doing same query over and over again.
+For example you can select sets which makes current Standard legality and save as "sandard". Or you select all collection
+which you own in Location filter (compare to some other ones, like wishlist) and you can quickly load it later to see only own cards.
+Or you can create an ability filter and save as "ability" keyword filter.
+<p>
+Press "Save As..." to save current filter (select an exiting filter to override it).
+<p>
+Select a filter and press "Load" to load a filter.
+<p>
+Select a filter and press "Remove" to delete a filter.
+<p>
+<img src="../screenshots/dialogs/save_filter.png" alt="Save/Load filter"/>
+</p>
+Filter files are saved in workspace/.metadata/.plugins/com.reflexit.magiccards.core/filters directory if you care.
 </body>
 </html>
