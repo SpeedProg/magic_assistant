@@ -29,7 +29,7 @@ public class MagicDbView extends AbstractCardsView {
 
 	@Override
 	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new LazyTableViewerManager(this);
+		return new CompositeViewerManager(this);
 	}
 
 	@Override
