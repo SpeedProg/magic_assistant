@@ -89,7 +89,7 @@ public class CompositeViewerManager extends ViewerManager {
 
 	public void setActivePage(int i) {
 		this.stackLayout.topControl = this.managers[i].getViewer().getControl();
-		this.view.getSite().setSelectionProvider(this.managers[i].getViewer());
+		//this.view.getSite().setSelectionProvider(selectionProvider);
 	}
 
 	/* (non-Javadoc)
@@ -144,7 +144,7 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateViewer()
 	 */
 	@Override
-    public void updateViewer() {
+	public void updateViewer() {
 		this.managers[this.activeIndex].updateViewer();
 		this.comp.layout();
 	}

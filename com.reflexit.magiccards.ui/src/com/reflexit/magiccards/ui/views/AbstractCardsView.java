@@ -530,7 +530,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void updateViewer() {
 		ISelection selection;
 		try {
-			selection = manager.getViewer().getSelection();
+			selection = manager.getSelectionProvider().getSelection();
 		} catch (Exception e) {
 			selection = new StructuredSelection();
 		}
@@ -538,11 +538,11 @@ public abstract class AbstractCardsView extends ViewPart {
 		updateStatus();
 		if (revealSelection != null) {
 			// set desired selection
-			getViewer().setSelection(revealSelection, true);
+			manager.getSelectionProvider().setSelection(revealSelection);
 			revealSelection = null;
 		} else {
 			// restore selection
-			getViewer().setSelection(selection, true);
+			manager.getSelectionProvider().setSelection(selection);
 		}
 	}
 
