@@ -3,7 +3,6 @@
  */
 package com.reflexit.magiccards.ui.views.card;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -91,8 +90,6 @@ class CardDescComposite extends Composite {
 		if (card == this.card) {
 			this.image = this.cardNotFound;
 			this.imageControl.setImage(this.image);
-			if (e != null)
-				MessageDialog.openError(getShell(), "Error:", "Can't load image: " + e.getMessage());
 		}
 	}
 

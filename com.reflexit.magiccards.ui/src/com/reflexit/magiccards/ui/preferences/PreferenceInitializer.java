@@ -31,5 +31,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		                PreferenceConstants.DECKVIEW_COLS,
 		                "Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price");
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
+		store.setDefault(PreferenceConstants.LOAD_IMAGES, true);
 	}
 }

@@ -40,7 +40,7 @@ public class NameColumn extends GenColumn {
 				try {
 					URL url = CardCache.createSetImageURL(card, true);
 					Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
-					if (image == null) {
+					if (image == null && url != null) {
 						image = createNewSetImage(url);
 						MagicUIActivator.getDefault().getImage(key, image);
 					}

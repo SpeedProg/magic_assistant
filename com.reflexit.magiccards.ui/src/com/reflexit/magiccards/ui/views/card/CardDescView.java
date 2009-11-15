@@ -57,6 +57,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					boolean nocard = (card == IMagicCard.DEFAULT);
 					CardDescView.this.panel.setVisible(!nocard);
 					CardDescView.this.message.setVisible(nocard);
+					if (nocard)
+						message.setText("Click on a card to populate the view");
 					CardDescView.this.panel.reload(card);
 				}
 			});
@@ -79,6 +81,12 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					public void run() {
 						if (remoteImage == null || remoteImage.getBounds().width < 20) {
 							CardDescView.this.panel.setImageNotFound(card, e);
+							message.setVisible(true);
+							if (e != null)
+								message.setText(e.getMessage());
+							else
+								message.setText("Image loading is disabled");
+							message.getParent().layout(true);
 						} else {
 							CardDescView.this.panel.setImage(card, remoteImage);
 						}
@@ -95,7 +103,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
 		this.message = new Label(parent, SWT.WRAP);
-		this.message.setText("Click on card to populate the view");
+		this.message.setText("Click on a card to populate the view");
+		this.message.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.panel = new CardDescComposite(this, parent, SWT.BORDER);
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -126,15 +135,11 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		//getSite().getPage().addSelectionListener(MagicDbView.ID, this);
-		//getSite().getPage().addSelectionListener(LibView.ID, this);
 		getSite().getPage().addSelectionListener(this);
 	}
 
 	@Override
 	public void dispose() {
-		//getSite().getPage().removeSelectionListener(MagicDbView.ID, this);
-		//getSite().getPage().removeSelectionListener(LibView.ID, this);
 		getSite().getPage().removeSelectionListener(this);
 		super.dispose();
 	}
@@ -171,6 +176,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	private Image createCardImage(IMagicCard card) throws IOException {
 		URL url = CardCache.createCardURL(card);
+		if (url == null)
+			return null;
 		ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
 		Image remoteImage = imageDesc.createImage(false, getDisplay());
 		MagicUIActivator.trace("Loading URL: " + url + (remoteImage == null ? " failed" : " success"));

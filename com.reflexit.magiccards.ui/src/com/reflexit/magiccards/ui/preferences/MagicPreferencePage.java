@@ -45,6 +45,15 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			}
 		};
 		addField(caching);
+		BooleanFieldEditor load = new BooleanFieldEditor(PreferenceConstants.LOAD_IMAGES,
+		        "Enable loading graphics from the net", getFieldEditorParent()) {
+			@Override
+			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
+				super.fireStateChanged(property, oldValue, newValue);
+				CardCache.setLoadingEnabled(newValue);
+			}
+		};
+		addField(load);
 	}
 
 	/* (non-Javadoc)

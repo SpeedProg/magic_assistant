@@ -48,6 +48,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		// start the Netwotk plugin to set proxy
 		org.eclipse.ui.internal.net.Activator.getDefault();
 		CardCache.setCahchingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.CACHE_IMAGES));
+		CardCache.setLoadingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.LOAD_IMAGES));
 	}
 
 	/*

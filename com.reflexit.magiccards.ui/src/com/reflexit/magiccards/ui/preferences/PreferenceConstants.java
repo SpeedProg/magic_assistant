@@ -16,4 +16,5 @@ public class PreferenceConstants {
 	public static final String GATHERER_UPDATE_LAND = PREFIX + ".land";
 	public static final String GATHERER_UPDATE_PRINT = PREFIX + ".printings";
 	public static final String CACHE_IMAGES = PREFIX + ".cacheImages";
+	public static final String LOAD_IMAGES = PREFIX + ".loadImages";
 }
