@@ -29,9 +29,14 @@ import com.reflexit.magiccards.core.model.IMagicCard;
  */
 public class CardCache {
 	private static boolean caching;
+	private static boolean loading;
 
 	public static void setCahchingEnabled(boolean enabled) {
 		caching = enabled;
+	};
+
+	public static void setLoadingEnabled(boolean enabled) {
+		loading = enabled;
 	};
 
 	public static URL createCardURL(IMagicCard card) throws IOException {
@@ -56,6 +61,7 @@ public class CardCache {
 				}
 			}
 		} else {
+			// this code is trying to figure out locale
 			try {
 				try {
 					st = tryLocale(cardId, "EN", edition, editionAbbr);
@@ -95,6 +101,8 @@ public class CardCache {
 		}
 		try {
 			URL url = createSetImageRemoteURL(editionAbbr, rarity);
+			if (url == null)
+				return null;
 			InputStream st = url.openStream();
 			ImageCache.saveStream(file, st);
 			st.close();
@@ -105,10 +113,14 @@ public class CardCache {
 	}
 
 	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
+		if (!CardCache.isLoadingEnabled())
+			return null;
 		return ParseGathererNewVisualSpoiler.createImageURL(cardId, editionAbbr, locale);
 	}
 
 	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) throws MalformedURLException {
+		if (!CardCache.isLoadingEnabled())
+			return null;
 		return ParseGathererNewVisualSpoiler.createSetImageURL(editionAbbr, rarity);
 	}
 
@@ -135,11 +147,21 @@ public class CardCache {
 	        throws MalformedURLException, IOException {
 		String oldLocale = Editions.getInstance().getLocale(edition);
 		URL url = createImageURL(cardId, editionAbbr, locale);
-		InputStream st = url.openStream();
-		if (oldLocale == null || !oldLocale.equals(locale)) {
-			Editions.getInstance().addLocale(edition, locale);
-			Editions.getInstance().save();
+		if (url == null)
+			return null;
+		try {
+			InputStream st = url.openStream();
+			if (oldLocale == null || !oldLocale.equals(locale)) {
+				Editions.getInstance().addLocale(edition, locale);
+				Editions.getInstance().save();
+			}
+			return st;
+		} catch (IOException e) {
+			throw new IOException("Cannot connect: " + e.getMessage());
 		}
-		return st;
+	}
+
+	public static boolean isLoadingEnabled() {
+		return loading;
 	}
 }
