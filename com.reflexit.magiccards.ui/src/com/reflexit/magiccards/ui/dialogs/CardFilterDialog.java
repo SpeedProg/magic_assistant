@@ -41,6 +41,13 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		page.setPreferenceStore(this.store);
 	}
 
+	public void performOk() {
+		IPreferenceNode[] rootSubNodes = getPreferenceManager().getRootSubNodes();
+		for (IPreferenceNode node : rootSubNodes) {
+			node.getPage().performOk();
+		}
+	}
+
 	@Override
 	protected boolean isResizable() {
 		return true;

@@ -39,6 +39,7 @@ public class LoadFilterPreferenceGroup extends MFieldEditorPreferencePage {
 				if (d.open() == Dialog.OK) {
 					String name = d.getValue();
 					Collection allIds = FilterHelper.getAllIds();
+					dialog.performOk(); // saved current values
 					IPreferenceStore store = getPreferenceStore();
 					Properties props = new Properties();
 					for (Iterator iterator = allIds.iterator(); iterator.hasNext();) {
