@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Widget;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 /**
  * An abstract field editor that manages a list of input values. 
@@ -65,8 +66,7 @@ public class CheckedListEditor extends FieldEditor {
 	 * The selection listener.
 	 */
 	private SelectionListener selectionListener;
-	private String[] values;
-	private String[] keys;
+	private LinkedHashMap<String, String> keysValus = new LinkedHashMap<String, String>();
 
 	/**
 	 * Creates a new list field editor 
@@ -88,8 +88,10 @@ public class CheckedListEditor extends FieldEditor {
 	public CheckedListEditor(String name, String labelText, Composite parent, String[] values, String[] keys) {
 		init(name, labelText);
 		createControl(parent);
-		this.values = values;
-		this.keys = keys;
+		for (int i = 0; i < keys.length; i++) {
+			String key = keys[i];
+			keysValus.put(key, values[i]);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -314,19 +316,19 @@ public class CheckedListEditor extends FieldEditor {
 		String[] prefValues = stringList.split(",");
 		HashSet prefs = new HashSet();
 		prefs.addAll(Arrays.asList(prefValues));
-		for (int i = 0; i < keys.length; i++) {
-			String value = keys[i];
-			boolean checked;
-			if (prefs.contains(value)) {
-				checked = true;
-			} else if (prefs.contains("-" + value)) {
+		for (String k : prefValues) {
+			boolean checked = true;
+			if (k.startsWith("-")) {
 				checked = false;
-			} else {
-				checked = true;
+				k = k.substring(1);
 			}
 			TableItem item = new TableItem(this.list, SWT.NONE);
-			item.setData(value);
-			item.setText(values[i]);
+			item.setData(k);
+			String value = keysValus.get(k);
+			if (value == null) {
+				value = k;
+			}
+			item.setText(value);
 			item.setChecked(checked);
 		}
 	}
@@ -392,11 +394,14 @@ public class CheckedListEditor extends FieldEditor {
 			TableItem item = this.list.getItem(index);
 			String text = item.getText();
 			boolean check = item.getChecked();
+			Object data = item.getData();
 			TableItem targetItem = this.list.getItem(target);
 			item.setText(targetItem.getText());
 			item.setChecked(targetItem.getChecked());
+			item.setData(targetItem.getData());
 			targetItem.setText(text);
 			targetItem.setChecked(check);
+			targetItem.setData(data);
 			this.list.setSelection(target);
 		}
 		selectionChanged();

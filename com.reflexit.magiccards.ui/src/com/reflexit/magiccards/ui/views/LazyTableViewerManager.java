@@ -113,7 +113,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	}
 
 	@Override
-    public void updateViewer() {
+	public void updateViewer() {
 		updateTableHeader();
 		long time = System.currentTimeMillis();
 		if (this.viewer.getInput() != getFilteredStore()) {
@@ -132,59 +132,57 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 
 	@Override
 	public void updateColumns(String newValue) {
-		TableColumn[] acolumns = this.viewer.getTable().getColumns();
-		int order[] = new int[acolumns.length];
-		String[] prefValues = newValue.split(",");
-		if (prefValues.length == 0)
-			return;
-		HashMap<String, Integer> colOrger = new HashMap();
-		HashSet<Integer> orderGaps = new HashSet();
-		for (int i = 0; i < prefValues.length; i++) {
-			Integer integer = Integer.valueOf(i);
-			colOrger.put(prefValues[i], integer);
-		}
-		for (int i = 0; i < acolumns.length; i++) {
-			Integer integer = Integer.valueOf(i);
-			orderGaps.add(integer);
-		}
-		for (int i = 0; i < acolumns.length; i++) {
-			TableColumn acol = acolumns[i];
-			AbstractColumn mcol = (AbstractColumn) columns.get(i);
-			boolean checked = true;
-			String key = mcol.getColumnFullName();
-			Integer pos = colOrger.get(key);
-			if (pos == null) {
-				pos = colOrger.get("-" + key);
-				if (pos != null)
-					checked = false;
+		try {
+			TableColumn[] acolumns = this.viewer.getTable().getColumns();
+			int order[] = new int[acolumns.length];
+			String[] prefValues = newValue.split(",");
+			if (prefValues.length == 0)
+				return;
+			HashMap<String, Integer> colOrder = new HashMap();
+			HashSet<Integer> orderGaps = new HashSet();
+			for (int i = 0; i < prefValues.length; i++) {
+				Integer integer = Integer.valueOf(i);
+				colOrder.put(prefValues[i], integer);
 			}
-			if (pos != null) {
-				order[i] = pos.intValue();
-				Integer ipos = Integer.valueOf(pos.intValue());
-				if (orderGaps.contains(ipos))
-					orderGaps.remove(ipos);
-				else
-					order[i] = -1; // duplicate keys!!
-			} else {
+			for (int i = 0; i < order.length; i++) {
 				order[i] = -1;
 			}
-			if (checked) {
-				if (acol.getWidth() <= 0)
-					acol.setWidth(((AbstractColumn) this.columns.get(i)).getColumnWidth());
-			} else {
-				acol.setWidth(0);
-			}
-		}
-		//fill order for columns which were not in the properly list
-		for (int i = 0; i < order.length; i++) {
-			int pos = order[i];
-			if (pos < 0)
-				if (orderGaps.size() > 0) {
-					Integer next = orderGaps.iterator().next();
-					orderGaps.remove(next);
-					order[i] = next.intValue();
+			for (int i = 0; i < acolumns.length; i++) {
+				TableColumn acol = acolumns[i];
+				AbstractColumn mcol = (AbstractColumn) columns.get(i);
+				boolean checked = true;
+				String key = mcol.getColumnFullName();
+				Integer pos = colOrder.get(key);
+				if (pos == null) {
+					pos = colOrder.get("-" + key);
+					if (pos != null)
+						checked = false;
 				}
+				if (pos != null) {
+					order[pos.intValue()] = i;
+				} else {
+					orderGaps.add(Integer.valueOf(i)); // i'th column has no position
+				}
+				if (checked) {
+					if (acol.getWidth() <= 0)
+						acol.setWidth(((AbstractColumn) this.columns.get(i)).getColumnWidth());
+				} else {
+					acol.setWidth(0);
+				}
+			}
+			//fill order for columns which were not in the properly list
+			for (int i = 0; i < order.length; i++) {
+				int pos = order[i];
+				if (pos < 0)
+					if (orderGaps.size() > 0) {
+						Integer next = orderGaps.iterator().next();
+						orderGaps.remove(next);
+						order[i] = next.intValue();
+					}
+			}
+			this.viewer.getTable().setColumnOrder(order);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 		}
-		this.viewer.getTable().setColumnOrder(order);
 	}
 }

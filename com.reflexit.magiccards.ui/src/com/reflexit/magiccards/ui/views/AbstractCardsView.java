@@ -517,7 +517,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		if (property.equals(getPrefenceColumnsId())) {
 			this.manager.updateColumns((String) event.getNewValue());
 		}
-		;
 	}
 
 	public IFilteredCardStore getFilteredStore() {
