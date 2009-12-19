@@ -87,7 +87,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	}
 
 	@Override
-    public void updateViewer() {
+	public void updateViewer() {
 		updateTableHeader();
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {
@@ -151,9 +151,8 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			Integer integer = Integer.valueOf(i);
 			colOrger.put(prefValues[i], integer);
 		}
-		for (int i = 0; i < acolumns.length; i++) {
-			Integer integer = Integer.valueOf(i);
-			orderGaps.add(integer);
+		for (int i = 0; i < order.length; i++) {
+			order[i] = -1;
 		}
 		for (int i = 0; i < acolumns.length; i++) {
 			TreeColumn acol = acolumns[i];
@@ -167,14 +166,9 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 					checked = false;
 			}
 			if (pos != null) {
-				order[i] = pos.intValue();
-				Integer ipos = Integer.valueOf(pos.intValue());
-				if (orderGaps.contains(ipos))
-					orderGaps.remove(ipos);
-				else
-					order[i] = -1; // duplicate keys!!
+				order[pos.intValue()] = i;
 			} else {
-				order[i] = -1;
+				orderGaps.add(Integer.valueOf(i)); // i'th column has no position
 			}
 			if (checked) {
 				if (acol.getWidth() <= 0)
@@ -187,9 +181,11 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		for (int i = 0; i < order.length; i++) {
 			int pos = order[i];
 			if (pos < 0) {
-				Integer next = orderGaps.iterator().next();
-				orderGaps.remove(next);
-				order[i] = next.intValue();
+				if (orderGaps.size() > 0) {
+					Integer next = orderGaps.iterator().next();
+					orderGaps.remove(next);
+					order[i] = next.intValue();
+				}
 			}
 		}
 		this.viewer.getTree().setColumnOrder(order);
