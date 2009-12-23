@@ -20,6 +20,7 @@ public class FilterHelper {
 	public static final String RARITY = MagicCardField.RARITY.name();
 	public static final String LOCATION = MagicCardFieldPhysical.LOCATION.name();
 	public static final String PRICE = MagicCardFieldPhysical.PRICE.name();
+	public static final String DBPRICE = MagicCardField.DBPRICE.name();
 	public static final String COUNT = MagicCardFieldPhysical.COUNT.name();
 	public static final String COMMENT = MagicCardFieldPhysical.COMMENT.name();
 	public static final String OWNERSHIP = MagicCardFieldPhysical.OWNERSHIP.name();
@@ -64,6 +65,7 @@ public class FilterHelper {
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.CCC, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.COUNT, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.PRICE, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.DBPRICE, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.COMMENT, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE_2, FilterHelper.TEXT_POSTFIX));

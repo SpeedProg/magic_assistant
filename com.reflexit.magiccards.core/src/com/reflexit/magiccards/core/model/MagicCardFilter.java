@@ -437,6 +437,10 @@ public class MagicCardFilter {
 			res = BinaryExpr.fieldEquals(MagicCardField.RARITY, value);
 		} else if (FilterHelper.COUNT.equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.COUNT, value);
+		} else if (FilterHelper.DBPRICE.equals(requestedId)) {
+			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
+			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
+			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
 		} else if (FilterHelper.PRICE.equals(requestedId)) {
 			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
 			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
@@ -503,6 +507,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.CCC), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.COUNT), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.PRICE), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterHelper.DBPRICE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.COMMENT), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
 		// text fields
