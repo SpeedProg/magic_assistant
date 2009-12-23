@@ -12,10 +12,13 @@ package com.reflexit.magiccards.core.model.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -117,6 +120,39 @@ public class CardStoreUtils {
 			}
 		}
 		return bars;
+	}
+
+	public static Collection<String> buildColors(Iterable store) {
+		HashSet<String> colors = new HashSet<String>();
+		for (Object element : store) {
+			IMagicCard elem = (IMagicCard) element;
+			if (elem.getType().contains("Land"))
+				continue;
+			String name = Colors.getColorName(elem.getCost());
+			String[] split = name.split("-");
+			for (String c : split) {
+				colors.add(c);
+			}
+		}
+		return colors;
+	}
+
+	public static Collection<CardGroup> buildSpellColorStats(Iterable store) {
+		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
+		for (Object element : store) {
+			IMagicCard elem = (IMagicCard) element;
+			if (elem.getType().contains("Land"))
+				continue;
+			String name = Colors.getColorName(elem.getCost());
+			CardGroup g = new CardGroup(MagicCardField.COST, name);
+			if (groupsList.containsKey(g)) {
+				groupsList.get(g).addCount(1);
+			} else {
+				g.addCount(1);
+				groupsList.put(g, g);
+			}
+		}
+		return groupsList.keySet();
 	}
 
 	public CardGroup buildTypeGroups(Iterable iterable) {
