@@ -410,7 +410,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void runLoadPrices() {
-		Job loadingPrices = new Job("Loading prices") {
+		Job loadingPrices = new Job("Loading prices (To view enable Price columns)") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				ParseMtgFanaticPrices parser = new ParseMtgFanaticPrices();

@@ -23,6 +23,9 @@ public class NumbericalPreferenceGroup extends MFieldEditorPreferencePage {
 		id = FilterHelper.getPrefConstant(FilterHelper.CCC, FilterHelper.NUMERIC_POSTFIX);
 		getPreferenceStore().setDefault(id, "0");
 		addField(new NumericalComparisonFieldEditor(id, "Converted CC", getFieldEditorParent()));
+		id = FilterHelper.getPrefConstant(FilterHelper.DBPRICE, FilterHelper.NUMERIC_POSTFIX);
+		getPreferenceStore().setDefault(id, "0");
+		addField(new NumericalComparisonFieldEditor(id, "Seller's Price", getFieldEditorParent()));
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -33,6 +34,7 @@ import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
@@ -80,6 +82,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	 */
 	public DeckView() {
 		pages = new ArrayList<IDeckPage>();
+	}
+
+	@Override
+	protected void runShowFilter() {
+		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getPreferenceStore());
+		if (cardFilterDialog.open() == IStatus.OK)
+			this.manager.loadData(null);
 	}
 
 	private static void loadExtensions() {

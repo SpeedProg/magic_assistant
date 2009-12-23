@@ -12,19 +12,16 @@ package com.reflexit.magiccards.ui.dialogs;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.UserFilterPreferencePage;
 
 /**
- * Filter dialog for My Cards view
+ * Filter dialog for Decks and Collections
  */
-public class MyCardsFilterDialog extends CardFilterDialog {
-	public MyCardsFilterDialog(Shell parentShell, IPreferenceStore store) {
+public class DeckFilterDialog extends CardFilterDialog {
+	public DeckFilterDialog(Shell parentShell, IPreferenceStore store) {
 		super(parentShell, store);
-		addNode(new PreferenceNode("locations", new LocationFilterPreferencePage(SWT.MULTI)));
 		addNode(new PreferenceNode("user", new UserFilterPreferencePage()));
 		super.addSavePage();
 	}
