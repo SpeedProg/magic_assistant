@@ -102,7 +102,7 @@ public class ParseGathererNewVisualSpoiler {
 			}
 		}
 	}
-	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard";
+	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard&special=true";
 	private static String[] updateAll = { //
 	base + "&format=[%22Legacy%22]", //
 	        base + "&set=[%22Unhinged%22]", //
