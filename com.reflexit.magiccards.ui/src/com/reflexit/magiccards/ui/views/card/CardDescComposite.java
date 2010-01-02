@@ -98,11 +98,14 @@ class CardDescComposite extends Composite {
 			this.image.dispose();
 			this.image = null;
 		}
-		{
-			Image full = remoteImage;
-			this.image = full;
-		}
+		this.image = remoteImage;
 		this.imageControl.setImage(this.image);
+		GridData ld = (GridData) this.imageControl.getLayoutData();
+		ld.minimumWidth = this.image.getBounds().width + 1;
+		ld.minimumHeight = this.image.getBounds().height + 1;
+		ld.widthHint = ld.minimumWidth;
+		ld.heightHint = ld.minimumHeight;
+		this.layout(true, true);
 	}
 
 	void reload(IMagicCard card) {
@@ -111,17 +114,10 @@ class CardDescComposite extends Composite {
 			if (card == IMagicCard.DEFAULT) {
 				return;
 			}
-			this.image = this.loadingImage;
-			this.imageControl.setImage(this.image);
-			GridData ld = (GridData) this.imageControl.getLayoutData();
-			ld.minimumWidth = this.image.getBounds().width + 1;
-			ld.minimumHeight = this.image.getBounds().height + 1;
-			ld.widthHint = ld.minimumWidth;
-			ld.heightHint = ld.minimumHeight;
 			String data = getCardDataHtml(card);
 			String text = card.getOracleText();
 			this.textValue.setText(SymbolConverter.wrapHtml(data + text, this));
-			this.layout(true, true);
+			setImage(this.loadingImage);
 		} catch (RuntimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
