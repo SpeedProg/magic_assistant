@@ -30,12 +30,10 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -225,6 +223,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (type == PICK) {
 					type = SplitDialog.askSplitType(getShell(), max);
 				}
+				if (type == 0)
+					return;
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof MagicCardPhisical) {

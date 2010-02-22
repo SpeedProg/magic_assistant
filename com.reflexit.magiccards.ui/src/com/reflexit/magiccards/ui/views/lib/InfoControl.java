@@ -8,10 +8,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
 import java.text.DecimalFormat;
 import java.util.Iterator;
-
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -97,6 +95,8 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 
 	@Override
 	public void updateFromStore() {
+		if (store == null)
+			return;
 		IStorageInfo si = getInfo();
 		if (si != null) {
 			String comment = si.getComment();
