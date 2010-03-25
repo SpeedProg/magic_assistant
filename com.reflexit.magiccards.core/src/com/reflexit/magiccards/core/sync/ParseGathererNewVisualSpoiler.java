@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.sync;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +21,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -354,6 +352,7 @@ public class ParseGathererNewVisualSpoiler {
 		str = str.replaceAll("&nbsp;", " ");
 		str = str.replaceAll("&amp;", "&");
 		str = str.replaceAll("&apos;", "'");
+		str = str.replaceAll("&quot;", "\"");
 		if (str.contains("img")) {
 			str = str.replaceAll("<img [^<]*name=([^&]*)&[^>]*/>", "{$1}");
 			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext();) {
