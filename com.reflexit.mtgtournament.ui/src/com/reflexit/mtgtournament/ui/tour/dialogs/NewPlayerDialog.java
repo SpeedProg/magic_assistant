@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import com.reflexit.mtgtournament.ui.tour.Activator;
 
 public class NewPlayerDialog extends TitleAreaDialog {
@@ -89,10 +88,10 @@ public class NewPlayerDialog extends TitleAreaDialog {
 	 */
 	protected void validate() {
 		boolean error = false;
-		if (pin.isEmpty()) {
+		if (pin.length() == 0) {
 			setErrorMessage("Player's PID (id) cannot be empty. Enter any unique id.");
 			error = true;
-		} else if (name.isEmpty()) {
+		} else if (name.length() == 0) {
 			setErrorMessage("Player's name cannot be empty");
 			error = true;
 		}
