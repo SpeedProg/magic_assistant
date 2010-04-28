@@ -75,3 +75,4 @@ Starter 2000|P4|en-us
 Magic 2010|M10|EN
 Zendikar|ZEN|EN
 Worldwake|WWK|EN
+Rise of the Eldrazi|ROE|EN
