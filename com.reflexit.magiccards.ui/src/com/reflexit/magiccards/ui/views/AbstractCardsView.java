@@ -58,7 +58,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
+import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -413,7 +413,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		Job loadingPrices = new Job("Loading prices (To view enable Price columns)") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				ParseMtgFanaticPrices parser = new ParseMtgFanaticPrices();
+				FindMagicCardsPrices parser = new FindMagicCardsPrices();
 				try {
 					parser.updateStore(getFilteredStore(), monitor);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

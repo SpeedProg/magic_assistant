@@ -165,7 +165,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 	}
 
 	private void propagateParam(HashMap parameters, String prop) {
-		parameters.put(prop, getPreferenceStore().getString(prop));
+		parameters.put(prop, getPreferenceStore().getString(prop).trim());
 	}
 
 	public void performUpdate() {
