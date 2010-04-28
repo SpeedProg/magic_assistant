@@ -31,35 +31,23 @@ public class FindMagicCardsPrices {
 	String baseURL;
 	String cardURL;
 	HashMap<String, String> setIdMap = new HashMap<String, String>();
+	private String setURL;
 
 	public FindMagicCardsPrices() {
 		// http://www.mtgfanatic.com/store/viewproducts.aspx?CatID=217&AffiliateID=44349&PageSize=500
 		baseURL = "http://findmagiccards.com/Find/BySet/${SetAbbr}/Matches.html";
 		cardURL = "http://findmagiccards.com/Cards/${SetAbbr}/${CardName}.html";
+		setURL = "http://findmagiccards.com/CardSets.html";
 		// hardcoded setIdMap
-		setIdMap.put("Alara Reborn", "AR");
-		setIdMap.put("Conflux", "CF");
-		setIdMap.put("Champions of Kamigawa", "CK");
-		setIdMap.put("Homelands", "HL");
-		setIdMap.put("Legions", "LE");
-		setIdMap.put("Legends", "LG");
-		setIdMap.put("Lorwyn", "LW");
-		setIdMap.put("Mirage", "MR");
-		setIdMap.put("Mirrodin", "MI");
-		setIdMap.put("Morningtide", "MT");
-		setIdMap.put("Time Spiral", "TSN");
-		setIdMap.put("Portal Second Age", "PO2");
-		setIdMap.put("Portal Three Kingdoms", "P3K");
+		setIdMap.put("Limited Edition Beta", "B");
+		setIdMap.put("Limited Edition Alpha", "A");
 		setIdMap.put("Revised Edition", "RV");
-		setIdMap.put("Shadowmoor", "SM");
-		setIdMap.put("Shards of Alara", "SA");
-		setIdMap.put("Torment", "TR");
-		setIdMap.put("Unhinged", "UH");
+		setIdMap.put("Unlimited Edition", "UN");
 		setIdMap.put("Time Spiral \"Timeshifted\"", "TSS");
 	}
 
 	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor) throws IOException {
-		monitor.beginTask("Loading prices...", fstore.getSize() + 10);
+		monitor.beginTask("Loading prices from http://findmagiccards.com ...", fstore.getSize() + 10);
 		HashSet<String> sets = new HashSet();
 		for (IMagicCard magicCard : fstore) {
 			String set = magicCard.getSet();
@@ -71,6 +59,7 @@ public class FindMagicCardsPrices {
 			storage = ((IStorageContainer) fstore.getCardStore()).getStorage();
 			storage.setAutoCommit(false);
 		}
+		processSetList(sets);
 		try {
 			for (String set : sets) {
 				String id = findSetId(set);
@@ -129,6 +118,9 @@ public class FindMagicCardsPrices {
 	private String findSetId(String set) {
 		if (setIdMap.containsKey(set))
 			return setIdMap.get(set);
+		set = set.replaceAll(" vs. ", " vs ");
+		if (setIdMap.containsKey(set))
+			return setIdMap.get(set);
 		String abbrByName = Editions.getInstance().getAbbrByName(set);
 		if (abbrByName != null && testSetUrl(abbrByName))
 			return abbrByName;
@@ -137,20 +129,6 @@ public class FindMagicCardsPrices {
 			if (testSetUrl(t12))
 				return t12;
 		}
-		String words[] = set.split(" ");
-		String title1 = "";
-		String title2 = "";
-		for (String word : words) {
-			char up = (char) Character.toUpperCase(word.getBytes()[0]);
-			title1 += up;
-			if (word.equals("of"))
-				continue;
-			title2 += up;
-		}
-		if (testSetUrl(title1))
-			return title1;
-		if (testSetUrl(title2))
-			return title2;
 		System.err.println("Cannot find prices for " + set);
 		return null;
 	}
@@ -256,6 +234,42 @@ public class FindMagicCardsPrices {
 			}
 		}
 		return -1;
+	}
+	private static final Pattern set1Pattern = Pattern.compile("<TR(.*?)</TR>");
+	private static final Pattern set2Pattern = Pattern.compile( // 
+	        "<TD>([A-Z]+).nbsp;</TD>" + // abbr
+	                "<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
+	        );
+
+	/*- no NL
+	 * <TR class=defRowEven>
+	 * <TD>RE&nbsp;</TD>
+	 * <TD><a href='CardSets/RE.html'>Rise of the Eldrazi</a>&nbsp;</TD>
+	 * </TR>
+	 * <TR class=defRowOdd><TD>WW&nbsp;</TD><TD><a href='CardSets/WW.html'>Worldwake</a>&nbsp;</TD></TR>
+	 */
+	private void processSetList(HashSet sets) throws IOException {
+		URL url = new URL(setURL);
+		InputStream openStream = url.openStream();
+		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
+		try {
+			String line = "";
+			while ((line = st.readLine()) != null) {
+				Matcher matcher = set1Pattern.matcher(line);
+				while (matcher.find()) {
+					String row = matcher.group(1);
+					Matcher matcher2 = set2Pattern.matcher(row);
+					if (matcher2.find()) {
+						String name = matcher2.group(2);
+						String abbr = matcher2.group(1);
+						if (!setIdMap.containsKey(name))
+							setIdMap.put(name, abbr);
+					}
+				}
+			}
+		} finally {
+			st.close();
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
