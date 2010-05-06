@@ -25,6 +25,8 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
 public class ImportWorker implements ICoreRunnableWithProgress {
 	InputStream stream;
@@ -42,6 +44,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		public ICardField[] fields = getNonTransientFeilds();
 		public ReportType type;
 		public Exception error;
+		public String location;
 	}
 
 	public ImportWorker(ReportType type, InputStream st, boolean header, IFilteredCardStore<IMagicCard> store,
@@ -111,6 +114,9 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 			try {
 				FileUtils.copyFile(stream, tmp);
 				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
+				IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>) store).getStorage();
+				String location = storage.getLocation();
+				result.location = location;
 				Iterator iterator = store.iterator();
 				while (iterator.hasNext()) {
 					line++;
