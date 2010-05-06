@@ -251,22 +251,26 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	}
 
 	@Override
-	public void handleEvent(CardEvent event) {
+	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
-		if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-			if (DataManager.getModelRoot().findCardCollectionById(this.deck.getFileName()) == null) {
-				this.deck.close();
-				getViewSite().getPage().hideView(this);
-				return;
+		folder.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
+					if (DataManager.getModelRoot().findCardCollectionById(deck.getFileName()) == null) {
+						deck.close();
+						getViewSite().getPage().hideView(DeckView.this);
+						return;
+					}
+				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
+					// ignore
+				} else {
+					for (IDeckPage deckPage : pages) {
+						IDeckPage page = deckPage;
+						page.updateFromStore();
+					}
+				}
 			}
-		} else if (event.getType() == CardEvent.ADD_CONTAINER) {
-			// ignore
-		} else {
-			for (IDeckPage deckPage : pages) {
-				IDeckPage page = deckPage;
-				page.updateFromStore();
-			}
-		}
+		});
 	}
 
 	@Override

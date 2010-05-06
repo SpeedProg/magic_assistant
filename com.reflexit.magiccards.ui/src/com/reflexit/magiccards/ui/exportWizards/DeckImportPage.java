@@ -43,8 +43,8 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportWorker;
-import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.exports.ImportWorker.PreviewResult;
+import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -162,7 +162,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			String value = store.getString(id);
 			if (value != null && value.length() > 0) {
 				map.put(id, value);
-				System.err.println(id + "=" + value);
+				//System.err.println(id + "=" + value);
 			}
 		}
 		return map;
