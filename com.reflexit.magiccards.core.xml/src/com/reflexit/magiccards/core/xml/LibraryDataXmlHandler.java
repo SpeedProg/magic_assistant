@@ -9,10 +9,11 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -77,7 +78,8 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 	private String findLocationFilter(Expr root) {
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
-			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals("location")) {
+			if (bin.getLeft() instanceof Node
+			        && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
 				return bin.getRight().toString();
 			}
 			String loc = findLocationFilter(bin.getLeft());
