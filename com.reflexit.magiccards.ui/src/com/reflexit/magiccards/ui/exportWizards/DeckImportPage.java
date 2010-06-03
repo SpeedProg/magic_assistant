@@ -40,7 +40,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,7 +74,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private IStructuredSelection initialResourceSelection;
 	private TreeViewer listViewer;
 	private Button includeHeader;
-	private final ArrayList importOptionButtons = new ArrayList();
 	private static final String ID = DeckImportPage.class.getName();
 	private ReportType reportType;
 	private PreferenceStore store;
@@ -86,6 +84,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button clipboardRadio;
 	private Composite fileSelectionArea;
 	private PreviewResult previewResult;
+	private CardElement element;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -198,6 +197,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 		listViewer.getControl().setLayoutData(data);
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
+				if (!event.getSelection().isEmpty())
+					element = (CardElement) ((IStructuredSelection) event.getSelection()).getFirstElement();
 				updatePageCompletion();
 				updateWidgetEnablements();
 			}
@@ -550,5 +551,19 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	public ReportType getReportType() {
 		return reportType;
+	}
+
+	/**
+	 * @param element the element to set
+	 */
+	public void setElement(CardElement element) {
+		this.element = element;
+	}
+
+	/**
+	 * @return the element
+	 */
+	public CardElement getElement() {
+		return element;
 	}
 }
