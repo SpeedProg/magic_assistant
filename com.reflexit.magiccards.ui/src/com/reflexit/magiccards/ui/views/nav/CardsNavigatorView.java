@@ -285,8 +285,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			return;
 		if (sel.size() == 1) {
 			CardElement el = (CardElement) sel.getFirstElement();
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete "
-			        + el.getName() + "?")) {
+			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation",
+			        "Are you sure you want to delete " + el.getName() + "?")) {
 				el.remove();
 			}
 		} else {
@@ -314,7 +314,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		dialog.open();
 	}
 
-	public static void createNewDeckAction(CollectionsContainer parent, String name, IWorkbenchPage page) {
+	public static CardCollection createNewDeckAction(CollectionsContainer parent, String name, IWorkbenchPage page) {
 		String filename = name + ".xml";
 		CardCollection d = parent.addDeck(filename);
 		try {
@@ -323,6 +323,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return d;
 	}
 
 	private void hookDoubleClickAction() {
@@ -382,8 +383,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			}
 		} else if (obj instanceof CardOrganizer) {
 			try {
-				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(
-				        MyCardsView.ID);
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
+				        .showView(MyCardsView.ID);
 				view.setLocationFilter(((CardOrganizer) obj).getLocation());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);

@@ -24,6 +24,8 @@ import org.eclipse.ui.IWorkbenchWizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.reflexit.magiccards.core.model.nav.CardElement;
+
 /**
  * @author Alena
  *
@@ -31,6 +33,18 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class NewCardElementWizard extends Wizard {
 	protected NewCardElementWizardPage page;
 	protected ISelection selection;
+	private CardElement element;
+
+	public CardElement getElement() {
+		return element;
+	}
+
+	/**
+	 * @param element the element to set
+	 */
+	public void setElement(CardElement element) {
+		this.element = element;
+	}
 
 	/**
 	 * 

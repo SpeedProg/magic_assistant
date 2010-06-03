@@ -62,6 +62,7 @@ public class NewCardCollectionWizard extends NewCardElementWizard implements INe
 		}
 		CollectionsContainer parent = (CollectionsContainer) resource;
 		final CardCollection col = new CardCollection(name + ".xml", parent);
+		setElement(col);
 		monitor.worked(1);
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {

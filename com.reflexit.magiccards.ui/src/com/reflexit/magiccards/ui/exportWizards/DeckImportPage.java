@@ -7,10 +7,13 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -27,6 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import java.io.ByteArrayInputStream;
@@ -48,10 +52,14 @@ import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
+import com.reflexit.magiccards.ui.wizards.NewCardElementWizard;
+import com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard;
+import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
 /**
  * First and only page of Deck Export Wizard
@@ -119,8 +127,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 								filteredLibrary.update(locFilter);
 								if (st != null) {
 									ImportWorker worker;
-									worker = new ImportWorker(reportType, st, header, filteredLibrary, magicDbHandler
-									        .getCardStore());
+									worker = new ImportWorker(reportType, st, header, filteredLibrary,
+									        magicDbHandler.getCardStore());
 									worker.run(monitor);
 								}
 							} finally {
@@ -177,6 +185,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	protected void createDestinationGroup(final Composite parent) {
+		Label label = new Label(parent, SWT.NONE);
+		label.setText("Select an existing deck/collection to import into:");
 		locPage = new LocationFilterPreferencePage(SWT.SINGLE);
 		locPage.noDefaultAndApplyButton();
 		locPage.setPreferenceStore(store);
@@ -227,11 +237,9 @@ public class DeckImportPage extends WizardDataTransferPage {
 		composite.setFont(parent.getFont());
 		createResourcesGroup(composite);
 		createOptionsGroup(composite);
-		// WizardExportResourcesPage page;
-		createButtonsGroup(composite);
 		createDestinationGroup(composite);
-		// restoreResourceSpecificationWidgetValues(); // ie.- local
-		restoreWidgetValues(); // ie.- subclass hook
+		createButtonsGroup(composite);
+		restoreWidgetValues();
 		if (initialResourceSelection != null) {
 			setupBasedOnInitialSelections();
 		}
@@ -241,17 +249,45 @@ public class DeckImportPage extends WizardDataTransferPage {
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
 		setControl(composite);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
-		        MagicUIActivator.getDefault().PLUGIN_ID + ".export");
+		PlatformUI.getWorkbench().getHelpSystem()
+		        .setHelp(composite, MagicUIActivator.getDefault().PLUGIN_ID + ".export");
 	}
 
 	/**
-	 * Creates the buttons for selecting specific types or selecting all or none of the elements.
+	 * Creates the buttons for creating new deck or collection
 	 * 
 	 * @param parent
 	 *            the parent control
 	 */
 	protected final void createButtonsGroup(final Composite parent) {
+		Composite buttons = new Composite(parent, SWT.NONE);
+		buttons.setLayout(new GridLayout());
+		Button button1 = createButton(buttons, 1, "Create new deck...", true);
+		Button button2 = createButton(buttons, 2, "Create new collection...", false);
+		button1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openWizard(new NewDeckWizard(), listViewer.getSelection());
+			};
+		});
+		button2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openWizard(new NewCollectionContainerWizard(), listViewer.getSelection());
+			};
+		});
+	}
+
+	protected void openWizard(NewCardElementWizard wizard, ISelection selection) {
+		// Get the workbench and initialize, the wizard.
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		wizard.init(workbench, (IStructuredSelection) selection);
+		// Open the wizard dialog with the given wizard.
+		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
+		dialog.open();
+		CardElement element = wizard.getElement();
+		listViewer.refresh(true);
+		listViewer.setSelection(new StructuredSelection(element));
 	}
 
 	private void defaultPrompt() {

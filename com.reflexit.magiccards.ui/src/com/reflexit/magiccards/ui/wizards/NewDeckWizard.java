@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
@@ -19,7 +20,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
  * (a folder or a project) is selected in the workspace 
  * when the wizard is opened, it will accept it as the target
  * container. The wizard creates one file with the extension
- * "deck". If a sample multi-page editor (also available
+ * "element". If a sample multi-page editor (also available
  * as a template) is registered for the same extension, it will
  * be able to open it.
  */
@@ -60,7 +61,8 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, fileName, page);
+				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, fileName, page);
+				setElement(element);
 			}
 		});
 		monitor.worked(1);
