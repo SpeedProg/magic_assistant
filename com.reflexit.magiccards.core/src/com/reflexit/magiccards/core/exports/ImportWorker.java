@@ -23,39 +23,28 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
 public class ImportWorker implements ICoreRunnableWithProgress {
 	InputStream stream;
 	boolean header;
-	IFilteredCardStore<IMagicCard> saveStore;
+	String location;
 	private ReportType type;
 	private ICardField[] fields;
 	private ICardStore lookupStore;
 	private boolean previewMode = false;
-	private PreviewResult result;
+	private PreviewResult previewResult;
 	private ArrayList<IMagicCard> toImport;
 	private int line;
-	public static class PreviewResult {
-		public ArrayList<String[]> values = new ArrayList<String[]>();
-		public ICardField[] fields = getNonTransientFeilds();
-		public ReportType type;
-		public Exception error;
-		public String location;
-	}
-
-	public ImportWorker(ReportType type, InputStream st, boolean header, IFilteredCardStore<IMagicCard> store,
-	        ICardStore lookupStore) {
+	public ImportWorker(ReportType type, InputStream st, boolean header, String location, ICardStore lookupStore) {
 		super();
 		this.stream = st;
-		this.saveStore = store;
+		this.location = location;
 		this.type = type;
 		this.lookupStore = lookupStore;
 		this.header = header;
-		result = new PreviewResult();
+		previewResult = new PreviewResult();
 	}
 
 	public ImportWorker(ReportType type, InputStream st, boolean header) {
@@ -64,7 +53,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		this.type = type;
 		this.header = header;
 		this.previewMode = true;
-		result = new PreviewResult();
+		previewResult = new PreviewResult();
 	}
 
 	public void setHeader(boolean header) {
@@ -90,12 +79,8 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 			} else {
 				throw new IllegalArgumentException("Format is not supported: " + type);
 			}
-			if (!previewMode) {
-				ICardStore cardStore = saveStore.getCardStore();
-				cardStore.addAll(toImport);
-			}
 		} catch (Exception e) {
-			result.error = e;
+			previewResult.setError(e);
 		} finally {
 			monitor.done();
 		}
@@ -107,8 +92,8 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	 */
 	protected void runXmlImport(IProgressMonitor monitor) throws IOException {
 		try {
-			result.type = type;
-			result.fields = fields = getNonTransientFeilds();
+			previewResult.setType(type);
+			previewResult.setFields(fields = getNonTransientFeilds());
 			File tmp = File.createTempFile("magic", "xml");
 			tmp.deleteOnExit();
 			try {
@@ -116,7 +101,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
 				IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>) store).getStorage();
 				String location = storage.getLocation();
-				result.location = location;
+				previewResult.setLocation(location);
 				Iterator iterator = store.iterator();
 				while (iterator.hasNext()) {
 					line++;
@@ -142,7 +127,11 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	}
 
 	public PreviewResult getPreview() {
-		return result;
+		return previewResult;
+	}
+
+	public ArrayList<IMagicCard> getImportedCards() {
+		return toImport;
 	}
 
 	/**
@@ -154,7 +143,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	 * @throws InvocationTargetException
 	 */
 	public void runDeckImport(IProgressMonitor monitor) throws IOException {
-		result.type = type;
+		previewResult.setType(type);
 		DeckParser parser = new DeckParser(stream);
 		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] {
 		        MagicCardField.NAME,
@@ -167,7 +156,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 			try {
 				MagicCardPhisical card = createDefaultCard();
 				card = parser.readLine(card);
-				result.fields = parser.getCurrentFields();
+				previewResult.setFields(parser.getCurrentFields());
 				if (card == null)
 					break;
 				importCard(card);
@@ -189,17 +178,25 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	protected void importCard(MagicCardPhisical card) {
 		if (previewMode) {
-			String[] res = new String[result.fields.length];
-			for (int i = 0; i < result.fields.length; i++) {
-				ICardField fi = result.fields[i];
+			String[] res = new String[previewResult.getFields().length];
+			for (int i = 0; i < previewResult.getFields().length; i++) {
+				ICardField fi = previewResult.getFields()[i];
 				Object o = card.getObjectByField(fi);
 				res[i] = o == null ? null : o.toString();
 			}
-			result.values.add(res);
+			previewResult.getValues().add(res);
 		} else {
 			MagicCard ref = findRef(card.getCard());
-			if (ref != null)
-				card.setMagicCard(ref);
+			if (ref != null) {
+				if (card.getSet() == null || ref.getSet().equals(card.getSet()))
+					card.setMagicCard(ref);
+				else if (card.getSet() != null) {
+					MagicCard newCard = (MagicCard) ref.clone();
+					newCard.setSet(card.getSet());
+					newCard.setId("0");
+					card.setMagicCard(newCard);
+				}
+			}
 			toImport.add(card);
 		}
 	}
@@ -226,11 +223,11 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	public void runCsvImport(IProgressMonitor monitor) throws IOException {
 		try {
-			result.type = type;
+			previewResult.setType(type);
 			CsvImporter importer = null;
 			if (fields == null)
 				fields = getNonTransientFeilds();
-			result.fields = fields;
+			previewResult.setFields(fields);
 			try {
 				importer = new CsvImporter(stream);
 				do {
@@ -279,23 +276,19 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 	}
 
 	protected String getLocation() {
-		if (saveStore instanceof ILocatable) {
-			String getLocation = ((ILocatable) saveStore).getLocation();
-			return getLocation;
-		}
-		return null;
+		return location;
 	}
 
-	private static ICardField[] getNonTransientFeilds() {
+	static ICardField[] getNonTransientFeilds() {
 		return MagicCardFieldPhysical.allNonTransientFields();
 	}
 
 	public void runTablePipedImport(IProgressMonitor monitor) throws IOException {
 		try {
-			result.type = type;
+			previewResult.setType(type);
 			if (fields == null)
 				fields = getNonTransientFeilds();
-			result.fields = fields;
+			previewResult.setFields(fields);
 			BufferedReader importer = null;
 			try {
 				importer = new BufferedReader(new InputStreamReader(stream));

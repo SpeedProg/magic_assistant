@@ -1,15 +1,23 @@
 package com.reflexit.magiccards.core.exports;
 
 public class ReportType {
-	private ReportType(String string) {
-		this.name = string;
-	}
 	private String name;
+	private String label;
 	public static final ReportType XML = new ReportType("XML");
 	public static final ReportType CSV = new ReportType("CSV");
 	public static final ReportType TEXT_DECK_CLASSIC = new ReportType("Deck Classic");
 	public static final ReportType USER_DEFINED = new ReportType("User Defined");
 	public static final ReportType TABLE_PIPED = new ReportType("Piped Table");
+
+	private ReportType(String string) {
+		this.name = string;
+		this.label = string;
+	}
+
+	public ReportType(String key, String label) {
+		this.name = key;
+		this.label = label;
+	}
 
 	@Override
 	public String toString() {
@@ -17,7 +25,7 @@ public class ReportType {
 	}
 
 	public String getLabel() {
-		return name;
+		return label;
 	}
 
 	public static ReportType valueOf(String type) {
