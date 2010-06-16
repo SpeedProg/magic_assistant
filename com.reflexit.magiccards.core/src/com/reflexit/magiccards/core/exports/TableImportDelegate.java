@@ -18,12 +18,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
  * Import for table piped import
  */
-public class TableImportDelegate extends ImportWorker {
+public class TableImportDelegate extends AbstractImportDelegate {
 	@Override
 	public ReportType getType() {
 		return ReportType.TABLE_PIPED;
@@ -50,8 +52,19 @@ public class TableImportDelegate extends ImportWorker {
 					String input = importer.readLine();
 					if (input == null)
 						break;
+					input = input.trim();
 					String[] split = input.split("\\|");
 					if (split.length > 1) {
+						if (line == 1 && isHeader()) {
+							ICardField fields[] = new ICardField[split.length];
+							for (int i = 0; i < split.length; i++) {
+								String hd = split[i];
+								ICardField field = MagicCardFieldPhysical.fieldByName(hd);
+								fields[i] = field;
+							}
+							setFields(fields);
+							continue;
+						}
 						MagicCardPhisical card = createCard(Arrays.asList(split));
 						importCard(card);
 					} else {

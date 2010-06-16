@@ -46,7 +46,7 @@ public class ImportUtils {
 				if (filteredLibrary instanceof ILocatable) {
 					location = ((ILocatable) filteredLibrary).getLocation();
 				}
-				IImportWorker worker;
+				IImportDelegate worker;
 				try {
 					worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);
 				} catch (Exception e) {
@@ -71,7 +71,7 @@ public class ImportUtils {
 
 	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header,
 	        IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		IImportWorker worker;
+		IImportDelegate worker;
 		try {
 			worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);
 		} catch (Exception e) {

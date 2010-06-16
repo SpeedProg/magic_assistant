@@ -13,7 +13,8 @@ public enum MagicCardField implements ICardField {
 	CTYPE(String.class, true),
 	CMC(Integer.class, true),
 	DBPRICE(Float.class),
-	LANG, ;
+	LANG,
+	EDITION_ABBR(String.class, true), ;
 	// fields
 	private final Class type;
 	private final boolean transientField;

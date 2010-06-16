@@ -26,17 +26,17 @@ import com.reflexit.magiccards.core.Activator;
 public class ImportFactory<T> {
 	private static HashMap<ReportType, String> importRegistry = new HashMap<ReportType, String>();
 
-	public IImportWorker<T> getImportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
+	public IImportDelegate<T> getImportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
 	        IllegalAccessException {
 		if (importRegistry.size() == 0) {
 			initRegistry();
 		}
-		IImportWorker<T> newInstance;
+		IImportDelegate<T> newInstance;
 		String className = importRegistry.get(type);
 		if (className == null)
 			return null;
 		Class loadClass = getClass().getClassLoader().loadClass(className);
-		newInstance = (IImportWorker<T>) loadClass.newInstance();
+		newInstance = (IImportDelegate<T>) loadClass.newInstance();
 		return newInstance;
 	};
 
@@ -57,7 +57,9 @@ public class ImportFactory<T> {
 		String id = elp.getAttribute("id");
 		String label = elp.getAttribute("label");
 		String imp = elp.getAttribute("importDelegate");
-		ReportType rt = ReportType.createReportType(id, label);
+		String sxml = elp.getAttribute("xmlFormat");
+		boolean xmlFormat = Boolean.valueOf(sxml);
+		ReportType rt = ReportType.createReportType(id, label, xmlFormat);
 		addWorker(rt, imp);
 	}
 

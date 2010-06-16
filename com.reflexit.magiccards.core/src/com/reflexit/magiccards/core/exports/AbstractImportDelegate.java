@@ -9,14 +9,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
-public abstract class ImportWorker implements ICoreRunnableWithProgress, IImportWorker {
+public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate {
 	private InputStream stream;
 	private boolean header;
 	private String location;
@@ -28,8 +30,9 @@ public abstract class ImportWorker implements ICoreRunnableWithProgress, IImport
 	private ArrayList<IMagicCard> toImport = new ArrayList<IMagicCard>();
 	protected int line = 0;
 
-	public ImportWorker() {
+	public AbstractImportDelegate() {
 		previewResult.setType(getType());
+		previewResult.setFields(getNonTransientFeilds());
 	}
 
 	public ReportType getType() {
@@ -136,9 +139,9 @@ public abstract class ImportWorker implements ICoreRunnableWithProgress, IImport
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
 			String value = list.get(i);
-			if (value != null && value.length() > 0) {
+			if (value != null && value.length() > 0 && f != null) {
 				try {
-					card.setObjectByField(f, value);
+					setFieldValue(card, f, i, value);
 				} catch (Exception e) {
 					throw new IllegalArgumentException("Error: Line " + line + ",Field " + (i + 1) + ": Expecting " + f
 					        + ", text was: " + value);
@@ -150,6 +153,15 @@ public abstract class ImportWorker implements ICoreRunnableWithProgress, IImport
 		}
 		card.setLocation(getLocation());
 		return card;
+	}
+
+	protected void setFieldValue(MagicCardPhisical card, ICardField field, int i, String value) {
+		if (field == MagicCardField.EDITION_ABBR) {
+			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
+			card.setObjectByField(MagicCardField.SET, nameByAbbr);
+		} else {
+			card.setObjectByField(field, value);
+		}
 	}
 
 	protected String getLocation() {
@@ -190,5 +202,13 @@ public abstract class ImportWorker implements ICoreRunnableWithProgress, IImport
 
 	public boolean isHeader() {
 		return header;
+	}
+
+	public ICardField[] getFields() {
+		return fields;
+	}
+
+	public void setFields(ICardField[] fields) {
+		this.fields = fields;
 	}
 }

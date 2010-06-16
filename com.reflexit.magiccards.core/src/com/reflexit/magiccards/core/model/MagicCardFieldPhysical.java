@@ -73,6 +73,11 @@ public enum MagicCardFieldPhysical implements ICardField {
 		} catch (Exception e) {
 			// ignore
 		}
+		// aliases
+		if (field.equals("EDITION"))
+			return MagicCardField.SET;
+		if (field.equals("QTY"))
+			return MagicCardFieldPhysical.COUNT;
 		return null;
 	}
 }

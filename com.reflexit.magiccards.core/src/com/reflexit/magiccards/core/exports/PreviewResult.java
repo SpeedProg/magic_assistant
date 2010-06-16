@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 
 public class PreviewResult {
 	private ArrayList<String[]> values = new ArrayList<String[]>();
-	private ICardField[] fields = ImportWorker.getNonTransientFeilds();
+	private ICardField[] fields = new ICardField[0];
 	private ReportType type;
 	private Exception error;
 	private String location;

@@ -19,9 +19,9 @@ import java.util.Collection;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
- * Import worker interface
+ * Import delegate interface
  */
-public interface IImportWorker<T> {
+public interface IImportDelegate<T> {
 	public ReportType getType();
 
 	public void init(InputStream st, boolean preview, String location, ICardStore<T> lookupStore);

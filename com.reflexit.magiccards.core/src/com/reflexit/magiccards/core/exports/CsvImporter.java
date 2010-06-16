@@ -14,10 +14,12 @@ import java.util.List;
 public class CsvImporter implements Closeable {
 	private BufferedReader reader;
 	private String lineSep;
+	private char sep = ',';
 
-	public CsvImporter(InputStream st) {
+	public CsvImporter(InputStream st, char sep) {
 		reader = new BufferedReader(new InputStreamReader(st));
 		lineSep = System.getProperty("line.separator");
+		this.sep = sep;
 	}
 
 	public List readLine() throws IOException {
@@ -37,7 +39,7 @@ public class CsvImporter implements Closeable {
 						state = 1; // quoted string
 						continue;
 					}
-					if (c == ',') {
+					if (c == sep) {
 						res.add(curField.toString());
 						curField = new StringBuffer();
 						continue;
@@ -58,7 +60,7 @@ public class CsvImporter implements Closeable {
 						continue;
 					}
 					state = 0;
-					if (c == ',') {
+					if (c == sep) {
 						res.add(curField.toString());
 						curField = new StringBuffer();
 						continue;

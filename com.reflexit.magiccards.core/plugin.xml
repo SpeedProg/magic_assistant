@@ -7,7 +7,8 @@
       <deckFormat
             id="xml"
             importDelegate="com.reflexit.magiccards.core.exports.XmlImportDelegate"
-            label="xml">
+            label="xml"
+            xmlFormat="true">
       </deckFormat>
       <deckFormat
             id="classic"
@@ -23,6 +24,12 @@
             id="table"
             importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
             label="table">
+      </deckFormat>
+      <deckFormat
+            id="mtgo"
+            importDelegate="com.reflexit.magiccards.core.exports.MtgoImportDelegate"
+            label="Magic the Gathering Online CSV"
+            xmlFormat="false">
       </deckFormat>
    </extension>
 </plugin>

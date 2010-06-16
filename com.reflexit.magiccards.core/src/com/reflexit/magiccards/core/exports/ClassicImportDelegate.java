@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 /**
  * Import for classic text deck format
  */
-public class ClassicImportDelegate extends ImportWorker {
+public class ClassicImportDelegate extends AbstractImportDelegate {
 	@Override
 	public ReportType getType() {
 		return ReportType.TEXT_DECK_CLASSIC;

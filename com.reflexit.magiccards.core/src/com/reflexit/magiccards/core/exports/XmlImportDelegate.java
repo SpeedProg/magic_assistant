@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 /**
  * Xml Import
  */
-public class XmlImportDelegate extends ImportWorker {
+public class XmlImportDelegate extends AbstractImportDelegate {
 	@Override
 	public ReportType getType() {
 		return ReportType.XML;

@@ -45,6 +45,17 @@ public class Editions implements ISearchableProperty {
 		return this.name2abbr.keySet();
 	}
 
+	public String getNameByAbbr(String abbr) {
+		for (Iterator iterator = name2abbr.keySet().iterator(); iterator.hasNext();) {
+			String name = (String) iterator.next();
+			String abbrValue = (String) name2abbr.get(name);
+			if (abbrValue != null && abbrValue.equals(abbr)) {
+				return name;
+			}
+		}
+		return null;
+	}
+
 	public synchronized void addAbbr(String name, String abbr) {
 		String guessed = name.replaceAll("\\W", "_");
 		if (!name2abbr.containsKey(name) || name2abbr.get(name).equals(guessed)) {
