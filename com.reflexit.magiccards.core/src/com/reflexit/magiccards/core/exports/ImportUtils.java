@@ -42,12 +42,18 @@ public class ImportUtils {
 				MagicCardFilter locFilter = new MagicCardFilter();
 				locFilter.update(filter);
 				filteredLibrary.update(locFilter);
-				ImportWorker worker;
 				String location = null;
 				if (filteredLibrary instanceof ILocatable) {
 					location = ((ILocatable) filteredLibrary).getLocation();
 				}
-				worker = new ImportWorker(reportType, st, header, location, magicDbHandler.getCardStore());
+				IImportWorker worker;
+				try {
+					worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				}
+				worker.init(st, false, location, magicDbHandler.getCardStore());
+				worker.setHeader(header);
 				worker.run(monitor);
 				ICardStore cardStore = filteredLibrary.getCardStore();
 				cardStore.addAll(worker.getImportedCards());
@@ -65,8 +71,14 @@ public class ImportUtils {
 
 	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header,
 	        IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		ImportWorker worker;
-		worker = new ImportWorker(reportType, st, header);
+		IImportWorker worker;
+		try {
+			worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);
+		} catch (Exception e) {
+			throw new InvocationTargetException(e);
+		}
+		worker.init(st, true, null, null);
+		worker.setHeader(header);
 		// init preview
 		PreviewResult previewResult = worker.getPreview();
 		worker.run(monitor);

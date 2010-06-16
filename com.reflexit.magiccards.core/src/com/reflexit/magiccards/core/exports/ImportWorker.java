@@ -2,83 +2,67 @@ package com.reflexit.magiccards.core.exports;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
-public class ImportWorker implements ICoreRunnableWithProgress {
-	InputStream stream;
-	boolean header;
-	String location;
+public abstract class ImportWorker implements ICoreRunnableWithProgress, IImportWorker {
+	private InputStream stream;
+	private boolean header;
+	private String location;
 	private ReportType type;
-	private ICardField[] fields;
-	private ICardStore lookupStore;
-	private boolean previewMode = false;
-	private PreviewResult previewResult;
-	private ArrayList<IMagicCard> toImport;
-	private int line;
-	public ImportWorker(ReportType type, InputStream st, boolean header, String location, ICardStore lookupStore) {
-		super();
-		this.stream = st;
-		this.location = location;
-		this.type = type;
-		this.lookupStore = lookupStore;
-		this.header = header;
-		previewResult = new PreviewResult();
+	private ICardField[] fields = getNonTransientFeilds();
+	private ICardStore lookupStore = null;
+	protected boolean previewMode = false;
+	protected PreviewResult previewResult = new PreviewResult();
+	private ArrayList<IMagicCard> toImport = new ArrayList<IMagicCard>();
+	protected int line = 0;
+
+	public ImportWorker() {
+		previewResult.setType(getType());
 	}
 
-	public ImportWorker(ReportType type, InputStream st, boolean header) {
-		super();
-		this.stream = st;
+	public ReportType getType() {
+		return type;
+	}
+
+	public void setType(ReportType type) {
 		this.type = type;
-		this.header = header;
-		this.previewMode = true;
-		previewResult = new PreviewResult();
+	}
+
+	public InputStream getStream() {
+		return stream;
+	}
+
+	public void setStream(InputStream stream) {
+		this.stream = stream;
+	}
+
+	public void init(InputStream st, boolean preview, String location, ICardStore lookupStore) {
+		this.stream = st;
+		this.location = location;
+		this.lookupStore = lookupStore;
+		this.previewMode = preview;
 	}
 
 	public void setHeader(boolean header) {
 		this.header = header;
 	}
 
-	public void setFields(ICardField[] fields) {
-		this.fields = fields;
-	}
-
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask("Importing...", 100);
 		try {
-			toImport = new ArrayList<IMagicCard>();
-			if (type == ReportType.CSV)
-				runCsvImport(monitor);
-			else if (type == ReportType.TEXT_DECK_CLASSIC) {
-				runDeckImport(monitor);
-			} else if (type == ReportType.TABLE_PIPED) {
-				runTablePipedImport(monitor);
-			} else if (type == ReportType.XML) {
-				runXmlImport(monitor);
-			} else {
-				throw new IllegalArgumentException("Format is not supported: " + type);
-			}
+			doRun(monitor);
 		} catch (Exception e) {
 			previewResult.setError(e);
 		} finally {
@@ -86,45 +70,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		}
 	}
 
-	/**
-	 * @param monitor
-	 * @throws IOException 
-	 */
-	protected void runXmlImport(IProgressMonitor monitor) throws IOException {
-		try {
-			previewResult.setType(type);
-			previewResult.setFields(fields = getNonTransientFeilds());
-			File tmp = File.createTempFile("magic", "xml");
-			tmp.deleteOnExit();
-			try {
-				FileUtils.copyFile(stream, tmp);
-				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
-				IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>) store).getStorage();
-				String location = storage.getLocation();
-				previewResult.setLocation(location);
-				Iterator iterator = store.iterator();
-				while (iterator.hasNext()) {
-					line++;
-					Object next = iterator.next();
-					if (next instanceof MagicCardPhisical) {
-						MagicCardPhisical card = (MagicCardPhisical) next;
-						importCard(card);
-						card.setLocation(getLocation());
-					} else if (next instanceof IMagicCard)
-						importCard(new MagicCardPhisical((IMagicCard) next));
-					if (previewMode && line >= 10)
-						break;
-					monitor.worked(1);
-				}
-			} catch (IOException e) {
-				throw e;
-			} finally {
-				tmp.delete();
-			}
-		} catch (IOException e) {
-			throw e;
-		}
-	}
+	protected abstract void doRun(IProgressMonitor monitor) throws IOException;
 
 	public PreviewResult getPreview() {
 		return previewResult;
@@ -132,42 +78,6 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 
 	public ArrayList<IMagicCard> getImportedCards() {
 		return toImport;
-	}
-
-	/**
-	 * format:
-	 *   Card Name (Set) x4
-	 *   4 x Card Name (Set)
-	 * @param monitor
-	 * @throws IOException 
-	 * @throws InvocationTargetException
-	 */
-	public void runDeckImport(IProgressMonitor monitor) throws IOException {
-		previewResult.setType(type);
-		DeckParser parser = new DeckParser(stream);
-		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] {
-		        MagicCardField.NAME,
-		        MagicCardField.SET,
-		        MagicCardFieldPhysical.COUNT });
-		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"),
-		        new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
-		do {
-			line++;
-			try {
-				MagicCardPhisical card = createDefaultCard();
-				card = parser.readLine(card);
-				previewResult.setFields(parser.getCurrentFields());
-				if (card == null)
-					break;
-				importCard(card);
-				if (previewMode && line >= 10)
-					break;
-				monitor.worked(1);
-			} catch (IOException e) {
-				throw e;
-			}
-		} while (true);
-		parser.close();
 	}
 
 	protected MagicCardPhisical createDefaultCard() {
@@ -221,40 +131,7 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		return cand;
 	}
 
-	public void runCsvImport(IProgressMonitor monitor) throws IOException {
-		try {
-			previewResult.setType(type);
-			CsvImporter importer = null;
-			if (fields == null)
-				fields = getNonTransientFeilds();
-			previewResult.setFields(fields);
-			try {
-				importer = new CsvImporter(stream);
-				do {
-					line++;
-					List<String> list = importer.readLine();
-					if (list == null)
-						break;
-					if (header && line == 1)
-						continue;
-					MagicCardPhisical card = createCard(list);
-					importCard(card);
-					if (previewMode && line >= 10)
-						break;
-					monitor.worked(1);
-				} while (true);
-			} catch (FileNotFoundException e) {
-				throw e;
-			} finally {
-				if (importer != null)
-					importer.close();
-			}
-		} catch (IOException e) {
-			throw e;
-		}
-	}
-
-	private MagicCardPhisical createCard(List<String> list) {
+	protected MagicCardPhisical createCard(List<String> list) {
 		MagicCardPhisical card = createDefaultCard();
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
@@ -283,40 +160,35 @@ public class ImportWorker implements ICoreRunnableWithProgress {
 		return MagicCardFieldPhysical.allNonTransientFields();
 	}
 
-	public void runTablePipedImport(IProgressMonitor monitor) throws IOException {
-		try {
-			previewResult.setType(type);
-			if (fields == null)
-				fields = getNonTransientFeilds();
-			previewResult.setFields(fields);
-			BufferedReader importer = null;
-			try {
-				importer = new BufferedReader(new InputStreamReader(stream));
-				do {
-					line++;
-					String input = importer.readLine();
-					if (input == null)
-						break;
-					String[] split = input.split("\\|");
-					if (split.length > 1) {
-						MagicCardPhisical card = createCard(Arrays.asList(split));
-						importCard(card);
-					} else {
-						throw new IllegalArgumentException("Error: Line " + line
-						        + ". Fields seprated by | are not found: " + input);
-					}
-					if (previewMode && line >= 10)
-						break;
-					monitor.worked(1);
-				} while (true);
-			} catch (FileNotFoundException e) {
-				throw e;
-			} finally {
-				if (importer != null)
-					importer.close();
-			}
-		} catch (IOException e) {
-			throw e;
-		}
+	public ICardStore getLookupStore() {
+		return lookupStore;
+	}
+
+	public void setLookupStore(ICardStore lookupStore) {
+		this.lookupStore = lookupStore;
+	}
+
+	public boolean isPreviewMode() {
+		return previewMode;
+	}
+
+	public void setPreviewMode(boolean previewMode) {
+		this.previewMode = previewMode;
+	}
+
+	public PreviewResult getPreviewResult() {
+		return previewResult;
+	}
+
+	public void setPreviewResult(PreviewResult previewResult) {
+		this.previewResult = previewResult;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public boolean isHeader() {
+		return header;
 	}
 }

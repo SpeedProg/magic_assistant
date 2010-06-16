@@ -1,22 +1,29 @@
 package com.reflexit.magiccards.core.exports;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ReportType {
 	private String name;
 	private String label;
-	public static final ReportType XML = new ReportType("XML");
-	public static final ReportType CSV = new ReportType("CSV");
-	public static final ReportType TEXT_DECK_CLASSIC = new ReportType("Deck Classic");
-	public static final ReportType USER_DEFINED = new ReportType("User Defined");
-	public static final ReportType TABLE_PIPED = new ReportType("Piped Table");
+	private static Map<String, ReportType> types = new HashMap<String, ReportType>();
+	public static final ReportType XML = new ReportType("xml", "Magic Assistant XML");
+	public static final ReportType CSV = new ReportType("csv", "Magic Assistant CSV");
+	public static final ReportType TEXT_DECK_CLASSIC = new ReportType("classic", "Deck Classic (Text)");
+	public static final ReportType USER_DEFINED = new ReportType("user", "User Defined");
+	public static final ReportType TABLE_PIPED = new ReportType("table", "Piped Table");
 
-	private ReportType(String string) {
-		this.name = string;
-		this.label = string;
-	}
-
-	public ReportType(String key, String label) {
+	private ReportType(String key, String label) {
 		this.name = key;
 		this.label = label;
+		types.put(key, this);
+	}
+
+	public static ReportType createReportType(String key, String label) {
+		ReportType reportType = types.get(key);
+		if (reportType != null)
+			return reportType;
+		return new ReportType(key, label);
 	}
 
 	@Override

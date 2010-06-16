@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="deckFormat" name="Deck Format" schema="schema/deckFormat.exsd"/>
+   <extension
+         point="com.reflexit.magiccards.core.deckFormat">
+      <deckFormat
+            id="xml"
+            importDelegate="com.reflexit.magiccards.core.exports.XmlImportDelegate"
+            label="xml">
+      </deckFormat>
+      <deckFormat
+            id="classic"
+            importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
+            label="classic">
+      </deckFormat>
+      <deckFormat
+            id="csv"
+            importDelegate="com.reflexit.magiccards.core.exports.CsvImportDelegate"
+            label="csv">
+      </deckFormat>
+      <deckFormat
+            id="table"
+            importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
+            label="table">
+      </deckFormat>
+   </extension>
 </plugin>
