@@ -1,60 +1,10 @@
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import com.reflexit.magiccards.core.exports.ImportUtils;
-import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 
-public class DeckParserTest extends junit.framework.TestCase {
-	private MemCardHandler deck;
-	private String line = "";
-	int resSize;
-	IMagicCard card1;
-	IMagicCard card2;
-	IMagicCard card3;
-
-	@Override
-	protected void setUp() throws Exception {
-		this.deck = new MemCardHandler();
-	}
-
-	private ArrayList<IMagicCard> extractStorageCards() {
-		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
-		Iterator<IMagicCard> iterator = this.deck.getCardStore().iterator();
-		for (; iterator.hasNext();) {
-			IMagicCard card = iterator.next();
-			res.add(card);
-		}
-		return res;
-	}
-
+public class DeckParserTest extends AbstarctImportTest {
 	private void parse() {
-		try {
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), ReportType.TEXT_DECK_CLASSIC, false,
-			        new HashMap(), deck, new NullProgressMonitor());
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-		ArrayList<IMagicCard> res = extractStorageCards();
-		resSize = res.size();
-		if (resSize >= 1)
-			card1 = res.get(0);
-		if (resSize >= 2)
-			card2 = res.get(1);
-		if (resSize >= 3)
-			card3 = res.get(2);
-	}
-
-	private void addLine(String string) {
-		line += string + "\n";
+		super.parse(false, ReportType.TEXT_DECK_CLASSIC);
 	}
 
 	public void test1_N_x_C() {

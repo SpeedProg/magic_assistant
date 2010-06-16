@@ -13,6 +13,10 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.core.exports.DeckParserTest;
+import com.reflexit.magiccards.core.exports.MtgoImportTest;
+import com.reflexit.magiccards.core.exports.TablePipedImportTest;
+
 /**
  * @author Alena
  *
@@ -21,6 +25,8 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magiccards.core.test");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(TablePipedImportTest.class);
+		suite.addTestSuite(MtgoImportTest.class);
 		suite.addTestSuite(VirtualMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
 		suite.addTestSuite(CardOrganizerTest.class);
