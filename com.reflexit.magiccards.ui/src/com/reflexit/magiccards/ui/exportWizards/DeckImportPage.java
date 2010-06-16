@@ -516,7 +516,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private boolean isExportCsvFlag() {
-		return getReportType() == ReportType.CSV || getReportType() == ReportType.TABLE_PIPED;
+		return !getReportType().isXmlFormat();
 	}
 
 	public boolean hasHeaderRow() {
