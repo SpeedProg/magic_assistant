@@ -511,6 +511,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	protected void updateWidgetEnablements() {
 		// type
 		includeHeader.setEnabled(isExportCsvFlag());
+		includeHeader.setVisible(isExportCsvFlag());
 		editor.setEnabled(!clipboard, fileSelectionArea);
 	}
 
