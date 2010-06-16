@@ -4,20 +4,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.exports.ImportWorker;
+import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 
 public class DeckParserTest extends junit.framework.TestCase {
 	private MemCardHandler deck;
-	private MagicCardFilter filter;
 	private String line = "";
-	private ImportWorker worker;
 	int resSize;
 	IMagicCard card1;
 	IMagicCard card2;
@@ -26,7 +24,6 @@ public class DeckParserTest extends junit.framework.TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		this.deck = new MemCardHandler();
-		this.filter = new MagicCardFilter();
 	}
 
 	private ArrayList<IMagicCard> extractStorageCards() {
@@ -40,10 +37,9 @@ public class DeckParserTest extends junit.framework.TestCase {
 	}
 
 	private void parse() {
-		this.worker = new ImportWorker(ReportType.TEXT_DECK_CLASSIC, new ByteArrayInputStream(line.getBytes()), false,
-		        deck, null);
 		try {
-			worker.run(new NullProgressMonitor());
+			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), ReportType.TEXT_DECK_CLASSIC, false,
+			        new HashMap(), deck, new NullProgressMonitor());
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
