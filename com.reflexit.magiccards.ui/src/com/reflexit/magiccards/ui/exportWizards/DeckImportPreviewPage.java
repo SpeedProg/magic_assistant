@@ -20,8 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.exports.ImportWorker;
-import com.reflexit.magiccards.core.exports.ImportWorker.PreviewResult;
+import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.model.ICardField;
 
 public class DeckImportPreviewPage extends WizardPage {
@@ -61,13 +60,15 @@ public class DeckImportPreviewPage extends WizardPage {
 			DeckImportWizard wizard = (DeckImportWizard) getWizard();
 			try {
 				InputStream st = startingPage.openInputStream();
-				BufferedReader b = new BufferedReader(new InputStreamReader(st));
 				String textFile = "";
-				String line;
-				int i = 0;
-				while ((line = b.readLine()) != null && i < 10) {
-					textFile += line + "\n";
-					i++;
+				if (st != null) {
+					String line;
+					int i = 0;
+					BufferedReader b = new BufferedReader(new InputStreamReader(st));
+					while ((line = b.readLine()) != null && i < 10) {
+						textFile += line + "\n";
+						i++;
+					}
 				}
 				text.setText(textFile);
 				st.close();
@@ -76,24 +77,24 @@ public class DeckImportPreviewPage extends WizardPage {
 				return;
 			}
 			startingPage.performImport(true);
-			ImportWorker.PreviewResult result = (PreviewResult) wizard.getData();
+			PreviewResult result = (PreviewResult) wizard.getData();
 			TableColumn[] columns = tableViewer.getTable().getColumns();
 			for (TableColumn tableColumn : columns) {
 				tableColumn.dispose();
 			}
-			if (result.fields != null)
-				for (ICardField f : result.fields) {
+			if (result.getFields() != null)
+				for (ICardField f : result.getFields()) {
 					TableColumn col = new TableColumn(tableViewer.getTable(), SWT.NONE);
 					col.setWidth(100);
 					if (f != null) {
 						col.setText(f.toString());
 					}
 				}
-			if (result.values.size() > 0)
-				tableViewer.setInput(result.values);
-			if (result.error != null)
-				setErrorMessage("Cannot parse data file: " + result.error.getMessage());
-			else if (result.values.size() == 0)
+			if (result.getValues().size() > 0)
+				tableViewer.setInput(result.getValues());
+			if (result.getError() != null)
+				setErrorMessage("Cannot parse data file: " + result.getError().getMessage());
+			else if (result.getValues().size() == 0)
 				setErrorMessage("Cannot parse data file");
 		}
 	}

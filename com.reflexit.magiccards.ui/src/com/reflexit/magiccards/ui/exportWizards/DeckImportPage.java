@@ -44,16 +44,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.exports.ImportWorker;
-import com.reflexit.magiccards.core.exports.ImportWorker.PreviewResult;
+import com.reflexit.magiccards.core.exports.ImportFactory;
+import com.reflexit.magiccards.core.exports.ImportUtils;
+import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 import com.reflexit.magiccards.ui.wizards.NewCardElementWizard;
@@ -105,34 +102,11 @@ public class DeckImportPage extends WizardDataTransferPage {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						if (preview) {
-							ImportWorker worker;
-							worker = new ImportWorker(reportType, st, header);
-							// init preview
-							previewResult = worker.getPreview();
-							((DeckImportWizard) getWizard()).setData(previewResult);
-							worker.run(monitor);
 							// if error occurs previewResult.error would be set to exception
+							previewResult = ImportUtils.performPreview(st, reportType, header, monitor);
+							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
-							// because we support both deck and collection it is trying to import using my cards handler
-							// with specific filter set on which deck/collection it is. It is really ugly and card should 
-							// have location set otherwise it is not adding them properly
-							IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
-							IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
-							((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
-							MagicCardFilter old = filteredLibrary.getFilter();
-							try {
-								MagicCardFilter locFilter = new MagicCardFilter();
-								locFilter.update(storeToMap());
-								filteredLibrary.update(locFilter);
-								if (st != null) {
-									ImportWorker worker;
-									worker = new ImportWorker(reportType, st, header, filteredLibrary,
-									        magicDbHandler.getCardStore());
-									worker.run(monitor);
-								}
-							} finally {
-								filteredLibrary.update(old); // restore filter
-							}
+							ImportUtils.performImport(st, reportType, header, storeToMap(), monitor);
 						}
 					}
 				};
@@ -292,18 +266,17 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private void defaultPrompt() {
-		String mess = "Import into selected exising deck or collection. ";
+		String mess = "You have selected '" + reportType.getLabel() + "' format. ";
 		if (reportType == ReportType.XML)
-			setMessage(mess + "You have selected XML format");
+			setMessage(mess);
 		else if (reportType == ReportType.CSV)
-			setMessage(mess
-			        + "You have selected CSV format, columns order 'ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT'");
+			setMessage(mess + "Columns: ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT");
 		else if (reportType == ReportType.TEXT_DECK_CLASSIC)
-			setMessage(mess
-			        + "You have selected Deck Classic format, lines like 'Quagmire Druid x 3' or 'Diabolic Tutor (Tenth Edition) x4'");
+			setMessage(mess + "Lines like 'Quagmire Druid x 3' or 'Diabolic Tutor (Tenth Edition) x4'");
 		else if (reportType == ReportType.TABLE_PIPED)
-			setMessage(mess
-			        + "You have selected Table Piped format: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT'");
+			setMessage(mess + "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
+		else
+			setMessage(mess + "You have selected " + reportType.getLabel() + " format");
 	}
 
 	@Override
@@ -443,10 +416,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText("Import Type:");
 		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
-		addComboType(ReportType.XML);
-		addComboType(ReportType.CSV);
-		addComboType(ReportType.TEXT_DECK_CLASSIC);
-		addComboType(ReportType.TABLE_PIPED);
+		Collection<ReportType> types = new ImportFactory<IMagicCard>().getTypes();
+		for (ReportType reportType : types) {
+			addComboType(reportType);
+		}
 		selectReportType(ReportType.TEXT_DECK_CLASSIC);
 		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
 		gd1.horizontalSpan = 1;
@@ -459,7 +432,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	private void addComboType(ReportType reportType) {
 		typeCombo.add(reportType.getLabel());
-		typeCombo.setData(reportType.toString(), reportType);
+		typeCombo.setData(reportType.getLabel(), reportType);
 		typeCombo.addListener(SWT.Selection, this);
 	}
 
@@ -471,7 +444,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected boolean validateDestinationGroup() {
 		if (locPage.isEmptySelection()) {
-			setMessage("Select an element to import to or parent element");
+			setMessage("Select a deck or collection to import data into. To import into new deck, create it first.");
 			return false;
 		}
 		return true;
