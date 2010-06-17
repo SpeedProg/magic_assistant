@@ -31,5 +31,11 @@
             label="Magic the Gathering Online CSV"
             xmlFormat="false">
       </deckFormat>
+      <deckFormat
+            id="mwcsv"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationImportDelegate"
+            label="Magic Workstation CSV"
+            xmlFormat="false">
+      </deckFormat>
    </extension>
 </plugin>

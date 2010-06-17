@@ -371,7 +371,7 @@ public class ParseGathererNewVisualSpoiler {
 	}
 
 	public static URL createSetImageURL(String editionAbbr, String rarity) throws MalformedURLException {
-		String rarLetter = rarity.substring(0, 1).toUpperCase();
+		String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
 		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr
 		        + "&size=small&rarity=" + rarLetter);
 	}

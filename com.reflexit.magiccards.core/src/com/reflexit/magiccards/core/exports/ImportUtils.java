@@ -77,7 +77,8 @@ public class ImportUtils {
 		} catch (Exception e) {
 			throw new InvocationTargetException(e);
 		}
-		worker.init(st, true, null, null);
+		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
+		worker.init(st, true, null, magicDbHandler.getCardStore());
 		worker.setHeader(header);
 		// init preview
 		PreviewResult previewResult = worker.getPreview();

@@ -16,7 +16,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.reflexit.magiccards.core.Activator;
 
@@ -24,7 +25,7 @@ import com.reflexit.magiccards.core.Activator;
  * Import factory - gets instance of worker class by its type
  */
 public class ImportFactory<T> {
-	private static HashMap<ReportType, String> importRegistry = new HashMap<ReportType, String>();
+	private static Map<ReportType, String> importRegistry = new LinkedHashMap<ReportType, String>();
 
 	public IImportDelegate<T> getImportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
 	        IllegalAccessException {

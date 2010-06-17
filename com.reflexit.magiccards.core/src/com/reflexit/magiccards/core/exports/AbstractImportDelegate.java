@@ -90,6 +90,19 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	}
 
 	protected void importCard(MagicCardPhisical card) {
+		if (card == null)
+			return;
+		MagicCard ref = findRef(card.getCard());
+		if (ref != null) {
+			if (card.getSet() == null || ref.getSet().equals(card.getSet()))
+				card.setMagicCard(ref);
+			else if (card.getSet() != null) {
+				MagicCard newCard = (MagicCard) ref.clone();
+				newCard.setSet(card.getSet());
+				newCard.setId("0");
+				card.setMagicCard(newCard);
+			}
+		}
 		if (previewMode) {
 			String[] res = new String[previewResult.getFields().length];
 			for (int i = 0; i < previewResult.getFields().length; i++) {
@@ -99,17 +112,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			}
 			previewResult.getValues().add(res);
 		} else {
-			MagicCard ref = findRef(card.getCard());
-			if (ref != null) {
-				if (card.getSet() == null || ref.getSet().equals(card.getSet()))
-					card.setMagicCard(ref);
-				else if (card.getSet() != null) {
-					MagicCard newCard = (MagicCard) ref.clone();
-					newCard.setSet(card.getSet());
-					newCard.setId("0");
-					card.setMagicCard(newCard);
-				}
-			}
 			toImport.add(card);
 		}
 	}

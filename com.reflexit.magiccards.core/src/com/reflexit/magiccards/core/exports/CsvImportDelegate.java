@@ -76,12 +76,12 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 	}
 
 	protected void setHeaderFields(List<String> list) {
-	    ICardField fields[] = new ICardField[list.size()];
-	    for (int i = 0; i < list.size(); i++) {
-	    	String hd = list.get(i);
-	    	ICardField field = MagicCardFieldPhysical.fieldByName(hd);
-	    	fields[i] = field;
-	    }
-	    setFields(fields);
-    }
+		ICardField fields[] = new ICardField[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			String hd = list.get(i);
+			ICardField field = MagicCardFieldPhysical.fieldByName(hd);
+			fields[i] = field;
+		}
+		setFields(fields);
+	}
 }

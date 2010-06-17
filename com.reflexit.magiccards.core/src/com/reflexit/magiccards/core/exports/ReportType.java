@@ -1,13 +1,13 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ReportType {
 	private String name;
 	private String label;
 	private boolean xmlFormat;
-	private static Map<String, ReportType> types = new HashMap<String, ReportType>();
+	private static Map<String, ReportType> types = new LinkedHashMap<String, ReportType>();
 	public static final ReportType XML = createReportType("xml", "Magic Assistant XML", true);
 	public static final ReportType CSV = createReportType("csv", "Magic Assistant CSV");
 	public static final ReportType TEXT_DECK_CLASSIC = createReportType("classic", "Deck Classic (Text)");
