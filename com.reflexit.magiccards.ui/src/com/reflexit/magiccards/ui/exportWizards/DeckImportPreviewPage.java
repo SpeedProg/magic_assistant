@@ -55,7 +55,7 @@ public class DeckImportPreviewPage extends WizardPage {
 			DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
 			setDescription("Importing into " + startingPage.getElement() + ". Import preview (First 10 rows). "
 			        + (startingPage.hasHeaderRow() ? "Header row." : "No header row.") + " Format "
-			        + startingPage.getReportType() + ".");
+			        + startingPage.getReportType().getLabel() + ".");
 			setErrorMessage(null);
 			DeckImportWizard wizard = (DeckImportWizard) getWizard();
 			try {
