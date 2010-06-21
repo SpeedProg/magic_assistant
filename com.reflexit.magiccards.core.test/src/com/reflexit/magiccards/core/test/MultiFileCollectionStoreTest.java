@@ -63,7 +63,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	}
 
 	public void testAddCardWithLocation() {
-		MagicCardPhisical a = new MagicCardPhisical(m1);
+		MagicCardPhisical a = new MagicCardPhisical(m1, null);
 		a.setLocation("coll2");
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
@@ -78,7 +78,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	}
 
 	public void testAddCardWithLocation2() {
-		MagicCardPhisical a = new MagicCardPhisical(m1);
+		MagicCardPhisical a = new MagicCardPhisical(m1, null);
 		a.setLocation("coll1");
 		this.store.add(a);
 		((ILocatable) this.store).setLocation("coll2");
