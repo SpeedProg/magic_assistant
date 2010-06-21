@@ -30,10 +30,12 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -186,6 +188,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				cardStore.removeAll(sel.toList());
 			}
 		}
+		refresh();
 	}
 
 	/**
@@ -237,7 +240,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 							continue;
 						if (type == EVEN)
 							left = count / 2;
-						MagicCardPhisical card2 = new MagicCardPhisical(card);
+						MagicCardPhisical card2 = new MagicCardPhisical(card, card.getLocation());
 						card.setCount(left);
 						cardStore.update(card);
 						card2.setCount(count - left);
