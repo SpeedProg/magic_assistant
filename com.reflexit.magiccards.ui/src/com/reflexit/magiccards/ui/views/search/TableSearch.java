@@ -96,7 +96,7 @@ public class TableSearch {
 				context.setDidWrap(true);
 				if (elements.length == 0)
 					return;
-				for (int i = elements.length - 1; i >= lastIndex; i--) {
+				for (int i = elements.length - 1; i >= lastIndex && i >= 0; i--) {
 					IMagicCard card = (IMagicCard) elements[i];
 					if (match(pat, card)) {
 						context.setFound(true, card);
