@@ -177,8 +177,7 @@ public class XmlCardHolder implements ICardHandler {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhisical phi = new MagicCardPhisical(card);
-			phi.setLocation(to);
+			MagicCardPhisical phi = new MagicCardPhisical(card, to);
 			list.add(phi);
 		}
 		ICardStore<IMagicCard> store = LibraryDataXmlHandler.getInstance().getStore(to);
@@ -194,8 +193,7 @@ public class XmlCardHolder implements ICardHandler {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhisical phi = new MagicCardPhisical(card);
-			phi.setLocation(to);
+			MagicCardPhisical phi = new MagicCardPhisical(card, to);
 			list.add(phi);
 		}
 		boolean res = sto.addAll(list);
@@ -211,11 +209,11 @@ public class XmlCardHolder implements ICardHandler {
 						break;
 					}
 				}
-				if (from != null) {
-					ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler.getInstance().getStore(from);
-					if (sfrom2 != null)
-						sfrom2.removeAll(cards);
-				}
+			}
+			if (from != null) {
+				ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler.getInstance().getStore(from);
+				if (sfrom2 != null)
+					sfrom2.removeAll(cards);
 			}
 		}
 		return res;
