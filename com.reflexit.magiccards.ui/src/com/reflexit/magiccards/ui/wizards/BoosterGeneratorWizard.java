@@ -242,8 +242,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);
 			IMagicCard card = (IMagicCard) dbcards.getElement(index);
-			MagicCardPhisical pcard = new MagicCardPhisical(card);
-			pcard.setLocation(col.getLocation());
+			MagicCardPhisical pcard = new MagicCardPhisical(card, col.getLocation());
 			store.add(pcard);
 		}
 	}

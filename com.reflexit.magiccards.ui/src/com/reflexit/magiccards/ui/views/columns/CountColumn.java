@@ -83,7 +83,7 @@ public class CountColumn extends GenColumn {
 					int count = value == null ? 0 : Integer.parseInt(value.toString());
 					if (oldCount == count)
 						return;
-					MagicCardPhisical add = new MagicCardPhisical(card);
+					MagicCardPhisical add = new MagicCardPhisical(card, card.getLocation());
 					add.setCount(count);
 					//viewer.update(element, null);
 					// save

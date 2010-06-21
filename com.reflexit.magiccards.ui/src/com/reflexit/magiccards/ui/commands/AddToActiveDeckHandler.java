@@ -49,7 +49,7 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				IMagicCard magicCard = (IMagicCard) iterator.next();
 				if (magicCard instanceof MagicCardPhisical) {
-					magicCard = new MagicCardPhisical(magicCard);
+					magicCard = new MagicCardPhisical(magicCard, null);
 					((MagicCardPhisical) magicCard).setCount(1);
 				}
 				toAdd.add(magicCard);

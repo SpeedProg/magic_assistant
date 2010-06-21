@@ -55,7 +55,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 						MagicCardPhisical mc = (MagicCardPhisical) magicCard;
 						int count = mc.getCount();
 						if (count <= 1) {
-							toRemove.add(new MagicCardPhisical(magicCard));
+							toRemove.add(new MagicCardPhisical(mc, mc.getLocation()));
 						} else {
 							mc.setCount(count - 1);
 							activeDeckHandler.getCardStore().update(mc);
@@ -76,7 +76,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 						// not possible
 						throw new IllegalArgumentException();
 					} else {
-						MagicCardPhisical magicCardCopy = new MagicCardPhisical(magicCard);
+						MagicCardPhisical magicCardCopy = new MagicCardPhisical(magicCard, null);
 						magicCardCopy.setCount(1);
 						toRemove.add(magicCardCopy);
 					}
