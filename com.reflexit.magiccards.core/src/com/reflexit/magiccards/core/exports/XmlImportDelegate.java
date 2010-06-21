@@ -58,7 +58,7 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 						importCard(card);
 						card.setLocation(getLocation());
 					} else if (next instanceof IMagicCard)
-						importCard(new MagicCardPhisical((IMagicCard) next));
+						importCard(new MagicCardPhisical((IMagicCard) next, null));
 					if (previewMode && line >= 10)
 						break;
 					monitor.worked(1);
