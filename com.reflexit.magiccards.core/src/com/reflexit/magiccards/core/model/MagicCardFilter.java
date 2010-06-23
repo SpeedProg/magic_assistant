@@ -448,7 +448,7 @@ public class MagicCardFilter {
 		} else if (FilterHelper.COMMENT.equals(requestedId)) {
 			res = textSearch(MagicCardFieldPhysical.COMMENT, value, regex);
 		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, "true");
+			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
 		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
 			res = textSearch(MagicCardField.ORACLE, value, regex);
 			if (requestedId.contains("_exclude_")) {
