@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -58,6 +59,10 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 	@Override
 	public String getElementCapitalTypeName() {
 		return "Collection Container";
+	}
+
+	@Override
+	protected void createOptionsGroup(Composite container) {
 	}
 
 	@Override

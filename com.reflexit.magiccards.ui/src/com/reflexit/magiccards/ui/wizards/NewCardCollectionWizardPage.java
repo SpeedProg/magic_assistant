@@ -4,6 +4,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -67,6 +70,14 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	@Override
 	public String getElementCapitalTypeName() {
 		return "Card Collection";
+	}
+
+	@Override
+	protected void createOptionsGroup(Composite container) {
+		virtual = new Button(container, SWT.CHECK);
+		virtual.setText("This " + getElementTypeName()
+		        + " is virtual (affect card ownership attribute and cards operations)");
+		virtual.setToolTipText("Virtual flag affect move/copy/inreaste/descrease operations on a collection. Also it automatically set flags to own for non-virtual collection.");
 	}
 
 	@Override

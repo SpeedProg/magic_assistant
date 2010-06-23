@@ -44,6 +44,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 public abstract class NewCardElementWizardPage extends WizardPage {
 	private Text containerText;
 	private Text nameText;
+	protected Button virtual;
 	protected ISelection selection;
 
 	/**
@@ -111,11 +112,15 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 				handleBrowse();
 			}
 		});
+		createOptionsGroup(container);
 		initialize();
 		dialogChanged();
 		setControl(container);
 		setErrorMessage(null);
 		this.nameText.setFocus();
+	}
+
+	protected void createOptionsGroup(Composite container) {
 	}
 
 	/**
@@ -206,5 +211,11 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 
 	public String getElementName() {
 		return this.nameText.getText();
+	}
+
+	public boolean isVirtual() {
+		if (virtual != null)
+			return virtual.getSelection();
+		return false;
 	}
 }

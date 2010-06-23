@@ -49,7 +49,8 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 	 * the editor on the newly created file.
 	 */
 	@Override
-	protected void doFinish(String containerName, final String fileName, IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(String containerName, final String fileName, final boolean virtual, IProgressMonitor monitor)
+	        throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + fileName, 2);
 		ModelRoot root = DataManager.getModelRoot();
@@ -61,7 +62,9 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, fileName, page);
+				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource,
+				        fileName, page);
+				element.setVirtual(virtual);
 				setElement(element);
 			}
 		});

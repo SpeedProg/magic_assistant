@@ -140,8 +140,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java.lang.String, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void doFinish(final String containerName, final String name, final IProgressMonitor monitor)
-	        throws CoreException {
+	protected void doFinish(final String containerName, final String name, boolean virtual,
+	        final IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
 		ModelRoot root = DataManager.getModelRoot();

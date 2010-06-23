@@ -63,11 +63,12 @@ public abstract class NewCardElementWizard extends Wizard {
 	public boolean performFinish() {
 		final String containerName = this.page.getContainerName();
 		final String fileName = this.page.getElementName();
+		final boolean virtual = page.isVirtual();
 		beforeFinish();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					doFinish(containerName, fileName, monitor);
+					doFinish(containerName, fileName, virtual, monitor);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -97,9 +98,10 @@ public abstract class NewCardElementWizard extends Wizard {
 	/**
 	 * @param containerName
 	 * @param fileName
+	 * @param virtual 
 	 * @param monitor
 	 */
-	protected abstract void doFinish(String containerName, String fileName, IProgressMonitor monitor)
+	protected abstract void doFinish(String containerName, String fileName, boolean virtual, IProgressMonitor monitor)
 	        throws CoreException;
 
 	protected void throwCoreException(String message) throws CoreException {

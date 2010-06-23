@@ -52,7 +52,8 @@ public class NewCardCollectionWizard extends NewCardElementWizard implements INe
 	 * the editor on the newly created file.
 	 */
 	@Override
-	protected void doFinish(String containerName, final String name, IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(String containerName, final String name, final boolean virtual, IProgressMonitor monitor)
+	        throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 2);
 		ModelRoot root = DataManager.getModelRoot();
@@ -62,6 +63,7 @@ public class NewCardCollectionWizard extends NewCardElementWizard implements INe
 		}
 		CollectionsContainer parent = (CollectionsContainer) resource;
 		final CardCollection col = new CardCollection(name + ".xml", parent);
+		col.setVirtual(virtual);
 		setElement(col);
 		monitor.worked(1);
 		getShell().getDisplay().asyncExec(new Runnable() {
