@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,10 +25,14 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		        + "which would be searched using AND connector.\n" // 
 		        + "Adding '-' in front of the word makes it NOT.\n";
 		addTooltip(nameSfe, toolTip);
-		//		id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
-		//		getPreferenceStore().setDefault(id, Boolean.FALSE);
-		//		BooleanFieldEditor x = new BooleanFieldEditor(id, "Only Own", getFieldEditorParent());
-		//		addField(x);
+		id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
+		RadioGroupFieldEditor radios = new RadioGroupFieldEditor(id, "Ownership", 1, new String[][] {
+		        { "Show all cards", "", },
+		        { "Show only own cards (determined by ownership attribute)", "true", },
+		        { "Show only virtual cards", "false", }, }, getFieldEditorParent(), true);
+		//getPreferenceStore().setDefault(id, Boolean.FALSE);
+		//BooleanFieldEditor x = new BooleanFieldEditor(id, "Only Own", getFieldEditorParent());
+		addField(radios);
 	}
 
 	@Override

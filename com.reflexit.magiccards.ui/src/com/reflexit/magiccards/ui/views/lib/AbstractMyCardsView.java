@@ -360,7 +360,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			String comment = card.getComment();
 			if (comment == null)
 				comment = "";
-			String ownshership = card.isOwn() ? "Own" : "Not Own";
+			String ownshership = card.isOwn() ? "Own" : "Virtual";
 			String price = card.getPrice() + "";
 			if (first) {
 				store.setDefault(EditCardsPropertiesDialog.COUNT_FIELD, count);
@@ -440,8 +440,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			if (eown.equals("Own")) {
 				card.setOwn(true);
 				modified = true;
-			}
-			if (eown.equals("Not Own")) {
+			} else {
 				card.setOwn(false);
 				modified = true;
 			}

@@ -67,7 +67,7 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 		createTextLabel(area, "Ownership");
 		final Combo ownership = new Combo(area, SWT.READ_ONLY);
 		ownership.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		setComboChoices(ownership, new String[] { "Own", "Not Own" }, store.getDefaultString(OWNERSHIP_FIELD));
+		setComboChoices(ownership, new String[] { "Own", "Virtual" }, store.getDefaultString(OWNERSHIP_FIELD));
 		ownership.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
