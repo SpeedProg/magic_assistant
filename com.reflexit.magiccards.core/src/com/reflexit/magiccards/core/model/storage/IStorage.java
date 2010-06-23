@@ -24,4 +24,6 @@ public interface IStorage<T> extends ICardSet<T>, ILocatable {
 	public String getName();
 
 	public String getComment();
+
+	public boolean isVirtual();
 }

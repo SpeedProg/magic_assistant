@@ -10,8 +10,10 @@ import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
 public class CardCollection extends CardElement {
-	private transient ICardStore<IMagicCard> store;
-	protected transient boolean deck;
+	transient private ICardStore<IMagicCard> store;
+	transient protected boolean deck;
+	transient boolean pendingVirtual;
+	transient private boolean virtualFlag;
 
 	public CardCollection(String filename, CardOrganizer parent) {
 		this(filename, parent, false);
@@ -56,6 +58,10 @@ public class CardCollection extends CardElement {
 				IStorage storage = ((IStorageContainer) store).getStorage();
 				if (storage instanceof IStorageInfo) {
 					deck = IStorageInfo.DECK_TYPE.equals(((IStorageInfo) storage).getType());
+					if (pendingVirtual) {
+						setVirtual(virtualFlag);
+						pendingVirtual = false;
+					}
 				}
 			}
 		} else {
@@ -80,5 +86,18 @@ public class CardCollection extends CardElement {
 	 */
 	public String getFileName() {
 		return getPath().lastSegment();
+	}
+
+	public void setVirtual(boolean virtual) {
+		if (!isOpen()) {
+			pendingVirtual = true;
+			virtualFlag = virtual;
+		} else if (store instanceof IStorageContainer) {
+			IStorage storage = ((IStorageContainer) store).getStorage();
+			if (storage instanceof IStorageInfo) {
+				((IStorageInfo) storage).setVirtual(virtual);
+				storage.save();
+			}
+		}
 	}
 }

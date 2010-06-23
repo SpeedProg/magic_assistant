@@ -322,5 +322,9 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		public String getName() {
 			throw new UnsupportedOperationException();
 		}
+
+		public boolean isVirtual() {
+			throw new UnsupportedOperationException();
+		};
 	};
 }

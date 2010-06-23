@@ -4,4 +4,6 @@ public interface ICardStore<T> extends ICardSet<T>, IMergeable<T>, ICardEventMan
 	public String getName();
 
 	public String getComment();
+
+	public boolean isVirtual();
 }

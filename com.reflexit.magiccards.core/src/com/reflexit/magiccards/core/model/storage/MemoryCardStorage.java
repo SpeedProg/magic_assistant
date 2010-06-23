@@ -100,4 +100,8 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	public String getName() {
 		return "mem";
 	}
+
+	public boolean isVirtual() {
+		return true;
+	}
 }

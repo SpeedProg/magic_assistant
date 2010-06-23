@@ -100,4 +100,12 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
+
+	public void setVirtual(boolean value) {
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean isVirtual() {
+		return storage.isVirtual();
+	}
 }
