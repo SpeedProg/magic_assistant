@@ -45,6 +45,11 @@ public class CollectionSingleFileCardStore extends CollectionCardStore implement
 		getFileStorage().setName(name);
 	}
 
+	@Override
+	public void setVirtual(boolean value) {
+		getFileStorage().setVirtual(value);
+	}
+
 	public void setComment(String comment) {
 		getFileStorage().setComment(comment);
 	}

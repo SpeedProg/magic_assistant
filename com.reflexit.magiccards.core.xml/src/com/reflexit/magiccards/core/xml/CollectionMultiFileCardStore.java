@@ -146,4 +146,8 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
+
+	public boolean isVirtual() {
+		throw new UnsupportedOperationException();
+	}
 }

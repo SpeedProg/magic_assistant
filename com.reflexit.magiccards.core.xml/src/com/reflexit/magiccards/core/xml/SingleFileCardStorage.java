@@ -17,6 +17,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable, IStorageInfo {
+	private transient static final String VIRTUAL = "virtual";
 	private transient File file;
 	private String location;
 	private String name;
@@ -79,7 +80,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			this.doSetList(obj.list);
 		else
 			this.doSetList(new ArrayList<IMagicCard>());
-		if (obj.key != null)
+		if (getLocation() == null)
 			this.location = obj.key;
 		if (obj.name != null)
 			this.name = obj.name;
@@ -138,6 +139,14 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		return name;
 	}
 
+	@Override
+	public boolean isVirtual() {
+		String vir = getProperty(VIRTUAL);
+		if (vir == null)
+			return true;
+		return Boolean.valueOf(vir);
+	}
+
 	public void setName(String name) {
 		doSetName(name);
 		autoSave();
@@ -176,5 +185,13 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	public String getProperty(String key) {
 		return properties.getProperty(key);
+	}
+
+	public void setProperty(String key, String value) {
+		properties.setProperty(key, value);
+	}
+
+	public void setVirtual(boolean value) {
+		setProperty(VIRTUAL, String.valueOf(value));
 	}
 }
