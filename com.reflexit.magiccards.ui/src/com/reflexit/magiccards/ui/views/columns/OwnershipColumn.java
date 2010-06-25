@@ -33,6 +33,8 @@ public class OwnershipColumn extends GenColumn {
 			MagicCardPhisical m = (MagicCardPhisical) element;
 			if (m.isOwn())
 				return MagicUIActivator.getDefault().getImage("icons/obj16/lib16.png");
+			else
+				return MagicUIActivator.getDefault().getImage("icons/obj16/monitor.gif");
 		}
 		return null;
 	}
