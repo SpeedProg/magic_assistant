@@ -19,8 +19,6 @@ public class MagicCard implements IMagicCard, Cloneable {
 	String lang;
 	transient String colorType = null;
 	transient int cmc = -1;
-	transient float fpower = -STAR_POWER;
-	transient float ftoughness = -STAR_POWER;
 
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
