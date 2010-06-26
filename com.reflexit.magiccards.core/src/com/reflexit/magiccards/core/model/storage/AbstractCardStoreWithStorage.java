@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.Location;
 
 /**
  * @author Alena
@@ -81,11 +82,11 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 		return storage.remove(card);
 	}
 
-	public String getLocation() {
+	public Location getLocation() {
 		return storage.getLocation();
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		storage.setLocation(location);
 	}
 

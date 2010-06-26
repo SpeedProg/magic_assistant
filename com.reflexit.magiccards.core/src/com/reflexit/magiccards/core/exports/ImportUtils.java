@@ -18,11 +18,11 @@ import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
  * Utils to perform import
@@ -42,10 +42,7 @@ public class ImportUtils {
 				MagicCardFilter locFilter = new MagicCardFilter();
 				locFilter.update(filter);
 				filteredLibrary.update(locFilter);
-				String location = null;
-				if (filteredLibrary instanceof ILocatable) {
-					location = ((ILocatable) filteredLibrary).getLocation();
-				}
+				Location location = filteredLibrary.getLocation();
 				IImportDelegate worker;
 				try {
 					worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);

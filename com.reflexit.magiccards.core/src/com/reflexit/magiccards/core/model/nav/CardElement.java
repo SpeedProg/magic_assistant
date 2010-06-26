@@ -11,6 +11,7 @@ import java.io.File;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
@@ -48,8 +49,8 @@ public abstract class CardElement extends EventManager {
 		return this.path;
 	}
 
-	public String getLocation() {
-		return getPath().toPortableString();
+	public Location getLocation() {
+		return Location.createLocation(getPath());
 	}
 
 	/**
@@ -142,7 +143,7 @@ public abstract class CardElement extends EventManager {
 	 * @return 
 	 */
 	public CardElement rename(String value) {
-		String oldName = getLocation();
+		Location oldName = getLocation();
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
@@ -158,5 +159,5 @@ public abstract class CardElement extends EventManager {
 		return x;
 	}
 
-	public abstract CardElement newElement(String name2, CardOrganizer parent2);
+	public abstract CardElement newElement(String name, CardOrganizer parent);
 }

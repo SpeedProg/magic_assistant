@@ -6,7 +6,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
-public interface IFilteredCardStore<T> extends Iterable<T> {
+public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable {
 	public void update(MagicCardFilter filter) throws MagicException;
 
 	public MagicCardFilter getFilter();

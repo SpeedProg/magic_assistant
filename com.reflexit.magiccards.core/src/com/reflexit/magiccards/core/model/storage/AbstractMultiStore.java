@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import org.eclipse.core.runtime.Path;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,21 +7,23 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ILocatable, ICardEventListener,
         IStorageContainer<T> {
-	protected HashMap<String, AbstractCardStoreWithStorage<T>> map;
+	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
 	protected int size;
-	protected String defaultLocation;
+	protected Location defaultLocation;
 
 	public AbstractMultiStore() {
-		this.map = new HashMap<String, AbstractCardStoreWithStorage<T>>();
+		this.map = new HashMap<Location, AbstractCardStoreWithStorage<T>>();
 	}
 
-	public ICardStore<T> getStore(String location) {
+	public ICardStore<T> getStore(Location location) {
 		return map.get(location);
 	}
 
@@ -59,12 +59,12 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		}
 	}
 
-	public AbstractCardStoreWithStorage getStorage(String location) {
+	public AbstractCardStoreWithStorage getStorage(Location location) {
 		AbstractCardStoreWithStorage loc = map.get(location);
 		return loc;
 	}
 
-	public synchronized void removeLocation(String location) {
+	public synchronized void removeLocation(Location location) {
 		this.map.remove(location);
 	}
 
@@ -74,11 +74,11 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		ArrayList<AbstractCardStoreWithStorage> all = new ArrayList<AbstractCardStoreWithStorage>();
 		all.addAll(this.map.values());
 		for (AbstractCardStoreWithStorage table : all) {
-			String oldLocation = table.getLocation();
+			Location oldLocation = table.getLocation();
 			removeLocation(oldLocation);
 			try {
 				table.initialize();
-				String newLocation = table.getLocation();
+				Location newLocation = table.getLocation();
 				if (!newLocation.equals(oldLocation)) {
 					System.err.println("Key conflict - fixing: " + newLocation + " -> " + oldLocation);
 					table.setLocation(oldLocation);
@@ -153,7 +153,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 	@Override
 	public synchronized boolean doRemoveCard(final T card) {
-		String key = getLocation(card);
+		Location key = getLocation(card);
 		AbstractCardStoreWithStorage res = this.map.get(key);
 		if (res != null) {
 			int oldSize = res.size();
@@ -166,7 +166,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 	@Override
 	public synchronized boolean doAddCard(final T card) {
-		String key = getLocation(card);
+		Location key = getLocation(card);
 		AbstractCardStoreWithStorage res = this.map.get(key);
 		if (res == null) {
 			res = newStorage(card);
@@ -188,12 +188,12 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 	protected abstract AbstractCardStoreWithStorage newStorage(T card);
 
-	protected abstract String getLocation(final T card);
+	protected abstract Location getLocation(final T card);
 
 	/**
 	 * @param location
 	 */
-	public void setLocation(final String location) {
+	public void setLocation(final Location location) {
 		if (map.size() > 0) {
 			if (map.get(location) == null)
 				throw new IllegalArgumentException("key is invalid");
@@ -201,11 +201,32 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		this.defaultLocation = location;
 	}
 
-	public String getLocation() {
+	public IMagicCard getCard(int id) {
+		Collection<IMagicCard> cards = getCards(id);
+		if (cards.size() > 0) {
+			return cards.iterator().next();
+		}
+		return null;
+	}
+
+	public Collection<IMagicCard> getCards(int id) {
+		ArrayList<IMagicCard> arr = new ArrayList<IMagicCard>();
+		for (AbstractCardStoreWithStorage table : map.values()) {
+			if (table instanceof ICardCollection) {
+				IMagicCard card = ((ICardCollection<IMagicCard>) table).getCard(id);
+				if (card != null) {
+					arr.add(card);
+				}
+			}
+		}
+		return arr;
+	}
+
+	public Location getLocation() {
 		return defaultLocation;
 	}
 
-	public void renameLocation(String oldLocation, String newLocation) {
+	public void renameLocation(Location oldLocation, Location newLocation) {
 		AbstractCardStoreWithStorage loaded = map.get(oldLocation);
 		if (loaded == null)
 			loaded = map.get(newLocation);
@@ -214,7 +235,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
 			card.setLocation(newLocation);
 		}
-		loaded.setName(new Path(newLocation).removeFileExtension().lastSegment());
+		loaded.setName(newLocation.getName());
 		map.remove(oldLocation);
 		map.put(newLocation, loaded);
 	}
@@ -307,12 +328,8 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			return size;
 		}
 
-		public String getLocation() {
+		public Location getLocation() {
 			return defaultLocation;
-		}
-
-		public void setLocation(String location) {
-			throw new UnsupportedOperationException();
 		}
 
 		public String getComment() {
@@ -324,6 +341,10 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		}
 
 		public boolean isVirtual() {
+			throw new UnsupportedOperationException();
+		}
+
+		public void setLocation(Location location) {
 			throw new UnsupportedOperationException();
 		};
 	};

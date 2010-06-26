@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
@@ -36,7 +37,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 
 	@Override
 	public boolean doAddCard(IMagicCard card) {
-		String loc = null;
+		Location loc = null;
 		if (this instanceof ILocatable)
 			loc = ((ILocatable) this).getLocation();
 		if (getMergeOnAdd()) {
@@ -80,7 +81,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		return this.storage.add(card);
 	}
 
-	protected IMagicCard createNewCard(IMagicCard card, String loc) {
+	protected IMagicCard createNewCard(IMagicCard card, Location loc) {
 		IMagicCard phi;
 		int count = 1;
 		if (card instanceof MagicCardPhisical) {

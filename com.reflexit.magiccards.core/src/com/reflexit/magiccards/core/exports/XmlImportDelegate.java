@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
@@ -41,13 +42,13 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 	 */
 	public void doRun(IProgressMonitor monitor) throws IOException {
 		try {
-			File tmp = File.createTempFile("magic", "xml");
+			File tmp = File.createTempFile("magic", ".xml");
 			tmp.deleteOnExit();
 			try {
 				FileUtils.copyFile(getStream(), tmp);
 				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
 				IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>) store).getStorage();
-				String location = storage.getLocation();
+				Location location = storage.getLocation();
 				previewResult.setLocation(location);
 				Iterator iterator = store.iterator();
 				while (iterator.hasNext()) {

@@ -13,13 +13,14 @@ package com.reflexit.magiccards.core.exports;
 import java.util.ArrayList;
 
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.Location;
 
 public class PreviewResult {
 	private ArrayList<String[]> values = new ArrayList<String[]>();
 	private ICardField[] fields = new ICardField[0];
 	private ReportType type;
 	private Exception error;
-	private String location;
+	private Location location;
 
 	/**
 	 * @param error the error to set
@@ -52,14 +53,14 @@ public class PreviewResult {
 	/**
 	 * @param location the location to set
 	 */
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
 	/**
 	 * @return the location
 	 */
-	public String getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 

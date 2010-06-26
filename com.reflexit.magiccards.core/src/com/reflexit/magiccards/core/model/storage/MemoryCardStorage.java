@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.reflexit.magiccards.core.model.Location;
+
 /**
  * ArrayList based implementation for AbstractCardStore
  * @author Alena
@@ -84,12 +86,13 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	protected void doSave() throws FileNotFoundException {
 		// nothing
 	}
+	private final Location MEM_LOC = new Location("mem");
 
-	public String getLocation() {
-		return "mem";
+	public Location getLocation() {
+		return MEM_LOC;
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		throw new UnsupportedOperationException();
 	}
 

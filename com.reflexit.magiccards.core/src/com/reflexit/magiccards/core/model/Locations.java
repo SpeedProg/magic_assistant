@@ -37,11 +37,15 @@ public class Locations implements ISearchableProperty {
 		Map map = modelRoot.getLocationsMap();
 		ArrayList<String> list = new ArrayList<String>();
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			String id = getPrefConstant(string);
+			Location loc = (Location) iterator.next();
+			String id = getPrefConstant(loc);
 			list.add(id);
 		}
 		return list;
+	}
+
+	public String getPrefConstant(Location loc) {
+		return getPrefConstant(loc.toString());
 	}
 
 	public String getPrefConstant(String name) {
@@ -52,10 +56,10 @@ public class Locations implements ISearchableProperty {
 		ModelRoot modelRoot = DataManager.getModelRoot();
 		Map map = modelRoot.getLocationsMap();
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			String id = getPrefConstant(string);
+			Location loc = (Location) iterator.next();
+			String id = getPrefConstant(loc);
 			if (id1.equals(id))
-				return string;
+				return loc.toString();
 		}
 		return null;
 	}

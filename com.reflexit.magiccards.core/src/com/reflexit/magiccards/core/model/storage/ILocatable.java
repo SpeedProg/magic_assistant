@@ -1,7 +1,9 @@
 package com.reflexit.magiccards.core.model.storage;
 
-public interface ILocatable {
-	void setLocation(String location);
+import com.reflexit.magiccards.core.model.Location;
 
-	String getLocation();
+public interface ILocatable {
+	void setLocation(Location location);
+
+	Location getLocation();
 }

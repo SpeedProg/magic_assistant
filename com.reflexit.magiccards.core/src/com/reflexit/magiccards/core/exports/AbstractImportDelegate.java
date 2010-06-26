@@ -12,6 +12,7 @@ import java.util.List;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -21,7 +22,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate {
 	private InputStream stream;
 	private boolean header;
-	private String location;
+	private Location location;
 	private ReportType type;
 	private ICardField[] fields = getNonTransientFeilds();
 	private ICardStore lookupStore = null;
@@ -51,7 +52,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.stream = stream;
 	}
 
-	public void init(InputStream st, boolean preview, String location, ICardStore lookupStore) {
+	public void init(InputStream st, boolean preview, Location location, ICardStore lookupStore) {
 		this.stream = st;
 		this.location = location;
 		this.lookupStore = lookupStore;
@@ -165,7 +166,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 	}
 
-	protected String getLocation() {
+	protected Location getLocation() {
 		return location;
 	}
 
@@ -197,7 +198,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.previewResult = previewResult;
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 

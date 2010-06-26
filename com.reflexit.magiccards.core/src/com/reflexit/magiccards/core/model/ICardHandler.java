@@ -22,9 +22,9 @@ public interface ICardHandler {
 
 	public void setActiveDeckHandler(IFilteredCardStore store);
 
-	public boolean copyCards(Collection cards, String to);
+	public boolean copyCards(Collection cards, Location to);
 
-	public boolean moveCards(Collection cards, String from, String to);
+	public boolean moveCards(Collection cards, Location from, Location to);
 
 	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException,
 	        InterruptedException;

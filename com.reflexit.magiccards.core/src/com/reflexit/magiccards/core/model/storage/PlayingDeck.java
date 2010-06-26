@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -77,5 +78,13 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		this.hand = new DrawDeck();
 		this.library = new DrawDeck();
 		this.library.addAll(randomize);
+	}
+
+	public void setLocation(Location location) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Location getLocation() {
+		return deck.getLocation();
 	}
 }

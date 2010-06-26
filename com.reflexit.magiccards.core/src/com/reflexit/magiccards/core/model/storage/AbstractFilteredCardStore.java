@@ -15,6 +15,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -28,9 +29,6 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
-	/**
-	 * 
-	 */
 	private static final CardGroup[] EMPTY_CARD_GROUP = new CardGroup[0];
 	protected Collection filteredList = null;
 	protected Map<String, CardGroup> groupsList = new LinkedHashMap<String, CardGroup>();
@@ -238,6 +236,14 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	public CardGroup getCardGroup(int index) {
 		return getCardGroups()[index];
+	}
+
+	public Location getLocation() {
+		return null;
+	}
+
+	public void setLocation(Location location) {
+		throw new UnsupportedOperationException();
 	}
 
 	protected void reload() {

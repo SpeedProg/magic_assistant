@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Location;
 
 /**
  * @author Alena
@@ -137,7 +138,7 @@ public class ModelRoot extends CardOrganizer {
 	 * @return map from string location to tree element
 	 */
 	public Map getLocationsMap() {
-		LinkedHashMap<String, CardElement> map = new LinkedHashMap<String, CardElement>();
+		LinkedHashMap<Location, CardElement> map = new LinkedHashMap<Location, CardElement>();
 		fillLocations(map, this);
 		return map;
 	}
@@ -146,7 +147,7 @@ public class ModelRoot extends CardOrganizer {
 	 * @param map
 	 * @param modelRoot
 	 */
-	private void fillLocations(LinkedHashMap<String, CardElement> map, CardElement root) {
+	private void fillLocations(LinkedHashMap<Location, CardElement> map, CardElement root) {
 		if (root instanceof CardCollection) {
 			map.put(root.getLocation(), root);
 		}

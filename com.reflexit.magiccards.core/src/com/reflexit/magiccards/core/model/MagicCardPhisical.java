@@ -8,11 +8,11 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private int count;
 	private float price;
 	private String comment;
-	private transient String location;
+	private Location location;
 	private String custom;
 	private boolean ownership;
 
-	public MagicCardPhisical(IMagicCard card, String location) {
+	public MagicCardPhisical(IMagicCard card, Location location) {
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;
@@ -26,6 +26,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			this.price = phi.getPrice();
 			this.ownership = phi.ownership;
 		}
+		if (location == null)
+			this.location = Location.NO_WHERE;
 		this.location = location;
 	}
 
@@ -75,11 +77,11 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		this.comment = comment;
 	}
 
-	public String getLocation() {
+	public Location getLocation() {
 		return this.location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
@@ -187,7 +189,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		return true;
 	}
 
-	public static boolean eqNull(String a, String b) {
+	public static boolean eqNull(Object a, Object b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
@@ -218,7 +220,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			setComment(value);
 			break;
 		case LOCATION:
-			setLocation(value);
+			setLocation(new Location(value));
 			break;
 		case CUSTOM:
 			setCustom(value);
