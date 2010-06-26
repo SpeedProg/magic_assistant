@@ -18,9 +18,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -48,8 +52,17 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
 		try {
 			XStream xs = DataManager.getXStream();
-			IMagicCard[] res = (IMagicCard[]) xs.fromXML(in);
-			return res;
+			LinkedHashMap<IMagicCard, Location> res = (LinkedHashMap<IMagicCard, Location>) xs.fromXML(in);
+			IMagicCard[] arr = new IMagicCard[res.size()];
+			int i = 0;
+			for (Iterator iterator = res.keySet().iterator(); iterator.hasNext(); i++) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				if (card instanceof MagicCardPhisical) {
+					((MagicCardPhisical) card).setLocation(res.get(card));
+				}
+				arr[i] = card;
+			}
+			return arr;
 		} finally {
 			try {
 				in.close();
@@ -98,7 +111,14 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(byteOut);
 		XStream xs = DataManager.getXStream();
-		xs.toXML(gadgets, out);
+		LinkedHashMap<IMagicCard, Location> cards = new LinkedHashMap<IMagicCard, Location>();
+		for (IMagicCard c : gadgets) {
+			Location loc = Location.NO_WHERE;
+			if (c instanceof MagicCardPhisical)
+				loc = ((MagicCardPhisical) c).getLocation();
+			cards.put(c, loc);
+		}
+		xs.toXML(cards, out);
 		try {
 			out.close();
 		} catch (IOException e) {
