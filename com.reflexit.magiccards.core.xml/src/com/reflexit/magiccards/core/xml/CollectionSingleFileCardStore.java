@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.xml;
 import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
@@ -24,15 +25,15 @@ public class CollectionSingleFileCardStore extends CollectionCardStore implement
 	/**
 	 * @param file
 	 */
-	public CollectionSingleFileCardStore(File file, String location) {
+	public CollectionSingleFileCardStore(File file, Location location) {
 		this(file, location, false);
 	}
 
-	public CollectionSingleFileCardStore(File file, String location, boolean initialize) {
+	public CollectionSingleFileCardStore(File file, Location location, boolean initialize) {
 		super(new SingleFileCardStorage(file, location, initialize));
 	}
 
-	public static CollectionCardStore create(File file, String location, boolean initialize) {
+	public static CollectionCardStore create(File file, Location location, boolean initialize) {
 		return new CollectionSingleFileCardStore(file, location, initialize);
 	}
 

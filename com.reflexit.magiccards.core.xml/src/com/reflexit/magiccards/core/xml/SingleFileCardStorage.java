@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.Path;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +8,7 @@ import java.util.Properties;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
@@ -19,21 +18,21 @@ import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable, IStorageInfo {
 	private transient static final String VIRTUAL = "virtual";
 	private transient File file;
-	private String location;
+	private Location location;
 	private String name;
 	private String comment;
 	private String type;
 	private Properties properties = new Properties();
 
-	SingleFileCardStorage(File file, String location) {
+	SingleFileCardStorage(File file, Location location) {
 		this(file, location, false);
 	}
 
-	SingleFileCardStorage(File file, String location, boolean initialize) {
+	SingleFileCardStorage(File file, Location location, boolean initialize) {
 		this.file = file;
 		this.location = location;
 		if (location != null)
-			this.name = new Path(new Path(location).lastSegment()).removeFileExtension().toString();
+			this.name = location.getName();
 		//System.err.println("Create sin store " + location + " 0x" + Integer.toHexString(System.identityHashCode(this)));
 		if (initialize) {
 			load();
@@ -81,7 +80,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		else
 			this.doSetList(new ArrayList<IMagicCard>());
 		if (getLocation() == null)
-			this.location = obj.key;
+			this.location = new Location(obj.key);
 		if (obj.name != null)
 			this.name = obj.name;
 		this.comment = obj.comment;
@@ -94,7 +93,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	 */
 	protected void storeFields(CardCollectionStoreObject obj) {
 		obj.list = new ArrayList(this.getList());
-		obj.key = getLocation();
+		obj.key = getLocation().toString();
 		obj.name = getName();
 		obj.comment = getComment();
 		obj.type = getType();
@@ -110,19 +109,19 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	@Override
-	public String getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
 	@Override
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		doSetLocation(location);
 		updateLocations();
 		autoSave();
 	}
 
-	protected final void doSetLocation(String location) {
-		this.location = location;
+	protected final void doSetLocation(Location location2) {
+		this.location = location2;
 	}
 
 	@Override

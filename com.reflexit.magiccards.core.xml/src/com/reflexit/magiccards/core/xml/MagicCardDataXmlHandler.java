@@ -11,6 +11,7 @@ import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -58,7 +59,7 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 			}
 			this.table.initialize();
 			for (File file : this.files) {
-				this.table.addFile(file, file.getName().replaceAll("\\.xml$", ""), true);
+				this.table.addFile(file, Location.createLocation(file, Location.NO_WHERE), true);
 			}
 		}
 	}

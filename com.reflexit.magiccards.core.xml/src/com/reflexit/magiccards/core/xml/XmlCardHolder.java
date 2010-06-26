@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -53,7 +54,8 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public ICardStore loadFromXml(String filename) {
-		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), filename, true);
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), new Location(
+		        filename), true);
 		return store;
 	}
 
@@ -173,7 +175,7 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public boolean copyCards(Collection cards, String to) {
+	public boolean copyCards(Collection cards, Location to) {
 		ICardStore<IMagicCard> store = LibraryDataXmlHandler.getInstance().getStore(to);
 		if (store == null)
 			return false;
@@ -188,7 +190,7 @@ public class XmlCardHolder implements ICardHandler {
 		return store.addAll(cards);
 	}
 
-	public boolean moveCards(Collection cards, String from, String to) {
+	public boolean moveCards(Collection cards, Location from, Location to) {
 		ICardStore<IMagicCard> sto = LibraryDataXmlHandler.getInstance().getStore(to);
 		if (sto == null)
 			return false;
@@ -202,22 +204,36 @@ public class XmlCardHolder implements ICardHandler {
 		}
 		boolean res = sto.addAll(list);
 		if (res) {
+			boolean allthesame = true;
 			if (from == null) {
 				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 					IMagicCard card = (IMagicCard) iterator.next();
 					if (!(card instanceof MagicCardPhisical))
-						continue;
-					String from2 = ((MagicCardPhisical) card).getLocation();
-					if (from2 != null) {
-						from = from2;
 						break;
+					Location from2 = ((MagicCardPhisical) card).getLocation();
+					if (from2 != null) {
+						if (from == null)
+							from = from2;
+						else if (!from.equals(from2)) {
+							allthesame = false;
+							break;
+						}
 					}
 				}
 			}
-			if (from != null) {
+			if (from != null && allthesame) {
 				ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler.getInstance().getStore(from);
 				if (sfrom2 != null)
 					sfrom2.removeAll(cards);
+			} else {
+				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+					IMagicCard card = (IMagicCard) iterator.next();
+					if (!(card instanceof MagicCardPhisical))
+						continue;
+					Location from2 = ((MagicCardPhisical) card).getLocation();
+					ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler.getInstance().getStore(from2);
+					sfrom2.remove(card);
+				}
 			}
 		}
 		return res;

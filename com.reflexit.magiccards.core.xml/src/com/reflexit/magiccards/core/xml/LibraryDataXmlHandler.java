@@ -9,6 +9,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
@@ -42,7 +43,6 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		Collection<CardElement> colls = container.getAllElements();
 		// init super
 		CardCollection def = DataManager.getModelRoot().getDefaultLib();
-		this.table.clear();
 		for (CardElement elem : colls) {
 			try {
 				this.table.addFile(elem.getFile(), elem.getLocation(), false);
@@ -67,22 +67,22 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		this.table = new CollectionMultiFileCardStore();
 	}
 
-	public String getLocation() {
+	public Location getLocation() {
 		Expr root = getFilter().getRoot();
-		String loc = findLocationFilter(root);
+		Location loc = findLocationFilter(root);
 		if (loc != null)
 			return loc;
 		return table.getLocation();
 	}
 
-	private String findLocationFilter(Expr root) {
+	private Location findLocationFilter(Expr root) {
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
 			if (bin.getLeft() instanceof Node
 			        && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
-				return bin.getRight().toString();
+				return new Location(bin.getRight().toString());
 			}
-			String loc = findLocationFilter(bin.getLeft());
+			Location loc = findLocationFilter(bin.getLeft());
 			if (loc != null)
 				return loc;
 			loc = findLocationFilter(bin.getRight());
@@ -121,14 +121,14 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		} else if (event.getSource() instanceof CardElement) {
 			CardElement elem = (CardElement) event.getSource();
 			if (event.getType() == CardEvent.RENAME_CONTAINER) {
-				this.table.renameLocation((String) event.getData(), elem.getLocation());
+				this.table.renameLocation((Location) event.getData(), elem.getLocation());
 				reload();
 			}
 		} else if (event.getType() == CardEvent.UPDATE) {
 			// need to save xml
 			if (event.getData() instanceof MagicCardPhisical) {
 				MagicCardPhisical c = (MagicCardPhisical) event.getData();
-				String location = c.getLocation();
+				Location location = c.getLocation();
 				AbstractCardStoreWithStorage storage = table.getStorage(location);
 				if (storage != null) {
 					storage.getStorage().save();
@@ -156,7 +156,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		return count;
 	}
 
-	public ICardStore<IMagicCard> getStore(String location) {
+	public ICardStore<IMagicCard> getStore(Location location) {
 		initialize();
 		if (location == null)
 			return table.getStore(table.getLocation());

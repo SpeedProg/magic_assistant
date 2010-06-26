@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.xml;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -37,11 +38,13 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implem
 		}
 	}
 
-	public String getLocation() {
+	@Override
+	public Location getLocation() {
 		return table.getLocation();
 	}
 
-	public void setLocation(String location) {
+	@Override
+	public void setLocation(Location location) {
 		table.setLocation(location);
 	}
 }

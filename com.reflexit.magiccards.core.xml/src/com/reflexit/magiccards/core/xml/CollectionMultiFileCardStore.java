@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.CoreException;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
@@ -39,11 +35,11 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	 * @param file
 	 * @param location
 	 */
-	public CollectionCardStore addFile(final File file, final String location) {
+	public CollectionCardStore addFile(final File file, final Location location) {
 		return addFile(file, location, true);
 	}
 
-	public synchronized CollectionCardStore addFile(final File file, final String location, boolean initialize) {
+	public synchronized CollectionCardStore addFile(final File file, final Location location, boolean initialize) {
 		if (location != null && map.containsKey(location)) {
 			return (CollectionCardStore) map.get(location);
 		}
@@ -60,21 +56,14 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	}
 
 	public File getFile(final IMagicCard card) {
-		try {
-			if (card instanceof MagicCard) {
-				String key = card.getSet();
-				return new File(XmlCardHolder.getDbFolder(), getExtFileName(key) + ".xml");
-			} else if (card instanceof MagicCardPhisical) {
-				String key = getLocation(card);
-				AbstractCardStoreWithStorage<IMagicCard> subTable = this.map.get(key);
-				if (subTable == null)
-					throw new MagicException("Invalid Key: " + key);
-				return ((SingleFileCardStorage) subTable.getStorage()).getFile();
-			} else
-				throw new MagicException("Unknown card type");
-		} catch (CoreException e) {
-			throw new MagicException("Can't resolve file: ", e);
-		}
+		if (card instanceof MagicCardPhisical) {
+			Location key = getLocation(card);
+			AbstractCardStoreWithStorage<IMagicCard> subTable = this.map.get(key);
+			if (subTable == null)
+				throw new MagicException("Invalid Key: " + key);
+			return ((SingleFileCardStorage) subTable.getStorage()).getFile();
+		} else
+			throw new MagicException("Unknown card type:" + card.getClass());
 	}
 
 	public int getCount() {
@@ -87,56 +76,23 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 		return count;
 	}
 
-	public void clear() {
-		for (AbstractCardStoreWithStorage table : map.values()) {
-			//table.clear();
-		}
-	}
-
 	@Override
-	protected String getLocation(IMagicCard card) {
-		String loc = null;
+	protected Location getLocation(IMagicCard card) {
+		Location loc = null;
 		if (card instanceof MagicCardPhisical) {
 			loc = ((MagicCardPhisical) card).getLocation();
-		} else if (card instanceof MagicCard) {
-			loc = card.getSet();
 		}
 		if (loc != null)
 			return loc;
 		return getLocation();
 	}
 
-	public IMagicCard getCard(int id) {
-		Collection<IMagicCard> cards = getCards(id);
-		if (cards.size() > 0) {
-			return cards.iterator().next();
-		}
-		return null;
-	}
-
-	public Collection<IMagicCard> getCards(int id) {
-		ArrayList<IMagicCard> arr = new ArrayList<IMagicCard>();
-		for (AbstractCardStoreWithStorage table : map.values()) {
-			if (table instanceof ICardCollection) {
-				IMagicCard card = ((ICardCollection<IMagicCard>) table).getCard(id);
-				if (card != null) {
-					arr.add(card);
-				}
-			}
-		}
-		return arr;
-	}
-
-	public File getFile(String location) {
+	public File getFile(Location location) {
 		AbstractCardStoreWithStorage storage = getStorage(location);
 		if (storage == null)
 			return null;
 		File file = ((SingleFileCardStorage) storage.getStorage()).getFile();
 		return file;
-	}
-
-	private String getExtFileName(String location) {
-		return location.replaceAll("[\\W]", "_");
 	}
 
 	public String getComment() {
@@ -149,5 +105,14 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 
 	public boolean isVirtual() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public synchronized boolean doAddCard(IMagicCard card) {
+		Location loc = getLocation();
+		if (card instanceof MagicCardPhisical)
+			loc = ((MagicCardPhisical) card).getLocation();
+		MagicCardPhisical c = new MagicCardPhisical(card, loc);
+		return super.doAddCard(c);
 	}
 }

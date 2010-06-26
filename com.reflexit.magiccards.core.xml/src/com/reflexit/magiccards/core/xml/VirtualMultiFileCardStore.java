@@ -10,27 +10,33 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
+import org.eclipse.core.runtime.CoreException;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
+import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardCollection;
 
 /**
  * @author Alena
  * 
  */
-public class VirtualMultiFileCardStore extends CollectionMultiFileCardStore {
+public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
 	public VirtualMultiFileCardStore() {
 		super();
 	}
 
-	@Override
-	public synchronized CollectionCardStore addFile(final File file, final String location, boolean initialize) {
+	public synchronized CollectionCardStore addFile(final File file, final Location location, boolean initialize) {
 		if (location != null && map.containsKey(location)) {
 			return (CollectionCardStore) map.get(location);
 		}
@@ -41,7 +47,6 @@ public class VirtualMultiFileCardStore extends CollectionMultiFileCardStore {
 		return store;
 	}
 
-	@Override
 	public int getCount() {
 		return getStorage().size();
 	}
@@ -78,5 +83,44 @@ public class VirtualMultiFileCardStore extends CollectionMultiFileCardStore {
 			}
 		}
 		this.removeAll(duplicates);
+	}
+
+	@Override
+	protected Location getLocation(IMagicCard card) {
+		Location loc = new Location(((MagicCard) card).getSet());
+		return loc;
+	}
+
+	@Override
+	public Location getLocation() {
+		return null;
+	}
+
+	public String getComment() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String getName() {
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean isVirtual() {
+		throw new UnsupportedOperationException();
+	}
+
+	private String getExtFileName(String location) {
+		return location.replaceAll("[\\W]", "_");
+	}
+
+	public File getFile(final IMagicCard card) {
+		try {
+			if (card instanceof MagicCard) {
+				String key = card.getSet();
+				return new File(XmlCardHolder.getDbFolder(), getExtFileName(key) + ".xml");
+			} else
+				throw new MagicException("Unknown card type");
+		} catch (CoreException e) {
+			throw new MagicException("Can't resolve file: ", e);
+		}
 	}
 }

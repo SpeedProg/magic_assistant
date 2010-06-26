@@ -14,6 +14,7 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
@@ -25,11 +26,11 @@ public class DbFileCardStore extends CollectionCardStore implements ICardCountab
 	/**
 	 * @param file
 	 */
-	public DbFileCardStore(File file, String location) {
+	public DbFileCardStore(File file, Location location) {
 		this(file, location, false);
 	}
 
-	public DbFileCardStore(File file, String location, boolean initialize) {
+	public DbFileCardStore(File file, Location location, boolean initialize) {
 		super(new SingleFileCardStorage(file, location, initialize), false);
 	}
 
