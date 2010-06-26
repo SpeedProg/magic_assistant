@@ -5,6 +5,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -68,6 +70,9 @@ public class NewDeckWizardPage extends NewCardElementWizardPage {
 		virtual.setText("This " + getElementTypeName()
 		        + " is virtual (affect card ownership attribute and cards operations)");
 		virtual.setToolTipText("Virtual flag affect move/copy/inreaste/descrease operations on a deck. Also it automatically set flags to own for non-virtual deck.");
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = ((GridLayout) container.getLayout()).numColumns;
+		virtual.setLayoutData(gd);
 	}
 
 	@Override
