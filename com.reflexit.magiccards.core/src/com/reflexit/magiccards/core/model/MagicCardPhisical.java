@@ -8,7 +8,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private int count;
 	private float price;
 	private String comment;
-	private Location location;
+	private transient Location location;
 	private String custom;
 	private boolean ownership;
 
