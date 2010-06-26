@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -61,7 +62,7 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	 * @param preferenceStore
 	 * @param portableString
 	 */
-	public void setLocationFilter(String loc) {
+	public void setLocationFilter(Location loc) {
 		IPreferenceStore preferenceStore = getPreferenceStore();
 		Collection ids = Locations.getInstance().getIds();
 		String locId = Locations.getInstance().getPrefConstant(loc);

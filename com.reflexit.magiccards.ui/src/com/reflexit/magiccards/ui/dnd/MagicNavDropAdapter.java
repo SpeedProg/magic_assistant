@@ -24,6 +24,7 @@ import java.util.Arrays;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -56,7 +57,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 		if (toDropArray.length == 0)
 			return false;
 		try {
-			String targetLocation = ((CardElement) idata).getLocation();
+			Location targetLocation = ((CardElement) idata).getLocation();
 			if (curEvent.detail == DND.DROP_MOVE)
 				return DataManager.getCardHandler().moveCards(Arrays.asList(toDropArray), null, targetLocation);
 			else

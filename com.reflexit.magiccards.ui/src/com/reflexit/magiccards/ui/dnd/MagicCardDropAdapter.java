@@ -24,6 +24,7 @@ import java.util.Arrays;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -52,7 +53,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		if (toDropArray.length == 0)
 			return false;
 		try {
-			String targetLocation = determineLocation();
+			Location targetLocation = determineLocation();
 			if (targetLocation == null)
 				throw new MagicException("Invalid drop target");
 			if (curEvent.detail == DND.DROP_MOVE)
@@ -69,12 +70,9 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		}
 	}
 
-	private String determineLocation() {
+	private Location determineLocation() {
 		IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-		String targetLocation = null;
-		if (target instanceof ILocatable) {
-			targetLocation = ((ILocatable) target).getLocation();
-		}
+		Location targetLocation = ((ILocatable) target).getLocation();
 		return targetLocation;
 	}
 

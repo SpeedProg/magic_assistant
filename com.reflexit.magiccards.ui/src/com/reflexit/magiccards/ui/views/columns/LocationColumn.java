@@ -13,6 +13,7 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -37,7 +38,7 @@ public class LocationColumn extends GenColumn {
 	public String getText(Object element) {
 		if (element instanceof MagicCardPhisical) {
 			MagicCardPhisical m = (MagicCardPhisical) element;
-			String loc = m.getLocation();
+			String loc = m.getLocation().toString();
 			if (loc == null)
 				return "";
 			if (loc.endsWith(".xml")) {
@@ -108,7 +109,7 @@ public class LocationColumn extends GenColumn {
 			protected Object getValue(Object element) {
 				if (element instanceof MagicCardPhisical) {
 					MagicCardPhisical card = (MagicCardPhisical) element;
-					String loc = card.getLocation();
+					String loc = card.getLocation().toString();
 					return loc;
 				}
 				return null;
@@ -122,7 +123,7 @@ public class LocationColumn extends GenColumn {
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					cardStore.remove(card);
-					card.setLocation((String) value);
+					card.setLocation(new Location((String) value));
 					cardStore.add(card);
 					// update
 					viewer.update(element, null);

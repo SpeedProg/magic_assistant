@@ -139,7 +139,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 					container = (CardOrganizer) obj;
 				else
 					container = ((CardElement) obj).getParent();
-				String loc = container.getLocation();
+				String loc = container.getLocation().toString();
 				if (loc.length() == 0)
 					this.containerText.setText(container.getName()); // only fake ones
 				else
@@ -172,7 +172,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
 				CardOrganizer org = (CardOrganizer) result[0];
-				this.containerText.setText(org.getLocation());
+				this.containerText.setText(org.getLocation().toString());
 			}
 		}
 	}

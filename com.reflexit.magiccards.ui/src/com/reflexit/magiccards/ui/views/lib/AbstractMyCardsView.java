@@ -38,6 +38,7 @@ import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -125,8 +126,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						if (o instanceof IMagicCard)
 							list.add((IMagicCard) o);
 					}
-					String location = ((ILocatable) DataManager.getCardHandler().getCardCollectionHandler(id)
-					        .getCardStore()).getLocation();
+					Location location = DataManager.getCardHandler().getCardCollectionHandler(id).getCardStore()
+					        .getLocation();
 					DataManager.getCardHandler().moveCards(list, null, location);
 				}
 			}
