@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
-import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
 import com.reflexit.magiccards.core.xml.VirtualMultiFileCardStore;
 
 public class VirtualMultiFileCardStoreTest extends TestCase {
 	private static final String MORNINGTIDE = "Morningtide";
 	private static final String LORWYN = "Lorwyn";
-	CollectionMultiFileCardStore store;
+	VirtualMultiFileCardStore store;
 	protected MagicCard m1;
 	protected MagicCard m2;
 
@@ -35,7 +35,7 @@ public class VirtualMultiFileCardStoreTest extends TestCase {
 	private void addStore(String name) throws IOException {
 		File tempFile1 = File.createTempFile(name, ".xml");
 		tempFile1.deleteOnExit();
-		this.store.addFile(tempFile1, name, false);
+		this.store.addFile(tempFile1, new Location(name), false);
 	}
 
 	public void testAddCard() {

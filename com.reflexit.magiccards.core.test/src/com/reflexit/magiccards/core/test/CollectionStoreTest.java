@@ -12,6 +12,7 @@ package com.reflexit.magiccards.core.test;
 
 import java.io.File;
 
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
 
@@ -22,12 +23,12 @@ import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
 public class CollectionStoreTest extends DeckStoreTest {
 	@Override
 	protected void setUp() throws Exception {
-		String name = "aaa";
+		Location loc = new Location("aaa");
 		tempFile = File.createTempFile("coll", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new CollectionMultiFileCardStore();
-		((CollectionMultiFileCardStore) this.store).addFile(tempFile, name);
-		((CollectionMultiFileCardStore) this.store).setLocation(name);
+		((CollectionMultiFileCardStore) this.store).addFile(tempFile, loc);
+		((CollectionMultiFileCardStore) this.store).setLocation(loc);
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
 		this.m2 = CardGenerator.generateRandomCard();

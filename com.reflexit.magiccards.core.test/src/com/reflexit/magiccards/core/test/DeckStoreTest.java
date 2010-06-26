@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
@@ -36,10 +37,10 @@ public class DeckStoreTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		String name = "aaa";
+		Location loc = new Location("Decks/aaa.xml");
 		tempFile = File.createTempFile("deck", ".xml");
 		tempFile.deleteOnExit();
-		this.store = new CollectionSingleFileCardStore(tempFile, "Decks/" + name + ".xml");
+		this.store = new CollectionSingleFileCardStore(tempFile, loc);
 		//((CollectionSingleFileCardStore) this.store).setName(name);
 		((CollectionSingleFileCardStore) this.store).setType(IStorageInfo.DECK_TYPE);
 		this.m1 = CardGenerator.generateRandomCard();
@@ -48,14 +49,26 @@ public class DeckStoreTest extends TestCase {
 		this.m2.setName("name 2");
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		tempFile.delete();
+		super.tearDown();
+	}
+
 	public void testName() {
 		assertEquals("aaa", this.store.getName());
 	}
 
-	public void testAddCard() {
+	private MagicCard createDCard() {
 		MagicCard a = CardGenerator.generateRandomCard();
+		a.setSet("Elena");
+		return a;
+	}
+
+	public void testAddCard() {
+		MagicCard a = createDCard();
 		this.store.add(a);
-		assertEquals(this.store.size(), 1);
+		assertEquals(1, this.store.size());
 		for (Object element : this.store) {
 			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
@@ -63,7 +76,7 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testAddAll() {
-		MagicCard a = CardGenerator.generateRandomCard();
+		MagicCard a = createDCard();
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		list.add(a);
 		this.store.addAll(list);
@@ -196,9 +209,9 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testAddCardCheckSaved() {
-		MagicCard a = CardGenerator.generateRandomCard();
+		MagicCard a = createDCard();
 		this.store.add(a);
-		String def = ((ILocatable) this.store).getLocation();
+		Location def = ((ILocatable) this.store).getLocation();
 		File tempFile1 = tempFile;
 		CollectionSingleFileCardStore loaded = new CollectionSingleFileCardStore(tempFile1, def, true);
 		assertEquals(1, loaded.size());
