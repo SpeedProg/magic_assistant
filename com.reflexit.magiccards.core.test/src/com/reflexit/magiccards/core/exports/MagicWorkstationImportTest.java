@@ -51,5 +51,6 @@ public class MagicWorkstationImportTest extends AbstarctImportTest {
 	public void test_brackets() {
 		parseLine("\"Forest (2)\";\"1\";\"C\";\"8E\";\"Lnd\";\"\";\"\";\"Basic Land - Forest\";\"0\";\"348\";\"\"");
 		assertEquals("Land", card1.getRarity());
+		assertEquals("Eighth Edition", card1.getSet());
 	}
 }
