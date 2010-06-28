@@ -28,7 +28,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public void setCost(String cost) {
-		this.cost = cost;
+		this.cost = cost.intern();
 	}
 
 	/* (non-Javadoc)
@@ -72,7 +72,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public void setRarity(String rarity) {
-		this.rarity = rarity;
+		this.rarity = rarity.intern();
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +83,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public void setSet(String setName) {
-		this.edition = setName;
+		this.edition = setName.intern();
 	}
 
 	/* (non-Javadoc)
@@ -110,7 +110,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public void setPower(String power) {
-		this.power = power;
+		this.power = power.intern();
 	}
 
 	/* (non-Javadoc)
@@ -121,7 +121,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public void setToughness(String toughness) {
-		this.toughness = toughness;
+		this.toughness = toughness.intern();
 	}
 
 	public static float convertFloat(String str) {
