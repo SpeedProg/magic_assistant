@@ -53,6 +53,8 @@ public class Editions implements ISearchableProperty {
 				return name;
 			}
 		}
+		if (abbr.equals("8E"))
+			return getNameByAbbr("8ED");
 		return null;
 	}
 
