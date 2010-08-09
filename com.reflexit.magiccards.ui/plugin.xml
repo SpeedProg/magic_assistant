@@ -199,7 +199,7 @@
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.sendBug"
-            name="Send Bug">
+            name="Send Bug or Feature Request">
       </command>
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
