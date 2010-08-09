@@ -60,7 +60,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.card.CardDescView"
-            icon="icons/back_32.jpg"
+            icon="icons/card_view.png"
             id="com.reflexit.magiccards.ui.views.card.CardDescView"
             name="Card Info">
       </view>
