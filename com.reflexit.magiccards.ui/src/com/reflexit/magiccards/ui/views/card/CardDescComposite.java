@@ -6,16 +6,20 @@ package com.reflexit.magiccards.ui.views.card;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
@@ -26,7 +30,9 @@ class CardDescComposite extends Composite {
 	private Image image;
 	private Label imageControl;
 	private final CardDescView cardDescView;
-	private Browser textValue;
+	private Browser textBrowser;
+	private Text textBackup;
+	private Composite details;
 	private IMagicCard card;
 	private Image loadingImage;
 	private Image cardNotFound;
@@ -40,26 +46,33 @@ class CardDescComposite extends Composite {
 		this.cardDescView = cardDescView;
 		Composite panel = this;
 		panel.setFont(parent.getFont());
-		panel.setLayout(new GridLayout(2, false));
+		panel.setLayout(new GridLayout());
 		panel.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		this.imageControl = new Label(panel, SWT.NONE);
 		GridDataFactory.fillDefaults() //
 		        .grab(true, false) //
-		        .align(SWT.CENTER, SWT.BEGINNING)//
-		        .span(2, 0) //
+		        .align(SWT.BEGINNING, SWT.BEGINNING)//
 		        .hint(width, hight).applyTo(this.imageControl);
-		this.textValue = new Browser(panel, SWT.WRAP | SWT.INHERIT_DEFAULT);
-		this.textValue.setFont(panel.getFont());
-		this.textValue.setBackground(panel.getBackground());
-		GridDataFactory.fillDefaults()//
-		        .align(SWT.FILL, SWT.FILL)//
-		        .grab(true, true)//
-		        .span(2, 0) //
-		        .applyTo(this.textValue);
 		createImages();
 		this.powerProvider = new PowerColumn(MagicCardField.POWER, null, null);
 		this.toughProvider = new PowerColumn(MagicCardField.TOUGHNESS, null, null);
-		this.reload(IMagicCard.DEFAULT);
+		details = new Composite(panel, SWT.INHERIT_DEFAULT);
+		details.setBackground(panel.getBackground());
+		GridDataFactory.fillDefaults()//
+		        .align(SWT.FILL, SWT.FILL)//
+		        .grab(true, true)//
+		        .applyTo(details);
+		details.setLayout(new StackLayout());
+		this.textBackup = new Text(details, SWT.WRAP);
+		this.textBackup.setFont(panel.getFont());
+		try {
+			this.textBrowser = new Browser(details, SWT.WRAP | SWT.INHERIT_DEFAULT);
+			this.textBrowser.setFont(panel.getFont());
+			swapVisibility(textBrowser, textBackup);
+		} catch (Exception e) {
+			MagicUIActivator.log(e);
+			swapVisibility(textBackup, textBrowser);
+		}
 	}
 
 	private void createImages() {
@@ -107,21 +120,55 @@ class CardDescComposite extends Composite {
 		ld.heightHint = ld.minimumHeight;
 		this.layout(true, true);
 	}
+	private boolean logOnce = false;
 
 	void reload(IMagicCard card) {
+		this.card = card;
+		if (card == IMagicCard.DEFAULT) {
+			return;
+		}
 		try {
-			this.card = card;
-			if (card == IMagicCard.DEFAULT) {
-				return;
-			}
-			String data = getCardDataHtml(card);
-			String text = card.getOracleText();
-			this.textValue.setText(SymbolConverter.wrapHtml(data + text, this));
 			setImage(this.loadingImage);
 		} catch (RuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MagicUIActivator.log(e);
 		}
+		try {
+			String data = getCardDataHtml(card);
+			String text = card.getOracleText();
+			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text, this));
+			swapVisibility(textBrowser, textBackup);
+		} catch (Exception e) {
+			if (logOnce == false) {
+				MagicUIActivator.log(e);
+				logOnce = true;
+			}
+			String data = getCardDataText(card);
+			String text = card.getOracleText();
+			text = text.replaceAll("<br>", "\n");
+			this.textBackup.setText(data + text);
+			swapVisibility(textBackup, textBrowser);
+		}
+	}
+
+	private void swapVisibility(Control con1, Control con2) {
+		((StackLayout) details.getLayout()).topControl = con1;
+		details.layout(true, true);
+		redraw();
+	}
+
+	private String getCardDataText(IMagicCard card) {
+		String pt = "";
+		if (card.getToughness() != null && card.getToughness().length() > 0) {
+			pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
+		}
+		String data = card.getName() + "\n" + card.getType();
+		if (pt.length() > 0) {
+			data += "\n" + pt;
+		} else {
+			data += "\n";
+		}
+		data += "\n" + card.getSet() + " (" + card.getRarity() + ") " + "\n";
+		return data;
 	}
 
 	private String getCardDataHtml(IMagicCard card) {
@@ -135,16 +182,6 @@ class CardDescComposite extends Composite {
 		} else {
 			data += "<br/>";
 		}
-		//		String img = "";
-		//		try {
-		//			String edition = card.getSet();
-		//			String editionAbbr = Editions.getInstance().getAbbrByName(edition);
-		//			URL url = CardCache.createSetImageRemoteURL(editionAbbr, card.getRarity());
-		//			img = url == null ? "" : "<img align=middle alt=\"\" height=12 src=\"" + url.toExternalForm() + "\"/>";
-		//		} catch (IOException e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
 		data += "<br/>" + card.getSet() + " (" + card.getRarity() + ") " + "<p/>";
 		return data;
 	}
