@@ -53,4 +53,8 @@ public class ReportType {
 			return null;
 		return types.get(key);
 	}
+
+	public String getExtension() {
+		return name;
+	}
 }

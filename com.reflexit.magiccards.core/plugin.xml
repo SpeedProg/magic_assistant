@@ -11,16 +11,19 @@
             xmlFormat="true">
       </deckFormat>
       <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.ClassicExportDelegate"
             id="classic"
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
             label="classic">
       </deckFormat>
       <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
             id="csv"
             importDelegate="com.reflexit.magiccards.core.exports.CsvImportDelegate"
             label="csv">
       </deckFormat>
       <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.TableExportDelegate"
             id="table"
             importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
             label="table">

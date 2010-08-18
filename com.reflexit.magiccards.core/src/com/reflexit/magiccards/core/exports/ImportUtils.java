@@ -45,7 +45,7 @@ public class ImportUtils {
 				Location location = filteredLibrary.getLocation();
 				IImportDelegate worker;
 				try {
-					worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);
+					worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
 				} catch (Exception e) {
 					throw new InvocationTargetException(e);
 				}
@@ -70,7 +70,7 @@ public class ImportUtils {
 	        IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		IImportDelegate worker;
 		try {
-			worker = new ImportFactory<IMagicCard>().getImportWorker(reportType);
+			worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
 		} catch (Exception e) {
 			throw new InvocationTargetException(e);
 		}

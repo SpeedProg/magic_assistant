@@ -86,6 +86,16 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="exportDelegate" type="string">
+            <annotation>
+               <documentation>
+                  class that implements export for this format
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":com.reflexit.magiccards.core.exports.IExportDelegate"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

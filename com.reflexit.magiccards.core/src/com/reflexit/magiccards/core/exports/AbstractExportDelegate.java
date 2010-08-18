@@ -3,10 +3,7 @@ package com.reflexit.magiccards.core.exports;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.lang.reflect.InvocationTargetException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,46 +14,15 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class ExportWorker implements ICoreRunnableWithProgress {
-	File file;
-	boolean header;
-	IFilteredCardStore<IMagicCard> store;
+public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProgress, IExportDelegate<T> {
+	protected boolean header;
+	protected IFilteredCardStore<T> store;
+	protected OutputStream st;
 
-	public ExportWorker(File file, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
-		super();
-		this.file = file;
+	public void init(OutputStream st, boolean header, IFilteredCardStore<T> filteredLibrary) {
+		this.st = st;
 		this.header = header;
 		this.store = filteredLibrary;
-	}
-
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		runCsvExport(monitor);
-	}
-
-	public void runCsvExport(IProgressMonitor monitor) throws InvocationTargetException {
-		CsvExporter exporter = null;
-		try {
-			exporter = new CsvExporter(new FileOutputStream(file));
-			exportToTable(monitor, store, exporter, header);
-		} catch (FileNotFoundException e) {
-			throw new InvocationTargetException(e);
-		} finally {
-			if (exporter != null)
-				exporter.close();
-		}
-	}
-
-	public void runTablePipeExport(IProgressMonitor monitor) throws InvocationTargetException {
-		TableExporter exporter = null;
-		try {
-			exporter = new TableExporter(new FileOutputStream(file), "|");
-			exportToTable(monitor, store, exporter, header);
-		} catch (FileNotFoundException e) {
-			throw new InvocationTargetException(e);
-		} finally {
-			if (exporter != null)
-				exporter.close();
-		}
 	}
 
 	public static void exportToTable(IProgressMonitor monitor, IFilteredCardStore<IMagicCard> store,

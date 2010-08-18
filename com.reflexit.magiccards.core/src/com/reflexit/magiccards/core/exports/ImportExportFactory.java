@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,10 +23,11 @@ import java.util.Map;
 import com.reflexit.magiccards.core.Activator;
 
 /**
- * Import factory - gets instance of worker class by its type
+ * Import/Export factory - gets instance of worker class by its type
  */
-public class ImportFactory<T> {
+public class ImportExportFactory<T> {
 	private static Map<ReportType, String> importRegistry = new LinkedHashMap<ReportType, String>();
+	private static Map<ReportType, String> exportRegistry = new LinkedHashMap<ReportType, String>();
 
 	public IImportDelegate<T> getImportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
 	        IllegalAccessException {
@@ -38,6 +40,20 @@ public class ImportFactory<T> {
 			return null;
 		Class loadClass = getClass().getClassLoader().loadClass(className);
 		newInstance = (IImportDelegate<T>) loadClass.newInstance();
+		return newInstance;
+	};
+
+	public IExportDelegate<T> getExportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
+	        IllegalAccessException {
+		if (exportRegistry.size() == 0) {
+			initRegistry();
+		}
+		IExportDelegate<T> newInstance;
+		String className = exportRegistry.get(type);
+		if (className == null)
+			return null;
+		Class loadClass = getClass().getClassLoader().loadClass(className);
+		newInstance = (IExportDelegate<T>) loadClass.newInstance();
 		return newInstance;
 	};
 
@@ -58,24 +74,38 @@ public class ImportFactory<T> {
 		String id = elp.getAttribute("id");
 		String label = elp.getAttribute("label");
 		String imp = elp.getAttribute("importDelegate");
+		String exp = elp.getAttribute("exportDelegate");
 		String sxml = elp.getAttribute("xmlFormat");
 		boolean xmlFormat = Boolean.valueOf(sxml);
 		ReportType rt = ReportType.createReportType(id, label, xmlFormat);
-		addWorker(rt, imp);
+		addImportWorker(rt, imp);
+		addExportWorker(rt, exp);
 	}
 
-	public static void addWorker(ReportType type, String clazz) {
-		importRegistry.put(type, clazz);
+	public static void addImportWorker(ReportType type, String clazz) {
+		addWorker(importRegistry, type, clazz);
 	}
 
-	public static void removeWorker(ReportType type) {
-		importRegistry.remove(type);
+	public static void addExportWorker(ReportType type, String clazz) {
+		addWorker(exportRegistry, type, clazz);
 	}
 
-	public Collection<ReportType> getTypes() {
+	private static void addWorker(Map<ReportType, String> registry, ReportType type, String clazz) {
+		if (clazz != null)
+			registry.put(type, clazz);
+	}
+
+	public Collection<ReportType> getImportTypes() {
 		if (importRegistry.size() == 0) {
 			initRegistry();
 		}
-		return importRegistry.keySet();
+		return new ArrayList<ReportType>(importRegistry.keySet());
+	}
+
+	public Collection<ReportType> getExportTypes() {
+		if (exportRegistry.size() == 0) {
+			initRegistry();
+		}
+		return new ArrayList<ReportType>(exportRegistry.keySet());
 	}
 }
