@@ -18,13 +18,17 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -33,10 +37,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.exports.ExportWorker;
 import com.reflexit.magiccards.core.exports.FileUtils;
+import com.reflexit.magiccards.core.exports.IExportDelegate;
+import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
@@ -57,12 +63,12 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	private IStructuredSelection initialResourceSelection;
 	private TreeViewer listViewer;
 	private Button includeHeader;
-	private Button exportXml;
 	private final ArrayList typeButtons = new ArrayList();
 	private static final String ID = DeckExportPage.class.getName();
 	private ReportType reportType;
 	private PreferenceStore store;
 	private LocationFilterPreferencePage locPage;
+	private Combo typeCombo;
 
 	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -80,12 +86,15 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		}
 		boolean res = false;
 		try {
-			//			final ExportWork work = new ExportWork(listViewer.getCheckedElements(), // 
-			//			        fileName, //
-			//			        reportType, includeHeader.getSelection(), getTimeUnitsName());
-			if (reportType == reportType.CSV) {
-				locPage.performOk();
+			final IExportDelegate<IMagicCard> worker;
+			try {
+				worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
+			} catch (Exception e) {
+				throw new InvocationTargetException(e);
+			}
+			if (worker != null) {
 				// TODO: export selection only
+				locPage.performOk();
 				final boolean header = includeHeader.getSelection();
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -95,15 +104,18 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 							MagicCardFilter locFilter = new MagicCardFilter();
 							locFilter.update(storeToMap());
 							filteredLibrary.update(locFilter);
-							ExportWorker exportWorker = new ExportWorker(new File(fileName), header, filteredLibrary);
-							exportWorker.run(monitor);
+							worker.init(new FileOutputStream(fileName), header, filteredLibrary);
+							worker.run(monitor);
+						} catch (FileNotFoundException e) {
+							throw new InvocationTargetException(e);
 						} finally {
 							filteredLibrary.update(old); // restore filter
 						}
 					}
 				};
 				getRunnableContext().run(true, true, work);
-			} else {
+			}
+			if (reportType == reportType.XML) {
 				// TODO: export multiple files? zip?
 				try {
 					Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
@@ -192,18 +204,20 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	public void handleEvent(final Event event) {
-		if (event.widget instanceof Button) {
-			if (event.type == SWT.Selection) {
-				Object data = event.widget.getData();
-				if (data instanceof ReportType
-				// && ((Button) event.widget).getSelection()
-				) {
-					reportType = (ReportType) data;
-				}
+		if (event.type == SWT.Selection && event.widget instanceof Combo) {
+			Object data = event.widget.getData(((Combo) event.widget).getText());
+			if (data instanceof ReportType) {
+				fileName = fileName.replaceAll("\\Q" + getFileExtension() + "\\E$", "");
+				reportType = (ReportType) data;
 			}
 		}
 		updateWidgetEnablements();
 		updatePageCompletion();
+	}
+
+	protected String getFileExtension() {
+		String ext = "." + reportType.getExtension();
+		return ext;
 	}
 
 	/**
@@ -231,8 +245,8 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
 		setControl(composite);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
-		        MagicUIActivator.getDefault().PLUGIN_ID + ".export"); //$NON-NLS-1$
+		PlatformUI.getWorkbench().getHelpSystem()
+		        .setHelp(composite, MagicUIActivator.getDefault().PLUGIN_ID + ".export"); //$NON-NLS-1$
 	}
 
 	/**
@@ -245,10 +259,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	private void defaultPrompt() {
-		if (reportType == ReportType.XML)
-			setMessage("Export to XML");
-		else if (reportType == ReportType.CSV)
-			setMessage("Export to SCV");
+		setMessage("Export to " + reportType.getLabel());
 	}
 
 	@Override
@@ -271,9 +282,9 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			// restore options
 			String type = dialogSettings.get(REPORT_TYPE_SETTING);
 			if (type != null)
-				selectTypeButtons(type);
+				selectReportType(ReportType.valueOf(type));
 			else
-				selectTypeButtons(ReportType.CSV.toString());
+				selectReportType(ReportType.CSV);
 			if (dialogSettings.get(INCLUDE_HEADER_SETTING) != null) {
 				includeHeader.setSelection(dialogSettings.getBoolean(INCLUDE_HEADER_SETTING));
 			}
@@ -365,26 +376,36 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		layout1.makeColumnsEqualWidth = true;
 		buttonComposite.setLayout(layout1);
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// csv
-		Button exportCsv = createTypeChoice(buttonComposite, "Export to CSV", ReportType.CSV);
-		exportCsv.setSelection(true);
-		// xml type
-		exportXml = createTypeChoice(buttonComposite, "Export XML", ReportType.XML);
-		exportXml.setSelection(false);
-		reportType = ReportType.XML;
+		// create report type
+		Label label = new Label(buttonComposite, SWT.NONE);
+		label.setText("Export Type:");
+		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
+		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
+		types.add(ReportType.XML);
+		for (ReportType reportType : types) {
+			addComboType(reportType);
+		}
+		selectReportType(ReportType.CSV);
+		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
+		gd1.horizontalSpan = 1;
+		typeCombo.setLayoutData(gd1);
 		// options to include header
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
 		includeHeader.setText("Generate header row");
 		includeHeader.setSelection(true);
 	}
 
-	private Button createTypeChoice(final Composite optionsGroup, final String text, final ReportType reportType) {
-		Button button = new Button(optionsGroup, SWT.RADIO | SWT.LEFT);
-		button.setText(text);
-		button.setData(reportType);
-		button.addListener(SWT.Selection, this);
-		typeButtons.add(button);
-		return button;
+	private void addComboType(ReportType reportType) {
+		typeCombo.add(reportType.getLabel());
+		typeCombo.setData(reportType.getLabel(), reportType);
+		typeCombo.addListener(SWT.Selection, this);
+	}
+
+	private void selectReportType(final ReportType type) {
+		if (type == null)
+			return;
+		reportType = type;
+		typeCombo.setText(type.getLabel());
 	}
 
 	@Override
@@ -404,16 +425,13 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	@Override
 	protected boolean validateDestinationGroup() {
 		if ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0)) {
-			setMessage("File not selected");
+			setMessage("File is not selected");
 			return false;
 		}
-		if (isExportCsvFlag() && !(fileName.endsWith(".csv"))) { //$NON-NLS-1$
-			setErrorMessage("File should have .csv extension");
-			return false;
-		}
-		if (!isExportCsvFlag() && !(fileName.endsWith(".xml"))) { //$NON-NLS-1$
-			setErrorMessage("File should have .xml extension");
-			return false;
+		String ext = getFileExtension();
+		if (!(fileName.endsWith(ext))) {
+			setMessage("File should have " + ext + " extension");
+			return true;
 		}
 		return true;
 	}
@@ -468,24 +486,13 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	@Override
 	protected void updateWidgetEnablements() {
 		// type
-		includeHeader.setEnabled(isExportCsvFlag());
-		// file extension
-		if (isExportCsvFlag() && fileName.endsWith(".xml")) { //$NON-NLS-1$
-			fileName = fileName.replaceAll(".xml$", ".csv"); //$NON-NLS-1$ //$NON-NLS-2$
-			editor.setStringValue(fileName);
-		} else if (!isExportCsvFlag() && fileName.endsWith(".csv")) { //$NON-NLS-1$
-			fileName = fileName.replaceAll(".csv$", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		includeHeader.setEnabled(!reportType.isXmlFormat());
+		String ext = getFileExtension();
+		if (!fileName.endsWith(ext)) {
+			fileName = fileName + ext;
 			editor.setStringValue(fileName);
 		}
-		if (isExportCsvFlag()) {
-			editor.setFileExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
-		} else {
-			editor.setFileExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
-		}
-	}
-
-	private boolean isExportCsvFlag() {
-		return !exportXml.getSelection();
+		editor.setFileExtensions(new String[] { ext });
 	}
 
 	public ReportType getReportType() {

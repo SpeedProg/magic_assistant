@@ -44,7 +44,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.exports.ImportFactory;
+import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.exports.ReportType;
@@ -416,7 +416,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText("Import Type:");
 		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
-		Collection<ReportType> types = new ImportFactory<IMagicCard>().getTypes();
+		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getImportTypes();
 		for (ReportType reportType : types) {
 			addComboType(reportType);
 		}
