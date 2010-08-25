@@ -7,8 +7,8 @@ Bundle-Activator: com.reflexit.mtgtournament.ui.tour.Activator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- com.reflexit.mtgtournament.core;bundle-version="1.0.5",
- org.eclipse.ui.forms;bundle-version="3.3.101"
+ com.reflexit.mtgtournament.core,
+ org.eclipse.ui.forms
 Bundle-ActivationPolicy: lazy
 Export-Package: com.reflexit.mtgtournament.ui.tour,
  com.reflexit.mtgtournament.ui.tour.views
