@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="Eclipse RCP">
+<locations>
+<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
+<unit id="org.eclipse.birt.feature.group" version="2.6.0.v20100617-9gF727DGKb0yl9AwWxpmbo35PwQ_"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.6.0.v20100614-1136"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
+</location>
+<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
+<unit id="org.eclipse.platform.ide" version="3.6.0.I20100608-0911"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.4.0.v20100524-7M7K-FIhIez-egBko15H73"/>
+<unit id="org.eclipse.rcp.sdk.id" version="3.6.0.I20100608-0911"/>
+<unit id="org.eclipse.pde.junit.runtime.addon.feature.group" version="1.0.0.v20100610"/>
+<unit id="org.eclipse.pde.junit.runtime.standalone.feature.group" version="1.0.0.v20100610"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
+</location>
+</locations>
+</target>
