@@ -11,6 +11,7 @@
 	 </pathconvert>
 
 	<target name="create.product">
+		
 		<property name="destination" location="${sp:destination}"/>
 		<delete dir="${destination}"/>
 		<makeurl property="repository" file="${sp:repository}"/>
@@ -22,7 +23,7 @@
 		<java jar="${equinox.launcher.jar}" fork="true" failonerror="true" >
 			<arg value="-application"/>
 			<arg value="org.eclipse.equinox.p2.director"/>
-			<arg value="-roaming"/>
+			<arg value="-roaming"/> <!-- Don't require the user to run on our build machine -->
 			<arg value="-repository"/>
 			<arg value="${repository}"/>
 			<arg value="-destination"/>
@@ -42,5 +43,17 @@
 			<arg value="-consoleLog"/>
 			<!-- jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/ -->
 		</java>
+		
+		<!-- Replace the config.ini our custom content. 
+		<property name="rootfiles.dir" value="${checkout.src}/com.qnx.tools.ide.momentics-feature/root/common"/>
+		<copy file="${rootfiles.dir}/configuration/config.ini"
+				todir="${destination}/configuration"
+				overwrite="true" verbose="true"/>
+		<replace file="${destination}/configuration/config.ini" token="@build@" value="${build.id}"/>
+		-->
+		
+		<!-- Create the dropins/ folder. -->
+		<mkdir dir="${destination}/dropins"/>
+		<chmod perm="777" dir="${destination}/dropins"/>
 	</target>
 </project>
