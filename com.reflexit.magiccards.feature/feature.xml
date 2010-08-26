@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.reflexit.magiccards.feature"
-      label="Magic Assistant "
+      label="Magic Card Organizer"
       version="1.0.7.qualifier"
       provider-name="Alena Laskavaia"
       plugin="com.reflexit.magiccards.ui">
@@ -44,6 +44,8 @@ http://www.eclipse.org/legal/epl-v10.html
       <import plugin="org.eclipse.birt.chart.engine" version="2.3.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.birt.chart.device.extension" version="2.3.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.birt.chart.engine.extension" version="2.3.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.http.registry" version="1.0.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jface"/>
    </requires>
 
    <plugin
