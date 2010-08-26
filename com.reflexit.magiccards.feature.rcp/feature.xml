@@ -44,6 +44,10 @@ http://www.eclipse.org/legal/epl-v10.html
          id="com.reflexit.mtgtournament.feature"
          version="0.0.0"/>
 
+   <includes
+         id="com.reflexit.magicassistant.p2.feature"
+         version="0.0.0"/>
+
    <plugin
          id="com.reflexit.magiccards_rcp"
          download-size="0"
@@ -235,6 +239,13 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="com.ibm.icu"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.forms"
          download-size="0"
          install-size="0"
          version="0.0.0"
