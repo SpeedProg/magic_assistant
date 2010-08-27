@@ -49,8 +49,10 @@
 		<copy file="${rootfiles.dir}/configuration/config.ini"
 				todir="${destination}/configuration"
 				overwrite="true" verbose="true"/>
-		<replace file="${destination}/configuration/config.ini" token="@build@" value="${build.id}"/>
-		-->
+				"s/Build id: xxxxxxxx/Build id: $TIMESTAMP/" $WORKSPACE/com.reflexit.magiccards-rcp/plugin.xml
+	
+		<replace file="$source.root/com.reflexit.magiccards-rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
+	-->
 		
 		<!-- Create the dropins/ folder. -->
 		<mkdir dir="${destination}/dropins"/>
