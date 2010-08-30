@@ -61,7 +61,7 @@ rm -rf /c/tmp/w/*
 $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
   -S $SOURCE_DIR/com.reflexit.magicassistant.bucky/build.script \
   -vmargs -Dsource.dir=$SOURCE_DIR \
-  -Dbuckyprops=$SOURCE_DIR/com.reflexit.magicassistant.bucky/buckminister.properties \
+  -Dbuckyprops=$SOURCE_DIR/com.reflexit.magicassistant.bucky/buckminster.properties \
   -Dbuild.id=${TIMESTAMP} \
   -Dbuckminster.build.timestamp=${TIMESTAMP} \
   -Dma.version=${VERSION} -Dma.release=${RELEASE} -Dmagic.build=${BUILD_DIR} > $LOG 2>&1 

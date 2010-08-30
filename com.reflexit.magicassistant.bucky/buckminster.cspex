@@ -15,7 +15,7 @@
                 <attribute name="site.p2" />
             </prerequisites>
             <products alias="destination" base="${buckminster.output}">
-                <path path="magicassistant-${ma.release}-${target.ws}.${target.os}.${target.arch}/" />
+                <path path="MagicAssistant/" />
             </products>
         </public>
         <public name="create.product.zip" actor="ant">

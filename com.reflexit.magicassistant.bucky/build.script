@@ -1,4 +1,4 @@
-importpreferences -F ${source.dir}/com.reflexit.magicassistant.bucky/buckminister.properties
+importpreferences -F ${source.dir}/com.reflexit.magicassistant.bucky/buckminster.properties
 importtargetdefinition -A ${source.dir}/com.reflexit.magicassistant.bucky/rcp.target
 import -P ${buckyprops} -D source.root=${source.dir} ${source.dir}/com.reflexit.magicassistant.bucky/magicassistant.cquery
 build
