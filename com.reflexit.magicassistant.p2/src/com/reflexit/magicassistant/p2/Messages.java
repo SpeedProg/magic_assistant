@@ -8,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
 package com.reflexit.magicassistant.p2;
 
 import org.eclipse.osgi.util.NLS;
@@ -19,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
  * @since 3.4
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.equinox.internal.p2.ui.sdk.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "com.reflexit.magicassistant.p2.messages"; //$NON-NLS-1$
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

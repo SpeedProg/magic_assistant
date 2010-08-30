@@ -34,6 +34,7 @@
             </command>
                         
       </menuContribution>
+      <!--
       <menuContribution
             locationURI="menu:help?after=com.reflexit.magicassistant.menu.update">
             <command
@@ -42,6 +43,7 @@
                   id="com.reflexit.magicassistant.menu.install">
             </command>
       </menuContribution>
+      -->
    </extension>
       <extension
          point="org.eclipse.ui.installationPages">
