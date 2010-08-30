@@ -53,7 +53,7 @@
 	
 		<replace file="$source.root/com.reflexit.magiccards-rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
 	-->
-		
+		<delete file="${destination}/eclipsec.exe" quiet="yes" failonerror="no"/>
 		<!-- Create the dropins/ folder. -->
 		<mkdir dir="${destination}/dropins"/>
 		<chmod perm="777" dir="${destination}/dropins"/>

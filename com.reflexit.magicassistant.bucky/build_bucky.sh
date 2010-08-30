@@ -43,7 +43,7 @@ if [ "$BUILD" -eq 1 ]; then
 echo copy sources
 SOURCE_DIR=$BUILD_DIR/sources
 rm -rf $SOURCE_DIR
-mkdir $SOURCE_DIR
+mkdir -p $SOURCE_DIR
 cp -r $WORKSPACE/com.reflexit.magic* $SOURCE_DIR
 cp -r $WORKSPACE/com.reflexit.mtg* $SOURCE_DIR
 
@@ -55,7 +55,7 @@ sed -e "s/Build id: xxxxxxxx/Build id: $RELEASE ($TIMESTAMP)/" $WORKSPACE/com.re
 
 echo bucky build
 RESULT="$BUILD_DIR/result/com.reflexit.magicassistant.bucky_1.0.0-eclipse.feature"
-mv $BUILD_DIR/tmp $BUILD_DIR/result /c/tmp/w
+mv $BUILD_DIR/result /c/tmp/w
 rm -rf /c/tmp/w/*
 
 $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
