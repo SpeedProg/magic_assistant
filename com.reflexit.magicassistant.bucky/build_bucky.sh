@@ -40,23 +40,15 @@ mkdir -p /c/tmp/w
 echo Building $RELEASE
 
 if [ "$BUILD" -eq 1 ]; then
-echo copy sources
-SOURCE_DIR=$BUILD_DIR/sources
-rm -rf $SOURCE_DIR
-mkdir -p $SOURCE_DIR
-cp -r $WORKSPACE/com.reflexit.magic* $SOURCE_DIR
-cp -r $WORKSPACE/com.reflexit.mtg* $SOURCE_DIR
-
-echo fixing build id
-#fixing build id in about.ini
-sed -e "s/Build id: xxxxxxxx/Build id: $RELEASE ($TIMESTAMP)/" $WORKSPACE/com.reflexit.magiccards-rcp/plugin.xml > $SOURCE_DIR/com.reflexit.magiccards-rcp/plugin.xml || die Cannot run subst
-sed -e "s/Build id: xxxxxxxx/Build id: $RELEASE ($TIMESTAMP)/" $WORKSPACE/com.reflexit.magiccards.ui/about.properties > $SOURCE_DIR/com.reflexit.magiccards.ui/about.properties || die Cannot run subst
-
-
-echo bucky build
+echo prepare
+SOURCE_DIR=$WORKSPACE
+#rm -rf $BUILD_DIR/bucky_workspace/plugins
+#rm -rf $BUILD_DIR/bucky_workspace/features
 RESULT="$BUILD_DIR/result/com.reflexit.magicassistant.bucky_1.0.0-eclipse.feature"
 mv $BUILD_DIR/result /c/tmp/w
 rm -rf /c/tmp/w/*
+
+echo bucky build
 
 $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
   -S $SOURCE_DIR/com.reflexit.magicassistant.bucky/build.script \

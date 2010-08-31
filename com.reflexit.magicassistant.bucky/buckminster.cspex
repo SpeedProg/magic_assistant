@@ -30,5 +30,14 @@
                 <path path="magicassistant-${ma.release}-${target.ws}.${target.os}.${target.arch}.zip" />
             </products>
         </public>
+        <public name="fix.about" actor="ant">
+            <actorProperties>
+                <property key="buildFile" value="build/product.ant" />
+                <property key="targets" value="fix.about" />
+            </actorProperties>
+            <properties>
+                <property key="WORKSPACE" value="${workspace.root}" />
+            </properties>
+        </public>
     </actions>
 </cspecExtension>

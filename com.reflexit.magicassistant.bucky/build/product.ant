@@ -44,18 +44,20 @@
 			<!-- jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/ -->
 		</java>
 		
-		<!-- Replace the config.ini our custom content. 
-		<property name="rootfiles.dir" value="${checkout.src}/com.qnx.tools.ide.momentics-feature/root/common"/>
-		<copy file="${rootfiles.dir}/configuration/config.ini"
-				todir="${destination}/configuration"
-				overwrite="true" verbose="true"/>
-				"s/Build id: xxxxxxxx/Build id: $TIMESTAMP/" $WORKSPACE/com.reflexit.magiccards-rcp/plugin.xml
-	
-		<replace file="$source.root/com.reflexit.magiccards-rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
-	-->
 		<delete file="${destination}/eclipsec.exe" quiet="yes" failonerror="no"/>
 		<!-- Create the dropins/ folder. -->
 		<mkdir dir="${destination}/dropins"/>
 		<chmod perm="777" dir="${destination}/dropins"/>
+	</target>
+	
+	<target name="fix.about">
+		
+		<echo message="Fixing stuff in ${WORKSPACE}"/>
+		
+		<!-- Replace the build qualifier token in about.properties . -->
+		
+		<replace file="${WORKSPACE}/plugins/com.reflexit.magiccards_rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
+		<replace file="${WORKSPACE}/plugins/com.reflexit.magiccards.ui/about.properties" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
+
 	</target>
 </project>
