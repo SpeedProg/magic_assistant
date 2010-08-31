@@ -34,7 +34,7 @@ public class Activator extends AbstractUIPlugin {
 	public class MaPolicy extends Policy {
 		public MaPolicy() {
 			//setRepositoriesVisible(false);
-			setRestartPolicy(RESTART_POLICY_FORCE);
+			setRestartPolicy(RESTART_POLICY_PROMPT);
 			setShowDrilldownRequirements(true);
 		}
 	}
