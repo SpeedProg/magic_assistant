@@ -49,15 +49,30 @@
 		<mkdir dir="${destination}/dropins"/>
 		<chmod perm="777" dir="${destination}/dropins"/>
 	</target>
-	
+	<target name="prepare" depends="clean,sync.files,fix.about">
+	</target>
+	<target name="clean">
+		<echo message="Deleting ${buckminster.output.root}"/>
+		<delete dir="${buckminster.output.root}" failonerror="false" verbose="on"></delete>
+	</target>
+	<target name="sync.files">
+		<echo message="Sync ${source} -> ${destination}"/>
+		<sync todir="${destination}" includeEmptyDirs="true" overwrite="true">
+			<fileset dir="${source}">
+				  <include name="com.reflexit.magic*/**"/>
+				  <include name="com.reflexit.mtg*/**"/>
+			</fileset>
+		</sync>
+
+	</target>
 	<target name="fix.about">
 		
-		<echo message="Fixing stuff in ${WORKSPACE}"/>
+		<echo message="Fixing stuff in ${source.root}"/>
 		
 		<!-- Replace the build qualifier token in about.properties . -->
 		
-		<replace file="${WORKSPACE}/plugins/com.reflexit.magiccards_rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
-		<replace file="${WORKSPACE}/plugins/com.reflexit.magiccards.ui/about.properties" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
+		<replace file="${source.root}/com.reflexit.magiccards-rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
+		<replace file="${source.root}/com.reflexit.magiccards.ui/about.properties" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
 
 	</target>
 </project>
