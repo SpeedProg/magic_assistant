@@ -5,21 +5,29 @@
       version="1.1.0.qualifier"
       provider-name="Reflex IT">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://mtgbrowser.sf.net">
+      Magic Assistance Update feature
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright url="http://mtgbrowser.wiki.sourceforge.net/copyright">
+      Copyright (c) 2008,2010 Alena Laskavaia.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license>
+      This program and the accompanying materials
+are made available under the terms of the Eclipse Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
    </license>
 
    <url>
-      <discovery label="Local Update" url="file://c:/Develop/magic/update/"/>
-      <discovery label="Magic Assisant Update" url="http://mtgbrowser.sf.net/update/"/>
+      <update label="Magic Assistant Software Update" url="http://mtgbrowser.sourceforge.net/update/1.1"/>
    </url>
 
    <requires>
