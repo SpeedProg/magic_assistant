@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
@@ -32,17 +34,31 @@ Gratuitous Violence,1,1,0,R,ONS,212/350
 Risky Move,1,1,0,R,ONS,223/350 
 Aven Brigadier,1,1,0,R,ONS,7/350 
 Aven Brigadier (premium),1,1,0,R,ONS,7/350
+
+Another format
+Card Name,	Online,	For, Trade,	Rarity,	Set,	No.,	Premium																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+Event Ticket,	2,	0,	EVENT,	 	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										
+Arrogant Bloodlord,	9,	5,	U,	ROE,	94/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+Arrogant Bloodlord,	1,	0,	U,	ROE,	94/248,	Yes																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+Bala Ged Scorpion,	7,	3,	C,	ROE,	95/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+Bloodrite Invoker,	3,	0,	C,	ROE,	97/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+Bloodthrone Vampire,	13,	6,	C,	ROE,	98/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+
  */
 public class MtgoImportDelegate extends CsvImportDelegate {
+	private int cardNameIndex = 0;
+	private int countIndex = 1;
+	private int forTradeIndex = 2;
+	private int setIndex = 5;
+	private int premiumIndex = -1;
+	private int numIndex = 6;
+
 	public ReportType getType() {
 		return ReportType.createReportType("mtgo", "Magic the Gathering Online");
 	}
 
 	public MtgoImportDelegate() {
-		ICardField fields[] = new ICardField[7];
-		fields[0] = MagicCardField.NAME;
-		fields[5] = MagicCardField.EDITION_ABBR;
-		setFields(fields);
+		setUpFields();
 	}
 
 	@Override
@@ -50,14 +66,14 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 		MagicCardPhisical x = super.createCard(list);
 		try {
 			String comment = "";
-			if (list.get(1).equals("1"))
-				comment += "online,";
-			if (list.get(2).equals("1"))
-				comment += "for trade,";
-			if (list.get(0).endsWith(" (premium)")) {
+			String forTrade = list.get(forTradeIndex);
+			if (forTrade != null && !forTrade.equals("0"))
+				comment += "for trade " + forTrade + ",";
+			if (list.get(cardNameIndex).endsWith(" (premium)")
+			        || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
 				comment += "premium,";
 			}
-			comment += list.get(6);
+			comment += list.get(numIndex);
 			x.setComment(comment);
 		} catch (Exception e) {
 			Activator.log(e);
@@ -67,7 +83,7 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 
 	@Override
 	protected void setFieldValue(MagicCardPhisical card, ICardField field, int i, String value) {
-		if (i == 0 && value.endsWith(" (premium)")) {
+		if (i == cardNameIndex && value.endsWith(" (premium)")) {
 			value = value.replaceAll("\\Q (premium)", "");
 		}
 		super.setFieldValue(card, field, i, value);
@@ -75,6 +91,31 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 
 	@Override
 	protected void setHeaderFields(List<String> list) {
-		// ignore header in a file
+		int i = 0;
+		for (Iterator iterator = list.iterator(); iterator.hasNext(); i++) {
+			String name = (String) iterator.next();
+			if (name.equals("Card Name")) {
+				cardNameIndex = i;
+			} else if (name.equals("Online")) {
+				countIndex = i;
+			} else if (name.equals("For Trade")) {
+				forTradeIndex = i;
+			} else if (name.equals("Set")) {
+				setIndex = i;
+			} else if (name.equals("Premium")) {
+				premiumIndex = i;
+			} else if (name.equals("No.")) {
+				numIndex = i;
+			}
+		}
+		setUpFields();
+	}
+
+	protected void setUpFields() {
+		ICardField fields[] = new ICardField[7];
+		fields[cardNameIndex] = MagicCardField.NAME;
+		fields[countIndex] = MagicCardFieldPhysical.COUNT;
+		fields[setIndex] = MagicCardField.EDITION_ABBR;
+		setFields(fields);
 	}
 }
