@@ -65,4 +65,17 @@ public class MtgoImportTest extends AbstarctImportTest {
 		String comment = ((MagicCardPhisical) card1).getComment();
 		assertTrue(comment, comment.contains("premium"));
 	}
+
+	public void testNewFormat() {
+		addLine("Card Name,Online,For Trade,Rarity,Set,No.,Premium");
+		//Event Ticket,2,0,EVENT, ,No
+		addLine("Arrogant Bloodlord,9,5,U,ROE,94/248,No");
+		addLine("Arrogant Bloodlord,1,0,U,ROE,94/248,Yes");
+		parse();
+		assertEquals(2, resSize);
+		assertEquals("Arrogant Bloodlord", card1.getName());
+		assertEquals(9, ((MagicCardPhisical) card1).getCount());
+		assertEquals("Rise of the Eldrazi", card1.getSet());
+		assertEquals("premium,94/248", ((MagicCardPhisical) card2).getComment());
+	}
 }
