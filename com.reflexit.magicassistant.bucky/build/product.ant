@@ -67,7 +67,7 @@
 	</target>
 	<target name="fix.about">
 		
-		<echo message="Fixing stuff in ${source.root}"/>
+		<echo message="Fixing build qualifiers in ${source.root}"/>
 		
 		<!-- Replace the build qualifier token in about.properties . -->
 		

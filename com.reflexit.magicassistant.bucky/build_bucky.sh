@@ -2,9 +2,9 @@
 #
 # to run:
 # UPLOAD=1 - to upload release
-# TIMESTAMP=N - to force release 4th number (build id) to be N 
+# QUAL=N - to force release 4th number (build id) to be N 
 # e.g 
-# UPLOAD=1 TIMESTAMP=4 ./build.sh
+# UPLOAD=1 QUAL=4 ./build.sh
 #
 
 die() {
@@ -44,7 +44,7 @@ if [ "$BUILD" -eq 1 ]; then
 RESULT="$BUILD_DIR/result/com.reflexit.magicassistant.bucky_1.0.0-eclipse.feature"
 
 
-echo bucky build $TIMESTAMP
+echo Bucky build $TIMESTAMP
 $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
   -S $WORKSPACE/com.reflexit.magicassistant.bucky/build.script \
   -vmargs \
@@ -57,12 +57,16 @@ $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
   
 test $? -eq 0 || { grep -i Error $LOG; die Build failed see $LOG; }
 
+echo Posting results
+OUTPUT=$BUILD_DIR/output
+rm -rf $OUTPUT
+mkdir $OUTPUT
+cp -r $RESULT/site.p2 $OUTPUT
 rm -rf "$EXPORT_DIR/$RELEASE"
 mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
-cp -r $RESULT/site.p2 $EXPORT_DIR/$RELEASE/
-rm -rf $BUILD_DIR/site.p2
-cp -r $RESULT/site.p2 $BUILD_DIR
+cp -r $RESULT/site.p2 $EXPORT_DIR/$RELEASE/1.1
+(cd $OUTPUT; unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*.zip;)
 echo "Published results at $EXPORT_DIR/$RELEASE/"
 fi
 
@@ -79,4 +83,5 @@ fi
 if [ "$UPLOAD" -eq 1 ]; then
   echo "Uploading builds for $RELEASE..."
   $SCP -r -v -i "$SF_PRIVATE_KEY" $EXPORT_DIR/$RELEASE $SF_USER,mtgbrowser@frs.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Magic_Assistant/
+  #$SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/$RELEASE/1.1/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
 fi
