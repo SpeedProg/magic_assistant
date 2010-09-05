@@ -88,6 +88,8 @@ public class XmlCardHolder implements ICardHandler {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		HashSet<Integer> hash = new HashSet<Integer>();
 		while ((line = st.readLine()) != null) {
+			if (line.trim().length() == 0)
+				continue;
 			String[] fields = line.split("\\Q" + TextPrinter.SEPARATOR);
 			for (int i = 0; i < fields.length; i++) {
 				fields[i] = fields[i].trim();
