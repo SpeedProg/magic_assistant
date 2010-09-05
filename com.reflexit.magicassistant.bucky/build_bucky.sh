@@ -29,6 +29,7 @@ SCP=scp.exe
 TIMESTAMP=`date +%Y%m%d%H%M`
 UPLOAD=${UPLOAD:-0}
 INSTALL=${INSTALL:-0}
+UPDATE_SITE=${UPDATE_SITE:-0}
 BUILD=${BUILD:-1}
 VERSION=`grep Bundle-Version $WORKSPACE/com.reflexit.magiccards-rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'` 
 RELEASE=$VERSION
@@ -65,7 +66,9 @@ cp -r $RESULT/site.p2 $OUTPUT
 rm -rf "$EXPORT_DIR/$RELEASE"
 mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
-cp -r $RESULT/site.p2 $EXPORT_DIR/$RELEASE/1.1
+rm -rf $EXPORT_DIR/update
+mkdir $EXPORT_DIR/update
+cp -r $RESULT/site.p2 $EXPORT_DIR/update/1.1
 (cd $OUTPUT; unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*.zip;)
 echo "Published results at $EXPORT_DIR/$RELEASE/"
 fi
@@ -83,5 +86,18 @@ fi
 if [ "$UPLOAD" -eq 1 ]; then
   echo "Uploading builds for $RELEASE..."
   $SCP -r -v -i "$SF_PRIVATE_KEY" $EXPORT_DIR/$RELEASE $SF_USER,mtgbrowser@frs.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Magic_Assistant/
-  #$SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/$RELEASE/1.1/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
+ 
+fi
+if [ "$UPDATE_SITE" -eq 1 ]; then
+  echo "Uploading update sute for $RELEASE..."
+  REMOTE_PATH="htdocs/update/1.1"
+  #$SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.1/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
+  (
+  cd $EXPORT_DIR/update/1.1/
+  unzip content.jar
+  unzip artifacts.jar
+  $SCP -v -i "$SF_PRIVATE_KEY" features/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/features/"
+  $SCP -v -i "$SF_PRIVATE_KEY" plugins/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/plugins/"
+  $SCP -v -i "$SF_PRIVATE_KEY" *.xml *.jar "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/"
+  )
 fi
