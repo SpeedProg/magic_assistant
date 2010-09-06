@@ -65,16 +65,10 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	protected synchronized MagicCardPhisical createCard(List<String> list) {
 		MagicCardPhisical x = super.createCard(list);
 		try {
-			String comment = "";
-			String forTrade = list.get(forTradeIndex);
-			if (forTrade != null && !forTrade.equals("0"))
-				comment += "for trade " + forTrade + ",";
 			if (list.get(cardNameIndex).endsWith(" (premium)")
 			        || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
-				comment += "premium,";
+				x.setVariant("premium");
 			}
-			comment += list.get(numIndex);
-			x.setComment(comment);
 		} catch (Exception e) {
 			Activator.log(e);
 		}
@@ -112,10 +106,12 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	}
 
 	protected void setUpFields() {
-		ICardField fields[] = new ICardField[7];
+		ICardField fields[] = new ICardField[10];
 		fields[cardNameIndex] = MagicCardField.NAME;
 		fields[countIndex] = MagicCardFieldPhysical.COUNT;
 		fields[setIndex] = MagicCardField.EDITION_ABBR;
+		fields[forTradeIndex] = MagicCardFieldPhysical.FORTRADECOUNT;
+		fields[numIndex] = MagicCardField.COLLNUM;
 		setFields(fields);
 	}
 }

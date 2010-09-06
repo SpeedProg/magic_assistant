@@ -21,6 +21,8 @@ public class FilterHelper {
 	public static final String LOCATION = MagicCardFieldPhysical.LOCATION.name();
 	public static final String PRICE = MagicCardFieldPhysical.PRICE.name();
 	public static final String DBPRICE = MagicCardField.DBPRICE.name();
+	public static final String COMMUNITYRATING = MagicCardField.COMMUNITYRATING.name();
+	public static final String ARTIST = MagicCardField.ARTIST.name();
 	public static final String COUNT = MagicCardFieldPhysical.COUNT.name();
 	public static final String COMMENT = MagicCardFieldPhysical.COMMENT.name();
 	public static final String OWNERSHIP = MagicCardFieldPhysical.OWNERSHIP.name();
@@ -66,6 +68,8 @@ public class FilterHelper {
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.COUNT, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.PRICE, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.DBPRICE, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.COMMUNITYRATING, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.ARTIST, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.COMMENT, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE_2, FilterHelper.TEXT_POSTFIX));
@@ -73,6 +77,9 @@ public class FilterHelper {
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_NOT_1, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_NOT_2, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_NOT_3, FilterHelper.TEXT_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.FORTRADECOUNT.name(), FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.CONDITION.name(), FilterHelper.TEXT_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.VARIANT.name(), FilterHelper.TEXT_POSTFIX));
 		// TODO add the rest
 		return ids;
 	}

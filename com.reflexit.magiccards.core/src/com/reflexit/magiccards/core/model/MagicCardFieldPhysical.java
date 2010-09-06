@@ -2,13 +2,21 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 
+/**
+ * Fields for actual player card
+ */
 public enum MagicCardFieldPhysical implements ICardField {
 	COUNT(Integer.class),
 	PRICE(Float.class),
 	COMMENT,
 	LOCATION,
 	CUSTOM,
-	OWNERSHIP(Boolean.class), ;
+	OWNERSHIP(Boolean.class),
+	FORTRADECOUNT(Integer.class),
+	CONDITION, // like mint, played etc
+	VARIANT, // like foil, premium for mtgo
+	// end of fields
+	;
 	// fields
 	private final Class type;
 	private final boolean transientField;

@@ -11,12 +11,18 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private transient Location location;
 	private String custom;
 	private boolean ownership;
+	private int forTrade;
+	private String condition;
+	private String variant;
 
 	public MagicCardPhisical(IMagicCard card, Location location) {
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;
 			this.ownership = false;
+			this.forTrade = 0;
+			this.condition = null;
+			this.variant = null;
 		} else if (card instanceof MagicCardPhisical) {
 			MagicCardPhisical phi = (MagicCardPhisical) card;
 			this.card = phi.getCard();
@@ -25,6 +31,9 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			this.custom = phi.getCustom();
 			this.price = phi.getPrice();
 			this.ownership = phi.ownership;
+			this.forTrade = phi.forTrade;
+			this.condition = phi.condition;
+			this.variant = phi.variant;
 		}
 		if (location == null)
 			this.location = Location.NO_WHERE;
@@ -33,6 +42,18 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 
 	public float getDbPrice() {
 		return card.getDbPrice();
+	}
+
+	public float getCommunityRating() {
+		return card.getCommunityRating();
+	}
+
+	public String getArtist() {
+		return card.getArtist();
+	}
+
+	public String getRulings() {
+		return card.getRulings();
 	}
 
 	public Collection getHeaderNames() {
@@ -228,6 +249,15 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		case OWNERSHIP:
 			setOwn(Boolean.parseBoolean(value));
 			break;
+		case VARIANT:
+			setVariant(value);
+			break;
+		case CONDITION:
+			setCondition(value);
+			break;
+		case FORTRADECOUNT:
+			setForTrade(Integer.parseInt(value));
+			break;
 		default:
 			return false;
 		}
@@ -254,11 +284,53 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			return getCustom();
 		case OWNERSHIP:
 			return isOwn();
+		case FORTRADECOUNT:
+			return getForTrade();
+		case CONDITION:
+			return getCondition();
+		case VARIANT:
+			return getVariant();
 		}
 		return null;
 	}
 
 	public void setDbPrice(Float price2) {
 		card.setDbPrice(price2);
+	}
+
+	public void setCommunityRating(float parseFloat) {
+		card.setCommunityRating(parseFloat);
+	}
+
+	public void setArtist(String artist) {
+		card.setArtist(artist);
+	}
+
+	public void setRulings(String rulings) {
+		card.setRulings(rulings);
+	}
+
+	public int getForTrade() {
+		return forTrade;
+	}
+
+	public void setForTrade(int forSale) {
+		this.forTrade = forSale;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getVariant() {
+		return variant;
+	}
+
+	public void setVariant(String variant) {
+		this.variant = variant;
 	}
 }

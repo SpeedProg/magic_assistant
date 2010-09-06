@@ -31,4 +31,12 @@ public interface IMagicCard extends ICard {
 	//
 	//	public abstract Object getObjectByIndex(int i);
 	public abstract float getDbPrice();
+	
+	public abstract float getCommunityRating();
+	
+	public abstract String getArtist();
+	
+	public abstract String getRulings();
+	
+	//public abstract float getMyRating();
 }

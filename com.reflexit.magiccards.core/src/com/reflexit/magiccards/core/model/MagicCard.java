@@ -15,8 +15,12 @@ public class MagicCard implements IMagicCard, Cloneable {
 	String edition;
 	String rarity;
 	String oracleText;
+	String artist;
+	transient String rulings;
 	float dbprice;
+	float communityRating;
 	String lang;
+	String collNumber;
 	transient String colorType = null;
 	transient int cmc = -1;
 
@@ -269,8 +273,16 @@ public class MagicCard implements IMagicCard, Cloneable {
 			return (new Integer(getCmc()));
 		case DBPRICE:
 			return getDbPrice();
+		case COMMUNITYRATING:
+			return getCommunityRating();
+		case ARTIST:
+			return getArtist();
+		case RULINGS:
+			return getRulings();
 		case LANG:
 			return getLanguage();
+		case COLLNUM:
+			return getCollNumber();
 		default:
 			break;
 		}
@@ -285,12 +297,44 @@ public class MagicCard implements IMagicCard, Cloneable {
 		this.dbprice = dbprice;
 	}
 
+	public float getCommunityRating() {
+		return communityRating;
+	}
+
+	public void setCommunityRating(float rating) {
+		this.communityRating = rating;
+	}
+
+	public String getArtist() {
+		return this.artist;
+	}
+
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+
+	public String getRulings() {
+		return this.rulings;
+	}
+
+	public void setRulings(String rulings) {
+		this.rulings = rulings;
+	}
+
 	public String getLanguage() {
 		return lang;
 	}
 
 	public void setLanguage(String lang) {
 		this.lang = lang;
+	}
+
+	public String getCollNumber() {
+		return collNumber;
+	}
+
+	public void setCollNumber(String collNumber) {
+		this.collNumber = collNumber;
 	}
 
 	public boolean setObjectByField(ICardField field, String value) {
@@ -334,8 +378,20 @@ public class MagicCard implements IMagicCard, Cloneable {
 		case DBPRICE:
 			setDbPrice(Float.parseFloat(value));
 			break;
+		case COMMUNITYRATING:
+			setCommunityRating(Float.parseFloat(value));
+			break;
+		case ARTIST:
+			setArtist(value);
+			break;
+		case RULINGS:
+			setRulings(value);
+			break;
 		case LANG:
 			setLanguage(value);
+			break;
+		case COLLNUM:
+			setCollNumber(value);
 			break;
 		default:
 			return false;

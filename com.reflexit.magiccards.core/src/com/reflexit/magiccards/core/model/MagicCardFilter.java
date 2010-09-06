@@ -437,16 +437,26 @@ public class MagicCardFilter {
 			res = BinaryExpr.fieldEquals(MagicCardField.RARITY, value);
 		} else if (FilterHelper.COUNT.equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.COUNT, value);
+		} else if (MagicCardFieldPhysical.FORTRADECOUNT.name().equals(requestedId)) {
+			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.FORTRADECOUNT, value);
 		} else if (FilterHelper.DBPRICE.equals(requestedId)) {
 			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
 			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
+		} else if (FilterHelper.COMMUNITYRATING.equals(requestedId)) {
+			res = BinaryExpr.fieldInt(MagicCardField.COMMUNITYRATING, value);
+		} else if (FilterHelper.ARTIST.equals(requestedId)) {
+			res = textSearch(MagicCardField.ARTIST, value, regex);
 		} else if (FilterHelper.PRICE.equals(requestedId)) {
 			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
 			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
 		} else if (FilterHelper.COMMENT.equals(requestedId)) {
 			res = textSearch(MagicCardFieldPhysical.COMMENT, value, regex);
+		} else if (MagicCardFieldPhysical.VARIANT.name().equals(requestedId)) {
+			res = textSearch(MagicCardFieldPhysical.VARIANT, value, regex);
+		} else if (MagicCardFieldPhysical.CONDITION.name().equals(requestedId)) {
+			res = textSearch(MagicCardFieldPhysical.CONDITION, value, regex);
 		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
 		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
@@ -510,6 +520,11 @@ public class MagicCardFilter {
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.DBPRICE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.COMMENT), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterHelper.COMMUNITYRATING), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.ARTIST), expr);
+		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.VARIANT.name()), expr);
+		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.CONDITION.name()), expr);
+		expr = createAndGroup(createNumericSearch(map, MagicCardFieldPhysical.FORTRADECOUNT.name()), expr);
 		// text fields
 		Expr text = createTextSearch(map, FilterHelper.TEXT_LINE);
 		text = createOrGroup(text, createTextSearch(map, FilterHelper.TEXT_LINE_2));
