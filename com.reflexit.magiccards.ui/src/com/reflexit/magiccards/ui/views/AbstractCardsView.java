@@ -59,8 +59,10 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
+import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
+import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
@@ -79,6 +81,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected Action showFind;
 	protected Action copyText;
 	protected Action loadPrices;
+	protected Action loadExtras;
 	protected ViewerManager manager;
 	private Label statusLine;
 	protected MenuManager sortMenu;
@@ -261,6 +264,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		manager.add(this.groupMenu);
 		manager.add(this.showPrefs);
 		manager.add(loadPrices);
+		manager.add(loadExtras);
 		manager.add(new Separator());
 	}
 
@@ -398,6 +402,12 @@ public abstract class AbstractCardsView extends ViewPart {
 				runLoadPrices();
 			}
 		};
+		this.loadExtras = new Action("Load Additional Info...") {
+			@Override
+			public void run() {
+				runLoadExtras();
+			}
+		};
 	}
 
 	protected MenuManager createGroupMenu() {
@@ -432,6 +442,36 @@ public abstract class AbstractCardsView extends ViewPart {
 		loadingPrices.schedule();
 	}
 
+	protected void runLoadExtras() {
+		LoadExtrasDialog dialog = new LoadExtrasDialog(getShell());
+		if (dialog.open() != dialog.OK || (!dialog.getRatings() && !dialog.getRulings() && !dialog.getArtists())) {
+			return;
+		}
+		
+		final LoadExtrasDialog dialog1 = dialog;
+		
+		Job loadingExtras = new Job("Loading extras (rulings, artists, ratings)") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				ParseGathererRulings parser = new ParseGathererRulings();
+				try {
+					parser.updateStore(getFilteredStore(), monitor, dialog1.getRatings(), dialog1.getRulings(), dialog1.getArtists());
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							reloadData();
+						}
+					});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		loadingExtras.setUser(true);
+		loadingExtras.schedule();
+	}
+	
 	/**
 	 * 
 	 */

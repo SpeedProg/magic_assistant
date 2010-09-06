@@ -48,6 +48,12 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		addContextAssist(textSfe, getTextProposals());
 		addField(textSfe);
 		addTooltip(textSfe, toolTip);
+		// artist
+		String artistId = FilterHelper.getPrefConstant(FilterHelper.ARTIST, FilterHelper.TEXT_POSTFIX);
+		getPreferenceStore().setDefault(artistId, "");
+		StringFieldEditor artistSfe = new StringFieldEditor(artistId, "Artist", getFieldEditorParent());
+		addField(artistSfe);
+		addTooltip(artistSfe, toolTip);
 	}
 	static String[] textProposals = new String[] {
 	        "Flying",

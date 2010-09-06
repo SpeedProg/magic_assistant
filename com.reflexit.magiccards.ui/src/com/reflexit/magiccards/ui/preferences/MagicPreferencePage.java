@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -45,8 +47,10 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			}
 		};
 		addField(caching);
+		Label space = new Label(getFieldEditorParent(), SWT.NONE);
+		space.setText("When card is selected:");
 		BooleanFieldEditor load = new BooleanFieldEditor(PreferenceConstants.LOAD_IMAGES,
-		        "Enable loading graphics from the net", getFieldEditorParent()) {
+		        "Load card graphics from the web", getFieldEditorParent()) {
 			@Override
 			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
 				super.fireStateChanged(property, oldValue, newValue);
@@ -54,6 +58,9 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			}
 		};
 		addField(load);
+		BooleanFieldEditor other = new BooleanFieldEditor(PreferenceConstants.LOAD_RULINGS,
+		        "Load rulings, extra fields and update oracle text from the web", getFieldEditorParent());
+		addField(other);
 	}
 
 	/* (non-Javadoc)

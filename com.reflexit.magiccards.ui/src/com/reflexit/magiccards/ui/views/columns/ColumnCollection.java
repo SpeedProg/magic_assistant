@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 public class ColumnCollection {
@@ -45,6 +46,14 @@ public class ColumnCollection {
 			this.columns.add(new PriceColumn());
 		}
 		this.columns.add(new SellerPriceColumn());
+		this.columns.add(new CommunityRatingColumn());
+		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
+		this.columns.add(new GenColumn(MagicCardField.COLLNUM, "Collector's Number"));
+		if (!this.id.equals(MagicDbView.ID)) {
+			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.CONDITION, "Condition"));
+			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.VARIANT, "Variant"));
+			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
+		}
 		int j = 0;
 		for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
 			AbstractColumn col = (AbstractColumn) iterator.next();

@@ -123,7 +123,16 @@ class CardDescComposite extends Composite {
 	private boolean logOnce = false;
 
 	void reload(IMagicCard card) {
+		setCard(card);
+		setLoadingImage(card);
+		setText(card);
+	}
+
+	public void setCard(IMagicCard card) {
 		this.card = card;
+	}
+
+	protected void setLoadingImage(IMagicCard card) {
 		if (card == IMagicCard.DEFAULT) {
 			return;
 		}
@@ -132,10 +141,17 @@ class CardDescComposite extends Composite {
 		} catch (RuntimeException e) {
 			MagicUIActivator.log(e);
 		}
+	}
+
+	public void setText(IMagicCard card) {
+		if (card == IMagicCard.DEFAULT) {
+			return;
+		}
 		try {
 			String data = getCardDataHtml(card);
 			String text = card.getOracleText();
-			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text, this));
+			String rulings = getCardRulingsHtml(card);
+			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text + rulings, this));
 			swapVisibility(textBrowser, textBackup);
 		} catch (Exception e) {
 			if (logOnce == false) {
@@ -183,6 +199,19 @@ class CardDescComposite extends Composite {
 			data += "<br/>";
 		}
 		data += "<br/>" + card.getSet() + " (" + card.getRarity() + ") " + "<p/>";
+		return data;
+	}
+
+	private String getCardRulingsHtml(IMagicCard card) {
+		if (card.getRulings() == null || card.getRulings().length() == 0) {
+			return "";
+		}
+		String data = "<p>Rulings:<ul>";
+		String rulings[] = card.getRulings().split("\\n");
+		for (String ruling : rulings) {
+			data += "<li>" + ruling + "</li>";
+		}
+		data += "</ul></p>";
 		return data;
 	}
 

@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 /**
  * An abstract field editor that manages a list of input values. 
@@ -314,9 +314,20 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	protected void loadFromString(String stringList) {
 		String[] prefValues = stringList.split(",");
-		HashSet prefs = new HashSet();
+		LinkedHashSet<String> prefs = new LinkedHashSet();
 		prefs.addAll(Arrays.asList(prefValues));
+		LinkedHashMap<String, String> rem = (LinkedHashMap<String, String>) keysValus.clone();
 		for (String k : prefValues) {
+			if (k.startsWith("-")) {
+				k = k.substring(1);
+			}
+			rem.remove(k);
+		}
+		// add field which are in the list for the control but not in the preferences
+		for (String k : rem.keySet()) {
+			prefs.add("-" + k);
+		}
+		for (String k : prefs) {
 			boolean checked = true;
 			if (k.startsWith("-")) {
 				checked = false;
