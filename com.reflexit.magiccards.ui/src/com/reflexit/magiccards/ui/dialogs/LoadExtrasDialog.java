@@ -62,6 +62,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 			}
 		});
 		button.setSelection(true);
+		selectedSet.add(field);
 		buttonGridData.applyTo(button);
 	}
 

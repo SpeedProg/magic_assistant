@@ -454,11 +454,11 @@ public abstract class AbstractCardsView extends ViewPart {
 				ParseGathererRulings parser = new ParseGathererRulings();
 				try {
 					parser.updateStore(getFilteredStore(), monitor, dialog.getFieldMap());
-					//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					//						public void run() {
-					//							reloadData();
-					//						}
-					//					});
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							reloadData();
+						}
+					});
 				} catch (IOException e) {
 					MagicUIActivator.log(e);
 				}
