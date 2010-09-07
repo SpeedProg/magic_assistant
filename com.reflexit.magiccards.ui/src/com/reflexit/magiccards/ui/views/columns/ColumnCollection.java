@@ -50,8 +50,7 @@ public class ColumnCollection {
 		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
 		this.columns.add(new GenColumn(MagicCardField.COLLNUM, "Collector's Number"));
 		if (!this.id.equals(MagicDbView.ID)) {
-			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.CONDITION, "Condition"));
-			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.VARIANT, "Variant"));
+			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
 		}
 		int j = 0;

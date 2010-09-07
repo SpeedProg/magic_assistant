@@ -276,7 +276,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		else if (reportType == ReportType.TABLE_PIPED)
 			setMessage(mess + "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
 		else
-			setMessage(mess + "You have selected " + reportType.getLabel() + " format");
+			setMessage(mess);
 	}
 
 	@Override

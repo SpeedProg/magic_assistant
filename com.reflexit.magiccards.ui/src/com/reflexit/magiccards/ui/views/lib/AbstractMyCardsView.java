@@ -37,8 +37,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -354,36 +356,23 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			return;
 		PreferenceStore store = new PreferenceStore();
 		boolean first = true;
-		String un = "<unchanged>";
 		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
-			String count = card.getCount() + "";
-			String comment = card.getComment();
-			if (comment == null)
-				comment = "";
-			String ownshership = card.isOwn() ? "Own" : "Virtual";
-			String price = card.getPrice() + "";
 			if (first) {
-				store.setDefault(EditCardsPropertiesDialog.COUNT_FIELD, count);
-				store.setDefault(EditCardsPropertiesDialog.COMMENT_FIELD, comment);
-				store.setDefault(EditCardsPropertiesDialog.OWNERSHIP_FIELD, ownshership);
-				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, card.getName());
-				store.setDefault(EditCardsPropertiesDialog.PRICE_FIELD, price);
+				ICardField[] allFields = MagicCardFieldPhysical.allFields();
+				for (ICardField f : allFields) {
+					store.setDefault(f.name(), String.valueOf(card.getObjectByField(f)));
+				}
 				first = false;
 			} else {
-				if (!count.equals(store.getDefaultString(EditCardsPropertiesDialog.COUNT_FIELD))) {
-					store.setDefault(EditCardsPropertiesDialog.COUNT_FIELD, un);
+				ICardField[] allFields = MagicCardFieldPhysical.allFields();
+				for (ICardField f : allFields) {
+					String value = String.valueOf(card.getObjectByField(f));
+					if (!value.equals(store.getDefaultString(f.name()))) {
+						store.setDefault(f.name(), UNCHANGED);
+					}
 				}
-				if (!ownshership.equals(store.getDefaultString(EditCardsPropertiesDialog.OWNERSHIP_FIELD))) {
-					store.setDefault(EditCardsPropertiesDialog.OWNERSHIP_FIELD, un);
-				}
-				if (!comment.equals(store.getDefaultString(EditCardsPropertiesDialog.COMMENT_FIELD))) {
-					store.setDefault(EditCardsPropertiesDialog.COMMENT_FIELD, un);
-				}
-				if (!price.equals(store.getDefaultString(EditCardsPropertiesDialog.PRICE_FIELD))) {
-					store.setDefault(EditCardsPropertiesDialog.PRICE_FIELD, un);
-				}
-				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>");
+				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>: " + selection.size());
 			}
 		}
 		new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
@@ -392,62 +381,38 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			editCard(card, store);
 		}
 	}
+	private final static String UNCHANGED = EditCardsPropertiesDialog.UNCHANGED;
 
 	private void editCard(MagicCardPhisical card, PreferenceStore store) {
-		String un = "<unchanged>";
 		boolean modified = false;
-		String count = card.getCount() + "";
-		String comment = card.getComment();
-		String price = card.getPrice() + "";
-		if (comment == null)
-			comment = "";
-		String ownshership = card.isOwn() ? "Own" : "Not Own";
-		String ecount = store.getString(EditCardsPropertiesDialog.COUNT_FIELD);
-		if (!un.equals(ecount) && !ecount.equals(count)) {
-			try {
-				int x = Integer.parseInt(ecount);
-				card.setCount(x);
-				modified = true;
-			} catch (NumberFormatException e) {
-				// was bad value
-				MessageDialog.openError(getShell(), "Error", "Invalid value for count: " + ecount);
-			}
-		}
-		String eprice = store.getString(EditCardsPropertiesDialog.PRICE_FIELD);
-		if (!un.equals(eprice) && !eprice.equals(price)) {
-			try {
-				float x = Float.parseFloat(eprice);
-				card.setPrice(x);
-				modified = true;
-			} catch (NumberFormatException e) {
-				// was bad value
-				MessageDialog.openError(getShell(), "Error", "Invalid value for price: " + eprice);
-			}
-		}
-		String ecomment = store.getString(EditCardsPropertiesDialog.COMMENT_FIELD);
-		if (!un.equals(ecomment) && !ecomment.equals(comment)) {
-			if (ecomment.trim().length() == 0) {
-				if (card.getComment() != null) {
-					card.setComment(null);
-					modified = true;
-				}
-			} else {
-				card.setComment(ecomment);
-				modified = true;
-			}
-		}
-		String eown = store.getString(EditCardsPropertiesDialog.OWNERSHIP_FIELD);
-		if (!un.equals(eown) && !eown.equals(ownshership)) {
-			if (eown.equals("Own")) {
-				card.setOwn(true);
-				modified = true;
-			} else {
-				card.setOwn(false);
-				modified = true;
-			}
+		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.COMMENT) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP) || modified;
+		String special = card.getSpecial();
+		String especial = store.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
+		if (!UNCHANGED.equals(especial) && !especial.equals(special)) {
+			card.setSpecial(especial);
+			modified = true;
 		}
 		if (modified) {
 			this.manager.getFilteredStore().getCardStore().update(card);
 		}
+	}
+
+	protected boolean setField(MagicCardPhisical card, PreferenceStore store, ICardField field) {
+		Boolean modified = false;
+		String orig = String.valueOf(card.getObjectByField(field));
+		String edited = store.getString(field.name());
+		if (!UNCHANGED.equals(edited) && !edited.equals(orig)) {
+			try {
+				card.setObjectByField(field, edited);
+				modified = true;
+			} catch (Exception e) {
+				// was bad value
+				MessageDialog.openError(getShell(), "Error", "Invalid value for " + field + ": " + edited);
+			}
+		}
+		return modified;
 	}
 }

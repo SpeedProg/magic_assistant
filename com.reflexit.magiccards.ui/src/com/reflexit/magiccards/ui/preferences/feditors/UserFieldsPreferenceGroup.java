@@ -32,18 +32,12 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		        + "which would be searched using AND connector.\n" // 
 		        + "Adding '-' in front of the word makes it NOT.\n";
 		addTooltip(nameSfe, toolTip);
-		// condition
-		id = FilterHelper.getPrefConstant(MagicCardFieldPhysical.CONDITION.name(), FilterHelper.TEXT_POSTFIX);
+		// special
+		id = FilterHelper.getPrefConstant(MagicCardFieldPhysical.SPECIAL.name(), FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(id, "");
-		StringFieldEditor cond = new StringFieldEditor(id, "Card Condition", getFieldEditorParent());
-		addField(cond);
-		addTooltip(cond, "Card condition, i.e. mint, nm, played, etc\n" + toolTip);
-		// variant
-		id = FilterHelper.getPrefConstant(MagicCardFieldPhysical.VARIANT.name(), FilterHelper.TEXT_POSTFIX);
-		getPreferenceStore().setDefault(id, "");
-		StringFieldEditor var = new StringFieldEditor(id, "Card Variant", getFieldEditorParent());
+		StringFieldEditor var = new StringFieldEditor(id, "Special Tags", getFieldEditorParent());
 		addField(var);
-		addTooltip(var, "Card variant, i.e. foil, premium, etc\n" + toolTip);
+		addTooltip(var, "Card tags, i.e. foil, premium, mint, online, etc\n" + toolTip);
 		// ownership
 		id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
 		RadioGroupFieldEditor radios = new RadioGroupFieldEditor(id, "Ownership", 1, new String[][] {

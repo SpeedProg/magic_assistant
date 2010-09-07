@@ -25,10 +25,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		        "Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number");
 		store.setDefault(
 		        PreferenceConstants.LIBVIEW_COLS,
-		        "Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Condition,-Variant,-Collector's Number");
+		        "Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number");
 		store.setDefault(
 		        PreferenceConstants.DECKVIEW_COLS,
-		        "Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Condition,-Variant,-Collector's Number");
+		        "Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number");
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_RULINGS, true);
