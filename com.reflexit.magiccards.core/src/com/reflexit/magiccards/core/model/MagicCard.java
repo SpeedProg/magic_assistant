@@ -330,11 +330,16 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public String getCollNumber() {
+		if (collNumber == null)
+			return "";
 		return collNumber;
 	}
 
 	public void setCollNumber(String collNumber) {
-		this.collNumber = collNumber;
+		if (collNumber == null || collNumber.trim().length() == 0)
+			this.collNumber = null;
+		else
+			this.collNumber = collNumber;
 	}
 
 	public boolean setObjectByField(ICardField field, String value) {

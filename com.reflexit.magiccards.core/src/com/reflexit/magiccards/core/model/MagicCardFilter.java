@@ -453,10 +453,8 @@ public class MagicCardFilter {
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
 		} else if (FilterHelper.COMMENT.equals(requestedId)) {
 			res = textSearch(MagicCardFieldPhysical.COMMENT, value, regex);
-		} else if (MagicCardFieldPhysical.VARIANT.name().equals(requestedId)) {
-			res = textSearch(MagicCardFieldPhysical.VARIANT, value, regex);
-		} else if (MagicCardFieldPhysical.CONDITION.name().equals(requestedId)) {
-			res = textSearch(MagicCardFieldPhysical.CONDITION, value, regex);
+		} else if (MagicCardFieldPhysical.SPECIAL.name().equals(requestedId)) {
+			res = textSearch(MagicCardFieldPhysical.SPECIAL, value, regex);
 		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
 		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
@@ -522,8 +520,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.COMMUNITYRATING), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.ARTIST), expr);
-		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.VARIANT.name()), expr);
-		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.CONDITION.name()), expr);
+		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.SPECIAL.name()), expr);
 		expr = createAndGroup(createNumericSearch(map, MagicCardFieldPhysical.FORTRADECOUNT.name()), expr);
 		// text fields
 		Expr text = createTextSearch(map, FilterHelper.TEXT_LINE);

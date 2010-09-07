@@ -13,8 +13,7 @@ public enum MagicCardFieldPhysical implements ICardField {
 	CUSTOM,
 	OWNERSHIP(Boolean.class),
 	FORTRADECOUNT(Integer.class),
-	CONDITION, // like mint, played etc
-	VARIANT, // like foil, premium for mtgo
+	SPECIAL, // like foil, premium, mint, played, online etc
 	// end of fields
 	;
 	// fields

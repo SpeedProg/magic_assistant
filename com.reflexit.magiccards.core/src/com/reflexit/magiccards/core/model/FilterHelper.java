@@ -78,8 +78,7 @@ public class FilterHelper {
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_NOT_2, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_NOT_3, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.FORTRADECOUNT.name(), FilterHelper.NUMERIC_POSTFIX));
-		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.CONDITION.name(), FilterHelper.TEXT_POSTFIX));
-		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.VARIANT.name(), FilterHelper.TEXT_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.SPECIAL.name(), FilterHelper.TEXT_POSTFIX));
 		// TODO add the rest
 		return ids;
 	}

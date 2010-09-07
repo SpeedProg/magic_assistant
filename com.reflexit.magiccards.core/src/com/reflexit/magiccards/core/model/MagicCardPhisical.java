@@ -12,8 +12,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	private String custom;
 	private boolean ownership;
 	private int forTrade;
-	private String condition;
-	private String variant;
+	private String special;
 
 	public MagicCardPhisical(IMagicCard card, Location location) {
 		if (card instanceof MagicCard) {
@@ -21,8 +20,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			this.count = 1;
 			this.ownership = false;
 			this.forTrade = 0;
-			this.condition = null;
-			this.variant = null;
+			this.special = null;
 		} else if (card instanceof MagicCardPhisical) {
 			MagicCardPhisical phi = (MagicCardPhisical) card;
 			this.card = phi.getCard();
@@ -32,8 +30,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			this.price = phi.getPrice();
 			this.ownership = phi.ownership;
 			this.forTrade = phi.forTrade;
-			this.condition = phi.condition;
-			this.variant = phi.variant;
+			this.special = phi.special;
 		}
 		if (location == null)
 			this.location = Location.NO_WHERE;
@@ -91,11 +88,16 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 	}
 
 	public String getComment() {
+		if (this.comment == null)
+			return "";
 		return this.comment;
 	}
 
 	public void setComment(String comment) {
-		this.comment = comment;
+		if (comment == null || comment.trim().length() == 0)
+			this.comment = null;
+		else
+			this.comment = comment.trim();
 	}
 
 	public Location getLocation() {
@@ -249,11 +251,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		case OWNERSHIP:
 			setOwn(Boolean.parseBoolean(value));
 			break;
-		case VARIANT:
-			setVariant(value);
-			break;
-		case CONDITION:
-			setCondition(value);
+		case SPECIAL:
+			setSpecial(value);
 			break;
 		case FORTRADECOUNT:
 			setForTrade(Integer.parseInt(value));
@@ -286,10 +285,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 			return isOwn();
 		case FORTRADECOUNT:
 			return getForTrade();
-		case CONDITION:
-			return getCondition();
-		case VARIANT:
-			return getVariant();
+		case SPECIAL:
+			return getSpecial();
 		}
 		return null;
 	}
@@ -318,19 +315,66 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable {
 		this.forTrade = forSale;
 	}
 
-	public String getCondition() {
-		return condition;
+	public String getSpecial() {
+		if (this.special == null)
+			return "";
+		return special;
 	}
 
-	public void setCondition(String condition) {
-		this.condition = condition;
+	public void setSpecial(String special) {
+		if (special == null || special.trim().length() == 0) {
+			this.special = null;
+			return;
+		} else {
+			String value = getSpecial();
+			String tags[] = special.trim().split(",");
+			boolean add = false;
+			for (String tag : tags) {
+				tag = tag.trim();
+				if (tag.length() == 0)
+					continue;
+				if (tag.startsWith("+")) {
+					tag = tag.substring(1);
+					value = addTag(value, tag);
+					add = true;
+				} else if (tag.startsWith("-")) {
+					tag = tag.substring(1);
+					value = removeTag(value, tag);
+					add = true;
+				} else {
+					if (add)
+						addTag(value, tag);
+					else
+						value = tag + ",";
+				}
+			}
+			this.special = value;
+		}
 	}
 
-	public String getVariant() {
-		return variant;
+	protected String addTag(String value, String tag) {
+		if (!containsTag(value, tag)) {
+			value += tag + ",";
+		}
+		return value;
 	}
 
-	public void setVariant(String variant) {
-		this.variant = variant;
+	protected String removeTag(String value, String a) {
+		String res = "";
+		String tags[] = value.split(",");
+		for (String tag : tags) {
+			if (!tag.equals(a))
+				res = res + tag + ",";
+		}
+		return res;
+	}
+
+	private boolean containsTag(String value, String a) {
+		String tags[] = value.split(",");
+		for (String tag : tags) {
+			if (tag.equals(a))
+				return true;
+		}
+		return false;
 	}
 }

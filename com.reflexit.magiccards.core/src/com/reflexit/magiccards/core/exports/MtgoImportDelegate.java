@@ -67,7 +67,7 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 		try {
 			if (list.get(cardNameIndex).endsWith(" (premium)")
 			        || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
-				x.setVariant("premium");
+				x.setSpecial("premium");
 			}
 		} catch (Exception e) {
 			Activator.log(e);
