@@ -3,24 +3,24 @@ package com.reflexit.magiccards.ui.dialogs;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * @author Alena
- *
- */
+import java.util.HashSet;
+import java.util.Set;
+
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.MagicCardField;
+
 public class LoadExtrasDialog extends TitleAreaDialog {
-	private Button rulingsCheck;
-	private Button ratingsCheck;
-	private Button artistCheck;
-	
-	private boolean rulings;
-	private boolean ratings;
-	private boolean artists;
+	private Set<ICardField> selectedSet = new HashSet<ICardField>();
+	private GridDataFactory buttonGridData;
+	private Composite buttons;
 
 	/**
 	 * @param parentShell
@@ -32,43 +32,40 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Load Additional Info...");
-		setTitle("Load Additional Info");
-		setMessage("Choose which features to load.");
+		getShell().setText("Extra Card Fields");
+		setTitle("Load Extra Card Fields...");
+		setMessage("Choose which fields to load or update");
 		Composite area = (Composite) super.createDialogArea(parent);
-		Composite buttons = new Composite(area, SWT.NONE);
+		buttons = new Composite(area, SWT.NONE);
 		buttons.setLayout(new GridLayout(2, false));
-		GridDataFactory buttonGridData = GridDataFactory.fillDefaults().span(2, 1);
-		this.rulingsCheck = new Button(buttons, SWT.CHECK);
-		this.rulingsCheck.setText("Rulings");
-		buttonGridData.applyTo(this.rulingsCheck);
-		this.ratingsCheck = new Button(buttons, SWT.CHECK);
-		this.ratingsCheck.setText("Ratings");
-		buttonGridData.applyTo(this.ratingsCheck);
-		this.artistCheck = new Button(buttons, SWT.CHECK);
-		this.artistCheck.setText("Artists");
-		buttonGridData.applyTo(this.artistCheck);
-
+		buttonGridData = GridDataFactory.fillDefaults().span(2, 1);
+		createFieldCheck("Rulings", MagicCardField.RULINGS);
+		createFieldCheck("Artist", MagicCardField.ARTIST);
+		createFieldCheck("Rating", MagicCardField.RATING);
+		createFieldCheck("Collector's Number", MagicCardField.COLLNUM);
+		createFieldCheck("Oracle Text", MagicCardField.ORACLE);
 		return area;
 	}
 
-	@Override
-	protected void okPressed() {
-		this.artists = this.artistCheck.getSelection();
-		this.rulings = this.rulingsCheck.getSelection();
-		this.ratings = this.ratingsCheck.getSelection();
-		super.okPressed();
+	protected void createFieldCheck(String name, final ICardField field) {
+		final Button button = new Button(buttons, SWT.CHECK);
+		button.setText(name);
+		button.setData(field);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (button.getSelection()) {
+					selectedSet.add(field);
+				} else {
+					selectedSet.remove(field);
+				}
+			}
+		});
+		button.setSelection(true);
+		buttonGridData.applyTo(button);
 	}
-	
-	public boolean getRatings() {
-		return this.ratings;
-	}
-	
-	public boolean getArtists() {
-		return this.artists;
-	}
-	
-	public boolean getRulings() {
-		return this.rulings;
+
+	public Set<ICardField> getFieldMap() {
+		return selectedSet;
 	}
 }

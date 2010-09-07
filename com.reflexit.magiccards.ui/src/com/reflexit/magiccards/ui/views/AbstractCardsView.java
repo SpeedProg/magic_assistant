@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -402,7 +403,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				runLoadPrices();
 			}
 		};
-		this.loadExtras = new Action("Load Additional Info...") {
+		this.loadExtras = new Action("Load Extra Fields...") {
 			@Override
 			public void run() {
 				runLoadExtras();
@@ -443,27 +444,23 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void runLoadExtras() {
-		LoadExtrasDialog dialog = new LoadExtrasDialog(getShell());
-		if (dialog.open() != dialog.OK || (!dialog.getRatings() && !dialog.getRulings() && !dialog.getArtists())) {
+		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell());
+		if (dialog.open() != Window.OK || dialog.getFieldMap().isEmpty()) {
 			return;
 		}
-		
-		final LoadExtrasDialog dialog1 = dialog;
-		
-		Job loadingExtras = new Job("Loading extras (rulings, artists, ratings)") {
+		Job loadingExtras = new Job("Loading extra fields") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				ParseGathererRulings parser = new ParseGathererRulings();
 				try {
-					parser.updateStore(getFilteredStore(), monitor, dialog1.getRatings(), dialog1.getRulings(), dialog1.getArtists());
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							reloadData();
-						}
-					});
+					parser.updateStore(getFilteredStore(), monitor, dialog.getFieldMap());
+					//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					//						public void run() {
+					//							reloadData();
+					//						}
+					//					});
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					MagicUIActivator.log(e);
 				}
 				return Status.OK_STATUS;
 			}
@@ -471,7 +468,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		loadingExtras.setUser(true);
 		loadingExtras.schedule();
 	}
-	
+
 	/**
 	 * 
 	 */

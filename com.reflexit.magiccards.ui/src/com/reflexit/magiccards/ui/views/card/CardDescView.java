@@ -132,7 +132,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					return Status.OK_STATUS;
 				if (!isStillNeeded(card))
 					return Status.CANCEL_STATUS;
-				new ParseGathererRulings().updateCard(card, monitor, true, true, true);
+				new ParseGathererRulings().updateCard(card, monitor, null);
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (!isStillNeeded(card))

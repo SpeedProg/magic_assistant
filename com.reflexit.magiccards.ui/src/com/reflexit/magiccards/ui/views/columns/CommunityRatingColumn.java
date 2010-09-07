@@ -10,7 +10,7 @@ public class CommunityRatingColumn extends GenColumn {
 	 * @param columnName
 	 */
 	public CommunityRatingColumn() {
-		super(MagicCardField.COMMUNITYRATING, "Rating");
+		super(MagicCardField.RATING, "Rating");
 	}
 	DecimalFormat decimalFormat = new DecimalFormat("#0.000");
 
