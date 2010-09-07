@@ -15,7 +15,7 @@ public enum MagicCardField implements ICardField {
 	DBPRICE(Float.class),
 	LANG,
 	EDITION_ABBR(String.class, true),
-	COMMUNITYRATING(Float.class),
+	RATING(Float.class),
 	ARTIST(String.class),
 	COLLNUM(String.class), // collector number i.e. 5/234
 	RULINGS(String.class, true), ;

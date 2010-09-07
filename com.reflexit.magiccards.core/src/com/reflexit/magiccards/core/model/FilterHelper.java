@@ -21,7 +21,7 @@ public class FilterHelper {
 	public static final String LOCATION = MagicCardFieldPhysical.LOCATION.name();
 	public static final String PRICE = MagicCardFieldPhysical.PRICE.name();
 	public static final String DBPRICE = MagicCardField.DBPRICE.name();
-	public static final String COMMUNITYRATING = MagicCardField.COMMUNITYRATING.name();
+	public static final String COMMUNITYRATING = MagicCardField.RATING.name();
 	public static final String ARTIST = MagicCardField.ARTIST.name();
 	public static final String COUNT = MagicCardFieldPhysical.COUNT.name();
 	public static final String COMMENT = MagicCardFieldPhysical.COMMENT.name();

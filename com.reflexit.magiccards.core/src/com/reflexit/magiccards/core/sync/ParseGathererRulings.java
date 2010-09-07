@@ -20,12 +20,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
@@ -55,10 +58,24 @@ public class ParseGathererRulings {
 	private static Pattern rulingPattern = Pattern.compile("<td.*?rulingText.*?5px;\">(.+?)</td>");
 	private static Pattern ratingPattern = Pattern.compile("class=\"textRatingValue\">([0-9.]{1,5})</span");
 	private static Pattern artistPattern = Pattern.compile("ArtistCredit\"\\sclass=\"value\">.*?\">(.*?)</a>");
+	/*-     
+	      <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_numberRow" class="row"> 
+	                        <div class="label"> 
+	                            Card #:</div> 
+	                        <div class="value"> 
+	                            33</div> 
+	                    </div> 
+	                    
+	  */
+	private static Pattern cardnumPattern = Pattern.compile("Card #:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	/*-
+	      <div class="cardtextbox">When Anathemancer enters the battlefield, it deals damage to target player equal to the number of nonbasic lands that player controls.</div>
+	      <div class="cardtextbox">Unearth <img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" /> <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" />: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)</i></div></div>
+	
+	*/
+	private static Pattern oraclePattern = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
 
-	private void parseSingleCard(IMagicCard card, boolean updateRatings, boolean updateRulings, boolean updateArtists)
-	        throws IOException {
-		String rulings = "";
+	private void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap) throws IOException {
 		URL url = new URL(RULINGS_QUERY_URL_BASE + card.getCardId());
 		InputStream openStream = url.openStream();
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
@@ -67,61 +84,44 @@ public class ParseGathererRulings {
 		while ((line = st.readLine()) != null) {
 			html += line + " ";
 		}
-		Matcher matcher;
-		if (updateRulings) {
-			matcher = rulingPattern.matcher(html);
-			while (matcher.find()) {
-				String ruling = matcher.group(1).trim();
-				if (ruling.length() == 0) {
-					continue;
-				}
-				rulings += ruling + "\n";
-			}
-			if (rulings.length() > 0) {
-				if (card instanceof MagicCard) {
-					((MagicCard) card).setRulings(rulings);
-				} else if (card instanceof MagicCardPhisical) {
-					((MagicCardPhisical) card).setRulings(rulings);
-				}
-			}
-		}
-		if (updateRatings) {
-			matcher = ratingPattern.matcher(html);
-			if (matcher.find()) {
-				String rating = matcher.group(1).trim();
-				if (rating.length() != 0) {
-					if (card instanceof MagicCard) {
-						((MagicCard) card).setCommunityRating(Float.parseFloat(rating));
-					} else if (card instanceof MagicCardPhisical) {
-						((MagicCardPhisical) card).setCommunityRating(Float.parseFloat(rating));
-					}
-				}
-			}
-		}
-		if (updateArtists) {
-			matcher = artistPattern.matcher(html);
-			if (matcher.find()) {
-				String artist = matcher.group(1).trim();
-				if (artist.length() != 0) {
-					if (card instanceof MagicCard) {
-						((MagicCard) card).setArtist(artist);
-					} else if (card instanceof MagicCardPhisical) {
-						((MagicCardPhisical) card).setArtist(artist);
-					}
-				}
-			}
-		}
 		st.close();
+		extractField(card, fieldMap, html, MagicCardField.RULINGS, rulingPattern);
+		extractField(card, fieldMap, html, MagicCardField.RATING, ratingPattern);
+		extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern);
+		extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern);
+		extractField(card, fieldMap, html, MagicCardField.ORACLE, oraclePattern);
 	}
 
-	public void updateCard(IMagicCard magicCard, IProgressMonitor monitor, boolean ratings, boolean rulings,
-	        boolean artists) throws IOException {
+	protected void extractField(IMagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field,
+	        Pattern pattern) {
+		if (fieldMap == null || fieldMap.contains(field)) {
+			Matcher matcher = pattern.matcher(html);
+			String value = "";
+			while (matcher.find()) {
+				String v = matcher.group(1).trim();
+				if (v.length() == 0)
+					continue;
+				if (value.length() > 0)
+					value += "\n";
+				value += v;
+			}
+			if (value.length() != 0) {
+				if (field == MagicCardField.ORACLE) {
+					value = value.replaceAll("\\n", "<br>");
+					value = ParseGathererNewVisualSpoiler.htmlToString(value);
+				}
+				((ICardModifiable) card).setObjectByField(field, value);
+			}
+		}
+	}
+
+	public void updateCard(IMagicCard magicCard, IProgressMonitor monitor, Set<ICardField> fieldMap) throws IOException {
 		monitor.beginTask("Loading additional info...", 10);
 		monitor.worked(1);
 		try {
 			// load individual card
 			try {
-				parseSingleCard(magicCard, ratings, rulings, artists);
+				parseSingleCard(magicCard, fieldMap);
 			} catch (IOException e) {
 				System.err.println("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
 			}
@@ -131,8 +131,8 @@ public class ParseGathererRulings {
 		}
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor, boolean ratings,
-	        boolean rulings, boolean artists) throws IOException {
+	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor, Set<ICardField> fieldMaps)
+	        throws IOException {
 		monitor.beginTask("Loading additional info...", fstore.getSize() + 10);
 		IStorage storage = null;
 		if (fstore.getCardStore() instanceof IStorageContainer) {
@@ -146,7 +146,7 @@ public class ParseGathererRulings {
 					return;
 				// load individual card
 				try {
-					parseSingleCard(magicCard, ratings, rulings, artists);
+					parseSingleCard(magicCard, fieldMaps);
 				} catch (IOException e) {
 					System.err.println("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
 				}
@@ -167,7 +167,8 @@ public class ParseGathererRulings {
 		MagicCard card = new MagicCard();
 		card.setCardId(11179);
 		ParseGathererRulings parser = new ParseGathererRulings();
-		parser.parseSingleCard(card, true, true, true);
-		System.err.println(card.getRulings() + " " + card.getArtist() + " " + card.getCommunityRating());
+		parser.parseSingleCard(card, null);
+		System.err.println(card.getRulings() + " " + card.getArtist() + " " + card.getCommunityRating() + " "
+		        + card.getCollNumber());
 	}
 }

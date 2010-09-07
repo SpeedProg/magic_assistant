@@ -3,7 +3,7 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MagicCardPhisical implements IMagicCard, ICardCountable {
+public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModifiable {
 	private MagicCard card;
 	private int count;
 	private float price;

@@ -444,7 +444,7 @@ public class MagicCardFilter {
 			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
 		} else if (FilterHelper.COMMUNITYRATING.equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardField.COMMUNITYRATING, value);
+			res = BinaryExpr.fieldInt(MagicCardField.RATING, value);
 		} else if (FilterHelper.ARTIST.equals(requestedId)) {
 			res = textSearch(MagicCardField.ARTIST, value, regex);
 		} else if (FilterHelper.PRICE.equals(requestedId)) {

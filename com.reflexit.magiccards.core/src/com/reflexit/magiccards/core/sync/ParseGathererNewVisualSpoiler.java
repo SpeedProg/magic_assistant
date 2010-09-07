@@ -349,7 +349,7 @@ public class ParseGathererNewVisualSpoiler {
 		}
 	}
 
-	private static String htmlToString(String str) {
+	public static String htmlToString(String str) {
 		str = str.replaceAll("\\Q " + LONG_MINUS, "-");
 		str = str.replaceAll("&nbsp;", " ");
 		str = str.replaceAll("&amp;", "&");

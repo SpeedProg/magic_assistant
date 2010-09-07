@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
 
-public class MagicCard implements IMagicCard, Cloneable {
+public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	int id;
 	String name;
 	String cost;
@@ -16,11 +16,11 @@ public class MagicCard implements IMagicCard, Cloneable {
 	String rarity;
 	String oracleText;
 	String artist;
-	transient String rulings;
 	float dbprice;
-	float communityRating;
+	float rating;
 	String lang;
-	String collNumber;
+	String num;
+	transient String rulings;
 	transient String colorType = null;
 	transient int cmc = -1;
 
@@ -273,7 +273,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 			return (new Integer(getCmc()));
 		case DBPRICE:
 			return getDbPrice();
-		case COMMUNITYRATING:
+		case RATING:
 			return getCommunityRating();
 		case ARTIST:
 			return getArtist();
@@ -298,11 +298,11 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public float getCommunityRating() {
-		return communityRating;
+		return rating;
 	}
 
 	public void setCommunityRating(float rating) {
-		this.communityRating = rating;
+		this.rating = rating;
 	}
 
 	public String getArtist() {
@@ -330,16 +330,16 @@ public class MagicCard implements IMagicCard, Cloneable {
 	}
 
 	public String getCollNumber() {
-		if (collNumber == null)
+		if (num == null)
 			return "";
-		return collNumber;
+		return num;
 	}
 
 	public void setCollNumber(String collNumber) {
 		if (collNumber == null || collNumber.trim().length() == 0)
-			this.collNumber = null;
+			this.num = null;
 		else
-			this.collNumber = collNumber;
+			this.num = collNumber;
 	}
 
 	public boolean setObjectByField(ICardField field, String value) {
@@ -383,7 +383,7 @@ public class MagicCard implements IMagicCard, Cloneable {
 		case DBPRICE:
 			setDbPrice(Float.parseFloat(value));
 			break;
-		case COMMUNITYRATING:
+		case RATING:
 			setCommunityRating(Float.parseFloat(value));
 			break;
 		case ARTIST:
