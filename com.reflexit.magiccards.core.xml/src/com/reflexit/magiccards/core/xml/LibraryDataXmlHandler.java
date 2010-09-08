@@ -67,6 +67,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		this.table = new CollectionMultiFileCardStore();
 	}
 
+	@Override
 	public Location getLocation() {
 		Expr root = getFilter().getRoot();
 		Location loc = findLocationFilter(root);

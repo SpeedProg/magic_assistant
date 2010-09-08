@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
@@ -55,10 +58,45 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			obj = CardCollectionStoreObject.initFromFile(this.file);
 			loadFields(obj);
 			updateLocations();
+			updateDbRef();
 		} catch (IOException e) {
 			Activator.log(e);
 		}
 	}
+
+	protected void updateDbRef() {
+		VirtualMultiFileCardStore db = null;
+		for (Object object : this) {
+			if (object instanceof MagicCardPhisical) {
+				MagicCardPhisical mp = (MagicCardPhisical) object;
+				if (mp.getCard().getType() == null) {
+					if (db == null) {
+						db = waitForDb();
+					}
+					Collection<IMagicCard> cards = db.getCards(mp.getCardId());
+					if (cards.size() > 0) {
+						MagicCard c = (MagicCard) cards.iterator().next();
+						mp.setMagicCard(c);
+					}
+				}
+			}
+		}
+	}
+
+	protected VirtualMultiFileCardStore waitForDb() {
+	    VirtualMultiFileCardStore db;
+	    db = (VirtualMultiFileCardStore) DataManager.getCardHandler().getDatabaseHandler()
+	            .getCardStore();
+	    int count = 20;
+	    while (db.size() < 10000 && count-- > 0) {
+	    	try {
+	    		Thread.sleep(1000);
+	    	} catch (InterruptedException e) {
+	    		break;
+	    	}
+	    }
+	    return db;
+    }
 
 	protected void updateLocations() {
 		if (getLocation() == null)

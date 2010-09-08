@@ -42,8 +42,10 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 		}
 		CollectionCardStore store = new DbFileCardStore(file, location, initialize);
 		addCardStore(store);
-		if (initialize)
+		if (initialize) {
 			initialized = initialize;
+			store.initialize();
+		}
 		return store;
 	}
 
