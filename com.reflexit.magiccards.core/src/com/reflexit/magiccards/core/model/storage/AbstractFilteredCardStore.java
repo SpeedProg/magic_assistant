@@ -203,15 +203,19 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	 */
 	private CardGroup findGroupIndex(IMagicCard elem, ICardField cardField) {
 		String name = null;
-		if (cardField == MagicCardField.COST) {
-			name = Colors.getColorName(elem.getCost());
-		} else if (cardField == MagicCardField.CMC) {
-			int ccc = elem.getCmc();
-			if (ccc == 0 && elem.getType().contains("Land")) {
-				name = "Land";
-			} else {
-				name = String.valueOf(ccc);
+		try {
+			if (cardField == MagicCardField.COST) {
+				name = Colors.getColorName(elem.getCost());
+			} else if (cardField == MagicCardField.CMC) {
+				int ccc = elem.getCmc();
+				if (ccc == 0 && elem.getType().contains("Land")) {
+					name = "Land";
+				} else {
+					name = String.valueOf(ccc);
+				}
 			}
+		} catch (Exception e) {
+			name = "Unknown";
 		}
 		CardGroup g = this.groupsList.get(name);
 		if (g == null && name != null) {

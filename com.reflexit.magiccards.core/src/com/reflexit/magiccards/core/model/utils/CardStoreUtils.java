@@ -158,6 +158,7 @@ public class CardStoreUtils {
 	public CardGroup buildTypeGroups(Iterable iterable) {
 		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, "Spell");
 		CardGroup landNode = new CardGroup(MagicCardField.TYPE, "Land");
+		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, "Unknown");
 		CardGroup basic = new CardGroup(MagicCardField.TYPE, "Basic");
 		landNode.add(basic);
 		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, "Non-Creature");
@@ -177,39 +178,43 @@ public class CardStoreUtils {
 		int total = 0;
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
 			IMagicCard elem = (IMagicCard) iterator.next();
-			String type = elem.getType();
 			int count = 1;
-			if (elem instanceof ICardCountable) {
-				count = ((ICardCountable) elem).getCount();
-			}
-			if (type.contains("Land")) {
-				if (type.contains(basic.getName())) {
-					basic.add(elem);
-					landNode.addCount(count);
-				} else {
-					landNode.add(elem);
+			try {
+				String type = elem.getType();
+				if (elem instanceof ICardCountable) {
+					count = ((ICardCountable) elem).getCount();
 				}
-			} else {
-				spellNode.addCount(count);
-				if (type.contains(creatureNode.getName()) || type.contains("Summon")) {
-					creatureNode.add(elem);
-				} else {
-					noncreatureNode.addCount(count);
-					if (type.contains(instant.getName()) || type.contains("Interrupt")) {
-						instant.add(elem);
-					} else if (type.contains(ench.getName())) {
-						ench.add(elem);
-					} else if (type.contains(sorcery.getName())) {
-						sorcery.add(elem);
-					} else if (type.contains(artifact.getName())) {
-						artifact.add(elem);
-					} else if (type.contains(walker.getName())) {
-						walker.add(elem);
+				if (type.contains("Land")) {
+					if (type.contains(basic.getName())) {
+						basic.add(elem);
+						landNode.addCount(count);
 					} else {
-						noncreatureNode.addCount(-count);
-						noncreatureNode.add(elem);
+						landNode.add(elem);
+					}
+				} else {
+					spellNode.addCount(count);
+					if (type.contains(creatureNode.getName()) || type.contains("Summon")) {
+						creatureNode.add(elem);
+					} else {
+						noncreatureNode.addCount(count);
+						if (type.contains(instant.getName()) || type.contains("Interrupt")) {
+							instant.add(elem);
+						} else if (type.contains(ench.getName())) {
+							ench.add(elem);
+						} else if (type.contains(sorcery.getName())) {
+							sorcery.add(elem);
+						} else if (type.contains(artifact.getName())) {
+							artifact.add(elem);
+						} else if (type.contains(walker.getName())) {
+							walker.add(elem);
+						} else {
+							noncreatureNode.addCount(-count);
+							noncreatureNode.add(elem);
+						}
 					}
 				}
+			} catch (Exception e) {
+				unknownNode.add(elem);
 			}
 			total += count;
 		}
@@ -217,6 +222,8 @@ public class CardStoreUtils {
 		root.setCount(total);
 		root.add(landNode);
 		root.add(spellNode);
+		if (unknownNode.getCount() > 0)
+			root.add(unknownNode);
 		return root;
 	}
 }

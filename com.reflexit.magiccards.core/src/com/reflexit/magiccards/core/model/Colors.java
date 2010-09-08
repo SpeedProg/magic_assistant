@@ -30,6 +30,8 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public static String getColorName(String cost) {
+		if (cost == null)
+			return "Unknown";
 		if (cost.length() == 0)
 			return "No Cost";
 		StringBuffer color = new StringBuffer();
