@@ -50,10 +50,9 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	private String statusMessage;
 	private Job loadingJob;
 
-	protected ViewerManager(IFilteredCardStore handler, IPreferenceStore store, String viewId) {
+	protected ViewerManager(IPreferenceStore store, String viewId) {
 		super(viewId);
 		this.filter = new MagicCardFilter();
-		this.mhandler = handler;
 		this.store = store;
 	}
 
@@ -63,6 +62,10 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 
 	public void setFilter(MagicCardFilter filter) {
 		this.filter = filter;
+	}
+
+	public void setFilteredCardStore(IFilteredCardStore store) {
+		this.mhandler = store;
 	}
 
 	void asyncUpdateViewer(Display display) {
@@ -151,6 +154,9 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 					try {
 						setName("Loading cards");
 						checkInit();
+						if (getFilteredStore() == null) {
+							setFilteredCardStore(view.doGetFilteredStore());
+						}
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
 						monitor.subTask("Loading cards...");
@@ -252,9 +258,12 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	}
 
 	public String getStatusMessage() {
-		ICardStore cardStore = getFilteredStore().getCardStore();
+		IFilteredCardStore filteredStore = getFilteredStore();
+		if (filteredStore == null)
+			return "";
+		ICardStore cardStore = filteredStore.getCardStore();
 		String cardCountTotal = "";
-		int filSize = getFilteredStore().getSize();
+		int filSize = filteredStore.getSize();
 		int totalSize = cardStore.size();
 		if (totalSize == 0)
 			return "";

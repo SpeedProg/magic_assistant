@@ -25,12 +25,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	private TableViewer viewer;
 
 	public LazyTableViewerManager(AbstractCardsView view) {
-		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
-		this.view = view;
-	}
-
-	public LazyTableViewerManager(IFilteredCardStore fs, AbstractCardsView view) {
-		super(fs, view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 
@@ -116,14 +111,15 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	public void updateViewer() {
 		updateTableHeader();
 		long time = System.currentTimeMillis();
-		if (this.viewer.getInput() != getFilteredStore()) {
-			this.viewer.setInput(getFilteredStore());
-			this.viewer.setItemCount(getFilteredStore().getSize());
+		IFilteredCardStore filteredStore = getFilteredStore();
+		if (this.viewer.getInput() != filteredStore) {
+			this.viewer.setInput(filteredStore);
+			this.viewer.setItemCount(filteredStore == null ? 0 : filteredStore.getSize());
 		} else {
 			this.viewer.setSelection(new StructuredSelection());
 			this.viewer.getTable().clearAll();
 			((MyTableViewer) this.viewer).unmapAllElements();
-			this.viewer.setItemCount(getFilteredStore().getSize());
+			this.viewer.setItemCount(filteredStore == null ? 0 : filteredStore.getSize());
 			this.viewer.refresh(true);
 		}
 		updateStatus();

@@ -17,23 +17,13 @@ import org.eclipse.ui.services.IDisposable;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {
 	private MyTreeViewer viewer;
 
 	LazyTreeViewerManager(AbstractCardsView view) {
-		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
-		this.view = view;
-	}
-
-	/**
-	 * @param filteredStore
-	 * @param view
-	 */
-	public LazyTreeViewerManager(IFilteredCardStore filteredStore, AbstractCardsView view) {
-		super(filteredStore, view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 

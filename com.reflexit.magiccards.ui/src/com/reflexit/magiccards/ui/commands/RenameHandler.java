@@ -79,7 +79,7 @@ public class RenameHandler extends AbstractHandler {
 		if (window == null)
 			return;
 		ISelection selection = window.getSelectionService().getSelection();
-		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
+		if (selection == null || selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
 			setBaseEnabled(false);
 			return;
 		}

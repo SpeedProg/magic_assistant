@@ -109,7 +109,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		super.init(site);
 		String secondaryId = getViewSite().getSecondaryId();
 		this.deck = DataManager.getModelRoot().findCardCollectionById(secondaryId);
-		if (this.deck.getStore() != getFilteredStore().getCardStore()) {
+		if (getFilteredStore() != null && this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
 		site.getPage().addPartListener(partListener = new PartListener());
@@ -157,15 +157,24 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		ICardEventManager s = this.manager.getFilteredStore().getCardStore();
-		if (s instanceof ICardStore) {
-			String name = ((ICardStore<IMagicCard>) s).getName();
-			if (deck.isDeck())
-				setPartName("Deck: " + name);
-			else
-				setPartName("Collection: " + name);
-		}
+		updatePartName();
 		super.createPartControl(parent);
+	}
+
+	protected void updatePartName() {
+		IFilteredCardStore filteredStore = this.manager.getFilteredStore();
+		if (filteredStore == null) {
+			return;
+		} else {
+			ICardEventManager s = filteredStore.getCardStore();
+			if (s instanceof ICardStore) {
+				String name = ((ICardStore<IMagicCard>) s).getName();
+				if (deck.isDeck())
+					setPartName("Deck: " + name);
+				else
+					setPartName("Collection: " + name);
+			}
+		}
 	}
 
 	@Override
@@ -294,6 +303,12 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	protected void refreshActivePage() {
 		reloadData();
+	}
+
+	@Override
+	protected void updateViewer() {
+		updatePartName();
+		super.updateViewer();
 		CTabItem sel = folder.getSelection();
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;

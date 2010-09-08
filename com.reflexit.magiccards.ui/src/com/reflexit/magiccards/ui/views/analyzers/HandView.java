@@ -57,7 +57,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	 */
 	@Override
 	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new LazyTableViewerManager(doGetFilteredStore(), this);
+		return new LazyTableViewerManager(this);
 	}
 
 	/* (non-Javadoc)

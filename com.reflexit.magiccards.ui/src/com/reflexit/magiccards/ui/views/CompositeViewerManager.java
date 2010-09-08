@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
@@ -40,10 +41,10 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @param viewId
 	 */
 	public CompositeViewerManager(AbstractCardsView view) {
-		super(view.doGetFilteredStore(), view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getPreferenceStore(), view.getViewSite().getId());
 		this.managers = new ViewerManager[2];
-		this.managers[0] = new LazyTableViewerManager(getFilteredStore(), view);
-		this.managers[1] = new LazyTreeViewerManager(getFilteredStore(), view);
+		this.managers[0] = new LazyTableViewerManager(view);
+		this.managers[1] = new LazyTreeViewerManager(view);
 		this.view = view;
 		for (ViewerManager m : this.managers) {
 			m.setFilter(this.filter);
@@ -171,5 +172,13 @@ public class CompositeViewerManager extends ViewerManager {
 	@Override
 	public Control getControl() {
 		return comp;
+	}
+
+	@Override
+	public void setFilteredCardStore(IFilteredCardStore store) {
+		for (ViewerManager m : this.managers) {
+			m.setFilteredCardStore(store);
+		}
+		super.setFilteredCardStore(store);
 	}
 }
