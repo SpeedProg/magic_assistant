@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -45,8 +44,8 @@ public class CardCollectionStoreObject {
 		xstream.alias("com.reflexit.magiccards.core.xml.LibraryCardStore", CardCollectionStoreObject.class);
 		xstream.alias("com.reflexit.magiccards.core.xml.DeckFileCardStore", CardCollectionStoreObject.class);
 		xstream.alias("cards", CardCollectionStoreObject.class);
-		xstream.registerLocalConverter(MagicCardPhisical.class, "card", new ReferenceCardConverter());
 		xstream.setClassLoader(CardCollectionStoreObject.class.getClassLoader());
+		xstream.registerConverter(new MagicCardPhysicalConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
 	}
 
 	public CardCollectionStoreObject() {
