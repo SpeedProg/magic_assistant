@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model.storage;
 
 public interface IStorageInfo {
 	public static final String DECK_TYPE = "deck";
+	public static final String COLLECTION_TYPE = "collection";
 
 	public String getComment();
 
