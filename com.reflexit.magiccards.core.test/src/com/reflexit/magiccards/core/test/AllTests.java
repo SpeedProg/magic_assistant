@@ -37,6 +37,7 @@ public class AllTests {
 		suite.addTestSuite(CollectionStoreTest.class);
 		suite.addTestSuite(DeckParserTest.class);
 		suite.addTestSuite(MagicCardFilterTest.class);
+		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
 		//$JUnit-END$
 		return suite;
 	}

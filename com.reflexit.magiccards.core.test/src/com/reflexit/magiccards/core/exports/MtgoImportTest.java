@@ -55,14 +55,14 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Onslaught", card1.getSet());
 	}
 
-	public void test_comment() {
+	public void test_special() {
 		addLine("Aven Brigadier (premium),1,1,0,R,ONS,7/350");
 		parse(false, TYPE);
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
 		assertEquals(1, ((MagicCardPhisical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
-		String comment = ((MagicCardPhisical) card1).getComment();
+		String comment = ((MagicCardPhisical) card1).getSpecial();
 		assertTrue(comment, comment.contains("premium"));
 	}
 
@@ -76,6 +76,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Arrogant Bloodlord", card1.getName());
 		assertEquals(9, ((MagicCardPhisical) card1).getCount());
 		assertEquals("Rise of the Eldrazi", card1.getSet());
-		assertEquals("premium,94/248", ((MagicCardPhisical) card2).getComment());
+		assertEquals("premium,", ((MagicCardPhisical) card2).getSpecial());
+		//assertEquals("248", ((MagicCardPhisical) card2).getCard().getCollNumber());
 	}
 }
