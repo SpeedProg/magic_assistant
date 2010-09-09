@@ -1,44 +1,49 @@
 package com.reflexit.magiccards.core.model;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 /**
  * Fields for actual player card
  */
 public enum MagicCardFieldPhysical implements ICardField {
-	COUNT(Integer.class),
-	PRICE(Float.class),
+	COUNT,
+	PRICE,
 	COMMENT,
 	LOCATION,
 	CUSTOM,
-	OWNERSHIP(Boolean.class),
-	FORTRADECOUNT(Integer.class),
+	OWNERSHIP,
+	FORTRADECOUNT("forTrade"),
 	SPECIAL, // like foil, premium, mint, played, online etc
 	// end of fields
 	;
 	// fields
-	private final Class type;
-	private final boolean transientField;
+	private final Field field;
 
-	MagicCardFieldPhysical(Class type, boolean trans) {
-		this.type = type;
-		this.transientField = trans;
-	}
-
-	MagicCardFieldPhysical(Class type) {
-		this(type, false);
+	MagicCardFieldPhysical(String javaField) {
+		try {
+			field = MagicCardPhisical.class.getDeclaredField(javaField);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	MagicCardFieldPhysical() {
-		this(String.class);
+		String javaField = name().toLowerCase();
+		try {
+			field = MagicCardPhisical.class.getDeclaredField(javaField);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	public Class getType() {
-		return type;
+		return field.getClass();
 	}
 
 	public boolean isTransient() {
-		return transientField;
+		return Modifier.isTransient(field.getModifiers());
 	}
 
 	public static ICardField[] allFields() {
@@ -86,5 +91,9 @@ public enum MagicCardFieldPhysical implements ICardField {
 		if (field.equals("QTY"))
 			return MagicCardFieldPhysical.COUNT;
 		return null;
+	}
+
+	public Field getJavaField() {
+		return field;
 	}
 }

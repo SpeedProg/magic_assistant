@@ -107,6 +107,8 @@ public class CardStoreUtils {
 		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard elem = (IMagicCard) iterator.next();
 			String type = elem.getType();
+			if (type == null)
+				continue;
 			int count = 1;
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
@@ -141,7 +143,7 @@ public class CardStoreUtils {
 		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType().contains("Land"))
+			if (elem.getType() == null || elem.getType().contains("Land"))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			CardGroup g = new CardGroup(MagicCardField.COST, name);
@@ -181,6 +183,10 @@ public class CardStoreUtils {
 			int count = 1;
 			try {
 				String type = elem.getType();
+				if (type == null) {
+					unknownNode.add(elem);
+					continue;
+				}
 				if (elem instanceof ICardCountable) {
 					count = ((ICardCountable) elem).getCount();
 				}

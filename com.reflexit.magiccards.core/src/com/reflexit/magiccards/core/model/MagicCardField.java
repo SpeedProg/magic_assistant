@@ -1,47 +1,56 @@
 package com.reflexit.magiccards.core.model;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 public enum MagicCardField implements ICardField {
-	ID(Integer.class),
+	ID,
 	NAME,
 	COST,
 	TYPE,
 	POWER,
 	TOUGHNESS,
-	ORACLE,
-	SET,
+	ORACLE("oracleText"),
+	SET("edition"),
 	RARITY,
-	CTYPE(String.class, true),
-	CMC(Integer.class, true),
-	DBPRICE(Float.class),
+	CTYPE("colorType"),
+	CMC,
+	DBPRICE,
 	LANG,
-	EDITION_ABBR(String.class, true),
-	RATING(Float.class),
-	ARTIST(String.class),
-	COLLNUM(String.class), // collector number i.e. 5/234
-	RULINGS(String.class, true), ;
-	// fields
-	private final Class type;
-	// transient field is not stored in xml
-	private final boolean transientField;
+	EDITION_ABBR(null),
+	RATING,
+	ARTIST,
+	COLLNUM("num"), // collector number i.e. 5/234
+	RULINGS,
+	// end
+	;
+	private final Field field;
 
-	MagicCardField(Class type, boolean trans) {
-		this.type = type;
-		this.transientField = trans;
-	}
-
-	MagicCardField(Class type) {
-		this(type, false);
+	MagicCardField(String javaField) {
+		if (javaField != null)
+			try {
+				field = MagicCard.class.getDeclaredField(javaField);
+			} catch (Exception e) {
+				throw new IllegalArgumentException(e);
+			}
+		else
+			field = null;
 	}
 
 	MagicCardField() {
-		this(String.class);
+		String javaField = name().toLowerCase();
+		try {
+			field = MagicCard.class.getDeclaredField(javaField);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	public Class getType() {
-		return type;
+		return field == null ? String.class : field.getClass();
 	}
 
 	public boolean isTransient() {
-		return transientField;
+		return field == null ? true : Modifier.isTransient(field.getModifiers());
 	}
 }
