@@ -1,10 +1,14 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -19,6 +23,7 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
+import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
 
 public class InfoControl extends AbstractDeckPage implements IDeckPage {
 	private Text text;
@@ -28,6 +33,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 	private Label colors;
 	private Label ownership;
+	private Button editButton;
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -35,6 +41,16 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 		area.setLayout(new GridLayout(2, false));
 		createStatsArea();
 		createTextArea();
+		editButton = new Button(area, SWT.PUSH);
+		editButton.setText("Edit...");
+		editButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
+					updateFromStore();
+				}
+			}
+		});
 		return area;
 	}
 
@@ -59,7 +75,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 	private void createTextArea() {
 		Label label = new Label(area, SWT.NONE);
 		label.setText(prefix + " description:");
-		text = new Text(area, SWT.WRAP | SWT.BORDER);
+		text = new Text(area, SWT.WRAP | SWT.BORDER | SWT.READ_ONLY);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		text.setLayoutData(gd);
