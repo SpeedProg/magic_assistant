@@ -46,8 +46,12 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 		editButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
-					updateFromStore();
+				try {
+					if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
+						updateFromStore();
+					}
+				} catch (Exception x) {
+					x.printStackTrace();
 				}
 			}
 		});

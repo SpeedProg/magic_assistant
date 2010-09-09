@@ -81,7 +81,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 3;
 		text.setLayoutData(gd);
-		text.setText(info.getComment());
+		text.setText(info.getComment() == null ? "" : info.getComment());
 	}
 
 	@Override
