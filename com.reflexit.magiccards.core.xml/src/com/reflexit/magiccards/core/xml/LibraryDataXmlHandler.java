@@ -108,7 +108,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 						if (storage instanceof IStorageInfo) {
 							((IStorageInfo) storage).setType(((CardCollection) elem).isDeck()
 							        ? IStorageInfo.DECK_TYPE
-							        : null);
+							        : IStorageInfo.COLLECTION_TYPE);
 						}
 					}
 				} catch (CoreException e) {
