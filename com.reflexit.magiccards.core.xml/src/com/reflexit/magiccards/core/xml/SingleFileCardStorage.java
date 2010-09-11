@@ -84,19 +84,18 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	protected VirtualMultiFileCardStore waitForDb() {
-	    VirtualMultiFileCardStore db;
-	    db = (VirtualMultiFileCardStore) DataManager.getCardHandler().getDatabaseHandler()
-	            .getCardStore();
-	    int count = 20;
-	    while (db.size() < 10000 && count-- > 0) {
-	    	try {
-	    		Thread.sleep(1000);
-	    	} catch (InterruptedException e) {
-	    		break;
-	    	}
-	    }
-	    return db;
-    }
+		VirtualMultiFileCardStore db;
+		db = (VirtualMultiFileCardStore) DataManager.getCardHandler().getDatabaseHandler().getCardStore();
+		int count = 20;
+		while (db.size() < 10000 && count-- > 0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		return db;
+	}
 
 	protected void updateLocations() {
 		if (getLocation() == null)
@@ -217,7 +216,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	protected final void doSetType(String type) {
-		this.type = type;
+		this.type = type.intern();
 	}
 
 	public String getProperty(String key) {
