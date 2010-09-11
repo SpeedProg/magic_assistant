@@ -46,6 +46,17 @@ public class CardCollection extends CardElement {
 		return this.store;
 	}
 
+	public IStorageInfo getStorageInfo() {
+		if (store instanceof IStorageContainer) {
+			IStorage storage = ((IStorageContainer) store).getStorage();
+			if (storage instanceof IStorageInfo) {
+				IStorageInfo si = ((IStorageInfo) storage);
+				return si;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public String getName() {
 		return super.getName();
@@ -54,14 +65,12 @@ public class CardCollection extends CardElement {
 	public void open(ICardStore<IMagicCard> store) {
 		if (this.store == null) {
 			this.store = store;
-			if (store instanceof IStorageContainer) {
-				IStorage storage = ((IStorageContainer) store).getStorage();
-				if (storage instanceof IStorageInfo) {
-					deck = IStorageInfo.DECK_TYPE.equals(((IStorageInfo) storage).getType());
-					if (pendingVirtual) {
-						setVirtual(virtualFlag);
-						pendingVirtual = false;
-					}
+			IStorageInfo info = getStorageInfo();
+			if (info != null) {
+				deck = IStorageInfo.DECK_TYPE.equals(info.getType());
+				if (pendingVirtual) {
+					setVirtual(virtualFlag);
+					pendingVirtual = false;
 				}
 			}
 		} else {
