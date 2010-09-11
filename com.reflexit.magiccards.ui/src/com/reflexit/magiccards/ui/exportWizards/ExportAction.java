@@ -24,6 +24,11 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 	public final static String ID = ExportAction.class.getName();
 	private IStructuredSelection selection;
 
+	public ExportAction(IStructuredSelection selection) {
+		this();
+		selectionChanged(selection);
+	}
+
 	public ExportAction() {
 		super("Export...");
 		setId(ID);

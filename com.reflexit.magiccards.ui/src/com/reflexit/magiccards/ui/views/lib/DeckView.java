@@ -28,11 +28,11 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
-import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
+import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
@@ -94,6 +94,11 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		}
 	}
 
+	@Override
+	protected ExportAction createExportAction() {
+		return new ExportAction(new StructuredSelection(getCardCollection()));
+	}
+
 	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui.IViewSite)
 	 */
@@ -106,6 +111,9 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			throw new IllegalArgumentException("Bad store");
 		}
 		site.getPage().addPartListener(PartListener.getInstance());
+		if (export != null) {
+			((ExportAction) export).selectionChanged(new StructuredSelection(getCardCollection()));
+		}
 	}
 
 	/* (non-Javadoc)
@@ -158,14 +166,12 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		if (filteredStore == null) {
 			return;
 		} else {
-			ICardEventManager s = filteredStore.getCardStore();
-			if (s instanceof ICardStore) {
-				String name = ((ICardStore<IMagicCard>) s).getName();
-				if (deck.isDeck())
-					setPartName("Deck: " + name);
-				else
-					setPartName("Collection: " + name);
-			}
+			ICardStore<IMagicCard> s = filteredStore.getCardStore();
+			String name = s.getName();
+			if (deck.isDeck())
+				setPartName("Deck: " + name);
+			else
+				setPartName("Collection: " + name);
 		}
 	}
 

@@ -51,6 +51,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.CompositeViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
@@ -66,6 +67,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private Action edit;
 	private Action paste;
 	private Action refresh;
+	protected Action export;
 	private MenuManager moveToDeckMenu;
 
 	@Override
@@ -111,6 +113,11 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			}
 		};
 		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+		this.export = createExportAction();
+	}
+
+	protected ExportAction createExportAction() {
+		return new ExportAction(new StructuredSelection());
 	}
 
 	protected void refresh() {
@@ -268,6 +275,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.refresh);
 		super.fillLocalPullDown(manager);
+		manager.add(this.export);
 	}
 
 	/* (non-Javadoc)
