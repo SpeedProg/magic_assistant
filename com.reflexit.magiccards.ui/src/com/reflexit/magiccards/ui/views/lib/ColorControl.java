@@ -21,7 +21,7 @@ public class ColorControl extends AbstractDeckPage implements IDeckPage {
 
 	@Override
 	public Composite createContents(Composite parent) {
-		area = super.createContents(parent);
+		Composite area = super.createContents(parent);
 		area.setLayout(new GridLayout(2, false));
 		spellColorCanvas = new ChartCanvas(area, SWT.BORDER);
 		spellColorCanvas.setLayoutData(new GridData(GridData.FILL_BOTH));

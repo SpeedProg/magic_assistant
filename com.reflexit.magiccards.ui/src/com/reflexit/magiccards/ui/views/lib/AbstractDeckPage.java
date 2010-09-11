@@ -14,7 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.reflexit.magiccards.core.model.storage.ICardEventManager;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 public class AbstractDeckPage implements IDeckPage {
 	protected DeckView view;
 	protected ICardStore store;
-	protected Composite area;
+	private Composite area;
 
 	public Composite createContents(Composite parent) {
 		area = new Composite(parent, SWT.NONE);
@@ -32,6 +32,10 @@ public class AbstractDeckPage implements IDeckPage {
 	}
 
 	public Control getControl() {
+		return getArea();
+	}
+
+	public Composite getArea() {
 		return area;
 	}
 
@@ -51,7 +55,9 @@ public class AbstractDeckPage implements IDeckPage {
 		this.store = store.getCardStore();
 	};
 
-	public ICardEventManager getCardStore() {
+	public ICardStore<IMagicCard> getCardStore() {
+		if (store == null && view != null && view.getCardCollection() != null)
+			store = view.getCardCollection().getStore();
 		return store;
 	}
 }

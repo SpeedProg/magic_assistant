@@ -66,7 +66,7 @@ public class TypeStatsControl extends AbstractDeckPage implements IDeckPage {
 
 	@Override
 	public Composite createContents(Composite parent) {
-		area = super.createContents(parent);
+		Composite area = super.createContents(parent);
 		area.setLayout(new GridLayout(2, true));
 		canvas = new ChartCanvas(area, SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));

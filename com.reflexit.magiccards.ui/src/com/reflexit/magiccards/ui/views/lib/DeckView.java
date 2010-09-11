@@ -17,14 +17,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -44,12 +42,11 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	CardCollection deck;
 	private Action shuffle;
 	private CTabFolder folder;
-	private IPartListener2 partListener;
 	private ArrayList<IDeckPage> pages;
 	static class DeckPageExtension {
 		String id;
 		String name;
-		private IDeckPage page;
+		IConfigurationElement elp;
 
 		public static Collection<DeckPageExtension> parseElement(IConfigurationElement el) {
 			Collection<DeckPageExtension> res = new ArrayList<DeckPageExtension>();
@@ -64,11 +61,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			DeckPageExtension page = new DeckPageExtension();
 			page.id = elp.getAttribute("id");
 			page.name = elp.getAttribute("name");
-			try {
-				page.page = (IDeckPage) elp.createExecutableExtension("class");
-			} catch (CoreException e) {
-				Activator.log(e);
-			}
+			page.elp = elp;
 			return page;
 		}
 	}
@@ -112,7 +105,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		if (getFilteredStore() != null && this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
-		site.getPage().addPartListener(partListener = new PartListener());
+		site.getPage().addPartListener(PartListener.getInstance());
 	}
 
 	/* (non-Javadoc)
@@ -148,7 +141,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	@Override
 	public void dispose() {
 		this.deck.close();
-		getSite().getPage().removePartListener(partListener);
 		super.dispose();
 	}
 
@@ -196,7 +188,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				refreshActivePage();
+				reloadData();
 			}
 		});
 		folder.setSelection(0);
@@ -206,8 +198,12 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		for (Object element : extensionPages) {
 			DeckPageExtension ex = (DeckPageExtension) element;
 			try {
-				IDeckPage page = ex.page;
-				createDeckTab(ex.name, page);
+				try {
+					IDeckPage page = (IDeckPage) ex.elp.createExecutableExtension("class");
+					createDeckTab(ex.name, page);
+				} catch (CoreException e) {
+					MagicUIActivator.log(e);
+				}
 			} catch (Exception e) {
 				MagicUIActivator.log(e);
 			}
@@ -221,18 +217,19 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		item.setText(name);
 		item.setShowClose(false);
 		item.setControl(page.getControl());
+		item.setData(page);
 		pages.add(page);
 	}
 
 	@Override
-	protected void updateStatus() {
+	protected synchronized void updateStatus() {
 		CTabItem sel = folder.getSelection();
 		if (sel.getControl() == manager.getControl()) {
 			setStatus(manager.getStatusMessage());
 		} else {
 			for (IDeckPage deckPage : pages) {
 				IDeckPage page = deckPage;
-				if (sel.getControl() == page.getControl()) {
+				if (sel.getData() == page) {
 					setStatus(page.getStatusMessage());
 				}
 			}
@@ -273,10 +270,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 					// ignore
 				} else {
-					for (IDeckPage deckPage : pages) {
-						IDeckPage page = deckPage;
-						page.updateFromStore();
-					}
+					System.err.println(event);
+					updateActivePage();
 				}
 			}
 		});
@@ -298,25 +293,30 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void refresh() {
-		refreshActivePage();
-	}
-
-	protected void refreshActivePage() {
 		reloadData();
 	}
 
 	@Override
 	protected void updateViewer() {
-		updatePartName();
 		super.updateViewer();
+		updatePartName();
+		updateActivePage();
+		updateStatus();
+	}
+
+	protected synchronized void updateActivePage() {
 		CTabItem sel = folder.getSelection();
+		//System.err.println(sel + " " + sel.getData());
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;
-			if (sel.getControl() == page.getControl()) {
+			//System.err.println(deckPage);
+			if (sel.getData() == page) {
+				if (sel.getControl() != page.getControl()) {
+					System.err.println("oops sel " + sel.getControl().handle + " page " + page.getControl().handle);
+				}
 				page.setFilteredStore(getFilteredStore());
 				page.updateFromStore();
 			}
 		}
-		updateStatus();
 	}
 }

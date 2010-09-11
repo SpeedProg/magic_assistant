@@ -61,9 +61,9 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 	@Override
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
-		area.setLayout(new GridLayout(2, false));
-		createGui(area);
-		return area;
+		getArea().setLayout(new GridLayout(2, false));
+		createGui(getArea());
+		return getArea();
 	}
 
 	private void createGui(Composite parent) {

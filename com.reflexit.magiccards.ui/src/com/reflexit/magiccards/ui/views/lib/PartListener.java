@@ -8,6 +8,18 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class PartListener implements IPartListener2 {
+	private static PartListener instance;
+
+	public synchronized static PartListener getInstance() {
+		if (instance == null)
+			instance = new PartListener();
+		return instance;
+	}
+
+	private PartListener() {
+		// singleton
+	}
+
 	public void partActivated(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof DeckView) {
