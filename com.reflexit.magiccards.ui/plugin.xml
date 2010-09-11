@@ -134,6 +134,10 @@
             commandId="com.reflexit.magiccards.ui.commands.updateMagicDb">
       </handler>
       <handler
+            class="com.reflexit.magiccards.ui.commands.EditDeckPropertiesHandler"
+            commandId="com.reflexit.magiccards.ui.commands.EditDeckProperties">
+      </handler>
+      <handler
             class="com.reflexit.magiccards.ui.commands.RenameHandler"
             commandId="org.eclipse.ui.edit.rename">
       </handler>
@@ -210,6 +214,12 @@
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
             name="Update Magic Cards Database...">
+      </command>
+      
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.EditDeckProperties"
+            name="Edit Properties...">
       </command>
    </extension>
    <extension
@@ -306,6 +316,10 @@
         <command
               commandId="org.eclipse.ui.edit.rename"
               mode="FORCE_TEXT"
+              style="push">
+        </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.EditDeckProperties"
               style="push">
         </command>
      </menuContribution>
