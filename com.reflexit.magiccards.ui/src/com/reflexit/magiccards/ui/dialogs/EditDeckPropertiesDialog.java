@@ -18,11 +18,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * Dialog to edit properties of a deck/collection
@@ -35,17 +37,22 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 
 	public EditDeckPropertiesDialog(Shell shell, IStorageInfo info) {
 		super(shell);
+		if (info == null)
+			throw new NullPointerException();
 		this.info = info;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage("Edit decl/collection properties. Press OK to save. Cancel to drop changes.");
+		getShell().setText("Edit...");
+		setTitleImage(MagicUIActivator.getDefault().getImage("icons/Book-1-icon.gif"));
+		setTitle("Edit Properties");
+		setMessage("You can modify decl/collection properties here. Press OK to save.");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite comp = new Composite(area, SWT.NONE);
 		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(5, false);
 		comp.setLayout(layout);
 		{
 			Label label = new Label(comp, SWT.NONE);
@@ -53,7 +60,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 			type = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN);
 			type.add(IStorageInfo.DECK_TYPE);
 			type.add(IStorageInfo.COLLECTION_TYPE);
-			type.setText(info.getType() == IStorageInfo.DECK_TYPE
+			type.setText(info.getType().equals(IStorageInfo.DECK_TYPE)
 			        ? IStorageInfo.DECK_TYPE
 			        : IStorageInfo.COLLECTION_TYPE);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -72,15 +79,15 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 	}
 
 	private void createTextArea(Composite area) {
-		Label label = new Label(area, SWT.NONE);
-		label.setText("Description:");
-		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
-		gd1.horizontalSpan = 3;
-		label.setLayoutData(gd1);
-		text = new Text(area, SWT.WRAP | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		Group group = new Group(area, SWT.NONE);
+		group.setText("Description");
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 3;
-		text.setLayoutData(gd);
+		gd.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
+		group.setLayoutData(gd);
+		group.setLayout(new GridLayout());
+		text = new Text(group, SWT.WRAP | SWT.BORDER);
+		GridData gd1 = new GridData(GridData.FILL_BOTH);
+		text.setLayoutData(gd1);
 		text.setText(info.getComment() == null ? "" : info.getComment());
 	}
 
