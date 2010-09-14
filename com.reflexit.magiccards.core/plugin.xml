@@ -40,5 +40,11 @@
             label="Magic Workstation CSV"
             xmlFormat="false">
       </deckFormat>
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.WagicExportDelegate"
+            id="wth"
+            label="Wagic: The Homebrew"
+            xmlFormat="false">
+      </deckFormat>
    </extension>
 </plugin>

@@ -17,4 +17,6 @@ public interface IStorageInfo {
 	public void setVirtual(boolean value);
 
 	public boolean isVirtual();
+
+	public String getName();
 }
