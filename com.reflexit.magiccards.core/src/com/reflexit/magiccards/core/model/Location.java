@@ -18,7 +18,7 @@ import java.io.File;
 /**
  * Location represents path to a decl/collection
  */
-public class Location {
+public class Location implements Comparable<Location> {
 	public static final Location NO_WHERE = new Location();
 	private final String location;
 
@@ -81,5 +81,9 @@ public class Location {
 	public static Location createLocation(File file, Location parent) {
 		String basename = file.getName().replaceAll("\\.xml$", "");
 		return new Location(basename, parent);
+	}
+
+	public int compareTo(Location o) {
+		return location.compareTo(o.location);
 	}
 }
