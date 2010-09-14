@@ -364,29 +364,36 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			return;
 		PreferenceStore store = new PreferenceStore();
 		boolean first = true;
+		boolean any = false;
 		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
-			if (first) {
-				ICardField[] allFields = MagicCardFieldPhysical.allFields();
-				for (ICardField f : allFields) {
-					store.setDefault(f.name(), String.valueOf(card.getObjectByField(f)));
-				}
-				first = false;
-			} else {
-				ICardField[] allFields = MagicCardFieldPhysical.allFields();
-				for (ICardField f : allFields) {
-					String value = String.valueOf(card.getObjectByField(f));
-					if (!value.equals(store.getDefaultString(f.name()))) {
-						store.setDefault(f.name(), UNCHANGED);
+			Object object = iterator.next();
+			if (object instanceof MagicCardPhisical) {
+				any = true;
+				MagicCardPhisical card = (MagicCardPhisical) object;
+				if (first) {
+					ICardField[] allFields = MagicCardFieldPhysical.allFields();
+					for (ICardField f : allFields) {
+						store.setDefault(f.name(), String.valueOf(card.getObjectByField(f)));
 					}
+					first = false;
+				} else {
+					ICardField[] allFields = MagicCardFieldPhysical.allFields();
+					for (ICardField f : allFields) {
+						String value = String.valueOf(card.getObjectByField(f));
+						if (!value.equals(store.getDefaultString(f.name()))) {
+							store.setDefault(f.name(), UNCHANGED);
+						}
+					}
+					store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>: " + selection.size());
 				}
-				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>: " + selection.size());
 			}
 		}
-		new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
-		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
-			editCard(card, store);
+		if (any) {
+			new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
+			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+				MagicCardPhisical card = (MagicCardPhisical) iterator.next();
+				editCard(card, store);
+			}
 		}
 	}
 	private final static String UNCHANGED = EditCardsPropertiesDialog.UNCHANGED;
