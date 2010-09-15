@@ -387,12 +387,12 @@
         <page
         name="Info"
         id="info"
-        class="com.reflexit.magiccards.ui.views.lib.InfoControl"
+        class="com.reflexit.magiccards.ui.views.analyzers.InfoControl"
         />
                 <page
         name="Legality"
         id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
-        class="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
+        class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage"
         />
   </extension>
 
