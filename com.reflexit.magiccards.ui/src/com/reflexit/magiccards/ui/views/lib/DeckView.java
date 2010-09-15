@@ -35,7 +35,10 @@ import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.views.analyzers.ColorControl;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
+import com.reflexit.magiccards.ui.views.analyzers.ManaCurveControl;
+import com.reflexit.magiccards.ui.views.analyzers.TypeStatsControl;
 
 public class DeckView extends AbstractMyCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
@@ -304,6 +307,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void updateViewer() {
+		if (folder.isDisposed()) return;
 		super.updateViewer();
 		updatePartName();
 		updateActivePage();
@@ -312,6 +316,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	protected synchronized void updateActivePage() {
 		CTabItem sel = folder.getSelection();
+		if (sel.isDisposed()) return;
 		//System.err.println(sel + " " + sel.getData());
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;

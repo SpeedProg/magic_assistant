@@ -109,9 +109,11 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 
 	@Override
 	public void updateViewer() {
+		if (this.viewer.getControl().isDisposed()) return;
 		updateTableHeader();
 		long time = System.currentTimeMillis();
 		IFilteredCardStore filteredStore = getFilteredStore();
+	
 		if (this.viewer.getInput() != filteredStore) {
 			this.viewer.setInput(filteredStore);
 			this.viewer.setItemCount(filteredStore == null ? 0 : filteredStore.getSize());

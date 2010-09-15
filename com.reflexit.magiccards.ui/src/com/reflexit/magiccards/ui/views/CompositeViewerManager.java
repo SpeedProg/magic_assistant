@@ -146,6 +146,7 @@ public class CompositeViewerManager extends ViewerManager {
 	 */
 	@Override
 	public void updateViewer() {
+		if (this.comp.isDisposed()) return;
 		this.managers[this.activeIndex].updateViewer();
 		this.comp.layout();
 	}
