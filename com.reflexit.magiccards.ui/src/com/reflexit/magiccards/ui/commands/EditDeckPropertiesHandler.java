@@ -65,10 +65,11 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 		if (iss.size() > 1) {
 			return null;
 		}
-		CardElement f = (CardElement) iss.getFirstElement();
-		if (!(f instanceof CardCollection)) {
+		if (!(iss.getFirstElement() instanceof CardCollection)) {
 			return null;
 		}
+		CardElement f = (CardElement) iss.getFirstElement();
+	
 		return (CardCollection) f;
 	}
 
