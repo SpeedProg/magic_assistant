@@ -80,7 +80,8 @@ public class ChartCanvas extends Canvas {
 				}
 				if (needRebuild || needRender) {
 					drawToCachedImage(chartBounds, e.gc);
-					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
+					if (cachedImage!=null)
+						e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
 				}
 			}
 		});
