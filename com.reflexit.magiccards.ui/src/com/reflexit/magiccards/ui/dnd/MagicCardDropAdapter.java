@@ -62,7 +62,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 				return DataManager.getCardHandler().copyCards(Arrays.asList(toDropArray), targetLocation);
 		} catch (MagicException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
-			        "Cannot perform this operation");
+			        "Cannot perform this operation: "+e.getMessage());
 			return false;
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
