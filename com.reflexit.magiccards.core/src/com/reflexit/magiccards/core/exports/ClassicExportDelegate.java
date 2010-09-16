@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
@@ -33,10 +34,18 @@ public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 		if (header) {
 			exportStream.println("COUNT NAME");
 		}
+		Location location = null ;
 		for (IMagicCard magicCard : store) {
+	
 			IMagicCard card = magicCard;
 			if (card instanceof MagicCardPhisical) {
 				MagicCardPhisical mc = (MagicCardPhisical) card;
+				if (!header) {
+					if (location!=mc.getLocation()) {
+						location = mc.getLocation();
+						exportStream.println(location.getName());
+					}
+				}
 				exportStream.println(mc.getCount() + "x " + mc.getName());
 			} else {
 				exportStream.println("1x " + card.getName());
