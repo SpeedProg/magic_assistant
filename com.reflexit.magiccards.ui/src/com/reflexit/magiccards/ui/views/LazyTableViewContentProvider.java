@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 class LazyTableViewContentProvider implements ILazyContentProvider {
 	LazyTableViewContentProvider() {
 	}
+
 	private TableViewer tableViewer;
 	private IFilteredCardStore root;
 
@@ -32,8 +33,12 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 
 	public void updateElement(int index) {
 		if (this.root instanceof IFilteredCardStore) {
-			Object element = this.root.getElement(index);
-			this.tableViewer.replace(element, index);
+			if (index >= root.getSize()) {
+				// element is gone...
+			} else {
+				Object element = this.root.getElement(index);
+				this.tableViewer.replace(element, index);
+			}
 		}
 	}
 }

@@ -43,6 +43,7 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
@@ -58,6 +59,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	private static final String OUTPUT_FILE_SETTING = "outputFile"; //$NON-NLS-1$
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
 	private static final String INCLUDE_HEADER_SETTING = "includeHeader"; //$NON-NLS-1$
+	private static final String INCLUDE_SIDEBOARD = "includeSideBoard"; //$NON-NLS-1$
 	FileFieldEditor editor;
 	private String fileName;
 	private IStructuredSelection initialResourceSelection;
@@ -69,6 +71,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	private PreferenceStore store;
 	private LocationFilterPreferencePage locPage;
 	private Combo typeCombo;
+	private Button includeSideBoard;
 
 	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -96,13 +99,14 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 				// TODO: export selection only
 				locPage.performOk();
 				final boolean header = includeHeader.getSelection();
+				final boolean sideboard = includeSideBoard.getSelection();
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
 						MagicCardFilter old = filteredLibrary.getFilter();
 						try {
 							MagicCardFilter locFilter = new MagicCardFilter();
-							locFilter.update(storeToMap());
+							locFilter.update(storeToMap(sideboard));
 							filteredLibrary.update(locFilter);
 							worker.init(new FileOutputStream(fileName), header, filteredLibrary);
 							worker.run(monitor);
@@ -145,13 +149,23 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		return res;
 	}
 
-	private HashMap storeToMap() {
+	private HashMap<String,String> storeToMap(boolean sideboard) {
 		IPreferenceStore store = getPreferenceStore();
-		HashMap map = new HashMap();
-		Collection col = FilterHelper.getAllIds();
-		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
+		HashMap<String,String> map = new HashMap<String, String>();
+		Locations locs = Locations.getInstance();
+		Collection<String> col = locs.getIds();
+		for (Iterator<String> iterator = col.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			String value = store.getString(id);
+			if (locs.isSideboard(id)) {
+				String deckId = locs.getMainDeck(id);
+				if (sideboard) {
+					value =  store.getString(deckId);
+				} else {
+					value = "false";
+				}
+			}
+	
 			if (value != null && value.length() > 0) {
 				map.put(id, value);
 				//System.err.println(id + "=" + value);
@@ -288,6 +302,9 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			if (dialogSettings.get(INCLUDE_HEADER_SETTING) != null) {
 				includeHeader.setSelection(dialogSettings.getBoolean(INCLUDE_HEADER_SETTING));
 			}
+			if (dialogSettings.get(INCLUDE_SIDEBOARD) != null) {
+				includeSideBoard.setSelection(dialogSettings.getBoolean(INCLUDE_SIDEBOARD));
+			}
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
 		}
@@ -325,6 +342,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			// save options
 			dialogSettings.put(REPORT_TYPE_SETTING, reportType.toString());
 			dialogSettings.put(INCLUDE_HEADER_SETTING, includeHeader.getSelection());
+			dialogSettings.put(INCLUDE_SIDEBOARD, includeSideBoard.getSelection());
 			// save into file
 			MagicUIActivator.getDefault().saveDialogSetting(dialogSettings);
 		} catch (IOException e) {
@@ -393,6 +411,10 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
 		includeHeader.setText("Generate header row");
 		includeHeader.setSelection(true);
+		// options to include sideboard
+		includeSideBoard = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
+		includeSideBoard.setText("Include sideboard");
+		includeSideBoard.setSelection(true);
 	}
 
 	private void addComboType(ReportType reportType) {

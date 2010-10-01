@@ -167,7 +167,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 					} catch (final Exception e) {
 						display.syncExec(new Runnable() {
 							public void run() {
-								MessageDialog.openError(getViewer().getControl().getShell(), "Error", e.getMessage());
+								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage());
 							}
 						});
 						MagicUIActivator.log(e);

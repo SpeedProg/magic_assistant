@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -58,10 +59,12 @@ import com.reflexit.magiccards.ui.views.ViewerManager;
 
 /**
  * Cards view for personal cards (decks and collections)
+ * 
  * @author Alena
- *
+ * 
  */
-public abstract class AbstractMyCardsView extends AbstractCardsView implements ICardEventListener {
+public abstract class AbstractMyCardsView extends AbstractCardsView implements
+		ICardEventListener {
 	protected Action delete;
 	private Action split;
 	private Action edit;
@@ -79,14 +82,16 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				runPaste();
 			}
 		};
-		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+		ISharedImages sharedImages = PlatformUI.getWorkbench()
+				.getSharedImages();
 		this.delete = new Action("Remove") {
 			@Override
 			public void run() {
 				removeSelected();
 			}
 		};
-		this.delete.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		this.delete.setImageDescriptor(sharedImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		this.split = new Action("Split Pile...") {
 			@Override
 			public void run() {
@@ -112,7 +117,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				refresh();
 			}
 		};
-		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+		this.refresh.setImageDescriptor(MagicUIActivator
+				.getImageDescriptor("icons/clcl16/refresh.gif"));
 		this.export = createExportAction();
 	}
 
@@ -123,34 +129,46 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected void refresh() {
 		reloadData();
 	}
+
 	protected IDeckAction moveToDeck = new IDeckAction() {
 		public void run(String id) {
-			ISelection selection = getViewer().getSelection();
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection sel = (IStructuredSelection) selection;
-				if (!sel.isEmpty()) {
-					ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-						Object o = iterator.next();
-						if (o instanceof IMagicCard)
-							list.add((IMagicCard) o);
+			try {
+				ISelection selection = getViewer().getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection sel = (IStructuredSelection) selection;
+					if (!sel.isEmpty()) {
+						ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+						for (Iterator iterator = sel.iterator(); iterator
+								.hasNext();) {
+							Object o = iterator.next();
+							if (o instanceof IMagicCard)
+								list.add((IMagicCard) o);
+						}
+						Location location = DataManager.getCardHandler()
+								.getCardCollectionHandler(id).getCardStore()
+								.getLocation();
+						DataManager.getCardHandler().moveCards(list, null,
+								location);
 					}
-					Location location = DataManager.getCardHandler().getCardCollectionHandler(id).getCardStore()
-					        .getLocation();
-					DataManager.getCardHandler().moveCards(list, null, location);
 				}
+			} catch (MagicException e) {
+				MessageDialog.openError(getShell(), "Error",
+						e.getMessage());
 			}
 		}
 	};
 
 	protected void runPaste() {
-		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench()
+				.getDisplay());
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
 		Object contents = cb.getContents(mt);
 		if (contents instanceof IMagicCard[]) {
 			IMagicCard[] cards = (IMagicCard[]) contents;
-			DataManager.getCardHandler().copyCards(Arrays.asList(cards),
-			        ((ILocatable) getFilteredStore().getCardStore()).getLocation());
+			DataManager.getCardHandler().copyCards(
+					Arrays.asList(cards),
+					((ILocatable) getFilteredStore().getCardStore())
+							.getLocation());
 		}
 	}
 
@@ -173,7 +191,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 * @param b
 	 */
 	protected void changeSelectedOwnerShip(boolean b) {
-		ICardEventManager cardStore = this.manager.getFilteredStore().getCardStore();
+		ICardEventManager cardStore = this.manager.getFilteredStore()
+				.getCardStore();
 		ISelection selection = getViewer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
@@ -224,7 +243,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					}
 				}
 				if (max == 1) {
-					MessageDialog.openInformation(getShell(), "Split", "Minimum pile, cannot split any further");
+					MessageDialog.openInformation(getShell(), "Split",
+							"Minimum pile, cannot split any further");
 					return;
 				}
 				int type = PICK;
@@ -250,7 +270,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 							continue;
 						if (type == EVEN)
 							left = count / 2;
-						MagicCardPhisical card2 = new MagicCardPhisical(card, card.getLocation());
+						MagicCardPhisical card2 = new MagicCardPhisical(card,
+								card.getLocation());
 						card.setCount(left);
 						cardStore.update(card);
 						card2.setCount(count - left);
@@ -267,7 +288,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected void setGlobalHandlers(IActionBars bars) {
 		super.setGlobalHandlers(bars);
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		IHandlerService service = (IHandlerService) (getSite())
+				.getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 
@@ -278,8 +300,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		manager.add(this.export);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org
+	 * .eclipse.jface.action.IMenuManager)
 	 */
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
@@ -306,22 +332,30 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		edit.run();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui.IViewSite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
+	 * .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		DataManager.getCardHandler().getMyCardsHandler().getCardStore().addListener(this);
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore()
+				.addListener(this);
 		DataManager.getModelRoot().addListener(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#dispose()
 	 */
 	@Override
 	public void dispose() {
-		DataManager.getCardHandler().getMyCardsHandler().getCardStore().removeListener(this);
+		DataManager.getCardHandler().getMyCardsHandler().getCardStore()
+				.removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}
@@ -338,10 +372,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				public void run() {
 					manager.getViewer().update(event.getSource(), null);
 					updateStatus();
-					getViewer().setSelection(new StructuredSelection(event.getSource()), true);
+					getViewer().setSelection(
+							new StructuredSelection(event.getSource()), true);
 				}
 			});
-		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
+		} else if (type == CardEvent.ADD_CONTAINER
+				|| type == CardEvent.REMOVE_CONTAINER) {
 			reloadData();
 		} else if (type == CardEvent.ADD) {
 			if (event.getData() instanceof List) {
@@ -351,7 +387,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			} else if (event.getData() instanceof IMagicCard) {
 				revealSelection = new StructuredSelection(event.getData());
 			}
-			//	System.err.println("Card added: " + revealSelection + " on " + getPartName());
+			// System.err.println("Card added: " + revealSelection + " on " +
+			// getPartName());
 			reloadData();
 		} else {
 			reloadData();
@@ -359,7 +396,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	protected void editSelected() {
-		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		IStructuredSelection selection = (IStructuredSelection) getViewer()
+				.getSelection();
 		if (selection.isEmpty())
 			return;
 		PreferenceStore store = new PreferenceStore();
@@ -373,7 +411,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (first) {
 					ICardField[] allFields = MagicCardFieldPhysical.allFields();
 					for (ICardField f : allFields) {
-						store.setDefault(f.name(), String.valueOf(card.getObjectByField(f)));
+						store.setDefault(f.name(),
+								String.valueOf(card.getObjectByField(f)));
 					}
 					first = false;
 				} else {
@@ -384,28 +423,36 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 							store.setDefault(f.name(), UNCHANGED);
 						}
 					}
-					store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>: " + selection.size());
+					store.setDefault(EditCardsPropertiesDialog.NAME_FIELD,
+							"<Multiple Cards>: " + selection.size());
 				}
 			}
 		}
 		if (any) {
-			new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
+			new EditCardsPropertiesDialog(manager.getViewer().getControl()
+					.getShell(), store).open();
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 				MagicCardPhisical card = (MagicCardPhisical) iterator.next();
 				editCard(card, store);
 			}
 		}
 	}
+
 	private final static String UNCHANGED = EditCardsPropertiesDialog.UNCHANGED;
 
 	private void editCard(MagicCardPhisical card, PreferenceStore store) {
 		boolean modified = false;
-		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.COMMENT) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.COUNT)
+				|| modified;
+		modified = setField(card, store, MagicCardFieldPhysical.PRICE)
+				|| modified;
+		modified = setField(card, store, MagicCardFieldPhysical.COMMENT)
+				|| modified;
+		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP)
+				|| modified;
 		String special = card.getSpecial();
-		String especial = store.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
+		String especial = store
+				.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
 		if (!UNCHANGED.equals(especial) && !especial.equals(special)) {
 			card.setSpecial(especial);
 			modified = true;
@@ -415,7 +462,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		}
 	}
 
-	protected boolean setField(MagicCardPhisical card, PreferenceStore store, ICardField field) {
+	protected boolean setField(MagicCardPhisical card, PreferenceStore store,
+			ICardField field) {
 		Boolean modified = false;
 		String orig = String.valueOf(card.getObjectByField(field));
 		String edited = store.getString(field.name());
@@ -425,7 +473,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				modified = true;
 			} catch (Exception e) {
 				// was bad value
-				MessageDialog.openError(getShell(), "Error", "Invalid value for " + field + ": " + edited);
+				MessageDialog.openError(getShell(), "Error",
+						"Invalid value for " + field + ": " + edited);
 			}
 		}
 		return modified;

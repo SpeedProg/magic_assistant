@@ -151,7 +151,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	 */
 	@Override
 	public void dispose() {
-		this.deck.close();
+		if (deck!=null) this.deck.close();
 		super.dispose();
 	}
 
@@ -268,6 +268,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	@Override
 	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
+		if (folder.isDisposed()) return;
 		folder.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
@@ -279,7 +280,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 					// ignore
 				} else {
-					System.err.println(event);
+					//System.err.println(event);
 					updateActivePage();
 				}
 			}
@@ -322,9 +323,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			IDeckPage page = deckPage;
 			//System.err.println(deckPage);
 			if (sel.getData() == page) {
-				if (sel.getControl() != page.getControl()) {
-					System.err.println("oops sel " + sel.getControl().handle + " page " + page.getControl().handle);
-				}
 				page.setFilteredStore(getFilteredStore());
 				page.updateFromStore();
 			}
