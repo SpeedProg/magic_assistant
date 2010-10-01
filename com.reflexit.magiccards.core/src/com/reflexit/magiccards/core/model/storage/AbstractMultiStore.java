@@ -286,7 +286,8 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 		public void save() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
-				table.getStorage().save();
+				if (table.getStorage().isNeedToBeSaved()) 
+					table.getStorage().save();
 			}
 		}
 
