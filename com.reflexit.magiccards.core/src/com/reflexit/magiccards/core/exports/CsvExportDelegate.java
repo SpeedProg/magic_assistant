@@ -14,12 +14,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 
 /**
- * TODO: add description
+ * Export of magic assistant csv
  */
 public class CsvExportDelegate extends AbstractExportDelegate<IMagicCard> {
+	@Override
+	protected boolean isForExport(ICardField field) {
+		return super.isForExport(field) || field == MagicCardFieldPhysical.SIDEBOARD;
+	}
 	public void runCsvExport(IProgressMonitor monitor) throws InvocationTargetException {
 		CsvExporter exporter = null;
 		try {

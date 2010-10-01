@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 
 public class CardOrganizer extends CardElement {
@@ -106,7 +107,9 @@ public class CardOrganizer extends CardElement {
 		}
 		return res;
 	}
-
+	public boolean contains(Location loc) {
+		return contains(loc.getBaseFileName());
+	}
 	public boolean contains(String name) {
 		return findChieldByName(name) != null;
 	}

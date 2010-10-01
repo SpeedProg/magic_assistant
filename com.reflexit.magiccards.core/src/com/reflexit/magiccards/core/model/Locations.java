@@ -32,7 +32,7 @@ public class Locations implements ISearchableProperty {
 		return new ArrayList(map.keySet());
 	}
 
-	public Collection getIds() {
+	public Collection<String> getIds() {
 		ModelRoot modelRoot = DataManager.getModelRoot();
 		Map map = modelRoot.getLocationsMap();
 		ArrayList<String> list = new ArrayList<String>();
@@ -62,5 +62,15 @@ public class Locations implements ISearchableProperty {
 				return loc.toString();
 		}
 		return null;
+	}
+
+	public boolean isSideboard(String id) {
+		return id.endsWith("-sideboard.xml");
+	}
+
+	public String getMainDeck(String id) {
+		if (isSideboard(id))
+			return id.replaceAll("-sideboard.xml$", ".xml");
+		return id;
 	}
 }

@@ -153,7 +153,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		if (card.getName() == null || card.getName().trim().length() == 0) {
 			throw new IllegalArgumentException("Error: Line " + line + ", Field 2: Expected NAME value is empty");
 		}
-		card.setLocation(getLocation());
 		return card;
 	}
 
@@ -163,6 +162,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			if (nameByAbbr == null)
 				nameByAbbr = "Unknown";
 			card.setObjectByField(MagicCardField.SET, nameByAbbr);
+		} 	if (field == MagicCardFieldPhysical.LOCATION)  {
+			// ignore this field
+		} 	if (field == MagicCardFieldPhysical.SIDEBOARD)  {
+			if (Boolean.valueOf(value).booleanValue()) {
+				card.setLocation(getLocation().toSideboard());
+			}
 		} else {
 			card.setObjectByField(field, value);
 		}

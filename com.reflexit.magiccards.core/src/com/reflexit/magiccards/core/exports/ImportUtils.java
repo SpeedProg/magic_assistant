@@ -10,16 +10,25 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
+import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -28,15 +37,20 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static void performImport(InputStream st, ReportType reportType, boolean header, HashMap filter,
-	        IFilteredCardStore filteredLibrary, IProgressMonitor monitor) throws InvocationTargetException,
-	        InterruptedException {
+	public static void performImport(InputStream st, ReportType reportType,
+			boolean header, HashMap filter, IFilteredCardStore filteredLibrary,
+			IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		if (st != null) {
-			// because we support both deck and collection it is trying to import using my cards handler
-			// with specific filter set on which deck/collection it is. It is really ugly and card should 
+			// because we support both deck and collection it is trying to
+			// import using my cards handler
+			// with specific filter set on which deck/collection it is. It is
+			// really ugly and card should
 			// have location set otherwise it is not adding them properly
-			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
-			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force initialization
+			IFilteredCardStore magicDbHandler = DataManager.getCardHandler()
+					.getDatabaseHandler();
+			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force
+																				// initialization
 			MagicCardFilter old = filteredLibrary.getFilter();
 			try {
 				MagicCardFilter locFilter = new MagicCardFilter();
@@ -45,7 +59,8 @@ public class ImportUtils {
 				Location location = filteredLibrary.getLocation();
 				IImportDelegate worker;
 				try {
-					worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
+					worker = new ImportExportFactory<IMagicCard>()
+							.getImportWorker(reportType);
 				} catch (Exception e) {
 					throw new InvocationTargetException(e);
 				}
@@ -53,28 +68,71 @@ public class ImportUtils {
 				worker.setHeader(header);
 				worker.run(monitor);
 				ICardStore cardStore = filteredLibrary.getCardStore();
-				cardStore.addAll(worker.getImportedCards());
+				Collection importedCards = worker.getImportedCards();
+				Collection<Location> importedLocations = getLocations(importedCards);
+				createDecks(importedLocations);
+				cardStore.addAll(importedCards);
 			} finally {
 				filteredLibrary.update(old); // restore filter
 			}
 		}
 	}
 
-	public static void performImport(InputStream st, ReportType reportType, boolean header, HashMap filter,
-	        IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
+	private static void createDecks(Collection<Location> importedLocations) {
+		for (Iterator iterator = importedLocations.iterator(); iterator
+				.hasNext();) {
+			Location location = (Location) iterator.next();
+			if (location.isSideboard()) {
+				ModelRoot root = DataManager.getModelRoot();
+				String containerName = location.getParent().getPath();
+				final CardElement resource = root.findElement(new Path(
+						containerName));
+				if (!(resource instanceof CollectionsContainer)) {
+					continue; // ???
+				}
+				CollectionsContainer parent = (CollectionsContainer) resource;
+				if (parent.contains(location)) {
+					continue;
+				}
+				
+				CardCollection sideboard = parent.addDeck(location.getBaseFileName());
+				CardCollection maindeck = (CardCollection) parent.findChield(location.toMainDeck());
+				if (maindeck!=null) sideboard.setVirtual(maindeck.isVirtual());
+				sideboard.close();
+			}
+		}
+	}
+
+	private static Collection<Location> getLocations(Collection importedCards) {
+		HashSet<Location> res = new HashSet<Location>();
+		for (Iterator iterator = importedCards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card instanceof MagicCardPhisical)
+				res.add(((MagicCardPhisical) card).getLocation());
+		}
+		return res;
+	}
+
+	public static void performImport(InputStream st, ReportType reportType,
+			boolean header, HashMap filter, IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
+		IFilteredCardStore filteredLibrary = DataManager.getCardHandler()
+				.getMyCardsHandler();
 		performImport(st, reportType, header, filter, filteredLibrary, monitor);
 	}
 
-	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header,
-	        IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public static PreviewResult performPreview(InputStream st,
+			ReportType reportType, boolean header, IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 		IImportDelegate worker;
 		try {
-			worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
+			worker = new ImportExportFactory<IMagicCard>()
+					.getImportWorker(reportType);
 		} catch (Exception e) {
 			throw new InvocationTargetException(e);
 		}
-		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
+		IFilteredCardStore magicDbHandler = DataManager.getCardHandler()
+				.getDatabaseHandler();
 		worker.init(st, true, null, magicDbHandler.getCardStore());
 		worker.setHeader(header);
 		// init preview

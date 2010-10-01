@@ -5,6 +5,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
+import com.reflexit.magiccards.core.model.Location;
+
 import java.io.InputStream;
 import java.net.URI;
 
@@ -24,13 +26,14 @@ public class CollectionsContainer extends CardOrganizer {
 			if (!mem.exists() || mem.isPhantom())
 				continue;
 			String name = mem.getName();
-			//System.err.println(this + "/" + name);
+			// System.err.println(this + "/" + name);
 			if (name.equals("MagicDB"))
 				continue; // skip this ones
 			CardElement el = findChieldByName(name);
 			if (mem instanceof IContainer) {
 				if (el == null) {
-					CollectionsContainer con = new CollectionsContainer(name, this);
+					CollectionsContainer con = new CollectionsContainer(name,
+							this);
 					con.loadChildren();
 				} else {
 					if (el instanceof CollectionsContainer) {
@@ -87,5 +90,9 @@ public class CollectionsContainer extends CardOrganizer {
 	@Override
 	public CardElement newElement(String name, CardOrganizer parent) {
 		return new CollectionsContainer(name + ".xml", parent);
+	}
+
+	public CardElement findChield(Location loc) {
+		return findChieldByName(loc.getBaseFileName());
 	}
 }

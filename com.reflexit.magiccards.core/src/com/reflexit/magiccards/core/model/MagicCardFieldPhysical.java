@@ -16,16 +16,21 @@ public enum MagicCardFieldPhysical implements ICardField {
 	OWNERSHIP,
 	FORTRADECOUNT("forTrade"),
 	SPECIAL, // like foil, premium, mint, played, online etc
+	SIDEBOARD(null)
 	// end of fields
 	;
 	// fields
 	private final Field field;
 
 	MagicCardFieldPhysical(String javaField) {
-		try {
-			field = MagicCardPhisical.class.getDeclaredField(javaField);
-		} catch (Exception e) {
-			throw new IllegalArgumentException(e);
+		if (javaField != null) {
+			try {
+				field = MagicCardPhisical.class.getDeclaredField(javaField);
+			} catch (Exception e) {
+				throw new IllegalArgumentException(e);
+			}
+		} else {
+			field = null;
 		}
 	}
 
@@ -39,10 +44,12 @@ public enum MagicCardFieldPhysical implements ICardField {
 	}
 
 	public Class getType() {
+		if (field==null) return null;
 		return field.getClass();
 	}
 
 	public boolean isTransient() {
+		if (field==null) return true;
 		return Modifier.isTransient(field.getModifiers());
 	}
 

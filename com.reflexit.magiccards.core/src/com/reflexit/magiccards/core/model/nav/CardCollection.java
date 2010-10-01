@@ -72,6 +72,7 @@ public class CardCollection extends CardElement {
 					setVirtual(virtualFlag);
 					pendingVirtual = false;
 				}
+				virtualFlag = info.isVirtual();
 			}
 		} else {
 			throw new IllegalArgumentException("Already open");
@@ -98,9 +99,9 @@ public class CardCollection extends CardElement {
 	}
 
 	public void setVirtual(boolean virtual) {
+		virtualFlag = virtual;
 		if (!isOpen()) {
 			pendingVirtual = true;
-			virtualFlag = virtual;
 		} else if (store instanceof IStorageContainer) {
 			IStorage storage = ((IStorageContainer) store).getStorage();
 			if (storage instanceof IStorageInfo) {
@@ -108,5 +109,9 @@ public class CardCollection extends CardElement {
 				storage.save();
 			}
 		}
+	}
+
+	public boolean isVirtual() {
+		return virtualFlag;
 	}
 }

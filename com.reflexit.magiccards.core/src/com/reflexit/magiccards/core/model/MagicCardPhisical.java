@@ -257,6 +257,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 		case FORTRADECOUNT:
 			setForTrade(Integer.parseInt(value));
 			break;
+		case SIDEBOARD:
+			return false; // not settable
 		default:
 			return false;
 		}
@@ -287,6 +289,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 			return getForTrade();
 		case SPECIAL:
 			return getSpecial();
+		case SIDEBOARD:
+			return isSideboard();
 		}
 		return null;
 	}
@@ -376,5 +380,9 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean isSideboard(){
+		return location.isSideboard();
 	}
 }

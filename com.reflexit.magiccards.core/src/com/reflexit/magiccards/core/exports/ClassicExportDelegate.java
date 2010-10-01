@@ -10,46 +10,46 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Formatter;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
- * export in format 
- * 4x Plain
- * ...
+ * export in format 4x Plain ...
  */
 public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public ReportType getType() {
 		return ReportType.TEXT_DECK_CLASSIC;
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		PrintStream exportStream = new PrintStream(st);
-		if (header) {
-			exportStream.println("COUNT NAME");
-		}
-		Location location = null ;
+		Location location = null;
 		for (IMagicCard magicCard : store) {
-	
 			IMagicCard card = magicCard;
+			String name;
+			int count = 1;
 			if (card instanceof MagicCardPhisical) {
 				MagicCardPhisical mc = (MagicCardPhisical) card;
-				if (!header) {
-					if (location!=mc.getLocation()) {
-						location = mc.getLocation();
-						exportStream.println(location.getName());
-					}
+				if (location != mc.getLocation()) {
+					location = mc.getLocation();
+					exportStream.println("# " + location.getName());
 				}
-				exportStream.println(mc.getCount() + "x " + mc.getName());
+				name = mc.getName();
+				count = mc.getCount();
 			} else {
-				exportStream.println("1x " + card.getName());
+				name = card.getName();
 			}
+			String line = new Formatter().format("%2dx %s", count, name)
+					.toString();
+			exportStream.println(line);
 			monitor.worked(1);
 		}
 		exportStream.close();

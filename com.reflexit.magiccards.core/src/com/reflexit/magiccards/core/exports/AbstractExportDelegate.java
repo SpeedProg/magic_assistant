@@ -25,7 +25,7 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 		this.store = filteredLibrary;
 	}
 
-	public static void exportToTable(IProgressMonitor monitor, IFilteredCardStore<IMagicCard> store,
+	public void exportToTable(IProgressMonitor monitor, IFilteredCardStore<IMagicCard> store,
 	        TableExporter exporter, boolean header) {
 		try {
 			if (monitor == null)
@@ -43,7 +43,7 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 					continue;
 				for (String name : names) {
 					ICardField field = MagicCardFieldPhysical.fieldByName(name);
-					if (!field.isTransient())
+					if (isForExport(field))
 						fields.add(field);
 				}
 				break;
@@ -66,5 +66,9 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 		} finally {
 			monitor.done();
 		}
+	}
+
+	protected boolean isForExport(ICardField field) {
+		return !field.isTransient();
 	}
 }

@@ -10,15 +10,17 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-import java.io.File;
 
 /**
  * Location represents path to a decl/collection
  */
 public class Location implements Comparable<Location> {
+	private static final String XML_SUFFIX = ".xml";
+	private static final String SIDEBOARD_SUFFIX = "-sideboard";
 	public static final Location NO_WHERE = new Location();
 	private final String location;
 
@@ -34,11 +36,13 @@ public class Location implements Comparable<Location> {
 		this(loc, NO_WHERE);
 	}
 
-	public Location(String loc, Location parent) {
+	private Location(String loc, Location parent) {
 		if (loc == null || loc.length() == 0)
 			throw new IllegalArgumentException(loc);
 		if (parent != Location.NO_WHERE)
 			loc = parent.toString() + "/" + loc;
+		if (loc.endsWith(XML_SUFFIX))
+			loc = loc.replaceAll(XML_SUFFIX + "$", "");
 		this.location = loc.intern();
 	}
 
@@ -46,7 +50,8 @@ public class Location implements Comparable<Location> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result
+				+ ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
 
@@ -79,11 +84,42 @@ public class Location implements Comparable<Location> {
 	}
 
 	public static Location createLocation(File file, Location parent) {
-		String basename = file.getName().replaceAll("\\.xml$", "");
+		String basename = file.getName();
 		return new Location(basename, parent);
 	}
 
 	public int compareTo(Location o) {
 		return location.compareTo(o.location);
+	}
+
+	public boolean isSideboard() {
+		return location.endsWith(SIDEBOARD_SUFFIX);
+	}
+
+	public Location toSideboard() {
+		if (isSideboard())
+			return this;
+		return new Location(location + SIDEBOARD_SUFFIX);
+	}
+
+	public Location getParent() {
+		if (this == NO_WHERE)
+			return NO_WHERE;
+		return new Location(new Path(location).removeLastSegments(1)
+				.toPortableString());
+	}
+
+	public String getPath() {
+		return location;
+	}
+
+	public String getBaseFileName() {
+		return getName()+XML_SUFFIX;
+	}
+
+	public Location toMainDeck() {
+		if (!isSideboard())
+			return this;
+		return new Location(location.replaceAll(SIDEBOARD_SUFFIX+"$",""));
 	}
 }
