@@ -60,7 +60,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.card.CardDescView"
-            icon="icons/card_view.png"
+            icon="icons/one_card24.png"
             id="com.reflexit.magiccards.ui.views.card.CardDescView"
             name="Card Info">
       </view>
@@ -68,7 +68,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.lib.MyCardsView"
-            icon="icons/Folder-Library-32x32.png"
+            icon="icons/card_coll24.png"
             id="com.reflexit.magiccards.ui.views.lib.LibView"
             name="My Cards"
             restorable="true">
@@ -77,7 +77,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
-            icon="icons/sailing-ship-32x32.png"
+            icon="icons/card_nav24.png"
             id="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
             name="Card Navigator">
       </view>
@@ -85,7 +85,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.lib.DeckView"
-            icon="icons/Book-1-icon.gif"
+            icon="icons/hand32.png"
             id="com.reflexit.magiccards.ui.views.lib.DeckView"
             name="Deck"
             restorable="true">
@@ -94,7 +94,7 @@
             allowMultiple="true"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.analyzers.HandView"
-            icon="icons/Book-1-icon.gif"
+            icon="icons/hand32.png"
             id="com.reflexit.magiccards.ui.views.analyzers.HandView"
             name="Draw"
             restorable="true">
@@ -335,7 +335,7 @@
            class="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
            finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
            hasPages="true"
-           icon="icons/obj16/deck16.png"
+           icon="icons/obj16/ideck16.png"
            id="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
            name="Deck">
      </wizard>
@@ -343,7 +343,7 @@
            category="com.reflexit.magiccards.ui"
            class="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
            finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
-           icon="icons/obj16/lib16.png"
+           icon="icons/obj16/ilib16.png"
            id="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
            name="Card Collection">
      </wizard>
@@ -361,7 +361,7 @@
                      class="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
                      finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
                      hasPages="true"
-                     icon="icons/obj16/lib16.png"
+                     icon="icons/obj16/m16.png"
                      id="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
                      name="Booster Pack">
                </wizard>

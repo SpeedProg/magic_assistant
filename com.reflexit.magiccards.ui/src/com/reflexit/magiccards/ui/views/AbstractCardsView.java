@@ -315,7 +315,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		};
 		this.showFilter.setText("Filter...");
 		this.showFilter.setToolTipText("Opens a Card Filter Dialog");
-		this.showFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/filter.gif"));
+		this.showFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter.gif"));
 		// double cick
 		this.doubleClickAction = new Action() {
 			@Override

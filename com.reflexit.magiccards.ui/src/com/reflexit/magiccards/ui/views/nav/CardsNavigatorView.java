@@ -212,7 +212,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		this.importa = new ImportAction();
 		this.newDeckWizard = new Action("New Deck") {
 			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/deck16.png"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/ideck16.png"));
 			}
 
 			@Override

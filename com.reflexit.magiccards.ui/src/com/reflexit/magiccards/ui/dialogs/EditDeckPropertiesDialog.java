@@ -46,7 +46,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Edit...");
-		setTitleImage(MagicUIActivator.getDefault().getImage("icons/Book-1-icon.gif"));
+		//setTitleImage(MagicUIActivator.getDefault().getImage("icons/Book-1-icon.gif"));
 		setTitle("Edit Properties");
 		setMessage("You can modify decl/collection properties here. Press OK to save.");
 		Composite area = (Composite) super.createDialogArea(parent);

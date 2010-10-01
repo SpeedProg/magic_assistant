@@ -24,9 +24,9 @@ public class CardsNavigatorLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		if (element instanceof CardCollection) {
 			if (((CardCollection) element).isDeck())
-				return MagicUIActivator.getDefault().getImage("icons/obj16/deck16.png");
+				return MagicUIActivator.getDefault().getImage("icons/obj16/ideck16.png");
 			else
-				return MagicUIActivator.getDefault().getImage("icons/obj16/lib16.png");
+				return MagicUIActivator.getDefault().getImage("icons/obj16/ilib16.png");
 		}
 		if (element instanceof CollectionsContainer) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-lib.png");
