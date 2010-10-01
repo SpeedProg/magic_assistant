@@ -9,7 +9,8 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
-public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable {
+public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard>
+		implements ILocatable {
 	private CollectionSingleFileCardStore table;
 
 	public ICardStore<IMagicCard> getCardStore() {
@@ -22,14 +23,19 @@ public class DeckXmlHandler extends AbstractFilteredCardStore<IMagicCard> implem
 	}
 
 	public DeckXmlHandler(String filename) {
-		CardCollection d = DataManager.getModelRoot().findCardCollectionById(filename);
+		CardCollection d = DataManager.getModelRoot().findCardCollectionById(
+				filename);
+		if (d == null)
+			d = DataManager.getModelRoot().findCardCollectionById(
+					filename + ".xml");
 		if (d == null)
 			throw new IllegalArgumentException("Not found: " + filename);
 		if (!d.isOpen()) {
-			LibraryDataXmlHandler magicLibraryHandler = (LibraryDataXmlHandler) DataManager.getCardHandler()
-			        .getMyCardsHandler();
+			LibraryDataXmlHandler magicLibraryHandler = (LibraryDataXmlHandler) DataManager
+					.getCardHandler().getMyCardsHandler();
 			magicLibraryHandler.doInitialize();
-			ICardStore<IMagicCard> store = magicLibraryHandler.getStore(d.getLocation());
+			ICardStore<IMagicCard> store = magicLibraryHandler.getStore(d
+					.getLocation());
 			d.open(store);
 		}
 		this.table = (CollectionSingleFileCardStore) d.getStore();
