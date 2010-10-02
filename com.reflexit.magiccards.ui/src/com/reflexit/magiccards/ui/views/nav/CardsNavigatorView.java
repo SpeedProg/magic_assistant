@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.nav;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,6 +29,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -45,8 +50,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
-
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -77,6 +80,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action newDeckWizard;
 	private Action openInDeckView;
 	private Action openInMyCardsView;
+	private Action showSideboards;
 
 	/**
 	 * The constructor.
@@ -152,6 +156,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		manager.add(new Separator());
 		manager.add(export);
 		manager.add(importa);
+		manager.add(new Separator());
+		manager.add(showSideboards);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -160,6 +166,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		manager.add(new Separator());
 		manager.add(export);
 		manager.add(importa);
+		manager.add(new Separator());
+		manager.add(showSideboards);
 		manager.add(openInDeckView);
 		openInDeckView.setEnabled(openInDeckView.isEnabled());
 		manager.add(openInMyCardsView);
@@ -227,6 +235,13 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				dialog.open();
 			}
 		};
+		this.showSideboards = new Action("Show Sideboads", SWT.TOGGLE) {
+			@Override
+			public void run() {
+				showSideboardFilter();
+			}
+		};
+		showSideboardFilter(); // activate filter
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.export);
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.importa);
 		openInDeckView = new Action("Open in Deck View") {
@@ -277,7 +292,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void actionDelete() {
 		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
@@ -408,5 +423,14 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				CardsNavigatorView.this.manager.getViewer().refresh(true);
 			}
 		});
+	}
+
+	protected void showSideboardFilter() {
+		Map<String, Object> prop = new HashMap<String, Object>();
+		boolean state = !showSideboards.isChecked();
+		prop.put(CardsNavigatorContentProvider.FILTER_SIDEBOARDS, state);
+		getViewer().setFilters(
+				new ViewerFilter[] { CardsNavigatorContentProvider
+						.getFilter(prop) });
 	}
 }

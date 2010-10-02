@@ -1,5 +1,15 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -26,22 +36,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.FileUtils;
 import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.MagicCardFilter;

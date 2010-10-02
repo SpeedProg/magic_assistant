@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * Dialog to edit properties of a deck/collection
@@ -60,7 +59,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 			type = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN);
 			type.add(IStorageInfo.DECK_TYPE);
 			type.add(IStorageInfo.COLLECTION_TYPE);
-			type.setText(info.getType().equals(IStorageInfo.DECK_TYPE)
+			type.setText(IStorageInfo.DECK_TYPE.equals(info.getType())
 			        ? IStorageInfo.DECK_TYPE
 			        : IStorageInfo.COLLECTION_TYPE);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);

@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -8,6 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -17,17 +21,18 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -46,12 +51,15 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	private Action shuffle;
 	private CTabFolder folder;
 	private ArrayList<IDeckPage> pages;
+	private Action sideboard;
+
 	static class DeckPageExtension {
 		String id;
 		String name;
 		IConfigurationElement elp;
 
-		public static Collection<DeckPageExtension> parseElement(IConfigurationElement el) {
+		public static Collection<DeckPageExtension> parseElement(
+				IConfigurationElement el) {
 			Collection<DeckPageExtension> res = new ArrayList<DeckPageExtension>();
 			IConfigurationElement[] children = el.getChildren();
 			for (IConfigurationElement elp : children) {
@@ -68,6 +76,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			return page;
 		}
 	}
+
 	private static ArrayList<DeckPageExtension> extensionPages;
 	static {
 		loadExtensions();
@@ -82,15 +91,18 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void runShowFilter() {
-		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getPreferenceStore());
+		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(),
+				getPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			this.manager.loadData(null);
 	}
 
 	private static void loadExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = registry.getExtensionPoint(MagicUIActivator.PLUGIN_ID + ".deckPage");
-		IConfigurationElement points[] = extensionPoint.getConfigurationElements();
+		IExtensionPoint extensionPoint = registry
+				.getExtensionPoint(MagicUIActivator.PLUGIN_ID + ".deckPage");
+		IConfigurationElement points[] = extensionPoint
+				.getConfigurationElements();
 		extensionPages = new ArrayList<DeckPageExtension>();
 		for (IConfigurationElement el : points) {
 			extensionPages.add(DeckPageExtension.parsePage(el));
@@ -102,24 +114,33 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		return new ExportAction(new StructuredSelection(getCardCollection()));
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui.IViewSite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
+	 * .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		String secondaryId = getViewSite().getSecondaryId();
-		this.deck = DataManager.getModelRoot().findCardCollectionById(secondaryId);
-		if (getFilteredStore() != null && this.deck.getStore() != getFilteredStore().getCardStore()) {
+		this.deck = DataManager.getModelRoot().findCardCollectionById(
+				secondaryId);
+		if (getFilteredStore() != null
+				&& this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}
 		site.getPage().addPartListener(PartListener.getInstance());
 		if (export != null) {
-			((ExportAction) export).selectionChanged(new StructuredSelection(getCardCollection()));
+			((ExportAction) export).selectionChanged(new StructuredSelection(
+					getCardCollection()));
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.lib.CollectionView#makeActions()
 	 */
 	@Override
@@ -131,6 +152,34 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				runShuffle();
 			}
 		};
+		this.sideboard = new Action("Open Sideboard") {
+			@Override
+			public void run() {
+				runCreateSideboard();
+			}
+		};
+	}
+
+	protected void runCreateSideboard() {
+		Location location = deck.getLocation();
+		Location sideboard = location.toSideboard();
+		if (location.equals(sideboard))
+			return;
+		CollectionsContainer parent = (CollectionsContainer) deck.getParent();
+		CardCollection s;
+		if (!deck.getParent().contains(sideboard)) {
+			s = parent.addDeck(sideboard.getBaseFileName());
+		} else {
+			s = (CardCollection) parent.findChield(sideboard);
+		}
+		IWorkbenchPage page = getViewSite().getWorkbenchWindow()
+				.getActivePage();
+		try {
+			page.showView(DeckView.ID, s.getFileName(),
+					IWorkbenchPage.VIEW_ACTIVATE);
+		} catch (PartInitException e) {
+			MessageDialog.openError(new Shell(), "Error", e.getMessage());
+		}
 	}
 
 	/**
@@ -138,7 +187,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	 */
 	protected void runShuffle() {
 		try {
-			HandView view = (HandView) getViewSite().getWorkbenchWindow().getActivePage().showView(HandView.ID);
+			HandView view = (HandView) getViewSite().getWorkbenchWindow()
+					.getActivePage().showView(HandView.ID);
 			view.selectionChanged(this, new StructuredSelection(this.deck));
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
@@ -146,17 +196,24 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.lib.LibView#dispose()
 	 */
 	@Override
 	public void dispose() {
-		if (deck!=null) this.deck.close();
+		if (deck != null)
+			this.deck.close();
 		super.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -171,10 +228,17 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		} else {
 			ICardStore<IMagicCard> s = filteredStore.getCardStore();
 			String name = s.getName();
-			if (deck.isDeck())
-				setPartName("Deck: " + name);
-			else
-				setPartName("Collection: " + name);
+			if (deck.getLocation().isSideboard()) {
+				setPartName("Sideboard: "
+						+ deck.getLocation().toMainDeck().getName());
+				if (sideboard!=null)
+					sideboard.setEnabled(false);
+			} else {
+				if (deck.isDeck()) {
+					setPartName("Deck: " + name);
+				} else
+					setPartName("Collection: " + name);
+			}
 		}
 	}
 
@@ -208,7 +272,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			DeckPageExtension ex = (DeckPageExtension) element;
 			try {
 				try {
-					IDeckPage page = (IDeckPage) ex.elp.createExecutableExtension("class");
+					IDeckPage page = (IDeckPage) ex.elp
+							.createExecutableExtension("class");
 					createDeckTab(ex.name, page);
 				} catch (CoreException e) {
 					MagicUIActivator.log(e);
@@ -250,29 +315,37 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		super.fillContextMenu(manager);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(org.eclipse.jface.action.IMenuManager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
+	 * org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
 		manager.add(this.shuffle);
+		manager.add(this.sideboard);
 	}
 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		String secondaryId = getViewSite().getSecondaryId();
-		return DataManager.getCardHandler().getCardCollectionHandler(secondaryId);
+		return DataManager.getCardHandler().getCardCollectionHandler(
+				secondaryId);
 	}
 
 	@Override
 	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
-		if (folder.isDisposed()) return;
+		if (folder.isDisposed())
+			return;
 		folder.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-					if (DataManager.getModelRoot().findCardCollectionById(deck.getFileName()) == null) {
+					if (DataManager.getModelRoot().findCardCollectionById(
+							deck.getFileName()) == null) {
 						deck.close();
 						getViewSite().getPage().hideView(DeckView.this);
 						return;
@@ -280,7 +353,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 					// ignore
 				} else {
-					//System.err.println(event);
+					// System.err.println(event);
 					updateActivePage();
 				}
 			}
@@ -308,7 +381,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void updateViewer() {
-		if (folder.isDisposed()) return;
+		if (folder.isDisposed())
+			return;
 		super.updateViewer();
 		updatePartName();
 		updateActivePage();
@@ -317,11 +391,12 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	protected synchronized void updateActivePage() {
 		CTabItem sel = folder.getSelection();
-		if (sel.isDisposed()) return;
-		//System.err.println(sel + " " + sel.getData());
+		if (sel.isDisposed())
+			return;
+		// System.err.println(sel + " " + sel.getData());
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;
-			//System.err.println(deckPage);
+			// System.err.println(deckPage);
 			if (sel.getData() == page) {
 				page.setFilteredStore(getFilteredStore());
 				page.updateFromStore();
