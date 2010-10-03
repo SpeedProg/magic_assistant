@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.CoreException;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.eclipse.core.runtime.CoreException;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
@@ -29,7 +29,7 @@ import com.reflexit.magiccards.core.model.storage.ICardCollection;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
 	public VirtualMultiFileCardStore() {
@@ -68,7 +68,7 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void pruneDuplicates() {
 		HashSet<Integer> hash = new HashSet<Integer>();
@@ -89,7 +89,8 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 
 	@Override
 	protected Location getLocation(IMagicCard card) {
-		Location loc = new Location(((MagicCard) card).getSet());
+		String set = ((MagicCard) card).getSet();
+		Location loc = new Location(getExtFileName(set));
 		return loc;
 	}
 
