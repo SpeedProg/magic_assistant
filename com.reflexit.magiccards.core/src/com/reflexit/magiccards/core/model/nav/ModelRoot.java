@@ -10,21 +10,24 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.nav;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 
 /**
+ * Model Root contains access to all deck, collections and magic db container
+ * (displayed in the navigator)
+ * 
  * @author Alena
- *
+ * 
  */
 public class ModelRoot extends CardOrganizer {
 	private static ModelRoot instance;
@@ -65,7 +68,7 @@ public class ModelRoot extends CardOrganizer {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void convertData() {
 		// move library data of 1.0.2 into Collections dir
@@ -120,7 +123,7 @@ public class ModelRoot extends CardOrganizer {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void reset() {
 		getDeckContainer().removeChildren();
