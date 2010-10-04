@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
@@ -36,7 +37,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		this.location = location;
 		if (location != null)
 			this.name = location.getName();
-		//System.err.println("Create sin store " + location + " 0x" + Integer.toHexString(System.identityHashCode(this)));
+		// System.err.println("Create sin store " + location + " 0x" +
+		// Integer.toHexString(System.identityHashCode(this)));
 		if (initialize) {
 			load();
 		}
@@ -84,10 +86,11 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	protected VirtualMultiFileCardStore waitForDb() {
-		VirtualMultiFileCardStore db;
-		db = (VirtualMultiFileCardStore) DataManager.getCardHandler().getDatabaseHandler().getCardStore();
+		IFilteredCardStore databaseHandler = DataManager.getCardHandler().getDatabaseHandler();
+		databaseHandler.getSize(); // should trigger initialization
+		VirtualMultiFileCardStore db = (VirtualMultiFileCardStore) databaseHandler.getCardStore();
 		int count = 20;
-		while (db.size() < 10000 && count-- > 0) {
+		while (!db.isInitialized() && count-- > 0) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -179,7 +182,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	public boolean isVirtual() {
 		String vir = getProperty(VIRTUAL);
 		if (vir == null)
-			return true;
+			return false;
 		return Boolean.valueOf(vir);
 	}
 

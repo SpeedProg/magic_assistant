@@ -43,7 +43,6 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 		CollectionCardStore store = new DbFileCardStore(file, location, initialize);
 		addCardStore(store);
 		if (initialize) {
-			initialized = initialize;
 			store.initialize();
 		}
 		return store;
@@ -115,6 +114,10 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 		return location.replaceAll("[\\W]", "_");
 	}
 
+	@Override
+	public boolean isInitialized() {
+		return super.isInitialized();
+	}
 	public File getFile(final IMagicCard card) {
 		try {
 			if (card instanceof MagicCard) {

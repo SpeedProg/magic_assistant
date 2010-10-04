@@ -1,11 +1,11 @@
 package com.reflexit.magiccards.core.xml;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -17,8 +17,8 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
-	private static MagicCardDataXmlHandler instance;
+public class MagicDBXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
+	private static MagicDBXmlHandler instance;
 	private ArrayList<File> files;
 	private VirtualMultiFileCardStore table;
 
@@ -31,7 +31,7 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 		return this.table;
 	}
 
-	private MagicCardDataXmlHandler() {
+	private MagicDBXmlHandler() {
 		instance = this;
 		this.table = new VirtualMultiFileCardStore();
 	}
@@ -40,33 +40,41 @@ public class MagicCardDataXmlHandler extends AbstractFilteredCardStore<IMagicCar
 	protected void doInitialize() throws MagicException {
 		new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
 		if (!this.table.isInitialized()) {
-			this.files = new ArrayList<File>();
-			IResource[] members;
-			try {
-				MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
-				members = con.getContainer().members();
-				for (IResource resource : members) {
-					File file = resource.getLocation().toFile();
-					if (file.getName().endsWith(".xml"))
-						this.files.add(file);
+			synchronized (table) {
+				this.files = new ArrayList<File>();
+				IResource[] members;
+				try {
+					MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
+					members = con.getContainer().members();
+					for (IResource resource : members) {
+						File file = resource.getLocation().toFile();
+						if (file.getName().endsWith(".xml"))
+							this.files.add(file);
+					}
+				} catch (CoreException e) {
+					Activator.log(e);
+					return;
+				} catch (MagicException e) {
+					Activator.log(e);
+					return;
 				}
-			} catch (CoreException e) {
-				Activator.log(e);
-				return;
-			} catch (MagicException e) {
-				Activator.log(e);
-				return;
-			}
-			this.table.initialize();
-			for (File file : this.files) {
-				this.table.addFile(file, Location.createLocation(file, Location.NO_WHERE), true);
+				this.table.initialize();
+				this.table.setInitialized(false);
+				try {
+					for (File file : this.files) {
+						Location setLocation = Location.createLocation(file, Location.NO_WHERE);
+						this.table.addFile(file, setLocation, true);
+					}
+				} finally {
+					this.table.setInitialized(true);
+				}
 			}
 		}
 	}
 
 	public static IFilteredCardStore getInstance() {
 		if (instance == null)
-			new MagicCardDataXmlHandler();
+			new MagicDBXmlHandler();
 		return instance;
 	}
 }

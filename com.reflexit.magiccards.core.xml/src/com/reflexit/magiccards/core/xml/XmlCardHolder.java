@@ -42,7 +42,7 @@ public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
 
 	public IFilteredCardStore getDatabaseHandler() {
-		return MagicCardDataXmlHandler.getInstance();
+		return MagicDBXmlHandler.getInstance();
 	}
 
 	public IFilteredCardStore getMyCardsHandler() {
