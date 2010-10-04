@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -81,6 +82,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action openInDeckView;
 	private Action openInMyCardsView;
 	private Action showSideboards;
+	private Action refresh;
 
 	/**
 	 * The constructor.
@@ -158,6 +160,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		manager.add(importa);
 		manager.add(new Separator());
 		manager.add(showSideboards);
+		manager.add(refresh);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -233,6 +236,20 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 				WizardDialog dialog = new WizardDialog(getShell(), wizard);
 				dialog.create();
 				dialog.open();
+			}
+		};
+		this.refresh = new Action("Refresh", SWT.NONE) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+			}
+			@Override
+			public void run() {
+				try {
+					DataManager.getModelRoot().refresh();
+				} catch (CoreException e) {
+					MagicUIActivator.log(e);
+				}
+				getViewer().refresh(true);
 			}
 		};
 		this.showSideboards = new Action("Show Sideboads", SWT.TOGGLE) {
