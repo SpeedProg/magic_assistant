@@ -57,6 +57,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	protected synchronized void doLoad() {
 		CardCollectionStoreObject obj = null;
 		try {
+			// System.err.println("Loading " + file);
 			obj = CardCollectionStoreObject.initFromFile(this.file);
 			loadFields(obj);
 			updateLocations();

@@ -38,9 +38,12 @@ public class MagicDBXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 
 	@Override
 	protected void doInitialize() throws MagicException {
+		// create initial database from flat file if not there
 		new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
+		// load card from xml in memory
 		if (!this.table.isInitialized()) {
 			synchronized (table) {
+				// System.err.println("Initializing DB");
 				this.files = new ArrayList<File>();
 				IResource[] members;
 				try {
