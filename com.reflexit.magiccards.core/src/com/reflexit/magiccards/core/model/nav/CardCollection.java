@@ -14,7 +14,6 @@ public class CardCollection extends CardElement {
 	transient private ICardStore<IMagicCard> store;
 	transient protected boolean deck;
 
-
 	public CardCollection(String filename, CardOrganizer parent) {
 		this(filename, parent, false);
 	}
@@ -84,6 +83,12 @@ public class CardCollection extends CardElement {
 	}
 
 	public boolean isDeck() {
+		if (!isOpen())
+			return deck;
+		IStorageInfo info = getStorageInfo();
+		if (info != null) {
+			deck = IStorageInfo.DECK_TYPE.equals(info.getType());
+		}
 		return deck;
 	}
 
