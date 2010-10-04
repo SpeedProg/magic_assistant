@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import org.eclipse.core.commands.common.EventManager;
-
 import java.util.Collection;
+
+import org.eclipse.core.commands.common.EventManager;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
@@ -150,7 +150,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		initialized = b;
 	}
 
-	public boolean isInitialized() {
+	public synchronized boolean isInitialized() {
 		return initialized;
 	}
 

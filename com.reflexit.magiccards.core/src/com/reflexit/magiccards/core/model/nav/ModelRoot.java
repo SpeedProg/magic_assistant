@@ -13,21 +13,19 @@ package com.reflexit.magiccards.core.model.nav;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.Activator;
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 
 /**
  * Model Root contains access to all deck, collections and magic db container
  * (displayed in the navigator)
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class ModelRoot extends CardOrganizer {
 	private static ModelRoot instance;
@@ -43,6 +41,7 @@ public class ModelRoot extends CardOrganizer {
 	 */
 	private ModelRoot() {
 		super("Root", null);
+		instance = this;
 		initRoot();
 	}
 
@@ -54,9 +53,7 @@ public class ModelRoot extends CardOrganizer {
 			this.fDecks = new CollectionsContainer("Decks", fMyCards);
 			this.db = new MagicDbContainter(root);
 			this.fLibFile = new CardCollection("main.xml", this.fLib);
-			this.fLibFile.setVirtual(false);
 			refresh();
-			convertData();
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
@@ -64,32 +61,12 @@ public class ModelRoot extends CardOrganizer {
 
 	public void refresh() throws CoreException {
 		this.fMyCards.loadChildren();
-		//this.fLib.loadChildren();
+		// this.fLib.loadChildren();
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 *
-	 */
-	private void convertData() {
-		// move library data of 1.0.2 into Collections dir
-		try {
-			IPath newloc = this.fLibFile.getPath();
-			IResource main = this.fLibFile.getResource();
-			IResource lib = DataManager.getProject().findMember("library.xml");
-			if (lib != null && lib.exists()) {
-				if (main == null || !main.exists())
-					lib.move(newloc, true, null);
-				else if (main.getLocation().toFile().length() == 0) {
-					main.delete(true, null);
-					lib.move(newloc, true, null);
-				}
-			}
-		} catch (CoreException e) {
-			Activator.log(e);
-		}
-	}
-
-	/* (non-Javadoc)
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#getPath()
 	 */
 	@Override
@@ -116,9 +93,9 @@ public class ModelRoot extends CardOrganizer {
 	/**
 	 * @return
 	 */
-	public static ModelRoot getInstance() {
+	public static synchronized ModelRoot getInstance() {
 		if (instance == null)
-			instance = new ModelRoot();
+			new ModelRoot();
 		return instance;
 	}
 

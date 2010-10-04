@@ -15,7 +15,7 @@ import java.util.HashMap;
 import com.reflexit.magiccards.core.model.Location;
 
 /**
- * Keeps the map between locations and card stores
+ * Keeps the map between locations and card stores. It is not used now.
  */
 public class LocationManager<T> {
 	private HashMap<Location, ICardStore<T>> map = new HashMap<Location, ICardStore<T>>();

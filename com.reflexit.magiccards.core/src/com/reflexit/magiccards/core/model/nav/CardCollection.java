@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model.nav;
 
 import java.io.File;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -12,8 +13,7 @@ import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 public class CardCollection extends CardElement {
 	transient private ICardStore<IMagicCard> store;
 	transient protected boolean deck;
-	transient boolean pendingVirtual;
-	transient private boolean virtualFlag;
+
 
 	public CardCollection(String filename, CardOrganizer parent) {
 		this(filename, parent, false);
@@ -47,6 +47,9 @@ public class CardCollection extends CardElement {
 	}
 
 	public IStorageInfo getStorageInfo() {
+		if (!isOpen()) {
+			open();
+		}
 		if (store instanceof IStorageContainer) {
 			IStorage storage = ((IStorageContainer) store).getStorage();
 			if (storage instanceof IStorageInfo) {
@@ -62,17 +65,18 @@ public class CardCollection extends CardElement {
 		return super.getName();
 	}
 
+	public void open() {
+		DataManager.getCardHandler().getCardCollectionHandler(getName());
+	}
+
 	public void open(ICardStore<IMagicCard> store) {
+		if (store == null)
+			return;
 		if (this.store == null) {
 			this.store = store;
 			IStorageInfo info = getStorageInfo();
 			if (info != null) {
 				deck = IStorageInfo.DECK_TYPE.equals(info.getType());
-				if (pendingVirtual) {
-					setVirtual(virtualFlag);
-					pendingVirtual = false;
-				}
-				virtualFlag = info.isVirtual();
 			}
 		} else {
 			throw new IllegalArgumentException("Already open");
@@ -99,10 +103,10 @@ public class CardCollection extends CardElement {
 	}
 
 	public void setVirtual(boolean virtual) {
-		virtualFlag = virtual;
 		if (!isOpen()) {
-			pendingVirtual = true;
-		} else if (store instanceof IStorageContainer) {
+			open();
+		}
+		if (store instanceof IStorageContainer) {
 			IStorage storage = ((IStorageContainer) store).getStorage();
 			if (storage instanceof IStorageInfo) {
 				((IStorageInfo) storage).setVirtual(virtual);
@@ -112,6 +116,9 @@ public class CardCollection extends CardElement {
 	}
 
 	public boolean isVirtual() {
-		return virtualFlag;
+		IStorageInfo info = getStorageInfo();
+		if (info == null)
+			return false;
+		return info.isVirtual();
 	}
 }
