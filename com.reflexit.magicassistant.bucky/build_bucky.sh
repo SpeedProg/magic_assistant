@@ -91,11 +91,12 @@ fi
 if [ "$UPDATE_SITE" -eq 1 ]; then
   echo "Uploading update sute for $RELEASE..."
   REMOTE_PATH="htdocs/update/1.1"
-  #$SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.1/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
+#  $SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.1/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
   (
   cd $EXPORT_DIR/update/1.1/
   unzip content.jar
   unzip artifacts.jar
+  $SCP -v -i "$SF_PRIVATE_KEY" binary/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/binary/"
   $SCP -v -i "$SF_PRIVATE_KEY" features/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/features/"
   $SCP -v -i "$SF_PRIVATE_KEY" plugins/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/plugins/"
   $SCP -v -i "$SF_PRIVATE_KEY" *.xml *.jar "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/"
