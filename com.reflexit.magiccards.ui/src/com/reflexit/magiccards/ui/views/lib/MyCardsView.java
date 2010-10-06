@@ -1,11 +1,11 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
@@ -68,7 +68,7 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 		String locId = Locations.getInstance().getPrefConstant(loc);
 		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
-			if (id.startsWith(locId)) {
+			if (id.startsWith(locId + ".") || id.equals(locId) || id.equals(locId + Location.SIDEBOARD_SUFFIX)) {
 				preferenceStore.setValue(id, true);
 			} else {
 				preferenceStore.setValue(id, false);
