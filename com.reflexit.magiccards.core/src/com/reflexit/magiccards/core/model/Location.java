@@ -20,10 +20,11 @@ import org.eclipse.core.runtime.Path;
  */
 public class Location implements Comparable<Location> {
 	private static final String XML_SUFFIX = ".xml";
-	private static final String SIDEBOARD_SUFFIX = "-sideboard";
+	public static final String SIDEBOARD_SUFFIX = "-sideboard";
 	public static final Location NO_WHERE = new Location();
 	private final String location;
 
+	@Override
 	public String toString() {
 		return location;
 	}

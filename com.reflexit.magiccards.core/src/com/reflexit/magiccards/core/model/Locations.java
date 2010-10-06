@@ -11,11 +11,12 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 public class Locations implements ISearchableProperty {
 	private Locations() {
 	}
+
 	static Locations instance = new Locations();
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
 	 */
 	public String getIdPrefix() {
@@ -26,10 +27,15 @@ public class Locations implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection getNames() {
+	public Collection<String> getNames() {
 		ModelRoot modelRoot = DataManager.getModelRoot();
 		Map map = modelRoot.getLocationsMap();
-		return new ArrayList(map.keySet());
+		ArrayList<String> list = new ArrayList<String>();
+		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
+			Location loc = (Location) iterator.next();
+			list.add(loc.toString());
+		}
+		return list;
 	}
 
 	public Collection<String> getIds() {
@@ -65,12 +71,24 @@ public class Locations implements ISearchableProperty {
 	}
 
 	public boolean isSideboard(String id) {
-		return id.endsWith("-sideboard.xml");
+		return id.endsWith(Location.SIDEBOARD_SUFFIX);
 	}
 
-	public String getMainDeck(String id) {
+	public String getMainDeckId(String id) {
 		if (isSideboard(id))
-			return id.replaceAll("-sideboard.xml$", ".xml");
+			return id.replaceAll(Location.SIDEBOARD_SUFFIX, "");
 		return id;
+	}
+
+	public Location findLocation(String locId) {
+		ModelRoot modelRoot = DataManager.getModelRoot();
+		Map map = modelRoot.getLocationsMap();
+		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
+			Location loc = (Location) iterator.next();
+			String id = getPrefConstant(loc);
+			if (locId.equals(id))
+				return loc;
+		}
+		return null;
 	}
 }

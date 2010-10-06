@@ -5,9 +5,9 @@ import java.util.Collection;
 public interface ISearchableProperty {
 	public String getIdPrefix();
 
-	public Collection getNames();
+	public Collection<String> getNames();
 
-	public Collection getIds();
+	public Collection<String> getIds();
 
 	public String getNameById(String id);
 }

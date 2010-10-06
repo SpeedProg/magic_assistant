@@ -32,22 +32,14 @@ public class FilterHelper {
 	public static final String TEXT_NOT_2 = TEXT_LINE + "_exclude_2";
 	public static final String TEXT_NOT_3 = TEXT_LINE + "_exclude_3";
 
-	public static String toIdent(String string) {
+	public static String escapeProperty(String string) {
 		String res = string.toLowerCase();
-		res = res.replaceAll("^\\W", "_");
+		res = res.replaceAll("[^\\w-./]", "_");
 		return res;
 	}
 
 	public static String getPrefConstant(String sub, String name) {
-		return PREFIX + ".filter." + sub + "." + toIdent(name);
-	}
-
-	public static String getTypePrefConstant(String name) {
-		return getPrefConstant("type", name);
-	}
-
-	public static String getSuperTypePrefConstant(String name) {
-		return getPrefConstant("supertype", name);
+		return PREFIX + ".filter." + sub + "." + escapeProperty(name);
 	}
 
 	public static Collection getAllIds() {
