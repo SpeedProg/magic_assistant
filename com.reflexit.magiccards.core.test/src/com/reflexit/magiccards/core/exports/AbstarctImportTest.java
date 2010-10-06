@@ -1,11 +1,10 @@
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
@@ -35,7 +34,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void parse(boolean header, ReportType type) {
 		try {
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), type, header, new HashMap(), deck,
+			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), type, header, deck.getLocation(), deck.getCardStore(),
 			        new NullProgressMonitor());
 		} catch (Exception e) {
 			fail(e.getMessage());
