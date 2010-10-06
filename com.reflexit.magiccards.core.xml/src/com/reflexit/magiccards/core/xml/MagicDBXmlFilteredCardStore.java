@@ -10,30 +10,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
-import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class MagicDBXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
-	private static MagicDBXmlHandler instance;
+public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStore {
+	private static MagicDBXmlFilteredCardStore instance;
 	private ArrayList<File> files;
-	private VirtualMultiFileCardStore table;
 
-	@Override
-	public int getSize() {
-		return super.getSize();
-	}
-
-	public ICardStore<IMagicCard> getCardStore() {
-		return this.table;
-	}
-
-	private MagicDBXmlHandler() {
+	private MagicDBXmlFilteredCardStore() {
+		super(new VirtualMultiFileCardStore());
 		instance = this;
-		this.table = new VirtualMultiFileCardStore();
 	}
 
 	@Override
@@ -77,7 +64,7 @@ public class MagicDBXmlHandler extends AbstractFilteredCardStore<IMagicCard> {
 
 	public static IFilteredCardStore getInstance() {
 		if (instance == null)
-			new MagicDBXmlHandler();
+			new MagicDBXmlFilteredCardStore();
 		return instance;
 	}
 }

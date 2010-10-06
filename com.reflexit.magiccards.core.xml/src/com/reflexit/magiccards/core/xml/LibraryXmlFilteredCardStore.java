@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.runtime.CoreException;
-
 import java.util.Collection;
+
+import org.eclipse.core.runtime.CoreException;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -10,10 +10,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
-import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
-import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -21,21 +17,13 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
-import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
-public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard> implements ILocatable,
-        ICardEventListener, ICardCountable {
-	private static LibraryDataXmlHandler instance;
-	private CollectionMultiFileCardStore table;
-
-	public ICardStore<IMagicCard> getCardStore() {
-		return this.table;
-	}
+public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStore implements ICardEventListener {
+	private static LibraryXmlFilteredCardStore instance;
 
 	@Override
 	protected void doInitialize() throws MagicException {
@@ -56,45 +44,16 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		table.addListener(this);
 	}
 
-	public static LibraryDataXmlHandler getInstance() {
+	@SuppressWarnings("unused")
+	public static LibraryXmlFilteredCardStore getInstance() {
 		if (instance == null)
-			new LibraryDataXmlHandler();
+			new LibraryXmlFilteredCardStore();
 		return instance;
 	}
 
-	private LibraryDataXmlHandler() {
+	private LibraryXmlFilteredCardStore() {
+		super(new CollectionMultiFileCardStore());
 		instance = this;
-		this.table = new CollectionMultiFileCardStore();
-	}
-
-	@Override
-	public Location getLocation() {
-		Expr root = getFilter().getRoot();
-		Location loc = findLocationFilter(root);
-		if (loc != null)
-			return loc;
-		return table.getLocation();
-	}
-
-	private Location findLocationFilter(Expr root) {
-		if (root instanceof BinaryExpr) {
-			BinaryExpr bin = ((BinaryExpr) root);
-			if (bin.getLeft() instanceof Node
-			        && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
-				return new Location(bin.getRight().toString());
-			}
-			Location loc = findLocationFilter(bin.getLeft());
-			if (loc != null)
-				return loc;
-			loc = findLocationFilter(bin.getRight());
-			if (loc != null)
-				return loc;
-		}
-		return null;
-	}
-
-	public void setLocation(String key) {
-		throw new UnsupportedOperationException("setLocation is not supported");
 	}
 
 	public void handleEvent(CardEvent event) {
@@ -106,24 +65,23 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 						CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
 						IStorage storage = store.getStorage();
 						if (storage instanceof IStorageInfo) {
-							((IStorageInfo) storage).setType(((CardCollection) elem).isDeck()
-							        ? IStorageInfo.DECK_TYPE
-							        : IStorageInfo.COLLECTION_TYPE);
+							((IStorageInfo) storage).setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
+									: IStorageInfo.COLLECTION_TYPE);
 						}
 					}
 				} catch (CoreException e) {
 					Activator.log(e);
 				}
-				reload();
+				update();
 			} else if (event.getType() == CardEvent.REMOVE_CONTAINER) {
 				this.table.removeLocation(elem.getLocation());
-				reload();
+				update();
 			}
 		} else if (event.getSource() instanceof CardElement) {
 			CardElement elem = (CardElement) event.getSource();
 			if (event.getType() == CardEvent.RENAME_CONTAINER) {
 				this.table.renameLocation((Location) event.getData(), elem.getLocation());
-				reload();
+				update();
 			}
 		} else if (event.getType() == CardEvent.UPDATE) {
 			// need to save xml
@@ -145,7 +103,9 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		update();
 	}
 
+	@Override
 	public int getCount() {
+		initialize();
 		int count = 0;
 		Collection<IMagicCard> list = getFilteredList();
 		for (Object element : list) {
@@ -157,6 +117,7 @@ public class LibraryDataXmlHandler extends AbstractFilteredCardStore<IMagicCard>
 		return count;
 	}
 
+	@Override
 	public ICardStore<IMagicCard> getStore(Location location) {
 		initialize();
 		if (location == null)

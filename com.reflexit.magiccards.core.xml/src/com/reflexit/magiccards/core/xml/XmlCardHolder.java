@@ -1,14 +1,5 @@
 package com.reflexit.magiccards.core.xml;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.SubProgressMonitor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +14,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -41,42 +41,49 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
 
-	public IFilteredCardStore getDatabaseHandler() {
-		return MagicDBXmlHandler.getInstance();
+	public IFilteredCardStore getMagicDBFilteredStore() {
+		return MagicDBXmlFilteredCardStore.getInstance();
 	}
 
-	public IFilteredCardStore getMyCardsHandler() {
-		return LibraryDataXmlHandler.getInstance();
+	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
+		return new BasicMagicDBXmlFilteredCardStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
 	}
 
-	public IFilteredCardStore getCardCollectionHandler(String filename) {
-		return new DeckXmlHandler(filename);
+	public IFilteredCardStore getLibraryFilteredStore() {
+		return LibraryXmlFilteredCardStore.getInstance();
+	}
+
+	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy() {
+		return new BasicLibraryXmlFilteredCardStore((CollectionMultiFileCardStore) getLibraryCardStore());
+	}
+
+	public ICardStore getLibraryCardStore() {
+		return LibraryXmlFilteredCardStore.getInstance().getCardStore();
+	}
+
+	public IFilteredCardStore getCardCollectionFilteredStore(String filename) {
+		return new DeckXmlFilteredCardStore(filename);
 	}
 
 	public ICardStore loadFromXml(String filename) {
-		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(
-				new File(filename), new Location(filename), true);
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), new Location(filename), true);
 		return store;
 	}
 
 	public void loadInitial() throws MagicException, CoreException, IOException {
-		InputStream is = FileLocator.openStream(Activator.getDefault()
-				.getBundle(), new Path("resources/all.txt"), false);
-		BufferedReader st = new BufferedReader(new InputStreamReader(is,
-				Charset.forName("utf-8")));
+		InputStream is = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/all.txt"), false);
+		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 		loadtFromFlatIntoXml(st);
 		is.close();
 	}
 
 	public static File getDbFolder() throws CoreException {
-		File dir = DataManager.getModelRoot().getMagicDBContainer()
-				.getContainer().getLocation().toFile();
+		File dir = DataManager.getModelRoot().getMagicDBContainer().getContainer().getLocation().toFile();
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoXml(BufferedReader st)
-			throws MagicException, IOException {
-		ICardStore store = getDatabaseHandler().getCardStore();
+	private synchronized int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
+		ICardStore store = getMagicDBFilteredStore().getCardStore();
 		int init = store.size();
 		ArrayList<IMagicCard> list = loadFromFlat(st);
 		boolean hasAny = list.size() > 0;
@@ -85,8 +92,7 @@ public class XmlCardHolder implements ICardHandler {
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 
-	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st)
-			throws IOException {
+	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st) throws IOException {
 		String line;
 		st.readLine(); // header ignore for now
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
@@ -130,8 +136,7 @@ public class XmlCardHolder implements ICardHandler {
 	public void loadInitialIfNot(IProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
-			IContainer db = DataManager.getModelRoot().getMagicDBContainer()
-					.getContainer();
+			IContainer db = DataManager.getModelRoot().getMagicDBContainer().getContainer();
 			db.refreshLocal(1, new SubProgressMonitor(pm, 50));
 			IResource[] members = db.members();
 			if (members.length > 0)
@@ -145,17 +150,15 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public String download(String set, Properties options, IProgressMonitor pm)
-			throws FileNotFoundException, MalformedURLException, IOException {
-		IPath path = Activator.getStateLocationAlways()
-				.append("downloaded.txt");
+	public String download(String set, Properties options, IProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
+			IOException {
+		IPath path = Activator.getStateLocationAlways().append("downloaded.txt");
 		String file = path.toPortableString();
 		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, options, pm);
 		return file;
 	}
 
-	public int downloadUpdates(String set, Properties options,
-			IProgressMonitor pm) throws MagicException, InterruptedException {
+	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException, InterruptedException {
 		int rec;
 		try {
 			pm.beginTask("Downloading", 100);
@@ -184,8 +187,7 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public boolean copyCards(Collection cards, Location to) {
-		ICardStore<IMagicCard> store = LibraryDataXmlHandler.getInstance()
-				.getStore(to);
+		ICardStore<IMagicCard> store = LibraryXmlFilteredCardStore.getInstance().getStore(to);
 		if (store == null)
 			return false;
 		boolean virtual = store.isVirtual();
@@ -195,8 +197,9 @@ public class XmlCardHolder implements ICardHandler {
 			MagicCardPhisical phi = new MagicCardPhisical(card, to);
 			if (card instanceof MagicCard) // moving from db
 				phi.setOwn(!virtual);
-			else if (virtual){
-				phi.setOwn(false); // copied cards will have collection ownership for virtual
+			else if (virtual) {
+				phi.setOwn(false); // copied cards will have collection
+									// ownership for virtual
 			}
 			list.add(phi);
 		}
@@ -204,12 +207,10 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public boolean moveCards(Collection cards, Location from, Location to) {
-		ICardStore<IMagicCard> sto = LibraryDataXmlHandler.getInstance()
-				.getStore(to);
+		ICardStore<IMagicCard> sto = LibraryXmlFilteredCardStore.getInstance().getStore(to);
 		if (sto == null)
 			return false;
 		boolean virtual = sto.isVirtual();
-	
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
@@ -217,7 +218,7 @@ public class XmlCardHolder implements ICardHandler {
 			if (card instanceof MagicCard) {
 				phi.setOwn(!virtual);
 			} else if (card instanceof MagicCardPhisical) {
-				if (((MagicCardPhisical) card).isOwn() && virtual) 
+				if (((MagicCardPhisical) card).isOwn() && virtual)
 					throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
 			}
 			list.add(phi);
@@ -242,8 +243,7 @@ public class XmlCardHolder implements ICardHandler {
 				}
 			}
 			if (from != null && allthesame) {
-				ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler
-						.getInstance().getStore(from);
+				ICardStore<IMagicCard> sfrom2 = LibraryXmlFilteredCardStore.getInstance().getStore(from);
 				if (sfrom2 != null)
 					sfrom2.removeAll(cards);
 			} else {
@@ -252,8 +252,7 @@ public class XmlCardHolder implements ICardHandler {
 					if (!(card instanceof MagicCardPhisical))
 						continue;
 					Location from2 = ((MagicCardPhisical) card).getLocation();
-					ICardStore<IMagicCard> sfrom2 = LibraryDataXmlHandler
-							.getInstance().getStore(from2);
+					ICardStore<IMagicCard> sfrom2 = LibraryXmlFilteredCardStore.getInstance().getStore(from2);
 					sfrom2.remove(card);
 				}
 			}
@@ -268,4 +267,5 @@ public class XmlCardHolder implements ICardHandler {
 	public void setActiveDeckHandler(IFilteredCardStore store) {
 		this.activeDeck = store;
 	}
+
 }

@@ -87,7 +87,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	protected VirtualMultiFileCardStore waitForDb() {
-		IFilteredCardStore databaseHandler = DataManager.getCardHandler().getDatabaseHandler();
+		IFilteredCardStore databaseHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 		databaseHandler.getSize(); // should trigger initialization
 		VirtualMultiFileCardStore db = (VirtualMultiFileCardStore) databaseHandler.getCardStore();
 		int count = 20;
