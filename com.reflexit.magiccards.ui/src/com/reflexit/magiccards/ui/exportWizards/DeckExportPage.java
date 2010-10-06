@@ -154,17 +154,17 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		Locations locs = Locations.getInstance();
 		Collection<String> col = locs.getIds();
 		for (Iterator<String> iterator = col.iterator(); iterator.hasNext();) {
-			String id = (String) iterator.next();
+			String id = iterator.next();
 			String value = store.getString(id);
 			if (locs.isSideboard(id)) {
-				String deckId = locs.getMainDeck(id);
+				String deckId = locs.getMainDeckId(id);
 				if (sideboard) {
 					value =  store.getString(deckId);
 				} else {
 					value = "false";
 				}
 			}
-	
+
 			if (value != null && value.length() > 0) {
 				map.put(id, value);
 				//System.err.println(id + "=" + value);
@@ -264,7 +264,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 
 	/**
 	 * Creates the buttons for selecting specific types or selecting all or none of the elements.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 */
@@ -473,7 +473,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	 * data. Note that the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
 	 * Subclasses may override.
 	 * </p>
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite
 	 * @param id
