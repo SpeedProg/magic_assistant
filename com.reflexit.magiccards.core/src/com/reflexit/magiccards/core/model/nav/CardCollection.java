@@ -65,7 +65,7 @@ public class CardCollection extends CardElement {
 	}
 
 	public void open() {
-		DataManager.getCardHandler().getCardCollectionHandler(getName());
+		DataManager.getCardHandler().getCardCollectionFilteredStore(getName());
 	}
 
 	public void open(ICardStore<IMagicCard> store) {

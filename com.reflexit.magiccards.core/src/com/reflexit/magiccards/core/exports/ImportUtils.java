@@ -38,7 +38,7 @@ public class ImportUtils {
 	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, ICardStore cardStore,
 			IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
-			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
+			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force
 																				// initialization
 			IImportDelegate worker;
@@ -92,7 +92,7 @@ public class ImportUtils {
 
 	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, IProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
-		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
+		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStore();
 		performImport(st, reportType, header, location, filteredLibrary.getCardStore(), monitor);
 	}
 
@@ -104,7 +104,7 @@ public class ImportUtils {
 		} catch (Exception e) {
 			throw new InvocationTargetException(e);
 		}
-		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getDatabaseHandler();
+		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 		worker.init(st, true, null, magicDbHandler.getCardStore());
 		worker.setHeader(header);
 		// init preview

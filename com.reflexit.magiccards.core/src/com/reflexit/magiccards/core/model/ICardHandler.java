@@ -1,20 +1,26 @@
 package com.reflexit.magiccards.core.model;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.util.Collection;
 import java.util.Properties;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public interface ICardHandler {
-	public IFilteredCardStore getDatabaseHandler();
+	public IFilteredCardStore getMagicDBFilteredStore();
 
-	public IFilteredCardStore getMyCardsHandler();
+	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy();
 
-	public IFilteredCardStore getCardCollectionHandler(String id);
+	public IFilteredCardStore getLibraryFilteredStore();
+
+	public ICardStore getLibraryCardStore();
+
+	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy();
+
+	public IFilteredCardStore getCardCollectionFilteredStore(String id);
 
 	public IFilteredCardStore getActiveDeckHandler();
 
@@ -26,8 +32,7 @@ public interface ICardHandler {
 
 	public boolean moveCards(Collection cards, Location from, Location to);
 
-	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException,
-	        InterruptedException;
+	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException, InterruptedException;
 
 	public void loadInitialIfNot(IProgressMonitor nullProgressMonitor) throws MagicException;
 }
