@@ -1,5 +1,15 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -33,23 +43,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
@@ -92,7 +92,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	public boolean performImport(final boolean preview) {
 		boolean res = false;
 		try {
-			//			final ExportWork work = new ExportWork(listViewer.getCheckedElements(), // 
+			//			final ExportWork work = new ExportWork(listViewer.getCheckedElements(), //
 			//			        fileName, //
 			//			        reportType, includeHeader.getSelection(), getTimeUnitsName());
 			locPage.performOk();
@@ -106,7 +106,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 							previewResult = ImportUtils.performPreview(st, reportType, header, monitor);
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
-							ImportUtils.performImport(st, reportType, header, storeToMap(), monitor);
+							ImportUtils.performImport(st, reportType, header, getSelectedLocation(), monitor);
 						}
 					}
 				};
@@ -134,19 +134,17 @@ public class DeckImportPage extends WizardDataTransferPage {
 		return st;
 	}
 
-	private HashMap storeToMap() {
+	private Location getSelectedLocation() {
 		IPreferenceStore store = getPreferenceStore();
-		HashMap map = new HashMap();
-		Collection col = FilterHelper.getAllIds();
-		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
-			String id = (String) iterator.next();
+		Collection<String> col = Locations.getInstance().getIds();
+		for (Iterator<String> iterator = col.iterator(); iterator.hasNext();) {
+			String id = iterator.next();
 			String value = store.getString(id);
-			if (value != null && value.length() > 0) {
-				map.put(id, value);
-				//System.err.println(id + "=" + value);
+			if (Boolean.valueOf(value)) {
+				return Locations.getInstance().findLocation(id);
 			}
 		}
-		return map;
+		return null;
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
@@ -230,7 +228,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	/**
 	 * Creates the buttons for creating new deck or collection
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 */
@@ -379,7 +377,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		clipboardRadio.setLayoutData(bgd);
 		editor = new FileFieldEditor("fileSelect", "Select input file", fileSelectionArea); // NON-NLS-1
 		// //NON-NLS-2
-		// 
+		//
 		editor.getTextControl(fileSelectionArea).addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				File file = new File(editor.getStringValue());
@@ -476,7 +474,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	 * data. Note that the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
 	 * Subclasses may override.
 	 * </p>
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite
 	 * @param id
