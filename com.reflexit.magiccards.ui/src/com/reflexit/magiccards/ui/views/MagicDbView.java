@@ -34,7 +34,7 @@ public class MagicDbView extends AbstractCardsView {
 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
-		return DataManager.getCardHandler().getDatabaseHandler();
+		return DataManager.getCardHandler().getMagicDBFilteredStore();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class MagicDbView extends AbstractCardsView {
 					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 						Object o = iterator.next();
 						if (o instanceof IMagicCard)
-							DataManager.getCardHandler().getCardCollectionHandler(id).getCardStore().add(o);
+							DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().add(o);
 					}
 				}
 			}

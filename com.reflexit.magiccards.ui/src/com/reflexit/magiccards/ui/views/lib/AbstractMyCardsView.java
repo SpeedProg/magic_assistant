@@ -145,7 +145,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 								list.add((IMagicCard) o);
 						}
 						Location location = DataManager.getCardHandler()
-								.getCardCollectionHandler(id).getCardStore()
+								.getCardCollectionFilteredStore(id).getCardStore()
 								.getLocation();
 						DataManager.getCardHandler().moveCards(list, null,
 								location);
@@ -342,7 +342,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		DataManager.getCardHandler().getMyCardsHandler().getCardStore()
+		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore()
 				.addListener(this);
 		DataManager.getModelRoot().addListener(this);
 	}
@@ -354,7 +354,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	 */
 	@Override
 	public void dispose() {
-		DataManager.getCardHandler().getMyCardsHandler().getCardStore()
+		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore()
 				.removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();

@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.wizards;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -23,9 +26,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -44,6 +44,7 @@ import com.reflexit.magiccards.ui.widgets.EditionsComposite;
 
 public class BoosterGeneratorWizard extends NewCardCollectionWizard implements INewWizard {
 	public static final String ID = "com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard";
+
 	static class BoosterGeneratorWizardPage extends WizardPage {
 		Spinner sp;
 		EditionsComposite edi;
@@ -58,8 +59,12 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			setDescription("Specify booster pack(s) properties");
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
+		 * .widgets.Composite)
 		 */
 		public void createControl(Composite parent) {
 			Composite a = new Composite(parent, SWT.NONE);
@@ -105,12 +110,16 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			setPageComplete(message == null);
 		}
 	}
+
 	private BoosterGeneratorWizardPage page2;
 	private ArrayList<String> sets;
 	private int packs;
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
 	 */
 	@Override
 	public void addPages() {
@@ -125,8 +134,11 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		addPage(this.page);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
 	 */
 	@Override
 	protected void beforeFinish() {
@@ -136,12 +148,17 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		this.packs = this.page2.sp.getSelection();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java.lang.String, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java
+	 * .lang.String, java.lang.String,
+	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void doFinish(final String containerName, final String name, boolean virtual,
-	        final IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(final String containerName, final String name, boolean virtual, final IProgressMonitor monitor)
+			throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
 		ModelRoot root = DataManager.getModelRoot();
@@ -152,8 +169,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		monitor.worked(1);
 		CardOrganizer parent = (CardOrganizer) resource;
 		final CardCollection col = new CardCollection(name + ".xml", parent, false);
-		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
-		        new SubProgressMonitor(monitor, 7));
+		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col, new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
 		try {
 			Thread.sleep(1000);
@@ -170,7 +186,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 					page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
 					monitor.worked(1);
 				} catch (PartInitException e) {
-					//  ignore
+					// ignore
 				}
 			}
 		});
@@ -180,20 +196,19 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	/**
 	 * @param firstElement
 	 * @param selection
-	 * @param col 
-	 * @param subProgressMonitor 
+	 * @param col
+	 * @param subProgressMonitor
 	 */
 	private void populateLibrary(ArrayList<String> sets, int packs, CardCollection col, IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 10);
 		if (col.isOpen() == false) {
-			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionHandler(col.getFileName());
+			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(col.getFileName());
 		}
 		monitor.worked(1);
 		ICardStore store = col.getStore();
 		MagicCardFilter filter = new MagicCardFilter();
 		HashMap filterset = new HashMap();
-		IFilteredCardStore dbcards = DataManager.getCardHandler().getDatabaseHandler();
-		MagicCardFilter oldFilter = dbcards.getFilter();
+		IFilteredCardStore dbcards = DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 		try {
 			for (Object element : sets) {
 				String editionName = (String) element;
@@ -227,7 +242,6 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			generateRandom(11 * packs, dbcards, store, col);
 		} finally {
 			monitor.done();
-			dbcards.update(oldFilter);
 		}
 	}
 

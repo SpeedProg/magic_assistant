@@ -111,12 +111,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected ExportAction createExportAction() {
-		return new ExportAction(new StructuredSelection(getCardCollection()));
+		CardCollection col = getCardCollection();
+		return new ExportAction(col == null ? new StructuredSelection() : new StructuredSelection(col));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
 	 * .IViewSite)
@@ -132,7 +133,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			throw new IllegalArgumentException("Bad store");
 		}
 		site.getPage().addPartListener(PartListener.getInstance());
-		if (export != null) {
+		if (export != null && deck != null) {
 			((ExportAction) export).selectionChanged(new StructuredSelection(
 					getCardCollection()));
 		}
@@ -140,7 +141,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.lib.CollectionView#makeActions()
 	 */
 	@Override
@@ -183,7 +184,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void runShuffle() {
 		try {
@@ -198,7 +199,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.lib.LibView#dispose()
 	 */
 	@Override
@@ -210,7 +211,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
 	 * .swt.widgets.Composite)
@@ -317,7 +318,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
 	 * org.eclipse.jface.action.IMenuManager)
@@ -332,7 +333,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		String secondaryId = getViewSite().getSecondaryId();
-		return DataManager.getCardHandler().getCardCollectionHandler(
+		return DataManager.getCardHandler().getCardCollectionFilteredStore(
 				secondaryId);
 	}
 

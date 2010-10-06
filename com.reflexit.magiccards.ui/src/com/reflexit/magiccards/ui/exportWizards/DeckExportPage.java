@@ -101,8 +101,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 				final boolean sideboard = includeSideBoard.getSelection();
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getMyCardsHandler();
-						MagicCardFilter old = filteredLibrary.getFilter();
+						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
 						try {
 							MagicCardFilter locFilter = new MagicCardFilter();
 							locFilter.update(storeToMap(sideboard));
@@ -111,8 +110,6 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 							worker.run(monitor);
 						} catch (FileNotFoundException e) {
 							throw new InvocationTargetException(e);
-						} finally {
-							filteredLibrary.update(old); // restore filter
 						}
 					}
 				};
@@ -148,9 +145,9 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		return res;
 	}
 
-	private HashMap<String,String> storeToMap(boolean sideboard) {
+	private HashMap<String, String> storeToMap(boolean sideboard) {
 		IPreferenceStore store = getPreferenceStore();
-		HashMap<String,String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		Locations locs = Locations.getInstance();
 		Collection<String> col = locs.getIds();
 		for (Iterator<String> iterator = col.iterator(); iterator.hasNext();) {
@@ -159,15 +156,14 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			if (locs.isSideboard(id)) {
 				String deckId = locs.getMainDeckId(id);
 				if (sideboard) {
-					value =  store.getString(deckId);
+					value = store.getString(deckId);
 				} else {
 					value = "false";
 				}
 			}
-
 			if (value != null && value.length() > 0) {
 				map.put(id, value);
-				//System.err.println(id + "=" + value);
+				// System.err.println(id + "=" + value);
 			}
 		}
 		return map;
@@ -258,12 +254,12 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
 		setControl(composite);
-		PlatformUI.getWorkbench().getHelpSystem()
-		        .setHelp(composite, MagicUIActivator.getDefault().PLUGIN_ID + ".export"); //$NON-NLS-1$
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, MagicUIActivator.getDefault().PLUGIN_ID + ".export"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Creates the buttons for selecting specific types or selecting all or none of the elements.
+	 * Creates the buttons for selecting specific types or selecting all or none
+	 * of the elements.
 	 *
 	 * @param parent
 	 *            the parent control
@@ -468,20 +464,24 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection
-	 * events including button presses and registers default buttons with its shell. The button id is stored as the buttons client
-	 * data. Note that the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
-	 * Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a
+	 * standard push button, registers for selection events including button
+	 * presses and registers default buttons with its shell. The button id is
+	 * stored as the buttons client data. Note that the parent's layout is
+	 * assumed to be a GridLayout and the number of columns in this layout is
+	 * incremented. Subclasses may override.
 	 * </p>
 	 *
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code>
+	 *            constants for standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button,
+	 *            and <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar
