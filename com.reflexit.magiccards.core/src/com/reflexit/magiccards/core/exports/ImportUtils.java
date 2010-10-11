@@ -92,8 +92,7 @@ public class ImportUtils {
 
 	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, IProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
-		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStore();
-		performImport(st, reportType, header, location, filteredLibrary.getCardStore(), monitor);
+		performImport(st, reportType, header, location, DataManager.getCardHandler().getLibraryCardStore(), monitor);
 	}
 
 	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header, IProgressMonitor monitor)
