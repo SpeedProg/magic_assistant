@@ -163,11 +163,11 @@ public class XmlCardHolder implements ICardHandler {
 		try {
 			pm.beginTask("Downloading", 100);
 			pm.subTask("Initializing");
-			loadInitialIfNot(new SubProgressMonitor(pm, 30));
+			loadInitialIfNot(new SubProgressMonitor(pm, 10));
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Downloading cards...");
-			String file = download(set, options, new SubProgressMonitor(pm, 30));
+			String file = download(set, options, new SubProgressMonitor(pm, 50));
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Updating database...");
