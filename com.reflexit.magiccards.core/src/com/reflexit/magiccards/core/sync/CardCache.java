@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.sync;
 
-import org.eclipse.core.runtime.IPath;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.eclipse.core.runtime.IPath;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.Editions;
@@ -40,6 +40,10 @@ public class CardCache {
 	};
 
 	public static URL createCardURL(IMagicCard card) throws IOException {
+		return createCardURL(card, isLoadingEnabled(), caching);
+	}
+
+	public static URL createCardURL(IMagicCard card, boolean remote, boolean cacheImage) throws MalformedURLException, IOException {
 		String edition = card.getSet();
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
 		if (editionAbbr == null)
@@ -50,12 +54,12 @@ public class CardCache {
 		URL localUrl = new File(file).toURL();
 		InputStream st = null;
 		if (locale != null) {
-			if (caching) {
+			if (cacheImage) {
 				if (new File(file).exists()) {
 					return localUrl;
 				}
 				try {
-					st = tryLocale(cardId, locale, edition, editionAbbr);
+					st = tryLocale(cardId, locale, edition, editionAbbr, remote);
 				} catch (IOException e1) {
 					throw e1;
 				}
@@ -64,16 +68,16 @@ public class CardCache {
 			// this code is trying to figure out locale
 			try {
 				try {
-					st = tryLocale(cardId, "EN", edition, editionAbbr);
+					st = tryLocale(cardId, "EN", edition, editionAbbr, remote);
 				} catch (FileNotFoundException e) {
-					st = tryLocale(cardId, "en-us", edition, editionAbbr);
+					st = tryLocale(cardId, "en-us", edition, editionAbbr, remote);
 				}
 			} catch (IOException e1) {
 				throw e1;
 			}
 			locale = Editions.getInstance().getLocale(edition);
 		}
-		if (caching && st != null) {
+		if (cacheImage && st != null) {
 			try {
 				ImageCache.saveStream(file, st);
 				st.close();
@@ -82,7 +86,7 @@ public class CardCache {
 				Activator.log(e);
 			}
 		}
-		URL remoteUrl = createImageURL(cardId, editionAbbr, locale == null ? "EN" : locale);
+		URL remoteUrl = createImageURL(cardId, editionAbbr, locale == null ? "EN" : locale, remote);
 		return remoteUrl;
 	}
 
@@ -112,8 +116,8 @@ public class CardCache {
 		return localUrl;
 	}
 
-	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
-		if (!CardCache.isLoadingEnabled())
+	public static URL createImageURL(int cardId, String editionAbbr, String locale, boolean remote) throws MalformedURLException {
+		if (!remote)
 			return null;
 		return ParseGathererNewVisualSpoiler.createImageURL(cardId, editionAbbr, locale);
 	}
@@ -124,8 +128,7 @@ public class CardCache {
 		return ParseGathererNewVisualSpoiler.createSetImageURL(editionAbbr, rarity);
 	}
 
-	public static String createLocalImageFilePath(int cardId, String editionAbbr, String locale)
-	        throws MalformedURLException {
+	public static String createLocalImageFilePath(int cardId, String editionAbbr, String locale) throws MalformedURLException {
 		IPath path = Activator.getStateLocationAlways();
 		if (editionAbbr.equals("CON")) {
 			// special hack for windows, which cannot create CON directory
@@ -143,10 +146,10 @@ public class CardCache {
 		return file;
 	}
 
-	private static InputStream tryLocale(int cardId, String locale, String edition, String editionAbbr)
-	        throws MalformedURLException, IOException {
+	private static InputStream tryLocale(int cardId, String locale, String edition, String editionAbbr, boolean remote)
+			throws MalformedURLException, IOException {
 		String oldLocale = Editions.getInstance().getLocale(edition);
-		URL url = createImageURL(cardId, editionAbbr, locale);
+		URL url = createImageURL(cardId, editionAbbr, locale, remote);
 		if (url == null)
 			return null;
 		try {

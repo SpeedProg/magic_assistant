@@ -20,7 +20,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	float rating;
 	String lang;
 	String num;
-	transient String rulings;
+	String rulings;
 	transient String colorType = null;
 	transient int cmc = -1;
 
