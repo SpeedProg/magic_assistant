@@ -131,6 +131,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		getSite().setSelectionProvider(this.manager.getSelectionProvider());
 		loadInitial();
 	}
+
 	IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			AbstractCardsView.this.propertyChange(event);
@@ -247,13 +248,14 @@ public abstract class AbstractCardsView extends ViewPart {
 		setGlobalHandlers(bars);
 		bars.updateActionBars();
 	}
+
 	public static final String FIND = "org.eclipse.ui.edit.findReplace";
 
 	/**
 	 * @param bars
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
-		//	this.showFind.setActionDefinitionId(FIND);
+		// this.showFind.setActionDefinitionId(FIND);
 		ActionHandler findHandler = new ActionHandler(this.showFind);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler(FIND, findHandler);
@@ -272,7 +274,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(this.showFilter);
 		manager.add(this.showPrefs);
-		//	manager.add(loadPrices);
+		// manager.add(loadPrices);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -287,6 +289,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 	}
+
 	class GroupAction extends Action {
 		ICardField field;
 
@@ -348,6 +351,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				else
 					actionGroupBy(null);
 			}
+
 			{
 				setMenuCreator(new IMenuCreator() {
 					private Menu listMenu;
@@ -372,13 +376,12 @@ public abstract class AbstractCardsView extends ViewPart {
 		};
 		this.groupMenuButton.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.groupMenu = createGroupMenu();
-		//this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
+		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.showPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
 				String id = getPreferencePageId();
-				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id },
-				        null);
+				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
 				dialog.open();
 			}
 		};
@@ -444,7 +447,9 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void runLoadExtras() {
-		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell());
+		final IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		final int size = selection.isEmpty() ? getFilteredStore().getSize() : selection.size();
+		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), !selection.isEmpty(), size);
 		if (dialog.open() != Window.OK || dialog.getFieldMap().isEmpty()) {
 			return;
 		}
@@ -453,8 +458,10 @@ public abstract class AbstractCardsView extends ViewPart {
 			protected IStatus run(IProgressMonitor monitor) {
 				ParseGathererRulings parser = new ParseGathererRulings();
 				try {
-					parser.updateStore(getFilteredStore(), monitor, dialog.getFieldMap());
+					@SuppressWarnings("rawtypes")
+					Iterator list = selection.isEmpty() ? getFilteredStore().iterator() : selection.iterator();
 
+					parser.updateStore(list, size, monitor, dialog.getFieldMap());
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							reloadData();
@@ -570,7 +577,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * Update view in UI thread after data load is finished
 	 */
 	protected void updateViewer() {
-		if (manager.getControl().isDisposed()) return;
+		if (manager.getControl().isDisposed())
+			return;
 		ISelection selection;
 		try {
 			selection = manager.getSelectionProvider().getSelection();
@@ -604,10 +612,10 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	public IPreferenceStore getPreferenceStore() {
 		if (this.store == null)
-			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(),
-			        getPreferencePageId());
+			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(), getPreferencePageId());
 		return this.store;
 	}
+
 	public static interface IDeckAction {
 		public void run(String id);
 	};
@@ -629,8 +637,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				if (DataManager.getCardHandler().getActiveDeckHandler().getCardStore() == cardCollection.getStore()) {
 					active = " (Active)";
 				}
-				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName()
-				        + active;
+				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName() + active;
 				Action ac = new Action(name) {
 					@Override
 					public void run() {

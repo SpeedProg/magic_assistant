@@ -21,20 +21,27 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	private Set<ICardField> selectedSet = new HashSet<ICardField>();
 	private GridDataFactory buttonGridData;
 	private Composite buttons;
+	private boolean sel;
+	private int size;
 
 	/**
 	 * @param parentShell
+	 * @param iFilteredCardStore
+	 * @param iSelection
 	 * @param max
 	 */
-	public LoadExtrasDialog(Shell parentShell) {
+	public LoadExtrasDialog(Shell parentShell, boolean sel, int size) {
 		super(parentShell);
+		this.sel = sel;
+		this.size = size;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Extra Card Fields");
-		setTitle("Load Extra Card Fields...");
-		setMessage("Choose which fields to load or update");
+		String cards = sel ? "selected " + size + " cards" : "updating " + size + " cards";
+		setTitle("Load Extra Card Fields (" + cards + ")...");
+		setMessage("Choose which fields to load or update.");
 		Composite area = (Composite) super.createDialogArea(parent);
 		buttons = new Composite(area, SWT.NONE);
 		buttons.setLayout(new GridLayout(2, false));
@@ -45,7 +52,45 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Collector's Number", MagicCardField.COLLNUM);
 		createFieldCheck("Oracle Text", MagicCardField.ORACLE);
 		createFieldCheck("Image", MagicCardField.ID);
+		createSelectAllButtons(area);
 		return area;
+	}
+
+	private void createSelectAllButtons(Composite parent) {
+		Composite sbuttons = new Composite(parent, SWT.NONE);
+		sbuttons.setLayout(new GridLayout(2, false));
+		final Button buttonSelect = new Button(sbuttons, SWT.PUSH);
+		buttonSelect.setText("Select All");
+		buttonSelect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Control[] children = buttons.getChildren();
+				for (int i = 0; i < children.length; i++) {
+					Control control = children[i];
+					if (control instanceof Button) {
+						ICardField field = (ICardField) control.getData();
+						selectedSet.add(field);
+						((Button) control).setSelection(true);
+					}
+				}
+			}
+		});
+		final Button buttondeselect = new Button(sbuttons, SWT.PUSH);
+		buttondeselect.setText("Deselect All");
+		buttondeselect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Control[] children = buttons.getChildren();
+				for (int i = 0; i < children.length; i++) {
+					Control control = children[i];
+					if (control instanceof Button) {
+						ICardField field = (ICardField) control.getData();
+						selectedSet.remove(field);
+						((Button) control).setSelection(false);
+					}
+				}
+			}
+		});
 	}
 
 	protected void createFieldCheck(String name, final ICardField field) {
