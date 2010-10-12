@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Fields for actual player card
@@ -35,7 +36,7 @@ public enum MagicCardFieldPhysical implements ICardField {
 	}
 
 	MagicCardFieldPhysical() {
-		String javaField = name().toLowerCase();
+		String javaField = name().toLowerCase(Locale.ENGLISH);
 		try {
 			field = MagicCardPhisical.class.getDeclaredField(javaField);
 		} catch (Exception e) {
