@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +33,6 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
@@ -133,14 +133,16 @@ public class ParseGathererRulings {
 		}
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor, Set<ICardField> fieldMaps) throws IOException {
-		monitor.beginTask("Loading additional info...", fstore.getSize() + 10);
+	public void updateStore(Iterator<IMagicCard> iter, int size, IProgressMonitor monitor,
+			Set<ICardField> fieldMaps) throws IOException {
+		monitor.beginTask("Loading additional info...", size + 10);
 		ICardStore db = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
 		IStorage storage = ((IStorageContainer) db).getStorage();
 		storage.setAutoCommit(false);
 		monitor.worked(5);
 		try {
-			for (IMagicCard magicCard : fstore) {
+			for (; iter.hasNext();) {
+				IMagicCard magicCard = iter.next();
 				if (monitor.isCanceled())
 					return;
 				// load individual card
