@@ -31,6 +31,14 @@ public class MagicCardComparator implements Comparator {
 				d = Float.compare(f1, f2);
 			} else if (this.sort == MagicCardField.RARITY) {
 				d = Rarity.compare((String) a1, (String) a2);
+			} else if (this.sort == MagicCardField.COLLNUM && a1 instanceof String) {
+				String s1 = (String) a1;
+				String s2 = (String) a2;
+				try {
+					d = Integer.valueOf(s1) - Integer.valueOf(s2);
+				} catch (NumberFormatException e) {
+					d = s1.compareTo(s2);
+				}
 			} else if (a1 instanceof Comparable) {
 				if (a2 == null)
 					d = 1;
