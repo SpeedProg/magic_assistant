@@ -76,8 +76,9 @@ public class UpdateDbHandler extends AbstractHandler {
 					ICardHandler ch = DataManager.getCardHandler();
 					Properties options = new Properties();
 					options.put(ParseGathererNewVisualSpoiler.UPDATE_BASIC_LAND_PRINTINGS, updateLand);
-					if (!set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
-						options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, updatePrintings);
+					options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, updatePrintings);
+					if (set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
+						options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, "true");
 					}
 					final int rec = ch.downloadUpdates(set, options, pm);
 					shell.getDisplay().syncExec(new Runnable() {
