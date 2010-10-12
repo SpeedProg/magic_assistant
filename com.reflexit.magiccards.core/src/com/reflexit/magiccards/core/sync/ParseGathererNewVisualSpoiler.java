@@ -1,8 +1,5 @@
 package com.reflexit.magiccards.core.sync;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +20,9 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -31,6 +31,7 @@ public class ParseGathererNewVisualSpoiler {
 	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
 	public static final String UPDATE_OTHER_PRINTINGS = "other.printings";
 	private static Charset UTF_8 = Charset.forName("utf-8");
+
 	/*-
 	  <tr class="cardItem evenItem">
 	                <td class="leftCol">
@@ -62,11 +63,11 @@ public class ParseGathererNewVisualSpoiler {
 	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=154408"><img title="Shadowmoor (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=SHM&amp;size=small&amp;rarity=U" alt="Shadowmoor (Uncommon)" style="border-width:0px;" /></a>
 	</div>
 	                    </div>
-	                    
+
 	                </td>
 	            </tr>
 
-	 * 
+	 *
 	 * */
 	public static interface ILoadCardHander {
 		void handle(MagicCard card);
@@ -75,6 +76,7 @@ public class ParseGathererNewVisualSpoiler {
 
 		void edition(String edition, String edAddr);
 	}
+
 	public static class OutputHandler implements ILoadCardHander {
 		private PrintStream out;
 		private boolean loadLandPrintings;
@@ -102,11 +104,12 @@ public class ParseGathererNewVisualSpoiler {
 			}
 		}
 	}
+
 	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard&special=true";
 	private static String[] updateAll = { //
 	base + "&format=[%22Legacy%22]", //
-	        base + "&set=[%22Unhinged%22]", //
-	        base + "&set=[%22Unglued%22]", //
+			base + "&set=[%22Unhinged%22]", //
+			base + "&set=[%22Unglued%22]", //
 	};
 	private static String[] updateLatest = { base + "&format=[%22Standard%22]" };
 	private static IProgressMonitor monitor;
@@ -125,8 +128,7 @@ public class ParseGathererNewVisualSpoiler {
 		Editions.getInstance().save();
 	}
 
-	private static void updateAll(String to, String[] urls, Properties options) throws MalformedURLException,
-	        IOException {
+	private static void updateAll(String to, String[] urls, Properties options) throws MalformedURLException, IOException {
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new File(to));
@@ -160,10 +162,10 @@ public class ParseGathererNewVisualSpoiler {
 		st.close();
 	}
 
-	public static void parseFileOrUrl(String from, String to, Properties options, IProgressMonitor pm)
-	        throws FileNotFoundException, MalformedURLException, IOException {
+	public static void parseFileOrUrl(String from, String to, Properties options, IProgressMonitor pm) throws FileNotFoundException,
+			MalformedURLException, IOException {
 		monitor = pm;
-		monitor.beginTask("Downloading", 100);
+		monitor.beginTask("Downloading", 10000);
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new FileOutputStream(new File(to)), true, UTF_8.toString());
@@ -175,14 +177,17 @@ public class ParseGathererNewVisualSpoiler {
 				// http://ww2.wizards.com/gatherer/index.aspx?setfilter=All%20sets&colorfilter=White&output=Spoiler
 				int i = 0;
 				boolean lastPage = false;
-				while (lastPage == false && i < 1000 && monitor.isCanceled() == false) {
+				while (lastPage == false && i < 2000 && monitor.isCanceled() == false) {
 					URL url = new URL(from + "&page=" + i);
 					lastPage = loadUrl(url, handler);
 					i++;
+					int pages = countCards / 25 + 1;
 					if (countCards == 0)
-						monitor.worked(1);
-					else
-						monitor.worked(i * 100 / (countCards / 25));
+						monitor.worked(100);
+					else {
+						monitor.subTask("Downloading cards. Page " + i + " of " + pages);
+						monitor.worked(10000 / pages);
+					}
 				}
 			} else {
 				File input = new File(from);
@@ -193,10 +198,10 @@ public class ParseGathererNewVisualSpoiler {
 			monitor.done();
 		}
 	}
+
 	private static Pattern countPattern = Pattern
-	        .compile("Search:<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"><i>.*</i>  \\((\\d+)\\)</span>");
-	private static Pattern lastPagePattern = Pattern
-	        .compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
+			.compile("Search:<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"><i>.*</i>  \\((\\d+)\\)</span>");
+	private static Pattern lastPagePattern = Pattern.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
 	private static int countCards;
 
 	private static boolean processFile(BufferedReader st, ILoadCardHander handler) throws IOException {
@@ -231,6 +236,7 @@ public class ParseGathererNewVisualSpoiler {
 			throw new IOException("No results");
 		return lastPage;
 	}
+
 	static Pattern spanPattern = Pattern.compile("class=[^>]*>(.*)</span>");
 	static Pattern divPattern = Pattern.compile("class=[^>]*>(.*?)</div>");
 	static Pattern idPattern = Pattern.compile("href=.*/Card/Details.aspx\\?multiverseid=(\\d+)");
@@ -303,6 +309,7 @@ public class ParseGathererNewVisualSpoiler {
 			res = " ";
 		return res;
 	}
+
 	static Map manaMap = new LinkedHashMap();
 	static {
 		manaMap.put("\\Q{500}", "{0.5}");
@@ -325,6 +332,7 @@ public class ParseGathererNewVisualSpoiler {
 			System.out.println(name + "[" + k + "] = " + "0x" + UnicodeFormatter.byteToHex(array[k]));
 		}
 	}
+
 	static class UnicodeFormatter {
 		static public String byteToHex(byte b) {
 			// Returns hex String representation of byte b
@@ -340,6 +348,7 @@ public class ParseGathererNewVisualSpoiler {
 			return byteToHex(hi) + byteToHex(lo);
 		}
 	} // class
+
 	private static String LONG_MINUS;
 	static {
 		try {
@@ -372,16 +381,17 @@ public class ParseGathererNewVisualSpoiler {
 
 	public static URL createSetImageURL(String editionAbbr, String rarity) throws MalformedURLException {
 		String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
-		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr
-		        + "&size=small&rarity=" + rarLetter);
+		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr + "&size=small&rarity=" + rarLetter);
 	}
 
-	public static void downloadUpdates(String set, String file, Properties options, IProgressMonitor pm)
-	        throws FileNotFoundException, MalformedURLException, IOException {
+	public static void downloadUpdates(String set, String file, Properties options, IProgressMonitor pm) throws FileNotFoundException,
+			MalformedURLException, IOException {
 		String url;
 		if (set == null || set.equals("Standard")) {
 			url = updateLatest[0];
 		} else {
+			if (set.equalsIgnoreCase("All"))
+				set = "";
 			set = set.replaceAll(" ", "%20");
 			url = base + "&set=[%22" + set + "%22]";
 		}
