@@ -1,5 +1,13 @@
 package com.reflexit.magiccards.ui.preferences;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -20,20 +28,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.commands.UpdateDbHandler;
 import com.reflexit.magiccards.ui.preferences.feditors.SpecialComboFieldEditor;
 
 public class MagicGathererPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+	public static final String STANDARD = "Standard";
+	public static final String ALL = "All";
 	private SpecialComboFieldEditor fSet;
 	private IHandlerService service;
 	private boolean hasUpdateButton = true;
@@ -86,10 +88,14 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		Collection names1 = Editions.getInstance().getNames();
 		ArrayList names = new ArrayList(names1);
 		Collections.sort(names);
-		String[][] res = new String[names.size() + 1][2];
-		int i = 1;
-		res[0][0] = "Standard";
-		res[0][1] = "Standard";
+		String[][] res = new String[names.size() + 2][2];
+		int i = 0;
+		res[i][0] = STANDARD;
+		res[i][1] = STANDARD;
+		i++;
+		res[i][0] = ALL;
+		res[i][1] = ALL;
+		i++;
 		for (Iterator iterator = names.iterator(); iterator.hasNext(); i++) {
 			String s = (String) iterator.next();
 			res[i][0] = s;

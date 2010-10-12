@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.commands;
 
+import java.util.Properties;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -23,12 +25,11 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
-import java.util.Properties;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
@@ -37,8 +38,12 @@ import com.reflexit.magiccards.ui.views.MagicDbView;
  *
  */
 public class UpdateDbHandler extends AbstractHandler {
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+	 * ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		performUpdate(event);
@@ -50,11 +55,20 @@ public class UpdateDbHandler extends AbstractHandler {
 		final Shell shell = wb != null ? wb.getActiveWorkbenchWindow().getShell() : new Shell();
 		String u1 = event.getParameter(PreferenceConstants.GATHERER_UPDATE_SET);
 		if (u1 == null) {
-			u1 = "Standard";
+			u1 = MagicGathererPreferencePage.STANDARD;
 		}
 		final String updateLand = event.getParameter(PreferenceConstants.GATHERER_UPDATE_LAND);
 		final String updatePrintings = event.getParameter(PreferenceConstants.GATHERER_UPDATE_PRINT);
 		final String set = u1;
+		if (u1.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
+			boolean confirm = MessageDialog.openConfirm(shell, "Warning", "You selected to update All sets. " //
+					+ "This operation will take a LONG time. "
+					+ "Maybe hours. "
+					+ "If you want to update to specific set simply type it in the input field. "
+					+ "If you want to update to latest just use 'Standard'. " + "Are you sure you want to update ALL?");
+			if (!confirm)
+				return;
+		}
 		Job job = new Job("Updating database...") {
 			@Override
 			public IStatus run(IProgressMonitor pm) {
@@ -62,13 +76,15 @@ public class UpdateDbHandler extends AbstractHandler {
 					ICardHandler ch = DataManager.getCardHandler();
 					Properties options = new Properties();
 					options.put(ParseGathererNewVisualSpoiler.UPDATE_BASIC_LAND_PRINTINGS, updateLand);
-					options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, updatePrintings);
+					if (!set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
+						options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, updatePrintings);
+					}
 					final int rec = ch.downloadUpdates(set, options, pm);
 					shell.getDisplay().syncExec(new Runnable() {
 						public void run() {
 							try {
 								IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-								        .findView(MagicDbView.ID);
+										.findView(MagicDbView.ID);
 								if (view != null) {
 									((MagicDbView) view).reloadData();
 								}
@@ -76,11 +92,9 @@ public class UpdateDbHandler extends AbstractHandler {
 								e.printStackTrace();
 							}
 							if (rec > 0)
-								MessageDialog.openInformation(shell, "Magic Db Update", "Data updated: " + rec
-								        + " new records");
+								MessageDialog.openInformation(shell, "Magic Db Update", "Data updated: " + rec + " new records");
 							else if (rec == 0)
-								MessageDialog.openInformation(shell, "Magic Db Update",
-								        "No new cards found for selected set");
+								MessageDialog.openInformation(shell, "Magic Db Update", "No new cards found for selected set");
 							else
 								MessageDialog.openError(shell, "Magic Db Update", "Query returned empty page");
 						}
