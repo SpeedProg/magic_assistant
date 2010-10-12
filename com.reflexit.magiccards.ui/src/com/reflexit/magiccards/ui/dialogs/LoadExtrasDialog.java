@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.dialogs;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -11,9 +14,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
@@ -24,7 +24,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 
 	/**
 	 * @param parentShell
-	 * @param max 
+	 * @param max
 	 */
 	public LoadExtrasDialog(Shell parentShell) {
 		super(parentShell);
@@ -44,6 +44,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Rating", MagicCardField.RATING);
 		createFieldCheck("Collector's Number", MagicCardField.COLLNUM);
 		createFieldCheck("Oracle Text", MagicCardField.ORACLE);
+		createFieldCheck("Image", MagicCardField.ID);
 		return area;
 	}
 

@@ -1,5 +1,9 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -46,10 +50,6 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterHelper;
@@ -147,7 +147,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void initManager() {
 		getPreferenceStore().setDefault(FilterHelper.GROUP_FIELD, "");
@@ -454,6 +454,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				ParseGathererRulings parser = new ParseGathererRulings();
 				try {
 					parser.updateStore(getFilteredStore(), monitor, dialog.getFieldMap());
+
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							reloadData();
@@ -470,7 +471,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void runCopy() {
 		IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
@@ -593,7 +594,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	/**
-	 * @return id of the preference for columns layout and hidings, i.e. 
+	 * @return id of the preference for columns layout and hidings, i.e.
 	 * @see PreferenceConstants.MDBVIEW_COLS
 	 */
 	abstract protected String getPrefenceColumnsId();
