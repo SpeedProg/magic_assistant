@@ -66,6 +66,11 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 		return modified;
 	}
 
+	@Override
+	protected boolean doUpdate(IMagicCard card) {
+		getStorage(getLocation(card)).getStorage().autoSave();
+		return super.doUpdate(card);
+	}
 	/**
 	 *
 	 */
