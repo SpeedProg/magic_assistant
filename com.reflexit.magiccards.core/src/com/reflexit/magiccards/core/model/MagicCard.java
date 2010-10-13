@@ -24,7 +24,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	transient String colorType = null;
 	transient int cmc = -1;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
 	 */
 	public String getCost() {
@@ -35,7 +37,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.cost = cost.intern();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCardId()
 	 */
 	public int getCardId() {
@@ -46,7 +50,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getName()
 	 */
 	public String getName() {
@@ -57,7 +63,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getOracleText()
 	 */
 	public String getOracleText() {
@@ -68,7 +76,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.oracleText = oracleText;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getRarity()
 	 */
 	public String getRarity() {
@@ -79,7 +89,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.rarity = rarity.intern();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
 	 */
 	public String getSet() {
@@ -90,7 +102,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.edition = setName.intern();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getType()
 	 */
 	public String getType() {
@@ -106,7 +120,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		setCardId(i);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getPower()
 	 */
 	public String getPower() {
@@ -117,7 +133,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.power = power.intern();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getToughness()
 	 */
 	public String getToughness() {
@@ -169,7 +187,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		return list;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
 	 */
 	public String getColorType() {
@@ -182,7 +202,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		this.colorType = colorType;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
 	 */
 	public int getCmc() {
@@ -410,6 +432,22 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {
 			return null;
+		}
+	}
+
+	public void updateFrom(IMagicCard card) {
+		MagicCardField[] fields = MagicCardField.values();
+		for (int i = 0; i < fields.length; i++) {
+			MagicCardField field = fields[i];
+			Object value = card.getObjectByField(field);
+			if (value != null) {
+				String string = value.toString();
+				if (value instanceof Number) {
+					if ((Float.valueOf(string) != 0))
+						this.setObjectByField(field, string);
+				} else if (string.length() > 0)
+					this.setObjectByField(field, string);
+			}
 		}
 	}
 }
