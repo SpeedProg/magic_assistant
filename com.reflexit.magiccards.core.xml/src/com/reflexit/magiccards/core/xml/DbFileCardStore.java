@@ -15,10 +15,12 @@ import java.io.File;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
  * Single File store with card count and caching
+ *
  * @author Alena
  *
  */
@@ -36,7 +38,15 @@ public class DbFileCardStore extends CollectionCardStore implements ICardCountab
 
 	@Override
 	public boolean doAddCard(IMagicCard card) {
-		return getStorage().add(card);
+		// db does not actually add cards but rather updates
+		MagicCard mc = (MagicCard) this.hashpart.getCard(card);
+		if (mc != null) {
+			mc.updateFrom(card);
+			return true;
+		} else {
+			hashpart.storeCard(card);
+			return storage.add(card);
+		}
 	}
 
 	@Override

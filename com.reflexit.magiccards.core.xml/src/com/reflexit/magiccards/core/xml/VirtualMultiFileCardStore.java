@@ -11,14 +11,10 @@
 package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 
 import org.eclipse.core.runtime.CoreException;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -28,8 +24,8 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
 
 /**
- * @author Alena
- *
+ * Card Store for Magic DB
+ * 
  */
 public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
 	public VirtualMultiFileCardStore() {
@@ -53,42 +49,16 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 	}
 
 	@Override
-	protected AbstractCardStoreWithStorage newStorage(IMagicCard card) {
+	protected AbstractCardStoreWithStorage<IMagicCard> newStorage(IMagicCard card) {
 		DbFileCardStore store = new DbFileCardStore(getFile(card), getLocation(card), false);
 		store.getStorage().setAutoCommit(getStorage().isAutoCommit());
 		return store;
 	}
 
 	@Override
-	protected synchronized boolean doAddAll(Collection<? extends IMagicCard> col) {
-		boolean modified = super.doAddAll(col);
-		pruneDuplicates();
-		return modified;
-	}
-
-	@Override
 	protected boolean doUpdate(IMagicCard card) {
 		getStorage(getLocation(card)).getStorage().autoSave();
 		return super.doUpdate(card);
-	}
-	/**
-	 *
-	 */
-	public void pruneDuplicates() {
-		HashSet<Integer> hash = new HashSet<Integer>();
-		ArrayList<IMagicCard> duplicates = new ArrayList<IMagicCard>();
-		for (Object element : this) {
-			IMagicCard card = (IMagicCard) element;
-			if (hash.contains(card.getCardId())) {
-				duplicates.add(card);
-				continue;
-			}
-			hash.add(card.getCardId());
-			if (Editions.getInstance().getAbbrByName(card.getSet()) == null) {
-				System.err.println("Failed to find set: " + card.getSet());
-			}
-		}
-		this.removeAll(duplicates);
 	}
 
 	@Override
@@ -119,10 +89,6 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 		return location.replaceAll("[\\W]", "_");
 	}
 
-	@Override
-	public boolean isInitialized() {
-		return super.isInitialized();
-	}
 	public File getFile(final IMagicCard card) {
 		try {
 			if (card instanceof MagicCard) {
