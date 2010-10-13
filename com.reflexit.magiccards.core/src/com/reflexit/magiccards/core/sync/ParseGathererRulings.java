@@ -141,11 +141,12 @@ public class ParseGathererRulings {
 		storage.setAutoCommit(false);
 		monitor.worked(5);
 		try {
-			for (; iter.hasNext();) {
+			for (int i = 0; iter.hasNext(); i++) {
 				IMagicCard magicCard = iter.next();
 				if (monitor.isCanceled())
 					return;
 				// load individual card
+				monitor.subTask("Updating card " + i + " of " + size);
 				try {
 					parseSingleCard(magicCard, fieldMaps);
 				} catch (IOException e) {
