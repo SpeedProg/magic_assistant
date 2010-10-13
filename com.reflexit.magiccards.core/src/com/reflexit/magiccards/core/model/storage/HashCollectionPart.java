@@ -23,10 +23,10 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  *
  */
 public class HashCollectionPart {
-	private transient HashMap<Integer, LinkedList<IMagicCard>> hash;
+	private transient HashMap<Integer, Object> hash;
 
 	public HashCollectionPart() {
-		this.hash = new HashMap<Integer, LinkedList<IMagicCard>>();
+		this.hash = new HashMap<Integer, Object>();
 	}
 
 	/**
@@ -34,57 +34,96 @@ public class HashCollectionPart {
 	 * @return first card in the list
 	 */
 	public IMagicCard getCard(Integer key) {
-		LinkedList<IMagicCard> linkedList = this.hash.get(key);
-		if (linkedList == null)
+		Object obj = this.hash.get(key);
+		if (obj == null) {
 			return null;
-		for (Iterator iterator = linkedList.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			return card;
+		}
+		if (obj instanceof IMagicCard) {
+			return (IMagicCard) obj;
+		}
+		if (obj instanceof LinkedList) {
+			LinkedList<IMagicCard> linkedList = (LinkedList<IMagicCard>) obj;
+			for (Iterator iterator = linkedList.iterator(); iterator.hasNext();) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				return card;
+			}
 		}
 		return null;
 	}
 
 	public IMagicCard getCard(IMagicCard card) {
-		LinkedList<IMagicCard> linkedList = this.hash.get(card.getCardId());
-		if (linkedList == null)
+		Object obj = this.hash.get(card.getCardId());
+		if (obj == null) {
 			return null;
-		for (Iterator iterator = linkedList.iterator(); iterator.hasNext();) {
-			IMagicCard card2 = (IMagicCard) iterator.next();
-			if (card2 instanceof MagicCardPhisical && card instanceof MagicCardPhisical) {
-				MagicCardPhisical phi2 = (MagicCardPhisical) card2;
-				MagicCardPhisical phi1 = (MagicCardPhisical) card;
-				if (!phi1.matching(phi2))
-					continue;
-				return card2;
-			} else
-				return card2;
+		}
+		if (obj instanceof IMagicCard) {
+			return getMatching(card, (IMagicCard) obj);
+		}
+		if (obj instanceof LinkedList) {
+			LinkedList<IMagicCard> linkedList = (LinkedList<IMagicCard>) obj;
+			for (Iterator iterator = linkedList.iterator(); iterator.hasNext();) {
+				IMagicCard card2 = (IMagicCard) iterator.next();
+				card2 = getMatching(card, card2);
+				if (card2 != null)
+					return card2;
+			}
 		}
 		return null;
+	}
+
+	protected IMagicCard getMatching(IMagicCard card, IMagicCard card2) {
+		if (card2 instanceof MagicCardPhisical && card instanceof MagicCardPhisical) {
+			MagicCardPhisical phi2 = (MagicCardPhisical) card2;
+			MagicCardPhisical phi1 = (MagicCardPhisical) card;
+			if (!phi1.matching(phi2))
+				return null;
+			return card2;
+		} else
+			return card2;
 	}
 
 	/**
 	 * @param card
 	 */
 	public void storeCard(IMagicCard card) {
-		LinkedList<IMagicCard> linkedList = this.hash.get(card.getCardId());
-		if (linkedList == null) {
-			linkedList = new LinkedList<IMagicCard>();
-			this.hash.put(card.getCardId(), linkedList);
+		Object obj = this.hash.get(card.getCardId());
+		if (obj == null) {
+			this.hash.put(card.getCardId(), card);
+			return;
 		}
-		linkedList.add(card);
+		LinkedList<IMagicCard> linkedList;
+		if (obj instanceof IMagicCard) {
+			linkedList = new LinkedList<IMagicCard>();
+			linkedList.add((IMagicCard) obj);
+			linkedList.add(card);
+			this.hash.put(card.getCardId(), linkedList);
+			return;
+		}
+		if (obj instanceof LinkedList) {
+			linkedList = (LinkedList<IMagicCard>) obj;
+			linkedList.add(card);
+			return;
+		}
 	}
 
 	/**
 	 * @param card
 	 */
 	public void removeCard(IMagicCard card) {
-		LinkedList<IMagicCard> linkedList = this.hash.get(card.getCardId());
-		if (linkedList == null) {
+		Object obj = this.hash.get(card.getCardId());
+		if (obj == null) {
 			return;
 		}
-		linkedList.remove(card);
-		if (linkedList.size() == 0) {
+		if (obj instanceof IMagicCard) {
 			this.hash.remove(card.getCardId());
+			return;
+		}
+		if (obj instanceof LinkedList) {
+			LinkedList<IMagicCard> linkedList = (LinkedList<IMagicCard>) obj;
+			linkedList.remove(card);
+			if (linkedList.size() == 0) {
+				this.hash.remove(card.getCardId());
+			}
 		}
 	}
 
@@ -93,7 +132,19 @@ public class HashCollectionPart {
 	 * @return
 	 */
 	public Collection getCards(int id) {
-		LinkedList<IMagicCard> linkedList = this.hash.get(id);
-		return linkedList; // TODO: xxx unsafe
+		Object obj = this.hash.get(id);
+		if (obj == null) {
+			return null;
+		}
+		if (obj instanceof IMagicCard) {
+			LinkedList<IMagicCard> linkedList = new LinkedList<IMagicCard>();
+			linkedList.add((IMagicCard) obj);
+			return linkedList;
+		}
+		if (obj instanceof LinkedList) {
+			LinkedList<IMagicCard> linkedList = (LinkedList<IMagicCard>) obj;
+			return linkedList;
+		}
+		return null;
 	}
 }
