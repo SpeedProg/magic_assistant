@@ -298,7 +298,14 @@
               label="Find...">
         </command>
      </menuContribution>
-     
+     <menuContribution
+            locationURI="menu:com.reflexit.magiccards.ui.views.MagicDbView">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
+                  mnemonic="U"
+                  id="com.reflexit.magiccards.ui.menus.updateMagicDbDialog">
+            </command>
+      </menuContribution>
      <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.MagicDbView">
        <!-- <command  commandId="com.reflexit.magiccards.ui.commands.addToLib" /> -->
