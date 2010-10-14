@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
+import java.text.DecimalFormat;
+import java.util.Iterator;
+
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -15,13 +18,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import java.text.DecimalFormat;
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
@@ -66,8 +65,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 		decktype = createTextLabel("Type: ");
 		total = createTextLabel("Total Cards: ");
 		dbprice = createTextLabel("Cost: ");
-		dbprice.setToolTipText("Cost of a deck using Seller's Price column,"
-		        + " in brackets cost of a deck using User's Price column");
+		dbprice.setToolTipText("Cost of a deck using Seller's Price column," + " in brackets cost of a deck using User's Price column");
 		colors = createTextLabel("Colors: ");
 		ownership = createTextLabel("Ownership: ");
 	}
@@ -107,12 +105,10 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 
 	private IStorageInfo getInfo() {
 		getCardStore();
-		if (store instanceof IStorageContainer) {
-			IStorage storage = ((IStorageContainer) store).getStorage();
-			if (storage instanceof IStorageInfo) {
-				IStorageInfo si = ((IStorageInfo) storage);
-				return si;
-			}
+		IStorage storage = store.getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si;
 		}
 		return null;
 	}

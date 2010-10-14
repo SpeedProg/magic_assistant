@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reflexit.magiccards.ui.views;
 
@@ -32,7 +32,7 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 	}
 
 	public void updateElement(int index) {
-		if (this.root instanceof IFilteredCardStore) {
+		if (this.root != null) {
 			if (index >= root.getSize()) {
 				// element is gone...
 			} else {
