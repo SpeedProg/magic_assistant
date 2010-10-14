@@ -19,7 +19,6 @@ import org.eclipse.birt.chart.model.attribute.Interactivity;
 import org.eclipse.birt.chart.model.attribute.LegendBehaviorType;
 import org.eclipse.birt.chart.model.attribute.LineAttributes;
 import org.eclipse.birt.chart.model.attribute.LineStyle;
-import org.eclipse.birt.chart.model.attribute.Marker;
 import org.eclipse.birt.chart.model.attribute.MarkerType;
 import org.eclipse.birt.chart.model.attribute.RiserType;
 import org.eclipse.birt.chart.model.attribute.TriggerCondition;
@@ -153,7 +152,7 @@ public class ManaCurve implements IChartGenerator {
 		ls1.setDataSet(seriesTwoValues);
 		//ls1.getLineAttributes().setColor(ColorDefinitionImpl.RED());
 		for (int i = 0; i < ls1.getMarkers().size(); i++) {
-			((Marker) ls1.getMarkers().get(i)).setType(MarkerType.BOX_LITERAL);
+			(ls1.getMarkers().get(i)).setType(MarkerType.BOX_LITERAL);
 		}
 		ls1.setCurve(true);
 		ls1.getTriggers().add(
