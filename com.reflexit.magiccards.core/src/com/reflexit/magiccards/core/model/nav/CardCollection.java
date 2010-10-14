@@ -49,12 +49,10 @@ public class CardCollection extends CardElement {
 		if (!isOpen()) {
 			open();
 		}
-		if (store instanceof IStorageContainer) {
-			IStorage storage = ((IStorageContainer) store).getStorage();
-			if (storage instanceof IStorageInfo) {
-				IStorageInfo si = ((IStorageInfo) storage);
-				return si;
-			}
+		IStorage storage = ((IStorageContainer) store).getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si;
 		}
 		return null;
 	}
@@ -111,12 +109,10 @@ public class CardCollection extends CardElement {
 		if (!isOpen()) {
 			open();
 		}
-		if (store instanceof IStorageContainer) {
-			IStorage storage = ((IStorageContainer) store).getStorage();
-			if (storage instanceof IStorageInfo) {
-				((IStorageInfo) storage).setVirtual(virtual);
-				storage.save();
-			}
+		IStorage storage = store.getStorage();
+		if (storage instanceof IStorageInfo) {
+			((IStorageInfo) storage).setVirtual(virtual);
+			storage.save();
 		}
 	}
 

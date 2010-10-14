@@ -1,8 +1,5 @@
 package com.reflexit.magiccards.core.seller;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,20 +11,22 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
+import com.reflexit.magiccards.core.sync.IStoreUpdator;
 
-public class FindMagicCardsPrices {
+public class FindMagicCardsPrices implements IStoreUpdator {
 	String baseURL;
 	String cardURL;
 	HashMap<String, String> setIdMap = new HashMap<String, String>();
@@ -46,19 +45,22 @@ public class FindMagicCardsPrices {
 		setIdMap.put("Time Spiral \"Timeshifted\"", "TSS");
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor) throws IOException {
-		monitor.beginTask("Loading prices from http://findmagiccards.com ...", fstore.getSize() + 10);
+	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, IProgressMonitor monitor)
+			throws IOException {
+		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
+		if (iterable == null) {
+			iterable = store;
+			size = store.size();
+		}
 		HashSet<String> sets = new HashSet();
-		for (IMagicCard magicCard : fstore) {
+		for (IMagicCard magicCard : iterable) {
 			String set = magicCard.getSet();
 			sets.add(set);
 		}
 		monitor.worked(5);
 		IStorage storage = null;
-		if (fstore.getCardStore() instanceof IStorageContainer) {
-			storage = ((IStorageContainer) fstore.getCardStore()).getStorage();
-			storage.setAutoCommit(false);
-		}
+		storage = store.getStorage();
+		storage.setAutoCommit(false);
 		processSetList(sets);
 		try {
 			for (String set : sets) {
@@ -66,14 +68,14 @@ public class FindMagicCardsPrices {
 				if (monitor.isCanceled())
 					return;
 				if (id != null) {
-					//System.err.println("found " + set + " " + id);
+					// System.err.println("found " + set + " " + id);
 					HashMap<String, Float> prices = null;
 					try {
 						prices = parse(id);
 					} catch (IOException e) {
 						//
 					}
-					for (IMagicCard magicCard : fstore) {
+					for (IMagicCard magicCard : iterable) {
 						if (monitor.isCanceled())
 							return;
 						String set2 = magicCard.getSet();
@@ -93,12 +95,8 @@ public class FindMagicCardsPrices {
 							if (price > 0) {
 								if (!setIdMap.containsKey(set))
 									setIdMap.put(set, id);
-								if (magicCard instanceof MagicCardPhisical) {
-									((MagicCardPhisical) magicCard).setDbPrice(price);
-								} else if (magicCard instanceof MagicCard) {
-									((MagicCard) magicCard).setDbPrice(price);
-								}
-								fstore.getCardStore().update(magicCard);
+								magicCard.setDbPrice(price);
+								store.update(magicCard);
 							}
 							monitor.worked(1);
 						}
@@ -106,13 +104,14 @@ public class FindMagicCardsPrices {
 				}
 			}
 		} finally {
-			if (storage != null) {
-				storage.save();
-				storage.setAutoCommit(true);
-			}
-			monitor.worked(5);
+			storage.save();
+			storage.setAutoCommit(true);
 			monitor.done();
 		}
+	}
+
+	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor) throws IOException {
+		updateStore(fstore.getCardStore(), fstore, fstore.getSize(), monitor);
 	}
 
 	private String findSetId(String set) {
@@ -174,12 +173,13 @@ public class FindMagicCardsPrices {
 			st.close();
 		}
 	}
+
 	private static final Pattern rowPattern = Pattern.compile("<TR(.*?)</TR>");
-	private static final Pattern rowPattern2 = Pattern.compile( // 
-	        "<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
-	                + ".*" //
-	                + "<TD>([0-9.]+).nbsp;</TD>$" // price
-	        );
+	private static final Pattern rowPattern2 = Pattern.compile( //
+			"<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
+					+ ".*" //
+					+ "<TD>([0-9.]+).nbsp;</TD>$" // price
+			);
 
 	/*-
 	 * no NL
@@ -214,6 +214,7 @@ public class FindMagicCardsPrices {
 			}
 		}
 	}
+
 	/*-
 	 * <TD align=right>Price :</TD><TD>$ 1.23&nbsp;&nbsp;</TD>
 	 */
@@ -235,11 +236,12 @@ public class FindMagicCardsPrices {
 		}
 		return -1;
 	}
+
 	private static final Pattern set1Pattern = Pattern.compile("<TR(.*?)</TR>");
-	private static final Pattern set2Pattern = Pattern.compile( // 
-	        "<TD>([A-Z]+).nbsp;</TD>" + // abbr
-	                "<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
-	        );
+	private static final Pattern set2Pattern = Pattern.compile( //
+			"<TD>([A-Z]+).nbsp;</TD>" + // abbr
+					"<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
+			);
 
 	/*- no NL
 	 * <TR class=defRowEven>

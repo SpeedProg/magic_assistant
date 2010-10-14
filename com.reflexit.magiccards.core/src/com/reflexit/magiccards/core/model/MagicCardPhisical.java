@@ -194,6 +194,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 
 	/**
 	 * Kind of equals by ignores count and location
+	 *
 	 * @param phi2
 	 * @return
 	 */
@@ -295,9 +296,6 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 		return null;
 	}
 
-	public void setDbPrice(Float price2) {
-		card.setDbPrice(price2);
-	}
 
 	public void setCommunityRating(float parseFloat) {
 		card.setCommunityRating(parseFloat);
@@ -381,8 +379,12 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 		}
 		return false;
 	}
-	
-	public boolean isSideboard(){
+
+	public boolean isSideboard() {
 		return location.isSideboard();
+	}
+
+	public void setDbPrice(float dbprice) {
+		getCard().setDbPrice(dbprice);
 	}
 }
