@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.seller;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,27 +10,32 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
+import org.eclipse.core.runtime.IProgressMonitor;
 
-public class ParseMtgFanaticPrices {
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.sync.IStoreUpdator;
+
+public class ParseMtgFanaticPrices implements IStoreUpdator {
 	String baseURL;
 	String setURL;
 
 	public ParseMtgFanaticPrices() {
 		// http://www.mtgfanatic.com/store/viewproducts.aspx?CatID=217&AffiliateID=44349&PageSize=500
-		baseURL = "http://www.mtgfanatic.com/store/viewproducts.aspx?CatID=SET&AffiliateID=44349&PageSize=500";
+		baseURL = "http://www.mtgfanatic.com/store/magic/viewcards.aspx?CatID=SET&ForumReferrerID=44349&PageSize=500";
 		setURL = "http://www.mtgfanatic.com/Store/Magic/BasicSearch.aspx?CatID=3";
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor) throws IOException {
-		monitor.beginTask("Loading prices...", fstore.getSize() + 10);
+	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, IProgressMonitor monitor)
+			throws IOException {
+		monitor.beginTask("Loading prices...", size + 10);
+		if (iterable == null) {
+			iterable = store;
+			size = store.size();
+		}
 		HashSet<String> sets = new HashSet();
-		for (IMagicCard magicCard : fstore) {
+		for (IMagicCard magicCard : iterable) {
 			String set = magicCard.getSet();
 			sets.add(set);
 		}
@@ -46,34 +49,25 @@ public class ParseMtgFanaticPrices {
 				System.err.println("found " + set + " " + id);
 				HashMap<String, Float> prices = parse(id);
 				if (prices.size() > 0) {
-					IStorage storage = null;
-					if (fstore.getCardStore() instanceof IStorageContainer) {
-						storage = ((IStorageContainer) fstore.getCardStore()).getStorage();
-						storage.setAutoCommit(false);
-					}
+					IStorage storage = store.getStorage();
+					storage.setAutoCommit(false);
 					try {
-						for (IMagicCard magicCard : fstore) {
+						for (IMagicCard magicCard : iterable) {
 							if (monitor.isCanceled())
 								return;
 							String set2 = magicCard.getSet();
 							if (set2.equals(set)) {
 								if (prices.containsKey(magicCard.getName())) {
 									Float price = prices.get(magicCard.getName());
-									if (magicCard instanceof MagicCardPhisical) {
-										((MagicCardPhisical) magicCard).setDbPrice(price);
-									} else if (magicCard instanceof MagicCard) {
-										((MagicCard) magicCard).setDbPrice(price);
-									}
-									fstore.getCardStore().update(magicCard);
+									magicCard.setDbPrice(price);
+									store.update(magicCard);
 									monitor.worked(1);
 								}
 							}
 						}
 					} finally {
-						if (storage != null) {
-							storage.save();
-							storage.setAutoCommit(true);
-						}
+						storage.setAutoCommit(true);
+						storage.save();
 						monitor.done();
 					}
 				}
@@ -133,8 +127,22 @@ public class ParseMtgFanaticPrices {
 		st.close();
 		return res;
 	}
-	private static final Pattern rowStart = Pattern.compile("<tr id=\"r\\d+\" class=\"(alt)?[Dd]ataRow\">");
+
+	/*-
+	 <tr class="altDataRow" id="r93">
+	 <td rowspan="1"><a href="javascript:AddToCart('MTG-PS-049062', 1, 93, 0, 0);">Buy</a></td><td rowspan="1"><input name="q93" type="text" id="q93" style="width:50px;" /></td><td rowspan="1">$.74</td><td rowspan="1">4</td><td rowspan="1">Played</td>
+	 </tr><tr class="dataRow" id="r94">
+	 <td rowspan="1"><a href="javascript:AddToCart('MTG-MS-049063', 1, 94, 0, 0);">Buy</a></td><td rowspan="1"><input name="q94" type="text" id="q94" style="width:50px;" /></td>
+	 <td rowspan="1">$1.99</td><td rowspan="1">14</td>
+	 <td rowspan="1">NM+/M</td>
+	 <td rowspan="2"><a href="/store/magic/viewcard.aspx?I=MTG-MS-049063">Sengir Vampire</a></td>
+	 <td rowspan="2"><a href="/store/magic/viewcard.aspx?I=MTG-MS-049063" alt="Sengir Vampire"><img src="http://www.mtgfanatic.com/images/CreateProductThumbnail.ashx?ID=50361&S=75" /></a></td>
+	 </tr>
+	 */
+	private static final Pattern rowStart = Pattern.compile("<tr class=\"(alt)?[Dd]ataRow\" id=\"r\\d+\">");
 	private static final Pattern rowEnd = Pattern.compile("</tr>");
+	private static final Pattern pricePattern = Pattern.compile("<td rowspan=\"\\d+\">\\$(.*?)</td>");
+	private static final Pattern namePattern = Pattern.compile("<a href=\"/store/magic/viewcard.aspx.I=MTG-MS-\\d+\">(.*?)</a>");
 
 	private void processFile(BufferedReader st, HashMap<String, Float> res) throws IOException {
 		String line = "";
@@ -150,30 +158,32 @@ public class ParseMtgFanaticPrices {
 			}
 		}
 	}
-	private static final Pattern rowPattern = Pattern.compile("<td>" // 
-	        + "\\s*<a href=\"/store/magic/ViewCard.aspx.I=MTG-MS-\\d+\">" // 
-	        + "\\s*(.*) - (.*?)" // 
-	        + "\\s*</a>" // 
-	        + "\\s*</td>" // 
-	        + "\\s*<td>\\$([0-9.]+)</td>" //
-	);
 
 	private void processRow(String row, HashMap<String, Float> res) {
-		Matcher matcher = rowPattern.matcher(row);
+		Matcher matcher = namePattern.matcher(row);
 		if (matcher.find()) {
-			String name = matcher.group(2);
-			String price = matcher.group(3);
-			try {
-				float f = Float.parseFloat(price);
-				res.put(name, f);
-			} catch (NumberFormatException e) {
-				return;
+			String name = matcher.group(1);
+			Matcher pmatcher = pricePattern.matcher(row);
+			if (pmatcher.find()) {
+				String price = pmatcher.group(1);
+				try {
+					float f = Float.parseFloat(price);
+					res.put(name, f);
+				} catch (NumberFormatException e) {
+					return;
+				}
 			}
 		}
 	}
-	private static final Pattern setLinePattern = Pattern.compile("class=\"clMenu\"");
-	private static Pattern setItemPattern = Pattern
-	        .compile("<li><a href=\"/store/ViewProducts.aspx\\?CatID=(\\d+)\">\\s*(.*?)</a></li>");
+
+	/*
+	 * <li> <a href="/store/magic/viewcards.aspx?CatID=390"><div
+	 * class="setIcon"><img src="/images/magic/symbols/Magic2010_Common.gif"
+	 * alt="Magic 2010 icon" title="Magic 2010 icon" /></div>Magic 2010</a>
+	 * </li>
+	 */
+	private static final Pattern setLinePattern = Pattern.compile("class=\"setIcon\"");
+	private static Pattern setItemPattern = Pattern.compile("<a href=\"/store/magic/viewcards.aspx\\?CatID=(\\d+)\">.*?</div>(.*?)</a>");
 
 	public HashMap<String, String> parseSets() throws IOException {
 		HashMap<String, String> res = new HashMap<String, String>();
@@ -193,6 +203,7 @@ public class ParseMtgFanaticPrices {
 				while (m.find()) {
 					String id = m.group(1);
 					String name = m.group(2);
+					System.err.println(name + " " + id);
 					res.put(name, id);
 				}
 			}
@@ -201,8 +212,9 @@ public class ParseMtgFanaticPrices {
 
 	public static void main(String[] args) throws IOException {
 		ParseMtgFanaticPrices item = new ParseMtgFanaticPrices();
-		//HashMap<String, Float> res = item.parse();
-		//System.err.println(res);
-		item.parseSets();
+		// item.parseSets();
+		HashMap<String, Float> res = item.parse("383");
+		System.err.println(res);
 	}
+
 }
