@@ -1,21 +1,30 @@
 package com.reflexit.magiccards.ui.preferences;
 
+
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.PriceProviderManager;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * This class represents a preference page that
- * is contributed to the Preferences dialog. By 
+ * is contributed to the Preferences dialog. By
  * subclassing <samp>FieldEditorPreferencePage</samp>, we
  * can use the field support built into JFace that allows
- * us to create a page that is small and knows how to 
+ * us to create a page that is small and knows how to
  * save, restore and apply itself.
  * <p>
  * This page is used to modify preferences only. They
@@ -61,6 +70,35 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		BooleanFieldEditor other = new BooleanFieldEditor(PreferenceConstants.LOAD_RULINGS,
 		        "Load rulings, extra fields and update oracle text from the web", getFieldEditorParent());
 		addField(other);
+		String[][] values = getPriceProviders();
+		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values,
+				getFieldEditorParent());
+		addField(combo);
+		// combo.setPropertyChangeListener(this);
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getSource() instanceof FieldEditor) {
+			String preferenceName = ((FieldEditor) event.getSource()).getPreferenceName();
+			if (preferenceName == PreferenceConstants.PRICE_PROVIDER) {
+				PriceProviderManager.getInstance().setProviderName((String) event.getNewValue());
+			}
+		}
+
+		super.propertyChange(event);
+	}
+
+	private String[][] getPriceProviders() {
+		PriceProviderManager ppm = PriceProviderManager.getInstance();
+		Collection<IPriceProvider> providers = ppm.getProviders();
+		String[][] res = new String[providers.size()][2];
+		int i = 0;
+		for (Iterator iterator = providers.iterator(); iterator.hasNext(); i++) {
+			IPriceProvider prov = (IPriceProvider) iterator.next();
+			res[i][0] = res[i][1] = prov.getName();
+		}
+		return res;
 	}
 
 	/* (non-Javadoc)

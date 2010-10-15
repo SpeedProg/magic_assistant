@@ -1,13 +1,9 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
@@ -59,12 +55,12 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
-import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
+import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
@@ -81,7 +77,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected Action showPrefs;
 	protected Action showFind;
 	protected Action copyText;
-	protected Action loadPrices;
 	protected Action loadExtras;
 	protected ViewerManager manager;
 	private Label statusLine;
@@ -266,7 +261,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		manager.add(this.sortMenu);
 		manager.add(this.groupMenu);
 		manager.add(this.showPrefs);
-		manager.add(loadPrices);
 		manager.add(loadExtras);
 		manager.add(new Separator());
 	}
@@ -400,12 +394,6 @@ public abstract class AbstractCardsView extends ViewPart {
 				runCopy();
 			}
 		};
-		this.loadPrices = new Action("Load Seller's Prices...") {
-			@Override
-			public void run() {
-				runLoadPrices();
-			}
-		};
 		this.loadExtras = new Action("Load Extra Fields...") {
 			@Override
 			public void run() {
@@ -423,57 +411,24 @@ public abstract class AbstractCardsView extends ViewPart {
 		return groupMenu;
 	}
 
-	protected void runLoadPrices() {
-		Job loadingPrices = new Job("Loading prices (To view enable Price columns)") {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				FindMagicCardsPrices parser = new FindMagicCardsPrices();
-				try {
-					parser.updateStore(getFilteredStore(), monitor);
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							reloadData();
-						}
-					});
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		loadingPrices.setUser(true);
-		loadingPrices.schedule();
-	}
-
 	protected void runLoadExtras() {
 		final IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-		final int size = selection.isEmpty() ? getFilteredStore().getSize() : selection.size();
-		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), !selection.isEmpty(), size);
-		if (dialog.open() != Window.OK || dialog.getFieldMap().isEmpty()) {
+		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), getFilteredStore().getSize(), getFilteredStore()
+				.getCardStore().size());
+		if (dialog.open() != Window.OK || dialog.getFields().isEmpty()) {
 			return;
 		}
-		Job loadingExtras = new Job("Loading extra fields") {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				ParseGathererRulings parser = new ParseGathererRulings();
-				try {
-					@SuppressWarnings("rawtypes")
-					Iterator list = selection.isEmpty() ? getFilteredStore().iterator() : selection.iterator();
-
-					parser.updateStore(list, size, monitor, dialog.getFieldMap());
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							reloadData();
-						}
-					});
-				} catch (IOException e) {
-					MagicUIActivator.log(e);
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		loadingExtras.setUser(true);
+		if (dialog.getFields().contains(MagicCardField.DBPRICE)) {
+			dialog.getFields().remove(MagicCardField.DBPRICE);
+			LoadingPricesJob loadingPrices = new LoadingPricesJob(this);
+			loadingPrices.setSelection(selection);
+			loadingPrices.setListChoice(dialog.getListChoice());
+			loadingPrices.schedule();
+		}
+		LoadingExtraJob loadingExtras = new LoadingExtraJob(this);
+		loadingExtras.setFields(dialog.getFields());
+		loadingExtras.setSelection(selection);
+		loadingExtras.setListChoice(dialog.getListChoice());
 		loadingExtras.schedule();
 	}
 

@@ -18,4 +18,5 @@ public class PreferenceConstants {
 	public static final String CACHE_IMAGES = PREFIX + ".cacheImages";
 	public static final String LOAD_IMAGES = PREFIX + ".loadImages";
 	public static final String LOAD_RULINGS = PREFIX + ".loadRulings";
+	public static final String PRICE_PROVIDER = PREFIX + ".priceProvider";
 }

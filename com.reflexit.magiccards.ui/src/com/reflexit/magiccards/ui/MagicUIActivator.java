@@ -1,6 +1,10 @@
 package com.reflexit.magiccards.ui;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogSettings;
@@ -11,9 +15,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
-import java.io.File;
-import java.io.IOException;
 
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -36,7 +37,10 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 *
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -53,7 +57,10 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 *
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -71,10 +78,11 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -82,14 +90,19 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	}
 
 	public static void log(Throwable e) {
-		getDefault().getLog().log(
-		        new Status(Status.ERROR, MagicUIActivator.getDefault().getBundle().getSymbolicName(), 1,
-		                e.getMessage(), e));
+		log(getStatus(e));
 	}
 
 	public static void log(String s) {
-		getDefault().getLog().log(
-		        new Status(Status.ERROR, MagicUIActivator.getDefault().getBundle().getSymbolicName(), s));
+		log(new Status(Status.ERROR, PLUGIN_ID, s));
+	}
+
+	public static void log(IStatus s) {
+		if (plugin == null) {
+			System.err.println("error: " + s.getMessage());
+		} else {
+			plugin.getLog().log(s);
+		}
 	}
 
 	public Image getImage(String key) {
@@ -124,6 +137,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/**
 	 * Puts image in a registy using key
+	 *
 	 * @param key
 	 * @param desc
 	 * @return
@@ -174,5 +188,9 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		IPath path = getDefault().getStateLocation();
 		String filename = path.append("settings.txt").toOSString();
 		dialogSettings.save(filename);
+	}
+
+	public static IStatus getStatus(Throwable e) {
+		return new Status(Status.ERROR, PLUGIN_ID, 1, e.getMessage(), e);
 	}
 }
