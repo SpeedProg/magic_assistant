@@ -45,6 +45,9 @@ public class XmlCardHolder implements ICardHandler {
 		return MagicDBXmlFilteredCardStore.getInstance();
 	}
 
+	public ICardStore getMagicDBStore() {
+		return getMagicDBFilteredStore().getCardStore();
+	}
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
 		return new BasicMagicDBXmlFilteredCardStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
 	}
@@ -58,7 +61,7 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public ICardStore getLibraryCardStore() {
-		return LibraryXmlFilteredCardStore.getInstance().getCardStore();
+		return getLibraryFilteredStore().getCardStore();
 	}
 
 	public IFilteredCardStore getCardCollectionFilteredStore(String filename) {

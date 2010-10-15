@@ -18,6 +18,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
@@ -25,7 +26,7 @@ import com.reflexit.magiccards.core.model.storage.ICardCollection;
 
 /**
  * Card Store for Magic DB
- * 
+ *
  */
 public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
 	public VirtualMultiFileCardStore() {
@@ -56,6 +57,14 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 	}
 
 	@Override
+	public void update(IMagicCard card) {
+		if (card instanceof MagicCardPhisical)
+			super.update(((MagicCardPhisical) card).getCard());
+		else
+			super.update(card);
+	}
+
+	@Override
 	protected boolean doUpdate(IMagicCard card) {
 		getStorage(getLocation(card)).getStorage().autoSave();
 		return super.doUpdate(card);
@@ -63,7 +72,7 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 
 	@Override
 	protected Location getLocation(IMagicCard card) {
-		String set = ((MagicCard) card).getSet();
+		String set = card.getSet();
 		Location loc = new Location(getExtFileName(set));
 		return loc;
 	}
