@@ -35,4 +35,6 @@ public interface ICardHandler {
 	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException, InterruptedException;
 
 	public void loadInitialIfNot(IProgressMonitor nullProgressMonitor) throws MagicException;
+
+	public ICardStore getMagicDBStore();
 }

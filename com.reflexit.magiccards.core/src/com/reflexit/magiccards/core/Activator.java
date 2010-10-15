@@ -10,15 +10,17 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-
-import java.io.File;
-import java.io.IOException;
-
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -54,11 +56,19 @@ public class Activator extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		savePluginPreferences();
+		getEclipsePreferences().flush();
 		plugin = null;
 		super.stop(context);
 	}
 
+	public IEclipsePreferences getEclipsePreferences() {
+		// Platform.getPreferencesService().getInt();
+		return new InstanceScope().getNode(PLUGIN_ID);
+	}
+
+	public IEclipsePreferences getEclipseDefaultPreferences() {
+		return new DefaultScope().getNode(PLUGIN_ID);
+	}
 	/**
 	 * Returns the shared instance
 	 *
@@ -99,14 +109,6 @@ public class Activator extends Plugin {
 		return path;
 	}
 
-	public void setPreference(String key, boolean value) {
-		getPluginPreferences().setValue(key, value);
-		savePluginPreferences();
-	}
-
-	public boolean getBooleanPreference(String key) {
-		return getPluginPreferences().getBoolean(key);
-	}
 
 	public IStatus getStatus(Throwable e) {
 		return new Status(Status.ERROR, PLUGIN_ID, e.getMessage(), e);

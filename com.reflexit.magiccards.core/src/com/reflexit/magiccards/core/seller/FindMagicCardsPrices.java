@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.sync.IStoreUpdator;
 
-public class FindMagicCardsPrices implements IStoreUpdator {
+public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;
 	String cardURL;
 	HashMap<String, String> setIdMap = new HashMap<String, String>();
@@ -45,6 +45,17 @@ public class FindMagicCardsPrices implements IStoreUpdator {
 		setIdMap.put("Time Spiral \"Timeshifted\"", "TSS");
 	}
 
+	public String getName() {
+		return "Find Magic Cards";
+	}
+
+	public URL getURL() {
+		try {
+			return new URL("http://findmagiccards.com");
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
 	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, IProgressMonitor monitor)
 			throws IOException {
 		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);

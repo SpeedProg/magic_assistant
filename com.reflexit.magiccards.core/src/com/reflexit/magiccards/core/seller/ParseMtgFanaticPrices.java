@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.sync.IStoreUpdator;
 
-public class ParseMtgFanaticPrices implements IStoreUpdator {
+public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;
 	String setURL;
 
@@ -217,4 +218,15 @@ public class ParseMtgFanaticPrices implements IStoreUpdator {
 		System.err.println(res);
 	}
 
+	public String getName() {
+		return "MTG Fanatic";
+	}
+
+	public URL getURL() {
+		try {
+			return new URL("http://www.mtgfanatic.com");
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
 }
