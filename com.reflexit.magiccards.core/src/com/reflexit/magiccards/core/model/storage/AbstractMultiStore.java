@@ -13,8 +13,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ILocatable, ICardEventListener,
-        IStorageContainer<T> {
+public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ILocatable, ICardEventListener, IStorageContainer<T> {
 	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
 	protected int size;
 	protected Location defaultLocation;
@@ -28,6 +27,9 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	}
 
 	protected void addCardStore(AbstractCardStoreWithStorage<T> table) {
+		if (this.map.containsKey(table.getLocation())) {
+			this.size -= table.size();
+		}
 		this.map.put(table.getLocation(), table);
 		this.size += table.size();
 		table.addListener(this);
@@ -83,7 +85,6 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 					System.err.println("Key conflict - fixing: " + newLocation + " -> " + oldLocation);
 					table.setLocation(oldLocation);
 				}
-				this.size += table.size();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Activator.log(e);
@@ -112,7 +113,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				if (this.cur == null)
 					return;
 				while (cur != null && !this.cur.hasNext()) {
-					//if (!this.cur.hasNext()) {
+					// if (!this.cur.hasNext()) {
 					if (iter.hasNext()) {
 						this.cur = (iter.next()).iterator();
 					} else {
@@ -135,7 +136,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	}
 
 	public int size() {
-		//		getDeepSize();
+		//System.err.println(getDeepSize() + " " + size);
 		return this.size;
 	}
 
@@ -257,6 +258,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		doInitialize();
 		fireEvent(event);
 	}
+
 	IStorage<T> storageWrapper = new IStorage<T>() {
 		boolean commit = true;
 
@@ -283,11 +285,13 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		public void load() {
 			throw new UnsupportedOperationException();
 		}
+
 		public void autoSave() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				table.getStorage().autoSave();
 			}
 		};
+
 		public void save() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				if (table.getStorage().isNeedToBeSaved())
@@ -352,7 +356,5 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		public void setLocation(Location location) {
 			throw new UnsupportedOperationException();
 		}
-
-
 	};
 }
