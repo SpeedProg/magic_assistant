@@ -11,7 +11,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
 	 */
 	@Override
@@ -32,5 +32,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_RULINGS, true);
+		store.setDefault(PreferenceConstants.SHOW_GRID, false);
 	}
 }

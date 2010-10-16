@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -15,10 +18,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.services.IDisposable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
 public class LazyTableViewerManager extends ViewerManager implements IDisposable {
@@ -33,6 +35,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	public ColumnViewer getViewer() {
 		return this.viewer;
 	}
+
 	static class MyTableViewer extends TableViewer {
 		public MyTableViewer(Composite parent, int style) {
 			super(parent, style);
@@ -50,13 +53,19 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new LazyTableViewContentProvider());
-		//MagicCardLabelProvider labelProvider = new MagicCardLabelProvider();
-		//this.viewer.setLabelProvider(labelProvider);
+		// MagicCardLabelProvider labelProvider = new MagicCardLabelProvider();
+		// this.viewer.setLabelProvider(labelProvider);
 		this.viewer.setUseHashlookup(true);
+		updateGrid();
 		addDargAndDrop();
 		// viewer.setSorter(new NameSorter());
 		createDefaultColumns();
 		return this.viewer.getControl();
+	}
+
+	protected void updateGrid() {
+		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+		this.viewer.getTable().setLinesVisible(grid);
 	}
 
 	protected void createDefaultColumns() {
@@ -109,11 +118,12 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 
 	@Override
 	public void updateViewer() {
-		if (this.viewer.getControl().isDisposed()) return;
+		if (this.viewer.getControl().isDisposed())
+			return;
 		updateTableHeader();
+		updateGrid();
 		long time = System.currentTimeMillis();
 		IFilteredCardStore filteredStore = getFilteredStore();
-	
 		if (this.viewer.getInput() != filteredStore) {
 			this.viewer.setInput(filteredStore);
 			this.viewer.setItemCount(filteredStore == null ? 0 : filteredStore.getSize());
@@ -125,7 +135,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			this.viewer.refresh(true);
 		}
 		updateStatus();
-		//System.err.println("set input time: " + (System.currentTimeMillis() - time) + " ms");
+		// System.err.println("set input time: " + (System.currentTimeMillis() -
+		// time) + " ms");
 	}
 
 	@Override
@@ -158,7 +169,8 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			if (pos != null) {
 				order[pos.intValue()] = i;
 			} else {
-				orderGaps.add(Integer.valueOf(i)); // i'th column has no position
+				orderGaps.add(Integer.valueOf(i)); // i'th column has no
+													// position
 			}
 			if (checked) {
 				if (acol.getWidth() <= 0)
@@ -167,7 +179,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 				acol.setWidth(0);
 			}
 		}
-		//fill order for columns which were not in the properly list
+		// fill order for columns which were not in the properly list
 		for (int i = 0; i < order.length; i++) {
 			int pos = order[i];
 			if (pos < 0)

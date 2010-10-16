@@ -74,7 +74,9 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values,
 				getFieldEditorParent());
 		addField(combo);
-		// combo.setPropertyChangeListener(this);
+		BooleanFieldEditor grid = new BooleanFieldEditor(PreferenceConstants.SHOW_GRID, "Show grid lines in card tables",
+				getFieldEditorParent());
+		addField(grid);
 	}
 
 	@Override

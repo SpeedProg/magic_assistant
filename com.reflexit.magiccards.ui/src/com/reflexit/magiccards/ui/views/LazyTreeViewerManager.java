@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -14,9 +17,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {
@@ -50,10 +52,16 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		this.viewer.setContentProvider(new LazyTreeViewContentProvider());
 		//	this.viewer.setLabelProvider(new MagicCardLabelProvider());
 		this.viewer.setUseHashlookup(true);
+		updateGrid();
 		// viewer.setSorter(new NameSorter());
 		addDargAndDrop();
 		createDefaultColumns();
 		return this.viewer.getControl();
+	}
+
+	protected void updateGrid() {
+		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+		this.viewer.getTree().setLinesVisible(grid);
 	}
 
 	@Override
@@ -79,6 +87,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	@Override
 	public void updateViewer() {
 		updateTableHeader();
+		updateGrid();
 		long time = System.currentTimeMillis();
 		//	if (this.viewer.getInput() != this.getDataHandler()) {
 		if (this.viewer.getInput() != this.getFilteredStore()) {
