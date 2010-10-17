@@ -25,7 +25,11 @@ public class MagicCardComparator implements Comparator {
 				a1 = Colors.getColorName((String) a1);
 				a2 = Colors.getColorName((String) a2);
 			}
-			if (this.sort == MagicCardField.POWER || this.sort == MagicCardField.TOUGHNESS) {
+			if (a1 == null && a2 != null) {
+				d = 1;
+			} else if (a1 != null && a2 == null) {
+				d = -1;
+			} else if (this.sort == MagicCardField.POWER || this.sort == MagicCardField.TOUGHNESS) {
 				float f1 = MagicCard.convertFloat((String) a1);
 				float f2 = MagicCard.convertFloat((String) a2);
 				d = Float.compare(f1, f2);
