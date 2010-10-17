@@ -26,10 +26,11 @@ import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
- * Class that implements IFilteredCardStore, it is only contains filtered filteredList
- * and no phisical media
+ * Class that implements IFilteredCardStore, it is only contains filtered
+ * filteredList and no phisical media
+ * 
  * @author Alena
- *
+ * 
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
@@ -47,7 +48,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		this.filter = filter;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getSize()
 	 */
 	public int getSize() {
@@ -217,6 +220,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				} else {
 					name = String.valueOf(ccc);
 				}
+			} else {
+				name = String.valueOf(elem.getObjectByField(cardField));
 			}
 		} catch (Exception e) {
 			name = "Unknown";
@@ -233,8 +238,11 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return new ArrayList<T>();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
 	 */
 	public CardGroup[] getCardGroups() {
 		if (this.groupsList.size() == 0)
@@ -257,8 +265,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	private Location findLocationFilter(Expr root) {
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
-			if (bin.getLeft() instanceof Node
-			        && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
+			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
 				return new Location(bin.getRight().toString());
 			}
 			Location loc = findLocationFilter(bin.getLeft());
