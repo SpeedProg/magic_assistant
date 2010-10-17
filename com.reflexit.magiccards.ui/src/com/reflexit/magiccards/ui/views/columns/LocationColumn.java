@@ -14,6 +14,7 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -24,7 +25,7 @@ import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class LocationColumn extends GenColumn {
 	/**
@@ -32,6 +33,11 @@ public class LocationColumn extends GenColumn {
 	 */
 	public LocationColumn() {
 		super(MagicCardFieldPhysical.LOCATION, "Location");
+	}
+
+	@Override
+	public int getColumnWidth() {
+		return 160;
 	}
 
 	@Override
@@ -45,23 +51,30 @@ public class LocationColumn extends GenColumn {
 				return loc.replaceFirst("\\.xml$", "");
 			}
 			return loc;
+		} else if (element instanceof MagicCard) {
+			return "MagicDB";
 		} else {
 			return super.getText(element);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface.viewers.ColumnViewer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * (org.eclipse.jface.viewers.ColumnViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhisical)
-					return true;
-				else
-					return false;
+				if (element instanceof MagicCardPhisical) {
+					if (viewer.getInput() instanceof IFilteredCardStore)
+						return true;
+				}
+				return false;
 			}
 
 			@Override
@@ -71,8 +84,8 @@ public class LocationColumn extends GenColumn {
 					@Override
 					protected Object openDialogBox(Control cellEditorWindow) {
 						CardNavigatorSelectionDialog d = new CardNavigatorSelectionDialog(cellEditorWindow.getShell(),
-						        DataManager.getModelRoot(), false, "Select location");
-						//d.setInitialLocation(iniLoc);
+								DataManager.getModelRoot(), false, "Select location");
+						// d.setInitialLocation(iniLoc);
 						d.setValidator(new ISelectionValidator() {
 							public String isValid(Object selection) {
 								if (selection instanceof IStructuredSelection) {
@@ -117,16 +130,18 @@ public class LocationColumn extends GenColumn {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
-					// move
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
-					cardStore.remove(card);
-					card.setLocation(new Location((String) value));
-					cardStore.add(card);
-					// update
-					viewer.update(element, null);
+				if (viewer.getInput() instanceof IFilteredCardStore) {
+					if (element instanceof MagicCardPhisical) {
+						MagicCardPhisical card = (MagicCardPhisical) element;
+						// move
+						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
+						ICardStore<IMagicCard> cardStore = target.getCardStore();
+						cardStore.remove(card);
+						card.setLocation(new Location((String) value));
+						cardStore.add(card);
+						// update
+						viewer.update(element, null);
+					}
 				}
 			}
 		};

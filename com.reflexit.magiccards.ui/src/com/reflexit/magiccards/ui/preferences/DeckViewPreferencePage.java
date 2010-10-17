@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public class DeckViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
@@ -18,10 +19,10 @@ public class DeckViewPreferencePage extends FieldEditorPreferencePage implements
 
 	@Override
 	protected void createFieldEditors() {
-		ColumnCollection columnCollection = new ColumnCollection(DeckView.ID);
+		ColumnCollection columnCollection = new MagicColumnCollection(DeckView.ID);
 		columnCollection.createColumnLabelProviders();
-		addField(new CheckedListEditor(PreferenceConstants.DECKVIEW_COLS, "Visible Columns and Order",
-		        getFieldEditorParent(), columnCollection.getColumnNames()));
+		addField(new CheckedListEditor(PreferenceConstants.DECKVIEW_COLS, "Visible Columns and Order", getFieldEditorParent(),
+				columnCollection.getColumnNames()));
 	}
 
 	public void init(IWorkbench workbench) {

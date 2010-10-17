@@ -19,20 +19,17 @@ import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.PluginTransferData;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class MagicCardDragListener implements DragSourceListener {
 	private StructuredViewer viewer;
-	AbstractCardsView view;
 	IStructuredSelection selection;
 
-	public MagicCardDragListener(StructuredViewer viewer, AbstractCardsView view) {
+	public MagicCardDragListener(StructuredViewer viewer) {
 		this.viewer = viewer;
-		this.view = view;
 	}
 
 	/**

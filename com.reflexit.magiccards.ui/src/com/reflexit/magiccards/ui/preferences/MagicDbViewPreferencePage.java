@@ -8,6 +8,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public class MagicDbViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public MagicDbViewPreferencePage() {
@@ -18,10 +19,10 @@ public class MagicDbViewPreferencePage extends FieldEditorPreferencePage impleme
 
 	@Override
 	protected void createFieldEditors() {
-		ColumnCollection columnCollection = new ColumnCollection(MagicDbView.ID);
+		ColumnCollection columnCollection = new MagicColumnCollection(MagicDbView.ID);
 		columnCollection.createColumnLabelProviders();
-		addField(new CheckedListEditor(PreferenceConstants.MDBVIEW_COLS, "Visible Columns and Order",
-		        getFieldEditorParent(), columnCollection.getColumnNames()));
+		addField(new CheckedListEditor(PreferenceConstants.MDBVIEW_COLS, "Visible Columns and Order", getFieldEditorParent(),
+				columnCollection.getColumnNames()));
 	}
 
 	public void init(IWorkbench workbench) {

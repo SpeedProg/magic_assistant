@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CountColumn extends GenColumn {
 	/**
@@ -38,15 +38,24 @@ public class CountColumn extends GenColumn {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface.viewers.TableViewer)
+	@Override
+	public int getColumnWidth() {
+		return 60;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * (org.eclipse.jface.viewers.TableViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhisical)
+				if (element instanceof MagicCardPhisical && (viewer.getInput() instanceof IFilteredCardStore))
 					return true;
 				else
 					return false;
@@ -58,7 +67,8 @@ public class CountColumn extends GenColumn {
 				((Text) editor.getControl()).setTextLimit(5);
 				((Text) editor.getControl()).addVerifyListener(new VerifyListener() {
 					public void verifyText(VerifyEvent e) {
-						// validation - mine was for an Integer (also allow 'enter'):
+						// validation - mine was for an Integer (also allow
+						// 'enter'):
 						e.doit = "0123456789".indexOf(e.text) >= 0 || e.character == '\0';
 					}
 				});
@@ -77,20 +87,22 @@ public class CountColumn extends GenColumn {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
-					int oldCount = card.getCount();
-					int count = value == null ? 0 : Integer.parseInt(value.toString());
-					if (oldCount == count)
-						return;
-					MagicCardPhisical add = new MagicCardPhisical(card, card.getLocation());
-					add.setCount(count);
-					//viewer.update(element, null);
-					// save
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
-					cardStore.remove(card);
-					cardStore.add(add);
+				if (viewer.getInput() instanceof IFilteredCardStore) {
+					if (element instanceof MagicCardPhisical) {
+						MagicCardPhisical card = (MagicCardPhisical) element;
+						int oldCount = card.getCount();
+						int count = value == null ? 0 : Integer.parseInt(value.toString());
+						if (oldCount == count)
+							return;
+						MagicCardPhisical add = new MagicCardPhisical(card, card.getLocation());
+						add.setCount(count);
+						// viewer.update(element, null);
+						// save
+						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
+						ICardStore<IMagicCard> cardStore = target.getCardStore();
+						cardStore.remove(card);
+						cardStore.add(add);
+					}
 				}
 			}
 		};

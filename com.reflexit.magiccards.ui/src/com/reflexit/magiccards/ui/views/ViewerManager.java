@@ -1,5 +1,9 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -24,10 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.services.IDisposable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.FilterHelper;
@@ -40,9 +40,9 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
-public abstract class ViewerManager extends ColumnCollection implements IDisposable {
+public abstract class ViewerManager extends MagicColumnCollection implements IDisposable {
 	protected MagicCardFilter filter;
 	private IFilteredCardStore mhandler;
 	private IPreferenceStore store;
@@ -81,7 +81,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	void checkInit() {
 		try {
 			DataManager.getCardHandler().loadInitialIfNot(new NullProgressMonitor());
-			//DataManager.getCardHandler().getMagicCardHandler().getTotal();
+			// DataManager.getCardHandler().getMagicCardHandler().getTotal();
 		} catch (MagicException e) {
 			MagicUIActivator.log(e);
 		}
@@ -101,7 +101,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 			String value = store.getString(id);
 			if (value != null && value.length() > 0) {
 				map.put(id, value);
-				//System.err.println(id + "=" + value);
+				// System.err.println(id + "=" + value);
 			}
 		}
 		return map;
@@ -116,6 +116,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
+
 	private Object jobFamility = new Object();
 	private ISchedulingRule jobRule = new ISchedulingRule() {
 		public boolean isConflicting(ISchedulingRule rule) {
@@ -130,7 +131,8 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	public void loadData(final Runnable postLoad) {
 		Job[] jobs = Job.getJobManager().find(jobFamility);
 		if (jobs.length >= 2) {
-			//System.err.println(jobs.length + " already running skipping refresh");
+			// System.err.println(jobs.length +
+			// " already running skipping refresh");
 			return;
 		}
 		final Display display = PlatformUI.getWorkbench().getDisplay();
@@ -173,12 +175,12 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 						MagicUIActivator.log(e);
 						return Status.OK_STATUS;
 					}
-					//asyncUpdateViewer();
+					// asyncUpdateViewer();
 					return Status.OK_STATUS;
 				}
 			}
 		};
-		//loadingJob.setRule(jobRule);
+		// loadingJob.setRule(jobRule);
 		loadingJob.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
@@ -239,7 +241,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 	}
 
 	/**
-	 * @return 
+	 * @return
 	 * @return
 	 */
 	public MagicCardFilter getFilter() {
@@ -288,7 +290,7 @@ public abstract class ViewerManager extends ColumnCollection implements IDisposa
 		this.getViewer().getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer(), this.view));
+		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
 		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer(), this.view));
 	}
 

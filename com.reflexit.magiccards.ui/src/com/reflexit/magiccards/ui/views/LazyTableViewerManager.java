@@ -16,14 +16,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
-public class LazyTableViewerManager extends ViewerManager implements IDisposable {
+public class LazyTableViewerManager extends ViewerManager {
 	private TableViewer viewer;
 
 	public LazyTableViewerManager(AbstractCardsView view) {
@@ -71,7 +70,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 	protected void createDefaultColumns() {
 		createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
-			AbstractColumn man = (AbstractColumn) this.columns.get(i);
+			AbstractColumn man = this.columns.get(i);
 			TableViewerColumn colv = new TableViewerColumn(this.viewer, i);
 			TableColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
@@ -89,7 +88,6 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			if (man instanceof Listener) {
 				this.viewer.getTable().addListener(SWT.PaintItem, (Listener) man);
 			}
-			;
 			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
@@ -157,7 +155,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 		}
 		for (int i = 0; i < acolumns.length; i++) {
 			TableColumn acol = acolumns[i];
-			AbstractColumn mcol = (AbstractColumn) columns.get(i);
+			AbstractColumn mcol = columns.get(i);
 			boolean checked = true;
 			String key = mcol.getColumnFullName();
 			Integer pos = colOrder.get(key);
@@ -174,7 +172,7 @@ public class LazyTableViewerManager extends ViewerManager implements IDisposable
 			}
 			if (checked) {
 				if (acol.getWidth() <= 0)
-					acol.setWidth(((AbstractColumn) this.columns.get(i)).getColumnWidth());
+					acol.setWidth((this.columns.get(i)).getColumnWidth());
 			} else {
 				acol.setWidth(0);
 			}

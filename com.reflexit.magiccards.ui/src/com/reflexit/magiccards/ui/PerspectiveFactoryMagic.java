@@ -16,6 +16,7 @@ import com.reflexit.magiccards.ui.views.card.CardDescView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
+import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 import com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard;
 import com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard;
 import com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard;
@@ -33,6 +34,7 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		IFolderLayout leftTop = layout.createFolder("leftTop", IPageLayout.TOP, 0.75f, "left");
 		leftTop.addView(CardDescView.ID);
 		left.addView(CardsNavigatorView.ID);
+		left.addView(PrintingsView.ID);
 		right.addView(MagicDbView.ID);
 		right.addView(MyCardsView.ID);
 		pf.addPlaceholder(DeckView.ID + ":*");
@@ -53,9 +55,11 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 
 	/**
 	 * Creates a "New..." menu
-	 * @param window - workbench window
-	 * @param menu 
-	 * @return 
+	 * 
+	 * @param window
+	 *            - workbench window
+	 * @param menu
+	 * @return
 	 * 
 	 */
 	public static MenuManager createNewMenu(IWorkbenchWindow window) {

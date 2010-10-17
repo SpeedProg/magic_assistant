@@ -33,6 +33,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	public ColumnViewer getViewer() {
 		return this.viewer;
 	}
+
 	static class MyTreeViewer extends TreeViewer {
 		public MyTreeViewer(Composite parent, int style) {
 			super(parent, style);
@@ -50,7 +51,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new LazyTreeViewContentProvider());
-		//	this.viewer.setLabelProvider(new MagicCardLabelProvider());
+		// this.viewer.setLabelProvider(new MagicCardLabelProvider());
 		this.viewer.setUseHashlookup(true);
 		updateGrid();
 		// viewer.setSorter(new NameSorter());
@@ -89,30 +90,32 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		updateTableHeader();
 		updateGrid();
 		long time = System.currentTimeMillis();
-		//	if (this.viewer.getInput() != this.getDataHandler()) {
+		// if (this.viewer.getInput() != this.getDataHandler()) {
 		if (this.viewer.getInput() != this.getFilteredStore()) {
 			this.viewer.unmapAllElements();
 			this.viewer.setInput(this.getFilteredStore());
 		}
-		//System.err.println("set input1 tree time: " + (System.currentTimeMillis() - time) + " ms");
+		// System.err.println("set input1 tree time: " +
+		// (System.currentTimeMillis() - time) + " ms");
 		int size = this.getFilteredStore().getCardGroups().length;
-		//System.err.println("size=" + size);
+		// System.err.println("size=" + size);
 		this.viewer.getTree().setItemCount(size);
 		this.viewer.refresh(true);
-		//		} else {
-		//			this.viewer.setSelection(new StructuredSelection());
-		//			this.viewer.getTree().clearAll(true);
-		//			((MyTreeViewer) this.viewer).unmapAllElements();
-		//			this.viewer.refresh(true);
-		//		}
-		//System.err.println("set input2 tree time: " + (System.currentTimeMillis() - time) + " ms");
+		// } else {
+		// this.viewer.setSelection(new StructuredSelection());
+		// this.viewer.getTree().clearAll(true);
+		// ((MyTreeViewer) this.viewer).unmapAllElements();
+		// this.viewer.refresh(true);
+		// }
+		// System.err.println("set input2 tree time: " +
+		// (System.currentTimeMillis() - time) + " ms");
 		updateStatus();
 	}
 
 	protected void createDefaultColumns() {
 		createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
-			AbstractColumn man = (AbstractColumn) this.columns.get(i);
+			AbstractColumn man = this.columns.get(i);
 			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
 			TreeColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
@@ -130,7 +133,6 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			if (man instanceof Listener) {
 				this.viewer.getTree().addListener(SWT.PaintItem, (Listener) man);
 			}
-			;
 			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
@@ -155,7 +157,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		}
 		for (int i = 0; i < acolumns.length; i++) {
 			TreeColumn acol = acolumns[i];
-			AbstractColumn mcol = (AbstractColumn) columns.get(i);
+			AbstractColumn mcol = columns.get(i);
 			boolean checked = true;
 			String key = mcol.getColumnFullName();
 			Integer pos = colOrger.get(key);
@@ -167,16 +169,17 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			if (pos != null) {
 				order[pos.intValue()] = i;
 			} else {
-				orderGaps.add(Integer.valueOf(i)); // i'th column has no position
+				orderGaps.add(Integer.valueOf(i)); // i'th column has no
+													// position
 			}
 			if (checked) {
 				if (acol.getWidth() <= 0)
-					acol.setWidth(((AbstractColumn) this.columns.get(i)).getColumnWidth());
+					acol.setWidth((this.columns.get(i)).getColumnWidth());
 			} else {
 				acol.setWidth(0);
 			}
 		}
-		//fill order for columns which were not in the properly list
+		// fill order for columns which were not in the properly list
 		for (int i = 0; i < order.length; i++) {
 			int pos = order[i];
 			if (pos < 0) {

@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.card;
 
+import java.io.IOException;
+import java.net.URL;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,9 +26,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import java.io.IOException;
-import java.net.URL;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParseGathererRulings;
@@ -33,12 +33,14 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public class CardDescView extends ViewPart implements ISelectionListener {
 	public static final String ID = CardDescView.class.getName();
 	private CardDescComposite panel;
 	private Label message;
 	private LoadCardJob loadCardJob;
+
 	public class LoadCardJob extends Job {
 		private IMagicCard card;
 
@@ -126,8 +128,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		protected IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card) {
 			monitor.beginTask("Loading info for " + card.getName(), 100);
 			try {
-				boolean update = MagicUIActivator.getDefault().getPreferenceStore()
-				        .getBoolean(PreferenceConstants.LOAD_RULINGS);
+				boolean update = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_RULINGS);
 				if (update == false)
 					return Status.OK_STATUS;
 				if (!isStillNeeded(card))
@@ -196,7 +197,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		if (part instanceof AbstractCardsView)
+		if (part instanceof AbstractCardsView || part instanceof PrintingsView)
 			runLoadJob(sel);
 	}
 

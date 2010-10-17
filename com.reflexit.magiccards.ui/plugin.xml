@@ -50,11 +50,13 @@
             id="com.reflexit.magiccards">
       </category>
       <view
-            name="MTG Database"
-            icon="icons/m.gif"
+            allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.MagicDbView"
-            id="com.reflexit.magiccards.ui.views.MagicDbView">
+            icon="icons/m.gif"
+            id="com.reflexit.magiccards.ui.views.MagicDbView"
+            name="MTG Database"
+            restorable="true">
       </view>
       <view
             allowMultiple="false"
@@ -97,6 +99,15 @@
             icon="icons/hand32.png"
             id="com.reflexit.magiccards.ui.views.analyzers.HandView"
             name="Draw"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.printings.PrintingsView"
+            icon="icons/card_coll24.png"
+            id="com.reflexit.magiccards.ui.views.printings.PrintingsView"
+            name="Printings"
             restorable="true">
       </view>
    </extension>
