@@ -20,10 +20,10 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
  * @author Alena
- *
+ * 
  */
-public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements
-        ICardCollection<IMagicCard>, IStorageContainer<IMagicCard> {
+public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements ICardStore<IMagicCard>,
+ICardCollection<IMagicCard>,IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
 
 	public CollectionCardStore(IStorage<IMagicCard> storage) {
@@ -136,7 +136,9 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		this.storage.remove(card);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.core.xml.SingleFileCardStore#doInitialize()
 	 */
 	@Override
@@ -159,7 +161,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	public int getCount() {
-		//return this.cardCount;
+		// return this.cardCount;
 		return getRealCount();
 	}
 

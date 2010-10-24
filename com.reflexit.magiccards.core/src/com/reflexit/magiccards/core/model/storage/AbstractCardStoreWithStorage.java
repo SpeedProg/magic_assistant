@@ -20,8 +20,7 @@ import com.reflexit.magiccards.core.model.Location;
  * @author Alena
  * 
  */
-public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>,
-        IStorageContainer<T> {
+public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>, IStorageContainer<T> {
 	protected IStorage<T> storage;
 	protected boolean wrapped;
 
@@ -38,7 +37,8 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 		return storage;
 	}
 
-	protected boolean doAddAll(Collection<? extends T> list) {
+	@Override
+	protected synchronized boolean doAddAll(Collection<? extends T> list) {
 		if (wrapped)
 			return super.doAddAll(list);
 		else
@@ -49,6 +49,7 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 		return storage.iterator();
 	}
 
+	@Override
 	public boolean doRemoveAll() {
 		if (wrapped)
 			return super.doRemoveAll();
@@ -56,6 +57,7 @@ public class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implem
 			return storage.removeAll();
 	}
 
+	@Override
 	public boolean doRemoveAll(Collection<?> list) {
 		if (wrapped)
 			return super.doRemoveAll(list);

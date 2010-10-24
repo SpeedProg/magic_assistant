@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.reflexit.magiccards.core.Activator;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -136,7 +135,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	}
 
 	public int size() {
-		//System.err.println(getDeepSize() + " " + size);
+		// System.err.println(getDeepSize() + " " + size);
 		return this.size;
 	}
 
@@ -202,22 +201,20 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		this.defaultLocation = location;
 	}
 
-	public IMagicCard getCard(int id) {
-		Collection<IMagicCard> cards = getCards(id);
+	public T getCard(int id) {
+		Collection<T> cards = getCards(id);
 		if (cards.size() > 0) {
 			return cards.iterator().next();
 		}
 		return null;
 	}
 
-	public Collection<IMagicCard> getCards(int id) {
-		ArrayList<IMagicCard> arr = new ArrayList<IMagicCard>();
-		for (AbstractCardStoreWithStorage table : map.values()) {
-			if (table instanceof ICardCollection) {
-				IMagicCard card = ((ICardCollection<IMagicCard>) table).getCard(id);
-				if (card != null) {
-					arr.add(card);
-				}
+	public Collection<T> getCards(int id) {
+		ArrayList<T> arr = new ArrayList<T>();
+		for (AbstractCardStoreWithStorage<T> table : map.values()) {
+			T card = table.getCard(id);
+			if (card != null) {
+				arr.add(card);
 			}
 		}
 		return arr;
