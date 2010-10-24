@@ -77,6 +77,18 @@ public class ParseGathererRulings {
 
 	 */
 	private static Pattern oraclePattern = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
+	/*-
+	 * <div class="label"> 
+	 Other Sets:</div> 
+	 <div class="value"> 
+	 <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_otherSetsValue"> 
+	 <a href="Details.aspx?multiverseid=19789"><img title="Mercadian Masques (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MM&amp;size=small&amp;rarity=U" alt="Mercadian Masques (Uncommon)" align="absmiddle" style="border-width:0px;" /></a>
+	 <a href="Details.aspx?multiverseid=48432"><img title="Mirrodin (Common)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MRD&amp;size=small&amp;rarity=C" alt="Mirrodin (Common)" align="absmiddle" style="border-width:0px;" /></a> 
+	 </div> 
+	 </div> 
+	 */
+	private static Pattern otherSetPattern = Pattern.compile("Other Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern otherSetPatternEach = Pattern.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 
 	private void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap) throws IOException {
 		URL url = new URL(RULINGS_QUERY_URL_BASE + card.getCardId());
@@ -93,6 +105,44 @@ public class ParseGathererRulings {
 		extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern);
 		extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern);
 		extractField(card, fieldMap, html, MagicCardField.ORACLE, oraclePattern);
+		extractOtherSets(card, fieldMap, html);
+	}
+
+	protected void extractOtherSets(IMagicCard card, Set<ICardField> fieldMap, String html) {
+		if (fieldMap == null || fieldMap.contains(MagicCardField.SET)) {
+			Matcher matcher1 = otherSetPattern.matcher(html);
+			String setsHtml = "";
+			if (matcher1.find()) {
+				setsHtml = matcher1.group(1).trim();
+			} else
+				return;
+			ICardStore db = DataManager.getCardHandler().getMagicDBStore();
+			Matcher matcher = otherSetPatternEach.matcher(setsHtml);
+			while (matcher.find()) {
+				String id = matcher.group(1).trim();
+				if (id.length() == 0)
+					continue;
+				String set = matcher.group(2).trim();
+				String rarity = matcher.group(3).trim();
+				// other printings
+				MagicCard mcard;
+				if (card instanceof MagicCard) {
+					mcard = (MagicCard) card;
+				} else if (card instanceof MagicCardPhisical) {
+					mcard = ((MagicCardPhisical) card).getCard();
+				} else {
+					continue;
+				}
+				MagicCard card2 = (MagicCard) mcard.clone();
+				card2.setId(id);
+				card2.setSet(set.trim());
+				card2.setRarity(rarity.trim());
+				if (db.getCard(card2.getCardId()) == null) {
+					db.add(card2);
+					System.err.println("Added " + card2.getName() + " " + id + " " + set + " " + rarity);
+				}
+			}
+		}
 	}
 
 	protected void extractField(IMagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field, Pattern pattern) {
@@ -133,8 +183,7 @@ public class ParseGathererRulings {
 		}
 	}
 
-	public void updateStore(Iterator<IMagicCard> iter, int size, IProgressMonitor monitor,
-			Set<ICardField> fieldMaps) throws IOException {
+	public void updateStore(Iterator<IMagicCard> iter, int size, IProgressMonitor monitor, Set<ICardField> fieldMaps) throws IOException {
 		monitor.beginTask("Loading additional info...", size + 10);
 		ICardStore db = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
 		IStorage storage = ((IStorageContainer) db).getStorage();
@@ -173,7 +222,8 @@ public class ParseGathererRulings {
 
 	public static void main(String[] args) throws IOException {
 		MagicCard card = new MagicCard();
-		card.setCardId(11179);
+		card.setCardId(19789);
+		// card.setCardId(11179);
 		ParseGathererRulings parser = new ParseGathererRulings();
 		parser.parseSingleCard(card, null);
 		System.err.println(card.getRulings() + " " + card.getArtist() + " " + card.getCommunityRating() + " " + card.getCollNumber());
