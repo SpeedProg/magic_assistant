@@ -1,5 +1,10 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.LinkedHashMap;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -9,11 +14,6 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.LinkedHashMap;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -76,6 +76,8 @@ public class NameColumn extends GenColumn {
 				if (image == null) {
 					if (file.exists()) {
 						image = createNewSetImage(url);
+						if (image == null)
+							return null;
 						return MagicUIActivator.getDefault().getImage(key, image);
 					} else {
 						synchronized (queue) {
@@ -99,33 +101,42 @@ public class NameColumn extends GenColumn {
 	}
 
 	private Image createNewSetImage(URL url) {
-		ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
-		Image origImage = imageDesc.createImage();
-		final int width = origImage.getBounds().width;
-		final int height = origImage.getBounds().height;
-		float zoom = 1;
-		int size = 12;
-		int x, y;
-		if (width > height) {
-			zoom = size / (float) width;
-			x = 0;
-			y = (int) ((size - height * zoom) / 2);
-		} else {
-			zoom = size / (float) height;
-			y = 0;
-			x = (int) ((size - width * zoom) / 2);
+		try {
+			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
+			Image origImage = imageDesc.createImage();
+			final int width = origImage.getBounds().width;
+			final int height = origImage.getBounds().height;
+			float zoom = 1;
+			int size = 12;
+			int x, y;
+			if (width > height) {
+				zoom = size / (float) width;
+				x = 0;
+				y = (int) ((size - height * zoom) / 2);
+			} else {
+				zoom = size / (float) height;
+				y = 0;
+				x = (int) ((size - width * zoom) / 2);
+			}
+			Image scaledImage = new Image(Display.getDefault(), origImage.getImageData().scaledTo((int) (width * zoom),
+					(int) (height * zoom)));
+			Image centeredImage = new Image(Display.getDefault(), size, size);
+			GC newGC = new GC(centeredImage);
+			newGC.drawImage(scaledImage, x, y);
+			newGC.dispose();
+			return centeredImage;
+		} catch (SWTException e) {
+			System.err.println("Cannot load image: " + url + ": " + e.getMessage());
+			return null;
 		}
-		Image scaledImage = new Image(Display.getDefault(), origImage.getImageData().scaledTo((int) (width * zoom),
-		        (int) (height * zoom)));
-		Image centeredImage = new Image(Display.getDefault(), size, size);
-		GC newGC = new GC(centeredImage);
-		newGC.drawImage(scaledImage, x, y);
-		newGC.dispose();
-		return centeredImage;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getText(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getText(java.lang
+	 * .Object)
 	 */
 	@Override
 	public String getText(Object element) {
