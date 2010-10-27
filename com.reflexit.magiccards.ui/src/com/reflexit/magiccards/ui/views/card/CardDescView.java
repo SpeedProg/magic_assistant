@@ -2,12 +2,19 @@ package com.reflexit.magiccards.ui.views.card;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,17 +23,23 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -40,32 +53,42 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private CardDescComposite panel;
 	private Label message;
 	private LoadCardJob loadCardJob;
+	private Action sync;
 
 	public class LoadCardJob extends Job {
 		private IMagicCard card;
+		private boolean forceUpdate;
 
 		public LoadCardJob(IMagicCard card) {
 			super("Loading card image");
 			this.card = card;
 		}
 
+		public LoadCardJob() {
+			super("Sync with web");
+			this.card = panel.getCard();
+			this.forceUpdate = true;
+		}
+
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			setName("Loading card info: " + card.getName());
 			monitor.beginTask("Loading info for " + card.getName(), 100);
-			CardDescView.this.panel.setCard(card);
-			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					boolean nocard = (card == IMagicCard.DEFAULT);
-					CardDescView.this.panel.setVisible(!nocard);
-					CardDescView.this.message.setVisible(nocard);
-					if (nocard)
-						message.setText("Click on a card to populate the view");
-					if (!isStillNeeded(card))
-						return;
-					CardDescView.this.panel.reload(card);
-				}
-			});
+			if (!forceUpdate) {
+				CardDescView.this.panel.setCard(card);
+				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						boolean nocard = (card == IMagicCard.DEFAULT);
+						CardDescView.this.panel.setVisible(!nocard);
+						CardDescView.this.message.setVisible(nocard);
+						if (nocard)
+							message.setText("Click on a card to populate the view");
+						if (!isStillNeeded(card))
+							return;
+						CardDescView.this.panel.reload(card);
+					}
+				});
+			}
 			monitor.worked(10);
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
@@ -77,10 +100,6 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			}
 			monitor.done();
 			return Status.OK_STATUS;
-		}
-
-		protected boolean isStillNeeded(final IMagicCard card) {
-			return CardDescView.this.panel.getCard() == card;
 		}
 
 		protected IStatus loadCardImage(IProgressMonitor monitor, final IMagicCard card) {
@@ -126,14 +145,43 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		}
 
 		protected IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card) {
+			try {
+				boolean updateRulings = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_RULINGS);
+				boolean updateExtras = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_EXTRAS);
+				boolean updateSets = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_PRINTINGS);
+				if (forceUpdate) {
+					updateRulings = true;
+					updateExtras = true;
+				}
+				if (updateExtras == false && updateRulings == false && updateSets == false)
+					return Status.OK_STATUS;
+				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
+				if (updateRulings)
+					fieldMap.add(MagicCardField.RULINGS);
+				if (updateSets)
+					fieldMap.add(MagicCardField.SET);
+				if (updateExtras)
+					fieldMap.addAll(ParseGathererRulings.getAllExtraFields());
+				return loadCardExtraInfo(monitor, card, fieldMap);
+			} catch (IOException e) {
+				return MagicUIActivator.getStatus(e);
+			} finally {
+				monitor.done();
+			}
+		}
+
+		boolean isStillNeeded(final IMagicCard card) {
+			return panel.getCard() == card;
+		}
+
+		IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card, HashSet<ICardField> fieldMap) throws IOException {
 			monitor.beginTask("Loading info for " + card.getName(), 100);
 			try {
-				boolean update = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_RULINGS);
-				if (update == false)
-					return Status.OK_STATUS;
 				if (!isStillNeeded(card))
 					return Status.CANCEL_STATUS;
-				new ParseGathererRulings().updateCard(card, monitor, null);
+				if (fieldMap.size() == 0)
+					return Status.OK_STATUS;
+				new ParseGathererRulings().updateCard(card, monitor, fieldMap);
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (!isStillNeeded(card))
@@ -141,9 +189,6 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						CardDescView.this.panel.setText(card);
 					}
 				});
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} finally {
 				monitor.done();
 			}
@@ -161,7 +206,61 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.loadCardJob = new LoadCardJob(IMagicCard.DEFAULT);
+		makeActions();
+		hookContextMenu();
+		contributeToActionBars();
 		revealCurrentSelection();
+	}
+
+	private void hookContextMenu() {
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}
+		});
+		Menu menu = menuMgr.createContextMenu(getControl());
+		getControl().setMenu(menu);
+		// getSite().registerContextMenu(menuMgr, getViewer());
+	}
+
+	private Control getControl() {
+		return panel;
+	}
+
+	private void contributeToActionBars() {
+		IActionBars bars = getViewSite().getActionBars();
+		// fillLocalPullDown(bars.getMenuManager());
+		fillLocalToolBar(bars.getToolBarManager());
+		// setGlobalHandlers();
+	}
+
+	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(sync);
+	}
+
+	private void fillContextMenu(IMenuManager manager) {
+		// Other plug-ins can contribute there actions here
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	void makeActions() {
+		this.sync = new Action("Update card info from web", SWT.NONE) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/web_sync.gif"));
+			}
+
+			@Override
+			public void run() {
+				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
+				fieldMap.add(MagicCardField.RULINGS);
+				fieldMap.addAll(ParseGathererRulings.getAllExtraFields());
+				LoadCardJob job = new LoadCardJob();
+				job.setUser(true);
+				job.schedule();
+			}
+		};
 	}
 
 	private void revealCurrentSelection() {

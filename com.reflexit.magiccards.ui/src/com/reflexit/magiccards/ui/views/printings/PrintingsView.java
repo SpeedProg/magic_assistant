@@ -10,13 +10,16 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.printings;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
@@ -59,10 +62,13 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
@@ -81,6 +87,8 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 	private PrintingsManager manager;
 	private Action delete;
 	private Action refresh;
+	private Action sync;
+	private IMagicCard card;
 
 	/**
 	 * The constructor.
@@ -156,6 +164,7 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
+		manager.add(sync);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -186,6 +195,7 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		// drillDownAdapter.addNavigationActions(manager);
+		manager.add(sync);
 	}
 
 	private void makeActions() {
@@ -215,6 +225,25 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 					MagicUIActivator.log(e);
 				}
 				getViewer().refresh(true);
+			}
+		};
+		this.sync = new Action("Update printings from web", SWT.NONE) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/web_sync.gif"));
+			}
+
+			@Override
+			public void run() {
+				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
+				fieldMap.add(MagicCardField.SET);
+				try {
+					new ParseGathererRulings().updateCard(card, new NullProgressMonitor(), fieldMap);
+					getViewer().refresh(true);
+					MessageDialog.openInformation(getShell(), "Information", card.getName() + ": up to date");
+				} catch (IOException e) {
+					// failed
+					MessageDialog.openError(getShell(), "Error", e.getLocalizedMessage());
+				}
 			}
 		};
 	}
@@ -333,7 +362,7 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 	}
 
 	private synchronized void runLoadJob(ISelection sel) {
-		final IMagicCard card = getCard(sel);
+		this.card = getCard(sel);
 		this.loadCardJob.cancel();
 		this.loadCardJob = new LoadPrintingsJob(card);
 		this.loadCardJob.schedule();
@@ -362,6 +391,7 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
 						getViewer().setInput(res);
+						getViewer().setSelection(new StructuredSelection(card));
 					}
 				});
 				return Status.OK_STATUS;
