@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -165,6 +166,15 @@ public class ParseGathererRulings {
 				((ICardModifiable) card).setObjectByField(field, value);
 			}
 		}
+	}
+
+	public static Set<ICardField> getAllExtraFields() {
+		HashSet<ICardField> res = new HashSet<ICardField>();
+		res.add(MagicCardField.RATING);
+		res.add(MagicCardField.ARTIST);
+		res.add(MagicCardField.COLLNUM);
+		res.add(MagicCardField.ORACLE);
+		return res;
 	}
 
 	public void updateCard(IMagicCard magicCard, IProgressMonitor monitor, Set<ICardField> fieldMap) throws IOException {
