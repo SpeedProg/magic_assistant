@@ -16,12 +16,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
-import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.LocationColumn;
+import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class PrintingsManager extends ColumnCollection implements IDisposable {
 	private TreeViewer viewer;
@@ -55,7 +54,7 @@ public class PrintingsManager extends ColumnCollection implements IDisposable {
 
 	@Override
 	protected void createColumns() {
-		this.columns.add(new GenColumn(MagicCardField.SET, "Set"));
+		this.columns.add(new SetColumn(true));
 		this.columns.add(new CountColumn());
 		this.columns.add(new LocationColumn());
 	}
