@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -51,13 +50,10 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -65,8 +61,6 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -75,7 +69,6 @@ import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
-import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
 /**
  * Shows different prints of the same card in different sets and per collection
@@ -169,28 +162,10 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
-		this.delete.setEnabled(canRemove());
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean canRemove() {
-		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
-		if (sel.isEmpty())
-			return false;
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-			CardElement el = (CardElement) iterator.next();
-			if (el.getParent() == DataManager.getModelRoot())
-				return false;
-			if (el instanceof CardOrganizer && ((CardOrganizer) el).hasChildren())
-				return false;
-		}
-		return true;
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
@@ -252,37 +227,7 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 	 *
 	 */
 	protected void actionDelete() {
-		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
-		if (sel.isEmpty())
-			return;
-		if (sel.size() == 1) {
-			CardElement el = (CardElement) sel.getFirstElement();
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete " + el.getName() + "?")) {
-				el.remove();
-			}
-		} else {
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these " + sel.size()
-					+ " elements?")) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					CardElement el = (CardElement) iterator.next();
-					el.remove();
-				}
-			}
-		}
-	}
-
-	protected void addNewDeck() {
-		// Grab the selection out of the tree and convert it to a
-		// StructuredSelection for use by the wizard.
-		StructuredSelection currentSelection = (StructuredSelection) this.manager.getViewer().getSelection();
-		// get the wizard from the child class.
-		IWorkbenchWizard wizard = new NewDeckWizard();
-		// Get the workbench and initialize, the wizard.
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		wizard.init(workbench, currentSelection);
-		// Open the wizard dialog with the given wizard.
-		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
-		dialog.open();
+		// TODO
 	}
 
 	private void hookDoubleClickAction() {
