@@ -23,29 +23,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
@@ -55,36 +41,31 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.views.ViewerManager;
 
 /**
  * Shows different prints of the same card in different sets and per collection
  * 
  */
-public class PrintingsView extends ViewPart implements ISelectionListener {
+public class PrintingsView extends AbstractCardsView implements ISelectionListener {
 	public static final String ID = PrintingsView.class.getName();
-	private Action doubleClickAction;
-	private PrintingsManager manager;
 	private Action delete;
 	private Action refresh;
 	private Action sync;
 	private IMagicCard card;
 	private LoadPrintingsJob loadCardJob;
-	private ICardField groupField;
 
 	/**
 	 * The constructor.
@@ -93,97 +74,38 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 		this.loadCardJob = new LoadPrintingsJob(IMagicCard.DEFAULT);
 	}
 
-	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
-	 */
 	@Override
-	public void createPartControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout gl = new GridLayout();
-		gl.marginHeight = 0;
-		gl.marginWidth = 0;
-		composite.setLayout(gl);
-		createTable(composite);
-		makeActions();
-		hookContextMenu();
-		hookDoubleClickAction();
-		contributeToActionBars();
-		addDragAndDrop();
-		revealCurrentSelection();
-	}
-
-	private void addDragAndDrop() {
-		this.getViewer().getControl().setDragDetect(true);
-		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
-	}
-
-	private void createTable(Composite parent) {
-		this.manager = new PrintingsManager();
-		Control control = this.manager.createContents(parent, SWT.MULTI);
-		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
-		// ADD the JFace Viewer as a Selection Provider to the View site.
-		getSite().setSelectionProvider(this.manager.getViewer());
-	}
-
-	public ColumnViewer getViewer() {
-		return this.manager.getViewer();
-	}
-
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				PrintingsView.this.fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(getViewer().getControl());
-		getViewer().getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, getViewer());
-	}
-
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
-		setGlobalHandlers();
-	}
-
-	protected void setGlobalHandlers() {
+	protected void setGlobalHandlers(IActionBars bars) {
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 
-	private void fillLocalPullDown(IMenuManager manager) {
+	@Override
+	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
 		manager.add(sync);
+		manager.add(this.groupMenu);
 	}
 
-	private void fillContextMenu(IMenuManager manager) {
-		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
-		manager.add(new Separator());
+	@Override
+	protected void fillContextMenu(IMenuManager manager) {
+		// manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-	private void fillLocalToolBar(IToolBarManager manager) {
+	@Override
+	protected void fillLocalToolBar(IToolBarManager manager) {
 		// drillDownAdapter.addNavigationActions(manager);
 		manager.add(sync);
+		manager.add(this.groupMenuButton);
 	}
 
-	private void makeActions() {
-		// double cick
-		this.doubleClickAction = new Action() {
-			@Override
-			public void run() {
-				runDoubleClick();
-			}
-		};
+	@Override
+	protected void makeActions() {
+		super.makeActions();
 		this.delete = new Action("Delete") {
 			@Override
 			public void run() {
@@ -233,18 +155,6 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 		// TODO
 	}
 
-	private void hookDoubleClickAction() {
-		getViewer().addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				PrintingsView.this.doubleClickAction.run();
-			}
-		});
-	}
-
-	private void showMessage(String message) {
-		MessageDialog.openInformation(getViewSite().getShell(), "Magic Cards", message);
-	}
-
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
@@ -254,27 +164,11 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 	@Override
 	public void dispose() {
 		getSite().getPage().removeSelectionListener(this);
-		this.manager.dispose();
 		super.dispose();
 	}
 
-	/**
-	 * Passing the focus request to the viewer's control.
-	 */
 	@Override
-	public void setFocus() {
-		getViewer().getControl().setFocus();
-	}
-
-	protected void runDoubleClick() {
-		//
-	}
-
-	public Shell getShell() {
-		return getViewSite().getShell();
-	}
-
-	private void revealCurrentSelection() {
+	protected void loadInitial() {
 		try {
 			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
 			if (page == null)
@@ -331,16 +225,18 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 					return Status.OK_STATUS;
 				setName("Loading card printings: " + card.getName());
 				monitor.beginTask("Loading card printings for " + card.getName(), 100);
-				final MemoryFilteredCardStore fstore = new MemoryFilteredCardStore();
-				ICardStore<IMagicCard> store = DataManager.getCardHandler().getMagicDBStore();
-				Collection<IMagicCard> res = searchInStore(store);
-				fstore.addAll(res);
+				MemoryFilteredCardStore fstore = (MemoryFilteredCardStore) getFilteredStore();
+				if (fstore == null) {
+					fstore = (MemoryFilteredCardStore) doGetFilteredStore();
+					PrintingsView.this.manager.setFilteredCardStore(fstore);
+				}
+				fstore.clear();
+				fstore.addAll(searchInStore(DataManager.getCardHandler().getMagicDBStore()));
 				fstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
-				fstore.getFilter().setGroupField(groupField);
-				fstore.update();
-				Display.getDefault().syncExec(new Runnable() {
+				// fstore.getFilter().setGroupField(groupField);
+				PrintingsView.this.manager.loadData(new Runnable() {
 					public void run() {
-						getViewer().setInput(fstore);
+						getViewer().setInput(getFilteredStore());
 						getViewer().setSelection(new StructuredSelection(card));
 					}
 				});
@@ -360,5 +256,27 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 			}
 			return res;
 		}
+	}
+
+	@Override
+	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
+		return new PrintingsManager(abstractCardsView);
+	}
+
+	@Override
+	protected String getPreferencePageId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IFilteredCardStore doGetFilteredStore() {
+		return new MemoryFilteredCardStore();
+	}
+
+	@Override
+	protected String getPrefenceColumnsId() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

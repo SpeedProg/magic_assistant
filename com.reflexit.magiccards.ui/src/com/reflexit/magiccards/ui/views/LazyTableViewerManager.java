@@ -56,7 +56,7 @@ public class LazyTableViewerManager extends ViewerManager {
 		// this.viewer.setLabelProvider(labelProvider);
 		this.viewer.setUseHashlookup(true);
 		updateGrid();
-		addDargAndDrop();
+		addDragAndDrop();
 		// viewer.setSorter(new NameSorter());
 		createDefaultColumns();
 		return this.viewer.getControl();

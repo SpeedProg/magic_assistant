@@ -132,7 +132,7 @@ public abstract class AbstractCardsView extends ViewPart {
 			AbstractCardsView.this.propertyChange(event);
 		}
 	};
-	private Action groupMenuButton;
+	protected Action groupMenuButton;
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {

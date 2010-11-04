@@ -8,6 +8,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -16,38 +18,55 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
+import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
+import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
-import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.LocationColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
-public class PrintingsManager extends ColumnCollection implements IDisposable {
+public class PrintingsManager extends ViewerManager implements IDisposable {
+	protected PrintingsManager(AbstractCardsView view) {
+		super(view.getPreferenceStore(), view.getViewSite().getId());
+		this.view = view;
+	}
+
 	private TreeViewer viewer;
 	private PrintingsViewerComparator vcomp = new PrintingsViewerComparator();
 
-	public PrintingsManager() {
-	}
-
-	public Control createContents(Composite parent, int flags) {
-		this.viewer = new TreeViewer(parent, flags | SWT.FULL_SELECTION | SWT.VIRTUAL);
+	@Override
+	public Control createContents(Composite parent) {
+		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new PrintingsContentProvider());
 		this.viewer.setUseHashlookup(true);
 		this.viewer.setComparator(null);
 		createDefaultColumns();
+		addDragAndDrop();
 		return this.viewer.getControl();
+	}
+
+	@Override
+	public void addDragAndDrop() {
+		this.getViewer().getControl().setDragDetect(true);
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
+		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
 	}
 
 	public void setInput(Collection<Object> input) {
 		this.viewer.setInput(input);
 	}
 
+	@Override
 	public ColumnViewer getViewer() {
 		return this.viewer;
 	}
 
+	@Override
 	public void dispose() {
 		this.viewer = null;
 	}
@@ -86,11 +105,13 @@ public class PrintingsManager extends ColumnCollection implements IDisposable {
 		this.viewer.getTree().setHeaderVisible(true);
 	}
 
+	@Override
 	protected void sort(int index) {
 		updateSortColumn(index);
 		getViewer().refresh();
 	}
 
+	@Override
 	public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
@@ -108,5 +129,10 @@ public class PrintingsManager extends ColumnCollection implements IDisposable {
 		} else {
 			this.viewer.setComparator(null);
 		}
+	}
+
+	@Override
+	public void updateViewer() {
+		viewer.refresh(true);
 	}
 }

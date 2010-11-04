@@ -55,7 +55,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		this.viewer.setUseHashlookup(true);
 		updateGrid();
 		// viewer.setSorter(new NameSorter());
-		addDargAndDrop();
+		addDragAndDrop();
 		createDefaultColumns();
 		return this.viewer.getControl();
 	}

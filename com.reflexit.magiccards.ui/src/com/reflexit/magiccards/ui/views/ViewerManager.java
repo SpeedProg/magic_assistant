@@ -286,7 +286,7 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 		sort(-2);
 	}
 
-	public void addDargAndDrop() {
+	public void addDragAndDrop() {
 		this.getViewer().getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
