@@ -7,8 +7,9 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class PrintingsContentProvider implements ITreeContentProvider {
+public class PrintingsContentProvider<T> implements ITreeContentProvider {
 	public void dispose() {
 	}
 
@@ -22,8 +23,18 @@ public class PrintingsContentProvider implements ITreeContentProvider {
 		} else if (element instanceof Collection) {
 			Collection children = (Collection) element;
 			return children.toArray(new Object[children.size()]);
+		} else if (element instanceof IFilteredCardStore) {
+			IFilteredCardStore<T> fstore = (IFilteredCardStore<T>) element;
+			if (isFlat(fstore)) {
+				return fstore.getElements();
+			} else
+				return fstore.getCardGroups();
 		}
 		return null;
+	}
+
+	private boolean isFlat(IFilteredCardStore<T> fstore) {
+		return fstore.getFilter().getGroupField() == null;
 	}
 
 	public Object getParent(Object element) {
@@ -37,6 +48,12 @@ public class PrintingsContentProvider implements ITreeContentProvider {
 		} else if (element instanceof Collection) {
 			Collection children = (Collection) element;
 			return children.size() > 0;
+		} else if (element instanceof IFilteredCardStore) {
+			IFilteredCardStore<T> fstore = (IFilteredCardStore<T>) element;
+			if (isFlat(fstore)) {
+				return fstore.getSize() > 0;
+			} else
+				return fstore.getCardGroups().length > 0;
 		}
 		return false;
 	}

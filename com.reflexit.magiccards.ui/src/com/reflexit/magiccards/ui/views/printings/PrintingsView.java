@@ -62,6 +62,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
@@ -82,6 +83,8 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 	private Action refresh;
 	private Action sync;
 	private IMagicCard card;
+	private LoadPrintingsJob loadCardJob;
+	private ICardField groupField;
 
 	/**
 	 * The constructor.
@@ -313,8 +316,6 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 		this.loadCardJob.schedule();
 	}
 
-	private LoadPrintingsJob loadCardJob;
-
 	public class LoadPrintingsJob extends Job {
 		private IMagicCard card;
 
@@ -330,12 +331,16 @@ public class PrintingsView extends ViewPart implements ISelectionListener {
 					return Status.OK_STATUS;
 				setName("Loading card printings: " + card.getName());
 				monitor.beginTask("Loading card printings for " + card.getName(), 100);
+				final MemoryFilteredCardStore fstore = new MemoryFilteredCardStore();
 				ICardStore<IMagicCard> store = DataManager.getCardHandler().getMagicDBStore();
-				final Collection<IMagicCard> res = searchInStore(store);
-				res.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
+				Collection<IMagicCard> res = searchInStore(store);
+				fstore.addAll(res);
+				fstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
+				fstore.getFilter().setGroupField(groupField);
+				fstore.update();
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
-						getViewer().setInput(res);
+						getViewer().setInput(fstore);
 						getViewer().setSelection(new StructuredSelection(card));
 					}
 				});
