@@ -49,4 +49,8 @@ public class MemoryFilteredCardStore extends AbstractFilteredCardStore<IMagicCar
 	public Location getLocation() {
 		throw new UnsupportedOperationException();
 	}
+
+	public void clear() {
+		cards.removeAll();
+	}
 }
