@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CardGroup implements ICardCountable {
 	private String name;
@@ -58,6 +58,10 @@ public class CardGroup implements ICardCountable {
 		return this.children;
 	}
 
+	public int size() {
+		return this.children.size();
+	}
+
 	public void add(Object elem) {
 		this.children.add(elem);
 		if (elem instanceof CardGroup)
@@ -76,7 +80,9 @@ public class CardGroup implements ICardCountable {
 		return this.children.get(index);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
 	 */
 	public String getLabelByField(ICardField f) {
