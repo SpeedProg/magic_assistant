@@ -20,6 +20,7 @@ import org.eclipse.ui.services.IDisposable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class LazyTreeViewerManager extends ViewerManager implements IDisposable {
 	private MyTreeViewer viewer;
@@ -140,7 +141,8 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	}
 
 	@Override
-	public void updateColumns(String newValue) {
+	public void updateColumns(String value) {
+		String newValue = moveGroupOnTop(value);
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		int order[] = new int[acolumns.length];
 		String[] prefValues = newValue.split(",");
@@ -172,7 +174,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 				orderGaps.add(Integer.valueOf(i)); // i'th column has no
 													// position
 			}
-			if (checked) {
+			if (checked || mcol instanceof GroupColumn) {
 				if (acol.getWidth() <= 0)
 					acol.setWidth((this.columns.get(i)).getColumnWidth());
 			} else {
@@ -191,5 +193,16 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			}
 		}
 		this.viewer.getTree().setColumnOrder(order);
+	}
+
+	protected String moveGroupOnTop(String value) {
+		String newValue = value;
+		newValue = newValue.replaceAll("-?" + GroupColumn.COL_NAME + ",", "");
+		newValue = GroupColumn.COL_NAME + "," + newValue;
+		if (!newValue.equals(value)) {
+			MagicUIActivator.getDefault().getPreferenceStore().setValue(view.getPrefenceColumnsId(), newValue);
+			return newValue;
+		}
+		return newValue;
 	}
 }

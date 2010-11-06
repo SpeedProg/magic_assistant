@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class LazyTableViewerManager extends ViewerManager {
 	private TableViewer viewer;
@@ -144,8 +145,8 @@ public class LazyTableViewerManager extends ViewerManager {
 		String[] prefValues = newValue.split(",");
 		if (prefValues.length == 0)
 			return;
-		HashMap<String, Integer> colOrder = new HashMap();
-		HashSet<Integer> orderGaps = new HashSet();
+		HashMap<String, Integer> colOrder = new HashMap<String, Integer>();
+		HashSet<Integer> orderGaps = new HashSet<Integer>();
 		for (int i = 0; i < prefValues.length; i++) {
 			Integer integer = Integer.valueOf(i);
 			colOrder.put(prefValues[i], integer);
@@ -170,7 +171,7 @@ public class LazyTableViewerManager extends ViewerManager {
 				orderGaps.add(Integer.valueOf(i)); // i'th column has no
 													// position
 			}
-			if (checked) {
+			if (checked && !(mcol instanceof GroupColumn)) {
 				if (acol.getWidth() <= 0)
 					acol.setWidth((this.columns.get(i)).getColumnWidth());
 			} else {

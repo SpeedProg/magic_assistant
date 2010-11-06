@@ -284,10 +284,10 @@ public abstract class AbstractCardsView extends ViewPart {
 		// drillDownAdapter.addNavigationActions(manager);
 	}
 
-	class GroupAction extends Action {
+	public class GroupAction extends Action {
 		ICardField field;
 
-		GroupAction(String name, ICardField field) {
+		public GroupAction(String name, ICardField field) {
 			super(name, Action.AS_RADIO_BUTTON);
 			this.field = field;
 			String val = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
@@ -463,8 +463,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	protected void actionGroupBy(ICardField field) {
 		getPreferenceStore().setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
-		if (field != null)
-			this.manager.filter.setSortField(field);
 		this.manager.filter.setAscending(false);
 		this.manager.updateGroupBy(field);
 		reloadData();

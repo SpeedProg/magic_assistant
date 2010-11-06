@@ -13,6 +13,7 @@ public class MagicColumnCollection extends ColumnCollection {
 
 	@Override
 	protected void createColumns() {
+		this.columns.add(new GroupColumn());
 		this.columns.add(new NameColumn());
 		this.columns.add(new IdColumn());
 		this.columns.add(new CostColumn());

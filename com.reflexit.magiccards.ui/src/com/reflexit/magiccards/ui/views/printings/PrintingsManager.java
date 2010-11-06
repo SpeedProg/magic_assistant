@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.printings;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -18,13 +19,21 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LocationColumn;
+import com.reflexit.magiccards.ui.views.columns.OwnershipColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class PrintingsManager extends ViewerManager implements IDisposable {
@@ -35,6 +44,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 
 	private TreeViewer viewer;
 	private PrintingsViewerComparator vcomp = new PrintingsViewerComparator();
+	private boolean dbMode = true;
 
 	@Override
 	public Control createContents(Composite parent) {
@@ -46,6 +56,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		this.viewer.setComparator(null);
 		createDefaultColumns();
 		addDragAndDrop();
+		updateDbMode(true);
 		return this.viewer.getControl();
 	}
 
@@ -73,8 +84,10 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 
 	@Override
 	protected void createColumns() {
+		this.columns.add(new GroupColumn());
 		this.columns.add(new SetColumn(true));
 		this.columns.add(new CountColumn());
+		this.columns.add(new OwnershipColumn());
 		this.columns.add(new LocationColumn());
 	}
 
@@ -108,7 +121,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 	@Override
 	protected void sort(int index) {
 		updateSortColumn(index);
-		getViewer().refresh();
+		updateViewer();
 	}
 
 	@Override
@@ -133,6 +146,74 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 
 	@Override
 	public void updateViewer() {
-		viewer.refresh(true);
+		if (this.viewer.getControl().isDisposed())
+			return;
+		updateTableHeader();
+		updateGrid();
+		IFilteredCardStore filteredStore = getFilteredStore();
+		this.viewer.setInput(this.getFilteredStore());
+		updateStatus();
+	}
+
+	@Override
+	protected void updateTableHeader() {
+		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
+		hideColumn(0, filter.getGroupField() == null, acolumns);
+		hideColumn(2, dbMode, acolumns);
+		hideColumn(3, dbMode, acolumns);
+		hideColumn(4, dbMode, acolumns);
+	}
+
+	private void hideColumn(int i, boolean hide, TreeColumn[] acolumns) {
+		TreeColumn column = acolumns[i];
+		if (hide)
+			column.setWidth(0);
+		else if (column.getWidth() <= 0) {
+			int def = (columns.get(i)).getColumnWidth();
+			column.setWidth(def);
+		}
+	}
+
+	@Override
+	protected void updateStore(IProgressMonitor monitor) {
+		((PrintingsView) view).updateStore(monitor);
+	}
+
+	protected void updateGrid() {
+		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+		this.viewer.getTree().setLinesVisible(grid);
+	}
+
+	@Override
+	public void updateGroupBy(ICardField field) {
+		super.updateGroupBy(field);
+	}
+
+	public void updateDbMode(boolean checked) {
+		dbMode = checked;
+		if (dbMode)
+			updateGroupBy(null);
+	}
+
+	public boolean isDbMode() {
+		return dbMode;
+	}
+
+	@Override
+	public String getStatusMessage() {
+		IFilteredCardStore filteredStore = getFilteredStore();
+		if (filteredStore == null)
+			return "";
+		ICardStore cardStore = filteredStore.getCardStore();
+		int totalSize = cardStore.size();
+		int count = totalSize;
+		if (cardStore instanceof ICardCountable) {
+			count = ((ICardCountable) cardStore).getCount();
+		}
+		if (isDbMode()) {
+			return "Total " + totalSize + " sets";
+		} else {
+			return "Total " + count + " cards";
+		}
 	}
 }

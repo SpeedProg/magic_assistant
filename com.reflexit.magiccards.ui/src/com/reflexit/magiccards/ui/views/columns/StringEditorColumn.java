@@ -15,15 +15,19 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class StringEditorColumn extends GenColumn {
 	public StringEditorColumn(ICardField field, String columnName) {
 		super(field, columnName);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface.viewers.ColumnViewer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * (org.eclipse.jface.viewers.ColumnViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
@@ -58,7 +62,7 @@ public class StringEditorColumn extends GenColumn {
 					// move
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
-					card.setObjectByField(dataIndex, (String) value);
+					card.setObjectByField(getDataField(), (String) value);
 					cardStore.update(card);
 				}
 			}

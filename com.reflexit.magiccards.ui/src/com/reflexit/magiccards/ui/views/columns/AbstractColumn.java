@@ -35,7 +35,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		if (element instanceof IMagicCard) {
 			IMagicCard card = (IMagicCard) element;
 			try {
-				ICardField field = this.dataIndex;
+				ICardField field = getDataField();
 				Object value = card.getObjectByField(field);
 				if (value == null)
 					return "";

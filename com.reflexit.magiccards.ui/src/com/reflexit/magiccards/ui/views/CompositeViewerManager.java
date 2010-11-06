@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CompositeViewerManager extends ViewerManager {
 	ViewerManager managers[];
@@ -72,8 +72,12 @@ public class CompositeViewerManager extends ViewerManager {
 		};
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	@Override
 	public Control createContents(Composite parent) {
@@ -90,10 +94,12 @@ public class CompositeViewerManager extends ViewerManager {
 
 	public void setActivePage(int i) {
 		this.stackLayout.topControl = this.managers[i].getViewer().getControl();
-		//this.view.getSite().setSelectionProvider(selectionProvider);
+		// this.view.getSite().setSelectionProvider(selectionProvider);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#getViewer()
 	 */
 	@Override
@@ -101,7 +107,9 @@ public class CompositeViewerManager extends ViewerManager {
 		return this.managers[this.activeIndex].getViewer();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateSortColumn(int)
 	 */
 	@Override
@@ -111,8 +119,12 @@ public class CompositeViewerManager extends ViewerManager {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateColumns(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.ViewerManager#updateColumns(java.lang
+	 * .String)
 	 */
 	@Override
 	public void updateColumns(String newValue) {
@@ -125,15 +137,17 @@ public class CompositeViewerManager extends ViewerManager {
 	 * @param indexCmc
 	 */
 	@Override
-	public void updateGroupBy(ICardField fieldIndex) {
+	public void updateGroupBy(ICardField field) {
 		ICardField oldIndex = this.filter.getGroupField();
-		if (oldIndex == fieldIndex)
+		if (oldIndex == field)
 			return;
-		this.filter.setGroupField(fieldIndex);
-		if (oldIndex == null && fieldIndex != null) {
+		if (field != null)
+			filter.setSortField(field);
+		this.filter.setGroupField(field);
+		if (oldIndex == null && field != null) {
 			// flip to tree
 			this.activeIndex = 1;
-		} else if (oldIndex != null && fieldIndex == null) {
+		} else if (oldIndex != null && field == null) {
 			// flip to table
 			this.activeIndex = 0;
 		}
@@ -141,12 +155,15 @@ public class CompositeViewerManager extends ViewerManager {
 			setActivePage(this.activeIndex);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateViewer()
 	 */
 	@Override
 	public void updateViewer() {
-		if (this.comp.isDisposed()) return;
+		if (this.comp.isDisposed())
+			return;
 		this.managers[this.activeIndex].updateViewer();
 		this.comp.layout();
 	}

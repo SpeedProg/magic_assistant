@@ -162,6 +162,7 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
 						monitor.subTask("Loading cards...");
+						updateStore(monitor);
 						updateFilter();
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
@@ -194,6 +195,10 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 		loadingJob.schedule(100);
 	}
 
+	protected void updateStore(IProgressMonitor monitor) {
+		// do nothing here
+	}
+
 	public abstract ColumnViewer getViewer();
 
 	public IFilteredCardStore getFilteredStore() {
@@ -214,8 +219,13 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 	/**
 	 * @param indexCmc
 	 */
-	public void updateGroupBy(ICardField fieldIndex) {
-		this.filter.setGroupField(fieldIndex);
+	public void updateGroupBy(ICardField field) {
+		ICardField oldIndex = this.filter.getGroupField();
+		if (oldIndex == field)
+			return;
+		if (field != null)
+			filter.setSortField(field);
+		this.filter.setGroupField(field);
 	}
 
 	/**
@@ -253,6 +263,7 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 	}
 
 	protected void updateTableHeader() {
+		// to be overriden
 	}
 
 	public void updateStatus() {
