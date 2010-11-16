@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
@@ -43,6 +44,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -70,6 +72,13 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	 * The constructor.
 	 */
 	public PrintingsView() {
+	}
+
+	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		dbmode.setChecked(isDbMode());
+		setStatus("Click on a card to populate the view");
 	}
 
 	@Override
@@ -113,6 +122,14 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	}
 
 	@Override
+	protected void updateStatus() {
+		if (card != MagicCard.DEFAULT && card != null)
+			setStatus(card.getName() + ": " + manager.getStatusMessage());
+		else
+			super.updateStatus();
+	}
+
+	@Override
 	protected void makeActions() {
 		super.makeActions();
 		this.delete = new Action("Delete") {
@@ -130,6 +147,10 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			public void run() {
 				boolean mode = !isDbMode();
 				dbmode.setChecked(mode);
+				if (!mode)
+					dbmode.setToolTipText("Check to show sets in magic database");
+				else
+					dbmode.setToolTipText("Uncheck to show cards in your collection");
 				((PrintingsManager) manager).updateDbMode(mode);
 				if (card != null && card != IMagicCard.DEFAULT)
 					reloadData();

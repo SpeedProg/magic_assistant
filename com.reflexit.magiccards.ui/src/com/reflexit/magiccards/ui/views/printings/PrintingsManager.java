@@ -211,9 +211,14 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 			count = ((ICardCountable) cardStore).getCount();
 		}
 		if (isDbMode()) {
-			return "Total " + totalSize + " sets";
+			if (totalSize == 1)
+				return "Only one version found";
+			return "Total " + totalSize + " diffrent versions";
 		} else {
-			return "Total " + count + " cards";
+			String s = "";
+			if (count != 1)
+				s = "s";
+			return "Total " + count + " card" + s + " in your collections";
 		}
 	}
 }
