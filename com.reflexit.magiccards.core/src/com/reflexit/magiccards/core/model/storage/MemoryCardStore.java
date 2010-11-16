@@ -12,13 +12,15 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
+
 /**
  * ArrayList based implementation for AbstractCardStore
  * 
  * @author Alena
  * 
  */
-public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardStore<T> {
+public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardStore<T>, ICardCountable {
 	protected boolean mergeOnAdd = true;
 
 	/**
@@ -44,5 +46,19 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 
 	public Collection<T> getCards(int id) {
 		throw new UnsupportedOperationException();
+	}
+
+	public int getCount() {
+		int count = 0;
+		boolean countable = false;
+		for (T card : getStorage()) {
+			if (card instanceof ICardCountable) {
+				count += ((ICardCountable) card).getCount();
+				countable = true;
+			}
+		}
+		if (countable)
+			return count;
+		return size();
 	}
 }
