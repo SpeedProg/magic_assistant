@@ -25,6 +25,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -91,22 +93,36 @@ public class ParseGathererRulings {
 	private static Pattern otherSetPattern = Pattern.compile("Other Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	private static Pattern otherSetPatternEach = Pattern.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 
-	private void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap) throws IOException {
-		URL url = new URL(RULINGS_QUERY_URL_BASE + card.getCardId());
-		InputStream openStream = url.openStream();
-		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
-		String line;
-		String html = "";
-		while ((line = st.readLine()) != null) {
-			html += line + " ";
+	private void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
+		monitor.beginTask("Updating card", 100);
+		try {
+			URL url = new URL(RULINGS_QUERY_URL_BASE + card.getCardId());
+			InputStream openStream = url.openStream();
+			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
+			String line;
+			String html = "";
+			while ((line = st.readLine()) != null) {
+				html += line + " ";
+			}
+			st.close();
+			monitor.worked(90);
+			if (monitor.isCanceled())
+				return;
+			extractField(card, fieldMap, html, MagicCardField.RULINGS, rulingPattern);
+			monitor.worked(1);
+			extractField(card, fieldMap, html, MagicCardField.RATING, ratingPattern);
+			monitor.worked(1);
+			extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern);
+			monitor.worked(1);
+			extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern);
+			monitor.worked(1);
+			extractField(card, fieldMap, html, MagicCardField.ORACLE, oraclePattern);
+			monitor.worked(1);
+			extractOtherSets(card, fieldMap, html);
+			monitor.worked(1);
+		} finally {
+			monitor.done();
 		}
-		st.close();
-		extractField(card, fieldMap, html, MagicCardField.RULINGS, rulingPattern);
-		extractField(card, fieldMap, html, MagicCardField.RATING, ratingPattern);
-		extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern);
-		extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern);
-		extractField(card, fieldMap, html, MagicCardField.ORACLE, oraclePattern);
-		extractOtherSets(card, fieldMap, html);
 	}
 
 	protected void extractOtherSets(IMagicCard card, Set<ICardField> fieldMap, String html) {
@@ -183,18 +199,17 @@ public class ParseGathererRulings {
 		try {
 			// load individual card
 			try {
-				parseSingleCard(magicCard, fieldMap);
+				parseSingleCard(magicCard, fieldMap, new SubProgressMonitor(monitor, 8));
 			} catch (IOException e) {
 				System.err.println("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
 			}
-			monitor.worked(8);
 		} finally {
 			monitor.done();
 		}
 	}
 
 	public void updateStore(Iterator<IMagicCard> iter, int size, IProgressMonitor monitor, Set<ICardField> fieldMaps) throws IOException {
-		monitor.beginTask("Loading additional info...", size + 10);
+		monitor.beginTask("Loading additional info...", size * 10 + 10);
 		ICardStore db = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
 		IStorage storage = ((IStorageContainer) db).getStorage();
 		storage.setAutoCommit(false);
@@ -207,10 +222,12 @@ public class ParseGathererRulings {
 				// load individual card
 				monitor.subTask("Updating card " + i + " of " + size);
 				try {
-					parseSingleCard(magicCard, fieldMaps);
+					parseSingleCard(magicCard, fieldMaps, new SubProgressMonitor(monitor, 9));
 				} catch (IOException e) {
 					System.err.println("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
 				}
+				if (monitor.isCanceled())
+					return;
 				if (magicCard instanceof MagicCardPhisical) {
 					db.update(((MagicCardPhisical) magicCard).getCard());
 				} else {
@@ -235,7 +252,7 @@ public class ParseGathererRulings {
 		card.setCardId(19789);
 		// card.setCardId(11179);
 		ParseGathererRulings parser = new ParseGathererRulings();
-		parser.parseSingleCard(card, null);
+		parser.parseSingleCard(card, null, new NullProgressMonitor());
 		System.err.println(card.getRulings() + " " + card.getArtist() + " " + card.getCommunityRating() + " " + card.getCollNumber());
 	}
 }
