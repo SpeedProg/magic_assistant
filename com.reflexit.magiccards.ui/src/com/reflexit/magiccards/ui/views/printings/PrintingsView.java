@@ -17,7 +17,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,7 +28,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -175,18 +177,39 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 			@Override
 			public void run() {
-				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
-				fieldMap.add(MagicCardField.SET);
-				try {
-					new ParseGathererRulings().updateCard(card, new NullProgressMonitor(), fieldMap);
-					getViewer().refresh(true);
-					MessageDialog.openInformation(getShell(), "Information", card.getName() + ": up to date");
-				} catch (IOException e) {
-					// failed
-					MessageDialog.openError(getShell(), "Error", e.getLocalizedMessage());
-				}
+				LoadCardJob job = new LoadCardJob();
+				job.setUser(true);
+				job.schedule();
 			}
 		};
+	}
+
+	class LoadCardJob extends Job {
+		public LoadCardJob() {
+			super("Loading card sets");
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			monitor.beginTask("Loading printings", 100);
+			try {
+				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
+				fieldMap.add(MagicCardField.SET);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				try {
+					new ParseGathererRulings().updateCard(card, new SubProgressMonitor(monitor, 90), fieldMap);
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+					reloadData();
+				} catch (IOException e) {
+					return MagicUIActivator.getStatus(e);
+				}
+				return Status.OK_STATUS;
+			} finally {
+				monitor.done();
+			}
+		}
 	}
 
 	/**
@@ -273,6 +296,8 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
 		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
+		if (card == null || card == MagicCard.DEFAULT)
+			return res;
 		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard next = iterator.next();
 			if (card.getName().equals(next.getName())) {
