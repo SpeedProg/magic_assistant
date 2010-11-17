@@ -77,3 +77,4 @@ Zendikar|ZEN|EN
 Worldwake|WWK|EN
 Rise of the Eldrazi|ROE|EN
 Magic 2011|M11|EN
+Scars of Mirrodin|SOM|EN

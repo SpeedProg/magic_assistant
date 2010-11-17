@@ -1,9 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,13 +13,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+
 import com.reflexit.magiccards.core.Activator;
 
 public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance = new Editions();
-	private HashMap name2abbr;
-	private HashMap name2locale;
+	private HashMap<String, String> name2abbr;
+	private HashMap<String, String> name2locale;
 
 	private Editions() {
 		this.name2abbr = new HashMap();
@@ -41,14 +41,14 @@ public class Editions implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection getEditions() {
+	public Collection<String> getEditions() {
 		return this.name2abbr.keySet();
 	}
 
 	public String getNameByAbbr(String abbr) {
 		for (Iterator iterator = name2abbr.keySet().iterator(); iterator.hasNext();) {
 			String name = (String) iterator.next();
-			String abbrValue = (String) name2abbr.get(name);
+			String abbrValue = name2abbr.get(name);
 			if (abbrValue != null && abbrValue.equals(abbr)) {
 				return name;
 			}
@@ -80,11 +80,11 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public String getAbbrByName(String name) {
-		return (String) this.name2abbr.get(name);
+		return this.name2abbr.get(name);
 	}
 
 	public String getLocale(String edition) {
-		String locale = (String) this.name2locale.get(edition);
+		String locale = this.name2locale.get(edition);
 		if (locale != null)
 			return locale;
 		return null;
@@ -94,8 +94,7 @@ public class Editions implements ISearchableProperty {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		String strfile = path.toOSString();
 		if (Activator.getDefault() != null) {
-			InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/"
-			        + EDITIONS_FILE), true);
+			InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/" + EDITIONS_FILE), true);
 			loadEditions(ist);
 		}
 		if (!new File(strfile).exists()) {
@@ -124,8 +123,8 @@ public class Editions implements ISearchableProperty {
 		try {
 			for (Iterator iterator = this.name2abbr.keySet().iterator(); iterator.hasNext();) {
 				String name = (String) iterator.next();
-				String abbr = (String) this.name2abbr.get(name);
-				String locale = (String) this.name2locale.get(name);
+				String abbr = this.name2abbr.get(name);
+				String locale = this.name2locale.get(name);
 				st.println(name + "|" + abbr + (locale == null ? "" : "|" + locale));
 			}
 		} finally {
@@ -151,7 +150,7 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public String getPrefConstantByName(String name) {
-		String abbr = (String) this.name2abbr.get(name);
+		String abbr = this.name2abbr.get(name);
 		return FilterHelper.getPrefConstant(getIdPrefix(), abbr);
 	}
 
@@ -159,7 +158,7 @@ public class Editions implements ISearchableProperty {
 		HashMap idToName = new HashMap();
 		for (Iterator iterator = this.name2abbr.keySet().iterator(); iterator.hasNext();) {
 			String name = (String) iterator.next();
-			String abbr = (String) this.name2abbr.get(name);
+			String abbr = this.name2abbr.get(name);
 			String id1 = getPrefConstant(abbr);
 			idToName.put(id1, name);
 		}
