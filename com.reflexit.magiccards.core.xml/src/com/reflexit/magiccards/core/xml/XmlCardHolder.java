@@ -48,6 +48,7 @@ public class XmlCardHolder implements ICardHandler {
 	public ICardStore getMagicDBStore() {
 		return getMagicDBFilteredStore().getCardStore();
 	}
+
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
 		return new BasicMagicDBXmlFilteredCardStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
 	}
@@ -74,7 +75,21 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public void loadInitial() throws MagicException, CoreException, IOException {
-		InputStream is = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/all.txt"), false);
+		loadFromFlat("all.txt");
+		Collection<String> editions = Editions.getInstance().getEditions();
+		for (String set : editions) {
+			String abbr = (Editions.getInstance().getAbbrByName(set));
+			try {
+				loadFromFlat(abbr + ".txt");
+				System.err.println("Loading " + abbr);
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+	}
+
+	protected void loadFromFlat(String set) throws IOException {
+		InputStream is = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/" + set), false);
 		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 		loadtFromFlatIntoXml(st);
 		is.close();
@@ -270,5 +285,4 @@ public class XmlCardHolder implements ICardHandler {
 	public void setActiveDeckHandler(IFilteredCardStore store) {
 		this.activeDeck = store;
 	}
-
 }
