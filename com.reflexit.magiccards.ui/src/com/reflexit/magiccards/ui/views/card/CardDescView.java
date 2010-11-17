@@ -181,7 +181,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					return Status.CANCEL_STATUS;
 				if (fieldMap.size() == 0)
 					return Status.OK_STATUS;
-				new ParseGathererRulings().updateCard(card, monitor, fieldMap);
+				new ParseGathererRulings().updateCard(card, new SubProgressMonitor(monitor, 99), fieldMap);
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (!isStillNeeded(card))
@@ -253,9 +253,6 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 			@Override
 			public void run() {
-				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
-				fieldMap.add(MagicCardField.RULINGS);
-				fieldMap.addAll(ParseGathererRulings.getAllExtraFields());
 				LoadCardJob job = new LoadCardJob();
 				job.setUser(true);
 				job.schedule();
