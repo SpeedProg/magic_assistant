@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -31,11 +36,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -47,6 +47,7 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
@@ -63,8 +64,7 @@ import com.reflexit.magiccards.ui.views.ViewerManager;
  * @author Alena
  * 
  */
-public abstract class AbstractMyCardsView extends AbstractCardsView implements
-		ICardEventListener {
+public abstract class AbstractMyCardsView extends AbstractCardsView implements ICardEventListener {
 	protected Action delete;
 	private Action split;
 	private Action edit;
@@ -72,6 +72,20 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	private Action refresh;
 	protected Action export;
 	private MenuManager moveToDeckMenu;
+	private MenuManager addToDeck;
+	protected IDeckAction copyToDeck = new IDeckAction() {
+		public void run(String id) {
+			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
+			Location loc = fstore.getLocation();
+			ISelection selection = getViewer().getSelection();
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection sel = (IStructuredSelection) selection;
+				if (!sel.isEmpty()) {
+					DataManager.getCardHandler().copyCards(sel.toList(), loc);
+				}
+			}
+		}
+	};
 
 	@Override
 	protected void makeActions() {
@@ -82,16 +96,14 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 				runPaste();
 			}
 		};
-		ISharedImages sharedImages = PlatformUI.getWorkbench()
-				.getSharedImages();
+		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 		this.delete = new Action("Remove") {
 			@Override
 			public void run() {
 				removeSelected();
 			}
 		};
-		this.delete.setImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		this.delete.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		this.split = new Action("Split Pile...") {
 			@Override
 			public void run() {
@@ -104,11 +116,18 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 				editSelected();
 			}
 		};
-		this.moveToDeckMenu = new MenuManager("Move to Deck");
+		this.moveToDeckMenu = new MenuManager("Move to");
 		this.moveToDeckMenu.setRemoveAllWhenShown(true);
 		this.moveToDeckMenu.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				fillDeckMenu(manager, moveToDeck);
+			}
+		});
+		this.addToDeck = new MenuManager("Copy to");
+		this.addToDeck.setRemoveAllWhenShown(true);
+		this.addToDeck.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillDeckMenu(manager, copyToDeck);
 			}
 		});
 		this.refresh = new Action("Refresh") {
@@ -117,8 +136,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 				refresh();
 			}
 		};
-		this.refresh.setImageDescriptor(MagicUIActivator
-				.getImageDescriptor("icons/clcl16/refresh.gif"));
+		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 		this.export = createExportAction();
 	}
 
@@ -126,6 +144,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 		return new ExportAction(new StructuredSelection());
 	}
 
+	@Override
 	protected void refresh() {
 		reloadData();
 	}
@@ -138,37 +157,28 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
 						ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-						for (Iterator iterator = sel.iterator(); iterator
-								.hasNext();) {
+						for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 							Object o = iterator.next();
 							if (o instanceof IMagicCard)
 								list.add((IMagicCard) o);
 						}
-						Location location = DataManager.getCardHandler()
-								.getCardCollectionFilteredStore(id).getCardStore()
-								.getLocation();
-						DataManager.getCardHandler().moveCards(list, null,
-								location);
+						Location location = DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
+						DataManager.getCardHandler().moveCards(list, null, location);
 					}
 				}
 			} catch (MagicException e) {
-				MessageDialog.openError(getShell(), "Error",
-						e.getMessage());
+				MessageDialog.openError(getShell(), "Error", e.getMessage());
 			}
 		}
 	};
 
 	protected void runPaste() {
-		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench()
-				.getDisplay());
+		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
 		Object contents = cb.getContents(mt);
 		if (contents instanceof IMagicCard[]) {
 			IMagicCard[] cards = (IMagicCard[]) contents;
-			DataManager.getCardHandler().copyCards(
-					Arrays.asList(cards),
-					((ILocatable) getFilteredStore().getCardStore())
-							.getLocation());
+			DataManager.getCardHandler().copyCards(Arrays.asList(cards), ((ILocatable) getFilteredStore().getCardStore()).getLocation());
 		}
 	}
 
@@ -191,8 +201,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	 * @param b
 	 */
 	protected void changeSelectedOwnerShip(boolean b) {
-		ICardEventManager cardStore = this.manager.getFilteredStore()
-				.getCardStore();
+		ICardEventManager cardStore = this.manager.getFilteredStore().getCardStore();
 		ISelection selection = getViewer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
@@ -243,8 +252,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 					}
 				}
 				if (max == 1) {
-					MessageDialog.openInformation(getShell(), "Split",
-							"Minimum pile, cannot split any further");
+					MessageDialog.openInformation(getShell(), "Split", "Minimum pile, cannot split any further");
 					return;
 				}
 				int type = PICK;
@@ -270,8 +278,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 							continue;
 						if (type == EVEN)
 							left = count / 2;
-						MagicCardPhisical card2 = new MagicCardPhisical(card,
-								card.getLocation());
+						MagicCardPhisical card2 = new MagicCardPhisical(card, card.getLocation());
 						card.setCount(left);
 						cardStore.update(card);
 						card2.setCount(count - left);
@@ -288,8 +295,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	protected void setGlobalHandlers(IActionBars bars) {
 		super.setGlobalHandlers(bars);
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (IHandlerService) (getSite())
-				.getService(IHandlerService.class);
+		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 
@@ -313,6 +319,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 		manager.add(this.copyText);
 		manager.add(this.paste);
 		manager.add(this.moveToDeckMenu);
+		manager.add(this.addToDeck);
 		manager.add(this.split);
 		manager.add(this.edit);
 	}
@@ -342,8 +349,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore()
-				.addListener(this);
+		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().addListener(this);
 		DataManager.getModelRoot().addListener(this);
 	}
 
@@ -354,8 +360,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	 */
 	@Override
 	public void dispose() {
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore()
-				.removeListener(this);
+		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}
@@ -372,12 +377,10 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 				public void run() {
 					manager.getViewer().update(event.getSource(), null);
 					updateStatus();
-					getViewer().setSelection(
-							new StructuredSelection(event.getSource()), true);
+					getViewer().setSelection(new StructuredSelection(event.getSource()), true);
 				}
 			});
-		} else if (type == CardEvent.ADD_CONTAINER
-				|| type == CardEvent.REMOVE_CONTAINER) {
+		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
 			reloadData();
 		} else if (type == CardEvent.ADD) {
 			if (event.getData() instanceof List) {
@@ -396,8 +399,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 	}
 
 	protected void editSelected() {
-		IStructuredSelection selection = (IStructuredSelection) getViewer()
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (selection.isEmpty())
 			return;
 		PreferenceStore store = new PreferenceStore();
@@ -411,8 +413,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 				if (first) {
 					ICardField[] allFields = MagicCardFieldPhysical.allFields();
 					for (ICardField f : allFields) {
-						store.setDefault(f.name(),
-								String.valueOf(card.getObjectByField(f)));
+						store.setDefault(f.name(), String.valueOf(card.getObjectByField(f)));
 					}
 					first = false;
 				} else {
@@ -423,14 +424,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 							store.setDefault(f.name(), UNCHANGED);
 						}
 					}
-					store.setDefault(EditCardsPropertiesDialog.NAME_FIELD,
-							"<Multiple Cards>: " + selection.size());
+					store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>: " + selection.size());
 				}
 			}
 		}
 		if (any) {
-			new EditCardsPropertiesDialog(manager.getViewer().getControl()
-					.getShell(), store).open();
+			new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 				MagicCardPhisical card = (MagicCardPhisical) iterator.next();
 				editCard(card, store);
@@ -442,17 +441,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 
 	private void editCard(MagicCardPhisical card, PreferenceStore store) {
 		boolean modified = false;
-		modified = setField(card, store, MagicCardFieldPhysical.COUNT)
-				|| modified;
-		modified = setField(card, store, MagicCardFieldPhysical.PRICE)
-				|| modified;
-		modified = setField(card, store, MagicCardFieldPhysical.COMMENT)
-				|| modified;
-		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP)
-				|| modified;
+		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.COMMENT) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP) || modified;
 		String special = card.getSpecial();
-		String especial = store
-				.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
+		String especial = store.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
 		if (!UNCHANGED.equals(especial) && !especial.equals(special)) {
 			card.setSpecial(especial);
 			modified = true;
@@ -462,8 +456,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 		}
 	}
 
-	protected boolean setField(MagicCardPhisical card, PreferenceStore store,
-			ICardField field) {
+	protected boolean setField(MagicCardPhisical card, PreferenceStore store, ICardField field) {
 		Boolean modified = false;
 		String orig = String.valueOf(card.getObjectByField(field));
 		String edited = store.getString(field.name());
@@ -473,8 +466,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements
 				modified = true;
 			} catch (Exception e) {
 				// was bad value
-				MessageDialog.openError(getShell(), "Error",
-						"Invalid value for " + field + ": " + edited);
+				MessageDialog.openError(getShell(), "Error", "Invalid value for " + field + ": " + edited);
 			}
 		}
 		return modified;

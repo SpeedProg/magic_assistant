@@ -7,10 +7,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PartInitException;
 
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
@@ -45,17 +43,16 @@ public class MagicDbView extends AbstractCardsView {
 			MagicUIActivator.log(e);
 		}
 	}
+
 	protected IDeckAction copyToDeck = new IDeckAction() {
 		public void run(String id) {
+			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
+			Location loc = fstore.getLocation();
 			ISelection selection = getViewer().getSelection();
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection sel = (IStructuredSelection) selection;
 				if (!sel.isEmpty()) {
-					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-						Object o = iterator.next();
-						if (o instanceof IMagicCard)
-							DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().add(o);
-					}
+					DataManager.getCardHandler().copyCards(sel.toList(), loc);
 				}
 			}
 		}
