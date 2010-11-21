@@ -1,5 +1,9 @@
 package com.reflexit.magiccards.ui.commands;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -10,16 +14,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
+import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 
 /**
  * Decrease card number, if number is 1 remove the card
@@ -46,46 +47,38 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 		IFilteredCardStore activeDeckHandler = null;
 		if (activePart instanceof DeckView) {
 			activeDeckHandler = ((DeckView) activePart).getFilteredStore();
-			if (activeDeckHandler != null) {
-				List list = iss.toList();
-				ArrayList<IMagicCard> toRemove = new ArrayList<IMagicCard>();
-				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-					IMagicCard magicCard = (IMagicCard) iterator.next();
-					if (magicCard instanceof MagicCardPhisical) {
-						MagicCardPhisical mc = (MagicCardPhisical) magicCard;
-						int count = mc.getCount();
-						if (count <= 1) {
-							toRemove.add(new MagicCardPhisical(mc, mc.getLocation()));
-						} else {
-							mc.setCount(count - 1);
-							activeDeckHandler.getCardStore().update(mc);
-						}
-					}
-				}
-				activeDeckHandler.getCardStore().removeAll(toRemove);
-			} else {
-				MessageDialog.openError(window.getShell(), "Error", "No active deck");
-			}
-		} else if (activePart instanceof MagicDbView) {
+			decrease(window, iss, activeDeckHandler);
+		} else if (activePart instanceof MagicDbView || activePart instanceof MyCardsView) {
 			activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
-			if (activeDeckHandler != null) {
-				ArrayList<IMagicCard> toRemove = new ArrayList<IMagicCard>();
-				for (Iterator iterator = iss.iterator(); iterator.hasNext();) {
-					IMagicCard magicCard = (IMagicCard) iterator.next();
-					if (magicCard instanceof MagicCardPhisical) {
-						// not possible
-						throw new IllegalArgumentException();
-					} else {
-						MagicCardPhisical magicCardCopy = new MagicCardPhisical(magicCard, null);
-						magicCardCopy.setCount(1);
-						toRemove.add(magicCardCopy);
-					}
-				}
-				activeDeckHandler.getCardStore().removeAll(toRemove);
-			} else {
-				MessageDialog.openError(window.getShell(), "Error", "No active deck/collection");
-			}
+			decrease(window, iss, activeDeckHandler);
 		}
 		return null;
+	}
+
+	protected void decrease(IWorkbenchWindow window, IStructuredSelection iss, IFilteredCardStore activeDeckHandler) {
+		if (activeDeckHandler != null) {
+			List list = iss.toList();
+			ArrayList<IMagicCard> toRemove = new ArrayList<IMagicCard>();
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				IMagicCard magicCard = (IMagicCard) iterator.next();
+				if (magicCard instanceof MagicCardPhisical) {
+					MagicCardPhisical mc = (MagicCardPhisical) magicCard;
+					int count = mc.getCount();
+					if (count <= 1) {
+						toRemove.add(new MagicCardPhisical(mc, mc.getLocation()));
+					} else {
+						mc.setCount(count - 1);
+						activeDeckHandler.getCardStore().update(mc);
+					}
+				} else {
+					MagicCardPhisical magicCardCopy = new MagicCardPhisical(magicCard, null);
+					magicCardCopy.setCount(1);
+					toRemove.add(magicCardCopy);
+				}
+			}
+			activeDeckHandler.getCardStore().removeAll(toRemove);
+		} else {
+			MessageDialog.openError(window.getShell(), "Error", "No active deck");
+		}
 	}
 }

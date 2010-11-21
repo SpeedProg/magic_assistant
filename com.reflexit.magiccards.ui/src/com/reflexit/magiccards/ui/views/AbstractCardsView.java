@@ -410,7 +410,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		groupMenu.add(new GroupAction("Type", MagicCardField.TYPE));
 		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
 		groupMenu.add(new GroupAction("Rarity", MagicCardField.RARITY));
-		groupMenu.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
+		// groupMenu.add(new GroupAction("Name", MagicCardField.NAME));
 		return groupMenu;
 	}
 

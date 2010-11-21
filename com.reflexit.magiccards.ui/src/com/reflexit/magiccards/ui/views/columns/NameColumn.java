@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import org.eclipse.swt.graphics.Image;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
@@ -35,9 +34,9 @@ public class NameColumn extends GenColumn {
 	 */
 	@Override
 	public String getText(Object element) {
-		if (element instanceof CardGroup) {
-			return ((CardGroup) element).getName();
-		}
+		// if (element instanceof CardGroup) {
+		// return ((CardGroup) element).getName();
+		// }
 		return super.getText(element);
 	}
 }

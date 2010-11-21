@@ -292,6 +292,13 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	@Override
+	protected MenuManager createGroupMenu() {
+		MenuManager x = super.createGroupMenu();
+		x.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
+		return x;
+	}
+
+	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
 		super.setGlobalHandlers(bars);
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
