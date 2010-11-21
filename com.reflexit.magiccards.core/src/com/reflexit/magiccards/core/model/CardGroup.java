@@ -88,7 +88,7 @@ public class CardGroup implements ICardCountable {
 	public String getLabelByField(ICardField f) {
 		if (f == this.groupField)
 			return this.name;
-		return "";
+		return null;
 	}
 
 	@Override
