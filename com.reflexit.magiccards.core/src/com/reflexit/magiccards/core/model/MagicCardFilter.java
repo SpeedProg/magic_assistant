@@ -12,6 +12,8 @@ public class MagicCardFilter {
 	private ICardField sortField = null;
 	private boolean ascending;
 	private ICardField groupField = null;
+	private boolean onlyLastSet = false;
+
 	public static class Expr {
 		boolean translated = false;
 
@@ -23,6 +25,7 @@ public class MagicCardFilter {
 			return null;
 		}
 	}
+
 	public static Expr TRUE = new Expr() {
 		@Override
 		public boolean evaluate(Object o) {
@@ -43,6 +46,7 @@ public class MagicCardFilter {
 	public Expr getRoot() {
 		return this.root;
 	}
+
 	public static class Node extends Expr {
 		String name;
 
@@ -60,6 +64,7 @@ public class MagicCardFilter {
 			return this.name;
 		}
 	}
+
 	public static class Field extends Expr {
 		ICardField field;
 
@@ -80,6 +85,7 @@ public class MagicCardFilter {
 			return null;
 		}
 	}
+
 	static class Value extends Node {
 		Value(String name) {
 			super(name);
@@ -90,6 +96,7 @@ public class MagicCardFilter {
 			return "'" + this.name + "'";
 		}
 	}
+
 	public static class BinaryExpr extends Expr {
 		Expr left;
 		Expr right;
@@ -227,6 +234,7 @@ public class MagicCardFilter {
 			return null;
 		}
 	}
+
 	static class SearchToken {
 		static enum TokenType {
 			WORD,
@@ -242,6 +250,7 @@ public class MagicCardFilter {
 		public String getValue() {
 			return value;
 		}
+
 		private TokenType type;
 		private String value;;
 
@@ -250,12 +259,14 @@ public class MagicCardFilter {
 			this.value = value;
 		}
 	}
+
 	public static class SearchStringTokenizer {
 		static enum State {
 			INIT,
 			IN_QUOTE,
 			IN_REG
 		};
+
 		private CharSequence seq;
 		private int cur;
 		private State state;
@@ -265,6 +276,7 @@ public class MagicCardFilter {
 			this.cur = 0;
 			this.state = State.INIT;
 		}
+
 		boolean tokenReady = false;
 		StringBuffer str;
 		SearchToken token = null;
@@ -469,6 +481,7 @@ public class MagicCardFilter {
 		res.translated = true;
 		return res;
 	}
+
 	public static class Operation {
 		public static final Operation AND = new Operation("AND");
 		public static final Operation OR = new Operation("OR");
@@ -657,5 +670,13 @@ public class MagicCardFilter {
 			return false;
 		boolean res = !this.root.evaluate(o);
 		return res;
+	}
+
+	public boolean isOnlyLastSet() {
+		return onlyLastSet;
+	}
+
+	public void setOnlyLastSet(boolean onlyLastSet) {
+		this.onlyLastSet = onlyLastSet;
 	}
 }

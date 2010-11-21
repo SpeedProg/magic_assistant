@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -164,6 +166,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 		}
+		if (filter.isOnlyLastSet())
+			filteredList = removeSetDuplicates(filteredList);
 		if (filter.getGroupField() != null) {
 			if (groupsList.size() > 0) {
 				CardGroup g = groupsList.values().iterator().next();
@@ -195,6 +199,25 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 		}
+		return filteredList;
+	}
+
+	protected Collection<IMagicCard> removeSetDuplicates(Collection<IMagicCard> filteredList) {
+		HashMap<String, IMagicCard> unique = new HashMap<String, IMagicCard>();
+		for (Iterator<IMagicCard> iterator = filteredList.iterator(); iterator.hasNext();) {
+			IMagicCard elem = iterator.next();
+			if (elem instanceof MagicCard) {
+				MagicCard card = (MagicCard) elem;
+				IMagicCard old = unique.get(card.getName());
+				if (old == null) {
+					unique.put(card.getName(), card);
+				} else if (old.getCardId() < card.getCardId()) {
+					unique.put(card.getName(), card);
+				}
+			}
+		}
+		if (unique.size() > 0)
+			return unique.values();
 		return filteredList;
 	}
 
