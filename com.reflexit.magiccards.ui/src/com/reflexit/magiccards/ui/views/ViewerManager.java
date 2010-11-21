@@ -40,6 +40,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public abstract class ViewerManager extends MagicColumnCollection implements IDisposable {
@@ -90,6 +91,7 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 	protected void updateFilter() {
 		HashMap map = storeToMap();
 		this.filter.update(map);
+		this.filter.setOnlyLastSet(getPreferenceStore().getBoolean(EditionsFilterPreferencePage.LAST_SET));
 	}
 
 	private HashMap storeToMap() {
