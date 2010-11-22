@@ -57,6 +57,7 @@ public class ParseGathererSpoiler {
 
 		void edition(String edition, String edAddr);
 	}
+
 	public static class OutputHandler implements ILoadCardHander {
 		private PrintStream out;
 
@@ -69,19 +70,20 @@ public class ParseGathererSpoiler {
 		}
 
 		public void edition(String edition, String edAddr) {
-			Editions.getInstance().addAbbrLocale(edition, edAddr, null);
+			Editions.getInstance().addAbbr(edition, edAddr);
 		}
 	}
+
 	private static String base = "http://ww2.wizards.com/gatherer/index.aspx?output=Spoiler&setfilter=All%20sets";
 	private static String[] updateAll = { //
 	base + "&typefilter=Lands", //
-	        base + "&typefilter=Artifacts",//
-	        base + "&colorfilter=White", //
-	        base + "&colorfilter=Black",//
-	        base + "&colorfilter=Blue",//
-	        base + "&colorfilter=Green",//
-	        base + "&colorfilter=Red", //
-	        base + "&colorfilter=Multi-Color", //
+			base + "&typefilter=Artifacts",//
+			base + "&colorfilter=White", //
+			base + "&colorfilter=Black",//
+			base + "&colorfilter=Blue",//
+			base + "&colorfilter=Green",//
+			base + "&colorfilter=Red", //
+			base + "&colorfilter=Multi-Color", //
 	};
 	private static String[] updateLatest = { base + "&setfilter=Standard" };
 
@@ -124,8 +126,7 @@ public class ParseGathererSpoiler {
 		st.close();
 	}
 
-	public static void parseFileOrUrl(String from, String to) throws FileNotFoundException, MalformedURLException,
-	        IOException {
+	public static void parseFileOrUrl(String from, String to) throws FileNotFoundException, MalformedURLException, IOException {
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new File(to));
@@ -163,6 +164,7 @@ public class ParseGathererSpoiler {
 		}
 		;
 	}
+
 	static Pattern textPattern = Pattern.compile("[^>]*>(.*)</td>.*");
 	Pattern textPatternCont = Pattern.compile("(.*)</td>.*");
 	Pattern textPatternOpen = Pattern.compile("[^>]*>(.*)");
@@ -212,6 +214,7 @@ public class ParseGathererSpoiler {
 		}
 		return htmlToString(type);
 	}
+
 	static Map manaMap = new HashMap();
 	static {
 		manaMap.put("Blue Mana", "{U}");
@@ -264,7 +267,6 @@ public class ParseGathererSpoiler {
 	}
 
 	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
-		return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId
-		        + ".jpg");
+		return new URL("http://resources.wizards.com/Magic/Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg");
 	}
 }

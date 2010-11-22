@@ -23,16 +23,12 @@ public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance = new Editions();
 	private HashMap<String, String> name2abbr;
-	private HashMap<String, String> name2locale;
 
 	private Editions() {
 		this.name2abbr = new HashMap();
-		this.name2locale = new HashMap();
-		addAbbr("Lorwyn", "LRW");
-		addAbbrLocale("Planar Chaos", "PLC", "en-us");
 		try {
 			load();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Activator.log(e);
 		}
 	}
@@ -69,25 +65,8 @@ public class Editions implements ISearchableProperty {
 		}
 	}
 
-	public synchronized void addLocale(String name, String locale) {
-		this.name2locale.put(name, locale);
-	}
-
-	public void addAbbrLocale(String name, String abbr, String locale) {
-		addAbbr(name, abbr);
-		if (locale != null)
-			addLocale(name, locale);
-	}
-
 	public String getAbbrByName(String name) {
 		return this.name2abbr.get(name);
-	}
-
-	public String getLocale(String edition) {
-		String locale = this.name2locale.get(edition);
-		if (locale != null)
-			return locale;
-		return null;
 	}
 
 	public synchronized void load() throws IOException {
@@ -110,7 +89,18 @@ public class Editions implements ISearchableProperty {
 			String line;
 			while ((line = r.readLine()) != null) {
 				String[] attrs = line.split("\\|");
-				addAbbrLocale(attrs[0].trim(), attrs[1].trim(), attrs.length >= 3 ? attrs[2].trim() : null);
+				String name = attrs[0].trim();
+				String abbr1 = attrs[1].trim();
+				addAbbr(name, abbr1);
+				try {
+					if (attrs.length < 3)
+						continue; // old style
+					String abbrOther = attrs[2].trim();
+					if (abbrOther.equals("en-us") || abbrOther.equals("EN"))
+						continue; // old style
+				} catch (Exception e) {
+					System.err.println("bad record: " + line);
+				}
 			}
 		} finally {
 			r.close();
@@ -124,8 +114,7 @@ public class Editions implements ISearchableProperty {
 			for (Iterator iterator = this.name2abbr.keySet().iterator(); iterator.hasNext();) {
 				String name = (String) iterator.next();
 				String abbr = this.name2abbr.get(name);
-				String locale = this.name2locale.get(name);
-				st.println(name + "|" + abbr + (locale == null ? "" : "|" + locale));
+				st.println(name + "|" + abbr + "|||");
 			}
 		} finally {
 			st.close();

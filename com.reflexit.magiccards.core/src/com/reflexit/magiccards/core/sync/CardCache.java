@@ -11,7 +11,6 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -25,7 +24,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CardCache {
 	private static boolean caching;
@@ -49,33 +48,18 @@ public class CardCache {
 		if (editionAbbr == null)
 			return null;
 		int cardId = card.getCardId();
-		String locale = Editions.getInstance().getLocale(edition);
-		String file = createLocalImageFilePath(cardId, editionAbbr, locale);
+		String file = createLocalImageFilePath(cardId, editionAbbr);
 		URL localUrl = new File(file).toURL();
 		InputStream st = null;
-		if (locale != null) {
-			if (cacheImage) {
-				if (new File(file).exists()) {
-					return localUrl;
-				}
-				try {
-					st = tryLocale(cardId, locale, edition, editionAbbr, remote);
-				} catch (IOException e1) {
-					throw e1;
-				}
+		if (cacheImage) {
+			if (new File(file).exists()) {
+				return localUrl;
 			}
-		} else {
-			// this code is trying to figure out locale
 			try {
-				try {
-					st = tryLocale(cardId, "EN", edition, editionAbbr, remote);
-				} catch (FileNotFoundException e) {
-					st = tryLocale(cardId, "en-us", edition, editionAbbr, remote);
-				}
+				st = tryUrl(cardId, edition, editionAbbr, remote);
 			} catch (IOException e1) {
 				throw e1;
 			}
-			locale = Editions.getInstance().getLocale(edition);
 		}
 		if (cacheImage && st != null) {
 			try {
@@ -86,7 +70,7 @@ public class CardCache {
 				Activator.log(e);
 			}
 		}
-		URL remoteUrl = createImageURL(cardId, editionAbbr, locale == null ? "EN" : locale, remote);
+		URL remoteUrl = createImageURL(cardId, editionAbbr, remote);
 		return remoteUrl;
 	}
 
@@ -116,10 +100,10 @@ public class CardCache {
 		return localUrl;
 	}
 
-	public static URL createImageURL(int cardId, String editionAbbr, String locale, boolean remote) throws MalformedURLException {
+	public static URL createImageURL(int cardId, String editionAbbr, boolean remote) throws MalformedURLException {
 		if (!remote)
 			return null;
-		return ParseGathererNewVisualSpoiler.createImageURL(cardId, editionAbbr, locale);
+		return ParseGathererNewVisualSpoiler.createImageURL(cardId, editionAbbr);
 	}
 
 	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) throws MalformedURLException {
@@ -128,12 +112,13 @@ public class CardCache {
 		return ParseGathererNewVisualSpoiler.createSetImageURL(editionAbbr, rarity);
 	}
 
-	public static String createLocalImageFilePath(int cardId, String editionAbbr, String locale) throws MalformedURLException {
+	public static String createLocalImageFilePath(int cardId, String editionAbbr) throws MalformedURLException {
 		IPath path = Activator.getStateLocationAlways();
 		if (editionAbbr.equals("CON")) {
 			// special hack for windows, which cannot create CON directory
 			editionAbbr = "CONFL";
 		}
+		String locale = "EN";
 		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
 		String file = path.append(part).toPortableString();
 		return file;
@@ -146,18 +131,13 @@ public class CardCache {
 		return file;
 	}
 
-	private static InputStream tryLocale(int cardId, String locale, String edition, String editionAbbr, boolean remote)
-			throws MalformedURLException, IOException {
-		String oldLocale = Editions.getInstance().getLocale(edition);
-		URL url = createImageURL(cardId, editionAbbr, locale, remote);
+	private static InputStream tryUrl(int cardId, String edition, String editionAbbr, boolean remote) throws MalformedURLException,
+			IOException {
+		URL url = createImageURL(cardId, editionAbbr, remote);
 		if (url == null)
 			return null;
 		try {
 			InputStream st = url.openStream();
-			if (oldLocale == null || !oldLocale.equals(locale)) {
-				Editions.getInstance().addLocale(edition, locale);
-				Editions.getInstance().save();
-			}
 			return st;
 		} catch (IOException e) {
 			throw new IOException("Cannot connect: " + e.getMessage());

@@ -90,6 +90,7 @@ public class ParseGathererNewTextSpoiler {
 
 		void edition(String edition, String edAddr);
 	}
+
 	public static class OutputHandler implements ILoadCardHander {
 		private PrintStream out;
 
@@ -102,19 +103,20 @@ public class ParseGathererNewTextSpoiler {
 		}
 
 		public void edition(String edition, String edAddr) {
-			Editions.getInstance().addAbbrLocale(edition, edAddr, null);
+			Editions.getInstance().addAbbr(edition, edAddr);
 		}
 	}
+
 	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=spoiler&method=text";
 	private static String[] updateAll = { //
 	base + "&typefilter=Lands", //
-	        base + "&typefilter=Artifacts",//
-	        base + "&colorfilter=White", //
-	        base + "&colorfilter=Black",//
-	        base + "&colorfilter=Blue",//
-	        base + "&colorfilter=Green",//
-	        base + "&colorfilter=Red", //
-	        base + "&colorfilter=Multi-Color", //
+			base + "&typefilter=Artifacts",//
+			base + "&colorfilter=White", //
+			base + "&colorfilter=Black",//
+			base + "&colorfilter=Blue",//
+			base + "&colorfilter=Green",//
+			base + "&colorfilter=Red", //
+			base + "&colorfilter=Multi-Color", //
 	};
 	private static String[] updateLatest = { base + "&format=[%22Standard%22]" };
 
@@ -157,8 +159,7 @@ public class ParseGathererNewTextSpoiler {
 		st.close();
 	}
 
-	public static void parseFileOrUrl(String from, String to) throws FileNotFoundException, MalformedURLException,
-	        IOException {
+	public static void parseFileOrUrl(String from, String to) throws FileNotFoundException, MalformedURLException, IOException {
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new File(to));
@@ -195,6 +196,7 @@ public class ParseGathererNewTextSpoiler {
 		}
 		;
 	}
+
 	static Pattern textPattern = Pattern.compile("</td>\\s*<td>([^<]*)</td>");
 	static Pattern idPattern = Pattern.compile("href=.*/Card/Details.aspx\\?multiverseid=(\\d+)");
 	static Pattern setPattern = Pattern.compile("(.*) (Mythic Rare|\\w+)\\s*$");
@@ -248,6 +250,7 @@ public class ParseGathererNewTextSpoiler {
 			res = " ";
 		return res;
 	}
+
 	static Map manaMap = new LinkedHashMap();
 	static {
 		manaMap.put("\\(", "{");

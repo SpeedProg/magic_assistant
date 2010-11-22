@@ -93,7 +93,7 @@ public class ParseGathererNewVisualSpoiler {
 		}
 
 		public void edition(String edition, String edAddr) {
-			Editions.getInstance().addAbbrLocale(edition, edAddr, null);
+			Editions.getInstance().addAbbr(edition, edAddr);
 		}
 
 		public void handleSecondary(MagicCard primary, MagicCard secondary) {
@@ -375,7 +375,7 @@ public class ParseGathererNewVisualSpoiler {
 		return str;
 	}
 
-	public static URL createImageURL(int cardId, String editionAbbr, String locale) throws MalformedURLException {
+	public static URL createImageURL(int cardId, String editionAbbr) throws MalformedURLException {
 		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
 	}
 
