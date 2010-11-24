@@ -151,8 +151,7 @@ To load card information into Card Info view select a card (single click) from a
 
 <h2><a name="viewcardnav"/>Card Navigator View</h2>
 Card navigator allows you to create a structure to organise your cards.
-You can create arbitrary structures to organise you collections and decks, 
-the only restriction is that deck cannot be in the same folder as collection.
+You can create arbitrary structures to organise you collections and decks.
 <p/>
 To add new elements in the structure you can use view context menu (right click) or main File menu,
 see details in <a href="workbench.html#new">New Menu</a>.
@@ -160,9 +159,19 @@ see details in <a href="workbench.html#new">New Menu</a>.
 To delete an element use context menu "Delete". Select an element, right-click on it and select menu item "Delete". 
 <p/>
 To rename an element use context menu "Rename". Select an element, right-click on it and select menu item "Rename".
+<p/>
+You can also Export and Import deck/collections from this view.
 
+<h2><a name="viewprintings"/>Printings View</h2>
 
-
+Printings view has two modes. 
+<p/>
+In "Magic Database" mode it shows all sets in which selected card was printing (which is know to local database),
+for example land such as Island would be listed at least four times for each core set in this view.
+<p/>
+In "My Cards" mode it shows instances of selected card available in your collections (columns are "Set", "Ownership", "Count" and "Location").
+You can drag cards from this view to deck/collection.  Regular rules apply - for db mode - it will add a card, for actuall card it will move a card pile,
+unless you "copy" drag (which is usually ctrl+drag). 
 
 </body>
 </html>

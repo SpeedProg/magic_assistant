@@ -14,14 +14,23 @@ If you want to load other cards you can run an update query which will load card
 In order to do this go to "Help->Update Magic Card Database...". 
 <p/>
 <p/>
-To update from a particular set select it from the drop down list and click "Update" button.<br/>
-To update for pre-release set type a name in the combo box and press "Update".<br/>
-To update for latest "released" cards select Standard and press "Update". <br/>
+To update from a particular set select it from the drop down list<br/>
+To update for pre-release set type a name in the combo<br/>
+To update for latest "released" cards select Standard<br/>
+To update all cards select All (do it overnight)<br/>
+
+then click "Update" button
 <p/>
 <li> Load all versions of art for basic land - Check this option if you want to load all 4 versions of each basic land in a set, otherwise only one would be loaded
 <li> Load all printed versions of the same card - For each card in selected set all other printed versions for previous sets would be loaded (same language). 
 For example if set has a card "Air Elemental" all of versions of this card would be loaded, so you will see few of them in your database after update.
 <p/>
+
 <img src="../screenshots/dialogs/updatedb.png" alt="update db dialog"/> 
+<p/>
+Note: Update database does not update extra fields such as Artist, Rating, etc. To load such field, you need to use Magic DB View.
+In the view use appropriate filter, then in view menu select "Load Extra Fields..." command,
+select the fields, and select "Update only cards in the filtered list" (or if no filter enabled - update all).
+
 </body>
 </html>

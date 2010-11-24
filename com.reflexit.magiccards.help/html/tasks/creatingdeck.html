@@ -59,6 +59,24 @@ If you want to enter number of cards (card count) you can either press "+" sever
 or double click on card in the deck and edit count of cards directly. You also can edit count in the Count cell itself.
 </li>
 
+<h2><a name="#populate_manual">Populate a deck from the cards in the collection</a></h2>
+First you need to decide which method you will be using. Virtual deck or Real deck. If you will be copying cards
+from your collection - it will be virtual deck. If you will be moving cards to the new deck it will be real.
+For the later if you don't like it - you can move it back to your collection. For virtual deck right now there is no tool support
+to actually "materialize it" (i.e. move cards from collections to a virtual deck automatically).
+<li>
+If you are going with virtual you need to create a virtual deck, follow intriction from <a href="#create_deck">Create a new deck</a>
+but before finishing deck creation check "Virtual" checkbox. Virtual means you don't actually have the cards
+or these are copies of the cards you have.
+<li>
+Next you open <a href="../reference/views.html#viewcol">My Cards View</a> and filter the locations you want to use,
+for example you don't want to disassemble your existing decks don't select them in a filter.
+<li> You can use search or other filters as in previous task (of populating deck from db view)
+<li> For virtual deck when card is found you either drag and "copy" drop it into new deck (be carefull if you don't "copy" drop it will just move the card!)
+or use "Copy To" action in the context menu. For real deck - you move the card ("drag and drop" or "Move To" menu).
+
+<p/>
+
 <h2><a name="import_deck">Populate a deck using import</a></h2>
 <h3>Importing from text format</h3>
 If you have a deck content in an electronic form you can import it using Deck import.
