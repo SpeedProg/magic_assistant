@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +13,8 @@ import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
+import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -203,7 +204,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected Collection<IMagicCard> removeSetDuplicates(Collection<IMagicCard> filteredList) {
-		HashMap<String, IMagicCard> unique = new HashMap<String, IMagicCard>();
+		LinkedHashMap<String, IMagicCard> unique = new LinkedHashMap<String, IMagicCard>();
 		for (Iterator<IMagicCard> iterator = filteredList.iterator(); iterator.hasNext();) {
 			IMagicCard elem = iterator.next();
 			if (elem instanceof MagicCard) {
@@ -211,8 +212,18 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				IMagicCard old = unique.get(card.getName());
 				if (old == null) {
 					unique.put(card.getName(), card);
-				} else if (old.getCardId() < card.getCardId()) {
-					unique.put(card.getName(), card);
+				} else {
+					Edition oldE = Editions.getInstance().getEditionByName(old.getSet());
+					Edition newE = Editions.getInstance().getEditionByName(card.getSet());
+					if (oldE != null && newE != null && oldE.getReleaseDate() != null && newE.getReleaseDate() != null) {
+						if (oldE.getReleaseDate().before(newE.getReleaseDate())) {
+							unique.put(card.getName(), card);
+						}
+						continue;
+					}
+					if (old.getCardId() < card.getCardId()) {
+						unique.put(card.getName(), card);
+					}
 				}
 			}
 		}

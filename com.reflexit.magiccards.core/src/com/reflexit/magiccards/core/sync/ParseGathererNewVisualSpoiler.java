@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 
@@ -74,7 +76,7 @@ public class ParseGathererNewVisualSpoiler {
 
 		void handleSecondary(MagicCard primary, MagicCard secondary);
 
-		void edition(String edition, String edAddr);
+		void edition(Edition ed);
 	}
 
 	public static class OutputHandler implements ILoadCardHander {
@@ -92,8 +94,10 @@ public class ParseGathererNewVisualSpoiler {
 			TextPrinter.print(card, this.out);
 		}
 
-		public void edition(String edition, String edAddr) {
-			Editions.getInstance().addAbbr(edition, edAddr);
+		public void edition(Edition ed) {
+			Edition res = Editions.getInstance().addAbbr(ed.getName(), ed.getMainAbbreviation());
+			if (res.getReleaseDate() == null)
+				res.setReleaseDate(Calendar.getInstance().getTime());
 		}
 
 		public void handleSecondary(MagicCard primary, MagicCard secondary) {
@@ -273,17 +277,18 @@ public class ParseGathererNewVisualSpoiler {
 			if (edition.length() <= 1)
 				continue;
 			edition = edition.trim();
+			Edition ed = new Editions.Edition(edition, abbr);
 			if (id.equals(setId)) {
 				card.setSet(edition);
 				card.setRarity(rarity.trim());
-				handler.edition(edition, abbr);
+				handler.edition(ed);
 			} else {
 				// other printings
 				MagicCard card2 = (MagicCard) card.clone();
 				card2.setId(setId);
 				card2.setSet(edition);
 				card2.setRarity(rarity.trim());
-				handler.edition(edition, abbr);
+				handler.edition(ed);
 				handler.handleSecondary(card, card2);
 			}
 		}

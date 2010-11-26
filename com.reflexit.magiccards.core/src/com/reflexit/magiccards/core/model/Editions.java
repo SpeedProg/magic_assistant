@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -22,10 +25,82 @@ import com.reflexit.magiccards.core.Activator;
 public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance = new Editions();
-	private HashMap<String, String> name2abbr;
+
+	public static class Edition {
+		String name;
+		String abbrs[];
+		Date release;
+		String type;
+		static final SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy");
+
+		public Edition(String name, String abbr) {
+			if (abbr == null)
+				abbr = "_" + name.replaceAll("\\W", "_"); // fake
+			abbrs = new String[1];
+			abbrs[0] = abbr;
+			this.name = name;
+		}
+
+		public void setReleaseDate(String date) throws ParseException {
+			release = formatter.parse(date);
+		}
+
+		public Date getReleaseDate() {
+			return release;
+		}
+
+		public boolean abbreviationOf(String abbr) {
+			if (abbr == null || abbrs.length == 0)
+				return false;
+			for (int i = 0; i < abbrs.length; i++) {
+				String a = abbrs[i];
+				if (abbr.equals(a))
+					return true;
+			}
+			return false;
+		}
+
+		public void addAbbreviation(String abbr) {
+			if (abbr == null)
+				return;
+			if (isAbbreviationFake()) {
+				abbrs[0] = abbr;
+			} else {
+				for (int i = 0; i < abbrs.length; i++) {
+					if (abbrs[i].equals(abbr))
+						return;
+				}
+				String[] arr = new String[abbrs.length + 1];
+				System.arraycopy(abbrs, 0, arr, 0, abbrs.length);
+				arr[abbrs.length] = abbr;
+			}
+		}
+
+		private boolean isAbbreviationFake() {
+			return getMainAbbreviation().startsWith("_");
+		}
+
+		public String getMainAbbreviation() {
+			return abbrs[0];
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setReleaseDate(Date time) {
+			release = time;
+		}
+	}
+
+	private HashMap<String, Edition> name2ed;
 
 	private Editions() {
-		this.name2abbr = new HashMap();
+		this.name2ed = new HashMap();
 		try {
 			load();
 		} catch (Exception e) {
@@ -38,14 +113,14 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public Collection<String> getEditions() {
-		return this.name2abbr.keySet();
+		return this.name2ed.keySet();
 	}
 
 	public String getNameByAbbr(String abbr) {
-		for (Iterator iterator = name2abbr.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = name2ed.keySet().iterator(); iterator.hasNext();) {
 			String name = (String) iterator.next();
-			String abbrValue = name2abbr.get(name);
-			if (abbrValue != null && abbrValue.equals(abbr)) {
+			Edition value = name2ed.get(name);
+			if (value != null && value.abbreviationOf(abbr)) {
 				return name;
 			}
 		}
@@ -54,19 +129,26 @@ public class Editions implements ISearchableProperty {
 		return null;
 	}
 
-	public synchronized void addAbbr(String name, String abbr) {
-		String guessed = name.replaceAll("\\W", "_");
-		if (!name2abbr.containsKey(name) || name2abbr.get(name).equals(guessed)) {
-			if (abbr != null)
-				this.name2abbr.put(name, abbr);
-			else {
-				this.name2abbr.put(name, guessed);
-			}
+	public synchronized Edition addAbbr(String name, String abbr) {
+		Edition edition = name2ed.get(name);
+		if (edition == null) {
+			edition = new Edition(name, abbr);
+			this.name2ed.put(name, edition);
+		} else {
+			edition.addAbbreviation(abbr);
 		}
+		return edition;
 	}
 
 	public String getAbbrByName(String name) {
-		return this.name2abbr.get(name);
+		Edition edition = getEditionByName(name);
+		if (edition == null)
+			return null;
+		return edition.getMainAbbreviation();
+	}
+
+	public Edition getEditionByName(String name) {
+		return this.name2ed.get(name);
 	}
 
 	public synchronized void load() throws IOException {
@@ -88,18 +170,31 @@ public class Editions implements ISearchableProperty {
 		try {
 			String line;
 			while ((line = r.readLine()) != null) {
-				String[] attrs = line.split("\\|");
-				String name = attrs[0].trim();
-				String abbr1 = attrs[1].trim();
-				addAbbr(name, abbr1);
 				try {
+					String[] attrs = line.split("\\|");
+					String name = attrs[0].trim();
+					String abbr1 = attrs[1].trim();
+					Edition set = addAbbr(name, abbr1);
 					if (attrs.length < 3)
 						continue; // old style
 					String abbrOther = attrs[2].trim();
 					if (abbrOther.equals("en-us") || abbrOther.equals("EN"))
 						continue; // old style
+					if (abbrOther.length() > 0)
+						set.addAbbreviation(abbrOther);
+					String releaseDate = attrs[3].trim();
+					if (releaseDate != null && releaseDate.length() > 0)
+						set.setReleaseDate(releaseDate);
+					else
+						System.err.println("Missing release date " + line);
+					String type = attrs[4].trim();
+					if (type != null && type.length() > 0)
+						set.setType(type);
+					else
+						System.err.println("Missing type " + line);
 				} catch (Exception e) {
-					System.err.println("bad record: " + line);
+					System.err.println("bad editions record: " + line);
+					e.printStackTrace();
 				}
 			}
 		} finally {
@@ -111,10 +206,10 @@ public class Editions implements ISearchableProperty {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		PrintStream st = new PrintStream(path.toPortableString());
 		try {
-			for (Iterator iterator = this.name2abbr.keySet().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
 				String name = (String) iterator.next();
-				String abbr = this.name2abbr.get(name);
-				st.println(name + "|" + abbr + "|||");
+				Edition ed = getEditionByName(name);
+				st.println(name + "|" + ed.getMainAbbreviation() + "|||"); // XXX
 			}
 		} finally {
 			st.close();
@@ -127,8 +222,9 @@ public class Editions implements ISearchableProperty {
 
 	public Collection getIds() {
 		ArrayList list = new ArrayList();
-		for (Iterator iterator = this.name2abbr.values().iterator(); iterator.hasNext();) {
-			String abbr = (String) iterator.next();
+		for (Iterator iterator = this.name2ed.values().iterator(); iterator.hasNext();) {
+			Edition ed = (Edition) iterator.next();
+			String abbr = ed.getMainAbbreviation();
 			list.add(getPrefConstant(abbr));
 		}
 		return list;
@@ -139,22 +235,21 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public String getPrefConstantByName(String name) {
-		String abbr = this.name2abbr.get(name);
+		String abbr = getAbbrByName(name);
 		return FilterHelper.getPrefConstant(getIdPrefix(), abbr);
 	}
 
 	public String getNameById(String id) {
 		HashMap idToName = new HashMap();
-		for (Iterator iterator = this.name2abbr.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
 			String name = (String) iterator.next();
-			String abbr = this.name2abbr.get(name);
-			String id1 = getPrefConstant(abbr);
+			String id1 = getPrefConstantByName(name);
 			idToName.put(id1, name);
 		}
 		return (String) idToName.get(id);
 	}
 
 	public Collection getNames() {
-		return new ArrayList(this.name2abbr.keySet());
+		return new ArrayList(this.name2ed.keySet());
 	}
 }
