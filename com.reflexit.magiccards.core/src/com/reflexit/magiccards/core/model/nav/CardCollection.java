@@ -6,6 +6,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
@@ -63,7 +64,9 @@ public class CardCollection extends CardElement {
 	}
 
 	public void open() {
-		DataManager.getCardHandler().getCardCollectionFilteredStore(getName());
+		IFilteredCardStore fi = DataManager.getCardHandler().getCardCollectionFilteredStore(getName());
+		if (fi != null && store == null)
+			this.store = fi.getCardStore();
 	}
 
 	public void open(ICardStore<IMagicCard> store) {

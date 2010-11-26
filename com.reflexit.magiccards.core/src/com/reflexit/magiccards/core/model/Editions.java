@@ -31,7 +31,7 @@ public class Editions implements ISearchableProperty {
 		String abbrs[];
 		Date release;
 		String type;
-		static final SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy");
+		static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
 
 		public Edition(String name, String abbr) {
 			if (abbr == null)
@@ -95,6 +95,10 @@ public class Editions implements ISearchableProperty {
 		public void setReleaseDate(Date time) {
 			release = time;
 		}
+
+		public String getType() {
+			return type;
+		}
 	}
 
 	private HashMap<String, Edition> name2ed;
@@ -112,8 +116,8 @@ public class Editions implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection<String> getEditions() {
-		return this.name2ed.keySet();
+	public Collection<Edition> getEditions() {
+		return this.name2ed.values();
 	}
 
 	public String getNameByAbbr(String abbr) {
@@ -209,7 +213,10 @@ public class Editions implements ISearchableProperty {
 			for (Iterator iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
 				String name = (String) iterator.next();
 				Edition ed = getEditionByName(name);
-				st.println(name + "|" + ed.getMainAbbreviation() + "|||"); // XXX
+				String rel = null;
+				if (ed.getReleaseDate() != null)
+					rel = Edition.formatter.format(ed.getReleaseDate());
+				st.println(name + "|" + ed.getMainAbbreviation() + "||" + rel + "|");
 			}
 		} finally {
 			st.close();
@@ -249,7 +256,7 @@ public class Editions implements ISearchableProperty {
 		return (String) idToName.get(id);
 	}
 
-	public Collection getNames() {
+	public Collection<String> getNames() {
 		return new ArrayList(this.name2ed.keySet());
 	}
 }
