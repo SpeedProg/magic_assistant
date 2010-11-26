@@ -27,7 +27,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -38,9 +40,9 @@ import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
-import com.reflexit.magiccards.ui.widgets.EditionsComposite;
 
 public class BoosterGeneratorWizard extends NewCardCollectionWizard implements INewWizard {
 	public static final String ID = "com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard";
@@ -61,7 +63,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see
 		 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
 		 * .widgets.Composite)
@@ -112,12 +114,12 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	}
 
 	private BoosterGeneratorWizardPage page2;
-	private ArrayList<String> sets;
+	private ArrayList<Edition> sets;
 	private int packs;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
 	 */
@@ -136,21 +138,21 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
 	 */
 	@Override
 	protected void beforeFinish() {
 		IStructuredSelection sel = this.page2.edi.getSelection();
-		this.sets = new ArrayList<String>();
+		this.sets = new ArrayList<Edition>();
 		sets.addAll(sel.toList());
 		this.packs = this.page2.sp.getSelection();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java
 	 * .lang.String, java.lang.String,
@@ -199,20 +201,19 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * @param col
 	 * @param subProgressMonitor
 	 */
-	private void populateLibrary(ArrayList<String> sets, int packs, CardCollection col, IProgressMonitor monitor) {
+	private void populateLibrary(ArrayList<Edition> sets, int packs, CardCollection col, IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 10);
 		if (col.isOpen() == false) {
-			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(col.getFileName());
+			col.open();
 		}
 		monitor.worked(1);
-		ICardStore store = col.getStore();
+		ICardStore<IMagicCard> store = col.getStore();
 		MagicCardFilter filter = new MagicCardFilter();
-		HashMap filterset = new HashMap();
-		IFilteredCardStore dbcards = DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
+		HashMap<String, String> filterset = new HashMap<String, String>();
+		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 		try {
-			for (Object element : sets) {
-				String editionName = (String) element;
-				String editionId = Editions.getInstance().getPrefConstantByName(editionName);
+			for (Edition ed : sets) {
+				String editionId = Editions.getInstance().getPrefConstantByName(ed.getName());
 				filterset.put(editionId, "true");
 			}
 			// 1*packs rare cards
@@ -222,6 +223,9 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			filterset.put(rarity1, "true");
 			filter.update(filterset);
 			dbcards.update(filter);
+			if (dbcards.getSize() == 0) {
+				throw new MagicException("No cards found in the selected sets");
+			}
 			generateRandom(1 * packs, dbcards, store, col);
 			monitor.worked(3);
 			// 3*packs uncommon
@@ -251,7 +255,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * @param store
 	 * @param col
 	 */
-	private void generateRandom(int packs, IFilteredCardStore dbcards, ICardStore store, CardElement col) {
+	private void generateRandom(int packs, IFilteredCardStore<IMagicCard> dbcards, ICardStore<IMagicCard> store, CardElement col) {
 		int rcards = dbcards.getSize();
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);

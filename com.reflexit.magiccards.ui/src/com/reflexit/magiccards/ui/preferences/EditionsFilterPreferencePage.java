@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.reflexit.magiccards.ui.widgets.EditionsComposite;
+import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 
 public class EditionsFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	public static final String LAST_SET = "onlyLastSet";

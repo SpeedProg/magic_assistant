@@ -146,7 +146,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 	protected Control createCompositeArea() {
 		Composite composite = this;
 		composite.setLayout(new GridLayout());
-		CheckboxTreeViewer treeViewer = createTreeViewer(composite);
+		CheckboxTreeViewer treeViewer = createTreeViewer(composite, SWT.BORDER | SWT.SCROLL_PAGE);
 		Control buttonComposite = createSelectionButtons(composite);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		Tree treeWidget = treeViewer.getTree();
@@ -160,10 +160,11 @@ public class CheckedTreeSelectionComposite extends Composite {
 	 * 
 	 * @param parent
 	 *            the parent composite
+	 * @param flags TODO
 	 * @return the tree viewer
 	 */
-	protected CheckboxTreeViewer createTreeViewer(Composite parent) {
-		this.fViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER | SWT.SCROLL_PAGE);
+	protected CheckboxTreeViewer createTreeViewer(Composite parent, int flags) {
+		this.fViewer = new ContainerCheckedTreeViewer(parent, flags);
 		this.fViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateOKStatus();

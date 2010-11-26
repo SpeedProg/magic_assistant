@@ -8,17 +8,22 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.widgets;
+package com.reflexit.magiccards.ui.views.editions;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,17 +32,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TreeColumn;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.FilterHelper;
 
 /**
- * Composite that contains checked tree selection for editions.
- * If supplied with preferenceStore can be also used as field editor
+ * Composite that contains checked tree selection for editions. If supplied with
+ * preferenceStore can be also used as field editor
  * 
  * <code>
  * c = new EditionsComposite(parent,SWT.CHECK | SWT.BORDER);
@@ -47,8 +51,9 @@ import com.reflexit.magiccards.core.model.FilterHelper;
  * // when user pressed ok in dialog call this to store values in preference store
  * c.performApply(); 
  * </code>
+ * 
  * @author Alena
- *
+ * 
  */
 public class EditionsComposite extends Composite {
 	private boolean buttons;
@@ -68,47 +73,15 @@ public class EditionsComposite extends Composite {
 		Composite one = (Composite) createContents(this, treeStyle);
 		one.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
-	public class EditionsContextProvider implements ITreeContentProvider {
-		ArrayList editions = new ArrayList();
 
-		public void dispose() {
-			// TODO Auto-generated method stub
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			if (newInput instanceof Editions) {
-				this.editions.clear();
-				this.editions.addAll(((Editions) newInput).getEditions());
-			}
-		}
-
-		public Object[] getChildren(Object parentElement) {
-			return new Object[0];
-		}
-
-		public Object getParent(Object element) {
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			if (element instanceof Editions) {
-				return true;
-			}
-			return false;
-		}
-
-		public Object[] getElements(Object inputElement) {
-			return this.editions.toArray();
-		}
-	}
-	public class EditionsLabelProvider extends LabelProvider {
-	}
 	private TreeViewer treeViewer;
 	private Composite panel;
 	private IPreferenceStore prefStore;
 	private boolean checkedTree = false;
 	private Button selAll;
 	private Button deselAll;
+	private ArrayList<AbstractEditionColumn> columns;
+	private EditionsViewerComparator vcomp;
 
 	protected Control createContents(Composite parent, int treeStyle) {
 		this.panel = new Composite(parent, SWT.NONE);
@@ -122,14 +95,107 @@ public class EditionsComposite extends Composite {
 			this.checkedTree = false;
 			this.treeViewer = new TreeViewer(this.panel, treeStyle);
 		}
-		this.treeViewer.setLabelProvider(new EditionsLabelProvider());
-		this.treeViewer.setContentProvider(new EditionsContextProvider());
-		this.treeViewer.setComparator(new ViewerComparator());
-		this.treeViewer.setInput(Editions.getInstance());
+		// this.treeViewer.setLabelProvider(null);
+		this.treeViewer.setContentProvider(new EditionsContentProvider());
+		vcomp = new EditionsViewerComparator();
+		this.treeViewer.setComparator(vcomp);
+		this.treeViewer.setUseHashlookup(true);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 300;
 		gd.horizontalSpan = 3;
 		this.treeViewer.getTree().setLayoutData(gd);
+		createDefaultColumns();
+		createButtonsControls();
+		this.treeViewer.setInput(Editions.getInstance());
+		return this.panel;
+	}
+
+	protected void createDefaultColumns() {
+		createColumnLabelProviders();
+		for (int i = 0; i < columns.size(); i++) {
+			AbstractEditionColumn man = this.columns.get(i);
+			TreeViewerColumn colv = new TreeViewerColumn((TreeViewer) getViewer(), i);
+			TreeColumn col = colv.getColumn();
+			col.setText(man.getColumnName());
+			col.setWidth(man.getColumnWidth());
+			col.setToolTipText(man.getColumnTooltip());
+			final int coln = i;
+			col.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					sort(coln);
+				}
+			});
+			col.setMoveable(false);
+			colv.setLabelProvider(man);
+			if (man instanceof Listener) {
+				treeViewer.getTree().addListener(SWT.PaintItem, (Listener) man);
+			}
+			colv.setEditingSupport(man.getEditingSupport(treeViewer));
+		}
+		ColumnViewerToolTipSupport.enableFor(treeViewer, ToolTip.NO_RECREATE);
+		treeViewer.getTree().setHeaderVisible(true);
+	}
+
+	private static SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
+
+	private void createColumnLabelProviders() {
+		columns = new ArrayList<AbstractEditionColumn>();
+		columns.add(new AbstractEditionColumn("Name", EditionField.NAME) {
+			@Override
+			public String getText(Object element) {
+				Editions.Edition ed = (Edition) element;
+				return ed.getName();
+			}
+
+			@Override
+			public int getColumnWidth() {
+				return 180;
+			}
+		});
+		columns.add(new AbstractEditionColumn("Date", EditionField.DATE) {
+			@Override
+			public String getText(Object element) {
+				Editions.Edition ed = (Edition) element;
+				if (ed.getReleaseDate() == null)
+					return "";
+				return formatter.format(ed.getReleaseDate());
+			}
+		});
+		columns.add(new AbstractEditionColumn("Type", EditionField.TYPE) {
+			@Override
+			public String getText(Object element) {
+				Editions.Edition ed = (Edition) element;
+				return ed.getType();
+			}
+		});
+	}
+
+	protected void sort(int index) {
+		updateSortColumn(index);
+		treeViewer.refresh();
+	}
+
+	public void updateSortColumn(int index) {
+		boolean sort = index >= 0;
+		TreeColumn column = sort ? treeViewer.getTree().getColumn(index) : null;
+		treeViewer.getTree().setSortColumn(column);
+		if (sort) {
+			int sortDirection = treeViewer.getTree().getSortDirection();
+			if (sortDirection != SWT.DOWN)
+				sortDirection = SWT.DOWN;
+			else
+				sortDirection = SWT.UP;
+			treeViewer.getTree().setSortDirection(sortDirection);
+			AbstractEditionColumn man = (AbstractEditionColumn) treeViewer.getLabelProvider(index);
+			vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
+			treeViewer.setComparator(vcomp);
+		} else {
+			treeViewer.setComparator(null);
+		}
+	}
+
+	protected void createButtonsControls() {
 		// buttons
 		if (buttons) {
 			this.selAll = new Button(panel, SWT.PUSH);
@@ -149,7 +215,6 @@ public class EditionsComposite extends Composite {
 				}
 			});
 		}
-		return this.panel;
 	}
 
 	protected void deselectAll() {
@@ -187,13 +252,11 @@ public class EditionsComposite extends Composite {
 	}
 
 	public void initialize() {
-		Collection names = Editions.getInstance().getNames();
-		ArrayList sel = new ArrayList();
-		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
-			String ed = (String) iterator.next();
-			String abbr = Editions.getInstance().getAbbrByName(ed);
-			if (abbr == null)
-				abbr = ed.replaceAll("\\W", "_");
+		Collection<Edition> names = Editions.getInstance().getEditions();
+		ArrayList<Edition> sel = new ArrayList<Edition>();
+		for (Iterator<Edition> iterator = names.iterator(); iterator.hasNext();) {
+			Edition ed = iterator.next();
+			String abbr = ed.getMainAbbreviation();
 			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
 			boolean checked = getPreferenceStore().getBoolean(id);
 			if (checked) {
@@ -227,22 +290,22 @@ public class EditionsComposite extends Composite {
 	public void performApply() {
 		if (this.treeViewer == null)
 			return;
-		Collection names = Editions.getInstance().getNames();
-		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
-			String ed = (String) iterator.next();
+		Collection<Edition> editions = Editions.getInstance().getEditions();
+		for (Iterator<Edition> iterator = editions.iterator(); iterator.hasNext();) {
+			Edition ed = iterator.next();
 			boolean checked = false;
 			if (this.checkedTree) {
 				checked = ((CheckboxTreeViewer) this.treeViewer).getChecked(ed);
 			}
-			String abbr = Editions.getInstance().getAbbrByName(ed);
+			String abbr = ed.getMainAbbreviation();
 			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
 			getPreferenceStore().setValue(id, checked);
 		}
 		if (!this.checkedTree) {
 			IStructuredSelection selection = (IStructuredSelection) this.treeViewer.getSelection();
-			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-				String ed = (String) iterator.next();
-				String abbr = Editions.getInstance().getAbbrByName(ed);
+			for (Iterator<Edition> iterator = selection.iterator(); iterator.hasNext();) {
+				Edition ed = iterator.next();
+				String abbr = ed.getMainAbbreviation();
 				String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
 				getPreferenceStore().setValue(id, true);
 			}
@@ -254,17 +317,17 @@ public class EditionsComposite extends Composite {
 	}
 
 	private String[] getIds() {
-		Collection names = Editions.getInstance().getNames();
-		ArrayList res = new ArrayList();
-		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
-			String ed = (String) iterator.next();
+		Collection<String> names = Editions.getInstance().getNames();
+		ArrayList<String> res = new ArrayList<String>();
+		for (Iterator<String> iterator = names.iterator(); iterator.hasNext();) {
+			String ed = iterator.next();
 			String abbr = Editions.getInstance().getAbbrByName(ed);
 			if (abbr == null)
 				abbr = ed.replaceAll("\\W", "_");
 			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
 			res.add(id);
 		}
-		return (String[]) res.toArray(new String[res.size()]);
+		return res.toArray(new String[res.size()]);
 	}
 
 	public Viewer getViewer() {
