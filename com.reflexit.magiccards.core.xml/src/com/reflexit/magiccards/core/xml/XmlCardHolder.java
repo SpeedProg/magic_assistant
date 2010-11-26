@@ -76,7 +76,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	public void loadInitial() throws MagicException, CoreException, IOException {
 		loadFromFlat("all.txt");
-		Collection<String> editions = Editions.getInstance().getEditions();
+		Collection<String> editions = Editions.getInstance().getNames();
 		for (String set : editions) {
 			String abbr = (Editions.getInstance().getAbbrByName(set));
 			try {
