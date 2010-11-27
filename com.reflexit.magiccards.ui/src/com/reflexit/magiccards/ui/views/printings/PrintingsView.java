@@ -148,16 +148,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			@Override
 			public void run() {
 				boolean mode = !isDbMode();
-				dbmode.setChecked(mode);
-				if (!mode)
-					dbmode.setToolTipText("Check to show sets in magic database");
-				else
-					dbmode.setToolTipText("Uncheck to show cards in your collection");
-				((PrintingsManager) manager).updateDbMode(mode);
-				if (card != null && card != IMagicCard.DEFAULT)
-					reloadData();
-				else
-					updateViewer();
+				setDbMode(mode);
 			}
 		};
 		this.refresh = new Action("Refresh", SWT.NONE) {
@@ -337,5 +328,18 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	protected boolean isDbMode() {
 		return ((PrintingsManager) manager).isDbMode();
+	}
+
+	public void setDbMode(boolean mode) {
+		dbmode.setChecked(mode);
+		if (!mode)
+			dbmode.setToolTipText("Check to show sets in magic database");
+		else
+			dbmode.setToolTipText("Uncheck to show cards in your collection");
+		((PrintingsManager) manager).updateDbMode(mode);
+		if (card != null && card != IMagicCard.DEFAULT)
+			reloadData();
+		else
+			updateViewer();
 	}
 }

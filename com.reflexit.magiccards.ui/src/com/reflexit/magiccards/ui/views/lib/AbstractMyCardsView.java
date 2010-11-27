@@ -32,6 +32,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -57,6 +60,7 @@ import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.CompositeViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
+import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 /**
  * Cards view for personal cards (decks and collections)
@@ -73,19 +77,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected Action export;
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
-	protected IDeckAction copyToDeck = new IDeckAction() {
-		public void run(String id) {
-			IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
-			Location loc = fstore.getLocation();
-			ISelection selection = getViewer().getSelection();
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection sel = (IStructuredSelection) selection;
-				if (!sel.isEmpty()) {
-					DataManager.getCardHandler().copyCards(sel.toList(), loc);
-				}
-			}
-		}
-	};
+	private Action showPrintings;
+	protected IDeckAction copyToDeck;
 
 	@Override
 	protected void makeActions() {
@@ -138,6 +131,37 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		};
 		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 		this.export = createExportAction();
+		copyToDeck = new IDeckAction() {
+			public void run(String id) {
+				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
+				Location loc = fstore.getLocation();
+				ISelection selection = getViewer().getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection sel = (IStructuredSelection) selection;
+					if (!sel.isEmpty()) {
+						DataManager.getCardHandler().copyCards(sel.toList(), loc);
+					}
+				}
+			}
+		};
+		showPrintings = new Action("Show All Instances") {
+			@Override
+			public void run() {
+				IWorkbench workbench = PlatformUI.getWorkbench();
+				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					if (page != null) {
+						try {
+							PrintingsView view = (PrintingsView) page.showView(PrintingsView.ID);
+							view.setDbMode(false);
+						} catch (PartInitException e) {
+							MagicUIActivator.log(e);
+						}
+					}
+				}
+			}
+		};
 	}
 
 	protected ExportAction createExportAction() {
@@ -329,6 +353,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		manager.add(this.addToDeck);
 		manager.add(this.split);
 		manager.add(this.edit);
+		manager.add(this.showPrintings);
 	}
 
 	@Override
