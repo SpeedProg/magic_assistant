@@ -213,10 +213,14 @@ public class Editions implements ISearchableProperty {
 			for (Iterator iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
 				String name = (String) iterator.next();
 				Edition ed = getEditionByName(name);
-				String rel = null;
+				String rel = "";
 				if (ed.getReleaseDate() != null)
 					rel = Edition.formatter.format(ed.getReleaseDate());
-				st.println(name + "|" + ed.getMainAbbreviation() + "||" + rel + "|");
+				String type = "";
+				if (ed.getType() != null) {
+					type = ed.getType();
+				}
+				st.println(name + "|" + ed.getMainAbbreviation() + "||" + rel + "|" + type + "|");
 			}
 		} finally {
 			st.close();
