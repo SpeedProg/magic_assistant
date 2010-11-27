@@ -43,7 +43,7 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 		this.onlyLastSet = new Button(parent, SWT.CHECK);
 		this.onlyLastSet.setText("Only show the latest set");
 		this.onlyLastSet.setSelection(getPreferenceStore().getBoolean(LAST_SET));
-		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER, true);
+		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION, true);
 		this.comp.setPreferenceStore(getPreferenceStore());
 		this.comp.initialize();
 		return this.comp;

@@ -137,7 +137,7 @@ public class EditionsComposite extends Composite {
 		treeViewer.getTree().setHeaderVisible(true);
 	}
 
-	private static SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
+	static SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
 
 	private void createColumnLabelProviders() {
 		columns = new ArrayList<AbstractEditionColumn>();
@@ -153,22 +153,8 @@ public class EditionsComposite extends Composite {
 				return 180;
 			}
 		});
-		columns.add(new AbstractEditionColumn("Date", EditionField.DATE) {
-			@Override
-			public String getText(Object element) {
-				Editions.Edition ed = (Edition) element;
-				if (ed.getReleaseDate() == null)
-					return "";
-				return formatter.format(ed.getReleaseDate());
-			}
-		});
-		columns.add(new AbstractEditionColumn("Type", EditionField.TYPE) {
-			@Override
-			public String getText(Object element) {
-				Editions.Edition ed = (Edition) element;
-				return ed.getType();
-			}
-		});
+		columns.add(new DateColumn());
+		columns.add(new TypeColumn());
 	}
 
 	protected void sort(int index) {
