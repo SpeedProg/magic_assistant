@@ -63,7 +63,6 @@ import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.dnd.MagicNavDropAdapter;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.exportWizards.ImportAction;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -111,8 +110,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 
 	private void addDragAndDrop() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(), MagicDeckTransfer.getInstance() };
+		Transfer[] transfers2 = new Transfer[] { MagicDeckTransfer.getInstance() };
 		getViewer().addDropSupport(ops, transfers, new MagicNavDropAdapter(getViewer()));
+		getViewer().addDragSupport(DND.DROP_MOVE, transfers2, new MagicNavDragListener(getViewer()));
 	}
 
 	private void createTable(Composite parent) {
@@ -230,9 +231,9 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			public void run() {
 				// Instantiates and initializes the wizard
 				NewDeckWizard wizard = new NewDeckWizard();
-				wizard.init(getSite().getWorkbenchWindow().getWorkbench(), (IStructuredSelection) getViewer()
-				        .getSelection());
-				// Instantiates the wizard container with the wizard and opens it
+				wizard.init(getSite().getWorkbenchWindow().getWorkbench(), (IStructuredSelection) getViewer().getSelection());
+				// Instantiates the wizard container with the wizard and opens
+				// it
 				WizardDialog dialog = new WizardDialog(getShell(), wizard);
 				dialog.create();
 				dialog.open();
@@ -242,6 +243,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			{
 				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 			}
+
 			@Override
 			public void run() {
 				try {
@@ -288,8 +290,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 					Object obj = ((IStructuredSelection) selection).getFirstElement();
 					MyCardsView view;
 					try {
-						view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
-						        .showView(MyCardsView.ID);
+						view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
 						view.setLocationFilter(((CardElement) obj).getLocation());
 					} catch (PartInitException e) {
 						// error
@@ -317,13 +318,12 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			return;
 		if (sel.size() == 1) {
 			CardElement el = (CardElement) sel.getFirstElement();
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation",
-			        "Are you sure you want to delete " + el.getName() + "?")) {
+			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete " + el.getName() + "?")) {
 				el.remove();
 			}
 		} else {
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these "
-			        + sel.size() + " elements?")) {
+			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these " + sel.size()
+					+ " elements?")) {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					CardElement el = (CardElement) iterator.next();
 					el.remove();
@@ -370,7 +370,9 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		MessageDialog.openInformation(getViewSite().getShell(), "Magic Cards", message);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
 	 */
 	@Override
@@ -405,9 +407,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			}
 		} else if (obj instanceof CardCollection) {
 			try {
-				//				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(
-				//				        MyCardsView.ID);
-				//				view.setLocationFilter(((CardCollection) obj).getLocation());
+				// MyCardsView view = (MyCardsView)
+				// getViewSite().getWorkbenchWindow().getActivePage().showView(
+				// MyCardsView.ID);
+				// view.setLocationFilter(((CardCollection) obj).getLocation());
 				CardCollection d = (CardCollection) obj;
 				openDeckView(d, getViewSite().getWorkbenchWindow().getActivePage());
 			} catch (PartInitException e) {
@@ -415,8 +418,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			}
 		} else if (obj instanceof CardOrganizer) {
 			try {
-				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
-				        .showView(MyCardsView.ID);
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
 				view.setLocationFilter(((CardOrganizer) obj).getLocation());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
@@ -446,8 +448,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		Map<String, Object> prop = new HashMap<String, Object>();
 		boolean state = !showSideboards.isChecked();
 		prop.put(CardsNavigatorContentProvider.FILTER_SIDEBOARDS, state);
-		getViewer().setFilters(
-				new ViewerFilter[] { CardsNavigatorContentProvider
-						.getFilter(prop) });
+		getViewer().setFilters(new ViewerFilter[] { CardsNavigatorContentProvider.getFilter(prop) });
 	}
 }
