@@ -1,12 +1,12 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.File;
+
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-import java.io.File;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
@@ -28,13 +28,15 @@ public abstract class CardElement extends EventManager {
 	protected void setParentInit(CardOrganizer parent) {
 		this.parent = parent;
 		if (parent != null) {
+			if (parent != DataManager.getModelRoot())
+				this.path = parent.getPath().append(path.lastSegment());
 			parent.addChild(this);
-		}
-		if (parent != null && parent.getResource() != null) {
-			try {
-				parent.getResource().refreshLocal(1, null);
-			} catch (Exception e) {
-				throw new MagicException(e);
+			if (parent.getResource() != null) {
+				try {
+					parent.getResource().refreshLocal(1, null);
+				} catch (Exception e) {
+					throw new MagicException(e);
+				}
 			}
 		}
 	}
@@ -68,7 +70,7 @@ public abstract class CardElement extends EventManager {
 
 	/**
 	 * @return
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
 	public File getFile() throws CoreException {
 		IPath p = getPath();
@@ -85,10 +87,6 @@ public abstract class CardElement extends EventManager {
 
 	public CardOrganizer getParent() {
 		return this.parent;
-	}
-
-	public void setParent(CardOrganizer parent) {
-		this.parent = parent;
 	}
 
 	public void addListener(ICardEventListener lis) {
@@ -130,7 +128,9 @@ public abstract class CardElement extends EventManager {
 		return new Path(filename).removeFileExtension().lastSegment();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -140,7 +140,7 @@ public abstract class CardElement extends EventManager {
 
 	/**
 	 * @param value
-	 * @return 
+	 * @return
 	 */
 	public CardElement rename(String value) {
 		Location oldName = getLocation();
@@ -157,6 +157,25 @@ public abstract class CardElement extends EventManager {
 		CardElement x = newElement(value, getParent());
 		fireEvent(new CardEvent(x, CardEvent.RENAME_CONTAINER, oldName));
 		return x;
+	}
+
+	public CardElement newParent(CardOrganizer parent) {
+		Location oldName = getLocation();
+		if (getParent() != null) {
+			getParent().removeChild(this);
+		}
+		if (getResource() != null) {
+			try {
+				IPath newPath = DataManager.getProject().getFullPath()
+						.append(parent.getPath().addTrailingSeparator().append(getPath().lastSegment()));
+				getResource().move(newPath, true, null);
+			} catch (CoreException e) {
+				Activator.log(e);
+			}
+		}
+		setParentInit(parent);
+		fireEvent(new CardEvent(this, CardEvent.RENAME_CONTAINER, oldName));
+		return this;
 	}
 
 	public abstract CardElement newElement(String name, CardOrganizer parent);

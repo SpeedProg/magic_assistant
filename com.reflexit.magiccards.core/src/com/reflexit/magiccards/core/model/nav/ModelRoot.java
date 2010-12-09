@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.nav;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -23,9 +24,9 @@ import com.reflexit.magiccards.core.model.Location;
 /**
  * Model Root contains access to all deck, collections and magic db container
  * (displayed in the navigator)
- *
+ * 
  * @author Alena
- *
+ * 
  */
 public class ModelRoot extends CardOrganizer {
 	private static ModelRoot instance;
@@ -66,7 +67,7 @@ public class ModelRoot extends CardOrganizer {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#getPath()
 	 */
 	@Override
@@ -105,6 +106,7 @@ public class ModelRoot extends CardOrganizer {
 	public void reset() {
 		getDeckContainer().removeChildren();
 		getCollectionsContainer().removeChildren();
+		this.fLibFile = new CardCollection("main.xml", this.fLib);
 	}
 
 	/**
@@ -117,10 +119,14 @@ public class ModelRoot extends CardOrganizer {
 	/**
 	 * @return map from string location to tree element
 	 */
-	public Map getLocationsMap() {
+	public Map<Location, CardElement> getLocationsMap() {
 		LinkedHashMap<Location, CardElement> map = new LinkedHashMap<Location, CardElement>();
 		fillLocations(map, this);
 		return map;
+	}
+
+	public CardElement getCardElement(Location location) {
+		return getLocationsMap().get(location);
 	}
 
 	/**
@@ -133,12 +139,28 @@ public class ModelRoot extends CardOrganizer {
 		}
 		if (root instanceof CardOrganizer) {
 			CardOrganizer org = (CardOrganizer) root;
-			if (org.getChildren() == null)
-				return;
-			for (Object element : org.getChildren()) {
-				CardElement el = (CardElement) element;
-				fillLocations(map, el);
+			if (org.getChildren() != null) {
+				for (Object element : org.getChildren()) {
+					CardElement el = (CardElement) element;
+					fillLocations(map, el);
+				}
 			}
+			map.put(root.getLocation(), root);
 		}
+	}
+
+	public void move(CardElement[] elements, CardOrganizer newParent) {
+		ArrayList<CardElement> norm = new ArrayList<CardElement>();
+		list: for (CardElement el : elements) {
+			for (CardElement no : norm) {
+				if (el.getParent() == no)
+					continue list;
+			}
+			norm.add(el);
+		}
+		for (CardElement no : norm) {
+			no.newParent(newParent);
+		}
+		System.err.println("drop to " + newParent);
 	}
 }
