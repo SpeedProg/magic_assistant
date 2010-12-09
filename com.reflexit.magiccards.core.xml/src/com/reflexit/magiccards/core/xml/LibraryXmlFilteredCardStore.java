@@ -15,6 +15,7 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
@@ -80,8 +81,12 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 		} else if (event.getSource() instanceof CardElement) {
 			CardElement elem = (CardElement) event.getSource();
 			if (event.getType() == CardEvent.RENAME_CONTAINER) {
-				this.table.renameLocation((Location) event.getData(), elem.getLocation());
-				update();
+				if (elem instanceof CardOrganizer) {
+					// panic!!
+				} else {
+					this.table.renameLocation((Location) event.getData(), elem.getLocation());
+					update();
+				}
 			}
 		} else if (event.getType() == CardEvent.UPDATE) {
 			// need to save xml
