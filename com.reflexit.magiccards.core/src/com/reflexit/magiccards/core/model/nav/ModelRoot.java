@@ -161,6 +161,6 @@ public class ModelRoot extends CardOrganizer {
 		for (CardElement no : norm) {
 			no.newParent(newParent);
 		}
-		System.err.println("drop to " + newParent);
+		// System.err.println("drop to " + newParent);
 	}
 }

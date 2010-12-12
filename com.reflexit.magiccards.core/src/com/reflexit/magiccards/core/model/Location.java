@@ -51,8 +51,7 @@ public class Location implements Comparable<Location> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
 
@@ -106,8 +105,7 @@ public class Location implements Comparable<Location> {
 	public Location getParent() {
 		if (this == NO_WHERE)
 			return NO_WHERE;
-		return new Location(new Path(location).removeLastSegments(1)
-				.toPortableString());
+		return new Location(new Path(location).removeLastSegments(1).toPortableString());
 	}
 
 	public String getPath() {
@@ -115,12 +113,16 @@ public class Location implements Comparable<Location> {
 	}
 
 	public String getBaseFileName() {
-		return getName()+XML_SUFFIX;
+		return getName() + XML_SUFFIX;
 	}
 
 	public Location toMainDeck() {
 		if (!isSideboard())
 			return this;
-		return new Location(location.replaceAll(SIDEBOARD_SUFFIX+"$",""));
+		return new Location(location.replaceAll(SIDEBOARD_SUFFIX + "$", ""));
+	}
+
+	public Location append(String name) {
+		return new Location(name, this);
 	}
 }

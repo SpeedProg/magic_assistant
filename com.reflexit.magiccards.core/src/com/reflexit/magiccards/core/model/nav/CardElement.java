@@ -26,10 +26,8 @@ public abstract class CardElement extends EventManager {
 	}
 
 	protected void setParentInit(CardOrganizer parent) {
-		this.parent = parent;
+		setParent(parent);
 		if (parent != null) {
-			if (parent != DataManager.getModelRoot())
-				this.path = parent.getPath().append(path.lastSegment());
 			parent.addChild(this);
 			if (parent.getResource() != null) {
 				try {
@@ -38,6 +36,14 @@ public abstract class CardElement extends EventManager {
 					throw new MagicException(e);
 				}
 			}
+		}
+	}
+
+	protected void setParent(CardOrganizer parent) {
+		this.parent = parent;
+		if (parent != null) {
+			if (parent != DataManager.getModelRoot())
+				this.path = parent.getPath().append(path.lastSegment());
 		}
 	}
 
@@ -160,6 +166,9 @@ public abstract class CardElement extends EventManager {
 	}
 
 	public CardElement newParent(CardOrganizer parent) {
+		if (parent.isAncestor(this) || this.equals(parent)) {
+			throw new MagicException("Cannot move inside itself");
+		}
 		Location oldName = getLocation();
 		if (getParent() != null) {
 			getParent().removeChild(this);
@@ -174,8 +183,28 @@ public abstract class CardElement extends EventManager {
 			}
 		}
 		setParentInit(parent);
-		fireEvent(new CardEvent(this, CardEvent.RENAME_CONTAINER, oldName));
+		fireRecorsiveRename(this, oldName);
 		return this;
+	}
+
+	public boolean isAncestor(CardElement parent) {
+		if (parent == null || !(parent instanceof CardOrganizer) || getParent() == null)
+			return false;
+		if (parent.equals(getParent()))
+			return true;
+		return getParent().isAncestor(parent);
+	}
+
+	private void fireRecorsiveRename(CardElement cardElement, Location oldName) {
+		cardElement.setParent(cardElement.getParent()); // that would update
+														// path
+		if (cardElement instanceof CardOrganizer) {
+			CardOrganizer org = (CardOrganizer) this;
+			for (CardElement el : org.getChildren()) {
+				fireRecorsiveRename(el, oldName.append(el.getName()));
+			}
+		}
+		cardElement.fireEvent(new CardEvent(cardElement, CardEvent.RENAME_CONTAINER, oldName));
 	}
 
 	public abstract CardElement newElement(String name, CardOrganizer parent);
