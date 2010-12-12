@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 
 /**
@@ -150,6 +151,8 @@ public class ModelRoot extends CardOrganizer {
 	}
 
 	public void move(CardElement[] elements, CardOrganizer newParent) {
+		if (newParent instanceof MagicDbContainter)
+			throw new MagicException("Cannot move to db");
 		ArrayList<CardElement> norm = new ArrayList<CardElement>();
 		list: for (CardElement el : elements) {
 			for (CardElement no : norm) {
