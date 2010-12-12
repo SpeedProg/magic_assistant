@@ -88,7 +88,16 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 			} else {
 				dropParent = ((CardElement) dropTarget).getParent();
 			}
-			DataManager.getModelRoot().move(toDropArray, dropParent);
+			try {
+				DataManager.getModelRoot().move(toDropArray, dropParent);
+			} catch (MagicException e) {
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation: "
+						+ e.getMessage());
+				return false;
+			} catch (Exception e) {
+				MagicUIActivator.log(e);
+				return false;
+			}
 		}
 		return false;
 	}
@@ -110,6 +119,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 		if (transfer == null)
 			return false;
 		if (MagicCardTransfer.getInstance() == transfer) {
+			// card
 			if (!(target instanceof CardCollection)) {
 				return false;
 			}
@@ -117,6 +127,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 				return false;
 			return true;
 		} else {
+			// deck
 			if (op == DND.DROP_COPY)
 				return false;
 			if (getCurrentLocation() == LOCATION_NONE)
