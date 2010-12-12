@@ -81,8 +81,11 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 		} else if (event.getSource() instanceof CardElement) {
 			CardElement elem = (CardElement) event.getSource();
 			if (event.getType() == CardEvent.RENAME_CONTAINER) {
+				// System.err.println("renamed " + event.getData() + " to " +
+				// elem.getLocation());
 				if (elem instanceof CardOrganizer) {
-					// panic!!
+					// ignore, individual rename per element would be sent for
+					// path and name changes
 				} else {
 					this.table.renameLocation((Location) event.getData(), elem.getLocation());
 					update();

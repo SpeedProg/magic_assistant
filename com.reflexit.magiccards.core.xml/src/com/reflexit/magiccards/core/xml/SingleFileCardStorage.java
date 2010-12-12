@@ -156,13 +156,16 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	@Override
 	public void setLocation(Location location) {
-		doSetLocation(location);
-		updateLocations();
-		autoSave();
+		if (this.location != null && !this.location.equals(location)) {
+			doSetLocation(location);
+			updateLocations();
+			this.file = LocationResolver.getInstance().getFile(location);
+			autoSave();
+		}
 	}
 
-	protected final void doSetLocation(Location location2) {
-		this.location = location2;
+	protected final void doSetLocation(Location location) {
+		this.location = location;
 	}
 
 	@Override
