@@ -41,7 +41,7 @@ public class DeckStoreTest extends TestCase {
 		tempFile = File.createTempFile("deck", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new CollectionSingleFileCardStore(tempFile, loc);
-		//((CollectionSingleFileCardStore) this.store).setName(name);
+		// ((CollectionSingleFileCardStore) this.store).setName(name);
 		((CollectionSingleFileCardStore) this.store).setType(IStorageInfo.DECK_TYPE);
 		this.m1 = CardGenerator.generateRandomCard();
 		this.m1.setName("name 1");
