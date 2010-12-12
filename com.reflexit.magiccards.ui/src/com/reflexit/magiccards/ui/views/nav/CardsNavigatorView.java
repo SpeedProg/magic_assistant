@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
@@ -53,6 +54,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -74,7 +76,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	public static final String ID = CardsNavigatorView.class.getName();
 	private Action doubleClickAction;
 	private CardsNavigatiorManager manager;
-	private Action delete;
 	private Action export;
 	private Action importa;
 	private Action newDeckWizard;
@@ -82,6 +83,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action openInMyCardsView;
 	private Action showSideboards;
 	private Action refresh;
+	private Clipboard clipboard;
 
 	/**
 	 * The constructor.
@@ -146,12 +148,109 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
 		setGlobalHandlers();
+		clipboard = new Clipboard(getSite().getShell().getDisplay());
+	}
+
+	class CutAction extends Action {
+		public CutAction() {
+			super("Cut");
+		}
+
+		@Override
+		public void run() {
+			IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+			CardElement[] gadgets = (CardElement[]) selection.toList().toArray(new CardElement[selection.size()]);
+			clipboard.setContents(new Object[] { gadgets }, new Transfer[] { MagicDeckTransfer.getInstance() });
+		}
+
+		@Override
+		public boolean isEnabled() {
+			return super.isEnabled();
+		}
+	}
+
+	class PasteAction extends Action {
+		public PasteAction() {
+			super("Paste");
+		}
+
+		@Override
+		public void run() {
+			IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
+			CardElement parent = (CardElement) sel.getFirstElement();
+			CardElement[] toDropArray = (CardElement[]) clipboard.getContents(MagicDeckTransfer.getInstance());
+			if (toDropArray == null)
+				return;
+			try {
+				if (!(parent instanceof CardOrganizer))
+					throw new MagicException("Has to be folder to move to");
+				DataManager.getModelRoot().move(toDropArray, (CardOrganizer) parent);
+			} catch (MagicException e) {
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation: "
+						+ e.getMessage());
+			}
+		}
+
+		@Override
+		public boolean isEnabled() {
+			IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
+			CardElement parent = (CardElement) sel.getFirstElement();
+			if (!(parent instanceof CardOrganizer))
+				return false;
+			CardElement[] toDropArray = (CardElement[]) clipboard.getContents(MagicDeckTransfer.getInstance());
+			if (toDropArray == null || toDropArray.length == 0)
+				return false;
+			return true;
+		}
+	}
+
+	class DeleteAction extends Action {
+		public DeleteAction() {
+			super("Delete");
+		}
+
+		@Override
+		public void run() {
+			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
+			if (sel.isEmpty())
+				return;
+			if (sel.size() == 1) {
+				CardElement el = (CardElement) sel.getFirstElement();
+				if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete " + el.getName() + "?")) {
+					el.remove();
+				}
+			} else {
+				if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these " + sel.size()
+						+ " elements?")) {
+					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+						CardElement el = (CardElement) iterator.next();
+						el.remove();
+					}
+				}
+			}
+		}
+
+		@Override
+		public boolean isEnabled() {
+			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
+			if (sel.isEmpty())
+				return false;
+			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+				CardElement el = (CardElement) iterator.next();
+				if (el.getParent() == DataManager.getModelRoot())
+					return false;
+				if (el instanceof CardOrganizer && ((CardOrganizer) el).hasChildren())
+					return false;
+			}
+			return true;
+		}
 	}
 
 	protected void setGlobalHandlers() {
-		ActionHandler deleteHandler = new ActionHandler(this.delete);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
+		service.activateHandler("org.eclipse.ui.edit.delete", new ActionHandler(new DeleteAction()));
+		service.activateHandler("org.eclipse.ui.edit.cut", new ActionHandler(new CutAction()));
+		service.activateHandler("org.eclipse.ui.edit.paste", new ActionHandler(new PasteAction()));
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
@@ -166,7 +265,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
-		this.delete.setEnabled(canRemove());
 		manager.add(new Separator());
 		manager.add(export);
 		manager.add(importa);
@@ -179,23 +277,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		// drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean canRemove() {
-		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
-		if (sel.isEmpty())
-			return false;
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-			CardElement el = (CardElement) iterator.next();
-			if (el.getParent() == DataManager.getModelRoot())
-				return false;
-			if (el instanceof CardOrganizer && ((CardOrganizer) el).hasChildren())
-				return false;
-		}
-		return true;
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
@@ -212,12 +293,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 			@Override
 			public void run() {
 				runDoubleClick();
-			}
-		};
-		this.delete = new Action("Delete") {
-			@Override
-			public void run() {
-				actionDelete();
 			}
 		};
 		this.export = new ExportAction();
@@ -309,29 +384,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		};
 	}
 
-	/**
-	 *
-	 */
-	protected void actionDelete() {
-		IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
-		if (sel.isEmpty())
-			return;
-		if (sel.size() == 1) {
-			CardElement el = (CardElement) sel.getFirstElement();
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete " + el.getName() + "?")) {
-				el.remove();
-			}
-		} else {
-			if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these " + sel.size()
-					+ " elements?")) {
-				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-					CardElement el = (CardElement) iterator.next();
-					el.remove();
-				}
-			}
-		}
-	}
-
 	protected void addNewDeck() {
 		// Grab the selection out of the tree and convert it to a
 		// StructuredSelection for use by the wizard.
@@ -385,6 +437,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	public void dispose() {
 		DataManager.getModelRoot().removeListener(this);
 		this.manager.dispose();
+		clipboard.dispose();
 		super.dispose();
 	}
 

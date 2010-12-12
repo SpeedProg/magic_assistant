@@ -78,8 +78,6 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 			}
 		} else {
 			CardElement[] toDropArray = (CardElement[]) data;
-			if (toDropArray.length == 0)
-				return false;
 			if (dropLocation == LOCATION_NONE)
 				return false;
 			CardOrganizer dropParent;
@@ -88,6 +86,8 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 			} else {
 				dropParent = ((CardElement) dropTarget).getParent();
 			}
+			if (toDropArray.length == 0)
+				return false;
 			try {
 				DataManager.getModelRoot().move(toDropArray, dropParent);
 			} catch (MagicException e) {

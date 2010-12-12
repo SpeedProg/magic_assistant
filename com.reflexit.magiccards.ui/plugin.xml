@@ -326,6 +326,16 @@
      
      <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.nav.CardsNavigatorView">
+                   <command
+              commandId="org.eclipse.ui.edit.cut"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+                <command
+              commandId="org.eclipse.ui.edit.paste"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
         <command
               commandId="org.eclipse.ui.edit.delete"
               mode="FORCE_TEXT"
