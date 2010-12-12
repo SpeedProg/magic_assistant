@@ -1,5 +1,11 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -8,17 +14,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 
+/**
+ * This represent a folder where decks or collections are stored (or any sort of
+ * super container)
+ * 
+ * @author Alena
+ * 
+ */
 public class CardOrganizer extends CardElement {
 	private final Collection<CardElement> children = new ArrayList<CardElement>();
 
@@ -76,7 +83,9 @@ public class CardOrganizer extends CardElement {
 		fireEvent(new CardEvent(this, CardEvent.REMOVE_CONTAINER, el));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#remove()
 	 */
 	@Override
@@ -107,9 +116,11 @@ public class CardOrganizer extends CardElement {
 		}
 		return res;
 	}
+
 	public boolean contains(Location loc) {
 		return contains(loc.getBaseFileName());
 	}
+
 	public boolean contains(String name) {
 		return findChieldByName(name) != null;
 	}

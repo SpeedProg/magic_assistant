@@ -15,6 +15,13 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
+/**
+ * This is base class that describe card containers. It basically either Deck or
+ * Deck Folder.
+ * 
+ * @author Alena
+ * 
+ */
 public abstract class CardElement extends EventManager {
 	private String name; // name
 	private IPath path; // project relative path

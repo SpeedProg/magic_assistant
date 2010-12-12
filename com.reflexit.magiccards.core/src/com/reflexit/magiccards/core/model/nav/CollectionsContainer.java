@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.InputStream;
+import java.net.URI;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -7,9 +10,12 @@ import org.eclipse.core.runtime.IPath;
 
 import com.reflexit.magiccards.core.model.Location;
 
-import java.io.InputStream;
-import java.net.URI;
-
+/**
+ * Specific organizer for decks and collections
+ * 
+ * @author Alena
+ * 
+ */
 public class CollectionsContainer extends CardOrganizer {
 	public CollectionsContainer(String name, CardOrganizer parent) {
 		super(name, parent);
@@ -32,8 +38,7 @@ public class CollectionsContainer extends CardOrganizer {
 			CardElement el = findChieldByName(name);
 			if (mem instanceof IContainer) {
 				if (el == null) {
-					CollectionsContainer con = new CollectionsContainer(name,
-							this);
+					CollectionsContainer con = new CollectionsContainer(name, this);
 					con.loadChildren();
 				} else {
 					if (el instanceof CollectionsContainer) {

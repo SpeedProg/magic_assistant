@@ -11,6 +11,12 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
+/**
+ * It is object representing a Deck or Collection (but not the card it contains)
+ * 
+ * @author Alena
+ * 
+ */
 public class CardCollection extends CardElement {
 	transient private ICardStore<IMagicCard> store;
 	transient protected boolean deck;
