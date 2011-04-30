@@ -45,7 +45,9 @@ public class ManaCurveControl extends AbstractDeckPage implements IDeckPage {
 		ICardEventManager cardStore = store;
 		String cardCountTotal = "";
 		if (cardStore instanceof ICardCountable) {
-			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+			float acost = CardStoreUtils.getInstance().getAverageManaCost(store);
+			int count = ((ICardCountable) cardStore).getCount();
+			cardCountTotal = "Total cards: " + count + ". Average cost: " + acost;
 		}
 		return cardCountTotal;
 	}
