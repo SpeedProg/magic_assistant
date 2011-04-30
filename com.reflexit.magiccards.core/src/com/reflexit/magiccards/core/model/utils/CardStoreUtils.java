@@ -27,7 +27,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CardStoreUtils {
 	public static CardStoreUtils getInstance() {
@@ -35,13 +35,13 @@ public class CardStoreUtils {
 			instance = new CardStoreUtils();
 		return instance;
 	}
+
 	public static CardStoreUtils instance;
 
 	/**
-	 * mana curve is array 0 .. 8 of card counts,
-	 * where non-land is counted, 
-	 * arr[8] - is cards with X cost in it, 
-	 * arr[7] - is 7+
+	 * mana curve is array 0 .. 8 of card counts, where non-land is counted,
+	 * arr[8] - is cards with X cost in it, arr[7] - is 7+
+	 * 
 	 * @param store
 	 * @return mana curve for given store
 	 */
@@ -68,6 +68,28 @@ public class CardStoreUtils {
 				System.err.println("mana curve: cost:" + elem.getCost());
 		}
 		return bars;
+	}
+
+	public float getAverageManaCost(ICardStore store) {
+		int total = 0;
+		int sum = 0;
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			IMagicCard elem = (IMagicCard) iterator.next();
+			int cost = elem.getCmc();
+			if (elem.getCost().length() == 0)
+				continue; // land
+			int count;
+			if (elem instanceof ICardCountable) {
+				count = ((ICardCountable) elem).getCount();
+			} else {
+				count = 1;
+			}
+			sum += cost;
+			total += count;
+		}
+		if (total == 0)
+			return 0;
+		return sum / (float) total;
 	}
 
 	public static Collection<IMagicCard> randomize(ICardStore store) {
