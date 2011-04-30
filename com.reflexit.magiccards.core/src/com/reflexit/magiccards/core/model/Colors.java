@@ -35,22 +35,45 @@ public class Colors implements ISearchableProperty {
 		if (cost.length() == 0)
 			return "No Cost";
 		StringBuffer color = new StringBuffer();
-		addColor("B", "Black", cost, color);
-		addColor("U", "Blue", cost, color);
-		addColor("G", "Green", cost, color);
-		addColor("R", "Red", cost, color);
 		addColor("W", "White", cost, color);
+		addColor("U", "Blue", cost, color);
+		addColor("B", "Black", cost, color);
+		addColor("R", "Red", cost, color);
+		addColor("G", "Green", cost, color);
 		String res = color.toString();
 		if (res.length() == 0)
 			return "Colorless";
 		return res;
 	}
 
+	public static int getColorSort(String cost) {
+		if (cost == null)
+			return 0;
+		if (cost.length() == 0)
+			return 0;
+		int xx = 0;
+		char c[] = { 'W', 'U', 'B', 'R', 'G' };
+		int times = 0;
+		for (int i = 0; i < c.length; i++) {
+			char cw = c[i];
+			xx *= 10;
+			if (cost.indexOf(cw) >= 0) {
+				times++;
+				xx += 5 - i;
+			}
+		}
+		if (xx == 0)
+			return 1;
+		if (times == 1)
+			xx *= 100000;
+		return xx;
+	}
+
 	/**
-	 
+	 * 
 	 * @param abbr
 	 * @param name
-	 * @param cost 
+	 * @param cost
 	 * @param buf
 	 */
 	private static void addColor(String abbr, String name, String cost, StringBuffer buf) {
@@ -60,6 +83,13 @@ public class Colors implements ISearchableProperty {
 			}
 			buf.append(name);
 		}
+	}
+
+	private static boolean hasColor(String abbr, String cost) {
+		if (cost.indexOf(abbr) >= 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/*

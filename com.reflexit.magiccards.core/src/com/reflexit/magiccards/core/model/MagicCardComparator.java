@@ -22,8 +22,8 @@ public class MagicCardComparator implements Comparator {
 			Object a2 = c2.getObjectByField(sby);
 			int d = 0;
 			if (this.sort == MagicCardField.COST) {
-				a1 = Colors.getColorName((String) a1);
-				a2 = Colors.getColorName((String) a2);
+				a1 = Colors.getColorSort((String) a1);
+				a2 = Colors.getColorSort((String) a2);
 			}
 			if (a1 == null && a2 != null) {
 				d = 1;
@@ -48,6 +48,11 @@ public class MagicCardComparator implements Comparator {
 					d = 1;
 				else
 					d = ((Comparable) a1).compareTo(a2);
+			}
+			if (d == 0 && this.sort == MagicCardField.CMC) {
+				int d1 = Colors.getColorSort((String) c1.getObjectByField(MagicCardField.COST));
+				int d2 = Colors.getColorSort((String) c2.getObjectByField(MagicCardField.COST));
+				d = d1 - d2;
 			}
 			if (d == 0 && c1.getCardId() != 0) {
 				d = c1.getCardId() - c2.getCardId();
