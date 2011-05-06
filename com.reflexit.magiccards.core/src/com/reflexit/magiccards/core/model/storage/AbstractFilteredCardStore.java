@@ -19,7 +19,6 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -142,7 +141,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
 		initialize();
 		Collection<IMagicCard> filteredList;
-		if (filter.getSortField() == null) {
+		if (filter.getSortOrder().isEmpty()) {
 			filteredList = new ArrayList<IMagicCard>();
 			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
 				IMagicCard elem = iterator.next();
@@ -233,7 +232,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
-		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortField(), filter.isAscending());
+		Comparator<IMagicCard> comp = filter.getSortOrder().getComparator();
 		return comp;
 	}
 

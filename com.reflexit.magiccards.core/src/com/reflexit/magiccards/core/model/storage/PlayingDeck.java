@@ -17,19 +17,20 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	ICardStore deck;
 	MemoryCardStore hand;
 	MemoryCardStore library;
+
 	static class DrawDeck extends MemoryCardStore implements ICardCountable {
+		@Override
 		public int getCount() {
 			return size();
 		}
@@ -42,8 +43,9 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		setStore(store);
 	}
 
+	@Override
 	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
-		Comparator<IMagicCard> comp = MagicCardComparator.getComparator(filter.getSortField(), filter.isAscending());
+		Comparator<IMagicCard> comp = filter.getSortOrder().getComparator();
 		return comp;
 	}
 
@@ -54,8 +56,12 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.core.model.storage.IFilteredCardStore#getCardStore()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.core.model.storage.IFilteredCardStore#getCardStore
+	 * ()
 	 */
 	public ICardStore getCardStore() {
 		return this.hand;
@@ -80,10 +86,12 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		this.library.addAll(randomize);
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Location getLocation() {
 		return deck.getLocation();
 	}

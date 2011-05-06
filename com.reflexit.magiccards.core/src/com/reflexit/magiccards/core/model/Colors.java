@@ -66,7 +66,7 @@ public class Colors implements ISearchableProperty {
 			return 1;
 		if (times == 1)
 			xx *= 100000;
-		return xx;
+		return -xx;
 	}
 
 	/**

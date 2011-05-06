@@ -9,8 +9,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter.SearchToken.TokenType;
 public class MagicCardFilter {
 	private Expr root;
 	private int limit = Integer.MAX_VALUE;
-	private ICardField sortField = null;
-	private boolean ascending;
+	private SortOrder sortOrder = new SortOrder();
 	private ICardField groupField = null;
 	private boolean onlyLastSet = false;
 
@@ -630,25 +629,17 @@ public class MagicCardFilter {
 		return this.limit;
 	}
 
-	public void setAscending(boolean ascending) {
-		this.ascending = ascending;
-	}
-
-	public boolean isAscending() {
-		return this.ascending;
-	}
-
 	/**
 	 * sort field
 	 * 
 	 * @param sortField
 	 */
-	public void setSortField(ICardField sortField) {
-		this.sortField = sortField;
+	public void setSortField(ICardField sortField, boolean accending) {
+		sortOrder.setSortField(sortField, accending);
 	}
 
-	public ICardField getSortField() {
-		return this.sortField;
+	public SortOrder getSortOrder() {
+		return this.sortOrder;
 	}
 
 	public ICardField getGroupField() {
@@ -678,5 +669,9 @@ public class MagicCardFilter {
 
 	public void setOnlyLastSet(boolean onlyLastSet) {
 		this.onlyLastSet = onlyLastSet;
+	}
+
+	public void setNoSort() {
+		sortOrder.clear();
 	}
 }
