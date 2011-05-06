@@ -78,11 +78,10 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 			else
 				sortDirection = SWT.UP;
 			this.viewer.getTree().setSortDirection(sortDirection);
-			this.filter.setAscending(sortDirection == SWT.UP);
 			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
-			this.filter.setSortField(man.getSortField());
+			this.filter.setSortField(man.getSortField(), sortDirection == SWT.DOWN);
 		} else {
-			this.filter.setSortField(null);
+			this.filter.setNoSort();
 		}
 	}
 

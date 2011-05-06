@@ -6,10 +6,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardComparator;
+import com.reflexit.magiccards.core.model.SortOrder;
 
 public class PrintingsViewerComparator extends ViewerComparator {
-	private Comparator comparator;
+	private SortOrder comparator = new SortOrder();
 
 	public PrintingsViewerComparator() {
 		super();
@@ -21,7 +21,7 @@ public class PrintingsViewerComparator extends ViewerComparator {
 	}
 
 	public void setOrder(ICardField field, boolean asc) {
-		comparator = MagicCardComparator.getComparator(field, asc);
+		comparator.setSortField(field, asc);
 	}
 
 	@Override

@@ -463,7 +463,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	protected void actionGroupBy(ICardField field) {
 		getPreferenceStore().setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
-		this.manager.filter.setAscending(false);
 		this.manager.updateGroupBy(field);
 		reloadData();
 	}

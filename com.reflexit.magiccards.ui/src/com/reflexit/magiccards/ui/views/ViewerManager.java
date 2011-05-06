@@ -226,7 +226,7 @@ public abstract class ViewerManager extends MagicColumnCollection implements IDi
 		if (oldIndex == field)
 			return;
 		if (field != null)
-			filter.setSortField(field);
+			filter.setSortField(field, true);
 		this.filter.setGroupField(field);
 	}
 
