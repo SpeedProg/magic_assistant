@@ -80,3 +80,5 @@ Worldwake|WWK||February 2010|Expansion|Zendikar
 Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar
 Magic 2011|M11||July 2010|Core
 Scars of Mirrodin|SOM||October 2010|Expansion|Scars of Mirrodin
+Mirrodin Besieged|MBS||February 2011|Expansion|Mirrodin Besieged
+New Phyrexia|NPH||May 2011|Expansion|New Phyrexia

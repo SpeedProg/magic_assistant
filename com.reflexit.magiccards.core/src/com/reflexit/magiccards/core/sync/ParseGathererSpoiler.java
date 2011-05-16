@@ -244,6 +244,11 @@ public class ParseGathererSpoiler {
 		manaMap.put("2/W Mana", "{2/W}");
 		manaMap.put("Tap", "{T}");
 		manaMap.put("Untap", "{Q}");
+		manaMap.put("Phyrexian Blue", "{UP}");
+		manaMap.put("Phyrexian White", "{WP}");
+		manaMap.put("Phyrexian Black", "{BP}");
+		manaMap.put("Phyrexian Green", "{GP}");
+		manaMap.put("Phyrexian Red", "{RP}");
 	}
 
 	private static String htmlToString(String str) {
