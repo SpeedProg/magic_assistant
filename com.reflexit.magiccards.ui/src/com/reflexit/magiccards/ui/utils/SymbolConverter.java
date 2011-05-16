@@ -1,5 +1,11 @@
 package com.reflexit.magiccards.ui.utils;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.FontData;
@@ -7,12 +13,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -60,6 +60,11 @@ public class SymbolConverter {
 		manaMap.put("{2/R}", "icons/mana/Symbol_2R_mana.gif");
 		manaMap.put("{T}", "icons/tap.gif");
 		manaMap.put("{Q}", "icons/untap.gif");
+		manaMap.put("{UP}", "icons/mana/Symbol_UP_mana.gif");
+		manaMap.put("{WP}", "icons/mana/Symbol_WP_mana.gif");
+		manaMap.put("{BP}", "icons/mana/Symbol_BP_mana.gif");
+		manaMap.put("{GP}", "icons/mana/Symbol_GP_mana.gif");
+		manaMap.put("{RP}", "icons/mana/Symbol_RP_mana.gif");
 	}
 	static {
 		// init
@@ -97,7 +102,7 @@ public class SymbolConverter {
 	}
 
 	public static void drawManaImage(GC gc, String text1, int x, int y) {
-		//gc.setAlpha(50);
+		// gc.setAlpha(50);
 		String text = text1;
 		int x_offset = x;
 		int y_offset = y;
@@ -146,8 +151,8 @@ public class SymbolConverter {
 		}
 		String style = getHtmlStyle(con);
 		String html = "<html>" //
-		        + "<head><base href=\"" + (bundleBase == null ? "." : bundleBase) + "\"/></head>" + //
-		        "<body style='overflow:auto;" + style + "'>" + text + "</body></html>";
+				+ "<head><base href=\"" + (bundleBase == null ? "." : bundleBase) + "\"/></head>" + //
+				"<body style='overflow:auto;" + style + "'>" + text + "</body></html>";
 		return html;
 	}
 
