@@ -41,7 +41,7 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 	@Override
 	protected Control createContents(Composite parent) {
 		this.onlyLastSet = new Button(parent, SWT.CHECK);
-		this.onlyLastSet.setText("Only show the latest set");
+		this.onlyLastSet.setText("Only show the card from the latest set if multiple available");
 		this.onlyLastSet.setSelection(getPreferenceStore().getBoolean(LAST_SET));
 		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION, true);
 		this.comp.setPreferenceStore(getPreferenceStore());
