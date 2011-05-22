@@ -3,9 +3,11 @@ package com.reflexit.magiccards.ui.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -43,10 +45,13 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 		this.onlyLastSet = new Button(parent, SWT.CHECK);
 		this.onlyLastSet.setText("Only show the card from the latest set if multiple available");
 		this.onlyLastSet.setSelection(getPreferenceStore().getBoolean(LAST_SET));
-		this.comp = new EditionsComposite(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION, true);
+		Group editions = new Group(parent, SWT.NONE);
+		editions.setText("Select visible sets");
+		editions.setLayout(new FillLayout());
+		this.comp = new EditionsComposite(editions, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION, true);
 		this.comp.setPreferenceStore(getPreferenceStore());
 		this.comp.initialize();
-		return this.comp;
+		return editions;
 	}
 
 	@Override
