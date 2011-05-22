@@ -22,6 +22,7 @@ MTG Database View specific context menu actions:
 <li>Add to Active Deck/Collection (hotkey + or =) - menu to move card to active collection (or deck). 
     Active collection is the collection that was active last time</li>
 <li>Add to - add card to selected deck/collection. Collection must be open to show up in the menu.</li>
+<li>Show Other Sets - for selected card show if this is printed in other sets, opens the <a href="#viewprintings">Printings</a> view</li>
 <p/>
 <p>
 <img src="../screenshots/views/mtg_database.png" alt="mtg database view image"/>
@@ -166,12 +167,21 @@ You can also Export and Import deck/collections from this view.
 
 Printings view has two modes. 
 <p/>
-In "Magic Database" mode it shows all sets in which selected card was printing (which is know to local database),
+In "Magic Database" mode it shows all sets in which selected card was printed (which is known to local database),
 for example land such as Island would be listed at least four times for each core set in this view.
 <p/>
+<p>
+<img src="../screenshots/views/printings.png" alt="Printings view image"/>
+</p>
 In "My Cards" mode it shows instances of selected card available in your collections (columns are "Set", "Ownership", "Count" and "Location").
-You can drag cards from this view to deck/collection.  Regular rules apply - for db mode - it will add a card, for actuall card it will move a card pile,
+You can drag cards from this view to deck/collection.  Regular rules apply - for db mode - it will add a card, for actual card it will move a card pile,
 unless you "copy" drag (which is usually ctrl+drag). 
-
+<p>
+<img src="../screenshots/views/printings_mycards.png" alt="Printings view image"/>
+</p>
+To switch between these two modes press "M" looking button.
+<p>
+The globe looking button is "Update printings from the web", it will synchronize local database copy with gatherer database for selected card.
+</p>
 </body>
 </html>
