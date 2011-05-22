@@ -72,7 +72,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			Composite a = new Composite(parent, SWT.NONE);
 			a.setLayout(new GridLayout(2, false));
 			createAmountControl(a);
-			this.edi = new EditionsComposite(a, SWT.BORDER | SWT.MULTI, true);
+			this.edi = new EditionsComposite(a, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION, true);
 			this.edi.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					pageChanged();
