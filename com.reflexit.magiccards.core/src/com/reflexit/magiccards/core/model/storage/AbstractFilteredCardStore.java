@@ -93,6 +93,16 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 	}
 
+	public boolean contains(T card) {
+		synchronized (this) {
+			for (T element : this) {
+				if (element.equals(card))
+					return true;
+			}
+			return false;
+		}
+	};
+
 	protected synchronized void addFilteredCard(T card) {
 		getFilteredList().add(card);
 	}

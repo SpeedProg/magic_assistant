@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.MagicException;
 
 /**
  * @author Alena
- *
+ * 
  */
 public abstract class AbstractStorage<T> implements IStorage<T> {
 	private boolean loaded = false;
@@ -120,6 +120,16 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		}
 		return modified;
 	}
+
+	public boolean contains(T card) {
+		synchronized (this) {
+			for (T element : this) {
+				if (element.equals(card))
+					return true;
+			}
+			return false;
+		}
+	};
 
 	protected abstract boolean doAddCard(T card);
 

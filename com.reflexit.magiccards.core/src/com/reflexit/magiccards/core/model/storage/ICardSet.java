@@ -6,19 +6,22 @@ import java.util.Iterator;
 public interface ICardSet<T> extends Iterable<T> {
 	/**
 	 * Total number of cards
+	 * 
 	 * @return
 	 */
 	public abstract int size();
 
 	/**
-	 * Add a card to physical media 
+	 * Add a card to physical media
+	 * 
 	 * @param card
 	 * @return
 	 */
 	public abstract boolean add(T card);
 
 	/**
-	 * Add cards to a physical media 
+	 * Add cards to a physical media
+	 * 
 	 * @param card
 	 * @return TODO
 	 * @return
@@ -26,14 +29,16 @@ public interface ICardSet<T> extends Iterable<T> {
 	public abstract boolean addAll(Collection<? extends T> list);
 
 	/**
-	 * Remove a card from a physical media 
+	 * Remove a card from a physical media
+	 * 
 	 * @param card
 	 * @return
 	 */
 	public abstract boolean remove(T o);
 
 	/**
-	 * Remove cards to a physical media 
+	 * Remove cards to a physical media
+	 * 
 	 * @param card
 	 * @return
 	 */
@@ -48,4 +53,6 @@ public interface ICardSet<T> extends Iterable<T> {
 	 * Read-only iterator
 	 */
 	public abstract Iterator<T> iterator();
+
+	public boolean contains(T card);
 }

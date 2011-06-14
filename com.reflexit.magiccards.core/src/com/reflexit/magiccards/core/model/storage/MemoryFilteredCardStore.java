@@ -53,4 +53,8 @@ public class MemoryFilteredCardStore extends AbstractFilteredCardStore<IMagicCar
 	public void clear() {
 		cards.removeAll();
 	}
+
+	public boolean contains(IMagicCard card) {
+		return cards.contains(card);
+	}
 }

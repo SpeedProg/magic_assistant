@@ -112,7 +112,7 @@ public class CardCache {
 		return ParseGathererNewVisualSpoiler.createSetImageURL(editionAbbr, rarity);
 	}
 
-	public static String createLocalImageFilePath(int cardId, String editionAbbr) throws MalformedURLException {
+	public static String createLocalImageFilePath(int cardId, String editionAbbr) {
 		IPath path = Activator.getStateLocationAlways();
 		if (editionAbbr.equals("CON")) {
 			// special hack for windows, which cannot create CON directory
@@ -122,6 +122,15 @@ public class CardCache {
 		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
 		String file = path.append(part).toPortableString();
 		return file;
+	}
+
+	public static String createLocalImageFilePath(IMagicCard card) {
+		String edition = card.getSet();
+		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
+		if (editionAbbr == null)
+			return null;
+		int cardId = card.getCardId();
+		return createLocalImageFilePath(cardId, editionAbbr);
 	}
 
 	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) throws MalformedURLException {

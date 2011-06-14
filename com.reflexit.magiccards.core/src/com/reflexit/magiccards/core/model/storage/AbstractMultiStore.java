@@ -353,5 +353,15 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		public void setLocation(Location location) {
 			throw new UnsupportedOperationException();
 		}
+
+		public boolean contains(T card) {
+			throw new UnsupportedOperationException();
+		}
+	};
+
+	public boolean contains(T card) {
+		Location loc = getLocation(card);
+		AbstractCardStoreWithStorage<T> store = map.get(loc);
+		return store.contains(card);
 	};
 }
