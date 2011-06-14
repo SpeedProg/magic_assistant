@@ -53,7 +53,7 @@ public class AbstractDeckPage implements IDeckPage {
 
 	public void setFilteredStore(IFilteredCardStore store) {
 		this.store = store.getCardStore();
-	};
+	}
 
 	public ICardStore<IMagicCard> getCardStore() {
 		if (store == null && view != null && view.getCardCollection() != null)
