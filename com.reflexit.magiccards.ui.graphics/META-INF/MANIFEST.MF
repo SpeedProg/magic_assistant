@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Graphics
+Bundle-SymbolicName: com.reflexit.magiccards.ui.graphics;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.reflexit.magiccards.ui.graphics.Activator
+Bundle-Vendor: REFLEXIT
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.reflexit.magiccards.ui;bundle-version="1.1.0",
+ com.reflexit.magiccards.core;bundle-version="1.1.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
