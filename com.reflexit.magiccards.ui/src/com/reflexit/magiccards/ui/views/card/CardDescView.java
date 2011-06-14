@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.card;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,7 +14,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -37,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
+import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -44,6 +43,7 @@ import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParseGathererRulings;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
@@ -83,6 +83,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						CardDescView.this.message.setVisible(nocard);
 						if (nocard)
 							message.setText("Click on a card to populate the view");
+						else
+							message.setText("");
+						message.getParent().layout(true);
 						if (!isStillNeeded(card))
 							return;
 						CardDescView.this.panel.reload(card);
@@ -110,7 +113,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				Image remoteImage1 = null;
 				IOException e1 = null;
 				try {
-					remoteImage1 = createCardImage(card);
+					remoteImage1 = ImageCreator.getInstance().getCardImage(card, CardCache.isLoadingEnabled(), false);
+				} catch (CachedImageNotFoundException e) {
+					// skip
 				} catch (IOException e) {
 					e1 = e;
 				}
@@ -323,15 +328,5 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	public Display getDisplay() {
 		return getViewSite().getShell().getDisplay();
-	}
-
-	private Image createCardImage(IMagicCard card) throws IOException {
-		URL url = CardCache.createCardURL(card);
-		if (url == null)
-			return null;
-		ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
-		Image remoteImage = imageDesc.createImage(false, getDisplay());
-		MagicUIActivator.trace("Loading URL: " + url + (remoteImage == null ? " failed" : " success"));
-		return remoteImage;
 	}
 }
