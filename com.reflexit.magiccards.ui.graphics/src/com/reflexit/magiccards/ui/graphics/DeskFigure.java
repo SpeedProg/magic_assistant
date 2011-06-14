@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
-import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 public class DeskFigure extends XFigure {
 	ArrayList<CardFigure> children;
@@ -129,31 +129,8 @@ public class DeskFigure extends XFigure {
 	}
 
 	private Image createCardNotFoundImage(IMagicCard card) {
-		Image im = createCardNotFoundImage();
-		GC gc = new GC(im);
-		gc.setAntialias(SWT.ON);
-		gc.setFont(canvas.getFont());
-		gc.drawText(card.getName(), 20, 16, true);
-		gc.drawText("Image not found", 30, 46, true);
-		gc.dispose();
+		Image im = ImageCreator.getInstance().createCardNotFoundImage(card);
 		return im;
-	}
-
-	private Image createCardNotFoundImage() {
-		int width = 223;
-		int height = 310;
-		Image im = MagicUIActivator.getDefault().getImage("icons/template.png");
-		return getResized(im, width, height);
-	}
-
-	private Image getResized(Image image, int width, int height) {
-		Image scaled = new Image(Display.getDefault(), width, height);
-		GC gc = new GC(scaled);
-		gc.setAntialias(SWT.ON);
-		gc.setInterpolation(SWT.HIGH);
-		gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height);
-		gc.dispose();
-		return scaled;
 	}
 
 	public void resize() {
