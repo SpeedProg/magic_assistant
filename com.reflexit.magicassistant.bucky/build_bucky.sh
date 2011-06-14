@@ -30,6 +30,7 @@ TIMESTAMP=`date +%Y%m%d%H%M`
 UPLOAD=${UPLOAD:-0}
 INSTALL=${INSTALL:-0}
 UPDATE_SITE=${UPDATE_SITE:-0}
+UPDATE_DOCS=${UPDATE_DOCS:-0}
 BUILD=${BUILD:-1}
 VERSION=`grep Bundle-Version $WORKSPACE/com.reflexit.magiccards-rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'` 
 RELEASE=$VERSION
@@ -39,7 +40,6 @@ fi
  
 mkdir -p /c/tmp/w
 echo Building $RELEASE
-
 if [ "$BUILD" -eq 1 ]; then
 
 RESULT="$BUILD_DIR/result/com.reflexit.magicassistant.bucky_1.0.0-eclipse.feature"
@@ -101,4 +101,9 @@ if [ "$UPDATE_SITE" -eq 1 ]; then
   $SCP -v -i "$SF_PRIVATE_KEY" plugins/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/plugins/"
   $SCP -v -i "$SF_PRIVATE_KEY" *.xml *.jar "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/"
   )
+fi
+if [ "$UPDATE_DOCS" -eq 1 ]; then
+	echo "Uploading docs for $RELEASE..."
+	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.help/html/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
+	#$SCP -r -batch -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.ui/icons/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.ui/icons/
 fi
