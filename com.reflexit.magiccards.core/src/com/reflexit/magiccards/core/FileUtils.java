@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.exports;
+package com.reflexit.magiccards.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,16 +28,17 @@ public class FileUtils {
 	}
 
 	/**
-	 * @param inStream
+	 * @param in
 	 * @param out
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public static void copyFile(InputStream fis, File out) throws IOException {
+	public static void saveStream(InputStream in, File out) throws IOException {
+		out.getAbsoluteFile().getParentFile().mkdirs();
 		FileOutputStream fos = new FileOutputStream(out);
 		try {
-			byte[] buf = new byte[1024];
+			byte[] buf = new byte[1024 * 4];
 			int i = 0;
-			while ((i = fis.read(buf)) != -1) {
+			while ((i = in.read(buf)) != -1) {
 				fos.write(buf, 0, i);
 			}
 		} catch (IOException e) {

@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -380,6 +381,7 @@ public class ParseGathererNewVisualSpoiler {
 		return str;
 	}
 
+	@NotNull
 	public static URL createImageURL(int cardId, String editionAbbr) throws MalformedURLException {
 		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
 	}

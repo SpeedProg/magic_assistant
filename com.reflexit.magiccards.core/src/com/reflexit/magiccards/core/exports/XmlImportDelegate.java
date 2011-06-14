@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
@@ -45,7 +46,7 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 			File tmp = File.createTempFile("magic", ".xml");
 			tmp.deleteOnExit();
 			try {
-				FileUtils.copyFile(getStream(), tmp);
+				FileUtils.saveStream(getStream(), tmp);
 				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
 				IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>) store).getStorage();
 				Location location = storage.getLocation();

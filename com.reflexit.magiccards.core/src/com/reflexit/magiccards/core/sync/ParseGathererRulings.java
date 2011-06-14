@@ -235,7 +235,7 @@ public class ParseGathererRulings {
 				}
 				if (fieldMaps.contains(MagicCardField.ID)) {
 					// load and cache image
-					CardCache.createCardURL(magicCard, true, true);
+					CardCache.loadCardImageOffline(magicCard, false);
 				}
 				monitor.worked(1);
 			}
