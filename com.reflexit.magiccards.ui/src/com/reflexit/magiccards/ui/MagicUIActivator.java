@@ -37,7 +37,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
@@ -57,7 +57,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
 	 * )
@@ -70,7 +70,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static MagicUIActivator getDefault() {
@@ -80,7 +80,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	/**
 	 * Returns an image descriptor for the image file at the given plug-in
 	 * relative path
-	 *
+	 * 
 	 * @param path
 	 *            the path
 	 * @return the image descriptor
@@ -137,7 +137,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/**
 	 * Puts image in a registy using key
-	 *
+	 * 
 	 * @param key
 	 * @param desc
 	 * @return
@@ -145,7 +145,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public Image getImage(String key, Image desc) {
 		ImageRegistry registry = getImageRegistry();
 		Image image = registry.get(key);
-		if (image == null) {
+		if (image == null && desc != null) {
 			registry.put(key, desc);
 			image = registry.get(key);
 		}

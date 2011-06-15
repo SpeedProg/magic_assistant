@@ -31,7 +31,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 
 	public Image getActualImage(Object element) {
 		if (element instanceof IMagicCard) {
-			return SymbolConverter.buildImage(((IMagicCard) element).getCost());
+			return SymbolConverter.buildCostImage(((IMagicCard) element).getCost());
 		}
 		return null;
 	}
@@ -66,7 +66,8 @@ public class CostColumn extends AbstractColumn implements Listener {
 			}
 			int imageHeight = 12;
 			int yi = y + (Math.max(bounds.height - imageHeight, 2)) / 2;
-			SymbolConverter.drawManaImage(event.gc, cost, x + 2, yi);
+			Image costImage = SymbolConverter.buildCostImage(cost);
+			event.gc.drawImage(costImage, x + 2, yi);
 			if (text != null) {
 				int yt = y + bounds.height - 2 - tw.y;
 				event.gc.setClipping(x, yt, bounds.width, bounds.height);

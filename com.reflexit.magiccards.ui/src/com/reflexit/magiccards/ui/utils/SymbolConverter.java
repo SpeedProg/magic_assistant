@@ -8,11 +8,15 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -87,21 +91,36 @@ public class SymbolConverter {
 		return style;
 	}
 
-	public static Image buildImage(String text1) {
-		if (text1 == null || text1.length() == 0)
-			return null;
-		Image image2 = MagicUIActivator.getDefault().getImageRegistry().get(text1);
-		if (image2 != null)
-			return image2;
-		Image image = new Image(MagicUIActivator.getDefault().getWorkbench().getDisplay(), 12 * 7, 12);
+	public static Image buildCostImage(String cost) {
+		if (cost == null)
+			cost = "";
+		Image cachedImage = MagicUIActivator.getDefault().getImageRegistry().get(cost);
+		if (cachedImage != null)
+			return cachedImage;
+		Display display = Display.getCurrent();
+		int height = 12;
+		Image image = new Image(display, 12 * 7, height);
+		// painting on green to add transparency later
+		Color backColor = display.getSystemColor(SWT.COLOR_GREEN);
 		GC gc = new GC(image);
-		drawManaImage(gc, text1, 0, 0);
+		gc.setBackground(backColor);
+		gc.fillRectangle(image.getBounds());
+		int width = drawManaImage(gc, cost, 0, 0);
+		final Image clippedImage = new Image(display, width, height);
+		gc.copyArea(clippedImage, 0, 0);
 		gc.dispose();
-		MagicUIActivator.getDefault().getImageRegistry().put(text1, image);
-		return image;
+		// transparency
+		ImageData imageData = clippedImage.getImageData();
+		int backPixel = imageData.palette.getPixel(backColor.getRGB());
+		imageData.transparentPixel = backPixel;
+		Image imageWithTransparentBg = new Image(display, imageData);
+		MagicUIActivator.getDefault().getImageRegistry().put(cost, imageWithTransparentBg);
+		image.dispose();
+		clippedImage.dispose();
+		return imageWithTransparentBg;
 	}
 
-	public static void drawManaImage(GC gc, String text1, int x, int y) {
+	private static int drawManaImage(GC gc, String text1, int x, int y) {
 		// gc.setAlpha(50);
 		String text = text1;
 		int x_offset = x;
@@ -138,6 +157,7 @@ public class SymbolConverter {
 				}
 			}
 		}
+		return x_offset - x;
 	}
 
 	public static String wrapHtml(String text, Control con) {

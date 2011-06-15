@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
@@ -50,18 +51,18 @@ class CardDescComposite extends Composite {
 		panel.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		this.imageControl = new Label(panel, SWT.NONE);
 		GridDataFactory.fillDefaults() //
-		        .grab(true, false) //
-		        .align(SWT.BEGINNING, SWT.BEGINNING)//
-		        .hint(width, hight).applyTo(this.imageControl);
+				.grab(true, false) //
+				.align(SWT.BEGINNING, SWT.BEGINNING)//
+				.hint(width, hight).applyTo(this.imageControl);
 		createImages();
 		this.powerProvider = new PowerColumn(MagicCardField.POWER, null, null);
 		this.toughProvider = new PowerColumn(MagicCardField.TOUGHNESS, null, null);
 		details = new Composite(panel, SWT.INHERIT_DEFAULT);
 		details.setBackground(panel.getBackground());
 		GridDataFactory.fillDefaults()//
-		        .align(SWT.FILL, SWT.FILL)//
-		        .grab(true, true)//
-		        .applyTo(details);
+				.align(SWT.FILL, SWT.FILL)//
+				.grab(true, true)//
+				.applyTo(details);
 		details.setLayout(new StackLayout());
 		this.textBackup = new Text(details, SWT.WRAP);
 		this.textBackup.setFont(panel.getFont());
@@ -101,7 +102,7 @@ class CardDescComposite extends Composite {
 
 	public void setImageNotFound(IMagicCard card, Throwable e) {
 		if (card == this.card) {
-			this.image = this.cardNotFound;
+			this.image = ImageCreator.getInstance().createCardNotFoundImage(card);
 			this.imageControl.setImage(this.image);
 		}
 	}
@@ -120,6 +121,7 @@ class CardDescComposite extends Composite {
 		ld.heightHint = ld.minimumHeight;
 		this.layout(true, true);
 	}
+
 	private boolean logOnce = false;
 
 	void reload(IMagicCard card) {

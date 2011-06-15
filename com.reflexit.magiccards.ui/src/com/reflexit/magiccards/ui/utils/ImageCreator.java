@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -10,23 +9,43 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class ImageCreator {
+	private static final String TEXT_ITALIC_FONT_KEY = "text_italic";
+	private static final String TEXT_FONT_KEY = "text";
+	private static final String TYPE_FONT_KEY = "type";
+	private static final String TITLE_FONT_KEY = "title";
+	private static final String CARD_TEMPLATE = "card_template";
 	static private ImageCreator instance;
+	private FontRegistry fontRegistry;
 
 	private ImageCreator() {
 		// private
+		fontRegistry = new FontRegistry(Display.getCurrent());
+		String fontName = "Times New Roman";
+		fontRegistry.put(TITLE_FONT_KEY, new FontData[] { new FontData(fontName, 9, SWT.BOLD) });
+		fontRegistry.put(TYPE_FONT_KEY, new FontData[] { new FontData(fontName, 8, SWT.BOLD) });
+		fontRegistry.put(TEXT_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.NORMAL) });
+		fontRegistry.put(TEXT_ITALIC_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.ITALIC) });
+	}
+
+	public Font getFount(String key) {
+		return fontRegistry.get(key);
 	}
 
 	static synchronized public ImageCreator getInstance() {
@@ -149,6 +168,8 @@ public class ImageCreator {
 	 */
 	public Image getCardImage(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation,
 			SWTException {
+		if (forceUpdate)
+			remote = true;
 		String path = CardCache.createLocalImageFilePath(card);
 		try {
 			File file = new File(path);
@@ -156,7 +177,7 @@ public class ImageCreator {
 				return createCardImage(path);
 			}
 			if (remote == false)
-				throw new FileNotFoundException(path);
+				throw new CachedImageNotFoundException(path);
 			file = CardCache.downloadAndSaveImage(card, remote, forceUpdate);
 			return createCardImage(path);
 		} catch (SWTException e) {
@@ -200,13 +221,31 @@ public class ImageCreator {
 		return getResized(im, width, height);
 	}
 
+	public Image getCardNotFoundImageTemplate() {
+		String key = CARD_TEMPLATE;
+		Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
+		if (image != null)
+			return image;
+		return MagicUIActivator.getDefault().getImage(key, createCardNotFoundImage());
+	}
+
 	public Image createCardNotFoundImage(IMagicCard card) {
-		Image im = createCardNotFoundImage();
+		Image im1 = getCardNotFoundImageTemplate();
+		Image im = new Image(Display.getCurrent(), im1, SWT.IMAGE_COPY);
 		GC gc = new GC(im);
-		gc.setAntialias(SWT.ON);
-		// gc.setFont(canvas.getFont());
-		gc.drawText(card.getName(), 20, 16, true);
+		// gc.setAntialias(SWT.ON);
+		// gc.setInterpolation(SWT.HIGH);
+		gc.setFont(getFount(TITLE_FONT_KEY));
+		gc.drawText(card.getName(), 20, 17, true);
+		Image costImage = SymbolConverter.buildCostImage(card.getCost());
+		gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
+		gc.setFont(getFount(TYPE_FONT_KEY));
+		gc.drawText(card.getType(), 20, 175, true);
+		gc.setFont(getFount(TEXT_FONT_KEY));
 		gc.drawText("Image not found", 30, 46, true);
+		// String oracleText = card.getOracleText();
+		// oracleText = oracleText.replaceAll("<br>", "\n");
+		// gc.drawText(oracleText, 20, 200, true);
 		gc.dispose();
 		return im;
 	}
