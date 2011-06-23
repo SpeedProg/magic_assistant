@@ -5,8 +5,6 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
-import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
-
 public class ScheduleTest extends TestCase {
 	private void checkPlayedBefore(Tournament tour, int tP) {
 		int n = tour.getNumberOfRounds();
@@ -38,7 +36,7 @@ public class ScheduleTest extends TestCase {
 		tour.generatePlayers(6);
 		tour.schedule();
 		assertEquals(5, tour.getNumberOfRounds());
-		//tour.printSchedule(System.out);
+		// tour.printSchedule(System.out);
 		checkPlayedBefore(tour, -1);
 	}
 
@@ -50,7 +48,7 @@ public class ScheduleTest extends TestCase {
 			tour.setDraft(false);
 			tour.generatePlayers(i);
 			tour.schedule();
-			//tour.printSchedule(System.out);
+			// tour.printSchedule(System.out);
 			checkPlayedBefore(tour, -1);
 		}
 	}
@@ -61,7 +59,7 @@ public class ScheduleTest extends TestCase {
 		tour.setNumberOfRounds(4);
 		tour.generatePlayers(4);
 		tour.schedule();
-		//tour.printSchedule(System.out);
+		// tour.printSchedule(System.out);
 		checkPlayedBefore(tour, 3);
 	}
 
@@ -89,13 +87,11 @@ public class ScheduleTest extends TestCase {
 				pw = 0;
 			}
 			if (pw == 0) {
-				p1.setResult(PlayerGameResult.WIN);
-				p2.setResult(PlayerGameResult.LOOSE);
-				p1.setWinGames(1);
+				p1.setWinGames(1, 0, 0);
+				p2.setWinGames(0, 1, 0);
 			} else {
-				p2.setResult(PlayerGameResult.WIN);
-				p1.setResult(PlayerGameResult.LOOSE);
-				p2.setWinGames(1);
+				p1.setWinGames(0, 1, 0);
+				p2.setWinGames(1, 0, 0);
 			}
 		}
 	}
@@ -135,7 +131,7 @@ public class ScheduleTest extends TestCase {
 			}
 			r.close();
 		}
-		//tour.printSchedule(System.out);
+		// tour.printSchedule(System.out);
 		checkPlayedBefore(tour, -1);
 	}
 
