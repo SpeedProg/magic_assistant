@@ -14,8 +14,11 @@ public class PlayerRoundInfo {
 	transient Round round;
 	transient TableInfo tableInfo;
 	private Player p;
-	private int w = -1;
+	private int gamesWon = -1;
 	private PlayerGameResult r = null;
+	private int gamesLost;
+	private int gamesDraw;
+
 	public enum PlayerGameResult {
 		WIN,
 		LOOSE,
@@ -26,12 +29,17 @@ public class PlayerRoundInfo {
 		return r;
 	}
 
-	public void setWinGames(int w) {
-		this.setWin(w);
-	}
-
-	public void setResult(PlayerGameResult r) {
-		this.r = r;
+	public void setWinGames(int w, int l, int d) {
+		gamesWon = w;
+		gamesLost = l;
+		gamesDraw = d;
+		if (w > l) {
+			this.r = PlayerGameResult.WIN;
+		} else if (w < l) {
+			this.r = PlayerGameResult.LOOSE;
+		} else {
+			this.r = PlayerGameResult.DRAW;
+		}
 	}
 
 	public PlayerRoundInfo(Player player, Round round) {
@@ -70,16 +78,33 @@ public class PlayerRoundInfo {
 	}
 
 	/**
-	 * @param w the w to set
+	 * @param w
+	 *            the w to set
 	 */
 	void setWin(int w) {
-		this.w = w;
+		this.gamesWon = w;
 	}
 
 	/**
-	 * @return the w
+	 * @return the games win within the match
 	 */
 	int getWin() {
-		return w;
+		return gamesWon;
+	}
+
+	int getLost() {
+		return gamesLost;
+	}
+
+	int getDraw() {
+		return gamesDraw;
+	}
+
+	public TableInfo getTableInfo() {
+		return tableInfo;
+	}
+
+	public void setTableInfo(TableInfo tableInfo2) {
+		tableInfo = tableInfo2;
 	}
 }

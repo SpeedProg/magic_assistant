@@ -22,11 +22,10 @@ import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
-import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 
 /**
  * @author Alena
- *
+ * 
  */
 public abstract class AbstractScheduler implements IScheduler {
 	public void schedule(Tournament t) {
@@ -64,7 +63,7 @@ public abstract class AbstractScheduler implements IScheduler {
 		if (r.getState() != RoundState.NOT_SCHEDULED) {
 			throw new IllegalStateException("Round is already scheduled");
 		}
-		//System.err.println("Round ======" + r.getNumber());
+		// System.err.println("Round ======" + r.getNumber());
 		// get active players and sort them by place
 		ArrayList<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>(r.getTournament().getPlayersInfo());
 		for (Iterator iterator = players.iterator(); iterator.hasNext();) {
@@ -84,7 +83,7 @@ public abstract class AbstractScheduler implements IScheduler {
 	}
 
 	/**
-	 * @param r 
+	 * @param r
 	 * 
 	 */
 	protected void dummyLooses(Round r) {
@@ -99,15 +98,14 @@ public abstract class AbstractScheduler implements IScheduler {
 			for (PlayerRoundInfo pi : playerRoundInfo) {
 				if (pi.getPlayer() == Player.DUMMY) {
 					hasDummy = true;
-					pi.setResult(PlayerGameResult.LOOSE);
+					pi.setWinGames(0, 1, 0);
 					break;
 				}
 			}
 			if (hasDummy)
 				for (PlayerRoundInfo pi : playerRoundInfo) {
 					if (pi.getPlayer() != Player.DUMMY) {
-						pi.setWinGames(1);
-						pi.setResult(PlayerGameResult.WIN);
+						pi.setWinGames(1, 0, 0);
 						break;
 					}
 				}

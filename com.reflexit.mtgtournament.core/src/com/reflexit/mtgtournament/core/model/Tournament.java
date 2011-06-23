@@ -56,7 +56,8 @@ public class Tournament {
 	}
 
 	/**
-	 * @param type -type of the scheduler, @see {@link TournamentType}
+	 * @param type
+	 *            -type of the scheduler, @see {@link TournamentType}
 	 */
 	public void setType(TournamentType type) {
 		if (isScheduled() && this.type != type)
@@ -66,7 +67,8 @@ public class Tournament {
 
 	/**
 	 * 
-	 * @param rounds - number of round, 0 if optimal (max for RR)
+	 * @param rounds
+	 *            - number of round, 0 if optimal (max for RR)
 	 */
 	public void setNumberOfRounds(int rounds) {
 		if (isScheduled() && this.numberOfRounds != rounds)
@@ -75,8 +77,9 @@ public class Tournament {
 	}
 
 	/**
-	* @param draft - is there draft round
-	*/
+	 * @param draft
+	 *            - is there draft round
+	 */
 	public void setDraft(boolean draft) {
 		if (isScheduled() && this.draftRound != draft)
 			throw new IllegalStateException("Cannot modify draft when tournament is already scheduled");
@@ -222,7 +225,8 @@ public class Tournament {
 	}
 
 	/**
-	 * @param scheduled - the scheduled to set
+	 * @param scheduled
+	 *            - the scheduled to set
 	 */
 	public void setScheduled(boolean scheduled) {
 		this.scheduled = scheduled;
@@ -261,10 +265,14 @@ public class Tournament {
 	public static int comparePlayers(PlayerTourInfo a, PlayerTourInfo b) {
 		if (a.getPoints() != b.getPoints())
 			return b.getPoints() - a.getPoints();
-		if (a.getGames() != b.getGames())
-			return a.getGames() - b.getGames();
-		if (a.getWin() != b.getWin())
-			return b.getWin() - a.getWin();
+		if (a.getRoundsPlayed() != b.getRoundsPlayed())
+			return a.getRoundsPlayed() - b.getRoundsPlayed();
+		if (a.getOMW() != b.getOMW())
+			return (int) (b.getOMW() - a.getOMW());
+		if (a.getPGW() != b.getPGW())
+			return (int) (b.getPGW() - a.getPGW());
+		if (a.getOGW() != b.getOGW())
+			return (int) (b.getOGW() - a.getOGW());
 		return 0;
 	}
 

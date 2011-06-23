@@ -34,7 +34,7 @@ public class CmdCommitTournament implements ITCommand {
 		for (PlayerTourInfo pt : playersInfo) {
 			Player player = pt.getPlayer();
 			player.setPoints(player.getPoints() + pt.getPoints());
-			player.setGames(player.getGames() + pt.getGames());
+			player.setGames(player.getGames() + pt.getRoundsPlayed());
 		}
 		t.setClosed(true);
 		return true;
@@ -45,7 +45,7 @@ public class CmdCommitTournament implements ITCommand {
 		for (PlayerTourInfo pt : playersInfo) {
 			Player player = pt.getPlayer();
 			player.setPoints(player.getPoints() - pt.getPoints());
-			player.setGames(player.getGames() - pt.getGames());
+			player.setGames(player.getGames() - pt.getRoundsPlayed());
 		}
 		t.setClosed(false);
 		return true;

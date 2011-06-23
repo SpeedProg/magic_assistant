@@ -10,18 +10,29 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.model;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 
 public class PlayerTourInfo {
 	transient private Tournament tournament;
 	private Player player;
-	private int win = 0;
-	private int draw = 0;
-	private int loose = 0;
+	private int roundsWon = 0;
+	private int roundsDrawn = 0;
+	private int roundsLost = 0;
 	private int points = 0;
-	private int games = 0;
+	private int matches = 0;
 	private boolean active = true;
 	private int place;
+	private HashSet<Player> opponents = new HashSet<Player>();
+	private int gamesWon;
+	private int gamesLost;
+	private int gamesDrawn;
+	private float omw;
+	private float ogw;
+	private float pgw;
 
 	public PlayerTourInfo(Player player) {
 		setPlayer(player);
@@ -59,12 +70,12 @@ public class PlayerTourInfo {
 		return player;
 	}
 
-	public int getLoose() {
-		return loose;
+	public int getLost() {
+		return roundsLost;
 	}
 
 	public void setLoose(int loose) {
-		this.loose = loose;
+		this.roundsLost = loose;
 	}
 
 	public int getPoints() {
@@ -75,16 +86,17 @@ public class PlayerTourInfo {
 		this.points = points;
 	}
 
-	public int getGames() {
-		return games;
+	public int getRoundsPlayed() {
+		return matches;
 	}
 
-	public void setGames(int games) {
-		this.games = games;
+	public void setMatches(int matches) {
+		this.matches = matches;
 	}
 
 	/**
-	 * @param tournament the tournament to set
+	 * @param tournament
+	 *            the tournament to set
 	 */
 	public void setTournament(Tournament tournament) {
 		this.tournament = tournament;
@@ -98,7 +110,8 @@ public class PlayerTourInfo {
 	}
 
 	/**
-	 * @param active the active to set
+	 * @param active
+	 *            the active to set
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
@@ -112,35 +125,52 @@ public class PlayerTourInfo {
 	}
 
 	/**
-	 * @param draw the draw to set
-	 */
-	public void setDraw(int draw) {
-		this.draw = draw;
-	}
-
-	/**
 	 * @return the draw
 	 */
 	public int getDraw() {
-		return draw;
+		return roundsDrawn;
 	}
 
 	/**
-	 * @param win the win to set
-	 */
-	public void setWin(int win) {
-		this.win = win;
-	}
-
-	/**
-	 * @return the win
+	 * @return the win matches
 	 */
 	public int getWin() {
-		return win;
+		return roundsWon;
+	}
+
+	public void calclulateOMW() {
+		int w = 0;
+		int gw = 0;
+		int m = 0;
+		int gm = 0;
+		for (Iterator<Player> iterator = opponents.iterator(); iterator.hasNext();) {
+			Player next = iterator.next();
+			PlayerTourInfo oppInfo = tournament.findPlayerTourInfo(next);
+			w += oppInfo.getWin();
+			m += oppInfo.getRoundsPlayed();
+			gw += oppInfo.getGamesWon();
+			gm += oppInfo.getGamesWon() + oppInfo.getGamesLost() + oppInfo.getGamesDrawn();
+		}
+		if (m == 0)
+			omw = 0;
+		else
+			omw = 100 * w / m;
+		if (gm == 0)
+			ogw = 0;
+		else
+			ogw = 100 * gw / gm;
+		PlayerTourInfo playerInfo = this;
+		gw = playerInfo.getGamesWon();
+		gm = playerInfo.getGamesWon() + playerInfo.getGamesLost() + playerInfo.getGamesDrawn();
+		if (gm == 0)
+			pgw = 0;
+		else
+			pgw = 100 * gw / gm;
 	}
 
 	/**
-	 * @param place the place to set
+	 * @param place
+	 *            the place to set
 	 */
 	public void setPlace(int place) {
 		this.place = place;
@@ -154,44 +184,53 @@ public class PlayerTourInfo {
 	}
 
 	/**
-	 * @param result
+	 * @param pi
 	 */
-	public void addGameResult(PlayerGameResult result) {
+	public void addMatchResult(PlayerRoundInfo roundInfo) {
+		PlayerGameResult result = roundInfo.getResult();
 		if (result == null)
 			return;
-		games++;
+		matches++;
 		switch (result) {
 		case WIN:
-			win++;
+			roundsWon++;
 			break;
 		case LOOSE:
-			loose++;
+			roundsLost++;
 			break;
 		case DRAW:
-			draw++;
+			roundsDrawn++;
 			break;
 		default:
 			break;
 		}
+		gamesWon += roundInfo.getWin();
+		gamesLost += roundInfo.getLost();
+		gamesDrawn += roundInfo.getDraw();
 		updatePoints();
+		addOpponents(roundInfo.getTableInfo());
+		calclulateOMW();
 	}
 
 	/**
 	 * 
 	 */
 	private void updatePoints() {
-		points = win * 2 + draw * 1 + loose * 0;
+		points = roundsWon * 2 + roundsDrawn * 1 + roundsLost * 0;
 	}
 
 	/**
 	 * 
 	 */
 	public void resetPoints() {
-		win = 0;
-		loose = 0;
-		draw = 0;
-		games = 0;
+		roundsWon = 0;
+		roundsLost = 0;
+		roundsDrawn = 0;
+		matches = 0;
 		points = 0;
+		gamesDrawn = 0;
+		gamesLost = 0;
+		gamesWon = 0;
 	}
 
 	/**
@@ -201,5 +240,48 @@ public class PlayerTourInfo {
 		if (np == null)
 			throw new NullPointerException();
 		this.player = np;
+	}
+
+	/**
+	 * Return list of opponents this player faced in this tournament
+	 * 
+	 * @return
+	 */
+	public Set<Player> getOpponents() {
+		return opponents;
+	}
+
+	private void addOpponents(TableInfo tableInfo) {
+		PlayerRoundInfo[] playerRoundInfo = tableInfo.getPlayerRoundInfo();
+		for (int i = 0; i < playerRoundInfo.length; i++) {
+			PlayerRoundInfo ri = playerRoundInfo[i];
+			if (ri.getPlayer() != player) {
+				opponents.add(ri.getPlayer());
+			}
+		}
+	}
+
+	public int getGamesWon() {
+		return gamesWon;
+	}
+
+	public int getGamesLost() {
+		return gamesLost;
+	}
+
+	public int getGamesDrawn() {
+		return gamesDrawn;
+	}
+
+	public float getOMW() {
+		return omw;
+	}
+
+	public float getOGW() {
+		return ogw;
+	}
+
+	public float getPGW() {
+		return pgw;
 	}
 }

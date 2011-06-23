@@ -100,14 +100,16 @@ public class Player {
 	}
 
 	/**
-	 * @param games the games to set
+	 * @param games
+	 *            the games to set
 	 */
 	public void setGames(int games) {
 		this.games = games;
 	}
 
 	/**
-	 * @param points the points to set
+	 * @param points
+	 *            the points to set
 	 */
 	public void setPoints(int points) {
 		this.points = points;

@@ -76,7 +76,7 @@ public class Round implements Cloneable {
 		for (Object element : tables) {
 			TableInfo table = (TableInfo) element;
 			st.println("Table " + table.getTableNumber() + ": " + table.getPlayerInfo(1).getPlayer() + " vs "
-			        + table.getPlayerInfo(2).getPlayer());
+					+ table.getPlayerInfo(2).getPlayer());
 		}
 	}
 
@@ -89,7 +89,8 @@ public class Round implements Cloneable {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(TournamentType type) {
 		this.type = type;
@@ -103,7 +104,8 @@ public class Round implements Cloneable {
 	}
 
 	/**
-	 * @param tournament the tournament to set
+	 * @param tournament
+	 *            the tournament to set
 	 */
 	public void setTournament(Tournament tournament) {
 		this.tournament = tournament;
@@ -117,7 +119,8 @@ public class Round implements Cloneable {
 	}
 
 	/**
-	 * @param dateStart the dateStart to set
+	 * @param dateStart
+	 *            the dateStart to set
 	 */
 	public void setDateStart(Date dateStart) {
 		this.dateStart = dateStart;
@@ -131,7 +134,8 @@ public class Round implements Cloneable {
 	}
 
 	/**
-	 * @param dateEnd the dateEnd to set
+	 * @param dateEnd
+	 *            the dateEnd to set
 	 */
 	public void setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
@@ -206,5 +210,9 @@ public class Round implements Cloneable {
 		if (getTournament().getNumberOfRounds() > getNumber())
 			return getTournament().getRound(getNumber() + 1);
 		return null;
+	}
+
+	public boolean isEnded() {
+		return dateEnd != null;
 	}
 }

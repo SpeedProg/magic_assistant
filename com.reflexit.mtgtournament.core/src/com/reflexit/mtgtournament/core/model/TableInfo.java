@@ -21,6 +21,8 @@ public class TableInfo {
 		pi = new PlayerRoundInfo[2];
 		this.setPlayerInfo(1, p1);
 		this.setPlayerInfo(2, p2);
+		p1.setTableInfo(this);
+		p2.setTableInfo(this);
 	}
 
 	@Override
@@ -44,14 +46,16 @@ public class TableInfo {
 	}
 
 	/**
-	 * @param round the round to set
+	 * @param round
+	 *            the round to set
 	 */
 	public void setRound(Round round) {
 		this.round = round;
 	}
 
 	/**
-	 * @param p1 the p1 to set
+	 * @param p1
+	 *            the p1 to set
 	 */
 	public void setPlayerInfo(int i, PlayerRoundInfo p1) {
 		this.pi[i - 1] = p1;

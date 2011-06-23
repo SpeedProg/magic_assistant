@@ -57,6 +57,7 @@ public class CmdCommitRounds implements ITCommand {
 				TableInfo t = (TableInfo) element;
 				for (int i = 0; i < t.getPlayerRoundInfo().length; i++) {
 					PlayerRoundInfo pi = t.getPlayerRoundInfo()[i];
+					pi.setTableInfo(t);
 					updateInfo(pi);
 				}
 			}
@@ -69,7 +70,7 @@ public class CmdCommitRounds implements ITCommand {
 			return;
 		PlayerTourInfo pt = t.findPlayerTourInfo(pi.getPlayer());
 		if (pi.getResult() != null)
-			pt.addGameResult(pi.getResult());
+			pt.addMatchResult(pi);
 	}
 
 	public PlayerTourInfo[] updatePlace() {
