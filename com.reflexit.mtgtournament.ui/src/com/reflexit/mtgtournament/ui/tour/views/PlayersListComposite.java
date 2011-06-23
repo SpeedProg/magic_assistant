@@ -35,6 +35,7 @@ public class PlayersListComposite extends Composite {
 	private boolean forTournamentStanding;
 	private int treeStyle;
 	private TableSorter tableSorter;
+
 	class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -53,6 +54,7 @@ public class PlayersListComposite extends Composite {
 			return new Object[0];
 		}
 	}
+
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 		@Override
 		public String getText(Object element) {
@@ -101,7 +103,13 @@ public class PlayersListComposite extends Composite {
 				case 4:
 					return getStats(pi);
 				case 5:
-					return String.valueOf(pi.getGames());
+					return String.valueOf(pi.getRoundsPlayed());
+				case 6:
+					return String.valueOf(pi.getOMW());
+				case 7:
+					return String.valueOf(pi.getPGW());
+				case 8:
+					return String.valueOf(pi.getOGW());
 				default:
 					break;
 				}
@@ -120,7 +128,7 @@ public class PlayersListComposite extends Composite {
 	}
 
 	public String getStats(PlayerTourInfo pi) {
-		return pi.getWin() + "-" + pi.getDraw() + "-" + pi.getLoose();
+		return pi.getWin() + "-" + pi.getDraw() + "-" + pi.getLost();
 	}
 
 	protected void createBody(Composite parent) {
@@ -134,13 +142,17 @@ public class PlayersListComposite extends Composite {
 		if (forTournamentStanding) {
 			createColumn(2, "Place", 60);
 			createColumn(3, "Points", 60);
-			createColumn(4, "Stats", 60);
-			createColumn(5, "Games", 60);
+			createColumn(4, "W-D-L", 60);
+			createColumn(5, "Matches", 60);
+			createColumn(6, "OMW%", 60);
+			createColumn(7, "PGW%", 60);
+			createColumn(8, "OGW%", 60);
 		}
 		// Set the sorter for the table
 		tableSorter = new TableSorter();
 		viewer.setSorter(tableSorter);
 	}
+
 	public class TableSorter extends ViewerSorter {
 		private int propertyIndex;
 		// private static final int ASCENDING = 0;
@@ -205,7 +217,7 @@ public class PlayersListComposite extends Composite {
 					rc = p1.getWin() - p2.getWin();
 					break;
 				case 5:
-					rc = p1.getGames() - p2.getGames();
+					rc = p1.getRoundsPlayed() - p2.getRoundsPlayed();
 					break;
 				default:
 					rc = 0;

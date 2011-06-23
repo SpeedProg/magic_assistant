@@ -253,7 +253,7 @@ public class CubePrintDialog extends Dialog {
 		buf.append(String.format("%2s %-20s %s\n", "Place", "Name", "Stats (Points)"));
 		for (PlayerTourInfo pi : playersInfo) {
 			buf.append(String.format("%5d %-20s %d-%d-%d (%2d)\n", pi.getPlace(), pi.getPlayer().getName(),
-			        pi.getWin(), pi.getDraw(), pi.getLoose(), pi.getPoints()));
+			        pi.getWin(), pi.getDraw(), pi.getLost(), pi.getPoints()));
 		}
 		return buf.toString();
 	}

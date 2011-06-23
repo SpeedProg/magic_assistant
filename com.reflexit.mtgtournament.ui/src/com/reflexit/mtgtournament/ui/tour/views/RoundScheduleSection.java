@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -36,15 +39,11 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
-import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 import com.reflexit.mtgtournament.ui.tour.dialogs.CubePrintDialog;
 import com.reflexit.mtgtournament.ui.tour.dialogs.GameResultDialog;
 
@@ -80,19 +79,9 @@ public class RoundScheduleSection extends TSectionPart {
 			d.setInput(tinfo);
 			if (d.open() == Dialog.OK) {
 				PlayerRoundInfo p1 = tinfo.getPlayerInfo(1);
-				p1.setWinGames(d.getWin1());
+				p1.setWinGames(d.getWin1(), d.getWin2(), d.getDraw());
 				PlayerRoundInfo p2 = tinfo.getPlayerInfo(2);
-				p2.setWinGames(d.getWin2());
-				if (d.getWin1() > d.getWin2()) {
-					p1.setResult(PlayerGameResult.WIN);
-					p2.setResult(PlayerGameResult.LOOSE);
-				} else if (d.getWin1() < d.getWin2()) {
-					p1.setResult(PlayerGameResult.LOOSE);
-					p2.setResult(PlayerGameResult.WIN);
-				} else {
-					p1.setResult(PlayerGameResult.DRAW);
-					p2.setResult(PlayerGameResult.DRAW);
-				}
+				p2.setWinGames(d.getWin2(), d.getWin1(), d.getDraw());
 				if (d.isDrop1()) {
 					tinfo.getRound().getTournament().playerDropped(p1.getPlayer());
 				}
@@ -103,6 +92,7 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 		}
 	}
+
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -151,6 +141,7 @@ public class RoundScheduleSection extends TSectionPart {
 			return getElements(element).length > 0;
 		}
 	}
+
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -190,6 +181,7 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 			return "";
 		}
+
 		private Color systemColorYellow;
 		private Color systemColorGray;
 		private Color systemColorBlue;
@@ -244,14 +236,13 @@ public class RoundScheduleSection extends TSectionPart {
 	private void createBody() {
 		Section section = this.getSection();
 		section.setText("Round Schedule and Results");
-		//section.setDescription("Tournament settings");
+		// section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
-		        | SWT.BORDER);
+		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));

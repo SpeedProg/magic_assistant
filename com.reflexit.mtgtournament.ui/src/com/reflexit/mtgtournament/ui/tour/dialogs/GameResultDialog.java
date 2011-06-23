@@ -37,6 +37,8 @@ public class GameResultDialog extends TrayDialog {
 	private int nWin2;
 	private boolean drop1;
 	private boolean drop2;
+	protected int nDraw;
+	private Text draw;
 
 	public GameResultDialog(Shell shell) {
 		super(shell);
@@ -84,6 +86,19 @@ public class GameResultDialog extends TrayDialog {
 				drop2 = dropBut2.getSelection();
 			}
 		});
+		Label label = new Label(comp, SWT.NONE);
+		label.setText("Draw #");
+		Label label2 = new Label(comp, SWT.NONE);
+		label2.setText("");
+		draw = new Text(comp, SWT.BORDER);
+		draw.setTextLimit(2);
+		draw.setLayoutData(hor.create());
+		draw.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String text = draw.getText();
+				nDraw = validateNumber(text);
+			}
+		});
 		return comp;
 	}
 
@@ -129,6 +144,10 @@ public class GameResultDialog extends TrayDialog {
 	 */
 	public int getWin2() {
 		return nWin2;
+	}
+
+	public int getDraw() {
+		return nDraw;
 	}
 
 	/**
