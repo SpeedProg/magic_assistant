@@ -106,6 +106,8 @@ public class SymbolConverter {
 		gc.setBackground(backColor);
 		gc.fillRectangle(image.getBounds());
 		int width = drawManaImage(gc, cost, 0, 0);
+		if (width == 0)
+			width = 1;
 		final Image clippedImage = new Image(display, width, height);
 		gc.copyArea(clippedImage, 0, 0);
 		gc.dispose();
