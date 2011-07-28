@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 
+/** Not used */
 public class ParseGathererNewTextSpoiler {
 	/*-
 	<tr>

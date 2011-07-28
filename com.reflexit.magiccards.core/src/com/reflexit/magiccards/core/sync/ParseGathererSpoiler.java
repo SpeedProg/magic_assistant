@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 
+/** Not used */
 public class ParseGathererSpoiler {
 	/*-
 	 <tr onmouseover="this.style.backgroundColor='#F5DEB3';" onmouseout="this.style.backgroundColor='#FBF2E1';" style="color:Black;background-color:#FBF2E1;">
