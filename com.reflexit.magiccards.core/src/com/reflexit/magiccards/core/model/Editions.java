@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.db.DbActivator;
 
 public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
@@ -158,8 +159,8 @@ public class Editions implements ISearchableProperty {
 	public synchronized void load() throws IOException {
 		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
 		String strfile = path.toOSString();
-		if (Activator.getDefault() != null) {
-			InputStream ist = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/" + EDITIONS_FILE), true);
+		if (DbActivator.getDefault() != null) {
+			InputStream ist = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + EDITIONS_FILE), true);
 			loadEditions(ist);
 		}
 		if (!new File(strfile).exists()) {
