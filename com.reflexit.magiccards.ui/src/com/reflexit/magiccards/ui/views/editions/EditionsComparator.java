@@ -25,7 +25,13 @@ public class EditionsComparator implements Comparator<Edition> {
 		case DATE:
 			Date r1 = a1.getReleaseDate();
 			Date r2 = a2.getReleaseDate();
-			if (r1 != null && r2 != null) {
+			if (r1 == null && r2 == null)
+				d = 0;
+			else if (r1 == null && r2 != null)
+				d = 1;
+			else if (r1 != null && r2 == null)
+				d = -1;
+			else if (r1 != null && r2 != null) {
 				d = r1.compareTo(r2);
 			}
 			break;

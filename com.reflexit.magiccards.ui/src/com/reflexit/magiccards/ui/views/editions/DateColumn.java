@@ -24,7 +24,7 @@ final class DateColumn extends AbstractEditionColumn {
 	public String getText(Object element) {
 		Editions.Edition ed = (Edition) element;
 		if (ed.getReleaseDate() == null)
-			return "";
+			return "?";
 		return EditionsComposite.formatter.format(ed.getReleaseDate());
 	}
 
