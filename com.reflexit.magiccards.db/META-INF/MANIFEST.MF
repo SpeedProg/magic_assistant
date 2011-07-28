@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Preloaded Cards Database
+Bundle-SymbolicName: com.reflexit.magiccards.db
+Bundle-Version: 1.0.7.qualifier
+Bundle-Activator: com.reflexit.magiccards.db.DbActivator
+Bundle-Vendor: REFLEXIT
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Export-Package: com.reflexit.magiccards.db
