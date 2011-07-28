@@ -54,7 +54,7 @@ public class CardGroup implements ICardCountable {
 		return this.groupField;
 	}
 
-	public Collection<IMagicCard> getChildren() {
+	public Collection getChildren() {
 		return this.children;
 	}
 

@@ -178,9 +178,11 @@ public class CardCache {
 		} catch (IOException e) {
 			throw new IOException("Cannot connect: " + e.getMessage());
 		}
-		FileUtils.saveStream(st, file);
+		File file2 = new File(path + ".part");
+		FileUtils.saveStream(st, file2);
 		st.close();
-		if (file.exists()) {
+		if (file2.exists()) {
+			file2.renameTo(file);
 			return file;
 		}
 		throw new FileNotFoundException(file.toString());
