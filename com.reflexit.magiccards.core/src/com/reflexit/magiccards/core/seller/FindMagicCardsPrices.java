@@ -24,7 +24,6 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
-import com.reflexit.magiccards.core.sync.IStoreUpdator;
 
 public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;

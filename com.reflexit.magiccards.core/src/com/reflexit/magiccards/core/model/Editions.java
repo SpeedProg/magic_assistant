@@ -31,7 +31,7 @@ public class Editions implements ISearchableProperty {
 		String name;
 		String abbrs[];
 		Date release;
-		String type;
+		String type = "?";
 		static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
 
 		public Edition(String name, String abbr) {
@@ -43,6 +43,8 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setReleaseDate(String date) throws ParseException {
+			if (date == null || date.length() == 0 || date.equals("?"))
+				release = null;
 			release = formatter.parse(date);
 		}
 
@@ -86,6 +88,8 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setType(String type) {
+			if (type == null || type.length() == 0)
+				this.type = "?";
 			this.type = type;
 		}
 
@@ -140,7 +144,8 @@ public class Editions implements ISearchableProperty {
 			edition = new Edition(name, abbr);
 			this.name2ed.put(name, edition);
 		} else {
-			edition.addAbbreviation(abbr);
+			if (abbr != null)
+				edition.addAbbreviation(abbr);
 		}
 		return edition;
 	}

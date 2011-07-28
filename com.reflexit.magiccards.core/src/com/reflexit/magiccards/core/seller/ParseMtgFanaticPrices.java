@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.sync.IStoreUpdator;
 
 public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;

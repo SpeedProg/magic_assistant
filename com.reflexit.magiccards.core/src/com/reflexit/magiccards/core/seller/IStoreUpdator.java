@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.sync;
+package com.reflexit.magiccards.core.seller;
 
 import java.io.IOException;
 
