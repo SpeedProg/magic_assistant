@@ -82,3 +82,17 @@ Magic 2011|M11||July 2010|Core
 Scars of Mirrodin|SOM||October 2010|Expansion|Scars of Mirrodin
 Mirrodin Besieged|MBS||February 2011|Expansion|Mirrodin Besieged
 New Phyrexia|NPH||May 2011|Expansion|New Phyrexia
+Magic 2012|M12||July 2011|Core|
+Premium Deck Series: Fire and Lightning|PD2||November 2010|Starter|
+Duel Decks: Knights vs. Dragons|DDG||April 2011|Starter|
+Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter|
+Duel Decks: Phyrexia vs. the Coalition|DDE||March 2010|Starter|
+Duel Decks: Divine vs. Demonic|DDC||April 2009|Starter|
+Masters Edition IV|ME4||January 2011|Starter|
+Archenemy|ARC||June 2010|Starter|
+Duel Decks: Garruk vs. Liliana|DDD||October 2009|Starter|
+Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter|
+Planechase|HOP||July 2011|Starter|
+Premium Deck Series: Slivers|H09||November 2009|Starter|
+Duel Decks: Jace vs. Chandra|DD2||November 2008|Starter|
+Magic: The Gathering-Commander|CMD||June 2011|Starter|
