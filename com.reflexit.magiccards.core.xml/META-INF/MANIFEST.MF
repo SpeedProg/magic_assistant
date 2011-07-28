@@ -7,3 +7,4 @@ Bundle-Vendor: Alena Laskavaia
 Fragment-Host: com.reflexit.magiccards.core;bundle-version="1.0.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
+Require-Bundle: com.reflexit.magiccards.db;bundle-version="1.0.7"

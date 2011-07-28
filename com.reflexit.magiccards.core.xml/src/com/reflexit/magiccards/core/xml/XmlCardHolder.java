@@ -37,6 +37,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.core.sync.TextPrinter;
+import com.reflexit.magiccards.db.DbActivator;
 
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
@@ -89,7 +90,7 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	protected void loadFromFlat(String set) throws IOException {
-		InputStream is = FileLocator.openStream(Activator.getDefault().getBundle(), new Path("resources/" + set), false);
+		InputStream is = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + set), false);
 		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 		loadtFromFlatIntoXml(st);
 		is.close();
