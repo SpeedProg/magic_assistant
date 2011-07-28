@@ -12,7 +12,6 @@ public class DeskCanvas extends ScrollableCanvas {
 	public DeskCanvas(Composite parent) {
 		super(parent, null);
 		desk = new DeskFigure(this);
-		setImage(desk.getImage());
 	}
 
 	@Override
@@ -45,7 +44,6 @@ public class DeskCanvas extends ScrollableCanvas {
 	@Override
 	public void resize() {
 		desk.resize();
-		setImage(desk.getImage());
 		super.resize();
 	}
 }

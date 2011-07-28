@@ -58,8 +58,9 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	}
 
 	public void scroll(int hSelection, int vSelection) {
-		System.err.println("scroll: " + +hSelection + "," + vSelection);
-		System.err.println("mp=" + mousePos + " ... sb=" + hBar.getSelection() + "," + vBar.getSelection() + " or=" + origin);
+		// System.err.println("scroll: " + +hSelection + "," + vSelection);
+		// System.err.println("mp=" + mousePos + " ... sb=" +
+		// hBar.getSelection() + "," + vBar.getSelection() + " or=" + origin);
 		int destY = -vSelection - origin.y;
 		int destX = -hSelection - origin.x;
 		Rectangle rect = image.getBounds();
@@ -82,6 +83,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 
 	public void setImage(Image image) {
 		this.image = image;
+		resize();
 	}
 
 	public void mouseScrolled(MouseEvent e) {
@@ -157,16 +159,18 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	}
 
 	public void paint(GC gc) {
-		gc.drawImage(image, origin.x, origin.y);
-		Rectangle rect = image.getBounds();
 		Rectangle client = canvas.getClientArea();
-		int marginWidth = client.width - rect.width;
-		if (marginWidth > 0) {
-			gc.fillRectangle(rect.width, 0, marginWidth, client.height);
-		}
-		int marginHeight = client.height - rect.height;
-		if (marginHeight > 0) {
-			gc.fillRectangle(0, rect.height, client.width, marginHeight);
-		}
+		gc.fillRectangle(0, 0, client.width, client.height);
+		gc.drawImage(image, origin.x, origin.y);
+		// Rectangle rect = image.getBounds();
+		//
+		// int marginWidth = client.width - rect.width;
+		// if (marginWidth > 0) {
+		// gc.fillRectangle(rect.width, 0, marginWidth, client.height);
+		// }
+		// int marginHeight = client.height - rect.height;
+		// if (marginHeight > 0) {
+		// gc.fillRectangle(0, rect.height, client.width, marginHeight);
+		// }
 	}
 }
