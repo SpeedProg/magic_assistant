@@ -36,6 +36,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
+import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.db.DbActivator;
 
@@ -180,11 +181,18 @@ public class XmlCardHolder implements ICardHandler {
 	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException, InterruptedException {
 		int rec;
 		try {
-			pm.beginTask("Downloading", 100);
+			pm.beginTask("Downloading", 110);
 			pm.subTask("Initializing");
 			loadInitialIfNot(new SubProgressMonitor(pm, 10));
 			if (pm.isCanceled())
 				throw new InterruptedException();
+			pm.subTask("Updating set list...");
+			try {
+				ParseGathererSets.loadEditions(new SubProgressMonitor(pm, 10));
+				Editions.getInstance().save();
+			} catch (Exception e) {
+				Activator.log(e); // move on if exception via set loading
+			}
 			pm.subTask("Downloading cards...");
 			String file = download(set, options, new SubProgressMonitor(pm, 50));
 			if (pm.isCanceled())
