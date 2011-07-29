@@ -20,20 +20,19 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
 
-public class DeskFigure extends XFigure {
-	ArrayList<CardFigure> children;
-	CardFigure active;
+public class DesktopFigure extends XFigure {
+	private ArrayList<CardFigure> children;
+	private CardFigure active;
 	private DeskCanvas canvas;
 	private IFilteredCardStore<IMagicCard> fstore;
 	private final Rectangle DEFAULT_SIZE = new Rectangle(0, 0, 1200, 768);
 	private ICardField currentGroup;
 
-	public DeskFigure(DeskCanvas deskCanvas) {
+	public DesktopFigure(DeskCanvas deskCanvas) {
 		super(null);
 		this.canvas = deskCanvas;
 		children = new ArrayList<CardFigure>();
 		image = new Image(Display.getCurrent(), DEFAULT_SIZE.width, DEFAULT_SIZE.height);
-		bounds = image.getBounds();
 		canvas.setImage(image);
 		redraw();
 	}
@@ -50,16 +49,25 @@ public class DeskFigure extends XFigure {
 	}
 
 	@Override
-	public void paint(GC gc) {
+	public void paint(GC gc, int x, int y, int width, int height, boolean all) {
 		// background
+		Rectangle rect = new Rectangle(x, y, width, height);
+		Rectangle bounds = getBounds();
+		gc.setClipping(rect);
 		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 		gc.fillRectangle(0, 0, bounds.width, bounds.height);
 		gc.drawLine(0, 0, bounds.width, bounds.height);
 		gc.drawLine(0, bounds.height, bounds.width, 0);
 		gc.drawText("Default Image", 10, 10);
 		// children
-		for (CardFigure child : children) {
-			child.paint(gc);
+		if (all) {
+			for (CardFigure child : children) {
+				Rectangle cb = child.getBounds();
+				if (cb.intersects(rect)) {
+					// System.err.println("Repaining " + child);
+					child.paint(gc, x, y, width, height, all);
+				}
+			}
 		}
 	}
 
@@ -69,6 +77,7 @@ public class DeskFigure extends XFigure {
 			Rectangle cb = active.getBounds();
 			if (cb.contains(p)) {
 				active.mouseDrag(p);
+				canvas.redraw(); // XXX
 				return true;
 			}
 			active.mouseStopDrag(p);
@@ -218,7 +227,6 @@ public class DeskFigure extends XFigure {
 		if (newsize.height < client.height)
 			newsize.height = client.height;
 		image = new Image(Display.getCurrent(), newsize.width, newsize.height);
-		bounds = image.getBounds();
 		canvas.setImage(image);
 		super.redraw();
 	}

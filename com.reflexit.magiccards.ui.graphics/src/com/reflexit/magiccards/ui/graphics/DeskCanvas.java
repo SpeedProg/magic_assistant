@@ -7,17 +7,17 @@ import org.eclipse.swt.widgets.Composite;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class DeskCanvas extends ScrollableCanvas {
-	DeskFigure desk;
+	private DesktopFigure desktop;
 
 	public DeskCanvas(Composite parent) {
 		super(parent, null);
-		desk = new DeskFigure(this);
+		desktop = new DesktopFigure(this);
 	}
 
 	@Override
 	public void mouseDrag(MouseEvent e) {
 		Point p = new Point(e.x - origin.x, e.y - origin.y);
-		if (desk.mouseDrag(p)) {
+		if (desktop.mouseDrag(p)) {
 			setDragCanvas(false);
 		}
 	}
@@ -25,7 +25,7 @@ public class DeskCanvas extends ScrollableCanvas {
 	@Override
 	public void mouseStartDrag(MouseEvent e) {
 		Point p = new Point(e.x - origin.x, e.y - origin.y);
-		if (desk.mouseStartDrag(p)) {
+		if (desktop.mouseStartDrag(p)) {
 			setDragCanvas(false);
 		}
 	}
@@ -33,17 +33,19 @@ public class DeskCanvas extends ScrollableCanvas {
 	@Override
 	public void mouseStopDrag(MouseEvent e) {
 		Point p = new Point(e.x - origin.x, e.y - origin.y);
-		desk.mouseStopDrag(p);
+		desktop.mouseStopDrag(p);
 		setDragCanvas(true);
 	}
 
 	public void setInput(IFilteredCardStore store) {
-		desk.setInput(store);
+		desktop.setInput(store);
 	}
 
 	@Override
 	public void resize() {
-		desk.resize();
-		super.resize();
+		if (desktop != null)
+			desktop.resize();
+		else
+			super.resize();
 	}
 }

@@ -22,25 +22,35 @@ public class CardFigure extends XFigure {
 	public CardFigure(XFigure parent, ImageData imageData, IMagicCard card) {
 		super(parent);
 		this.card = card;
-		this.bounds = new Rectangle(0, 0, imageData.width, imageData.height);
 		ImageCreator.getInstance().setAlphaBlendingForCorners(imageData);
-		Image transparentIdeaImage = new Image(Display.getCurrent(), imageData);
-		this.image = transparentIdeaImage;
+		Image im = new Image(Display.getCurrent(), imageData);
+		setImage(im);
 		this.imageNotFound = false;
 	}
 
 	public CardFigure(XFigure parent, IMagicCard card) {
 		super(parent);
 		this.card = card;
-		image = ImageCreator.getInstance().createCardNotFoundImage(card);
-		Rectangle bi = image.getBounds();
-		this.bounds = new Rectangle(0, 0, bi.width, bi.height);
+		Image im = ImageCreator.getInstance().createCardNotFoundImage(card);
+		setImage(im);
 		this.imageNotFound = true;
 	}
 
 	@Override
 	public void paint(GC gc) {
-		gc.drawImage(image, bounds.x, bounds.y);
+		gc.drawImage(image, location.x, location.y);
+	}
+
+	@Override
+	public void paint(GC gc, int x, int y, int width, int height, boolean all) {
+		// System.err.println("Clipping " + x + "," + y + "," + width + "," +
+		// height);
+		Rectangle clip = new Rectangle(x, y, width, height);
+		Rectangle cb = getBounds();
+		Rectangle in = clip.intersection(cb);
+		if (in.isEmpty())
+			return;
+		gc.drawImage(image, in.x - cb.x, in.y - cb.y, in.width, in.height, in.x, in.y, in.width, in.height);
 	}
 
 	@Override
@@ -52,6 +62,7 @@ public class CardFigure extends XFigure {
 	@Override
 	public boolean mouseDrag(Point p) {
 		if (mousePos != null) {
+			Rectangle bounds = getBounds();
 			int x = bounds.x - mousePos.x + p.x;
 			if (x < 0)
 				x = 0;
@@ -63,10 +74,10 @@ public class CardFigure extends XFigure {
 				x = pb.width - bounds.width;
 			if (y > pb.height - bounds.height)
 				y = pb.height - bounds.height;
-			bounds.x = x;
-			bounds.y = y;
-			parent.redraw();
 			mousePos = p;
+			setLocation(x, y);
+			Rectangle area = bounds.union(new Rectangle(x, y, bounds.width, bounds.height));
+			parent.redraw(area.x, area.y, area.width, area.height, true);
 			return true;
 		}
 		return false;

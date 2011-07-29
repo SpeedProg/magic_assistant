@@ -83,7 +83,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 
 	public void setImage(Image image) {
 		this.image = image;
-		resize();
+		setScrolls();
 	}
 
 	public void mouseScrolled(MouseEvent e) {
@@ -135,6 +135,11 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	}
 
 	public void resize() {
+		setScrolls();
+		redraw();
+	}
+
+	public void setScrolls() {
 		Rectangle rect = image.getBounds();
 		Rectangle client = canvas.getClientArea();
 		hBar.setMaximum(rect.width);
@@ -155,7 +160,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 				vSelection = 0;
 			origin.y = -vSelection;
 		}
-		canvas.redraw();
+		// canvas.redraw();
 	}
 
 	public void paint(GC gc) {
