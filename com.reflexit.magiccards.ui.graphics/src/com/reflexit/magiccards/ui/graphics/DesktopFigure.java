@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -23,12 +22,14 @@ import com.reflexit.magiccards.core.sync.CardCache;
 public class DesktopFigure extends XFigure {
 	private ArrayList<CardFigure> children;
 	private CardFigure active;
-	private DeskCanvas canvas;
+	private DesktopCanvas canvas;
 	private IFilteredCardStore<IMagicCard> fstore;
 	private final Rectangle DEFAULT_SIZE = new Rectangle(0, 0, 1200, 768);
 	private ICardField currentGroup;
+	private boolean mouseMove;
+	private int lastActivePosition;
 
-	public DesktopFigure(DeskCanvas deskCanvas) {
+	public DesktopFigure(DesktopCanvas deskCanvas) {
 		super(null);
 		this.canvas = deskCanvas;
 		children = new ArrayList<CardFigure>();
@@ -48,17 +49,22 @@ public class DesktopFigure extends XFigure {
 		children.add(card);
 	}
 
+	public void moveTo(int i, CardFigure card) {
+		children.remove(card);
+		children.add(i, card);
+	}
+
 	@Override
 	public void paint(GC gc, int x, int y, int width, int height, boolean all) {
 		// background
 		Rectangle rect = new Rectangle(x, y, width, height);
 		Rectangle bounds = getBounds();
 		gc.setClipping(rect);
-		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+		// gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 		gc.fillRectangle(0, 0, bounds.width, bounds.height);
 		gc.drawLine(0, 0, bounds.width, bounds.height);
 		gc.drawLine(0, bounds.height, bounds.width, 0);
-		gc.drawText("Default Image", 10, 10);
+		// gc.drawText("Default Image", 10, 10);
 		// children
 		if (all) {
 			for (CardFigure child : children) {
@@ -73,6 +79,7 @@ public class DesktopFigure extends XFigure {
 
 	@Override
 	public boolean mouseDrag(Point p) {
+		mouseMove = true;
 		if (active != null) {
 			Rectangle cb = active.getBounds();
 			if (cb.contains(p)) {
@@ -89,6 +96,7 @@ public class DesktopFigure extends XFigure {
 	@Override
 	public boolean mouseStartDrag(Point p) {
 		active = null;
+		mouseMove = false;
 		for (int i = children.size() - 1; i >= 0; i--) {
 			CardFigure child = children.get(i);
 			if (child.getBounds().contains(p)) {
@@ -99,7 +107,9 @@ public class DesktopFigure extends XFigure {
 		if (active == null)
 			return false;
 		active.mouseStartDrag(p);
+		lastActivePosition = children.indexOf(active);
 		moveUp(active);
+		redraw();
 		return true;
 	}
 
@@ -108,6 +118,10 @@ public class DesktopFigure extends XFigure {
 		if (active == null)
 			return false;
 		active.mouseStopDrag(p);
+		if (!mouseMove) {
+			moveTo(lastActivePosition, active);
+		}
+		redraw();
 		return true;
 	}
 

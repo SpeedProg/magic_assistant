@@ -6,10 +6,10 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class DeskCanvas extends ScrollableCanvas {
+public class DesktopCanvas extends ScrollableCanvas {
 	private DesktopFigure desktop;
 
-	public DeskCanvas(Composite parent) {
+	public DesktopCanvas(Composite parent) {
 		super(parent, null);
 		desktop = new DesktopFigure(this);
 	}
