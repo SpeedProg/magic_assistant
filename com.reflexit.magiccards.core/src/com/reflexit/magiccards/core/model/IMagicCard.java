@@ -36,4 +36,8 @@ public interface IMagicCard extends ICard {
 	public abstract String getRulings();
 
 	public void setDbPrice(float dbprice);
+
+	public IMagicCard cloneCard();
+
+	public abstract MagicCard getBase();
 }

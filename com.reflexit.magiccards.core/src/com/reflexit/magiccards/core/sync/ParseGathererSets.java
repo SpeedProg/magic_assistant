@@ -12,12 +12,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.sync;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -32,10 +27,8 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 /**
  * Retrieve legality info
  */
-public class ParseGathererSets {
-	private static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
+public class ParseGathererSets extends ParseGathererPage {
 	private static final String SET_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Default.aspx";
-	private static Charset UTF_8 = Charset.forName("utf-8");
 	/*-
 	                <b>
 	                    Filter Card Set:
@@ -52,30 +45,13 @@ public class ParseGathererSets {
 	private static Pattern setStartPattern = Pattern.compile("<b>\\s*Filter Card Set:.*?<option value=\"\"></option>(.*?)</select>");
 	private static Pattern oneSetPattern = Pattern.compile("<option.*?>(.*?)</option>");
 
-	public static void loadEditions(IProgressMonitor monitor) throws IOException {
-		monitor.beginTask("Updating sets", 100);
-		try {
-			URL url = new URL(SET_QUERY_URL_BASE);
-			InputStream openStream = url.openStream();
-			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
-			String line;
-			String html = "";
-			while ((line = st.readLine()) != null) {
-				html += line + " ";
-				if (monitor.isCanceled())
-					return;
-			}
-			st.close();
-			monitor.worked(90);
-			if (monitor.isCanceled())
-				return;
-			loadEditions(html);
-		} finally {
-			monitor.done();
-		}
+	public ParseGathererSets() {
+		setTitle("Updating sets...");
 	}
 
-	private static void loadEditions(String html) {
+	@Override
+	protected void loadHtml(String html, IProgressMonitor monitor) {
+		html = html.replaceAll("\r?\n", " ");
 		Matcher matcher = setStartPattern.matcher(html);
 		if (matcher.find()) {
 			String sets = matcher.group(1);
@@ -90,10 +66,15 @@ public class ParseGathererSets {
 		}
 	}
 
+	@Override
+	protected String getUrl() {
+		return SET_QUERY_URL_BASE;
+	}
+
 	public static void main(String[] args) throws IOException {
 		// card.setCardId(11179);
 		ParseGathererSets parser = new ParseGathererSets();
-		parser.loadEditions(new NullProgressMonitor());
+		parser.load(new NullProgressMonitor());
 		Collection<Edition> editions = Editions.getInstance().getEditions();
 		for (Iterator iterator = editions.iterator(); iterator.hasNext();) {
 			Edition edition = (Edition) iterator.next();

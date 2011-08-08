@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,5 +48,15 @@ public class FileUtils {
 			if (fos != null)
 				fos.close();
 		}
+	}
+
+	public static String readFileAsString(BufferedReader reader) throws IOException {
+		StringBuffer fileData = new StringBuffer(1024 * 4);
+		char[] buf = new char[1024 * 4];
+		int numRead = 0;
+		while ((numRead = reader.read(buf)) != -1) {
+			fileData.append(buf, 0, numRead);
+		}
+		return fileData.toString();
 	}
 }

@@ -12,14 +12,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.sync;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,24 +22,24 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
+import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
 /**
  * Retrieve legality info
  */
-public class ParseGathererRulings {
-	private static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
+public class ParseGathererRulings extends ParseGathererPage {
 	private static final String RULINGS_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Details.aspx?multiverseid=";
-	private static Charset UTF_8 = Charset.forName("utf-8");
+	private IMagicCard card;
+	private Set<ICardField> fieldMapFilter;
+	private ICardStore magicDb;
 	/*-
 	 <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_rulingsContainer" class="postContainer" style="display:block;">
 	                        <table cellpadding="0" cellspacing="0">
@@ -93,36 +87,10 @@ public class ParseGathererRulings {
 	private static Pattern otherSetPattern = Pattern.compile("Other Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	private static Pattern otherSetPatternEach = Pattern.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 
-	private void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
-		monitor.beginTask("Updating card", 100);
-		try {
-			URL url = new URL(RULINGS_QUERY_URL_BASE + card.getCardId());
-			InputStream openStream = url.openStream();
-			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
-			String line;
-			String html = "";
-			while ((line = st.readLine()) != null) {
-				html += line + " ";
-			}
-			st.close();
-			monitor.worked(90);
-			if (monitor.isCanceled())
-				return;
-			extractField(card, fieldMap, html, MagicCardField.RULINGS, rulingPattern);
-			monitor.worked(1);
-			extractField(card, fieldMap, html, MagicCardField.RATING, ratingPattern);
-			monitor.worked(1);
-			extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern);
-			monitor.worked(1);
-			extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern);
-			monitor.worked(1);
-			extractField(card, fieldMap, html, MagicCardField.ORACLE, oraclePattern);
-			monitor.worked(1);
-			extractOtherSets(card, fieldMap, html);
-			monitor.worked(1);
-		} finally {
-			monitor.done();
-		}
+	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
+		setCard(card);
+		setFilter(fieldMap);
+		load(monitor);
 	}
 
 	protected void extractOtherSets(IMagicCard card, Set<ICardField> fieldMap, String html) {
@@ -133,7 +101,6 @@ public class ParseGathererRulings {
 				setsHtml = matcher1.group(1).trim();
 			} else
 				return;
-			ICardStore db = DataManager.getCardHandler().getMagicDBStore();
 			Matcher matcher = otherSetPatternEach.matcher(setsHtml);
 			while (matcher.find()) {
 				String id = matcher.group(1).trim();
@@ -142,20 +109,13 @@ public class ParseGathererRulings {
 				String set = matcher.group(2).trim();
 				String rarity = matcher.group(3).trim();
 				// other printings
-				MagicCard mcard;
-				if (card instanceof MagicCard) {
-					mcard = (MagicCard) card;
-				} else if (card instanceof MagicCardPhisical) {
-					mcard = ((MagicCardPhisical) card).getCard();
-				} else {
-					continue;
-				}
-				MagicCard card2 = (MagicCard) mcard.clone();
+				MagicCard mcard = card.getBase();
+				MagicCard card2 = (MagicCard) mcard.cloneCard();
 				card2.setId(id);
 				card2.setSet(set.trim());
 				card2.setRarity(rarity.trim());
-				if (db.getCard(card2.getCardId()) == null) {
-					db.add(card2);
+				if (magicDb != null && magicDb.getCard(card2.getCardId()) == null) {
+					magicDb.add(card2);
 					System.err.println("Added " + card2.getName() + " " + id + " " + set + " " + rarity);
 				}
 			}
@@ -193,66 +153,63 @@ public class ParseGathererRulings {
 		return res;
 	}
 
-	public void updateCard(IMagicCard magicCard, IProgressMonitor monitor, Set<ICardField> fieldMap) throws IOException {
-		monitor.beginTask("Loading additional info...", 10);
-		monitor.worked(1);
+	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
 		try {
-			// load individual card
-			try {
-				parseSingleCard(magicCard, fieldMap, new SubProgressMonitor(monitor, 8));
-			} catch (IOException e) {
-				System.err.println("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
-			}
+			ICardHandler cardHandler = DataManager.getCardHandler();
+			if (cardHandler != null)
+				setMagicDb(cardHandler.getMagicDBStore());
+			parseSingleCard(magicCard, fieldMap, new SubProgressMonitor(monitor, 8));
+		} catch (IOException e) {
+			Activator.log("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
+		}
+	}
+
+	public void setCard(IMagicCard card) {
+		this.card = card;
+	}
+
+	public void setFilter(Set<ICardField> fieldMapFilter) {
+		this.fieldMapFilter = fieldMapFilter;
+	}
+
+	@Override
+	protected void loadHtml(String html, IProgressMonitor monitor) {
+		monitor.beginTask("Updating card", 6);
+		try {
+			html = html.replaceAll("\r?\n", " ");
+			extractField(card, fieldMapFilter, html, MagicCardField.RULINGS, rulingPattern);
+			monitor.worked(1);
+			extractField(card, fieldMapFilter, html, MagicCardField.RATING, ratingPattern);
+			monitor.worked(1);
+			extractField(card, fieldMapFilter, html, MagicCardField.ARTIST, artistPattern);
+			monitor.worked(1);
+			extractField(card, fieldMapFilter, html, MagicCardField.COLLNUM, cardnumPattern);
+			monitor.worked(1);
+			extractField(card, fieldMapFilter, html, MagicCardField.ORACLE, oraclePattern);
+			monitor.worked(1);
+			extractOtherSets(card, fieldMapFilter, html);
+			monitor.worked(1);
 		} finally {
 			monitor.done();
 		}
 	}
 
-	public void updateStore(Iterator<IMagicCard> iter, int size, IProgressMonitor monitor, Set<ICardField> fieldMaps) throws IOException {
-		monitor.beginTask("Loading additional info...", size * 10 + 10);
-		ICardStore db = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
-		IStorage storage = ((IStorageContainer) db).getStorage();
-		storage.setAutoCommit(false);
-		monitor.worked(5);
-		try {
-			for (int i = 0; iter.hasNext(); i++) {
-				IMagicCard magicCard = iter.next();
-				if (monitor.isCanceled())
-					return;
-				// load individual card
-				monitor.subTask("Updating card " + i + " of " + size);
-				try {
-					parseSingleCard(magicCard, fieldMaps, new SubProgressMonitor(monitor, 9));
-				} catch (IOException e) {
-					System.err.println("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
-				}
-				if (monitor.isCanceled())
-					return;
-				if (magicCard instanceof MagicCardPhisical) {
-					db.update(((MagicCardPhisical) magicCard).getCard());
-				} else {
-					db.update(magicCard);
-				}
-				if (fieldMaps.contains(MagicCardField.ID)) {
-					// load and cache image
-					CardCache.loadCardImageOffline(magicCard, false);
-				}
-				monitor.worked(1);
-			}
-		} finally {
-			storage.setAutoCommit(true);
-			storage.save();
-			monitor.worked(5);
-			monitor.done();
-		}
+	@Override
+	protected String getUrl() {
+		return RULINGS_QUERY_URL_BASE + card.getCardId();
+	}
+
+	public void setMagicDb(ICardStore magicDb) {
+		this.magicDb = magicDb;
 	}
 
 	public static void main(String[] args) throws IOException {
 		MagicCard card = new MagicCard();
-		card.setCardId(19789);
-		// card.setCardId(11179);
+		card.setCardId(191338);
+		// card.setCardId(191338);
 		ParseGathererRulings parser = new ParseGathererRulings();
-		parser.parseSingleCard(card, null, new NullProgressMonitor());
+		parser.setCard(card);
+		parser.load(new NullProgressMonitor());
 		System.err.println(card.getRulings() + " " + card.getArtist() + " " + card.getCommunityRating() + " " + card.getCollNumber());
 	}
 }

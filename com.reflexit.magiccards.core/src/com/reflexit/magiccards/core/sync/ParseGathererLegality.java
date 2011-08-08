@@ -10,17 +10,15 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.sync;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardSet;
@@ -28,10 +26,9 @@ import com.reflexit.magiccards.core.model.storage.ICardSet;
 /**
  * Retrieve legality info
  */
-public class ParseGathererLegality {
-	private static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
+public class ParseGathererLegality extends ParseGathererPage {
 	private static final String LEGALITY_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Printings.aspx?multiverseid=";
-	private static Charset UTF_8 = Charset.forName("utf-8");
+	private int cardId;
 	/*-
 	 <table class="cardList" cellspacing="0" cellpadding="2">
 	<tr class="headerRow">
@@ -65,16 +62,68 @@ public class ParseGathererLegality {
 
 	 */
 	private static Pattern rowPattern = Pattern.compile(">\\s*([^<]*)\\s*</td>");
+	private HashMap<String, String> legalityMap;
+
+	public HashMap<String, String> getLegalityMap() {
+		return legalityMap;
+	}
+
+	public void setCardId(int cardId) {
+		this.cardId = cardId;
+	}
+
+	public int getCardId() {
+		return cardId;
+	}
 
 	public static Map<String, String> cardLegality(int id) throws IOException {
-		HashMap<String, String> res = new LinkedHashMap<String, String>();
-		URL url = new URL(LEGALITY_QUERY_URL_BASE + id);
-		InputStream openStream = url.openStream();
-		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
-		String line;
-		String row = "";
+		ParseGathererLegality parser = new ParseGathererLegality();
+		return parser.getCardLegality(id);
+	}
+
+	public Map<String, String> getCardLegality(int id) throws IOException {
+		ParseGathererLegality parser = this;
+		parser.setCardId(id);
+		parser.load(new NullProgressMonitor());
+		Map<String, String> cardLegality = parser.getLegalityMap();
+		return cardLegality;
+	}
+
+	public static Map<Integer, Map<String, String>> cardSetLegality(ICardSet<IMagicCard> cards) throws IOException {
+		ParseGathererLegality parser = new ParseGathererLegality();
+		Map<Integer, Map<String, String>> res = new LinkedHashMap<Integer, Map<String, String>>();
+		IOException ex = null; // last exception
+		for (IMagicCard magicCard : cards) {
+			int id = magicCard.getCardId();
+			try {
+				Map map = parser.getCardLegality(id);
+				res.put(id, map);
+			} catch (IOException e) {
+				ex = e;
+			}
+		}
+		if (res.size() == 0 && ex != null)
+			throw ex;
+		return res;
+	}
+
+	public static void main(String[] args) throws IOException {
+		int id = 193867;
+		ParseGathererLegality parser = new ParseGathererLegality();
+		parser.setCardId(id);
+		parser.load(new NullProgressMonitor());
+		Map<String, String> cardLegality = parser.getLegalityMap();
+		System.err.println(cardLegality);
+	}
+
+	@Override
+	protected void loadHtml(String html, IProgressMonitor monitor) {
+		legalityMap = new LinkedHashMap<String, String>();
+		String lines[] = html.split("\n");
 		int state = 0;
-		while ((line = st.readLine()) != null) {
+		String row = "";
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
 			if (line.contains("This card has restrictions in the following formats")) {
 				state = 1;
 				continue;
@@ -97,7 +146,7 @@ public class ParseGathererLegality {
 						String format = matcher.group(1).trim();
 						if (matcher.find()) {
 							String legal = matcher.group(1).trim();
-							res.put(format, legal);
+							legalityMap.put(format, legal);
 						} else {
 							System.err.println("? " + row);
 						}
@@ -109,30 +158,10 @@ public class ParseGathererLegality {
 				row += line;
 			}
 		}
-		st.close();
-		return res;
 	}
 
-	public static Map<Integer, Map<String, String>> cardSetLegality(ICardSet<IMagicCard> cards) throws IOException {
-		Map<Integer, Map<String, String>> res = new LinkedHashMap<Integer, Map<String, String>>();
-		IOException ex = null; // last exception
-		for (IMagicCard magicCard : cards) {
-			int id = magicCard.getCardId();
-			try {
-				Map map = cardLegality(id);
-				res.put(id, map);
-			} catch (IOException e) {
-				ex = e;
-			}
-		}
-		if (res.size() == 0 && ex != null)
-			throw ex;
-		return res;
-	}
-
-	public static void main(String[] args) throws IOException {
-		int id = 193867;
-		Map<String, String> cardLegality = cardLegality(id);
-		System.err.println(cardLegality);
+	@Override
+	protected String getUrl() {
+		return LEGALITY_QUERY_URL_BASE + getCardId();
 	}
 }

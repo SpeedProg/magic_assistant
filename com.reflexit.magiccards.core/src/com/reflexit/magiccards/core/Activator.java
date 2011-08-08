@@ -31,7 +31,7 @@ public class Activator extends Plugin {
 	public static final String PLUGIN_ID = "com.reflexit.magiccards.core";
 	// The shared instance
 	private static Activator plugin;
-	//global preferences keys
+	// global preferences keys
 	public static final String DB_LOADED = "db_loaded";
 
 	/**
@@ -43,7 +43,9 @@ public class Activator extends Plugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -52,7 +54,9 @@ public class Activator extends Plugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -69,13 +73,22 @@ public class Activator extends Plugin {
 	public IEclipsePreferences getEclipseDefaultPreferences() {
 		return new DefaultScope().getNode(PLUGIN_ID);
 	}
+
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	public static void log(String message) {
+		Activator pl = getDefault();
+		if (pl == null) {
+			System.err.println("Log: " + message);
+		} else
+			pl.getLog().log(new Status(Status.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
 	}
 
 	public static void log(Throwable e) {
@@ -83,10 +96,7 @@ public class Activator extends Plugin {
 		if (pl == null) {
 			e.printStackTrace();
 		} else
-			pl.getLog()
-			        .log(
-			                new Status(Status.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e
-			                        .getMessage(), e));
+			pl.getLog().log(new Status(Status.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
 	}
 
 	public static IPath getStateLocationAlways() {
@@ -100,7 +110,7 @@ public class Activator extends Plugin {
 				temp.delete();
 				temp = new File(temp.getParentFile(), PLUGIN_ID);
 				temp.mkdir();
-				//temp.deleteOnExit();
+				// temp.deleteOnExit();
 				return new Path(temp.getPath());
 			} catch (IOException e) {
 				return new Path("/tmp");
@@ -108,7 +118,6 @@ public class Activator extends Plugin {
 		}
 		return path;
 	}
-
 
 	public IStatus getStatus(Throwable e) {
 		return new Status(Status.ERROR, PLUGIN_ID, e.getMessage(), e);

@@ -26,7 +26,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
 	 */
 	public String getCost() {
@@ -39,7 +39,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCardId()
 	 */
 	public int getCardId() {
@@ -52,7 +52,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getName()
 	 */
 	public String getName() {
@@ -65,7 +65,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getOracleText()
 	 */
 	public String getOracleText() {
@@ -78,7 +78,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getRarity()
 	 */
 	public String getRarity() {
@@ -91,7 +91,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
 	 */
 	public String getSet() {
@@ -104,7 +104,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getType()
 	 */
 	public String getType() {
@@ -122,7 +122,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getPower()
 	 */
 	public String getPower() {
@@ -135,7 +135,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getToughness()
 	 */
 	public String getToughness() {
@@ -189,7 +189,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
 	 */
 	public String getColorType() {
@@ -204,7 +204,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
 	 */
 	public int getCmc() {
@@ -435,6 +435,10 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		}
 	}
 
+	public MagicCard cloneCard() {
+		return (MagicCard) clone();
+	}
+
 	public void updateFrom(IMagicCard card) {
 		MagicCardField[] fields = MagicCardField.values();
 		for (int i = 0; i < fields.length; i++) {
@@ -449,5 +453,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 					this.setObjectByField(field, string);
 			}
 		}
+	}
+
+	public MagicCard getBase() {
+		return this;
 	}
 }
