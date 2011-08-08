@@ -188,7 +188,7 @@ public class XmlCardHolder implements ICardHandler {
 				throw new InterruptedException();
 			pm.subTask("Updating set list...");
 			try {
-				ParseGathererSets.loadEditions(new SubProgressMonitor(pm, 10));
+				new ParseGathererSets().load(new SubProgressMonitor(pm, 10));
 				Editions.getInstance().save();
 			} catch (Exception e) {
 				Activator.log(e); // move on if exception via set loading
