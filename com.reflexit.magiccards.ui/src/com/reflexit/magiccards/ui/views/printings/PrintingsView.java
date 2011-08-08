@@ -189,7 +189,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 				try {
-					new ParseGathererRulings().updateCard(card, new SubProgressMonitor(monitor, 90), fieldMap);
+					new ParseGathererRulings().updateCard(card, fieldMap, new SubProgressMonitor(monitor, 90));
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
 					reloadData();

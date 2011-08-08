@@ -186,7 +186,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					return Status.CANCEL_STATUS;
 				if (fieldMap.size() == 0)
 					return Status.OK_STATUS;
-				new ParseGathererRulings().updateCard(card, new SubProgressMonitor(monitor, 99), fieldMap);
+				new ParseGathererRulings().updateCard(card, fieldMap, new SubProgressMonitor(monitor, 99));
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (!isStillNeeded(card))

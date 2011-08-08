@@ -11,8 +11,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.sync.ParseGathererRulings;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -22,6 +24,7 @@ public class LoadingExtraJob extends Job {
 	private Set<ICardField> fields;
 	private IStructuredSelection selection;
 	private int listChoice;
+	private String lang;
 
 	public LoadingExtraJob(AbstractCardsView view) {
 		this("Loading extra fields", view);
@@ -40,13 +43,13 @@ public class LoadingExtraJob extends Job {
 	public void setListChoice(int listChoice) {
 		this.listChoice = listChoice;
 	}
+
 	public void setFields(Set<ICardField> set) {
 		this.fields = set;
 	}
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-
 		try {
 			int size = 0;
 			Iterator list = null;
@@ -66,8 +69,10 @@ public class LoadingExtraJob extends Job {
 			default:
 				return Status.CANCEL_STATUS;
 			}
-			ParseGathererRulings parser = new ParseGathererRulings();
-			parser.updateStore(list, size, monitor, fields);
+			ICardStore magicDb = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
+			UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
+			// parser.set
+			parser.updateStore(list, size, fields, lang, magicDb, monitor);
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					view.reloadData();
@@ -79,5 +84,7 @@ public class LoadingExtraJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-
+	public void setLanguage(String language) {
+		this.lang = language;
+	}
 }

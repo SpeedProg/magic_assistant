@@ -432,6 +432,9 @@ public abstract class AbstractCardsView extends ViewPart {
 		loadingExtras.setFields(dialog.getFields());
 		loadingExtras.setSelection(selection);
 		loadingExtras.setListChoice(dialog.getListChoice());
+		if (dialog.getFields().contains(MagicCardField.LANG)) {
+			loadingExtras.setLanguage(dialog.getLanguage());
+		}
 		loadingExtras.schedule();
 	}
 

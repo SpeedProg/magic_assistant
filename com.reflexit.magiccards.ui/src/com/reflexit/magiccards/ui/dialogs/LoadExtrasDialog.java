@@ -11,8 +11,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.model.ICardField;
@@ -28,6 +30,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	public static final int USE_SELECTION = 1;
 	public static final int USE_FILTER = 2;
 	public static final int USE_ALL = 3;
+	private Combo langCombo;
 
 	public LoadExtrasDialog(Shell parentShell, int selSize, int filSize, int totalSize) {
 		super(parentShell);
@@ -78,9 +81,14 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Artist", MagicCardField.ARTIST);
 		createFieldCheck("Rating", MagicCardField.RATING);
 		createFieldCheck("Collector's Number", MagicCardField.COLLNUM);
-		createFieldCheck("Oracle Text", MagicCardField.ORACLE);
-		createFieldCheck("Image", MagicCardField.ID);
-		createFieldCheck("Price", MagicCardField.DBPRICE);
+		createFieldCheck("Oracle Text", MagicCardField.ORACLE, false);
+		createFieldCheck("Image", MagicCardField.ID, false);
+		createFieldCheck("Price", MagicCardField.DBPRICE, false);
+		new Label(buttons, SWT.NONE);
+		createFieldCheck("Language", MagicCardField.LANG, false);
+		langCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
+		langCombo.setItems(new String[] { "English", "Russian", "French", "German", "Italian", "Spanish", "Portuguese" });
+		langCombo.setText("English");
 		createSelectAllButtons(checkArea);
 	}
 
@@ -164,6 +172,10 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	}
 
 	protected void createFieldCheck(String name, final ICardField field) {
+		createFieldCheck(name, field, true);
+	}
+
+	protected void createFieldCheck(String name, final ICardField field, boolean selection) {
 		final Button button = new Button(buttons, SWT.CHECK);
 		button.setText(name);
 		button.setData(field);
@@ -177,12 +189,16 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		button.setSelection(true);
+		button.setSelection(selection);
 		selectedSet.add(field);
 		buttonGridData.applyTo(button);
 	}
 
 	public Set<ICardField> getFields() {
 		return selectedSet;
+	}
+
+	public String getLanguage() {
+		return "Russian";
 	}
 }

@@ -42,5 +42,6 @@ public class MagicColumnCollection extends ColumnCollection {
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
 		}
+		this.columns.add(new GenColumn(MagicCardField.LANG, "Language"));
 	}
 }
