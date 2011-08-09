@@ -137,12 +137,14 @@ public class CardCache {
 					} else
 						return Status.OK_STATUS;
 				}
-				try {
-					downloadAndSaveImage(card, isLoadingEnabled(), forceUpdate);
-				} catch (Exception e) {
-					continue;
-				} finally {
-					card.notifyAll();
+				synchronized (card) {
+					try {
+						downloadAndSaveImage(card, isLoadingEnabled(), forceUpdate);
+					} catch (Exception e) {
+						continue;
+					} finally {
+						card.notifyAll();
+					}
 				}
 			}
 		}

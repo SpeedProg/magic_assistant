@@ -26,6 +26,7 @@ public class FilterHelper {
 	public static final String COUNT = MagicCardFieldPhysical.COUNT.name();
 	public static final String COMMENT = MagicCardFieldPhysical.COMMENT.name();
 	public static final String OWNERSHIP = MagicCardFieldPhysical.OWNERSHIP.name();
+	public static final String LANG = MagicCardField.LANG.name();
 	public static final String TEXT_LINE_2 = TEXT_LINE + "_2";
 	public static final String TEXT_LINE_3 = TEXT_LINE + "_3";
 	public static final String TEXT_NOT_1 = TEXT_LINE + "_exclude_1";
@@ -71,6 +72,7 @@ public class FilterHelper {
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.TEXT_NOT_3, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.FORTRADECOUNT.name(), FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(MagicCardFieldPhysical.SPECIAL.name(), FilterHelper.TEXT_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.LANG, FilterHelper.TEXT_POSTFIX));
 		// TODO add the rest
 		return ids;
 	}

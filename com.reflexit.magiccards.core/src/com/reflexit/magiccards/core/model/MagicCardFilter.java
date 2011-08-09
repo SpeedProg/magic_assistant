@@ -468,6 +468,15 @@ public class MagicCardFilter {
 			res = textSearch(MagicCardFieldPhysical.SPECIAL, value, regex);
 		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
+		} else if (FilterHelper.LANG.equals(requestedId)) {
+			if (value.equals("")) {
+				res = TRUE;
+			} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
+				res = BinaryExpr.fieldEquals(MagicCardField.LANG, null);
+				res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldEquals(MagicCardField.LANG, value));
+			} else {
+				res = BinaryExpr.fieldEquals(MagicCardField.LANG, value);
+			}
 		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
 			res = textSearch(MagicCardField.ORACLE, value, regex);
 			if (requestedId.contains("_exclude_")) {
@@ -520,6 +529,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Rarity.getInstance()), expr);
+		expr = createAndGroup(createTextSearch(map, FilterHelper.LANG), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.TYPE_LINE), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.POWER), expr);
