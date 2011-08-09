@@ -4,6 +4,7 @@ import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -13,15 +14,16 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.Languages;
 
 public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
-	//private Group group;
+	// private Group group;
 	@Override
 	protected void createFieldEditors() {
-		//		this.group = new Group(getFieldEditorParent(), SWT.NONE);
-		//		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//		this.group.setText("Subtype");
-		//		Composite parent = this.group;
+		// this.group = new Group(getFieldEditorParent(), SWT.NONE);
+		// this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		// this.group.setText("Subtype");
+		// Composite parent = this.group;
 		// addCheckBox("Any", parent);
 		String id;
 		id = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
@@ -29,10 +31,10 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		StringFieldEditor nameSfe = new StringFieldEditor(id, "Name", getFieldEditorParent());
 		addField(nameSfe);
 		String toolTip = "Search expression can contain words separated by spaces,\n"
-		        + "which would be searched using AND connector.\n" // 
-		        + "Adding '-' in front of the word makes it NOT.\n"
-		        + "Special symbols can be search using {X} type syntax (i.e. {T} for tap).\n" // 
-		        + "See help for details.";
+				+ "which would be searched using AND connector.\n" //
+				+ "Adding '-' in front of the word makes it NOT.\n"
+				+ "Special symbols can be search using {X} type syntax (i.e. {T} for tap).\n" //
+				+ "See help for details.";
 		addTooltip(nameSfe, toolTip);
 		// type
 		String typeId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
@@ -54,26 +56,26 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		StringFieldEditor artistSfe = new StringFieldEditor(artistId, "Artist", getFieldEditorParent());
 		addField(artistSfe);
 		addTooltip(artistSfe, toolTip);
+		// language
+		String langId = FilterHelper.getPrefConstant(FilterHelper.LANG, FilterHelper.TEXT_POSTFIX);
+		getPreferenceStore().setDefault(langId, "");
+		String[][] langs;
+		String[] langValues = Languages.getInstance().getLangValues();
+		langs = new String[langValues.length + 1][2];
+		langs[0][0] = langs[0][1] = "";
+		for (int i = 0; i < langs.length - 1; i++) {
+			langs[i + 1][0] = langs[i + 1][1] = langValues[i];
+		}
+		ComboFieldEditor langSfe = new ComboFieldEditor(langId, "Language", langs, getFieldEditorParent());
+		addField(langSfe);
 	}
-	static String[] textProposals = new String[] {
-	        "Flying",
-	        "Haste",
-	        "Persist",
-	        "Wither",
-	        "Lifelink",
-	        "First Strike",
-	        "Double Strike",
-	        "Protection",
-	        "Reach",
-	        "Deathtouch",
-	        "Unblockable",
-	        "Fear",
-	        "Changeling",
-	        "Trample",
-	        "Vigilance", };
+
+	static String[] textProposals = new String[] { "Flying", "Haste", "Persist", "Wither", "Lifelink", "First Strike", "Double Strike",
+			"Protection", "Reach", "Deathtouch", "Unblockable", "Fear", "Changeling", "Trample", "Vigilance", };
 
 	/**
-	 * TODO: refactor 
+	 * TODO: refactor
+	 * 
 	 * @return
 	 */
 	private String[] getTextProposals() {
@@ -84,8 +86,11 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 	private void addContextAssist(StringFieldEditor sfe, String[] proposals) {
 		Text t = sfe.getTextControl(getFieldEditorParent());
 		SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(proposals) {
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.fieldassist.SimpleContentProposalProvider#getProposals(java.lang.String, int)
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.jface.fieldassist.SimpleContentProposalProvider#
+			 * getProposals(java.lang.String, int)
 			 */
 			@Override
 			public IContentProposal[] getProposals(String contents, int position) {
@@ -106,15 +111,15 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 				int k = old.lastIndexOf(' ');
 				int l = old.length() - k - 1;
 				textCon.insert(text.substring(l));
-				// Insert will leave the cursor at the end of the inserted text. If this
+				// Insert will leave the cursor at the end of the inserted text.
+				// If this
 				// is not what we wanted, reset the selection.
 				if (cursorPosition < text.length()) {
 					textCon.setSelection(selection.x + cursorPosition, selection.x + cursorPosition);
 				}
 			}
 		};
-		ContentProposalAdapter adapter = new ContentProposalAdapter(t, controlContentAdapter, proposalProvider, null,
-		        null);
+		ContentProposalAdapter adapter = new ContentProposalAdapter(t, controlContentAdapter, proposalProvider, null, null);
 	}
 
 	@Override

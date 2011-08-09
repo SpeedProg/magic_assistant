@@ -1,8 +1,10 @@
 package com.reflexit.magiccards.ui.dialogs;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -18,10 +20,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.Languages;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class LoadExtrasDialog extends TitleAreaDialog {
 	private Set<ICardField> selectedSet = new HashSet<ICardField>();
+	private Set<ICardField> fieldsSet = new HashSet<ICardField>();
 	private GridDataFactory buttonGridData;
 	private Composite buttons;
 	private int totalSize;
@@ -30,6 +35,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	public static final int USE_SELECTION = 1;
 	public static final int USE_FILTER = 2;
 	public static final int USE_ALL = 3;
+	private static final String ID = LoadExtrasDialog.class.getName();
 	private Combo langCombo;
 
 	public LoadExtrasDialog(Shell parentShell, int selSize, int filSize, int totalSize) {
@@ -64,6 +70,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		buttonGridData = GridDataFactory.fillDefaults();
 		createListChoiceGroup(panel);
 		createFieldsGroup(panel);
+		restoreWidgetValues();
 		return area;
 	}
 
@@ -85,9 +92,9 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Image", MagicCardField.ID, false);
 		createFieldCheck("Price", MagicCardField.DBPRICE, false);
 		new Label(buttons, SWT.NONE);
-		createFieldCheck("Language", MagicCardField.LANG, false);
+		createFieldCheck("Localized version in", MagicCardField.LANG, false);
 		langCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
-		langCombo.setItems(new String[] { "English", "Russian", "French", "German", "Italian", "Spanish", "Portuguese" });
+		langCombo.setItems(Languages.getInstance().getLangValues());
 		langCombo.setText("English");
 		createSelectAllButtons(checkArea);
 	}
@@ -109,6 +116,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	}
 
 	private int listChoice;
+	private String lang;
 
 	public int getListChoice() {
 		return listChoice;
@@ -179,7 +187,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		final Button button = new Button(buttons, SWT.CHECK);
 		button.setText(name);
 		button.setData(field);
-		button.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (button.getSelection()) {
@@ -188,10 +196,20 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 					selectedSet.remove(field);
 				}
 			}
-		});
-		button.setSelection(selection);
-		selectedSet.add(field);
+		};
+		button.addSelectionListener(listener);
+		fieldsSet.add(field);
 		buttonGridData.applyTo(button);
+		// restore value
+		String value = getDialogBoundsSettings().get(field.name());
+		if (Boolean.valueOf(value)) {
+			button.setSelection(true);
+		} else if (value != null) {
+			button.setSelection(false);
+		} else { // value==null
+			button.setSelection(selection);
+		}
+		listener.widgetSelected(null);
 	}
 
 	public Set<ICardField> getFields() {
@@ -199,6 +217,43 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	}
 
 	public String getLanguage() {
-		return "Russian";
+		return lang;
+	}
+
+	@Override
+	protected IDialogSettings getDialogBoundsSettings() {
+		return MagicUIActivator.getDefault().getDialogSettings(ID);
+	}
+
+	@Override
+	protected void okPressed() {
+		lang = langCombo.getText();
+		saveWidgetValues();
+		super.okPressed();
+	}
+
+	protected void saveWidgetValues() {
+		try {
+			IDialogSettings dialogSettings = getDialogBoundsSettings();
+			// save lang
+			dialogSettings.put("lang", lang);
+			// save checks
+			for (ICardField field : fieldsSet) {
+				dialogSettings.put(field.name(), selectedSet.contains(field));
+			}
+			// save into file
+			MagicUIActivator.getDefault().saveDialogSetting(dialogSettings);
+		} catch (IOException e) {
+			MagicUIActivator.log(e);
+		}
+	}
+
+	protected void restoreWidgetValues() {
+		IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
+		// restore file
+		this.lang = dialogSettings.get("lang");
+		if (lang != null) {
+			langCombo.setText(lang);
+		}
 	}
 }

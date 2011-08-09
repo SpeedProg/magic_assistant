@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -92,9 +92,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 	public boolean performImport(final boolean preview) {
 		boolean res = false;
 		try {
-			//			final ExportWork work = new ExportWork(listViewer.getCheckedElements(), //
-			//			        fileName, //
-			//			        reportType, includeHeader.getSelection(), getTimeUnitsName());
+			// final ExportWork work = new
+			// ExportWork(listViewer.getCheckedElements(), //
+			// fileName, //
+			// reportType, includeHeader.getSelection(), getTimeUnitsName());
 			locPage.performOk();
 			final boolean header = includeHeader.getSelection();
 			final InputStream st = openInputStream();
@@ -102,7 +103,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						if (preview) {
-							// if error occurs previewResult.error would be set to exception
+							// if error occurs previewResult.error would be set
+							// to exception
 							previewResult = ImportUtils.performPreview(st, reportType, header, monitor);
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
@@ -222,13 +224,12 @@ public class DeckImportPage extends WizardDataTransferPage {
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
 		setControl(composite);
-		PlatformUI.getWorkbench().getHelpSystem()
-		        .setHelp(composite, MagicUIActivator.getDefault().PLUGIN_ID + ".export");
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, MagicUIActivator.PLUGIN_ID + ".export");
 	}
 
 	/**
 	 * Creates the buttons for creating new deck or collection
-	 *
+	 * 
 	 * @param parent
 	 *            the parent control
 	 */
@@ -241,13 +242,13 @@ public class DeckImportPage extends WizardDataTransferPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openWizard(new NewDeckWizard(), listViewer.getSelection());
-			};
+			}
 		});
 		button2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openWizard(new NewCollectionContainerWizard(), listViewer.getSelection());
-			};
+			}
 		});
 	}
 
@@ -280,36 +281,32 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected void restoreWidgetValues() {
 		super.restoreWidgetValues();
-		try {
-			DialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
-			// restore file
-			String file = dialogSettings.get(IMPUT_FILE_SETTING);
-			if (file != null) {
-				setFileName(file);
-				editor.setStringValue(file);
-			}
-			clipboard = dialogSettings.getBoolean(IMPORT_CLIPBOARD);
-			fileRadio.setSelection(!clipboard);
-			clipboardRadio.setSelection(clipboard);
-			// restore selection
-			String ids = dialogSettings.get(IMPORTED_RESOURCES_SETTING);
-			if (ids != null) {
-				locPage.loadFromMemento(ids);
-				locPage.load();
-			}
-			// restore options
-			String type = dialogSettings.get(REPORT_TYPE_SETTING);
-			if (type != null)
-				selectReportType(ReportType.valueOf(type));
-			else
-				selectReportType(ReportType.TEXT_DECK_CLASSIC);
-			if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {
-				includeHeader.setSelection(dialogSettings.getBoolean(IMPORT_HEADER_SETTING));
-			}
-			updateWidgetEnablements();
-		} catch (IOException e) {
-			MagicUIActivator.log(e);
+		IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
+		// restore file
+		String file = dialogSettings.get(IMPUT_FILE_SETTING);
+		if (file != null) {
+			setFileName(file);
+			editor.setStringValue(file);
 		}
+		clipboard = dialogSettings.getBoolean(IMPORT_CLIPBOARD);
+		fileRadio.setSelection(!clipboard);
+		clipboardRadio.setSelection(clipboard);
+		// restore selection
+		String ids = dialogSettings.get(IMPORTED_RESOURCES_SETTING);
+		if (ids != null) {
+			locPage.loadFromMemento(ids);
+			locPage.load();
+		}
+		// restore options
+		String type = dialogSettings.get(REPORT_TYPE_SETTING);
+		if (type != null)
+			selectReportType(ReportType.valueOf(type));
+		else
+			selectReportType(ReportType.TEXT_DECK_CLASSIC);
+		if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {
+			includeHeader.setSelection(dialogSettings.getBoolean(IMPORT_HEADER_SETTING));
+		}
+		updateWidgetEnablements();
 	}
 
 	private void selectReportType(final ReportType type) {
@@ -322,7 +319,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected void saveWidgetValues() {
 		try {
-			DialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
+			IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
 			// save file name
 			dialogSettings.put(IMPUT_FILE_SETTING, fileName);
 			dialogSettings.put(IMPORT_CLIPBOARD, clipboard);
@@ -450,8 +447,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateSourceGroup() {
-		if (clipboard == false
-		        && ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0))) {
+		if (clipboard == false && ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0))) {
 			setMessage("Imput file is not selected");
 			return false;
 		}
@@ -469,20 +465,24 @@ public class DeckImportPage extends WizardDataTransferPage {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection
-	 * events including button presses and registers default buttons with its shell. The button id is stored as the buttons client
-	 * data. Note that the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
-	 * Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a
+	 * standard push button, registers for selection events including button
+	 * presses and registers default buttons with its shell. The button id is
+	 * stored as the buttons client data. Note that the parent's layout is
+	 * assumed to be a GridLayout and the number of columns in this layout is
+	 * incremented. Subclasses may override.
 	 * </p>
-	 *
+	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code>
+	 *            constants for standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button,
+	 *            and <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar
@@ -526,7 +526,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	/**
-	 * @param element the element to set
+	 * @param element
+	 *            the element to set
 	 */
 	public void setElement(CardElement element) {
 		this.element = element;

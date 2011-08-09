@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -260,7 +260,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	/**
 	 * Creates the buttons for selecting specific types or selecting all or none
 	 * of the elements.
-	 *
+	 * 
 	 * @param parent
 	 *            the parent control
 	 */
@@ -274,34 +274,30 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	@Override
 	protected void restoreWidgetValues() {
 		super.restoreWidgetValues();
-		try {
-			DialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
-			// restore file
-			String file = dialogSettings.get(OUTPUT_FILE_SETTING);
-			if (file != null) {
-				setFileName(file);
-				editor.setStringValue(file);
-			}
-			// restore selection
-			String ids = dialogSettings.get(EXPORTED_RESOURCES_SETTING);
-			if (ids != null) {
-				locPage.loadFromMemento(ids);
-				locPage.load();
-			}
-			// restore options
-			String type = dialogSettings.get(REPORT_TYPE_SETTING);
-			if (type != null)
-				selectReportType(ReportType.valueOf(type));
-			else
-				selectReportType(ReportType.CSV);
-			if (dialogSettings.get(INCLUDE_HEADER_SETTING) != null) {
-				includeHeader.setSelection(dialogSettings.getBoolean(INCLUDE_HEADER_SETTING));
-			}
-			if (dialogSettings.get(INCLUDE_SIDEBOARD) != null) {
-				includeSideBoard.setSelection(dialogSettings.getBoolean(INCLUDE_SIDEBOARD));
-			}
-		} catch (IOException e) {
-			MagicUIActivator.log(e);
+		IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
+		// restore file
+		String file = dialogSettings.get(OUTPUT_FILE_SETTING);
+		if (file != null) {
+			setFileName(file);
+			editor.setStringValue(file);
+		}
+		// restore selection
+		String ids = dialogSettings.get(EXPORTED_RESOURCES_SETTING);
+		if (ids != null) {
+			locPage.loadFromMemento(ids);
+			locPage.load();
+		}
+		// restore options
+		String type = dialogSettings.get(REPORT_TYPE_SETTING);
+		if (type != null)
+			selectReportType(ReportType.valueOf(type));
+		else
+			selectReportType(ReportType.CSV);
+		if (dialogSettings.get(INCLUDE_HEADER_SETTING) != null) {
+			includeHeader.setSelection(dialogSettings.getBoolean(INCLUDE_HEADER_SETTING));
+		}
+		if (dialogSettings.get(INCLUDE_SIDEBOARD) != null) {
+			includeSideBoard.setSelection(dialogSettings.getBoolean(INCLUDE_SIDEBOARD));
 		}
 	}
 
@@ -326,7 +322,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	@Override
 	protected void saveWidgetValues() {
 		try {
-			DialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
+			IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
 			// save file name
 			dialogSettings.put(OUTPUT_FILE_SETTING, fileName);
 			// save selection
@@ -471,7 +467,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	 * assumed to be a GridLayout and the number of columns in this layout is
 	 * incremented. Subclasses may override.
 	 * </p>
-	 *
+	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id

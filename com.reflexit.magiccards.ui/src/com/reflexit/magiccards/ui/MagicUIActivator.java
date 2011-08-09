@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -172,19 +173,23 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		System.out.println(debugInfo);
 	}
 
-	public DialogSettings getDialogSettings(String id) throws IOException {
+	public IDialogSettings getDialogSettings(String id) {
 		IPath path = getDefault().getStateLocation();
 		String filename = path.append("settings.txt").toOSString();
 		DialogSettings settings = new DialogSettings(id);
 		if (new File(filename).exists()) {
-			settings.load(filename);
+			try {
+				settings.load(filename);
+			} catch (IOException e) {
+				log(e);
+			}
 		} else {
 			// empty settings
 		}
 		return settings;
 	}
 
-	public void saveDialogSetting(DialogSettings dialogSettings) throws IOException {
+	public void saveDialogSetting(IDialogSettings dialogSettings) throws IOException {
 		IPath path = getDefault().getStateLocation();
 		String filename = path.append("settings.txt").toOSString();
 		dialogSettings.save(filename);
@@ -192,5 +197,9 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	public static IStatus getStatus(Throwable e) {
 		return new Status(Status.ERROR, PLUGIN_ID, 1, e.getMessage(), e);
+	}
+
+	public void saveDialogSetting() {
+		// TODO Auto-generated method stub
 	}
 }
