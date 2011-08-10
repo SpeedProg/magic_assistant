@@ -21,6 +21,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	String lang;
 	String num;
 	String rulings;
+	String text;
 	transient String colorType = null;
 	transient int cmc = -1;
 
@@ -252,6 +253,8 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			this.cost = this.cost == null ? "" : this.cost.trim();
 			setColorType(Colors.getInstance().getColorType(this.cost));
 			setCmc(Colors.getInstance().getConvertedManaCost(this.cost));
+			if (text == null)
+				text = oracleText;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -305,6 +308,8 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			return getLanguage();
 		case COLLNUM:
 			return getCollNumber();
+		case TEXT:
+			return getText();
 		default:
 			break;
 		}
@@ -420,6 +425,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		case COLLNUM:
 			setCollNumber(value);
 			break;
+		case TEXT:
+			setText(value);
+			break;
 		default:
 			return false;
 		}
@@ -457,5 +465,13 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	public MagicCard getBase() {
 		return this;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 }

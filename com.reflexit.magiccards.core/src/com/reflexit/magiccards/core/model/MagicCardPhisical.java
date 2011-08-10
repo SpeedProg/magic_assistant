@@ -403,4 +403,12 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	public MagicCard getBase() {
 		return card;
 	}
+
+	public String getText() {
+		return card.getText();
+	}
+
+	public String getLanguage() {
+		return card.getLanguage();
+	}
 }

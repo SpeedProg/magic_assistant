@@ -13,19 +13,14 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 
-import com.reflexit.magiccards.core.Activator;
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -110,7 +105,7 @@ public class ParseGathererRulings extends ParseGathererPage {
 				String rarity = matcher.group(3).trim();
 				// other printings
 				MagicCard mcard = card.getBase();
-				MagicCard card2 = (MagicCard) mcard.cloneCard();
+				MagicCard card2 = mcard.cloneCard();
 				card2.setId(id);
 				card2.setSet(set.trim());
 				card2.setRarity(rarity.trim());
@@ -135,32 +130,12 @@ public class ParseGathererRulings extends ParseGathererPage {
 				value += v;
 			}
 			if (value.length() != 0) {
-				if (field == MagicCardField.ORACLE) {
+				if (field == MagicCardField.ORACLE || field == MagicCardField.TEXT) {
 					value = value.replaceAll("\\n", "<br>");
 					value = ParseGathererNewVisualSpoiler.htmlToString(value);
 				}
 				((ICardModifiable) card).setObjectByField(field, value);
 			}
-		}
-	}
-
-	public static Set<ICardField> getAllExtraFields() {
-		HashSet<ICardField> res = new HashSet<ICardField>();
-		res.add(MagicCardField.RATING);
-		res.add(MagicCardField.ARTIST);
-		res.add(MagicCardField.COLLNUM);
-		res.add(MagicCardField.ORACLE);
-		return res;
-	}
-
-	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
-		try {
-			ICardHandler cardHandler = DataManager.getCardHandler();
-			if (cardHandler != null)
-				setMagicDb(cardHandler.getMagicDBStore());
-			parseSingleCard(magicCard, fieldMap, new SubProgressMonitor(monitor, 8));
-		} catch (IOException e) {
-			Activator.log("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
 		}
 	}
 

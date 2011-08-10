@@ -40,4 +40,8 @@ public interface IMagicCard extends ICard {
 	public IMagicCard cloneCard();
 
 	public abstract MagicCard getBase();
+
+	public abstract String getText();
+
+	public abstract String getLanguage();
 }

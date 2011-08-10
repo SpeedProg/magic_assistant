@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -17,6 +18,15 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 
 public class UpdateCardsFromWeb {
+	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb, IProgressMonitor monitor)
+			throws IOException {
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(1);
+		list.add(card);
+		if (lang == null)
+			lang = card.getLanguage();
+		updateStore(list.iterator(), 1, fieldMaps, lang, magicDb, monitor);
+	}
+
 	public void updateStore(Iterator<IMagicCard> iter, int size, Set<ICardField> fieldMaps, String lang, ICardStore magicDb,
 			IProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading additional info...", size * 100 + 10);
@@ -24,10 +34,15 @@ public class UpdateCardsFromWeb {
 		ParseGathererRulings rulParser = new ParseGathererRulings();
 		rulParser.setMagicDb(magicDb);
 		ParseGathererBasicInfo linfoParser = new ParseGathererBasicInfo();
+		ParseGathererBasicInfo textParser = new ParseGathererBasicInfo();
 		ParseGathererCardLanguages langParser = new ParseGathererCardLanguages();
 		langParser.setLanguage(lang);
-		storage.setAutoCommit(false);
 		monitor.worked(5);
+		boolean loadText = fieldMaps.contains(MagicCardField.TEXT);
+		boolean loadLang = fieldMaps.contains(MagicCardField.LANG);
+		boolean loadImage = fieldMaps.contains(MagicCardField.ID);
+		// load
+		storage.setAutoCommit(false);
 		try {
 			for (int i = 0; iter.hasNext(); i++) {
 				IMagicCard card = iter.next();
@@ -38,7 +53,12 @@ public class UpdateCardsFromWeb {
 				monitor.subTask("Updating card " + i + " of " + size);
 				try {
 					rulParser.parseSingleCard(card, fieldMaps, new SubProgressMonitor(monitor, 50));
-					if (fieldMaps.contains(MagicCardField.LANG)) {
+					if (loadText) {
+						textParser.setCard(card);
+						textParser.setFilter(fieldMaps);
+						textParser.load(new SubProgressMonitor(monitor, 10));
+					}
+					if (loadLang) {
 						langParser.setCardId(card.getCardId());
 						langParser.load(new SubProgressMonitor(monitor, 40));
 						int langId = langParser.getLangCardId();
@@ -47,7 +67,7 @@ public class UpdateCardsFromWeb {
 							newMagicCard.setCardId(langId);
 							newMagicCard.setLanguage(lang);
 							linfoParser.setCard(newMagicCard);
-							linfoParser.load(new SubProgressMonitor(monitor, 50));
+							linfoParser.load(new SubProgressMonitor(monitor, 40));
 							if (magicDb != null && magicDb.getCard(newMagicCard.getCardId()) == null) {
 								magicDb.add(newMagicCard);
 								System.err.println("Added " + newMagicCard.getName());
@@ -60,8 +80,8 @@ public class UpdateCardsFromWeb {
 				if (monitor.isCanceled())
 					return;
 				magicDb.update(magicCard);
-				if (fieldMaps.contains(MagicCardField.ID)) {
-					// load and cache image
+				if (loadImage) {
+					// load and cache image offline
 					CardCache.loadCardImageOffline(card, false);
 				}
 				monitor.worked(1);

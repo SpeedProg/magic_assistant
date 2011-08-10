@@ -56,7 +56,7 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 	      <div class="cardtextbox">Unearth <img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" /> <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" />: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)</i></div></div>
 
 	 */
-	private static Pattern oraclePattern = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
+	private static Pattern textPattern = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
 	/*-
 	     <div class="contentTitle">
 
@@ -78,7 +78,7 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 				value += v;
 			}
 			if (value.length() != 0) {
-				if (field == MagicCardField.ORACLE) {
+				if (field == MagicCardField.TEXT || field == MagicCardField.ORACLE) {
 					value = value.replaceAll("\\n", "<br>");
 					value = ParseGathererNewVisualSpoiler.htmlToString(value);
 				}
@@ -121,7 +121,7 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.TYPE, typesPattern);
 			monitor.worked(1);
-			extractField(card, fieldMapFilter, html, MagicCardField.ORACLE, oraclePattern);
+			extractField(card, fieldMapFilter, html, MagicCardField.TEXT, textPattern);
 			monitor.worked(1);
 		} finally {
 			monitor.done();

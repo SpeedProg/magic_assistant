@@ -22,6 +22,7 @@ public enum MagicCardField implements ICardField {
 	ARTIST,
 	COLLNUM("num"), // collector number i.e. 5/234
 	RULINGS,
+	TEXT
 	// end
 	;
 	private final Field field;

@@ -478,6 +478,11 @@ public class MagicCardFilter {
 				res = BinaryExpr.fieldEquals(MagicCardField.LANG, value);
 			}
 		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
+			res = textSearch(MagicCardField.TEXT, value, regex);
+			if (requestedId.contains("_exclude_")) {
+				res = new BinaryExpr(res, Operation.NOT, null);
+			}
+		} else if (requestedId.startsWith(FilterHelper.ORACLE_LINE)) {
 			res = textSearch(MagicCardField.ORACLE, value, regex);
 			if (requestedId.contains("_exclude_")) {
 				res = new BinaryExpr(res, Operation.NOT, null);

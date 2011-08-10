@@ -166,28 +166,30 @@ public class CardCache {
 	 * @throws IOException
 	 */
 	public static File downloadAndSaveImage(IMagicCard card, boolean remote, boolean forceRemote) throws IOException {
-		String path = CardCache.createLocalImageFilePath(card);
-		File file = new File(path);
-		if (forceRemote == false && file.exists()) {
-			return file;
+		synchronized (card) {
+			String path = CardCache.createLocalImageFilePath(card);
+			File file = new File(path);
+			if (forceRemote == false && file.exists()) {
+				return file;
+			}
+			if (!remote)
+				throw new CachedImageNotFoundException("Cannot find cached image for " + card.getName());
+			URL url = createRemoteImageURL(card);
+			InputStream st = null;
+			try {
+				st = url.openStream();
+			} catch (IOException e) {
+				throw new IOException("Cannot connect: " + e.getMessage());
+			}
+			File file2 = new File(path + ".part");
+			FileUtils.saveStream(st, file2);
+			st.close();
+			if (file2.exists()) {
+				file2.renameTo(file);
+				return file;
+			}
+			throw new FileNotFoundException(file.toString());
 		}
-		if (!remote)
-			throw new CachedImageNotFoundException("Cannot find cached image for " + card.getName());
-		URL url = createRemoteImageURL(card);
-		InputStream st = null;
-		try {
-			st = url.openStream();
-		} catch (IOException e) {
-			throw new IOException("Cannot connect: " + e.getMessage());
-		}
-		File file2 = new File(path + ".part");
-		FileUtils.saveStream(st, file2);
-		st.close();
-		if (file2.exists()) {
-			file2.renameTo(file);
-			return file;
-		}
-		throw new FileNotFoundException(file.toString());
 	}
 
 	/**
