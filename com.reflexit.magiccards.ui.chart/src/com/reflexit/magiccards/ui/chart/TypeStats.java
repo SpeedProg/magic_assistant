@@ -26,6 +26,8 @@ import org.eclipse.birt.chart.model.layout.Legend;
 import org.eclipse.birt.chart.model.type.PieSeries;
 import org.eclipse.birt.chart.model.type.impl.PieSeriesImpl;
 
+import com.reflexit.magiccards.core.CardText;
+
 public class TypeStats implements IChartGenerator {
 	private double[] bars;
 
@@ -43,8 +45,8 @@ public class TypeStats implements IChartGenerator {
 		cwoaPie.setSubType("Standard Pie Chart"); //$NON-NLS-1$
 		// Plot
 		cwoaPie.setSeriesThickness(5);
-		cwoaPie.setMinSlice(0.1);
-		cwoaPie.setMinSliceLabel("Other");
+		// cwoaPie.setMinSlice(0.1);
+		// cwoaPie.setMinSliceLabel("Other");
 		// Legend
 		Legend lg = cwoaPie.getLegend();
 		lg.setVisible(false);
@@ -52,7 +54,8 @@ public class TypeStats implements IChartGenerator {
 		// Title
 		cwoaPie.getTitle().getLabel().getCaption().setValue("Card Types");//$NON-NLS-1$
 		// Data Set
-		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { "Land", "Creatures", "Non-creatures" });
+		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { CardText.CardTypes_Land, CardText.CardTypes_Creature,
+				CardText.CardTypes_Non_Creature });
 		NumberDataSet seriesOneValues = NumberDataSetImpl.create(bars);
 		SampleData sdata = DataFactory.eINSTANCE.createSampleData();
 		BaseSampleData sdBase = DataFactory.eINSTANCE.createBaseSampleData();
@@ -85,10 +88,9 @@ public class TypeStats implements IChartGenerator {
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
 		DataPointComponent dpc1 = DataPointComponentImpl.create(DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
-		        JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
-		DataPointComponent dpc2 = DataPointComponentImpl.create(
-		        DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL, JavaNumberFormatSpecifierImpl
-		                .create(" (##.##%)")); //$NON-NLS-1$
+				JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
+		DataPointComponent dpc2 = DataPointComponentImpl.create(DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL,
+				JavaNumberFormatSpecifierImpl.create(" (##.##%)")); //$NON-NLS-1$
 		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL, null);
 		dataPoint.getComponents().add(dpc3);
 		dataPoint.getComponents().add(dpc1);
