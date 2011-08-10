@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.card;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,11 +37,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
-import com.reflexit.magiccards.core.sync.ParseGathererRulings;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
@@ -166,13 +169,23 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				if (updateSets)
 					fieldMap.add(MagicCardField.SET);
 				if (updateExtras)
-					fieldMap.addAll(ParseGathererRulings.getAllExtraFields());
+					fieldMap.addAll(getAllExtraFields());
 				return loadCardExtraInfo(monitor, card, fieldMap);
 			} catch (IOException e) {
 				return MagicUIActivator.getStatus(e);
 			} finally {
 				monitor.done();
 			}
+		}
+
+		public Set<ICardField> getAllExtraFields() {
+			HashSet<ICardField> res = new HashSet<ICardField>();
+			res.add(MagicCardField.RATING);
+			res.add(MagicCardField.ARTIST);
+			res.add(MagicCardField.COLLNUM);
+			res.add(MagicCardField.ORACLE);
+			res.add(MagicCardField.TEXT);
+			return res;
 		}
 
 		boolean isStillNeeded(final IMagicCard card) {
@@ -186,7 +199,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					return Status.CANCEL_STATUS;
 				if (fieldMap.size() == 0)
 					return Status.OK_STATUS;
-				new ParseGathererRulings().updateCard(card, fieldMap, new SubProgressMonitor(monitor, 99));
+				ICardStore store = DataManager.getCardHandler().getMagicDBStore();
+				new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new SubProgressMonitor(monitor, 99));
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (!isStillNeeded(card))

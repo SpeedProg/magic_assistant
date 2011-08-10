@@ -151,7 +151,7 @@ class CardDescComposite extends Composite {
 		}
 		try {
 			String data = getCardDataHtml(card);
-			String text = card.getOracleText();
+			String text = card.getText();
 			String rulings = getCardRulingsHtml(card);
 			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text + rulings, this));
 			swapVisibility(textBrowser, textBackup);
@@ -161,7 +161,7 @@ class CardDescComposite extends Composite {
 				logOnce = true;
 			}
 			String data = getCardDataText(card);
-			String text = card.getOracleText();
+			String text = card.getText();
 			text = text.replaceAll("<br>", "\n");
 			this.textBackup.setText(data + text);
 			swapVisibility(textBackup, textBrowser);

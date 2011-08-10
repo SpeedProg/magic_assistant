@@ -23,13 +23,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				"http://ww2.wizards.com/gatherer/index.aspx?output=Spoiler&setfilter=Standard");
 		store.setDefault(
 				PreferenceConstants.MDBVIEW_COLS,
-				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language");
+				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
 		store.setDefault(
 				PreferenceConstants.LIBVIEW_COLS,
-				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language");
+				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		store.setDefault(
 				PreferenceConstants.DECKVIEW_COLS,
-				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language");
+				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_RULINGS, true);

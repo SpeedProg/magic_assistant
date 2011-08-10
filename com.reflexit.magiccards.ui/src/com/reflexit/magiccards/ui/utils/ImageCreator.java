@@ -169,23 +169,25 @@ public class ImageCreator {
 	 */
 	public Image getCardImage(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation,
 			SWTException {
-		if (forceUpdate)
-			remote = true;
-		String path = CardCache.createLocalImageFilePath(card);
-		try {
-			File file = new File(path);
-			if (file.exists()) {
-				return createCardImage(path);
+		synchronized (card) {
+			if (forceUpdate)
+				remote = true;
+			String path = CardCache.createLocalImageFilePath(card);
+			try {
+				File file = new File(path);
+				if (file.exists()) {
+					return createCardImage(path);
+				}
+				if (remote == false)
+					throw new CachedImageNotFoundException(path);
+				file = CardCache.downloadAndSaveImage(card, remote, forceUpdate);
+				return createCardImage(file.getAbsolutePath());
+			} catch (SWTException e) {
+				// failed to create image
+				MagicUIActivator.log("Failed to create an image for: " + card);
+				MagicUIActivator.log(e);
+				throw e;
 			}
-			if (remote == false)
-				throw new CachedImageNotFoundException(path);
-			file = CardCache.downloadAndSaveImage(card, remote, forceUpdate);
-			return createCardImage(path);
-		} catch (SWTException e) {
-			// failed to create image
-			MagicUIActivator.log("Failed to create an image for: " + card);
-			MagicUIActivator.log(e);
-			throw e;
 		}
 	}
 
