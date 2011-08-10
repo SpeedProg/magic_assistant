@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Magic Assistant Localization Pack
+Bundle-SymbolicName: com.reflexit.magiccards.core.nl1
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: REFLEXIT
+Fragment-Host: com.reflexit.magiccards.core;bundle-version="1.0.7"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: $nl$,
+ .
