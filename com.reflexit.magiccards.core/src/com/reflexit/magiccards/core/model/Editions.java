@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -32,7 +33,7 @@ public class Editions implements ISearchableProperty {
 		String abbrs[];
 		Date release;
 		String type = "?";
-		static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
+		static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
 		public Edition(String name, String abbr) {
 			if (abbr == null)

@@ -82,6 +82,9 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 					value = value.replaceAll("\\n", "<br>");
 					value = ParseGathererNewVisualSpoiler.htmlToString(value);
 				}
+				if (field == MagicCardField.TYPE) {
+					value = value.replaceAll("—", "-");
+				}
 				((ICardModifiable) card).setObjectByField(field, value);
 			}
 		}

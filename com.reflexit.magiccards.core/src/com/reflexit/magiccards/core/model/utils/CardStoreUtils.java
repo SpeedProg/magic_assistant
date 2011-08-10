@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.reflexit.magiccards.core.CoreMessages;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -58,14 +59,14 @@ public class CardStoreUtils {
 			} else {
 				count = 1;
 			}
-			if (elem.getCost().contains("X"))
+			if (elem.getCost().contains("X")) //$NON-NLS-1$
 				bars[8] += count;
 			else if (cost < 7 && cost >= 0)
 				bars[cost] += count;
 			else if (cost >= 7)
 				bars[7] += count;
 			else
-				System.err.println("mana curve: cost:" + elem.getCost());
+				System.err.println("mana curve: cost:" + elem.getCost()); //$NON-NLS-1$
 		}
 		return bars;
 	}
@@ -135,9 +136,9 @@ public class CardStoreUtils {
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
 			}
-			if (type.contains("Land")) {
+			if (type.contains(CoreMessages.CardTypes_Land)) {
 				bars[0] += count;
-			} else if (type.contains("Creature") || type.contains("Summon")) {
+			} else if (type.contains(CoreMessages.CardTypes_Creature) || type.contains(CoreMessages.CardTypes_Summon)) {
 				bars[1] += count;
 			} else {
 				bars[2] += count;
@@ -150,10 +151,10 @@ public class CardStoreUtils {
 		HashSet<String> colors = new HashSet<String>();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType().contains("Land"))
+			if (elem.getType().contains(CoreMessages.CardTypes_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
-			String[] split = name.split("-");
+			String[] split = name.split("-"); //$NON-NLS-1$
 			for (String c : split) {
 				colors.add(c);
 			}
@@ -165,7 +166,7 @@ public class CardStoreUtils {
 		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType() == null || elem.getType().contains("Land"))
+			if (elem.getType() == null || elem.getType().contains(CoreMessages.CardTypes_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			CardGroup g = new CardGroup(MagicCardField.COST, name);
@@ -180,24 +181,24 @@ public class CardStoreUtils {
 	}
 
 	public CardGroup buildTypeGroups(Iterable iterable) {
-		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, "Spell");
-		CardGroup landNode = new CardGroup(MagicCardField.TYPE, "Land");
-		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, "Unknown");
-		CardGroup basic = new CardGroup(MagicCardField.TYPE, "Basic");
+		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Spell);
+		CardGroup landNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Land);
+		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Unknown);
+		CardGroup basic = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Basic);
 		landNode.add(basic);
-		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, "Non-Creature");
+		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Non_Creature);
 		spellNode.add(noncreatureNode);
-		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, "Creature");
+		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Creature);
 		spellNode.add(creatureNode);
-		CardGroup instant = new CardGroup(MagicCardField.TYPE, "Instant");
+		CardGroup instant = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Instant);
 		noncreatureNode.add(instant);
-		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, "Sorcery");
+		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Sorcery);
 		noncreatureNode.add(sorcery);
-		CardGroup ench = new CardGroup(MagicCardField.TYPE, "Enchantment");
+		CardGroup ench = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Enchantment);
 		noncreatureNode.add(ench);
-		CardGroup artifact = new CardGroup(MagicCardField.TYPE, "Artifact");
+		CardGroup artifact = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Artifact);
 		noncreatureNode.add(artifact);
-		CardGroup walker = new CardGroup(MagicCardField.TYPE, "Planeswalker");
+		CardGroup walker = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Planeswalker);
 		noncreatureNode.add(walker);
 		int total = 0;
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
@@ -212,7 +213,7 @@ public class CardStoreUtils {
 				if (elem instanceof ICardCountable) {
 					count = ((ICardCountable) elem).getCount();
 				}
-				if (type.contains("Land")) {
+				if (type.contains(CoreMessages.CardTypes_Land)) {
 					if (type.contains(basic.getName())) {
 						basic.add(elem);
 						landNode.addCount(count);
@@ -221,11 +222,11 @@ public class CardStoreUtils {
 					}
 				} else {
 					spellNode.addCount(count);
-					if (type.contains(creatureNode.getName()) || type.contains("Summon")) {
+					if (type.contains(creatureNode.getName()) || type.contains(CoreMessages.CardTypes_Summon)) {
 						creatureNode.add(elem);
 					} else {
 						noncreatureNode.addCount(count);
-						if (type.contains(instant.getName()) || type.contains("Interrupt")) {
+						if (type.contains(instant.getName()) || type.contains(CoreMessages.CardTypes_Interrupt)) {
 							instant.add(elem);
 						} else if (type.contains(ench.getName())) {
 							ench.add(elem);
@@ -246,7 +247,7 @@ public class CardStoreUtils {
 			}
 			total += count;
 		}
-		CardGroup root = new CardGroup(MagicCardField.TYPE, "");
+		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
 		root.setCount(total);
 		root.add(landNode);
 		root.add(spellNode);
