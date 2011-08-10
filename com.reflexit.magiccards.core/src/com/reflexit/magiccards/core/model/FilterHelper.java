@@ -12,7 +12,6 @@ public class FilterHelper {
 	public static final String GROUP_FIELD = "group_field";
 	public static final String TYPE_LINE = MagicCardField.TYPE.name();
 	public static final String TEXT_LINE = MagicCardField.TEXT.name();
-	public static final String ORACLE_LINE = MagicCardField.ORACLE.name();
 	public static final String NAME_LINE = MagicCardField.NAME.name();
 	public static final String POWER = MagicCardField.POWER.name();
 	public static final String TOUGHNESS = MagicCardField.TOUGHNESS.name();

@@ -479,11 +479,7 @@ public class MagicCardFilter {
 			}
 		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
 			res = textSearch(MagicCardField.TEXT, value, regex);
-			if (requestedId.contains("_exclude_")) {
-				res = new BinaryExpr(res, Operation.NOT, null);
-			}
-		} else if (requestedId.startsWith(FilterHelper.ORACLE_LINE)) {
-			res = textSearch(MagicCardField.ORACLE, value, regex);
+			res = new BinaryExpr(res, Operation.OR, textSearch(MagicCardField.ORACLE, value, regex));
 			if (requestedId.contains("_exclude_")) {
 				res = new BinaryExpr(res, Operation.NOT, null);
 			}

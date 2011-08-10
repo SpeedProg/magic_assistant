@@ -40,6 +40,7 @@ public class Abilities {
 			return null;
 		}
 	}
+
 	static class TextSeachNot implements ISearchableProperty {
 		public String getIdPrefix() {
 			return FilterHelper.TEXT_LINE;
