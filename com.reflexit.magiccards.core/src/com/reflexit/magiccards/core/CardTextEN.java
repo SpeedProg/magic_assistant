@@ -2,8 +2,8 @@ package com.reflexit.magiccards.core;
 
 import org.eclipse.osgi.util.NLS;
 
-public class CoreMessages extends NLS {
-	private static final String BUNDLE_NAME = "com.reflexit.magiccards.core.messages"; //$NON-NLS-1$
+public class CardTextEN extends NLS {
+	private static final String BUNDLE_NAME = CardTextEN.class.getName();
 	public static String CardTypes_Artifact;
 	public static String CardTypes_Basic;
 	public static String CardTypes_Creature;
@@ -19,9 +19,6 @@ public class CoreMessages extends NLS {
 	public static String CardTypes_Unknown;
 	static {
 		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, CoreMessages.class);
-	}
-
-	private CoreMessages() {
+		NLS.initializeMessages(BUNDLE_NAME, CardTextEN.class);
 	}
 }

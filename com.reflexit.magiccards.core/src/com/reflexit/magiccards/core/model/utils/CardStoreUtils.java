@@ -17,7 +17,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.reflexit.magiccards.core.CoreMessages;
+import com.reflexit.magiccards.core.CardText;
+import com.reflexit.magiccards.core.CardTextEN;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -123,6 +124,7 @@ public class CardStoreUtils {
 	}
 
 	private CardStoreUtils() {
+		// CardTextEN.EN = "EN"; // fake initializion
 	}
 
 	public int[] buildTypeStats(ICardStore store) {
@@ -136,9 +138,10 @@ public class CardStoreUtils {
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
 			}
-			if (type.contains(CoreMessages.CardTypes_Land)) {
+			if (type.contains(CardText.CardTypes_Land)) {
 				bars[0] += count;
-			} else if (type.contains(CoreMessages.CardTypes_Creature) || type.contains(CoreMessages.CardTypes_Summon)) {
+			} else if (type.contains(CardText.CardTypes_Creature) || type.contains(CardText.CardTypes_Summon)
+					|| type.contains(CardTextEN.CardTypes_Creature)) {
 				bars[1] += count;
 			} else {
 				bars[2] += count;
@@ -151,7 +154,7 @@ public class CardStoreUtils {
 		HashSet<String> colors = new HashSet<String>();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType().contains(CoreMessages.CardTypes_Land))
+			if (elem.getType().contains(CardText.CardTypes_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			String[] split = name.split("-"); //$NON-NLS-1$
@@ -166,7 +169,7 @@ public class CardStoreUtils {
 		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType() == null || elem.getType().contains(CoreMessages.CardTypes_Land))
+			if (elem.getType() == null || elem.getType().contains(CardText.CardTypes_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			CardGroup g = new CardGroup(MagicCardField.COST, name);
@@ -181,24 +184,24 @@ public class CardStoreUtils {
 	}
 
 	public CardGroup buildTypeGroups(Iterable iterable) {
-		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Spell);
-		CardGroup landNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Land);
-		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Unknown);
-		CardGroup basic = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Basic);
+		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Spell);
+		CardGroup landNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Land);
+		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Unknown);
+		CardGroup basic = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Basic);
 		landNode.add(basic);
-		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Non_Creature);
+		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Non_Creature);
 		spellNode.add(noncreatureNode);
-		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Creature);
+		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Creature);
 		spellNode.add(creatureNode);
-		CardGroup instant = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Instant);
+		CardGroup instant = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Instant);
 		noncreatureNode.add(instant);
-		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Sorcery);
+		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Sorcery);
 		noncreatureNode.add(sorcery);
-		CardGroup ench = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Enchantment);
+		CardGroup ench = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Enchantment);
 		noncreatureNode.add(ench);
-		CardGroup artifact = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Artifact);
+		CardGroup artifact = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Artifact);
 		noncreatureNode.add(artifact);
-		CardGroup walker = new CardGroup(MagicCardField.TYPE, CoreMessages.CardTypes_Planeswalker);
+		CardGroup walker = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Planeswalker);
 		noncreatureNode.add(walker);
 		int total = 0;
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
@@ -213,7 +216,7 @@ public class CardStoreUtils {
 				if (elem instanceof ICardCountable) {
 					count = ((ICardCountable) elem).getCount();
 				}
-				if (type.contains(CoreMessages.CardTypes_Land)) {
+				if (type.contains(CardText.CardTypes_Land) || type.contains(CardTextEN.CardTypes_Land)) {
 					if (type.contains(basic.getName())) {
 						basic.add(elem);
 						landNode.addCount(count);
@@ -222,19 +225,21 @@ public class CardStoreUtils {
 					}
 				} else {
 					spellNode.addCount(count);
-					if (type.contains(creatureNode.getName()) || type.contains(CoreMessages.CardTypes_Summon)) {
+					if (type.contains(creatureNode.getName()) || type.contains(CardText.CardTypes_Summon)
+							|| type.contains(CardTextEN.CardTypes_Creature)) {
 						creatureNode.add(elem);
 					} else {
 						noncreatureNode.addCount(count);
-						if (type.contains(instant.getName()) || type.contains(CoreMessages.CardTypes_Interrupt)) {
+						if (type.contains(instant.getName()) || type.contains(CardText.CardTypes_Interrupt)
+								|| type.contains(CardTextEN.CardTypes_Instant)) {
 							instant.add(elem);
-						} else if (type.contains(ench.getName())) {
+						} else if (type.contains(ench.getName()) || type.contains(CardTextEN.CardTypes_Enchantment)) {
 							ench.add(elem);
-						} else if (type.contains(sorcery.getName())) {
+						} else if (type.contains(sorcery.getName()) || type.contains(CardTextEN.CardTypes_Sorcery)) {
 							sorcery.add(elem);
-						} else if (type.contains(artifact.getName())) {
+						} else if (type.contains(artifact.getName()) || type.contains(CardTextEN.CardTypes_Artifact)) {
 							artifact.add(elem);
-						} else if (type.contains(walker.getName())) {
+						} else if (type.contains(walker.getName()) || type.contains(CardTextEN.CardTypes_Planeswalker)) {
 							walker.add(elem);
 						} else {
 							noncreatureNode.addCount(-count);
