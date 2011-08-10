@@ -185,6 +185,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			res.add(MagicCardField.COLLNUM);
 			res.add(MagicCardField.ORACLE);
 			res.add(MagicCardField.TEXT);
+			res.add(MagicCardField.TYPE);
+			res.add(MagicCardField.NAME);
 			return res;
 		}
 

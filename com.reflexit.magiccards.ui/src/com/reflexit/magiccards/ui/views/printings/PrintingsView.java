@@ -292,8 +292,12 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			return res;
 		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard next = iterator.next();
-			if (card.getName().equals(next.getName())) {
-				res.add(next);
+			try {
+				if (card.getName().equals(next.getName())) {
+					res.add(next);
+				}
+			} catch (Exception e) {
+				System.err.println("Bad card: " + card);
 			}
 		}
 		return res;
