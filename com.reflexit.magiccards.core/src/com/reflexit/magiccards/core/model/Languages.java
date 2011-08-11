@@ -3,26 +3,32 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Locale;
+
+import com.reflexit.magiccards.core.locale.LocalizedText;
 
 public class Languages implements ISearchableProperty {
 	public static enum Language {
-		ENGLISH,
-		RUSSIAN,
-		FRENCH,
-		SPANISH,
-		GERMAN,
-		ITALIAN,
-		PORTUGESE,
-		JAPANESE,
-		CHINESE("Chinese Standard");
+		ENGLISH(LocalizedText.ENGLISH),
+		RUSSIAN(LocalizedText.RUSSIAN),
+		FRENCH(LocalizedText.FRENCH),
+		SPANISH(LocalizedText.SPANISH),
+		GERMAN(LocalizedText.GERMAN),
+		ITALIAN(LocalizedText.ITALIAN),
+		PORTUGESE(LocalizedText.PORTUGESE),
+		JAPANESE(LocalizedText.JAPANESE),
+		CHINESE("Chinese Standard", LocalizedText.CHINESE);
 		private String lang;
+		private Locale locale;
 
-		Language() {
+		Language(Locale locale) {
 			this.lang = name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();
+			this.locale = locale;
 		}
 
-		Language(String name) {
+		Language(String name, Locale locale) {
 			this.lang = name;
+			this.locale = locale;
 		}
 
 		public String getLang() {
@@ -32,7 +38,7 @@ public class Languages implements ISearchableProperty {
 
 	private LinkedHashMap names;
 
-	public String[] getLangValues() {
+	public static String[] getLangValues() {
 		Language[] values = Language.values();
 		String[] res = new String[values.length];
 		for (int i = 0; i < values.length; i++) {
@@ -80,5 +86,15 @@ public class Languages implements ISearchableProperty {
 
 	public String getNameById(String id) {
 		return (String) this.names.get(id);
+	}
+
+	public static Locale getLocale(String language) {
+		Language[] array = Language.values();
+		for (int i = 0; i < array.length; i++) {
+			Language l = array[i];
+			if (l.getLang().equals(language))
+				return l.locale;
+		}
+		throw new IllegalArgumentException("Language Not Found");
 	}
 }

@@ -17,9 +17,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.reflexit.magiccards.core.CardText;
-import com.reflexit.magiccards.core.CardTextEN;
+import com.reflexit.magiccards.core.locale.CardText;
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -39,6 +39,7 @@ public class CardStoreUtils {
 	}
 
 	public static CardStoreUtils instance;
+	private static CardTypes MTYPES = CardTypes.getInstance();
 
 	/**
 	 * mana curve is array 0 .. 8 of card counts, where non-land is counted,
@@ -138,10 +139,9 @@ public class CardStoreUtils {
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
 			}
-			if (type.contains(CardText.CardTypes_Land)) {
+			if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Land)) {
 				bars[0] += count;
-			} else if (type.contains(CardText.CardTypes_Creature) || type.contains(CardText.CardTypes_Summon)
-					|| type.contains(CardTextEN.CardTypes_Creature)) {
+			} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
 				bars[1] += count;
 			} else {
 				bars[2] += count;
@@ -154,7 +154,7 @@ public class CardStoreUtils {
 		HashSet<String> colors = new HashSet<String>();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType().contains(CardText.CardTypes_Land))
+			if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			String[] split = name.split("-"); //$NON-NLS-1$
@@ -169,7 +169,7 @@ public class CardStoreUtils {
 		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType() == null || elem.getType().contains(CardText.CardTypes_Land))
+			if (elem.getType() == null || MTYPES.hasType(elem, CardTypes.TYPES.Type_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			CardGroup g = new CardGroup(MagicCardField.COST, name);
@@ -184,24 +184,24 @@ public class CardStoreUtils {
 	}
 
 	public CardGroup buildTypeGroups(Iterable iterable) {
-		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Spell);
-		CardGroup landNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Land);
-		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Unknown);
-		CardGroup basic = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Basic);
+		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Spell);
+		CardGroup landNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Land);
+		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Unknown);
+		CardGroup basic = new CardGroup(MagicCardField.TYPE, CardText.Type_Basic);
 		landNode.add(basic);
-		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Non_Creature);
+		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Non_Creature);
 		spellNode.add(noncreatureNode);
-		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Creature);
+		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Creature);
 		spellNode.add(creatureNode);
-		CardGroup instant = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Instant);
+		CardGroup instant = new CardGroup(MagicCardField.TYPE, CardText.Type_Instant);
 		noncreatureNode.add(instant);
-		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Sorcery);
+		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, CardText.Type_Sorcery);
 		noncreatureNode.add(sorcery);
-		CardGroup ench = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Enchantment);
+		CardGroup ench = new CardGroup(MagicCardField.TYPE, CardText.Type_Enchantment);
 		noncreatureNode.add(ench);
-		CardGroup artifact = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Artifact);
+		CardGroup artifact = new CardGroup(MagicCardField.TYPE, CardText.Type_Artifact);
 		noncreatureNode.add(artifact);
-		CardGroup walker = new CardGroup(MagicCardField.TYPE, CardText.CardTypes_Planeswalker);
+		CardGroup walker = new CardGroup(MagicCardField.TYPE, CardText.Type_Planeswalker);
 		noncreatureNode.add(walker);
 		int total = 0;
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
@@ -216,8 +216,8 @@ public class CardStoreUtils {
 				if (elem instanceof ICardCountable) {
 					count = ((ICardCountable) elem).getCount();
 				}
-				if (type.contains(CardText.CardTypes_Land) || type.contains(CardTextEN.CardTypes_Land)) {
-					if (type.contains(basic.getName())) {
+				if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Land)) {
+					if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Basic)) {
 						basic.add(elem);
 						landNode.addCount(count);
 					} else {
@@ -225,21 +225,19 @@ public class CardStoreUtils {
 					}
 				} else {
 					spellNode.addCount(count);
-					if (type.contains(creatureNode.getName()) || type.contains(CardText.CardTypes_Summon)
-							|| type.contains(CardTextEN.CardTypes_Creature)) {
+					if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
 						creatureNode.add(elem);
 					} else {
 						noncreatureNode.addCount(count);
-						if (type.contains(instant.getName()) || type.contains(CardText.CardTypes_Interrupt)
-								|| type.contains(CardTextEN.CardTypes_Instant)) {
+						if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Interrupt)) {
 							instant.add(elem);
-						} else if (type.contains(ench.getName()) || type.contains(CardTextEN.CardTypes_Enchantment)) {
+						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Enchantment)) {
 							ench.add(elem);
-						} else if (type.contains(sorcery.getName()) || type.contains(CardTextEN.CardTypes_Sorcery)) {
+						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Sorcery)) {
 							sorcery.add(elem);
-						} else if (type.contains(artifact.getName()) || type.contains(CardTextEN.CardTypes_Artifact)) {
+						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Artifact)) {
 							artifact.add(elem);
-						} else if (type.contains(walker.getName()) || type.contains(CardTextEN.CardTypes_Planeswalker)) {
+						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Planeswalker)) {
 							walker.add(elem);
 						} else {
 							noncreatureNode.addCount(-count);

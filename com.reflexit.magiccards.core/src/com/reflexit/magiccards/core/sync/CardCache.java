@@ -186,6 +186,9 @@ public class CardCache {
 			st.close();
 			if (file2.exists()) {
 				file2.renameTo(file);
+				if (!file.exists()) {
+					throw new IOException("failed to rename into " + file.toString());
+				}
 				return file;
 			}
 			throw new FileNotFoundException(file.toString());
