@@ -26,7 +26,7 @@ import org.eclipse.birt.chart.model.layout.Legend;
 import org.eclipse.birt.chart.model.type.PieSeries;
 import org.eclipse.birt.chart.model.type.impl.PieSeriesImpl;
 
-import com.reflexit.magiccards.core.CardText;
+import com.reflexit.magiccards.core.locale.CardText;
 
 public class TypeStats implements IChartGenerator {
 	private double[] bars;
@@ -54,8 +54,8 @@ public class TypeStats implements IChartGenerator {
 		// Title
 		cwoaPie.getTitle().getLabel().getCaption().setValue("Card Types");//$NON-NLS-1$
 		// Data Set
-		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { CardText.CardTypes_Land, CardText.CardTypes_Creature,
-				CardText.CardTypes_Non_Creature });
+		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { CardText.Type_Land, CardText.Type_Creature,
+				CardText.Type_Non_Creature });
 		NumberDataSet seriesOneValues = NumberDataSetImpl.create(bars);
 		SampleData sdata = DataFactory.eINSTANCE.createSampleData();
 		BaseSampleData sdBase = DataFactory.eINSTANCE.createBaseSampleData();
