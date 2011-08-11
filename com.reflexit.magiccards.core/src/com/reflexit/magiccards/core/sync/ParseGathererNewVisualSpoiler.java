@@ -33,6 +33,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 public class ParseGathererNewVisualSpoiler {
 	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
 	public static final String UPDATE_OTHER_PRINTINGS = "other.printings";
+	public static final String UPDATE_LANGUAGE = "lang";
 	private static Charset UTF_8 = Charset.forName("utf-8");
 
 	/*-
