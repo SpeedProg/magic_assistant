@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Languages;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.commands.UpdateDbHandler;
 import com.reflexit.magiccards.ui.preferences.feditors.SpecialComboFieldEditor;
@@ -39,11 +40,12 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 	private SpecialComboFieldEditor fSet;
 	private IHandlerService service;
 	private boolean hasUpdateButton = true;
+	private SpecialComboFieldEditor lang;
 
 	public MagicGathererPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
-		//setDescription("Update settings");
+		// setDescription("Update settings");
 	}
 
 	@Override
@@ -57,28 +59,32 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	protected void createFieldEditors() {
-		//		addField(this.fUrl = new StringFieldEditor(PreferenceConstants.GATHERER_UPDATE, "Gatherer update query:",
-		//		        getFieldEditorParent()) {
-		//			@Override
-		//			protected boolean checkState() {
-		//				if (!super.checkState())
-		//					return false;
-		//				try {
-		//					new URL(getStringValue());
-		//					return true;
-		//				} catch (Exception e) {
-		//					setErrorMessage(e.getMessage());
-		//					return false;
-		//				}
-		//			}
-		//		});
+		// addField(this.fUrl = new
+		// StringFieldEditor(PreferenceConstants.GATHERER_UPDATE,
+		// "Gatherer update query:",
+		// getFieldEditorParent()) {
+		// @Override
+		// protected boolean checkState() {
+		// if (!super.checkState())
+		// return false;
+		// try {
+		// new URL(getStringValue());
+		// return true;
+		// } catch (Exception e) {
+		// setErrorMessage(e.getMessage());
+		// return false;
+		// }
+		// }
+		// });
 		String[][] array = createSetArray();
-		addField(this.fSet = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:", array,
-		        getFieldEditorParent(), SWT.DROP_DOWN));
-		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_LAND,
-		        "Load all versions of art for basic lands", getFieldEditorParent()));
+		addField(this.fSet = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:", array, getFieldEditorParent(),
+				SWT.DROP_DOWN));
+		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_LAND, "Load all versions of art for basic lands",
+				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_PRINT,
-		        "Load all printed versions of the same card (vs only version for latest set)", getFieldEditorParent()));
+				"Load all printed versions of the same card (vs only version for latest set)", getFieldEditorParent()));
+		addField(this.lang = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_LANGUAGE, "Also load localized version in:",
+				createLanguagesArray(), getFieldEditorParent(), SWT.DROP_DOWN));
 	}
 
 	/**
@@ -104,19 +110,45 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	private String[][] createLanguagesArray() {
+		Collection names1 = Languages.getInstance().getNames();
+		ArrayList names = new ArrayList(names1);
+		Collections.sort(names);
+		String[][] res = new String[names.size() + 1][2];
+		int i = 0;
+		res[i][0] = "";
+		res[i][1] = "";
+		i++;
+		// res[i][0] = ALL;
+		// res[i][1] = ALL;
+		// i++;
+		for (Iterator iterator = names.iterator(); iterator.hasNext(); i++) {
+			String s = (String) iterator.next();
+			res[i][0] = s;
+			res[i][1] = s;
+		}
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
+	 * (org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		//		if (event.getSource() == this.fSet) {
-		//			updateUrl();
-		//			this.fUrl.load();
-		//		}
+		// if (event.getSource() == this.fSet) {
+		// updateUrl();
+		// this.fUrl.load();
+		// }
 		super.propertyChange(event);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
 	 */
 	@Override
@@ -139,8 +171,8 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	protected Control createContents(final Composite parent) {
-		//parent.setLayout(new GridLayout());
-		//com.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// parent.setLayout(new GridLayout());
+		// com.setLayoutData(new GridData(GridData.FILL_BOTH));
 		Composite com = new Composite(parent, SWT.NONE);
 		com.setLayout(new GridLayout());
 		Control fields = super.createContents(com);
@@ -149,11 +181,12 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 			Button button = new Button(com, SWT.PUSH);
 			button.setText("Update Now...");
 			GridDataFactory.fillDefaults()//
-			        .align(SWT.END, SWT.END)//
-			        .applyTo(button);
+					.align(SWT.END, SWT.END)//
+					.applyTo(button);
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
+					MessageDialog.openInformation(getShell(), "Info", "Update is scheduled");
 					performUpdate();
 				}
 			});
@@ -181,8 +214,9 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_SET);
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_PRINT);
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_LAND);
-			new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null,
-			        MagicGathererPreferencePage.this.service.getCurrentState()));
+			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_LANGUAGE);
+			new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null, MagicGathererPreferencePage.this.service
+					.getCurrentState()));
 		} catch (ExecutionException e1) {
 			MessageDialog.openError(new Shell(), "Error", e1.getMessage());
 		}

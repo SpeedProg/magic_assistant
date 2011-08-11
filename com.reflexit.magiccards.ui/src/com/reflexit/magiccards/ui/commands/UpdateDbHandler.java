@@ -35,12 +35,12 @@ import com.reflexit.magiccards.ui.views.MagicDbView;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class UpdateDbHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
 	 * ExecutionEvent)
@@ -50,7 +50,7 @@ public class UpdateDbHandler extends AbstractHandler {
 		return null;
 	}
 
-	public void performUpdate(ExecutionEvent event) {
+	public void performUpdate(final ExecutionEvent event) {
 		IWorkbench wb = PlatformUI.getWorkbench();
 		final Shell shell = wb != null ? wb.getActiveWorkbenchWindow().getShell() : new Shell();
 		String u1 = event.getParameter(PreferenceConstants.GATHERER_UPDATE_SET);
@@ -80,6 +80,8 @@ public class UpdateDbHandler extends AbstractHandler {
 					if (set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
 						options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, "true");
 					}
+					options.put(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE,
+							event.getParameter(PreferenceConstants.GATHERER_UPDATE_LANGUAGE));
 					final int rec = ch.downloadUpdates(set, options, pm);
 					shell.getDisplay().syncExec(new Runnable() {
 						public void run() {
