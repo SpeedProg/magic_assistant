@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
@@ -28,16 +29,19 @@ import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class XmlCardHolder implements ICardHandler {
@@ -77,12 +81,12 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public void loadInitial() throws MagicException, CoreException, IOException {
-		loadFromFlat("all.txt");
+		loadFromFlatResource("all.txt");
 		Collection<String> editions = Editions.getInstance().getNames();
 		for (String set : editions) {
 			String abbr = (Editions.getInstance().getAbbrByName(set));
 			try {
-				loadFromFlat(abbr + ".txt");
+				loadFromFlatResource(abbr + ".txt");
 				System.err.println("Loading " + abbr);
 			} catch (IOException e) {
 				// ignore
@@ -90,10 +94,11 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	protected void loadFromFlat(String set) throws IOException {
+	protected void loadFromFlatResource(String set) throws IOException {
 		InputStream is = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + set), false);
 		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
-		loadtFromFlatIntoXml(st);
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+		loadtFromFlatIntoXml(st, list);
 		is.close();
 	}
 
@@ -102,20 +107,19 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoXml(BufferedReader st) throws MagicException, IOException {
+	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list) throws MagicException, IOException {
 		ICardStore store = getMagicDBFilteredStore().getCardStore();
 		int init = store.size();
-		ArrayList<IMagicCard> list = loadFromFlat(st);
+		loadFromFlat(st, list);
 		boolean hasAny = list.size() > 0;
 		store.addAll(list);
 		int rec = store.size() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 
-	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st) throws IOException {
+	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list) throws IOException {
 		String line;
 		st.readLine(); // header ignore for now
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		HashSet<Integer> hash = new HashSet<Integer>();
 		while ((line = st.readLine()) != null) {
 			if (line.trim().length() == 0)
@@ -181,7 +185,11 @@ public class XmlCardHolder implements ICardHandler {
 	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException, InterruptedException {
 		int rec;
 		try {
-			pm.beginTask("Downloading", 110);
+			String lang = (String) options.get(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE);
+			if (lang != null && lang.length() == 0) {
+				lang = null;
+			}
+			pm.beginTask("Downloading", 110 + (lang == null ? 0 : 100));
 			pm.subTask("Initializing");
 			loadInitialIfNot(new SubProgressMonitor(pm, 10));
 			if (pm.isCanceled())
@@ -199,12 +207,20 @@ public class XmlCardHolder implements ICardHandler {
 				throw new InterruptedException();
 			pm.subTask("Updating database...");
 			BufferedReader st = new BufferedReader(new FileReader(file));
-			rec = loadtFromFlatIntoXml(st);
+			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+			rec = loadtFromFlatIntoXml(st, list);
 			st.close();
 			pm.worked(30);
 			pm.subTask("Updating editions...");
 			Editions.getInstance().save();
 			pm.worked(10);
+			if (lang != null && lang.length() > 0) {
+				pm.subTask("Updating languages...");
+				Set<ICardField> fieldMaps = new HashSet<ICardField>();
+				fieldMaps.add(MagicCardField.LANG);
+				new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang, getMagicDBStore(),
+						new SubProgressMonitor(pm, 100));
+			}
 			return rec;
 		} catch (MalformedURLException e) {
 			throw new MagicException(e);
