@@ -228,7 +228,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.loadCardJob = new LoadCardJob(IMagicCard.DEFAULT);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(panel, MagicUIActivator.helpId("viewcard"));
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewcard"));
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(panel,
+		// MagicUIActivator.helpId("viewcard"));
 		makeActions();
 		hookContextMenu();
 		contributeToActionBars();
@@ -300,7 +302,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	@Override
 	public void setFocus() {
-		this.panel.setFocus();
+		this.panel.getParent().setFocus();
 	}
 
 	@Override

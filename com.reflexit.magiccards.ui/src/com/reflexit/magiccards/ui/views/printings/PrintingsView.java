@@ -41,6 +41,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -81,6 +82,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		super.createPartControl(parent);
 		dbmode.setChecked(isDbMode());
 		setStatus("Click on a card to populate the view");
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
 	}
 
 	@Override
