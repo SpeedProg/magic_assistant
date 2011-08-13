@@ -22,7 +22,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	private void search(String expr, String text, boolean exp) {
-		Expr e = MagicCardFilter.textSearch(MagicCardField.ORACLE, expr, true);
+		Expr e = MagicCardFilter.textSearch(MagicCardField.ORACLE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setOracleText(text);
 		boolean res = e.evaluate(mc);
