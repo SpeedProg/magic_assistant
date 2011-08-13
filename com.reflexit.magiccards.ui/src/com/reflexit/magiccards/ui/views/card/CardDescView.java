@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
@@ -227,6 +228,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.loadCardJob = new LoadCardJob(IMagicCard.DEFAULT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(panel, MagicUIActivator.helpId("viewcard"));
 		makeActions();
 		hookContextMenu();
 		contributeToActionBars();

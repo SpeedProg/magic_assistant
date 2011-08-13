@@ -199,7 +199,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		return new Status(Status.ERROR, PLUGIN_ID, 1, e.getMessage(), e);
 	}
 
-	public void saveDialogSetting() {
-		// TODO Auto-generated method stub
+	public static String helpId(String string) {
+		return "com.reflexit.magiccards.help." + string;
 	}
 }

@@ -84,6 +84,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	private Action showSideboards;
 	private Action refresh;
 	private Clipboard clipboard;
+	private Composite top;
 
 	/**
 	 * The constructor.
@@ -97,12 +98,13 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		top = new Composite(parent, SWT.NONE);
 		GridLayout gl = new GridLayout();
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
-		composite.setLayout(gl);
-		createTable(composite);
+		top.setLayout(gl);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(top, MagicUIActivator.helpId("viewcardnav"));
+		createTable(top);
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
@@ -446,7 +448,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	 */
 	@Override
 	public void setFocus() {
-		getViewer().getControl().setFocus();
+		top.setFocus();
 	}
 
 	protected void runDoubleClick() {
