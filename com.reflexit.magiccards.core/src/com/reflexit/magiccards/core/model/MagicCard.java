@@ -478,7 +478,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	public boolean matches(ICardField left, TextValue right) {
 		String value = String.valueOf(getObjectByField(left));
-		if (left == MagicCardField.TYPE) {
+		if (left == MagicCardField.TYPE && !right.regex) {
 			return CardTypes.getInstance().hasType(this, right.getText());
 		}
 		return right.toPattern().matcher(value).find();
