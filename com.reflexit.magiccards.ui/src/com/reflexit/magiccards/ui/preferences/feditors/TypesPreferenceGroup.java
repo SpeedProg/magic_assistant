@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.SWT;
@@ -7,8 +9,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.CardTypes;
 
@@ -26,7 +26,7 @@ public class TypesPreferenceGroup extends MFieldEditorPreferencePage {
 		CardTypes coreTypes = CardTypes.getInstance();
 		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
-			addCheckBox(id, coreTypes.getNameById(id), parent);
+			addCheckBox(id, coreTypes.getLocalizedNameById(id), parent);
 		}
 	}
 
