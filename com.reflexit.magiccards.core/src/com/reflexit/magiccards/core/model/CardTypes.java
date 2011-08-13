@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.locale.CardTextLocal;
 
@@ -30,13 +32,13 @@ public class CardTypes implements ISearchableProperty {
 
 	public boolean hasType(IMagicCard card, String type) {
 		String typeText = card.getType();
-		if (typeText.contains(type))
+		if (containsType(typeText, type))
 			return true;
 		String language = card.getLanguage();
-		if (language != null) {
+		if (language != null && language.length() > 0) {
 			CardTextLocal localized = CardTextLocal.getCardText(language);
 			String localizedType = TYPES.translate(type, localized);
-			if (typeText.contains(localizedType))
+			if (localizedType != null && containsType(typeText, localizedType))
 				return true;
 		}
 		if (type == TYPES.Type_Creature) {
@@ -46,6 +48,10 @@ public class CardTypes implements ISearchableProperty {
 			return hasType(card, TYPES.Type_Interrupt);
 		}
 		return false;
+	}
+
+	private boolean containsType(String text, String type) {
+		return Pattern.compile("\\b\\Q" + type + "\\E\\b", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(text).find();
 	}
 
 	/*
@@ -75,6 +81,11 @@ public class CardTypes implements ISearchableProperty {
 
 	public String getNameById(String id) {
 		return (String) this.names.get(id);
+	}
+
+	public String getLocalizedNameById(String id) {
+		String enName = getNameById(id);
+		return TYPES.translate(enName, Locale.getDefault());
 	}
 
 	public static String[] proposals = new String[] {//

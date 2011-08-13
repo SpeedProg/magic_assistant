@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+
 public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModifiable {
 	private MagicCard card;
 	private int count;
@@ -410,5 +412,9 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 
 	public String getLanguage() {
 		return card.getLanguage();
+	}
+
+	public boolean matches(ICardField left, TextValue right) {
+		return card.matches(left, right);
 	}
 }

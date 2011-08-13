@@ -2,11 +2,11 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.Comparator;
 
-class SortElement implements Comparator {
+class MagicCardComparator implements Comparator {
 	private ICardField field;
 	private boolean accending;
 
-	public SortElement(ICardField sortField, boolean accending) {
+	public MagicCardComparator(ICardField sortField, boolean accending) {
 		this.field = sortField;
 		this.accending = accending;
 	}
@@ -35,7 +35,7 @@ class SortElement implements Comparator {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SortElement other = (SortElement) obj;
+		MagicCardComparator other = (MagicCardComparator) obj;
 		if (field == null) {
 			if (other.field != null)
 				return false;

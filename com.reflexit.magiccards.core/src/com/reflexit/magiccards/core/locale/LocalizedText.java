@@ -22,6 +22,10 @@ public abstract class LocalizedText {
 
 	public abstract String getBundleName();
 
+	public String translate(String fromValue, Locale locale) {
+		return translate(fromValue, CardTextLocal.getCardText(locale));
+	}
+
 	public String translate(String fromValue, LocalizedText toLocale) {
 		Field field = getField(fromValue);
 		if (field != null)

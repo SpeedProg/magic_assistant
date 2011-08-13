@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+
 public enum MagicCardField implements ICardField {
 	ID,
 	NAME,
@@ -53,5 +55,10 @@ public enum MagicCardField implements ICardField {
 
 	public boolean isTransient() {
 		return field == null ? true : Modifier.isTransient(field.getModifiers());
+	}
+
+	public boolean matches(ICard o, TextValue value) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

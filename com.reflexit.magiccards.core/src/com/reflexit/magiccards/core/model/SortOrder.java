@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 @SuppressWarnings("serial")
-public class SortOrder extends ArrayList<SortElement> implements Comparator {
+public class SortOrder extends ArrayList<MagicCardComparator> implements Comparator {
 	public int compare(Object o1, Object o2) {
 		if (o1 == o2)
 			return 0; // this is only case it is 0
@@ -15,7 +15,7 @@ public class SortOrder extends ArrayList<SortElement> implements Comparator {
 			IMagicCard c1 = (IMagicCard) o1;
 			IMagicCard c2 = (IMagicCard) o2;
 			for (int i = sortOrder.size() - 1; i >= 0; i--) {
-				SortElement elem = sortOrder.get(i);
+				MagicCardComparator elem = sortOrder.get(i);
 				d = elem.compare(o1, o2);
 				if (d != 0)
 					return d;
@@ -33,13 +33,13 @@ public class SortOrder extends ArrayList<SortElement> implements Comparator {
 		return this;
 	}
 
-	public void push(SortElement elem) {
+	public void push(MagicCardComparator elem) {
 		add(elem);
 	}
 
 	public void setSortField(ICardField sortField, boolean accending) {
 		SortOrder sortOrder = this;
-		SortElement elem = new SortElement(sortField, accending);
+		MagicCardComparator elem = new MagicCardComparator(sortField, accending);
 		if (sortOrder.contains(elem)) {
 			sortOrder.remove(elem);
 		}
@@ -52,11 +52,11 @@ public class SortOrder extends ArrayList<SortElement> implements Comparator {
 	public boolean isAccending() {
 		if (size() == 0)
 			return true;
-		SortElement elem = peek();
+		MagicCardComparator elem = peek();
 		return elem.isAccending();
 	}
 
-	private SortElement peek() {
+	private MagicCardComparator peek() {
 		return get(size() - 1);
 	}
 }

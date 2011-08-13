@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
+import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+
 public interface IMagicCard extends ICard {
 	public static final MagicCard DEFAULT = new MagicCard();
 	public static final float STAR_POWER = 911.0F;
@@ -44,4 +46,6 @@ public interface IMagicCard extends ICard {
 	public abstract String getText();
 
 	public abstract String getLanguage();
+
+	public abstract boolean matches(ICardField left, TextValue right);
 }

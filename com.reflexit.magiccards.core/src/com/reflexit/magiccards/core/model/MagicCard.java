@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
 public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	int id;
@@ -473,5 +474,13 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public boolean matches(ICardField left, TextValue right) {
+		String value = String.valueOf(getObjectByField(left));
+		if (left == MagicCardField.TYPE) {
+			return CardTypes.getInstance().hasType(this, right.getText());
+		}
+		return right.toPattern().matcher(value).find();
 	}
 }
