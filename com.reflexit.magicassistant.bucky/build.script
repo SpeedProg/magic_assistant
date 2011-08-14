@@ -1,7 +1,7 @@
 importpreferences -F ${orig.workspace.root}/com.reflexit.magicassistant.bucky/buckminster.properties
 import -Dsource.root=${orig.workspace.root} ${orig.workspace.root}/com.reflexit.magicassistant.bucky/buckyonly.cquery
 perform -P ${buckyprops} com.reflexit.magicassistant.bucky#prepare
-importtargetdefinition -A ${orig.workspace.root}/com.reflexit.magicassistant.bucky/rcp.target
+importtargetdefinition -A ${orig.workspace.root}/com.reflexit.magicassistant.bucky/rcp_indigo.target
 import -P ${buckyprops}  ${orig.workspace.root}/com.reflexit.magicassistant.bucky/magicassistant.cquery
 build
 perform -P ${buckyprops} -D target.os=* -D target.ws=* -D target.arch=* com.reflexit.magicassistant.bucky#site.p2
