@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests Plug-in
 Bundle-SymbolicName: com.reflexit.mtgtournament.core.tests
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: com.reflexit.mtgtournament.core.tests.Activator
 Bundle-Vendor: REFLEXIT
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
- com.reflexit.mtgtournament.core;bundle-version="1.0.5"
+ com.reflexit.mtgtournament.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
