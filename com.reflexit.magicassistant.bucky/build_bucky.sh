@@ -78,7 +78,9 @@ fi
 if [ "$INSTALL" -eq 1 ]; then
     echo Installing...
 	cd $INSTALL_DIR
-	rm -rf $INSTALL_DIR/*
+	rm -rf $INSTALL_DIR/$RELEASE
+	mkdir $RELEASE
+	cd $RELEASE
     unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*.zip
     echo Installed in $INSTALL_DIR
 fi
