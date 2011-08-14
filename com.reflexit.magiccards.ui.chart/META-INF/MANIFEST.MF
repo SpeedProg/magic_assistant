@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant Chart Plugin
 Bundle-SymbolicName: com.reflexit.magiccards.ui.chart;singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: com.reflexit.magiccards.ui.chart.Activator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.ui,
@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.birt.chart.engine;bundle-version="2.3.1",
  org.eclipse.birt.chart.device.extension;bundle-version="2.3.1",
  org.eclipse.birt.chart.engine.extension;bundle-version="2.3.1",
- com.reflexit.magiccards.core;bundle-version="1.1.0"
+ com.reflexit.magiccards.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.reflexit.magiccards.ui.chart;
