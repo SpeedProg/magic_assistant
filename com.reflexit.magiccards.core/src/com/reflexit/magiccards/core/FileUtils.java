@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
 public class FileUtils {
+	public static final String UTF8 = "UTF-8";
+
 	public static void copyFile(File in, File out) throws IOException {
 		FileChannel inChannel = new FileInputStream(in).getChannel();
 		FileChannel outChannel = new FileOutputStream(out).getChannel();
