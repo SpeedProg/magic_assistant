@@ -415,7 +415,7 @@ public class MagicCardFilter {
 			TextValue tvalue = new TextValue(value, false, false, true);
 			return new BinaryExpr(new Field(field), Operation.MATCHES, tvalue);
 		} else {
-			TextValue tvalue = new TextValue(value, true, false, false);
+			TextValue tvalue = new TextValue(value, false, true, false);
 			char c = value.charAt(0);
 			if (Character.isLetter(c) && token.getType() != TokenType.QUOTED) {
 				tvalue.setWordBoundary(true);
