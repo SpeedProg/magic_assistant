@@ -501,11 +501,14 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
 		Dialog cardFilterDialog = new CardFilterDialog(getShell(), getPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK)
+		if (cardFilterDialog.open() == IStatus.OK) {
+			revealSelection = getSelection();
 			reloadData();
+		}
 	}
 
 	public void reloadData() {
+		getSelection();
 		this.manager.loadData(updateViewerRunnable);
 	}
 
@@ -519,8 +522,10 @@ public abstract class AbstractCardsView extends ViewPart {
 		String property = event.getProperty();
 		if (property.equals(getPrefenceColumnsId())) {
 			this.manager.updateColumns((String) event.getNewValue());
+			refresh();
+		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
+			refresh();
 		}
-		refresh();
 	}
 
 	protected void refresh() {
@@ -537,12 +542,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void updateViewer() {
 		if (manager.getControl().isDisposed())
 			return;
-		ISelection selection;
-		try {
-			selection = manager.getSelectionProvider().getSelection();
-		} catch (Exception e) {
-			selection = new StructuredSelection();
-		}
+		ISelection selection = getSelection();
 		manager.updateViewer();
 		updateStatus();
 		if (revealSelection != null) {
@@ -553,6 +553,18 @@ public abstract class AbstractCardsView extends ViewPart {
 			// restore selection
 			manager.getSelectionProvider().setSelection(selection);
 		}
+	}
+
+	protected ISelection getSelection() {
+		ISelection selection;
+		try {
+			selection = manager.getSelectionProvider().getSelection();
+		} catch (Exception e) {
+			selection = new StructuredSelection();
+		}
+		// System.err.println("current selection 2 " +
+		// manager.getSelectionProvider() + " " + selection);
+		return selection;
 	}
 
 	protected void updateStatus() {
