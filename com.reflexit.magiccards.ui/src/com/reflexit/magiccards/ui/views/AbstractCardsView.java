@@ -114,6 +114,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		gl.marginWidth = 0;
 		composite.setLayout(gl);
 		createStatusLine(composite);
+		createQuickFilterControl(composite);
 		createMainControl(composite);
 		createSearchControl(composite);
 		makeActions();
@@ -133,6 +134,8 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	};
 	protected Action groupMenuButton;
+	private QuickFilterControl quickFilter;
+	protected Action showQuickFilter;
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -169,6 +172,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
 		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
+		quickFilter.setPreferenceStore(getPreferenceStore());
 		reloadData();
 	}
 
@@ -180,17 +184,21 @@ public abstract class AbstractCardsView extends ViewPart {
 			public void run(SearchContext context) {
 				runSearch(context);
 			}
-		}) {
-			@Override
-			public void setVisible(boolean vis) {
-				super.setVisible(vis);
-				if (AbstractCardsView.this.showFind != null)
-					AbstractCardsView.this.showFind.setEnabled(!vis);
-			}
-		};
+		});
 		this.searchControl.createFindBar(composite);
 		this.searchControl.setVisible(false);
 		this.searchControl.setSearchAsYouType(true);
+	}
+
+	/**
+	 * @param composite
+	 */
+	protected void createQuickFilterControl(Composite composite) {
+		this.quickFilter = new QuickFilterControl(composite, new Runnable() {
+			public void run() {
+				reloadData();
+			}
+		});
 	}
 
 	/**
@@ -258,11 +266,18 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.showFilter);
+		manager.add(this.showQuickFilter);
 		manager.add(this.sortMenu);
 		manager.add(this.groupMenu);
 		manager.add(this.showPrefs);
 		manager.add(loadExtras);
 		manager.add(new Separator());
+		manager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				showQuickFilter.setEnabled(!quickFilter.isVisible());
+				showFind.setEnabled(!searchControl.isVisible());
+			}
+		});
 	}
 
 	protected void fillContextMenu(IMenuManager manager) {
@@ -388,6 +403,13 @@ public abstract class AbstractCardsView extends ViewPart {
 			}
 		};
 		this.showFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
+		this.showQuickFilter = new Action("Show Quick Filter") {
+			@Override
+			public void run() {
+				AbstractCardsView.this.quickFilter.setVisible(true);
+				AbstractCardsView.this.showQuickFilter.setEnabled(false);
+			}
+		};
 		this.copyText = new Action("Copy") {
 			@Override
 			public void run() {
@@ -508,7 +530,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	public void reloadData() {
-		getSelection();
 		this.manager.loadData(updateViewerRunnable);
 	}
 

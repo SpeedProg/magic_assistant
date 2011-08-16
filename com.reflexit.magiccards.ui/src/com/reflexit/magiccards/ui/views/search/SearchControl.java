@@ -41,6 +41,7 @@ public class SearchControl {
 	private Label status;
 	private Label statusImage;
 	private boolean searchAsYouType;
+	private Composite comp;
 
 	/**
 	 * 
@@ -56,6 +57,7 @@ public class SearchControl {
 	}
 
 	public void setVisible(boolean vis) {
+		comp.setVisible(vis);
 		if (!vis)
 			this.gridData.heightHint = 0;
 		else {
@@ -79,7 +81,7 @@ public class SearchControl {
 	 */
 	public void createFindBar(final Composite partParent) {
 		this.parent = partParent;
-		final Composite comp = new Composite(partParent, SWT.NONE);
+		comp = new Composite(partParent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
@@ -113,7 +115,9 @@ public class SearchControl {
 		// search field
 		String os = System.getProperty("osgi.os", "");
 		if (os.equals("macosx")) {
-			this.searchText = new Text(toolbar, SWT.NONE); // bug in eclipse - text is too shallow
+			this.searchText = new Text(toolbar, SWT.NONE); // bug in eclipse -
+															// text is too
+															// shallow
 		} else {
 			this.searchText = new Text(toolbar, SWT.BORDER);
 		}
@@ -228,7 +232,8 @@ public class SearchControl {
 
 	private void preRunnable() {
 		synchronized (context) {
-			// System.err.println("search " + context.text + " forward=" + context.forward + " case=" + context.matchCase);
+			// System.err.println("search " + context.text + " forward=" +
+			// context.forward + " case=" + context.matchCase);
 			this.status.setText("");
 			this.statusImage.setImage(null);
 		}
@@ -255,7 +260,8 @@ public class SearchControl {
 	}
 
 	/**
-	 * For testing and external search if needed. Ui buttons would not be updated.
+	 * For testing and external search if needed. Ui buttons would not be
+	 * updated.
 	 * 
 	 * @param text
 	 * @param matchCase
@@ -288,5 +294,9 @@ public class SearchControl {
 
 	public SearchContext getContext() {
 		return this.context;
+	}
+
+	public boolean isVisible() {
+		return comp.isVisible();
 	}
 }
