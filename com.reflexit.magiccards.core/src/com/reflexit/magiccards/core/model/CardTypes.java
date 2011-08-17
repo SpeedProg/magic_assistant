@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -100,5 +101,14 @@ public class CardTypes implements ISearchableProperty {
 	 */
 	public static String[] getProposals() {
 		return proposals;
+	}
+
+	public Collection<String> getLocalizedNames() {
+		ArrayList<String> names2 = new ArrayList<String>();
+		for (Iterator iterator = names.values().iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+			names2.add(TYPES.translate(string, Locale.getDefault()));
+		}
+		return names2;
 	}
 }
