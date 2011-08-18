@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -28,6 +29,10 @@ public class AbstractDeckPage implements IDeckPage {
 
 	public Composite createContents(Composite parent) {
 		area = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		area.setLayout(layout);
 		return area;
 	}
 
@@ -47,8 +52,11 @@ public class AbstractDeckPage implements IDeckPage {
 		this.view = view;
 	}
 
-	public void updateFromStore() {
-		// nothing
+	public void activate() {
+		view.setTopBarVisible(false);
+		getCardStore();
+		if (store == null)
+			return;
 	}
 
 	public void setFilteredStore(IFilteredCardStore store) {

@@ -11,6 +11,10 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.analyzers;
 
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,10 +42,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
@@ -57,13 +57,18 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 	private Button updateButton;
 	private TableViewer cardList;
 	private Map<String, String> deckInput; // map format->legality
-	private Map<Integer, Map<String, String>> cardLegalities; // map card id->(map format->legaity)
+	private Map<Integer, Map<String, String>> cardLegalities; // map card
+																// id->(map
+																// format->legaity)
 	private String selectedFormat = null;
 
 	@Override
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
-		getArea().setLayout(new GridLayout(2, false));
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		getArea().setLayout(layout);
 		createGui(getArea());
 		return getArea();
 	}
@@ -81,6 +86,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		createBreakdownSection(right);
 		cardList.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
+
 	class DeckLegalityLabelProvider extends LabelProvider implements ITableLabelProvider {
 		@Override
 		public String getText(Object element) {
@@ -106,6 +112,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			return null;
 		}
 	}
+
 	class CardTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 		@Override
 		public String getText(Object element) {
@@ -165,6 +172,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			}
 		});
 	}
+
 	ViewerFilter formatFilter = new ViewerFilter() {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
@@ -267,8 +275,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 						public void run() {
 							legalityTableViewer.setInput(deckInput);
 							if (deckInput.size() > 0) {
-								legalityTableViewer.setSelection(new StructuredSelection(deckInput.keySet().iterator()
-								        .next()));
+								legalityTableViewer.setSelection(new StructuredSelection(deckInput.keySet().iterator().next()));
 							}
 						}
 					});
@@ -291,10 +298,10 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			return null;
 		}
 	}
+
 	private String formats[] = { "Standard", "Extended", "Legacy", "Vintage" };
 
-	private Map<String, String> calculateDeckLegality(Map<Integer, Map<String, String>> cardLegalities,
-	        IProgressMonitor monitor) {
+	private Map<String, String> calculateDeckLegality(Map<Integer, Map<String, String>> cardLegalities, IProgressMonitor monitor) {
 		monitor.beginTask("", cardLegalities.size() + 1);
 		Map<String, String> deckLegalityRestrictions = new LinkedHashMap<String, String>();
 		for (String format : formats) {
@@ -309,8 +316,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		return deckLegalityRestrictions;
 	}
 
-	private void updateDeckLegality(Map<String, String> deckLegalityRestrictions,
-	        Map<String, String> cardLegalityRestrictions) {
+	private void updateDeckLegality(Map<String, String> deckLegalityRestrictions, Map<String, String> cardLegalityRestrictions) {
 		for (Map.Entry<String, String> deckLegalityEntry : deckLegalityRestrictions.entrySet()) {
 			if (!cardLegalityRestrictions.keySet().contains(deckLegalityEntry.getKey())) {
 				deckLegalityEntry.setValue(NOT_PRESENT);

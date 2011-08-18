@@ -7,7 +7,8 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public interface IDeckPage {
 	/**
-	 * Create page contents (composite). Method getControl() should return same composite as this method returns.
+	 * Create page contents (composite). Method getControl() should return same
+	 * composite as this method returns.
 	 */
 	public Composite createContents(Composite parent);
 
@@ -24,7 +25,7 @@ public interface IDeckPage {
 	/**
 	 * Method is called when page is activate and store is set
 	 */
-	public void updateFromStore();
+	public void activate();
 
 	/**
 	 * Return main page control (created by createComposite method)

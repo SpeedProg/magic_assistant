@@ -1,12 +1,12 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -31,9 +31,8 @@ public class ColorControl extends AbstractDeckPage implements IDeckPage {
 	}
 
 	@Override
-	public void updateFromStore() {
-		if (store == null)
-			return;
+	public void activate() {
+		super.activate();
 		Collection<CardGroup> groups = CardStoreUtils.buildSpellColorStats(store);
 		int values[] = new int[groups.size()];
 		String labels[] = new String[groups.size()];

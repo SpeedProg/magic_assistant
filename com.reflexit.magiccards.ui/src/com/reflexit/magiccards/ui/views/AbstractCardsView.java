@@ -108,15 +108,14 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		partControl = new Composite(parent, SWT.NONE);
 		GridLayout gl = new GridLayout();
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
-		composite.setLayout(gl);
-		createStatusLine(composite);
-		createQuickFilterControl(composite);
-		createMainControl(composite);
-		createSearchControl(composite);
+		partControl.setLayout(gl);
+		createTopBar(partControl);
+		createMainControl(partControl);
+		createSearchControl(partControl);
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
@@ -126,6 +125,24 @@ public abstract class AbstractCardsView extends ViewPart {
 		// ADD the JFace Viewer as a Selection Provider to the View site.
 		getSite().setSelectionProvider(this.manager.getSelectionProvider());
 		loadInitial();
+	}
+
+	protected Composite createTopBar(Composite composite) {
+		topBar = new Composite(composite, SWT.BORDER);
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		topBar.setLayout(layout);
+		Control two = createQuickFilterControl(topBar);
+		two.setLayoutData(new GridData());
+		Control one = createStatusLine(topBar);
+		one.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		topBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		return topBar;
+	}
+
+	public Composite getTopBar() {
+		return topBar;
 	}
 
 	IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
@@ -154,12 +171,18 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.manager.updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
 	}
 
-	private void createStatusLine(Composite composite) {
-		this.statusLine = new Label(composite, SWT.NONE);
+	private Composite createStatusLine(Composite composite) {
+		Composite comp = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		comp.setLayout(layout);
+		this.statusLine = new Label(comp, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalIndent = 5;
 		this.statusLine.setLayoutData(gd);
 		this.statusLine.setText("Status");
+		return comp;
 	}
 
 	protected void createMainControl(Composite parent) {
@@ -192,13 +215,15 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	/**
 	 * @param composite
+	 * @return
 	 */
-	protected void createQuickFilterControl(Composite composite) {
+	protected QuickFilterControl createQuickFilterControl(Composite composite) {
 		this.quickFilter = new QuickFilterControl(composite, new Runnable() {
 			public void run() {
 				reloadData();
 			}
 		});
+		return quickFilter;
 	}
 
 	/**
@@ -253,6 +278,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	public static final String FIND = "org.eclipse.ui.edit.findReplace";
+	private Composite partControl;
+	private Composite topBar;
 
 	/**
 	 * @param bars
@@ -274,7 +301,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		manager.add(new Separator());
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				showQuickFilter.setEnabled(!quickFilter.isVisible());
+				updateShowFilterText();
 				showFind.setEnabled(!searchControl.isVisible());
 			}
 		});
@@ -406,8 +433,10 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.showQuickFilter = new Action("Show Quick Filter") {
 			@Override
 			public void run() {
-				AbstractCardsView.this.quickFilter.setVisible(true);
-				AbstractCardsView.this.showQuickFilter.setEnabled(false);
+				AbstractCardsView.this.quickFilter.setVisible(!quickFilter.isVisible());
+				partControl.layout(true);
+				// updateShowFilterText();
+				// showQuickFilter.setChecked(!isChecked());
 			}
 		};
 		this.copyText = new Action("Copy") {
@@ -526,6 +555,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		if (cardFilterDialog.open() == IStatus.OK) {
 			revealSelection = getSelection();
 			reloadData();
+			quickFilter.refresh();
 		}
 	}
 
@@ -646,6 +676,15 @@ public abstract class AbstractCardsView extends ViewPart {
 			};
 			manager.add(ac);
 			ac.setEnabled(false);
+		}
+	}
+
+	protected void updateShowFilterText() {
+		// showQuickFilter.setChecked(quickFilter.isVisible());
+		if (quickFilter.isVisible()) {
+			AbstractCardsView.this.showQuickFilter.setText("Hide Quick Filter");
+		} else {
+			AbstractCardsView.this.showQuickFilter.setText("Show Quick Filter");
 		}
 	}
 }

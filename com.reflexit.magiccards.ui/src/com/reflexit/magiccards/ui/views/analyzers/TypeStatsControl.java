@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
+import java.text.DecimalFormat;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -9,8 +11,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
-import java.text.DecimalFormat;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -26,6 +26,7 @@ import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 public class TypeStatsControl extends AbstractDeckPage implements IDeckPage {
 	ChartCanvas canvas;
 	private TreeViewer stats;
+
 	static class TypesContentProider implements ITreeContentProvider {
 		public Object[] getChildren(Object element) {
 			if (element instanceof CardGroup) {
@@ -119,9 +120,8 @@ public class TypeStatsControl extends AbstractDeckPage implements IDeckPage {
 	}
 
 	@Override
-	public void updateFromStore() {
-		if (store == null)
-			return;
+	public void activate() {
+		super.activate();
 		IChartGenerator gen = new TypeStats(buildTypeStats());
 		canvas.setChartGenerator(gen);
 		canvas.redraw();

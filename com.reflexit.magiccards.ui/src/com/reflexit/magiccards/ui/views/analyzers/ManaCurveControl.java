@@ -23,9 +23,8 @@ public class ManaCurveControl extends AbstractDeckPage implements IDeckPage {
 	}
 
 	@Override
-	public void updateFromStore() {
-		if (store == null)
-			return;
+	public void activate() {
+		super.activate();
 		IChartGenerator gen = new ManaCurve(buildManaCurve());
 		canvas.setChartGenerator(gen);
 		canvas.redraw();

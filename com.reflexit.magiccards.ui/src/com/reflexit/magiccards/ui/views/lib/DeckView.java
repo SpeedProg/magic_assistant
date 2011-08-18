@@ -236,7 +236,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void createMainControl(Composite parent) {
-		folder = new CTabFolder(parent, SWT.BORDER | SWT.BOTTOM);
+		folder = new CTabFolder(parent, SWT.BOTTOM);
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// Cards List
 		final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
@@ -253,10 +253,11 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				reloadData();
+				updateActivePage();
 			}
 		});
 		folder.setSelection(0);
+		refresh();
 	}
 
 	protected void createExtendedTabs() {
@@ -273,6 +274,18 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				MagicUIActivator.log(e);
 			}
 		}
+	}
+
+	protected void setTopBarVisible(boolean vis) {
+		Composite bar = getTopBar();
+		GridData data = (GridData) bar.getLayoutData();
+		if (vis) {
+			data.heightHint = SWT.DEFAULT;
+		} else {
+			data.heightHint = 0;
+		}
+		bar.setVisible(vis);
+		bar.getParent().layout(true);
 	}
 
 	private void createDeckTab(String name, final IDeckPage page) {
@@ -365,7 +378,19 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void refresh() {
+		setStore();
 		reloadData();
+	}
+
+	protected void setStore() {
+		IFilteredCardStore store = getFilteredStore();
+		if (store == null)
+			return;
+		for (IDeckPage deckPage : pages) {
+			IDeckPage page = deckPage;
+			// System.err.println(deckPage);
+			page.setFilteredStore(store);
+		}
 	}
 
 	@Override
@@ -382,13 +407,17 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		CTabItem sel = folder.getSelection();
 		if (sel.isDisposed())
 			return;
+		if (sel.getControl() == manager.getControl()) {
+			setTopBarVisible(true);
+			return;
+		}
 		// System.err.println(sel + " " + sel.getData());
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;
 			// System.err.println(deckPage);
 			if (sel.getData() == page) {
 				page.setFilteredStore(getFilteredStore());
-				page.updateFromStore();
+				page.activate();
 			}
 		}
 	}

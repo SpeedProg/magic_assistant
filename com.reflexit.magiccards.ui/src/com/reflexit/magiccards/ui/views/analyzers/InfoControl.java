@@ -51,7 +51,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
-						updateFromStore();
+						activate();
 					}
 				} catch (Exception x) {
 					x.printStackTrace();
@@ -114,10 +114,8 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 	}
 
 	@Override
-	public void updateFromStore() {
-		getCardStore();
-		if (store == null)
-			return;
+	public void activate() {
+		super.activate();
 		IStorageInfo si = getInfo();
 		if (si != null) {
 			String comment = si.getComment();

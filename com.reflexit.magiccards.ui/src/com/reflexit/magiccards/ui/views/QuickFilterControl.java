@@ -27,18 +27,18 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class QuickFilterControl extends Composite {
-	private static final String ALL_TYPES = "All Types";
-	private static final String ALL_NAMES = "All Names";
+	private static final String ALL_TYPES = "";
+	private static final String ADVANCED = "<advanced filter>";
+	private static final String ALL_NAMES = "";
 	private Text searchText;
 	private IPreferenceStore store;
 	private Runnable runnable;
 	private Combo typeCombo;
 
 	public QuickFilterControl(Composite composite, Runnable run) {
-		super(composite, SWT.BORDER);
+		super(composite, SWT.NONE);
 		setLayout(new GridLayout());
 		createBar(this);
-		setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.runnable = run;
 		setFocus();
 	}
@@ -47,11 +47,13 @@ public class QuickFilterControl extends Composite {
 	public void setVisible(boolean vis) {
 		super.setVisible(vis);
 		GridData gd = (GridData) getLayoutData();
-		if (!vis)
+		if (!vis) {
 			gd.heightHint = 0;
-		else {
+			gd.widthHint = 0;
+		} else {
 			gd.heightHint = SWT.DEFAULT;
-			gd.minimumHeight = 32;
+			gd.widthHint = SWT.DEFAULT;
+			// gd.minimumHeight = 32;
 			setFocus();
 		}
 		getParent().layout(true);
@@ -66,7 +68,7 @@ public class QuickFilterControl extends Composite {
 
 	void createBar(Composite comp) {
 		// toolbar composite
-		GridLayout gridLayout2 = new GridLayout(3, false);
+		GridLayout gridLayout2 = new GridLayout(2, false);
 		gridLayout2.marginHeight = 0;
 		gridLayout2.marginWidth = 0;
 		comp.setLayout(gridLayout2);
@@ -84,7 +86,7 @@ public class QuickFilterControl extends Composite {
 		// type
 		createTypeField(toolbar);
 		// hide
-		createHideButton(comp);
+		// createHideButton(comp);
 	}
 
 	private void createSearchField(ToolBar toolbar) {
@@ -112,6 +114,7 @@ public class QuickFilterControl extends Composite {
 				filterText(searchText.getText());
 			}
 		});
+		searchText.setToolTipText("Name filter");
 		ToolItem text = new ToolItem(toolbar, SWT.SEPARATOR);
 		text.setControl(this.searchText);
 		text.setWidth(200);
@@ -138,6 +141,7 @@ public class QuickFilterControl extends Composite {
 				filterType(typeCombo.getText());
 			}
 		});
+		typeCombo.setToolTipText("Type filter");
 		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
 		item.setControl(this.typeCombo);
 		item.setWidth(200);
@@ -166,6 +170,7 @@ public class QuickFilterControl extends Composite {
 			}
 		});
 		button.setSelection(false);
+		button.setToolTipText(name);
 	}
 
 	private void createHideButton(Composite comp) {
@@ -185,13 +190,41 @@ public class QuickFilterControl extends Composite {
 
 	public void setPreferenceStore(IPreferenceStore store) {
 		this.store = store;
-		if (searchText != null) {
-			init();
-		}
+		refresh();
 	}
 
-	private void init() {
-		// TODO Auto-generated method stub
+	void refresh() {
+		if (searchText != null && store != null) {
+			// text
+			String textId = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
+			String text = store.getString(textId);
+			if (text == null || text.trim().length() == 0) {
+				searchText.setText(ALL_NAMES);
+			} else if (text.startsWith("\"") && text.endsWith("\"")) {
+				text = text.replaceAll("\"(.*)\"", "\\1");
+				searchText.setText(text);
+			} else {
+				searchText.setText(ADVANCED);
+			}
+			// type
+			String type = ALL_TYPES;
+			int typehit = 0;
+			CardTypes coreTypes = CardTypes.getInstance();
+			for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
+				String id = (String) iterator.next();
+				boolean isSet = store.getBoolean(id);
+				// System.err.println(id + " " + isSet);
+				if (isSet) {
+					type = coreTypes.getLocalizedNameById(id);
+					typehit++;
+				}
+			}
+			if (typehit > 1) {
+				typeCombo.setText(ADVANCED);
+			} else {
+				typeCombo.setText(type);
+			}
+		}
 	}
 
 	public void setUpdateHook(Runnable run) {
@@ -199,6 +232,8 @@ public class QuickFilterControl extends Composite {
 	}
 
 	protected void filterText(String text) {
+		if (ADVANCED.equals(text))
+			return;
 		if (ALL_NAMES.equals(text))
 			text = "";
 		String textId = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
@@ -211,6 +246,8 @@ public class QuickFilterControl extends Composite {
 	}
 
 	protected void filterType(String text) {
+		if (ADVANCED.equals(text))
+			return;
 		if (ALL_TYPES.equals(text))
 			text = "";
 		CardTypes coreTypes = CardTypes.getInstance();
