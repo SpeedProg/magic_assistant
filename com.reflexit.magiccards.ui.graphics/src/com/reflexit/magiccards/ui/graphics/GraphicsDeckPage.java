@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.graphics;
 
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -13,7 +12,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
-		getArea().setLayout(new GridLayout());
 		panel = new DesktopCanvas(getArea());
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		return getArea();
@@ -31,9 +29,8 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	}
 
 	@Override
-	public void updateFromStore() {
-		if (store == null)
-			return;
+	public void activate() {
+		super.activate();
 		// ?
 	}
 }
