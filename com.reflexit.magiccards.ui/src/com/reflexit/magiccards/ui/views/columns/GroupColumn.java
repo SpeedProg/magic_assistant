@@ -26,7 +26,7 @@ public class GroupColumn extends GenColumn {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardGroup) {
-			return ((CardGroup) element).getName() + " (" + ((CardGroup) element).size() + ")";
+			return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getCount() + ")";
 		}
 		return null;
 	}
