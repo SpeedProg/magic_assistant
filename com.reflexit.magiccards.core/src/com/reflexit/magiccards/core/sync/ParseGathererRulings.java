@@ -68,7 +68,8 @@ public class ParseGathererRulings extends ParseGathererPage {
 	      <div class="cardtextbox">Unearth <img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" /> <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" />: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)</i></div></div>
 
 	 */
-	private static Pattern oraclePattern = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
+	private static Pattern textPattern = Pattern.compile("Card Text:</div>(.*?)class=\"label\"");
+	private static Pattern textPatternEach = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
 	/*-
 	 * <div class="label"> 
 	 Other Sets:</div> 
@@ -160,7 +161,11 @@ public class ParseGathererRulings extends ParseGathererPage {
 			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.COLLNUM, cardnumPattern);
 			monitor.worked(1);
-			extractField(card, fieldMapFilter, html, MagicCardField.ORACLE, oraclePattern);
+			Matcher matcher = textPattern.matcher(html);
+			if (matcher.find()) {
+				String text = matcher.group(1);
+				extractField(card, fieldMapFilter, text, MagicCardField.ORACLE, textPatternEach);
+			}
 			monitor.worked(1);
 			extractOtherSets(card, fieldMapFilter, html);
 			monitor.worked(1);
