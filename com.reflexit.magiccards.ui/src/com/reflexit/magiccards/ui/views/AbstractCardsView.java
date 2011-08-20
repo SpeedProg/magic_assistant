@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -41,7 +42,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -86,6 +86,10 @@ public abstract class AbstractCardsView extends ViewPart {
 	private SearchControl searchControl;
 	protected Runnable updateViewerRunnable;
 	protected ISelection revealSelection;
+	protected Action groupMenuButton;
+	protected QuickFilterControl quickFilter;
+	protected Action showQuickFilter;
+	protected Action refresh;
 
 	/**
 	 * The constructor.
@@ -121,7 +125,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		hookDoubleClickAction();
 		contributeToActionBars();
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
-		IContextActivation contextActivation = contextService.activateContext("com.reflexit.magiccards.ui.context");
+		contextService.activateContext("com.reflexit.magiccards.ui.context");
 		// ADD the JFace Viewer as a Selection Provider to the View site.
 		getSite().setSelectionProvider(this.manager.getSelectionProvider());
 		loadInitial();
@@ -150,9 +154,6 @@ public abstract class AbstractCardsView extends ViewPart {
 			AbstractCardsView.this.propertyChange(event);
 		}
 	};
-	protected Action groupMenuButton;
-	private QuickFilterControl quickFilter;
-	protected Action showQuickFilter;
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -285,7 +286,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * @param bars
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
-		// this.showFind.setActionDefinitionId(FIND);
+		showFind.setActionDefinitionId(FIND);
 		ActionHandler findHandler = new ActionHandler(this.showFind);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler(FIND, findHandler);
@@ -294,15 +295,16 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.showFilter);
 		manager.add(this.showQuickFilter);
+		manager.add(this.showFind);
+		manager.add(this.showPrefs);
 		manager.add(this.sortMenu);
 		manager.add(this.groupMenu);
-		manager.add(this.showPrefs);
-		manager.add(loadExtras);
+		manager.add(this.loadExtras);
+		manager.add(this.refresh);
 		manager.add(new Separator());
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				updateShowFilterText();
-				showFind.setEnabled(!searchControl.isVisible());
+				viewMenuIsAboutToShow(manager);
 			}
 		});
 	}
@@ -363,13 +365,13 @@ public abstract class AbstractCardsView extends ViewPart {
 			}
 		};
 		this.sortMenu = new MenuManager("Sort By");
-		Collection columns = this.manager.getColumns();
+		Collection columns = getManager().getColumns();
 		int i = 0;
 		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {
 			final AbstractColumn man = (AbstractColumn) iterator.next();
 			String name = man.getColumnFullName();
 			final int index = i;
-			Action ac = new Action(name) {
+			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
 				@Override
 				public void run() {
 					manager.updateSortColumn(index);
@@ -451,10 +453,17 @@ public abstract class AbstractCardsView extends ViewPart {
 				runLoadExtras();
 			}
 		};
+		this.refresh = new Action("Refresh") {
+			@Override
+			public void run() {
+				refresh();
+			}
+		};
+		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 	}
 
 	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By");
+		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
 		groupMenu.add(new GroupAction("None", null));
 		groupMenu.add(new GroupAction("Color", MagicCardField.COST));
 		groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
@@ -679,12 +688,17 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	}
 
-	protected void updateShowFilterText() {
+	protected void updateQuickShowFilterText() {
 		// showQuickFilter.setChecked(quickFilter.isVisible());
 		if (quickFilter.isVisible()) {
 			AbstractCardsView.this.showQuickFilter.setText("Hide Quick Filter");
 		} else {
 			AbstractCardsView.this.showQuickFilter.setText("Show Quick Filter");
 		}
+	}
+
+	protected void viewMenuIsAboutToShow(IMenuManager manager) {
+		updateQuickShowFilterText();
+		showFind.setEnabled(!searchControl.isVisible());
 	}
 }

@@ -152,8 +152,14 @@ class CardDescComposite extends Composite {
 		try {
 			String data = getCardDataHtml(card);
 			String text = card.getText();
+			String oracle = card.getOracleText();
+			if (!text.equals(oracle)) {
+				oracle = "<br><br>Oracle:<br>" + oracle;
+			} else {
+				oracle = "";
+			}
 			String rulings = getCardRulingsHtml(card);
-			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text + rulings, this));
+			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text + oracle + rulings, this));
 			swapVisibility(textBrowser, textBackup);
 		} catch (Exception e) {
 			if (logOnce == false) {

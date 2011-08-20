@@ -3,19 +3,22 @@ package com.reflexit.magiccards.ui.views.analyzers;
 import java.text.DecimalFormat;
 import java.util.Iterator;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -24,6 +27,7 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
+import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
@@ -35,17 +39,24 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 	private Label colors;
 	private Label ownership;
-	private Button editButton;
+	private Link editButton;
 	private Label decktype;
+	private Label averagecost;
+	private Composite stats;
 
 	@Override
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
-		getArea().setLayout(new GridLayout(4, false));
-		createStatsArea();
-		createTextArea();
-		editButton = new Button(getArea(), SWT.PUSH);
-		editButton.setText("Edit...");
+		getArea().setLayout(new GridLayout(3, false));
+		createStatsArea().setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
+		createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		createEditButton(stats).setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.BEGINNING, SWT.END).create());
+		return getArea();
+	}
+
+	protected Control createEditButton(Composite parent) {
+		editButton = new Link(parent, SWT.PUSH);
+		editButton.setText("<a>Edit Description...</a>");
 		editButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -58,33 +69,37 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 				}
 			}
 		});
-		return getArea();
+		return editButton;
 	}
 
-	private void createStatsArea() {
+	private Composite createStatsArea() {
+		stats = new Composite(getArea(), SWT.NONE);
+		stats.setLayout(new GridLayout(2, false));
 		decktype = createTextLabel("Type: ");
 		total = createTextLabel("Total Cards: ");
-		dbprice = createTextLabel("Cost: ");
+		dbprice = createTextLabel("Money Cost: ");
 		dbprice.setToolTipText("Cost of a deck using Seller's Price column," + " in brackets cost of a deck using User's Price column");
 		colors = createTextLabel("Colors: ");
 		ownership = createTextLabel("Ownership: ");
+		averagecost = createTextLabel("Average Mana Cost: ");
+		// stats.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+		return stats;
 	}
 
 	private Label createTextLabel(String string) {
-		Label label = new Label(getArea(), SWT.NONE);
+		Label label = new Label(stats, SWT.NONE);
 		label.setText(string);
 		label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
-		Label text = new Label(getArea(), SWT.NONE);
+		Label text = new Label(stats, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gd);
 		return text;
 	}
 
-	private void createTextArea() {
+	private Group createTextArea() {
 		Group group = new Group(getArea(), SWT.NONE);
 		group.setText("Description");
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = ((GridLayout) getArea().getLayout()).numColumns;
 		group.setLayoutData(gd);
 		group.setLayout(new GridLayout());
 		text = new Text(group, SWT.WRAP | SWT.READ_ONLY);
@@ -94,6 +109,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 			}
 		});
 		text.setLayoutData(new GridData(GridData.FILL_BOTH));
+		return group;
 	}
 
 	protected void setComment(String text2) {
@@ -137,8 +153,13 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 				cost += elem.getPrice() * elem.getCount();
 		}
 		dbprice.setText("$" + decimalFormat.format(cost) + " ($" + decimalFormat.format(ucost) + ")");
-		colors.setText("" + CardStoreUtils.buildColors(store));
+		String costs = CardStoreUtils.buildColorsCost(store);
+		Image buildCostImage = SymbolConverter.buildCostImage(costs);
+		colors.setImage(buildCostImage);
 		ownership.setText(store.isVirtual() ? "Virtual" : "Own");
 		decktype.setText(prefix);
+		float acost = CardStoreUtils.getInstance().getAverageManaCost(store);
+		averagecost.setText(String.valueOf(acost));
+		getArea().layout(true);
 	}
 }

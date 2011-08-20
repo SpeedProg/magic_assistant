@@ -10,10 +10,14 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IActionBars;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -54,9 +58,18 @@ public class AbstractDeckPage implements IDeckPage {
 
 	public void activate() {
 		view.setTopBarVisible(false);
+		IActionBars bars = view.getViewSite().getActionBars();
+		IToolBarManager toolBarManager = bars.getToolBarManager();
+		toolBarManager.removeAll();
+		fillLocalToolBar(toolBarManager);
+		toolBarManager.update(true);
 		getCardStore();
 		if (store == null)
 			return;
+	}
+
+	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
+		// override if need toolbar
 	}
 
 	public void setFilteredStore(IFilteredCardStore store) {
@@ -67,5 +80,14 @@ public class AbstractDeckPage implements IDeckPage {
 		if (store == null && view != null && view.getCardCollection() != null)
 			store = view.getCardCollection().getStore();
 		return store;
+	}
+
+	protected Label createStatusLine(Composite composite) {
+		Label statusLine = new Label(composite, SWT.BORDER);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalIndent = 3;
+		statusLine.setLayoutData(gd);
+		statusLine.setText("Status");
+		return statusLine;
 	}
 }

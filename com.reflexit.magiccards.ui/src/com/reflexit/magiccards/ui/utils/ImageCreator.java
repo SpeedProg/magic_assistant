@@ -26,6 +26,10 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
+/**
+ * Create or loads images for cards
+ * 
+ */
 public class ImageCreator {
 	private static final String TEXT_ITALIC_FONT_KEY = "text_italic";
 	private static final String TEXT_FONT_KEY = "text";

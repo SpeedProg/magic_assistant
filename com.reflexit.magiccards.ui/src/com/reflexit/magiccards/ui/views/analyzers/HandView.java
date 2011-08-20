@@ -16,6 +16,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
@@ -36,7 +37,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class HandView extends AbstractCardsView implements ISelectionListener {
 	public static final String ID = HandView.class.getName();
@@ -44,24 +45,41 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	private IAction shuffle;
 	private Action draw;
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#doGetFilteredStore()
+	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		quickFilter.setVisible(false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#doGetFilteredStore()
 	 */
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return this.store;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#doGetViewerManager(com.reflexit.magiccards.ui.views.AbstractCardsView)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#doGetViewerManager
+	 * (com.reflexit.magiccards.ui.views.AbstractCardsView)
 	 */
 	@Override
 	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
 		return new LazyTableViewerManager(this);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(org.eclipse.jface.action.IMenuManager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
+	 * org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
@@ -77,7 +95,9 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		manager.add(this.draw);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#makeActions()
 	 */
 	@Override
@@ -123,8 +143,11 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		super.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IStructuredSelection sel = (IStructuredSelection) selection;
@@ -141,7 +164,9 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#loadInitial()
 	 */
 	@Override

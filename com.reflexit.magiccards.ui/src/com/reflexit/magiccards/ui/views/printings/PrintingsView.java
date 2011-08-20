@@ -81,6 +81,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		dbmode.setChecked(isDbMode());
+		quickFilter.setVisible(false);
 		setStatus("Click on a card to populate the view");
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
 	}

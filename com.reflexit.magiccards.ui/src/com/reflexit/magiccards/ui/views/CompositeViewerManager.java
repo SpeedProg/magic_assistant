@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Collection;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -23,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
 /**
  * @author Alena
@@ -198,5 +201,10 @@ public class CompositeViewerManager extends ViewerManager {
 			m.setFilteredCardStore(store);
 		}
 		super.setFilteredCardStore(store);
+	}
+
+	@Override
+	public Collection<AbstractColumn> getColumns() {
+		return this.managers[this.activeIndex].getColumns();
 	}
 }

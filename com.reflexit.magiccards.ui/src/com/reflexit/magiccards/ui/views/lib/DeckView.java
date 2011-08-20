@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -22,6 +23,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -408,7 +410,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		if (sel.isDisposed())
 			return;
 		if (sel.getControl() == manager.getControl()) {
-			setTopBarVisible(true);
+			activateCardsTab();
 			return;
 		}
 		// System.err.println(sel + " " + sel.getData());
@@ -420,5 +422,21 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				page.activate();
 			}
 		}
+	}
+
+	protected void activateCardsTab() {
+		setTopBarVisible(true);
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager toolBarManager = bars.getToolBarManager();
+		toolBarManager.removeAll();
+		fillLocalToolBar(toolBarManager);
+	}
+
+	public Action getShowFilterAction() {
+		return showFilter;
+	}
+
+	public Action getGroupAction() {
+		return groupMenuButton;
 	}
 }

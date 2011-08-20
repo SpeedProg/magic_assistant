@@ -73,7 +73,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private Action split;
 	private Action edit;
 	private Action paste;
-	private Action refresh;
 	protected Action export;
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
@@ -123,13 +122,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				fillDeckMenu(manager, copyToDeck);
 			}
 		});
-		this.refresh = new Action("Refresh") {
-			@Override
-			public void run() {
-				refresh();
-			}
-		};
-		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 		this.export = createExportAction();
 		copyToDeck = new IDeckAction() {
 			public void run(String id) {
@@ -332,7 +324,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
-		manager.add(this.refresh);
 		super.fillLocalPullDown(manager);
 		manager.add(this.export);
 	}
