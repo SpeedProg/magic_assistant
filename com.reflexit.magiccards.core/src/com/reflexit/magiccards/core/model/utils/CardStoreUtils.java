@@ -165,6 +165,29 @@ public class CardStoreUtils {
 		return colors;
 	}
 
+	public static String buildColorsCost(Iterable store) {
+		String res = "";
+		HashSet<String> colors = new HashSet<String>();
+		for (Object element : store) {
+			IMagicCard elem = (IMagicCard) element;
+			if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Land))
+				continue;
+			String name = Colors.getColorName(elem.getCost());
+			String[] split = name.split("-"); //$NON-NLS-1$
+			for (String c : split) {
+				colors.add(c);
+			}
+		}
+		for (Iterator iterator = Colors.getInstance().getNames().iterator(); iterator.hasNext();) {
+			String c = (String) iterator.next();
+			if (colors.contains(c)) {
+				String encodeByName = Colors.getInstance().getEncodeByName(c);
+				res += "{" + encodeByName + "}";
+			}
+		}
+		return res;
+	}
+
 	public static Collection<CardGroup> buildSpellColorStats(Iterable store) {
 		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
 		for (Object element : store) {
