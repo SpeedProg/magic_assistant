@@ -78,6 +78,11 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 				value += v;
 			}
 			if (value.length() != 0) {
+				if (field == MagicCardField.TEXT) {
+					// hack to correct weird values
+					value = value.replaceAll("o([WGUBR0-9])", "{$1}");
+					value = value.replaceAll("ocT", "{T}");
+				}
 				if (field == MagicCardField.TEXT || field == MagicCardField.ORACLE) {
 					value = value.replaceAll("\\n", "<br>");
 					value = ParseGathererNewVisualSpoiler.htmlToString(value);
