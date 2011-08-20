@@ -15,12 +15,12 @@ public class Colors implements ISearchableProperty {
 	private Colors() {
 		this.names = new LinkedHashMap();
 		this.codes = new HashMap();
-		add("Black", "B");
 		add("White", "W");
-		add("Red", "R");
 		add("Blue", "U");
+		add("Black", "B");
+		add("Red", "R");
 		add("Green", "G");
-		add("Colorless", null);
+		add("Colorless", "1");
 	};
 
 	private void add(String string, String code) {
