@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
 public class MyCardsView extends AbstractMyCardsView implements ICardEventListener {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.LibView";
@@ -55,14 +54,9 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	}
 
 	@Override
-	protected String getPrefenceColumnsId() {
-		return PreferenceConstants.LIBVIEW_COLS;
-	}
-
-	@Override
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
-		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getPreferenceStore());
+		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getLocalPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			this.manager.loadData(null);
 	}
@@ -72,7 +66,7 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	 * @param portableString
 	 */
 	public void setLocationFilter(Location loc) {
-		IPreferenceStore preferenceStore = getPreferenceStore();
+		IPreferenceStore preferenceStore = getLocalPreferenceStore();
 		Collection ids = Locations.getInstance().getIds();
 		String locId = Locations.getInstance().getPrefConstant(loc);
 		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {

@@ -18,7 +18,6 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
@@ -114,10 +113,5 @@ public class MagicDbView extends AbstractCardsView {
 	@Override
 	protected String getPreferencePageId() {
 		return MagicDbViewPreferencePage.class.getName();
-	}
-
-	@Override
-	protected String getPrefenceColumnsId() {
-		return PreferenceConstants.MDBVIEW_COLS;
 	}
 }

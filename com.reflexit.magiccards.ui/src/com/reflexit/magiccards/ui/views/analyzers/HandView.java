@@ -29,7 +29,6 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
@@ -124,11 +123,6 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 				getManager().loadData(updateViewerRunnable);
 			}
 		};
-	}
-
-	@Override
-	protected String getPrefenceColumnsId() {
-		return PreferenceConstants.DECKVIEW_COLS;
 	}
 
 	@Override

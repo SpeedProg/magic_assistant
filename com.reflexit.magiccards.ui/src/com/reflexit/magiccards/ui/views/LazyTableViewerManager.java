@@ -27,7 +27,7 @@ public class LazyTableViewerManager extends ViewerManager {
 	private TableViewer viewer;
 
 	public LazyTableViewerManager(AbstractCardsView view) {
-		super(view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getLocalPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 

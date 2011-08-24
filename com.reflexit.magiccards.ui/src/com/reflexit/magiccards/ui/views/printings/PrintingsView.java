@@ -327,16 +327,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		return new MemoryFilteredCardStore();
 	}
 
-	@Override
-	protected String getPrefenceColumnsId() {
-		return null;
-	}
-
-	@Override
-	protected String getPrefenceQuickFixId() {
-		return null;
-	}
-
 	protected boolean isDbMode() {
 		return ((PrintingsManager) manager).isDbMode();
 	}

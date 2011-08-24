@@ -32,19 +32,14 @@ import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
  * 
  */
 public class CompositeViewerManager extends ViewerManager {
-	ViewerManager managers[];
-	int activeIndex = 0;
+	private ViewerManager managers[];
+	private int activeIndex = 0;
 	private StackLayout stackLayout;
 	private Composite comp;
 	private ISelectionProvider selectionProvider;
 
-	/**
-	 * @param handler
-	 * @param store
-	 * @param viewId
-	 */
 	public CompositeViewerManager(AbstractCardsView view) {
-		super(view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getLocalPreferenceStore(), view.getViewSite().getId());
 		this.managers = new ViewerManager[2];
 		this.managers[0] = new LazyTableViewerManager(view);
 		this.managers[1] = new LazyTreeViewerManager(view);

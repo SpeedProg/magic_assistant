@@ -19,7 +19,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class PrefixedPreferenceStore implements IPreferenceStore {
 	private IPreferenceStore store;
@@ -57,63 +57,63 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 	}
 
 	public boolean contains(String name) {
-		return this.store.contains(getPropertyName(name));
+		return this.store.contains(toGlobal(name));
 	}
 
 	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
-		this.store.firePropertyChangeEvent(getPropertyName(name), oldValue, newValue);
+		this.store.firePropertyChangeEvent(toGlobal(name), oldValue, newValue);
 	}
 
 	public boolean getBoolean(String name) {
-		return this.store.getBoolean(getPropertyName(name));
+		return this.store.getBoolean(toGlobal(name));
 	}
 
 	public boolean getDefaultBoolean(String name) {
-		return this.store.getDefaultBoolean(getPropertyName(name));
+		return this.store.getDefaultBoolean(toGlobal(name));
 	}
 
 	public double getDefaultDouble(String name) {
-		return this.store.getDefaultDouble(getPropertyName(name));
+		return this.store.getDefaultDouble(toGlobal(name));
 	}
 
 	public float getDefaultFloat(String name) {
-		return this.store.getDefaultFloat(getPropertyName(name));
+		return this.store.getDefaultFloat(toGlobal(name));
 	}
 
 	public int getDefaultInt(String name) {
-		return this.store.getDefaultInt(getPropertyName(name));
+		return this.store.getDefaultInt(toGlobal(name));
 	}
 
 	public long getDefaultLong(String name) {
-		return this.store.getDefaultLong(getPropertyName(name));
+		return this.store.getDefaultLong(toGlobal(name));
 	}
 
 	public String getDefaultString(String name) {
-		return this.store.getDefaultString(getPropertyName(name));
+		return this.store.getDefaultString(toGlobal(name));
 	}
 
 	public double getDouble(String name) {
-		return this.store.getDouble(getPropertyName(name));
+		return this.store.getDouble(toGlobal(name));
 	}
 
 	public float getFloat(String name) {
-		return this.store.getFloat(getPropertyName(name));
+		return this.store.getFloat(toGlobal(name));
 	}
 
 	public int getInt(String name) {
-		return this.store.getInt(getPropertyName(name));
+		return this.store.getInt(toGlobal(name));
 	}
 
 	public long getLong(String name) {
-		return this.store.getLong(getPropertyName(name));
+		return this.store.getLong(toGlobal(name));
 	}
 
 	public String getString(String name) {
-		return this.store.getString(getPropertyName(name));
+		return this.store.getString(toGlobal(name));
 	}
 
 	public boolean isDefault(String name) {
-		return this.store.isDefault(getPropertyName(name));
+		return this.store.isDefault(toGlobal(name));
 	}
 
 	public boolean needsSaving() {
@@ -121,7 +121,7 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 	}
 
 	public void putValue(String name, String value) {
-		this.store.putValue(getPropertyName(name), value);
+		this.store.putValue(toGlobal(name), value);
 	}
 
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
@@ -129,58 +129,58 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 	}
 
 	public void setDefault(String name, boolean value) {
-		this.store.setDefault(getPropertyName(name), value);
+		this.store.setDefault(toGlobal(name), value);
 	}
 
 	public void setDefault(String name, double value) {
-		this.store.setDefault(getPropertyName(name), value);
+		this.store.setDefault(toGlobal(name), value);
 	}
 
 	public void setDefault(String name, float value) {
-		this.store.setDefault(getPropertyName(name), value);
+		this.store.setDefault(toGlobal(name), value);
 	}
 
 	public void setDefault(String name, int value) {
-		this.store.setDefault(getPropertyName(name), value);
+		this.store.setDefault(toGlobal(name), value);
 	}
 
 	public void setDefault(String name, long value) {
-		this.store.setDefault(getPropertyName(name), value);
+		this.store.setDefault(toGlobal(name), value);
 	}
 
 	public void setDefault(String name, String defaultObject) {
-		this.store.setDefault(getPropertyName(name), defaultObject);
+		this.store.setDefault(toGlobal(name), defaultObject);
 	}
 
 	public void setToDefault(String name) {
-		this.store.setToDefault(getPropertyName(name));
+		this.store.setToDefault(toGlobal(name));
 	}
 
 	public void setValue(String name, boolean value) {
-		this.store.setValue(getPropertyName(name), value);
+		this.store.setValue(toGlobal(name), value);
 	}
 
 	public void setValue(String name, double value) {
-		this.store.setValue(getPropertyName(name), value);
+		this.store.setValue(toGlobal(name), value);
 	}
 
 	public void setValue(String name, float value) {
-		this.store.setValue(getPropertyName(name), value);
+		this.store.setValue(toGlobal(name), value);
 	}
 
 	public void setValue(String name, int value) {
-		this.store.setValue(getPropertyName(name), value);
+		this.store.setValue(toGlobal(name), value);
 	}
 
 	public void setValue(String name, long value) {
-		this.store.setValue(getPropertyName(name), value);
+		this.store.setValue(toGlobal(name), value);
 	}
 
 	public void setValue(String name, String value) {
-		this.store.setValue(getPropertyName(name), value);
+		this.store.setValue(toGlobal(name), value);
 	}
 
-	private String getPropertyName(String name) {
+	public String toGlobal(String name) {
 		String id = (this.prefix + "." + name).intern();
 		return id;
 	}
@@ -191,5 +191,7 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 	public PrefixedPreferenceStore(IPreferenceStore parent, String prefix) {
 		this.store = parent;
 		this.prefix = prefix;
+		if (this.prefix == null)
+			this.prefix = "other";
 	}
 }

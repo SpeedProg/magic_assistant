@@ -26,7 +26,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 	private MyTreeViewer viewer;
 
 	LazyTreeViewerManager(AbstractCardsView view) {
-		super(view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getLocalPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 
@@ -199,7 +199,7 @@ public class LazyTreeViewerManager extends ViewerManager implements IDisposable 
 		newValue = newValue.replaceAll("-?" + GroupColumn.COL_NAME + ",", "");
 		newValue = GroupColumn.COL_NAME + "," + newValue;
 		if (!newValue.equals(value)) {
-			MagicUIActivator.getDefault().getPreferenceStore().setValue(view.getPrefenceColumnsId(), newValue);
+			view.getLocalPreferenceStore().setValue(PreferenceConstants.LOCAL_COLUMNS, newValue);
 			return newValue;
 		}
 		return newValue;

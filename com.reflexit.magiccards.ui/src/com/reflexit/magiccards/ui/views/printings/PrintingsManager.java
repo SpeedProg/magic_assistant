@@ -38,7 +38,7 @@ import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class PrintingsManager extends ViewerManager implements IDisposable {
 	protected PrintingsManager(AbstractCardsView view) {
-		super(view.getPreferenceStore(), view.getViewSite().getId());
+		super(view.getLocalPreferenceStore(), view.getViewSite().getId());
 		this.view = view;
 	}
 

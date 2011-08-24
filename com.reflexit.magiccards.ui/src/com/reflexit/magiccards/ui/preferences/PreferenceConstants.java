@@ -9,9 +9,9 @@ public class PreferenceConstants {
 	private static final String PREFIX = MagicUIActivator.PLUGIN_ID;
 	public static final String GATHERER_SITE = PREFIX + ".gathererSite";
 	public static final String GATHERER_UPDATE = PREFIX + ".gathererUpdate";
-	public static final String MDBVIEW_COLS = PREFIX + ".columns.mdb";
-	public static final String LIBVIEW_COLS = PREFIX + ".columns.lib";
-	public static final String DECKVIEW_COLS = PREFIX + ".columns.deck";
+	// public static final String MDBVIEW_COLS = PREFIX + ".columns.mdb";
+	// public static final String LIBVIEW_COLS = PREFIX + ".columns.lib";
+	// public static final String DECKVIEW_COLS = PREFIX + ".columns.deck";
 	public static final String GATHERER_UPDATE_SET = PREFIX + ".set";
 	public static final String GATHERER_UPDATE_LAND = PREFIX + ".land";
 	public static final String GATHERER_UPDATE_LANGUAGE = PREFIX + ".lang";
@@ -23,7 +23,6 @@ public class PreferenceConstants {
 	public static final String LOAD_PRINTINGS = PREFIX + ".loadPrintings";
 	public static final String PRICE_PROVIDER = PREFIX + ".priceProvider";
 	public static final String SHOW_GRID = PREFIX + ".grid";
-	public static final String DECKVIEW_SHOW_QUICKFILTER = PREFIX + ".quickfilter.deck";
-	public static final String MDBVIEW_SHOW_QUICKFILTER = PREFIX + ".quickfilter.mdb";
-	public static final String LIBVIEW_SHOW_QUICKFILTER = PREFIX + ".quickfilter.lib";
+	public static final String LOCAL_SHOW_QUICKFILTER = "quickfilter";
+	public static final String LOCAL_COLUMNS = "columns";
 }

@@ -42,7 +42,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.analyzers.ColorControl;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
 import com.reflexit.magiccards.ui.views.analyzers.ManaCurveControl;
@@ -93,7 +92,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 
 	@Override
 	protected void runShowFilter() {
-		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getPreferenceStore());
+		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getLocalPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			this.manager.loadData(null);
 	}
@@ -362,11 +361,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 				}
 			}
 		});
-	}
-
-	@Override
-	protected String getPrefenceColumnsId() {
-		return PreferenceConstants.DECKVIEW_COLS;
 	}
 
 	@Override

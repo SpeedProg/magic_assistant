@@ -9,6 +9,10 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * Class used to initialize default preference values.
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
+	private static IPreferenceStore deckStore;
+	private static IPreferenceStore libStore;
+	private static IPreferenceStore mdbStore;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -17,27 +21,57 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	@Override
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
+		IPreferenceStore store = getGlobalStore();
 		store.setDefault(PreferenceConstants.GATHERER_SITE, "http://ww2.wizards.com/gatherer");
 		store.setDefault(PreferenceConstants.GATHERER_UPDATE,
 				"http://ww2.wizards.com/gatherer/index.aspx?output=Spoiler&setfilter=Standard");
-		store.setDefault(
-				PreferenceConstants.MDBVIEW_COLS,
-				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
-		store.setDefault(
-				PreferenceConstants.LIBVIEW_COLS,
-				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
-		store.setDefault(
-				PreferenceConstants.DECKVIEW_COLS,
-				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_RULINGS, true);
 		store.setDefault(PreferenceConstants.LOAD_EXTRAS, false);
 		store.setDefault(PreferenceConstants.LOAD_PRINTINGS, false);
 		store.setDefault(PreferenceConstants.SHOW_GRID, false);
-		store.setDefault(PreferenceConstants.DECKVIEW_SHOW_QUICKFILTER, false);
-		store.setDefault(PreferenceConstants.MDBVIEW_SHOW_QUICKFILTER, true);
-		store.setDefault(PreferenceConstants.LIBVIEW_SHOW_QUICKFILTER, true);
+		// local settings
+		getMdbStore()
+				.setDefault(
+						PreferenceConstants.LOCAL_COLUMNS,
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
+		getLibStore()
+				.setDefault(
+						PreferenceConstants.LOCAL_COLUMNS,
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
+		getDeckStore()
+				.setDefault(
+						PreferenceConstants.LOCAL_COLUMNS,
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
+		getDeckStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
+		getMdbStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
+		getLibStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
+	}
+
+	public static IPreferenceStore getGlobalStore() {
+		return MagicUIActivator.getDefault().getPreferenceStore();
+	}
+
+	public static PrefixedPreferenceStore getLocalStore(String id) {
+		return new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(), id);
+	}
+
+	public static IPreferenceStore getDeckStore() {
+		if (deckStore == null)
+			deckStore = getLocalStore(DeckViewPreferencePage.class.getName());
+		return deckStore;
+	}
+
+	public static IPreferenceStore getLibStore() {
+		if (libStore == null)
+			libStore = getLocalStore(LibViewPreferencePage.class.getName());
+		return libStore;
+	}
+
+	public static IPreferenceStore getMdbStore() {
+		if (mdbStore == null)
+			mdbStore = getLocalStore(MagicDbViewPreferencePage.class.getName());
+		return mdbStore;
 	}
 }

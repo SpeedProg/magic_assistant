@@ -14,7 +14,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -62,6 +61,7 @@ import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
@@ -82,7 +82,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	private Label statusLine;
 	protected MenuManager sortMenu;
 	protected MenuManager groupMenu;
-	private IPreferenceStore store;
+	private PrefixedPreferenceStore store;
 	private SearchControl searchControl;
 	protected Runnable updateViewerRunnable;
 	protected ISelection revealSelection;
@@ -99,6 +99,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				updateViewer();
 			}
 		};
+		store = PreferenceInitializer.getLocalStore(getPreferencePageId());
 	}
 
 	public ViewerManager getManager() {
@@ -166,8 +167,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	 *
 	 */
 	protected void initManager() {
-		getPreferenceStore().setDefault(FilterHelper.GROUP_FIELD, "");
-		String field = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
+		store.setDefault(FilterHelper.GROUP_FIELD, "");
+		String field = store.getString(FilterHelper.GROUP_FIELD);
 		this.manager.updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
 	}
 
@@ -192,11 +193,10 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void loadInitial() {
 		// update manager columns
-		IPreferenceStore store = MagicUIActivator.getDefault().getPreferenceStore();
-		String value = store.getString(getPrefenceColumnsId());
+		String value = store.getString(PreferenceConstants.LOCAL_COLUMNS);
 		AbstractCardsView.this.manager.updateColumns(value);
-		quickFilter.setPreferenceStore(getPreferenceStore());
-		boolean qf = store.getBoolean(getPrefenceQuickFixId());
+		quickFilter.setPreferenceStore(store);
+		boolean qf = store.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
 		reloadData();
 	}
@@ -339,7 +339,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		public GroupAction(String name, ICardField field) {
 			super(name, Action.AS_RADIO_BUTTON);
 			this.field = field;
-			String val = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
+			String val = store.getString(FilterHelper.GROUP_FIELD);
 			if (field == null && val.length() == 0 || field != null && field.toString().equals(val)) {
 				setChecked(true);
 			}
@@ -388,7 +388,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.groupMenuButton = new Action("Group By", Action.AS_DROP_DOWN_MENU) {
 			@Override
 			public void run() {
-				String group = getPreferenceStore().getString(FilterHelper.GROUP_FIELD);
+				String group = store.getString(FilterHelper.GROUP_FIELD);
 				if (group == null || group.length() == 0)
 					actionGroupBy(MagicCardField.CMC);
 				else
@@ -424,8 +424,10 @@ public abstract class AbstractCardsView extends ViewPart {
 			@Override
 			public void run() {
 				String id = getPreferencePageId();
-				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
-				dialog.open();
+				if (id != null) {
+					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
+					dialog.open();
+				}
 			}
 		};
 		this.showPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
@@ -521,7 +523,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * @param indexCost
 	 */
 	protected void actionGroupBy(ICardField field) {
-		getPreferenceStore().setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
+		store.setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
 		this.manager.updateGroupBy(field);
 		reloadData();
 	}
@@ -556,7 +558,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
-		Dialog cardFilterDialog = new CardFilterDialog(getShell(), getPreferenceStore());
+		Dialog cardFilterDialog = new CardFilterDialog(getShell(), store);
 		if (cardFilterDialog.open() == IStatus.OK) {
 			revealSelection = getSelection();
 			reloadData();
@@ -576,12 +578,12 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
-		if (property.equals(getPrefenceColumnsId())) {
+		if (property.equals(store.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
 			this.manager.updateColumns((String) event.getNewValue());
 			refresh();
 		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
 			refresh();
-		} else if (property.equals(getPrefenceQuickFixId())) {
+		} else if (property.equals(store.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
 			boolean qf = (Boolean) event.getNewValue();
 			setQuickFilterVisible(qf);
 		}
@@ -631,27 +633,15 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	/**
-	 * @return id of the preference for columns layout and hidings, i.e.
-	 * @see PreferenceConstants.MDBVIEW_COLS
-	 */
-	abstract protected String getPrefenceColumnsId();
-
-	protected String getPrefenceQuickFixId() {
-		return getPrefenceColumnsId().replace(".columns.", ".quickfilter.");
-	}
-
-	/**
 	 * @return
 	 */
-	public IPreferenceStore getPreferenceStore() {
-		if (this.store == null)
-			this.store = new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(), getPreferencePageId());
+	public PrefixedPreferenceStore getLocalPreferenceStore() {
 		return this.store;
 	}
 
 	public static interface IDeckAction {
 		public void run(String id);
-	};
+	}
 
 	/**
 	 * @param manager

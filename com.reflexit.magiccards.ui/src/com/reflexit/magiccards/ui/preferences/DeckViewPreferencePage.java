@@ -5,7 +5,6 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
@@ -14,7 +13,7 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 public class DeckViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public DeckViewPreferencePage() {
 		super(GRID);
-		setPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore());
+		setPreferenceStore(PreferenceInitializer.getDeckStore());
 		setDescription("Deck View Preferences");
 	}
 
@@ -22,12 +21,12 @@ public class DeckViewPreferencePage extends FieldEditorPreferencePage implements
 	protected void createFieldEditors() {
 		ColumnCollection columnCollection = new MagicColumnCollection(DeckView.ID);
 		columnCollection.createColumnLabelProviders();
-		addField(new BooleanFieldEditor(PreferenceConstants.DECKVIEW_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
-		addField(new CheckedListEditor(PreferenceConstants.DECKVIEW_COLS, "Visible Columns and Order", getFieldEditorParent(),
+		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
+		addField(new CheckedListEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),
 				columnCollection.getColumnNames()));
 	}
 
 	public void init(IWorkbench workbench) {
-		// TODO Auto-generated method stub
+		// nothing
 	}
 }
