@@ -213,6 +213,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	public void createPartControl(Composite parent) {
 		updatePartName();
 		super.createPartControl(parent);
+		quickFilter.setVisible(false);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewdeck"));
 	}
 
@@ -430,6 +431,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
+		toolBarManager.update(true);
 	}
 
 	public Action getShowFilterAction() {
