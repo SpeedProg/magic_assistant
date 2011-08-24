@@ -23,4 +23,7 @@ public class PreferenceConstants {
 	public static final String LOAD_PRINTINGS = PREFIX + ".loadPrintings";
 	public static final String PRICE_PROVIDER = PREFIX + ".priceProvider";
 	public static final String SHOW_GRID = PREFIX + ".grid";
+	public static final String DECKVIEW_SHOW_QUICKFILTER = PREFIX + ".quickfilter.deck";
+	public static final String MDBVIEW_SHOW_QUICKFILTER = PREFIX + ".quickfilter.mdb";
+	public static final String LIBVIEW_SHOW_QUICKFILTER = PREFIX + ".quickfilter.lib";
 }

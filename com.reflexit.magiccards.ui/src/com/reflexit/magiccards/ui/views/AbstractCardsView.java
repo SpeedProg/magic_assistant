@@ -87,8 +87,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected Runnable updateViewerRunnable;
 	protected ISelection revealSelection;
 	protected Action groupMenuButton;
-	protected QuickFilterControl quickFilter;
-	protected Action showQuickFilter;
+	private QuickFilterControl quickFilter;
 	protected Action refresh;
 
 	/**
@@ -197,7 +196,14 @@ public abstract class AbstractCardsView extends ViewPart {
 		String value = store.getString(getPrefenceColumnsId());
 		AbstractCardsView.this.manager.updateColumns(value);
 		quickFilter.setPreferenceStore(getPreferenceStore());
+		boolean qf = store.getBoolean(getPrefenceQuickFixId());
+		setQuickFilterVisible(qf);
 		reloadData();
+	}
+
+	protected void setQuickFilterVisible(boolean qf) {
+		quickFilter.setVisible(qf);
+		partControl.layout(true);
 	}
 
 	/**
@@ -294,7 +300,6 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.showFilter);
-		manager.add(this.showQuickFilter);
 		manager.add(this.showFind);
 		manager.add(this.showPrefs);
 		manager.add(this.sortMenu);
@@ -432,15 +437,6 @@ public abstract class AbstractCardsView extends ViewPart {
 			}
 		};
 		this.showFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
-		this.showQuickFilter = new Action("Show Quick Filter") {
-			@Override
-			public void run() {
-				AbstractCardsView.this.quickFilter.setVisible(!quickFilter.isVisible());
-				partControl.layout(true);
-				// updateShowFilterText();
-				// showQuickFilter.setChecked(!isChecked());
-			}
-		};
 		this.copyText = new Action("Copy") {
 			@Override
 			public void run() {
@@ -585,6 +581,9 @@ public abstract class AbstractCardsView extends ViewPart {
 			refresh();
 		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
 			refresh();
+		} else if (property.equals(getPrefenceQuickFixId())) {
+			boolean qf = (Boolean) event.getNewValue();
+			setQuickFilterVisible(qf);
 		}
 	}
 
@@ -637,6 +636,10 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	abstract protected String getPrefenceColumnsId();
 
+	protected String getPrefenceQuickFixId() {
+		return getPrefenceColumnsId().replace(".columns.", ".quickfilter.");
+	}
+
 	/**
 	 * @return
 	 */
@@ -688,17 +691,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	}
 
-	protected void updateQuickShowFilterText() {
-		// showQuickFilter.setChecked(quickFilter.isVisible());
-		if (quickFilter.isVisible()) {
-			AbstractCardsView.this.showQuickFilter.setText("Hide Quick Filter");
-		} else {
-			AbstractCardsView.this.showQuickFilter.setText("Show Quick Filter");
-		}
-	}
-
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {
-		updateQuickShowFilterText();
 		showFind.setEnabled(!searchControl.isVisible());
 	}
 }

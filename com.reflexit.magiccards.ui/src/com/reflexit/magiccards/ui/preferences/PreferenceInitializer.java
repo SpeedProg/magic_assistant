@@ -36,5 +36,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.LOAD_EXTRAS, false);
 		store.setDefault(PreferenceConstants.LOAD_PRINTINGS, false);
 		store.setDefault(PreferenceConstants.SHOW_GRID, false);
+		store.setDefault(PreferenceConstants.DECKVIEW_SHOW_QUICKFILTER, false);
+		store.setDefault(PreferenceConstants.MDBVIEW_SHOW_QUICKFILTER, true);
+		store.setDefault(PreferenceConstants.LIBVIEW_SHOW_QUICKFILTER, true);
 	}
 }

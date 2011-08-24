@@ -213,7 +213,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	public void createPartControl(Composite parent) {
 		updatePartName();
 		super.createPartControl(parent);
-		quickFilter.setVisible(false);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewdeck"));
 	}
 

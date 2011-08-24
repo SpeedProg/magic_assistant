@@ -81,7 +81,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		dbmode.setChecked(isDbMode());
-		quickFilter.setVisible(false);
+		setQuickFilterVisible(false);
 		setStatus("Click on a card to populate the view");
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
 	}
@@ -319,7 +319,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected String getPreferencePageId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -330,7 +329,11 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected String getPrefenceColumnsId() {
-		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getPrefenceQuickFixId() {
 		return null;
 	}
 

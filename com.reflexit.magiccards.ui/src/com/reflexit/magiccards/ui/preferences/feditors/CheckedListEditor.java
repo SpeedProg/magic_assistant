@@ -169,7 +169,8 @@ public class CheckedListEditor extends FieldEditor {
 		control.setLayoutData(gd);
 		this.list = getListControl(parent);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.verticalAlignment = GridData.FILL;
+		gd.verticalAlignment = GridData.BEGINNING;
+		gd.heightHint = 400;
 		gd.horizontalSpan = numColumns - 1;
 		gd.grabExcessHorizontalSpace = true;
 		this.list.setLayoutData(gd);

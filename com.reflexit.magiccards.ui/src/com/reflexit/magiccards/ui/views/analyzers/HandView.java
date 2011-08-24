@@ -48,7 +48,12 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		quickFilter.setVisible(false);
+		setQuickFilterVisible(false);
+	}
+
+	@Override
+	protected void setQuickFilterVisible(boolean qf) {
+		super.setQuickFilterVisible(false);
 	}
 
 	/*

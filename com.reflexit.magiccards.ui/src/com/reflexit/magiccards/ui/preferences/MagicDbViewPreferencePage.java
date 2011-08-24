@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -21,6 +22,7 @@ public class MagicDbViewPreferencePage extends FieldEditorPreferencePage impleme
 	protected void createFieldEditors() {
 		ColumnCollection columnCollection = new MagicColumnCollection(MagicDbView.ID);
 		columnCollection.createColumnLabelProviders();
+		addField(new BooleanFieldEditor(PreferenceConstants.MDBVIEW_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
 		addField(new CheckedListEditor(PreferenceConstants.MDBVIEW_COLS, "Visible Columns and Order", getFieldEditorParent(),
 				columnCollection.getColumnNames()));
 	}

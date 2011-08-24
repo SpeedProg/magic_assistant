@@ -201,7 +201,7 @@ public class QuickFilterControl extends Composite {
 			if (text == null || text.trim().length() == 0) {
 				searchText.setText(ALL_NAMES);
 			} else if (text.startsWith("\"") && text.endsWith("\"")) {
-				text = text.replaceAll("\"(.*)\"", "\\1");
+				text = text.replaceAll("\"(.*)\"", "$1");
 				searchText.setText(text);
 			} else {
 				searchText.setText(ADVANCED);
