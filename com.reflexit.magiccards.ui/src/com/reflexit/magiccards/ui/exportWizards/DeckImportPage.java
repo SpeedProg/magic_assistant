@@ -8,22 +8,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Random;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -40,28 +36,29 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.Locations;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
-import com.reflexit.magiccards.ui.wizards.NewCardElementWizard;
-import com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard;
-import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
+import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
+import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
  * First and only page of Deck Export Wizard
  */
 public class DeckImportPage extends WizardDataTransferPage {
-	private static final String IMPORTED_RESOURCES_SETTING = "importedResources"; //$NON-NLS-1$
 	private static final String IMPUT_FILE_SETTING = "outputFile"; //$NON-NLS-1$
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
 	private static final String IMPORT_HEADER_SETTING = "headerRow"; //$NON-NLS-1$
@@ -69,12 +66,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 	FileFieldEditor editor;
 	private String fileName;
 	private IStructuredSelection initialResourceSelection;
-	private TreeViewer listViewer;
 	private Button includeHeader;
 	private static final String ID = DeckImportPage.class.getName();
 	private ReportType reportType;
 	private PreferenceStore store;
-	private LocationFilterPreferencePage locPage;
 	private boolean clipboard;
 	private Combo typeCombo;
 	private Button fileRadio;
@@ -82,6 +77,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Composite fileSelectionArea;
 	private PreviewResult previewResult;
 	private CardElement element;
+	private Button createNewDeck;
+	private Button importIntoExisting;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -92,11 +89,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 	public boolean performImport(final boolean preview) {
 		boolean res = false;
 		try {
-			// final ExportWork work = new
-			// ExportWork(listViewer.getCheckedElements(), //
-			// fileName, //
-			// reportType, includeHeader.getSelection(), getTimeUnitsName());
-			locPage.performOk();
 			final boolean header = includeHeader.getSelection();
 			final InputStream st = openInputStream();
 			try {
@@ -108,7 +100,13 @@ public class DeckImportPage extends WizardDataTransferPage {
 							previewResult = ImportUtils.performPreview(st, reportType, header, monitor);
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
-							ImportUtils.performImport(st, reportType, header, getSelectedLocation(), monitor);
+							Location selectedLocation = getSelectedLocation();
+							if (selectedLocation == null) {
+								// create a new deck
+								createNewDeck(getNewDeckName());
+								selectedLocation = getSelectedLocation();
+							}
+							ImportUtils.performImport(st, reportType, header, selectedLocation, monitor);
 						}
 					}
 				};
@@ -124,6 +122,32 @@ public class DeckImportPage extends WizardDataTransferPage {
 		return res;
 	}
 
+	protected void createNewDeck(final String newDeckName) {
+		// create a sample file
+		ModelRoot root = DataManager.getModelRoot();
+		final CardElement resource = root.getDeckContainer();
+		getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, newDeckName, page);
+				element.setVirtual(true);
+				setElement(element);
+			}
+		});
+	}
+
+	protected String getNewDeckName() {
+		if (clipboard) {
+			return "clipboardDeck" + new Random().nextInt(1000);
+		} else {
+			String basename = new File(fileName).getName();
+			int k = basename.lastIndexOf('.');
+			if (k >= 0)
+				basename = basename.substring(0, k);
+			return basename;
+		}
+	}
+
 	InputStream openInputStream() throws FileNotFoundException {
 		InputStream st = null;
 		if (clipboard) {
@@ -137,15 +161,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private Location getSelectedLocation() {
-		IPreferenceStore store = getPreferenceStore();
-		Collection<String> col = Locations.getInstance().getIds();
-		for (Iterator<String> iterator = col.iterator(); iterator.hasNext();) {
-			String id = iterator.next();
-			String value = store.getString(id);
-			if (Boolean.valueOf(value)) {
-				return Locations.getInstance().findLocation(id);
-			}
-		}
+		if (element != null)
+			return element.getLocation();
 		return null;
 	}
 
@@ -158,23 +175,36 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	protected void createDestinationGroup(final Composite parent) {
-		Label label = new Label(parent, SWT.NONE);
-		label.setText("Select an existing deck/collection to import into:");
-		locPage = new LocationFilterPreferencePage(SWT.SINGLE);
-		locPage.noDefaultAndApplyButton();
-		locPage.setPreferenceStore(store);
-		locPage.createControl(parent);
-		listViewer = locPage.getViewer();
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = 200;
-		data.widthHint = 300;
-		listViewer.getControl().setLayoutData(data);
-		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				if (!event.getSelection().isEmpty())
-					element = (CardElement) ((IStructuredSelection) event.getSelection()).getFirstElement();
-				updatePageCompletion();
-				updateWidgetEnablements();
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayoutData(GridDataFactory.fillDefaults().create());
+		group.setText("Import into");
+		group.setLayout(new GridLayout(3, false));
+		createNewDeck = new Button(group, SWT.RADIO);
+		createNewDeck.setText("Create a new deck");
+		createNewDeck.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
+		createNewDeck.setSelection(true);
+		importIntoExisting = new Button(group, SWT.RADIO);
+		importIntoExisting.setText("Import into existing deck/collection");
+		final Text text = new Text(group, SWT.BORDER);
+		text.setEditable(false);
+		text.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).create());
+		Button browse = new Button(group, SWT.PUSH);
+		browse.setText("Browse...");
+		browse.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				LocationPickerDialog dialog = new LocationPickerDialog(getShell(), SWT.SINGLE);
+				dialog.setSelection(initialResourceSelection);
+				if (dialog.open() == Window.OK) {
+					if (dialog.getSelection() != null && !dialog.getSelection().isEmpty()) {
+						element = (CardElement) dialog.getSelection().getFirstElement();
+						text.setText(element.getName());
+					}
+					importIntoExisting.setSelection(true);
+					createNewDeck.setSelection(false);
+					updatePageCompletion();
+					updateWidgetEnablements();
+				}
 			}
 		});
 	}
@@ -213,11 +243,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		createResourcesGroup(composite);
 		createOptionsGroup(composite);
 		createDestinationGroup(composite);
-		createButtonsGroup(composite);
 		restoreWidgetValues();
-		if (initialResourceSelection != null) {
-			setupBasedOnInitialSelections();
-		}
 		updateWidgetEnablements();
 		setTitle("Import to a Deck or Collection");
 		defaultPrompt();
@@ -225,43 +251,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 		setErrorMessage(null); // should not initially have error message
 		setControl(composite);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, MagicUIActivator.PLUGIN_ID + ".export");
-	}
-
-	/**
-	 * Creates the buttons for creating new deck or collection
-	 * 
-	 * @param parent
-	 *            the parent control
-	 */
-	protected final void createButtonsGroup(final Composite parent) {
-		Composite buttons = new Composite(parent, SWT.NONE);
-		buttons.setLayout(new GridLayout());
-		Button button1 = createButton(buttons, 1, "Create new deck...", true);
-		Button button2 = createButton(buttons, 2, "Create new collection...", false);
-		button1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openWizard(new NewDeckWizard(), listViewer.getSelection());
-			}
-		});
-		button2.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openWizard(new NewCollectionContainerWizard(), listViewer.getSelection());
-			}
-		});
-	}
-
-	protected void openWizard(NewCardElementWizard wizard, ISelection selection) {
-		// Get the workbench and initialize, the wizard.
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		wizard.init(workbench, (IStructuredSelection) selection);
-		// Open the wizard dialog with the given wizard.
-		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
-		dialog.open();
-		CardElement element = wizard.getElement();
-		listViewer.refresh(true);
-		listViewer.setSelection(new StructuredSelection(element));
 	}
 
 	private void defaultPrompt() {
@@ -291,12 +280,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 		clipboard = dialogSettings.getBoolean(IMPORT_CLIPBOARD);
 		fileRadio.setSelection(!clipboard);
 		clipboardRadio.setSelection(clipboard);
-		// restore selection
-		String ids = dialogSettings.get(IMPORTED_RESOURCES_SETTING);
-		if (ids != null) {
-			locPage.loadFromMemento(ids);
-			locPage.load();
-		}
 		// restore options
 		String type = dialogSettings.get(REPORT_TYPE_SETTING);
 		if (type != null)
@@ -323,10 +306,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 			// save file name
 			dialogSettings.put(IMPUT_FILE_SETTING, fileName);
 			dialogSettings.put(IMPORT_CLIPBOARD, clipboard);
-			// save selection
-			locPage.performOk();
-			String ids = locPage.getMemento();
-			dialogSettings.put(IMPORTED_RESOURCES_SETTING, ids);
 			// save options
 			dialogSettings.put(REPORT_TYPE_SETTING, reportType.toString());
 			dialogSettings.put(IMPORT_HEADER_SETTING, includeHeader.getSelection());
@@ -388,14 +367,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 		// fileSelectionArea.moveAbove(null);
 	}
 
-	/**
-	 * Set the initial selections in the resource group.
-	 */
-	protected void setupBasedOnInitialSelections() {
-		locPage.loadPreferenceFromSelection(initialResourceSelection);
-		locPage.load();
-	}
-
 	@Override
 	protected void createOptionsGroupButtons(final Group optionsPanel) {
 		// top level group
@@ -438,8 +409,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateDestinationGroup() {
-		if (locPage.isEmptySelection()) {
-			setMessage("Select a deck or collection to import data into. To import into new deck, create it first.");
+		if (element == null && importIntoExisting.getSelection()) {
+			setMessage("Select a deck or collection to import data into or select to import to a new deck.");
 			return false;
 		}
 		return true;

@@ -56,7 +56,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 
 	protected Control createEditButton(Composite parent) {
 		editButton = new Link(parent, SWT.PUSH);
-		editButton.setText("<a>Edit Description...</a>");
+		editButton.setText("<a>Edit...</a>");
 		editButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

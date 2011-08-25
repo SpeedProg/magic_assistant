@@ -1,5 +1,11 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -14,14 +20,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collection;
-
 import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.nav.CardElement;
 
 public class DeckImportPreviewPage extends WizardPage {
 	private static final Object[] EMPTY_ARRAY = new Object[] {};
@@ -31,6 +32,7 @@ public class DeckImportPreviewPage extends WizardPage {
 	protected DeckImportPreviewPage(String pageName) {
 		super(pageName);
 	}
+
 	static class TabLabelProvder extends BaseLabelProvider implements ITableLabelProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
@@ -53,9 +55,11 @@ public class DeckImportPreviewPage extends WizardPage {
 		super.setVisible(visible);
 		if (visible == true) {
 			DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
-			setDescription("Importing into " + startingPage.getElement() + ". Import preview (First 10 rows). "
-			        + (startingPage.hasHeaderRow() ? "Header row." : "No header row.") + " Format "
-			        + startingPage.getReportType().getLabel() + ".");
+			CardElement element = startingPage.getElement();
+			String deckName = element == null ? "newdeck" : element.getName();
+			setDescription("Importing into " + deckName + ". Import preview (First 10 rows). "
+					+ (startingPage.hasHeaderRow() ? "Header row." : "No header row.") + " Format "
+					+ startingPage.getReportType().getLabel() + ".");
 			setErrorMessage(null);
 			DeckImportWizard wizard = (DeckImportWizard) getWizard();
 			try {
