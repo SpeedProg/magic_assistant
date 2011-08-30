@@ -43,6 +43,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
 		super.fillLocalToolBar(toolBarManager);
-		toolBarManager.add(view.getGroupAction());
+		// TODO toolBarManager.add(view.getGroupAction());
 	}
 }
