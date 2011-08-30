@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -23,9 +26,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
-
-import java.util.Iterator;
-import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerList;
@@ -43,7 +43,7 @@ public class MasterPlayersSection extends TSectionPart {
 	private void createBody() {
 		Section section = this.getSection();
 		section.setText("Players Listing");
-		//section.setDescription("Tournament settings");
+		// section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 		GridLayout layout = new GridLayout(2, false);
@@ -60,8 +60,7 @@ public class MasterPlayersSection extends TSectionPart {
 
 	protected void createButtons(Composite sectionClient) {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
-		buttons.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.BEGINNING)
-		        .create());
+		buttons.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.BEGINNING).create());
 		GridLayout layout = new GridLayout(1, true);
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
@@ -74,10 +73,8 @@ public class MasterPlayersSection extends TSectionPart {
 				dialog.setPin(plist.getNewId());
 				if (dialog.open() == Dialog.OK) {
 					Player player = new Player(dialog.getPin(), dialog.getName());
-					if (player != null) {
-						plist.addPlayer(player);
-						modelUpdated();
-					}
+					plist.addPlayer(player);
+					modelUpdated();
 				}
 			}
 		});
