@@ -38,14 +38,13 @@ public class CompositeViewerManager extends ViewerManager {
 	private Composite comp;
 	private ISelectionProvider selectionProvider;
 
-	public CompositeViewerManager(AbstractCardsView view) {
-		super(view.getLocalPreferenceStore(), view.getViewSite().getId());
+	public CompositeViewerManager(String id) {
+		super(id);
 		this.managers = new ViewerManager[2];
-		this.managers[0] = new LazyTableViewerManager(view);
-		this.managers[1] = new LazyTreeViewerManager(view);
-		this.view = view;
+		this.managers[0] = new LazyTableViewerManager(id);
+		this.managers[1] = new LazyTreeViewerManager(id);
 		for (ViewerManager m : this.managers) {
-			m.setFilter(this.filter);
+			m.setFilter(getFilter());
 		}
 		this.selectionProvider = new ISelectionProvider() {
 			public void addSelectionChangedListener(ISelectionChangedListener listener) {
@@ -136,12 +135,12 @@ public class CompositeViewerManager extends ViewerManager {
 	 */
 	@Override
 	public void updateGroupBy(ICardField field) {
-		ICardField oldIndex = this.filter.getGroupField();
+		ICardField oldIndex = getFilter().getGroupField();
 		if (oldIndex == field)
 			return;
 		if (field != null)
-			filter.setSortField(field, true);
-		this.filter.setGroupField(field);
+			getFilter().setSortField(field, true);
+		getFilter().setGroupField(field);
 		if (oldIndex == null && field != null) {
 			// flip to tree
 			this.activeIndex = 1;
@@ -167,9 +166,9 @@ public class CompositeViewerManager extends ViewerManager {
 	}
 
 	@Override
-	public void addDoubleClickListener(IDoubleClickListener doubleClickListener) {
+	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
 		for (ViewerManager m : this.managers) {
-			m.addDoubleClickListener(doubleClickListener);
+			m.hookDoubleClickListener(doubleClickListener);
 		}
 	}
 
@@ -200,6 +199,6 @@ public class CompositeViewerManager extends ViewerManager {
 
 	@Override
 	public Collection<AbstractColumn> getColumns() {
-		return this.managers[this.activeIndex].getColumns();
+		return this.managers[this.activeIndex].getColumnsCollection().getColumns();
 	}
 }

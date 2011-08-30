@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.dnd;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -19,8 +21,6 @@ import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
 
-import java.util.Arrays;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -28,23 +28,20 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTargetListener {
-	private AbstractCardsView view;
 	private DropTargetEvent curEvent;
 
 	/**
 	 * @param viewer
-	 * @param view 
+	 * @param view
 	 */
-	public MagicCardDropAdapter(Viewer viewer, AbstractCardsView view) {
+	public MagicCardDropAdapter(Viewer viewer) {
 		super(viewer);
-		this.view = view;
 	}
 
 	@Override
@@ -62,7 +59,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 				return DataManager.getCardHandler().copyCards(Arrays.asList(toDropArray), targetLocation);
 		} catch (MagicException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
-			        "Cannot perform this operation: "+e.getMessage());
+					"Cannot perform this operation: " + e.getMessage());
 			return false;
 		} catch (Exception e) {
 			MagicUIActivator.log(e);

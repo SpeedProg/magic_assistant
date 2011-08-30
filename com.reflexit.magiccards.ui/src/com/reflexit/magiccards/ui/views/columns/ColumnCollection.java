@@ -49,4 +49,8 @@ public abstract class ColumnCollection {
 			col.setColumnIndex(j++);
 		}
 	}
+
+	public AbstractColumn getColumn(int i) {
+		return columns.get(i);
+	}
 }

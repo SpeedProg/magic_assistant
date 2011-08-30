@@ -39,7 +39,7 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 				if (preferenceNodes.length > 0)
 					res = preferenceNodes[0].keys();
 			} catch (BackingStoreException e) {
-				res = null;
+				// res = null;
 			}
 		}
 		if (res == null)

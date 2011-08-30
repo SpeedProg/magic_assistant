@@ -39,13 +39,18 @@ public class MagicDbView extends AbstractCardsView {
 	}
 
 	@Override
-	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new CompositeViewerManager(this);
+	public ViewerManager doGetViewerManager() {
+		return new CompositeViewerManager(getId());
 	}
 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return DataManager.getCardHandler().getMagicDBFilteredStore();
+	}
+
+	@Override
+	protected AbstractMagicCardsListControl doGetViewControl() {
+		return new AbstractMagicCardsListControl(this);
 	}
 
 	@Override
@@ -73,7 +78,7 @@ public class MagicDbView extends AbstractCardsView {
 			public void run(String id) {
 				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
 				Location loc = fstore.getLocation();
-				ISelection selection = getViewer().getSelection();
+				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
@@ -113,5 +118,10 @@ public class MagicDbView extends AbstractCardsView {
 	@Override
 	protected String getPreferencePageId() {
 		return MagicDbViewPreferencePage.class.getName();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 }

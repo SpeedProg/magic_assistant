@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views.printings;
 
 import java.util.Collection;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -19,17 +18,15 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LocationColumn;
@@ -37,14 +34,13 @@ import com.reflexit.magiccards.ui.views.columns.OwnershipColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class PrintingsManager extends ViewerManager implements IDisposable {
-	protected PrintingsManager(AbstractCardsView view) {
-		super(view.getLocalPreferenceStore(), view.getViewSite().getId());
-		this.view = view;
-	}
-
 	private TreeViewer viewer;
 	private PrintingsViewerComparator vcomp = new PrintingsViewerComparator();
 	private boolean dbMode = true;
+
+	protected PrintingsManager(String id) {
+		super(id);
+	}
 
 	@Override
 	public Control createContents(Composite parent) {
@@ -55,13 +51,13 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		this.viewer.setUseHashlookup(true);
 		this.viewer.setComparator(null);
 		createDefaultColumns();
-		addDragAndDrop();
+		hookDragAndDrop();
 		updateDbMode(true);
 		return this.viewer.getControl();
 	}
 
 	@Override
-	public void addDragAndDrop() {
+	public void hookDragAndDrop() {
 		this.getViewer().getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
@@ -83,18 +79,23 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 	}
 
 	@Override
-	protected void createColumns() {
-		this.columns.add(new GroupColumn());
-		this.columns.add(new SetColumn(true));
-		this.columns.add(new CountColumn());
-		this.columns.add(new OwnershipColumn());
-		this.columns.add(new LocationColumn());
+	protected ColumnCollection doGetColumnCollection(String viewId) {
+		return new ColumnCollection() {
+			@Override
+			protected void createColumns() {
+				columns.add(new GroupColumn());
+				columns.add(new SetColumn(true));
+				columns.add(new CountColumn());
+				columns.add(new OwnershipColumn());
+				columns.add(new LocationColumn());
+			}
+		};
 	}
 
 	protected void createDefaultColumns() {
-		createColumnLabelProviders();
+		getColumnsCollection().createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
-			AbstractColumn man = this.columns.get(i);
+			AbstractColumn man = getColumn(i);
 			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
 			TreeColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
@@ -104,7 +105,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 			col.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					sort(coln);
+					sortColumn(coln);
 				}
 			});
 			col.setMoveable(false);
@@ -116,12 +117,6 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		}
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
 		this.viewer.getTree().setHeaderVisible(true);
-	}
-
-	@Override
-	protected void sort(int index) {
-		updateSortColumn(index);
-		updateViewer();
 	}
 
 	@Override
@@ -152,13 +147,12 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		updateGrid();
 		IFilteredCardStore filteredStore = getFilteredStore();
 		this.viewer.setInput(this.getFilteredStore());
-		updateStatus();
 	}
 
 	@Override
 	protected void updateTableHeader() {
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
-		hideColumn(0, filter.getGroupField() == null, acolumns);
+		hideColumn(0, getFilter().getGroupField() == null, acolumns);
 		hideColumn(2, dbMode, acolumns);
 		hideColumn(3, dbMode, acolumns);
 		hideColumn(4, dbMode, acolumns);
@@ -169,14 +163,9 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		if (hide)
 			column.setWidth(0);
 		else if (column.getWidth() <= 0) {
-			int def = (columns.get(i)).getColumnWidth();
+			int def = getColumn(i).getColumnWidth();
 			column.setWidth(def);
 		}
-	}
-
-	@Override
-	protected void updateStore(IProgressMonitor monitor) {
-		((PrintingsView) view).updateStore(monitor);
 	}
 
 	protected void updateGrid() {
@@ -197,28 +186,5 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 
 	public boolean isDbMode() {
 		return dbMode;
-	}
-
-	@Override
-	public String getStatusMessage() {
-		IFilteredCardStore filteredStore = getFilteredStore();
-		if (filteredStore == null)
-			return "";
-		ICardStore cardStore = filteredStore.getCardStore();
-		int totalSize = cardStore.size();
-		int count = totalSize;
-		if (cardStore instanceof ICardCountable) {
-			count = ((ICardCountable) cardStore).getCount();
-		}
-		if (isDbMode()) {
-			if (totalSize == 1)
-				return "Only one version found";
-			return "Total " + totalSize + " diffrent versions";
-		} else {
-			String s = "";
-			if (count != 1)
-				s = "s";
-			return "Total " + count + " card" + s + " in your collections";
-		}
 	}
 }

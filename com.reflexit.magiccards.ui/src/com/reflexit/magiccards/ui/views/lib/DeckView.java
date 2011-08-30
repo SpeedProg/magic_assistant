@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -39,7 +38,6 @@ import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.views.analyzers.ColorControl;
@@ -88,13 +86,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	 */
 	public DeckView() {
 		pages = new ArrayList<IDeckPage>();
-	}
-
-	@Override
-	protected void runShowFilter() {
-		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getLocalPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK)
-			this.manager.loadData(null);
 	}
 
 	private static void loadExtensions() {
@@ -210,13 +201,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		updatePartName();
 		super.createPartControl(parent);
+		updatePartName();
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewdeck"));
 	}
 
 	protected void updatePartName() {
-		IFilteredCardStore filteredStore = this.manager.getFilteredStore();
+		IFilteredCardStore filteredStore = getFilteredStore();
 		if (filteredStore == null) {
 			return;
 		} else {
@@ -243,8 +234,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
 		cardsList.setText("Cards");
 		cardsList.setShowClose(false);
-		Control control = this.manager.createContents(folder);
-		cardsList.setControl(control);
+		Control control1 = control.createPartControl(folder);
+		cardsList.setControl(control1);
 		// Pages
 		createDeckTab("Mana Curve", new ManaCurveControl());
 		createDeckTab("Card Types", new TypeStatsControl());
@@ -277,18 +268,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		}
 	}
 
-	protected void setTopBarVisible(boolean vis) {
-		Composite bar = getTopBar();
-		GridData data = (GridData) bar.getLayoutData();
-		if (vis) {
-			data.heightHint = SWT.DEFAULT;
-		} else {
-			data.heightHint = 0;
-		}
-		bar.setVisible(vis);
-		bar.getParent().layout(true);
-	}
-
 	private void createDeckTab(String name, final IDeckPage page) {
 		page.createContents(folder);
 		page.setDeckView(this);
@@ -298,21 +277,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		item.setControl(page.getControl());
 		item.setData(page);
 		pages.add(page);
-	}
-
-	@Override
-	protected synchronized void updateStatus() {
-		CTabItem sel = folder.getSelection();
-		if (sel.getControl() == manager.getControl()) {
-			setStatus(manager.getStatusMessage());
-		} else {
-			for (IDeckPage deckPage : pages) {
-				IDeckPage page = deckPage;
-				if (sel.getData() == page) {
-					setStatus(page.getStatusMessage());
-				}
-			}
-		}
 	}
 
 	@Override
@@ -373,7 +337,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	}
 
 	@Override
-	protected void refresh() {
+	public void refresh() {
 		setStore();
 		reloadData();
 	}
@@ -396,14 +360,13 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		super.updateViewer();
 		updatePartName();
 		updateActivePage();
-		updateStatus();
 	}
 
 	protected synchronized void updateActivePage() {
 		CTabItem sel = folder.getSelection();
 		if (sel.isDisposed())
 			return;
-		if (sel.getControl() == manager.getControl()) {
+		if (sel.getControl() == control.getControl()) {
 			activateCardsTab();
 			return;
 		}
@@ -419,7 +382,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 	}
 
 	protected void activateCardsTab() {
-		setTopBarVisible(true);
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();
@@ -427,11 +389,8 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		toolBarManager.update(true);
 	}
 
-	public Action getShowFilterAction() {
-		return showFilter;
-	}
-
-	public Action getGroupAction() {
-		return groupMenuButton;
+	@Override
+	public String getId() {
+		return ID;
 	}
 }

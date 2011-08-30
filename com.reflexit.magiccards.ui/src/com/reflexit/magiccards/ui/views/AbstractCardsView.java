@@ -1,39 +1,29 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.Collection;
-import java.util.Iterator;
-
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewReference;
@@ -47,64 +37,36 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.FilterHelper;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
-import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
-import com.reflexit.magiccards.ui.utils.TextConvertor;
-import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
-import com.reflexit.magiccards.ui.views.search.SearchContext;
-import com.reflexit.magiccards.ui.views.search.SearchControl;
-import com.reflexit.magiccards.ui.views.search.TableSearch;
 
 public abstract class AbstractCardsView extends ViewPart {
-	protected Action showFilter;
-	protected Action doubleClickAction;
-	protected Action showPrefs;
-	protected Action showFind;
-	protected Action copyText;
 	protected Action loadExtras;
-	protected ViewerManager manager;
-	private Label statusLine;
-	protected MenuManager sortMenu;
-	protected MenuManager groupMenu;
-	private PrefixedPreferenceStore store;
-	private SearchControl searchControl;
-	protected Runnable updateViewerRunnable;
-	protected ISelection revealSelection;
-	protected Action groupMenuButton;
-	private QuickFilterControl quickFilter;
-	protected Action refresh;
+	protected AbstractMagicCardsListControl control;
+	public static final String FIND = "org.eclipse.ui.edit.findReplace";
+	private Composite partControl;
+	private Action refresh;
+	private Action showPrefs;
+	private Action showFind;
+	protected Action copyText;
 
 	/**
 	 * The constructor.
 	 */
 	public AbstractCardsView() {
-		updateViewerRunnable = new Runnable() {
-			public void run() {
-				updateViewer();
-			}
-		};
-		store = PreferenceInitializer.getLocalStore(getPreferencePageId());
+		control = doGetViewControl();
 	}
 
-	public ViewerManager getManager() {
-		return this.manager;
-	}
+	protected abstract AbstractMagicCardsListControl doGetViewControl();
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
@@ -117,152 +79,27 @@ public abstract class AbstractCardsView extends ViewPart {
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
 		partControl.setLayout(gl);
-		createTopBar(partControl);
 		createMainControl(partControl);
-		createSearchControl(partControl);
 		makeActions();
 		hookContextMenu();
-		hookDoubleClickAction();
 		contributeToActionBars();
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
 		contextService.activateContext("com.reflexit.magiccards.ui.context");
 		// ADD the JFace Viewer as a Selection Provider to the View site.
-		getSite().setSelectionProvider(this.manager.getSelectionProvider());
-		loadInitial();
+		getSite().setSelectionProvider(control.getSelectionProvider());
 	}
 
-	protected Composite createTopBar(Composite composite) {
-		topBar = new Composite(composite, SWT.BORDER);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		topBar.setLayout(layout);
-		Control two = createQuickFilterControl(topBar);
-		two.setLayoutData(new GridData());
-		Control one = createStatusLine(topBar);
-		one.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		topBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		return topBar;
+	protected void createMainControl(Composite parent) {
+		control.createPartControl(parent);
 	}
-
-	public Composite getTopBar() {
-		return topBar;
-	}
-
-	IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			AbstractCardsView.this.propertyChange(event);
-		}
-	};
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		this.manager = doGetViewerManager(this);
-		initManager();
-		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
+		control.init(site);
 	}
 
-	/**
-	 *
-	 */
-	protected void initManager() {
-		store.setDefault(FilterHelper.GROUP_FIELD, "");
-		String field = store.getString(FilterHelper.GROUP_FIELD);
-		this.manager.updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
-	}
-
-	private Composite createStatusLine(Composite composite) {
-		Composite comp = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		comp.setLayout(layout);
-		this.statusLine = new Label(comp, SWT.NONE);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalIndent = 5;
-		this.statusLine.setLayoutData(gd);
-		this.statusLine.setText("Status");
-		return comp;
-	}
-
-	protected void createMainControl(Composite parent) {
-		Control control = this.manager.createContents(parent);
-		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
-	}
-
-	protected void loadInitial() {
-		// update manager columns
-		String value = store.getString(PreferenceConstants.LOCAL_COLUMNS);
-		AbstractCardsView.this.manager.updateColumns(value);
-		quickFilter.setPreferenceStore(store);
-		boolean qf = store.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
-		setQuickFilterVisible(qf);
-		reloadData();
-	}
-
-	protected void setQuickFilterVisible(boolean qf) {
-		quickFilter.setVisible(qf);
-		partControl.layout(true);
-	}
-
-	/**
-	 * @param composite
-	 */
-	protected void createSearchControl(Composite composite) {
-		this.searchControl = new SearchControl(new ISearchRunnable() {
-			public void run(SearchContext context) {
-				runSearch(context);
-			}
-		});
-		this.searchControl.createFindBar(composite);
-		this.searchControl.setVisible(false);
-		this.searchControl.setSearchAsYouType(true);
-	}
-
-	/**
-	 * @param composite
-	 * @return
-	 */
-	protected QuickFilterControl createQuickFilterControl(Composite composite) {
-		this.quickFilter = new QuickFilterControl(composite, new Runnable() {
-			public void run() {
-				reloadData();
-			}
-		});
-		return quickFilter;
-	}
-
-	/**
-	 * @param context
-	 */
-	protected void runSearch(final SearchContext context) {
-		TableSearch.search(context, getFilteredStore());
-		if (context.isFound()) {
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					highlightCard((IMagicCard) context.getLast());
-				}
-			});
-		}
-	}
-
-	/**
-	 * @param last
-	 */
-	protected void highlightCard(IMagicCard last) {
-		this.manager.getViewer().setSelection(new StructuredSelection(last), true);
-	}
-
-	public abstract ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView);
-
-	public ColumnViewer getViewer() {
-		return this.manager.getViewer();
-	}
-
-	public void setStatus(String text) {
-		this.statusLine.setText(text);
-	}
+	public abstract ViewerManager doGetViewerManager();
 
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
@@ -272,8 +109,12 @@ public abstract class AbstractCardsView extends ViewPart {
 				AbstractCardsView.this.fillContextMenu(manager);
 			}
 		});
-		this.manager.hookContextMenu(menuMgr);
-		getSite().registerContextMenu(menuMgr, this.manager.getSelectionProvider());
+		control.hookContextMenu(menuMgr);
+		getSite().registerContextMenu(menuMgr, getSelectionProvider());
+	}
+
+	protected ISelectionProvider getSelectionProvider() {
+		return control.getSelectionProvider();
 	}
 
 	private void contributeToActionBars() {
@@ -284,10 +125,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		bars.updateActionBars();
 	}
 
-	public static final String FIND = "org.eclipse.ui.edit.findReplace";
-	private Composite partControl;
-	private Composite topBar;
-
 	/**
 	 * @param bars
 	 */
@@ -296,129 +133,32 @@ public abstract class AbstractCardsView extends ViewPart {
 		ActionHandler findHandler = new ActionHandler(this.showFind);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler(FIND, findHandler);
+		control.setGlobalHandlers(bars);
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
-		manager.add(this.showFilter);
-		manager.add(this.showFind);
-		manager.add(this.showPrefs);
-		manager.add(this.sortMenu);
-		manager.add(this.groupMenu);
+		control.fillLocalPullDown(manager);
 		manager.add(this.loadExtras);
 		manager.add(this.refresh);
 		manager.add(new Separator());
-		manager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				viewMenuIsAboutToShow(manager);
-			}
-		});
+		// Other plug-ins can contribute there actions here
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	protected void fillContextMenu(IMenuManager manager) {
-		manager.add(this.showFilter);
-		manager.add(this.showPrefs);
-		// manager.add(loadPrices);
-		manager.add(new Separator());
-		// drillDownAdapter.addNavigationActions(manager);
+		manager.add(this.loadExtras);
+		control.fillContextMenu(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(this.groupMenuButton);
-		manager.add(this.showPrefs);
-		manager.add(this.showFind);
-		manager.add(this.showFilter);
-		manager.add(new Separator());
-		// drillDownAdapter.addNavigationActions(manager);
-	}
-
-	public class GroupAction extends Action {
-		ICardField field;
-
-		public GroupAction(String name, ICardField field) {
-			super(name, Action.AS_RADIO_BUTTON);
-			this.field = field;
-			String val = store.getString(FilterHelper.GROUP_FIELD);
-			if (field == null && val.length() == 0 || field != null && field.toString().equals(val)) {
-				setChecked(true);
-			}
-		}
-
-		@Override
-		public void run() {
-			if (isChecked())
-				actionGroupBy(this.field);
-		}
+		control.fillLocalToolBar(manager);
+		// Other plug-ins can contribute there actions here
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	protected void makeActions() {
-		this.showFilter = new Action() {
-			@Override
-			public void run() {
-				runShowFilter();
-			}
-		};
-		this.showFilter.setText("Filter...");
-		this.showFilter.setToolTipText("Opens a Card Filter Dialog");
-		this.showFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter.gif"));
-		// double cick
-		this.doubleClickAction = new Action() {
-			@Override
-			public void run() {
-				runDoubleClick();
-			}
-		};
-		this.sortMenu = new MenuManager("Sort By");
-		Collection columns = getManager().getColumns();
-		int i = 0;
-		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {
-			final AbstractColumn man = (AbstractColumn) iterator.next();
-			String name = man.getColumnFullName();
-			final int index = i;
-			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
-				@Override
-				public void run() {
-					manager.updateSortColumn(index);
-					reloadData();
-				}
-			};
-			this.sortMenu.add(ac);
-		}
-		this.groupMenuButton = new Action("Group By", Action.AS_DROP_DOWN_MENU) {
-			@Override
-			public void run() {
-				String group = store.getString(FilterHelper.GROUP_FIELD);
-				if (group == null || group.length() == 0)
-					actionGroupBy(MagicCardField.CMC);
-				else
-					actionGroupBy(null);
-			}
-
-			{
-				setMenuCreator(new IMenuCreator() {
-					private Menu listMenu;
-
-					public void dispose() {
-						if (listMenu != null)
-							listMenu.dispose();
-					}
-
-					public Menu getMenu(Control parent) {
-						if (listMenu != null)
-							listMenu.dispose();
-						listMenu = createGroupMenu().createContextMenu(parent);
-						return listMenu;
-					}
-
-					public Menu getMenu(Menu parent) {
-						return null;
-					}
-				});
-			}
-		};
-		this.groupMenuButton.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.groupMenu = createGroupMenu();
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.showPrefs = new Action("Preferences...") {
 			@Override
@@ -434,8 +174,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.showFind = new Action("Find...") {
 			@Override
 			public void run() {
-				AbstractCardsView.this.searchControl.setVisible(true);
-				AbstractCardsView.this.showFind.setEnabled(false);
+				runFind();
 			}
 		};
 		this.showFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
@@ -460,20 +199,12 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 	}
 
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
-		groupMenu.add(new GroupAction("None", null));
-		groupMenu.add(new GroupAction("Color", MagicCardField.COST));
-		groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
-		groupMenu.add(new GroupAction("Type", MagicCardField.TYPE));
-		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
-		groupMenu.add(new GroupAction("Rarity", MagicCardField.RARITY));
-		// groupMenu.add(new GroupAction("Name", MagicCardField.NAME));
-		return groupMenu;
+	protected void refresh() {
+		// TODO Auto-generated method stub
 	}
 
 	protected void runLoadExtras() {
-		final IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		final IStructuredSelection selection = getSelection();
 		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), getFilteredStore().getSize(), getFilteredStore()
 				.getCardStore().size());
 		if (dialog.open() != Window.OK || dialog.getFields().isEmpty()) {
@@ -496,52 +227,22 @@ public abstract class AbstractCardsView extends ViewPart {
 		loadingExtras.schedule();
 	}
 
+	public IStructuredSelection getSelection() {
+		return (IStructuredSelection) getSelectionProvider().getSelection();
+	}
+
 	/**
 	 *
 	 */
 	protected void runCopy() {
-		IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
-		if (sel.isEmpty())
-			return;
-		StringBuffer buf = new StringBuffer();
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			buf.append(TextConvertor.toText(card));
-			buf.append("--------------------------\n");
-		}
-		String textData = buf.toString();
-		if (textData.length() > 0) {
-			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-			TextTransfer textTransfer = TextTransfer.getInstance();
-			MagicCardTransfer mt = MagicCardTransfer.getInstance();
-			IMagicCard[] cards = (IMagicCard[]) sel.toList().toArray(new IMagicCard[sel.size()]);
-			cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
-		}
-	}
-
-	/**
-	 * @param indexCost
-	 */
-	protected void actionGroupBy(ICardField field) {
-		store.setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
-		this.manager.updateGroupBy(field);
-		reloadData();
+		control.runCopy();
 	}
 
 	protected abstract String getPreferencePageId();
 
-	private void hookDoubleClickAction() {
-		this.manager.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				AbstractCardsView.this.doubleClickAction.run();
-			}
-		});
-	}
-
 	@Override
 	public void dispose() {
-		this.manager.dispose();
-		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
+		control.dispose();
 		super.dispose();
 	}
 
@@ -550,24 +251,14 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	@Override
 	public void setFocus() {
-		getViewer().getControl().setFocus();
+		getControl().setFocus();
+	}
+
+	protected Control getControl() {
+		return control.getControl();
 	}
 
 	protected void runDoubleClick() {
-	}
-
-	protected void runShowFilter() {
-		// CardFilter.open(getViewSite().getShell());
-		Dialog cardFilterDialog = new CardFilterDialog(getShell(), store);
-		if (cardFilterDialog.open() == IStatus.OK) {
-			revealSelection = getSelection();
-			reloadData();
-			quickFilter.refresh();
-		}
-	}
-
-	public void reloadData() {
-		this.manager.loadData(updateViewerRunnable);
 	}
 
 	public Shell getShell() {
@@ -576,67 +267,22 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	public abstract IFilteredCardStore doGetFilteredStore();
 
-	protected void propertyChange(PropertyChangeEvent event) {
-		String property = event.getProperty();
-		if (property.equals(store.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
-			this.manager.updateColumns((String) event.getNewValue());
-			refresh();
-		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
-			refresh();
-		} else if (property.equals(store.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
-			boolean qf = (Boolean) event.getNewValue();
-			setQuickFilterVisible(qf);
-		}
-	}
-
-	protected void refresh() {
-		reloadData();
-	}
-
 	public IFilteredCardStore getFilteredStore() {
-		return this.manager.getFilteredStore();
+		return control.getFilteredStore();
 	}
 
 	/**
 	 * Update view in UI thread after data load is finished
 	 */
 	protected void updateViewer() {
-		if (manager.getControl().isDisposed())
-			return;
-		ISelection selection = getSelection();
-		manager.updateViewer();
-		updateStatus();
-		if (revealSelection != null) {
-			// set desired selection
-			manager.getSelectionProvider().setSelection(revealSelection);
-			revealSelection = null;
-		} else {
-			// restore selection
-			manager.getSelectionProvider().setSelection(selection);
-		}
-	}
-
-	protected ISelection getSelection() {
-		ISelection selection;
-		try {
-			selection = manager.getSelectionProvider().getSelection();
-		} catch (Exception e) {
-			selection = new StructuredSelection();
-		}
-		// System.err.println("current selection 2 " +
-		// manager.getSelectionProvider() + " " + selection);
-		return selection;
-	}
-
-	protected void updateStatus() {
-		setStatus(manager.getStatusMessage());
+		control.updateViewer();
 	}
 
 	/**
 	 * @return
 	 */
 	public PrefixedPreferenceStore getLocalPreferenceStore() {
-		return this.store;
+		return control.getLocalPreferenceStore();
 	}
 
 	public static interface IDeckAction {
@@ -681,7 +327,113 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	}
 
-	protected void viewMenuIsAboutToShow(IMenuManager manager) {
-		showFind.setEnabled(!searchControl.isVisible());
+	public void runFind() {
+		control.runFind();
+	}
+
+	public void reloadData() {
+		control.reloadData();
+	}
+
+	public abstract String getId();
+
+	private Object jobFamility = new Object();
+	private Job loadingJob;
+	protected Runnable updateViewerRunnable = new Runnable() {
+		public void run() {
+			updateViewer();
+		}
+	};
+
+	public void loadData(final Runnable postLoad) {
+		Job[] jobs = Job.getJobManager().find(jobFamility);
+		if (jobs.length >= 2) {
+			// System.err.println(jobs.length +
+			// " already running skipping refresh");
+			return;
+		}
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		loadingJob = new Job("Loading cards") {
+			@Override
+			public boolean belongsTo(Object family) {
+				return family == jobFamility;
+			}
+
+			@Override
+			public boolean shouldSchedule() {
+				Job[] jobs = Job.getJobManager().find(jobFamility);
+				if (jobs.length >= 2)
+					return false;
+				return super.shouldSchedule();
+			}
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				synchronized (jobFamility) {
+					try {
+						setName("Loading cards");
+						checkInit();
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						monitor.subTask("Loading cards...");
+						populateStore(monitor);
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						if (getFilteredStore() == null)
+							return Status.OK_STATUS;
+						getFilteredStore().update(getFilter());
+					} catch (final Exception e) {
+						display.syncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage());
+							}
+						});
+						MagicUIActivator.log(e);
+						return Status.OK_STATUS;
+					}
+					// asyncUpdateViewer();
+					return Status.OK_STATUS;
+				}
+			}
+		};
+		// loadingJob.setRule(jobRule);
+		loadingJob.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				if (postLoad != null)
+					display.syncExec(postLoad);
+				else
+					display.syncExec(new Runnable() {
+						public void run() {
+							updateViewer();
+						}
+					});
+				super.done(event);
+			}
+		});
+		loadingJob.schedule(100);
+	}
+
+	protected void populateStore(IProgressMonitor monitor) {
+		if (getFilteredStore() == null) {
+			setFilteredCardStore(doGetFilteredStore());
+		}
+	}
+
+	public void setFilteredCardStore(IFilteredCardStore fstore) {
+		control.setFilteredCardStore(fstore);
+	}
+
+	public MagicCardFilter getFilter() {
+		return control.getFilter();
+	}
+
+	private void checkInit() {
+		try {
+			DataManager.getCardHandler().loadInitialIfNot(new NullProgressMonitor());
+			// DataManager.getCardHandler().getMagicCardHandler().getTotal();
+		} catch (MagicException e) {
+			MagicUIActivator.log(e);
+		}
 	}
 }

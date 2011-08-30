@@ -3,7 +3,6 @@ package com.reflexit.magiccards.ui.views.lib;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
@@ -15,7 +14,6 @@ import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 
 public class MyCardsView extends AbstractMyCardsView implements ICardEventListener {
@@ -53,14 +51,6 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 		return LibViewPreferencePage.class.getName();
 	}
 
-	@Override
-	protected void runShowFilter() {
-		// CardFilter.open(getViewSite().getShell());
-		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getLocalPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK)
-			this.manager.loadData(null);
-	}
-
 	/**
 	 * @param preferenceStore
 	 * @param portableString
@@ -78,5 +68,10 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 			}
 		}
 		reloadData();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 }

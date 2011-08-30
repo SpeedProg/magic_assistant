@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -47,12 +48,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		setQuickFilterVisible(false);
-	}
-
-	@Override
-	protected void setQuickFilterVisible(boolean qf) {
-		super.setQuickFilterVisible(false);
+		control.setStatus("To populate this view use 'Emulate Draw' command from a Deck view");
 	}
 
 	/*
@@ -74,8 +70,8 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	 * (com.reflexit.magiccards.ui.views.AbstractCardsView)
 	 */
 	@Override
-	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new LazyTableViewerManager(this);
+	public ViewerManager doGetViewerManager() {
+		return new LazyTableViewerManager(getId());
 	}
 
 	/*
@@ -110,17 +106,14 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		this.shuffle = new Action("Shuffle") {
 			@Override
 			public void run() {
-				getManager().updateSortColumn(-1);
-				HandView.this.store.shuffle();
-				HandView.this.store.draw(7);
-				getManager().loadData(updateViewerRunnable);
+				runShuffle();
 			}
 		};
 		this.draw = new Action("Draw") {
 			@Override
 			public void run() {
 				HandView.this.store.draw(1);
-				getManager().loadData(updateViewerRunnable);
+				control.reloadData();
 			}
 		};
 	}
@@ -155,22 +148,25 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 			if (deck.isOpen()) {
 				ICardStore<IMagicCard> store2 = deck.getStore();
 				this.store.setStore(store2);
-				getManager().updateSortColumn(-1);
-				HandView.this.store.shuffle();
-				HandView.this.store.draw(7);
-				getManager().loadData(updateViewerRunnable);
+				runShuffle();
 			}
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#loadInitial()
-	 */
 	@Override
-	protected void loadInitial() {
-		setStatus("To populate this view use 'Emulate Draw' command from a Deck view");
-		super.loadInitial();
+	protected AbstractMagicCardsListControl doGetViewControl() {
+		return new AbstractMagicCardsListControl(this);
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	public void runShuffle() {
+		HandView.this.store.shuffle();
+		HandView.this.store.draw(7);
+		control.unsort();
+		control.reloadData();
 	}
 }

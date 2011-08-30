@@ -41,6 +41,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -78,6 +79,11 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private MenuManager addToDeck;
 	private Action showPrintings;
 	protected IDeckAction copyToDeck;
+
+	@Override
+	protected MyCardsListControl doGetViewControl() {
+		return new MyCardsListControl(this);
+	}
 
 	@Override
 	protected void makeActions() {
@@ -127,7 +133,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			public void run(String id) {
 				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
 				Location loc = fstore.getLocation();
-				ISelection selection = getViewer().getSelection();
+				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
@@ -168,7 +174,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected IDeckAction moveToDeck = new IDeckAction() {
 		public void run(String id) {
 			try {
-				ISelection selection = getViewer().getSelection();
+				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
@@ -217,8 +223,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 * @param b
 	 */
 	protected void changeSelectedOwnerShip(boolean b) {
-		ICardEventManager cardStore = this.manager.getFilteredStore().getCardStore();
-		ISelection selection = getViewer().getSelection();
+		ICardEventManager cardStore = getFilteredStore().getCardStore();
+		ISelection selection = getSelectionProvider().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
@@ -234,8 +240,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	protected void removeSelected() {
-		ICardStore cardStore = this.manager.getFilteredStore().getCardStore();
-		ISelection selection = getViewer().getSelection();
+		ICardStore cardStore = getFilteredStore().getCardStore();
+		ISelection selection = getSelectionProvider().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
@@ -252,8 +258,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		final int PICK = 0;
 		final int N_TO_1 = 1;
 		final int EVEN = -2;
-		ICardStore cardStore = this.manager.getFilteredStore().getCardStore();
-		ISelection selection = getViewer().getSelection();
+		ICardStore cardStore = getFilteredStore().getCardStore();
+		ISelection selection = getSelectionProvider().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
@@ -305,13 +311,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				}
 			}
 		}
-	}
-
-	@Override
-	protected MenuManager createGroupMenu() {
-		MenuManager x = super.createGroupMenu();
-		x.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
-		return x;
 	}
 
 	@Override
@@ -389,8 +388,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	@Override
-	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new CompositeViewerManager(this);
+	public ViewerManager doGetViewerManager() {
+		return new CompositeViewerManager(getId());
 	}
 
 	public void handleEvent(final CardEvent event) {
@@ -398,9 +397,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (type == CardEvent.UPDATE) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					manager.getViewer().update(event.getSource(), null);
-					updateStatus();
-					getViewer().setSelection(new StructuredSelection(event.getSource()), true);
+					if (event.getSource() instanceof ICard)
+						control.updateSingle((ICard) event.getSource());
 				}
 			});
 		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
@@ -409,9 +407,9 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			if (event.getData() instanceof List) {
 				List arr = (List) event.getData();
 				if (arr.size() == 1)
-					revealSelection = new StructuredSelection(arr);
+					control.setNextSelection(new StructuredSelection(arr));
 			} else if (event.getData() instanceof IMagicCard) {
-				revealSelection = new StructuredSelection(event.getData());
+				control.setNextSelection(new StructuredSelection(event.getData()));
 			}
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
@@ -422,7 +420,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	protected void editSelected() {
-		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		IStructuredSelection selection = (IStructuredSelection) getSelectionProvider().getSelection();
 		if (selection.isEmpty())
 			return;
 		PreferenceStore store = new PreferenceStore();
@@ -452,7 +450,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			}
 		}
 		if (any) {
-			new EditCardsPropertiesDialog(manager.getViewer().getControl().getShell(), store).open();
+			new EditCardsPropertiesDialog(getViewSite().getShell(), store).open();
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 				MagicCardPhisical card = (MagicCardPhisical) iterator.next();
 				editCard(card, store);
@@ -475,7 +473,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			modified = true;
 		}
 		if (modified) {
-			this.manager.getFilteredStore().getCardStore().update(card);
+			getFilteredStore().getCardStore().update(card);
 		}
 	}
 

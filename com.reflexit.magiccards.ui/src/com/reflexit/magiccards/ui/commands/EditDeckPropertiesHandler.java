@@ -30,7 +30,7 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class EditDeckPropertiesHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -43,8 +43,8 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 				try {
 					// Update TODO: ugly
 					DeckView deckView = (DeckView) window.getActivePage().showView(DeckView.ID, f.getFileName(),
-					        IWorkbenchPage.VIEW_ACTIVATE);
-					deckView.reloadData();
+							IWorkbenchPage.VIEW_ACTIVATE);
+					deckView.refresh();
 				} catch (PartInitException e) {
 					MagicUIActivator.log(e);
 				}
@@ -69,12 +69,14 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 			return null;
 		}
 		CardElement f = (CardElement) iss.getFirstElement();
-	
 		return (CardCollection) f;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
 	 */
 	@Override
 	public void setEnabled(Object eo) {

@@ -57,7 +57,6 @@ public class AbstractDeckPage implements IDeckPage {
 	}
 
 	public void activate() {
-		view.setTopBarVisible(false);
 		IActionBars bars = view.getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();

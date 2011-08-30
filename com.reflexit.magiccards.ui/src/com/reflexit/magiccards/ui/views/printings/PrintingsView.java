@@ -25,7 +25,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
@@ -49,7 +48,6 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
@@ -81,9 +79,45 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		dbmode.setChecked(isDbMode());
-		setQuickFilterVisible(false);
-		setStatus("Click on a card to populate the view");
+		control.setStatus("Click on a card to populate the view");
+		loadInitial();
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
+	}
+
+	@Override
+	protected void populateStore(IProgressMonitor monitor) {
+		if (card == IMagicCard.DEFAULT)
+			return;
+		monitor.beginTask("Loading card printings for " + card.getName(), 100);
+		MemoryFilteredCardStore fstore = (MemoryFilteredCardStore) getFilteredStore();
+		if (fstore == null) {
+			fstore = (MemoryFilteredCardStore) doGetFilteredStore();
+			setFilteredCardStore(fstore);
+		}
+		fstore.clear();
+		if (isDbMode()) {
+			fstore.addAll(searchInStore(DataManager.getCardHandler().getMagicDBStore()));
+		} else {
+			fstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
+		}
+		monitor.done();
+	}
+
+	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
+		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
+		if (card == null || card == MagicCard.DEFAULT)
+			return res;
+		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
+			IMagicCard next = iterator.next();
+			try {
+				if (card.getName().equals(next.getName())) {
+					res.add(next);
+				}
+			} catch (Exception e) {
+				System.err.println("Bad card: " + card);
+			}
+		}
+		return res;
 	}
 
 	@Override
@@ -97,7 +131,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
 		manager.add(sync);
-		manager.add(this.groupMenu);
+		manager.add(control.getGroupMenu());
 	}
 
 	@Override
@@ -114,24 +148,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		manager.add(sync);
 		// manager.add(this.groupMenuButton);
 		manager.add(dbmode);
-	}
-
-	@Override
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By");
-		groupMenu.add(new GroupAction("None", null));
-		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
-		groupMenu.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
-		groupMenu.add(new GroupAction("Ownership", MagicCardFieldPhysical.OWNERSHIP));
-		return groupMenu;
-	}
-
-	@Override
-	protected void updateStatus() {
-		if (card != MagicCard.DEFAULT && card != null)
-			setStatus(card.getName() + ": " + manager.getStatusMessage());
-		else
-			super.updateStatus();
 	}
 
 	@Override
@@ -226,7 +242,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		super.dispose();
 	}
 
-	@Override
 	protected void loadInitial() {
 		try {
 			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
@@ -268,53 +283,24 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			return;
 		this.card = cardSel;
 		// System.err.println(card);
+		((PrintingListControl) control).setCard(card);
 		reloadData();
 	}
 
-	protected void updateStore(IProgressMonitor monitor) {
-		if (card == IMagicCard.DEFAULT)
-			return;
-		monitor.beginTask("Loading card printings for " + card.getName(), 100);
-		MemoryFilteredCardStore fstore = (MemoryFilteredCardStore) getFilteredStore();
-		if (fstore == null) {
-			fstore = (MemoryFilteredCardStore) doGetFilteredStore();
-			PrintingsView.this.manager.setFilteredCardStore(fstore);
-		}
-		fstore.clear();
-		if (isDbMode()) {
-			fstore.addAll(searchInStore(DataManager.getCardHandler().getMagicDBStore()));
-		} else {
-			fstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
-		}
-		monitor.done();
-	}
-
-	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
-		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
-		if (card == null || card == MagicCard.DEFAULT)
-			return res;
-		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
-			IMagicCard next = iterator.next();
-			try {
-				if (card.getName().equals(next.getName())) {
-					res.add(next);
-				}
-			} catch (Exception e) {
-				System.err.println("Bad card: " + card);
-			}
-		}
-		return res;
+	@Override
+	protected PrintingListControl doGetViewControl() {
+		return new PrintingListControl(this);
 	}
 
 	@Override
-	public ViewerManager doGetViewerManager(AbstractCardsView abstractCardsView) {
-		return new PrintingsManager(abstractCardsView);
+	public ViewerManager doGetViewerManager() {
+		return new PrintingsManager(getId());
 	}
 
 	@Override
 	protected void updateViewer() {
 		super.updateViewer();
-		getViewer().setSelection(new StructuredSelection(card));
+		getSelectionProvider().setSelection(new StructuredSelection(card));
 	}
 
 	@Override
@@ -328,7 +314,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	}
 
 	protected boolean isDbMode() {
-		return ((PrintingsManager) manager).isDbMode();
+		return ((PrintingListControl) control).isDbMode();
 	}
 
 	public void setDbMode(boolean mode) {
@@ -337,10 +323,15 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			dbmode.setToolTipText("Check to show sets in magic database");
 		else
 			dbmode.setToolTipText("Uncheck to show cards in your collection");
-		((PrintingsManager) manager).updateDbMode(mode);
+		((PrintingListControl) control).updateDbMode(mode);
 		if (card != null && card != IMagicCard.DEFAULT)
 			reloadData();
 		else
 			updateViewer();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 }
