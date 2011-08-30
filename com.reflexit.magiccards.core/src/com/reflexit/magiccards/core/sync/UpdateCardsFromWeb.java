@@ -68,9 +68,10 @@ public class UpdateCardsFromWeb {
 							newMagicCard.setLanguage(lang);
 							linfoParser.setCard(newMagicCard);
 							linfoParser.load(new SubProgressMonitor(monitor, 40));
-							if (magicDb != null && magicDb.getCard(newMagicCard.getCardId()) == null) {
+							if (magicDb.getCard(newMagicCard.getCardId()) == null) {
 								magicDb.add(newMagicCard);
-								System.err.println("Added " + newMagicCard.getName());
+								// System.err.println("Added " +
+								// newMagicCard.getName());
 							}
 						}
 					}

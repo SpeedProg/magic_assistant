@@ -58,7 +58,7 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 	}
 
 	@Override
-	public boolean doRemoveAll(Collection<?> list) {
+	public boolean doRemoveAll(Collection<? extends T> list) {
 		if (wrapped)
 			return super.doRemoveAll(list);
 		else

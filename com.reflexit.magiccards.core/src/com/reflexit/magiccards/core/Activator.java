@@ -31,8 +31,6 @@ public class Activator extends Plugin {
 	public static final String PLUGIN_ID = "com.reflexit.magiccards.core";
 	// The shared instance
 	private static Activator plugin;
-	// global preferences keys
-	public static final String DB_LOADED = "db_loaded";
 
 	/**
 	 * The constructor
@@ -88,7 +86,7 @@ public class Activator extends Plugin {
 		if (pl == null) {
 			System.err.println("Log: " + message);
 		} else
-			pl.getLog().log(new Status(Status.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
+			pl.getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
 	}
 
 	public static void log(Throwable e) {
@@ -96,7 +94,7 @@ public class Activator extends Plugin {
 		if (pl == null) {
 			e.printStackTrace();
 		} else
-			pl.getLog().log(new Status(Status.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
+			pl.getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
 	}
 
 	public static IPath getStateLocationAlways() {
@@ -120,6 +118,6 @@ public class Activator extends Plugin {
 	}
 
 	public IStatus getStatus(Throwable e) {
-		return new Status(Status.ERROR, PLUGIN_ID, e.getMessage(), e);
+		return new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e);
 	}
 }

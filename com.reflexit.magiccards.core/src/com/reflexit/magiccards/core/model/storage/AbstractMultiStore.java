@@ -50,7 +50,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	}
 
 	@Override
-	protected boolean doRemoveAll(Collection<?> list) {
+	protected boolean doRemoveAll(Collection<? extends T> list) {
 		boolean commit = getStorage().isAutoCommit();
 		getStorage().setAutoCommit(true);
 		try {
@@ -322,7 +322,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			throw new UnsupportedOperationException();
 		}
 
-		public boolean removeAll(Collection<?> list) {
+		public boolean removeAll(Collection<? extends T> list) {
 			throw new UnsupportedOperationException();
 		}
 

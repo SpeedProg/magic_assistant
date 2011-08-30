@@ -23,7 +23,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
  * 
  */
 public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements ICardStore<IMagicCard>,
-ICardCollection<IMagicCard>,IStorageContainer<IMagicCard> {
+		ICardCollection<IMagicCard>, IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
 
 	public CollectionCardStore(IStorage<IMagicCard> storage) {
@@ -37,9 +37,7 @@ ICardCollection<IMagicCard>,IStorageContainer<IMagicCard> {
 
 	@Override
 	public boolean doAddCard(IMagicCard card) {
-		Location loc = null;
-		if (this instanceof ILocatable)
-			loc = ((ILocatable) this).getLocation();
+		Location loc = getLocation();
 		if (getMergeOnAdd()) {
 			MagicCardPhisical phi = (MagicCardPhisical) this.hashpart.getCard(card);
 			if (phi == null || loc != null && !loc.equals(phi.getLocation())) {

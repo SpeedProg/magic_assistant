@@ -25,6 +25,7 @@ public class CollectionsContainer extends CardOrganizer {
 		super(name, path, parent);
 	}
 
+	@SuppressWarnings("unused")
 	public void loadChildren() throws CoreException {
 		getContainer().refreshLocal(IResource.DEPTH_ONE, null);
 		IResource[] members = getContainer().members();
@@ -45,7 +46,7 @@ public class CollectionsContainer extends CardOrganizer {
 						((CollectionsContainer) el).loadChildren();
 					}
 				}
-			} else if (mem != null) {
+			} else {
 				if (name.endsWith(".xml")) {
 					if (el == null) {
 						boolean deck = checkType(mem);

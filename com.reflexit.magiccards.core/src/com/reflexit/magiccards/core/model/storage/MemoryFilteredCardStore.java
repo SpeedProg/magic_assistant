@@ -12,7 +12,6 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
@@ -20,10 +19,10 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
  * @author Alena
  * 
  */
-public class MemoryFilteredCardStore extends AbstractFilteredCardStore<IMagicCard> {
+public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 	private MemoryCardStore cards = new MemoryCardStore();
 
-	public MemoryFilteredCardStore(Collection<IMagicCard> list) {
+	public MemoryFilteredCardStore(Collection<T> list) {
 		this();
 		addAll(list);
 	}
@@ -32,7 +31,7 @@ public class MemoryFilteredCardStore extends AbstractFilteredCardStore<IMagicCar
 		update(new MagicCardFilter());
 	}
 
-	public void addAll(Collection<IMagicCard> list) {
+	public void addAll(Collection<T> list) {
 		cards.addAll(list);
 	}
 
@@ -54,7 +53,8 @@ public class MemoryFilteredCardStore extends AbstractFilteredCardStore<IMagicCar
 		cards.removeAll();
 	}
 
-	public boolean contains(IMagicCard card) {
+	@Override
+	public boolean contains(T card) {
 		return cards.contains(card);
 	}
 }

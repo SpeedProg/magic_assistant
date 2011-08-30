@@ -23,15 +23,17 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.thoughtworks.xstream.XStream;
 
 public class DataManager {
-	static ICardHandler handler;
+	private static ICardHandler handler;
 	private static ModelRoot root;
 
 	public static ICardHandler getCardHandler() {
 		if (handler != null)
 			return handler;
 		try {
-			String variant1 = "com.reflexit.magiccards.core.sql.handlers.CardHolder";
+			// String variant1 =
+			// "com.reflexit.magiccards.core.sql.handlers.CardHolder";
 			String variant2 = "com.reflexit.magiccards.core.xml.XmlCardHolder";
+			@SuppressWarnings("rawtypes")
 			Class c = Class.forName(variant2);
 			Object x = c.newInstance();
 			handler = (ICardHandler) x;
@@ -57,8 +59,8 @@ public class DataManager {
 
 	public static IProject getProject() throws CoreException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceRoot root = workspace.getRoot();
-		IProject project = root.getProject("magiccards");
+		IWorkspaceRoot wsroot = workspace.getRoot();
+		IProject project = wsroot.getProject("magiccards");
 		if (!project.exists())
 			project.create(null);
 		if (!project.isOpen())

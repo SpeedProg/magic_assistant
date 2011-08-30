@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable {
@@ -48,5 +47,5 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable {
 
 	public CardGroup getCardGroup(int index);
 
-	public boolean contains(IMagicCard card);
+	public boolean contains(T card);
 }

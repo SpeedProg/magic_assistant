@@ -91,7 +91,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		return modified;
 	}
 
-	public boolean removeAll(Collection<?> list) {
+	public boolean removeAll(Collection<? extends T> list) {
 		load();
 		boolean modified = false;
 		synchronized (this) {

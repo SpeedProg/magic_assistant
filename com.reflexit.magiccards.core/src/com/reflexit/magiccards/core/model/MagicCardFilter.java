@@ -101,10 +101,6 @@ public class MagicCardFilter {
 		public boolean caseSensitive = false;
 		public boolean regex = false;
 
-		TextValue(String name) {
-			super(name);
-		}
-
 		public TextValue(String name, boolean wordBoundary, boolean caseSensitive, boolean regex) {
 			super(name);
 			this.wordBoundary = wordBoundary;
@@ -661,10 +657,9 @@ public class MagicCardFilter {
 					or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
 					or = new BinaryExpr(or, Operation.NOT, null);
 				} else {
-					// skip
-					or = null;
+					// skip or = null;
 				}
-			} else if (value != null && value.length() > 0) {
+			} else if (value.length() > 0) {
 				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Value(value));
 			}
 			if (or == null) {

@@ -42,7 +42,7 @@ public interface ICardSet<T> extends Iterable<T> {
 	 * @param card
 	 * @return
 	 */
-	public abstract boolean removeAll(Collection<?> list);
+	public abstract boolean removeAll(Collection<? extends T> list);
 
 	/**
 	 * Remove all cards from collection
