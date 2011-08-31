@@ -17,9 +17,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
@@ -51,10 +48,13 @@ public class LazyTableViewerManager extends ViewerManager {
 		// this.viewer.setLabelProvider(labelProvider);
 		this.viewer.setUseHashlookup(true);
 		updateGrid();
-		hookDragAndDrop();
 		// viewer.setSorter(new NameSorter());
 		createDefaultColumns();
 		return this.viewer.getControl();
+	}
+
+	protected LazyTableViewContentProvider getContentProvider() {
+		return (LazyTableViewContentProvider) getViewer().getContentProvider();
 	}
 
 	protected void createDefaultColumns() {
@@ -90,7 +90,6 @@ public class LazyTableViewerManager extends ViewerManager {
 		return this.viewer;
 	}
 
-	@Override
 	public void updateColumns(String newValue) {
 		TableColumn[] acolumns = this.viewer.getTable().getColumns();
 		int order[] = new int[acolumns.length];
@@ -143,46 +142,44 @@ public class LazyTableViewerManager extends ViewerManager {
 		this.viewer.getTable().setColumnOrder(order);
 	}
 
-	protected void updateGrid() {
-		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+	public void setLinesVisible(boolean grid) {
 		this.viewer.getTable().setLinesVisible(grid);
 	}
 
-	@Override
 	public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TableColumn column = sort ? this.viewer.getTable().getColumn(index) : null;
 		this.viewer.getTable().setSortColumn(column);
 		if (sort) {
-			int sortDirection = this.viewer.getTable().getSortDirection();
+			int sortDirection = getSortDirection();
 			if (sortDirection != SWT.DOWN)
 				sortDirection = SWT.DOWN;
 			else
 				sortDirection = SWT.UP;
 			this.viewer.getTable().setSortDirection(sortDirection);
-			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
-			getFilter().setSortField(man.getSortField(), sortDirection == SWT.DOWN);
-		} else {
-			getFilter().setNoSort();
 		}
 	}
 
 	@Override
-	public void updateViewer() {
+	protected int getSortDirection() {
+		return this.viewer.getTable().getSortDirection();
+	}
+
+	public void updateViewer(Object filteredStore) {
 		if (this.viewer.getControl().isDisposed())
 			return;
 		updateTableHeader();
 		updateGrid();
 		long time = System.currentTimeMillis();
-		IFilteredCardStore filteredStore = getFilteredStore();
+		int size = getContentProvider().getSize(filteredStore);
 		if (this.viewer.getInput() != filteredStore) {
 			this.viewer.setInput(filteredStore);
-			this.viewer.setItemCount(filteredStore == null ? 0 : filteredStore.getSize());
+			this.viewer.setItemCount(filteredStore == null ? 0 : size);
 		} else {
 			this.viewer.setSelection(new StructuredSelection());
 			this.viewer.getTable().clearAll();
 			((MyTableViewer) this.viewer).unmapAllElements();
-			this.viewer.setItemCount(filteredStore == null ? 0 : filteredStore.getSize());
+			this.viewer.setItemCount(filteredStore == null ? 0 : size);
 			this.viewer.refresh(true);
 		}
 		// System.err.println("set input time: " + (System.currentTimeMillis() -

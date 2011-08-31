@@ -31,6 +31,13 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 		this.root = null;
 	}
 
+	public int getSize(Object newInput) {
+		if (newInput instanceof IFilteredCardStore) {
+			return ((IFilteredCardStore) newInput).getSize();
+		}
+		return 0;
+	}
+
 	public void updateElement(int index) {
 		if (this.root != null) {
 			if (index >= root.getSize()) {

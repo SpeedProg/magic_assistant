@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
@@ -53,6 +54,8 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
+import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
+import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -107,6 +110,8 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	protected ViewerManager manager;
 	private MenuManager menuSort;
 	protected ISelection revealSelection;
+	private MagicCardFilter filter = new MagicCardFilter();
+	private IFilteredCardStore<ICard> fstore;
 
 	/**
 	 * The constructor.
@@ -151,11 +156,11 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	}
 
 	public MagicCardFilter getFilter() {
-		return manager.getFilter();
+		return filter;
 	}
 
 	public IFilteredCardStore getFilteredStore() {
-		return this.manager.getFilteredStore();
+		return fstore;
 	}
 
 	public Action getGroupAction() {
@@ -173,7 +178,7 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		return this.prefStore;
 	}
 
-	public ViewerManager getManager() {
+	public IMagicColumnViewer getManager() {
 		return this.manager;
 	}
 
@@ -232,7 +237,7 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	}
 
 	public void reloadData() {
-		updateFilter(manager.getFilter());
+		updateFilter(getFilter());
 		abstractCardsView.loadData(null);
 	}
 
@@ -241,8 +246,8 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		AbstractMagicCardsListControl.this.actionShowFind.setEnabled(false);
 	}
 
-	public void setFilteredCardStore(IFilteredCardStore fstore) {
-		manager.setFilteredCardStore(fstore);
+	public void setFilteredCardStore(IFilteredCardStore<ICard> fstore) {
+		this.fstore = fstore;
 	}
 
 	/**
@@ -292,8 +297,8 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		return comp;
 	}
 
-	private HashMap storeToMap(IPreferenceStore store) {
-		HashMap map = new HashMap();
+	private HashMap<String, String> storeToMap(IPreferenceStore store) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		Collection col = FilterHelper.getAllIds();
 		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
@@ -311,8 +316,23 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	 */
 	protected void actionGroupBy(ICardField field) {
 		prefStore.setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
-		this.manager.updateGroupBy(field);
+		updateGroupBy(field);
 		reloadData();
+	}
+
+	/**
+	 * @param indexCmc
+	 */
+	public void updateGroupBy(ICardField field) {
+		MagicCardFilter filter = getFilter();
+		ICardField oldIndex = filter.getGroupField();
+		if (oldIndex == field)
+			return;
+		boolean hasGroups = field != null;
+		if (hasGroups)
+			filter.setSortField(field, true);
+		filter.setGroupField(field);
+		manager.flip(hasGroups);
 	}
 
 	protected MenuManager createGroupMenu() {
@@ -357,6 +377,15 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	protected void createTableControl(Composite parent) {
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
+		hookDragAndDrop();
+	}
+
+	public void hookDragAndDrop() {
+		getViewer().getControl().setDragDetect(true);
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
+		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
+		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer()));
 	}
 
 	protected Composite createTopBar(Composite composite) {
@@ -436,13 +465,13 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	protected void initManager() {
 		prefStore.setDefault(FilterHelper.GROUP_FIELD, "");
 		String field = prefStore.getString(FilterHelper.GROUP_FIELD);
-		this.manager.updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
-		ViewerManager.IColumnSortAction sortAction = new ViewerManager.IColumnSortAction() {
+		updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
+		IColumnSortAction sortAction = new IColumnSortAction() {
 			public void sort(int i) {
 				AbstractMagicCardsListControl.this.sort(i);
 			}
 		};
-		this.manager.setSortAction(sortAction);
+		this.manager.hookSortAction(sortAction);
 	}
 
 	@Override
@@ -469,7 +498,7 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		this.actionShowFilter.setToolTipText("Opens a Card Filter Dialog");
 		this.actionShowFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter.gif"));
 		this.menuSort = new MenuManager("Sort By");
-		Collection columns = getManager().getColumns();
+		Collection columns = getManager().getColumnsCollection().getColumns();
 		int i = 0;
 		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {
 			final AbstractColumn man = (AbstractColumn) iterator.next();
@@ -478,7 +507,7 @@ public class AbstractMagicCardsListControl extends MagicControl {
 			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
 				@Override
 				public void run() {
-					manager.updateSortColumn(index);
+					updateSortColumn(index);
 					reloadData();
 				}
 			};
@@ -635,13 +664,13 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	}
 
 	protected void sort(int index) {
-		manager.updateSortColumn(index);
+		updateSortColumn(index);
 		abstractCardsView.loadData(null);
 	}
 
 	protected void updateFilter(MagicCardFilter filter) {
 		IPreferenceStore store = getLocalPreferenceStore();
-		HashMap map = storeToMap(store);
+		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
 	}
@@ -657,7 +686,8 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		if (manager.getControl().isDisposed())
 			return;
 		ISelection selection = getSelection();
-		manager.updateViewer();
+		IFilteredCardStore filteredStore = getFilteredStore();
+		manager.updateViewer(filteredStore);
 		if (revealSelection != null) {
 			// set desired selection
 			getSelectionProvider().setSelection(revealSelection);
@@ -671,5 +701,16 @@ public class AbstractMagicCardsListControl extends MagicControl {
 
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {
 		actionShowFind.setEnabled(!searchControl.isVisible());
+	}
+
+	protected void updateSortColumn(final int index) {
+		manager.updateSortColumn(index);
+		if (index > 0) {
+			int sortDirection = manager.getSortDirection();
+			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
+			getFilter().setSortField(man.getSortField(), sortDirection == SWT.DOWN);
+		} else {
+			getFilter().setNoSort();
+		}
 	}
 }

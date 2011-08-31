@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views;
 
-import java.util.Collection;
-
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -22,10 +20,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 
 /**
  * @author Alena
@@ -43,12 +37,9 @@ public class CompositeViewerManager extends ViewerManager {
 		this.managers = new ViewerManager[2];
 		this.managers[0] = new LazyTableViewerManager(id);
 		this.managers[1] = new LazyTreeViewerManager(id);
-		for (ViewerManager m : this.managers) {
-			m.setFilter(getFilter());
-		}
 		this.selectionProvider = new ISelectionProvider() {
 			public void addSelectionChangedListener(ISelectionChangedListener listener) {
-				for (ViewerManager m : CompositeViewerManager.this.managers) {
+				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
 					m.getViewer().addSelectionChangedListener(listener);
 				}
 			}
@@ -58,7 +49,7 @@ public class CompositeViewerManager extends ViewerManager {
 			}
 
 			public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-				for (ViewerManager m : CompositeViewerManager.this.managers) {
+				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
 					m.getViewer().removeSelectionChangedListener(listener);
 				}
 			}
@@ -81,7 +72,7 @@ public class CompositeViewerManager extends ViewerManager {
 		this.comp = new Composite(parent, SWT.NONE);
 		this.stackLayout = new StackLayout();
 		this.comp.setLayout(this.stackLayout);
-		for (ViewerManager m : this.managers) {
+		for (IMagicColumnViewer m : this.managers) {
 			Control control = m.createContents(this.comp);
 		}
 		setActivePage(this.activeIndex);
@@ -104,47 +95,24 @@ public class CompositeViewerManager extends ViewerManager {
 		return this.managers[this.activeIndex].getViewer();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateSortColumn(int)
-	 */
-	@Override
 	public void updateSortColumn(int index) {
-		for (ViewerManager m : this.managers) {
+		for (IMagicColumnViewer m : this.managers) {
 			m.updateSortColumn(index);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.ViewerManager#updateColumns(java.lang
-	 * .String)
-	 */
-	@Override
 	public void updateColumns(String newValue) {
-		for (ViewerManager m : this.managers) {
+		for (IMagicColumnViewer m : this.managers) {
 			m.updateColumns(newValue);
 		}
 	}
 
-	/**
-	 * @param indexCmc
-	 */
 	@Override
-	public void updateGroupBy(ICardField field) {
-		ICardField oldIndex = getFilter().getGroupField();
-		if (oldIndex == field)
-			return;
-		if (field != null)
-			getFilter().setSortField(field, true);
-		getFilter().setGroupField(field);
-		if (oldIndex == null && field != null) {
+	public void flip(boolean hasGroups) {
+		if (hasGroups) {
 			// flip to tree
 			this.activeIndex = 1;
-		} else if (oldIndex != null && field == null) {
+		} else {
 			// flip to table
 			this.activeIndex = 0;
 		}
@@ -152,29 +120,37 @@ public class CompositeViewerManager extends ViewerManager {
 			setActivePage(this.activeIndex);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#updateViewer()
-	 */
-	@Override
-	public void updateViewer() {
+	public void updateViewer(Object input) {
 		if (this.comp.isDisposed())
 			return;
-		this.managers[this.activeIndex].updateViewer();
+		this.managers[this.activeIndex].updateViewer(input);
 		this.comp.layout();
+	}
+
+	public void setLinesVisible(boolean grid) {
+		for (IMagicColumnViewer m : this.managers) {
+			m.setLinesVisible(grid);
+		}
+	}
+
+	@Override
+	public void hookSortAction(IColumnSortAction sortAction) {
+		for (IMagicColumnViewer m : this.managers) {
+			m.hookSortAction(sortAction);
+		}
+		super.hookSortAction(sortAction);
 	}
 
 	@Override
 	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
-		for (ViewerManager m : this.managers) {
+		for (IMagicColumnViewer m : this.managers) {
 			m.hookDoubleClickListener(doubleClickListener);
 		}
 	}
 
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
-		for (ViewerManager m : this.managers) {
+		for (IMagicColumnViewer m : this.managers) {
 			m.hookContextMenu(menuMgr);
 		}
 	}
@@ -190,15 +166,7 @@ public class CompositeViewerManager extends ViewerManager {
 	}
 
 	@Override
-	public void setFilteredCardStore(IFilteredCardStore store) {
-		for (ViewerManager m : this.managers) {
-			m.setFilteredCardStore(store);
-		}
-		super.setFilteredCardStore(store);
-	}
-
-	@Override
-	public Collection<AbstractColumn> getColumns() {
-		return this.managers[this.activeIndex].getColumnsCollection().getColumns();
+	protected int getSortDirection() {
+		return this.managers[this.activeIndex].getSortDirection();
 	}
 }

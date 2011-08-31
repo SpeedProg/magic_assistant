@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 
-import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
@@ -49,7 +47,6 @@ public class LazyTreeViewerManager extends ViewerManager {
 		this.viewer.setUseHashlookup(true);
 		updateGrid();
 		// viewer.setSorter(new NameSorter());
-		hookDragAndDrop();
 		createDefaultColumns();
 		return this.viewer.getControl();
 	}
@@ -93,7 +90,6 @@ public class LazyTreeViewerManager extends ViewerManager {
 		return newValue;
 	}
 
-	@Override
 	public void updateColumns(String value) {
 		String newValue = moveGroupOnTop(value);
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
@@ -148,43 +144,45 @@ public class LazyTreeViewerManager extends ViewerManager {
 		this.viewer.getTree().setColumnOrder(order);
 	}
 
-	protected void updateGrid() {
-		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+	public void setLinesVisible(boolean grid) {
 		this.viewer.getTree().setLinesVisible(grid);
 	}
 
-	@Override
 	public void updateSortColumn(int index) {
 		boolean sort = index >= 0;
 		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
 		this.viewer.getTree().setSortColumn(column);
 		if (sort) {
-			int sortDirection = this.viewer.getTree().getSortDirection();
+			int sortDirection = getSortDirection();
 			if (sortDirection != SWT.DOWN)
 				sortDirection = SWT.DOWN;
 			else
 				sortDirection = SWT.UP;
 			this.viewer.getTree().setSortDirection(sortDirection);
-			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
-			getFilter().setSortField(man.getSortField(), sortDirection == SWT.DOWN);
-		} else {
-			getFilter().setNoSort();
 		}
 	}
 
 	@Override
-	public void updateViewer() {
+	protected int getSortDirection() {
+		return this.viewer.getTree().getSortDirection();
+	}
+
+	protected LazyTreeViewContentProvider getContentProvider() {
+		return (LazyTreeViewContentProvider) getViewer().getContentProvider();
+	}
+
+	public void updateViewer(Object input) {
 		updateTableHeader();
 		updateGrid();
 		// long time = System.currentTimeMillis();
 		// if (this.viewer.getInput() != this.getDataHandler()) {
-		if (this.viewer.getInput() != this.getFilteredStore()) {
+		if (this.viewer.getInput() != input) {
 			this.viewer.unmapAllElements();
-			this.viewer.setInput(this.getFilteredStore());
+			this.viewer.setInput(input);
 		}
 		// System.err.println("set input1 tree time: " +
 		// (System.currentTimeMillis() - time) + " ms");
-		int size = this.getFilteredStore().getCardGroups().length;
+		int size = getContentProvider().getSize(input);
 		// System.err.println("size=" + size);
 		this.viewer.getTree().setItemCount(size);
 		this.viewer.refresh(true);

@@ -86,7 +86,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void populateStore(IProgressMonitor monitor) {
-		if (card == IMagicCard.DEFAULT)
+		if (card == IMagicCard.DEFAULT || card == null)
 			return;
 		monitor.beginTask("Loading card printings for " + card.getName(), 100);
 		MemoryFilteredCardStore fstore = (MemoryFilteredCardStore) getFilteredStore();

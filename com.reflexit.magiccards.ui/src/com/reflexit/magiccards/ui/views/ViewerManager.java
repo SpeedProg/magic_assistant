@@ -1,47 +1,42 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.Collection;
-
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.services.IDisposable;
 
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
-public abstract class ViewerManager implements IDisposable {
-	public interface IColumnSortAction {
-		void sort(int i);
-	}
-
-	private ColumnCollection col;
-	private MagicCardFilter filter;
-	private IFilteredCardStore<ICard> fstore;
+public abstract class ViewerManager implements IMagicColumnViewer {
+	private ColumnCollection collumns;
 	private IColumnSortAction sortAction;
 
 	protected ViewerManager(String viewId) {
-		this.col = doGetColumnCollection(viewId);
-		this.filter = new MagicCardFilter();
+		this.collumns = doGetColumnCollection(viewId);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
+	 * .eclipse.swt.widgets.Composite)
+	 */
 	public abstract Control createContents(Composite parent);
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#dispose()
+	 */
 	public void dispose() {
 		// override to dispose resources
 	}
@@ -51,82 +46,92 @@ public abstract class ViewerManager implements IDisposable {
 	}
 
 	protected AbstractColumn getColumn(int i) {
-		return col.getColumn(i);
+		return collumns.getColumn(i);
 	}
 
-	public Collection<AbstractColumn> getColumns() {
-		return col.getColumns();
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#getColumnsCollection
+	 * ()
+	 */
 	public ColumnCollection getColumnsCollection() {
-		return col;
+		return collumns;
 	}
 
 	protected int getColumnsNumber() {
-		return col.getColumnsNumber();
+		return collumns.getColumnsNumber();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getControl()
+	 */
 	public Control getControl() {
 		return getViewer().getControl();
 	}
 
-	/**
-	 * @return
-	 */
-	public MagicCardFilter getFilter() {
-		return this.filter;
-	}
-
-	public IFilteredCardStore<ICard> getFilteredStore() {
-		return this.fstore;
-	}
-
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider
+	 * ()
 	 */
 	public ISelectionProvider getSelectionProvider() {
 		return getViewer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getShell()
+	 */
 	public Shell getShell() {
 		return getControl().getShell();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getViewer()
+	 */
 	public abstract ColumnViewer getViewer();
 
-	/**
-	 * @param menuMgr
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
+	 * .eclipse.jface.action.MenuManager)
 	 */
 	public void hookContextMenu(MenuManager menuMgr) {
 		Menu menu = menuMgr.createContextMenu(getViewer().getControl());
 		getViewer().getControl().setMenu(menu);
 	}
 
-	/**
-	 * @param doubleClickListener
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookDoubleClickListener
+	 * (org.eclipse.jface.viewers.IDoubleClickListener)
 	 */
 	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
 		getViewer().addDoubleClickListener(doubleClickListener);
 	}
 
-	public void hookDragAndDrop() {
-		this.getViewer().getControl().setDragDetect(true);
-		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
-		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer()));
-	}
-
-	public void setFilter(MagicCardFilter filter) {
-		this.filter = filter;
-	}
-
-	public void setFilteredCardStore(IFilteredCardStore<ICard> store) {
-		this.fstore = store;
-	}
-
-	public void setSortAction(IColumnSortAction sortAction2) {
-		this.sortAction = sortAction2;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
+	 * .reflexit.magiccards.ui.views.IColumnSortAction)
+	 */
+	public void hookSortAction(IColumnSortAction sortAction) {
+		this.sortAction = sortAction;
 	}
 
 	protected void sortColumn(final int coln) {
@@ -134,27 +139,23 @@ public abstract class ViewerManager implements IDisposable {
 			sortAction.sort(coln);
 	}
 
-	public void updateColumns(String preferenceValue) {
-		// override to implement
-	}
-
-	/**
-	 * @param indexCmc
-	 */
-	public void updateGroupBy(ICardField field) {
-		ICardField oldIndex = this.filter.getGroupField();
-		if (oldIndex == field)
-			return;
-		if (field != null)
-			filter.setSortField(field, true);
-		this.filter.setGroupField(field);
-	}
-
-	public abstract void updateSortColumn(int index);
-
 	protected void updateTableHeader() {
 		// to be overriden
 	}
 
-	public abstract void updateViewer();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#flip(boolean)
+	 */
+	public void flip(boolean hasGroups) {
+		// flip between tree and table if control supports it
+	}
+
+	protected void updateGrid() {
+		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+		setLinesVisible(grid);
+	}
+
+	protected abstract int getSortDirection();
 }
