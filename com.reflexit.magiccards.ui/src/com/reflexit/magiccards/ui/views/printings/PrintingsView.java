@@ -54,6 +54,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 /**
@@ -78,7 +79,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		dbmode.setChecked(isDbMode());
-		control.setStatus("Click on a card to populate the view");
+		((IMagicCardListControl) control).setStatus("Click on a card to populate the view");
 		loadInitial();
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
 	}
@@ -130,7 +131,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
 		manager.add(sync);
-		manager.add(control.getGroupMenu());
+		manager.add(((IMagicCardListControl) control).getGroupMenu());
 	}
 
 	@Override

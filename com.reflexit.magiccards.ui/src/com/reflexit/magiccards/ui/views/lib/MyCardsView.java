@@ -11,6 +11,7 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -73,5 +74,14 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	@Override
+	public void handleEvent(final CardEvent event) {
+		super.handleEvent(event);
+		int type = event.getType();
+		if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
+			reloadData();
+		}
 	}
 }

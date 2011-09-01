@@ -40,6 +40,22 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
  * 
  */
 public class HandView extends AbstractCardsView implements ISelectionListener {
+	private final class HandViewListControl extends AbstractMagicCardsListControl {
+		private HandViewListControl(AbstractCardsView abstractCardsView) {
+			super(abstractCardsView);
+		}
+
+		@Override
+		public IMagicColumnViewer createViewerManager() {
+			return new LazyTableViewerManager(getId());
+		}
+
+		@Override
+		public void unsort() {
+			super.unsort();
+		}
+	}
+
 	public static final String ID = HandView.class.getName();
 	protected PlayingDeck store = new PlayingDeck(new MemoryCardStore());
 	private IAction shuffle;
@@ -48,7 +64,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		control.setStatus("To populate this view use 'Emulate Draw' command from a Deck view");
+		((HandViewListControl) control).setStatus("To populate this view use 'Emulate Draw' command from a Deck view");
 	}
 
 	/*
@@ -143,12 +159,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 
 	@Override
 	protected AbstractMagicCardsListControl doGetViewControl() {
-		return new AbstractMagicCardsListControl(this) {
-			@Override
-			public IMagicColumnViewer createViewerManager() {
-				return new LazyTableViewerManager(getId());
-			}
-		};
+		return new HandViewListControl(this);
 	}
 
 	@Override
@@ -159,7 +170,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	public void runShuffle() {
 		HandView.this.store.shuffle();
 		HandView.this.store.draw(7);
-		control.unsort();
+		((HandViewListControl) control).unsort();
 		control.reloadData();
 	}
 }

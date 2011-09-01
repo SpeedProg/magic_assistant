@@ -19,7 +19,7 @@ import org.eclipse.ui.contexts.IContextService;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
-public abstract class MagicControl {
+public abstract class MagicControl implements IMagicControl {
 	protected Composite partControl;
 	private IViewSite site;
 	protected Action doubleClickAction;
@@ -76,7 +76,7 @@ public abstract class MagicControl {
 		this.site = site;
 	}
 
-	protected abstract ISelectionProvider getSelectionProvider();
+	public abstract ISelectionProvider getSelectionProvider();
 
 	public IViewSite getSite() {
 		return site;
@@ -86,7 +86,7 @@ public abstract class MagicControl {
 		this.site = site;
 	}
 
-	protected abstract void createMainControl(Composite parent);
+	public abstract void createMainControl(Composite parent);
 
 	protected void loadInitial() {
 	}
@@ -94,16 +94,16 @@ public abstract class MagicControl {
 	/**
 	 * @param bars
 	 */
-	protected void setGlobalHandlers(IActionBars bars) {
+	public void setGlobalHandlers(IActionBars bars) {
 	}
 
-	protected void fillLocalPullDown(IMenuManager manager) {
+	public void fillLocalPullDown(IMenuManager manager) {
 	}
 
-	protected void fillContextMenu(IMenuManager manager) {
+	public void fillContextMenu(IMenuManager manager) {
 	}
 
-	protected void fillLocalToolBar(IToolBarManager manager) {
+	public void fillLocalToolBar(IToolBarManager manager) {
 	}
 
 	public void dispose() {
@@ -131,7 +131,7 @@ public abstract class MagicControl {
 	protected void propertyChange(PropertyChangeEvent event) {
 	}
 
-	protected void refresh() {
+	public void refresh() {
 	}
 
 	public abstract ISelection getSelection();

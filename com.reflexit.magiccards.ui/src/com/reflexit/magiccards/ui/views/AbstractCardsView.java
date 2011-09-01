@@ -51,18 +51,22 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public abstract class AbstractCardsView extends ViewPart {
 	protected Action loadExtras;
-	protected AbstractMagicCardsListControl control;
+	protected IMagicControl control;
 	private Composite partControl;
 	private Action actionRefresh;
 	private Action actionShowPrefs;
 	protected Action actionCopy;
 	protected Action actionPaste;
+	protected IFilteredCardStore fstore;
+	private MagicCardFilter filter = new MagicCardFilter();
 
 	/**
 	 * The constructor.
 	 */
 	public AbstractCardsView() {
 		control = doGetViewControl();
+		if (control instanceof IMagicCardListControl)
+			((IMagicCardListControl) control).setFilter(filter);
 	}
 
 	protected abstract AbstractMagicCardsListControl doGetViewControl();
@@ -141,14 +145,13 @@ public abstract class AbstractCardsView extends ViewPart {
 		control.fillLocalPullDown(manager);
 		manager.add(this.loadExtras);
 		manager.add(this.actionRefresh);
-		manager.add(new Separator());
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	protected void fillContextMenu(IMenuManager manager) {
-		manager.add(this.loadExtras);
 		control.fillContextMenu(manager);
+		manager.add(this.loadExtras);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -272,7 +275,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	public abstract IFilteredCardStore doGetFilteredStore();
 
 	public IFilteredCardStore getFilteredStore() {
-		return control.getFilteredStore();
+		return fstore;
 	}
 
 	/**
@@ -286,7 +289,9 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * @return
 	 */
 	public PrefixedPreferenceStore getLocalPreferenceStore() {
-		return control.getLocalPreferenceStore();
+		if (control instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) control).getLocalPreferenceStore();
+		return null;
 	}
 
 	public static interface IDeckAction {
@@ -417,11 +422,13 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	public void setFilteredCardStore(IFilteredCardStore fstore) {
-		control.setFilteredCardStore(fstore);
+		this.fstore = fstore;
+		if (control instanceof IMagicCardListControl)
+			((IMagicCardListControl) control).setFilteredCardStore(fstore);
 	}
 
 	public MagicCardFilter getFilter() {
-		return control.getFilter();
+		return filter;
 	}
 
 	private void checkInit() {

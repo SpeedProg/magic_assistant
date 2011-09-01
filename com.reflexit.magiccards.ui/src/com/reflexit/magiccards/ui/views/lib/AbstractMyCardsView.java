@@ -13,7 +13,6 @@ package com.reflexit.magiccards.ui.views.lib;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -41,7 +40,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -382,26 +380,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (event.getSource() instanceof ICard)
-						control.updateSingle((ICard) event.getSource());
-				}
-			});
+			// handled by card control
 		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
-			reloadData();
+			// nothing
 		} else if (type == CardEvent.ADD) {
-			if (event.getData() instanceof List) {
-				List arr = (List) event.getData();
-				if (arr.size() == 1)
-					control.setNextSelection(new StructuredSelection(arr));
-			} else if (event.getData() instanceof IMagicCard) {
-				control.setNextSelection(new StructuredSelection(event.getData()));
-			}
-			// System.err.println("Card added: " + revealSelection + " on " +
-			// getPartName());
-			reloadData();
-		} else {
+			// handled by card control
+		} else if (type == CardEvent.RENAME_CONTAINER) {
 			reloadData();
 		}
 	}

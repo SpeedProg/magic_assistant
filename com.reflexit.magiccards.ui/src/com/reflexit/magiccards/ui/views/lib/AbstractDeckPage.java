@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.lib;
 
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -57,14 +58,24 @@ public class AbstractDeckPage implements IDeckPage {
 	}
 
 	public void activate() {
+		// toolbar
 		IActionBars bars = view.getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
+		// local view menu
+		IMenuManager viewMenuManager = bars.getMenuManager();
+		viewMenuManager.removeAll();
+		fillLocalPullDown(viewMenuManager);
+		viewMenuManager.updateAll(true);
 		getCardStore();
 		if (store == null)
 			return;
+	}
+
+	protected void fillLocalPullDown(IMenuManager viewMenuManager) {
+		// override if need view menu
 	}
 
 	protected void fillLocalToolBar(IToolBarManager toolBarManager) {

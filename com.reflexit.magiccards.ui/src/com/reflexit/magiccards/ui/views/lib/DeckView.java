@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,6 +39,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.analyzers.ColorControl;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
 import com.reflexit.magiccards.ui.views.analyzers.ManaCurveControl;
@@ -369,15 +371,25 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void activateCardsTab() {
+		// toolbar
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
+		// local view menu
+		IMenuManager viewMenuManager = bars.getMenuManager();
+		viewMenuManager.removeAll();
+		fillLocalPullDown(viewMenuManager);
+		viewMenuManager.updateAll(true);
 	}
 
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	public IAction getGroupAction() {
+		return ((AbstractMagicCardsListControl) control).getGroupAction();
 	}
 }
