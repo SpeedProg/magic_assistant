@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.graphics;
 
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -41,8 +42,13 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	}
 
 	@Override
+	protected void fillLocalPullDown(IMenuManager viewMenuManager) {
+		super.fillLocalPullDown(viewMenuManager);
+	}
+
+	@Override
 	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
 		super.fillLocalToolBar(toolBarManager);
-		// TODO toolBarManager.add(view.getGroupAction());
+		toolBarManager.add(view.getGroupAction());
 	}
 }

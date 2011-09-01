@@ -154,8 +154,12 @@ public class DesktopFigure extends XFigure {
 			int gi;
 			if (map.size() == 0)
 				gi = j % 6;
-			else
-				gi = map.get(card);
+			else {
+				if (map.get(card) != null)
+					gi = map.get(card);
+				else
+					gi = 0;
+			}
 			layout.addCard(gi, next);
 		}
 		Collection zorder = layout.layout();
