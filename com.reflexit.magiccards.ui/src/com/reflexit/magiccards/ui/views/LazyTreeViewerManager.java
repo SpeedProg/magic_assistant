@@ -163,7 +163,7 @@ public class LazyTreeViewerManager extends ViewerManager {
 	}
 
 	@Override
-	protected int getSortDirection() {
+	public int getSortDirection() {
 		return this.viewer.getTree().getSortDirection();
 	}
 

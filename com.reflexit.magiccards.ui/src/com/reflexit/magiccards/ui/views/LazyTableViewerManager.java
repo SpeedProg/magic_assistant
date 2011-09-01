@@ -161,7 +161,7 @@ public class LazyTableViewerManager extends ViewerManager {
 	}
 
 	@Override
-	protected int getSortDirection() {
+	public int getSortDirection() {
 		return this.viewer.getTable().getSortDirection();
 	}
 

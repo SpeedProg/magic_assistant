@@ -59,8 +59,6 @@ import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.CompositeViewerManager;
-import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 /**
@@ -73,7 +71,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected Action delete;
 	private Action split;
 	private Action edit;
-	private Action paste;
 	protected Action export;
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
@@ -88,12 +85,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.paste = new Action("Paste") {
-			@Override
-			public void run() {
-				runPaste();
-			}
-		};
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 		this.delete = new Action("Remove") {
 			@Override
@@ -194,6 +185,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		}
 	};
 
+	@Override
 	protected void runPaste() {
 		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
@@ -337,8 +329,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
-		manager.add(this.copyText);
-		manager.add(this.paste);
+		manager.add(this.actionCopy);
+		manager.add(this.actionPaste);
 		manager.add(this.moveToDeckMenu);
 		manager.add(this.addToDeck);
 		manager.add(this.split);
@@ -385,11 +377,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
-	}
-
-	@Override
-	public ViewerManager doGetViewerManager() {
-		return new CompositeViewerManager(getId());
 	}
 
 	public void handleEvent(final CardEvent event) {

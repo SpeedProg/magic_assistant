@@ -55,7 +55,6 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
-import com.reflexit.magiccards.ui.views.ViewerManager;
 
 /**
  * Shows different prints of the same card in different sets and per collection
@@ -290,11 +289,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected PrintingListControl doGetViewControl() {
 		return new PrintingListControl(this);
-	}
-
-	@Override
-	public ViewerManager doGetViewerManager() {
-		return new PrintingsManager(getId());
 	}
 
 	@Override

@@ -29,7 +29,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -44,10 +43,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -386,20 +383,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		};
 	}
 
-	protected void addNewDeck() {
-		// Grab the selection out of the tree and convert it to a
-		// StructuredSelection for use by the wizard.
-		StructuredSelection currentSelection = (StructuredSelection) this.manager.getViewer().getSelection();
-		// get the wizard from the child class.
-		IWorkbenchWizard wizard = new NewDeckWizard();
-		// Get the workbench and initialize, the wizard.
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		wizard.init(workbench, currentSelection);
-		// Open the wizard dialog with the given wizard.
-		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
-		dialog.open();
-	}
-
 	public static CardCollection createNewDeckAction(CollectionsContainer parent, String name, IWorkbenchPage page) {
 		String filename = name + ".xml";
 		CardCollection d = parent.addDeck(filename);
@@ -483,7 +466,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		}
 	}
 
-	public static void openDeckView(CardCollection d, IWorkbenchPage page) throws PartInitException {
+	private static void openDeckView(CardCollection d, IWorkbenchPage page) throws PartInitException {
 		page.showView(DeckView.ID, d.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
 	}
 

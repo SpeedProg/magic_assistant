@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -32,7 +31,6 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
-import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -45,31 +43,21 @@ import com.reflexit.magiccards.ui.views.analyzers.HandView;
 import com.reflexit.magiccards.ui.views.analyzers.ManaCurveControl;
 import com.reflexit.magiccards.ui.views.analyzers.TypeStatsControl;
 
-public class DeckView extends AbstractMyCardsView implements ICardEventListener {
+public class DeckView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
-	CardCollection deck;
+	private CardCollection deck;
 	private Action shuffle;
 	private CTabFolder folder;
 	private ArrayList<IDeckPage> pages;
 	private Action sideboard;
 
-	static class DeckPageExtension {
-		String id;
-		String name;
-		IConfigurationElement elp;
+	private static class DeckPageExtension {
+		private String name;
+		private IConfigurationElement elp;
 
-		public static Collection<DeckPageExtension> parseElement(IConfigurationElement el) {
-			Collection<DeckPageExtension> res = new ArrayList<DeckPageExtension>();
-			IConfigurationElement[] children = el.getChildren();
-			for (IConfigurationElement elp : children) {
-				res.add(parsePage(elp));
-			}
-			return res;
-		}
-
-		public static DeckPageExtension parsePage(IConfigurationElement elp) {
+		private static DeckPageExtension parsePage(IConfigurationElement elp) {
 			DeckPageExtension page = new DeckPageExtension();
-			page.id = elp.getAttribute("id");
+			// page.id = elp.getAttribute("id");
 			page.name = elp.getAttribute("name");
 			page.elp = elp;
 			return page;
@@ -252,7 +240,7 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 		refresh();
 	}
 
-	protected void createExtendedTabs() {
+	private void createExtendedTabs() {
 		for (Object element : extensionPages) {
 			DeckPageExtension ex = (DeckPageExtension) element;
 			try {
@@ -348,7 +336,6 @@ public class DeckView extends AbstractMyCardsView implements ICardEventListener 
 			return;
 		for (IDeckPage deckPage : pages) {
 			IDeckPage page = deckPage;
-			// System.err.println(deckPage);
 			page.setFilteredStore(store);
 		}
 	}

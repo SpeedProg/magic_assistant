@@ -7,10 +7,17 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.CompositeViewerManager;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class MyCardsListControl extends AbstractMagicCardsListControl {
 	public MyCardsListControl(AbstractCardsView abstractCardsView) {
 		super(abstractCardsView);
+	}
+
+	@Override
+	public IMagicColumnViewer createViewerManager() {
+		return new CompositeViewerManager(getPreferencePageId());
 	}
 
 	@Override

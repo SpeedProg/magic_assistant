@@ -52,12 +52,11 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 public abstract class AbstractCardsView extends ViewPart {
 	protected Action loadExtras;
 	protected AbstractMagicCardsListControl control;
-	public static final String FIND = "org.eclipse.ui.edit.findReplace";
 	private Composite partControl;
-	private Action refresh;
-	private Action showPrefs;
-	private Action showFind;
-	protected Action copyText;
+	private Action actionRefresh;
+	private Action actionShowPrefs;
+	protected Action actionCopy;
+	protected Action actionPaste;
 
 	/**
 	 * The constructor.
@@ -85,8 +84,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		contributeToActionBars();
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
 		contextService.activateContext("com.reflexit.magiccards.ui.context");
-		// ADD the JFace Viewer as a Selection Provider to the View site.
-		getSite().setSelectionProvider(control.getSelectionProvider());
+		getSite().setSelectionProvider(getSelectionProvider());
 	}
 
 	protected void createMainControl(Composite parent) {
@@ -98,8 +96,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		super.init(site);
 		control.init(site);
 	}
-
-	public abstract ViewerManager doGetViewerManager();
 
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
@@ -129,17 +125,22 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * @param bars
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
-		showFind.setActionDefinitionId(FIND);
-		ActionHandler findHandler = new ActionHandler(this.showFind);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler(FIND, findHandler);
+		activateActionHandler(actionCopy, "org.eclipse.ui.edit.copy");
+		activateActionHandler(actionPaste, "org.eclipse.ui.edit.paste");
 		control.setGlobalHandlers(bars);
+	}
+
+	protected void activateActionHandler(Action action, String actionId) {
+		action.setActionDefinitionId(actionId);
+		ActionHandler handler = new ActionHandler(action);
+		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		service.activateHandler(actionId, handler);
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
 		control.fillLocalPullDown(manager);
 		manager.add(this.loadExtras);
-		manager.add(this.refresh);
+		manager.add(this.actionRefresh);
 		manager.add(new Separator());
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -160,7 +161,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void makeActions() {
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.showPrefs = new Action("Preferences...") {
+		this.actionShowPrefs = new Action("Preferences...") {
 			@Override
 			public void run() {
 				String id = getPreferencePageId();
@@ -170,18 +171,17 @@ public abstract class AbstractCardsView extends ViewPart {
 				}
 			}
 		};
-		this.showPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
-		this.showFind = new Action("Find...") {
-			@Override
-			public void run() {
-				runFind();
-			}
-		};
-		this.showFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
-		this.copyText = new Action("Copy") {
+		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
+		this.actionCopy = new Action("Copy") {
 			@Override
 			public void run() {
 				runCopy();
+			}
+		};
+		this.actionPaste = new Action("Paste") {
+			@Override
+			public void run() {
+				runPaste();
 			}
 		};
 		this.loadExtras = new Action("Load Extra Fields...") {
@@ -190,17 +190,17 @@ public abstract class AbstractCardsView extends ViewPart {
 				runLoadExtras();
 			}
 		};
-		this.refresh = new Action("Refresh") {
+		this.actionRefresh = new Action("Refresh") {
 			@Override
 			public void run() {
 				refresh();
 			}
 		};
-		this.refresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 	}
 
 	protected void refresh() {
-		// TODO Auto-generated method stub
+		control.refresh();
 	}
 
 	protected void runLoadExtras() {
@@ -236,6 +236,10 @@ public abstract class AbstractCardsView extends ViewPart {
 	 */
 	protected void runCopy() {
 		control.runCopy();
+	}
+
+	protected void runPaste() {
+		control.runPaste();
 	}
 
 	protected abstract String getPreferencePageId();
@@ -303,7 +307,8 @@ public abstract class AbstractCardsView extends ViewPart {
 					continue;
 				CardCollection cardCollection = deckView.getCardCollection();
 				String active = "";
-				if (DataManager.getCardHandler().getActiveDeckHandler().getCardStore() == cardCollection.getStore()) {
+				IFilteredCardStore activeHandler = DataManager.getCardHandler().getActiveDeckHandler();
+				if (activeHandler != null && activeHandler.getCardStore() == cardCollection.getStore()) {
 					active = " (Active)";
 				}
 				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName() + active;
@@ -327,10 +332,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	}
 
-	public void runFind() {
-		control.runFind();
-	}
-
 	public void reloadData() {
 		control.reloadData();
 	}
@@ -339,11 +340,6 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	private Object jobFamility = new Object();
 	private Job loadingJob;
-	protected Runnable updateViewerRunnable = new Runnable() {
-		public void run() {
-			updateViewer();
-		}
-	};
 
 	public void loadData(final Runnable postLoad) {
 		Job[] jobs = Job.getJobManager().find(jobFamility);

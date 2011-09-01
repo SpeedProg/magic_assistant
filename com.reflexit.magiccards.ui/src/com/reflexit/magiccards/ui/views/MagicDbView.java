@@ -39,18 +39,18 @@ public class MagicDbView extends AbstractCardsView {
 	}
 
 	@Override
-	public ViewerManager doGetViewerManager() {
-		return new CompositeViewerManager(getId());
-	}
-
-	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return DataManager.getCardHandler().getMagicDBFilteredStore();
 	}
 
 	@Override
 	protected AbstractMagicCardsListControl doGetViewControl() {
-		return new AbstractMagicCardsListControl(this);
+		return new AbstractMagicCardsListControl(this) {
+			@Override
+			public IMagicColumnViewer createViewerManager() {
+				return new CompositeViewerManager(getId());
+			}
+		};
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class MagicDbView extends AbstractCardsView {
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(this.addToDeck);
-		manager.add(this.copyText);
+		manager.add(this.actionCopy);
 		manager.add(this.showPrintings);
 	}
 

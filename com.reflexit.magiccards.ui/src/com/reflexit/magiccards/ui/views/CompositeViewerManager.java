@@ -166,7 +166,7 @@ public class CompositeViewerManager extends ViewerManager {
 	}
 
 	@Override
-	protected int getSortDirection() {
+	public int getSortDirection() {
 		return this.managers[this.activeIndex].getSortDirection();
 	}
 }

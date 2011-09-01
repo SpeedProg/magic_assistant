@@ -73,7 +73,7 @@ import com.reflexit.magiccards.ui.views.search.TableSearch;
  * table), and comes with actions and preferences to manipulate this list
  * 
  */
-public class AbstractMagicCardsListControl extends MagicControl {
+public abstract class AbstractMagicCardsListControl extends MagicControl {
 	public class GroupAction extends Action {
 		ICardField field;
 
@@ -101,13 +101,12 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	private SearchControl searchControl;
 	private Label statusLine;
 	private Composite topBar;
-	protected Action actionCopyText;
+	protected Action actionCopy;
 	protected Action actionGroupMenu;
-	protected Action actionRefresh;
 	protected Action actionShowFilter;
 	protected Action actionShowFind;
 	protected Action actionShowPrefs;
-	protected ViewerManager manager;
+	protected IMagicColumnViewer manager;
 	private MenuManager menuSort;
 	protected ISelection revealSelection;
 	private MagicCardFilter filter = new MagicCardFilter();
@@ -121,7 +120,7 @@ public class AbstractMagicCardsListControl extends MagicControl {
 			throw new NullPointerException();
 		this.abstractCardsView = abstractCardsView;
 		prefStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
-		this.manager = doGetViewerManager();
+		this.manager = createViewerManager();
 		initManager();
 	}
 
@@ -143,17 +142,11 @@ public class AbstractMagicCardsListControl extends MagicControl {
 
 	@Override
 	public void dispose() {
-		this.manager.dispose();
+		// this.manager.dispose(); TODO
 		super.dispose();
 	}
 
-	public IFilteredCardStore<ICard> doGetFilteredStore() {
-		return abstractCardsView.doGetFilteredStore();
-	}
-
-	public ViewerManager doGetViewerManager() {
-		return abstractCardsView.doGetViewerManager();
-	}
+	public abstract IMagicColumnViewer createViewerManager();
 
 	public MagicCardFilter getFilter() {
 		return filter;
@@ -242,8 +235,8 @@ public class AbstractMagicCardsListControl extends MagicControl {
 	}
 
 	public void runFind() {
-		AbstractMagicCardsListControl.this.searchControl.setVisible(true);
-		AbstractMagicCardsListControl.this.actionShowFind.setEnabled(false);
+		searchControl.setVisible(true);
+		actionShowFind.setEnabled(false);
 	}
 
 	public void setFilteredCardStore(IFilteredCardStore<ICard> fstore) {
@@ -415,7 +408,6 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		manager.add(this.actionShowPrefs);
 		manager.add(this.menuSort);
 		manager.add(this.getGroupMenu());
-		manager.add(this.actionRefresh);
 		manager.add(new Separator());
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -566,19 +558,12 @@ public class AbstractMagicCardsListControl extends MagicControl {
 			}
 		};
 		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
-		this.actionCopyText = new Action("Copy") {
+		this.actionCopy = new Action("Copy") {
 			@Override
 			public void run() {
 				runCopy();
 			}
 		};
-		this.actionRefresh = new Action("Refresh") {
-			@Override
-			public void run() {
-				refresh();
-			}
-		};
-		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 	}
 
 	@Override
@@ -712,5 +697,9 @@ public class AbstractMagicCardsListControl extends MagicControl {
 		} else {
 			getFilter().setNoSort();
 		}
+	}
+
+	public void runPaste() {
+		// TODO Auto-generated method stub
 	}
 }

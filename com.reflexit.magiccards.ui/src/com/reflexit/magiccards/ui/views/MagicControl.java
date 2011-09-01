@@ -62,7 +62,7 @@ public abstract class MagicControl {
 		//
 	}
 
-	IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
+	private IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			MagicControl.this.propertyChange(event);
 		}
@@ -71,7 +71,6 @@ public abstract class MagicControl {
 	public void init(IViewSite site) {
 		IContextService contextService = (IContextService) site.getService(IContextService.class);
 		contextService.activateContext("com.reflexit.magiccards.ui.context");
-		// ADD the JFace Viewer as a Selection Provider to the View site.
 		site.setSelectionProvider(getSelectionProvider());
 		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
 		this.site = site;

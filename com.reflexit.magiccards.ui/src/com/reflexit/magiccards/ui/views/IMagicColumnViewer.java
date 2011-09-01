@@ -6,16 +6,10 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 
-public interface IMagicColumnViewer extends IDisposable {
-	public abstract Control createContents(Composite parent);
-
-	public abstract void dispose();
-
+public interface IMagicColumnViewer {
 	public abstract ColumnCollection getColumnsCollection();
 
 	public abstract Control getControl();
@@ -24,8 +18,6 @@ public interface IMagicColumnViewer extends IDisposable {
 	 * @return
 	 */
 	public abstract ISelectionProvider getSelectionProvider();
-
-	public abstract Shell getShell();
 
 	public abstract ColumnViewer getViewer();
 
@@ -50,4 +42,8 @@ public interface IMagicColumnViewer extends IDisposable {
 	public abstract void flip(boolean hasGroups);
 
 	public abstract void setLinesVisible(boolean grid);
+
+	public abstract int getSortDirection();
+
+	public abstract Control createContents(Composite comp);
 }

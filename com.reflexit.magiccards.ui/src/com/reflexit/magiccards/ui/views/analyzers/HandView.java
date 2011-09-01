@@ -31,8 +31,8 @@ import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
-import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
@@ -60,18 +60,6 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return this.store;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#doGetViewerManager
-	 * (com.reflexit.magiccards.ui.views.AbstractCardsView)
-	 */
-	@Override
-	public ViewerManager doGetViewerManager() {
-		return new LazyTableViewerManager(getId());
 	}
 
 	/*
@@ -155,7 +143,12 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 
 	@Override
 	protected AbstractMagicCardsListControl doGetViewControl() {
-		return new AbstractMagicCardsListControl(this);
+		return new AbstractMagicCardsListControl(this) {
+			@Override
+			public IMagicColumnViewer createViewerManager() {
+				return new LazyTableViewerManager(getId());
+			}
+		};
 	}
 
 	@Override

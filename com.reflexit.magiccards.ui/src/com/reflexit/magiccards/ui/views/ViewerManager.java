@@ -49,13 +49,6 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return collumns.getColumn(i);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#getColumnsCollection
-	 * ()
-	 */
 	public ColumnCollection getColumnsCollection() {
 		return collumns;
 	}
@@ -157,5 +150,5 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		setLinesVisible(grid);
 	}
 
-	protected abstract int getSortDirection();
+	public abstract int getSortDirection();
 }

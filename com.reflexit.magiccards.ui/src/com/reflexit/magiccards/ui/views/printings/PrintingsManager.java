@@ -124,7 +124,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 	}
 
 	@Override
-	protected int getSortDirection() {
+	public int getSortDirection() {
 		return this.viewer.getTree().getSortDirection();
 	}
 
