@@ -47,8 +47,7 @@ public class FileUtils {
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			if (fos != null)
-				fos.close();
+			fos.close();
 		}
 	}
 

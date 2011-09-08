@@ -111,22 +111,20 @@ public abstract class NLSLocal {
 
 	static String[] buildNlSuffixes(Locale locale) {
 		String[] nlSuffixes = null;
-		if (nlSuffixes == null) {
-			// build list of suffixes for loading resource bundles
-			String nl = locale.toString();
-			ArrayList result = new ArrayList(4);
-			int lastSeparator;
-			while (true) {
-				result.add('_' + nl + EXTENSION);
-				lastSeparator = nl.lastIndexOf('_');
-				if (lastSeparator == -1)
-					break;
-				nl = nl.substring(0, lastSeparator);
-			}
-			// add the empty suffix last (most general)
-			result.add(EXTENSION);
-			nlSuffixes = (String[]) result.toArray(new String[result.size()]);
+		// build list of suffixes for loading resource bundles
+		String nl = locale.toString();
+		ArrayList result = new ArrayList(4);
+		int lastSeparator;
+		while (true) {
+			result.add('_' + nl + EXTENSION);
+			lastSeparator = nl.lastIndexOf('_');
+			if (lastSeparator == -1)
+				break;
+			nl = nl.substring(0, lastSeparator);
 		}
+		// add the empty suffix last (most general)
+		result.add(EXTENSION);
+		nlSuffixes = (String[]) result.toArray(new String[result.size()]);
 		return nlSuffixes;
 	}
 
@@ -160,12 +158,11 @@ public abstract class NLSLocal {
 			} catch (IOException e) {
 				log(SEVERITY_ERROR, "Error loading " + variants[i], e); //$NON-NLS-1$
 			} finally {
-				if (input != null)
-					try {
-						input.close();
-					} catch (IOException e) {
-						// ignore
-					}
+				try {
+					input.close();
+				} catch (IOException e) {
+					// ignore
+				}
 			}
 		}
 		if (Debug.DEBUG_MESSAGE_BUNDLES)

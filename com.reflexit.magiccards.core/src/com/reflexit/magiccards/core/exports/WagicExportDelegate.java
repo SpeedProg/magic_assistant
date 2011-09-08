@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -26,24 +26,22 @@ import com.reflexit.magiccards.core.model.storage.IStorageContainer;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
 /**
- * Export to Wagic: The Homebrew (http://wololo.net/wagic/)
- * TODO: add description
+ * Export to Wagic: The Homebrew (http://wololo.net/wagic/) TODO: add
+ * description
  */
 public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public WagicExportDelegate() {
 	}
 
 	public String getName() {
-		if (store instanceof ILocatable) {
+		if (store != null) {
 			return ((ILocatable) store).getLocation().getName();
 		}
 		ICardStore store1 = store.getCardStore();
-		if (store1 instanceof IStorageContainer) {
-			IStorage storage = ((IStorageContainer) store1).getStorage();
-			if (storage instanceof IStorageInfo) {
-				IStorageInfo si = ((IStorageInfo) storage);
-				return si.getName();
-			}
+		IStorage storage = ((IStorageContainer) store1).getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si.getName();
 		}
 		return "deck";
 	}
