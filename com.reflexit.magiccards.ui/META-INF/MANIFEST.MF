@@ -22,6 +22,7 @@ Export-Package: com.reflexit.magiccards.ui,
  com.reflexit.magiccards.ui.views,
  com.reflexit.magiccards.ui.views.card,
  com.reflexit.magiccards.ui.views.columns,
+ com.reflexit.magiccards.ui.views.editions,
  com.reflexit.magiccards.ui.views.lib,
  com.reflexit.magiccards.ui.views.nav,
  com.reflexit.magiccards.ui.widgets
