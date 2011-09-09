@@ -322,7 +322,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		comp.setLayout(layout);
 		this.statusLine = new Label(comp, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalIndent = 5;
+		gd.horizontalIndent = 0;
 		this.statusLine.setLayoutData(gd);
 		this.statusLine.setText("Status");
 		return comp;
