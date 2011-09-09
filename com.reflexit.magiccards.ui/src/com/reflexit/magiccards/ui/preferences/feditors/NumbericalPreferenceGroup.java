@@ -6,13 +6,13 @@ import org.eclipse.swt.widgets.Composite;
 import com.reflexit.magiccards.core.model.FilterHelper;
 
 public class NumbericalPreferenceGroup extends MFieldEditorPreferencePage {
-	//private Group group;
+	// private Group group;
 	@Override
 	protected void createFieldEditors() {
-		//		this.group = new Group(getFieldEditorParent(), SWT.NONE);
-		//		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//		this.group.setText("Subtype");
-		//		Composite parent = this.group;
+		// this.group = new Group(getFieldEditorParent(), SWT.NONE);
+		// this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		// this.group.setText("Subtype");
+		// Composite parent = this.group;
 		// addCheckBox("Any", parent);
 		String id = FilterHelper.getPrefConstant(FilterHelper.POWER, FilterHelper.NUMERIC_POSTFIX);
 		getPreferenceStore().setDefault(id, "0");
@@ -29,6 +29,9 @@ public class NumbericalPreferenceGroup extends MFieldEditorPreferencePage {
 		id = FilterHelper.getPrefConstant(FilterHelper.COMMUNITYRATING, FilterHelper.NUMERIC_POSTFIX);
 		getPreferenceStore().setDefault(id, "0");
 		addField(new NumericalComparisonFieldEditor(id, "Community Rating", getFieldEditorParent()));
+		id = FilterHelper.getPrefConstant(FilterHelper.COLLNUM, FilterHelper.NUMERIC_POSTFIX);
+		getPreferenceStore().setDefault(id, "0");
+		addField(new NumericalComparisonFieldEditor(id, "Collector's Number", getFieldEditorParent()));
 	}
 
 	@Override

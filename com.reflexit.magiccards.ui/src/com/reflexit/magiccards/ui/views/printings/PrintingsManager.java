@@ -21,6 +21,7 @@ import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
+import com.reflexit.magiccards.ui.views.columns.LanguageColumn;
 import com.reflexit.magiccards.ui.views.columns.LocationColumn;
 import com.reflexit.magiccards.ui.views.columns.OwnershipColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
@@ -73,6 +74,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 				columns.add(new CountColumn());
 				columns.add(new OwnershipColumn());
 				columns.add(new LocationColumn());
+				columns.add(new LanguageColumn());
 			}
 		};
 	}

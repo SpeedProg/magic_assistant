@@ -46,6 +46,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -107,15 +108,50 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
 		if (card == null || card == MagicCard.DEFAULT)
 			return res;
+		String englishName = card.getName();
+		String language = card.getLanguage();
+		if (language != null && !language.equals(Language.ENGLISH.getLang())) {
+			int enId = card.getEnglishCardId();
+			if (enId != 0) {
+				IMagicCard card2 = store.getCard(enId);
+				englishName = card2.getName();
+			}
+		}
+		boolean multilang = false;
 		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard next = iterator.next();
 			try {
-				if (card.getName().equals(next.getName())) {
+				if (englishName.equals(next.getName())) {
 					res.add(next);
 				}
+				language = next.getLanguage();
+				if (language != null && !language.equals(Language.ENGLISH.getLang())) {
+					multilang = true;
+				}
 			} catch (Exception e) {
-				System.err.println("Bad card: " + card);
+				MagicUIActivator.log("Bad card: " + next);
 			}
+		}
+		if (multilang) {
+			ArrayList<IMagicCard> res2 = new ArrayList<IMagicCard>();
+			for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
+				IMagicCard next = iterator.next();
+				try {
+					int parentId = next.getEnglishCardId();
+					if (parentId != 0) {
+						for (Iterator<IMagicCard> iterator2 = res.iterator(); iterator2.hasNext();) {
+							IMagicCard mc = iterator2.next();
+							if (mc.getCardId() == parentId) {
+								if (!res.contains(next))
+									res2.add(next);
+							}
+						}
+					}
+				} catch (Exception e) {
+					MagicUIActivator.log("Bad card: " + next);
+				}
+			}
+			res.addAll(res2);
 		}
 		return res;
 	}
