@@ -25,6 +25,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	String text;
 	transient String colorType = null;
 	transient int cmc = -1;
+	int enId;
 
 	/*
 	 * (non-Javadoc)
@@ -50,6 +51,14 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	public void setCardId(int id) {
 		this.id = id;
+	}
+
+	public int getEnglishCardId() {
+		return this.enId;
+	}
+
+	public void setEnglishCardId(int id) {
+		this.enId = id;
 	}
 
 	/*
@@ -296,21 +305,23 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		case CTYPE:
 			return (getColorType());
 		case CMC:
-			return (new Integer(getCmc()));
+			return (Integer.valueOf(getCmc()));
 		case DBPRICE:
-			return getDbPrice();
+			return (this.dbprice);
 		case RATING:
-			return getCommunityRating();
+			return (this.rating);
 		case ARTIST:
-			return getArtist();
+			return (this.artist);
 		case RULINGS:
-			return getRulings();
+			return (this.rulings);
 		case LANG:
-			return getLanguage();
+			return (this.lang);
 		case COLLNUM:
-			return getCollNumber();
+			return (this.num);
 		case TEXT:
-			return getText();
+			return (this.text);
+		case ENID:
+			return (this.enId);
 		default:
 			break;
 		}
@@ -428,6 +439,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			break;
 		case TEXT:
 			setText(value);
+			break;
+		case ENID:
+			setEnglishCardId(Integer.parseInt(value));
 			break;
 		default:
 			return false;

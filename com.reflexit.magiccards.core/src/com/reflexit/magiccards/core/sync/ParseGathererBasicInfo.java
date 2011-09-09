@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
@@ -99,14 +98,10 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 	}
 
 	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
-		try {
-			ICardHandler cardHandler = DataManager.getCardHandler();
-			if (cardHandler != null)
-				setMagicDb(cardHandler.getMagicDBStore());
-			parseSingleCard(magicCard, fieldMap, monitor);
-		} catch (IOException e) {
-			Activator.log("Cannot load card " + e.getMessage() + " " + magicCard.getCardId());
-		}
+		ICardHandler cardHandler = DataManager.getCardHandler();
+		if (cardHandler != null)
+			setMagicDb(cardHandler.getMagicDBStore());
+		parseSingleCard(magicCard, fieldMap, monitor);
 	}
 
 	void parseSingleCard(IMagicCard magicCard, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
@@ -124,10 +119,10 @@ public class ParseGathererBasicInfo extends ParseGathererPage {
 	}
 
 	@Override
-	protected void loadHtml(String html, IProgressMonitor monitor) {
+	protected void loadHtml(String html1, IProgressMonitor monitor) {
 		monitor.beginTask("Updating card", 6);
 		try {
-			html = html.replaceAll("\r?\n", " ");
+			String html = html1.replaceAll("\r?\n", " ");
 			extractField(card, fieldMapFilter, html, MagicCardField.NAME, namePattern);
 			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.TYPE, typesPattern);

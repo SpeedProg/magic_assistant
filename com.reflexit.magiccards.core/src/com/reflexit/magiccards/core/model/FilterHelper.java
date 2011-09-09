@@ -32,6 +32,7 @@ public class FilterHelper {
 	public static final String TEXT_NOT_1 = TEXT_LINE + "_exclude_1";
 	public static final String TEXT_NOT_2 = TEXT_LINE + "_exclude_2";
 	public static final String TEXT_NOT_3 = TEXT_LINE + "_exclude_3";
+	public static final String COLLNUM = MagicCardField.COLLNUM.name();
 
 	public static String escapeProperty(String string) {
 		String res = string.toLowerCase();
@@ -62,6 +63,7 @@ public class FilterHelper {
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.PRICE, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.DBPRICE, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.COMMUNITYRATING, FilterHelper.NUMERIC_POSTFIX));
+		ids.add(FilterHelper.getPrefConstant(FilterHelper.COLLNUM, FilterHelper.NUMERIC_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.ARTIST, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.COMMENT, FilterHelper.TEXT_POSTFIX));
 		ids.add(FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX));

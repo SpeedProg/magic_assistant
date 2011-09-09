@@ -48,4 +48,6 @@ public interface IMagicCard extends ICard {
 	public abstract String getLanguage();
 
 	public abstract boolean matches(ICardField left, TextValue right);
+
+	public abstract int getEnglishCardId();
 }

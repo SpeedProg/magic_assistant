@@ -417,4 +417,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	public boolean matches(ICardField left, TextValue right) {
 		return card.matches(left, right);
 	}
+
+	public int getEnglishCardId() {
+		return card.getEnglishCardId();
+	}
 }

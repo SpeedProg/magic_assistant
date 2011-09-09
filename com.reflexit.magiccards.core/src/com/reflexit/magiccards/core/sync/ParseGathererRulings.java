@@ -110,6 +110,8 @@ public class ParseGathererRulings extends ParseGathererPage {
 				card2.setId(id);
 				card2.setSet(set.trim());
 				card2.setRarity(rarity.trim());
+				card2.setLanguage(null);
+				card2.setText(card.getOracleText());
 				if (magicDb != null && magicDb.getCard(card2.getCardId()) == null) {
 					magicDb.add(card2);
 					System.err.println("Added " + card2.getName() + " " + id + " " + set + " " + rarity);

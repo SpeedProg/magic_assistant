@@ -65,6 +65,7 @@ public class UpdateCardsFromWeb {
 						if (langId != 0) {
 							MagicCard newMagicCard = magicCard.cloneCard();
 							newMagicCard.setCardId(langId);
+							newMagicCard.setEnglishCardId(card.getCardId());
 							newMagicCard.setLanguage(lang);
 							linfoParser.setCard(newMagicCard);
 							linfoParser.load(new SubProgressMonitor(monitor, 40));

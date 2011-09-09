@@ -494,6 +494,8 @@ public class MagicCardFilter {
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
 		} else if (FilterHelper.COMMUNITYRATING.equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardField.RATING, value);
+		} else if (FilterHelper.COLLNUM.equals(requestedId)) {
+			res = BinaryExpr.fieldInt(MagicCardField.COLLNUM, value);
 		} else if (FilterHelper.ARTIST.equals(requestedId)) {
 			res = textSearch(MagicCardField.ARTIST, value);
 		} else if (FilterHelper.PRICE.equals(requestedId)) {
@@ -580,6 +582,7 @@ public class MagicCardFilter {
 		expr = createAndGroup(createTextSearch(map, FilterHelper.COMMENT), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
 		expr = createAndGroup(createNumericSearch(map, FilterHelper.COMMUNITYRATING), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterHelper.COLLNUM), expr);
 		expr = createAndGroup(createTextSearch(map, FilterHelper.ARTIST), expr);
 		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.SPECIAL.name()), expr);
 		expr = createAndGroup(createNumericSearch(map, MagicCardFieldPhysical.FORTRADECOUNT.name()), expr);
