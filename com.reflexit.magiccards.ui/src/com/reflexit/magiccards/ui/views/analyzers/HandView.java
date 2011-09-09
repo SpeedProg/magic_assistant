@@ -22,6 +22,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -54,17 +55,24 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		public void unsort() {
 			super.unsort();
 		}
+
+		@Override
+		public String getStatusMessage() {
+			if (deck == null)
+				return "To populate this view use 'Emulate Draw' command from a Deck view";
+			return deck.getName() + ": drawn " + store.getSize() + " of " + ((ICardCountable) deck.getStore()).getCount();
+		}
 	}
 
 	public static final String ID = HandView.class.getName();
-	protected PlayingDeck store = new PlayingDeck(new MemoryCardStore());
+	private PlayingDeck store = new PlayingDeck(new MemoryCardStore());
 	private IAction shuffle;
 	private Action draw;
+	private CardCollection deck;
 
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		((HandViewListControl) control).setStatus("To populate this view use 'Emulate Draw' command from a Deck view");
 	}
 
 	/*
@@ -150,6 +158,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		if (sel.getFirstElement() instanceof CardCollection) {
 			CardCollection deck = (CardCollection) sel.getFirstElement();
 			if (deck.isOpen()) {
+				this.deck = deck;
 				ICardStore<IMagicCard> store2 = deck.getStore();
 				this.store.setStore(store2);
 				runShuffle();
