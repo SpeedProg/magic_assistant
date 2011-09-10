@@ -4,7 +4,7 @@ Bundle-Name: Install Update
 Bundle-SymbolicName: com.reflexit.magicassistant.p2;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: com.reflexit.magicassistant.p2.Activator
-Bundle-Vendor: Reflex IT
+Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.equinox.p2.ui;bundle-version="2.0.0",
