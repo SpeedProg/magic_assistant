@@ -68,7 +68,7 @@ mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
 rm -rf $EXPORT_DIR/update
 mkdir $EXPORT_DIR/update
-cp -r $RESULT/site.p2 $EXPORT_DIR/update/1.1
+cp -r $RESULT/site.p2 $EXPORT_DIR/update/1.2
 (cd $OUTPUT; unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*.zip;)
 echo "Published results at $EXPORT_DIR/$RELEASE/"
 fi
@@ -92,16 +92,18 @@ if [ "$UPLOAD" -eq 1 ]; then
 fi
 if [ "$UPDATE_SITE" -eq 1 ]; then
   echo "Uploading update sute for $RELEASE..."
-  REMOTE_PATH="htdocs/update/1.1"
-#  $SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.1/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
+  REMOTE_PATH="htdocs/update/1.2"
   (
-  cd $EXPORT_DIR/update/1.1/
+  cd $EXPORT_DIR/update/1.2/
   unzip content.jar
   unzip artifacts.jar
+  #uncomment to do full update with platform
+  #$SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.2/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
   $SCP -v -i "$SF_PRIVATE_KEY" binary/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/binary/"
   $SCP -v -i "$SF_PRIVATE_KEY" features/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/features/"
   $SCP -v -i "$SF_PRIVATE_KEY" plugins/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/plugins/"
   $SCP -v -i "$SF_PRIVATE_KEY" *.xml *.jar "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/"
+#  $SCP -v -i "$SF_PRIVATE_KEY" features/org.eclipse.rcp*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/features/"
   )
 fi
 if [ "$UPDATE_DOCS" -eq 1 ]; then
