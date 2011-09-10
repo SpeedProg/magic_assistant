@@ -4,7 +4,7 @@ Bundle-Name: Preloaded Cards Database
 Bundle-SymbolicName: com.reflexit.magiccards.db
 Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: com.reflexit.magiccards.db.DbActivator
-Bundle-Vendor: REFLEXIT
+Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
