@@ -4,7 +4,7 @@ Bundle-Name: Tests Plug-in
 Bundle-SymbolicName: com.reflexit.mtgtournament.core.tests
 Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: com.reflexit.mtgtournament.core.tests.Activator
-Bundle-Vendor: REFLEXIT
+Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  com.reflexit.mtgtournament.core
