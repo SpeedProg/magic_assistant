@@ -12,7 +12,8 @@ import org.eclipse.equinox.p2.operations.UpdateOperation;
 
 public class P2Util {
 	// XXX Check for updates to this application and return a status.
-	public static IStatus checkForUpdates(IProvisioningAgent agent, IProgressMonitor monitor) throws OperationCanceledException {
+	public static IStatus checkForUpdates(IProvisioningAgent agent, IProgressMonitor monitor, boolean apply)
+			throws OperationCanceledException {
 		// IProvisioningAgent agent = (IProvisioningAgent)
 		// ServiceHelper.getService(getContext(),
 		// IProvisioningAgent.SERVICE_NAME);
@@ -30,17 +31,22 @@ public class P2Util {
 		if (status.getSeverity() == IStatus.CANCEL)
 			throw new OperationCanceledException();
 		if (status.getSeverity() != IStatus.ERROR) {
-			// More complex status handling might include showing the user what
-			// updates
-			// are available if there are multiples, differentiating patches vs.
-			// updates, etc.
-			// In this example, we simply update as suggested by the operation.
-			ProvisioningJob job = operation.getProvisioningJob(null);
-			if (job == null)
-				return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Cannot get updates");
-			status = job.runModal(sub.newChild(100));
-			if (status.getSeverity() == IStatus.CANCEL)
-				throw new OperationCanceledException();
+			if (apply) {
+				// More complex status handling might include showing the user
+				// what
+				// updates
+				// are available if there are multiples, differentiating patches
+				// vs.
+				// updates, etc.
+				// In this example, we simply update as suggested by the
+				// operation.
+				ProvisioningJob job = operation.getProvisioningJob(null);
+				if (job == null)
+					return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Cannot get updates");
+				status = job.runModal(sub.newChild(100));
+				if (status.getSeverity() == IStatus.CANCEL)
+					throw new OperationCanceledException();
+			}
 		}
 		return status;
 	}

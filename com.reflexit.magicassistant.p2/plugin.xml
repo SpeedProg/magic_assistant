@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            name="Check for Sofware Updates"
+            name="Check for Software Updates"
             id="com.reflexit.magicassistant.command.update">
       </command>
       <command

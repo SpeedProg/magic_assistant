@@ -13,7 +13,7 @@ package com.reflexit.magicassistant.p2;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * Message class for provisioning UI messages.  
+ * Message class for provisioning UI messages.
  * 
  * @since 3.4
  */
@@ -34,10 +34,6 @@ public class Messages extends NLS {
 	public static String ProvisioningPreferencePage_NeverOpenWizard;
 	public static String ProvisioningPreferencePage_OpenWizardIfInvalid;
 	public static String ProvisioningPreferencePage_PromptToOpenWizard;
-	public static String ProvSDKUIActivator_ErrorSavingPrefs;
-	public static String ProvSDKUIActivator_NoSelfProfile;
-	public static String ProvSDKUIActivator_OpenWizardAnyway;
-	public static String ProvSDKUIActivator_Question;
 	public static String SDKPolicy_PrefPageName;
 	public static String UpdateHandler_NoSitesMessage;
 	public static String UpdateHandler_NoSitesTitle;
