@@ -13,6 +13,7 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -44,6 +45,7 @@ public class ParseGathererSets extends ParseGathererPage {
 	 */
 	private static Pattern setStartPattern = Pattern.compile("<b>\\s*Filter Card Set:.*?<option value=\"\"></option>(.*?)</select>");
 	private static Pattern oneSetPattern = Pattern.compile("<option.*?>(.*?)</option>");
+	private Collection<Edition> newSets = new ArrayList<Editions.Edition>();
 
 	public ParseGathererSets() {
 		setTitle("Updating sets...");
@@ -51,6 +53,7 @@ public class ParseGathererSets extends ParseGathererPage {
 
 	@Override
 	protected void loadHtml(String html, IProgressMonitor monitor) {
+		Editions editions = Editions.getInstance();
 		html = html.replaceAll("\r?\n", " ");
 		Matcher matcher = setStartPattern.matcher(html);
 		if (matcher.find()) {
@@ -61,9 +64,17 @@ public class ParseGathererSets extends ParseGathererPage {
 				if (name.length() == 0)
 					continue;
 				name = name.replaceAll("&quot;", "\"");
-				Editions.getInstance().addAbbr(name, null);
+				if (!editions.containsName(name)) {
+					Edition ed = editions.addAbbr(name, null);
+					newSets.add(ed);
+				} else
+					editions.addAbbr(name, null);
 			}
 		}
+	}
+
+	public Collection<Edition> getNew() {
+		return newSets;
 	}
 
 	@Override

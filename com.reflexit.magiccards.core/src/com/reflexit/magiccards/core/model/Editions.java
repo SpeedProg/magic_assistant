@@ -43,6 +43,11 @@ public class Editions implements ISearchableProperty {
 			this.name = name;
 		}
 
+		@Override
+		public String toString() {
+			return name;
+		}
+
 		public void setReleaseDate(String date) throws ParseException {
 			if (date == null || date.length() == 0 || date.equals("?"))
 				release = null;
@@ -149,6 +154,10 @@ public class Editions implements ISearchableProperty {
 				edition.addAbbreviation(abbr);
 		}
 		return edition;
+	}
+
+	public synchronized boolean containsName(String name) {
+		return getEditionByName(name) != null;
 	}
 
 	public String getAbbrByName(String name) {
