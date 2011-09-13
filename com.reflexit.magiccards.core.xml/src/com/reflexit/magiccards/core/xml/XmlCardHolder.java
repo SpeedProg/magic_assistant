@@ -81,10 +81,10 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public void loadInitial() throws MagicException, CoreException, IOException {
-		loadFromFlatResource("all.txt");
+		// loadFromFlatResource("all.txt");
 		Collection<String> editions = Editions.getInstance().getNames();
 		for (String set : editions) {
-			String abbr = (Editions.getInstance().getAbbrByName(set));
+			String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
 			try {
 				loadFromFlatResource(abbr + ".txt");
 				System.err.println("Loading " + abbr);
@@ -98,8 +98,16 @@ public class XmlCardHolder implements ICardHandler {
 		InputStream is = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + set), false);
 		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-		loadtFromFlatIntoXml(st, list);
+		loadtFromFlatIntoXml(st, list, isSingleSet(set));
 		is.close();
+	}
+
+	private boolean isSingleSet(String set) {
+		if (set.equalsIgnoreCase("Standard"))
+			return false;
+		if (set.equalsIgnoreCase("All"))
+			return false;
+		return true;
 	}
 
 	public static File getDbFolder() throws CoreException {
@@ -107,21 +115,25 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list) throws MagicException, IOException {
+	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws MagicException,
+			IOException {
 		ICardStore store = getMagicDBFilteredStore().getCardStore();
 		int init = store.size();
-		loadFromFlat(st, list);
+		loadFromFlat(st, list, markCn);
 		boolean hasAny = list.size() > 0;
 		store.addAll(list);
 		int rec = store.size() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 
-	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list) throws IOException {
+	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
 		String line;
 		st.readLine(); // header ignore for now
+		MagicCardField[] xfields = MagicCardField.values();
 		HashSet<Integer> hash = new HashSet<Integer>();
+		int cnum = 0;
 		while ((line = st.readLine()) != null) {
+			cnum++;
 			if (line.trim().length() == 0)
 				continue;
 			String[] fields = line.split("\\Q" + TextPrinter.SEPARATOR);
@@ -129,20 +141,14 @@ public class XmlCardHolder implements ICardHandler {
 				fields[i] = fields[i].trim();
 			}
 			MagicCard card = new MagicCard();
-			card.setId(fields[0]);
-			card.setName(fields[1]);
-			card.setCost(fields[2]);
-			card.setType(fields[3]);
-			card.setPower(fields[4]);
-			card.setToughness(fields[5]);
-			card.setOracleText(fields[6]);
-			card.setSet(fields[7]);
-			card.setRarity(fields[8]);
-			if (fields.length > 9)
-				card.setColorType(fields[9]);
-			if (fields.length > 10)
-				card.setCmc(fields[10]);
-			card.setExtraFields();
+			int i = 0;
+			for (ICardField field : xfields) {
+				card.setObjectByField(field, fields[i]);
+				i++;
+			}
+			if (markCn && card.getCollNumber() == null || card.getCollNumber().length() == 0) {
+				card.setCollNumber(cnum);
+			}
 			int id = card.getCardId();
 			if (id == 0) {
 				System.err.print("Skipped invalid: ");
@@ -208,7 +214,7 @@ public class XmlCardHolder implements ICardHandler {
 			pm.subTask("Updating database...");
 			BufferedReader st = new BufferedReader(new FileReader(file));
 			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-			rec = loadtFromFlatIntoXml(st, list);
+			rec = loadtFromFlatIntoXml(st, list, isSingleSet(set));
 			st.close();
 			pm.worked(30);
 			pm.subTask("Updating editions...");
