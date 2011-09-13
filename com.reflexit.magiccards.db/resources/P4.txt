@@ -1,0 +1,58 @@
+ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|CTYPE|CMC|DBPRICE|LANG|EDITION_ABBR|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID
+25485|Moon Sprite|{1}{G}|Creature - Faerie|1|1|Flying|Starter 2000|Uncommon|mono|2|0.0|||0.0||||Flying|0
+25456|Angelic Blessing|{2}{W}|Sorcery|||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|Starter 2000|Common|mono|3|0.0|||0.0||||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|0
+25498|Armored Pegasus|{1}{W}|Creature - Pegasus|1|2|Flying|Starter 2000|Common|mono|2|0.0|||0.0||||Flying|0
+25492|Bog Imp|{1}{B}|Creature - Imp|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Starter 2000|Common|mono|2|0.0|||0.0||||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0
+25447|Breath of Life|{3}{W}|Sorcery|||Return target creature card from your graveyard to the battlefield.|Starter 2000|Uncommon|mono|4|0.0|||0.0||||Return target creature card from your graveyard to the battlefield.|0
+25477|Coercion|{2}{B}|Sorcery|||Target opponent reveals his or her hand. You choose a card from it. That player discards that card.|Starter 2000|Common|mono|3|0.0|||0.0||||Target opponent reveals his or her hand. You choose a card from it. That player discards that card.|0
+25503|Counterspell|{U}{U}|Instant|||Counter target spell.|Starter 2000|Common|mono|2|0.0|||0.0||||Counter target spell.|0
+25500|Disenchant|{1}{W}|Instant|||Destroy target artifact or enchantment.|Starter 2000|Common|mono|2|0.0|||0.0||||Destroy target artifact or enchantment.|0
+25507|Drudge Skeletons|{1}{B}|Creature - Skeleton|1|1|{B}: Regenerate Drudge Skeletons. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|Starter 2000|Common|mono|2|0.0|||0.0||||{B}: Regenerate Drudge Skeletons. <i>(The next time this creature would be destroyed this turn, it isn't. Instead tap it, remove all damage from it, and remove it from combat.)</i>|0
+25493|Durkwood Boars|{4}{G}|Creature - Boar|4|4||Starter 2000|Common|mono|5|0.0|||0.0|||||0
+25455|Eager Cadet|{W}|Creature - Human Soldier|1|1||Starter 2000|Common|mono|1|0.0|||0.0|||||0
+25514|Flame Spirit|{4}{R}|Creature - Elemental Spirit|2|3|{R}: Flame Spirit gets +1/+0 until end of turn.|Starter 2000|Common|mono|5|0.0|||0.0||||{R}: Flame Spirit gets +1/+0 until end of turn.|0
+25510|Flight|{U}|Enchantment - Aura|||Enchant creature<br>Enchanted creature has flying.|Starter 2000|Common|mono|1|0.0|||0.0||||Enchant creature<br>Enchanted creature has flying.|0
+25483|Forest||Basic Land - Forest|||G|Starter 2000|Land|land|0|0.0|||0.0||||G|0
+25482|Forest||Basic Land - Forest|||G|Starter 2000|Land|land|0|0.0|||0.0||||G|0
+25502|Giant Growth|{G}|Instant|||Target creature gets +3/+3 until end of turn.|Starter 2000|Common|mono|1|0.0|||0.0||||Target creature gets +3/+3 until end of turn.|0
+25457|Giant Octopus|{3}{U}|Creature - Octopus|3|3||Starter 2000|Common|mono|4|0.0|||0.0|||||0
+25486|Goblin Hero|{2}{R}|Creature - Goblin|2|2||Starter 2000|Common|mono|3|0.0|||0.0|||||0
+25490|Hand of Death|{2}{B}|Sorcery|||Destroy target nonblack creature.|Starter 2000|Common|mono|3|0.0|||0.0||||Destroy target nonblack creature.|0
+25536|Hero's Resolve|{1}{W}|Enchantment - Aura|||Enchant creature<br>Enchanted creature gets +1/+5.|Starter 2000|Common|mono|2|0.0|||0.0||||Enchant creature<br>Enchanted creature gets +1/+5.|0
+25526|Inspiration|{3}{U}|Instant|||Target player draws two cards.|Starter 2000|Common|mono|4|0.0|||0.0||||Target player draws two cards.|0
+25452|Island||Basic Land - Island|||U|Starter 2000|Land|land|0|0.0|||0.0||||U|0
+25451|Island||Basic Land - Island|||U|Starter 2000|Land|land|0|0.0|||0.0||||U|0
+25450|Knight Errant|{1}{W}|Creature - Human Knight|2|2||Starter 2000|Common|mono|2|0.0|||0.0|||||0
+25488|Lava Axe|{4}{R}|Sorcery|||Lava Axe deals 5 damage to target player.|Starter 2000|Common|mono|5|0.0|||0.0||||Lava Axe deals 5 damage to target player.|0
+25508|Llanowar Elves|{G}|Creature - Elf Druid|1|1|{T}: Add {G} to your mana pool.|Starter 2000|Common|mono|1|0.0|||0.0||||{T}: Add {G} to your mana pool.|0
+25458|Merfolk of the Pearl Trident|{U}|Creature - Merfolk|1|1||Starter 2000|Common|mono|1|0.0|||0.0|||||0
+25491|Mons's Goblin Raiders|{R}|Creature - Goblin|1|1||Starter 2000|Common|mono|1|0.0|||0.0|||||0
+25475|Monstrous Growth|{1}{G}|Sorcery|||Target creature gets +4/+4 until end of turn.|Starter 2000|Common|mono|2|0.0|||0.0||||Target creature gets +4/+4 until end of turn.|0
+25481|Mountain||Basic Land - Mountain|||R|Starter 2000|Land|land|0|0.0|||0.0||||R|0
+25480|Mountain||Basic Land - Mountain|||R|Starter 2000|Land|land|0|0.0|||0.0||||R|0
+25528|Obsianus Golem|{6}|Artifact Creature - Golem|4|6||Starter 2000|Uncommon|colorless|6|0.0|||0.0|||||0
+25476|Ogre Warrior|{3}{R}|Creature - Ogre Warrior|3|3||Starter 2000|Common|mono|4|0.0|||0.0|||||0
+25540|Orcish Oriflamme|{3}{R}|Enchantment|||Attacking creatures you control get +1/+0.|Starter 2000|Uncommon|mono|4|0.0|||0.0||||Attacking creatures you control get +1/+0.|0
+25454|Plains||Basic Land - Plains|||W|Starter 2000|Land|land|0|0.0|||0.0||||W|0
+25453|Plains||Basic Land - Plains|||W|Starter 2000|Land|land|0|0.0|||0.0||||W|0
+25506|Prodigal Sorcerer|{2}{U}|Creature - Human Wizard|1|1|{T}: Prodigal Sorcerer deals 1 damage to target creature or player.|Starter 2000|Common|mono|3|0.0|||0.0||||{T}: Prodigal Sorcerer deals 1 damage to target creature or player.|0
+25499|Python|{1}{B}{B}|Creature - Snake|3|2||Starter 2000|Common|mono|3|0.0|||0.0|||||0
+25529|Rod of Ruin|{4}|Artifact|||{3}, {T}: Rod of Ruin deals 1 damage to target creature or player.|Starter 2000|Uncommon|colorless|4|0.0|||0.0||||{3}, {T}: Rod of Ruin deals 1 damage to target creature or player.|0
+25459|Royal Falcon|{1}{W}|Creature - Bird|1|1|Flying|Starter 2000|Common|mono|2|0.0|||0.0||||Flying|0
+25533|Samite Healer|{1}{W}|Creature - Human Cleric|1|1|{T}: Prevent the next 1 damage that would be dealt to target creature or player this turn.|Starter 2000|Common|mono|2|0.0|||0.0||||{T}: Prevent the next 1 damage that would be dealt to target creature or player this turn.|0
+25487|Scathe Zombies|{2}{B}|Creature - Zombie|2|2||Starter 2000|Common|mono|3|0.0|||0.0|||||0
+25460|Sea Eagle|{1}{U}|Creature - Bird|1|1|Flying|Starter 2000|Common|mono|2|0.0|||0.0||||Flying|0
+25501|Shock|{R}|Instant|||Shock deals 2 damage to target creature or player.|Starter 2000|Common|mono|1|0.0|||0.0||||Shock deals 2 damage to target creature or player.|0
+25543|Soul Net|{1}|Artifact|||Whenever a creature dies, you may pay {1}. If you do, you gain 1 life.|Starter 2000|Uncommon|colorless|1|0.0|||0.0||||Whenever a creature dies, you may pay {1}. If you do, you gain 1 life.|0
+25496|Spined Wurm|{4}{G}|Creature - Wurm|5|4||Starter 2000|Common|mono|5|0.0|||0.0|||||0
+25497|Stone Rain|{2}{R}|Sorcery|||Destroy target land.|Starter 2000|Common|mono|3|0.0|||0.0||||Destroy target land.|0
+25479|Swamp||Basic Land - Swamp|||B|Starter 2000|Land|land|0|0.0|||0.0||||B|0
+25478|Swamp||Basic Land - Swamp|||B|Starter 2000|Land|land|0|0.0|||0.0||||B|0
+25504|Terror|{1}{B}|Instant|||Destroy target nonartifact, nonblack creature. It can't be regenerated.|Starter 2000|Common|mono|2|0.0|||0.0||||Destroy target nonartifact, nonblack creature. It can't be regenerated.|0
+25462|Time Ebb|{2}{U}|Sorcery|||Put target creature on top of its owner's library.|Starter 2000|Common|mono|3|0.0|||0.0||||Put target creature on top of its owner's library.|0
+25494|Trained Orgg|{6}{R}|Creature - Orgg|6|6||Starter 2000|Rare|mono|7|0.0|||0.0|||||0
+25515|Venerable Monk|{2}{W}|Creature - Human Monk Cleric|2|2|When Venerable Monk enters the battlefield, you gain 2 life.|Starter 2000|Common|mono|3|0.0|||0.0||||When Venerable Monk enters the battlefield, you gain 2 life.|0
+25463|Vizzerdrix|{6}{U}|Creature - Rabbit Beast|6|6||Starter 2000|Rare|mono|7|0.0|||0.0|||||0
+25449|Wild Griffin|{2}{W}|Creature - Griffin|2|2|Flying|Starter 2000|Common|mono|3|0.0|||0.0||||Flying|0
+25484|Willow Elf|{G}|Creature - Elf|1|1||Starter 2000|Common|mono|1|0.0|||0.0|||||0
+25448|Wind Drake|{2}{U}|Creature - Drake|2|2|Flying|Starter 2000|Common|mono|3|0.0|||0.0||||Flying|0
