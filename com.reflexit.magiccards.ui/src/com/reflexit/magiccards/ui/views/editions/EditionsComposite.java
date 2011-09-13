@@ -56,6 +56,8 @@ import com.reflexit.magiccards.core.model.FilterHelper;
  * 
  */
 public class EditionsComposite extends Composite {
+	private static final String SORT_DIRECTION = "set_sort_direction";
+	private static final String SORT_COLUMN = "set_sort_column";
 	private boolean buttons;
 
 	public EditionsComposite(Composite parent) {
@@ -176,7 +178,10 @@ public class EditionsComposite extends Composite {
 			AbstractEditionColumn man = (AbstractEditionColumn) treeViewer.getLabelProvider(index);
 			vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
 			treeViewer.setComparator(vcomp);
+			getPreferenceStore().setValue(SORT_COLUMN, man.getColumnName());
+			getPreferenceStore().setValue(SORT_DIRECTION, sortDirection == SWT.UP ? 1 : -1);
 		} else {
+			getPreferenceStore().setValue(SORT_COLUMN, null);
 			treeViewer.setComparator(null);
 		}
 	}
@@ -260,6 +265,22 @@ public class EditionsComposite extends Composite {
 		if (!this.checkedTree) {
 			this.treeViewer.setSelection(new StructuredSelection(sel));
 		}
+		String colName = getPreferenceStore().getString(SORT_COLUMN);
+		if (colName != null)
+			for (int i = 0; i < columns.size(); i++) {
+				AbstractEditionColumn man = columns.get(i);
+				if (colName.equals(man.getColumnName())) {
+					int sortvalue = getPreferenceStore().getInt(SORT_DIRECTION);
+					if (sortvalue != 0) {
+						int sortDirection = sortvalue == 1 ? SWT.UP : SWT.DOWN;
+						vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
+						treeViewer.setComparator(vcomp);
+						treeViewer.getTree().setSortDirection(sortDirection);
+					}
+					break;
+				}
+			}
+		treeViewer.refresh();
 	}
 
 	/**
