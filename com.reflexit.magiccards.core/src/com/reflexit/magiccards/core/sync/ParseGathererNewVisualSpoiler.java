@@ -398,10 +398,11 @@ public class ParseGathererNewVisualSpoiler {
 		if (set == null || set.equals("Standard")) {
 			url = updateLatest[0];
 		} else {
-			if (set.equalsIgnoreCase("All"))
-				set = "";
-			set = set.replaceAll(" ", "%20");
-			url = base + "&set=[%22" + set + "%22]";
+			if (set.equalsIgnoreCase("All")) {
+				url = base + "&set=[%22%22]";
+			} else {
+				url = base + "&set=[%22" + set.replaceAll(" ", "%20") + "%22]&sort=cn+";
+			}
 		}
 		parseFileOrUrl(url, file, options, pm);
 	}

@@ -1,11 +1,11 @@
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -25,8 +25,7 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 		this.store = filteredLibrary;
 	}
 
-	public void exportToTable(IProgressMonitor monitor, IFilteredCardStore<IMagicCard> store,
-	        TableExporter exporter, boolean header) {
+	public void exportToTable(IProgressMonitor monitor, IFilteredCardStore<IMagicCard> store, TableExporter exporter, boolean header) {
 		try {
 			if (monitor == null)
 				monitor = new NullProgressMonitor();

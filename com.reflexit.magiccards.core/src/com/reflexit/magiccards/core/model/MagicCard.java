@@ -184,17 +184,10 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 
 	public Collection getValues() {
 		ArrayList list = new ArrayList();
-		list.add(new Integer(this.id));
-		list.add(this.name);
-		list.add(this.cost);
-		list.add(this.type);
-		list.add(this.power);
-		list.add(this.toughness);
-		list.add(this.oracleText);
-		list.add(this.edition);
-		list.add(this.rarity);
-		list.add(getColorType());
-		list.add(new Integer(getCmc()));
+		MagicCardField[] xfields = MagicCardField.values();
+		for (ICardField field : xfields) {
+			list.add(getObjectByField(field));
+		}
 		return list;
 	}
 
@@ -496,5 +489,12 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			return CardTypes.getInstance().hasType(this, right.getText());
 		}
 		return right.toPattern().matcher(value).find();
+	}
+
+	public void setCollNumber(int cnum) {
+		if (cnum != 0)
+			this.num = String.valueOf(cnum);
+		else
+			this.num = null;
 	}
 }

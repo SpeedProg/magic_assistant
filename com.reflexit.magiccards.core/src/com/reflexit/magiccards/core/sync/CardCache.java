@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
@@ -91,16 +92,14 @@ public class CardCache {
 
 	@NotNull
 	public static String createLocalImageFilePath(IMagicCard card) {
-		String edition = card.getSet();
-		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
-		if (editionAbbr == null)
+		String editionName = card.getSet();
+		Editions editions = Editions.getInstance();
+		Edition set = editions.getEditionByName(editionName);
+		if (set == null)
 			throw new CannotDetermineSetAbbriviation(card);
+		String editionAbbr = set.getBaseFileName();
 		int cardId = card.getCardId();
 		IPath path = Activator.getStateLocationAlways();
-		if (editionAbbr.equals("CON")) {
-			// special hack for windows, which cannot create CON directory
-			editionAbbr = "CONFL";
-		}
 		String locale = "EN";
 		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
 		String file = path.append(part).toPortableString();

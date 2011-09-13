@@ -110,6 +110,16 @@ public class Editions implements ISearchableProperty {
 		public String getType() {
 			return type;
 		}
+
+		public String getBaseFileName() {
+			String a = getMainAbbreviation();
+			if (a.equals("CON")) {
+				// special hack for windows, which cannot create CON
+				// directory
+				a = "CONFL";
+			}
+			return a;
+		}
 	}
 
 	private HashMap<String, Edition> name2ed;
