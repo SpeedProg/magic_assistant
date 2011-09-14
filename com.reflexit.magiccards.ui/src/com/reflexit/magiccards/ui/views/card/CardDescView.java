@@ -84,12 +84,10 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					public void run() {
 						boolean nocard = (card == IMagicCard.DEFAULT);
 						CardDescView.this.panel.setVisible(!nocard);
-						CardDescView.this.message.setVisible(nocard);
 						if (nocard)
-							message.setText("Click on a card to populate the view");
+							setMessage("Click on a card to populate the view");
 						else
-							message.setText("");
-						message.getParent().layout(true);
+							setMessage("");
 						if (!isStillNeeded(card))
 							return;
 						CardDescView.this.panel.reload(card);
@@ -134,12 +132,10 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					public void run() {
 						if (remoteImage == null || remoteImage.getBounds().width < 20) {
 							CardDescView.this.panel.setImageNotFound(card, e);
-							message.setVisible(true);
 							if (e != null)
-								message.setText(e.getMessage());
+								setMessage(e.getMessage());
 							else
-								message.setText("Image loading is disabled");
-							message.getParent().layout(true);
+								setMessage("Image loading is disabled");
 						} else {
 							if (!isStillNeeded(card))
 								return;
@@ -216,6 +212,19 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			}
 			return Status.OK_STATUS;
 		}
+	}
+
+	public void setMessage(String text) {
+		if (text == null || text.length() == 0) {
+			message.setText("");
+			message.setVisible(false);
+			((GridData) message.getLayoutData()).heightHint = 0;
+		} else {
+			message.setText(text);
+			message.setVisible(true);
+			((GridData) message.getLayoutData()).heightHint = SWT.DEFAULT;
+		}
+		message.getParent().layout(true);
 	}
 
 	@Override
