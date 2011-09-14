@@ -51,6 +51,9 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			}
 		};
 		addField(caching);
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup",
+				getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards of startup", getFieldEditorParent()));
 		Label space = new Label(getFieldEditorParent(), SWT.NONE);
 		space.setText("When card is selected:");
 		BooleanFieldEditor load = new BooleanFieldEditor(PreferenceConstants.LOAD_IMAGES, "Load card graphics from the web",
