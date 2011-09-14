@@ -33,10 +33,12 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -748,7 +750,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public void runPaste() {
-		// nothing
+		Control fc = partControl.getDisplay().getFocusControl();
+		if (fc instanceof Text)
+			((Text) fc).paste();
+		if (fc instanceof Combo)
+			((Combo) fc).paste();
 	}
 
 	public void handleEvent(final CardEvent event) {

@@ -191,6 +191,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (contents instanceof IMagicCard[]) {
 			IMagicCard[] cards = (IMagicCard[]) contents;
 			DataManager.getCardHandler().copyCards(Arrays.asList(cards), ((ILocatable) getFilteredStore().getCardStore()).getLocation());
+		} else {
+			super.runPaste();
 		}
 	}
 
