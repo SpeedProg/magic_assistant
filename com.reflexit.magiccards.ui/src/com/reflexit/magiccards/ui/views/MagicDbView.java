@@ -165,7 +165,8 @@ public class MagicDbView extends AbstractCardsView {
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
-		manager.add(exportDatabase); // this is for internal use only
+		if (MagicUIActivator.TRACE_EXPORT)
+			manager.add(exportDatabase); // this is for internal use only
 	}
 
 	@Override

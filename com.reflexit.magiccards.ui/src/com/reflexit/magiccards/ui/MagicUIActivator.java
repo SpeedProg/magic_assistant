@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogSettings;
@@ -28,6 +29,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "com.reflexit.magiccards.ui";
 	// The shared instance
 	private static MagicUIActivator plugin;
+	public static boolean TRACE_EXPORT = false;
+	public static boolean TRACE_UI = false;
 
 	/**
 	 * The constructor
@@ -47,6 +50,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		activateCoreSettings();
+		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
+		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
 	}
 
 	private void activateCoreSettings() {
