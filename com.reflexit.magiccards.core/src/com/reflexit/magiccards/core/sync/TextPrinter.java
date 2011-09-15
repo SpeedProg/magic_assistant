@@ -21,9 +21,13 @@ public class TextPrinter {
 		StringBuffer buf = new StringBuffer();
 		for (Iterator iter = list.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element != null)
-				buf.append(element.toString());
-			else
+			if (element != null) {
+				String string = element.toString();
+				if (string.contains("\n")) {
+					string = string.replaceAll("\n", "<br>");
+				}
+				buf.append(string);
+			} else
 				buf.append("");
 			if (iter.hasNext()) {
 				buf.append(sep);
