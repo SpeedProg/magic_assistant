@@ -136,29 +136,33 @@ public class XmlCardHolder implements ICardHandler {
 			cnum++;
 			if (line.trim().length() == 0)
 				continue;
-			String[] fields = line.split("\\Q" + TextPrinter.SEPARATOR);
-			for (int i = 0; i < fields.length; i++) {
-				fields[i] = fields[i].trim();
+			try {
+				String[] fields = line.split("\\Q" + TextPrinter.SEPARATOR);
+				for (int i = 0; i < fields.length; i++) {
+					fields[i] = fields[i].trim();
+				}
+				MagicCard card = new MagicCard();
+				int i = 0;
+				for (ICardField field : xfields) {
+					card.setObjectByField(field, fields[i]);
+					i++;
+				}
+				if (markCn && card.getCollNumber() == null || card.getCollNumber().length() == 0) {
+					card.setCollNumber(cnum);
+				}
+				int id = card.getCardId();
+				if (id == 0) {
+					System.err.print("Skipped invalid: ");
+					TextPrinter.print(card, System.err);
+					continue;
+				}
+				if (hash.contains(id))
+					continue;
+				hash.add(id);
+				list.add(card);
+			} catch (Exception e) {
+				Activator.log(e);
 			}
-			MagicCard card = new MagicCard();
-			int i = 0;
-			for (ICardField field : xfields) {
-				card.setObjectByField(field, fields[i]);
-				i++;
-			}
-			if (markCn && card.getCollNumber() == null || card.getCollNumber().length() == 0) {
-				card.setCollNumber(cnum);
-			}
-			int id = card.getCardId();
-			if (id == 0) {
-				System.err.print("Skipped invalid: ");
-				TextPrinter.print(card, System.err);
-				continue;
-			}
-			if (hash.contains(id))
-				continue;
-			hash.add(id);
-			list.add(card);
 		}
 		return list;
 	}
