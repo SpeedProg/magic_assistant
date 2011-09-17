@@ -31,6 +31,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	private static MagicUIActivator plugin;
 	public static boolean TRACE_EXPORT = false;
 	public static boolean TRACE_UI = false;
+	public static boolean TRACE_TESTING = false;
 
 	/**
 	 * The constructor
@@ -52,6 +53,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		activateCoreSettings();
 		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
+		TRACE_TESTING = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing"));
 	}
 
 	private void activateCoreSettings() {

@@ -44,8 +44,6 @@ public class LazyTableViewerManager extends ViewerManager {
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new LazyTableViewContentProvider());
-		// MagicCardLabelProvider labelProvider = new MagicCardLabelProvider();
-		// this.viewer.setLabelProvider(labelProvider);
 		this.viewer.setUseHashlookup(true);
 		updateGrid();
 		// viewer.setSorter(new NameSorter());

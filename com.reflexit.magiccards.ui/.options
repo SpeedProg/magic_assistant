@@ -1,2 +1,3 @@
 com.reflexit.magiccards.ui/debug=false
 com.reflexit.magiccards.ui/debug/export=false
+com.reflexit.magiccards.ui/debug/testing=false
