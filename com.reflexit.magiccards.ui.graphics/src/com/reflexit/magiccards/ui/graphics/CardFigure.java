@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.graphics;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -42,7 +43,7 @@ public class CardFigure extends XFigure {
 	}
 
 	@Override
-	public void paint(GC gc, int x, int y, int width, int height, boolean all) {
+	public void paint(GC gc, int x, int y, int width, int height) {
 		// System.err.println("Clipping " + x + "," + y + "," + width + "," +
 		// height);
 		Rectangle clip = new Rectangle(x, y, width, height);
@@ -51,6 +52,10 @@ public class CardFigure extends XFigure {
 		if (in.isEmpty())
 			return;
 		gc.drawImage(image, in.x - cb.x, in.y - cb.y, in.width, in.height, in.x, in.y, in.width, in.height);
+		if (isSelected()) {
+			gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+			gc.drawFocus(cb.x, cb.y, cb.width, cb.height);
+		}
 	}
 
 	@Override
@@ -76,8 +81,6 @@ public class CardFigure extends XFigure {
 				y = pb.height - bounds.height;
 			mousePos = p;
 			setLocation(x, y);
-			Rectangle area = bounds.union(new Rectangle(x, y, bounds.width, bounds.height));
-			parent.redraw(area.x, area.y, area.width, area.height, true);
 			return true;
 		}
 		return false;

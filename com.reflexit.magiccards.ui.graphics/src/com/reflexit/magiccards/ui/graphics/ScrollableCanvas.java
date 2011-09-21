@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -15,7 +16,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public class ScrollableCanvas extends Canvas implements MouseWheelListener, MouseListener, MouseMoveListener {
+public class ScrollableCanvas extends Canvas implements MouseWheelListener, MouseListener, MouseMoveListener, MouseTrackListener {
 	private ScrollableCanvas canvas;
 	private Image image;
 	protected Point origin;
@@ -49,6 +50,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 				resize();
 			}
 		});
+		canvas.addMouseTrackListener(this);
 		canvas.addListener(SWT.Paint, new Listener() {
 			public void handleEvent(Event e) {
 				GC gc = e.gc;
@@ -95,23 +97,16 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	}
 
 	public void mouseUp(MouseEvent e) {
-		if (mousePos != null) {
-			mouseStopDrag(e);
+		if (e.button == 1) {
+			mousePos = null;
 		}
-		mousePos = null;
-	}
-
-	public void mouseStopDrag(MouseEvent e) {
 	}
 
 	public void mouseDown(MouseEvent e) {
 		if (e.button == 1) {
 			mousePos = new Point(e.x, e.y);
-			mouseStartDrag(e);
+			// dragDetect(e);
 		}
-	}
-
-	public void mouseStartDrag(MouseEvent e) {
 	}
 
 	public void mouseDoubleClick(MouseEvent e) {
@@ -119,8 +114,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	}
 
 	public void mouseMove(MouseEvent e) {
-		if (mousePos != null) {
-			mouseDrag(e);
+		if (isButton1Pressed(e)) {
 			Point newpoint = new Point(e.x, e.y);
 			if (dragCanvas) {
 				hBar.setSelection(hBar.getSelection() + mousePos.x - newpoint.x);
@@ -131,7 +125,8 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 		}
 	}
 
-	public void mouseDrag(MouseEvent e) {
+	protected boolean isButton1Pressed(MouseEvent e) {
+		return (e.stateMask & SWT.BUTTON_MASK & SWT.BUTTON1) != 0;
 	}
 
 	public void resize() {
@@ -177,5 +172,17 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 		// if (marginHeight > 0) {
 		// gc.fillRectangle(0, rect.height, client.width, marginHeight);
 		// }
+	}
+
+	public void mouseEnter(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	public void mouseExit(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	public void mouseHover(MouseEvent e) {
+		// TODO Auto-generated method stub
 	}
 }

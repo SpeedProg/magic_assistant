@@ -6,6 +6,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -13,28 +20,31 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
+import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
 
-public class DesktopFigure extends XFigure {
+public class DesktopFigure extends XFigure implements ISelectionProvider {
 	private ArrayList<CardFigure> children;
-	private CardFigure active;
+	private CardFigure selected;
 	private DesktopCanvas canvas;
 	private IFilteredCardStore<IMagicCard> fstore;
 	private final Rectangle DEFAULT_SIZE = new Rectangle(0, 0, 1200, 768);
 	private ICardField currentGroup;
 	private boolean mouseMove;
-	private int lastActivePosition;
+	private int lastActiveZOrder;
+	private Image backgroungImage;
+	private boolean dragging;
 
 	public DesktopFigure(DesktopCanvas deskCanvas) {
 		super(null);
 		this.canvas = deskCanvas;
 		children = new ArrayList<CardFigure>();
-		image = new Image(Display.getCurrent(), DEFAULT_SIZE.width, DEFAULT_SIZE.height);
-		canvas.setImage(image);
+		setImage(new Image(Display.getCurrent(), DEFAULT_SIZE.width, DEFAULT_SIZE.height));
+		canvas.setImage(getImage());
 		redraw();
 	}
 
@@ -44,85 +54,134 @@ public class DesktopFigure extends XFigure {
 		canvas.redraw();
 	}
 
+	@Override
+	public void redraw(int x, int y, int width, int height) {
+		super.redraw(x, y, width, height);
+		canvas.redraw();
+	}
+
 	public void moveUp(CardFigure card) {
-		children.remove(card);
+		remove(card);
+		add(card);
+	}
+
+	public void add(CardFigure card) {
 		children.add(card);
 	}
 
-	public void moveTo(int i, CardFigure card) {
+	public void remove(CardFigure card) {
 		children.remove(card);
+	}
+
+	public void moveTo(int i, CardFigure card) {
+		remove(card);
 		children.add(i, card);
 	}
 
 	@Override
-	public void paint(GC gc, int x, int y, int width, int height, boolean all) {
-		// background
-		Rectangle rect = new Rectangle(x, y, width, height);
-		Rectangle bounds = getBounds();
-		gc.setClipping(rect);
-		// gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-		gc.fillRectangle(0, 0, bounds.width, bounds.height);
-		gc.drawLine(0, 0, bounds.width, bounds.height);
-		gc.drawLine(0, bounds.height, bounds.width, 0);
-		// gc.drawText("Default Image", 10, 10);
-		// children
-		if (all) {
+	public void paint(GC gc, int x, int y, int width, int height) {
+		if (!dragging) {
+			// background
+			Rectangle rect = new Rectangle(x, y, width, height);
+			Rectangle bounds = getBounds();
+			gc.setClipping(rect);
+			// gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+			gc.fillRectangle(0, 0, bounds.width, bounds.height);
+			gc.drawLine(0, 0, bounds.width, bounds.height);
+			gc.drawLine(0, bounds.height, bounds.width, 0);
+			// gc.drawText("Default Image", 10, 10);
+			// children
 			for (CardFigure child : children) {
 				Rectangle cb = child.getBounds();
 				if (cb.intersects(rect)) {
 					// System.err.println("Repaining " + child);
-					child.paint(gc, x, y, width, height, all);
+					child.paint(gc, x, y, width, height);
 				}
 			}
+		} else {
+			paintBg(gc, x, y, width, height);
+			paintActive(gc, x, y, width, height);
 		}
+	}
+
+	public void paintActive(GC gc, int x, int y, int width, int height) {
+		Rectangle rect = new Rectangle(x, y, width, height);
+		CardFigure child = selected;
+		Rectangle cb = child.getBounds();
+		if (cb.intersects(rect)) {
+			// System.err.println("Repaining " + child);
+			child.paint(gc, x, y, width, height);
+		}
+	}
+
+	public void paintBg(GC gc, int x, int y, int width, int height) {
+		// background
+		gc.drawImage(backgroungImage, x, y, width, height, x, y, width, height);
 	}
 
 	@Override
 	public boolean mouseDrag(Point p) {
 		mouseMove = true;
-		if (active != null) {
-			Rectangle cb = active.getBounds();
+		if (selected != null && dragging) {
+			Rectangle cb = selected.getBounds();
 			if (cb.contains(p)) {
-				active.mouseDrag(p);
-				canvas.redraw(); // XXX
+				selected.mouseDrag(p);
+				Rectangle area = cb.union(selected.getBounds());
+				redraw(area.x, area.y, area.width, area.height);
 				return true;
 			}
-			active.mouseStopDrag(p);
-			active = null;
+			selected.mouseStopDrag(p);
+			dragging = false;
 		}
 		return false;
 	}
 
 	@Override
 	public boolean mouseStartDrag(Point p) {
-		active = null;
+		if (selected != null) {
+			selected.setSelected(false);
+		}
+		selected = null;
 		mouseMove = false;
 		for (int i = children.size() - 1; i >= 0; i--) {
 			CardFigure child = children.get(i);
 			if (child.getBounds().contains(p)) {
-				active = child;
+				selected = child;
 				break;
 			}
 		}
-		if (active == null)
+		selectionChanged(new SelectionChangedEvent(this, getSelection()));
+		if (selected == null)
 			return false;
-		active.mouseStartDrag(p);
-		lastActivePosition = children.indexOf(active);
-		moveUp(active);
+		selected.mouseStartDrag(p);
+		selected.setSelected(true);
+		lastActiveZOrder = children.indexOf(selected);
+		remove(selected);
+		super.redraw();
+		dragging = true;
+		backgroungImage = new Image(canvas.getDisplay(), getImage(), SWT.IMAGE_COPY);
 		redraw();
 		return true;
 	}
 
 	@Override
 	public boolean mouseStopDrag(Point p) {
-		if (active == null)
+		if (selected == null)
 			return false;
-		active.mouseStopDrag(p);
-		if (!mouseMove) {
-			moveTo(lastActivePosition, active);
-		}
+		selected.mouseStopDrag(p);
+		if (!mouseMove)
+			moveTo(lastActiveZOrder, selected);
+		else
+			add(selected);
+		dragging = false;
+		backgroungImage.dispose();
+		backgroungImage = null;
 		redraw();
 		return true;
+	}
+
+	public IFilteredCardStore<IMagicCard> getInput() {
+		return fstore;
 	}
 
 	public void setInput(IFilteredCardStore<IMagicCard> store) {
@@ -198,7 +257,7 @@ public class DesktopFigure extends XFigure {
 			String path = CardCache.createLocalImageFilePath(card);
 			boolean imageCached = new File(path).exists();
 			if (found != null && found.isImageNotFound() && imageCached) {
-				children.remove(found);
+				remove(found);
 			} else if (found != null) {
 				continue;
 			}
@@ -247,5 +306,41 @@ public class DesktopFigure extends XFigure {
 		image = new Image(Display.getCurrent(), newsize.width, newsize.height);
 		canvas.setImage(image);
 		super.redraw();
+	}
+
+	public IStructuredSelection getSelection() {
+		if (selected != null)
+			return new StructuredSelection(selected.getCard());
+		else
+			return new StructuredSelection();
+	}
+
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		addListenerObject(listener);
+	}
+
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		removeListenerObject(listener);
+	}
+
+	private void selectionChanged(final SelectionChangedEvent event) {
+		Object[] listeners = getListeners();
+		for (Object listener : listeners) {
+			ISelectionChangedListener lis = (ISelectionChangedListener) listener;
+			try {
+				lis.selectionChanged(event);
+			} catch (Throwable t) {
+				Activator.log(t);
+			}
+		}
+	}
+
+	public void setSelection(ISelection selection) {
+		IMagicCard firstElement = (IMagicCard) ((IStructuredSelection) selection).getFirstElement();
+		CardFigure findCardFigure = findCardFigure(firstElement);
+		if (findCardFigure == null)
+			return;
+		this.selected = findCardFigure;
+		selectionChanged(new SelectionChangedEvent(this, selection));
 	}
 }

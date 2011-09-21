@@ -1,18 +1,31 @@
 package com.reflexit.magiccards.ui.graphics;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
+import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
+import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 
 public class GraphicsDeckPage extends AbstractDeckPage {
 	private DesktopCanvas panel;
 	private Label status;
 	private IFilteredCardStore fstore;
+	private Action refresh;
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -20,7 +33,37 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		status = createStatusLine(getArea());
 		panel = new DesktopCanvas(getArea());
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		this.refresh = new Action("Refresh", SWT.NONE) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+			}
+
+			@Override
+			public void run() {
+				activate();
+			}
+		};
+		panel.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+				view.getSite().getSelectionProvider().setSelection(sel);
+			}
+		});
+		hookDragAndDrop();
 		return getArea();
+	}
+
+	public void hookDragAndDrop() {
+		// panel.setDragDetect(true);
+		StructuredViewer viewer = getViewer();
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
+		viewer.addDragSupport(operations, transfers, new MagicCardDragListener(viewer));
+		viewer.addDropSupport(operations, transfers, new MagicCardDropAdapter(viewer));
+	}
+
+	private StructuredViewer getViewer() {
+		return panel.getViewer();
 	}
 
 	@Override
@@ -50,5 +93,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
 		super.fillLocalToolBar(toolBarManager);
 		toolBarManager.add(view.getGroupAction());
+		toolBarManager.add(refresh);
 	}
 }

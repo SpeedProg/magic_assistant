@@ -1,14 +1,16 @@
 package com.reflexit.magiccards.ui.graphics;
 
+import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-public class XFigure {
+public class XFigure extends EventManager {
 	protected Image image;
 	protected XFigure parent;
 	protected Point location;
+	private boolean selected = false;
 
 	public XFigure(XFigure parent) {
 		super();
@@ -24,24 +26,22 @@ public class XFigure {
 		this.image = image;
 	}
 
-	public void redraw(int x, int y, int width, int height, boolean all) {
+	public void redraw(int x, int y, int width, int height) {
 		GC gc = new GC(image);
-		paint(gc, x, y, width, height, all);
+		paint(gc, x, y, width, height);
 		gc.dispose();
 	}
 
 	public void redraw() {
-		GC gc = new GC(image);
 		Rectangle bounds = image.getBounds();
-		paint(gc, bounds.x, bounds.y, bounds.width, bounds.height, true);
-		gc.dispose();
+		redraw(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 
 	public void paint(GC gc) {
 		return;
 	}
 
-	public void paint(GC gc, int x, int y, int width, int height, boolean all) {
+	public void paint(GC gc, int x, int y, int width, int height) {
 		return;
 	}
 
@@ -72,5 +72,13 @@ public class XFigure {
 	public void dispose() {
 		image.dispose();
 		image = null;
+	}
+
+	public void setSelected(boolean b) {
+		this.selected = b;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 }
