@@ -159,16 +159,14 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Get card image from local cache. This image is not managed - to be
-	 * disposed by called.
+	 * Get card image from local cache. This image is not managed - to be disposed by called.
 	 * 
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot
-	 *         found locally or cannot be downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be downloaded remotely
 	 * @throws IOException
 	 */
 	public Image getCardImage(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation,
@@ -196,8 +194,8 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Check that card image exists locally or schedule a loading job if image
-	 * not found. This image is not managed - to be disposed by called.
+	 * Check that card image exists locally or schedule a loading job if image not found. This image is not managed - to be disposed by
+	 * called.
 	 * 
 	 * @param card
 	 * @throws IOException
@@ -267,9 +265,9 @@ public class ImageCreator {
 	public void setAlphaBlendingForCorners(ImageData fullImageData) {
 		int width = fullImageData.width;
 		int height = fullImageData.height;
-		int redMask = fullImageData.palette.redMask;
-		int blueMask = fullImageData.palette.blueMask;
-		int greenMask = fullImageData.palette.greenMask;
+		// int redMask = fullImageData.palette.redMask;
+		// int blueMask = fullImageData.palette.blueMask;
+		// int greenMask = fullImageData.palette.greenMask;
 		byte[] alphaData = new byte[height * width];
 		int[] lineData = new int[width];
 		for (int y = 0; y < height; y++) {
@@ -280,18 +278,17 @@ public class ImageCreator {
 				int al = FULL_OPAQUE;
 				int x1 = width / 2 - Math.abs(x - width / 2) - radius;
 				int y1 = height / 2 - Math.abs(y - height / 2) - radius;
+				// int pixelValue = lineData[x];
+				// int r = (pixelValue & redMask) >>> -fullImageData.palette.redShift;
+				// int g = (pixelValue & greenMask) >>> -fullImageData.palette.greenShift;
+				// int b = (pixelValue & blueMask) >>> -fullImageData.palette.blueShift;
+				// int al2 = al - (r + g + b) / 3;
 				if (y1 < 0 && x1 < 0) {
-					int pixelValue = lineData[x];
-					int r = (pixelValue & redMask) >>> -fullImageData.palette.redShift;
-					int g = (pixelValue & greenMask) >>> -fullImageData.palette.greenShift;
-					int b = (pixelValue & blueMask) >>> -fullImageData.palette.blueShift;
-					int al1 = al - (r + g + b) / 3;
-					if (al1 < 10) {
-						double dist = Math.sqrt(x1 * x1 + y1 * y1);
-						if (dist > radius - 1)
-							al = al1;
-					} else
-						al = al1;
+					double dist = Math.sqrt(x1 * x1 + y1 * y1);
+					if (dist >= radius)
+						al = 0;
+					else if (dist >= radius - 1)
+						al = (int) (FULL_OPAQUE * (radius - dist));
 				}
 				alphaRow[x] = (byte) al;
 			}

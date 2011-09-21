@@ -55,7 +55,9 @@ public class CompositeViewerManager extends ViewerManager {
 			}
 
 			public void setSelection(ISelection selection) {
-				getViewer().setSelection(selection);
+				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
+					m.getViewer().setSelection(selection, true);
+				}
 			}
 		};
 	}
@@ -63,9 +65,7 @@ public class CompositeViewerManager extends ViewerManager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse
-	 * .swt.widgets.Composite)
+	 * @see com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse .swt.widgets.Composite)
 	 */
 	@Override
 	public Control createContents(Composite parent) {

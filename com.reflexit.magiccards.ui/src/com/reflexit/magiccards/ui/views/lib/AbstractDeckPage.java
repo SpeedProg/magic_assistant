@@ -69,6 +69,7 @@ public class AbstractDeckPage implements IDeckPage {
 		viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
+		// selection provider
 		getCardStore();
 		if (store == null)
 			return;

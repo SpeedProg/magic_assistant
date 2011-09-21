@@ -17,15 +17,23 @@ Eclipse-LazyStart: true
 Export-Package: com.reflexit.magiccards.ui,
  com.reflexit.magiccards.ui.commands,
  com.reflexit.magiccards.ui.dialogs,
+ com.reflexit.magiccards.ui.dnd,
+ com.reflexit.magiccards.ui.exportWizards,
+ com.reflexit.magiccards.ui.jobs,
  com.reflexit.magiccards.ui.preferences,
+ com.reflexit.magiccards.ui.preferences.feditors,
  com.reflexit.magiccards.ui.utils,
  com.reflexit.magiccards.ui.views,
+ com.reflexit.magiccards.ui.views.analyzers,
  com.reflexit.magiccards.ui.views.card,
  com.reflexit.magiccards.ui.views.columns,
  com.reflexit.magiccards.ui.views.editions,
  com.reflexit.magiccards.ui.views.lib,
  com.reflexit.magiccards.ui.views.nav,
- com.reflexit.magiccards.ui.widgets
+ com.reflexit.magiccards.ui.views.printings,
+ com.reflexit.magiccards.ui.views.search,
+ com.reflexit.magiccards.ui.widgets,
+ com.reflexit.magiccards.ui.wizards
 Bundle-ClassPath: .,
  imagetransfer.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
