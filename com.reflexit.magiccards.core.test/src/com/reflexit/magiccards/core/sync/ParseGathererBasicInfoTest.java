@@ -23,4 +23,13 @@ public class ParseGathererBasicInfoTest extends TestCase {
 		parser.load(new NullProgressMonitor());
 		assertEquals("Бурав Выжженной Пустоши", card.getName());
 	}
+
+	public void testInnistradSide2Russian() throws IOException {
+		MagicCard card = new MagicCard();
+		card.setCardId(273275);
+		parser.setCard(card);
+		parser.load(new NullProgressMonitor());
+		assertEquals("149b", card.getCollNumber());
+		assertEquals("Wildblood Pack", card.getName()); // XXX bug in gatherer
+	}
 }
