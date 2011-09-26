@@ -31,7 +31,7 @@ public class UpdateCardsFromWeb {
 			IProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading additional info...", size * 100 + 10);
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
-		ParseGathererRulings rulParser = new ParseGathererRulings();
+		ParseGathererDetails rulParser = new ParseGathererDetails();
 		rulParser.setMagicDb(magicDb);
 		ParseGathererBasicInfo linfoParser = new ParseGathererBasicInfo();
 		ParseGathererBasicInfo textParser = new ParseGathererBasicInfo();

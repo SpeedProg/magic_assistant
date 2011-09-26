@@ -28,8 +28,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
- * Class that implements IFilteredCardStore, it is only contains filtered
- * filteredList and no phisical media
+ * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no phisical media
  * 
  * @author Alena
  * 
@@ -284,8 +283,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
+	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
 	 */
 	public CardGroup[] getCardGroups() {
 		if (this.groupsList.size() == 0)
@@ -328,5 +326,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	protected void reload() {
 		initialized = false;
 		initialize();
+	}
+
+	@Override
+	public String toString() {
+		return filteredList.toString();
 	}
 }

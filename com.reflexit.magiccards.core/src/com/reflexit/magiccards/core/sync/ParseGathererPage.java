@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -42,6 +44,21 @@ public abstract class ParseGathererPage {
 		if (html == null)
 			throw new NullPointerException();
 		loadHtml(this.html, monitor);
+	}
+
+	protected String extractPatternValue(String html, Pattern pattern, boolean multiple) {
+		Matcher matcher = pattern.matcher(html);
+		String value = "";
+		while (matcher.find()) {
+			String v = matcher.group(1).trim();
+			if (value.length() > 0) {
+				if (multiple == false)
+					throw new IllegalStateException("Multiple pattern found where signle expected");
+				value += "\n";
+			}
+			value += v;
+		}
+		return value;
 	}
 
 	protected abstract String getUrl();
