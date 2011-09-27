@@ -96,3 +96,10 @@ Planechase|HOP||July 2011|Starter|
 Premium Deck Series: Slivers|H09||November 2009|Starter|
 Duel Decks: Jace vs. Chandra|DD2||November 2008|Starter|
 Magic: The Gathering-Commander|CMD||June 2011|Starter|
+From the Vault: Dragons|DRB||September 2011|Starter
+Vanguard|VAN||September 2011|Expansion
+Duel Decks: Ajani vs. Nicol Bolas|DDH||September 2011|Starter
+From the Vault: Relics|V10||September 2011|Starter|
+From the Vault: Exiled|V09||September 2011|Starter|
+Innistrad|ISD||September 2011|Expansion
+From the Vault: Legends|V11||September 2011|Starter
