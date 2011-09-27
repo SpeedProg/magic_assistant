@@ -20,18 +20,7 @@ import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class LazyTreeViewerManager extends ViewerManager {
-	static class MyTreeViewer extends TreeViewer {
-		public MyTreeViewer(Composite parent, int style) {
-			super(parent, style);
-		}
-
-		@Override
-		public void unmapAllElements() {
-			super.unmapAllElements();
-		}
-	}
-
-	private MyTreeViewer viewer;
+	private TreeViewer viewer;
 
 	public LazyTreeViewerManager(String id) {
 		super(id);
@@ -39,7 +28,7 @@ public class LazyTreeViewerManager extends ViewerManager {
 
 	@Override
 	public Control createContents(Composite parent) {
-		this.viewer = new MyTreeViewer(parent, SWT.FULL_SELECTION | SWT.VIRTUAL | SWT.MULTI);
+		this.viewer = new TreeViewer(parent, SWT.FULL_SELECTION | SWT.VIRTUAL | SWT.MULTI);
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new LazyTreeViewContentProvider());
@@ -177,7 +166,6 @@ public class LazyTreeViewerManager extends ViewerManager {
 		// long time = System.currentTimeMillis();
 		// if (this.viewer.getInput() != this.getDataHandler()) {
 		if (this.viewer.getInput() != input) {
-			this.viewer.unmapAllElements();
 			this.viewer.setInput(input);
 		}
 		// System.err.println("set input1 tree time: " +

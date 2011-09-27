@@ -3,6 +3,9 @@
  */
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.ILazyTreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -41,6 +44,22 @@ class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 	}
 
 	public Object getParent(Object child) {
+		if (child instanceof IMagicCard) {
+			// System.err.println("get parent " + child);
+			IFilteredCardStore fstore = root;
+			if (root == null)
+				return null;
+			CardGroup[] cardGroups = fstore.getCardGroups();
+			for (int i = 0; i < cardGroups.length; i++) {
+				CardGroup cardGroup = cardGroups[i];
+				Collection children = cardGroup.getChildren();
+				for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+					Object object = iterator.next();
+					if (object == child)
+						return cardGroup;
+				}
+			}
+		}
 		return null;
 	}
 

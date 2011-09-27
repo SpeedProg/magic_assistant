@@ -358,4 +358,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	public Display getDisplay() {
 		return getViewSite().getShell().getDisplay();
 	}
+
+	public void setSelection(ISelection sel) {
+		runLoadJob(sel);
+	}
 }

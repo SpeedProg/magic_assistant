@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -127,7 +128,7 @@ public class MagicDbView extends AbstractCardsView {
 
 	protected void exportDatabase() {
 		ICardStore<IMagicCard> store = getFilteredStore().getCardStore();
-		MagicCardField[] fields = MagicCardField.values();
+		ICardField[] fields = MagicCardField.allNonTransientFields();
 		String curset = null;
 		TextPrinter exporter = null;
 		File dir = new File("C:/tmp/madatabase");

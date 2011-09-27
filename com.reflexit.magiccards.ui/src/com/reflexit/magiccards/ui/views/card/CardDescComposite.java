@@ -4,8 +4,11 @@
 package com.reflexit.magiccards.ui.views.card;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationAdapter;
+import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -17,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -25,6 +29,7 @@ import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
 class CardDescComposite extends Composite {
+	private static final String MULTIVERSEID_URI = "multiverseid:";
 	/**
 	 * 
 	 */
@@ -41,10 +46,10 @@ class CardDescComposite extends Composite {
 	private PowerColumn toughProvider;
 	int width = 223, hight = 310;
 
-	public CardDescComposite(CardDescView cardDescView, Composite parent, int style) {
+	public CardDescComposite(CardDescView cardDescView1, Composite parent, int style) {
 		super(parent, style);
 		// UI
-		this.cardDescView = cardDescView;
+		this.cardDescView = cardDescView1;
 		Composite panel = this;
 		panel.setFont(parent.getFont());
 		panel.setLayout(new GridLayout());
@@ -69,6 +74,19 @@ class CardDescComposite extends Composite {
 		try {
 			this.textBrowser = new Browser(details, SWT.WRAP | SWT.INHERIT_DEFAULT);
 			this.textBrowser.setFont(panel.getFont());
+			textBrowser.addLocationListener(new LocationAdapter() {
+				@Override
+				public void changing(LocationEvent event) {
+					String location = event.location;
+					int index = location.indexOf(MULTIVERSEID_URI);
+					if (index != -1) {
+						event.doit = false;
+						int cardId = Integer.valueOf(location.substring(index + MULTIVERSEID_URI.length())).intValue();
+						IMagicCard card2 = (IMagicCard) DataManager.getCardHandler().getMagicDBStore().getCard(cardId);
+						cardDescView.setSelection(new StructuredSelection(card2));
+					}
+				}
+			});
 			swapVisibility(textBrowser, textBackup);
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
@@ -151,15 +169,11 @@ class CardDescComposite extends Composite {
 		}
 		try {
 			String data = getCardDataHtml(card);
-			String text = card.getText();
-			String oracle = card.getOracleText();
-			if (!text.equals(oracle)) {
-				oracle = "<br><br>Oracle:<br>" + oracle;
-			} else {
-				oracle = "";
-			}
+			String text = getText(card);
+			String links = getLinks(card);
+			String oracle = getOracle(card, text);
 			String rulings = getCardRulingsHtml(card);
-			this.textBrowser.setText(SymbolConverter.wrapHtml(data + text + oracle + rulings, this));
+			this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, this));
 			swapVisibility(textBrowser, textBackup);
 		} catch (Exception e) {
 			if (logOnce == false) {
@@ -167,11 +181,37 @@ class CardDescComposite extends Composite {
 				logOnce = true;
 			}
 			String data = getCardDataText(card);
-			String text = card.getText();
+			String text = getText(card);
 			text = text.replaceAll("<br>", "\n");
 			this.textBackup.setText(data + text);
 			swapVisibility(textBackup, textBrowser);
 		}
+	}
+
+	protected String getText(IMagicCard card) {
+		String text = card.getText();
+		if (text == null || text.length() == 0)
+			text = card.getOracleText();
+		return text;
+	}
+
+	protected String getOracle(IMagicCard card, String text) {
+		String oracle = card.getOracleText();
+		if (text != null && text.length() != 0 && !text.equals(oracle)) {
+			oracle = "<br><br>Oracle:<br>" + oracle;
+		} else {
+			oracle = "";
+		}
+		return oracle;
+	}
+
+	protected String getLinks(IMagicCard card) {
+		String links = "";
+		int flipId = card.getFlipId();
+		if (flipId != 0) {
+			links = "<a href=\"" + MULTIVERSEID_URI + flipId + "\">Reverse side</a><br><br>";
+		}
+		return links;
 	}
 
 	private void swapVisibility(Control con1, Control con2) {

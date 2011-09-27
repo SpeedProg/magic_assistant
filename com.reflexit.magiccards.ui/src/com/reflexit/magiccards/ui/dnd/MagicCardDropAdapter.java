@@ -34,7 +34,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * 
  */
 public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTargetListener {
-	private DropTargetEvent curEvent;
+	protected DropTargetEvent curEvent;
 
 	/**
 	 * @param viewer
