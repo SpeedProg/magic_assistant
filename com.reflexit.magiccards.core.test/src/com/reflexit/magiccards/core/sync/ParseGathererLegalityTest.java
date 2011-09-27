@@ -27,6 +27,6 @@ public class ParseGathererLegalityTest extends TestCase {
 		parser.setCardId(193867);
 		parser.load(new NullProgressMonitor());
 		HashMap<String, String> map = parser.getLegalityMap();
-		assertEquals("Banned", map.get("Legacy"));
+		assertEquals("Legal", map.get("Legacy"));
 	}
 }
