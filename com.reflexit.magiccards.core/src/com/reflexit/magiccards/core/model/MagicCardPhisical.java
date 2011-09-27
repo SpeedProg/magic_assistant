@@ -421,4 +421,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	public int getEnglishCardId() {
 		return card.getEnglishCardId();
 	}
+
+	public int getFlipId() {
+		return card.getFlipId();
+	}
 }

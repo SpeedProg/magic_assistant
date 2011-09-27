@@ -45,12 +45,14 @@ public enum MagicCardFieldPhysical implements ICardField {
 	}
 
 	public Class getType() {
-		if (field==null) return null;
+		if (field == null)
+			return null;
 		return field.getClass();
 	}
 
 	public boolean isTransient() {
-		if (field==null) return true;
+		if (field == null)
+			return true;
 		return Modifier.isTransient(field.getModifiers());
 	}
 
@@ -103,5 +105,16 @@ public enum MagicCardFieldPhysical implements ICardField {
 
 	public Field getJavaField() {
 		return field;
+	}
+
+	public static ICardField[] toFields(String line, String sep) {
+		String split[] = line.split(sep);
+		ICardField res[] = new ICardField[split.length];
+		for (int i = 0; i < split.length; i++) {
+			String string = split[i];
+			ICardField field = MagicCardFieldPhysical.fieldByName(string);
+			res[i] = field;
+		}
+		return res;
 	}
 }

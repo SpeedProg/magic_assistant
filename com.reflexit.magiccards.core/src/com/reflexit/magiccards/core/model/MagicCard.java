@@ -2,6 +2,8 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
@@ -26,6 +28,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	transient String colorType = null;
 	transient int cmc = -1;
 	int enId;
+	LinkedHashMap<String, String> properties;
 
 	/*
 	 * (non-Javadoc)
@@ -182,15 +185,6 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		return t;
 	}
 
-	public Collection getValues() {
-		ArrayList list = new ArrayList();
-		MagicCardField[] xfields = MagicCardField.values();
-		for (ICardField field : xfields) {
-			list.add(getObjectByField(field));
-		}
-		return list;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -264,10 +258,19 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	}
 
 	public Collection getHeaderNames() {
-		MagicCardField[] values = MagicCardField.values();
+		ICardField[] values = MagicCardField.allNonTransientFields();
 		ArrayList list = new ArrayList();
-		for (MagicCardField magicCardField : values) {
+		for (ICardField magicCardField : values) {
 			list.add(magicCardField.toString());
+		}
+		return list;
+	}
+
+	public Collection getValues() {
+		ArrayList list = new ArrayList();
+		ICardField[] xfields = MagicCardField.allNonTransientFields();
+		for (ICardField field : xfields) {
+			list.add(getObjectByField(field));
 		}
 		return list;
 	}
@@ -315,6 +318,10 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			return (this.text);
 		case ENID:
 			return (this.enId);
+		case PROPERTIES:
+			return (this.properties);
+		case FLIPID:
+			return getProperty(MagicCardField.FLIPID.name());
 		default:
 			break;
 		}
@@ -436,6 +443,12 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		case ENID:
 			setEnglishCardId(Integer.parseInt(value));
 			break;
+		case PROPERTIES:
+			setProperties(value);
+			break;
+		case FLIPID:
+			setProperty(MagicCardField.FLIPID.name(), value);
+			break;
 		default:
 			return false;
 		}
@@ -456,9 +469,9 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	}
 
 	public void updateFrom(IMagicCard card) {
-		MagicCardField[] fields = MagicCardField.values();
+		ICardField[] fields = MagicCardField.allNonTransientFields();
 		for (int i = 0; i < fields.length; i++) {
-			MagicCardField field = fields[i];
+			ICardField field = fields[i];
 			Object value = card.getObjectByField(field);
 			if (value != null) {
 				String string = value.toString();
@@ -496,5 +509,48 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			this.num = String.valueOf(cnum);
 		else
 			this.num = null;
+	}
+
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(String list) {
+		if (list == null || list.length() == 0)
+			properties = null;
+		else {
+			if (!list.startsWith("{"))
+				throw new IllegalArgumentException();
+			list = list.substring(1, list.length() - 1);
+			String[] split = list.split(",");
+			for (int i = 0; i < split.length; i++) {
+				String pair = split[i];
+				String[] split2 = pair.split("=");
+				setProperty(split2[0], split2[1]);
+			}
+		}
+	}
+
+	public void setProperty(String key, String value) {
+		if (key == null)
+			throw new NullPointerException();
+		if (properties == null)
+			properties = new LinkedHashMap<String, String>(3);
+		properties.put(key, value);
+	}
+
+	public String getProperty(String key) {
+		if (properties == null)
+			return null;
+		if (key == null)
+			throw new NullPointerException();
+		return properties.get(key);
+	}
+
+	public int getFlipId() {
+		String fid = getProperty(MagicCardField.FLIPID.name());
+		if (fid == null || fid.length() == 0)
+			return 0;
+		return Integer.valueOf(fid);
 	}
 }

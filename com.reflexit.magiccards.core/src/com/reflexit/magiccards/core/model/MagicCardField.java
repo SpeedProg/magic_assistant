@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 
 public enum MagicCardField implements ICardField {
 	ID,
@@ -23,7 +24,9 @@ public enum MagicCardField implements ICardField {
 	COLLNUM("num"), // collector number i.e. 5/234
 	RULINGS,
 	TEXT,
-	ENID("enId")
+	ENID("enId"),
+	PROPERTIES,
+	FLIPID(null)
 	// end
 	;
 	private final Field field;
@@ -54,5 +57,24 @@ public enum MagicCardField implements ICardField {
 
 	public boolean isTransient() {
 		return field == null ? true : Modifier.isTransient(field.getModifiers());
+	}
+
+	public static ICardField[] allFields() {
+		MagicCardField[] values = MagicCardField.values();
+		return values;
+	}
+
+	public static ICardField[] allNonTransientFields() {
+		MagicCardField[] values = MagicCardField.values();
+		ArrayList<ICardField> res = new ArrayList<ICardField>();
+		for (MagicCardField f : values) {
+			if (!f.isTransient())
+				res.add(f);
+		}
+		return res.toArray(new ICardField[res.size()]);
+	}
+
+	public Field getJavaField() {
+		return field;
 	}
 }

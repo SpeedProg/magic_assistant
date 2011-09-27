@@ -125,6 +125,13 @@ public class ParseGathererDetails extends ParseGathererPage {
 
 	 */
 	private static Pattern cardAltPattern = Pattern.compile("cardImage\"\\s*alt=\"(.*?)\"");
+	/*-
+	 *              <img src="../../Handlers/Image.ashx?multiverseid=241988&amp;type=card" 
+	 *              id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_cardImage" 
+	 *              alt="Hinterland Harbor" style="border:none;" />
+
+	 */
+	private static Pattern cardIdPattern = Pattern.compile("img src.*?\\?multiverseid=(.*?)&amp;type=card");
 
 	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
 		setCard(card);
@@ -224,23 +231,25 @@ public class ParseGathererDetails extends ParseGathererPage {
 			if (sides == 1) {
 				html = cardSides.get(0);
 			} else if (sides == 2) {
-				boolean found = false;
+				String html2 = null;
 				for (Iterator iterator = cardSides.iterator(); iterator.hasNext();) {
-					html = (String) iterator.next();
-					extractField(cardN, null, html, MagicCardField.NAME, cardNamePattern, false);
+					String htmlA = (String) iterator.next();
+					extractField(cardN, null, htmlA, MagicCardField.NAME, cardNamePattern, false);
 					nameCur = cardN.getName();
-					if (nameTitle != null && nameTitle.equals(nameCur)) {
-						found = true;
-						break;
-					}
-					if (nameOrig != null && nameOrig.equals(nameCur)) {
-						found = true;
-						break;
+					if ((nameTitle != null && nameTitle.equals(nameCur)) || (nameOrig != null && nameOrig.equals(nameCur))) {
+						html = htmlA;
+					} else {
+						html2 = htmlA;
 					}
 				}
-				if (found == false) {
+				if (html == null) {
 					Activator.log("Problems parsing card - cannot find matching name " + card.getCardId());
 					return;
+				}
+				extractField(cardN, null, html2, MagicCardField.ID, cardIdPattern, false);
+				int pairId = cardN.getCardId();
+				if (pairId != 0) {
+					((ICardModifiable) card).setObjectByField(MagicCardField.FLIPID, String.valueOf(pairId));
 				}
 			} else if (sides == 0) {
 				Activator.log("Problems parsing card " + card.getCardId());

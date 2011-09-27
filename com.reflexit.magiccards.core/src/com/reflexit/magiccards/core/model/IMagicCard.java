@@ -50,4 +50,6 @@ public interface IMagicCard extends ICard {
 	public abstract boolean matches(ICardField left, TextValue right);
 
 	public abstract int getEnglishCardId();
+
+	public abstract int getFlipId();
 }
