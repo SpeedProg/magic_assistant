@@ -12,7 +12,8 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 public class CardFigure extends XFigure {
-	protected Point mousePos;
+	private Image cardImage;
+	private Point mousePos;
 	private IMagicCard card;
 	private boolean imageNotFound;
 
@@ -21,25 +22,35 @@ public class CardFigure extends XFigure {
 	}
 
 	public CardFigure(XFigure parent, ImageData imageData, IMagicCard card) {
-		super(parent);
+		super(parent, imageData.width, imageData.height);
 		this.card = card;
-		ImageCreator.getInstance().setAlphaBlendingForCorners(imageData);
-		Image im = new Image(Display.getCurrent(), imageData);
-		setImage(im);
-		this.imageNotFound = false;
+		setImageData(imageData);
+	}
+
+	public void setCardImage(Image im) {
+		if (cardImage != null)
+			cardImage.dispose();
+		cardImage = im;
 	}
 
 	public CardFigure(XFigure parent, IMagicCard card) {
-		super(parent);
+		super(parent, 223, 310);
 		this.card = card;
 		Image im = ImageCreator.getInstance().createCardNotFoundImage(card);
-		setImage(im);
+		setCardImage(im);
 		this.imageNotFound = true;
+	}
+
+	public void setImageData(ImageData imageData) {
+		ImageCreator.getInstance().setAlphaBlendingForCorners(imageData);
+		Image im = new Image(Display.getCurrent(), imageData);
+		setCardImage(im);
+		imageNotFound = false;
 	}
 
 	@Override
 	public void paint(GC gc) {
-		gc.drawImage(image, location.x, location.y);
+		gc.drawImage(cardImage, location.x, location.y);
 	}
 
 	@Override
@@ -51,7 +62,7 @@ public class CardFigure extends XFigure {
 		Rectangle in = clip.intersection(cb);
 		if (in.isEmpty())
 			return;
-		gc.drawImage(image, in.x - cb.x, in.y - cb.y, in.width, in.height, in.x, in.y, in.width, in.height);
+		gc.drawImage(cardImage, in.x - cb.x, in.y - cb.y, in.width, in.height, in.x, in.y, in.width, in.height);
 		if (isSelected()) {
 			gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 			gc.drawFocus(cb.x, cb.y, cb.width, cb.height);
@@ -96,5 +107,10 @@ public class CardFigure extends XFigure {
 
 	public IMagicCard getCard() {
 		return card;
+	}
+
+	@Override
+	public String toString() {
+		return card + " at " + super.toString();
 	}
 }

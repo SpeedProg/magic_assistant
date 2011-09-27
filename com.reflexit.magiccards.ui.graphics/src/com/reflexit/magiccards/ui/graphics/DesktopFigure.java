@@ -18,7 +18,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -32,30 +31,30 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 	private CardFigure selected;
 	private DesktopCanvas canvas;
 	private IFilteredCardStore<IMagicCard> fstore;
-	private final Rectangle DEFAULT_SIZE = new Rectangle(0, 0, 1200, 768);
+	private static final Rectangle DEFAULT_SIZE = new Rectangle(0, 0, 1200, 768);
 	private ICardField currentGroup;
 	private boolean mouseMove;
-	private int lastActiveZOrder;
+	private int lastSelectedZOrder;
 	private Image backgroungImage;
-	private boolean dragging;
+	private boolean floatingLayer;
+	private boolean init;
 
 	public DesktopFigure(DesktopCanvas deskCanvas) {
-		super(null);
+		super(null, DEFAULT_SIZE.width, DEFAULT_SIZE.height);
 		this.canvas = deskCanvas;
 		children = new ArrayList<CardFigure>();
-		setImage(new Image(Display.getCurrent(), DEFAULT_SIZE.width, DEFAULT_SIZE.height));
 		canvas.setImage(getImage());
 		redraw();
 	}
 
 	@Override
-	public void redraw() {
+	public synchronized void redraw() {
 		super.redraw();
 		canvas.redraw();
 	}
 
 	@Override
-	public void redraw(int x, int y, int width, int height) {
+	public synchronized void redraw(int x, int y, int width, int height) {
 		super.redraw(x, y, width, height);
 		canvas.redraw();
 	}
@@ -80,16 +79,11 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 
 	@Override
 	public void paint(GC gc, int x, int y, int width, int height) {
-		if (!dragging) {
-			// background
-			Rectangle rect = new Rectangle(x, y, width, height);
-			Rectangle bounds = getBounds();
-			gc.setClipping(rect);
-			// gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			gc.fillRectangle(0, 0, bounds.width, bounds.height);
-			gc.drawLine(0, 0, bounds.width, bounds.height);
-			gc.drawLine(0, bounds.height, bounds.width, 0);
-			// gc.drawText("Default Image", 10, 10);
+		Rectangle rect = new Rectangle(x, y, width, height);
+		gc.setClipping(rect);
+		if (!floatingLayer) {
+			// System.err.println("paint regular");
+			paintDesktopBackground(gc, x, y, width, height);
 			// children
 			for (CardFigure child : children) {
 				Rectangle cb = child.getBounds();
@@ -99,45 +93,65 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 				}
 			}
 		} else {
+			// System.err.println("paint floating");
 			paintBg(gc, x, y, width, height);
 			paintActive(gc, x, y, width, height);
 		}
 	}
 
+	protected void paintDesktopBackground(GC gc, int x, int y, int width, int height) {
+		// background
+		Rectangle bounds = getBounds();
+		// gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+		gc.fillRectangle(0, 0, bounds.width, bounds.height);
+		gc.drawLine(0, 0, bounds.width, bounds.height);
+		gc.drawLine(0, bounds.height, bounds.width, 0);
+		// gc.drawText("Default Image", 10, 10);
+		return;
+	}
+
 	public void paintActive(GC gc, int x, int y, int width, int height) {
-		Rectangle rect = new Rectangle(x, y, width, height);
 		CardFigure child = selected;
-		Rectangle cb = child.getBounds();
-		if (cb.intersects(rect)) {
-			// System.err.println("Repaining " + child);
-			child.paint(gc, x, y, width, height);
+		if (child != null) {
+			Rectangle cb = child.getBounds();
+			Rectangle rect = new Rectangle(x, y, width, height);
+			if (cb.intersects(rect)) {
+				// System.err.println("Repaining " + child);
+				child.paint(gc, x, y, width, height);
+			}
 		}
 	}
 
 	public void paintBg(GC gc, int x, int y, int width, int height) {
 		// background
-		gc.drawImage(backgroungImage, x, y, width, height, x, y, width, height);
+		if (backgroungImage != null && floatingLayer) {
+			if (!backgroungImage.getBounds().equals(getBounds())) {
+				backgroungImage.dispose();
+				makeFloatingLayer();
+			}
+			gc.drawImage(backgroungImage, x, y, width, height, x, y, width, height);
+		}
 	}
 
 	@Override
 	public boolean mouseDrag(Point p) {
 		mouseMove = true;
-		if (selected != null && dragging) {
+		if (selected != null && floatingLayer) {
 			Rectangle cb = selected.getBounds();
 			if (cb.contains(p)) {
 				selected.mouseDrag(p);
-				Rectangle area = cb.union(selected.getBounds());
+				Rectangle area = cb.union(selected.getBounds()).intersection(getBounds());
 				redraw(area.x, area.y, area.width, area.height);
 				return true;
 			}
 			selected.mouseStopDrag(p);
-			dragging = false;
+			floatingLayer = false;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean mouseStartDrag(Point p) {
+	public synchronized boolean mouseStartDrag(Point p) {
 		if (selected != null) {
 			selected.setSelected(false);
 		}
@@ -155,27 +169,34 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 			return false;
 		selected.mouseStartDrag(p);
 		selected.setSelected(true);
-		lastActiveZOrder = children.indexOf(selected);
+		lastSelectedZOrder = children.indexOf(selected);
 		remove(selected);
-		super.redraw();
-		dragging = true;
-		backgroungImage = new Image(canvas.getDisplay(), getImage(), SWT.IMAGE_COPY);
+		makeFloatingLayer();
 		redraw();
 		return true;
 	}
 
+	protected void makeFloatingLayer() {
+		floatingLayer = false;
+		super.redraw();
+		floatingLayer = true;
+		backgroungImage = new Image(canvas.getDisplay(), getImage(), SWT.IMAGE_COPY);
+	}
+
 	@Override
-	public boolean mouseStopDrag(Point p) {
+	public synchronized boolean mouseStopDrag(Point p) {
 		if (selected == null)
 			return false;
 		selected.mouseStopDrag(p);
 		if (!mouseMove)
-			moveTo(lastActiveZOrder, selected);
+			moveTo(lastSelectedZOrder, selected);
 		else
 			add(selected);
-		dragging = false;
-		backgroungImage.dispose();
+		floatingLayer = false;
+		if (backgroungImage != null)
+			backgroungImage.dispose();
 		backgroungImage = null;
+		addNewFigure(selected.getCard()); // refresh the image
 		redraw();
 		return true;
 	}
@@ -184,14 +205,15 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		return fstore;
 	}
 
-	public void setInput(IFilteredCardStore<IMagicCard> store) {
+	public synchronized void setInput(IFilteredCardStore<IMagicCard> store) {
 		// if (this.fstore == store)
 		// return;
 		this.fstore = store;
 		updateChildren();
-		if (fstore.getFilter().getGroupField() != currentGroup) {
+		if (fstore.getFilter().getGroupField() != currentGroup || init == false) {
 			currentGroup = fstore.getFilter().getGroupField();
 			layout();
+			init = true;
 		}
 		redraw();
 	}
@@ -224,7 +246,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		Collection zorder = layout.layout();
 		children.clear();
 		children.addAll(zorder);
-		System.err.println("new size: " + layout.width + "," + layout.height);
+		// System.err.println("new size: " + layout.width + "," + layout.height);
 		resize(new Rectangle(0, 0, layout.width, layout.height));
 	}
 
@@ -250,34 +272,33 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 			next.dispose();
 			iterator.remove();
 		}
-		ArrayList<CardFigure> newchildren = new ArrayList<CardFigure>();
-		int i = 0;
 		for (IMagicCard card : fstore) {
-			CardFigure found = findCardFigure(card);
-			String path = CardCache.createLocalImageFilePath(card);
-			boolean imageCached = new File(path).exists();
-			if (found != null && found.isImageNotFound() && imageCached) {
-				remove(found);
-			} else if (found != null) {
-				continue;
-			}
-			// new card
-			CardFigure c1;
-			if (imageCached) {
-				ImageData cimage = new ImageData(path);
-				c1 = new CardFigure(this, cimage, card);
-			} else {
-				c1 = new CardFigure(this, card);
-			}
-			if (found != null) {
-				c1.setLocation(found.getBounds().x, found.getBounds().y);
-				found.dispose();
-			} else {
-				c1.setLocation(100 + 20 * i, 100 + 20 * i++);
-			}
-			newchildren.add(c1);
+			addNewFigure(card);
 		}
-		children.addAll(newchildren);
+	}
+
+	protected CardFigure addNewFigure(IMagicCard card) {
+		CardFigure found = findCardFigure(card);
+		String path = CardCache.createLocalImageFilePath(card);
+		boolean imageCached = new File(path).exists();
+		if (found != null && found.isImageNotFound() && imageCached) {
+			ImageData cimage = new ImageData(path);
+			found.setImageData(cimage);
+			return found;
+		} else if (found != null) {
+			return found;
+		}
+		// new card
+		CardFigure cf;
+		if (imageCached) {
+			ImageData cimage = new ImageData(path);
+			cf = new CardFigure(this, cimage, card);
+		} else {
+			cf = new CardFigure(this, card);
+		}
+		// cf.setLocation(0, 0);
+		children.add(cf);
+		return cf;
 	}
 
 	public CardFigure findCardFigure(IMagicCard card) {
@@ -297,14 +318,12 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		resize(newsize);
 	}
 
-	public void resize(Rectangle newsize) {
+	@Override
+	public synchronized void resize(Rectangle newsize) {
 		Rectangle client = canvas.getClientArea();
-		if (newsize.width < client.width)
-			newsize.width = client.width;
-		if (newsize.height < client.height)
-			newsize.height = client.height;
-		image = new Image(Display.getCurrent(), newsize.width, newsize.height);
-		canvas.setImage(image);
+		Rectangle res = newsize.union(client);
+		super.resize(res);
+		canvas.setImage(getImage());
 		super.redraw();
 	}
 

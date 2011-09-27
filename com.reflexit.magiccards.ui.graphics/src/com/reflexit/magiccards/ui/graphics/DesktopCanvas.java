@@ -111,7 +111,7 @@ public class DesktopCanvas extends ScrollableCanvas {
 	@Override
 	public void mouseDown(MouseEvent e) {
 		if (e.button == 1) {
-			System.err.println(e);
+			// System.err.println(e);
 			Point p = translate(e);
 			if (desktop.mouseStartDrag(p)) {
 				setDragCanvas(false); // desktop will process the following move & up event itself
@@ -149,5 +149,9 @@ public class DesktopCanvas extends ScrollableCanvas {
 
 	public StructuredViewer getViewer() {
 		return viewer;
+	}
+
+	public DesktopFigure getDesktop() {
+		return desktop;
 	}
 }

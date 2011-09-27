@@ -5,31 +5,44 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 
 public class XFigure extends EventManager {
-	protected Image image;
+	private Image image;
 	protected XFigure parent;
 	protected Point location;
 	private boolean selected = false;
 
-	public XFigure(XFigure parent) {
+	public XFigure(XFigure parent, int width, int height) {
 		super();
 		this.parent = parent;
 		this.location = new Point(0, 0);
+		this.image = new Image(Display.getCurrent(), width, height);
 	}
 
 	public Image getImage() {
 		return image;
 	}
 
-	public void setImage(Image image) {
+	private void setImage(Image image) {
+		if (this.image != null)
+			this.image.dispose();
 		this.image = image;
 	}
 
 	public void redraw(int x, int y, int width, int height) {
-		GC gc = new GC(image);
-		paint(gc, x, y, width, height);
-		gc.dispose();
+		if (image.isDisposed())
+			throw new IllegalArgumentException("image is disposed");
+		try {
+			GC gc = new GC(image);
+			try {
+				paint(gc, x, y, width, height);
+			} finally {
+				gc.dispose();
+			}
+		} catch (IllegalArgumentException e) {
+			System.err.println("Something wrong with image..." + toString());
+		}
 	}
 
 	public void redraw() {
@@ -80,5 +93,20 @@ public class XFigure extends EventManager {
 
 	public boolean isSelected() {
 		return selected;
+	}
+
+	@Override
+	public String toString() {
+		return getBounds().toString();
+	}
+
+	/**
+	 * Resize will reset the default image, after that all references to image must be re-set
+	 * 
+	 * @param newsize
+	 */
+	public void resize(Rectangle newsize) {
+		setImage(new Image(Display.getCurrent(), newsize.width, newsize.height));
+		// System.err.println("resize " + this);
 	}
 }

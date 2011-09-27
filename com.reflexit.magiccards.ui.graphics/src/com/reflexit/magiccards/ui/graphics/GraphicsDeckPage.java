@@ -10,10 +10,12 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
@@ -59,7 +61,25 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
 		viewer.addDragSupport(operations, transfers, new MagicCardDragListener(viewer));
-		viewer.addDropSupport(operations, transfers, new MagicCardDropAdapter(viewer));
+		viewer.addDropSupport(operations, transfers, new MagicCardDropAdapter(viewer) {
+			@Override
+			public boolean performDrop(Object data) {
+				boolean did = super.performDrop(data);
+				if (did) {
+					IMagicCard[] toDropArray = (IMagicCard[]) data;
+					if (toDropArray.length == 1) {
+						IMagicCard single = toDropArray[0];
+						DesktopFigure desktop = panel.getDesktop();
+						fstore.update(fstore.getFilter());
+						single = (IMagicCard) fstore.getCardStore().getCard(single.getCardId());
+						CardFigure figure = desktop.addNewFigure(single);
+						Point control = panel.toControl(curEvent.x, curEvent.y);
+						figure.setLocation(control.x, control.y);
+					}
+				}
+				return did;
+			}
+		});
 	}
 
 	private StructuredViewer getViewer() {
