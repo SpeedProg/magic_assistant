@@ -27,7 +27,7 @@ import com.thoughtworks.xstream.XStream;
 
 /**
  * Object that holds xml. Fields should not be renamed as well as class anme itself.
- *
+ * 
  */
 public class CardCollectionStoreObject {
 	public String name;
@@ -46,6 +46,7 @@ public class CardCollectionStoreObject {
 		xstream.alias("cards", CardCollectionStoreObject.class);
 		xstream.setClassLoader(CardCollectionStoreObject.class.getClassLoader());
 		xstream.registerConverter(new MagicCardPhysicalConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
+		xstream.registerConverter(new MagicCardConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
 	}
 
 	public CardCollectionStoreObject() {

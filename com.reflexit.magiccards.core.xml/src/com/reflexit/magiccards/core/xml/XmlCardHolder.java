@@ -35,6 +35,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -127,9 +128,8 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
-		String line;
-		st.readLine(); // header ignore for now
-		MagicCardField[] xfields = MagicCardField.values();
+		String line = st.readLine(); // header ignore for now
+		ICardField[] xfields = MagicCardFieldPhysical.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
 		HashSet<Integer> hash = new HashSet<Integer>();
 		int cnum = 0;
 		while ((line = st.readLine()) != null) {
@@ -144,7 +144,9 @@ public class XmlCardHolder implements ICardHandler {
 				MagicCard card = new MagicCard();
 				int i = 0;
 				for (ICardField field : xfields) {
-					card.setObjectByField(field, fields[i]);
+					if (i < fields.length) {
+						card.setObjectByField(field, fields[i]);
+					}
 					i++;
 				}
 				if (markCn && card.getCollNumber() == null || card.getCollNumber().length() == 0) {
