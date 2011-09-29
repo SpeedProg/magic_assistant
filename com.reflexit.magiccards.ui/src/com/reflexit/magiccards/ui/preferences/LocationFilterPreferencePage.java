@@ -1,5 +1,10 @@
 package com.reflexit.magiccards.ui.preferences;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -17,11 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Locations;
@@ -41,7 +41,8 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 
 	/**
 	 * 
-	 * @param mode {@link SWT.SINGLE}, {@link SWT.MULTI}
+	 * @param mode
+	 *            {@link SWT.SINGLE}, {@link SWT.MULTI}
 	 */
 	public LocationFilterPreferencePage(int mode) {
 		setTitle("Location Filter");
@@ -100,10 +101,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	public void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 		if (store instanceof PrefixedPreferenceStore) {
-			String[] preferenceNames = ((PrefixedPreferenceStore) store).preferenceNames();
-			for (String id : preferenceNames) {
-				store.setToDefault(id);
-			}
+			((PrefixedPreferenceStore) store).setToDefault();
 		}
 		initializeTree();
 		super.performDefaults();

@@ -18,10 +18,7 @@ public abstract class MFieldEditorPreferencePage extends FieldEditorPreferencePa
 	public void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 		if (store instanceof PrefixedPreferenceStore) {
-			String[] preferenceNames = ((PrefixedPreferenceStore) store).preferenceNames();
-			for (String id : preferenceNames) {
-				store.setToDefault(id);
-			}
+			((PrefixedPreferenceStore) store).setToDefault();
 		}
 		super.performDefaults();
 	}

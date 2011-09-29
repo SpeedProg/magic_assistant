@@ -56,6 +56,13 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 		return arr;
 	}
 
+	public void setToDefault() {
+		String[] preferenceNames = preferenceNames();
+		for (String id : preferenceNames) {
+			store.setToDefault(id);
+		}
+	}
+
 	public boolean contains(String name) {
 		return this.store.contains(toGlobal(name));
 	}

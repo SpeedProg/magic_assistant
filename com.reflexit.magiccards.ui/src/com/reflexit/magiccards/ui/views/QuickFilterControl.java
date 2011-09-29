@@ -208,6 +208,8 @@ public class QuickFilterControl extends Composite {
 			}
 			// type
 			String type = ALL_TYPES;
+			String typeId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
+			String type1 = store.getString(typeId);
 			int typehit = 0;
 			CardTypes coreTypes = CardTypes.getInstance();
 			for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
@@ -219,8 +221,10 @@ public class QuickFilterControl extends Composite {
 					typehit++;
 				}
 			}
-			if (typehit > 1) {
+			if (typehit > 1 || typehit == 1 && type1.length() > 0) {
 				typeCombo.setText(ADVANCED);
+			} else if (typehit == 0) {
+				typeCombo.setText(type1);
 			} else {
 				typeCombo.setText(type);
 			}
@@ -253,7 +257,6 @@ public class QuickFilterControl extends Composite {
 		CardTypes coreTypes = CardTypes.getInstance();
 		String selId = null;
 		String textId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
-		this.store.setValue(textId, "");
 		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			store.setValue(id, "false");
@@ -262,8 +265,9 @@ public class QuickFilterControl extends Composite {
 			}
 		}
 		if (selId == null) {
-			this.store.setValue(textId, text.trim());
+			store.setValue(textId, text.trim());
 		} else {
+			store.setValue(textId, "");
 			store.setValue(selId, "true");
 		}
 		runnable.run();
