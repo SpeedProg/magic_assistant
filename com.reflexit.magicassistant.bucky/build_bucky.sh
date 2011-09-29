@@ -30,6 +30,7 @@ TIMESTAMP=`date +%Y%m%d%H%M`
 UPLOAD=${UPLOAD:-0}
 INSTALL=${INSTALL:-0}
 UPDATE_SITE=${UPDATE_SITE:-0}
+UPDATE_SITE_FULL=${UPDATE_SITE_FULL:-0}
 UPDATE_DOCS=${UPDATE_DOCS:-0}
 BUILD=${BUILD:-1}
 VERSION=`grep Bundle-Version $WORKSPACE/com.reflexit.magiccards-rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'` 
@@ -88,8 +89,8 @@ fi
 if [ "$UPLOAD" -eq 1 ]; then
   echo "Uploading builds for $RELEASE..."
   $SCP -r -v -i "$SF_PRIVATE_KEY" $EXPORT_DIR/$RELEASE $SF_USER,mtgbrowser@frs.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Magic_Assistant/
- 
 fi
+
 if [ "$UPDATE_SITE" -eq 1 ]; then
   echo "Uploading update sute for $RELEASE..."
   REMOTE_PATH="htdocs/update/1.2"
@@ -97,8 +98,7 @@ if [ "$UPDATE_SITE" -eq 1 ]; then
   cd $EXPORT_DIR/update/1.2/
   unzip content.jar
   unzip artifacts.jar
-  #uncomment to do full update with platform
-  #$SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.2/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
+  #partial update
   $SCP -v -i "$SF_PRIVATE_KEY" binary/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/binary/"
   $SCP -v -i "$SF_PRIVATE_KEY" features/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/features/"
   $SCP -v -i "$SF_PRIVATE_KEY" plugins/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/plugins/"
@@ -106,6 +106,17 @@ if [ "$UPDATE_SITE" -eq 1 ]; then
 #  $SCP -v -i "$SF_PRIVATE_KEY" features/org.eclipse.rcp*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/features/"
   )
 fi
+if [ "$UPDATE_SITE_FULL" -eq 1 ]; then
+  echo "Uploading update sute for $RELEASE..."
+  REMOTE_PATH="htdocs/update/1.2"
+  (
+  cd $EXPORT_DIR/update/1.2/
+  unzip content.jar
+  unzip artifacts.jar
+  $SCP -r -v -i "$SF_PRIVATE_KEY" "$EXPORT_DIR/update/1.2/"  "$SF_USER,mtgbrowser@web.sourceforge.net:htdocs/update/"
+  )
+fi
+
 if [ "$UPDATE_DOCS" -eq 1 ]; then
 	echo "Uploading docs for $RELEASE..."
 	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.help/html/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
