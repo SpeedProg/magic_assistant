@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.test;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -79,5 +79,19 @@ public class MagicCardFilterTest extends TestCase {
 	@Test
 	public void testTextSearchRegex2() {
 		search("m/\\*/", "1/*");
+	}
+
+	private void searchType(String expr, String text, boolean expected) {
+		Expr e = MagicCardFilter.textSearch(MagicCardField.TYPE, expr);
+		MagicCard mc = new MagicCard();
+		mc.setType(text);
+		boolean res = e.evaluate(mc);
+		assertEquals(expected, res);
+	}
+
+	@Test
+	public void testBasicType() {
+		searchType("Artifact", "Artifact", true);
+		searchType("Artifact", "Artifact Creature", true);
 	}
 }
