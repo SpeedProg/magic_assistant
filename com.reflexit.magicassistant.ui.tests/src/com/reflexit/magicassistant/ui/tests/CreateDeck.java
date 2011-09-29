@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 
+import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
+import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
@@ -34,6 +36,8 @@ public class CreateDeck extends UITestCaseSWT {
 		IUIContext ui = getUI();
 		ui.ensureThat(new WorkbenchLocator().hasFocus());
 		ui.ensureThat(ViewLocator.forName("Welcome").isClosed());
+		PrefixedPreferenceStore mdbStore = (PrefixedPreferenceStore) PreferenceInitializer.getMdbStore();
+		mdbStore.setToDefault();
 	}
 
 	/**

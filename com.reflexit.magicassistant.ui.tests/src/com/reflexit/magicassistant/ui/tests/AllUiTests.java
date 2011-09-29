@@ -23,7 +23,9 @@ public class AllUiTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magicassistant.ui.tests");
 		// $JUnit-BEGIN$
+		suite.addTestSuite(FilterType.class);
 		suite.addTestSuite(CreateDeck.class);
+		suite.addTestSuite(GroupByCost.class);
 		suite.addTestSuite(MagicDeckTransferTest.class);
 		// $JUnit-END$
 		return suite;
