@@ -119,6 +119,7 @@ fi
 
 if [ "$UPDATE_DOCS" -eq 1 ]; then
 	echo "Uploading docs for $RELEASE..."
+	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.help/toc.html"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
 	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.help/html/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
 	#$SCP -r -batch -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.ui/icons/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.ui/icons/
 fi
