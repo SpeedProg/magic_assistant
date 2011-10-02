@@ -8,21 +8,30 @@
 
 <body>
 <h1>Basic Tutorial</h1>
+<h2> Workspace </h2>
+Workspace is the directory where Magic Assistant store all its data, in version 1.1 and below it is directory where
+application itself is unzippped, in 1.2 it is in your home directory, in subdirectory MagicAssistantWorkspace.
+Check installation instructions if you want to change it.
+
 <h2> Overview </h2>
 Magic Assistant is application for browsing "Magic: The Gathering" &#0153; cards 
 (see <a href="http://www.wizards.com/magic">official wizards website</a>) 
-and organising cards into decks and library collections.
+and organising cards into decks and library collections. Also contains tournament organizer for MTG in-house tournaments.
 <p/>
 For more information on Magic Assistant check <a href="http://mtgbrowser.sourceforge.net">Magic Assistant website</a>.
 <p/>
 
-Magic perspective contains several views: <br/>
+App contains two distinct window sets, called perspective. Default is "Card Organizer", you can also switch to
+"Tournament Organizer" from Windows menu.
+
+Car Organizer perspective contains several views: <br/>
 <a href="../reference/views.html#viewmagicdb">MTG Database</a> - To browse existing mtg cards, <br/> 
 <a href="../reference/views.html#viewcard">Card Info</a> - To view detailed card information and picture,<br/> 
 <a href="../reference/views.html#viewcardnav">Card Navigator</a> - To browse your own decks and collections, <br/> 
-<a href="../reference/views.html#viewcol">My Cards View</a> - To browse all your personal cards, <br/> 
-<a href="../reference/views.html#viewdeck">Deck view</a>s - To look at the cards in each deck or collection individually, and run deck analysis tools, <br>
-<a href="../reference/views.html#viewprintings">Printings</a> - To show sets in which selected card is available. <br/> 
+<a href="../reference/views.html#viewcol">My Cards</a> - To browse all your personal cards, <br/> 
+<a href="../reference/views.html#viewdeck">Deck</a>s - To look at the cards in each deck or collection individually, and run deck analysis tools, <br>
+<a href="../reference/views.html#viewprintings">Printings</a> - To show sets in which selected card is available. <br/>
+<a href="../reference/views.html#viewdraw">Draw</a> - Show subset of cards in deck to emulate draw (hand of seven random cards from a deck) <br/>  
 <p/>
 
 You can changes layout of your views but dragging them around by the header. If you get lost you can reset to original layout using 
@@ -35,8 +44,11 @@ is invoked by "mouse right click".
 <h2>Updating Magic Card Database Online</h2>
 
 MTG Database View shows all available cards. By default it will only
-show one instance of a card with the same name for the latest edition.
-Cards for older editions can be downloaded from the internet, see <a href="../tasks/updatingdb.html">updating database</a> section.
+show cards witch pre-loaded with application. It can quickly be out of data, 
+to keep database in sync you have to perform cards updates. In version 1.2 and above
+it will check for update automatically.
+
+To update cards manually, see <a href="../tasks/updatingdb.html">updating database</a> section.
 
 
 <h2> Browsing and Searching </h2>
@@ -50,10 +62,12 @@ You can filter cards in the view by opening filter. Filter action is on view too
 You can select one of more criteria from the filters.
 See details in 
 <a href="../reference/filter_dialog.html">Filter Dialog</a> reference.
+You can also filter cards by name, type and colour using quick filter - the bar on top of card tables (since 1.2).
 
 <p>
 You can bring up search control using Ctrl-F key or using view menu "Find...".
-It allows you to find a card in the view by name (or part of name). 
+It allows you to find a card in the view by name (or part of name). Compare to filter it does not remove the cards from
+the list.
 See details in 
 <a href="../reference/search_bar.html">Search Bar</a> reference.
 <p/>
@@ -64,17 +78,18 @@ reference.
 <h2> Building a deck </h2>
 To build a deck you need <a href="../reference/views.html#viewcardnav">Card Navigator</a> view,
 from there you can add a new deck and place it in the desired folder. After deck is created you can populate
-it by moving cards from database or from other decks or collection, or using deck import.
+it by moving cards from database or from other decks or collection, or using deck Import.
 See more details in <a href="../tasks/creatingdeck.html">Creating and Populating a Deck or Collection</a>.
 <p/>
-You can edit cards in your decks and collections. To edit card properties you can select or more cards from the
+You can edit cards in your decks and collections. To edit card properties you can select one or more cards from the
 table and choose "Edit..." from context menu (or double click on a card). Editable card properties currently are:
  count, comment, ownership and price.
 <p/>
 You can analyse you deck using some tools: Mana Curve, Colors, Card Types, Legality - these are tabs at the bottom of the
 deck view. Also you can group cards to achieve same statistics in the main table tab using Group By menu (from the view menu).
+<br>
 Draw analyzer is available from the view context menu.
-
+<br>
 Mana Curve - shows chart of your deck mana curve (number of cards vs cost) for spells (land is not there).
 Average bars - is normal distribution of cards in average deck adjusted to number of cards in your deck (hardcoded in program, it is not based on your decks) . 
 
