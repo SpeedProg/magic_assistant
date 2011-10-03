@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -24,7 +23,7 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract void updateSingle(ICard source);
 
-	public abstract void setNextSelection(StructuredSelection structuredSelection);
+	public abstract void setNextSelection(ISelection structuredSelection);
 
 	public abstract void setStatus(String string);
 

@@ -75,8 +75,8 @@ import com.reflexit.magiccards.ui.views.search.SearchControl;
 import com.reflexit.magiccards.ui.views.search.TableSearch;
 
 /**
- * Magic card list control - MagicControl that represents list of cards (tree or
- * table), and comes with actions and preferences to manipulate this list
+ * Magic card list control - MagicControl that represents list of cards (tree or table), and comes
+ * with actions and preferences to manipulate this list
  * 
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl, ICardEventListener {
@@ -143,8 +143,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#createPartControl
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#createPartControl
 	 * (org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -167,8 +166,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
 	public IFilteredCardStore getFilteredStore() {
 		return fstore;
@@ -196,8 +194,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
 	 */
 	@Override
 	public ISelection getSelection() {
@@ -207,8 +204,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		} catch (Exception e) {
 			selection = new StructuredSelection();
 		}
-		// System.err.println("current selection 2 " +
-		// manager.getSelectionProvider() + " " + selection);
+		//System.err.println("current selection 2 " + manager.getSelectionProvider() + " " + selection);
 		return selection;
 	}
 
@@ -247,8 +243,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
 	 * (org.eclipse.jface.action.MenuManager)
 	 */
 	public void hookContextMenu(MenuManager menuMgr) {
@@ -258,9 +253,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#init(org.eclipse
-	 * .ui.IViewSite)
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#init(org.eclipse .ui.IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) {
@@ -281,6 +274,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public void reloadData() {
+		setNextSelection(getSelection());
 		updateFilter(getFilter());
 		abstractCardsView.loadData(null);
 	}
@@ -302,7 +296,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		getViewer().getControl().setFocus();
 	}
 
-	public void setNextSelection(StructuredSelection structuredSelection) {
+	public void setNextSelection(ISelection structuredSelection) {
 		revealSelection = structuredSelection;
 	}
 
@@ -416,8 +410,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
 	 */
 	public void hookDragAndDrop() {
 		getViewer().getControl().setDragDetect(true);
@@ -672,7 +665,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		// CardFilter.open(getViewSite().getShell());
 		Dialog cardFilterDialog = new CardFilterDialog(getShell(), prefStore);
 		if (cardFilterDialog.open() == IStatus.OK) {
-			revealSelection = getSelection();
 			reloadData();
 			quickFilter.refresh();
 		}
