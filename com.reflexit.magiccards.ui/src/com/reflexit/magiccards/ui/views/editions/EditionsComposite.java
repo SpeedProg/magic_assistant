@@ -34,14 +34,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.FilterHelper;
 
 /**
- * Composite that contains checked tree selection for editions. If supplied with
- * preferenceStore can be also used as field editor
+ * Composite that contains checked tree selection for editions. If supplied with preferenceStore can
+ * be also used as field editor
  * 
  * <code>
  * c = new EditionsComposite(parent,SWT.CHECK | SWT.BORDER);
@@ -90,13 +92,20 @@ public class EditionsComposite extends Composite {
 		GridLayout layout = new GridLayout(3, false);
 		this.panel.setLayout(layout);
 		this.panel.setFont(parent.getFont());
-		if ((treeStyle & SWT.CHECK) != 0) {
-			this.checkedTree = true;
-			this.treeViewer = new CheckboxTreeViewer(this.panel, treeStyle);
-		} else {
-			this.checkedTree = false;
-			this.treeViewer = new TreeViewer(this.panel, treeStyle);
-		}
+		PatternFilter filter = new PatternFilter();
+		FilteredTree filteredTree = new FilteredTree(panel, treeStyle, filter, true) {
+			@Override
+			protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+				if ((style & SWT.CHECK) != 0) {
+					checkedTree = true;
+					EditionsComposite.this.treeViewer = new CheckboxTreeViewer(parent, style);
+				} else {
+					checkedTree = false;
+					EditionsComposite.this.treeViewer = new TreeViewer(parent, style);
+				}
+				return EditionsComposite.this.treeViewer;
+			}
+		};
 		// this.treeViewer.setLabelProvider(null);
 		this.treeViewer.setContentProvider(new EditionsContentProvider());
 		vcomp = new EditionsViewerComparator();
@@ -105,7 +114,7 @@ public class EditionsComposite extends Composite {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 300;
 		gd.horizontalSpan = 3;
-		this.treeViewer.getTree().setLayoutData(gd);
+		filteredTree.setLayoutData(gd);
 		createDefaultColumns();
 		createButtonsControls();
 		this.treeViewer.setInput(Editions.getInstance());
