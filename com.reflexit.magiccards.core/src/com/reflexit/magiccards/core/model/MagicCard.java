@@ -4,31 +4,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
-public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
-	int id;
-	String name;
-	String cost;
-	String type;
-	String power;
-	String toughness;
-	String edition;
-	String rarity;
-	String oracleText;
-	String artist;
-	float dbprice;
-	float rating;
-	String lang;
-	String num;
-	String rulings;
-	String text;
-	transient String colorType = null;
-	transient int cmc = -1;
-	int enId;
-	LinkedHashMap<String, String> properties;
+public class MagicCard implements IMagicCard, ICardModifiable {
+	private int id;
+	private String name;
+	private String cost;
+	private String type;
+	private String power;
+	private String toughness;
+	private String edition;
+	private String rarity;
+	private String oracleText;
+	private String artist;
+	private float dbprice;
+	private float rating;
+	private String lang;
+	private String num;
+	private String rulings;
+	private String text;
+	private transient String colorType = null;
+	private transient int cmc = -1;
+	private int enId;
+	private LinkedHashMap<String, String> properties;
 
 	/*
 	 * (non-Javadoc)
@@ -245,6 +247,8 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		return this.id + ": " + this.name;
 	}
 
+	private final static Pattern mpartnamePattern = Pattern.compile("(.*)//(.*)\\s*\\((.*)\\)");
+
 	public synchronized void setExtraFields() {
 		try {
 			this.cost = this.cost == null ? "" : this.cost.trim();
@@ -252,6 +256,15 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			setCmc(Colors.getInstance().getConvertedManaCost(this.cost));
 			if (text == null)
 				text = oracleText;
+			Matcher matcher = mpartnamePattern.matcher(name);
+			if (matcher.matches()) {
+				String p1 = matcher.group(1).trim();
+				String p2 = matcher.group(2).trim();
+				String pCur = matcher.group(3);
+				setProperty(MagicCardField.PART, pCur);
+				String other = pCur.equals(p1) ? p2 : p1;
+				setProperty(MagicCardField.OTHER_PART, other);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -315,13 +328,17 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		case COLLNUM:
 			return (this.num);
 		case TEXT:
-			return (this.text);
+			return getText();
 		case ENID:
 			return (this.enId);
 		case PROPERTIES:
 			return (this.properties);
 		case FLIPID:
-			return getProperty(MagicCardField.FLIPID.name());
+			return getProperty(MagicCardField.FLIPID);
+		case OTHER_PART:
+			return getProperty(MagicCardField.OTHER_PART);
+		case PART:
+			return getProperty(MagicCardField.PART);
 		default:
 			break;
 		}
@@ -447,7 +464,13 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 			setProperties(value);
 			break;
 		case FLIPID:
-			setProperty(MagicCardField.FLIPID.name(), value);
+			setProperty(MagicCardField.FLIPID, value);
+			break;
+		case PART:
+			setProperty(MagicCardField.PART, value);
+			break;
+		case OTHER_PART:
+			setProperty(MagicCardField.OTHER_PART, value);
 			break;
 		default:
 			return false;
@@ -468,7 +491,7 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		return (MagicCard) clone();
 	}
 
-	public void updateFrom(IMagicCard card) {
+	public void copyFrom(IMagicCard card) {
 		ICardField[] fields = MagicCardField.allNonTransientFields();
 		for (int i = 0; i < fields.length; i++) {
 			ICardField field = fields[i];
@@ -489,6 +512,8 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	}
 
 	public String getText() {
+		if (text == null)
+			setExtraFields();
 		return text;
 	}
 
@@ -531,6 +556,10 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		}
 	}
 
+	public void setProperty(ICardField field, String value) {
+		setProperty(field.name(), value);
+	}
+
 	public void setProperty(String key, String value) {
 		if (key == null)
 			throw new NullPointerException();
@@ -539,7 +568,13 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 		properties.put(key, value);
 	}
 
+	public String getProperty(ICardField field) {
+		return getProperty(field.name());
+	}
+
 	public String getProperty(String key) {
+		if (colorType == null)
+			setExtraFields();
 		if (properties == null)
 			return null;
 		if (key == null)
@@ -548,9 +583,14 @@ public class MagicCard implements IMagicCard, Cloneable, ICardModifiable {
 	}
 
 	public int getFlipId() {
-		String fid = getProperty(MagicCardField.FLIPID.name());
+		String fid = getProperty(MagicCardField.FLIPID);
 		if (fid == null || fid.length() == 0)
 			return 0;
 		return Integer.valueOf(fid);
+	}
+
+	public String getPart() {
+		String part = getProperty(MagicCardField.PART);
+		return part;
 	}
 }

@@ -20,7 +20,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class HashCollectionPart {
 	private transient HashMap<Integer, Object> hash;
@@ -78,8 +78,9 @@ public class HashCollectionPart {
 			if (!phi1.matching(phi2))
 				return null;
 			return card2;
-		} else
+		} else if (card2.getName().equals(card.getName()))
 			return card2;
+		return null;
 	}
 
 	/**

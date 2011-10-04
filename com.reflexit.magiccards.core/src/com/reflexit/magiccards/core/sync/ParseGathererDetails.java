@@ -291,7 +291,12 @@ public class ParseGathererDetails extends ParseGathererPage {
 
 	@Override
 	protected String getUrl() {
-		return DETAILS_QUERY_URL_BASE + card.getCardId();
+		String base = DETAILS_QUERY_URL_BASE + card.getCardId();
+		String part = (String) card.getObjectByField(MagicCardField.PART);
+		if (part == null) {
+			return base;
+		}
+		return base + "&part=" + part;
 	}
 
 	public void setMagicDb(ICardStore magicDb) {

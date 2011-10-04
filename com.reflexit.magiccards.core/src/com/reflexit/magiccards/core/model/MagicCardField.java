@@ -26,7 +26,9 @@ public enum MagicCardField implements ICardField {
 	TEXT,
 	ENID("enId"),
 	PROPERTIES,
-	FLIPID(null)
+	FLIPID(null),
+	PART(null),
+	OTHER_PART(null)
 	// end
 	;
 	private final Field field;
