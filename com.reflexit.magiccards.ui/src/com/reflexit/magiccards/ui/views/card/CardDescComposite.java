@@ -3,6 +3,9 @@
  */
 package com.reflexit.magiccards.ui.views.card;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -23,7 +26,9 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
@@ -103,14 +108,29 @@ class CardDescComposite extends Composite {
 						}
 						if (cardId == 0)
 							cardId = card.getCardId();
-						IMagicCard card2 = (IMagicCard) DataManager.getCardHandler().getMagicDBStore().getCard(cardId);
+						String opart = (String) card.getObjectByField(MagicCardField.PART);
+						ICardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
+						Collection<IMagicCard> cards = magicDBStore.getCards(cardId);
+						IMagicCard card2 = null;
 						if (part != null) {
-							String opart = (String) card2.getObjectByField(MagicCardField.PART);
-							card2 = card2.cloneCard();
-							((ICardModifiable) card2).setObjectByField(MagicCardField.PART, part);
-							((ICardModifiable) card2).setObjectByField(MagicCardField.OTHER_PART, opart);
-							((ICardModifiable) card2).setObjectByField(MagicCardField.NAME,
-									card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+							for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+								IMagicCard card3 = (IMagicCard) iterator.next();
+								if (part.equals(((MagicCard) card3).getPart())) {
+									card2 = card3;
+									break;
+								}
+							}
+							if (card2 == null) {
+								// card is not in DB
+								card2 = card.cloneCard();
+								((ICardModifiable) card2).setObjectByField(MagicCardField.PART, part);
+								((ICardModifiable) card2).setObjectByField(MagicCardField.OTHER_PART, opart);
+								((ICardModifiable) card2).setObjectByField(MagicCardField.NAME,
+										card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+							}
+						} else {
+							if (cards.size() > 0)
+								card2 = cards.iterator().next();
 						}
 						cardDescView.setSelection(new StructuredSelection(card2));
 					}
@@ -241,8 +261,11 @@ class CardDescComposite extends Composite {
 			links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "\">Reverse side</a><br><br>";
 		}
 		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
+		String dualId = (String) card.getObjectByField(MagicCardField.DUAL_ID);
 		if (part != null) {
-			links += "<a href=\"" + CARD_URI + OTHER_PART + part + "\">Other part</a><br><br>";
+			if (dualId == null)
+				dualId = String.valueOf(card.getCardId());
+			links += "<a href=\"" + CARD_URI + OTHER_PART + part + "&" + MULTIVERSEID + dualId + "\">Other part</a><br><br>";
 		}
 		return links;
 	}
