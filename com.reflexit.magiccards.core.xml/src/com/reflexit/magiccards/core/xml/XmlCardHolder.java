@@ -149,14 +149,14 @@ public class XmlCardHolder implements ICardHandler {
 					if (brother == null) {
 						// no brother - they have same mid
 						brother = card.cloneCard();
-						flipParts(brother);
+						flipParts(brother, 0);
 						more.add(brother);
 					} else {
-						String part = card.getPart();
-						if (card.getName().startsWith(part)) {
-							flipParts(brother);
+						brother.setExtraFields();
+						if (card.getCardId() < brother.getCardId()) {
+							flipParts(brother, card.getCardId());
 						} else {
-							flipParts(card);
+							flipParts(card, brother.getCardId());
 						}
 					}
 				}
@@ -167,18 +167,19 @@ public class XmlCardHolder implements ICardHandler {
 		return more;
 	}
 
-	protected void flipParts(MagicCard card) {
+	protected void flipParts(MagicCard card, int brotherId) {
 		String opart = card.getPart();
 		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
 		((ICardModifiable) card).setObjectByField(MagicCardField.PART, part);
 		((ICardModifiable) card).setObjectByField(MagicCardField.OTHER_PART, opart);
 		((ICardModifiable) card).setObjectByField(MagicCardField.NAME, card.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+		if (brotherId != 0)
+			((ICardModifiable) card).setObjectByField(MagicCardField.DUAL_ID, String.valueOf(brotherId));
 	}
 
 	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
 		String line = st.readLine(); // header ignore for now
 		ICardField[] xfields = MagicCardFieldPhysical.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
-		HashSet<Integer> hash = new HashSet<Integer>();
 		int cnum = 0;
 		while ((line = st.readLine()) != null) {
 			cnum++;
@@ -206,9 +207,6 @@ public class XmlCardHolder implements ICardHandler {
 					TextPrinter.print(card, System.err);
 					continue;
 				}
-				if (hash.contains(id))
-					continue;
-				hash.add(id);
 				list.add(card);
 			} catch (Exception e) {
 				Activator.log(e);
@@ -217,7 +215,7 @@ public class XmlCardHolder implements ICardHandler {
 		return list;
 	}
 
-	public void loadInitialIfNot(IProgressMonitor pm) throws MagicException {
+	public synchronized void loadInitialIfNot(IProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
 			IContainer db = DataManager.getModelRoot().getMagicDBContainer().getContainer();
