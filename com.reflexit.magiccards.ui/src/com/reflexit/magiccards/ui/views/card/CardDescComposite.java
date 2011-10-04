@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -29,7 +30,9 @@ import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
 class CardDescComposite extends Composite {
-	private static final String MULTIVERSEID_URI = "multiverseid:";
+	private static final String CARD_URI = "card://";
+	private static final String MULTIVERSEID = "multiverseid=";
+	private static final String OTHER_PART = "opart=";
 	/**
 	 * 
 	 */
@@ -78,11 +81,37 @@ class CardDescComposite extends Composite {
 				@Override
 				public void changing(LocationEvent event) {
 					String location = event.location;
-					int index = location.indexOf(MULTIVERSEID_URI);
-					if (index != -1) {
-						event.doit = false;
-						int cardId = Integer.valueOf(location.substring(index + MULTIVERSEID_URI.length())).intValue();
+					if (location.startsWith(CARD_URI)) {
+						location = location.substring(CARD_URI.length());
+						if (location.endsWith("/")) {
+							location = location.substring(0, location.length() - 1);
+						}
+						String params[] = location.split("&");
+						String part = null;
+						int cardId = 0;
+						for (int i = 0; i < params.length; i++) {
+							String string = params[i];
+							if (string.startsWith(MULTIVERSEID)) {
+								event.doit = false;
+								String value = string.substring(MULTIVERSEID.length());
+								cardId = Integer.valueOf(value).intValue();
+							}
+							if (string.startsWith(OTHER_PART)) {
+								event.doit = false;
+								part = string.substring(OTHER_PART.length());
+							}
+						}
+						if (cardId == 0)
+							cardId = card.getCardId();
 						IMagicCard card2 = (IMagicCard) DataManager.getCardHandler().getMagicDBStore().getCard(cardId);
+						if (part != null) {
+							String opart = (String) card2.getObjectByField(MagicCardField.PART);
+							card2 = card2.cloneCard();
+							((ICardModifiable) card2).setObjectByField(MagicCardField.PART, part);
+							((ICardModifiable) card2).setObjectByField(MagicCardField.OTHER_PART, opart);
+							((ICardModifiable) card2).setObjectByField(MagicCardField.NAME,
+									card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+						}
 						cardDescView.setSelection(new StructuredSelection(card2));
 					}
 				}
@@ -209,7 +238,11 @@ class CardDescComposite extends Composite {
 		String links = "";
 		int flipId = card.getFlipId();
 		if (flipId != 0) {
-			links = "<a href=\"" + MULTIVERSEID_URI + flipId + "\">Reverse side</a><br><br>";
+			links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "\">Reverse side</a><br><br>";
+		}
+		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
+		if (part != null) {
+			links += "<a href=\"" + CARD_URI + OTHER_PART + part + "\">Other part</a><br><br>";
 		}
 		return links;
 	}
