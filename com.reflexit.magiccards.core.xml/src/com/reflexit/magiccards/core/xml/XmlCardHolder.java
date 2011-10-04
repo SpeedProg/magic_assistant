@@ -152,13 +152,11 @@ public class XmlCardHolder implements ICardHandler {
 						flipParts(brother);
 						more.add(brother);
 					} else {
-						if (card.getName().equals(brother.getName())) {
-							String part = card.getPart();
-							if (card.getName().startsWith(part)) {
-								flipParts(brother);
-							} else {
-								flipParts(card);
-							}
+						String part = card.getPart();
+						if (card.getName().startsWith(part)) {
+							flipParts(brother);
+						} else {
+							flipParts(card);
 						}
 					}
 				}

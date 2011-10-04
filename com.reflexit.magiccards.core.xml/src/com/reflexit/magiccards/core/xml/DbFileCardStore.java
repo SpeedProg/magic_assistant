@@ -41,7 +41,7 @@ public class DbFileCardStore extends CollectionCardStore implements ICardCountab
 		// db does not actually add cards but rather updates
 		MagicCard mc = (MagicCard) this.hashpart.getCard(card);
 		if (mc != null) {
-			mc.updateFrom(card);
+			mc.copyFrom(card);
 			return true;
 		} else {
 			hashpart.storeCard(card);
