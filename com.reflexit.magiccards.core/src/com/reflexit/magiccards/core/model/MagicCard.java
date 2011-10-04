@@ -339,6 +339,8 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			return getProperty(MagicCardField.OTHER_PART);
 		case PART:
 			return getProperty(MagicCardField.PART);
+		case DUAL_ID:
+			return getProperty(MagicCardField.DUAL_ID);
 		default:
 			break;
 		}
@@ -472,6 +474,9 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		case OTHER_PART:
 			setProperty(MagicCardField.OTHER_PART, value);
 			break;
+		case DUAL_ID:
+			setProperty(MagicCardField.DUAL_ID, value);
+			break;
 		default:
 			return false;
 		}
@@ -481,7 +486,9 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	@Override
 	public Object clone() {
 		try {
-			return super.clone();
+			MagicCard obj = (MagicCard) super.clone();
+			obj.properties = (LinkedHashMap<String, String>) this.properties.clone();
+			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}

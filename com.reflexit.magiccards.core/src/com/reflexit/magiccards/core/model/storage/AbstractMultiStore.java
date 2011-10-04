@@ -212,9 +212,9 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	public Collection<T> getCards(int id) {
 		ArrayList<T> arr = new ArrayList<T>();
 		for (AbstractCardStoreWithStorage<T> table : map.values()) {
-			T card = table.getCard(id);
-			if (card != null) {
-				arr.add(card);
+			Collection<T> cards = table.getCards(id);
+			if (cards != null) {
+				arr.addAll(cards);
 			}
 		}
 		return arr;
