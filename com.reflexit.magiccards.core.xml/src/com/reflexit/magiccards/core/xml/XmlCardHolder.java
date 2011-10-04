@@ -31,6 +31,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
+import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -121,10 +122,59 @@ public class XmlCardHolder implements ICardHandler {
 		ICardStore store = getMagicDBFilteredStore().getCardStore();
 		int init = store.size();
 		loadFromFlat(st, list, markCn);
+		ArrayList<IMagicCard> more = fixCards(list);
 		boolean hasAny = list.size() > 0;
 		store.addAll(list);
+		if (more.size() > 0)
+			store.addAll(more);
 		int rec = store.size() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
+	}
+
+	private ArrayList<IMagicCard> fixCards(ArrayList<IMagicCard> list) {
+		ArrayList<IMagicCard> more = new ArrayList<IMagicCard>();
+		try {
+			for (int i = 0; i < list.size(); i++) {
+				MagicCard card = (MagicCard) list.get(i);
+				card.setExtraFields();
+				if (card.getPart() != null) {
+					MagicCard brother = null;
+					if (i + 1 < list.size()) {
+						MagicCard next = (MagicCard) list.get(i + 1);
+						if (next.getName().equals(card.getName())) {
+							brother = next;
+							i++;
+						}
+					}
+					if (brother == null) {
+						// no brother - they have same mid
+						brother = card.cloneCard();
+						flipParts(brother);
+						more.add(brother);
+					} else {
+						if (card.getName().equals(brother.getName())) {
+							String part = card.getPart();
+							if (card.getName().startsWith(part)) {
+								flipParts(brother);
+							} else {
+								flipParts(card);
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			Activator.log(e);
+		}
+		return more;
+	}
+
+	protected void flipParts(MagicCard card) {
+		String opart = card.getPart();
+		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
+		((ICardModifiable) card).setObjectByField(MagicCardField.PART, part);
+		((ICardModifiable) card).setObjectByField(MagicCardField.OTHER_PART, opart);
+		((ICardModifiable) card).setObjectByField(MagicCardField.NAME, card.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
 	}
 
 	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
