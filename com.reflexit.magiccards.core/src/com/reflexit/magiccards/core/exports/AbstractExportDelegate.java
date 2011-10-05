@@ -18,6 +18,7 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 	protected boolean header;
 	protected IFilteredCardStore<T> store;
 	protected OutputStream st;
+	protected ICardField[] columns;
 
 	public void init(OutputStream st, boolean header, IFilteredCardStore<T> filteredLibrary) {
 		this.st = st;
@@ -65,6 +66,10 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 		} finally {
 			monitor.done();
 		}
+	}
+
+	public void setColumns(ICardField[] columnsForExport) {
+		this.columns = columnsForExport;
 	}
 
 	protected boolean isForExport(ICardField field) {

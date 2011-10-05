@@ -10,11 +10,12 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
@@ -26,4 +27,6 @@ public interface IExportDelegate<T> {
 	public void init(OutputStream st, boolean header, IFilteredCardStore<T> cards);
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
+
+	public void setColumns(ICardField[] columnsForExport);
 }

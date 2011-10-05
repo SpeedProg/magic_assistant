@@ -46,5 +46,11 @@
             label="Wagic: The Homebrew"
             xmlFormat="false">
       </deckFormat>
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.HtmlTableExportDelegate"
+            id="html"
+            label="HTML Table"
+            xmlFormat="true">
+      </deckFormat>
    </extension>
 </plugin>
