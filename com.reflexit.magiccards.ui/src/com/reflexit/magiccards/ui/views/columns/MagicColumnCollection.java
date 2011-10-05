@@ -2,17 +2,18 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 
 public class MagicColumnCollection extends ColumnCollection {
 	private String id;
 
-	public MagicColumnCollection(String viewId) {
-		this.id = viewId;
+	public MagicColumnCollection(String prefPageId) {
+		this.id = prefPageId;
 	}
 
 	@Override
 	protected void createColumns() {
+		String dbPrefId = MagicDbViewPreferencePage.class.getName();
 		this.columns.add(new GroupColumn());
 		this.columns.add(new NameColumn());
 		this.columns.add(new IdColumn());
@@ -24,12 +25,12 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new SetColumn());
 		this.columns.add(new GenColumn(MagicCardField.RARITY, "Rarity"));
 		this.columns.add(new GenColumn(MagicCardField.CTYPE, "Color Type"));
-		if (!this.id.equals(MagicDbView.ID)) {
+		if (!this.id.equals(dbPrefId)) {
 			this.columns.add(new CountColumn());
 			this.columns.add(new LocationColumn());
 		}
 		this.columns.add(new ColorColumn());
-		if (!this.id.equals(MagicDbView.ID)) {
+		if (!this.id.equals(dbPrefId)) {
 			this.columns.add(new OwnershipColumn());
 			this.columns.add(new CommentColumn());
 			this.columns.add(new PriceColumn());
@@ -38,7 +39,7 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new CommunityRatingColumn());
 		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
 		this.columns.add(new GenColumn(MagicCardField.COLLNUM, "Collector's Number"));
-		if (!this.id.equals(MagicDbView.ID)) {
+		if (!this.id.equals(dbPrefId)) {
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
 		}

@@ -91,15 +91,13 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	protected ExportAction createExportAction() {
 		CardCollection col = getCardCollection();
-		return new ExportAction(col == null ? new StructuredSelection() : new StructuredSelection(col));
+		return new ExportAction(col == null ? new StructuredSelection() : new StructuredSelection(col), getPreferencePageId());
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
-	 * .IViewSite)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -185,8 +183,7 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
+	 * @see com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	@Override
@@ -277,8 +274,7 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
 	 * org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override

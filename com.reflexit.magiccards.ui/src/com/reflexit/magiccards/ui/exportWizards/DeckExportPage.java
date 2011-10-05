@@ -1,19 +1,14 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -36,9 +31,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -46,7 +38,6 @@ import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 
@@ -76,73 +67,6 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		super(pageName);
 		initialResourceSelection = selection;
 		store = new PreferenceStore();
-	}
-
-	public boolean saveFile() {
-		if (new File(fileName).exists()) {
-			String res = queryOverwrite(fileName);
-			if (res == CANCEL)
-				return false;
-			if (res == NO)
-				return false;
-		}
-		boolean res = false;
-		try {
-			final IExportDelegate<IMagicCard> worker;
-			try {
-				worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
-			} catch (Exception e) {
-				throw new InvocationTargetException(e);
-			}
-			if (worker != null) {
-				// TODO: export selection only
-				locPage.performOk();
-				final boolean header = includeHeader.getSelection();
-				final boolean sideboard = includeSideBoard.getSelection();
-				IRunnableWithProgress work = new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
-						try {
-							MagicCardFilter locFilter = new MagicCardFilter();
-							locFilter.update(storeToMap(sideboard));
-							filteredLibrary.update(locFilter);
-							worker.init(new FileOutputStream(fileName), header, filteredLibrary);
-							worker.run(monitor);
-						} catch (FileNotFoundException e) {
-							throw new InvocationTargetException(e);
-						}
-					}
-				};
-				getRunnableContext().run(true, true, work);
-			}
-			if (reportType == reportType.XML) {
-				// TODO: export multiple files? zip?
-				try {
-					Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
-					CardElement ce = null;
-					for (Object object : el) {
-						if (object instanceof CardOrganizer)
-							continue;
-						if (ce != null)
-							throw new Exception("Select only one element");
-						ce = (CardElement) object;
-					}
-					FileUtils.copyFile(ce.getFile(), new File(fileName));
-				} catch (Exception e) {
-					throw new InvocationTargetException(e);
-				}
-			}
-			return true;
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			if (e.getTargetException() instanceof InterruptedException) {
-				displayErrorDialog("Export cancelled");
-			} else
-				displayErrorDialog(e.getCause());
-		} catch (InterruptedException e) {
-			displayErrorDialog("Export cancelled");
-		}
-		return res;
 	}
 
 	private HashMap<String, String> storeToMap(boolean sideboard) {
@@ -258,8 +182,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	}
 
 	/**
-	 * Creates the buttons for selecting specific types or selecting all or none
-	 * of the elements.
+	 * Creates the buttons for selecting specific types or selecting all or none of the elements.
 	 * 
 	 * @param parent
 	 *            the parent control
@@ -322,12 +245,12 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	@Override
 	protected void saveWidgetValues() {
 		try {
+			// save pref page
+			locPage.performOk();
 			IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
 			// save file name
 			dialogSettings.put(OUTPUT_FILE_SETTING, fileName);
 			// save selection
-			// save selection
-			locPage.performOk();
 			String ids = locPage.getMemento();
 			dialogSettings.put(EXPORTED_RESOURCES_SETTING, ids);
 			// save options
@@ -460,24 +383,23 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a
-	 * standard push button, registers for selection events including button
-	 * presses and registers default buttons with its shell. The button id is
-	 * stored as the buttons client data. Note that the parent's layout is
-	 * assumed to be a GridLayout and the number of columns in this layout is
-	 * incremented. Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a standard push
+	 * button, registers for selection events including button presses and registers default buttons
+	 * with its shell. The button id is stored as the buttons client data. Note that the parent's
+	 * layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
+	 * Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code>
-	 *            constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for
+	 *            standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button,
-	 *            and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button, and
+	 *            <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar
@@ -514,5 +436,41 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 
 	public ReportType getReportType() {
 		return reportType;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public boolean getIncludeHeader() {
+		return includeHeader.getSelection();
+	}
+
+	public PreferenceStore getStore() {
+		return store;
+	}
+
+	public boolean getIncludeSideBoard() {
+		return includeSideBoard.getSelection();
+	}
+
+	public CardElement getFirstCardElement() {
+		Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
+		CardElement ce = null;
+		for (Object object : el) {
+			if (object instanceof CardOrganizer)
+				continue;
+			if (ce != null)
+				throw new IllegalArgumentException("Select only one element");
+			ce = (CardElement) object;
+		}
+		return ce;
+	}
+
+	public MagicCardFilter getLocationFilter() {
+		MagicCardFilter locFilter = new MagicCardFilter();
+		boolean sideboard = getIncludeSideBoard();
+		locFilter.update(storeToMap(sideboard));
+		return locFilter;
 	}
 }

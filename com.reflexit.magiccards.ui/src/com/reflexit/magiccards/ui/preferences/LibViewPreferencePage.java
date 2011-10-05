@@ -8,7 +8,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
-import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 
 public class LibViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public LibViewPreferencePage() {
@@ -19,7 +18,7 @@ public class LibViewPreferencePage extends FieldEditorPreferencePage implements 
 
 	@Override
 	protected void createFieldEditors() {
-		ColumnCollection columnCollection = new MagicColumnCollection(MyCardsView.ID);
+		ColumnCollection columnCollection = new MagicColumnCollection(getClass().getName());
 		columnCollection.createColumnLabelProviders();
 		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
 		addField(new CheckedListEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),

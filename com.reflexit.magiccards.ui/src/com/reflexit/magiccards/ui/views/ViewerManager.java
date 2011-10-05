@@ -19,8 +19,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	private ColumnCollection collumns;
 	private IColumnSortAction sortAction;
 
-	protected ViewerManager(String viewId) {
-		this.collumns = doGetColumnCollection(viewId);
+	protected ViewerManager(String prefPageId) {
+		this.collumns = doGetColumnCollection(prefPageId);
 	}
 
 	/*
@@ -41,8 +41,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		// override to dispose resources
 	}
 
-	protected ColumnCollection doGetColumnCollection(String viewId) {
-		return new MagicColumnCollection(viewId);
+	protected ColumnCollection doGetColumnCollection(String prefPageId) {
+		return new MagicColumnCollection(prefPageId);
 	}
 
 	protected AbstractColumn getColumn(int i) {

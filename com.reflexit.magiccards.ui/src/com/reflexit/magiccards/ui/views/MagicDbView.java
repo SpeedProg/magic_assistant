@@ -61,7 +61,7 @@ public class MagicDbView extends AbstractCardsView {
 		return new AbstractMagicCardsListControl(this) {
 			@Override
 			public IMagicColumnViewer createViewerManager() {
-				return new CompositeViewerManager(getId());
+				return new CompositeViewerManager(getPreferencePageId());
 			}
 		};
 	}
