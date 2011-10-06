@@ -40,6 +40,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
+import com.reflexit.magiccards.ui.preferences.feditors.FileSaveFieldEditor;
 
 /**
  * First and only page of Deck Export Wizard
@@ -111,7 +112,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		fileSelectionLayout.marginWidth = 0;
 		fileSelectionLayout.marginHeight = 0;
 		fileSelectionArea.setLayout(fileSelectionLayout);
-		editor = new FileFieldEditor("fileSelect", "Select output file", fileSelectionArea); // NON-NLS-1
+		editor = new FileSaveFieldEditor("fileSelect", "Select output file", fileSelectionArea); // NON-NLS-1
 		// //NON-NLS-2
 		// //$NON-NLS-1$
 		editor.getTextControl(fileSelectionArea).addModifyListener(new ModifyListener() {
