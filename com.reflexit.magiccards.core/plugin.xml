@@ -12,6 +12,7 @@
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.ClassicExportDelegate"
+            extension="txt"
             id="classic"
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
             label="classic">
@@ -46,11 +47,13 @@
             label="Wagic: The Homebrew"
             xmlFormat="false">
       </deckFormat>
-      <deckFormat
-            exportDelegate="com.reflexit.magiccards.core.exports.HtmlTableExportDelegate"
-            id="html"
-            label="HTML Table"
-            xmlFormat="true">
-      </deckFormat>
+     
+     <deckFormat
+           exportDelegate="com.reflexit.magiccards.core.exports.HtmlTableExportDelegate"
+           extension="html"
+           id="htmlWithSymbols"
+           label="HTML Table "
+           xmlFormat="false">
+     </deckFormat>  
    </extension>
 </plugin>

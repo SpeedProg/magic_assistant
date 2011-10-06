@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 
 import com.reflexit.magiccards.core.Activator;
 
@@ -30,7 +30,7 @@ public class ImportExportFactory<T> {
 	private static Map<ReportType, String> exportRegistry = new LinkedHashMap<ReportType, String>();
 
 	public IImportDelegate<T> getImportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
-	        IllegalAccessException {
+			IllegalAccessException {
 		if (importRegistry.size() == 0) {
 			initRegistry();
 		}
@@ -44,7 +44,7 @@ public class ImportExportFactory<T> {
 	};
 
 	public IExportDelegate<T> getExportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
-	        IllegalAccessException {
+			IllegalAccessException {
 		if (exportRegistry.size() == 0) {
 			initRegistry();
 		}
@@ -76,8 +76,9 @@ public class ImportExportFactory<T> {
 		String imp = elp.getAttribute("importDelegate");
 		String exp = elp.getAttribute("exportDelegate");
 		String sxml = elp.getAttribute("xmlFormat");
+		String ext = elp.getAttribute("extension");
 		boolean xmlFormat = Boolean.valueOf(sxml);
-		ReportType rt = ReportType.createReportType(id, label, xmlFormat);
+		ReportType rt = ReportType.createReportType(id, label, ext, xmlFormat);
 		addImportWorker(rt, imp);
 		addExportWorker(rt, exp);
 	}

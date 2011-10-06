@@ -72,7 +72,7 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  id of a deck format
+                  id of a deck format, used as default extension of file name, if extension attribute is not specified
                </documentation>
                <appInfo>
                   <meta.attribute kind="identifier"/>
@@ -94,6 +94,13 @@
                <appInfo>
                   <meta.attribute kind="java" basedOn=":com.reflexit.magiccards.core.exports.IExportDelegate"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="extension" type="string">
+            <annotation>
+               <documentation>
+                  File extension for file format, without leading dot, i.e. html
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

@@ -4,32 +4,37 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ReportType {
-	private String name;
+	private String id;
 	private String label;
 	private boolean xmlFormat;
+	private String extension;
 	private static Map<String, ReportType> types = new LinkedHashMap<String, ReportType>();
 	public static final ReportType XML = createReportType("xml", "Magic Assistant XML", true);
 	public static final ReportType CSV = createReportType("csv", "Magic Assistant CSV");
-	public static final ReportType TEXT_DECK_CLASSIC = createReportType("classic", "Deck Classic (Text)");
-	public static final ReportType USER_DEFINED = createReportType("user", "User Defined");
+	public static final ReportType TEXT_DECK_CLASSIC = createReportType("classic", "Deck Classic (Text)", "txt", false);
 	public static final ReportType TABLE_PIPED = createReportType("table", "Piped Table");
 
-	private ReportType(String key, String label, boolean xml) {
-		this.name = key;
+	private ReportType(String key, String label, boolean xml, String extension) {
+		this.id = key;
 		this.label = label;
 		this.xmlFormat = xml;
+		this.extension = extension;
 		types.put(key, this);
 	}
 
 	public static ReportType createReportType(String key, String label) {
-		return createReportType(key, label, false);
+		return createReportType(key, label, key, false);
 	}
 
 	public static ReportType createReportType(String key, String label, boolean xml) {
+		return createReportType(key, label, key, false);
+	}
+
+	public static ReportType createReportType(String key, String label, String extension, boolean xml) {
 		ReportType reportType = types.get(key);
 		if (reportType != null)
 			return reportType;
-		return new ReportType(key, label, xml);
+		return new ReportType(key, label, xml, extension);
 	}
 
 	/**
@@ -41,7 +46,7 @@ public class ReportType {
 
 	@Override
 	public String toString() {
-		return name;
+		return id;
 	}
 
 	public String getLabel() {
@@ -55,6 +60,6 @@ public class ReportType {
 	}
 
 	public String getExtension() {
-		return name;
+		return extension;
 	}
 }

@@ -387,9 +387,23 @@ public class ParseGathererNewVisualSpoiler {
 		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
 	}
 
-	public static URL createSetImageURL(String editionAbbr, String rarity) throws MalformedURLException {
-		String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
-		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr + "&size=small&rarity=" + rarLetter);
+	public static URL createSetImageURL(String editionAbbr, String rarity) {
+		try {
+			String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr + "&size=small&rarity="
+					+ rarLetter);
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
+
+	public static URL createManaImageURL(String symbol) {
+		String manaName = symbol.replaceAll("[{}/]", "");
+		try {
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=" + manaName + "&type=symbol");
+		} catch (MalformedURLException e) {
+			return null;
+		}
 	}
 
 	public static void downloadUpdates(String set, String file, Properties options, IProgressMonitor pm) throws FileNotFoundException,

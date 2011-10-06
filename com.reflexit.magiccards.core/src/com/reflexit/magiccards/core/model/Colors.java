@@ -172,7 +172,7 @@ public class Colors implements ISearchableProperty {
 		return res;
 	}
 
-	private String[] manasplit(String cost) {
+	public String[] manasplit(String cost) {
 		if (cost.contains(","))
 			return new String[] { "1000000" };
 		String res = cost.replaceAll("\\{", "");
