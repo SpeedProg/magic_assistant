@@ -68,16 +68,14 @@ public class CardStackLayout {
 
 	public Collection<XFigure> layout() {
 		Collection<XFigure> zorder = new ArrayList<XFigure>();
-		int i = 0;
 		int x = marginWidth;
 		int w = 0;
 		int h = 0;
-		for (Iterator<Collection<XFigure>> iterator = groups.iterator(); iterator.hasNext(); i++) {
+		for (Iterator<Collection<XFigure>> iterator = groups.iterator(); iterator.hasNext();) {
 			Collection<XFigure> stack = iterator.next();
 			int y = marginHeight;
-			int j = 0;
 			if (stack != null) {
-				for (Iterator<XFigure> iterator2 = stack.iterator(); iterator2.hasNext(); j++) {
+				for (Iterator<XFigure> iterator2 = stack.iterator(); iterator2.hasNext();) {
 					XFigure xFigure = iterator2.next();
 					xFigure.setLocation(x, y);
 					zorder.add(xFigure);
@@ -96,5 +94,21 @@ public class CardStackLayout {
 		}
 		width = x;
 		return zorder;
+	}
+
+	public Collection<XFigure> getTop() {
+		Collection<XFigure> top = new ArrayList<XFigure>();
+		for (Iterator<Collection<XFigure>> iterator = groups.iterator(); iterator.hasNext();) {
+			Collection<XFigure> stack = iterator.next();
+			if (stack != null) {
+				XFigure last = null;
+				for (Iterator<XFigure> iterator2 = stack.iterator(); iterator2.hasNext();) {
+					XFigure xFigure = iterator2.next();
+					last = xFigure;
+				}
+				top.add(last);
+			}
+		}
+		return top;
 	}
 }

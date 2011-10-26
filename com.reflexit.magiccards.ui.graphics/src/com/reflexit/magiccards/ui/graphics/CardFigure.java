@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 public class CardFigure extends XFigure {
@@ -21,12 +22,6 @@ public class CardFigure extends XFigure {
 		return imageNotFound;
 	}
 
-	public CardFigure(XFigure parent, ImageData imageData, IMagicCard card) {
-		super(parent, imageData.width, imageData.height);
-		this.card = card;
-		setImageData(imageData);
-	}
-
 	public void setCardImage(Image im) {
 		if (cardImage != null)
 			cardImage.dispose();
@@ -36,9 +31,34 @@ public class CardFigure extends XFigure {
 	public CardFigure(XFigure parent, IMagicCard card) {
 		super(parent, 223, 310);
 		this.card = card;
-		Image im = ImageCreator.getInstance().createCardNotFoundImage(card);
-		setCardImage(im);
-		this.imageNotFound = true;
+		if (CardCache.isImageCached(card)) {
+			String path = CardCache.createLocalImageFilePath(card);
+			setImageData(new ImageData(path));
+		} else {
+			Image im = ImageCreator.getInstance().createCardNotFoundImage(card);
+			setCardImage(im);
+			imageNotFound = true;
+		}
+	}
+
+	public void loadImage(boolean web) {
+		if (imageNotFound)
+			try {
+				synchronized (card) {
+					boolean exists = CardCache.isImageCached(card);
+					if (!exists && web) {
+						CardCache.loadCardImageOffline(card, false);
+						card.wait(100);
+						exists = CardCache.isImageCached(card);
+					}
+					if (exists) {
+						String path = CardCache.createLocalImageFilePath(card);
+						setImageData(new ImageData(path));
+					}
+				}
+			} catch (Exception e) {
+				// ignore
+			}
 	}
 
 	public void setImageData(ImageData imageData) {
@@ -55,10 +75,10 @@ public class CardFigure extends XFigure {
 
 	@Override
 	public void paint(GC gc, int x, int y, int width, int height) {
-		// System.err.println("Clipping " + x + "," + y + "," + width + "," +
-		// height);
+		// System.err.println("Clipping " + x + "," + y + "," + width + "," + height);
 		Rectangle clip = new Rectangle(x, y, width, height);
 		Rectangle cb = getBounds();
+		// System.err.println("Bounds " + cb.x + "," + cb.y + "," + cb.width + "," + cb.height);
 		Rectangle in = clip.intersection(cb);
 		if (in.isEmpty())
 			return;

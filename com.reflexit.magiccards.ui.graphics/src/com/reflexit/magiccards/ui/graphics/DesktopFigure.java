@@ -1,10 +1,10 @@
 package com.reflexit.magiccards.ui.graphics;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -24,7 +23,6 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.sync.CardCache;
 
 public class DesktopFigure extends XFigure implements ISelectionProvider {
 	private ArrayList<CardFigure> children;
@@ -196,7 +194,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		if (backgroungImage != null)
 			backgroungImage.dispose();
 		backgroungImage = null;
-		addNewFigure(selected.getCard()); // refresh the image
+		addNewFigureIfNotFound(selected.getCard()); // refresh the image
 		redraw();
 		return true;
 	}
@@ -234,7 +232,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 			IMagicCard card = next.getCard();
 			int gi;
 			if (map.size() == 0)
-				gi = j % 6;
+				gi = j % 4;
 			else {
 				if (map.get(card) != null)
 					gi = map.get(card);
@@ -248,6 +246,12 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		children.addAll(zorder);
 		// System.err.println("new size: " + layout.width + "," + layout.height);
 		resize(new Rectangle(0, 0, layout.width, layout.height));
+		Collection<XFigure> top = layout.getTop();
+		for (Iterator iterator = top.iterator(); iterator.hasNext();) {
+			CardFigure cardf = (CardFigure) iterator.next();
+			System.err.println("Top:" + cardf);
+			cardf.loadImage(true);
+		}
 	}
 
 	private int addFromGroup(CardGroup cardGroup, HashMap<IMagicCard, Integer> map, int i) {
@@ -273,30 +277,22 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 			iterator.remove();
 		}
 		for (IMagicCard card : fstore) {
-			addNewFigure(card);
+			addNewFigureIfNotFound(card);
 		}
 	}
 
-	protected CardFigure addNewFigure(IMagicCard card) {
+	protected CardFigure addNewFigureIfNotFound(IMagicCard card) {
 		CardFigure found = findCardFigure(card);
-		String path = CardCache.createLocalImageFilePath(card);
-		boolean imageCached = new File(path).exists();
-		if (found != null && found.isImageNotFound() && imageCached) {
-			ImageData cimage = new ImageData(path);
-			found.setImageData(cimage);
-			return found;
-		} else if (found != null) {
+		if (found != null) {
+			// refresh image
+			found.loadImage(false);
 			return found;
 		}
 		// new card
-		CardFigure cf;
-		if (imageCached) {
-			ImageData cimage = new ImageData(path);
-			cf = new CardFigure(this, cimage, card);
-		} else {
-			cf = new CardFigure(this, card);
-		}
-		// cf.setLocation(0, 0);
+		CardFigure cf = new CardFigure(this, card);
+		Rectangle bounds = getBounds();
+		cf.setLocation(new Random().nextInt(bounds.width - cf.getBounds().width),
+				new Random().nextInt(bounds.height - cf.getBounds().height));
 		children.add(cf);
 		return cf;
 	}

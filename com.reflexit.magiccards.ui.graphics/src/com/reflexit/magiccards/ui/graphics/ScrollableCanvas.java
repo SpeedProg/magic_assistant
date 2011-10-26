@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
 public class ScrollableCanvas extends Canvas implements MouseWheelListener, MouseListener, MouseMoveListener, MouseTrackListener {
-	private ScrollableCanvas canvas;
 	private Image image;
 	protected Point origin;
 	private boolean dragCanvas = true;
@@ -27,11 +26,10 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 
 	public ScrollableCanvas(Composite parent, Image originalImage) {
 		super(parent, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.DOUBLE_BUFFERED);
-		canvas = this;
 		image = originalImage;
 		origin = new Point(0, 0);
-		hBar = canvas.getHorizontalBar();
-		vBar = canvas.getVerticalBar();
+		hBar = this.getHorizontalBar();
+		vBar = this.getVerticalBar();
 		hBar.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				scroll(hBar.getSelection(), vBar.getSelection());
@@ -42,16 +40,16 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 				scroll(hBar.getSelection(), vBar.getSelection());
 			}
 		});
-		canvas.addMouseWheelListener(this);
-		canvas.addMouseListener(this);
-		canvas.addMouseMoveListener(this);
-		canvas.addListener(SWT.Resize, new Listener() {
+		this.addMouseWheelListener(this);
+		this.addMouseListener(this);
+		this.addMouseMoveListener(this);
+		this.addListener(SWT.Resize, new Listener() {
 			public void handleEvent(Event e) {
 				resize();
 			}
 		});
-		canvas.addMouseTrackListener(this);
-		canvas.addListener(SWT.Paint, new Listener() {
+		this.addMouseTrackListener(this);
+		this.addListener(SWT.Paint, new Listener() {
 			public void handleEvent(Event e) {
 				GC gc = e.gc;
 				paint(gc);
@@ -66,7 +64,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 		int destY = -vSelection - origin.y;
 		int destX = -hSelection - origin.x;
 		Rectangle rect = image.getBounds();
-		canvas.scroll(destX, destY, 0, 0, rect.width, rect.height, false);
+		this.scroll(destX, destY, 0, 0, rect.width, rect.height, false);
 		origin.y = -vSelection;
 		origin.x = -hSelection;
 	}
@@ -136,7 +134,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 
 	public void setScrolls() {
 		Rectangle rect = image.getBounds();
-		Rectangle client = canvas.getClientArea();
+		Rectangle client = this.getClientArea();
 		hBar.setMaximum(rect.width);
 		vBar.setMaximum(rect.height);
 		hBar.setThumb(Math.min(rect.width, client.width));
@@ -159,7 +157,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	}
 
 	public void paint(GC gc) {
-		Rectangle client = canvas.getClientArea();
+		Rectangle client = this.getClientArea();
 		gc.fillRectangle(0, 0, client.width, client.height);
 		gc.drawImage(image, origin.x, origin.y);
 		// Rectangle rect = image.getBounds();
