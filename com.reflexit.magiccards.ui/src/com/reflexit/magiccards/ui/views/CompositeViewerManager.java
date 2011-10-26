@@ -65,7 +65,8 @@ public class CompositeViewerManager extends ViewerManager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse .swt.widgets.Composite)
+	 * @see com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	@Override
 	public Control createContents(Composite parent) {
@@ -74,6 +75,7 @@ public class CompositeViewerManager extends ViewerManager {
 		this.comp.setLayout(this.stackLayout);
 		for (IMagicColumnViewer m : this.managers) {
 			Control control = m.createContents(this.comp);
+			m.hookDragAndDrop();
 		}
 		setActivePage(this.activeIndex);
 		this.comp.layout();

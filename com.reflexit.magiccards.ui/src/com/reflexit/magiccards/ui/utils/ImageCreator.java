@@ -166,7 +166,8 @@ public class ImageCreator {
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot
+	 *         be downloaded remotely
 	 * @throws IOException
 	 */
 	public Image getCardImage(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation,
@@ -191,17 +192,6 @@ public class ImageCreator {
 				throw e;
 			}
 		}
-	}
-
-	/**
-	 * Check that card image exists locally or schedule a loading job if image not found. This image is not managed - to be disposed by
-	 * called.
-	 * 
-	 * @param card
-	 * @throws IOException
-	 */
-	public void loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation, SWTException {
-		CardCache.loadCardImageOffline(card, forceUpdate);
 	}
 
 	private Image createCardImage(String path) {

@@ -18,8 +18,6 @@ public interface IMagicControl {
 
 	public abstract void init(IViewSite site);
 
-	public abstract void hookDragAndDrop();
-
 	public abstract ISelectionProvider getSelectionProvider();
 
 	public abstract void setGlobalHandlers(IActionBars bars);

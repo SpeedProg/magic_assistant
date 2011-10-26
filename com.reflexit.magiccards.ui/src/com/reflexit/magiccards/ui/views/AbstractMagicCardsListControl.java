@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
@@ -60,8 +59,6 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -204,7 +201,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		} catch (Exception e) {
 			selection = new StructuredSelection();
 		}
-		//System.err.println("current selection 2 " + manager.getSelectionProvider() + " " + selection);
+		// System.err.println("current selection 2 " + manager.getSelectionProvider() + " " +
+		// selection);
 		return selection;
 	}
 
@@ -236,7 +234,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		return topBar;
 	}
 
-	public ColumnViewer getViewer() {
+	private ColumnViewer getViewer() {
 		return this.manager.getViewer();
 	}
 
@@ -293,7 +291,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void setFocus() {
-		getViewer().getControl().setFocus();
+		manager.getControl().setFocus();
 	}
 
 	public void setNextSelection(ISelection structuredSelection) {
@@ -305,9 +303,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public void updateSingle(ICard source) {
-		manager.getViewer().update(source, null);
+		getViewer().update(source, null);
 		updateStatus();
-		getViewer().setSelection(new StructuredSelection(source), true);
+		getSelectionProvider().setSelection(new StructuredSelection(source));
 	}
 
 	private Composite createStatusLine(Composite composite) {
@@ -404,20 +402,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected void createTableControl(Composite parent) {
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
-		hookDragAndDrop();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
-	 */
-	public void hookDragAndDrop() {
-		getViewer().getControl().setDragDetect(true);
-		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
-		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer()));
 	}
 
 	protected Composite createTopBar(Composite composite) {
@@ -478,7 +462,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @param last
 	 */
 	protected void highlightCard(IMagicCard last) {
-		this.manager.getViewer().setSelection(new StructuredSelection(last), true);
+		getSelectionProvider().setSelection(new StructuredSelection(last));
 	}
 
 	@Override
@@ -628,7 +612,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 *
 	 */
 	public void runCopy() {
-		IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
+		IStructuredSelection sel = (IStructuredSelection) getSelectionProvider().getSelection();
 		if (sel.isEmpty())
 			return;
 		StringBuffer buf = new StringBuffer();

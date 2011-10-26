@@ -8,6 +8,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -16,6 +18,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
+import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
+import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -46,7 +50,16 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		this.viewer.setComparator(null);
 		createDefaultColumns();
 		updateDbMode(true);
+		hookDragAndDrop();
 		return this.viewer.getControl();
+	}
+
+	@Override
+	public void hookDragAndDrop() {
+		this.getViewer().getControl().setDragDetect(true);
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
+		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
 	}
 
 	public void setInput(Collection<Object> input) {

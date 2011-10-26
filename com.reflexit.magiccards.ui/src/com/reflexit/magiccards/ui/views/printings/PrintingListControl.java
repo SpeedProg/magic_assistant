@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.ui.views.printings;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -12,8 +10,6 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -75,14 +71,6 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 				s = "s";
 			return "Total " + count + " card" + s + " in your collections";
 		}
-	}
-
-	@Override
-	public void hookDragAndDrop() {
-		this.getViewer().getControl().setDragDetect(true);
-		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
 	}
 
 	boolean isDbMode() {

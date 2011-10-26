@@ -4,12 +4,17 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
+import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
+import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -26,8 +31,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
 	public abstract Control createContents(Composite parent);
@@ -69,9 +73,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider
-	 * ()
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider ()
 	 */
 	public ISelectionProvider getSelectionProvider() {
 		return getViewer();
@@ -96,8 +98,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
 	 * .eclipse.jface.action.MenuManager)
 	 */
 	public void hookContextMenu(MenuManager menuMgr) {
@@ -108,8 +109,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookDoubleClickListener
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookDoubleClickListener
 	 * (org.eclipse.jface.viewers.IDoubleClickListener)
 	 */
 	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
@@ -119,8 +119,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
 	 * .reflexit.magiccards.ui.views.IColumnSortAction)
 	 */
 	public void hookSortAction(IColumnSortAction sortAction) {
@@ -148,6 +147,19 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	protected void updateGrid() {
 		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
 		setLinesVisible(grid);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
+	 */
+	public void hookDragAndDrop() {
+		getViewer().getControl().setDragDetect(true);
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
+		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
+		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer()));
 	}
 
 	public abstract int getSortDirection();

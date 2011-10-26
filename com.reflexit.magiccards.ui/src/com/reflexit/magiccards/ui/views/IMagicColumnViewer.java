@@ -46,4 +46,6 @@ public interface IMagicColumnViewer {
 	public abstract int getSortDirection();
 
 	public abstract Control createContents(Composite comp);
+
+	void hookDragAndDrop();
 }
