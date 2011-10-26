@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -117,7 +117,7 @@ public class CardCache {
 		return loading;
 	}
 
-	private static LinkedHashMap<IMagicCard, Boolean> cardImageQueue = new LinkedHashMap<IMagicCard, Boolean>();
+	private static ArrayList<IMagicCard> cardImageQueue = new ArrayList<IMagicCard>();
 	private static Job cardImageLoadingJob = new Job("Loading card images") {
 		{
 			setSystem(true);
@@ -127,18 +127,16 @@ public class CardCache {
 		protected IStatus run(IProgressMonitor monitor) {
 			while (true) {
 				IMagicCard card = null;
-				boolean forceUpdate = false;
 				synchronized (cardImageQueue) {
 					if (cardImageQueue.size() > 0) {
-						card = cardImageQueue.keySet().iterator().next();
-						forceUpdate = cardImageQueue.get(card);
+						card = cardImageQueue.iterator().next();
 						cardImageQueue.remove(card);
 					} else
 						return Status.OK_STATUS;
 				}
 				synchronized (card) {
 					try {
-						downloadAndSaveImage(card, isLoadingEnabled(), forceUpdate);
+						downloadAndSaveImage(card, isLoadingEnabled(), true);
 					} catch (Exception e) {
 						continue;
 					} finally {
@@ -149,9 +147,10 @@ public class CardCache {
 		}
 	};
 
-	public static void queueImageLoading(IMagicCard card, boolean forceUpdate) {
+	private static void queueImageLoading(IMagicCard card) {
 		synchronized (cardImageQueue) {
-			cardImageQueue.put(card, forceUpdate);
+			if (!cardImageQueue.contains(card))
+				cardImageQueue.add(card);
 		}
 		cardImageLoadingJob.schedule(0);
 	}
@@ -195,19 +194,32 @@ public class CardCache {
 	}
 
 	/**
-	 * Get card image or schedule a loading job if image not found. This image
-	 * is not managed - to be disposed by called.
+	 * Get card image or schedule a loading job if image not found. This image is not managed - to
+	 * be disposed by called. To get notified when job is done loading, can wait on card object
 	 * 
 	 * @param card
+	 * @return true if card image exists, schedule update otherwise. If loading is disabled and
+	 *         there is no cached image through an exception
 	 * @throws IOException
 	 */
-	public static void loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
+	public static boolean loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
 		String path = createLocalImageFilePath(card);
 		File file = new File(path);
 		if (file.exists() && forceUpdate == false) {
-			return;
+			return true;
 		}
-		CardCache.queueImageLoading(card, forceUpdate);
-		return;
+		if (!isLoadingEnabled())
+			throw new CachedImageNotFoundException("Cannot find cached image for " + card.getName());
+		CardCache.queueImageLoading(card);
+		return false;
+	}
+
+	public static boolean isImageCached(IMagicCard card) {
+		String path = createLocalImageFilePath(card);
+		File file = new File(path);
+		if (file.exists()) {
+			return true;
+		}
+		return false;
 	}
 }
