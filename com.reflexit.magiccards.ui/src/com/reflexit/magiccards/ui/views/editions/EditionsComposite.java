@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -76,6 +77,7 @@ public class EditionsComposite extends Composite {
 		this.setLayout(new GridLayout());
 		Composite one = (Composite) createContents(this, treeStyle);
 		one.setLayoutData(new GridData(GridData.FILL_BOTH));
+		setPreferenceStore(new PreferenceStore());
 	}
 
 	private TreeViewer treeViewer;
