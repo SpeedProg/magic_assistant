@@ -249,7 +249,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		Collection<XFigure> top = layout.getTop();
 		for (Iterator iterator = top.iterator(); iterator.hasNext();) {
 			CardFigure cardf = (CardFigure) iterator.next();
-			System.err.println("Top:" + cardf);
+			// System.err.println("Top:" + cardf);
 			cardf.loadImage(true);
 		}
 	}
