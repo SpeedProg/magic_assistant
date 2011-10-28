@@ -62,7 +62,8 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 		String locId = Locations.getInstance().getPrefConstant(loc);
 		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
-			if (id.startsWith(locId + ".") || id.equals(locId) || id.equals(locId + Location.SIDEBOARD_SUFFIX)) {
+			if (id.startsWith(locId + ".") || id.startsWith(locId + "/") || id.equals(locId)
+					|| id.equals(locId + Location.SIDEBOARD_SUFFIX)) {
 				preferenceStore.setValue(id, true);
 			} else {
 				preferenceStore.setValue(id, false);
