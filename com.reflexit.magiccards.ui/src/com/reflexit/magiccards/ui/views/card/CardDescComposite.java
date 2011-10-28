@@ -241,6 +241,8 @@ class CardDescComposite extends Composite {
 		String text = card.getText();
 		if (text == null || text.length() == 0)
 			text = card.getOracleText();
+		if (text == null || text.length() == 0)
+			text = "";
 		return text;
 	}
 
