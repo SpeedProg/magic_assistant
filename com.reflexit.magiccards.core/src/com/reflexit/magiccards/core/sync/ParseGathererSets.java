@@ -65,10 +65,10 @@ public class ParseGathererSets extends ParseGathererPage {
 					continue;
 				name = name.replaceAll("&quot;", "\"");
 				if (!editions.containsName(name)) {
-					Edition ed = editions.addAbbr(name, null);
+					Edition ed = editions.addEdition(name, null);
 					newSets.add(ed);
 				} else
-					editions.addAbbr(name, null);
+					editions.addEdition(name, null);
 			}
 		}
 	}

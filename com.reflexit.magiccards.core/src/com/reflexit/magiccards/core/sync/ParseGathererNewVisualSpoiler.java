@@ -97,7 +97,7 @@ public class ParseGathererNewVisualSpoiler {
 		}
 
 		public void edition(Edition ed) {
-			Edition res = Editions.getInstance().addAbbr(ed.getName(), ed.getMainAbbreviation());
+			Edition res = Editions.getInstance().addEdition(ed.getName(), ed.getMainAbbreviation());
 			if (res.getReleaseDate() == null)
 				res.setReleaseDate(Calendar.getInstance().getTime());
 		}
