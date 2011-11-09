@@ -5,12 +5,12 @@ import java.lang.reflect.Modifier;
 
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCard;
 
 public enum EditionField implements ICardField {
 	NAME,
 	DATE("release"),
-	TYPE
+	TYPE,
+	FORMAT
 	// end
 	;
 	private final Field field;
@@ -29,7 +29,7 @@ public enum EditionField implements ICardField {
 	EditionField() {
 		String javaField = name().toLowerCase();
 		try {
-			field = MagicCard.class.getDeclaredField(javaField);
+			field = Edition.class.getDeclaredField(javaField);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

@@ -168,6 +168,7 @@ public class EditionsComposite extends Composite {
 		});
 		columns.add(new DateColumn());
 		columns.add(new TypeColumn());
+		columns.add(new FormatColumn());
 	}
 
 	protected void sort(int index) {
