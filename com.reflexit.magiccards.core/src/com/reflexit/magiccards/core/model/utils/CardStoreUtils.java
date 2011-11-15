@@ -112,16 +112,14 @@ public final class CardStoreUtils {
 				filteredList.add(elem);
 			}
 		}
-		ArrayList<IMagicCard> another = new ArrayList<IMagicCard>();
-		another = filteredList;
-		filteredList = new ArrayList<IMagicCard>(another.size());
-		Random r = new Random(System.currentTimeMillis() * another.hashCode());
-		while (another.size() > 0) {
-			int index = r.nextInt(another.size());
-			filteredList.add(another.get(index));
-			another.remove(index);
+		ArrayList<IMagicCard> newList = new ArrayList<IMagicCard>(filteredList.size());
+		Random r = new Random(System.currentTimeMillis() * filteredList.hashCode());
+		while (filteredList.size() > 0) {
+			int index = r.nextInt(filteredList.size());
+			newList.add(filteredList.get(index));
+			filteredList.remove(index);
 		}
-		return filteredList;
+		return newList;
 	}
 
 	private CardStoreUtils() {

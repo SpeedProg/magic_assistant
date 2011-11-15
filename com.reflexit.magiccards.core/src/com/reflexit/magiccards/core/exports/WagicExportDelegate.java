@@ -19,15 +19,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.model.storage.IStorage;
-import com.reflexit.magiccards.core.model.storage.IStorageContainer;
-import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
 /**
- * Export to Wagic: The Homebrew (http://wololo.net/wagic/) TODO: add
- * description
+ * Export to Wagic: The Homebrew (http://wololo.net/wagic/) TODO: add description
  */
 public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public WagicExportDelegate() {
@@ -36,12 +31,6 @@ public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public String getName() {
 		if (store != null) {
 			return ((ILocatable) store).getLocation().getName();
-		}
-		ICardStore store1 = store.getCardStore();
-		IStorage storage = ((IStorageContainer) store1).getStorage();
-		if (storage instanceof IStorageInfo) {
-			IStorageInfo si = ((IStorageInfo) storage);
-			return si.getName();
 		}
 		return "deck";
 	}
