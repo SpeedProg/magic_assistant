@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.locale;
 
 import org.eclipse.osgi.util.NLS;
 
-public class CardText extends NLS {
+public final class CardText extends NLS {
 	private static final String BUNDLE_NAME = CardText.class.getName();
 	public static String Type_Artifact;
 	public static String Type_Basic;

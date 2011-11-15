@@ -31,7 +31,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
  * @author Alena
  * 
  */
-public class CardStoreUtils {
+public final class CardStoreUtils {
 	public static CardStoreUtils getInstance() {
 		if (instance == null)
 			instance = new CardStoreUtils();
@@ -42,8 +42,8 @@ public class CardStoreUtils {
 	private static CardTypes MTYPES = CardTypes.getInstance();
 
 	/**
-	 * mana curve is array 0 .. 8 of card counts, where non-land is counted,
-	 * arr[8] - is cards with X cost in it, arr[7] - is 7+
+	 * mana curve is array 0 .. 8 of card counts, where non-land is counted, arr[8] - is cards with
+	 * X cost in it, arr[7] - is 7+
 	 * 
 	 * @param store
 	 * @return mana curve for given store

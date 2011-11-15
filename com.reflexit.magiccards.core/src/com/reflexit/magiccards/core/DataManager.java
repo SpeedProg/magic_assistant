@@ -26,7 +26,7 @@ public class DataManager {
 	private static ICardHandler handler;
 	private static ModelRoot root;
 
-	public static ICardHandler getCardHandler() {
+	public synchronized static ICardHandler getCardHandler() {
 		if (handler != null)
 			return handler;
 		try {

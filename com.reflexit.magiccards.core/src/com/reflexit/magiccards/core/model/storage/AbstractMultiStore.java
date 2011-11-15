@@ -139,7 +139,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		return this.size;
 	}
 
-	public int getDeepSize() {
+	public synchronized int getDeepSize() {
 		int s = 0;
 		for (Object element : this) {
 			s++;

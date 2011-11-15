@@ -56,7 +56,8 @@ public class Editions implements ISearchableProperty {
 		public void setReleaseDate(String date) throws ParseException {
 			if (date == null || date.length() == 0 || date.equals("?"))
 				release = null;
-			release = formatter.parse(date);
+			else
+				release = formatter.parse(date);
 		}
 
 		public Date getReleaseDate() {
