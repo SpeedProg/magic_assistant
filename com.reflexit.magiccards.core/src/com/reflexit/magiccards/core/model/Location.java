@@ -12,8 +12,9 @@ package com.reflexit.magiccards.core.model;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+
+import com.reflexit.magiccards.core.model.nav.LocationPath;
 
 /**
  * Location represents path to a decl/collection
@@ -76,7 +77,7 @@ public class Location implements Comparable<Location> {
 		return new Path(location).removeFileExtension().lastSegment();
 	}
 
-	public static Location createLocation(IPath path) {
+	public static Location createLocation(LocationPath path) {
 		String str = path.toPortableString();
 		if (str.length() == 0)
 			return NO_WHERE;

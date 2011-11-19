@@ -1,12 +1,8 @@
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URI;
-
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 
 import com.reflexit.magiccards.core.model.Location;
 
@@ -21,23 +17,22 @@ public class CollectionsContainer extends CardOrganizer {
 		super(name, parent);
 	}
 
-	public CollectionsContainer(String name, IPath path, CardOrganizer parent) {
+	public CollectionsContainer(String name, LocationPath path, CardOrganizer parent) {
 		super(name, path, parent);
 	}
 
 	@SuppressWarnings("unused")
-	public void loadChildren() throws CoreException {
-		getContainer().refreshLocal(IResource.DEPTH_ONE, null);
-		IResource[] members = getContainer().members();
-		for (IResource mem : members) {
-			if (!mem.exists() || mem.isPhantom())
+	public void loadChildren() {
+		File dir = getFile();
+		for (File mem : dir.listFiles()) {
+			if (!mem.exists())
 				continue;
 			String name = mem.getName();
 			// System.err.println(this + "/" + name);
 			if (name.equals("MagicDB"))
 				continue; // skip this ones
 			CardElement el = findChieldByName(name);
-			if (mem instanceof IContainer) {
+			if (mem.isDirectory()) {
 				if (el == null) {
 					CollectionsContainer con = new CollectionsContainer(name, this);
 					con.loadChildren();
@@ -57,14 +52,13 @@ public class CollectionsContainer extends CardOrganizer {
 		}
 	}
 
-	private boolean checkType(IResource mem) {
-		URI locationURI = mem.getLocationURI();
+	private boolean checkType(File mem) {
 		try {
 			byte[] headerBytes = new byte[1000];
-			InputStream openStream = locationURI.toURL().openStream();
+			InputStream openStream = new FileInputStream(mem);
 			try {
-				openStream.read(headerBytes);
-				String header = new String(headerBytes);
+				int k = openStream.read(headerBytes);
+				String header = new String(headerBytes, 0, k);
 				if (header.contains("<type>deck</type"))
 					return true;
 			} finally {

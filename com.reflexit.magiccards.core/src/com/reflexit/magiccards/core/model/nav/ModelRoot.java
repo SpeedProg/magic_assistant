@@ -14,17 +14,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 
 /**
- * Model Root contains access to all deck, collections and magic db container
- * (displayed in the navigator)
+ * Model Root contains access to all deck, collections and magic db container (displayed in the
+ * navigator)
  * 
  * @author Alena
  * 
@@ -48,20 +43,16 @@ public class ModelRoot extends CardOrganizer {
 	}
 
 	private void initRoot() {
-		try {
-			CardOrganizer root = this;
-			this.fMyCards = new CollectionsContainer("My Cards", root.getPath(), root);
-			this.fLib = new CollectionsContainer("Collections", fMyCards);
-			this.fDecks = new CollectionsContainer("Decks", fMyCards);
-			this.db = new MagicDbContainter(root);
-			this.fLibFile = new CardCollection("main.xml", this.fLib);
-			refresh();
-		} catch (CoreException e) {
-			Activator.log(e);
-		}
+		CardOrganizer root = this;
+		this.fMyCards = new CollectionsContainer("My Cards", root.getPath(), root);
+		this.fLib = new CollectionsContainer("Collections", fMyCards);
+		this.fDecks = new CollectionsContainer("Decks", fMyCards);
+		this.db = new MagicDbContainter(root);
+		this.fLibFile = new CardCollection("main.xml", this.fLib);
+		refresh();
 	}
 
-	public void refresh() throws CoreException {
+	public void refresh() {
 		this.fMyCards.loadChildren();
 		// this.fLib.loadChildren();
 	}
@@ -72,8 +63,8 @@ public class ModelRoot extends CardOrganizer {
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#getPath()
 	 */
 	@Override
-	public IPath getPath() {
-		return new Path("");
+	public LocationPath getPath() {
+		return new LocationPath("");
 	}
 
 	public CollectionsContainer getDeckContainer() {

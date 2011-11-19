@@ -2,11 +2,10 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
 
-import org.eclipse.core.commands.common.EventManager;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
+import com.reflexit.magiccards.core.model.events.EventManager;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T>, ILocatable {

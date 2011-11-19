@@ -10,11 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -25,6 +21,7 @@ import com.thoughtworks.xstream.XStream;
 public class DataManager {
 	private static ICardHandler handler;
 	private static ModelRoot root;
+	private static File rootDir;
 
 	public synchronized static ICardHandler getCardHandler() {
 		if (handler != null)
@@ -57,15 +54,24 @@ public class DataManager {
 		return root;
 	}
 
-	public static IProject getProject() throws CoreException {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceRoot wsroot = workspace.getRoot();
-		IProject project = wsroot.getProject("magiccards");
-		if (!project.exists())
-			project.create(null);
-		if (!project.isOpen())
-			project.open(null);
-		return project;
+	// public static IProject getProject() throws CoreException {
+	// IWorkspace workspace = ResourcesPlugin.getWorkspace();
+	// IWorkspaceRoot wsroot = workspace.getRoot();
+	// IProject project = wsroot.getProject("magiccards");
+	// if (!project.exists())
+	// project.create(null);
+	// if (!project.isOpen())
+	// project.open(null);
+	// return project;
+	// }
+	public static void setRootDir(File dir) {
+		rootDir = dir;
+	}
+
+	public static File getRootDir() {
+		if (rootDir == null)
+			throw new NullPointerException();
+		return rootDir;
 	}
 
 	public static XStream getXStream() {
@@ -73,5 +79,9 @@ public class DataManager {
 		xstream.alias("mc", MagicCard.class);
 		xstream.alias("mcp", MagicCardPhisical.class);
 		return xstream;
+	}
+
+	public static File getStateLocationFile() {
+		return Activator.getStateLocationAlways().toFile();
 	}
 }

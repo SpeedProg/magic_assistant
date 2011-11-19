@@ -6,22 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 
 /**
- * This represent a folder where decks or collections are stored (or any sort of
- * super container)
+ * This represent a folder where decks or collections are stored (or any sort of super container)
  * 
  * @author Alena
  * 
@@ -30,10 +20,10 @@ public class CardOrganizer extends CardElement {
 	private final Collection<CardElement> children = new ArrayList<CardElement>();
 
 	public CardOrganizer(String filename, CardOrganizer parent) {
-		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename), parent);
+		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(filename), parent);
 	}
 
-	public CardOrganizer(String name, IPath path, CardOrganizer parent) {
+	public CardOrganizer(String name, LocationPath path, CardOrganizer parent) {
 		super(name, path);
 		createDir();
 		setParentInit(parent);
@@ -60,15 +50,13 @@ public class CardOrganizer extends CardElement {
 		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER, a));
 	}
 
-	public IContainer getContainer() {
-		return (IContainer) getResource();
-	}
-
-	public void create() throws CoreException {
-		IProject project = DataManager.getProject();
-		IFolder dir = project.getFolder(getPath());
-		if (!dir.exists())
-			dir.create(IResource.NONE, true, null);
+	public void create() throws IOException {
+		File dir = getFile();
+		if (!dir.exists()) {
+			if (!dir.mkdir()) {
+				throw new IOException("Cannot create " + dir);
+			}
+		}
 	}
 
 	public boolean hasChildren() {
@@ -127,26 +115,26 @@ public class CardOrganizer extends CardElement {
 
 	public CardElement findChieldByName(String name) {
 		for (CardElement el : getChildren()) {
-			try {
-				if (el.getFile().getName().equals(name)) {
-					return el;
-				}
-			} catch (CoreException e) {
-				continue;
+			if (el.getFile().getName().equals(name)) {
+				return el;
 			}
 		}
 		return null;
+	}
+
+	public CardElement findElement(String p) {
+		return findElement(new LocationPath(p));
 	}
 
 	/**
 	 * @param path
 	 * @return
 	 */
-	public CardElement findElement(IPath p) {
+	public CardElement findElement(LocationPath p) {
 		if (p.isRoot())
 			return this;
-		String top = p.removeLastSegments(p.segmentCount() - 1).toString();
-		IPath rest = p.removeFirstSegments(1);
+		String top = p.getFirstSegment();
+		LocationPath rest = p.removeFirstSegments(1);
 		for (Object element : getChildren()) {
 			CardElement el = (CardElement) element;
 			if (el.getPath().equals(p))

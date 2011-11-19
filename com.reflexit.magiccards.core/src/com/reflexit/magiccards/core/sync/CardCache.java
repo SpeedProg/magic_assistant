@@ -18,15 +18,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
@@ -99,17 +98,17 @@ public class CardCache {
 			throw new CannotDetermineSetAbbriviation(card);
 		String editionAbbr = set.getBaseFileName();
 		int cardId = card.getCardId();
-		IPath path = Activator.getStateLocationAlways();
+		File loc = DataManager.getStateLocationFile();
 		String locale = "EN";
 		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
-		String file = path.append(part).toPortableString();
+		String file = new File(loc, part).getPath();
 		return file;
 	}
 
 	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) throws MalformedURLException {
-		IPath path = Activator.getStateLocationAlways();
+		File loc = DataManager.getStateLocationFile();
 		String part = "Sets/" + editionAbbr + "-" + rarity + ".jpg";
-		String file = path.append(part).toPortableString();
+		String file = new File(loc, part).getPath();
 		return file;
 	}
 

@@ -1,11 +1,8 @@
 package com.reflexit.magiccards.core.model.nav;
 
 import java.io.File;
+import java.io.IOException;
 
-import org.eclipse.core.commands.common.EventManager;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.Activator;
@@ -13,21 +10,21 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
+import com.reflexit.magiccards.core.model.events.EventManager;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 /**
- * This is base class that describe card containers. It basically either Deck or
- * Deck Folder.
+ * This is base class that describe card containers. It basically either Deck or Deck Folder.
  * 
  * @author Alena
  * 
  */
 public abstract class CardElement extends EventManager {
 	private String name; // name
-	private IPath path; // project relative path
+	private LocationPath path; // project relative path
 	private CardOrganizer parent;
 
-	public CardElement(String name, IPath path) {
+	public CardElement(String name, LocationPath path) {
 		this.name = name;
 		this.path = path;
 	}
@@ -36,13 +33,6 @@ public abstract class CardElement extends EventManager {
 		setParent(parent);
 		if (parent != null) {
 			parent.addChild(this);
-			if (parent.getResource() != null) {
-				try {
-					parent.getResource().refreshLocal(1, null);
-				} catch (Exception e) {
-					throw new MagicException(e);
-				}
-			}
 		}
 	}
 
@@ -55,12 +45,12 @@ public abstract class CardElement extends EventManager {
 	}
 
 	public CardElement(String filename, CardOrganizer parent, boolean addToParent) {
-		this(nameFromFile(filename), parent == null ? new Path(filename) : parent.getPath().append(filename));
+		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(filename));
 		if (addToParent)
 			setParentInit(parent);
 	}
 
-	public IPath getPath() {
+	public LocationPath getPath() {
 		return this.path;
 	}
 
@@ -71,27 +61,11 @@ public abstract class CardElement extends EventManager {
 	/**
 	 * @return
 	 */
-	public IResource getResource() {
-		if (this.path == null)
-			return null;
-		try {
-			return DataManager.getProject().findMember(getPath());
-		} catch (CoreException e) {
-			return null;
-		}
-	}
-
-	/**
-	 * @return
-	 * @throws CoreException
-	 */
-	public File getFile() throws CoreException {
-		IPath p = getPath();
+	public File getFile() {
+		LocationPath p = getPath();
 		if (p == null)
 			return null;
-		IPath projectLoc = DataManager.getProject().getLocation();
-		IPath full = projectLoc.append(p);
-		return full.toFile();
+		return new File(DataManager.getRootDir(), p.toString());
 	}
 
 	public String getName() {
@@ -128,12 +102,8 @@ public abstract class CardElement extends EventManager {
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		if (getResource() != null) {
-			try {
-				getResource().delete(true, null);
-			} catch (CoreException e) {
-				Activator.log(e);
-			}
+		if (!getFile().delete()) {
+			Activator.log(new IOException("Cannot delete " + getFile()));
 		}
 	}
 
@@ -160,13 +130,8 @@ public abstract class CardElement extends EventManager {
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		if (getResource() != null) {
-			try {
-				getResource().move(new Path(value + ".xml"), true, null);
-			} catch (CoreException e) {
-				Activator.log(e);
-			}
-		}
+		File newFile = new File(parent.getFile(), value + ".xml"); // XXX
+		getFile().renameTo(newFile);
 		CardElement x = newElement(value, getParent());
 		fireEvent(new CardEvent(x, CardEvent.RENAME_CONTAINER, oldName));
 		return x;
@@ -180,15 +145,8 @@ public abstract class CardElement extends EventManager {
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		if (getResource() != null) {
-			try {
-				IPath newPath = DataManager.getProject().getFullPath()
-						.append(parent.getPath().addTrailingSeparator().append(getPath().lastSegment()));
-				getResource().move(newPath, true, null);
-			} catch (CoreException e) {
-				Activator.log(e);
-			}
-		}
+		File newFile = new File(parent.getFile(), getFile().getName());
+		getFile().renameTo(newFile);
 		setParentInit(parent);
 		fireRecorsiveRename(this, oldName);
 		return this;

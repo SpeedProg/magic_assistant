@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -26,6 +25,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -63,7 +63,7 @@ public class ImportUtils {
 			if (location.isSideboard()) {
 				ModelRoot root = DataManager.getModelRoot();
 				String containerName = location.getParent().getPath();
-				final CardElement resource = root.findElement(new Path(containerName));
+				final CardElement resource = root.findElement(new LocationPath(containerName));
 				if (!(resource instanceof CollectionsContainer)) {
 					continue; // ???
 				}

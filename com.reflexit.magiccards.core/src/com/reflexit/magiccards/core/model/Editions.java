@@ -20,10 +20,10 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class Editions implements ISearchableProperty {
@@ -264,16 +264,15 @@ public class Editions implements ISearchableProperty {
 	}
 
 	private synchronized void load() throws IOException {
-		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
-		String strfile = path.toOSString();
+		File file = new File(DataManager.getStateLocationFile(), EDITIONS_FILE);
 		if (DbActivator.getDefault() != null) {
 			InputStream ist = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + EDITIONS_FILE), true);
 			loadEditions(ist);
 		}
-		if (!new File(strfile).exists()) {
+		if (!file.exists()) {
 			save();
 		}
-		InputStream st = new FileInputStream(strfile);
+		InputStream st = new FileInputStream(file);
 		loadEditions(st);
 	}
 
@@ -327,8 +326,8 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public synchronized void save() throws FileNotFoundException {
-		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
-		PrintStream st = new PrintStream(path.toPortableString());
+		File file = new File(DataManager.getStateLocationFile(), EDITIONS_FILE);
+		PrintStream st = new PrintStream(file);
 		try {
 			for (Iterator<String> iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
 				String name = iterator.next();
