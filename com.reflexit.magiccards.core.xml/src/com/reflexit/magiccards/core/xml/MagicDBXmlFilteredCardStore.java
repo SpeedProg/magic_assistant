@@ -3,8 +3,6 @@ package com.reflexit.magiccards.core.xml;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.reflexit.magiccards.core.Activator;
@@ -32,18 +30,14 @@ public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStor
 			synchronized (table) {
 				// System.err.println("Initializing DB");
 				this.files = new ArrayList<File>();
-				IResource[] members;
+				File[] members;
 				try {
 					MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
-					members = con.getContainer().members();
-					for (IResource resource : members) {
-						File file = resource.getLocation().toFile();
+					members = con.getFile().listFiles();
+					for (File file : members) {
 						if (file.getName().endsWith(".xml"))
 							this.files.add(file);
 					}
-				} catch (CoreException e) {
-					Activator.log(e);
-					return;
 				} catch (MagicException e) {
 					Activator.log(e);
 					return;

@@ -16,9 +16,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -82,7 +79,7 @@ public class XmlCardHolder implements ICardHandler {
 		return store;
 	}
 
-	public void loadInitial() throws MagicException, CoreException, IOException {
+	public void loadInitial() throws MagicException {
 		// loadFromFlatResource("all.txt");
 		Collection<String> editions = Editions.getInstance().getNames();
 		for (String set : editions) {
@@ -112,8 +109,8 @@ public class XmlCardHolder implements ICardHandler {
 		return true;
 	}
 
-	public static File getDbFolder() throws CoreException {
-		File dir = DataManager.getModelRoot().getMagicDBContainer().getContainer().getLocation().toFile();
+	public static File getDbFolder() {
+		File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
 		return dir;
 	}
 
@@ -218,10 +215,8 @@ public class XmlCardHolder implements ICardHandler {
 	public synchronized void loadInitialIfNot(IProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
-			IContainer db = DataManager.getModelRoot().getMagicDBContainer().getContainer();
-			db.refreshLocal(1, new SubProgressMonitor(pm, 50));
-			IResource[] members = db.members();
-			if (members.length > 0)
+			File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
+			if (dir.listFiles().length > 0)
 				return;
 			else
 				loadInitial();

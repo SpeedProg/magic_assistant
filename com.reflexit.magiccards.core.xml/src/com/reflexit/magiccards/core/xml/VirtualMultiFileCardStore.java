@@ -12,8 +12,6 @@ package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.CoreException;
-
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -26,7 +24,7 @@ import com.reflexit.magiccards.core.model.storage.ICardCollection;
 
 /**
  * Card Store for Magic DB
- *
+ * 
  */
 public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
 	public VirtualMultiFileCardStore() {
@@ -99,14 +97,10 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 	}
 
 	public File getFile(final IMagicCard card) {
-		try {
-			if (card instanceof MagicCard) {
-				String key = card.getSet();
-				return new File(XmlCardHolder.getDbFolder(), getExtFileName(key) + ".xml");
-			} else
-				throw new MagicException("Unknown card type");
-		} catch (CoreException e) {
-			throw new MagicException("Can't resolve file: ", e);
-		}
+		if (card instanceof MagicCard) {
+			String key = card.getSet();
+			return new File(XmlCardHolder.getDbFolder(), getExtFileName(key) + ".xml");
+		} else
+			throw new MagicException("Unknown card type");
 	}
 }

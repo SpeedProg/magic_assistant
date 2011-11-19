@@ -3,10 +3,6 @@ package com.reflexit.magiccards.core.xml;
 import java.io.File;
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 
@@ -29,14 +25,7 @@ public class LocationResolver {
 	public File getFile(Location location) {
 		if (locmap.containsKey(location))
 			return locmap.get(location);
-		IPath path;
-		try {
-			path = DataManager.getProject().getLocation().append(location.getPath() + ".xml");
-		} catch (CoreException e) {
-			Activator.log(e);
-			return null;
-		}
-		return path.toFile();
+		return new File(DataManager.getRootDir(), location.getPath() + ".xml");
 	}
 
 	public void setFile(Location location, File file) {

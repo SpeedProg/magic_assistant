@@ -2,9 +2,6 @@ package com.reflexit.magiccards.core.xml;
 
 import java.util.Collection;
 
-import org.eclipse.core.runtime.CoreException;
-
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -33,11 +30,7 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 		// init super
 		CardCollection def = DataManager.getModelRoot().getDefaultLib();
 		for (CardElement elem : colls) {
-			try {
-				this.table.addFile(elem.getFile(), elem.getLocation(), false);
-			} catch (CoreException e) {
-				Activator.log(e);
-			}
+			this.table.addFile(elem.getFile(), elem.getLocation(), false);
 		}
 		this.table.setLocation(def.getLocation());
 		this.table.initialize();
@@ -61,17 +54,13 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 		if (event.getData() instanceof CardElement) {
 			CardElement elem = (CardElement) event.getData();
 			if (event.getType() == CardEvent.ADD_CONTAINER) {
-				try {
-					if (elem instanceof CardCollection) {
-						CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
-						IStorage storage = store.getStorage();
-						if (storage instanceof IStorageInfo) {
-							((IStorageInfo) storage).setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
-									: IStorageInfo.COLLECTION_TYPE);
-						}
+				if (elem instanceof CardCollection) {
+					CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
+					IStorage storage = store.getStorage();
+					if (storage instanceof IStorageInfo) {
+						((IStorageInfo) storage).setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
+								: IStorageInfo.COLLECTION_TYPE);
 					}
-				} catch (CoreException e) {
-					Activator.log(e);
 				}
 				update();
 			} else if (event.getType() == CardEvent.REMOVE_CONTAINER) {
