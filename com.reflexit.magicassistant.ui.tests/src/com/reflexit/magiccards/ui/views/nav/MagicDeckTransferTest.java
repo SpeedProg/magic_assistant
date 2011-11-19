@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views.nav;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -34,7 +33,7 @@ public class MagicDeckTransferTest extends TestCase {
 	public void testOrg() {
 		CollectionsContainer decks = this.root.getDeckContainer();
 		CollectionsContainer con = decks.addCollectionsContainer("cox");
-		CardElement element = this.root.findElement(new Path("My Cards/Decks/cox"));
+		CardElement element = this.root.findElement("My Cards/Decks/cox");
 		assertEquals(con, element);
 		byte[] byteArray = trans.toByteArray(new CardElement[] { defaultLib, con });
 		CardElement[] res = trans.fromByteArray(byteArray);
