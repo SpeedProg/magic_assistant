@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.wizards;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -17,7 +16,7 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 		super(selection);
 		setTitle("Create a new " + getElementTypeName());
 		setDescription("This wizard creates a new " + getElementTypeName()
-		        + " with a given name and place it in specified parent deck container.");
+				+ " with a given name and place it in specified parent deck container.");
 	}
 
 	@Override
@@ -29,7 +28,9 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizardPage#dialogChanged()
 	 */
 	@Override
@@ -39,13 +40,13 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 			return;
 		ModelRoot root = DataManager.getModelRoot();
 		String containerName = getContainerName();
-		CardElement parent = root.findElement(new Path(containerName));
+		CardElement parent = root.findElement(containerName);
 		if (!(parent instanceof CollectionsContainer)) {
 			updateStatus("Parent folder is not a proper container");
 			return;
 		}
 		String name = getElementName();
-		if (((CollectionsContainer) parent).findElement(new Path(name + ".xml")) != null) {
+		if (((CollectionsContainer) parent).findElement(name + ".xml") != null) {
 			updateStatus("Container with this name already exists");
 			return;
 		}

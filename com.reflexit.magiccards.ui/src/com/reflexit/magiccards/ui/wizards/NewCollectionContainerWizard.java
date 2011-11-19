@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IViewPart;
@@ -33,17 +32,15 @@ public class NewCollectionContainerWizard extends NewCardElementWizard implement
 	}
 
 	/**
-	 * The worker method. It will find the container, create the
-	 * file if missing or just replace its contents, and open
-	 * the editor on the newly created file.
+	 * The worker method. It will find the container, create the file if missing or just replace its
+	 * contents, and open the editor on the newly created file.
 	 */
 	@Override
-	protected void doFinish(String containerName, final String name, boolean virtual, IProgressMonitor monitor)
-	        throws CoreException {
+	protected void doFinish(String containerName, final String name, boolean virtual, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 2);
 		ModelRoot root = DataManager.getModelRoot();
-		final CardElement resource = root.findElement(new Path(containerName));
+		final CardElement resource = root.findElement(containerName);
 		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
@@ -57,7 +54,7 @@ public class NewCollectionContainerWizard extends NewCardElementWizard implement
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(con));
 				} catch (PartInitException e) {
-					//  ignore
+					// ignore
 				}
 			}
 		});

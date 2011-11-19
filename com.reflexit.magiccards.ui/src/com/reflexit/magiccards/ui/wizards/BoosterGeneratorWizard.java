@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,6 +36,7 @@ import com.reflexit.magiccards.core.model.Rarity;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -64,8 +64,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
+		 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
 		 * .widgets.Composite)
 		 */
 		public void createControl(Composite parent) {
@@ -120,8 +119,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
+	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
 	 */
 	@Override
 	public void addPages() {
@@ -139,8 +137,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
+	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
 	 */
 	@Override
 	protected void beforeFinish() {
@@ -153,10 +150,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java
-	 * .lang.String, java.lang.String,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java .lang.String,
+	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	protected void doFinish(final String containerName, final String name, boolean virtual, final IProgressMonitor monitor)
@@ -164,7 +159,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
 		ModelRoot root = DataManager.getModelRoot();
-		final CardElement resource = root.findElement(new Path(containerName));
+		final CardElement resource = root.findElement(new LocationPath(containerName));
 		if (!(resource instanceof CardOrganizer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}

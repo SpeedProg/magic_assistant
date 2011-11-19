@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -90,8 +89,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
+	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -320,11 +318,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 
 			@Override
 			public void run() {
-				try {
-					DataManager.getModelRoot().refresh();
-				} catch (CoreException e) {
-					MagicUIActivator.log(e);
-				}
+				DataManager.getModelRoot().refresh();
 				getViewer().refresh(true);
 			}
 		};

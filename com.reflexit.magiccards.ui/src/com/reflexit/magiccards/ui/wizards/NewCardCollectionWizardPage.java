@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.wizards;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -17,9 +16,9 @@ import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
 /**
- * The "New" wizard page allows setting the container for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (deck).
+ * The "New" wizard page allows setting the container for the new file as well as the file name. The
+ * page will only accept file name without the extension OR with the extension that matches the
+ * expected one (deck).
  */
 public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	/**
@@ -42,7 +41,9 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizardPage#dialogChanged()
 	 */
 	@Override
@@ -52,7 +53,7 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 			return;
 		ModelRoot root = DataManager.getModelRoot();
 		String containerName = getContainerName();
-		CardElement parent = root.findElement(new Path(containerName));
+		CardElement parent = root.findElement(containerName);
 		if (!(parent instanceof CollectionsContainer)) {
 			updateStatus("Parent folder is not a proper container");
 			return;
@@ -77,8 +78,7 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	@Override
 	protected void createOptionsGroup(Composite container) {
 		virtual = new Button(container, SWT.CHECK);
-		virtual.setText("This " + getElementTypeName()
-		        + " is virtual (affect card ownership attribute and cards operations)");
+		virtual.setText("This " + getElementTypeName() + " is virtual (affect card ownership attribute and cards operations)");
 		virtual.setToolTipText("Virtual flag affect move/copy/inreaste/descrease operations on a collection. Also it automatically set flags to own for non-virtual collection.");
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = ((GridLayout) container.getLayout()).numColumns;

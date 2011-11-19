@@ -3,6 +3,11 @@ package com.reflexit.magiccards.ui;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -18,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
@@ -40,16 +46,27 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		plugin = this;
 	}
 
+	public static IProject getProject() throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot wsroot = workspace.getRoot();
+		IProject project = wsroot.getProject("magiccards");
+		if (!project.exists())
+			project.create(null);
+		if (!project.isOpen())
+			project.open(null);
+		return project;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		IProject project = getProject();
+		DataManager.setRootDir(project.getLocation().toFile());
 		activateCoreSettings();
 		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
@@ -66,9 +83,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -86,8 +101,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path
+	 * Returns an image descriptor for the image file at the given plug-in relative path
 	 * 
 	 * @param path
 	 *            the path
