@@ -51,7 +51,7 @@ public class ParseGathererRulingsTest extends TestCase {
 
 	public void testFlip() throws IOException {
 		MagicCard card = load(78687);
-		assertEquals("202", card.getCollNumber());
+		assertEquals("202a", card.getCollNumber());
 		assertEquals("Budoka Gardener", card.getName());
 	}
 

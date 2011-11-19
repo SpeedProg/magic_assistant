@@ -10,52 +10,62 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.test;
 
-import org.eclipse.core.runtime.Path;
-import org.junit.Test;
+import java.io.File;
 
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CardOrganizerTest extends TestCase {
 	private ModelRoot root;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
 	protected void setUp() throws Exception {
+		File temp = new File("/tmp/magiccards");
+		DataManager.setRootDir(temp);
 		this.root = DataManager.getModelRoot();
 		this.root.reset();
 	}
 
 	/**
-	 * Test method for {@link com.reflexit.magiccards.core.model.nav.CardOrganizer#findElement(org.eclipse.core.runtime.IPath)}.
+	 * Test method for
+	 * {@link com.reflexit.magiccards.core.model.nav.CardOrganizer#findElement(org.eclipse.core.runtime.IPath)}
+	 * .
 	 */
 	@Test
 	public void testFindElement() {
-		CardElement element = this.root.findElement(new Path("My Cards/Decks"));
+		CardElement element = this.root.findElement(new LocationPath("My Cards/Decks"));
 		assertEquals(this.root.getDeckContainer(), element);
 	}
 
 	public void testFindElement2() {
 		CollectionsContainer decks = this.root.getDeckContainer();
 		CollectionsContainer con = decks.addCollectionsContainer("cox");
-		CardElement element = this.root.findElement(new Path("My Cards/Decks/cox"));
+		CardElement element = this.root.findElement(new LocationPath("My Cards/Decks/cox"));
 		assertEquals(con, element);
 	}
 
 	/**
-	 * Test method for {@link com.reflexit.magiccards.core.model.nav.CardElement#fireEvent(com.reflexit.magiccards.core.model.events.CardEvent)}.
+	 * Test method for
+	 * {@link com.reflexit.magiccards.core.model.nav.CardElement#fireEvent(com.reflexit.magiccards.core.model.events.CardEvent)}
+	 * .
 	 */
 	@Test
 	public void testFireEvent() {
