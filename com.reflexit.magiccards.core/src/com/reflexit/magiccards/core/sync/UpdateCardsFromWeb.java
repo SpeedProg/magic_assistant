@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -16,9 +13,11 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public class UpdateCardsFromWeb {
-	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb, IProgressMonitor monitor)
+	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb, ICoreProgressMonitor monitor)
 			throws IOException {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(1);
 		list.add(card);
@@ -28,7 +27,7 @@ public class UpdateCardsFromWeb {
 	}
 
 	public void updateStore(Iterator<IMagicCard> iter, int size, Set<ICardField> fieldMaps, String lang, ICardStore magicDb,
-			IProgressMonitor monitor) throws IOException {
+			ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading additional info...", size * 100 + 10);
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
 		ParseGathererDetails rulParser = new ParseGathererDetails();
@@ -52,15 +51,15 @@ public class UpdateCardsFromWeb {
 				// load individual card
 				monitor.subTask("Updating card " + i + " of " + size);
 				try {
-					rulParser.parseSingleCard(card, fieldMaps, new SubProgressMonitor(monitor, 50));
+					rulParser.parseSingleCard(card, fieldMaps, new SubCoreProgressMonitor(monitor, 50));
 					if (loadText) {
 						textParser.setCard(card);
 						textParser.setFilter(fieldMaps);
-						textParser.load(new SubProgressMonitor(monitor, 10));
+						textParser.load(new SubCoreProgressMonitor(monitor, 10));
 					}
 					if (loadLang) {
 						langParser.setCardId(card.getCardId());
-						langParser.load(new SubProgressMonitor(monitor, 40));
+						langParser.load(new SubCoreProgressMonitor(monitor, 40));
 						int langId = langParser.getLangCardId();
 						if (langId != 0) {
 							MagicCard newMagicCard = magicCard.cloneCard();
@@ -68,7 +67,7 @@ public class UpdateCardsFromWeb {
 							newMagicCard.setEnglishCardId(card.getCardId());
 							newMagicCard.setLanguage(lang);
 							linfoParser.setCard(newMagicCard);
-							linfoParser.load(new SubProgressMonitor(monitor, 40));
+							linfoParser.load(new SubCoreProgressMonitor(monitor, 40));
 							if (magicDb.getCard(newMagicCard.getCardId()) == null) {
 								magicDb.add(newMagicCard);
 								// System.err.println("Added " +

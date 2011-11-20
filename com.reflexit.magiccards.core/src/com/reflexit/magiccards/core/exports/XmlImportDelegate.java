@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -24,6 +22,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Xml Import
@@ -41,7 +40,7 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 	 * @param monitor
 	 * @throws IOException 
 	 */
-	public void doRun(IProgressMonitor monitor) throws IOException {
+	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		try {
 			File tmp = File.createTempFile("magic", ".xml");
 			tmp.deleteOnExit();

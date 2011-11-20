@@ -14,9 +14,6 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
@@ -27,6 +24,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 
 public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> {
@@ -40,9 +38,9 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 		return "deck";
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (monitor == null)
-			monitor = new NullProgressMonitor();
+			monitor = ICoreProgressMonitor.NONE;
 		monitor.beginTask("Exporting to wagic...", store.getSize());
 		PrintStream stream = new PrintStream(st);
 		String ename = getName();

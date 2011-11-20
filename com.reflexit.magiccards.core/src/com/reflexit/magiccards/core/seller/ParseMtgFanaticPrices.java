@@ -11,11 +11,10 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;
@@ -27,7 +26,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 		setURL = "http://www.mtgfanatic.com/Store/Magic/BasicSearch.aspx?CatID=3";
 	}
 
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, IProgressMonitor monitor)
+	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
 			throws IOException {
 		monitor.beginTask("Loading prices...", size + 10);
 		if (iterable == null) {
@@ -177,10 +176,9 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	}
 
 	/*
-	 * <li> <a href="/store/magic/viewcards.aspx?CatID=390"><div
-	 * class="setIcon"><img src="/images/magic/symbols/Magic2010_Common.gif"
-	 * alt="Magic 2010 icon" title="Magic 2010 icon" /></div>Magic 2010</a>
-	 * </li>
+	 * <li> <a href="/store/magic/viewcards.aspx?CatID=390"><div class="setIcon"><img
+	 * src="/images/magic/symbols/Magic2010_Common.gif" alt="Magic 2010 icon"
+	 * title="Magic 2010 icon" /></div>Magic 2010</a> </li>
 	 */
 	private static final Pattern setLinePattern = Pattern.compile("class=\"setIcon\"");
 	private static Pattern setItemPattern = Pattern.compile("<a href=\"/store/magic/viewcards.aspx\\?CatID=(\\d+)\">.*?</div>(.*?)</a>");

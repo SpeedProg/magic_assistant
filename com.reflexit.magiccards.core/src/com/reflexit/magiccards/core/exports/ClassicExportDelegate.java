@@ -14,11 +14,10 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Formatter;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * export in format 4x Plain ...
@@ -28,8 +27,7 @@ public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 		return ReportType.TEXT_DECK_CLASSIC;
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		PrintStream exportStream = new PrintStream(st);
 		Location location = null;
 		for (IMagicCard magicCard : store) {
@@ -47,8 +45,7 @@ public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 			} else {
 				name = card.getName();
 			}
-			String line = new Formatter().format("%2dx %s", count, name)
-					.toString();
+			String line = new Formatter().format("%2dx %s", count, name).toString();
 			exportStream.println(line);
 			monitor.worked(1);
 		}

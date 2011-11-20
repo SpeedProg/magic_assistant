@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Retrieve legality info
@@ -48,7 +47,7 @@ public class ParseGathererCardLanguages extends ParseGathererPage {
 		ParseGathererCardLanguages parser = new ParseGathererCardLanguages();
 		parser.setCardId(153981);
 		parser.setLanguage("Russian");
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		System.err.println(parser.getLangCardId());
 	}
 
@@ -61,7 +60,7 @@ public class ParseGathererCardLanguages extends ParseGathererPage {
 	}
 
 	@Override
-	protected void loadHtml(String html, IProgressMonitor monitor) {
+	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
 		html = html.replaceAll("\r?\n", " ");
 		Matcher matcher = rowPattern.matcher(html);
 		int count = 0;
@@ -77,7 +76,7 @@ public class ParseGathererCardLanguages extends ParseGathererPage {
 		if (langId == 0 && count >= 25 && page <= 3) {
 			page++;
 			try {
-				load(new NullProgressMonitor());
+				load(ICoreProgressMonitor.NONE);
 			} catch (IOException e) {
 				// ignore
 			}

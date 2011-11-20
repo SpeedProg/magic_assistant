@@ -17,11 +17,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardSet;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Retrieve legality info
@@ -84,7 +82,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 	public Map<String, String> getCardLegality(int id) throws IOException {
 		ParseGathererLegality parser = this;
 		parser.setCardId(id);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		Map<String, String> cardLegality = parser.getLegalityMap();
 		return cardLegality;
 	}
@@ -111,13 +109,13 @@ public class ParseGathererLegality extends ParseGathererPage {
 		int id = 193867;
 		ParseGathererLegality parser = new ParseGathererLegality();
 		parser.setCardId(id);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		Map<String, String> cardLegality = parser.getLegalityMap();
 		System.err.println(cardLegality);
 	}
 
 	@Override
-	protected void loadHtml(String html, IProgressMonitor monitor) {
+	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
 		legalityMap = new LinkedHashMap<String, String>();
 		String lines[] = html.split("\n");
 		int state = 0;

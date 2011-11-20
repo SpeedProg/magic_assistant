@@ -19,11 +19,9 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Retrieve legality info
@@ -52,7 +50,7 @@ public class ParseGathererSets extends ParseGathererPage {
 	}
 
 	@Override
-	protected void loadHtml(String html, IProgressMonitor monitor) {
+	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
 		Editions editions = Editions.getInstance();
 		html = html.replaceAll("\r?\n", " ");
 		Matcher matcher = setStartPattern.matcher(html);
@@ -85,7 +83,7 @@ public class ParseGathererSets extends ParseGathererPage {
 	public static void main(String[] args) throws IOException {
 		// card.setCardId(11179);
 		ParseGathererSets parser = new ParseGathererSets();
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		Collection<Edition> editions = Editions.getInstance().getEditions();
 		for (Iterator iterator = editions.iterator(); iterator.hasNext();) {
 			Edition edition = (Edition) iterator.next();

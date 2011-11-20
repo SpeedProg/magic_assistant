@@ -21,14 +21,12 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererNewVisualSpoiler {
 	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
@@ -118,7 +116,7 @@ public class ParseGathererNewVisualSpoiler {
 			base + "&set=[%22Unglued%22]", //
 	};
 	private static String[] updateLatest = { base + "&format=[%22Standard%22]" };
-	private static IProgressMonitor monitor;
+	private static ICoreProgressMonitor monitor;
 
 	public static void main(String[] args) throws IOException {
 		String from = args[0];
@@ -130,7 +128,7 @@ public class ParseGathererNewVisualSpoiler {
 		if (from.equals("updateAll")) {
 			updateAll(to, updateAll, options);
 		} else
-			parseFileOrUrl(from, to, options, new NullProgressMonitor());
+			parseFileOrUrl(from, to, options, ICoreProgressMonitor.NONE);
 		Editions.getInstance().save();
 	}
 
@@ -168,7 +166,7 @@ public class ParseGathererNewVisualSpoiler {
 		st.close();
 	}
 
-	public static void parseFileOrUrl(String from, String to, Properties options, IProgressMonitor pm) throws FileNotFoundException,
+	public static void parseFileOrUrl(String from, String to, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		monitor = pm;
 		monitor.beginTask("Downloading", 10000);
@@ -406,7 +404,7 @@ public class ParseGathererNewVisualSpoiler {
 		}
 	}
 
-	public static void downloadUpdates(String set, String file, Properties options, IProgressMonitor pm) throws FileNotFoundException,
+	public static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
 		if (set == null || set.equals("Standard")) {

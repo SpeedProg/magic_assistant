@@ -13,6 +13,11 @@ package com.reflexit.magiccards.core;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -39,6 +44,17 @@ public class Activator extends Plugin {
 		plugin = this;
 	}
 
+	public static IProject getProject() throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot wsroot = workspace.getRoot();
+		IProject project = wsroot.getProject("magiccards");
+		if (!project.exists())
+			project.create(null);
+		if (!project.isOpen())
+			project.open(null);
+		return project;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -47,6 +63,8 @@ public class Activator extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		IProject project = getProject();
+		DataManager.setRootDir(project.getLocation().toFile());
 	}
 
 	/*

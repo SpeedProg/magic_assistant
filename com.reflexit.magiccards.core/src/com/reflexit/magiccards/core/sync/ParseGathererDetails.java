@@ -19,9 +19,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -31,6 +28,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Retrieve legality info
@@ -133,13 +131,13 @@ public class ParseGathererDetails extends ParseGathererPage {
 	 */
 	private static Pattern cardIdPattern = Pattern.compile("img src.*?\\?multiverseid=(.*?)&amp;type=card");
 
-	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
+	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, ICoreProgressMonitor monitor) throws IOException {
 		setCard(card);
 		setFilter(fieldMap);
 		load(monitor);
 	}
 
-	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, IProgressMonitor monitor) throws IOException {
+	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, ICoreProgressMonitor monitor) throws IOException {
 		ICardHandler cardHandler = DataManager.getCardHandler();
 		if (cardHandler != null)
 			setMagicDb(cardHandler.getMagicDBStore());
@@ -211,7 +209,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 	}
 
 	@Override
-	protected void loadHtml(String html0, IProgressMonitor monitor) {
+	protected void loadHtml(String html0, ICoreProgressMonitor monitor) {
 		monitor.beginTask("Updating card", 10);
 		try {
 			html0 = html0.replaceAll("\r?\n", " ");
@@ -309,7 +307,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 		// card.setCardId(191338);
 		ParseGathererDetails parser = new ParseGathererDetails();
 		parser.setCard(card);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		System.err.println(card.getArtist() + " " + card.getCommunityRating() + " " + card.getCollNumber());
 	}
 }

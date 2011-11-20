@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +19,7 @@ import java.util.Arrays;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Import for table piped import
@@ -38,11 +37,11 @@ public class TableImportDelegate extends AbstractImportDelegate {
 	 * @param monitor
 	 * @throws IOException 
 	 */
-	public void doRun(IProgressMonitor monitor) throws IOException {
+	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		runTablePipedImport(monitor);
 	}
 
-	public void runTablePipedImport(IProgressMonitor monitor) throws IOException {
+	public void runTablePipedImport(ICoreProgressMonitor monitor) throws IOException {
 		try {
 			BufferedReader importer = null;
 			try {

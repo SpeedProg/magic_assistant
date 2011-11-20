@@ -3,8 +3,6 @@ package com.reflexit.magiccards.core.model.nav;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.core.runtime.Path;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -108,7 +106,12 @@ public abstract class CardElement extends EventManager {
 	}
 
 	public static String nameFromFile(String filename) {
-		return new Path(filename).removeFileExtension().lastSegment();
+		String lastSegment = new File(filename).getName();
+		int index = lastSegment.lastIndexOf('.');
+		if (index == -1) {
+			return lastSegment;
+		}
+		return lastSegment.substring(0, index);
 	}
 
 	/*

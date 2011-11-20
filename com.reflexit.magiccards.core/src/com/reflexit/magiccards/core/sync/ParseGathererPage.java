@@ -9,10 +9,9 @@ import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
-
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public abstract class ParseGathererPage {
 	public static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
@@ -20,7 +19,11 @@ public abstract class ParseGathererPage {
 	private String title = "Loading gatherer info...";
 	private String html;
 
-	public void load(IProgressMonitor monitor) throws IOException {
+	public void load() throws IOException {
+		load(ICoreProgressMonitor.NONE);
+	}
+
+	public void load(ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask(getTitle(), 100);
 		try {
 			URL url = new URL(getUrl());
@@ -32,15 +35,15 @@ public abstract class ParseGathererPage {
 			if (monitor.isCanceled())
 				return;
 			setHtml(html);
-			loadHtml(html, new SubProgressMonitor(monitor, 50));
+			loadHtml(html, new SubCoreProgressMonitor(monitor, 50));
 		} finally {
 			monitor.done();
 		}
 	}
 
-	protected abstract void loadHtml(String html, IProgressMonitor monitor);
+	protected abstract void loadHtml(String html, ICoreProgressMonitor monitor);
 
-	public void loadHtml(IProgressMonitor monitor) {
+	public void loadHtml(ICoreProgressMonitor monitor) {
 		if (html == null)
 			throw new NullPointerException();
 		loadHtml(this.html, monitor);

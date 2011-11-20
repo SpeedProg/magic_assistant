@@ -14,9 +14,8 @@ package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Retrieve legality info
@@ -46,7 +45,7 @@ public class ParseGathererBasicInfo extends ParseGathererDetails {
 		// card.setCardId(191338);
 		ParseGathererBasicInfo parser = new ParseGathererBasicInfo();
 		parser.setCard(card);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		System.out.println(card.getName());
 		System.out.println(card.getType());
 		System.out.println(card.getOracleText());

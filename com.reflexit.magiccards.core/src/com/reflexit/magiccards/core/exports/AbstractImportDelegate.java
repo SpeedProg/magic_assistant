@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +16,8 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
 public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate {
 	private InputStream stream;
@@ -63,7 +63,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.header = header;
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask("Importing...", 100);
 		try {
 			doRun(monitor);
@@ -74,7 +74,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 	}
 
-	protected abstract void doRun(IProgressMonitor monitor) throws IOException;
+	protected abstract void doRun(ICoreProgressMonitor monitor) throws IOException;
 
 	public PreviewResult getPreview() {
 		return previewResult;
@@ -145,8 +145,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 				try {
 					setFieldValue(card, f, i, value);
 				} catch (Exception e) {
-					throw new IllegalArgumentException("Error: Line " + line + ",Field " + (i + 1) + ": Expecting " + f
-					        + ", text was: " + value);
+					throw new IllegalArgumentException("Error: Line " + line + ",Field " + (i + 1) + ": Expecting " + f + ", text was: "
+							+ value);
 				}
 			}
 		}
@@ -162,9 +162,11 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			if (nameByAbbr == null)
 				nameByAbbr = "Unknown";
 			card.setObjectByField(MagicCardField.SET, nameByAbbr);
-		} 	if (field == MagicCardFieldPhysical.LOCATION)  {
+		}
+		if (field == MagicCardFieldPhysical.LOCATION) {
 			// ignore this field
-		} 	if (field == MagicCardFieldPhysical.SIDEBOARD)  {
+		}
+		if (field == MagicCardFieldPhysical.SIDEBOARD) {
 			if (Boolean.valueOf(value).booleanValue()) {
 				card.setLocation(getLocation().toSideboard());
 			}

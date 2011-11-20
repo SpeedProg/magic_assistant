@@ -10,17 +10,16 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * TODO: add description
  */
 public class TableExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public void runTablePipeExport(IProgressMonitor monitor) throws InvocationTargetException {
+	public void runTablePipeExport(ICoreProgressMonitor monitor) throws InvocationTargetException {
 		TableExporter exporter = null;
 		try {
 			exporter = new TableExporter(st, "|");
@@ -36,7 +35,7 @@ public class TableExportDelegate extends AbstractExportDelegate<IMagicCard> {
 		return ReportType.TABLE_PIPED;
 	}
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		runTablePipeExport(monitor);
 	}
 }

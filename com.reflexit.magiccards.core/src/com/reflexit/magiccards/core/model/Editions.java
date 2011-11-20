@@ -19,9 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.db.DbActivator;
@@ -266,7 +263,7 @@ public class Editions implements ISearchableProperty {
 	private synchronized void load() throws IOException {
 		File file = new File(DataManager.getStateLocationFile(), EDITIONS_FILE);
 		if (DbActivator.getDefault() != null) {
-			InputStream ist = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + EDITIONS_FILE), true);
+			InputStream ist = DbActivator.loadResource(EDITIONS_FILE);
 			loadEditions(ist);
 		}
 		if (!file.exists()) {

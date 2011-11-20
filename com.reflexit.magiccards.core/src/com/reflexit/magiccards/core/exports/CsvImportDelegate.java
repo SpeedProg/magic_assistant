@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +17,7 @@ import java.util.List;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Import for classic text deck format
@@ -34,9 +33,10 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 
 	/**
 	 * @param monitor
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public void doRun(IProgressMonitor monitor) throws IOException {
+	@Override
+	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		runCsvImport(monitor);
 	}
 
@@ -44,7 +44,7 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 		return ',';
 	}
 
-	public void runCsvImport(IProgressMonitor monitor) throws IOException {
+	public void runCsvImport(ICoreProgressMonitor monitor) throws IOException {
 		try {
 			CsvImporter importer = null;
 			try {

@@ -11,9 +11,6 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -24,6 +21,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;
@@ -55,7 +53,8 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 			return null;
 		}
 	}
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, IProgressMonitor monitor)
+
+	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
 			throws IOException {
 		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
 		if (iterable == null) {
@@ -120,7 +119,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 		}
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, IProgressMonitor monitor) throws IOException {
+	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
 		updateStore(fstore.getCardStore(), fstore, fstore.getSize(), monitor);
 	}
 
@@ -298,6 +297,6 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 		card.setName("Amrou Scout");
 		fstore.getCardStore().add(card);
 		fstore.update(new MagicCardFilter());
-		prices.updateStore(fstore, new NullProgressMonitor());
+		prices.updateStore(fstore, ICoreProgressMonitor.NONE);
 	}
 }

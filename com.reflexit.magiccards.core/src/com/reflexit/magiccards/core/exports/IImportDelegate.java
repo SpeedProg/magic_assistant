@@ -10,14 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Import delegate interface
@@ -29,7 +28,7 @@ public interface IImportDelegate<T> {
 
 	public void setHeader(boolean header);
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
+	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 
 	public PreviewResult getPreview();
 

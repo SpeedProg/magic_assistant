@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model.events;
 
-import org.eclipse.core.runtime.ListenerList;
-
 /**
  * <p>
  * A manager to which listeners can be attached. This handles the management of a list of listeners

@@ -487,7 +487,8 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	public Object clone() {
 		try {
 			MagicCard obj = (MagicCard) super.clone();
-			obj.properties = (LinkedHashMap<String, String>) this.properties.clone();
+			if (this.properties != null)
+				obj.properties = (LinkedHashMap<String, String>) this.properties.clone();
 			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;

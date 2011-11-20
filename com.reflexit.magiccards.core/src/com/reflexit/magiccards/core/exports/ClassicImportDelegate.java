@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Pattern;
@@ -20,6 +18,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Import for classic text deck format
@@ -35,28 +34,26 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 
 	/**
 	 * @param monitor
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public void doRun(IProgressMonitor monitor) throws IOException {
+	@Override
+	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		runDeckImport(monitor);
 	}
 
 	/**
-	 * format:
-	 *   Card Name (Set) x4
-	 *   4 x Card Name (Set)
+	 * format: Card Name (Set) x4 4 x Card Name (Set)
+	 * 
 	 * @param monitor
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws InvocationTargetException
 	 */
-	public void runDeckImport(IProgressMonitor monitor) throws IOException {
+	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
 		DeckParser parser = new DeckParser(getStream());
-		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] {
-		        MagicCardField.NAME,
-		        MagicCardField.SET,
-		        MagicCardFieldPhysical.COUNT });
-		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"),
-		        new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
+		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] { MagicCardField.NAME,
+				MagicCardField.SET, MagicCardFieldPhysical.COUNT });
+		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"), new ICardField[] {
+				MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
 		do {
 			line++;
 			try {

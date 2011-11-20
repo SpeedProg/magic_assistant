@@ -16,8 +16,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -30,13 +28,14 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Utils to perform import
  */
 public class ImportUtils {
 	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, ICardStore cardStore,
-			IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
 			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force
@@ -90,12 +89,12 @@ public class ImportUtils {
 		return res;
 	}
 
-	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, IProgressMonitor monitor)
+	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, ICoreProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
 		performImport(st, reportType, header, location, DataManager.getCardHandler().getLibraryCardStore(), monitor);
 	}
 
-	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header, IProgressMonitor monitor)
+	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header, ICoreProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
 		IImportDelegate worker;
 		try {

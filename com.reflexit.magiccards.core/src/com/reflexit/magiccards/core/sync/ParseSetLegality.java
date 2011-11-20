@@ -7,12 +7,10 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
-
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public class ParseSetLegality extends ParseGathererPage {
 	private Pattern setPattern = Pattern.compile("<li>\\s*<i>(.+?)</i>");
@@ -30,7 +28,7 @@ public class ParseSetLegality extends ParseGathererPage {
 
 	 */
 	@Override
-	protected void loadHtml(String html, IProgressMonitor monitor) {
+	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
 		int i = html.indexOf("<h5 class=\"byline\"></h5>");
 		int j = html.indexOf("<div class=\"article-bottom\"></div>");
 		String setsHtml = html.substring(i, j);
@@ -55,7 +53,7 @@ public class ParseSetLegality extends ParseGathererPage {
 		return "http://www.wizards.com/Magic/TCG/Resources.aspx?x=judge/resources/sfr" + format.toLowerCase(Locale.ENGLISH);
 	}
 
-	public static void loadAllFormats(IProgressMonitor monitor) {
+	public static void loadAllFormats(ICoreProgressMonitor monitor) {
 		Collection<String> formats = getFormats();
 		int ticks = 100 * formats.size();
 		monitor.beginTask("Updating set formats", ticks);
@@ -63,7 +61,7 @@ public class ParseSetLegality extends ParseGathererPage {
 			for (Iterator iterator = formats.iterator(); iterator.hasNext();) {
 				String format = (String) iterator.next();
 				ParseSetLegality parser = new ParseSetLegality(format);
-				parser.load(new SubProgressMonitor(monitor, ticks / formats.size()));
+				parser.load(new SubCoreProgressMonitor(monitor, ticks / formats.size()));
 			}
 			Editions eds = Editions.getInstance();
 			eds.save();
@@ -84,6 +82,6 @@ public class ParseSetLegality extends ParseGathererPage {
 
 	public static void main(String[] args) throws IOException {
 		ParseSetLegality parser = new ParseSetLegality("Modern");
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 	}
 }
