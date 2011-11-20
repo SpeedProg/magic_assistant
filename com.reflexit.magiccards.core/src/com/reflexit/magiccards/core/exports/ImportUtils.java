@@ -34,18 +34,13 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, ICardStore cardStore,
+	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICardStore cardStore,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
 			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force
 																				// initialization
-			IImportDelegate worker;
-			try {
-				worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
-			} catch (Exception e) {
-				throw new InvocationTargetException(e);
-			}
+			ReportType reportType = worker.getType();
 			worker.init(st, false, location, magicDbHandler.getCardStore());
 			worker.setHeader(header);
 			worker.run(monitor);
@@ -89,9 +84,9 @@ public class ImportUtils {
 		return res;
 	}
 
-	public static void performImport(InputStream st, ReportType reportType, boolean header, Location location, ICoreProgressMonitor monitor)
+	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICoreProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
-		performImport(st, reportType, header, location, DataManager.getCardHandler().getLibraryCardStore(), monitor);
+		performImport(st, worker, header, location, DataManager.getCardHandler().getLibraryCardStore(), monitor);
 	}
 
 	public static PreviewResult performPreview(InputStream st, ReportType reportType, boolean header, ICoreProgressMonitor monitor)

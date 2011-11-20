@@ -64,8 +64,8 @@ public class LocationPath {
 		int k = top.indexOf(SEP);
 		String rest = "";
 		if (k > 0) {
-			top = top.substring(0, k);
 			rest = top.substring(k + 1);
+			top = top.substring(0, k);
 		}
 		return new String[] { top, rest };
 	}

@@ -256,6 +256,8 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			setCmc(Colors.getInstance().getConvertedManaCost(this.cost));
 			if (text == null)
 				text = oracleText;
+			if (name == null)
+				return;
 			Matcher matcher = mpartnamePattern.matcher(name);
 			if (matcher.matches()) {
 				String p1 = matcher.group(1).trim();

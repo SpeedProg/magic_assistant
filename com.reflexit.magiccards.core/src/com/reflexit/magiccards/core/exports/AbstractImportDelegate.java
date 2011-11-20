@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
-public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate {
+public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate<IMagicCard> {
 	private InputStream stream;
 	private boolean header;
 	private Location location;
