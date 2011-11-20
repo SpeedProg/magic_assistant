@@ -13,24 +13,24 @@ package com.reflexit.magiccards.core.exports;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
-"Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
-"Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
-"Throne of Bone";"1";"U";"4E";"Art";"1";"";"Artifact";"1";"353";""
-"Hanabi Blast";"1";"U";"CHK";"R";"1RR";"";"Instant";"3";"170";""
-"Feral Lightning";"1";"U";"SOK";"R";"3RRR";"";"Sorcery";"6";"101";""
-"Forest (2)";"1";"C";"8E";"Lnd";"";"";"Basic Land - Forest";"0";"348";""
+ * "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
+ * "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
+ * "Throne of Bone";"1";"U";"4E";"Art";"1";"";"Artifact";"1";"353";""
+ * "Hanabi Blast";"1";"U";"CHK";"R";"1RR";"";"Instant";"3";"170";""
+ * "Feral Lightning";"1";"U";"SOK";"R";"3RRR";"";"Sorcery";"6";"101";""
+ * "Forest (2)";"1";"C";"8E";"Lnd";"";"";"Basic Land - Forest";"0";"348";""
  */
 public class MagicWorkstationImportTest extends AbstarctImportTest {
-	//"Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
-	private static final ReportType TYPE = new MagicWorkstationImportDelegate().getType();
+	// "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
+	private final MagicWorkstationImportDelegate worker = new MagicWorkstationImportDelegate();
 
 	private void parse() {
-		parse(true, TYPE);
+		parse(true, worker);
 	}
 
 	private void parseLine(String str) {
 		addLine(str);
-		parse(false, TYPE);
+		parse(false, worker);
 	}
 
 	public void test1() {

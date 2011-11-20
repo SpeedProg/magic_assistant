@@ -3,8 +3,10 @@ package com.reflexit.magiccards.core.exports;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 public class TablePipedImportTest extends AbstarctImportTest {
+	TableImportDelegate tableImport = new TableImportDelegate();
+
 	private void parse() {
-		parse(true, ReportType.TABLE_PIPED);
+		parse(true, tableImport);
 	}
 
 	public void test1_N_x_C() {
@@ -68,9 +70,8 @@ public class TablePipedImportTest extends AbstarctImportTest {
 	}
 
 	/*
-	NAME|EDITION_ABBR
-	Aven Brigadier|ONS
-	*/
+	 * NAME|EDITION_ABBR Aven Brigadier|ONS
+	 */
 	public void test5_Abbr() {
 		addLine("NAME|EDITION_ABBR");
 		addLine("Aven Brigadier|ONS");

@@ -27,7 +27,7 @@ public class ParseGathererSetsTest extends TestCase {
 				+ "	<option value=\"\"></option>\r\n" + "	<option value=\"Alara Reborn\">Alara Reborn</option>\r\n"
 				+ "	<option value=\"Alliances\">Alliances</option>\r\n" + "	<option value=\"Antiquities\">Antiquities</option>\r\n"
 				+ "	...\r\n" + "	</select>";
-		parser.loadHtml(ICoreProgressMonitor.NONE);
+		parser.loadHtml(html, ICoreProgressMonitor.NONE);
 		assertTrue(hasEdition("Alara Reborn"));
 	}
 

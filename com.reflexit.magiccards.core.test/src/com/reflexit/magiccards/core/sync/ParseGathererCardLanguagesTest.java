@@ -24,7 +24,7 @@ public class ParseGathererCardLanguagesTest extends TestCase {
 				+ "	            </td>\r\n" + "	            <td style=\"text-align: center;\">\r\n" + "\r\n"
 				+ "	                русский язык\r\n" + "	            </td>\r\n" + "	        </tr>";
 		html = html.replaceAll("\r?\n", " ");
-		parser.loadHtml(ICoreProgressMonitor.NONE);
+		parser.loadHtml(html, ICoreProgressMonitor.NONE);
 		assertEquals(172550, parser.getLangCardId());
 	}
 

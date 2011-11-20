@@ -3,8 +3,10 @@ package com.reflexit.magiccards.core.exports;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 public class DeckParserTest extends AbstarctImportTest {
+	private ClassicImportDelegate classicImport = new ClassicImportDelegate();
+
 	private void parse() {
-		super.parse(false, ReportType.TEXT_DECK_CLASSIC);
+		super.parse(false, classicImport);
 	}
 
 	public void test1_N_x_C() {

@@ -35,9 +35,9 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		return res;
 	}
 
-	protected void parse(boolean header, ReportType type) {
+	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), type, header, deck.getLocation(), deck.getCardStore(),
+			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(), deck.getCardStore(),
 					ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			fail(e.getMessage());

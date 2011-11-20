@@ -13,26 +13,18 @@ package com.reflexit.magiccards.core.exports;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
- * Format example
-Card Name,Online,For Trade,Physical#,Rarity,Set,No. 
-Words of Wind,1,1,0,R,ONS,122/350 
-Standardize,1,1,0,R,ONS,116/350 
-Elvish Vanguard,1,1,0,R,ONS,259/350 
-Gigapede,1,1,0,R,ONS,264/350 
-Ravenous Baloth,1,1,0,R,ONS,278/350 
-Biorhythm,1,1,0,R,ONS,247/350 
-Goblin Piledriver,1,1,0,R,ONS,205/350 
-Tephraderm,1,1,0,R,ONS,239/350 
-Gratuitous Violence,1,1,0,R,ONS,212/350 
-Risky Move,1,1,0,R,ONS,223/350 
-Aven Brigadier,1,1,0,R,ONS,7/350 
-Aven Brigadier (premium),1,1,0,R,ONS,7/350
+ * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of
+ * Wind,1,1,0,R,ONS,122/350 Standardize,1,1,0,R,ONS,116/350 Elvish Vanguard,1,1,0,R,ONS,259/350
+ * Gigapede,1,1,0,R,ONS,264/350 Ravenous Baloth,1,1,0,R,ONS,278/350 Biorhythm,1,1,0,R,ONS,247/350
+ * Goblin Piledriver,1,1,0,R,ONS,205/350 Tephraderm,1,1,0,R,ONS,239/350 Gratuitous
+ * Violence,1,1,0,R,ONS,212/350 Risky Move,1,1,0,R,ONS,223/350 Aven Brigadier,1,1,0,R,ONS,7/350 Aven
+ * Brigadier (premium),1,1,0,R,ONS,7/350
  */
 public class MtgoImportTest extends AbstarctImportTest {
-	private static final ReportType TYPE = new MtgoImportDelegate().getType();
+	private MtgoImportDelegate mtgoImport = new MtgoImportDelegate();
 
 	private void parse() {
-		parse(true, TYPE);
+		parse(true, mtgoImport);
 	}
 
 	public void test1() {
@@ -57,7 +49,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 
 	public void test_special() {
 		addLine("Aven Brigadier (premium),1,1,0,R,ONS,7/350");
-		parse(false, TYPE);
+		parse(false, mtgoImport);
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
 		assertEquals(1, ((MagicCardPhisical) card1).getCount());
@@ -68,7 +60,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 
 	public void testNewFormat() {
 		addLine("Card Name,Online,For Trade,Rarity,Set,No.,Premium");
-		//Event Ticket,2,0,EVENT, ,No
+		// Event Ticket,2,0,EVENT, ,No
 		addLine("Arrogant Bloodlord,9,5,U,ROE,94/248,No");
 		addLine("Arrogant Bloodlord,1,0,U,ROE,94/248,Yes");
 		parse();
@@ -77,6 +69,6 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals(9, ((MagicCardPhisical) card1).getCount());
 		assertEquals("Rise of the Eldrazi", card1.getSet());
 		assertEquals("premium,", ((MagicCardPhisical) card2).getSpecial());
-		//assertEquals("248", ((MagicCardPhisical) card2).getCard().getCollNumber());
+		// assertEquals("248", ((MagicCardPhisical) card2).getCard().getCollNumber());
 	}
 }
