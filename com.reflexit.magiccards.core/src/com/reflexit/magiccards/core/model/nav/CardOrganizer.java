@@ -133,15 +133,16 @@ public class CardOrganizer extends CardElement {
 	public CardElement findElement(LocationPath p) {
 		if (p.isRoot())
 			return this;
-		String top = p.getFirstSegment();
-		LocationPath rest = p.removeFirstSegments(1);
+		String[] parts = p.splitTop();
+		String top = parts[0];
+		LocationPath rest = new LocationPath(parts[1]);
 		for (Object element : getChildren()) {
 			CardElement el = (CardElement) element;
 			if (el.getPath().equals(p))
 				return el;
 			if (top.equals(el.getName())) {
 				if (el instanceof CardOrganizer) {
-					if (rest == null || rest.isEmpty())
+					if (rest.isEmpty())
 						return el;
 					return ((CardOrganizer) el).findElement(rest);
 				}

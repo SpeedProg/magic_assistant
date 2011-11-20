@@ -2,35 +2,45 @@ package com.reflexit.magiccards.core.model.nav;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
 public class LocationPath {
-	private IPath path;
+	private final String SEP = "/";
+	private String path;
 
 	public LocationPath(String path) {
 		super();
-		this.path = new Path(path);
+		this.path = path;
 	}
 
-	public IPath addTrailingSeparator() {
-		return path.addTrailingSeparator();
+	public LocationPath addTrailingSeparator() {
+		return new LocationPath(path + SEP);
 	}
 
-	public LocationPath append(String pat) {
-		return new LocationPath(path.append(pat).toPortableString());
+	public boolean hasTrailingSeparator() {
+		return path.endsWith(SEP);
+	}
+
+	public LocationPath append(String end) {
+		if (hasTrailingSeparator())
+			return new LocationPath(path + end);
+		else
+			return new LocationPath(path + SEP + end);
 	}
 
 	public String getFileExtension() {
-		return path.getFileExtension();
+		String lastSegment = new File(path).getName();
+		int index = lastSegment.lastIndexOf('.');
+		if (index == -1) {
+			return "";
+		}
+		return lastSegment.substring(index + 1);
 	}
 
 	public boolean isAbsolute() {
-		return path.isAbsolute();
+		return path.startsWith(SEP);
 	}
 
 	public File toFile() {
-		return path.toFile();
+		return new File(path);
 	}
 
 	@Override
@@ -39,23 +49,25 @@ public class LocationPath {
 	}
 
 	public String lastSegment() {
-		// TODO Auto-generated method stub
-		return path.lastSegment();
+		return toFile().getName();
 	}
 
 	public String toPortableString() {
-		// TODO Auto-generated method stub
-		return path.toPortableString();
+		return path;
 	}
 
-	public String getFirstSegment() {
-		String top = path.removeLastSegments(path.segmentCount() - 1).toPortableString();
-		return top;
-	}
-
-	public LocationPath removeFirstSegments(int i) {
-		// TODO Auto-generated method stub
-		return new LocationPath(path.removeFirstSegments(i).toPortableString());
+	public String[] splitTop() {
+		String top = path;
+		while (top.startsWith(SEP)) {
+			top = top.substring(1);
+		}
+		int k = top.indexOf(SEP);
+		String rest = "";
+		if (k > 0) {
+			top = top.substring(0, k);
+			rest = top.substring(k + 1);
+		}
+		return new String[] { top, rest };
 	}
 
 	public boolean isEmpty() {
@@ -63,10 +75,12 @@ public class LocationPath {
 	}
 
 	public boolean isRoot() {
-		return path.isRoot();
-	}
-
-	public IPath getPath() {
-		return path;
+		String top = path;
+		while (top.startsWith(SEP)) {
+			top = top.substring(1);
+		}
+		if (top.isEmpty())
+			return true;
+		return false;
 	}
 }
