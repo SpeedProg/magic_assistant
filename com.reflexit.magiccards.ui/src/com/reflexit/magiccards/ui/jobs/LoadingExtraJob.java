@@ -17,6 +17,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 public class LoadingExtraJob extends Job {
@@ -72,7 +73,7 @@ public class LoadingExtraJob extends Job {
 			ICardStore magicDb = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
 			UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
 			// parser.set
-			parser.updateStore(list, size, fields, lang, magicDb, monitor);
+			parser.updateStore(list, size, fields, lang, magicDb, new CoreMonitorAdapter(monitor));
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					view.reloadData();

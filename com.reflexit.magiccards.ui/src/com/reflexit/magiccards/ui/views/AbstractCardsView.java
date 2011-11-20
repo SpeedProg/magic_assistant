@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -42,6 +41,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
@@ -72,8 +72,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected abstract AbstractMagicCardsListControl doGetViewControl();
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
+	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -433,7 +432,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	private void checkInit() {
 		try {
-			DataManager.getCardHandler().loadInitialIfNot(new NullProgressMonitor());
+			DataManager.getCardHandler().loadInitialIfNot(ICoreProgressMonitor.NONE);
 			// DataManager.getCardHandler().getMagicCardHandler().getTotal();
 		} catch (MagicException e) {
 			MagicUIActivator.log(e);

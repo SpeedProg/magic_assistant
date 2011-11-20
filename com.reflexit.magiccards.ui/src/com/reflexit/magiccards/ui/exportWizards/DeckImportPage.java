@@ -53,6 +53,7 @@ import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
@@ -97,7 +98,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 						if (preview) {
 							// if error occurs previewResult.error would be set
 							// to exception
-							previewResult = ImportUtils.performPreview(st, reportType, header, monitor);
+							previewResult = ImportUtils.performPreview(st, reportType, header, new CoreMonitorAdapter(monitor));
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
 							Location selectedLocation = getSelectedLocation();
@@ -106,7 +107,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 								createNewDeck(getNewDeckName());
 								selectedLocation = getSelectedLocation();
 							}
-							ImportUtils.performImport(st, reportType, header, selectedLocation, monitor);
+							ImportUtils.performImport(st, reportType, header, selectedLocation, new CoreMonitorAdapter(monitor));
 						}
 					}
 				};
@@ -436,24 +437,23 @@ public class DeckImportPage extends WizardDataTransferPage {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a
-	 * standard push button, registers for selection events including button
-	 * presses and registers default buttons with its shell. The button id is
-	 * stored as the buttons client data. Note that the parent's layout is
-	 * assumed to be a GridLayout and the number of columns in this layout is
-	 * incremented. Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a standard push
+	 * button, registers for selection events including button presses and registers default buttons
+	 * with its shell. The button id is stored as the buttons client data. Note that the parent's
+	 * layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
+	 * Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code>
-	 *            constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for
+	 *            standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button,
-	 *            and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button, and
+	 *            <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar

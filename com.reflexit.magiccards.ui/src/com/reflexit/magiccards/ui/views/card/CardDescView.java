@@ -47,6 +47,7 @@ import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -199,7 +200,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				if (fieldMap.size() == 0)
 					return Status.OK_STATUS;
 				ICardStore store = DataManager.getCardHandler().getMagicDBStore();
-				new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new SubProgressMonitor(monitor, 99));
+				new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(
+						new SubProgressMonitor(monitor, 99)));
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (!isStillNeeded(card))

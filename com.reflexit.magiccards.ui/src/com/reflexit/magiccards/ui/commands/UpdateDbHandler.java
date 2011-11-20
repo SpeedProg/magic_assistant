@@ -31,6 +31,7 @@ import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 /**
@@ -41,9 +42,7 @@ public class UpdateDbHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-	 * ExecutionEvent)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		performUpdate(event);
@@ -82,7 +81,7 @@ public class UpdateDbHandler extends AbstractHandler {
 					}
 					options.put(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE,
 							event.getParameter(PreferenceConstants.GATHERER_UPDATE_LANGUAGE));
-					final int rec = ch.downloadUpdates(set, options, pm);
+					final int rec = ch.downloadUpdates(set, options, new CoreMonitorAdapter(pm));
 					shell.getDisplay().syncExec(new Runnable() {
 						public void run() {
 							try {

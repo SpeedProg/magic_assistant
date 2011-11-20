@@ -24,6 +24,7 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 
 public class DeckExportWizard extends Wizard implements IExportWizard {
 	private DeckExportPage mainPage;
@@ -85,7 +86,7 @@ public class DeckExportWizard extends Wizard implements IExportWizard {
 					try {
 						filteredLibrary.update(locationFilter);
 						worker.init(new FileOutputStream(fileName), header, filteredLibrary);
-						worker.run(monitor);
+						worker.run(new CoreMonitorAdapter(monitor));
 					} catch (FileNotFoundException e) {
 						throw new InvocationTargetException(e);
 					}

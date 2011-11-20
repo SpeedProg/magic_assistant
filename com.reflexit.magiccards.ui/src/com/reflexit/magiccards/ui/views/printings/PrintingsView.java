@@ -54,6 +54,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -245,7 +246,8 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 					return Status.CANCEL_STATUS;
 				try {
 					ICardStore store = DataManager.getCardHandler().getMagicDBStore();
-					new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new SubProgressMonitor(monitor, 90));
+					new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(new SubProgressMonitor(
+							monitor, 90)));
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
 					reloadData();
