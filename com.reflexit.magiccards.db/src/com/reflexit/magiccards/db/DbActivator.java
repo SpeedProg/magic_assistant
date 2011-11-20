@@ -1,6 +1,11 @@
 package com.reflexit.magiccards.db;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -26,8 +31,7 @@ public class DbActivator extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -37,8 +41,7 @@ public class DbActivator extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -63,6 +66,11 @@ public class DbActivator extends Plugin {
 	 */
 	public static DbActivator getDefault() {
 		return plugin;
+	}
+
+	public static InputStream loadResource(String name) throws IOException {
+		InputStream is = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + name), false);
+		return is;
 	}
 
 	public static void log(Throwable e) {
