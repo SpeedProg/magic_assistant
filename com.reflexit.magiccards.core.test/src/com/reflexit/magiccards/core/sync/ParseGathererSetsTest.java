@@ -6,10 +6,9 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererSetsTest extends TestCase {
 	private ParseGathererSets parser;
@@ -28,7 +27,7 @@ public class ParseGathererSetsTest extends TestCase {
 				+ "	<option value=\"\"></option>\r\n" + "	<option value=\"Alara Reborn\">Alara Reborn</option>\r\n"
 				+ "	<option value=\"Alliances\">Alliances</option>\r\n" + "	<option value=\"Antiquities\">Antiquities</option>\r\n"
 				+ "	...\r\n" + "	</select>";
-		parser.loadHtml(html, new NullProgressMonitor());
+		parser.loadHtml(ICoreProgressMonitor.NONE);
 		assertTrue(hasEdition("Alara Reborn"));
 	}
 
@@ -45,7 +44,7 @@ public class ParseGathererSetsTest extends TestCase {
 	}
 
 	public void testLoad() throws IOException {
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		assertTrue(hasEdition("Alara Reborn"));
 	}
 }

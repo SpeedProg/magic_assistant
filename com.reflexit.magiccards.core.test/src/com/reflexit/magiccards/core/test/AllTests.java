@@ -17,6 +17,7 @@ import com.reflexit.magiccards.core.exports.DeckParserTest;
 import com.reflexit.magiccards.core.exports.MagicWorkstationImportTest;
 import com.reflexit.magiccards.core.exports.MtgoImportTest;
 import com.reflexit.magiccards.core.exports.TablePipedImportTest;
+import com.reflexit.magiccards.core.model.nav.CardElementTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererLegalityTest;
@@ -46,6 +47,7 @@ public class AllTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
 		suite.addTestSuite(CardTextNL1Test.class);
+		suite.addTestSuite(CardElementTest.class);
 		// gatherer
 		suite.addTestSuite(ParseGathererCardLanguagesTest.class);
 		suite.addTestSuite(ParseGathererSetsTest.class);

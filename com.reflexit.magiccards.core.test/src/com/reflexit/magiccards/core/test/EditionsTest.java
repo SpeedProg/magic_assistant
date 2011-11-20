@@ -10,13 +10,13 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.db.DbActivator;
@@ -157,7 +157,7 @@ public class EditionsTest extends TestCase {
 		editions.init();
 		editions.save();
 		ParseGathererSets parser = new ParseGathererSets();
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		Collection<Edition> editionsList = editions.getEditions();
 		assertTrue("Expected more than 103 but was " + editionsList.size(), editionsList.size() > 103);
 		for (Iterator iterator = editionsList.iterator(); iterator.hasNext();) {
@@ -176,7 +176,7 @@ public class EditionsTest extends TestCase {
 
 	@Test
 	public void testLegalitiesInet() {
-		ParseSetLegality.loadAllFormats(new NullProgressMonitor());
+		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
 		Edition ed = editions.getEditionByName("Innistrad");
 		String legalitiesString = ed.getFormatString();
 		assertEquals("Standard, Modern, Extended", legalitiesString);

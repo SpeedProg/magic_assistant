@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererLegalityTest extends TestCase {
 	private ParseGathererLegality parser;
@@ -25,7 +25,7 @@ public class ParseGathererLegalityTest extends TestCase {
 	// }
 	public void testLoad() throws IOException {
 		parser.setCardId(193867);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		HashMap<String, String> map = parser.getLegalityMap();
 		assertEquals("Banned", map.get("Legacy"));
 	}

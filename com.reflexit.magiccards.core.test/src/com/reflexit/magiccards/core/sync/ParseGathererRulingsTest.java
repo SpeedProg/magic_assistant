@@ -4,9 +4,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererRulingsTest extends TestCase {
 	private ParseGathererDetails parser;
@@ -20,7 +19,7 @@ public class ParseGathererRulingsTest extends TestCase {
 		MagicCard card = new MagicCard();
 		card.setCardId(id);
 		parser.setCard(card);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		return card;
 	}
 

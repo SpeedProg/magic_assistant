@@ -4,9 +4,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererBasicInfoTest extends TestCase {
 	private ParseGathererBasicInfo parser;
@@ -20,7 +19,7 @@ public class ParseGathererBasicInfoTest extends TestCase {
 		MagicCard card = new MagicCard();
 		card.setCardId(172550);
 		parser.setCard(card);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("Бурав Выжженной Пустоши", card.getName());
 	}
 
@@ -28,7 +27,7 @@ public class ParseGathererBasicInfoTest extends TestCase {
 		MagicCard card = new MagicCard();
 		card.setCardId(273275);
 		parser.setCard(card);
-		parser.load(new NullProgressMonitor());
+		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("149b", card.getCollNumber());
 		assertEquals("Wildblood Pack", card.getName()); // XXX bug in gatherer
 	}
