@@ -41,6 +41,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.exports.IImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.PreviewResult;
@@ -107,7 +108,12 @@ public class DeckImportPage extends WizardDataTransferPage {
 								createNewDeck(getNewDeckName());
 								selectedLocation = getSelectedLocation();
 							}
-							ImportUtils.performImport(st, reportType, header, selectedLocation, new CoreMonitorAdapter(monitor));
+							try {
+								IImportDelegate<IMagicCard> worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
+								ImportUtils.performImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
+							} catch (Exception e) {
+								throw new InvocationTargetException(e);
+							}
 						}
 					}
 				};
