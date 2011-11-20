@@ -3,14 +3,13 @@ package com.reflexit.magiccards.core.xml;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStore {
 	private static MagicDBXmlFilteredCardStore instance;
@@ -24,7 +23,7 @@ public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStor
 	@Override
 	protected void doInitialize() throws MagicException {
 		// create initial database from flat file if not there
-		new XmlCardHolder().loadInitialIfNot(new NullProgressMonitor());
+		new XmlCardHolder().loadInitialIfNot(ICoreProgressMonitor.NONE);
 		// load card from xml in memory
 		if (!this.table.isInitialized()) {
 			synchronized (table) {

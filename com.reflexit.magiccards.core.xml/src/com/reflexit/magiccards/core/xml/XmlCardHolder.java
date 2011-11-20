@@ -16,12 +16,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.SubProgressMonitor;
-
 import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -37,6 +31,8 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
@@ -94,7 +90,7 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	protected void loadFromFlatResource(String set) throws IOException {
-		InputStream is = FileLocator.openStream(DbActivator.getDefault().getBundle(), new Path("resources/" + set), false);
+		InputStream is = DbActivator.loadResource(set);
 		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		loadtFromFlatIntoXml(st, list, isSingleSet(set));
@@ -212,7 +208,7 @@ public class XmlCardHolder implements ICardHandler {
 		return list;
 	}
 
-	public synchronized void loadInitialIfNot(IProgressMonitor pm) throws MagicException {
+	public synchronized void loadInitialIfNot(ICoreProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
 			File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
@@ -227,15 +223,14 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public String download(String set, Properties options, IProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
+	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
 			IOException {
-		IPath path = Activator.getStateLocationAlways().append("downloaded.txt");
-		String file = path.toPortableString();
+		String file = new File(DataManager.getStateLocationFile(), "downloaded.txt").getPath();
 		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, options, pm);
 		return file;
 	}
 
-	public int downloadUpdates(String set, Properties options, IProgressMonitor pm) throws MagicException, InterruptedException {
+	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException {
 		int rec;
 		try {
 			String lang = (String) options.get(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE);
@@ -244,18 +239,18 @@ public class XmlCardHolder implements ICardHandler {
 			}
 			pm.beginTask("Downloading", 110 + (lang == null ? 0 : 100));
 			pm.subTask("Initializing");
-			loadInitialIfNot(new SubProgressMonitor(pm, 10));
+			loadInitialIfNot(new SubCoreProgressMonitor(pm, 10));
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Updating set list...");
 			try {
-				new ParseGathererSets().load(new SubProgressMonitor(pm, 10));
+				new ParseGathererSets().load(new SubCoreProgressMonitor(pm, 10));
 				Editions.getInstance().save();
 			} catch (Exception e) {
 				Activator.log(e); // move on if exception via set loading
 			}
 			pm.subTask("Downloading cards...");
-			String file = download(set, options, new SubProgressMonitor(pm, 50));
+			String file = download(set, options, new SubCoreProgressMonitor(pm, 50));
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Updating database...");
@@ -272,7 +267,7 @@ public class XmlCardHolder implements ICardHandler {
 				Set<ICardField> fieldMaps = new HashSet<ICardField>();
 				fieldMaps.add(MagicCardField.LANG);
 				new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang, getMagicDBStore(),
-						new SubProgressMonitor(pm, 100));
+						new SubCoreProgressMonitor(pm, 100));
 			}
 			return rec;
 		} catch (MalformedURLException e) {
