@@ -10,17 +10,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
+ * 
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
@@ -32,8 +29,8 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 	}
 
 	/**
-	 * the command has been executed, so extract extract the needed information
-	 * from the application context.
+	 * the command has been executed, so extract extract the needed information from the application
+	 * context.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
@@ -45,19 +42,10 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 		IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
-			ArrayList<IMagicCard> toAdd = new ArrayList<IMagicCard>();
-			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				IMagicCard magicCard = (IMagicCard) iterator.next();
-				if (magicCard instanceof MagicCardPhisical) {
-					magicCard = new MagicCardPhisical(magicCard, null);
-					((MagicCardPhisical) magicCard).setCount(1);
-				}
-				toAdd.add(magicCard);
-			}
-			activeDeckHandler.getCardStore().addAll(toAdd);
+			DataManager.getCardHandler().copyCards(list, activeDeckHandler.getLocation());
 		} else {
 			Display display = window.getShell().getDisplay();
-			MessageDialog.openError(window.getShell(), "Error", "No active deck");
+			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");
 		}
 		return null;
 	}
