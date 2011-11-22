@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 
 @SuppressWarnings("serial")
 public class SortOrder extends ArrayList<MagicCardComparator> implements Comparator {
@@ -49,11 +50,42 @@ public class SortOrder extends ArrayList<MagicCardComparator> implements Compara
 		sortOrder.push(elem);
 	}
 
+	public boolean hasSortField(ICardField sortField) {
+		if (size() == 0)
+			return false;
+		for (Iterator<MagicCardComparator> iterator = iterator(); iterator.hasNext();) {
+			MagicCardComparator comp = iterator.next();
+			if (sortField.equals(comp.getField())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isAccending(ICardField sortField) {
+		if (size() == 0)
+			return true;
+		for (Iterator<MagicCardComparator> iterator = iterator(); iterator.hasNext();) {
+			MagicCardComparator comp = iterator.next();
+			if (sortField.equals(comp.getField())) {
+				return comp.isAccending();
+			}
+		}
+		return false; // default to false
+	}
+
 	public boolean isAccending() {
 		if (size() == 0)
 			return true;
 		MagicCardComparator elem = peek();
 		return elem.isAccending();
+	}
+
+	public boolean isTop(ICardField sortField) {
+		if (size() == 0)
+			return false;
+		MagicCardComparator elem = peek();
+		return elem.getField().equals(sortField);
 	}
 
 	private MagicCardComparator peek() {
