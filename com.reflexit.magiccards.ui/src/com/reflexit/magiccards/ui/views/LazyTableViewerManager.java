@@ -144,17 +144,21 @@ public class LazyTableViewerManager extends ViewerManager {
 		this.viewer.getTable().setLinesVisible(grid);
 	}
 
-	public void updateSortColumn(int index) {
+	public void setSortColumn(int index, int direction) {
 		boolean sort = index >= 0;
-		TableColumn column = sort ? this.viewer.getTable().getColumn(index) : null;
-		this.viewer.getTable().setSortColumn(column);
 		if (sort) {
-			int sortDirection = getSortDirection();
-			if (sortDirection != SWT.DOWN)
+			int sortDirection;
+			if (direction == -1)
 				sortDirection = SWT.DOWN;
+			else if (direction == 0)
+				sortDirection = SWT.NONE;
 			else
 				sortDirection = SWT.UP;
 			this.viewer.getTable().setSortDirection(sortDirection);
+			TableColumn column = viewer.getTable().getColumn(index);
+			this.viewer.getTable().setSortColumn(column);
+		} else {
+			this.viewer.getTable().setSortColumn(null);
 		}
 	}
 

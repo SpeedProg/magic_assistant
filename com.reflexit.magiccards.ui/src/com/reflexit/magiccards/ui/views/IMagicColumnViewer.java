@@ -35,7 +35,7 @@ public interface IMagicColumnViewer {
 
 	public abstract void updateColumns(String preferenceValue);
 
-	public abstract void updateSortColumn(int index);
+	public abstract void setSortColumn(int index, int direction);
 
 	public abstract void updateViewer(Object input);
 

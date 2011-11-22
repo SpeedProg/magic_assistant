@@ -137,17 +137,21 @@ public class LazyTreeViewerManager extends ViewerManager {
 		this.viewer.getTree().setLinesVisible(grid);
 	}
 
-	public void updateSortColumn(int index) {
+	public void setSortColumn(int index, int direction) {
 		boolean sort = index >= 0;
-		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
-		this.viewer.getTree().setSortColumn(column);
 		if (sort) {
-			int sortDirection = getSortDirection();
-			if (sortDirection != SWT.DOWN)
+			int sortDirection;
+			if (direction == -1)
 				sortDirection = SWT.DOWN;
+			else if (direction == 0)
+				sortDirection = SWT.NONE;
 			else
 				sortDirection = SWT.UP;
 			this.viewer.getTree().setSortDirection(sortDirection);
+			TreeColumn column = this.viewer.getTree().getColumn(index);
+			this.viewer.getTree().setSortColumn(column);
+		} else {
+			this.viewer.getTree().setSortColumn(null);
 		}
 	}
 

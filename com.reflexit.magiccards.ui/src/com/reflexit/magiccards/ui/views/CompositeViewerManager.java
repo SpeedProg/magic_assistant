@@ -97,9 +97,9 @@ public class CompositeViewerManager extends ViewerManager {
 		return this.managers[this.activeIndex].getViewer();
 	}
 
-	public void updateSortColumn(int index) {
+	public void setSortColumn(int index, int direction) {
 		for (IMagicColumnViewer m : this.managers) {
-			m.updateSortColumn(index);
+			m.setSortColumn(index, direction);
 		}
 	}
 

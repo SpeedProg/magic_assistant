@@ -53,6 +53,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.SortOrder;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -715,12 +716,19 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void updateSortColumn(final int index) {
-		manager.updateSortColumn(index);
-		if (index > 0) {
-			int sortDirection = manager.getSortDirection();
+		if (index >= 0) {
 			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
-			getFilter().setSortField(man.getSortField(), sortDirection == SWT.DOWN);
+			ICardField sortField = man.getSortField();
+			boolean acc = true;
+			SortOrder sortOrder = getFilter().getSortOrder();
+			if (sortOrder.isTop(sortField)) {
+				boolean oldAcc = sortOrder.isAccending(sortField);
+				acc = !oldAcc;
+			}
+			getFilter().setSortField(sortField, acc);
+			manager.setSortColumn(index, acc ? 1 : -1);
 		} else {
+			manager.setSortColumn(-1, 0);
 			getFilter().setNoSort();
 		}
 	}

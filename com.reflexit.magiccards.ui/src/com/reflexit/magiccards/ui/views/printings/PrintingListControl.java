@@ -46,7 +46,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void sort(int index) {
-		manager.updateSortColumn(index);
+		updateSortColumn(index);
 		updateViewer();
 	}
 

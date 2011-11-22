@@ -119,7 +119,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		this.viewer.getTree().setHeaderVisible(true);
 	}
 
-	public void updateSortColumn(int index) {
+	public void setSortColumn(int index, int direction) {
 		boolean sort = index >= 0;
 		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
 		this.viewer.getTree().setSortColumn(column);
