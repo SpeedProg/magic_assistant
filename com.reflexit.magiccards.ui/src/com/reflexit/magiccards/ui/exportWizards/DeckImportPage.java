@@ -96,10 +96,16 @@ public class DeckImportPage extends WizardDataTransferPage {
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						IImportDelegate<IMagicCard> worker;
+						try {
+							worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
+						} catch (Exception e) {
+							throw new InvocationTargetException(e);
+						}
 						if (preview) {
 							// if error occurs previewResult.error would be set
 							// to exception
-							previewResult = ImportUtils.performPreview(st, reportType, header, new CoreMonitorAdapter(monitor));
+							previewResult = ImportUtils.performPreview(st, worker, header, new CoreMonitorAdapter(monitor));
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
 							Location selectedLocation = getSelectedLocation();
@@ -108,12 +114,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 								createNewDeck(getNewDeckName());
 								selectedLocation = getSelectedLocation();
 							}
-							try {
-								IImportDelegate<IMagicCard> worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
-								ImportUtils.performImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
-							} catch (Exception e) {
-								throw new InvocationTargetException(e);
-							}
+							ImportUtils.performImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
 						}
 					}
 				};
