@@ -15,6 +15,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -28,7 +29,8 @@ import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
- * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no phisical media
+ * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no
+ * phisical media
  * 
  * @author Alena
  * 
@@ -92,6 +94,23 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 	}
 
+	/**
+	 * Count of the cards in the filtered list
+	 */
+	public int getCount() {
+		int count = 0;
+		synchronized (this) {
+			for (T element : this) {
+				if (element instanceof ICardCountable) {
+					count += ((ICardCountable) element).getCount();
+				} else {
+					count++;
+				}
+			}
+			return count;
+		}
+	}
+
 	public boolean contains(T card) {
 		synchronized (this) {
 			for (T element : this) {
@@ -100,7 +119,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			}
 			return false;
 		}
-	};
+	}
 
 	protected synchronized void addFilteredCard(T card) {
 		getFilteredList().add(card);

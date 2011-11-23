@@ -148,6 +148,20 @@ public final class CardStoreUtils {
 		return bars;
 	}
 
+	public static int countCards(Iterable store) {
+		int count = 0;
+		synchronized (store) {
+			for (Object element : store) {
+				if (element instanceof ICardCountable) {
+					count += ((ICardCountable) element).getCount();
+				} else {
+					count++;
+				}
+			}
+			return count;
+		}
+	}
+
 	public static Collection<String> buildColors(Iterable store) {
 		HashSet<String> colors = new HashSet<String>();
 		for (Object element : store) {

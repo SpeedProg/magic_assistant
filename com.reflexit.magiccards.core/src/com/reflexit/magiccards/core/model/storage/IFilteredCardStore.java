@@ -4,9 +4,10 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
-public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable {
+public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCountable {
 	public void update(MagicCardFilter filter) throws MagicException;
 
 	public MagicCardFilter getFilter();
@@ -38,8 +39,7 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable {
 	public Object getElement(int index);
 
 	/**
-	 * return top level cards group if grouping is enabled or null if not
-	 * enabled
+	 * return top level cards group if grouping is enabled or null if not enabled
 	 * 
 	 * @return
 	 */
