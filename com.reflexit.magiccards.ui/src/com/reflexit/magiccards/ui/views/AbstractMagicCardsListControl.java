@@ -23,8 +23,10 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -58,6 +60,7 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -115,6 +118,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected ISelection revealSelection;
 	private MagicCardFilter filter;
 	private IFilteredCardStore<ICard> fstore;
+	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+		public void selectionChanged(SelectionChangedEvent event) {
+			// selection changes on own view
+			setStatus(getStatusMessage());
+		}
+	};
 
 	/**
 	 * The constructor.
@@ -136,6 +145,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		createTopBar(partControl);
 		createTableControl(partControl);
 		createSearchControl(partControl);
+		getSelectionProvider().addSelectionChangedListener(selectionListener);
 	}
 
 	/*
@@ -216,19 +226,42 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (filteredStore == null)
 			return "";
 		ICardStore cardStore = filteredStore.getCardStore();
-		int filSize = filteredStore.getSize();
-		int totalSize = cardStore.size();
-		if (totalSize == 0)
+		int shownSize = filteredStore.getSize();
+		int storeSize = cardStore.size();
+		if (storeSize == 0)
 			return "";
-		int count = totalSize;
+		int storeCount = storeSize;
 		if (cardStore instanceof ICardCountable) {
-			count = ((ICardCountable) cardStore).getCount();
+			storeCount = ((ICardCountable) cardStore).getCount();
 		}
-		if (count != totalSize) {
-			return "Total " + count + " cards, shown unique " + filSize + " of " + totalSize;
-		} else {
-			return "Shown unique " + filSize + " of " + totalSize;
+		int shownCount = shownSize;
+		if (storeCount != storeSize) // collection not db
+			shownCount = filteredStore.getCount();
+		String mainMessage = "Total " + cardsUnique(shownCount, storeCount, shownSize, storeSize) + " cards";
+		if (shownSize != storeSize) { // filter is active
+			mainMessage += ". Filtered " + (storeCount - shownCount);
 		}
+		IStructuredSelection sel = (IStructuredSelection) getSelection();
+		if (sel != null && !sel.isEmpty()) { // selection
+			int selCount = CardStoreUtils.countCards(sel.toList());
+			int selSize = sel.size();
+			mainMessage += ". Selected " + cardsUnique(selCount, selCount, selSize, selSize);
+		}
+		return mainMessage;
+	}
+
+	private String cardsUnique(int a, int ta, int b, int tb) {
+		if (a != b)
+			return countOf(a, ta) + " (unique " + countOf(b, tb) + ")";
+		else
+			return countOf(a, ta) + "";
+	}
+
+	private String countOf(int a, int ta) {
+		if (a != ta)
+			return a + " of " + ta;
+		else
+			return a + "";
 	}
 
 	public Composite getTopBar() {
@@ -269,6 +302,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public void dispose() {
 		// this.manager.dispose(); TODO
 		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().removeListener(this);
+		getSelectionProvider().removeSelectionChangedListener(selectionListener);
 		super.dispose();
 	}
 
