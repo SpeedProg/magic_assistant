@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class TableSearch {
 	public static void search(SearchContext context, IFilteredCardStore store) {
@@ -36,6 +36,11 @@ public class TableSearch {
 			context.setDidWrap(false);
 		}
 		Object[] elements = store.getElements();
+		if (isCamelCase(inputText)) {
+			matchCase = true;
+		} else {
+			matchCase = false;
+		}
 		String escapedInput = escapeAndCamelCase(inputText);
 		String pattern = escapedInput;
 		if (wholeWord)
@@ -109,6 +114,17 @@ public class TableSearch {
 		}
 	}
 
+	private static boolean isCamelCase(String inputText) {
+		char[] charArray = inputText.toCharArray();
+		for (int i = 0; i < charArray.length; i++) {
+			char c = charArray[i];
+			if (Character.isUpperCase(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static String escapeAndCamelCase(String inputText) {
 		char[] charArray = inputText.toCharArray();
 		StringBuffer res = new StringBuffer();
@@ -120,8 +136,7 @@ public class TableSearch {
 			}
 			if (Character.isUpperCase(c)) {
 				if (i > 0)
-					res.append(".*");
-				res.append("\\b");
+					res.append("\\P{Lu}*");
 			}
 			res.append(c);
 		}
@@ -129,7 +144,7 @@ public class TableSearch {
 	}
 
 	/**
-	 * @param pat 
+	 * @param pat
 	 * @param card
 	 * @return
 	 */

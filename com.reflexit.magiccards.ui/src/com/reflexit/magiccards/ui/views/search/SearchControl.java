@@ -127,12 +127,7 @@ public class SearchControl {
 		this.searchText.setLayoutData(td);
 		this.searchText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				Color white = SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-				if (searchText.getBackground() != white) {
-					searchText.setBackground(white);
-					searchText.setForeground(SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-					searchText.redraw();
-				}
+				resetBoxColor();
 				context.setCancelled(true);
 				context.setText(SearchControl.this.searchText.getText());
 				if (searchAsYouType) {
@@ -171,16 +166,16 @@ public class SearchControl {
 				search();
 			}
 		});
-		// case check
-		final ToolItem csCheck = new ToolItem(toolbar, SWT.CHECK);
-		csCheck.setImage(getPlugin().getImage("icons/clcl16/match_case.png"));
-		csCheck.setToolTipText("Match case");
-		csCheck.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				SearchControl.this.context.setMatchCase(csCheck.getSelection());
-			}
-		});
+		// // case check
+		// final ToolItem csCheck = new ToolItem(toolbar, SWT.CHECK);
+		// csCheck.setImage(getPlugin().getImage("icons/clcl16/match_case.png"));
+		// csCheck.setToolTipText("Match case");
+		// csCheck.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// SearchControl.this.context.setMatchCase(csCheck.getSelection());
+		// }
+		// });
 		// word check
 		final ToolItem wordCheck = new ToolItem(toolbar, SWT.CHECK);
 		wordCheck.setImage(getPlugin().getImage("icons/clcl16/whole_word.png"));
@@ -189,6 +184,7 @@ public class SearchControl {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				SearchControl.this.context.setWholeWord(wordCheck.getSelection());
+				search();
 			}
 		});
 		// status
@@ -236,6 +232,7 @@ public class SearchControl {
 			// context.forward + " case=" + context.matchCase);
 			this.status.setText("");
 			this.statusImage.setImage(null);
+			resetBoxColor();
 		}
 	}
 
@@ -260,8 +257,7 @@ public class SearchControl {
 	}
 
 	/**
-	 * For testing and external search if needed. Ui buttons would not be
-	 * updated.
+	 * For testing and external search if needed. Ui buttons would not be updated.
 	 * 
 	 * @param text
 	 * @param matchCase
@@ -298,5 +294,14 @@ public class SearchControl {
 
 	public boolean isVisible() {
 		return comp.isVisible();
+	}
+
+	public void resetBoxColor() {
+		Color white = SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		if (searchText.getBackground() != white) {
+			searchText.setBackground(white);
+			searchText.setForeground(SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+			searchText.redraw();
+		}
 	}
 }
