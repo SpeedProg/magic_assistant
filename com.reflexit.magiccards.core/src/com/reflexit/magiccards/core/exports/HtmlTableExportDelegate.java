@@ -76,8 +76,11 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 					Object value = card.getObjectByField(field);
 					if (value == null)
 						value = "";
-					if (field == MagicCardField.COST)
-						value = replaceSymbolsWithLinksOnline(String.valueOf(value));
+					if (field == MagicCardField.COST) {
+						String str = String.valueOf(value);
+						if (str.length() > 0)
+							value = replaceSymbolsWithLinksOnline(str);
+					}
 					if (field == MagicCardField.NAME) {
 						value = img(ParseGathererNewVisualSpoiler.createSetImageURL(abbr, card.getRarity()), "") + "&nbsp;" + value;
 					}
