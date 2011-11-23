@@ -264,7 +264,7 @@ public final class CardStoreUtils {
 						creatureNode.add(elem);
 					} else {
 						noncreatureNode.addCount(count);
-						if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Interrupt)) {
+						if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Instant)) {
 							instant.add(elem);
 						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Enchantment)) {
 							ench.add(elem);
