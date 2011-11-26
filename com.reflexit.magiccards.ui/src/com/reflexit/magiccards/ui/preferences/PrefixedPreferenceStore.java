@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.preferences;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -22,8 +24,8 @@ import org.osgi.service.prefs.BackingStoreException;
  * 
  */
 public class PrefixedPreferenceStore implements IPreferenceStore {
-	private IPreferenceStore store;
-	private String prefix;
+	private final IPreferenceStore store;
+	private final String prefix;
 
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		this.store.addPropertyChangeListener(listener);
@@ -44,16 +46,14 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 		}
 		if (res == null)
 			return null;
-		String arr[] = new String[res.length];
+		ArrayList<String> arr = new ArrayList<String>();
 		int l = prefix.length() + 1;
 		for (int i = 0; i < res.length; i++) {
 			String full = res[i];
-			if (full.length() > l)
-				arr[i] = full.substring(l);
-			else
-				arr[i] = full; // should not happened
+			if (full.startsWith(prefix))
+				arr.add(full.substring(l));
 		}
-		return arr;
+		return arr.toArray(new String[arr.size()]);
 	}
 
 	public void setToDefault() {
@@ -197,8 +197,14 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 	 */
 	public PrefixedPreferenceStore(IPreferenceStore parent, String prefix) {
 		this.store = parent;
-		this.prefix = prefix;
-		if (this.prefix == null)
+		if (prefix == null)
 			this.prefix = "other";
+		else
+			this.prefix = prefix;
+	}
+
+	@Override
+	public String toString() {
+		return store.toString();
 	}
 }
