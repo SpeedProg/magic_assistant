@@ -59,7 +59,7 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 	public void setToDefault() {
 		String[] preferenceNames = preferenceNames();
 		for (String id : preferenceNames) {
-			store.setToDefault(id);
+			store.setToDefault(toGlobal(id));
 		}
 	}
 
@@ -205,6 +205,15 @@ public class PrefixedPreferenceStore implements IPreferenceStore {
 
 	@Override
 	public String toString() {
-		return store.toString();
+		String header = prefix + ":" + store.toString();
+		String body = "";
+		String[] preferenceNames = preferenceNames();
+		for (String id : preferenceNames) {
+			String gid = toGlobal(id);
+			if (!store.isDefault(gid)) {
+				body += "   " + id + "=" + store.getString(gid) + "\n";
+			}
+		}
+		return header + body;
 	}
 }
