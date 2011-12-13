@@ -4,15 +4,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WT;
 import com.windowtester.runtime.WidgetSearchException;
 import com.windowtester.runtime.condition.HasTextCondition;
-import com.windowtester.runtime.swt.UITestCaseSWT;
 import com.windowtester.runtime.swt.condition.shell.ShellDisposedCondition;
 import com.windowtester.runtime.swt.condition.shell.ShellShowingCondition;
 import com.windowtester.runtime.swt.locator.ButtonLocator;
@@ -21,23 +17,15 @@ import com.windowtester.runtime.swt.locator.SWTWidgetLocator;
 import com.windowtester.runtime.swt.locator.TableCellLocator;
 import com.windowtester.runtime.swt.locator.TreeItemLocator;
 import com.windowtester.runtime.swt.locator.eclipse.ViewLocator;
-import com.windowtester.runtime.swt.locator.eclipse.WorkbenchLocator;
 
-public class FilterType extends UITestCaseSWT {
-	private IUIContext ui;
-
+public class FilterType extends MagicTestCase {
 	/*
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ui = getUI();
-		ui.ensureThat(new WorkbenchLocator().hasFocus());
-		ui.ensureThat(ViewLocator.forName("Welcome").isClosed());
 		ui.ensureThat(ViewLocator.forId(DeckView.ID).isClosed());
-		PrefixedPreferenceStore mdbStore = (PrefixedPreferenceStore) PreferenceInitializer.getMdbStore();
-		mdbStore.setToDefault();
 	}
 
 	protected void assertHasType(String pattern, String viewId) throws WidgetSearchException {
