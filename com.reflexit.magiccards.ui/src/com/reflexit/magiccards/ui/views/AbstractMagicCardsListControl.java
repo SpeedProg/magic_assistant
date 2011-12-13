@@ -111,6 +111,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected Action actionCopy;
 	protected Action actionGroupMenu;
 	protected Action actionShowFilter;
+	protected Action actionResetFilter;
 	protected Action actionShowFind;
 	protected Action actionShowPrefs;
 	protected IMagicColumnViewer manager;
@@ -456,12 +457,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void fillContextMenu(IMenuManager manager) {
 		manager.add(this.actionShowFilter);
+		manager.add(this.actionResetFilter);
 		manager.add(this.actionShowPrefs);
 	}
 
 	@Override
 	public void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.actionShowFilter);
+		manager.add(this.actionResetFilter);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowPrefs);
 		manager.add(this.menuSort);
@@ -480,6 +483,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		manager.add(this.actionShowPrefs);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
+		manager.add(this.actionResetFilter);
 		manager.add(new Separator());
 		// drillDownAdapter.addNavigationActions(manager);
 	}
@@ -547,6 +551,15 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.actionShowFilter.setText("Filter...");
 		this.actionShowFilter.setToolTipText("Opens a Card Filter Dialog");
 		this.actionShowFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter.gif"));
+		this.actionResetFilter = new Action() {
+			@Override
+			public void run() {
+				runResetFilter();
+			}
+		};
+		this.actionResetFilter.setText("Reset Filter");
+		this.actionResetFilter.setToolTipText("Resets the filter to default values");
+		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
 		this.menuSort = new MenuManager("Sort By");
 		Collection columns = getManager().getColumnsCollection().getColumns();
 		int i = 0;
@@ -687,6 +700,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			reloadData();
 			quickFilter.refresh();
 		}
+	}
+
+	protected void runResetFilter() {
+		Collection<String> allIds = FilterHelper.getAllIds();
+		for (Iterator<String> iterator = allIds.iterator(); iterator.hasNext();) {
+			String id = iterator.next();
+			prefStore.setToDefault(id);
+		}
+		reloadData();
+		quickFilter.refresh();
 	}
 
 	/**

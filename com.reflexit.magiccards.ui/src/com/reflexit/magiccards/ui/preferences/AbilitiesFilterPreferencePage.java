@@ -7,15 +7,17 @@ import org.eclipse.swt.widgets.Control;
 
 import java.util.ArrayList;
 
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.AdvancedTextSeachFieldsPreferenceGroup;
 
 public class AbilitiesFilterPreferencePage extends AbstractFilterPreferencePage {
-	public AbilitiesFilterPreferencePage() {
+	public AbilitiesFilterPreferencePage(CardFilterDialog cardFilterDialog) {
+		super(cardFilterDialog);
 		this.subPages = new ArrayList();
 		setTitle("Abilities Filter");
 		setDescription("This filter allows to perform advanced abilities search using card oracle text. "
-		        + "To search for two abilities (using and) enter them on the same line, for alternative abilities (or) "
-		        + "use different lines, use 'Excluding' line to remove some cards from the search result.");
+				+ "To search for two abilities (using and) enter them on the same line, for alternative abilities (or) "
+				+ "use different lines, use 'Excluding' line to remove some cards from the search result.");
 		// setDescription("A demonstration of a preference page
 		// implementation");
 	}

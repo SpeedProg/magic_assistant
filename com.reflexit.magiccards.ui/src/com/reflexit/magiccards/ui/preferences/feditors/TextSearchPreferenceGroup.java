@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
@@ -17,6 +20,13 @@ import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.Languages;
 
 public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
+	private Collection<String> ids = new ArrayList<String>(6);
+
+	@Override
+	public Collection<String> getIds() {
+		return ids;
+	}
+
 	// private Group group;
 	@Override
 	protected void createFieldEditors() {
@@ -28,6 +38,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		String id;
 		id = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(id, "");
+		ids.add(id);
 		StringFieldEditor nameSfe = new StringFieldEditor(id, "Name", getFieldEditorParent());
 		addField(nameSfe);
 		String toolTip = "Search expression can contain words separated by spaces,\n"
@@ -43,6 +54,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		addContextAssist(sfe, CardTypes.getProposals());
 		addField(sfe);
 		addTooltip(sfe, toolTip);
+		ids.add(typeId);
 		// text
 		String textId = FilterHelper.getPrefConstant(FilterHelper.TEXT_LINE, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(textId, "");
@@ -50,12 +62,14 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		addContextAssist(textSfe, getTextProposals());
 		addField(textSfe);
 		addTooltip(textSfe, toolTip);
+		ids.add(textId);
 		// artist
 		String artistId = FilterHelper.getPrefConstant(FilterHelper.ARTIST, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(artistId, "");
 		StringFieldEditor artistSfe = new StringFieldEditor(artistId, "Artist", getFieldEditorParent());
 		addField(artistSfe);
 		addTooltip(artistSfe, toolTip);
+		ids.add(artistId);
 		// language
 		String langId = FilterHelper.getPrefConstant(FilterHelper.LANG, FilterHelper.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(langId, "");
@@ -68,6 +82,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		}
 		ComboFieldEditor langSfe = new ComboFieldEditor(langId, "Language", langs, getFieldEditorParent());
 		addField(langSfe);
+		ids.add(langId);
 	}
 
 	static String[] textProposals = new String[] { "Flying", "Haste", "Persist", "Wither", "Lifelink", "First Strike", "Double Strike",

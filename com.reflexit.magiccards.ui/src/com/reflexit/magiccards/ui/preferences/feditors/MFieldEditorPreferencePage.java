@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
+import java.util.Collection;
+
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -18,10 +20,15 @@ public abstract class MFieldEditorPreferencePage extends FieldEditorPreferencePa
 	public void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 		if (store instanceof PrefixedPreferenceStore) {
-			((PrefixedPreferenceStore) store).setToDefault();
+			Collection<String> ids = getIds();
+			for (String id : ids) {
+				store.setToDefault(id);
+			}
 		}
 		super.performDefaults();
 	}
+
+	public abstract Collection<String> getIds();
 
 	@Override
 	public void initialize() {

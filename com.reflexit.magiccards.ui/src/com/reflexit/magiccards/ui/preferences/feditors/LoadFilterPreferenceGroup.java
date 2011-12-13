@@ -21,6 +21,13 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 
 public class LoadFilterPreferenceGroup extends MFieldEditorPreferencePage {
+	private Collection<String> ids = new ArrayList<String>(6);
+
+	@Override
+	public Collection<String> getIds() {
+		return ids;
+	}
+
 	private CardFilterDialog dialog;
 
 	public LoadFilterPreferenceGroup(CardFilterDialog dialog) {

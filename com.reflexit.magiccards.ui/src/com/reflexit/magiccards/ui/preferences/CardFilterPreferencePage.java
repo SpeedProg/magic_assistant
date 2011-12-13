@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import java.util.ArrayList;
-
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.ColorsPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.NumbericalPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.RarityPreferenceGroup;
@@ -15,7 +15,8 @@ import com.reflexit.magiccards.ui.preferences.feditors.TextSearchPreferenceGroup
 import com.reflexit.magiccards.ui.preferences.feditors.TypesPreferenceGroup;
 
 public class CardFilterPreferencePage extends AbstractFilterPreferencePage {
-	public CardFilterPreferencePage() {
+	public CardFilterPreferencePage(CardFilterDialog cardFilterDialog) {
+		super(cardFilterDialog);
 		this.subPages = new ArrayList();
 		setTitle("Basic Filter");
 		// setDescription("A demonstration of a preference page
@@ -24,7 +25,7 @@ public class CardFilterPreferencePage extends AbstractFilterPreferencePage {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		setTitle("Card Filter");
+		setTitle("Basic Filter");
 		this.panel = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
 		this.panel.setLayout(layout);

@@ -8,12 +8,21 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.ColorTypes;
 import com.reflexit.magiccards.core.model.Colors;
 
 public class ColorsPreferenceGroup extends MFieldEditorPreferencePage {
+	private Collection<String> ids = new ArrayList<String>(6);
+
+	@Override
+	public Collection<String> getIds() {
+		return ids;
+	}
+
 	private Group group;
 
 	@Override
@@ -41,6 +50,7 @@ public class ColorsPreferenceGroup extends MFieldEditorPreferencePage {
 	private FieldEditor addCheckBox(String id, String name, Composite parent) {
 		BooleanFieldEditor editor = new BooleanFieldEditor(id, name, parent);
 		addField(editor);
+		ids.add(id);
 		return editor;
 	}
 

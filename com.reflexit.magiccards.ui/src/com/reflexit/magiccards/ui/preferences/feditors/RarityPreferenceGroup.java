@@ -8,8 +8,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import java.util.Collection;
 import java.util.Iterator;
 
+import com.reflexit.magiccards.core.model.ISearchableProperty;
 import com.reflexit.magiccards.core.model.Rarity;
 
 public class RarityPreferenceGroup extends MFieldEditorPreferencePage {
@@ -26,6 +28,16 @@ public class RarityPreferenceGroup extends MFieldEditorPreferencePage {
 			String id = (String) iterator.next();
 			addCheckBox(id, coreTypes.getNameById(id), parent);
 		}
+	}
+
+	public ISearchableProperty getSearchablePropery() {
+		Rarity coreTypes = Rarity.getInstance();
+		return coreTypes;
+	}
+
+	@Override
+	public Collection<String> getIds() {
+		return getSearchablePropery().getIds();
 	}
 
 	private FieldEditor addCheckBox(String id, String name, Composite parent) {

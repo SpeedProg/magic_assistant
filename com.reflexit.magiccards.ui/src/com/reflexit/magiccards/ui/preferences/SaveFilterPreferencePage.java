@@ -9,12 +9,10 @@ import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.LoadFilterPreferenceGroup;
 
 public class SaveFilterPreferencePage extends AbstractFilterPreferencePage {
-	private CardFilterDialog dialog;
-
 	public SaveFilterPreferencePage(CardFilterDialog dialog) {
+		super(dialog);
 		setTitle("Save/Load Filter");
 		setDescription("To Save current filter use 'Save As...'. \nTo load existing filter select a filter and press 'Load'.");
-		this.dialog = dialog;
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import com.reflexit.magiccards.ui.preferences.UserFilterPreferencePage;
 public class DeckFilterDialog extends CardFilterDialog {
 	public DeckFilterDialog(Shell parentShell, IPreferenceStore store) {
 		super(parentShell, store);
-		addNode(new PreferenceNode("user", new UserFilterPreferencePage()));
+		addNode(new PreferenceNode("user", new UserFilterPreferencePage(this)));
 		super.addSavePage();
 	}
 

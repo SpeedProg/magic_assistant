@@ -1,36 +1,25 @@
 package com.reflexit.magiccards.ui.preferences;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
-
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 
-public class EditionsFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class EditionsFilterPreferencePage extends AbstractFilterPreferencePage {
 	public static final String LAST_SET = "onlyLastSet";
 	private EditionsComposite comp;
 	private Button onlyLastSet;
 
-	public EditionsFilterPreferencePage() {
+	public EditionsFilterPreferencePage(CardFilterDialog cardFilterDialog) {
+		super(cardFilterDialog);
 		setTitle("Set Filter");
 		// setDescription("A demonstration of a preference page
 		// implementation");
-	}
-
-	public void init(IWorkbench workbench) {
-		// nothing
-	}
-
-	@Override
-	public void noDefaultAndApplyButton() {
-		super.noDefaultAndApplyButton();
 	}
 
 	@Override
@@ -64,13 +53,10 @@ public class EditionsFilterPreferencePage extends PreferencePage implements IWor
 	}
 
 	@Override
-	protected IPreferenceStore doGetPreferenceStore() {
-		throw new UnsupportedOperationException("Unspecified preference store");
-	}
-
-	@Override
 	public void performDefaults() {
-		comp.setToDefaults();
+		if (this.comp != null) {
+			comp.setToDefaults();
+		}
 		super.performDefaults();
 	}
 }

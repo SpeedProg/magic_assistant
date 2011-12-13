@@ -5,10 +5,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.UserFieldsPreferenceGroup;
 
 public class UserFilterPreferencePage extends AbstractFilterPreferencePage {
-	public UserFilterPreferencePage() {
+	public UserFilterPreferencePage(CardFilterDialog dialog) {
+		super(dialog);
 		setTitle("User Filter");
 		// setDescription("A demonstration of a preference page
 		// implementation");

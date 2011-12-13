@@ -10,10 +10,17 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.preferences;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -21,6 +28,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.MFieldEditorPreferencePage;
 
 /**
@@ -29,9 +37,43 @@ import com.reflexit.magiccards.ui.preferences.feditors.MFieldEditorPreferencePag
 public abstract class AbstractFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	protected Composite panel;
 	protected Collection<MFieldEditorPreferencePage> subPages = new ArrayList();
+	protected CardFilterDialog dialog;
+
+	public AbstractFilterPreferencePage(CardFilterDialog dialog) {
+		this.dialog = dialog;
+	}
 
 	public void init(IWorkbench workbench) {
 		// nothing
+	}
+
+	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		getDefaultsButton().setText("Restore Page Defaults");
+		((GridData) (getDefaultsButton().getLayoutData())).widthHint = SWT.DEFAULT;
+	}
+
+	@Override
+	protected void contributeButtons(Composite buttonBar) {
+		if (dialog != null) {
+			GridLayout layout = (GridLayout) buttonBar.getLayout();
+			layout.numColumns = layout.numColumns + 1;
+			int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+			Button defaultsGlobalButton = new Button(buttonBar, SWT.PUSH);
+			defaultsGlobalButton.setText("Restore All Defaults");
+			Dialog.applyDialogFont(defaultsGlobalButton);
+			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			Point minButtonSize = defaultsGlobalButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			data.widthHint = Math.max(widthHint, minButtonSize.x);
+			defaultsGlobalButton.setLayoutData(data);
+			defaultsGlobalButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					performGlobalDefaults();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -49,7 +91,7 @@ public abstract class AbstractFilterPreferencePage extends PreferencePage implem
 	}
 
 	@Override
-	protected void performDefaults() {
+	public void performDefaults() {
 		for (Object element : this.subPages) {
 			MFieldEditorPreferencePage page = (MFieldEditorPreferencePage) element;
 			page.performDefaults();
@@ -78,5 +120,12 @@ public abstract class AbstractFilterPreferencePage extends PreferencePage implem
 			page.performOk();
 		}
 		return super.performOk();
+	}
+
+	public void performGlobalDefaults() {
+		if (dialog != null) {
+			dialog.performDefaults();
+			dialog.refresh();
+		}
 	}
 }

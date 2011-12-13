@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.AbilitiesFilterPreferencePage;
+import com.reflexit.magiccards.ui.preferences.AbstractFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.CardFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.SaveFilterPreferencePage;
@@ -25,9 +26,9 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		else
 			this.store = store;
 		//
-		addNode(new PreferenceNode("basic", new CardFilterPreferencePage()));
-		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage()));
-		addNode(new PreferenceNode("abilities", new AbilitiesFilterPreferencePage()));
+		addNode(new PreferenceNode("basic", new CardFilterPreferencePage(this)));
+		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage(this)));
+		addNode(new PreferenceNode("abilities", new AbilitiesFilterPreferencePage(this)));
 		addSavePage();
 	}
 
@@ -63,6 +64,16 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		for (IPreferenceNode node : rootSubNodes) {
 			PreferencePage page = (PreferencePage) node.getPage();
 			page.setPreferenceStore(this.store);
+		}
+	}
+
+	public void performDefaults() {
+		IPreferenceNode[] rootSubNodes = getPreferenceManager().getRootSubNodes();
+		for (IPreferenceNode node : rootSubNodes) {
+			PreferencePage page = (PreferencePage) node.getPage();
+			if (page instanceof AbstractFilterPreferencePage) {
+				((AbstractFilterPreferencePage) page).performDefaults();
+			}
 		}
 	}
 }

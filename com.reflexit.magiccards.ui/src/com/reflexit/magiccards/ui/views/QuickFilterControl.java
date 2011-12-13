@@ -34,6 +34,7 @@ public class QuickFilterControl extends Composite {
 	private IPreferenceStore store;
 	private Runnable runnable;
 	private Combo typeCombo;
+	private ToolBar toolbar;
 
 	public QuickFilterControl(Composite composite, Runnable run) {
 		super(composite, SWT.NONE);
@@ -73,7 +74,7 @@ public class QuickFilterControl extends Composite {
 		gridLayout2.marginWidth = 0;
 		comp.setLayout(gridLayout2);
 		// toolbar
-		ToolBar toolbar = new ToolBar(comp, SWT.FLAT);
+		toolbar = new ToolBar(comp, SWT.FLAT);
 		toolbar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// createToolBarLabel(toolbar, "Text:");
 		// search field
@@ -171,6 +172,18 @@ public class QuickFilterControl extends Composite {
 		});
 		button.setSelection(false);
 		button.setToolTipText(name);
+		button.setData("id", id);
+	}
+
+	private void setButtonToStoreValue(ToolBar toolbar, String id) {
+		ToolItem[] children = toolbar.getItems();
+		for (int i = 0; i < children.length; i++) {
+			ToolItem control = children[i];
+			Object data = control.getData("id");
+			if (data != null && id.equals(data)) {
+				control.setSelection(store.getBoolean(id));
+			}
+		}
 	}
 
 	private void createHideButton(Composite comp) {
@@ -227,6 +240,12 @@ public class QuickFilterControl extends Composite {
 				typeCombo.setText(type1);
 			} else {
 				typeCombo.setText(type);
+			}
+			// color
+			Collection<String> ids = Colors.getInstance().getIds();
+			for (Iterator<String> iterator = ids.iterator(); iterator.hasNext();) {
+				String id = iterator.next();
+				setButtonToStoreValue(toolbar, id);
 			}
 		}
 	}

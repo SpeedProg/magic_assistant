@@ -25,7 +25,7 @@ public class MyCardsFilterDialog extends CardFilterDialog {
 	public MyCardsFilterDialog(Shell parentShell, IPreferenceStore store) {
 		super(parentShell, store);
 		addNode(new PreferenceNode("locations", new LocationFilterPreferencePage(SWT.MULTI)));
-		addNode(new PreferenceNode("user", new UserFilterPreferencePage()));
+		addNode(new PreferenceNode("user", new UserFilterPreferencePage(this)));
 		super.addSavePage();
 	}
 
