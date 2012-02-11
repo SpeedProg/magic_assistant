@@ -25,12 +25,16 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new SetColumn());
 		this.columns.add(new GenColumn(MagicCardField.RARITY, "Rarity"));
 		this.columns.add(new GenColumn(MagicCardField.CTYPE, "Color Type"));
-		if (!this.id.equals(dbPrefId)) {
+		boolean myCards = true;
+		if (id != null && id.equals(dbPrefId)) {
+			myCards = false;
+		}
+		if (myCards) {
 			this.columns.add(new CountColumn());
 			this.columns.add(new LocationColumn());
 		}
 		this.columns.add(new ColorColumn());
-		if (!this.id.equals(dbPrefId)) {
+		if (myCards) {
 			this.columns.add(new OwnershipColumn());
 			this.columns.add(new CommentColumn());
 			this.columns.add(new PriceColumn());
@@ -39,7 +43,7 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new CommunityRatingColumn());
 		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
 		this.columns.add(new GenColumn(MagicCardField.COLLNUM, "Collector's Number"));
-		if (!this.id.equals(dbPrefId)) {
+		if (myCards) {
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
 		}
