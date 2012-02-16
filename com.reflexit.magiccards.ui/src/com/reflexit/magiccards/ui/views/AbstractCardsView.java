@@ -219,14 +219,16 @@ public abstract class AbstractCardsView extends ViewPart {
 			loadingPrices.setListChoice(dialog.getListChoice());
 			loadingPrices.schedule();
 		}
-		LoadingExtraJob loadingExtras = new LoadingExtraJob(this);
-		loadingExtras.setFields(dialog.getFields());
-		loadingExtras.setSelection(selection);
-		loadingExtras.setListChoice(dialog.getListChoice());
-		if (dialog.getFields().contains(MagicCardField.LANG)) {
-			loadingExtras.setLanguage(dialog.getLanguage());
+		if (dialog.getFields().size() > 0) {
+			LoadingExtraJob loadingExtras = new LoadingExtraJob(this);
+			loadingExtras.setFields(dialog.getFields());
+			loadingExtras.setSelection(selection);
+			loadingExtras.setListChoice(dialog.getListChoice());
+			if (dialog.getFields().contains(MagicCardField.LANG)) {
+				loadingExtras.setLanguage(dialog.getLanguage());
+			}
+			loadingExtras.schedule();
 		}
-		loadingExtras.schedule();
 	}
 
 	public IStructuredSelection getSelection() {
