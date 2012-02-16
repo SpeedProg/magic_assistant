@@ -16,6 +16,7 @@ public class PriceProviderManager {
 	private PriceProviderManager() {
 		ParseMtgFanaticPrices mtgFanatic = new ParseMtgFanaticPrices();
 		FindMagicCardsPrices findMagicCards = new FindMagicCardsPrices();
+		providers.add(new ParseMOTLPrices());
 		providers.add(mtgFanatic);
 		providers.add(findMagicCards);
 		Activator.getDefault().getEclipseDefaultPreferences().put(PROVIDER_PROP, getDefaultProvider().getName());

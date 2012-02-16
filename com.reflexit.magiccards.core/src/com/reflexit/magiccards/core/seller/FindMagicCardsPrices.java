@@ -217,7 +217,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 						float f = Float.parseFloat(price);
 						res.put(name, f);
 					} catch (NumberFormatException e) {
-						return;
+						break;
 					}
 				}
 			}
