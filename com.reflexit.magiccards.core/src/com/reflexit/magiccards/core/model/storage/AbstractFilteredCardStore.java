@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Colors;
@@ -75,7 +75,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			try {
 				doInitialize();
 			} catch (MagicException e) {
-				Activator.log(e);
+				MagicLogger.log(e);
 			} finally {
 				this.initialized = true;
 			}

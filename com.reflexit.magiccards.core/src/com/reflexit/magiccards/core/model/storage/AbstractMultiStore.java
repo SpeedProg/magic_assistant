@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -86,7 +86,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				Activator.log(e);
+				MagicLogger.log(e);
 			}
 			addCardStore(table);
 		}

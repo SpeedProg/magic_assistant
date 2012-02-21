@@ -8,8 +8,8 @@ Bundle-Vendor: Alena Laskavaia
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.reflexit.magiccards.db,
- org.eclipse.core.runtime;bundle-version="3.6.0",
- org.eclipse.core.resources;bundle-version="3.6.0"
+ org.eclipse.core.resources;bundle-version="3.6.0",
+ org.eclipse.core.runtime;bundle-version="3.6.0"
 Export-Package: com.reflexit.magiccards.core;
   uses:="org.eclipse.core.runtime,
    org.eclipse.core.resources,

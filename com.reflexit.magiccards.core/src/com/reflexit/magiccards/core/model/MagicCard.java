@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
 public class MagicCard implements IMagicCard, ICardModifiable {
@@ -180,7 +180,7 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			try {
 				t = Float.parseFloat(str);
 			} catch (NumberFormatException e) {
-				Activator.log(e);
+				MagicLogger.log(e);
 				t = STAR_POWER;
 			}
 		}

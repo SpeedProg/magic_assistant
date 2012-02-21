@@ -13,37 +13,24 @@ package com.reflexit.magiccards.core.exports;
 import java.util.Iterator;
 import java.util.List;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 /**
- * Format example
-Card Name,Online,For Trade,Physical#,Rarity,Set,No. 
-Words of Wind,1,1,0,R,ONS,122/350 
-Standardize,1,1,0,R,ONS,116/350 
-Elvish Vanguard,1,1,0,R,ONS,259/350 
-Gigapede,1,1,0,R,ONS,264/350 
-Ravenous Baloth,1,1,0,R,ONS,278/350 
-Biorhythm,1,1,0,R,ONS,247/350 
-Goblin Piledriver,1,1,0,R,ONS,205/350 
-Tephraderm,1,1,0,R,ONS,239/350 
-Gratuitous Violence,1,1,0,R,ONS,212/350 
-Risky Move,1,1,0,R,ONS,223/350 
-Aven Brigadier,1,1,0,R,ONS,7/350 
-Aven Brigadier (premium),1,1,0,R,ONS,7/350
-
-Another format
-Card Name,	Online,	For, Trade,	Rarity,	Set,	No.,	Premium																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
-Event Ticket,	2,	0,	EVENT,	 	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										
-Arrogant Bloodlord,	9,	5,	U,	ROE,	94/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
-Arrogant Bloodlord,	1,	0,	U,	ROE,	94/248,	Yes																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
-Bala Ged Scorpion,	7,	3,	C,	ROE,	95/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
-Bloodrite Invoker,	3,	0,	C,	ROE,	97/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
-Bloodthrone Vampire,	13,	6,	C,	ROE,	98/248,	No																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
-
+ * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of
+ * Wind,1,1,0,R,ONS,122/350 Standardize,1,1,0,R,ONS,116/350 Elvish Vanguard,1,1,0,R,ONS,259/350
+ * Gigapede,1,1,0,R,ONS,264/350 Ravenous Baloth,1,1,0,R,ONS,278/350 Biorhythm,1,1,0,R,ONS,247/350
+ * Goblin Piledriver,1,1,0,R,ONS,205/350 Tephraderm,1,1,0,R,ONS,239/350 Gratuitous
+ * Violence,1,1,0,R,ONS,212/350 Risky Move,1,1,0,R,ONS,223/350 Aven Brigadier,1,1,0,R,ONS,7/350 Aven
+ * Brigadier (premium),1,1,0,R,ONS,7/350
+ * 
+ * Another format Card Name, Online, For, Trade, Rarity, Set, No., Premium Event Ticket, 2, 0,
+ * EVENT, No Arrogant Bloodlord, 9, 5, U, ROE, 94/248, No Arrogant Bloodlord, 1, 0, U, ROE, 94/248,
+ * Yes Bala Ged Scorpion, 7, 3, C, ROE, 95/248, No Bloodrite Invoker, 3, 0, C, ROE, 97/248, No
+ * Bloodthrone Vampire, 13, 6, C, ROE, 98/248, No
  */
 public class MtgoImportDelegate extends CsvImportDelegate {
 	private int cardNameIndex = 0;
@@ -53,6 +40,7 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	private int premiumIndex = -1;
 	private int numIndex = 6;
 
+	@Override
 	public ReportType getType() {
 		return ReportType.createReportType("mtgo", "Magic the Gathering Online");
 	}
@@ -65,12 +53,11 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	protected synchronized MagicCardPhisical createCard(List<String> list) {
 		MagicCardPhisical x = super.createCard(list);
 		try {
-			if (list.get(cardNameIndex).endsWith(" (premium)")
-			        || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
+			if (list.get(cardNameIndex).endsWith(" (premium)") || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
 				x.setSpecial("premium");
 			}
 		} catch (Exception e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 		}
 		return x;
 	}

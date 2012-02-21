@@ -36,13 +36,13 @@ public class DataManager {
 			handler = (ICardHandler) x;
 			return handler;
 		} catch (InstantiationException e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 			return null;
 		} catch (IllegalAccessException e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 			return null;
 		} catch (ClassNotFoundException e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 			return null;
 		}
 	}

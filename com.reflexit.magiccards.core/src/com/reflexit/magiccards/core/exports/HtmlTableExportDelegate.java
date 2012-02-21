@@ -14,7 +14,7 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -89,7 +89,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 				stream.println(line + "</tr>");
 				monitor.worked(1);
 			} else if (mc instanceof MagicCard) {
-				Activator.log("Skipping " + mc);
+				MagicLogger.log("Skipping " + mc);
 			}
 		}
 		stream.println("</table>");

@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.monitor;
 
+import org.eclipse.core.runtime.SubMonitor;
+
 
 /**
  * For new implementations consider using {@link SubMonitor}.

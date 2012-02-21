@@ -19,8 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class Editions implements ISearchableProperty {
@@ -208,7 +208,7 @@ public class Editions implements ISearchableProperty {
 		try {
 			load();
 		} catch (Exception e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 		}
 	}
 

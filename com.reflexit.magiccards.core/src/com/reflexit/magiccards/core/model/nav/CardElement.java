@@ -3,8 +3,8 @@ package com.reflexit.magiccards.core.model.nav;
 import java.io.File;
 import java.io.IOException;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -89,7 +89,7 @@ public abstract class CardElement extends EventManager {
 			try {
 				lis.handleEvent(event);
 			} catch (Throwable t) {
-				Activator.log(t);
+				MagicLogger.log(t);
 			}
 		}
 		if (this.parent != null)
@@ -101,7 +101,7 @@ public abstract class CardElement extends EventManager {
 			getParent().removeChild(this);
 		}
 		if (!getFile().delete()) {
-			Activator.log(new IOException("Cannot delete " + getFile()));
+			MagicLogger.log(new IOException("Cannot delete " + getFile()));
 		}
 	}
 

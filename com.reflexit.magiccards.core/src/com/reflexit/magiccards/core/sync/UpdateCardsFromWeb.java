@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -76,7 +76,7 @@ public class UpdateCardsFromWeb {
 						}
 					}
 				} catch (IOException e) {
-					Activator.log("Cannot load card " + e.getMessage() + " " + card.getCardId());
+					MagicLogger.log("Cannot load card " + e.getMessage() + " " + card.getCardId());
 				}
 				if (monitor.isCanceled())
 					return;

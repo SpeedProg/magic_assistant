@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.EventManager;
@@ -17,7 +17,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 			try {
 				doInitialize();
 			} catch (final MagicException e) {
-				Activator.log(e);
+				MagicLogger.log(e);
 			} finally {
 				setInitialized(true);
 			}
@@ -167,7 +167,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 			try {
 				lis.handleEvent(event);
 			} catch (final Throwable t) {
-				Activator.log(t);
+				MagicLogger.log(t);
 			}
 		}
 	}

@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.ICardModifiable;
@@ -241,7 +241,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 					}
 				}
 				if (html == null) {
-					Activator.log("Problems parsing card - cannot find matching name " + card.getCardId());
+					MagicLogger.log("Problems parsing card - cannot find matching name " + card.getCardId());
 					return;
 				}
 				extractField(cardN, null, html2, MagicCardField.ID, cardIdPattern, false);
@@ -250,14 +250,14 @@ public class ParseGathererDetails extends ParseGathererPage {
 					((ICardModifiable) card).setObjectByField(MagicCardField.FLIPID, String.valueOf(pairId));
 				}
 			} else if (sides == 0) {
-				Activator.log("Problems parsing card " + card.getCardId());
+				MagicLogger.log("Problems parsing card " + card.getCardId());
 				return;
 			}
 			// name update
 			if (nameOrig == null)
 				extractField(card, fieldMapFilter, html0, MagicCardField.NAME, titleNamePattern, true);
 			else if (!nameOrig.equals(nameTitle))
-				Activator.log("Name is not set: " + nameOrig + ", title " + nameTitle + ", card " + nameCur);
+				MagicLogger.log("Name is not set: " + nameOrig + ", title " + nameTitle + ", card " + nameCur);
 			// extractField(card, fieldMapFilter, html, MagicCardField.NAME, cardAltPattern, true);
 			// monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.RULINGS, rulingPattern, true);
