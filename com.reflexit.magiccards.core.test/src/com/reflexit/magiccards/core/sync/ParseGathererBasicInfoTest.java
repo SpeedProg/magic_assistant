@@ -26,6 +26,7 @@ public class ParseGathererBasicInfoTest extends TestCase {
 	public void testInnistradSide2Russian() throws IOException {
 		MagicCard card = new MagicCard();
 		card.setCardId(273275);
+		card.setName("Wildblood Pack");
 		parser.setCard(card);
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("149b", card.getCollNumber());

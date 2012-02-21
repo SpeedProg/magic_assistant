@@ -23,6 +23,15 @@ public class ParseGathererRulingsTest extends TestCase {
 		return card;
 	}
 
+	protected MagicCard load(int id, String name) throws IOException {
+		MagicCard card = new MagicCard();
+		card.setCardId(id);
+		card.setName(name);
+		parser.setCard(card);
+		parser.load(ICoreProgressMonitor.NONE);
+		return card;
+	}
+
 	public void testCollNumber() throws IOException {
 		MagicCard card = load(191338);
 		assertEquals(220, Integer.parseInt(card.getCollNumber()));
@@ -43,13 +52,13 @@ public class ParseGathererRulingsTest extends TestCase {
 	}
 
 	public void testInnistradSide2Russian() throws IOException {
-		MagicCard card = load(273275);
+		MagicCard card = load(273275, "Wildblood Pack");
 		assertEquals("149b", card.getCollNumber());
 		assertEquals("Wildblood Pack", card.getName());
 	}
 
 	public void testFlip() throws IOException {
-		MagicCard card = load(78687);
+		MagicCard card = load(78687, "Budoka Gardener");
 		assertEquals("202a", card.getCollNumber());
 		assertEquals("Budoka Gardener", card.getName());
 	}

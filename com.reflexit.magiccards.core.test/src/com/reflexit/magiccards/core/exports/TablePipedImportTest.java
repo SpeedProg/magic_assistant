@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.exports;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 
 public class TablePipedImportTest extends AbstarctImportTest {
@@ -10,6 +11,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 	}
 
 	public void test1_N_x_C() {
+		MagicLogger.log("start test");
 		addLine("NAME|COUNT");
 		addLine("Counterspell|2");
 		parse();
