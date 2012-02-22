@@ -3,10 +3,10 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.DataManager;
 
 public class FilterHelper {
-	private static final String PREFIX = Activator.PLUGIN_ID;
+	private static final String PREFIX = DataManager.ID;
 	public static final String TEXT_POSTFIX = "text";
 	public static final String NUMERIC_POSTFIX = "numeric";
 	public static final String GROUP_FIELD = "group_field";

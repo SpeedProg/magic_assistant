@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core;
 
+import com.reflexit.magiccards.core.Activator;
+
 public class MagicLogger {
 	static boolean rcp = false;
 	static {

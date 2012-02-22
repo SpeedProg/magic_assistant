@@ -19,9 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.db.DbActivator;
 
 public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
@@ -261,9 +260,9 @@ public class Editions implements ISearchableProperty {
 	}
 
 	private synchronized void load() throws IOException {
-		File file = new File(DataManager.getStateLocationFile(), EDITIONS_FILE);
-		if (DbActivator.getDefault() != null) {
-			InputStream ist = DbActivator.loadResource(EDITIONS_FILE);
+		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
+		InputStream ist = FileUtils.loadDbResource(EDITIONS_FILE);
+		if (ist != null) {
 			loadEditions(ist);
 		}
 		if (!file.exists()) {
@@ -323,7 +322,7 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public synchronized void save() throws FileNotFoundException {
-		File file = new File(DataManager.getStateLocationFile(), EDITIONS_FILE);
+		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
 		PrintStream st = new PrintStream(file);
 		try {
 			for (Iterator<String> iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {

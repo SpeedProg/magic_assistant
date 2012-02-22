@@ -19,6 +19,7 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.thoughtworks.xstream.XStream;
 
 public class DataManager {
+	public static final String ID = "com.reflexit.magiccards.core";
 	private static ICardHandler handler;
 	private static ModelRoot root;
 	private static File rootDir;
@@ -49,6 +50,7 @@ public class DataManager {
 
 	public static synchronized ModelRoot getModelRoot() {
 		if (root == null) {
+			DataManager.setRootDir(new File(FileUtils.getWorkspaceFile(), "magiccards"));
 			root = ModelRoot.getInstance();
 		}
 		return root;
@@ -79,9 +81,5 @@ public class DataManager {
 		xstream.alias("mc", MagicCard.class);
 		xstream.alias("mcp", MagicCardPhisical.class);
 		return xstream;
-	}
-
-	public static File getStateLocationFile() {
-		return Activator.getStateLocationAlways().toFile();
 	}
 }

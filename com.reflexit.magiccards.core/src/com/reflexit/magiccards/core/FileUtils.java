@@ -8,8 +8,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
+import com.reflexit.magiccards.core.model.ICardHandler;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.db.DbActivator;
+
 public class FileUtils {
 	public static final String UTF8 = "UTF-8";
+	static {
+		File stateLocationFile = getStateLocationFile();
+		if (!stateLocationFile.exists() && !stateLocationFile.mkdirs()) {
+			System.err.println("Cannot create " + stateLocationFile);
+		}
+	}
 
 	public static void copyFile(File in, File out) throws IOException {
 		FileChannel inChannel = new FileInputStream(in).getChannel();
@@ -24,10 +36,6 @@ public class FileUtils {
 			if (outChannel != null)
 				outChannel.close();
 		}
-	}
-
-	public static void main(String args[]) throws IOException {
-		FileUtils.copyFile(new File(args[0]), new File(args[1]));
 	}
 
 	/**
@@ -59,5 +67,38 @@ public class FileUtils {
 			fileData.append(buf, 0, numRead);
 		}
 		return fileData.toString();
+	}
+
+	public static File getWorkspaceFile() {
+		String str = System.getProperty("osgi.instance.area");
+		if (str != null) {
+			return new File(str.replaceFirst("^file:", ""));
+		} else {
+			return new File(System.getProperty("user.home"), "MagicAssistant");
+		}
+	}
+
+	public static File getStateLocationFile() {
+		if (System.getProperty("eclipse.home.location") != null) {
+			return Activator.getDefault().getStateLocation().toFile();
+		} else {
+			return new File(getWorkspaceFile() + "/.metadata/.plugins/" + DataManager.ID);
+		}
+	}
+
+	public static InputStream loadDbResource(String name) throws IOException {
+		if (System.getProperty("eclipse.home.location") != null) {
+			return DbActivator.loadResource(name);
+		} else {
+			return FileUtils.class.getClassLoader().getResourceAsStream(name);
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		ICardHandler cardHandler = DataManager.getCardHandler();
+		cardHandler.loadInitialIfNot(ICoreProgressMonitor.NONE);
+		IFilteredCardStore fstore = cardHandler.getMagicDBFilteredStore();
+		fstore.update(new MagicCardFilter());
+		System.err.println("Loaded " + fstore.getSize() + " cards");
 	}
 }

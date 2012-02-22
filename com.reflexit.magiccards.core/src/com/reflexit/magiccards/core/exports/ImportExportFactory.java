@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.DataManager;
 
 /**
  * Import/Export factory - gets instance of worker class by its type
@@ -63,7 +63,7 @@ public class ImportExportFactory<T> {
 
 	private static void loadExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = registry.getExtensionPoint(Activator.PLUGIN_ID + ".deckFormat");
+		IExtensionPoint extensionPoint = registry.getExtensionPoint(DataManager.ID + ".deckFormat");
 		IConfigurationElement points[] = extensionPoint.getConfigurationElements();
 		for (IConfigurationElement el : points) {
 			parseExtension(el);
