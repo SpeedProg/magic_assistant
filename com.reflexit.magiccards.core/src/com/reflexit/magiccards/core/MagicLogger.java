@@ -11,7 +11,7 @@ public class MagicLogger {
 	}
 
 	public static void log(String message) {
-		if (rcp) {
+		if (rcp == false) {
 			System.err.println("Log: " + message);
 		} else {
 			Activator.log(message);
@@ -19,7 +19,7 @@ public class MagicLogger {
 	}
 
 	public static void log(Throwable e) {
-		if (rcp) {
+		if (rcp == false) {
 			System.err.println("Exception: " + e.getStackTrace());
 		} else {
 			Activator.log(e);

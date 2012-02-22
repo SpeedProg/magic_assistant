@@ -95,6 +95,7 @@ public class FileUtils {
 	}
 
 	public static void main(String[] args) throws IOException {
+		MagicLogger.log("aaa");
 		ICardHandler cardHandler = DataManager.getCardHandler();
 		cardHandler.loadInitialIfNot(ICoreProgressMonitor.NONE);
 		IFilteredCardStore fstore = cardHandler.getMagicDBFilteredStore();
