@@ -8,6 +8,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -18,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
@@ -69,6 +73,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		getEclipsePreferences().flush();
 		super.stop(context);
 	}
 
@@ -203,5 +208,14 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	public static String helpId(String string) {
 		return "com.reflexit.magiccards.help." + string;
+	}
+
+	public IEclipsePreferences getEclipsePreferences() {
+		// Platform.getPreferencesService().getInt();
+		return InstanceScope.INSTANCE.getNode(DataManager.ID);
+	}
+
+	public IEclipsePreferences getEclipseDefaultPreferences() {
+		return DefaultScope.INSTANCE.getNode(DataManager.ID);
 	}
 }

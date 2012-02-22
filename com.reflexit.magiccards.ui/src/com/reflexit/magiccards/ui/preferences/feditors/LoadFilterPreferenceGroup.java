@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
@@ -119,7 +120,7 @@ public class LoadFilterPreferenceGroup extends MFieldEditorPreferencePage {
 	}
 
 	private IPath getFilterPath() {
-		IPath stateLocation = Activator.getStateLocationAlways();
+		IPath stateLocation = new Path(FileUtils.getStateLocationFile().toString());
 		IPath filters = stateLocation.append("/filters");
 		filters.toFile().mkdir();
 		return filters;

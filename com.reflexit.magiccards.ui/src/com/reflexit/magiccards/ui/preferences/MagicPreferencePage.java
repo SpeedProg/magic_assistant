@@ -14,7 +14,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magiccards.core.seller.IPriceProvider;
-import com.reflexit.magiccards.core.seller.PriceProviderManager;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
