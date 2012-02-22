@@ -9,10 +9,8 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.IPath;
 import org.junit.Test;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -41,9 +39,7 @@ public class EditionsTest extends TestCase {
 	}
 
 	public File getExFile() {
-		IPath path = Activator.getStateLocationAlways().append(EDITIONS_FILE);
-		File file = path.toFile();
-		return file;
+		return new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
 	}
 
 	@Override
