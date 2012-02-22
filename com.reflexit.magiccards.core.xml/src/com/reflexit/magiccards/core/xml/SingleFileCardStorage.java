@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -63,7 +63,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			updateLocations();
 			updateDbRef();
 		} catch (IOException e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 		}
 	}
 

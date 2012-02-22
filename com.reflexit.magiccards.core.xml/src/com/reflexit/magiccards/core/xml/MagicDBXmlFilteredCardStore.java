@@ -3,9 +3,9 @@ package com.reflexit.magiccards.core.xml;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -38,7 +38,7 @@ public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStor
 							this.files.add(file);
 					}
 				} catch (MagicException e) {
-					Activator.log(e);
+					MagicLogger.log(e);
 					return;
 				}
 				this.table.initialize();

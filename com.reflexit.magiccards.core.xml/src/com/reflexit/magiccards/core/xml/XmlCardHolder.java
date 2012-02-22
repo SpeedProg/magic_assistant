@@ -16,9 +16,10 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
@@ -37,7 +38,6 @@ import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
-import com.reflexit.magiccards.db.DbActivator;
 
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
@@ -90,11 +90,13 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	protected void loadFromFlatResource(String set) throws IOException {
-		InputStream is = DbActivator.loadResource(set);
-		BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-		loadtFromFlatIntoXml(st, list, isSingleSet(set));
-		is.close();
+		InputStream is = FileUtils.loadDbResource(set);
+		if (is != null) {
+			BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
+			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+			loadtFromFlatIntoXml(st, list, isSingleSet(set));
+			is.close();
+		}
 	}
 
 	private boolean isSingleSet(String set) {
@@ -155,7 +157,7 @@ public class XmlCardHolder implements ICardHandler {
 				}
 			}
 		} catch (Exception e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 		}
 		return more;
 	}
@@ -202,7 +204,7 @@ public class XmlCardHolder implements ICardHandler {
 				}
 				list.add(card);
 			} catch (Exception e) {
-				Activator.log(e);
+				MagicLogger.log(e);
 			}
 		}
 		return list;
@@ -225,7 +227,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
 			IOException {
-		String file = new File(DataManager.getStateLocationFile(), "downloaded.txt").getPath();
+		String file = new File(FileUtils.getStateLocationFile(), "downloaded.txt").getPath();
 		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, options, pm);
 		return file;
 	}
@@ -247,7 +249,7 @@ public class XmlCardHolder implements ICardHandler {
 				new ParseGathererSets().load(new SubCoreProgressMonitor(pm, 10));
 				Editions.getInstance().save();
 			} catch (Exception e) {
-				Activator.log(e); // move on if exception via set loading
+				MagicLogger.log(e); // move on if exception via set loading
 			}
 			pm.subTask("Downloading cards...");
 			String file = download(set, options, new SubCoreProgressMonitor(pm, 50));
