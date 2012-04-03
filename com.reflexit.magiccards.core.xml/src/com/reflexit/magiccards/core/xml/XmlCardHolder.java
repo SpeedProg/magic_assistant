@@ -51,7 +51,8 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
-		return new BasicMagicDBXmlFilteredCardStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
+		return new BasicMagicDBXmlFilteredCardStore((VirtualMultiFileCardStore) getMagicDBFilteredStore()
+				.getCardStore());
 	}
 
 	public IFilteredCardStore getLibraryFilteredStore() {
@@ -71,7 +72,8 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public ICardStore loadFromXml(String filename) {
-		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), new Location(filename), true);
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), new Location(
+				filename), true);
 		return store;
 	}
 
@@ -81,8 +83,9 @@ public class XmlCardHolder implements ICardHandler {
 		for (String set : editions) {
 			String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
 			try {
+				long time = System.currentTimeMillis();
 				loadFromFlatResource(abbr + ".txt");
-				System.err.println("Loading " + abbr);
+				System.err.println("Loading " + abbr + " took " + (System.currentTimeMillis() - time) / 1000 + " s");
 			} catch (IOException e) {
 				// ignore
 			}
@@ -112,8 +115,8 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws MagicException,
-			IOException {
+	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn)
+			throws MagicException, IOException {
 		ICardStore store = getMagicDBFilteredStore().getCardStore();
 		int init = store.size();
 		loadFromFlat(st, list, markCn);
@@ -167,21 +170,23 @@ public class XmlCardHolder implements ICardHandler {
 		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
 		((ICardModifiable) card).setObjectByField(MagicCardField.PART, part);
 		((ICardModifiable) card).setObjectByField(MagicCardField.OTHER_PART, opart);
-		((ICardModifiable) card).setObjectByField(MagicCardField.NAME, card.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+		((ICardModifiable) card).setObjectByField(MagicCardField.NAME,
+				card.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
 		if (brotherId != 0)
 			((ICardModifiable) card).setObjectByField(MagicCardField.DUAL_ID, String.valueOf(brotherId));
 	}
 
-	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
+	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn)
+			throws IOException {
 		String line = st.readLine(); // header ignore for now
 		ICardField[] xfields = MagicCardFieldPhysical.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
 		int cnum = 0;
 		while ((line = st.readLine()) != null) {
 			cnum++;
-			if (line.trim().length() == 0)
+			if (line.length() == 0)
 				continue;
 			try {
-				String[] fields = line.split("\\Q" + TextPrinter.SEPARATOR);
+				String[] fields = linesplit(line, TextPrinter.SEPARATOR);
 				for (int i = 0; i < fields.length; i++) {
 					fields[i] = fields[i].trim();
 				}
@@ -210,6 +215,38 @@ public class XmlCardHolder implements ICardHandler {
 		return list;
 	}
 
+	/**
+	 * Optimized split function
+	 * 
+	 * @param line
+	 * @param ssep
+	 * @return
+	 */
+	private String[] linesplit(String line, String ssep) {
+		char sep = ssep.charAt(0);
+		int k = 0;
+		int len = line.length();
+		for (int i = 0; i < len; i++) {
+			if (line.charAt(i) == sep) {
+				k++;
+			}
+		}
+		String res[] = new String[k + 1];
+		int ik = 0;
+		int n = line.indexOf(sep);
+		if (n < 0)
+			n = len;
+		res[ik++] = line.substring(0, n);
+		for (int i = n; i < len;) {
+			n = line.indexOf(sep, i + 1);
+			if (n < 0)
+				n = len;
+			res[ik++] = line.substring(i + 1, n);
+			i = n;
+		}
+		return res;
+	}
+
 	public synchronized void loadInitialIfNot(ICoreProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
@@ -225,14 +262,15 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
-			IOException {
+	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
+			MalformedURLException, IOException {
 		String file = new File(FileUtils.getStateLocationFile(), "downloaded.txt").getPath();
 		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, options, pm);
 		return file;
 	}
 
-	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException {
+	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException,
+			InterruptedException {
 		int rec;
 		try {
 			String lang = (String) options.get(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE);
