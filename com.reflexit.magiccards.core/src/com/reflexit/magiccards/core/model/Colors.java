@@ -131,14 +131,13 @@ public class Colors implements ISearchableProperty {
 		String[] manas = manasplit(cost);
 		Map colors = new HashMap();
 		for (String x : manas) {
-			if (x.equals("X") || x.equals("Y") || x.equals("Z")) {
+			char firstChar = x.charAt(0);
+			if (firstChar == 'X' || firstChar == 'Y' || firstChar == 'Z')
 				continue;
-			}
-			if (x.matches("\\d+")) {
-				continue;
-			}
 			if (x.contains("/"))
 				return "hybrid";
+			if (Character.isDigit(firstChar))
+				continue;
 			colors.put(x, x);
 		}
 		int diff = 0;
@@ -163,9 +162,13 @@ public class Colors implements ISearchableProperty {
 				res += 0;
 				continue;
 			}
-			if (x.matches("\\d+")) {
-				res += Integer.parseInt(x);
-				continue;
+			if (Character.isDigit(x.charAt(0))) {
+				try {
+					res += Integer.parseInt(x);
+					continue;
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 			res++;
 		}
@@ -175,9 +178,21 @@ public class Colors implements ISearchableProperty {
 	public String[] manasplit(String cost) {
 		if (cost.contains(","))
 			return new String[] { "1000000" };
-		String res = cost.replaceAll("\\{", "");
-		res = res.replaceAll("\\}$", "");
-		String manas[] = res.split("\\}");
+		int k = 0;
+		for (int i = 0; i < cost.length(); i++) {
+			if (cost.charAt(i) == '{') {
+				k++;
+			}
+		}
+		String manas[] = new String[k];
+		int ik = 0;
+		for (int i = 0; i < cost.length(); i++) {
+			if (cost.charAt(i) == '{') {
+				int l = cost.indexOf('}', i);
+				manas[ik++] = cost.substring(i + 1, l);
+				i = l;
+			}
+		}
 		return manas;
 	}
 }

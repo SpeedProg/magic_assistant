@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.EventManager;
@@ -133,7 +133,7 @@ public abstract class CardElement extends EventManager {
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		File newFile = new File(parent.getFile(), value + ".xml"); // XXX
+		File newFile = new File(parent.getFile(), value + ".xml");
 		getFile().renameTo(newFile);
 		CardElement x = newElement(value, getParent());
 		fireEvent(new CardEvent(x, CardEvent.RENAME_CONTAINER, oldName));

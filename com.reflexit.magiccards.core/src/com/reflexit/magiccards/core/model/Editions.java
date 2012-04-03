@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 
 public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
-	private static Editions instance = new Editions();
+	private static Editions instance;
 	private HashMap<String, Edition> name2ed;
 
 	public static class Edition {
@@ -211,7 +211,9 @@ public class Editions implements ISearchableProperty {
 		}
 	}
 
-	public static Editions getInstance() {
+	public synchronized static Editions getInstance() {
+		if (instance == null)
+			instance = new Editions();
 		return instance;
 	}
 
@@ -261,15 +263,32 @@ public class Editions implements ISearchableProperty {
 
 	private synchronized void load() throws IOException {
 		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
-		InputStream ist = FileUtils.loadDbResource(EDITIONS_FILE);
-		if (ist != null) {
-			loadEditions(ist);
-		}
 		if (!file.exists()) {
-			save();
+			initializeEditions();
+		} else {
+			InputStream st = new FileInputStream(file);
+			loadEditions(st);
 		}
-		InputStream st = new FileInputStream(file);
-		loadEditions(st);
+	}
+
+	private void initializeEditions() throws IOException, FileNotFoundException {
+		if (false) {
+			// Magic 2012|M12||July 2011|Core|
+			Edition ed = addEdition("Magic 2012", "M12");
+			try {
+				ed.setReleaseDate("July 2011");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ed.setType("Core");
+		} else {
+			InputStream ist = FileUtils.loadDbResource(EDITIONS_FILE);
+			if (ist != null) {
+				loadEditions(ist);
+			}
+		}
+		save();
 	}
 
 	private synchronized void loadEditions(InputStream st) throws IOException {
@@ -335,8 +354,8 @@ public class Editions implements ISearchableProperty {
 				if (ed.getType() != null) {
 					type = ed.getType();
 				}
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviation() + "|" + rel + "|" + type + "||"
-						+ ed.getFormatString());
+				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviation() + "|" + rel + "|"
+						+ type + "||" + ed.getFormatString());
 			}
 		} finally {
 			st.close();

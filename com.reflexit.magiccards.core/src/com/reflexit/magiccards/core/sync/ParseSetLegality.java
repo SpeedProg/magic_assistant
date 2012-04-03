@@ -29,8 +29,8 @@ public class ParseSetLegality extends ParseGathererPage {
 	 */
 	@Override
 	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
-		int i = html.indexOf("<h5 class=\"byline\"></h5>");
-		int j = html.indexOf("<div class=\"article-bottom\"></div>");
+		int i = html.indexOf("<div class=\"article-content\">");
+		int j = html.indexOf("<div class=\"article-bottom\">");
 		String setsHtml = html.substring(i, j);
 		setsHtml = setsHtml.replaceAll("\r?\n", " ");
 		setsHtml = setsHtml.replaceAll("</?b>", "");
