@@ -27,7 +27,7 @@ public abstract class ParseGathererPage {
 		monitor.beginTask(getTitle(), 100);
 		try {
 			URL url = new URL(getUrl());
-			InputStream openStream = url.openStream();
+			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
 			String html = FileUtils.readFileAsString(st);
 			st.close();

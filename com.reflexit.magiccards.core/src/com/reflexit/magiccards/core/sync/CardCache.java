@@ -65,7 +65,7 @@ public class CardCache {
 			URL url = createSetImageRemoteURL(editionAbbr, rarity);
 			if (url == null)
 				return null;
-			InputStream st = url.openStream();
+			InputStream st = UpdateCardsFromWeb.openUrl(url);
 			FileUtils.saveStream(st, file);
 			st.close();
 		} catch (IOException e1) {
@@ -173,7 +173,7 @@ public class CardCache {
 			URL url = createRemoteImageURL(card);
 			InputStream st = null;
 			try {
-				st = url.openStream();
+				st = UpdateCardsFromWeb.openUrl(url);
 			} catch (IOException e) {
 				throw new IOException("Cannot connect: " + e.getMessage());
 			}

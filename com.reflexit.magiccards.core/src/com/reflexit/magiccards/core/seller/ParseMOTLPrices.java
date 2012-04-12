@@ -19,6 +19,7 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 	private String baseURL;
@@ -134,7 +135,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 	public HashMap<String, Float> parse() throws IOException {
 		HashMap<String, Float> res = new HashMap<String, Float>();
 		URL url = new URL(baseURL);
-		InputStream openStream = url.openStream();
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processFile(st, res);
 		st.close();

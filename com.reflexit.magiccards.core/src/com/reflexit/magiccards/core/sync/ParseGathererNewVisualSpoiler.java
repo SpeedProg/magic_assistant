@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -153,11 +154,16 @@ public class ParseGathererNewVisualSpoiler {
 	}
 
 	public static boolean loadUrl(URL url, ILoadCardHander handler) throws IOException {
-		InputStream openStream = url.openStream();
-		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
-		boolean res = processFile(st, handler);
-		st.close();
-		return res;
+		try {
+			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
+			boolean res = processFile(st, handler);
+			st.close();
+			return res;
+		} catch (IOException e) {
+			MagicLogger.log("Loading url exception: " + url + ": " + e.getMessage());
+			throw e;
+		}
 	}
 
 	public static void loadFile(File file, ILoadCardHander handler) throws IOException {

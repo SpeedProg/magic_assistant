@@ -15,6 +15,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;
@@ -120,7 +121,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	public HashMap<String, Float> parse(String setId) throws IOException {
 		HashMap<String, Float> res = new HashMap<String, Float>();
 		URL url = new URL(baseURL.toString().replace("SET", setId));
-		InputStream openStream = url.openStream();
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processFile(st, res);
 		st.close();
@@ -186,7 +187,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 	public HashMap<String, String> parseSets() throws IOException {
 		HashMap<String, String> res = new HashMap<String, String>();
 		URL url = new URL(setURL);
-		InputStream openStream = url.openStream();
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processSetFile(st, res);
 		st.close();

@@ -22,6 +22,7 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	String baseURL;
@@ -145,7 +146,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 		String testurl = "http://findmagiccards.com/Cards/" + abbr;
 		try {
 			URL url = new URL(testurl);
-			InputStream openStream = url.openStream();
+			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 			BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 			st.readLine();
 			st.readLine();
@@ -164,7 +165,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	public HashMap<String, Float> parse(String setId) throws IOException {
 		HashMap<String, Float> res = new HashMap<String, Float>();
 		URL url = new URL(baseURL.toString().replace("${SetAbbr}", setId));
-		InputStream openStream = url.openStream();
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processFile(st, res);
 		st.close();
@@ -174,7 +175,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	private float parseSingleCard(String setAbbr, IMagicCard magicCard) throws IOException {
 		String name = magicCard.getName().replaceAll("\\W", "_");
 		URL url = new URL(cardURL.toString().replace("${SetAbbr}", setAbbr).replace("${CardName}", name));
-		InputStream openStream = url.openStream();
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		try {
 			return processCard(st);
@@ -261,7 +262,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	 */
 	private void processSetList(HashSet sets) throws IOException {
 		URL url = new URL(setURL);
-		InputStream openStream = url.openStream();
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		try {
 			String line = "";

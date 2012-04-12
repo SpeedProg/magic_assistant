@@ -1,6 +1,9 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -93,5 +96,14 @@ public class UpdateCardsFromWeb {
 			monitor.worked(5);
 			monitor.done();
 		}
+	}
+
+	public static InputStream openUrl(URL url) throws IOException {
+		HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+		huc.setConnectTimeout(10 * 1000);
+		huc.setReadTimeout(10 * 1000);
+		huc.connect();
+		InputStream openStream = huc.getInputStream();
+		return openStream;
 	}
 }
