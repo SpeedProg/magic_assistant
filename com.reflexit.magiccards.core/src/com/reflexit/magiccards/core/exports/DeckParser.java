@@ -47,7 +47,7 @@ public class DeckParser implements Closeable {
 						try {
 							String group = m.group(i + 1);
 							if (group != null)
-								res.setObjectByField(cardField, group);
+								res.setObjectByField(cardField, group.trim());
 						} catch (Exception e) {
 							// nothing
 						}
