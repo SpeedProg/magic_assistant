@@ -9,6 +9,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -161,6 +162,13 @@ public class MagicDbView extends AbstractCardsView {
 		if (ps != null) {
 			ps.close();
 		}
+		try {
+			Editions.getInstance().save(new File(dir, "editions.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MessageDialog.openInformation(getShell(), "Location", "Database is stored in " + dir);
 	}
 
 	@Override
