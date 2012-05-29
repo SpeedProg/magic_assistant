@@ -81,6 +81,8 @@ public enum MagicCardFieldPhysical implements ICardField {
 	}
 
 	public static ICardField fieldByName(String field) {
+		if (field == null || field.length() == 0)
+			return null;
 		try {
 			MagicCardFieldPhysical p = valueOf(field);
 			if (p != null)

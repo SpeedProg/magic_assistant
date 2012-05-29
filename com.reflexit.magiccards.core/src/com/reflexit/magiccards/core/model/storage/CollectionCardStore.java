@@ -166,8 +166,12 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	public int getRealCount() {
 		int count = 0;
 		for (Object element : getStorage()) {
-			ICardCountable card = (ICardCountable) element;
-			count += card.getCount();
+			if (element instanceof ICardCountable) {
+				ICardCountable card = (ICardCountable) element;
+				count += card.getCount();
+			} else {
+				count++;
+			}
 		}
 		return count;
 	}
