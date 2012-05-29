@@ -12,7 +12,6 @@ package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -24,7 +23,7 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
  * @author Alena
  * 
  */
-public class DbFileCardStore extends CollectionCardStore implements ICardCountable {
+public class DbFileCardStore extends CollectionCardStore {
 	/**
 	 * @param file
 	 */
