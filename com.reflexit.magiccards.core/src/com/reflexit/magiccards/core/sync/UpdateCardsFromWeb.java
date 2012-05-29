@@ -57,7 +57,7 @@ public class UpdateCardsFromWeb {
 					rulParser.parseSingleCard(card, fieldMaps, new SubCoreProgressMonitor(monitor, 50));
 					if (loadText) {
 						textParser.setCard(card);
-						textParser.setFilter(fieldMaps);
+						textParser.addFilter(MagicCardField.TEXT);
 						textParser.load(new SubCoreProgressMonitor(monitor, 10));
 					}
 					if (loadLang) {
