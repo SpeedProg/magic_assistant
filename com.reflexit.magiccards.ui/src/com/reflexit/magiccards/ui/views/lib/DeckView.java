@@ -298,7 +298,7 @@ public class DeckView extends AbstractMyCardsView {
 		folder.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-					if (DataManager.getModelRoot().findCardCollectionById(deck.getFileName()) == null) {
+					if (deck != null && DataManager.getModelRoot().findCardCollectionById(deck.getFileName()) == null) {
 						deck.close();
 						getViewSite().getPage().hideView(DeckView.this);
 						return;
