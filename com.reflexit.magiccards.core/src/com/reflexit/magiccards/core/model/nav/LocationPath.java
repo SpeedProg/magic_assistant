@@ -71,7 +71,7 @@ public class LocationPath {
 	}
 
 	public boolean isEmpty() {
-		return path.isEmpty();
+		return path.length() == 0;
 	}
 
 	public boolean isRoot() {
@@ -79,7 +79,7 @@ public class LocationPath {
 		while (top.startsWith(SEP)) {
 			top = top.substring(1);
 		}
-		if (top.isEmpty())
+		if (top.length() == 0)
 			return true;
 		return false;
 	}
