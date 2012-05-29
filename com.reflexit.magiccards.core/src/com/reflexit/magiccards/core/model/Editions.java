@@ -247,6 +247,22 @@ public class Editions implements ISearchableProperty {
 		return edition;
 	}
 
+	public synchronized Edition addEdition(Edition set) {
+		String name = set.getName();
+		if (name.length() == 0)
+			throw new IllegalArgumentException();
+		Edition edition = name2ed.get(name);
+		if (edition == null) {
+			edition = set;
+			this.name2ed.put(name, edition);
+		} else {
+			String abbr = set.getMainAbbreviation();
+			if (abbr != null)
+				edition.addAbbreviation(abbr);
+		}
+		return edition;
+	}
+
 	public synchronized boolean containsName(String name) {
 		return getEditionByName(name) != null;
 	}
