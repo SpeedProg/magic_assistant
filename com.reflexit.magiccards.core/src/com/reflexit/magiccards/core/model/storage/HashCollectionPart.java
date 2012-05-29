@@ -78,7 +78,7 @@ public class HashCollectionPart {
 			if (!phi1.matching(phi2))
 				return null;
 			return card2;
-		} else if (card2.getName().equals(card.getName()))
+		} else if (card2.equals(card))
 			return card2;
 		return null;
 	}
