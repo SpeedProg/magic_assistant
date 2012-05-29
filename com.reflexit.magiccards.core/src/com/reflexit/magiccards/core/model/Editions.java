@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -25,7 +26,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance;
-	private HashMap<String, Edition> name2ed;
+	private LinkedHashMap<String, Edition> name2ed;
 
 	public static class Edition {
 		private String name;
@@ -203,7 +204,7 @@ public class Editions implements ISearchableProperty {
 	 * This is not public API, only called by tests
 	 */
 	public void init() {
-		this.name2ed = new HashMap<String, Edition>();
+		this.name2ed = new LinkedHashMap<String, Edition>();
 		try {
 			load();
 		} catch (Exception e) {
@@ -342,6 +343,10 @@ public class Editions implements ISearchableProperty {
 
 	public synchronized void save() throws FileNotFoundException {
 		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
+		save(file);
+	}
+
+	public synchronized void save(File file) throws FileNotFoundException {
 		PrintStream st = new PrintStream(file);
 		try {
 			for (Iterator<String> iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
@@ -354,8 +359,8 @@ public class Editions implements ISearchableProperty {
 				if (ed.getType() != null) {
 					type = ed.getType();
 				}
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviation() + "|" + rel + "|"
-						+ type + "||" + ed.getFormatString());
+				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviation() + "|" + rel + "|" + type + "||"
+						+ ed.getFormatString());
 			}
 		} finally {
 			st.close();
