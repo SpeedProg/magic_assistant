@@ -208,7 +208,7 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	}
 
 	/**
-	 * Kind of equals by ignores count and location
+	 * Kind of equals but ignores count and location
 	 * 
 	 * @param phi2
 	 * @return
