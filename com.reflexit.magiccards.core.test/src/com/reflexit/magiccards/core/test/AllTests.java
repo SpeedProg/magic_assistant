@@ -43,6 +43,7 @@ public class AllTests {
 		suite.addTestSuite(CardOrganizerTest.class);
 		suite.addTestSuite(MemCardHandlerTest.class);
 		suite.addTestSuite(DeckStoreTest.class);
+		suite.addTestSuite(DbFileCardStoreTest.class);
 		suite.addTestSuite(CollectionStoreTest.class);
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
