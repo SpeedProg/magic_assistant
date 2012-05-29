@@ -89,6 +89,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Rating", MagicCardField.RATING);
 		createFieldCheck("Collector's Number", MagicCardField.COLLNUM);
 		createFieldCheck("Oracle Text", MagicCardField.ORACLE, false);
+		createFieldCheck("Printed Text", MagicCardField.TEXT, false);
 		createFieldCheck("Image", MagicCardField.ID, false);
 		createFieldCheck("Price", MagicCardField.DBPRICE, false);
 		new Label(buttons, SWT.NONE);
