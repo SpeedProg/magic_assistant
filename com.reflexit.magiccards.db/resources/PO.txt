@@ -1,223 +1,223 @@
-ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|CTYPE|CMC|DBPRICE|LANG|EDITION_ABBR|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID
-4207|Arrogant Vampire|{3}{B}{B}|Creature - Vampire|4|3|Flying|Portal|Uncommon|mono|5|0.0|||2.051|Zina Saunders|||Flying|0
-4208|Assassin's Blade|{1}{B}|Instant|||Cast Assassin's Blade only during the declare attackers step and only if you've been attacked this step.<br>Destroy target nonblack attacking creature.|Portal|Uncommon|mono|2|0.0|||3.036|John Matson|||Cast Assassin's Blade only during the declare attackers step and only if you've been attacked this step.<br>Destroy target nonblack attacking creature.|0
-4212|Charging Bandits|{4}{B}|Creature - Human Rogue|3|3|Whenever Charging Bandits attacks, it gets +2/+0 until end of turn.|Portal|Uncommon|mono|5|0.0|||1.767|Dermot Power|||Whenever Charging Bandits attacks, it gets +2/+0 until end of turn.|0
-4213|Craven Knight|{1}{B}|Creature - Human Knight|2|2|Craven Knight can't block.|Portal|Common|mono|2|0.0|||1.435|Charles Gillespie|||Craven Knight can't block.|0
-4214|Cruel Bargain|{B}{B}{B}|Sorcery|||Draw four cards. You lose half your life, rounded up.|Portal|Rare|mono|3|0.0|||3.844|Adrian Smith|||Draw four cards. You lose half your life, rounded up.|0
-4215|Cruel Tutor|{2}{B}|Sorcery|||Search your library for a card, then shuffle your library and put that card on top of it. You lose 2 life.|Portal|Rare|mono|3|0.0|||2.774|Kev Walker|||Search your library for a card, then shuffle your library and put that card on top of it. You lose 2 life.|0
-4216|Dread Charge|{3}{B}|Sorcery|||Until end of turn, black creatures you control can be blocked only by black creatures.|Portal|Rare|mono|4|0.0|||1.958|Ted Naifeh|||Until end of turn, black creatures you control can be blocked only by black creatures.|0
-4219|Ebon Dragon|{5}{B}{B}|Creature - Dragon|5|4|Flying<br>When Ebon Dragon enters the battlefield, you may have target opponent discard a card.|Portal|Rare|mono|7|0.0|||2.417|Donato Giancola|||Flying<br>When Ebon Dragon enters the battlefield, you may have target opponent discard a card.|0
-4220|Endless Cockroaches|{1}{B}{B}|Creature - Insect|1|1|When Endless Cockroaches dies, return it to its owner's hand.|Portal|Rare|mono|3|0.0|||3.283|Ron Spencer|||When Endless Cockroaches dies, return it to its owner's hand.|0
-4222|Final Strike|{2}{B}{B}|Sorcery|||As an additional cost to cast Final Strike, sacrifice a creature.<br>Final Strike deals damage to target opponent equal to the sacrificed creature's power.|Portal|Rare|mono|4|0.0|||1.361|John Coulthart|||As an additional cost to cast Final Strike, sacrifice a creature.<br>Final Strike deals damage to target opponent equal to the sacrificed creature's power.|0
-4227|King's Assassin|{1}{B}{B}|Creature - Human Assassin|1|1|{T}: Destroy target tapped creature. Activate this ability only during your turn, before attackers are declared.|Portal|Rare|mono|3|0.0|||2.6|Zina Saunders|||{T}: Destroy target tapped creature. Activate this ability only during your turn, before attackers are declared.|0
-4228|Mercenary Knight|{2}{B}|Creature - Human Mercenary Knight|4|4|When Mercenary Knight enters the battlefield, sacrifice it unless you discard a creature card.|Portal|Rare|mono|3|0.0|||3.577|Adrian Smith|||When Mercenary Knight enters the battlefield, sacrifice it unless you discard a creature card.|0
-4229|Mind Knives|{1}{B}|Sorcery|||Target opponent discards a card at random.|Portal|Common|mono|2|0.0|||2.579|Rebecca Guay|||Target opponent discards a card at random.|0
-4232|Nature's Ruin|{2}{B}|Sorcery|||Destroy all green creatures.|Portal|Uncommon|mono|3|0.0|||3.868|Mike Dringenberg|||Destroy all green creatures.|0
-4233|Noxious Toad|{2}{B}|Creature - Frog|1|1|When Noxious Toad dies, each opponent discards a card.|Portal|Uncommon|mono|3|0.0|||1.406|Adrian Smith|||When Noxious Toad dies, each opponent discards a card.|0
-4237|Serpent Assassin|{3}{B}{B}|Creature - Snake Assassin|2|2|When Serpent Assassin enters the battlefield, you may destroy target nonblack creature.|Portal|Rare|mono|5|0.0|||2.294|Roger Raupp|||When Serpent Assassin enters the battlefield, you may destroy target nonblack creature.|0
-4239|Skeletal Crocodile|{3}{B}|Creature - Crocodile Skeleton|5|1||Portal|Common|mono|4|0.0|||2.115|Mike Dringenberg||||0
-4240|Skeletal Snake|{1}{B}|Creature - Snake Skeleton|2|1||Portal|Common|mono|2|0.0|||1.889|John Matson||||0
-4241|Soul Shred|{3}{B}{B}|Sorcery|||Soul Shred deals 3 damage to target nonblack creature. You gain 3 life.|Portal|Common|mono|5|0.0|||1.227|Alan Rabinowitz|||Soul Shred deals 3 damage to target nonblack creature. You gain 3 life.|0
-4242|Undying Beast|{3}{B}|Creature - Beast|3|2|When Undying Beast dies, put it on top of its owner's library.|Portal|Common|mono|4|0.0|||1.75|Steve Luke|||When Undying Beast dies, put it on top of its owner's library.|0
-4243|Vampiric Feast|{5}{B}{B}|Sorcery|||Vampiric Feast deals 4 damage to target creature or player and you gain 4 life.|Portal|Uncommon|mono|7|0.0|||1.034|D. Alexander Gregory|||Vampiric Feast deals 4 damage to target creature or player and you gain 4 life.|0
-4244|Vampiric Touch|{2}{B}|Sorcery|||Vampiric Touch deals 2 damage to target opponent and you gain 2 life.|Portal|Common|mono|3|0.0|||2.233|Zina Saunders|||Vampiric Touch deals 2 damage to target opponent and you gain 2 life.|0
-4245|Virtue's Ruin|{2}{B}|Sorcery|||Destroy all white creatures.|Portal|Uncommon|mono|3|0.0|||3.9|Mike Dringenberg|||Destroy all white creatures.|0
-4250|Capricious Sorcerer|{2}{U}|Creature - Human Wizard|1|1|{T}: Capricious Sorcerer deals 1 damage to target creature or player. Activate this ability only during your turn, before attackers are declared.|Portal|Rare|mono|3|0.0|||1.4|Zina Saunders|||{T}: Capricious Sorcerer deals 1 damage to target creature or player. Activate this ability only during your turn, before attackers are declared.|0
-4251|Cloak of Feathers|{U}|Sorcery|||Target creature gains flying until end of turn.<br>Draw a card.|Portal|Common|mono|1|0.0|||3.676|Rebecca Guay|||Target creature gains flying until end of turn.<br><br>Draw a card.|0
-4252|Cloud Dragon|{5}{U}|Creature - Illusion Dragon|5|4|Flying<br>Cloud Dragon can block only creatures with flying.|Portal|Rare|mono|6|0.0|||2.696|John Avon|||Flying<br>Cloud Dragon can block only creatures with flying.|0
-4253|Cloud Pirates|{U}|Creature - Human Pirate|1|1|Flying<br>Cloud Pirates can block only creatures with flying.|Portal|Common|mono|1|0.0|||2.812|Phil Foglio|||Flying<br>Cloud Pirates can block only creatures with flying.|0
-4254|Cloud Spirit|{2}{U}|Creature - Spirit|3|1|Flying<br>Cloud Spirit can block only creatures with flying.|Portal|Uncommon|mono|3|0.0|||2.833|DiTerlizzi|||Flying<br>Cloud Spirit can block only creatures with flying.|0
-4255|Command of Unsummoning|{2}{U}|Instant|||Cast Command of Unsummoning only during the declare attackers step and only if you've been attacked this step.<br>Return one or two target attacking creatures to their owner's hand.|Portal|Uncommon|mono|3|0.0|||2.15|Phil Foglio|||Cast Command of Unsummoning only during the declare attackers step and only if you've been attacked this step.<br>Return one or two target attacking creatures to their owner's hand.|0
-4257|Cruel Fate|{4}{U}|Sorcery|||Look at the top five cards of target opponent's library. Put one of those cards into that player's graveyard, and the rest on top of his or her library in any order.|Portal|Rare|mono|5|0.0|||1.714|Adrian Smith|||Look at the top five cards of target opponent's library. Put one of those cards into that player's graveyard, and the rest on top of his or her library in any order.|0
-4258|Deep-Sea Serpent|{4}{U}{U}|Creature - Serpent|5|5|Deep-Sea Serpent can't attack unless defending player controls an Island.|Portal|Uncommon|mono|6|0.0|||1.5|Scott M. Fischer|||Deep-Sea Serpent can't attack unless defending player controls an Island.|0
-4259|Déjà Vu|{2}{U}|Sorcery|||Return target sorcery card from your graveyard to your hand.|Portal|Common|mono|3|0.0|||3.278|Hannibal King|||Return target sorcery card from your graveyard to your hand.|0
-4260|Djinn of the Lamp|{5}{U}{U}|Creature - Djinn|5|6|Flying|Portal|Rare|mono|7|0.0|||1.976|DiTerlizzi|||Flying|0
-4262|Flux|{2}{U}|Sorcery|||Each player discards any number of cards, then draws that many cards.<br>Draw a card.|Portal|Uncommon|mono|3|0.0|||2.75|Ted Naifeh|||Each player discards any number of cards, then draws that many cards.<br>Draw a card.|0
-4265|Ingenious Thief|{1}{U}|Creature - Human Rogue|1|1|Flying<br>When Ingenious Thief enters the battlefield, look at target player's hand.|Portal|Uncommon|mono|2|0.0|||2.846|Dan Frazier|||Flying<br>When Ingenious Thief enters the battlefield, look at target player's hand.|0
-4268|Mystic Denial|{1}{U}{U}|Instant|||Counter target creature or sorcery spell.|Portal|Uncommon|mono|3|0.0|||1.875|Hannibal King|||Counter target creature or sorcery spell.|0
-4269|Omen|{1}{U}|Sorcery|||Look at the top three cards of your library, then put them back in any order. You may shuffle your library.<br>Draw a card.|Portal|Common|mono|2|0.0|||1.72|Eric Peterson|||Look at the top three cards of your library, then put them back in any order. You may shuffle your library. <br>Draw a card.|0
-4270|Owl Familiar|{1}{U}|Creature - Bird|1|1|Flying<br>When Owl Familiar enters the battlefield, draw a card, then discard a card.|Portal|Common|mono|2|0.0|||2.889|Janine Johnston|||Flying<br>When Owl Familiar enters the battlefield, draw a card, then discard a card.|0
-4271|Personal Tutor|{U}|Sorcery|||Search your library for a sorcery card and reveal that card. Shuffle your library, then put the card on top of it.|Portal|Uncommon|mono|1|0.0|||4.132|D. Alexander Gregory|||Search your library for a sorcery card and reveal that card. Shuffle your library, then put the card on top of it.|0
-4275|Sorcerous Sight|{U}|Sorcery|||Look at target opponent's hand.<br>Draw a card.|Portal|Common|mono|1|0.0|||1.711|Kaja Foglio|||Look at target opponent's hand.<br><br>Draw a card.|0
-4277|Symbol of Unsummoning|{2}{U}|Sorcery|||Return target creature to its owner's hand.<br>Draw a card.|Portal|Common|mono|3|0.0|||2.615|Adam Rex|||Return target creature to its owner's hand.<br><br>Draw a card.|0
-4278|Taunt|{U}|Sorcery|||During target player's next turn, creatures that player controls attack you if able.|Portal|Rare|mono|1|0.0|||3.107|Phil Foglio|||During target player's next turn, creatures that player controls attack you if able.|0
-4280|Thing from the Deep|{6}{U}{U}{U}|Creature - Leviathan|9|9|Whenever Thing from the Deep attacks, sacrifice it unless you sacrifice an Island.|Portal|Rare|mono|9|0.0|||3.054|Paolo Parente|||Whenever Thing from the Deep attacks, sacrifice it unless you sacrifice an Island.|0
-4283|Touch of Brilliance|{3}{U}|Sorcery|||Draw two cards.|Portal|Common|mono|4|0.0|||1.278|John Coulthart|||Draw two cards.|0
-4293|Elite Cat Warrior|{2}{G}|Creature - Cat Warrior|2|3|Forestwalk|Portal|Common|mono|3|0.0|||3.333|Eric Peterson|||Forestwalk|0
-4297|Fruition|{G}|Sorcery|||You gain 1 life for each Forest on the battlefield.|Portal|Common|mono|1|0.0|||3.706|Steve Luke|||You gain 1 life for each Forest on the battlefield.|0
-4302|Jungle Lion|{G}|Creature - Cat|2|1|Jungle Lion can't block.|Portal|Common|mono|1|0.0|||4.25|Janine Johnston|||Jungle Lion can't block.|0
-4303|Mobilize|{G}|Sorcery|||Untap all creatures you control.|Portal|Common|mono|1|0.0|||3.139|Rebecca Guay|||Untap all creatures you control.|0
-4307|Natural Order|{2}{G}{G}|Sorcery|||As an additional cost to cast Natural Order, sacrifice a green creature.<br>Search your library for a green creature card and put it onto the battlefield. Then shuffle your library.|Portal|Rare|mono|4|0.0|||4.765|Alan Rabinowitz|||As an additional cost to cast Natural Order, sacrifice a green creature.<br>Search your library for a green creature card and put it onto the battlefield. Then shuffle your library.|0
-4313|Plant Elemental|{1}{G}|Creature - Plant Elemental|3|4|When Plant Elemental enters the battlefield, sacrifice it unless you sacrifice a Forest.|Portal|Uncommon|mono|2|0.0|||3.2|Ted Naifeh|||When Plant Elemental enters the battlefield, sacrifice it unless you sacrifice a Forest.|0
-4316|Rowan Treefolk|{3}{G}|Creature - Treefolk|3|4||Portal|Common|mono|4|0.0|||2.146|Gerry Grace||||0
-4320|Sylvan Tutor|{G}|Sorcery|||Search your library for a creature card and reveal that card. Shuffle your library, then put the card on top of it.|Portal|Rare|mono|1|0.0|||4.107|Kaja Foglio|||Search your library for a creature card and reveal that card. Shuffle your library, then put the card on top of it.|0
-4321|Thundering Wurm|{2}{G}|Creature - Wurm|4|4|When Thundering Wurm enters the battlefield, sacrifice it unless you discard a land card.|Portal|Rare|mono|3|0.0|||3.214|Paolo Parente|||When Thundering Wurm enters the battlefield, sacrifice it unless you discard a land card.|0
-4322|Treetop Defense|{1}{G}|Instant|||Cast Treetop Defense only during the declare attackers step and only if you've been attacked this step.<br>Creatures you control gain reach until end of turn. <i>(They can block creatures with flying.)</i>|Portal|Rare|mono|2|0.0|||1.417|Zina Saunders|||Cast Treetop Defense only during the declare attackers step and only if you've been attacked this step.<br>Creatures you control gain reach until end of turn. <i>(They can block creatures with flying.)</i>|0
-4325|Willow Dryad|{G}|Creature - Dryad|1|1|Forestwalk|Portal|Common|mono|1|0.0|||2.211|D. Alexander Gregory|||Forestwalk|0
-4326|Winter's Grasp|{1}{G}{G}|Sorcery|||Destroy target land.|Portal|Uncommon|mono|3|0.0|||3.15|Paolo Parente|||Destroy target land.|0
-4331|Burning Cloak|{R}|Sorcery|||Target creature gets +2/+0 until end of turn. Burning Cloak deals 2 damage to that creature.|Portal|Common|mono|1|0.0|||2.324|Scott M. Fischer|||Target creature gets +2/+0 until end of turn. Burning Cloak deals 2 damage to that creature.|0
-4333|Desert Drake|{3}{R}|Creature - Drake|2|2|Flying|Portal|Uncommon|mono|4|0.0|||1.667|Gerry Grace|||Flying|0
-4336|Fire Dragon|{6}{R}{R}{R}|Creature - Dragon|6|6|Flying<br>When Fire Dragon enters the battlefield, it deals damage equal to the number of Mountains you control to target creature.|Portal|Rare|mono|9|0.0|||2.896|William Simpson|||Flying<br>When Fire Dragon enters the battlefield, it deals damage equal to the number of Mountains you control to target creature.|0
-4337|Fire Imp|{2}{R}|Creature - Imp|2|1|When Fire Imp enters the battlefield, it deals 2 damage to target creature.|Portal|Uncommon|mono|3|0.0|||3.538|DiTerlizzi|||When Fire Imp enters the battlefield, it deals 2 damage to target creature.|0
-4338|Fire Snake|{4}{R}|Creature - Snake|3|1|When Fire Snake dies, destroy target land.|Portal|Common|mono|5|0.0|||2.647|Steve Luke|||When Fire Snake dies, destroy target land.|0
-4341|Forked Lightning|{3}{R}|Sorcery|||Forked Lightning deals 4 damage divided as you choose among one, two, or three target creatures.|Portal|Rare|mono|4|0.0|||3.389|Ted Naifeh|||Forked Lightning deals 4 damage divided as you choose among one, two, or three target creatures.|0
-4342|Goblin Bully|{1}{R}|Creature - Goblin|2|1||Portal|Common|mono|2|0.0|||2.143|Pete Venters||||0
-4343|Highland Giant|{2}{R}{R}|Creature - Giant|3|4||Portal|Common|mono|4|0.0|||2.75|Ron Spencer||||0
-4349|Lava Flow|{3}{R}{R}|Sorcery|||Destroy target creature or land.|Portal|Uncommon|mono|5|0.0|||3.107|Mike Dringenberg|||Destroy target creature or land.|0
-4350|Lizard Warrior|{3}{R}|Creature - Lizard Warrior|4|2||Portal|Common|mono|4|0.0|||1.659|Roger Raupp||||0
-4351|Minotaur Warrior|{2}{R}|Creature - Minotaur Warrior|2|3||Portal|Common|mono|3|0.0|||2.0|Scott M. Fischer||||0
-4353|Pillaging Horde|{2}{R}{R}|Creature - Human Barbarian|5|5|When Pillaging Horde enters the battlefield, sacrifice it unless you discard a card at random.|Portal|Rare|mono|4|0.0|||3.667|Kev Walker|||When Pillaging Horde enters the battlefield, sacrifice it unless you discard a card at random.|0
-4355|Raging Cougar|{2}{R}|Creature - Cat|2|2|Haste|Portal|Common|mono|3|0.0|||2.346|Terese Nielsen|||Haste|0
-4358|Raging Minotaur|{2}{R}{R}|Creature - Minotaur Berserker|3|3|Haste|Portal|Common|mono|4|0.0|||2.188|Scott M. Fischer|||Haste|0
-4359|Rain of Salt|{4}{R}{R}|Sorcery|||Destroy two target lands.|Portal|Uncommon|mono|6|0.0|||3.1|Charles Gillespie|||Destroy two target lands.|0
-4361|Scorching Winds|{R}|Instant|||Cast Scorching Winds only during the declare attackers step and only if you've been attacked this step.<br>Scorching Winds deals 1 damage to each attacking creature.|Portal|Uncommon|mono|1|0.0|||2.714|D. Alexander Gregory|||Cast Scorching Winds only during the declare attackers step and only if you've been attacked this step.<br>Scorching Winds deals 1 damage to each attacking creature.|0
-4367|Wall of Granite|{2}{R}|Creature - Wall|0|7|Defender <i>(This creature can't attack.)</i>|Portal|Uncommon|mono|3|0.0|||2.679|Kev Walker|||Defender <i>(This creature can't attack.)</i>|0
-4369|Alabaster Dragon|{4}{W}{W}|Creature - Dragon|4|4|Flying<br>When Alabaster Dragon dies, shuffle it into its owner's library.|Portal|Rare|mono|6|0.0|||2.5|Ted Naifeh|||Flying<br>When Alabaster Dragon dies, shuffle it into its owner's library.|0
-4380|Defiant Stand|{1}{W}|Instant|||Cast Defiant Stand only during the declare attackers step and only if you've been attacked this step.<br>Target creature gets +1/+3 until end of turn. Untap that creature.|Portal|Uncommon|mono|2|0.0|||2.0|Hannibal King|||Cast Defiant Stand only during the declare attackers step and only if you've been attacked this step.<br>Target creature gets +1/+3 until end of turn. Untap that creature.|0
-4383|Fleet-Footed Monk|{1}{W}|Creature - Human Monk|1|1|Fleet-Footed Monk can't be blocked by creatures with power 2 or greater.|Portal|Common|mono|2|0.0|||2.833|D. Alexander Gregory|||Fleet-Footed Monk can't be blocked by creatures with power 2 or greater.|0
-4386|Harsh Justice|{2}{W}|Instant|||Cast Harsh Justice only during the declare attackers step and only if you've been attacked this step.<br>This turn, whenever an attacking creature deals combat damage to you, it deals that much damage to its controller.|Portal|Rare|mono|3|0.0|||3.846|John Coulthart|||Cast Harsh Justice only during the declare attackers step and only if you've been attacked this step.<br>This turn, whenever an attacking creature deals combat damage to you, it deals that much damage to its controller.|0
-4387|Keen-Eyed Archers|{2}{W}|Creature - Elf Archer|2|2|Reach <i>(This creature can block creatures with flying.)</i>|Portal|Common|mono|3|0.0|||2.891|Alan Rabinowitz|||Reach <i>(This creature can block creatures with flying.)</i>|0
-4391|Renewing Dawn|{1}{W}|Sorcery|||You gain 2 life for each Mountain target opponent controls.|Portal|Uncommon|mono|2|0.0|||3.083|John Avon|||You gain 2 life for each Mountain target opponent controls.|0
-4392|Sacred Knight|{3}{W}|Creature - Human Knight|3|2|Sacred Knight can't be blocked by black and/or red creatures.|Portal|Common|mono|4|0.0|||2.816|Donato Giancola|||Sacred Knight can't be blocked by black and/or red creatures.|0
-4395|Spiritual Guardian|{3}{W}{W}|Creature - Spirit|3|4|When Spiritual Guardian enters the battlefield, you gain 4 life.|Portal|Rare|mono|5|0.0|||2.188|Terese Nielsen|||When Spiritual Guardian enters the battlefield, you gain 4 life.|0
-4396|Spotted Griffin|{3}{W}|Creature - Griffin|2|3|Flying|Portal|Common|mono|4|0.0|||1.933|William Simpson|||Flying|0
-4398|Starlit Angel|{3}{W}{W}|Creature - Angel|3|4|Flying|Portal|Uncommon|mono|5|0.0|||1.917|Rebecca Guay|||Flying|0
-4400|Stern Marshal|{2}{W}|Creature - Human Soldier|2|2|{T}: Target creature gets +2/+2 until end of turn. Activate this ability only during your turn, before attackers are declared.|Portal|Rare|mono|3|0.0|||2.033|D. Alexander Gregory|||{T}: Target creature gets +2/+2 until end of turn. Activate this ability only during your turn, before attackers are declared.|0
-4401|Temporary Truce|{1}{W}|Sorcery|||Each player may draw up to two cards. For each card less than two a player draws this way, that player gains 2 life.|Portal|Rare|mono|2|0.0|||2.786|Mike Raabe|||Each player may draw up to two cards. For each card less than two a player draws this way, that player gains 2 life.|0
-4402|Valorous Charge|{1}{W}{W}|Sorcery|||White creatures get +2/+0 until end of turn.|Portal|Uncommon|mono|3|0.0|||1.167|Douglas Shuler|||White creatures get +2/+0 until end of turn.|0
-4406|Warrior's Charge|{2}{W}|Sorcery|||Creatures you control get +1/+1 until end of turn.|Portal|Common|mono|3|0.0|||2.077|Ted Naifeh|||Creatures you control get +1/+1 until end of turn.|0
-4286|Alluring Scent|{1}{G}{G}|Sorcery|||All creatures able to block target creature this turn do so.|Portal|Rare|mono|3|0.0|||1.733|Ted Naifeh|||All creatures able to block target creature this turn do so.|0
-4288|Anaconda|{3}{G}|Creature - Snake|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Uncommon|mono|4|0.0|||2.929|Andrew Robinson|||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0
-4287|Anaconda|{3}{G}|Creature - Snake|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Uncommon|mono|4|0.0|||2.333|Andrew Robinson|||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0
-4247|Ancestral Memories|{2}{U}{U}{U}|Sorcery|||Look at the top seven cards of your library. Put two of them into your hand and the rest into your graveyard.|Portal|Rare|mono|5|0.0|||3.267|Dan Frazier|||Look at the top seven cards of your library. Put two of them into your hand and the rest into your graveyard.|0
-4370|Angelic Blessing|{2}{W}|Sorcery|||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|Portal|Common|mono|3|0.0|||2.958|DiTerlizzi|||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|0
-4371|Archangel|{5}{W}{W}|Creature - Angel|5|5|Flying, vigilance|Portal|Rare|mono|7|0.0|||2.719|Quinton Hoover|||Flying, vigilance|0
-4372|Ardent Militia|{4}{W}|Creature - Human Soldier|2|5|Vigilance|Portal|Uncommon|mono|5|0.0|||1.75|Mike Raabe|||Vigilance|0
-4373|Armageddon|{3}{W}|Sorcery|||Destroy all lands.|Portal|Rare|mono|4|0.0|||4.647|John Avon|||Destroy all lands.|0
-4374|Armored Pegasus|{1}{W}|Creature - Pegasus|1|2|Flying|Portal|Common|mono|2|0.0|||2.75|Andrew Robinson|||Flying|0
-4248|Balance of Power|{3}{U}{U}|Sorcery|||If target opponent has more cards in hand than you, draw cards equal to the difference.|Portal|Rare|mono|5|0.0|||2.067|Adam Rex|||If target opponent has more cards in hand than you, draw cards equal to the difference.|0
-4249|Baleful Stare|{2}{U}|Sorcery|||Target opponent reveals his or her hand. You draw a card for each Mountain and red card in it.|Portal|Uncommon|mono|3|0.0|||2.875|John Coulthart|||Target opponent reveals his or her hand. You draw a card for each Mountain and red card in it.|0
-4289|Bee Sting|{3}{G}|Sorcery|||Bee Sting deals 2 damage to target creature or player.|Portal|Uncommon|mono|4|0.0|||1.603|Phil Foglio|||Bee Sting deals 2 damage to target creature or player.|0
-4329|Blaze|{X}{R}|Sorcery|||Blaze deals X damage to target creature or player.|Portal|Uncommon|mono|1|0.0|||2.857|Gerry Grace|||Blaze deals X damage to target creature or player.|0
-4328|Blaze|{X}{R}|Sorcery|||Blaze deals X damage to target creature or player.|Portal|Uncommon|mono|1|0.0|||3.119|Gerry Grace|||Blaze deals X damage to target creature or player.|0
-4375|Blessed Reversal|{1}{W}|Instant|||You gain 3 life for each creature attacking you.|Portal|Rare|mono|2|0.0|||2.385|Zina Saunders|||You gain 3 life for each creature attacking you.|0
-4376|Blinding Light|{2}{W}|Sorcery|||Tap all nonwhite creatures.|Portal|Rare|mono|3|0.0|||3.143|John Coulthart|||Tap all nonwhite creatures.|0
-4209|Bog Imp|{1}{B}|Creature - Imp|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Portal|Common|mono|2|0.0|||1.4|Christopher Rush|||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0
-4210|Bog Raiders|{2}{B}|Creature - Zombie|2|2|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Common|mono|3|0.0|||2.542|Steve Luke|||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0
-4211|Bog Wraith|{3}{B}|Creature - Wraith|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Uncommon|mono|4|0.0|||2.357|Ted Naifeh|||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0
-4330|Boiling Seas|{3}{R}|Sorcery|||Destroy all Islands.|Portal|Uncommon|mono|4|0.0|||3.357|Tom Wänerstrand|||Destroy all Islands.|0
-4377|Border Guard|{2}{W}|Creature - Human Soldier|1|4||Portal|Common|mono|3|0.0|||1.722|Kev Walker||||0
-4378|Breath of Life|{3}{W}|Sorcery|||Return target creature card from your graveyard to the battlefield.|Portal|Common|mono|4|0.0|||3.923|DiTerlizzi|||Return target creature card from your graveyard to the battlefield.|0
-4290|Bull Hippo|{3}{G}|Creature - Hippo|3|3|Islandwalk|Portal|Uncommon|mono|4|0.0|||3.056|Roger Raupp|||Islandwalk|0
-4379|Charging Paladin|{2}{W}|Creature - Human Knight|2|2|Whenever Charging Paladin attacks, it gets +0/+3 until end of turn.|Portal|Uncommon|mono|3|0.0|||2.393|Kev Walker|||Whenever Charging Paladin attacks, it gets +0/+3 until end of turn.|0
-4291|Charging Rhino|{3}{G}{G}|Creature - Rhino|4|4|Charging Rhino can't be blocked by more than one creature.|Portal|Rare|mono|5|0.0|||2.688|Una Fricker|||Charging Rhino can't be blocked by more than one creature.|0
-4256|Coral Eel|{1}{U}|Creature - Fish|2|1||Portal|Common|mono|2|0.0|||1.36|Una Fricker||||0
-4332|Craven Giant|{2}{R}|Creature - Giant|4|1|Craven Giant can't block.|Portal|Common|mono|3|0.0|||1.789|Ron Spencer|||Craven Giant can't block.|0
-4292|Deep Wood|{1}{G}|Instant|||Cast Deep Wood only during the declare attackers step and only if you've been attacked this step.<br>Prevent all damage that would be dealt to you this turn by attacking creatures.|Portal|Uncommon|mono|2|0.0|||2.633|Paolo Parente|||Cast Deep Wood only during the declare attackers step and only if you've been attacked this step.<br>Prevent all damage that would be dealt to you this turn by attacking creatures.|0
-4334|Devastation|{5}{R}{R}|Sorcery|||Destroy all creatures and lands.|Portal|Rare|mono|7|0.0|||3.618|Steve Luke|||Destroy all creatures and lands.|0
-4381|Devoted Hero|{W}|Creature - Elf Soldier|1|2||Portal|Common|mono|1|0.0|||2.9|DiTerlizzi||||0
-4217|Dread Reaper|{3}{B}{B}{B}|Creature - Horror|6|5|Flying<br>When Dread Reaper enters the battlefield, you lose 5 life.|Portal|Rare|mono|6|0.0|||1.737|Christopher Rush|||Flying<br>When Dread Reaper enters the battlefield, you lose 5 life.|0
-4218|Dry Spell|{1}{B}|Sorcery|||Dry Spell deals 1 damage to each creature and each player.|Portal|Uncommon|mono|2|0.0|||2.979|Roger Raupp|||Dry Spell deals 1 damage to each creature and each player.|0
-4335|Earthquake|{X}{R}|Sorcery|||Earthquake deals X damage to each creature without flying and each player.|Portal|Rare|mono|1|0.0|||3.957|Adrian Smith|||Earthquake deals X damage to each creature without flying and each player.|0
-4294|Elite Cat Warrior|{2}{G}|Creature - Cat Warrior|2|3|Forestwalk|Portal|Common|mono|3|0.0|||3.382|Eric Peterson|||Forestwalk|0
-4295|Elven Cache|{2}{G}{G}|Sorcery|||Return target card from your graveyard to your hand.|Portal|Common|mono|4|0.0|||2.059|Rebecca Guay|||Return target card from your graveyard to your hand.|0
-4296|Elvish Ranger|{2}{G}|Creature - Elf|4|1||Portal|Common|mono|3|0.0|||2.316|DiTerlizzi||||0
-4261|Exhaustion|{2}{U}|Sorcery|||Creatures and lands target opponent controls don't untap during his or her next untap step.|Portal|Rare|mono|3|0.0|||3.868|DiTerlizzi|||Creatures and lands target opponent controls don't untap during his or her next untap step.|0
-4382|False Peace|{W}|Sorcery|||Target player skips all combat phases of his or her next turn.|Portal|Common|mono|1|0.0|||3.861|Zina Saunders|||Target player skips all combat phases of his or her next turn.|0
-4221|Feral Shadow|{2}{B}|Creature - Nightstalker|2|1|Flying|Portal|Common|mono|3|0.0|||2.159|Colin MacNeil|||Flying|0
-4339|Fire Tempest|{5}{R}{R}|Sorcery|||Fire Tempest deals 6 damage to each creature and each player.|Portal|Rare|mono|7|0.0|||2.929|Mike Dringenberg|||Fire Tempest deals 6 damage to each creature and each player.|0
-4340|Flashfires|{3}{R}|Sorcery|||Destroy all Plains.|Portal|Uncommon|mono|4|0.0|||3.55|Randy Gallegos|||Destroy all Plains.|0
-4384|Foot Soldiers|{3}{W}|Creature - Human Soldier|2|4||Portal|Common|mono|4|0.0|||1.842|Kev Walker||||0
-4416|Forest||Basic Land - Forest|||G|Portal|Land|land|0|0.0|||4.62|John Avon|||G|0
-4415|Forest||Basic Land - Forest|||G|Portal|Land|land|0|0.0|||4.727|John Avon|||G|0
-4414|Forest||Basic Land - Forest|||G|Portal|Land|land|0|0.0|||4.775|John Avon|||G|0
-4413|Forest||Basic Land - Forest|||G|Portal|Land|land|0|0.0|||4.478|John Avon|||G|0
-4263|Giant Octopus|{3}{U}|Creature - Octopus|3|3||Portal|Common|mono|4|0.0|||1.882|John Matson||||0
-4298|Giant Spider|{3}{G}|Creature - Spider|2|4|Reach <i>(This creature can block creatures with flying.)</i>|Portal|Common|mono|4|0.0|||2.962|Randy Gallegos|||Reach <i>(This creature can block creatures with flying.)</i>|0
-4385|Gift of Estates|{1}{W}|Sorcery|||If an opponent controls more lands than you, search your library for up to three Plains cards, reveal them, and put them into your hand. Then shuffle your library.|Portal|Rare|mono|2|0.0|||4.075|Kaja Foglio|||If an opponent controls more lands than you, search your library for up to three Plains cards, reveal them, and put them into your hand. Then shuffle your library.|0
-4299|Gorilla Warrior|{2}{G}|Creature - Ape Warrior|3|2||Portal|Common|mono|3|0.0|||2.091|John Matson||||0
-4223|Gravedigger|{3}{B}|Creature - Zombie|2|2|When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|Portal|Uncommon|mono|4|0.0|||3.767|Scott M. Fischer|||When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|0
-4300|Grizzly Bears|{1}{G}|Creature - Bear|2|2||Portal|Common|mono|2|0.0|||3.6|Zina Saunders||||0
-4225|Hand of Death|{2}{B}|Sorcery|||Destroy target nonblack creature.|Portal|Common|mono|3|0.0|||2.094|John Coulthart|||Destroy target nonblack creature.|0
-4224|Hand of Death|{2}{B}|Sorcery|||Destroy target nonblack creature.|Portal|Common|mono|3|0.0|||1.35|John Coulthart|||Destroy target nonblack creature.|0
-4344|Hill Giant|{3}{R}|Creature - Giant|3|3||Portal|Common|mono|4|0.0|||2.194|Randy Gallegos||||0
-4264|Horned Turtle|{2}{U}|Creature - Turtle|1|4||Portal|Common|mono|3|0.0|||1.929|Adrian Smith||||0
-4226|Howling Fury|{2}{B}|Sorcery|||Target creature gets +4/+0 until end of turn.|Portal|Common|mono|3|0.0|||1.7|Mike Dringenberg|||Target creature gets +4/+0 until end of turn.|0
-4345|Hulking Cyclops|{3}{R}{R}|Creature - Cyclops|5|5|Hulking Cyclops can't block.|Portal|Uncommon|mono|5|0.0|||2.675|Paolo Parente|||Hulking Cyclops can't block.|0
-4346|Hulking Goblin|{1}{R}|Creature - Goblin|2|2|Hulking Goblin can't block.|Portal|Common|mono|2|0.0|||1.9|Pete Venters|||Hulking Goblin can't block.|0
-4301|Hurricane|{X}{G}|Sorcery|||Hurricane deals X damage to each creature with flying and each player.|Portal|Rare|mono|1|0.0|||3.531|Andrew Robinson|||Hurricane deals X damage to each creature with flying and each player.|0
-4424|Island||Basic Land - Island|||U|Portal|Land|land|0|0.0|||4.477|Eric Peterson|||U|0
-4423|Island||Basic Land - Island|||U|Portal|Land|land|0|0.0|||4.607|Eric Peterson|||U|0
-4422|Island||Basic Land - Island|||U|Portal|Land|land|0|0.0|||4.444|Eric Peterson|||U|0
-4421|Island||Basic Land - Island|||U|Portal|Land|land|0|0.0|||4.361|Eric Peterson|||U|0
-4388|Knight Errant|{1}{W}|Creature - Human Knight|2|2||Portal|Common|mono|2|0.0|||2.5|Dan Frazier||||0
-4347|Last Chance|{R}{R}|Sorcery|||Take an extra turn after this one. At the beginning of that turn's end step, you lose the game.|Portal|Rare|mono|2|0.0|||3.632|Hannibal King|||Take an extra turn after this one. At the beginning of that turn's end step, you lose the game.|0
-4348|Lava Axe|{4}{R}|Sorcery|||Lava Axe deals 5 damage to target player.|Portal|Common|mono|5|0.0|||2.941|Adrian Smith|||Lava Axe deals 5 damage to target player.|0
-4266|Man-o'-War|{2}{U}|Creature - Jellyfish|2|2|When Man-o'-War enters the battlefield, return target creature to its owner's hand.|Portal|Uncommon|mono|3|0.0|||4.354|Una Fricker|||When Man-o'-War enters the battlefield, return target creature to its owner's hand.|0
-4267|Merfolk of the Pearl Trident|{U}|Creature - Merfolk|1|1||Portal|Common|mono|1|0.0|||1.292|DiTerlizzi||||0
-4230|Mind Rot|{2}{B}|Sorcery|||Target player discards two cards.|Portal|Common|mono|3|0.0|||3.233|Steve Luke|||Target player discards two cards.|0
-4305|Monstrous Growth|{1}{G}|Sorcery|||Target creature gets +4/+4 until end of turn.|Portal|Common|mono|2|0.0|||2.441|Dan Frazier|||Target creature gets +4/+4 until end of turn.|0
-4304|Monstrous Growth|{1}{G}|Sorcery|||Target creature gets +4/+4 until end of turn.|Portal|Common|mono|2|0.0|||2.381|Dan Frazier|||Target creature gets +4/+4 until end of turn.|0
-4306|Moon Sprite|{1}{G}|Creature - Faerie|1|1|Flying|Portal|Uncommon|mono|2|0.0|||1.4|Terese Nielsen|||Flying|0
-4420|Mountain||Basic Land - Mountain|||R|Portal|Land|land|0|0.0|||4.289|Brian Durfee|||R|0
-4419|Mountain||Basic Land - Mountain|||R|Portal|Land|land|0|0.0|||4.1|Brian Durfee|||R|0
-4418|Mountain||Basic Land - Mountain|||R|Portal|Land|land|0|0.0|||4.55|Brian Durfee|||R|0
-4417|Mountain||Basic Land - Mountain|||R|Portal|Land|land|0|0.0|||4.833|Brian Durfee|||R|0
-4352|Mountain Goat|{R}|Creature - Goat|1|1|Mountainwalk|Portal|Uncommon|mono|1|0.0|||2.806|Una Fricker|||Mountainwalk|0
-4231|Muck Rats|{B}|Creature - Rat|1|1||Portal|Common|mono|1|0.0|||1.045|Colin MacNeil||||0
-4308|Natural Spring|{3}{G}{G}|Sorcery|||Target player gains 8 life.|Portal|Uncommon|mono|5|0.0|||2.286|Janine Johnston|||Target player gains 8 life.|0
-4309|Nature's Cloak|{2}{G}|Sorcery|||Green creatures you control gain forestwalk until end of turn.|Portal|Rare|mono|3|0.0|||1.65|Rebecca Guay|||Green creatures you control gain forestwalk until end of turn.|0
-4310|Nature's Lore|{1}{G}|Sorcery|||Search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|Portal|Common|mono|2|0.0|||3.87|Terese Nielsen|||Search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|0
-4311|Needle Storm|{2}{G}|Sorcery|||Needle Storm deals 4 damage to each creature with flying.|Portal|Uncommon|mono|3|0.0|||3.458|Charles Gillespie|||Needle Storm deals 4 damage to each creature with flying.|0
-9845|Panther Warriors|{4}{G}|Creature - Cat Warrior|6|3||Portal|Common|mono|5|0.0|||3.103|Eric Peterson||||0
-4389|Path of Peace|{3}{W}|Sorcery|||Destroy target creature. Its owner gains 4 life.|Portal|Common|mono|4|0.0|||2.175|Pete Venters|||Destroy target creature. Its owner gains 4 life.|0
-4272|Phantom Warrior|{1}{U}{U}|Creature - Illusion Warrior|2|2|Phantom Warrior is unblockable.|Portal|Rare|mono|3|0.0|||3.643|Dan Frazier|||Phantom Warrior is unblockable.|0
-4428|Plains||Basic Land - Plains|||W|Portal|Land|land|0|0.0|||4.679|Douglas Shuler|||W|0
-4427|Plains||Basic Land - Plains|||W|Portal|Land|land|0|0.0|||4.556|Douglas Shuler|||W|0
-4426|Plains||Basic Land - Plains|||W|Portal|Land|land|0|0.0|||4.647|Douglas Shuler|||W|0
-4425|Plains||Basic Land - Plains|||W|Portal|Land|land|0|0.0|||4.079|Douglas Shuler|||W|0
-4314|Primeval Force|{2}{G}{G}{G}|Creature - Elemental|8|8|When Primeval Force enters the battlefield, sacrifice it unless you sacrifice three Forests.|Portal|Rare|mono|5|0.0|||3.175|Randy Gallegos|||When Primeval Force enters the battlefield, sacrifice it unless you sacrifice three Forests.|0
-4273|Prosperity|{X}{U}|Sorcery|||Each player draws X cards.|Portal|Rare|mono|1|0.0|||3.75|Phil Foglio|||Each player draws X cards.|0
-4354|Pyroclasm|{1}{R}|Sorcery|||Pyroclasm deals 2 damage to each creature.|Portal|Rare|mono|2|0.0|||4.326|John Matson|||Pyroclasm deals 2 damage to each creature.|0
-4234|Python|{1}{B}{B}|Creature - Snake|3|2||Portal|Common|mono|3|0.0|||2.167|Alan Rabinowitz||||0
-4357|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Portal|Common|mono|1|0.0|||2.974|Pete Venters|||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0
-4356|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Portal|Common|mono|1|0.0|||3.062|Pete Venters|||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0
-4235|Rain of Tears|{1}{B}{B}|Sorcery|||Destroy target land.|Portal|Uncommon|mono|3|0.0|||3.071|Eric Peterson|||Destroy target land.|0
-4236|Raise Dead|{B}|Sorcery|||Return target creature card from your graveyard to your hand.|Portal|Common|mono|1|0.0|||3.25|Charles Gillespie|||Return target creature card from your graveyard to your hand.|0
-4315|Redwood Treefolk|{4}{G}|Creature - Treefolk|3|6||Portal|Common|mono|5|0.0|||2.1|Steve Luke||||0
-4390|Regal Unicorn|{2}{W}|Creature - Unicorn|2|3||Portal|Common|mono|3|0.0|||1.85|Zina Saunders||||0
-4393|Sacred Nectar|{1}{W}|Sorcery|||You gain 4 life.|Portal|Common|mono|2|0.0|||0.925|Janine Johnston|||You gain 4 life.|0
-4360|Scorching Spear|{R}|Sorcery|||Scorching Spear deals 1 damage to target creature or player.|Portal|Common|mono|1|0.0|||0.872|Mike Raabe|||Scorching Spear deals 1 damage to target creature or player.|0
-4394|Seasoned Marshal|{2}{W}{W}|Creature - Human Soldier|2|2|Whenever Seasoned Marshal attacks, you may tap target creature.|Portal|Uncommon|mono|4|0.0|||3.385|Zina Saunders|||Whenever Seasoned Marshal attacks, you may tap target creature.|0
-4238|Serpent Warrior|{2}{B}|Creature - Snake Warrior|3|3|When Serpent Warrior enters the battlefield, you lose 3 life.|Portal|Common|mono|3|0.0|||1.818|Roger Raupp|||When Serpent Warrior enters the battlefield, you lose 3 life.|0
-4274|Snapping Drake|{3}{U}|Creature - Drake|3|2|Flying|Portal|Common|mono|4|0.0|||3.16|Christopher Rush|||Flying|0
-4317|Spined Wurm|{4}{G}|Creature - Wurm|5|4||Portal|Common|mono|5|0.0|||2.361|Colin MacNeil||||0
-4362|Spitting Earth|{1}{R}|Sorcery|||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|Portal|Common|mono|2|0.0|||2.933|Hannibal King|||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|0
-4318|Stalking Tiger|{3}{G}|Creature - Cat|3|3|Stalking Tiger can't be blocked by more than one creature.|Portal|Common|mono|4|0.0|||2.75|Colin MacNeil|||Stalking Tiger can't be blocked by more than one creature.|0
-4397|Starlight|{1}{W}|Sorcery|||You gain 3 life for each black creature target opponent controls.|Portal|Uncommon|mono|2|0.0|||2.269|John Avon|||You gain 3 life for each black creature target opponent controls.|0
-4399|Steadfastness|{1}{W}|Sorcery|||Creatures you control get +0/+3 until end of turn.|Portal|Common|mono|2|0.0|||1.125|Kev Walker|||Creatures you control get +0/+3 until end of turn.|0
-4363|Stone Rain|{2}{R}|Sorcery|||Destroy target land.|Portal|Common|mono|3|0.0|||3.957|John Matson|||Destroy target land.|0
-4276|Storm Crow|{1}{U}|Creature - Bird|1|2|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Portal|Common|mono|2|0.0|||3.935|Una Fricker|||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0
-4319|Summer Bloom|{1}{G}|Sorcery|||You may play up to three additional lands this turn.|Portal|Rare|mono|2|0.0|||4.167|Kaja Foglio|||You may play up to three additional lands this turn.|0
-4412|Swamp||Basic Land - Swamp|||B|Portal|Land|land|0|0.0|||4.567|Romas|||B|0
-4411|Swamp||Basic Land - Swamp|||B|Portal|Land|land|0|0.0|||4.722|Romas|||B|0
-4410|Swamp||Basic Land - Swamp|||B|Portal|Land|land|0|0.0|||4.75|Romas|||B|0
-4409|Swamp||Basic Land - Swamp|||B|Portal|Land|land|0|0.0|||4.417|Romas|||B|0
-4279|Theft of Dreams|{2}{U}|Sorcery|||Draw a card for each tapped creature target opponent controls.|Portal|Uncommon|mono|3|0.0|||3.263|Adam Rex|||Draw a card for each tapped creature target opponent controls.|0
-4364|Thundermare|{5}{R}|Creature - Elemental Horse|5|5|Haste <i>(This creature can attack the turn it comes under your control.)</i><br>When Thundermare enters the battlefield, tap all other creatures.|Portal|Rare|mono|6|0.0|||3.643|Bob Eggleton|||Haste <i>(This creature can attack the turn it comes under your control.)</i><br>When Thundermare enters the battlefield, tap all other creatures.|0
-4281|Tidal Surge|{1}{U}|Sorcery|||Tap up to three target creatures without flying.|Portal|Common|mono|2|0.0|||2.885|Douglas Shuler|||Tap up to three target creatures without flying.|0
-4282|Time Ebb|{2}{U}|Sorcery|||Put target creature on top of its owner's library.|Portal|Common|mono|3|0.0|||2.667|Alan Rabinowitz|||Put target creature on top of its owner's library.|0
-4323|Untamed Wilds|{2}{G}|Sorcery|||Search your library for a basic land card and put that card onto the battlefield. Then shuffle your library.|Portal|Uncommon|mono|3|0.0|||2.857|Romas|||Search your library for a basic land card and put that card onto the battlefield. Then shuffle your library.|0
-4403|Venerable Monk|{2}{W}|Creature - Human Monk Cleric|2|2|When Venerable Monk enters the battlefield, you gain 2 life.|Portal|Uncommon|mono|3|0.0|||1.944|D. Alexander Gregory|||When Venerable Monk enters the battlefield, you gain 2 life.|0
-4404|Vengeance|{3}{W}|Sorcery|||Destroy target tapped creature.|Portal|Uncommon|mono|4|0.0|||2.591|Andrew Robinson|||Destroy target tapped creature.|0
-4365|Volcanic Dragon|{4}{R}{R}|Creature - Dragon|4|4|Flying<br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Portal|Rare|mono|6|0.0|||3.315|Tom Wänerstrand|||Flying<br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0
-4366|Volcanic Hammer|{1}{R}|Sorcery|||Volcanic Hammer deals 3 damage to target creature or player.|Portal|Common|mono|2|0.0|||2.694|Christopher Rush|||Volcanic Hammer deals 3 damage to target creature or player.|0
-4405|Wall of Swords|{3}{W}|Creature - Wall|3|5|Defender, flying <i>(This creature can't attack, and it can block creatures with flying.)</i>|Portal|Uncommon|mono|4|0.0|||2.816|Douglas Shuler|||Defender, flying <i>(This creature can't attack, and it can block creatures with flying.)</i>|0
-4407|Warrior's Charge|{2}{W}|Sorcery|||Creatures you control get +1/+1 until end of turn.|Portal|Common|mono|3|0.0|||1.538|Ted Naifeh|||Creatures you control get +1/+1 until end of turn.|0
-4324|Whiptail Wurm|{6}{G}|Creature - Wurm|8|5||Portal|Uncommon|mono|7|0.0|||1.324|Una Fricker||||0
-4246|Wicked Pact|{1}{B}{B}|Sorcery|||Destroy two target nonblack creatures. You lose 5 life.|Portal|Rare|mono|3|0.0|||2.767|Adam Rex|||Destroy two target nonblack creatures. You lose 5 life.|0
-4284|Wind Drake|{2}{U}|Creature - Drake|2|2|Flying|Portal|Common|mono|3|0.0|||2.765|Zina Saunders|||Flying|0
-4368|Winds of Change|{R}|Sorcery|||Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|Portal|Rare|mono|1|0.0|||3.9|Adam Rex|||Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|0
-4285|Withering Gaze|{2}{U}|Sorcery|||Target opponent reveals his or her hand. You draw a card for each Forest and green card in it.|Portal|Uncommon|mono|3|0.0|||2.444|Scott M. Fischer|||Target opponent reveals his or her hand. You draw a card for each Forest and green card in it.|0
-4327|Wood Elves|{2}{G}|Creature - Elf Scout|1|1|When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|Portal|Rare|mono|3|0.0|||3.625|Rebecca Guay|||When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|0
-4408|Wrath of God|{2}{W}{W}|Sorcery|||Destroy all creatures. They can't be regenerated.|Portal|Rare|mono|4|0.0|||4.622|Mike Raabe|||Destroy all creatures. They can't be regenerated.|0
+ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
+4207|Arrogant Vampire|{3}{B}{B}|Creature - Vampire|4|3|Flying|Portal|Uncommon|0.0||2.051|Zina Saunders|1||Flying|0|
+4208|Assassin's Blade|{1}{B}|Instant|||Cast Assassin's Blade only during the declare attackers step and only if you've been attacked this step.<br>Destroy target nonblack attacking creature.|Portal|Uncommon|0.0||3.036|John Matson|2||Cast Assassin's Blade only during the declare attackers step and only if you've been attacked this step.<br>Destroy target nonblack attacking creature.|0|
+4212|Charging Bandits|{4}{B}|Creature - Human Rogue|3|3|Whenever Charging Bandits attacks, it gets +2/+0 until end of turn.|Portal|Uncommon|0.0||1.767|Dermot Power|3||Whenever Charging Bandits attacks, it gets +2/+0 until end of turn.|0|
+4213|Craven Knight|{1}{B}|Creature - Human Knight|2|2|Craven Knight can't block.|Portal|Common|0.0||1.435|Charles Gillespie|4||Craven Knight can't block.|0|
+4214|Cruel Bargain|{B}{B}{B}|Sorcery|||Draw four cards. You lose half your life, rounded up.|Portal|Rare|0.0||3.844|Adrian Smith|5||Draw four cards. You lose half your life, rounded up.|0|
+4215|Cruel Tutor|{2}{B}|Sorcery|||Search your library for a card, then shuffle your library and put that card on top of it. You lose 2 life.|Portal|Rare|0.0||2.774|Kev Walker|6||Search your library for a card, then shuffle your library and put that card on top of it. You lose 2 life.|0|
+4216|Dread Charge|{3}{B}|Sorcery|||Until end of turn, black creatures you control can be blocked only by black creatures.|Portal|Rare|0.0||1.958|Ted Naifeh|7||Until end of turn, black creatures you control can be blocked only by black creatures.|0|
+4219|Ebon Dragon|{5}{B}{B}|Creature - Dragon|5|4|Flying<br>When Ebon Dragon enters the battlefield, you may have target opponent discard a card.|Portal|Rare|0.0||2.417|Donato Giancola|8||Flying<br>When Ebon Dragon enters the battlefield, you may have target opponent discard a card.|0|
+4220|Endless Cockroaches|{1}{B}{B}|Creature - Insect|1|1|When Endless Cockroaches dies, return it to its owner's hand.|Portal|Rare|0.0||3.283|Ron Spencer|9||When Endless Cockroaches dies, return it to its owner's hand.|0|
+4222|Final Strike|{2}{B}{B}|Sorcery|||As an additional cost to cast Final Strike, sacrifice a creature.<br>Final Strike deals damage to target opponent equal to the sacrificed creature's power.|Portal|Rare|0.0||1.361|John Coulthart|10||As an additional cost to cast Final Strike, sacrifice a creature.<br>Final Strike deals damage to target opponent equal to the sacrificed creature's power.|0|
+4227|King's Assassin|{1}{B}{B}|Creature - Human Assassin|1|1|{T}: Destroy target tapped creature. Activate this ability only during your turn, before attackers are declared.|Portal|Rare|0.0||2.6|Zina Saunders|11||{T}: Destroy target tapped creature. Activate this ability only during your turn, before attackers are declared.|0|
+4228|Mercenary Knight|{2}{B}|Creature - Human Mercenary Knight|4|4|When Mercenary Knight enters the battlefield, sacrifice it unless you discard a creature card.|Portal|Rare|0.0||3.577|Adrian Smith|12||When Mercenary Knight enters the battlefield, sacrifice it unless you discard a creature card.|0|
+4229|Mind Knives|{1}{B}|Sorcery|||Target opponent discards a card at random.|Portal|Common|0.0||2.579|Rebecca Guay|13||Target opponent discards a card at random.|0|
+4232|Nature's Ruin|{2}{B}|Sorcery|||Destroy all green creatures.|Portal|Uncommon|0.0||3.868|Mike Dringenberg|14||Destroy all green creatures.|0|
+4233|Noxious Toad|{2}{B}|Creature - Frog|1|1|When Noxious Toad dies, each opponent discards a card.|Portal|Uncommon|0.0||1.406|Adrian Smith|15||When Noxious Toad dies, each opponent discards a card.|0|
+4237|Serpent Assassin|{3}{B}{B}|Creature - Snake Assassin|2|2|When Serpent Assassin enters the battlefield, you may destroy target nonblack creature.|Portal|Rare|0.0||2.294|Roger Raupp|16||When Serpent Assassin enters the battlefield, you may destroy target nonblack creature.|0|
+4239|Skeletal Crocodile|{3}{B}|Creature - Crocodile Skeleton|5|1||Portal|Common|0.0||2.115|Mike Dringenberg|17|||0|
+4240|Skeletal Snake|{1}{B}|Creature - Snake Skeleton|2|1||Portal|Common|0.0||1.889|John Matson|18|||0|
+4241|Soul Shred|{3}{B}{B}|Sorcery|||Soul Shred deals 3 damage to target nonblack creature. You gain 3 life.|Portal|Common|0.0||1.227|Alan Rabinowitz|19||Soul Shred deals 3 damage to target nonblack creature. You gain 3 life.|0|
+4242|Undying Beast|{3}{B}|Creature - Beast|3|2|When Undying Beast dies, put it on top of its owner's library.|Portal|Common|0.0||1.75|Steve Luke|20||When Undying Beast dies, put it on top of its owner's library.|0|
+4243|Vampiric Feast|{5}{B}{B}|Sorcery|||Vampiric Feast deals 4 damage to target creature or player and you gain 4 life.|Portal|Uncommon|0.0||1.034|D. Alexander Gregory|21||Vampiric Feast deals 4 damage to target creature or player and you gain 4 life.|0|
+4244|Vampiric Touch|{2}{B}|Sorcery|||Vampiric Touch deals 2 damage to target opponent and you gain 2 life.|Portal|Common|0.0||2.233|Zina Saunders|22||Vampiric Touch deals 2 damage to target opponent and you gain 2 life.|0|
+4245|Virtue's Ruin|{2}{B}|Sorcery|||Destroy all white creatures.|Portal|Uncommon|0.0||3.9|Mike Dringenberg|23||Destroy all white creatures.|0|
+4250|Capricious Sorcerer|{2}{U}|Creature - Human Wizard|1|1|{T}: Capricious Sorcerer deals 1 damage to target creature or player. Activate this ability only during your turn, before attackers are declared.|Portal|Rare|0.0||1.4|Zina Saunders|24||{T}: Capricious Sorcerer deals 1 damage to target creature or player. Activate this ability only during your turn, before attackers are declared.|0|
+4251|Cloak of Feathers|{U}|Sorcery|||Target creature gains flying until end of turn.<br>Draw a card.|Portal|Common|0.0||3.676|Rebecca Guay|25||Target creature gains flying until end of turn.<br><br>Draw a card.|0|
+4252|Cloud Dragon|{5}{U}|Creature - Illusion Dragon|5|4|Flying<br>Cloud Dragon can block only creatures with flying.|Portal|Rare|0.0||2.696|John Avon|26||Flying<br>Cloud Dragon can block only creatures with flying.|0|
+4253|Cloud Pirates|{U}|Creature - Human Pirate|1|1|Flying<br>Cloud Pirates can block only creatures with flying.|Portal|Common|0.0||2.812|Phil Foglio|27||Flying<br>Cloud Pirates can block only creatures with flying.|0|
+4254|Cloud Spirit|{2}{U}|Creature - Spirit|3|1|Flying<br>Cloud Spirit can block only creatures with flying.|Portal|Uncommon|0.0||2.833|DiTerlizzi|28||Flying<br>Cloud Spirit can block only creatures with flying.|0|
+4255|Command of Unsummoning|{2}{U}|Instant|||Cast Command of Unsummoning only during the declare attackers step and only if you've been attacked this step.<br>Return one or two target attacking creatures to their owner's hand.|Portal|Uncommon|0.0||2.15|Phil Foglio|29||Cast Command of Unsummoning only during the declare attackers step and only if you've been attacked this step.<br>Return one or two target attacking creatures to their owner's hand.|0|
+4257|Cruel Fate|{4}{U}|Sorcery|||Look at the top five cards of target opponent's library. Put one of those cards into that player's graveyard, and the rest on top of his or her library in any order.|Portal|Rare|0.0||1.714|Adrian Smith|30||Look at the top five cards of target opponent's library. Put one of those cards into that player's graveyard, and the rest on top of his or her library in any order.|0|
+4258|Deep-Sea Serpent|{4}{U}{U}|Creature - Serpent|5|5|Deep-Sea Serpent can't attack unless defending player controls an Island.|Portal|Uncommon|0.0||1.5|Scott M. Fischer|31||Deep-Sea Serpent can't attack unless defending player controls an Island.|0|
+4259|Déjà Vu|{2}{U}|Sorcery|||Return target sorcery card from your graveyard to your hand.|Portal|Common|0.0||3.278|Hannibal King|32||Return target sorcery card from your graveyard to your hand.|0|
+4260|Djinn of the Lamp|{5}{U}{U}|Creature - Djinn|5|6|Flying|Portal|Rare|0.0||1.976|DiTerlizzi|33||Flying|0|
+4262|Flux|{2}{U}|Sorcery|||Each player discards any number of cards, then draws that many cards.<br>Draw a card.|Portal|Uncommon|0.0||2.75|Ted Naifeh|34||Each player discards any number of cards, then draws that many cards.<br>Draw a card.|0|
+4265|Ingenious Thief|{1}{U}|Creature - Human Rogue|1|1|Flying<br>When Ingenious Thief enters the battlefield, look at target player's hand.|Portal|Uncommon|0.0||2.846|Dan Frazier|35||Flying<br>When Ingenious Thief enters the battlefield, look at target player's hand.|0|
+4268|Mystic Denial|{1}{U}{U}|Instant|||Counter target creature or sorcery spell.|Portal|Uncommon|0.0||1.875|Hannibal King|36||Counter target creature or sorcery spell.|0|
+4269|Omen|{1}{U}|Sorcery|||Look at the top three cards of your library, then put them back in any order. You may shuffle your library.<br>Draw a card.|Portal|Common|0.0||1.72|Eric Peterson|37||Look at the top three cards of your library, then put them back in any order. You may shuffle your library. <br>Draw a card.|0|
+4270|Owl Familiar|{1}{U}|Creature - Bird|1|1|Flying<br>When Owl Familiar enters the battlefield, draw a card, then discard a card.|Portal|Common|0.0||2.889|Janine Johnston|38||Flying<br>When Owl Familiar enters the battlefield, draw a card, then discard a card.|0|
+4271|Personal Tutor|{U}|Sorcery|||Search your library for a sorcery card and reveal that card. Shuffle your library, then put the card on top of it.|Portal|Uncommon|0.0||4.132|D. Alexander Gregory|39||Search your library for a sorcery card and reveal that card. Shuffle your library, then put the card on top of it.|0|
+4275|Sorcerous Sight|{U}|Sorcery|||Look at target opponent's hand.<br>Draw a card.|Portal|Common|0.0||1.711|Kaja Foglio|40||Look at target opponent's hand.<br><br>Draw a card.|0|
+4277|Symbol of Unsummoning|{2}{U}|Sorcery|||Return target creature to its owner's hand.<br>Draw a card.|Portal|Common|0.0||2.615|Adam Rex|41||Return target creature to its owner's hand.<br><br>Draw a card.|0|
+4278|Taunt|{U}|Sorcery|||During target player's next turn, creatures that player controls attack you if able.|Portal|Rare|0.0||3.107|Phil Foglio|42||During target player's next turn, creatures that player controls attack you if able.|0|
+4280|Thing from the Deep|{6}{U}{U}{U}|Creature - Leviathan|9|9|Whenever Thing from the Deep attacks, sacrifice it unless you sacrifice an Island.|Portal|Rare|0.0||3.054|Paolo Parente|43||Whenever Thing from the Deep attacks, sacrifice it unless you sacrifice an Island.|0|
+4283|Touch of Brilliance|{3}{U}|Sorcery|||Draw two cards.|Portal|Common|0.0||1.278|John Coulthart|44||Draw two cards.|0|
+4293|Elite Cat Warrior|{2}{G}|Creature - Cat Warrior|2|3|Forestwalk|Portal|Common|0.0||3.333|Eric Peterson|45||Forestwalk|0|
+4297|Fruition|{G}|Sorcery|||You gain 1 life for each Forest on the battlefield.|Portal|Common|0.0||3.706|Steve Luke|46||You gain 1 life for each Forest on the battlefield.|0|
+4302|Jungle Lion|{G}|Creature - Cat|2|1|Jungle Lion can't block.|Portal|Common|0.0||4.25|Janine Johnston|47||Jungle Lion can't block.|0|
+4303|Mobilize|{G}|Sorcery|||Untap all creatures you control.|Portal|Common|0.0||3.139|Rebecca Guay|48||Untap all creatures you control.|0|
+4307|Natural Order|{2}{G}{G}|Sorcery|||As an additional cost to cast Natural Order, sacrifice a green creature.<br>Search your library for a green creature card and put it onto the battlefield. Then shuffle your library.|Portal|Rare|0.0||4.765|Alan Rabinowitz|49||As an additional cost to cast Natural Order, sacrifice a green creature.<br>Search your library for a green creature card and put it onto the battlefield. Then shuffle your library.|0|
+4313|Plant Elemental|{1}{G}|Creature - Plant Elemental|3|4|When Plant Elemental enters the battlefield, sacrifice it unless you sacrifice a Forest.|Portal|Uncommon|0.0||3.2|Ted Naifeh|50||When Plant Elemental enters the battlefield, sacrifice it unless you sacrifice a Forest.|0|
+4316|Rowan Treefolk|{3}{G}|Creature - Treefolk|3|4||Portal|Common|0.0||2.146|Gerry Grace|51|||0|
+4320|Sylvan Tutor|{G}|Sorcery|||Search your library for a creature card and reveal that card. Shuffle your library, then put the card on top of it.|Portal|Rare|0.0||4.107|Kaja Foglio|52||Search your library for a creature card and reveal that card. Shuffle your library, then put the card on top of it.|0|
+4321|Thundering Wurm|{2}{G}|Creature - Wurm|4|4|When Thundering Wurm enters the battlefield, sacrifice it unless you discard a land card.|Portal|Rare|0.0||3.214|Paolo Parente|53||When Thundering Wurm enters the battlefield, sacrifice it unless you discard a land card.|0|
+4322|Treetop Defense|{1}{G}|Instant|||Cast Treetop Defense only during the declare attackers step and only if you've been attacked this step.<br>Creatures you control gain reach until end of turn. <i>(They can block creatures with flying.)</i>|Portal|Rare|0.0||1.417|Zina Saunders|54||Cast Treetop Defense only during the declare attackers step and only if you've been attacked this step.<br>Creatures you control gain reach until end of turn. <i>(They can block creatures with flying.)</i>|0|
+4325|Willow Dryad|{G}|Creature - Dryad|1|1|Forestwalk|Portal|Common|0.0||2.211|D. Alexander Gregory|55||Forestwalk|0|
+4326|Winter's Grasp|{1}{G}{G}|Sorcery|||Destroy target land.|Portal|Uncommon|0.0||3.15|Paolo Parente|56||Destroy target land.|0|
+4331|Burning Cloak|{R}|Sorcery|||Target creature gets +2/+0 until end of turn. Burning Cloak deals 2 damage to that creature.|Portal|Common|0.0||2.324|Scott M. Fischer|57||Target creature gets +2/+0 until end of turn. Burning Cloak deals 2 damage to that creature.|0|
+4333|Desert Drake|{3}{R}|Creature - Drake|2|2|Flying|Portal|Uncommon|0.0||1.667|Gerry Grace|58||Flying|0|
+4336|Fire Dragon|{6}{R}{R}{R}|Creature - Dragon|6|6|Flying<br>When Fire Dragon enters the battlefield, it deals damage equal to the number of Mountains you control to target creature.|Portal|Rare|0.0||2.896|William Simpson|59||Flying<br>When Fire Dragon enters the battlefield, it deals damage equal to the number of Mountains you control to target creature.|0|
+4337|Fire Imp|{2}{R}|Creature - Imp|2|1|When Fire Imp enters the battlefield, it deals 2 damage to target creature.|Portal|Uncommon|0.0||3.538|DiTerlizzi|60||When Fire Imp enters the battlefield, it deals 2 damage to target creature.|0|
+4338|Fire Snake|{4}{R}|Creature - Snake|3|1|When Fire Snake dies, destroy target land.|Portal|Common|0.0||2.647|Steve Luke|61||When Fire Snake dies, destroy target land.|0|
+4341|Forked Lightning|{3}{R}|Sorcery|||Forked Lightning deals 4 damage divided as you choose among one, two, or three target creatures.|Portal|Rare|0.0||3.389|Ted Naifeh|62||Forked Lightning deals 4 damage divided as you choose among one, two, or three target creatures.|0|
+4342|Goblin Bully|{1}{R}|Creature - Goblin|2|1||Portal|Common|0.0||2.143|Pete Venters|63|||0|
+4343|Highland Giant|{2}{R}{R}|Creature - Giant|3|4||Portal|Common|0.0||2.75|Ron Spencer|64|||0|
+4349|Lava Flow|{3}{R}{R}|Sorcery|||Destroy target creature or land.|Portal|Uncommon|0.0||3.107|Mike Dringenberg|65||Destroy target creature or land.|0|
+4350|Lizard Warrior|{3}{R}|Creature - Lizard Warrior|4|2||Portal|Common|0.0||1.659|Roger Raupp|66|||0|
+4351|Minotaur Warrior|{2}{R}|Creature - Minotaur Warrior|2|3||Portal|Common|0.0||2.0|Scott M. Fischer|67|||0|
+4353|Pillaging Horde|{2}{R}{R}|Creature - Human Barbarian|5|5|When Pillaging Horde enters the battlefield, sacrifice it unless you discard a card at random.|Portal|Rare|0.0||3.667|Kev Walker|68||When Pillaging Horde enters the battlefield, sacrifice it unless you discard a card at random.|0|
+4355|Raging Cougar|{2}{R}|Creature - Cat|2|2|Haste|Portal|Common|0.0||2.346|Terese Nielsen|69||Haste|0|
+4358|Raging Minotaur|{2}{R}{R}|Creature - Minotaur Berserker|3|3|Haste|Portal|Common|0.0||2.188|Scott M. Fischer|70||Haste|0|
+4359|Rain of Salt|{4}{R}{R}|Sorcery|||Destroy two target lands.|Portal|Uncommon|0.0||3.1|Charles Gillespie|71||Destroy two target lands.|0|
+4361|Scorching Winds|{R}|Instant|||Cast Scorching Winds only during the declare attackers step and only if you've been attacked this step.<br>Scorching Winds deals 1 damage to each attacking creature.|Portal|Uncommon|0.0||2.714|D. Alexander Gregory|72||Cast Scorching Winds only during the declare attackers step and only if you've been attacked this step.<br>Scorching Winds deals 1 damage to each attacking creature.|0|
+4367|Wall of Granite|{2}{R}|Creature - Wall|0|7|Defender <i>(This creature can't attack.)</i>|Portal|Uncommon|0.0||2.679|Kev Walker|73||Defender <i>(This creature can't attack.)</i>|0|
+4369|Alabaster Dragon|{4}{W}{W}|Creature - Dragon|4|4|Flying<br>When Alabaster Dragon dies, shuffle it into its owner's library.|Portal|Rare|0.0||2.5|Ted Naifeh|74||Flying<br>When Alabaster Dragon dies, shuffle it into its owner's library.|0|
+4380|Defiant Stand|{1}{W}|Instant|||Cast Defiant Stand only during the declare attackers step and only if you've been attacked this step.<br>Target creature gets +1/+3 until end of turn. Untap that creature.|Portal|Uncommon|0.0||2.0|Hannibal King|75||Cast Defiant Stand only during the declare attackers step and only if you've been attacked this step.<br>Target creature gets +1/+3 until end of turn. Untap that creature.|0|
+4383|Fleet-Footed Monk|{1}{W}|Creature - Human Monk|1|1|Fleet-Footed Monk can't be blocked by creatures with power 2 or greater.|Portal|Common|0.0||2.833|D. Alexander Gregory|76||Fleet-Footed Monk can't be blocked by creatures with power 2 or greater.|0|
+4386|Harsh Justice|{2}{W}|Instant|||Cast Harsh Justice only during the declare attackers step and only if you've been attacked this step.<br>This turn, whenever an attacking creature deals combat damage to you, it deals that much damage to its controller.|Portal|Rare|0.0||3.846|John Coulthart|77||Cast Harsh Justice only during the declare attackers step and only if you've been attacked this step.<br>This turn, whenever an attacking creature deals combat damage to you, it deals that much damage to its controller.|0|
+4387|Keen-Eyed Archers|{2}{W}|Creature - Elf Archer|2|2|Reach <i>(This creature can block creatures with flying.)</i>|Portal|Common|0.0||2.891|Alan Rabinowitz|78||Reach <i>(This creature can block creatures with flying.)</i>|0|
+4391|Renewing Dawn|{1}{W}|Sorcery|||You gain 2 life for each Mountain target opponent controls.|Portal|Uncommon|0.0||3.083|John Avon|79||You gain 2 life for each Mountain target opponent controls.|0|
+4392|Sacred Knight|{3}{W}|Creature - Human Knight|3|2|Sacred Knight can't be blocked by black and/or red creatures.|Portal|Common|0.0||2.816|Donato Giancola|80||Sacred Knight can't be blocked by black and/or red creatures.|0|
+4395|Spiritual Guardian|{3}{W}{W}|Creature - Spirit|3|4|When Spiritual Guardian enters the battlefield, you gain 4 life.|Portal|Rare|0.0||2.188|Terese Nielsen|81||When Spiritual Guardian enters the battlefield, you gain 4 life.|0|
+4396|Spotted Griffin|{3}{W}|Creature - Griffin|2|3|Flying|Portal|Common|0.0||1.933|William Simpson|82||Flying|0|
+4398|Starlit Angel|{3}{W}{W}|Creature - Angel|3|4|Flying|Portal|Uncommon|0.0||1.917|Rebecca Guay|83||Flying|0|
+4400|Stern Marshal|{2}{W}|Creature - Human Soldier|2|2|{T}: Target creature gets +2/+2 until end of turn. Activate this ability only during your turn, before attackers are declared.|Portal|Rare|0.0||2.033|D. Alexander Gregory|84||{T}: Target creature gets +2/+2 until end of turn. Activate this ability only during your turn, before attackers are declared.|0|
+4401|Temporary Truce|{1}{W}|Sorcery|||Each player may draw up to two cards. For each card less than two a player draws this way, that player gains 2 life.|Portal|Rare|0.0||2.786|Mike Raabe|85||Each player may draw up to two cards. For each card less than two a player draws this way, that player gains 2 life.|0|
+4402|Valorous Charge|{1}{W}{W}|Sorcery|||White creatures get +2/+0 until end of turn.|Portal|Uncommon|0.0||1.167|Douglas Shuler|86||White creatures get +2/+0 until end of turn.|0|
+4406|Warrior's Charge|{2}{W}|Sorcery|||Creatures you control get +1/+1 until end of turn.|Portal|Common|0.0||2.077|Ted Naifeh|87||Creatures you control get +1/+1 until end of turn.|0|
+4286|Alluring Scent|{1}{G}{G}|Sorcery|||All creatures able to block target creature this turn do so.|Portal|Rare|0.0||1.733|Ted Naifeh|88||All creatures able to block target creature this turn do so.|0|
+4288|Anaconda|{3}{G}|Creature - Snake|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Uncommon|0.0||2.929|Andrew Robinson|89||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
+4287|Anaconda|{3}{G}|Creature - Snake|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Uncommon|0.0||2.333|Andrew Robinson|90||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
+4247|Ancestral Memories|{2}{U}{U}{U}|Sorcery|||Look at the top seven cards of your library. Put two of them into your hand and the rest into your graveyard.|Portal|Rare|0.0||3.267|Dan Frazier|91||Look at the top seven cards of your library. Put two of them into your hand and the rest into your graveyard.|0|
+4370|Angelic Blessing|{2}{W}|Sorcery|||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|Portal|Common|0.0||2.958|DiTerlizzi|92||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|0|
+4371|Archangel|{5}{W}{W}|Creature - Angel|5|5|Flying, vigilance|Portal|Rare|0.0||2.719|Quinton Hoover|93||Flying, vigilance|0|
+4372|Ardent Militia|{4}{W}|Creature - Human Soldier|2|5|Vigilance|Portal|Uncommon|0.0||1.75|Mike Raabe|94||Vigilance|0|
+4373|Armageddon|{3}{W}|Sorcery|||Destroy all lands.|Portal|Rare|0.0||4.647|John Avon|95||Destroy all lands.|0|
+4374|Armored Pegasus|{1}{W}|Creature - Pegasus|1|2|Flying|Portal|Common|0.0||2.75|Andrew Robinson|96||Flying|0|
+4248|Balance of Power|{3}{U}{U}|Sorcery|||If target opponent has more cards in hand than you, draw cards equal to the difference.|Portal|Rare|0.0||2.067|Adam Rex|97||If target opponent has more cards in hand than you, draw cards equal to the difference.|0|
+4249|Baleful Stare|{2}{U}|Sorcery|||Target opponent reveals his or her hand. You draw a card for each Mountain and red card in it.|Portal|Uncommon|0.0||2.875|John Coulthart|98||Target opponent reveals his or her hand. You draw a card for each Mountain and red card in it.|0|
+4289|Bee Sting|{3}{G}|Sorcery|||Bee Sting deals 2 damage to target creature or player.|Portal|Uncommon|0.0||1.603|Phil Foglio|99||Bee Sting deals 2 damage to target creature or player.|0|
+4329|Blaze|{X}{R}|Sorcery|||Blaze deals X damage to target creature or player.|Portal|Uncommon|0.0||2.857|Gerry Grace|100||Blaze deals X damage to target creature or player.|0|
+4328|Blaze|{X}{R}|Sorcery|||Blaze deals X damage to target creature or player.|Portal|Uncommon|0.0||3.119|Gerry Grace|101||Blaze deals X damage to target creature or player.|0|
+4375|Blessed Reversal|{1}{W}|Instant|||You gain 3 life for each creature attacking you.|Portal|Rare|0.0||2.385|Zina Saunders|102||You gain 3 life for each creature attacking you.|0|
+4376|Blinding Light|{2}{W}|Sorcery|||Tap all nonwhite creatures.|Portal|Rare|0.0||3.143|John Coulthart|103||Tap all nonwhite creatures.|0|
+4209|Bog Imp|{1}{B}|Creature - Imp|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Portal|Common|0.0||1.4|Christopher Rush|104||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0|
+4210|Bog Raiders|{2}{B}|Creature - Zombie|2|2|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Common|0.0||2.542|Steve Luke|105||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
+4211|Bog Wraith|{3}{B}|Creature - Wraith|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Portal|Uncommon|0.0||2.357|Ted Naifeh|106||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
+4330|Boiling Seas|{3}{R}|Sorcery|||Destroy all Islands.|Portal|Uncommon|0.0||3.357|Tom Wänerstrand|107||Destroy all Islands.|0|
+4377|Border Guard|{2}{W}|Creature - Human Soldier|1|4||Portal|Common|0.0||1.722|Kev Walker|108|||0|
+4378|Breath of Life|{3}{W}|Sorcery|||Return target creature card from your graveyard to the battlefield.|Portal|Common|0.0||3.923|DiTerlizzi|109||Return target creature card from your graveyard to the battlefield.|0|
+4290|Bull Hippo|{3}{G}|Creature - Hippo|3|3|Islandwalk|Portal|Uncommon|0.0||3.056|Roger Raupp|110||Islandwalk|0|
+4379|Charging Paladin|{2}{W}|Creature - Human Knight|2|2|Whenever Charging Paladin attacks, it gets +0/+3 until end of turn.|Portal|Uncommon|0.0||2.393|Kev Walker|111||Whenever Charging Paladin attacks, it gets +0/+3 until end of turn.|0|
+4291|Charging Rhino|{3}{G}{G}|Creature - Rhino|4|4|Charging Rhino can't be blocked by more than one creature.|Portal|Rare|0.0||2.688|Una Fricker|112||Charging Rhino can't be blocked by more than one creature.|0|
+4256|Coral Eel|{1}{U}|Creature - Fish|2|1||Portal|Common|0.0||1.36|Una Fricker|113|||0|
+4332|Craven Giant|{2}{R}|Creature - Giant|4|1|Craven Giant can't block.|Portal|Common|0.0||1.789|Ron Spencer|114||Craven Giant can't block.|0|
+4292|Deep Wood|{1}{G}|Instant|||Cast Deep Wood only during the declare attackers step and only if you've been attacked this step.<br>Prevent all damage that would be dealt to you this turn by attacking creatures.|Portal|Uncommon|0.0||2.633|Paolo Parente|115||Cast Deep Wood only during the declare attackers step and only if you've been attacked this step.<br>Prevent all damage that would be dealt to you this turn by attacking creatures.|0|
+4334|Devastation|{5}{R}{R}|Sorcery|||Destroy all creatures and lands.|Portal|Rare|0.0||3.618|Steve Luke|116||Destroy all creatures and lands.|0|
+4381|Devoted Hero|{W}|Creature - Elf Soldier|1|2||Portal|Common|0.0||2.9|DiTerlizzi|117|||0|
+4217|Dread Reaper|{3}{B}{B}{B}|Creature - Horror|6|5|Flying<br>When Dread Reaper enters the battlefield, you lose 5 life.|Portal|Rare|0.0||1.737|Christopher Rush|118||Flying<br>When Dread Reaper enters the battlefield, you lose 5 life.|0|
+4218|Dry Spell|{1}{B}|Sorcery|||Dry Spell deals 1 damage to each creature and each player.|Portal|Uncommon|0.0||2.979|Roger Raupp|119||Dry Spell deals 1 damage to each creature and each player.|0|
+4335|Earthquake|{X}{R}|Sorcery|||Earthquake deals X damage to each creature without flying and each player.|Portal|Rare|0.0||3.957|Adrian Smith|120||Earthquake deals X damage to each creature without flying and each player.|0|
+4294|Elite Cat Warrior|{2}{G}|Creature - Cat Warrior|2|3|Forestwalk|Portal|Common|0.0||3.382|Eric Peterson|121||Forestwalk|0|
+4295|Elven Cache|{2}{G}{G}|Sorcery|||Return target card from your graveyard to your hand.|Portal|Common|0.0||2.059|Rebecca Guay|122||Return target card from your graveyard to your hand.|0|
+4296|Elvish Ranger|{2}{G}|Creature - Elf|4|1||Portal|Common|0.0||2.316|DiTerlizzi|123|||0|
+4261|Exhaustion|{2}{U}|Sorcery|||Creatures and lands target opponent controls don't untap during his or her next untap step.|Portal|Rare|0.0||3.868|DiTerlizzi|124||Creatures and lands target opponent controls don't untap during his or her next untap step.|0|
+4382|False Peace|{W}|Sorcery|||Target player skips all combat phases of his or her next turn.|Portal|Common|0.0||3.861|Zina Saunders|125||Target player skips all combat phases of his or her next turn.|0|
+4221|Feral Shadow|{2}{B}|Creature - Nightstalker|2|1|Flying|Portal|Common|0.0||2.159|Colin MacNeil|126||Flying|0|
+4339|Fire Tempest|{5}{R}{R}|Sorcery|||Fire Tempest deals 6 damage to each creature and each player.|Portal|Rare|0.0||2.929|Mike Dringenberg|127||Fire Tempest deals 6 damage to each creature and each player.|0|
+4340|Flashfires|{3}{R}|Sorcery|||Destroy all Plains.|Portal|Uncommon|0.0||3.55|Randy Gallegos|128||Destroy all Plains.|0|
+4384|Foot Soldiers|{3}{W}|Creature - Human Soldier|2|4||Portal|Common|0.0||1.842|Kev Walker|129|||0|
+4416|Forest||Basic Land - Forest|||G|Portal|Land|0.0||4.62|John Avon|130||G|0|
+4415|Forest||Basic Land - Forest|||G|Portal|Land|0.0||4.727|John Avon|131||G|0|
+4414|Forest||Basic Land - Forest|||G|Portal|Land|0.0||4.775|John Avon|132||G|0|
+4413|Forest||Basic Land - Forest|||G|Portal|Land|0.0||4.478|John Avon|133||G|0|
+4263|Giant Octopus|{3}{U}|Creature - Octopus|3|3||Portal|Common|0.0||1.882|John Matson|134|||0|
+4298|Giant Spider|{3}{G}|Creature - Spider|2|4|Reach <i>(This creature can block creatures with flying.)</i>|Portal|Common|0.0||2.962|Randy Gallegos|135||Reach <i>(This creature can block creatures with flying.)</i>|0|
+4385|Gift of Estates|{1}{W}|Sorcery|||If an opponent controls more lands than you, search your library for up to three Plains cards, reveal them, and put them into your hand. Then shuffle your library.|Portal|Rare|0.0||4.075|Kaja Foglio|136||If an opponent controls more lands than you, search your library for up to three Plains cards, reveal them, and put them into your hand. Then shuffle your library.|0|
+4299|Gorilla Warrior|{2}{G}|Creature - Ape Warrior|3|2||Portal|Common|0.0||2.091|John Matson|137|||0|
+4223|Gravedigger|{3}{B}|Creature - Zombie|2|2|When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|Portal|Uncommon|0.0||3.767|Scott M. Fischer|138||When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|0|
+4300|Grizzly Bears|{1}{G}|Creature - Bear|2|2||Portal|Common|0.0||3.6|Zina Saunders|139|||0|
+4225|Hand of Death|{2}{B}|Sorcery|||Destroy target nonblack creature.|Portal|Common|0.0||2.094|John Coulthart|140||Destroy target nonblack creature.|0|
+4224|Hand of Death|{2}{B}|Sorcery|||Destroy target nonblack creature.|Portal|Common|0.0||1.35|John Coulthart|141||Destroy target nonblack creature.|0|
+4344|Hill Giant|{3}{R}|Creature - Giant|3|3||Portal|Common|0.0||2.194|Randy Gallegos|142|||0|
+4264|Horned Turtle|{2}{U}|Creature - Turtle|1|4||Portal|Common|0.0||1.929|Adrian Smith|143|||0|
+4226|Howling Fury|{2}{B}|Sorcery|||Target creature gets +4/+0 until end of turn.|Portal|Common|0.0||1.7|Mike Dringenberg|144||Target creature gets +4/+0 until end of turn.|0|
+4345|Hulking Cyclops|{3}{R}{R}|Creature - Cyclops|5|5|Hulking Cyclops can't block.|Portal|Uncommon|0.0||2.675|Paolo Parente|145||Hulking Cyclops can't block.|0|
+4346|Hulking Goblin|{1}{R}|Creature - Goblin|2|2|Hulking Goblin can't block.|Portal|Common|0.0||1.9|Pete Venters|146||Hulking Goblin can't block.|0|
+4301|Hurricane|{X}{G}|Sorcery|||Hurricane deals X damage to each creature with flying and each player.|Portal|Rare|0.0||3.531|Andrew Robinson|147||Hurricane deals X damage to each creature with flying and each player.|0|
+4424|Island||Basic Land - Island|||U|Portal|Land|0.0||4.477|Eric Peterson|148||U|0|
+4423|Island||Basic Land - Island|||U|Portal|Land|0.0||4.607|Eric Peterson|149||U|0|
+4422|Island||Basic Land - Island|||U|Portal|Land|0.0||4.444|Eric Peterson|150||U|0|
+4421|Island||Basic Land - Island|||U|Portal|Land|0.0||4.361|Eric Peterson|151||U|0|
+4388|Knight Errant|{1}{W}|Creature - Human Knight|2|2||Portal|Common|0.0||2.5|Dan Frazier|152|||0|
+4347|Last Chance|{R}{R}|Sorcery|||Take an extra turn after this one. At the beginning of that turn's end step, you lose the game.|Portal|Rare|0.0||3.632|Hannibal King|153||Take an extra turn after this one. At the beginning of that turn's end step, you lose the game.|0|
+4348|Lava Axe|{4}{R}|Sorcery|||Lava Axe deals 5 damage to target player.|Portal|Common|0.0||2.941|Adrian Smith|154||Lava Axe deals 5 damage to target player.|0|
+4266|Man-o'-War|{2}{U}|Creature - Jellyfish|2|2|When Man-o'-War enters the battlefield, return target creature to its owner's hand.|Portal|Uncommon|0.0||4.354|Una Fricker|155||When Man-o'-War enters the battlefield, return target creature to its owner's hand.|0|
+4267|Merfolk of the Pearl Trident|{U}|Creature - Merfolk|1|1||Portal|Common|0.0||1.292|DiTerlizzi|156|||0|
+4230|Mind Rot|{2}{B}|Sorcery|||Target player discards two cards.|Portal|Common|0.0||3.233|Steve Luke|157||Target player discards two cards.|0|
+4305|Monstrous Growth|{1}{G}|Sorcery|||Target creature gets +4/+4 until end of turn.|Portal|Common|0.0||2.441|Dan Frazier|158||Target creature gets +4/+4 until end of turn.|0|
+4304|Monstrous Growth|{1}{G}|Sorcery|||Target creature gets +4/+4 until end of turn.|Portal|Common|0.0||2.381|Dan Frazier|159||Target creature gets +4/+4 until end of turn.|0|
+4306|Moon Sprite|{1}{G}|Creature - Faerie|1|1|Flying|Portal|Uncommon|0.0||1.4|Terese Nielsen|160||Flying|0|
+4420|Mountain||Basic Land - Mountain|||R|Portal|Land|0.0||4.289|Brian Durfee|161||R|0|
+4419|Mountain||Basic Land - Mountain|||R|Portal|Land|0.0||4.1|Brian Durfee|162||R|0|
+4418|Mountain||Basic Land - Mountain|||R|Portal|Land|0.0||4.55|Brian Durfee|163||R|0|
+4417|Mountain||Basic Land - Mountain|||R|Portal|Land|0.0||4.833|Brian Durfee|164||R|0|
+4352|Mountain Goat|{R}|Creature - Goat|1|1|Mountainwalk|Portal|Uncommon|0.0||2.806|Una Fricker|165||Mountainwalk|0|
+4231|Muck Rats|{B}|Creature - Rat|1|1||Portal|Common|0.0||1.045|Colin MacNeil|166|||0|
+4308|Natural Spring|{3}{G}{G}|Sorcery|||Target player gains 8 life.|Portal|Uncommon|0.0||2.286|Janine Johnston|167||Target player gains 8 life.|0|
+4309|Nature's Cloak|{2}{G}|Sorcery|||Green creatures you control gain forestwalk until end of turn.|Portal|Rare|0.0||1.65|Rebecca Guay|168||Green creatures you control gain forestwalk until end of turn.|0|
+4310|Nature's Lore|{1}{G}|Sorcery|||Search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|Portal|Common|0.0||3.87|Terese Nielsen|169||Search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|0|
+4311|Needle Storm|{2}{G}|Sorcery|||Needle Storm deals 4 damage to each creature with flying.|Portal|Uncommon|0.0||3.458|Charles Gillespie|170||Needle Storm deals 4 damage to each creature with flying.|0|
+9845|Panther Warriors|{4}{G}|Creature - Cat Warrior|6|3||Portal|Common|0.0||3.103|Eric Peterson|171|||0|
+4389|Path of Peace|{3}{W}|Sorcery|||Destroy target creature. Its owner gains 4 life.|Portal|Common|0.0||2.175|Pete Venters|172||Destroy target creature. Its owner gains 4 life.|0|
+4272|Phantom Warrior|{1}{U}{U}|Creature - Illusion Warrior|2|2|Phantom Warrior is unblockable.|Portal|Rare|0.0||3.643|Dan Frazier|173||Phantom Warrior is unblockable.|0|
+4428|Plains||Basic Land - Plains|||W|Portal|Land|0.0||4.679|Douglas Shuler|174||W|0|
+4427|Plains||Basic Land - Plains|||W|Portal|Land|0.0||4.556|Douglas Shuler|175||W|0|
+4426|Plains||Basic Land - Plains|||W|Portal|Land|0.0||4.647|Douglas Shuler|176||W|0|
+4425|Plains||Basic Land - Plains|||W|Portal|Land|0.0||4.079|Douglas Shuler|177||W|0|
+4314|Primeval Force|{2}{G}{G}{G}|Creature - Elemental|8|8|When Primeval Force enters the battlefield, sacrifice it unless you sacrifice three Forests.|Portal|Rare|0.0||3.175|Randy Gallegos|178||When Primeval Force enters the battlefield, sacrifice it unless you sacrifice three Forests.|0|
+4273|Prosperity|{X}{U}|Sorcery|||Each player draws X cards.|Portal|Rare|0.0||3.75|Phil Foglio|179||Each player draws X cards.|0|
+4354|Pyroclasm|{1}{R}|Sorcery|||Pyroclasm deals 2 damage to each creature.|Portal|Rare|0.0||4.326|John Matson|180||Pyroclasm deals 2 damage to each creature.|0|
+4234|Python|{1}{B}{B}|Creature - Snake|3|2||Portal|Common|0.0||2.167|Alan Rabinowitz|181|||0|
+4357|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Portal|Common|0.0||2.974|Pete Venters|182||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
+4356|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Portal|Common|0.0||3.062|Pete Venters|183||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
+4235|Rain of Tears|{1}{B}{B}|Sorcery|||Destroy target land.|Portal|Uncommon|0.0||3.071|Eric Peterson|184||Destroy target land.|0|
+4236|Raise Dead|{B}|Sorcery|||Return target creature card from your graveyard to your hand.|Portal|Common|0.0||3.25|Charles Gillespie|185||Return target creature card from your graveyard to your hand.|0|
+4315|Redwood Treefolk|{4}{G}|Creature - Treefolk|3|6||Portal|Common|0.0||2.1|Steve Luke|186|||0|
+4390|Regal Unicorn|{2}{W}|Creature - Unicorn|2|3||Portal|Common|0.0||1.85|Zina Saunders|187|||0|
+4393|Sacred Nectar|{1}{W}|Sorcery|||You gain 4 life.|Portal|Common|0.0||0.925|Janine Johnston|188||You gain 4 life.|0|
+4360|Scorching Spear|{R}|Sorcery|||Scorching Spear deals 1 damage to target creature or player.|Portal|Common|0.0||0.872|Mike Raabe|189||Scorching Spear deals 1 damage to target creature or player.|0|
+4394|Seasoned Marshal|{2}{W}{W}|Creature - Human Soldier|2|2|Whenever Seasoned Marshal attacks, you may tap target creature.|Portal|Uncommon|0.0||3.385|Zina Saunders|190||Whenever Seasoned Marshal attacks, you may tap target creature.|0|
+4238|Serpent Warrior|{2}{B}|Creature - Snake Warrior|3|3|When Serpent Warrior enters the battlefield, you lose 3 life.|Portal|Common|0.0||1.818|Roger Raupp|191||When Serpent Warrior enters the battlefield, you lose 3 life.|0|
+4274|Snapping Drake|{3}{U}|Creature - Drake|3|2|Flying|Portal|Common|0.0||3.16|Christopher Rush|192||Flying|0|
+4317|Spined Wurm|{4}{G}|Creature - Wurm|5|4||Portal|Common|0.0||2.361|Colin MacNeil|193|||0|
+4362|Spitting Earth|{1}{R}|Sorcery|||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|Portal|Common|0.0||2.933|Hannibal King|194||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|0|
+4318|Stalking Tiger|{3}{G}|Creature - Cat|3|3|Stalking Tiger can't be blocked by more than one creature.|Portal|Common|0.0||2.75|Colin MacNeil|195||Stalking Tiger can't be blocked by more than one creature.|0|
+4397|Starlight|{1}{W}|Sorcery|||You gain 3 life for each black creature target opponent controls.|Portal|Uncommon|0.0||2.269|John Avon|196||You gain 3 life for each black creature target opponent controls.|0|
+4399|Steadfastness|{1}{W}|Sorcery|||Creatures you control get +0/+3 until end of turn.|Portal|Common|0.0||1.125|Kev Walker|197||Creatures you control get +0/+3 until end of turn.|0|
+4363|Stone Rain|{2}{R}|Sorcery|||Destroy target land.|Portal|Common|0.0||3.957|John Matson|198||Destroy target land.|0|
+4276|Storm Crow|{1}{U}|Creature - Bird|1|2|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Portal|Common|0.0||3.935|Una Fricker|199||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0|
+4319|Summer Bloom|{1}{G}|Sorcery|||You may play up to three additional lands this turn.|Portal|Rare|0.0||4.167|Kaja Foglio|200||You may play up to three additional lands this turn.|0|
+4412|Swamp||Basic Land - Swamp|||B|Portal|Land|0.0||4.567|Romas|201||B|0|
+4411|Swamp||Basic Land - Swamp|||B|Portal|Land|0.0||4.722|Romas|202||B|0|
+4410|Swamp||Basic Land - Swamp|||B|Portal|Land|0.0||4.75|Romas|203||B|0|
+4409|Swamp||Basic Land - Swamp|||B|Portal|Land|0.0||4.417|Romas|204||B|0|
+4279|Theft of Dreams|{2}{U}|Sorcery|||Draw a card for each tapped creature target opponent controls.|Portal|Uncommon|0.0||3.263|Adam Rex|205||Draw a card for each tapped creature target opponent controls.|0|
+4364|Thundermare|{5}{R}|Creature - Elemental Horse|5|5|Haste <i>(This creature can attack the turn it comes under your control.)</i><br>When Thundermare enters the battlefield, tap all other creatures.|Portal|Rare|0.0||3.643|Bob Eggleton|206||Haste <i>(This creature can attack the turn it comes under your control.)</i><br>When Thundermare enters the battlefield, tap all other creatures.|0|
+4281|Tidal Surge|{1}{U}|Sorcery|||Tap up to three target creatures without flying.|Portal|Common|0.0||2.885|Douglas Shuler|207||Tap up to three target creatures without flying.|0|
+4282|Time Ebb|{2}{U}|Sorcery|||Put target creature on top of its owner's library.|Portal|Common|0.0||2.667|Alan Rabinowitz|208||Put target creature on top of its owner's library.|0|
+4323|Untamed Wilds|{2}{G}|Sorcery|||Search your library for a basic land card and put that card onto the battlefield. Then shuffle your library.|Portal|Uncommon|0.0||2.857|Romas|209||Search your library for a basic land card and put that card onto the battlefield. Then shuffle your library.|0|
+4403|Venerable Monk|{2}{W}|Creature - Human Monk Cleric|2|2|When Venerable Monk enters the battlefield, you gain 2 life.|Portal|Uncommon|0.0||1.944|D. Alexander Gregory|210||When Venerable Monk enters the battlefield, you gain 2 life.|0|
+4404|Vengeance|{3}{W}|Sorcery|||Destroy target tapped creature.|Portal|Uncommon|0.0||2.591|Andrew Robinson|211||Destroy target tapped creature.|0|
+4365|Volcanic Dragon|{4}{R}{R}|Creature - Dragon|4|4|Flying<br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Portal|Rare|0.0||3.315|Tom Wänerstrand|212||Flying<br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
+4366|Volcanic Hammer|{1}{R}|Sorcery|||Volcanic Hammer deals 3 damage to target creature or player.|Portal|Common|0.0||2.694|Christopher Rush|213||Volcanic Hammer deals 3 damage to target creature or player.|0|
+4405|Wall of Swords|{3}{W}|Creature - Wall|3|5|Defender, flying <i>(This creature can't attack, and it can block creatures with flying.)</i>|Portal|Uncommon|0.0||2.816|Douglas Shuler|214||Defender, flying <i>(This creature can't attack, and it can block creatures with flying.)</i>|0|
+4407|Warrior's Charge|{2}{W}|Sorcery|||Creatures you control get +1/+1 until end of turn.|Portal|Common|0.0||1.538|Ted Naifeh|215||Creatures you control get +1/+1 until end of turn.|0|
+4324|Whiptail Wurm|{6}{G}|Creature - Wurm|8|5||Portal|Uncommon|0.0||1.324|Una Fricker|216|||0|
+4246|Wicked Pact|{1}{B}{B}|Sorcery|||Destroy two target nonblack creatures. You lose 5 life.|Portal|Rare|0.0||2.767|Adam Rex|217||Destroy two target nonblack creatures. You lose 5 life.|0|
+4284|Wind Drake|{2}{U}|Creature - Drake|2|2|Flying|Portal|Common|0.0||2.765|Zina Saunders|218||Flying|0|
+4368|Winds of Change|{R}|Sorcery|||Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|Portal|Rare|0.0||3.9|Adam Rex|219||Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|0|
+4285|Withering Gaze|{2}{U}|Sorcery|||Target opponent reveals his or her hand. You draw a card for each Forest and green card in it.|Portal|Uncommon|0.0||2.444|Scott M. Fischer|220||Target opponent reveals his or her hand. You draw a card for each Forest and green card in it.|0|
+4327|Wood Elves|{2}{G}|Creature - Elf Scout|1|1|When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|Portal|Rare|0.0||3.625|Rebecca Guay|221||When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|0|
+4408|Wrath of God|{2}{W}{W}|Sorcery|||Destroy all creatures. They can't be regenerated.|Portal|Rare|0.0||4.622|Mike Raabe|222||Destroy all creatures. They can't be regenerated.|0|
