@@ -125,8 +125,10 @@ class CardDescComposite extends Composite {
 								card2 = card.cloneCard();
 								((ICardModifiable) card2).setObjectByField(MagicCardField.PART, part);
 								((ICardModifiable) card2).setObjectByField(MagicCardField.OTHER_PART, opart);
-								((ICardModifiable) card2).setObjectByField(MagicCardField.NAME,
-										card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+								if (!part.contains("@")) {
+									((ICardModifiable) card2).setObjectByField(MagicCardField.NAME,
+											card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
+								}
 							}
 						} else {
 							if (cards.size() > 0)
@@ -259,15 +261,15 @@ class CardDescComposite extends Composite {
 	protected String getLinks(IMagicCard card) {
 		String links = "";
 		int flipId = card.getFlipId();
-		if (flipId != 0) {
-			links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "\">Reverse side</a><br><br>";
-		}
 		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
-		String dualId = (String) card.getObjectByField(MagicCardField.DUAL_ID);
-		if (part != null) {
-			if (dualId == null)
-				dualId = String.valueOf(card.getCardId());
-			links += "<a href=\"" + CARD_URI + OTHER_PART + part + "&" + MULTIVERSEID + dualId + "\">Other part</a><br><br>";
+		if (part != null && !part.contains("@")) {
+			links += "<a href=\"" + CARD_URI + OTHER_PART + part + ((flipId != 0) ? "&" + MULTIVERSEID + flipId : "")
+					+ "\">Other split part</a><br><br>";
+		} else if (flipId != 0) {
+			if (flipId == card.getCardId() && part != null && part.contains("@")) {
+				links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "&" + OTHER_PART + part + "\">Flip</a><br><br>";
+			} else
+				links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "\">Flip</a><br><br>";
 		}
 		return links;
 	}
@@ -283,29 +285,36 @@ class CardDescComposite extends Composite {
 		if (card.getToughness() != null && card.getToughness().length() > 0) {
 			pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
 		}
-		String data = card.getName() + "\n" + card.getType();
+		String data = card.getName() + "\n" + getType(card);
 		if (pt.length() > 0) {
 			data += "\n" + pt;
 		} else {
 			data += "\n";
 		}
-		data += "\n" + card.getSet() + " (" + card.getRarity() + ") " + "\n";
+		String num = getCollectorNumber(card);
+		data += "\n" + card.getSet() + " (" + getRarity(card) + ") " + num + "\n";
 		return data;
 	}
 
+	public String getRarity(IMagicCard card) {
+		return card.getRarity() == null ? "Unknown Rarity" : card.getRarity();
+	}
+
+	public String getType(IMagicCard card) {
+		return card.getType() == null ? "Unknown Type" : card.getType();
+	}
+
 	private String getCardDataHtml(IMagicCard card) {
-		String pt = "";
-		if (card.getToughness() != null && card.getToughness().length() > 0) {
-			pt = powerProvider.getText(card) + "/" + toughProvider.getText(card);
-		}
-		String data = card.getName() + "<br/>" + card.getType();
-		if (pt.length() > 0) {
-			data += "<br/>" + pt;
-		} else {
-			data += "<br/>";
-		}
-		data += "<br/>" + card.getSet() + " (" + card.getRarity() + ") " + "<p/>";
-		return data;
+		String text = getCardDataText(card);
+		text = text.replaceAll("\n", "<br/>\n");
+		return text + "<p/>";
+	}
+
+	public String getCollectorNumber(IMagicCard card) {
+		String num = (String) card.getObjectByField(MagicCardField.COLLNUM);
+		if (num != null)
+			num = "[" + num + "]";
+		return num;
 	}
 
 	private String getCardRulingsHtml(IMagicCard card) {
@@ -317,7 +326,7 @@ class CardDescComposite extends Composite {
 		for (String ruling : rulings) {
 			data += "<li>" + ruling + "</li>";
 		}
-		data += "</ul></p>";
+		data += "</ul><p/>";
 		return data;
 	}
 

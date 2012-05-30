@@ -115,7 +115,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			int enId = card.getEnglishCardId();
 			if (enId != 0) {
 				IMagicCard card2 = store.getCard(enId);
-				englishName = card2.getName();
+				englishName = card2 != null ? card2.getName() : card.getName();
 			}
 		}
 		boolean multilang = false;

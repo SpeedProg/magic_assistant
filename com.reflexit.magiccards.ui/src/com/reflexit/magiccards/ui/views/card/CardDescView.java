@@ -116,7 +116,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				Image remoteImage1 = null;
 				IOException e1 = null;
 				try {
-					remoteImage1 = ImageCreator.getInstance().getCardImage(card, CardCache.isLoadingEnabled(), forceUpdate);
+					if (card.getCardId() != 0)
+						remoteImage1 = ImageCreator.getInstance().getCardImage(card, CardCache.isLoadingEnabled(), forceUpdate);
 				} catch (CachedImageNotFoundException e) {
 					// skip
 				} catch (IOException e) {
@@ -131,17 +132,33 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				final IOException e = e1;
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						if (remoteImage == null || remoteImage.getBounds().width < 20) {
-							CardDescView.this.panel.setImageNotFound(card, e);
-							if (e != null)
-								setMessage(e.getMessage());
-							else
-								setMessage("Image loading is disabled");
-						} else {
-							if (!isStillNeeded(card))
-								return;
-							CardDescView.this.panel.setImage(card, remoteImage);
+						if (e != null)
+							setMessage(e.getMessage());
+						else if (!CardCache.isLoadingEnabled())
+							setMessage("Image loading is disabled");
+						else if (card.getCardId() == 0)
+							setMessage("Card does not exist in dababase");
+						if (!isStillNeeded(card))
+							return;
+						Image image = remoteImage;
+						if (image == null || image.getBounds().width < 20) {
+							image = ImageCreator.getInstance().createCardNotFoundImage(card);
 						}
+						// rotate image if needed
+						String options = (String) card.getObjectByField(MagicCardField.PART);
+						if (options != null && options.length() > 0) {
+							int rotate = 0;
+							if (options.contains("rotate180")) {
+								rotate = 180;
+							} else if (options.contains("rotate90")) {
+								rotate = 90;
+							}
+							if (rotate != 0)
+								image = ImageCreator.getInstance().getRotated(image, rotate);
+						}
+						if (!isStillNeeded(card))
+							return;
+						CardDescView.this.panel.setImage(card, image);
 					}
 				});
 			} finally {
@@ -198,6 +215,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				if (!isStillNeeded(card))
 					return Status.CANCEL_STATUS;
 				if (fieldMap.size() == 0)
+					return Status.OK_STATUS;
+				if (card.getCardId() == 0)
 					return Status.OK_STATUS;
 				ICardStore store = DataManager.getCardHandler().getMagicDBStore();
 				new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(

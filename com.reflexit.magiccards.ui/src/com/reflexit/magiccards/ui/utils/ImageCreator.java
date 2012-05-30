@@ -209,6 +209,62 @@ public class ImageCreator {
 		return scaled;
 	}
 
+	public Image getRotated(Image image, int angle) {
+		int dir = 0;
+		switch (angle) {
+		case 180:
+			dir = SWT.DOWN;
+			break;
+		case 90:
+			dir = SWT.RIGHT;
+			break;
+		case -90:
+			dir = SWT.LEFT;
+			break;
+		default:
+			break;
+		}
+		ImageData data = rotate(image.getImageData(), dir);
+		return new Image(image.getDevice(), data);
+	}
+
+	public ImageData rotate(ImageData srcData, int direction) {
+		int bytesPerPixel = srcData.bytesPerLine / srcData.width;
+		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine : srcData.height * bytesPerPixel;
+		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length : srcData.width * destBytesPerLine];
+		int width = 0, height = 0;
+		for (int srcY = 0; srcY < srcData.height; srcY++) {
+			for (int srcX = 0; srcX < srcData.width; srcX++) {
+				int destX = 0, destY = 0, destIndex = 0, srcIndex = 0;
+				switch (direction) {
+				case SWT.LEFT: // left 90 degrees
+					destX = srcY;
+					destY = srcData.width - srcX - 1;
+					width = srcData.height;
+					height = srcData.width;
+					break;
+				case SWT.RIGHT: // right 90 degrees
+					destX = srcData.height - srcY - 1;
+					destY = srcX;
+					width = srcData.height;
+					height = srcData.width;
+					break;
+				case SWT.DOWN: // 180 degrees
+					destX = srcData.width - srcX - 1;
+					destY = srcData.height - srcY - 1;
+					width = srcData.width;
+					height = srcData.height;
+					break;
+				}
+				destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
+				srcIndex = (srcY * srcData.bytesPerLine) + (srcX * bytesPerPixel);
+				System.arraycopy(srcData.data, srcIndex, newData, destIndex, bytesPerPixel);
+			}
+		}
+		// destBytesPerLine is used as scanlinePad to ensure that no padding is required
+		return new ImageData(width, height, srcData.depth, srcData.palette, srcData.scanlinePad, newData);
+	}
+
 	public Image createCardNotFoundImage() {
 		int width = 223;
 		int height = 310;
@@ -240,7 +296,7 @@ public class ImageCreator {
 		Image costImage = SymbolConverter.buildCostImage(card.getCost());
 		gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
 		gc.setFont(getFount(TYPE_FONT_KEY));
-		gc.drawText(card.getType(), 20, 175, true);
+		gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);
 		gc.setFont(getFount(TEXT_FONT_KEY));
 		gc.drawText("Image not found", 30, 46, true);
 		// String oracleText = card.getOracleText();

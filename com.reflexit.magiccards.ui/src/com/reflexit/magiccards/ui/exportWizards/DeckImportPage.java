@@ -7,11 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -46,13 +50,19 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.exports.ReportType;
+import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dialogs.CorrectSetDialog;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -114,7 +124,11 @@ public class DeckImportPage extends WizardDataTransferPage {
 								createNewDeck(getNewDeckName());
 								selectedLocation = getSelectedLocation();
 							}
-							ImportUtils.performImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
+							Collection<IMagicCard> result = ImportUtils.performPreImport(st, worker, header, selectedLocation,
+									new CoreMonitorAdapter(monitor));
+							if (fixErrors(result)) {
+								ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
+							}
 						}
 					}
 				};
@@ -128,6 +142,72 @@ public class DeckImportPage extends WizardDataTransferPage {
 			displayErrorDialog(e);
 		}
 		return res;
+	}
+
+	private boolean fixErrors(final Collection<IMagicCard> result) {
+		getControl().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				int size = result.size();
+				int errors = 0;
+				Editions editions = Editions.getInstance();
+				HashMap<String, String> badSets = new HashMap<String, String>();
+				for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+					IMagicCard card = (IMagicCard) iterator.next();
+					if (card.getCardId() == 0) {
+						errors++;
+						String set = card.getSet();
+						Edition eset = editions.getEditionByName(set);
+						if (eset == null)
+							badSets.put(set, set);
+					}
+				}
+				if (errors != 0) {
+					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve " + errors + " cards of " + size
+							+ ". The following sets are not found: " + badSets.keySet()
+							+ ".\n Do you want to attempt to fix import errors?");
+					if (yes) {
+						List x = new ArrayList(badSets.keySet());
+						// ...
+						for (Iterator<String> iterator = x.iterator(); iterator.hasNext();) {
+							String set = iterator.next();
+							CorrectSetDialog dialog = new CorrectSetDialog(getShell(), set);
+							if (dialog.open() == Window.OK) {
+								String newSet = dialog.getSet();
+								badSets.put(set, newSet);
+							} else {
+								break;
+							}
+						}
+						IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
+						for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+							IMagicCard card = (IMagicCard) iterator.next();
+							if (card.getCardId() == 0 && card instanceof MagicCardPhisical) {
+								String set = card.getSet();
+								String corr = badSets.get(set);
+								if (corr != null) {
+									if (!corr.equals(CorrectSetDialog.SKIP)) {
+										MagicCard newCard = card.getBase();
+										newCard.setSet(corr);
+										ImportUtils.updateCardReference((MagicCardPhisical) card, magicDbHandler.getCardStore());
+										if (card.getCardId() != 0) {
+											errors--;
+										}
+									} else {
+										iterator.remove();
+										errors--;
+									}
+								}
+							}
+						}
+						if (errors != 0) {
+							MessageDialog.openInformation(getShell(), "Import", "After all this effort I cannot resolve " + errors
+									+ " cards of " + size);
+						}
+					}
+				}
+			}
+		});
+		return true;
 	}
 
 	protected void createNewDeck(final String newDeckName) {
