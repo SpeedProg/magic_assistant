@@ -45,9 +45,9 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Edit...");
-		//setTitleImage(MagicUIActivator.getDefault().getImage("icons/Book-1-icon.gif"));
+		// setTitleImage(MagicUIActivator.getDefault().getImage("icons/Book-1-icon.gif"));
 		setTitle("Edit Properties");
-		setMessage("You can modify decl/collection properties here. Press OK to save.");
+		setMessage("You can modify deck/collection properties here. Press OK to save.");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite comp = new Composite(area, SWT.NONE);
 		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -59,9 +59,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 			type = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN);
 			type.add(IStorageInfo.DECK_TYPE);
 			type.add(IStorageInfo.COLLECTION_TYPE);
-			type.setText(IStorageInfo.DECK_TYPE.equals(info.getType())
-			        ? IStorageInfo.DECK_TYPE
-			        : IStorageInfo.COLLECTION_TYPE);
+			type.setText(IStorageInfo.DECK_TYPE.equals(info.getType()) ? IStorageInfo.DECK_TYPE : IStorageInfo.COLLECTION_TYPE);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			type.setLayoutData(gd);
 		}
