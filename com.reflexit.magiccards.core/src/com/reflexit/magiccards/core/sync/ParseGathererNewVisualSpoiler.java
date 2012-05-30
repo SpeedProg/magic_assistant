@@ -274,6 +274,7 @@ public class ParseGathererNewVisualSpoiler {
 		card.setOracleText(text);
 		card.setPower(pow);
 		card.setToughness(tou);
+		fixGathererBugs(card);
 		String[] sets = rows[3].split("<a onclick");
 		for (String set : sets) {
 			String edition = getMatch(setPattern, set, 1);
@@ -300,6 +301,18 @@ public class ParseGathererNewVisualSpoiler {
 		}
 		// print
 		handler.handle(card);
+	}
+
+	private static void fixGathererBugs(MagicCard card) {
+		String name = card.getName();
+		if (name.contains("’")) {
+			int i = name.indexOf('(');
+			int k = name.indexOf(')');
+			if (i >= 0 && k >= 0) {
+				name = name.substring(i + 1, k);
+				card.setName(name);
+			}
+		}
 	}
 
 	private static String getMatch(Pattern textPattern, String typeF) {

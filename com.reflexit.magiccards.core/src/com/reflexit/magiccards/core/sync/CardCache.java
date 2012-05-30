@@ -90,16 +90,22 @@ public class CardCache {
 
 	@NotNull
 	public static String createLocalImageFilePath(IMagicCard card) {
-		String editionName = card.getSet();
-		Editions editions = Editions.getInstance();
-		Edition set = editions.getEditionByName(editionName);
-		if (set == null)
-			throw new CannotDetermineSetAbbriviation(card);
-		String editionAbbr = set.getBaseFileName();
-		int cardId = card.getCardId();
 		File loc = FileUtils.getStateLocationFile();
-		String locale = "EN";
-		String part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
+		String part;
+		if (card.getCardId() == 0) {
+			part = "Cards/0.jpg";
+		} else {
+			String editionName = card.getSet();
+			Editions editions = Editions.getInstance();
+			Edition set = editions.getEditionByName(editionName);
+			if (set == null)
+				throw new CannotDetermineSetAbbriviation(card);
+			String editionAbbr = set.getBaseFileName();
+			int cardId = card.getCardId();
+			String locale = "EN";
+			// if card getPart != null add partPostfix or CardNum XXX
+			part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
+		}
 		String file = new File(loc, part).getPath();
 		return file;
 	}

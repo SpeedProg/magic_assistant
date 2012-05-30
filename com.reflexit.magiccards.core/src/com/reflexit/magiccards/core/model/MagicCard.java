@@ -235,11 +235,27 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		if (obj == this)
 			return true;
 		MagicCard ma = (MagicCard) obj;
-		if (this.id != 0)
-			return this.id == ma.id;
-		if (this.name != null)
-			return this.name.equals(ma.name);
-		return false;
+		if (this.id != 0) {
+			if (this.id != ma.id)
+				return false;
+			if (this.properties == null && ma.properties == null) {
+				return true;
+			}
+			// part is the other distinguisher of a card, used in split cards and flip cards
+			String part = this.getPart();
+			String part2 = ma.getPart();
+			if (part != null)
+				return part.equals(part2);
+			return part == part2;
+		} else {
+			if (this.name != null)
+				if (!this.name.equals(ma.name))
+					return false;
+			if (this.edition != null)
+				return this.edition.equals(ma.edition);
+			else
+				return this.edition == ma.edition;
+		}
 	}
 
 	@Override
@@ -341,8 +357,6 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			return getProperty(MagicCardField.OTHER_PART);
 		case PART:
 			return getProperty(MagicCardField.PART);
-		case DUAL_ID:
-			return getProperty(MagicCardField.DUAL_ID);
 		default:
 			break;
 		}
@@ -476,9 +490,6 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		case OTHER_PART:
 			setProperty(MagicCardField.OTHER_PART, value);
 			break;
-		case DUAL_ID:
-			setProperty(MagicCardField.DUAL_ID, value);
-			break;
 		default:
 			return false;
 		}
@@ -561,6 +572,8 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			for (int i = 0; i < split.length; i++) {
 				String pair = split[i];
 				String[] split2 = pair.split("=");
+				if (split2.length < 2)
+					continue;
 				setProperty(split2[0], split2[1]);
 			}
 		}
@@ -573,9 +586,13 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	public void setProperty(String key, String value) {
 		if (key == null)
 			throw new NullPointerException();
+		key = key.trim();
 		if (properties == null)
 			properties = new LinkedHashMap<String, String>(3);
-		properties.put(key, value);
+		if (value == null)
+			properties.remove(key);
+		else
+			properties.put(key, value);
 	}
 
 	public String getProperty(ICardField field) {

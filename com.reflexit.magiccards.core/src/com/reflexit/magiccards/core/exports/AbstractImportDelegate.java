@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.model.Editions;
@@ -92,17 +91,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected void importCard(MagicCardPhisical card) {
 		if (card == null)
 			return;
-		MagicCard ref = findRef(card.getCard());
-		if (ref != null) {
-			if (card.getSet() == null || ref.getSet().equals(card.getSet()))
-				card.setMagicCard(ref);
-			else if (card.getSet() != null) {
-				MagicCard newCard = (MagicCard) ref.clone();
-				newCard.setSet(card.getSet());
-				newCard.setId("0");
-				card.setMagicCard(newCard);
-			}
-		}
+		ImportUtils.updateCardReference(card, lookupStore);
 		if (previewMode) {
 			String[] res = new String[previewResult.getFields().length];
 			for (int i = 0; i < previewResult.getFields().length; i++) {
@@ -116,26 +105,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 	}
 
-	protected MagicCard findRef(MagicCard card) {
-		if (lookupStore == null)
-			return card;
-		MagicCard cand = null;
-		for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
-			MagicCard a = (MagicCard) iterator.next();
-			if (card.getCardId() != 0 && a.getCardId() == card.getCardId())
-				return a;
-			if (card.getName() != null && card.getName().equals(a.getName())) {
-				if (card.getSet() == null)
-					return a;
-				if (card.getSet().equals(a.getSet()))
-					return a;
-				if (cand == null || cand.getCardId() < a.getCardId())
-					cand = a;
-			}
-		}
-		return cand;
-	}
-
 	protected MagicCardPhisical createCard(List<String> list) {
 		MagicCardPhisical card = createDefaultCard();
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
@@ -143,14 +112,14 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			String value = list.get(i);
 			if (value != null && value.length() > 0 && f != null) {
 				try {
-					setFieldValue(card, f, i, value);
+					setFieldValue(card, f, i, value.trim());
 				} catch (Exception e) {
 					throw new IllegalArgumentException("Error: Line " + line + ",Field " + (i + 1) + ": Expecting " + f + ", text was: "
 							+ value);
 				}
 			}
 		}
-		if (card.getName() == null || card.getName().trim().length() == 0) {
+		if (card.getName() == null || card.getName().length() == 0) {
 			throw new IllegalArgumentException("Error: Line " + line + ", Field 2: Expected NAME value is empty");
 		}
 		return card;

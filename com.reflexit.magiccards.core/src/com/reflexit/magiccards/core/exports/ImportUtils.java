@@ -15,10 +15,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhisical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -34,7 +38,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICardStore cardStore,
+	public static Collection<IMagicCard> performPreImport(InputStream st, IImportDelegate worker, boolean header, Location location,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
 			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
@@ -44,7 +48,20 @@ public class ImportUtils {
 			worker.init(st, false, location, magicDbHandler.getCardStore());
 			worker.setHeader(header);
 			worker.run(monitor);
-			Collection importedCards = worker.getImportedCards();
+			Collection<IMagicCard> importedCards = worker.getImportedCards();
+			return importedCards;
+		} else
+			return null;
+	}
+
+	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICardStore cardStore,
+			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		Collection importedCards = performPreImport(st, worker, header, location, monitor);
+		performImport(importedCards, cardStore);
+	}
+
+	public static void performImport(Collection importedCards, ICardStore cardStore) {
+		if (importedCards != null) {
 			Collection<Location> importedLocations = getLocations(importedCards);
 			createDecks(importedLocations);
 			cardStore.addAll(importedCards);
@@ -84,9 +101,83 @@ public class ImportUtils {
 		return res;
 	}
 
-	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICoreProgressMonitor monitor)
-			throws InvocationTargetException, InterruptedException {
-		performImport(st, worker, header, location, DataManager.getCardHandler().getLibraryCardStore(), monitor);
+	public static MagicCard findRef(MagicCard card, ICardStore lookupStore) {
+		if (lookupStore == null)
+			return card;
+		MagicCard cand = null;
+		String name = getFixedName(card);
+		String set = getFixedSet(card);
+		for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
+			MagicCard a = (MagicCard) iterator.next();
+			if (card.getCardId() != 0 && a.getCardId() == card.getCardId())
+				return a;
+			String lname = a.getName();
+			if (name != null && name.equalsIgnoreCase(lname)) {
+				if (set == null)
+					return a;
+				if (set.equalsIgnoreCase(a.getSet()))
+					return a;
+				if (cand == null || cand.getCardId() < a.getCardId())
+					cand = a;
+			}
+		}
+		if (cand != null) {
+			System.err.println("Looking for " + card.getName() + " " + set + " but found " + cand.getSet());
+		}
+		return cand;
+	}
+
+	public static String getFixedSet(MagicCard card) {
+		String set = card.getSet();
+		if (set == null)
+			return null;
+		Editions eds = Editions.getInstance();
+		if (eds.getEditionByName(set) != null)
+			return set;
+		if (set.toLowerCase(Locale.ENGLISH).startsWith("token ")) {
+			set = set.replace("token ", "").trim();
+		} else if (set.contains("''")) {
+			set = set.replaceAll("''", "\"");
+		} else if (set.contains(" : ")) {
+			set = set.replaceAll(" : ", ": ");
+		} else
+			return set;
+		for (Iterator<Edition> iterator = eds.getEditions().iterator(); iterator.hasNext();) {
+			Edition ed = iterator.next();
+			if (set.equalsIgnoreCase(ed.getName())) {
+				set = ed.getName();
+			}
+		}
+		card.setSet(set);
+		return set;
+	}
+
+	public static String getFixedName(MagicCard card) {
+		String name = card.getName();
+		if (name == null)
+			return null;
+		if (name.contains("Aet")) // Æther
+			name = name.replaceAll("Aet", "Æt");
+		else
+			return name;
+		card.setName(name);
+		return name;
+	}
+
+	public static void updateCardReference(MagicCardPhisical card, ICardStore lookupStore) {
+		if (card == null)
+			return;
+		MagicCard ref = findRef(card.getCard(), lookupStore);
+		if (ref != null) {
+			if (card.getSet() == null || ref.getSet().equalsIgnoreCase(card.getSet()))
+				card.setMagicCard(ref);
+			else if (card.getSet() != null) {
+				MagicCard newCard = (MagicCard) ref.clone();
+				newCard.setSet(card.getSet());
+				newCard.setId("0");
+				card.setMagicCard(newCard);
+			}
+		}
 	}
 
 	public static PreviewResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header,
