@@ -16,7 +16,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
@@ -61,17 +61,17 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 			ArrayList<IMagicCard> toRemove = new ArrayList<IMagicCard>();
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				IMagicCard magicCard = (IMagicCard) iterator.next();
-				if (magicCard instanceof MagicCardPhisical) {
-					MagicCardPhisical mc = (MagicCardPhisical) magicCard;
+				if (magicCard instanceof MagicCardPhysical) {
+					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
 					int count = mc.getCount();
 					if (count <= 1) {
-						toRemove.add(new MagicCardPhisical(mc, mc.getLocation()));
+						toRemove.add(new MagicCardPhysical(mc, mc.getLocation()));
 					} else {
 						mc.setCount(count - 1);
 						activeDeckHandler.getCardStore().update(mc);
 					}
 				} else {
-					MagicCardPhisical magicCardCopy = new MagicCardPhisical(magicCard, null);
+					MagicCardPhysical magicCardCopy = new MagicCardPhysical(magicCard, null);
 					magicCardCopy.setCount(1);
 					toRemove.add(magicCardCopy);
 				}

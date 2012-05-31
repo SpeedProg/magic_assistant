@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -55,7 +55,7 @@ public class CountColumn extends GenColumn {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhisical && (viewer.getInput() instanceof IFilteredCardStore))
+				if (element instanceof MagicCardPhysical && (viewer.getInput() instanceof IFilteredCardStore))
 					return true;
 				else
 					return false;
@@ -77,8 +77,8 @@ public class CountColumn extends GenColumn {
 
 			@Override
 			protected Object getValue(Object element) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
+				if (element instanceof MagicCardPhysical) {
+					MagicCardPhysical card = (MagicCardPhysical) element;
 					int count = card.getCount();
 					return String.valueOf(count);
 				}
@@ -88,13 +88,13 @@ public class CountColumn extends GenColumn {
 			@Override
 			protected void setValue(Object element, Object value) {
 				if (viewer.getInput() instanceof IFilteredCardStore) {
-					if (element instanceof MagicCardPhisical) {
-						MagicCardPhisical card = (MagicCardPhisical) element;
+					if (element instanceof MagicCardPhysical) {
+						MagicCardPhysical card = (MagicCardPhysical) element;
 						int oldCount = card.getCount();
 						int count = value == null ? 0 : Integer.parseInt(value.toString());
 						if (oldCount == count)
 							return;
-						MagicCardPhisical add = new MagicCardPhisical(card, card.getLocation());
+						MagicCardPhysical add = new MagicCardPhysical(card, card.getLocation());
 						add.setCount(count);
 						// viewer.update(element, null);
 						// save

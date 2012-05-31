@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
 import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
@@ -124,8 +124,8 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof MagicCardPhisical) {
-				MagicCardPhisical card = (MagicCardPhisical) element;
+			if (element instanceof MagicCardPhysical) {
+				MagicCardPhysical card = (MagicCardPhysical) element;
 				switch (columnIndex) {
 				case 0:
 					return card.getName();

@@ -55,7 +55,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
@@ -181,14 +181,14 @@ public class DeckImportPage extends WizardDataTransferPage {
 						IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 						for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 							IMagicCard card = (IMagicCard) iterator.next();
-							if (card.getCardId() == 0 && card instanceof MagicCardPhisical) {
+							if (card.getCardId() == 0 && card instanceof MagicCardPhysical) {
 								String set = card.getSet();
 								String corr = badSets.get(set);
 								if (corr != null) {
 									if (!corr.equals(CorrectSetDialog.SKIP)) {
 										MagicCard newCard = card.getBase();
 										newCard.setSet(corr);
-										ImportUtils.updateCardReference((MagicCardPhisical) card, magicDbHandler.getCardStore());
+										ImportUtils.updateCardReference((MagicCardPhysical) card, magicDbHandler.getCardStore());
 										if (card.getCardId() != 0) {
 											errors--;
 										}

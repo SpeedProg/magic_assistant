@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -146,7 +146,7 @@ public class InfoControl extends AbstractDeckPage implements IDeckPage {
 		float cost = 0;
 		float ucost = 0;
 		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
-			MagicCardPhisical elem = (MagicCardPhisical) iterator.next();
+			MagicCardPhysical elem = (MagicCardPhysical) iterator.next();
 			cost += elem.getDbPrice() * elem.getCount();
 			ucost += elem.getPrice() * elem.getCount();
 			if (elem.getDbPrice() == 0)

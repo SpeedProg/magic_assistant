@@ -28,7 +28,7 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.thoughtworks.xstream.XStream;
 
@@ -68,8 +68,8 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 			int i = 0;
 			for (Iterator iterator = res.keySet().iterator(); iterator.hasNext(); i++) {
 				IMagicCard card = (IMagicCard) iterator.next();
-				if (card instanceof MagicCardPhisical) {
-					((MagicCardPhisical) card).setLocation(res.get(card));
+				if (card instanceof MagicCardPhysical) {
+					((MagicCardPhysical) card).setLocation(res.get(card));
 				}
 				arr[i] = card;
 			}
@@ -126,8 +126,8 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 			LinkedHashMap<IMagicCard, Location> cards = new LinkedHashMap<IMagicCard, Location>();
 			for (IMagicCard c : gadgets) {
 				Location loc = Location.NO_WHERE;
-				if (c instanceof MagicCardPhisical)
-					loc = ((MagicCardPhisical) c).getLocation();
+				if (c instanceof MagicCardPhysical)
+					loc = ((MagicCardPhysical) c).getLocation();
 				cards.put(c, loc);
 			}
 			xs.toXML(cards, out);

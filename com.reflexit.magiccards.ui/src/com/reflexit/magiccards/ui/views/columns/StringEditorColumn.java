@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -34,7 +34,7 @@ public class StringEditorColumn extends GenColumn {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhisical)
+				if (element instanceof MagicCardPhysical)
 					return true;
 				else
 					return false;
@@ -48,7 +48,7 @@ public class StringEditorColumn extends GenColumn {
 
 			@Override
 			protected Object getValue(Object element) {
-				if (element instanceof MagicCardPhisical) {
+				if (element instanceof MagicCardPhysical) {
 					String loc = getText(element);
 					return loc;
 				}
@@ -57,8 +57,8 @@ public class StringEditorColumn extends GenColumn {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
+				if (element instanceof MagicCardPhysical) {
+					MagicCardPhysical card = (MagicCardPhysical) element;
 					// move
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();

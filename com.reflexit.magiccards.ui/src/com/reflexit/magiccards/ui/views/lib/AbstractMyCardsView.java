@@ -44,7 +44,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
@@ -222,8 +222,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			if (!sel.isEmpty()) {
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
-					if (o instanceof MagicCardPhisical) {
-						((MagicCardPhisical) o).setOwn(b);
+					if (o instanceof MagicCardPhysical) {
+						((MagicCardPhysical) o).setOwn(b);
 						cardStore.update(o);
 					}
 				}
@@ -258,8 +258,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				int max = 0;
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
-					if (o instanceof MagicCardPhisical) {
-						MagicCardPhisical card = (MagicCardPhisical) o;
+					if (o instanceof MagicCardPhysical) {
+						MagicCardPhysical card = (MagicCardPhysical) o;
 						int count = card.getCount();
 						if (count > max)
 							max = count;
@@ -282,8 +282,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					return;
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
-					if (o instanceof MagicCardPhisical) {
-						MagicCardPhisical card = (MagicCardPhisical) o;
+					if (o instanceof MagicCardPhysical) {
+						MagicCardPhysical card = (MagicCardPhysical) o;
 						int count = card.getCount();
 						if (count == 1)
 							continue;
@@ -292,7 +292,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 							continue;
 						if (type == EVEN)
 							left = count / 2;
-						MagicCardPhisical card2 = new MagicCardPhisical(card, card.getLocation());
+						MagicCardPhysical card2 = new MagicCardPhysical(card, card.getLocation());
 						card.setCount(left);
 						cardStore.update(card);
 						card2.setCount(count - left);
@@ -401,9 +401,9 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		boolean any = false;
 		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
-			if (object instanceof MagicCardPhisical) {
+			if (object instanceof MagicCardPhysical) {
 				any = true;
-				MagicCardPhisical card = (MagicCardPhisical) object;
+				MagicCardPhysical card = (MagicCardPhysical) object;
 				if (first) {
 					ICardField[] allFields = MagicCardFieldPhysical.allFields();
 					for (ICardField f : allFields) {
@@ -425,7 +425,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (any) {
 			new EditCardsPropertiesDialog(getViewSite().getShell(), store).open();
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-				MagicCardPhisical card = (MagicCardPhisical) iterator.next();
+				MagicCardPhysical card = (MagicCardPhysical) iterator.next();
 				editCard(card, store);
 			}
 		}
@@ -433,7 +433,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 
 	private final static String UNCHANGED = EditCardsPropertiesDialog.UNCHANGED;
 
-	private void editCard(MagicCardPhisical card, PreferenceStore store) {
+	private void editCard(MagicCardPhysical card, PreferenceStore store) {
 		boolean modified = false;
 		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
 		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
@@ -450,7 +450,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		}
 	}
 
-	protected boolean setField(MagicCardPhisical card, PreferenceStore store, ICardField field) {
+	protected boolean setField(MagicCardPhysical card, PreferenceStore store, ICardField field) {
 		Boolean modified = false;
 		String orig = String.valueOf(card.getObjectByField(field));
 		String edited = store.getString(field.name());

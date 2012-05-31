@@ -15,7 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
@@ -59,8 +59,8 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 			for (Iterator iterator = iss.iterator(); iterator.hasNext();) {
 				IMagicCard magicCard = (IMagicCard) iterator.next();
 				ArrayList<IMagicCard> toAdd = new ArrayList<IMagicCard>();
-				if (magicCard instanceof MagicCardPhisical) {
-					MagicCardPhisical mc = (MagicCardPhisical) magicCard;
+				if (magicCard instanceof MagicCardPhysical) {
+					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
 					int count = mc.getCount();
 					mc.setCount(count + 1);
 					activeDeckHandler.getCardStore().update(mc);

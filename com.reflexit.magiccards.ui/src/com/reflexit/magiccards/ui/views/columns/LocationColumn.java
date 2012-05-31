@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -42,8 +42,8 @@ public class LocationColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof MagicCardPhisical) {
-			MagicCardPhisical m = (MagicCardPhisical) element;
+		if (element instanceof MagicCardPhysical) {
+			MagicCardPhysical m = (MagicCardPhysical) element;
 			String loc = m.getLocation().toString();
 			if (loc == null)
 				return "";
@@ -70,7 +70,7 @@ public class LocationColumn extends GenColumn {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhisical) {
+				if (element instanceof MagicCardPhysical) {
 					if (viewer.getInput() instanceof IFilteredCardStore)
 						return true;
 				}
@@ -120,8 +120,8 @@ public class LocationColumn extends GenColumn {
 
 			@Override
 			protected Object getValue(Object element) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
+				if (element instanceof MagicCardPhysical) {
+					MagicCardPhysical card = (MagicCardPhysical) element;
 					String loc = card.getLocation().toString();
 					return loc;
 				}
@@ -131,8 +131,8 @@ public class LocationColumn extends GenColumn {
 			@Override
 			protected void setValue(Object element, Object value) {
 				if (viewer.getInput() instanceof IFilteredCardStore) {
-					if (element instanceof MagicCardPhisical) {
-						MagicCardPhisical card = (MagicCardPhisical) element;
+					if (element instanceof MagicCardPhysical) {
+						MagicCardPhysical card = (MagicCardPhysical) element;
 						// move
 						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 						ICardStore<IMagicCard> cardStore = target.getCardStore();

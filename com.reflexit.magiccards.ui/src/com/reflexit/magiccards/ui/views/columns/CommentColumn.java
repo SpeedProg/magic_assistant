@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -27,8 +27,8 @@ public class CommentColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof MagicCardPhisical) {
-			MagicCardPhisical m = (MagicCardPhisical) element;
+		if (element instanceof MagicCardPhysical) {
+			MagicCardPhysical m = (MagicCardPhysical) element;
 			String comm = m.getComment();
 			return comm;
 		} else {
@@ -44,7 +44,7 @@ public class CommentColumn extends GenColumn {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhisical)
+				if (element instanceof MagicCardPhysical)
 					return true;
 				else
 					return false;
@@ -58,8 +58,8 @@ public class CommentColumn extends GenColumn {
 
 			@Override
 			protected Object getValue(Object element) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
+				if (element instanceof MagicCardPhysical) {
+					MagicCardPhysical card = (MagicCardPhysical) element;
 					String loc = card.getComment();
 					return loc;
 				}
@@ -68,8 +68,8 @@ public class CommentColumn extends GenColumn {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				if (element instanceof MagicCardPhisical) {
-					MagicCardPhisical card = (MagicCardPhisical) element;
+				if (element instanceof MagicCardPhysical) {
+					MagicCardPhysical card = (MagicCardPhysical) element;
 					// move
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();

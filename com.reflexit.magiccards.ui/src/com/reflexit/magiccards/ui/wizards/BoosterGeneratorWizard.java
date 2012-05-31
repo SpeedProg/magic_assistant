@@ -31,7 +31,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.Rarity;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -255,7 +255,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);
 			IMagicCard card = (IMagicCard) dbcards.getElement(index);
-			MagicCardPhisical pcard = new MagicCardPhisical(card, col.getLocation());
+			MagicCardPhysical pcard = new MagicCardPhysical(card, col.getLocation());
 			store.add(pcard);
 		}
 	}
