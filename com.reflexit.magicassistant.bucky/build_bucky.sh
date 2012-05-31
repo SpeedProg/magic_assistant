@@ -67,10 +67,11 @@ cp -r $RESULT/site.p2 $OUTPUT
 rm -rf "$EXPORT_DIR/$RELEASE"
 mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
+cp $WORKSPACE/com.reflexit.magiccards-metadata/READEME.TXT $EXPORT_DIR/$RELEASE/
 rm -rf $EXPORT_DIR/update
 mkdir $EXPORT_DIR/update
 cp -r $RESULT/site.p2 $EXPORT_DIR/update/1.2
-(cd $OUTPUT; unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*.zip;)
+(cd $OUTPUT; unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*x86.zip;)
 echo "Published results at $EXPORT_DIR/$RELEASE/"
 fi
 
@@ -82,7 +83,7 @@ if [ "$INSTALL" -eq 1 ]; then
 	rm -rf $INSTALL_DIR/$RELEASE
 	mkdir $RELEASE
 	cd $RELEASE
-    unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*.zip
+    unzip $EXPORT_DIR/$RELEASE/magicassistant*win32*x86.zip
     echo Installed in $INSTALL_DIR
 fi
 
