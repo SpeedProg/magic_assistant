@@ -6,7 +6,7 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
@@ -47,7 +47,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		for (Object element : this.store) {
 			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
-			assertEquals(LOCATION5, ((MagicCardPhisical) card).getLocation());
+			assertEquals(LOCATION5, ((MagicCardPhysical) card).getLocation());
 			found = true;
 		}
 		assertTrue("Card not found", found);
@@ -64,14 +64,14 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		for (Object element : loaded) {
 			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
-			assertEquals(def, ((MagicCardPhisical) card).getLocation());
+			assertEquals(def, ((MagicCardPhysical) card).getLocation());
 			found = true;
 		}
 		assertTrue("Card not found", found);
 	}
 
 	public void testAddCardWithLocation() {
-		MagicCardPhisical a = new MagicCardPhisical(m1, null);
+		MagicCardPhysical a = new MagicCardPhysical(m1, null);
 		Location loc2 = new Location("coll2");
 		a.setLocation(loc2);
 		this.store.add(a);
@@ -80,14 +80,14 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		for (Object element : this.store) {
 			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
-			assertEquals(loc2, ((MagicCardPhisical) card).getLocation());
+			assertEquals(loc2, ((MagicCardPhysical) card).getLocation());
 			found = true;
 		}
 		assertTrue("Card not found", found);
 	}
 
 	public void testAddCardWithLocation2() {
-		MagicCardPhisical a = new MagicCardPhisical(m1, null);
+		MagicCardPhysical a = new MagicCardPhysical(m1, null);
 		this.store.add(a);
 		Location LOC2 = new Location("coll2");
 		((ILocatable) this.store).setLocation(LOC2);
@@ -98,8 +98,8 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		assertEquals(a.getCardId(), card.getCardId());
 		IMagicCard card2 = (IMagicCard) iterator.next();
 		assertEquals(a.getCardId(), card2.getCardId());
-		Location loc1 = ((MagicCardPhisical) card).getLocation();
-		Location loc2 = ((MagicCardPhisical) card2).getLocation();
+		Location loc1 = ((MagicCardPhysical) card).getLocation();
+		Location loc2 = ((MagicCardPhysical) card2).getLocation();
 		if (loc1.equals(LOCATION5)) {
 			assertEquals(LOCATION5, loc1);
 			assertEquals(LOC2, loc2);

@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.core.exports;
 
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class TablePipedImportTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
@@ -17,7 +17,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Counterspell", card1.getName());
-		assertEquals(2, ((MagicCardPhisical) card1).getCount());
+		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 	}
 
 	public void test2_N_x_C() {
@@ -27,8 +27,8 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(2, resSize);
 		assertEquals("Counterspell", card2.getName());
-		assertEquals(2, ((MagicCardPhisical) card2).getCount());
-		assertEquals(3, ((MagicCardPhisical) card1).getCount());
+		assertEquals(2, ((MagicCardPhysical) card2).getCount());
+		assertEquals(3, ((MagicCardPhysical) card1).getCount());
 	}
 
 	public void test3_N_x_C() {
@@ -37,7 +37,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Counterspell", card1.getName());
-		assertEquals(2, ((MagicCardPhisical) card1).getCount());
+		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
@@ -47,7 +47,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Counterspell", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
@@ -57,7 +57,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Counterspell", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
@@ -67,7 +67,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Risky Move", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
 	}
 
@@ -80,7 +80,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
 	}
 
@@ -90,7 +90,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Counterspell", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 }

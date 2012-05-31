@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of
@@ -33,7 +33,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
 	}
 
@@ -43,7 +43,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
 	}
 
@@ -52,9 +52,9 @@ public class MtgoImportTest extends AbstarctImportTest {
 		parse(false, mtgoImport);
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
-		String comment = ((MagicCardPhisical) card1).getSpecial();
+		String comment = ((MagicCardPhysical) card1).getSpecial();
 		assertTrue(comment, comment.contains("premium"));
 	}
 
@@ -66,9 +66,9 @@ public class MtgoImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(2, resSize);
 		assertEquals("Arrogant Bloodlord", card1.getName());
-		assertEquals(9, ((MagicCardPhisical) card1).getCount());
+		assertEquals(9, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Rise of the Eldrazi", card1.getSet());
-		assertEquals("premium,", ((MagicCardPhisical) card2).getSpecial());
-		// assertEquals("248", ((MagicCardPhisical) card2).getCard().getCollNumber());
+		assertEquals("premium,", ((MagicCardPhysical) card2).getSpecial());
+		// assertEquals("248", ((MagicCardPhysical) card2).getCard().getCollNumber());
 	}
 }

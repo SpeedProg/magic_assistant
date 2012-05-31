@@ -11,7 +11,7 @@
 package com.reflexit.magiccards.core.test.assist;
 
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * @author Alena
@@ -41,9 +41,9 @@ public class CardGenerator {
 		}
 	}
 
-	static public MagicCardPhisical generatePhysicalCardWithValues() {
+	static public MagicCardPhysical generatePhysicalCardWithValues() {
 		MagicCard card = generateCardWithValues();
-		MagicCardPhisical phi = new MagicCardPhisical(card, null);
+		MagicCardPhysical phi = new MagicCardPhysical(card, null);
 		phi.setCount(id % 10);
 		phi.setComment("comment " + id);
 		phi.setOwn(id % 2 == 0 ? true : false);

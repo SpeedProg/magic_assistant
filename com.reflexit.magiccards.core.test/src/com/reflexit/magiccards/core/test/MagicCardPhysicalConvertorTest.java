@@ -13,7 +13,7 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.data.MagicCardPhysicalConvertor;
 import com.thoughtworks.xstream.XStream;
@@ -32,28 +32,28 @@ public class MagicCardPhysicalConvertorTest extends TestCase {
 	}
 
 	public void testXStreamWriteNoDefaultFields() {
-		MagicCardPhisical phi = CardGenerator.generatePhysicalCardWithValues();
+		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
 		phi.setForTrade(0);
 		String xml = xstream.toXML(phi);
 		assertTrue(!xml.contains("forTrade"));
 	}
 
 	public void testXStreamWriteNoDefaultFieldsOwn() {
-		MagicCardPhisical phi = CardGenerator.generatePhysicalCardWithValues();
+		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
 		phi.setOwn(false);
 		String xml = xstream.toXML(phi);
 		assertTrue(!xml.contains("ownership"));
 	}
 
 	public void testXStreamWriteField() {
-		MagicCardPhisical phi = CardGenerator.generatePhysicalCardWithValues();
+		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
 		phi.setForTrade(1);
 		String xml = xstream.toXML(phi);
 		assertTrue(xml.contains("<forTrade>1"));
 	}
 
 	public void testXStreamAround() {
-		MagicCardPhisical phi = CardGenerator.generatePhysicalCardWithValues();
+		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
 		phi.setForTrade(1);
 		String xml = xstream.toXML(phi);
 		Object object = xstream.fromXML(xml);

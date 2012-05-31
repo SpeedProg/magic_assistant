@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
@@ -39,7 +39,7 @@ public class MagicWorkstationImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		assertEquals("Disrupting Scepter", card1.getName());
-		assertEquals(1, ((MagicCardPhisical) card1).getCount());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Fourth Edition", card1.getSet());
 	}
 

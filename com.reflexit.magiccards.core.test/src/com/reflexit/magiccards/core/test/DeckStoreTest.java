@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
@@ -88,7 +88,7 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testAddCardMCP() {
-		MagicCardPhisical a = createMCard(this.m1);
+		MagicCardPhysical a = createMCard(this.m1);
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
 		for (Object element : this.store) {
@@ -98,29 +98,29 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testAddCardMCP_2() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		this.store.add(a1);
-		MagicCardPhisical a2 = createMCard(this.m2);
+		MagicCardPhysical a2 = createMCard(this.m2);
 		assertEquals(this.store.size(), 1);
 		this.store.add(a2);
 		assertEquals(this.store.size(), 2);
 	}
 
 	public void testAddCardMCP_2Merge() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		this.store.add(a1);
-		MagicCardPhisical a2 = createMCard(this.m1);
+		MagicCardPhysical a2 = createMCard(this.m1);
 		assertEquals(1, this.store.size());
 		this.store.add(a2);
 		assertEquals(1, this.store.size());
-		MagicCardPhisical a3 = (MagicCardPhisical) this.store.getCard(this.m1.getCardId());
+		MagicCardPhysical a3 = (MagicCardPhysical) this.store.getCard(this.m1.getCardId());
 		assertEquals(2, a3.getCount());
 	}
 
 	public void testRemoveCard() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		this.store.add(a1);
-		MagicCardPhisical a2 = createMCard(this.m2);
+		MagicCardPhysical a2 = createMCard(this.m2);
 		assertEquals(1, this.store.size());
 		this.store.add(a2);
 		assertEquals(2, this.store.size());
@@ -129,28 +129,28 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testRemoveCard2() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		this.store.add(a1);
-		MagicCardPhisical a2 = createMCard(this.m2);
+		MagicCardPhysical a2 = createMCard(this.m2);
 		assertEquals(1, this.store.size());
 		this.store.add(a2);
 		assertEquals(2, this.store.size());
-		MagicCardPhisical a3 = (MagicCardPhisical) this.store.getCard(this.m2.getCardId());
+		MagicCardPhysical a3 = (MagicCardPhysical) this.store.getCard(this.m2.getCardId());
 		this.store.remove(a3);
 		assertEquals(1, this.store.size());
 	}
 
 	public void testSelfDragAndDrop() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		a1.setCount(1);
-		MagicCardPhisical a2 = createMCard(this.m2);
+		MagicCardPhysical a2 = createMCard(this.m2);
 		a2.setCount(3);
 		this.store.add(a1);
 		assertEquals(1, this.store.size());
 		this.store.add(a2);
 		assertEquals(2, this.store.size());
 		assertEquals(4, this.store.getCount());
-		MagicCardPhisical a3 = (MagicCardPhisical) this.store.getCard(this.m2.getCardId());
+		MagicCardPhysical a3 = (MagicCardPhysical) this.store.getCard(this.m2.getCardId());
 		this.store.add(a3);
 		assertEquals(2, this.store.size());
 		assertEquals(7, this.store.getCount());
@@ -160,9 +160,9 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testSelfDragAndDropMerge() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		a1.setCount(1);
-		MagicCardPhisical a2 = createMCard(this.m1);
+		MagicCardPhysical a2 = createMCard(this.m1);
 		a2.setCount(3);
 		this.store.add(a1);
 		assertEquals(1, this.store.size());
@@ -179,7 +179,7 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testSelfDragAndDropMerge2() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		a1.setCount(1);
 		this.store.add(a1);
 		assertEquals(1, this.store.size());
@@ -191,14 +191,14 @@ public class DeckStoreTest extends TestCase {
 		assertEquals(1, this.store.size());
 	}
 
-	private MagicCardPhisical createMCard(MagicCard m) {
-		return new MagicCardPhisical(m, null);
+	private MagicCardPhysical createMCard(MagicCard m) {
+		return new MagicCardPhysical(m, null);
 	}
 
 	public void testAddMint() {
-		MagicCardPhisical a1 = createMCard(this.m1);
+		MagicCardPhysical a1 = createMCard(this.m1);
 		a1.setCount(1);
-		MagicCardPhisical a2 = createMCard(this.m1);
+		MagicCardPhysical a2 = createMCard(this.m1);
 		a2.setCount(1);
 		a2.setCustom("mint");
 		this.store.add(a1);
@@ -219,7 +219,7 @@ public class DeckStoreTest extends TestCase {
 		for (Object element : loaded) {
 			IMagicCard card = (IMagicCard) element;
 			assertEquals(a.getCardId(), card.getCardId());
-			assertEquals(def, ((MagicCardPhisical) card).getLocation());
+			assertEquals(def, ((MagicCardPhysical) card).getLocation());
 			found = true;
 		}
 		assertTrue("Card not found", found);
