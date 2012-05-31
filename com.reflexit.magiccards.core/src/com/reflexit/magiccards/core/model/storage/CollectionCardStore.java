@@ -16,7 +16,7 @@ import java.util.Iterator;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * @author Alena
@@ -39,9 +39,9 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	public boolean doAddCard(IMagicCard card) {
 		Location loc = getLocation();
 		if (getMergeOnAdd()) {
-			MagicCardPhisical phi = (MagicCardPhisical) this.hashpart.getCard(card);
+			MagicCardPhysical phi = (MagicCardPhysical) this.hashpart.getCard(card);
 			if (phi == null || loc != null && !loc.equals(phi.getLocation())) {
-				phi = (MagicCardPhisical) createNewCard(card, loc);
+				phi = (MagicCardPhysical) createNewCard(card, loc);
 				this.hashpart.storeCard(phi);
 				if (this.storage.add(phi))
 					return true;
@@ -54,8 +54,8 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				if (card instanceof ICardCountable) {
 					count = ((ICardCountable) card).getCount();
 				}
-				MagicCardPhisical add = new MagicCardPhisical(card, loc);
-				MagicCardPhisical old = phi;
+				MagicCardPhysical add = new MagicCardPhysical(card, loc);
+				MagicCardPhysical old = phi;
 				add.setCount(old.getCount() + count);
 				doRemoveCard(old);
 				this.hashpart.storeCard(add);
@@ -82,27 +82,27 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	protected IMagicCard createNewCard(IMagicCard card, Location loc) {
 		IMagicCard phi;
 		int count = 1;
-		if (card instanceof MagicCardPhisical) {
-			phi = new MagicCardPhisical(card, loc);
-			count = ((MagicCardPhisical) card).getCount();
-			((MagicCardPhisical) phi).setCount(count);
+		if (card instanceof MagicCardPhysical) {
+			phi = new MagicCardPhysical(card, loc);
+			count = ((MagicCardPhysical) card).getCount();
+			((MagicCardPhysical) phi).setCount(count);
 		} else {
-			phi = new MagicCardPhisical(card, loc);
+			phi = new MagicCardPhysical(card, loc);
 		}
 		return phi;
 	}
 
 	@Override
 	public boolean doRemoveCard(IMagicCard card) {
-		if (!(card instanceof MagicCardPhisical))
+		if (!(card instanceof MagicCardPhysical))
 			return false;
-		MagicCardPhisical phi = (MagicCardPhisical) card;
+		MagicCardPhysical phi = (MagicCardPhysical) card;
 		Collection cards = this.hashpart.getCards(card.getCardId());
-		MagicCardPhisical found = null;
-		MagicCardPhisical max = null;
+		MagicCardPhysical found = null;
+		MagicCardPhysical max = null;
 		if (cards != null)
 			for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-				MagicCardPhisical candy = (MagicCardPhisical) iterator.next();
+				MagicCardPhysical candy = (MagicCardPhysical) iterator.next();
 				if (phi.matching(candy)) {
 					if (phi.getCount() == candy.getCount()) {
 						found = candy;
@@ -121,7 +121,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				return false;
 			if (max.getCount() < phi.getCount())
 				return false;
-			MagicCardPhisical add = new MagicCardPhisical(max, max.getLocation());
+			MagicCardPhysical add = new MagicCardPhysical(max, max.getLocation());
 			add.setCount(max.getCount() - phi.getCount());
 			storageRemove(max);
 			this.hashpart.removeCard(max);

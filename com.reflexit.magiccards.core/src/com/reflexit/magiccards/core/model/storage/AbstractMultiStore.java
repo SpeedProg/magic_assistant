@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
@@ -230,7 +230,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			loaded = map.get(newLocation);
 		loaded.setLocation(newLocation);
 		for (Iterator iterator = loaded.iterator(); iterator.hasNext();) {
-			MagicCardPhisical card = (MagicCardPhisical) iterator.next();
+			MagicCardPhysical card = (MagicCardPhysical) iterator.next();
 			card.setLocation(newLocation);
 		}
 		loaded.setName(newLocation.getName());

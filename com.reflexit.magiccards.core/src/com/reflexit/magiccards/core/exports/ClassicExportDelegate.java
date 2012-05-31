@@ -16,7 +16,7 @@ import java.util.Formatter;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -34,8 +34,8 @@ public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 			IMagicCard card = magicCard;
 			String name;
 			int count = 1;
-			if (card instanceof MagicCardPhisical) {
-				MagicCardPhisical mc = (MagicCardPhisical) card;
+			if (card instanceof MagicCardPhysical) {
+				MagicCardPhysical mc = (MagicCardPhysical) card;
 				if (location != mc.getLocation()) {
 					location = mc.getLocation();
 					exportStream.println("# " + location.getName());

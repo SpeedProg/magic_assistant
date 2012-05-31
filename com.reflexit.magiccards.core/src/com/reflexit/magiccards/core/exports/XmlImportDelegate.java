@@ -18,7 +18,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageContainer;
@@ -54,12 +54,12 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 				while (iterator.hasNext()) {
 					line++;
 					Object next = iterator.next();
-					if (next instanceof MagicCardPhisical) {
-						MagicCardPhisical card = (MagicCardPhisical) next;
+					if (next instanceof MagicCardPhysical) {
+						MagicCardPhysical card = (MagicCardPhysical) next;
 						importCard(card);
 						card.setLocation(getLocation());
 					} else if (next instanceof IMagicCard)
-						importCard(new MagicCardPhisical((IMagicCard) next, null));
+						importCard(new MagicCardPhysical((IMagicCard) next, null));
 					if (previewMode && line >= 10)
 						break;
 					monitor.worked(1);

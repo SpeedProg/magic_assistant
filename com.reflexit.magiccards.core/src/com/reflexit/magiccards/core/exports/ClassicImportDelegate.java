@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -57,7 +57,7 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 		do {
 			line++;
 			try {
-				MagicCardPhisical card = createDefaultCard();
+				MagicCardPhysical card = createDefaultCard();
 				card = parser.readLine(card);
 				previewResult.setFields(parser.getCurrentFields());
 				if (card == null)

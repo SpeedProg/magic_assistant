@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of
@@ -50,8 +50,8 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	}
 
 	@Override
-	protected synchronized MagicCardPhisical createCard(List<String> list) {
-		MagicCardPhisical x = super.createCard(list);
+	protected synchronized MagicCardPhysical createCard(List<String> list) {
+		MagicCardPhysical x = super.createCard(list);
 		try {
 			if (list.get(cardNameIndex).endsWith(" (premium)") || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
 				x.setSpecial("premium");
@@ -63,7 +63,7 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	}
 
 	@Override
-	protected void setFieldValue(MagicCardPhisical card, ICardField field, int i, String value) {
+	protected void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (i == cardNameIndex && value.endsWith(" (premium)")) {
 			value = value.replaceAll("\\Q (premium)", "");
 		}

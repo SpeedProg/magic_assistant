@@ -8,7 +8,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
@@ -34,8 +34,8 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 			for (IMagicCard magicCard : store) {
 				IMagicCard card = magicCard;
 				Collection<String> names;
-				if (card instanceof MagicCardPhisical) {
-					names = ((MagicCardPhisical) card).getHeaderNames();
+				if (card instanceof MagicCardPhysical) {
+					names = ((MagicCardPhysical) card).getHeaderNames();
 				} else if (card instanceof MagicCard) {
 					names = ((MagicCard) card).getHeaderNames();
 				} else
@@ -52,8 +52,8 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 			}
 			for (IMagicCard magicCard : store) {
 				IMagicCard card = magicCard;
-				if (card instanceof MagicCardPhisical) {
-					MagicCardPhisical mc = (MagicCardPhisical) card;
+				if (card instanceof MagicCardPhysical) {
+					MagicCardPhysical mc = (MagicCardPhysical) card;
 					ArrayList line = new ArrayList();
 					for (ICardField field : fields) {
 						line.add(mc.getObjectByField(field));

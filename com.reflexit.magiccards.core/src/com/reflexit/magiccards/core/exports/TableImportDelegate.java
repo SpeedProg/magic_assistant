@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -64,7 +64,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 							setFields(fields);
 							continue;
 						}
-						MagicCardPhisical card = createCard(Arrays.asList(split));
+						MagicCardPhysical card = createCard(Arrays.asList(split));
 						importCard(card);
 					} else {
 						throw new IllegalArgumentException("Error: Line " + line

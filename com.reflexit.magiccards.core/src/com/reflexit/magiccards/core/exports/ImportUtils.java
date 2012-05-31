@@ -23,7 +23,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
@@ -95,8 +95,8 @@ public class ImportUtils {
 		HashSet<Location> res = new HashSet<Location>();
 		for (Iterator iterator = importedCards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			if (card instanceof MagicCardPhisical)
-				res.add(((MagicCardPhisical) card).getLocation());
+			if (card instanceof MagicCardPhysical)
+				res.add(((MagicCardPhysical) card).getLocation());
 		}
 		return res;
 	}
@@ -164,7 +164,7 @@ public class ImportUtils {
 		return name;
 	}
 
-	public static void updateCardReference(MagicCardPhisical card, ICardStore lookupStore) {
+	public static void updateCardReference(MagicCardPhysical card, ICardStore lookupStore) {
 		if (card == null)
 			return;
 		MagicCard ref = findRef(card.getCard(), lookupStore);

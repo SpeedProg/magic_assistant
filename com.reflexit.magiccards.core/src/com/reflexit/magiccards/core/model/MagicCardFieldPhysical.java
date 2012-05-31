@@ -26,7 +26,7 @@ public enum MagicCardFieldPhysical implements ICardField {
 	MagicCardFieldPhysical(String javaField) {
 		if (javaField != null) {
 			try {
-				field = MagicCardPhisical.class.getDeclaredField(javaField);
+				field = MagicCardPhysical.class.getDeclaredField(javaField);
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			}
@@ -38,7 +38,7 @@ public enum MagicCardFieldPhysical implements ICardField {
 	MagicCardFieldPhysical() {
 		String javaField = name().toLowerCase(Locale.ENGLISH);
 		try {
-			field = MagicCardPhisical.class.getDeclaredField(javaField);
+			field = MagicCardPhysical.class.getDeclaredField(javaField);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

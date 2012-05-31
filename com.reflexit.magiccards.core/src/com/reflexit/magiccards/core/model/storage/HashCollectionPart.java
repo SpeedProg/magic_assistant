@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * @author Alena
@@ -72,9 +72,9 @@ public class HashCollectionPart {
 	}
 
 	protected IMagicCard getMatching(IMagicCard card, IMagicCard card2) {
-		if (card2 instanceof MagicCardPhisical && card instanceof MagicCardPhisical) {
-			MagicCardPhisical phi2 = (MagicCardPhisical) card2;
-			MagicCardPhisical phi1 = (MagicCardPhisical) card;
+		if (card2 instanceof MagicCardPhysical && card instanceof MagicCardPhysical) {
+			MagicCardPhysical phi2 = (MagicCardPhysical) card2;
+			MagicCardPhysical phi1 = (MagicCardPhysical) card;
 			if (!phi1.matching(phi2))
 				return null;
 			return card2;

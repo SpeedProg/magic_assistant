@@ -14,7 +14,7 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.thoughtworks.xstream.XStream;
 
@@ -79,7 +79,7 @@ public class DataManager {
 	public static XStream getXStream() {
 		XStream xstream = new XStream();
 		xstream.alias("mc", MagicCard.class);
-		xstream.alias("mcp", MagicCardPhisical.class);
+		xstream.alias("mcp", MagicCardPhysical.class);
 		return xstream;
 	}
 }

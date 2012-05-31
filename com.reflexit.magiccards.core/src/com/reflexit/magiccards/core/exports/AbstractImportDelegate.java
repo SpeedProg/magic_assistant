@@ -13,7 +13,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
@@ -83,12 +83,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return toImport;
 	}
 
-	protected MagicCardPhisical createDefaultCard() {
-		MagicCardPhisical card = new MagicCardPhisical(new MagicCard(), getLocation());
+	protected MagicCardPhysical createDefaultCard() {
+		MagicCardPhysical card = new MagicCardPhysical(new MagicCard(), getLocation());
 		return card;
 	}
 
-	protected void importCard(MagicCardPhisical card) {
+	protected void importCard(MagicCardPhysical card) {
 		if (card == null)
 			return;
 		ImportUtils.updateCardReference(card, lookupStore);
@@ -105,8 +105,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 	}
 
-	protected MagicCardPhisical createCard(List<String> list) {
-		MagicCardPhisical card = createDefaultCard();
+	protected MagicCardPhysical createCard(List<String> list) {
+		MagicCardPhysical card = createDefaultCard();
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
 			String value = list.get(i);
@@ -125,7 +125,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return card;
 	}
 
-	protected void setFieldValue(MagicCardPhisical card, ICardField field, int i, String value) {
+	protected void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (field == MagicCardField.EDITION_ABBR) {
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)

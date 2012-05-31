@@ -16,7 +16,7 @@ import java.util.List;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -58,7 +58,7 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 						setHeaderFields(list);
 						continue;
 					}
-					MagicCardPhisical card = createCard(list);
+					MagicCardPhysical card = createCard(list);
 					importCard(card);
 					if (previewMode && line >= 10)
 						break;

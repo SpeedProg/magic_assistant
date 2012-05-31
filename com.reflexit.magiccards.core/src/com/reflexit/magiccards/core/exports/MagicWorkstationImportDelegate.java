@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * Format example "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
@@ -48,11 +48,11 @@ public class MagicWorkstationImportDelegate extends CsvImportDelegate {
 	}
 
 	@Override
-	protected synchronized MagicCardPhisical createCard(List<String> list) {
+	protected synchronized MagicCardPhysical createCard(List<String> list) {
 		String name = list.get(0);
 		if (name.length() == 0)
 			return null;
-		MagicCardPhisical x = super.createCard(list);
+		MagicCardPhysical x = super.createCard(list);
 		try {
 			String comment = "";
 			if (list.get(10).equals("1"))
@@ -66,7 +66,7 @@ public class MagicWorkstationImportDelegate extends CsvImportDelegate {
 	}
 
 	@Override
-	protected void setFieldValue(MagicCardPhisical card, ICardField field, int i, String value) {
+	protected void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (i == 0 && value.endsWith(")")) {
 			value = value.replaceAll(" \\(\\d+\\)$", "");
 		}

@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -41,10 +41,10 @@ public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 		String name = getName();
 		stream.println("#NAME:" + name);
 		for (IMagicCard magicCard : store) {
-			if (magicCard instanceof MagicCardPhisical) {
-				MagicCardPhisical phisical = ((MagicCardPhisical) magicCard);
-				for (int i = 0; i < phisical.getCount(); i++)
-					stream.println(phisical.getCardId());
+			if (magicCard instanceof MagicCardPhysical) {
+				MagicCardPhysical physical = ((MagicCardPhysical) magicCard);
+				for (int i = 0; i < physical.getCount(); i++)
+					stream.println(physical.getCardId());
 			} else if (magicCard instanceof MagicCard) {
 				MagicCard card = (MagicCard) magicCard;
 				stream.println(card.getCardId());

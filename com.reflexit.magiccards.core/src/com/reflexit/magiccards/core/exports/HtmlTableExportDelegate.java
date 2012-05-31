@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
@@ -61,8 +61,8 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 		}
 		stream.println(line + "</tr>");
 		for (IMagicCard mc : store) {
-			if (mc instanceof MagicCardPhisical) {
-				MagicCardPhisical card = ((MagicCardPhisical) mc);
+			if (mc instanceof MagicCardPhysical) {
+				MagicCardPhysical card = ((MagicCardPhysical) mc);
 				String abbr = Editions.getInstance().getAbbrByName(card.getSet());
 				if (location != card.getLocation()) {
 					location = card.getLocation();

@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class DeckParser implements Closeable {
 	private BufferedReader reader;
@@ -31,7 +31,7 @@ public class DeckParser implements Closeable {
 		return currentFields;
 	};
 
-	public MagicCardPhisical readLine(MagicCardPhisical res) throws IOException {
+	public MagicCardPhysical readLine(MagicCardPhysical res) throws IOException {
 		nextline: do {
 			String line = reader.readLine();
 			if (line == null)

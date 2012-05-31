@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
@@ -104,7 +104,7 @@ public final class CardStoreUtils {
 				ICardCountable card = (ICardCountable) elem;
 				count = card.getCount();
 				for (int i = 0; i < count; i++) {
-					MagicCardPhisical nc = new MagicCardPhisical(elem, store.getLocation());
+					MagicCardPhysical nc = new MagicCardPhysical(elem, store.getLocation());
 					nc.setCount(1);
 					filteredList.add(nc);
 				}

@@ -30,7 +30,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
  * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no
- * phisical media
+ * physical media
  * 
  * @author Alena
  * 

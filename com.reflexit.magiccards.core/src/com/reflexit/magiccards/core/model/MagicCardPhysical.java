@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
-public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModifiable {
+public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModifiable {
 	private MagicCard card;
 	private int count;
 	private float price;
@@ -16,15 +16,15 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	private int forTrade;
 	private String special;
 
-	public MagicCardPhisical(IMagicCard card, Location location) {
+	public MagicCardPhysical(IMagicCard card, Location location) {
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;
 			this.ownership = false;
 			this.forTrade = 0;
 			this.special = null;
-		} else if (card instanceof MagicCardPhisical) {
-			MagicCardPhisical phi = (MagicCardPhisical) card;
+		} else if (card instanceof MagicCardPhysical) {
+			MagicCardPhysical phi = (MagicCardPhysical) card;
 			this.card = phi.getCard();
 			this.count = phi.getCount();
 			this.comment = phi.getComment();
@@ -192,8 +192,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		if (obj instanceof MagicCardPhisical) {
-			MagicCardPhisical phi = (MagicCardPhisical) obj;
+		if (obj instanceof MagicCardPhysical) {
+			MagicCardPhysical phi = (MagicCardPhysical) obj;
 			if (this.getCount() != phi.getCount())
 				return false;
 			if (!this.matching(phi))
@@ -213,8 +213,8 @@ public class MagicCardPhisical implements IMagicCard, ICardCountable, ICardModif
 	 * @param phi2
 	 * @return
 	 */
-	public boolean matching(MagicCardPhisical phi2) {
-		MagicCardPhisical phi1 = this;
+	public boolean matching(MagicCardPhysical phi2) {
+		MagicCardPhysical phi1 = this;
 		if (!phi1.card.equals(phi2.card))
 			return false;
 		if (phi1.isOwn() != phi2.isOwn())
