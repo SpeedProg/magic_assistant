@@ -225,6 +225,8 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 			return false;
 		if (!eqNull(phi1.getComment(), phi2.getComment()))
 			return false;
+		if (!eqNull(phi1.special, phi2.special))
+			return false;
 		return true;
 	}
 
