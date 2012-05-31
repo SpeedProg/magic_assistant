@@ -12,7 +12,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
@@ -70,8 +70,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	protected void updateDbRef() {
 		VirtualMultiFileCardStore db = null;
 		for (Object object : this) {
-			if (object instanceof MagicCardPhisical) {
-				MagicCardPhisical mp = (MagicCardPhisical) object;
+			if (object instanceof MagicCardPhysical) {
+				MagicCardPhysical mp = (MagicCardPhysical) object;
 				if (mp.getCard().getType() == null) {
 					if (db == null) {
 						db = waitForDb();
@@ -105,8 +105,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		if (getLocation() == null)
 			return;
 		for (Object object : this) {
-			if (object instanceof MagicCardPhisical) {
-				MagicCardPhisical mp = (MagicCardPhisical) object;
+			if (object instanceof MagicCardPhysical) {
+				MagicCardPhysical mp = (MagicCardPhysical) object;
 				mp.setLocation(getLocation());
 			}
 		}

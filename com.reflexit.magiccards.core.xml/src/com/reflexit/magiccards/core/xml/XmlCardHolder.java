@@ -29,7 +29,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -317,7 +317,7 @@ public class XmlCardHolder implements ICardHandler {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhisical phi = new MagicCardPhisical(card, to);
+			MagicCardPhysical phi = new MagicCardPhysical(card, to);
 			if (card instanceof MagicCard) // moving from db
 				phi.setOwn(!virtual);
 			else if (virtual) {
@@ -337,11 +337,11 @@ public class XmlCardHolder implements ICardHandler {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhisical phi = new MagicCardPhisical(card, to);
+			MagicCardPhysical phi = new MagicCardPhysical(card, to);
 			if (card instanceof MagicCard) {
 				phi.setOwn(!virtual);
-			} else if (card instanceof MagicCardPhisical) {
-				if (((MagicCardPhisical) card).isOwn() && virtual)
+			} else if (card instanceof MagicCardPhysical) {
+				if (((MagicCardPhysical) card).isOwn() && virtual)
 					throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
 			}
 			list.add(phi);
@@ -352,9 +352,9 @@ public class XmlCardHolder implements ICardHandler {
 			if (from == null) {
 				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 					IMagicCard card = (IMagicCard) iterator.next();
-					if (!(card instanceof MagicCardPhisical))
+					if (!(card instanceof MagicCardPhysical))
 						break;
-					Location from2 = ((MagicCardPhisical) card).getLocation();
+					Location from2 = ((MagicCardPhysical) card).getLocation();
 					if (from2 != null) {
 						if (from == null)
 							from = from2;
@@ -372,9 +372,9 @@ public class XmlCardHolder implements ICardHandler {
 			} else {
 				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 					IMagicCard card = (IMagicCard) iterator.next();
-					if (!(card instanceof MagicCardPhisical))
+					if (!(card instanceof MagicCardPhysical))
 						continue;
-					Location from2 = ((MagicCardPhisical) card).getLocation();
+					Location from2 = ((MagicCardPhysical) card).getLocation();
 					ICardStore<IMagicCard> sfrom2 = LibraryXmlFilteredCardStore.getInstance().getStore(from2);
 					sfrom2.remove(card);
 				}

@@ -11,7 +11,7 @@
 package com.reflexit.magiccards.core.xml.data;
 
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -32,11 +32,11 @@ public class MagicCardPhysicalConvertor implements Converter {
 	}
 
 	public boolean canConvert(Class arg0) {
-		return arg0.equals(MagicCardPhisical.class);
+		return arg0.equals(MagicCardPhysical.class);
 	}
 
 	public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
-		MagicCardPhisical card = (MagicCardPhisical) value;
+		MagicCardPhysical card = (MagicCardPhysical) value;
 		writer.startNode("card");
 		context.convertAnother(card.getCard(), new ReferenceCardConverter());
 		writer.endNode();
@@ -62,7 +62,7 @@ public class MagicCardPhysicalConvertor implements Converter {
 	}
 
 	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-		MagicCardPhisical card = new MagicCardPhisical(null, null);
-		return context.convertAnother(card, MagicCardPhisical.class, reflectionConvertor);
+		MagicCardPhysical card = new MagicCardPhysical(null, null);
+		return context.convertAnother(card, MagicCardPhysical.class, reflectionConvertor);
 	}
 }

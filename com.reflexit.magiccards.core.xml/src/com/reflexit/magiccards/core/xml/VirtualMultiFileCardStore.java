@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
@@ -56,8 +56,8 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 
 	@Override
 	public void update(IMagicCard card) {
-		if (card instanceof MagicCardPhisical)
-			super.update(((MagicCardPhisical) card).getCard());
+		if (card instanceof MagicCardPhysical)
+			super.update(((MagicCardPhysical) card).getCard());
 		else
 			super.update(card);
 	}

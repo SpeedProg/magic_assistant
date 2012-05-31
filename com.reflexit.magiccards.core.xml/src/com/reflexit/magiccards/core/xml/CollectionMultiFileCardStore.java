@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
@@ -56,7 +56,7 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	}
 
 	public File getFile(final IMagicCard card) {
-		if (card instanceof MagicCardPhisical) {
+		if (card instanceof MagicCardPhysical) {
 			Location key = getLocation(card);
 			AbstractCardStoreWithStorage<IMagicCard> subTable = this.map.get(key);
 			if (subTable == null)
@@ -79,8 +79,8 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	@Override
 	protected Location getLocation(IMagicCard card) {
 		Location loc = null;
-		if (card instanceof MagicCardPhisical) {
-			loc = ((MagicCardPhisical) card).getLocation();
+		if (card instanceof MagicCardPhysical) {
+			loc = ((MagicCardPhysical) card).getLocation();
 		}
 		if (loc != null)
 			return loc;
@@ -110,9 +110,9 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	@Override
 	public synchronized boolean doAddCard(IMagicCard card) {
 		Location loc = getLocation();
-		if (card instanceof MagicCardPhisical)
-			loc = ((MagicCardPhisical) card).getLocation();
-		MagicCardPhisical c = new MagicCardPhisical(card, loc);
+		if (card instanceof MagicCardPhysical)
+			loc = ((MagicCardPhysical) card).getLocation();
+		MagicCardPhysical c = new MagicCardPhysical(card, loc);
 		return super.doAddCard(c);
 	}
 }

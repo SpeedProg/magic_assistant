@@ -7,7 +7,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhisical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -82,8 +82,8 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 			}
 		} else if (event.getType() == CardEvent.UPDATE) {
 			// need to save xml
-			if (event.getData() instanceof MagicCardPhisical) {
-				MagicCardPhisical c = (MagicCardPhisical) event.getData();
+			if (event.getData() instanceof MagicCardPhysical) {
+				MagicCardPhysical c = (MagicCardPhysical) event.getData();
 				Location location = c.getLocation();
 				AbstractCardStoreWithStorage storage = table.getStorage(location);
 				if (storage != null) {
