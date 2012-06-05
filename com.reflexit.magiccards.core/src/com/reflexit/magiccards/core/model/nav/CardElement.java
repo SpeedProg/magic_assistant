@@ -140,6 +140,11 @@ public abstract class CardElement extends EventManager {
 		return x;
 	}
 
+	public void update() {
+		fireEvent(new CardEvent(this, CardEvent.UPDATE_CONTAINER, null));
+		return;
+	}
+
 	public CardElement newParent(CardOrganizer parent) {
 		if (parent.isAncestor(this) || this.equals(parent)) {
 			throw new MagicException("Cannot move inside itself");
