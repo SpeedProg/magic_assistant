@@ -27,7 +27,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
@@ -48,6 +51,7 @@ import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
+import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public abstract class AbstractCardsView extends ViewPart {
 	protected Action loadExtras;
@@ -57,6 +61,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	private Action actionShowPrefs;
 	protected Action actionCopy;
 	protected Action actionPaste;
+	protected Action showPrintings;
 	protected IFilteredCardStore fstore;
 	private MagicCardFilter filter = new MagicCardFilter();
 
@@ -199,6 +204,24 @@ public abstract class AbstractCardsView extends ViewPart {
 			}
 		};
 		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+		showPrintings = new Action("Show All Instances") {
+			@Override
+			public void run() {
+				IWorkbench workbench = PlatformUI.getWorkbench();
+				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					if (page != null) {
+						try {
+							PrintingsView view = (PrintingsView) page.showView(PrintingsView.ID);
+							view.setDbMode(false);
+						} catch (PartInitException e) {
+							MagicUIActivator.log(e);
+						}
+					}
+				}
+			}
+		};
 	}
 
 	protected void refresh() {

@@ -31,9 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -51,13 +48,11 @@ import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 /**
  * Cards view for personal cards (decks and collections)
@@ -72,7 +67,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected Action export;
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
-	private Action showPrintings;
 	protected IDeckAction copyToDeck;
 
 	@Override
@@ -127,24 +121,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
 						DataManager.getCardHandler().copyCards(sel.toList(), loc);
-					}
-				}
-			}
-		};
-		showPrintings = new Action("Show All Instances") {
-			@Override
-			public void run() {
-				IWorkbench workbench = PlatformUI.getWorkbench();
-				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-				if (window != null) {
-					IWorkbenchPage page = window.getActivePage();
-					if (page != null) {
-						try {
-							PrintingsView view = (PrintingsView) page.showView(PrintingsView.ID);
-							view.setDbMode(false);
-						} catch (PartInitException e) {
-							MagicUIActivator.log(e);
-						}
 					}
 				}
 			}
@@ -322,8 +298,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org
 	 * .eclipse.jface.action.IMenuManager)
 	 */
 	@Override
@@ -356,9 +331,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
-	 * .IViewSite)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
