@@ -3,11 +3,15 @@ package com.reflexit.magiccards.ui.views.nav;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class CardsNavigatorLabelProvider extends LabelProvider {
@@ -15,6 +19,15 @@ public class CardsNavigatorLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof CardElement) {
 			String name = ((CardElement) element).getName();
+			IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+			if (activeDeckHandler != null && element instanceof CardCollection) {
+				ICardStore<IMagicCard> store = ((CardCollection) element).getStore();
+				if (store != null) {
+					if (activeDeckHandler.getCardStore().getLocation().equals(store.getLocation())) {
+						return name + " (Active)";
+					}
+				}
+			}
 			return name;
 		}
 		return super.getText(element);

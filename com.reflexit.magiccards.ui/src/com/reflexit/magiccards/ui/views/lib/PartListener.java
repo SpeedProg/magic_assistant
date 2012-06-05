@@ -5,6 +5,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class PartListener implements IPartListener2 {
@@ -25,7 +26,16 @@ public class PartListener implements IPartListener2 {
 		if (part instanceof DeckView) {
 			DeckView deckView = (DeckView) part;
 			IFilteredCardStore store = deckView.getFilteredStore();
+			activateDeck(store);
+		}
+	}
+
+	public void activateDeck(IFilteredCardStore store) {
+		if (store != null) {
 			DataManager.getCardHandler().setActiveDeckHandler(store);
+			String id = store.getLocation().getBaseFileName();
+			CardCollection coll = DataManager.getModelRoot().findCardCollectionById(id);
+			coll.update();
 		}
 	}
 
@@ -54,7 +64,7 @@ public class PartListener implements IPartListener2 {
 		if (part instanceof DeckView) {
 			DeckView deckView = (DeckView) part;
 			IFilteredCardStore store = deckView.getFilteredStore();
-			DataManager.getCardHandler().setActiveDeckHandler(store);
+			activateDeck(store);
 		}
 	}
 

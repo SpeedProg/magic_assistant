@@ -331,7 +331,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		showSideboardFilter(); // activate filter
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.export);
 		getViewer().addSelectionChangedListener((ISelectionChangedListener) this.importa);
-		openInDeckView = new Action("Open in Deck View") {
+		openInDeckView = new Action("Open (Activate)") {
 			@Override
 			public void run() {
 				if (isEnabled())
@@ -469,11 +469,21 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	}
 
 	public void handleEvent(final CardEvent event) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				CardsNavigatorView.this.manager.getViewer().refresh(true);
-			}
-		});
+		int type = event.getType();
+		switch (type) {
+		case CardEvent.ADD_CONTAINER:
+		case CardEvent.REMOVE_CONTAINER:
+		case CardEvent.RENAME_CONTAINER:
+		case CardEvent.UPDATE_CONTAINER:
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					CardsNavigatorView.this.manager.getViewer().refresh(true);
+				}
+			});
+			break;
+		default:
+			break;
+		}
 	}
 
 	protected void showSideboardFilter() {
