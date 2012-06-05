@@ -202,7 +202,7 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 				return false;
 			return true;
 		}
-		if (obj instanceof IMagicCard)
+		if (obj instanceof MagicCard)
 			return this.card.equals(obj);
 		return false;
 	}
