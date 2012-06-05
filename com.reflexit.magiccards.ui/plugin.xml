@@ -128,6 +128,10 @@
             commandId="com.reflexit.magiccards.ui.commands.addToLib">
       </handler>
       <handler
+            class="com.reflexit.magiccards.ui.commands.AddToActiveDeckHandler"
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck">
+      </handler>
+      <handler
             class="com.reflexit.magiccards.ui.commands.DecreaseCardCountHandler"
             commandId="com.reflexit.magiccards.ui.commands.decreaseCount">
       </handler>
@@ -166,6 +170,12 @@
             sequence="INSERT">
       </key>
       <key
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+D">
+      </key>
+      <key
             commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
@@ -200,6 +210,11 @@
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.addToLib"
             name="Add to Default Collection">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.addToDeck"
+            name="Copy to Active Collection">
       </command>
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
@@ -296,9 +311,13 @@
       </menuContribution>
      <menuContribution
            locationURI="popup:com.reflexit.magiccards.ui.views.MagicDbView">
-       <!-- <command  commandId="com.reflexit.magiccards.ui.commands.addToLib" /> -->
-        <command  commandId="com.reflexit.magiccards.ui.commands.increaseCount" label="Add to Active Deck/Collection"/>
+        <command  commandId="com.reflexit.magiccards.ui.commands.addToLib" /> 
+        <command  commandId="com.reflexit.magiccards.ui.commands.increaseCount" label="Add to Active Collection"/>
        
+     </menuContribution>
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
+        <command  commandId="com.reflexit.magiccards.ui.commands.addToDeck" label="Copy to Active Collection"/>    
      </menuContribution>
      
      <menuContribution
@@ -376,7 +395,7 @@
      <wizard
            class="com.reflexit.magiccards.ui.exportWizards.DeckExportWizard"
            id="com.reflexit.magiccards.ui.exportWizards.DeckExportWizard"
-           name="Export Deck/Collection">
+           name="Export Collection">
      </wizard>
   </extension>
   <extension
@@ -384,7 +403,7 @@
      <wizard
            class="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
            id="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
-           name="Import Deck/Collection">
+           name="Import Collection">
      </wizard>
   </extension>
   <extension
