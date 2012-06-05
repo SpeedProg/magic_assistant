@@ -70,29 +70,6 @@ public class DeckExportWizard extends Wizard implements IExportWizard {
 		}
 		boolean res = false;
 		try {
-			final IExportDelegate<IMagicCard> worker;
-			try {
-				worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
-				worker.setColumns(columns == null ? MagicCardFieldPhysical.allNonTransientFields() : columns);
-			} catch (Exception e) {
-				throw new InvocationTargetException(e);
-			}
-			// TODO: export selection only
-			final boolean header = mainPage.getIncludeHeader();
-			final MagicCardFilter locationFilter = mainPage.getLocationFilter();
-			IRunnableWithProgress work = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
-					try {
-						filteredLibrary.update(locationFilter);
-						worker.init(new FileOutputStream(fileName), header, filteredLibrary);
-						worker.run(new CoreMonitorAdapter(monitor));
-					} catch (FileNotFoundException e) {
-						throw new InvocationTargetException(e);
-					}
-				}
-			};
-			mainPage.getRunnableContext().run(true, true, work);
 			if (reportType == reportType.XML) {
 				// TODO: export multiple files? zip?
 				try {
@@ -101,6 +78,30 @@ public class DeckExportWizard extends Wizard implements IExportWizard {
 				} catch (Exception e) {
 					throw new InvocationTargetException(e);
 				}
+			} else {
+				final IExportDelegate<IMagicCard> worker;
+				try {
+					worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
+					worker.setColumns(columns == null ? MagicCardFieldPhysical.allNonTransientFields() : columns);
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				}
+				// TODO: export selection only
+				final boolean header = mainPage.getIncludeHeader();
+				final MagicCardFilter locationFilter = mainPage.getLocationFilter();
+				IRunnableWithProgress work = new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
+						try {
+							filteredLibrary.update(locationFilter);
+							worker.init(new FileOutputStream(fileName), header, filteredLibrary);
+							worker.run(new CoreMonitorAdapter(monitor));
+						} catch (FileNotFoundException e) {
+							throw new InvocationTargetException(e);
+						}
+					}
+				};
+				mainPage.getRunnableContext().run(true, true, work);
 			}
 			return true;
 		} catch (InvocationTargetException e) {
