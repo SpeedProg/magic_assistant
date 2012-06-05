@@ -48,7 +48,10 @@ public class LocationColumn extends GenColumn {
 			if (loc == null)
 				return "";
 			if (loc.endsWith(".xml")) {
-				return loc.replaceFirst("\\.xml$", "");
+				loc = loc.replaceFirst("\\.xml$", "");
+			}
+			if (loc.startsWith("/")) {
+				loc = loc.substring(1);
 			}
 			return loc;
 		} else if (element instanceof MagicCard) {
@@ -61,8 +64,7 @@ public class LocationColumn extends GenColumn {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
 	 * (org.eclipse.jface.viewers.ColumnViewer)
 	 */
 	@Override
@@ -84,7 +86,7 @@ public class LocationColumn extends GenColumn {
 					@Override
 					protected Object openDialogBox(Control cellEditorWindow) {
 						CardNavigatorSelectionDialog d = new CardNavigatorSelectionDialog(cellEditorWindow.getShell(),
-								DataManager.getModelRoot(), false, "Select location");
+								DataManager.getModelRoot(), false, "Select location to move card into");
 						// d.setInitialLocation(iniLoc);
 						d.setValidator(new ISelectionValidator() {
 							public String isValid(Object selection) {
@@ -137,7 +139,7 @@ public class LocationColumn extends GenColumn {
 						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 						ICardStore<IMagicCard> cardStore = target.getCardStore();
 						cardStore.remove(card);
-						card.setLocation(new Location((String) value));
+						card.setLocation((Location) value);
 						cardStore.add(card);
 						// update
 						viewer.update(element, null);
