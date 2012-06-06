@@ -9,9 +9,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Location;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
+ * 
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
@@ -23,8 +25,8 @@ public class AddToLibraryHandler extends AbstractHandler {
 	}
 
 	/**
-	 * the command has been executed, so extract extract the needed information
-	 * from the application context.
+	 * the command has been executed, so extract extract the needed information from the application
+	 * context.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
@@ -33,7 +35,8 @@ public class AddToLibraryHandler extends AbstractHandler {
 			return null;
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().addAll(iss.toList());
+		Location location = DataManager.getModelRoot().getDefaultLib().getLocation();
+		DataManager.getCardHandler().copyCards(iss.toList(), location);
 		return null;
 	}
 }
