@@ -37,6 +37,20 @@ public class Location implements Comparable<Location> {
 		this(loc, NO_WHERE);
 	}
 
+	public static Location fromCard(IMagicCard card) {
+		if (card instanceof MagicCardPhysical) {
+			return ((MagicCardPhysical) card).getLocation();
+		} else if (card instanceof MagicCard) {
+			String set = card.getSet();
+			return new Location(getLocFromSet(set));
+		}
+		return Location.NO_WHERE;
+	}
+
+	private static String getLocFromSet(String set) {
+		return set.replaceAll("[\\W]", "_");
+	}
+
 	private Location(String loc, Location parent) {
 		if (loc == null || loc.length() == 0)
 			throw new IllegalArgumentException(loc);

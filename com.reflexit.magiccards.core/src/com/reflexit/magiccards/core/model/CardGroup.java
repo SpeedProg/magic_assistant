@@ -23,6 +23,7 @@ public class CardGroup implements ICardCountable {
 	private ICardField groupField;
 	private int count;
 	private ArrayList children;
+	private Object data;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
@@ -114,5 +115,24 @@ public class CardGroup implements ICardCountable {
 				}
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	/**
+	 * Get extra data object associated with the group, can be used for caching of card group
+	 * properties
+	 * 
+	 * @return
+	 */
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 }

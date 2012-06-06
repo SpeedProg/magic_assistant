@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 
-public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModifiable {
+public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModifiable, ILocatable {
 	private MagicCard card;
 	private int count;
 	private float price;

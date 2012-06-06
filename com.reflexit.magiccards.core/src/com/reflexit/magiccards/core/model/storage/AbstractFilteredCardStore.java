@@ -160,6 +160,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		for (CardGroup g : groupsList.values()) {
 			g.getChildren().clear();
 			g.setCount(0);
+			g.setData(null);
 		}
 		setFilteredList(null);
 		Collection filterCards = filterCards(this.filter);

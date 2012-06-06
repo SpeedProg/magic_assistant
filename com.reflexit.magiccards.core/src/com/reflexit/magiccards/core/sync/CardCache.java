@@ -49,8 +49,12 @@ public class CardCache {
 
 	public static URL createSetImageURL(IMagicCard card, boolean upload) throws IOException {
 		String edition = card.getSet();
-		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
 		String rarity = card.getRarity();
+		return createSetImageURL(edition, rarity, upload);
+	}
+
+	public static URL createSetImageURL(String edition, String rarity, boolean upload) throws MalformedURLException, IOException {
+		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
 		if (editionAbbr == null)
 			return null;
 		String path = createLocalSetImageFilePath(editionAbbr, rarity);
