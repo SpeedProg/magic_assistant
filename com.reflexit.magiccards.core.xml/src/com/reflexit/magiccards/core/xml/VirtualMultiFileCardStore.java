@@ -70,9 +70,7 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 
 	@Override
 	protected Location getLocation(IMagicCard card) {
-		String set = card.getSet();
-		Location loc = new Location(getExtFileName(set));
-		return loc;
+		return Location.fromCard(card);
 	}
 
 	@Override
@@ -92,14 +90,9 @@ public class VirtualMultiFileCardStore extends AbstractMultiStore<IMagicCard> im
 		throw new UnsupportedOperationException();
 	}
 
-	private String getExtFileName(String location) {
-		return location.replaceAll("[\\W]", "_");
-	}
-
 	public File getFile(final IMagicCard card) {
 		if (card instanceof MagicCard) {
-			String key = card.getSet();
-			return new File(XmlCardHolder.getDbFolder(), getExtFileName(key) + ".xml");
+			return new File(XmlCardHolder.getDbFolder(), Location.fromCard(card).getBaseFileName());
 		} else
 			throw new MagicException("Unknown card type");
 	}
