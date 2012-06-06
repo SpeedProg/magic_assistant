@@ -110,6 +110,14 @@
             name="Printings"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            class="com.reflexit.magiccards.ui.views.collector.CollectorView"
+            icon="icons/card_coll24.png"
+            id="com.reflexit.magiccards.ui.views.collector.CollectorView"
+            name="Collector"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -401,7 +409,7 @@
   <extension
         point="org.eclipse.ui.importWizards">
      <wizard
-           class="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
+           class="com.reflexit.magiccards.ui.views.collector"
            id="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
            name="Import Collection">
      </wizard>

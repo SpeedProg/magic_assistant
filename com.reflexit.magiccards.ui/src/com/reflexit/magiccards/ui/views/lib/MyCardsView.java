@@ -81,7 +81,7 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
 		int type = event.getType();
-		if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
+		if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER || type == CardEvent.RENAME_CONTAINER) {
 			reloadData();
 		}
 	}

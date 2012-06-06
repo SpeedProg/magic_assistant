@@ -517,8 +517,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 *
 	 */
 	protected void initManager() {
-		prefStore.setDefault(FilterHelper.GROUP_FIELD, "");
 		String field = prefStore.getString(FilterHelper.GROUP_FIELD);
+		if (field == null)
+			field = "";
 		updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
 		IColumnSortAction sortAction = new IColumnSortAction() {
 			public void sort(int i) {

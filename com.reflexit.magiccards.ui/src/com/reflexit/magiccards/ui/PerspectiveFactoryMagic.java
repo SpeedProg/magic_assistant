@@ -13,6 +13,7 @@ import org.eclipse.ui.actions.BaseNewWizardMenu;
 
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
+import com.reflexit.magiccards.ui.views.collector.CollectorView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -37,6 +38,7 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		left.addView(PrintingsView.ID);
 		right.addView(MagicDbView.ID);
 		right.addView(MyCardsView.ID);
+		right.addView(CollectorView.ID);
 		pf.addPlaceholder(DeckView.ID + ":*");
 		// layout.addStandaloneView(MagicDbView.ID, false, IPageLayout.LEFT,
 		// 1.0f, editorArea);

@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -12,6 +15,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -21,6 +25,7 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
 
 /**
@@ -45,20 +50,40 @@ public class LocationColumn extends GenColumn {
 		if (element instanceof MagicCardPhysical) {
 			MagicCardPhysical m = (MagicCardPhysical) element;
 			String loc = m.getLocation().toString();
-			if (loc == null)
-				return "";
-			if (loc.endsWith(".xml")) {
-				loc = loc.replaceFirst("\\.xml$", "");
-			}
-			if (loc.startsWith("/")) {
-				loc = loc.substring(1);
-			}
-			return loc;
+			return pretty(loc);
 		} else if (element instanceof MagicCard) {
 			return "MagicDB";
+		} else if (element instanceof CardGroup) {
+			Collection children = ((CardGroup) element).getChildren();
+			String loc = null;
+			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+				Object object = iterator.next();
+				if (object instanceof ILocatable) {
+					Location location = ((ILocatable) object).getLocation();
+					if (loc == null)
+						loc = location.toString();
+					else if (!loc.equals(location.toString())) {
+						loc = "<mixed>";
+						break;
+					}
+				}
+			}
+			return pretty(loc);
 		} else {
 			return super.getText(element);
 		}
+	}
+
+	public String pretty(String loc) {
+		if (loc == null)
+			loc = "";
+		else if (loc.endsWith(".xml")) {
+			loc = loc.replaceFirst("\\.xml$", "");
+		}
+		if (loc.startsWith("/")) {
+			loc = loc.substring(1);
+		}
+		return loc;
 	}
 
 	/*

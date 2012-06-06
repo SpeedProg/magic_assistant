@@ -13,6 +13,10 @@ public class GroupColumn extends GenColumn {
 		super(null, COL_NAME);
 	}
 
+	public GroupColumn(ICardField field, String columnName) {
+		super(field, columnName);
+	}
+
 	@Override
 	public int getColumnWidth() {
 		return 100;
