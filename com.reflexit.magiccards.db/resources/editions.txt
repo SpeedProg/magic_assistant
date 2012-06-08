@@ -107,3 +107,4 @@ Homelands|HM|HML|October 1995|Expansion||
 Dissension|DIS||May 2006|Expansion||Modern
 Worldwake|WWK||February 2010|Expansion||Modern, Extended
 Seventh Edition|7E|7ED|April 2001|Core||
+Planechase 2012 Edition|PC2||June 2012|?||
