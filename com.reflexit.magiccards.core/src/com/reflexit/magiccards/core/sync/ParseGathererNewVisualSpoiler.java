@@ -243,7 +243,7 @@ public class ParseGathererNewVisualSpoiler {
 			state = 0;
 		}
 		if (cards == false)
-			throw new IOException("No results");
+			throw new RuntimeException("No results");
 		return lastPage;
 	}
 
@@ -305,7 +305,7 @@ public class ParseGathererNewVisualSpoiler {
 
 	private static void fixGathererBugs(MagicCard card) {
 		String name = card.getName();
-		if (name.contains("’")) {
+		if (name.contains("ï¿½")) {
 			int i = name.indexOf('(');
 			int k = name.indexOf(')');
 			if (i >= 0 && k >= 0) {
