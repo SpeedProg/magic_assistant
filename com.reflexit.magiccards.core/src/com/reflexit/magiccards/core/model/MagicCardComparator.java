@@ -7,6 +7,8 @@ class MagicCardComparator implements Comparator {
 	private boolean accending;
 
 	public MagicCardComparator(ICardField sortField, boolean accending) {
+		if (sortField == null)
+			throw new NullPointerException();
 		this.field = sortField;
 		this.accending = accending;
 	}

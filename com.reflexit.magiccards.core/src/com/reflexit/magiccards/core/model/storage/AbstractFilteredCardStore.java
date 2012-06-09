@@ -158,9 +158,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (filter == null)
 			return;
 		for (CardGroup g : groupsList.values()) {
-			g.getChildren().clear();
-			g.setCount(0);
-			g.setData(null);
+			g.clear();
 		}
 		setFilteredList(null);
 		Collection filterCards = filterCards(this.filter);
@@ -169,6 +167,50 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
 		initialize();
+		Collection<IMagicCard> filteredList = sortCards(filter);
+		groupCards(filter, filteredList);
+		return filteredList;
+	}
+
+	protected void groupCards(MagicCardFilter filter, Collection<IMagicCard> filteredList) {
+		if (filter.getGroupField() != null) {
+			if (groupsList.size() > 0) {
+				CardGroup g = groupsList.values().iterator().next();
+				if (g.getFieldIndex() != filter.getGroupField())
+					groupsList.clear();
+			}
+			if (filter.getGroupField() == MagicCardField.TYPE) {
+				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
+				for (Object o : buildTypeGroups.getChildren()) {
+					if (o instanceof CardGroup) {
+						CardGroup gr = (CardGroup) o;
+						groupsList.put(gr.getName(), gr);
+					}
+				}
+			} else {
+				for (Object element : filteredList) {
+					IMagicCard elem = (IMagicCard) element;
+					CardGroup group = findGroupIndex(elem, filter.getGroupField());
+					if (group != null) {
+						group.add(elem);
+					}
+				}
+			}
+			removeEmptyGroups();
+		}
+	}
+
+	protected void removeEmptyGroups() {
+		for (Iterator iterator = groupsList.values().iterator(); iterator.hasNext();) {
+			CardGroup g = (CardGroup) iterator.next();
+			g.removeEmptyChildren();
+			if (g.getChildren().size() == 0) {
+				iterator.remove();
+			}
+		}
+	}
+
+	protected Collection<IMagicCard> sortCards(MagicCardFilter filter) {
 		Collection<IMagicCard> filteredList;
 		if (filter.getSortOrder().isEmpty()) {
 			filteredList = new ArrayList<IMagicCard>();
@@ -197,37 +239,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 		if (filter.isOnlyLastSet())
 			filteredList = removeSetDuplicates(filteredList);
-		if (filter.getGroupField() != null) {
-			if (groupsList.size() > 0) {
-				CardGroup g = groupsList.values().iterator().next();
-				if (g.getFieldIndex() != filter.getGroupField())
-					groupsList.clear();
-			}
-			if (filter.getGroupField() == MagicCardField.TYPE) {
-				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
-				for (Object o : buildTypeGroups.getChildren()) {
-					if (o instanceof CardGroup) {
-						CardGroup gr = (CardGroup) o;
-						groupsList.put(gr.getName(), gr);
-					}
-				}
-			} else {
-				for (Object element : filteredList) {
-					IMagicCard elem = (IMagicCard) element;
-					CardGroup group = findGroupIndex(elem, filter.getGroupField());
-					if (group != null) {
-						group.add(elem);
-					}
-				}
-			}
-			for (Iterator iterator = groupsList.values().iterator(); iterator.hasNext();) {
-				CardGroup g = (CardGroup) iterator.next();
-				g.removeEmptyChildren();
-				if (g.getChildren().size() == 0) {
-					iterator.remove();
-				}
-			}
-		}
 		return filteredList;
 	}
 
@@ -288,10 +299,22 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		} catch (Exception e) {
 			name = "Unknown";
 		}
+		if (name == null)
+			return null;
 		CardGroup g = this.groupsList.get(name);
-		if (g == null && name != null) {
+		if (g == null) {
 			g = new CardGroup(cardField, name);
 			this.groupsList.put(name, g);
+		}
+		if (cardField == MagicCardField.SET) {
+			// g is set group, now add rariry subgroup
+			name = elem.getRarity();
+			CardGroup r = g.getSubGroup(name);
+			if (r == null) {
+				r = new CardGroup(MagicCardField.RARITY, elem.getRarity());
+				g.add(r);
+			}
+			return r;
 		}
 		return g;
 	}

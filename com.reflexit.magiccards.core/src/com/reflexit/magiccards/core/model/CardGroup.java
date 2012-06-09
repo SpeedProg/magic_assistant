@@ -22,6 +22,7 @@ public class CardGroup implements ICardCountable {
 	private String name;
 	private ICardField groupField;
 	private int count;
+	private int usize;
 	private ArrayList children;
 	private Object data;
 
@@ -40,15 +41,43 @@ public class CardGroup implements ICardCountable {
 	}
 
 	public int getCount() {
+		if (count == 0)
+			calculateCount();
 		return this.count;
 	}
 
-	public void setCount(int count) {
-		this.count = count;
+	public int getUSize() {
+		if (usize == 0)
+			calculateUSize();
+		return this.usize;
 	}
 
-	public void addCount(int count) {
-		this.count += count;
+	public int calculateCount() {
+		count = 0;
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup) {
+				count += ((CardGroup) o).calculateCount();
+			} else if (o instanceof ICardCountable) {
+				count += ((ICardCountable) o).getCount();
+			} else {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public int calculateUSize() {
+		usize = 0;
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup) {
+				usize += ((CardGroup) o).calculateUSize();
+			} else {
+				usize++;
+			}
+		}
+		return usize;
 	}
 
 	public ICardField getFieldIndex() {
@@ -65,13 +94,7 @@ public class CardGroup implements ICardCountable {
 
 	public void add(Object elem) {
 		this.children.add(elem);
-		if (elem instanceof CardGroup)
-			return;
-		if (elem instanceof ICardCountable) {
-			this.count += ((ICardCountable) elem).getCount();
-		} else {
-			this.count++;
-		}
+		count = 0;
 	}
 
 	/**
@@ -134,5 +157,49 @@ public class CardGroup implements ICardCountable {
 
 	public void setData(Object data) {
 		this.data = data;
+	}
+
+	public CardGroup getSubGroup(String key) {
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup) {
+				if (((CardGroup) o).getName().equals(key))
+					return (CardGroup) o;
+			}
+		}
+		return null;
+	}
+
+	public void clear() {
+		count = 0;
+		data = null;
+		children.clear();
+	}
+
+	public IMagicCard getFirstCard() {
+		if (children.size() == 0)
+			return null;
+		Object card = children.get(0);
+		if (card instanceof CardGroup)
+			return ((CardGroup) card).getFirstCard();
+		if (card instanceof IMagicCard)
+			return (IMagicCard) card;
+		return null;
+	}
+
+	public boolean contains(IMagicCard card) {
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup) {
+				if (((CardGroup) o).contains(card))
+					return true;
+			} else {
+				if (o == card)
+					return true;
+				if (o.equals(card))
+					return true;
+			}
+		}
+		return false;
 	}
 }

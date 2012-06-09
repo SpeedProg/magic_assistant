@@ -42,13 +42,13 @@ public class Location implements Comparable<Location> {
 			return ((MagicCardPhysical) card).getLocation();
 		} else if (card instanceof MagicCard) {
 			String set = card.getSet();
-			return new Location(getLocFromSet(set));
+			return createLocationFromSet(set);
 		}
 		return Location.NO_WHERE;
 	}
 
-	private static String getLocFromSet(String set) {
-		return set.replaceAll("[\\W]", "_");
+	public static Location createLocationFromSet(String set) {
+		return new Location(set.replaceAll("[\\W]", "_"));
 	}
 
 	private Location(String loc, Location parent) {

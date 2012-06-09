@@ -208,10 +208,7 @@ public final class CardStoreUtils {
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			CardGroup g = new CardGroup(MagicCardField.COST, name);
-			if (groupsList.containsKey(g)) {
-				groupsList.get(g).addCount(1);
-			} else {
-				g.addCount(1);
+			if (!groupsList.containsKey(g)) {
 				groupsList.put(g, g);
 			}
 		}
@@ -254,16 +251,13 @@ public final class CardStoreUtils {
 				if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Land)) {
 					if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Basic)) {
 						basic.add(elem);
-						landNode.addCount(count);
 					} else {
 						landNode.add(elem);
 					}
 				} else {
-					spellNode.addCount(count);
 					if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
 						creatureNode.add(elem);
 					} else {
-						noncreatureNode.addCount(count);
 						if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Instant)) {
 							instant.add(elem);
 						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Enchantment)) {
@@ -275,7 +269,6 @@ public final class CardStoreUtils {
 						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Planeswalker)) {
 							walker.add(elem);
 						} else {
-							noncreatureNode.addCount(-count);
 							noncreatureNode.add(elem);
 						}
 					}
@@ -286,7 +279,6 @@ public final class CardStoreUtils {
 			total += count;
 		}
 		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
-		root.setCount(total);
 		root.add(landNode);
 		root.add(spellNode);
 		if (unknownNode.getCount() > 0)
