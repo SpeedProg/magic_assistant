@@ -20,6 +20,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
@@ -309,7 +310,9 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public boolean copyCards(Collection cards, Location to) {
+	public boolean copyCards(Collection cards1, Location to) {
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
+		expandGroups(cards, cards1);
 		ICardStore<IMagicCard> store = LibraryXmlFilteredCardStore.getInstance().getStore(to);
 		if (store == null)
 			return false;
@@ -329,7 +332,19 @@ public class XmlCardHolder implements ICardHandler {
 		return store.addAll(list);
 	}
 
-	public boolean moveCards(Collection cards, Location from, Location to) {
+	private void expandGroups(Collection res, Collection cards) {
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup)
+				expandGroups(res, ((CardGroup) o).getChildren());
+			else
+				res.add(o);
+		}
+	}
+
+	public boolean moveCards(Collection cards1, Location from, Location to) {
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
+		expandGroups(cards, cards1);
 		ICardStore<IMagicCard> sto = LibraryXmlFilteredCardStore.getInstance().getStore(to);
 		if (sto == null)
 			return false;
