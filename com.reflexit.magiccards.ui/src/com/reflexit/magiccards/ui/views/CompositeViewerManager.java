@@ -50,7 +50,8 @@ public class CompositeViewerManager extends ViewerManager {
 
 			public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
-					m.getViewer().removeSelectionChangedListener(listener);
+					if (m.getViewer() != null)
+						m.getViewer().removeSelectionChangedListener(listener);
 				}
 			}
 

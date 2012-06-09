@@ -70,6 +70,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
 import com.reflexit.magiccards.ui.views.search.SearchContext;
 import com.reflexit.magiccards.ui.views.search.SearchControl;
@@ -777,6 +778,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (index >= 0) {
 			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
 			ICardField sortField = man.getSortField();
+			if (sortField == null && man instanceof GroupColumn)
+				sortField = filter.getGroupField();
 			boolean acc = true;
 			SortOrder sortOrder = getFilter().getSortOrder();
 			if (sortOrder.isTop(sortField)) {

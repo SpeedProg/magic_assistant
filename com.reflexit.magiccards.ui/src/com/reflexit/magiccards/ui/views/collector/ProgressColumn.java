@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views.collector;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,6 +20,8 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -26,6 +29,7 @@ import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
 public class ProgressColumn extends GenColumn implements Listener {
 	final Color barColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_GREEN);
+	final Color missColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_RED);
 
 	public ProgressColumn(ICardField field, String columnName) {
 		super(field, columnName);
@@ -52,41 +56,38 @@ public class ProgressColumn extends GenColumn implements Listener {
 		return props.get(key);
 	}
 
+	MessageFormat performat = new MessageFormat("{0,number,000} / {1,number,000} ({2,choice,0# bummer|0< {2,number,000}%) }");
+
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) element;
-			String text = (String) getProperty(cardGroup, getColumnName());
-			if (text != null)
-				return text;
 			if (cardGroup.size() > 0) {
 				int size = getSetSize(cardGroup);
 				int count = getOwnSize(cardGroup);
-				String scount;
 				int per = 0;
-				if (size == 0) {
-					scount = count + " / ?";
-				} else {
-					scount = count + " / " + size;
+				if (size > 0) {
 					per = count * 100 / size;
-					scount += " (" + per + "%)";
 				}
 				setProperty(cardGroup, getColumnName() + ".per", per);
-				setProperty(cardGroup, getColumnName(), scount);
-				return scount;
+				if (per > 0)
+					return String.format("%3d / %3d (%2d%%)", count, size, per);
+				else
+					return String.format("%3d / ?", count);
 			}
 			return "";
 		} else if (element instanceof MagicCardPhysical) {
-			if (((MagicCardPhysical) element).isOwn())
-				return ((MagicCardPhysical) element).getCount() + "";
-			else
-				return "0";
+			return getSizeCountText(element);
+		} else if (element instanceof MagicCard) {
+			return "0";
 		}
 		return super.getText(element);
 	}
 
 	protected ICardStore<IMagicCard> getSetStore(CardGroup cardGroup) {
-		Location loc = Location.fromCard(((IMagicCard) cardGroup.getChildAtIndex(0)).getBase());
+		if (cardGroup.size() == 0)
+			return null;
+		Location loc = Location.createLocationFromSet(cardGroup.getFirstCard().getSet());
 		ICardStore<IMagicCard> store = ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc);
 		return store;
 	}
@@ -94,11 +95,18 @@ public class ProgressColumn extends GenColumn implements Listener {
 	public int getOwnSize(CardGroup cardGroup) {
 		int count = 0;
 		Collection children = cardGroup.getChildren();
+		ICardField field = cardGroup.getFieldIndex();
+		String name = cardGroup.getName();
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
-				if (((MagicCardPhysical) object).isOwn())
-					count++;
+				if (((MagicCardPhysical) object).isOwn()) {
+					Object fieldValue = ((MagicCardPhysical) object).getObjectByField(field);
+					if (name.equals(String.valueOf(fieldValue)))
+						count++;
+				}
+			} else if (object instanceof CardGroup) {
+				count += getOwnSize((CardGroup) object);
 			}
 		}
 		return count;
@@ -106,8 +114,33 @@ public class ProgressColumn extends GenColumn implements Listener {
 
 	public int getSetSize(CardGroup cardGroup) {
 		ICardStore<IMagicCard> store = getSetStore(cardGroup);
-		int size = store == null ? 0 : store.size();
-		return size;
+		if (store == null)
+			return 0;
+		int count = 0;
+		ICardField field = cardGroup.getFieldIndex();
+		String name = cardGroup.getName();
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			Object object = iterator.next();
+			if (object instanceof IMagicCard) {
+				Object fieldValue = ((IMagicCard) object).getObjectByField(field);
+				if (name.equals(String.valueOf(fieldValue)))
+					count++;
+			}
+		}
+		return count;
+	}
+
+	public int getFilteredSize(Iterable store, MagicCardFilter filter) {
+		if (store == null)
+			return 0;
+		int sum = 0;
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			Object c = iterator.next();
+			if (filter != null && filter.isFiltered(c))
+				continue;
+			sum++;
+		}
+		return sum;
 	}
 
 	public void handleEvent(Event event) {
@@ -131,10 +164,30 @@ public class ProgressColumn extends GenColumn implements Listener {
 					event.gc.setAlpha(64);
 					int width = bounds.width * per / 100;
 					event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
+				} else if (row instanceof MagicCard || row instanceof MagicCardPhysical
+						&& (((MagicCardPhysical) row).getCount() == 0 || ((MagicCardPhysical) row).isOwn() == false)) {
+					event.gc.setBackground(missColor);
+					event.gc.setAlpha(64);
+					event.gc.fillRectangle(event.x, event.y, event.width, event.height);
 				}
 			}
 			break;
 		}
 		}
+	}
+
+	public String getSizeCountText(Object element) {
+		if (element instanceof MagicCardPhysical) {
+			int base = 0;
+			if (((MagicCardPhysical) element).isOwn()) {
+				base = 1;
+			}
+			int icount = ((MagicCardPhysical) element).getCount();
+			if (icount != base)
+				return base + " (" + String.valueOf(icount) + ")";
+			else
+				return base + "";
+		}
+		return "0";
 	}
 }

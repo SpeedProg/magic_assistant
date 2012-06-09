@@ -44,7 +44,12 @@ public class GroupColumn extends GenColumn {
 	}
 
 	@Override
-	public ICardField getDataField() {
+	public ICardField getSortField() {
 		return groupField;
+	}
+
+	@Override
+	public ICardField getDataField() {
+		return super.getDataField();
 	}
 }

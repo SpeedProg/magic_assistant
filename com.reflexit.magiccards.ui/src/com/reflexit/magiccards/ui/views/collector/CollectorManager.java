@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.collector;
 
 import java.util.Collection;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -81,11 +82,11 @@ public class CollectorManager extends ViewerManager implements IDisposable {
 		return new ColumnCollection() {
 			@Override
 			protected void createColumns() {
-				columns.add(new GroupColumn(MagicCardField.SET, "SetGroup") {
+				columns.add(new GroupColumn(MagicCardField.SET, "Set") {
 					@Override
 					public String getText(Object element) {
 						if (element instanceof CardGroup) {
-							return ((CardGroup) element).getName() + " (" + ((CardGroup) element).size() + ")";
+							return ((CardGroup) element).getName();
 						} else if (element instanceof IMagicCard) {
 							return ((IMagicCard) element).getName();
 						}
@@ -152,6 +153,9 @@ public class CollectorManager extends ViewerManager implements IDisposable {
 				sortDirection = SWT.UP;
 			this.viewer.getTree().setSortDirection(sortDirection);
 			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
+			if (man instanceof GroupColumn) {
+				((GroupColumn) man).setGroupField(man.getDataField());
+			}
 			vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
 			this.viewer.setComparator(vcomp);
 		} else {

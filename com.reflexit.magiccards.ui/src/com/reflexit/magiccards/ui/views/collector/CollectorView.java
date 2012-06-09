@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.collector;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -28,10 +31,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 
 /**
  * Shows sets and how many cards collected per set
@@ -41,6 +49,7 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	public static final String ID = CollectorView.class.getName();
 	private Action delete;
 	private Action refresh;
+	private MemoryFilteredCardStore<IMagicCard> fstore = new MemoryFilteredCardStore<IMagicCard>();
 
 	/**
 	 * The constructor.
@@ -65,7 +74,6 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
-		manager.add(((IMagicCardListControl) control).getGroupMenu());
 	}
 
 	@Override
@@ -100,6 +108,39 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void populateStore(IProgressMonitor monitor) {
 		super.populateStore(monitor);
+		fstore.clear();
+		ICardStore lib = DataManager.getCardHandler().getLibraryFilteredStore().getCardStore();
+		// ICardStore magicDB = DataManager.getCardHandler().getMagicDBStore();
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(lib.size());
+		// for (Iterator iterator = magicDB.iterator(); iterator.hasNext();) {
+		// IMagicCard card = (IMagicCard) iterator.next();
+		// list.add(card);
+		// }
+		for (Iterator iterator = lib.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			list.add(card);
+		}
+		getFilteredStore().getCardStore().addAll(list);
+		getFilteredStore().update(getFilter());
+		CardGroup[] elements = getFilteredStore().getCardGroups();
+		for (int i = 0; i < elements.length; i++) {
+			CardGroup cardGroup = elements[i];
+			// suppose to be groupped by set
+			Location loc = Location.createLocationFromSet(cardGroup.getFirstCard().getSet());
+			ICardStore<IMagicCard> store = ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc);
+			for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				if (!cardGroup.contains(card)) {
+					System.err.println("Does not contain " + card);
+					getFilteredStore().getCardStore().add(card);
+				}
+			}
+		}
+	}
+
+	@Override
+	public IFilteredCardStore doGetFilteredStore() {
+		return fstore;
 	}
 
 	/**
@@ -137,11 +178,6 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected String getPreferencePageId() {
 		return null;
-	}
-
-	@Override
-	public IFilteredCardStore doGetFilteredStore() {
-		return DataManager.getCardHandler().getLibraryFilteredStore();
 	}
 
 	@Override

@@ -1,12 +1,13 @@
 package com.reflexit.magiccards.ui.views.collector;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -28,8 +29,6 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By");
 		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
-		groupMenu.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
-		groupMenu.add(new GroupAction("Ownership", MagicCardFieldPhysical.OWNERSHIP));
 		return groupMenu;
 	}
 
@@ -45,23 +44,25 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		super.initManager();
 	}
 
+	public int getOwnSize(Iterable children) {
+		int count = 0;
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			Object object = iterator.next();
+			if (object instanceof MagicCardPhysical) {
+				if (((MagicCardPhysical) object).isOwn())
+					count++;
+			}
+		}
+		return count;
+	}
+
 	@Override
 	public String getStatusMessage() {
 		IFilteredCardStore filteredStore = getFilteredStore();
 		if (filteredStore == null)
 			return "";
 		ICardStore cardStore = filteredStore.getCardStore();
-		int totalSize = cardStore.size();
-		int count = totalSize;
-		if (cardStore instanceof ICardCountable) {
-			count = ((ICardCountable) cardStore).getCount();
-		}
-		{
-			String s = "";
-			if (count != 1)
-				s = "s";
-			return "Total " + totalSize + " unique card" + s + " in your collections";
-		}
+		return "Total " + getOwnSize(cardStore) + " unique card(s) in your collections";
 	}
 
 	@Override
