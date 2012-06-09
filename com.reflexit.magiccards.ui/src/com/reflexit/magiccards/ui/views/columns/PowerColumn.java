@@ -17,6 +17,6 @@ public class PowerColumn extends GenColumn {
 
 	@Override
 	public int getColumnWidth() {
-		return 30;
+		return 20;
 	}
 }

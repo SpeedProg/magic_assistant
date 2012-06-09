@@ -40,14 +40,13 @@ public class CountColumn extends GenColumn {
 
 	@Override
 	public int getColumnWidth() {
-		return 60;
+		return 45;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
 	 * (org.eclipse.jface.viewers.TableViewer)
 	 */
 	@Override
