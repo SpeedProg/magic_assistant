@@ -99,11 +99,26 @@ public class UpdateCardsFromWeb {
 	}
 
 	public static InputStream openUrl(URL url) throws IOException {
-		HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-		huc.setConnectTimeout(10 * 1000);
-		huc.setReadTimeout(10 * 1000);
-		huc.connect();
-		InputStream openStream = huc.getInputStream();
-		return openStream;
+		IOException rt = null;
+		for (int i = 0; i < 3; i++) {
+			// 3 attempts
+			try {
+				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+				huc.setConnectTimeout(30 * 1000);
+				huc.setReadTimeout(30 * 1000);
+				huc.connect();
+				InputStream openStream = huc.getInputStream();
+				return openStream;
+			} catch (IOException e) {
+				MagicLogger.log("Connection error on url " + url + ": " + e.getMessage() + ". Attempt " + i);
+				rt = e;
+				continue;
+			}
+		}
+		if (rt != null) {
+			MagicLogger.log("Connection error on url " + url + ": " + rt.getMessage() + ". Giving up");
+			throw rt;
+		}
+		throw new RuntimeException("Not possible");
 	}
 }
