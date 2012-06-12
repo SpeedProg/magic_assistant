@@ -176,3 +176,23 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 271226|Warstorm Surge|{5}{R}|Enchantment|||Whenever a creature enters the battlefield under your control, it deals damage equal to its power to target creature or player.|Planechase 2012 Edition|Rare|0.0||0.0||175||Whenever a creature enters the battlefield under your control, it deals damage equal to its power to target creature or player.|0|
 271165|Whirlpool Warrior|{2}{U}|Creature - Merfolk Warrior|2|2|When Whirlpool Warrior enters the battlefield, shuffle the cards from your hand into your library, then draw that many cards.<br>{R}, Sacrifice Whirlpool Warrior: Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|Planechase 2012 Edition|Rare|0.0||0.0||176||When Whirlpool Warrior enters the battlefield, shuffle the cards from your hand into your library, then draw that many cards.<br>{R}, Sacrifice Whirlpool Warrior: Each player shuffles the cards from his or her hand into his or her library, then draws that many cards.|0|
 271198|Whispersilk Cloak|{3}|Artifact - Equipment|||Equipped creature is unblockable and has shroud.<br>Equip {2}|Planechase 2012 Edition|Uncommon|0.0||0.0||177||Equipped creature is unblockable and has shroud.<br>Equip {2}|0|
+276467|Forest||Basic Land - Forest|||G|Planechase 2012 Edition|Land|0.0||0.0||||G|0|
+276468|Forest||Basic Land - Forest|||G|Planechase 2012 Edition|Land|0.0||0.0||||G|0|
+276460|Forest||Basic Land - Forest|||G|Planechase 2012 Edition|Land|0.0||0.0||||G|0|
+276464|Forest||Basic Land - Forest|||G|Planechase 2012 Edition|Land|0.0||0.0||||G|0|
+276454|Forest||Basic Land - Forest|||G|Planechase 2012 Edition|Land|0.0||0.0||||G|0|
+276466|Island||Basic Land - Island|||U|Planechase 2012 Edition|Land|0.0||0.0||||U|0|
+276452|Island||Basic Land - Island|||U|Planechase 2012 Edition|Land|0.0||0.0||||U|0|
+276453|Island||Basic Land - Island|||U|Planechase 2012 Edition|Land|0.0||0.0||||U|0|
+276462|Island||Basic Land - Island|||U|Planechase 2012 Edition|Land|0.0||0.0||||U|0|
+276447|Mountain||Basic Land - Mountain|||R|Planechase 2012 Edition|Land|0.0||0.0||||R|0|
+276449|Mountain||Basic Land - Mountain|||R|Planechase 2012 Edition|Land|0.0||0.0||||R|0|
+276470|Mountain||Basic Land - Mountain|||R|Planechase 2012 Edition|Land|0.0||0.0||||R|0|
+276473|Plains||Basic Land - Plains|||W|Planechase 2012 Edition|Land|0.0||0.0||||W|0|
+276469|Plains||Basic Land - Plains|||W|Planechase 2012 Edition|Land|0.0||0.0||||W|0|
+276458|Plains||Basic Land - Plains|||W|Planechase 2012 Edition|Land|0.0||0.0||||W|0|
+276461|Plains||Basic Land - Plains|||W|Planechase 2012 Edition|Land|0.0||0.0||||W|0|
+276472|Swamp||Basic Land - Swamp|||B|Planechase 2012 Edition|Land|0.0||0.0||||B|0|
+276463|Swamp||Basic Land - Swamp|||B|Planechase 2012 Edition|Land|0.0||0.0||||B|0|
+276448|Swamp||Basic Land - Swamp|||B|Planechase 2012 Edition|Land|0.0||0.0||||B|0|
+276457|Swamp||Basic Land - Swamp|||B|Planechase 2012 Edition|Land|0.0||0.0||||B|0|

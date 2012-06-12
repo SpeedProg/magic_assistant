@@ -88,7 +88,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 6536|Air Elemental|{3}{U}{U}|Creature - Elemental|4|4|Flying|Portal Second Age|Uncommon|0.0||3.083|Doug Chaffee|87||Flying|0|
 6505|Angel of Mercy|{4}{W}|Creature - Angel|3|3|Flying<br>When Angel of Mercy enters the battlefield, you gain 3 life.|Portal Second Age|Uncommon|0.0||3.159|Melissa A. Benson|88||Flying<br>When Angel of Mercy enters the battlefield, you gain 3 life.|0|
 6500|Angelic Blessing|{2}{W}|Sorcery|||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|Portal Second Age|Common|0.0||2.833|Henry Van Der Linde|89||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|0|
-6498|Angelic Wall|{1}{W}|Creature - Wall|0|4|Defender, flying <i>(This creature can't attack, and it can block creatures with flying.)</i>|Portal Second Age|Common|0.0||3.433|Rebecca Guay|90||Defender, flying <i>(This creature can't attack, and it can block creatures with flying.)</i>|0|
+6498|Angelic Wall|{1}{W}|Creature - Wall|0|4|Defender, flying|Portal Second Age|Common|0.0||3.433|Rebecca Guay|90||Defender, flying|0|
 6514|Archangel|{5}{W}{W}|Creature - Angel|5|5|Flying, vigilance|Portal Second Age|Rare|0.0||2.292|rk post|91||Flying, vigilance|0|
 6520|Armageddon|{3}{W}|Sorcery|||Destroy all lands.|Portal Second Age|Rare|0.0||4.85|Rob Alexander|92||Destroy all lands.|0|
 6600|Blaze|{X}{R}|Sorcery|||Blaze deals X damage to target creature or player.|Portal Second Age|Uncommon|0.0||2.909|David A. Cherry|93||Blaze deals X damage to target creature or player.|0|

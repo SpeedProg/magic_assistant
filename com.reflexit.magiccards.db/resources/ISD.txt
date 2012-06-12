@@ -273,3 +273,13 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 241983|Woodland Cemetery||Land|||Woodland Cemetery enters the battlefield tapped unless you control a Swamp or a Forest.<br>{T}: Add {B} or {G} to your mana pool.|Innistrad|Rare|0.0||0.0||1423||Woodland Cemetery enters the battlefield tapped unless you control a Swamp or a Forest.<br>{T}: Add {B} or {G} to your mana pool.|0|
 220654|Woodland Sleuth|{3}{G}|Creature - Human Scout|2|3|Morbid- When Woodland Sleuth enters the battlefield, if a creature died this turn, return a creature card at random from your graveyard to your hand.|Innistrad|Common|0.0||0.0||1424||Morbid- When Woodland Sleuth enters the battlefield, if a creature died this turn, return a creature card at random from your graveyard to your hand.|0|
 237017|Wreath of Geists|{G}|Enchantment - Aura|||Enchant creature<br>Enchanted creature gets +X/+X, where X is the number of creature cards in your graveyard.|Innistrad|Uncommon|0.0||0.0||1427||Enchant creature<br>Enchanted creature gets +X/+X, where X is the number of creature cards in your graveyard.|0|
+245248|Forest||Basic Land - Forest|||G|Innistrad|Land|0.0||0.0||||G|0|
+245246|Forest||Basic Land - Forest|||G|Innistrad|Land|0.0||0.0||||G|0|
+245237|Island||Basic Land - Island|||U|Innistrad|Land|0.0||0.0||||U|0|
+245236|Island||Basic Land - Island|||U|Innistrad|Land|0.0||0.0||||U|0|
+245245|Mountain||Basic Land - Mountain|||R|Innistrad|Land|0.0||0.0||||R|0|
+245243|Mountain||Basic Land - Mountain|||R|Innistrad|Land|0.0||0.0||||R|0|
+245233|Plains||Basic Land - Plains|||W|Innistrad|Land|0.0||0.0||||W|0|
+245231|Plains||Basic Land - Plains|||W|Innistrad|Land|0.0||0.0||||W|0|
+245239|Swamp||Basic Land - Swamp|||B|Innistrad|Land|0.0||0.0||||B|0|
+245241|Swamp||Basic Land - Swamp|||B|Innistrad|Land|0.0||0.0||||B|0|
