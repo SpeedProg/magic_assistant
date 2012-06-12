@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.ui.views;
+package com.reflexit.magiccards.ui.widgets;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
@@ -35,6 +36,7 @@ public class QuickFilterControl extends Composite {
 	private Runnable runnable;
 	private Combo typeCombo;
 	private ToolBar toolbar;
+	private Combo setCombo;
 
 	public QuickFilterControl(Composite composite, Runnable run) {
 		super(composite, SWT.NONE);
@@ -86,6 +88,8 @@ public class QuickFilterControl extends Composite {
 		createColorButton(toolbar, "Green");
 		// type
 		createTypeField(toolbar);
+		// set
+		createEditionField(toolbar);
 		// hide
 		// createHideButton(comp);
 	}
@@ -148,6 +152,33 @@ public class QuickFilterControl extends Composite {
 		item.setWidth(200);
 	}
 
+	private void createEditionField(ToolBar toolbar) {
+		setCombo = new Combo(toolbar, SWT.BORDER);
+		setCombo.add(ALL_TYPES);
+		setCombo.setText(ALL_TYPES);
+		Collection<String> names = Editions.getInstance().getNames();
+		for (String type : names) {
+			setCombo.add(type);
+		}
+		GridData td = new GridData(GridData.FILL_HORIZONTAL);
+		setCombo.setLayoutData(td);
+		setCombo.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				filterSet(setCombo.getText());
+			}
+		});
+		setCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				filterSet(setCombo.getText());
+			}
+		});
+		setCombo.setToolTipText("Set filter");
+		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
+		item.setControl(setCombo);
+		item.setWidth(180);
+	}
+
 	private void createToolBarLabel(ToolBar toolbar, String string) {
 		Label label = new Label(toolbar, SWT.NONE);
 		label.setText(string);
@@ -206,7 +237,7 @@ public class QuickFilterControl extends Composite {
 		refresh();
 	}
 
-	void refresh() {
+	public void refresh() {
 		if (searchText != null && store != null) {
 			// text
 			String textId = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
@@ -241,11 +272,31 @@ public class QuickFilterControl extends Composite {
 			} else {
 				typeCombo.setText(type);
 			}
-			// color
+			// set
 			Collection<String> ids = Colors.getInstance().getIds();
 			for (Iterator<String> iterator = ids.iterator(); iterator.hasNext();) {
 				String id = iterator.next();
 				setButtonToStoreValue(toolbar, id);
+			}
+			// type
+			String set = ALL_TYPES;
+			int sethit = 0;
+			Editions editions = Editions.getInstance();
+			for (Iterator iterator = editions.getIds().iterator(); iterator.hasNext();) {
+				String id = (String) iterator.next();
+				boolean isSet = store.getBoolean(id);
+				// System.err.println(id + " " + isSet);
+				if (isSet) {
+					set = editions.getNameById(id);
+					sethit++;
+				}
+			}
+			if (sethit > 1) {
+				setCombo.setText(ADVANCED);
+			} else if (sethit == 0) {
+				setCombo.setText(ALL_TYPES);
+			} else {
+				setCombo.setText(set);
 			}
 		}
 	}
@@ -287,6 +338,26 @@ public class QuickFilterControl extends Composite {
 			store.setValue(textId, text.trim());
 		} else {
 			store.setValue(textId, "");
+			store.setValue(selId, "true");
+		}
+		runnable.run();
+	}
+
+	protected void filterSet(String text) {
+		if (ADVANCED.equals(text))
+			return;
+		if (ALL_TYPES.equals(text))
+			text = "";
+		Editions editions = Editions.getInstance();
+		String selId = null;
+		for (Iterator iterator = editions.getIds().iterator(); iterator.hasNext();) {
+			String id = (String) iterator.next();
+			store.setValue(id, "false");
+			if (editions.getNameById(id).equals(text)) {
+				selId = id;
+			}
+		}
+		if (selId != null) {
 			store.setValue(selId, "true");
 		}
 		runnable.run();

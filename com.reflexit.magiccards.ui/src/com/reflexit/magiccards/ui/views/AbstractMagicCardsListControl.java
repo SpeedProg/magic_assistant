@@ -75,6 +75,7 @@ import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
 import com.reflexit.magiccards.ui.views.search.SearchContext;
 import com.reflexit.magiccards.ui.views.search.SearchControl;
 import com.reflexit.magiccards.ui.views.search.TableSearch;
+import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
 
 /**
  * Magic card list control - MagicControl that represents list of cards (tree or table), and comes
