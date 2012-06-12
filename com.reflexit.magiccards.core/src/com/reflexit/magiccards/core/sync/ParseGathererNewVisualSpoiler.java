@@ -33,6 +33,7 @@ public class ParseGathererNewVisualSpoiler {
 	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
 	public static final String UPDATE_OTHER_PRINTINGS = "other.printings";
 	public static final String UPDATE_LANGUAGE = "lang";
+	public static final String UPDATE_SPECIAL = "special";
 	private static Charset UTF_8 = Charset.forName("utf-8");
 
 	/*-
@@ -110,7 +111,7 @@ public class ParseGathererNewVisualSpoiler {
 		}
 	}
 
-	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard&special=true";
+	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard";
 	private static String[] updateAll = { //
 	base + "&format=[%22Legacy%22]", //
 			base + "&set=[%22Unhinged%22]", //
@@ -181,6 +182,10 @@ public class ParseGathererNewVisualSpoiler {
 			out = new PrintStream(new FileOutputStream(new File(to)), true, UTF_8.toString());
 		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
 		OutputHandler handler = createOutputHandler(out, options);
+		String message = "cards";
+		if (options.get("set") != null) {
+			message = options.getProperty("set");
+		}
 		try {
 			countCards = 0;
 			if (from.startsWith("http:")) {
@@ -195,7 +200,7 @@ public class ParseGathererNewVisualSpoiler {
 					if (countCards == 0)
 						monitor.worked(100);
 					else {
-						monitor.subTask("Downloading cards. Page " + i + " of " + pages);
+						monitor.subTask("Downloading " + message + ". Page " + i + " of " + pages);
 						monitor.worked(10000 / pages);
 					}
 				}
@@ -305,7 +310,7 @@ public class ParseGathererNewVisualSpoiler {
 
 	private static void fixGathererBugs(MagicCard card) {
 		String name = card.getName();
-		if (name.contains("�")) {
+		if (name.contains("’")) {
 			int i = name.indexOf('(');
 			int k = name.indexOf(')');
 			if (i >= 0 && k >= 0) {
@@ -426,14 +431,21 @@ public class ParseGathererNewVisualSpoiler {
 	public static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
-		if (set == null || set.equals("Standard")) {
-			url = updateLatest[0];
+		if (set != null && set.startsWith("http")) {
+			url = set;
 		} else {
-			if (set.equalsIgnoreCase("All")) {
-				url = base + "&set=[%22%22]";
+			if (set == null || set.equals("Standard")) {
+				url = updateLatest[0];
 			} else {
-				url = base + "&set=[%22" + set.replaceAll(" ", "%20") + "%22]&sort=cn+";
+				if (set.equalsIgnoreCase("All")) {
+					url = base + "&set=[%22%22]";
+				} else {
+					url = base + "&set=[%22" + set.replaceAll(" ", "%20") + "%22]&sort=cn+";
+				}
 			}
+			if (options.get(UPDATE_SPECIAL) != null)
+				url += "&special=" + options.getProperty(UPDATE_SPECIAL);
+			options.put("set", set);
 		}
 		parseFileOrUrl(url, file, options, pm);
 	}

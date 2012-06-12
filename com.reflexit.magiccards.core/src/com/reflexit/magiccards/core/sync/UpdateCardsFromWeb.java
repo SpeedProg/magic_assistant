@@ -112,6 +112,11 @@ public class UpdateCardsFromWeb {
 			} catch (IOException e) {
 				MagicLogger.log("Connection error on url " + url + ": " + e.getMessage() + ". Attempt " + i);
 				rt = e;
+				try {
+					Thread.sleep(30 * 1000);
+				} catch (InterruptedException e1) {
+					continue;
+				}
 				continue;
 			}
 		}

@@ -61,11 +61,11 @@ public class Activator extends Plugin {
 		return plugin;
 	}
 
-	static void log(String message) {
+	static public void log(String message) {
 		getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
 	}
 
-	static void log(Throwable e) {
+	static public void log(Throwable e) {
 		getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
 	}
 }
