@@ -83,6 +83,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_PRINT,
 				"Load all printed versions of the same card (vs only version for latest set)", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_SPECIAL, "Load special items", getFieldEditorParent()));
 		addField(this.lang = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_LANGUAGE, "Also load localized version in:",
 				createLanguagesArray(), getFieldEditorParent(), SWT.DROP_DOWN));
 	}
@@ -133,8 +134,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
 	 * (org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	@Override
@@ -214,6 +214,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_SET);
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_PRINT);
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_LAND);
+			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_SPECIAL);
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_LANGUAGE);
 			new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null, MagicGathererPreferencePage.this.service
 					.getCurrentState()));

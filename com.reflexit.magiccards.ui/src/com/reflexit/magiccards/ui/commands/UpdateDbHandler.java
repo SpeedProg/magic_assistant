@@ -76,6 +76,8 @@ public class UpdateDbHandler extends AbstractHandler {
 					Properties options = new Properties();
 					options.put(ParseGathererNewVisualSpoiler.UPDATE_BASIC_LAND_PRINTINGS, updateLand);
 					options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, updatePrintings);
+					options.put(ParseGathererNewVisualSpoiler.UPDATE_SPECIAL,
+							event.getParameter(PreferenceConstants.GATHERER_UPDATE_SPECIAL));
 					if (set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
 						options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, "true");
 					}
