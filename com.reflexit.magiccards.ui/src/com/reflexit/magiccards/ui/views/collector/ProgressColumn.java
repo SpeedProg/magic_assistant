@@ -65,13 +65,15 @@ public class ProgressColumn extends GenColumn implements Listener {
 			if (cardGroup.size() > 0) {
 				int size = getSetSize(cardGroup);
 				int count = getOwnSize(cardGroup);
-				int per = 0;
+				float per = 0;
 				if (size > 0) {
-					per = count * 100 / size;
+					per = count * 100 / (float) size;
 				}
-				setProperty(cardGroup, getColumnName() + ".per", per);
-				if (per > 0)
-					return String.format("%3d / %3d (%2d%%)", count, size, per);
+				setProperty(cardGroup, getColumnName() + ".per", (int) per);
+				if (per < 5 && per > 0)
+					return String.format("%3d / %3d (%2.1f%%)", count, size, per);
+				else if (size > 0)
+					return String.format("%3d / %3d (%2d%%)", count, size, (int) per);
 				else
 					return String.format("%3d / ?", count);
 			}

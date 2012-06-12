@@ -126,7 +126,9 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 		for (int i = 0; i < elements.length; i++) {
 			CardGroup cardGroup = elements[i];
 			// suppose to be groupped by set
-			Location loc = Location.createLocationFromSet(cardGroup.getFirstCard().getSet());
+			IMagicCard firstCard = cardGroup.getFirstCard();
+			String set = firstCard == null ? cardGroup.getName() : firstCard.getSet();
+			Location loc = Location.createLocationFromSet(set);
 			ICardStore<IMagicCard> store = ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc);
 			for (Iterator iterator = store.iterator(); iterator.hasNext();) {
 				IMagicCard card = (IMagicCard) iterator.next();
