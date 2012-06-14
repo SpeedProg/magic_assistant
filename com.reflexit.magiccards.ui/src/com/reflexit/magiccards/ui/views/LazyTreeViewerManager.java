@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
+import com.reflexit.magiccards.ui.views.columns.NameColumn;
 
 public class LazyTreeViewerManager extends ViewerManager {
 	private TreeViewer viewer;
@@ -116,6 +117,10 @@ public class LazyTreeViewerManager extends ViewerManager {
 				if (acol.getWidth() <= 0)
 					acol.setWidth(getColumn(i).getColumnWidth());
 			} else {
+				acol.setWidth(0);
+			}
+			// Hide Name column because group column has name
+			if (mcol instanceof NameColumn) {
 				acol.setWidth(0);
 			}
 		}
