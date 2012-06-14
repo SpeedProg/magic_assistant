@@ -20,7 +20,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class PriceColumn extends GenColumn {
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -42,8 +42,12 @@ public class PriceColumn extends GenColumn {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface.viewers.TableViewer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface
+	 * .viewers.TableViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
@@ -92,5 +96,10 @@ public class PriceColumn extends GenColumn {
 				}
 			}
 		};
+	}
+
+	@Override
+	public int getColumnWidth() {
+		return 50;
 	}
 }

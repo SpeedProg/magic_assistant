@@ -36,6 +36,12 @@
              id="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
              name="Deck View">
        </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
+             name="Collector View">
+       </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

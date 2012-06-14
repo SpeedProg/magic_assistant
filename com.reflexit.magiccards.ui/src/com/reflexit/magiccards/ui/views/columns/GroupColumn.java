@@ -4,6 +4,8 @@ import org.eclipse.swt.graphics.Image;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 public class GroupColumn extends GenColumn {
 	public static final String COL_NAME = "Group";
@@ -18,19 +20,26 @@ public class GroupColumn extends GenColumn {
 	}
 
 	@Override
-	public int getColumnWidth() {
-		return 100;
+	public Image getImage(Object element) {
+		if (element instanceof IMagicCard) {
+			IMagicCard card = (IMagicCard) element;
+			return ImageCreator.getInstance().getSetImage(card);
+		}
+		return null;
 	}
 
 	@Override
-	public Image getImage(Object element) {
-		return null;
+	public int getColumnWidth() {
+		return 200;
 	}
 
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardGroup) {
 			return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getCount() + ")";
+		}
+		if (element instanceof IMagicCard) {
+			return ((IMagicCard) element).getName();
 		}
 		return null;
 	}

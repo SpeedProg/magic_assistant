@@ -5,7 +5,6 @@ import java.util.Iterator;
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -29,13 +28,8 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By");
 		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
+		groupMenu.add(new GroupAction("Artist", MagicCardField.ARTIST));
 		return groupMenu;
-	}
-
-	@Override
-	protected void sort(int index) {
-		updateSortColumn(index);
-		updateViewer();
 	}
 
 	@Override
@@ -66,14 +60,9 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public void updateGroupBy(ICardField field) {
-		super.updateGroupBy(field);
-	}
-
-	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE) {
+		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD) {
 			reloadData();
 		}
 	}

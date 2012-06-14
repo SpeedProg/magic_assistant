@@ -42,7 +42,7 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new SellerPriceColumn());
 		this.columns.add(new CommunityRatingColumn());
 		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
-		this.columns.add(new GenColumn(MagicCardField.COLLNUM, "Collector's Number"));
+		this.columns.add(new CollectorsNumberColumn());
 		if (myCards) {
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
 			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));

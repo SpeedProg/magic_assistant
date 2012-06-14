@@ -10,8 +10,14 @@ public class SellerPriceColumn extends GenColumn {
 	 * @param columnName
 	 */
 	public SellerPriceColumn() {
-		super(MagicCardField.DBPRICE, "Seller Price");
+		super(MagicCardField.DBPRICE, "SPrice");
 	}
+
+	@Override
+	public String getColumnFullName() {
+		return "Seller Price";
+	}
+
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 
 	@Override
@@ -25,5 +31,10 @@ public class SellerPriceColumn extends GenColumn {
 		} else {
 			return "";
 		}
+	}
+
+	@Override
+	public int getColumnWidth() {
+		return 50;
 	}
 }

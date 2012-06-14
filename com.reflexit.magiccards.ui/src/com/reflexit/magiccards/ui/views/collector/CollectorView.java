@@ -39,6 +39,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
@@ -179,7 +180,7 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected String getPreferencePageId() {
-		return null;
+		return CollectorViewPreferencePage.class.getName();
 	}
 
 	@Override

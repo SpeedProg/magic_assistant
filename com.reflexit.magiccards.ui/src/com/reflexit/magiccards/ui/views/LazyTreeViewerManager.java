@@ -106,7 +106,7 @@ public class LazyTreeViewerManager extends ViewerManager {
 				if (pos != null)
 					checked = false;
 			}
-			if (pos != null) {
+			if (pos != null && pos.intValue() < order.length) {
 				order[pos.intValue()] = i;
 			} else {
 				orderGaps.add(Integer.valueOf(i)); // i'th column has no
