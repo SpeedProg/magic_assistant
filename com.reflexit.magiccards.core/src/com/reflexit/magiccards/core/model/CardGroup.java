@@ -12,6 +12,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -24,12 +25,70 @@ public class CardGroup implements ICardCountable {
 	private int count;
 	private int usize;
 	private ArrayList children;
-	private Object data;
+	private HashMap<String, Object> props;
+	private IMagicCard base;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
 		this.name = name;
-		this.children = new ArrayList();
+		this.children = new ArrayList(2);
+	}
+
+	public IMagicCard getBase() {
+		if (base == null) {
+			if (children.size() == 1 && !(children.get(0) instanceof CardGroup))
+				return getFirstCard();
+			base = new MagicCardPhysical(new MagicCard(), null);
+			base.getBase().setName(name);
+			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+				Object o = iterator.next();
+				if (o instanceof CardGroup) {
+					addBase(((CardGroup) o).getBase());
+				} else if (o instanceof IMagicCard) {
+					addBase((IMagicCard) o);
+				}
+			}
+		}
+		return base;
+	}
+
+	private void addBase(IMagicCard o) {
+		ICardField[] allNonTransientFields;
+		if (o instanceof MagicCard)
+			allNonTransientFields = MagicCardField.allNonTransientFields();
+		else
+			allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
+		for (int i = 0; i < allNonTransientFields.length; i++) {
+			ICardField field = allNonTransientFields[i];
+			if (field == MagicCardField.NAME) {
+				continue;
+			}
+			Object value = o.getObjectByField(field);
+			Object mine = base.getObjectByField(field);
+			Object newmine = null;
+			if (mine == null) {
+				newmine = value;
+			} else if (mine.equals(value)) {
+				// good
+			} else {
+				if (field.getType() == String.class) {
+					newmine = "*";
+				} else if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE) {
+					Float fvalue = (Float) value;
+					Float fmain = (Float) mine;
+					if (o instanceof MagicCardPhysical) {
+						// && ((MagicCardPhysical) o).isOwn()
+						int count = ((ICardCountable) o).getCount();
+						newmine = fmain + fvalue * count;
+					}
+				} else {
+					// ...
+				}
+			}
+			if (newmine != null) {
+				((ICardModifiable) base).setObjectByField(field, String.valueOf(newmine));
+			}
+		}
 	}
 
 	public String getName() {
@@ -95,6 +154,7 @@ public class CardGroup implements ICardCountable {
 	public void add(Object elem) {
 		this.children.add(elem);
 		count = 0;
+		base = null;
 	}
 
 	/**
@@ -112,7 +172,12 @@ public class CardGroup implements ICardCountable {
 	public String getLabelByField(ICardField f) {
 		if (f == this.groupField)
 			return this.name;
-		return null;
+		if (children.size() == 0)
+			return "";
+		Object value = getBase().getObjectByField(f);
+		if (value == null)
+			return "";
+		return String.valueOf(value);
 	}
 
 	@Override
@@ -151,12 +216,17 @@ public class CardGroup implements ICardCountable {
 	 * 
 	 * @return
 	 */
-	public Object getData() {
-		return data;
+	public Object getProperty(String key) {
+		if (props == null)
+			return null;
+		return props.get(key);
 	}
 
-	public void setData(Object data) {
-		this.data = data;
+	public void setProperty(String key, Object value) {
+		if (props == null) {
+			props = new HashMap<String, Object>();
+		}
+		props.put(key, value);
 	}
 
 	public CardGroup getSubGroup(String key) {
@@ -172,7 +242,7 @@ public class CardGroup implements ICardCountable {
 
 	public void clear() {
 		count = 0;
-		data = null;
+		props = null;
 		children.clear();
 	}
 

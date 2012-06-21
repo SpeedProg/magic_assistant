@@ -54,7 +54,7 @@ public enum MagicCardField implements ICardField {
 	}
 
 	public Class getType() {
-		return field == null ? String.class : field.getClass();
+		return field == null ? String.class : field.getType();
 	}
 
 	public boolean isTransient() {
