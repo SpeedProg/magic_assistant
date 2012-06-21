@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import java.text.DecimalFormat;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class SellerPriceColumn extends GenColumn {
@@ -22,15 +21,12 @@ public class SellerPriceColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof IMagicCard) {
-			IMagicCard m = (IMagicCard) element;
-			float dbPrice = m.getDbPrice();
-			if (dbPrice == 0)
-				return "";
-			return "$" + decimalFormat.format(dbPrice);
-		} else {
+		String text = super.getText(element);
+		if (text.length() == 0)
+			return text;
+		if (text.equals("0.0"))
 			return "";
-		}
+		return "$" + decimalFormat.format(Float.parseFloat(text));
 	}
 
 	@Override

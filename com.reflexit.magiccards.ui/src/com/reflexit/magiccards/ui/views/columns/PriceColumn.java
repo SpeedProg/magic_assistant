@@ -34,12 +34,12 @@ public class PriceColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof MagicCardPhysical) {
-			MagicCardPhysical m = (MagicCardPhysical) element;
-			return "$" + decimalFormat.format(m.getPrice());
-		} else {
+		String text = super.getText(element);
+		if (text.length() == 0)
+			return text;
+		if (text.equals("0.0"))
 			return "";
-		}
+		return "$" + decimalFormat.format(Float.parseFloat(text));
 	}
 
 	/*

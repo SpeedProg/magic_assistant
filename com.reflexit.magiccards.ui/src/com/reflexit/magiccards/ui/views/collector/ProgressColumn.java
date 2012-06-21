@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views.collector;
 
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -39,23 +38,6 @@ public class ProgressColumn extends GenColumn implements Listener {
 		super(null, "Progress");
 	}
 
-	public void setProperty(CardGroup element, String key, Object value) {
-		HashMap<String, Object> props = (HashMap<String, Object>) element.getData();
-		if (props == null) {
-			props = new HashMap<String, Object>();
-			element.setData(props);
-		}
-		props.put(key, value);
-	}
-
-	public Object getProperty(CardGroup element, String key) {
-		HashMap<String, Object> props = (HashMap<String, Object>) element.getData();
-		if (props == null) {
-			return null;
-		}
-		return props.get(key);
-	}
-
 	MessageFormat performat = new MessageFormat("{0,number,000} / {1,number,000} ({2,choice,0# bummer|0< {2,number,000}%) }");
 
 	@Override
@@ -69,7 +51,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 				if (size > 0) {
 					per = count * 100 / (float) size;
 				}
-				setProperty(cardGroup, getColumnName() + ".per", (int) per);
+				cardGroup.setProperty(getColumnName() + ".per", (int) per);
 				if (per < 5 && per > 0)
 					return String.format("%3d / %3d (%2.1f%%)", count, size, per);
 				else if (size > 0)
@@ -152,7 +134,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 				Item item = (Item) event.item;
 				Object row = item.getData();
 				if (row instanceof CardGroup) {
-					Integer per = (Integer) getProperty((CardGroup) row, getColumnName() + ".per");
+					Integer per = (Integer) ((CardGroup) row).getProperty(getColumnName() + ".per");
 					if (per == null)
 						per = Integer.valueOf(0);
 					Rectangle bounds;
