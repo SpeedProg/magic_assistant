@@ -192,11 +192,43 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 					IMagicCard elem = (IMagicCard) element;
 					CardGroup group = findGroupIndex(elem, filter.getGroupField());
 					if (group != null) {
-						group.add(elem);
+						addToNameGroup(elem, group);
 					}
 				}
 			}
 			removeEmptyGroups();
+		}
+	}
+
+	public void addToNameGroup(IMagicCard elem, CardGroup group) {
+		if (group.getFieldIndex() == MagicCardField.NAME) {
+			group.add(elem);
+		} else {
+			String key = elem.getName();
+			Collection children = group.getChildren();
+			IMagicCard card = null;
+			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+				Object o = iterator.next();
+				if (o instanceof CardGroup) {
+					CardGroup nameGroup = (CardGroup) o;
+					if (nameGroup.getFieldIndex() == MagicCardField.NAME && nameGroup.getName().equals(key)) {
+						nameGroup.add(elem);
+						return;
+					}
+				} else if (o instanceof IMagicCard && ((IMagicCard) o).getName().equals(key)) {
+					card = (IMagicCard) o;
+					break;
+				}
+			}
+			if (card == null) {
+				group.add(elem);
+			} else {
+				group.remove(card);
+				CardGroup nameGroup = new CardGroup(MagicCardField.NAME, key);
+				nameGroup.add(card);
+				nameGroup.add(elem);
+				group.add(nameGroup);
+			}
 		}
 	}
 
