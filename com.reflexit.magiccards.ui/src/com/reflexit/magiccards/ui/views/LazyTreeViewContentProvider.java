@@ -3,15 +3,11 @@
  */
 package com.reflexit.magiccards.ui.views;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.eclipse.jface.viewers.ILazyTreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LazyTreeViewContentProvider implements // IStructuredContentProvider,
@@ -44,34 +40,37 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	}
 
 	public Object getParent(Object child) {
-		if (child instanceof IMagicCard) {
-			// System.err.println("get parent " + child);
-			IFilteredCardStore fstore = root;
-			if (root == null)
-				return null;
-			CardGroup[] cardGroups = fstore.getCardGroups();
-			for (int i = 0; i < cardGroups.length; i++) {
-				CardGroup cardGroup = cardGroups[i];
-				Collection children = cardGroup.getChildren();
-				for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-					Object object = iterator.next();
-					if (object == child)
-						return cardGroup;
-				}
-			}
-		}
+		// if (child instanceof IMagicCard) {
+		// // System.err.println("get parent " + child);
+		// IFilteredCardStore fstore = root;
+		// if (root == null)
+		// return null;
+		// CardGroup[] cardGroups = fstore.getCardGroups();
+		// for (int i = 0; i < cardGroups.length; i++) {
+		// CardGroup cardGroup = cardGroups[i];
+		// Collection children = cardGroup.getChildren();
+		// for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+		// Object object = iterator.next();
+		// if (object == child)
+		// return cardGroup;
+		// }
+		// }
+		// }
 		return null;
 	}
 
 	public void updateChildCount(Object element, int currentChildCount) {
-		if (element instanceof IMagicCard) {
-			this.treeViewer.setChildCount(element, 0);
-		} else if (element instanceof IFilteredCardStore) {
-			int count = ((IFilteredCardStore) element).getCardGroups().length;
-			this.treeViewer.setChildCount(element, count);
-		} else if (element instanceof CardGroup) {
-			int count = ((CardGroup) element).getChildren().size();
-			this.treeViewer.setChildCount(element, count);
+		synchronized (root) {
+			int count = 0;
+			if (element instanceof IFilteredCardStore) {
+				count = ((IFilteredCardStore) element).getCardGroups().length;
+			} else if (element instanceof CardGroup) {
+				count = ((CardGroup) element).size();
+			}
+			if (count == 0)
+				treeViewer.setHasChildren(element, false);
+			else
+				this.treeViewer.setChildCount(element, count);
 		}
 	}
 
@@ -91,9 +90,9 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	private int level = 0;
 
 	public void updateElement(Object parent, int index) {
-		if (parent instanceof IFilteredCardStore) {
-			IFilteredCardStore store = (IFilteredCardStore) parent;
-			{
+		synchronized (root) {
+			if (parent instanceof IFilteredCardStore) {
+				IFilteredCardStore store = (IFilteredCardStore) parent;
 				// System.err.println("store: " + " index " + index);
 				try {
 					Object element = store.getCardGroup(index);
@@ -102,16 +101,16 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
+			} else if (parent instanceof CardGroup) {
+				CardGroup group = (CardGroup) parent;
+				Object child = group.getChildAtIndex(index);
+				this.treeViewer.replace(parent, index, child);
+				// System.err.println("grpup: " + " index " + index);
+				if (child instanceof CardGroup)
+					updateChildCount(child, -1);
+				else
+					updateChildCount(child, 0);
 			}
-		} else if (parent instanceof CardGroup) {
-			CardGroup group = (CardGroup) parent;
-			Object child = group.getChildAtIndex(index);
-			this.treeViewer.replace(parent, index, child);
-			// System.err.println("grpup: " + " index " + index);
-			if (child instanceof CardGroup)
-				updateChildCount(child, -1);
-			else
-				updateChildCount(child, 0);
 		}
 	}
 
@@ -119,7 +118,9 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		if (!(input instanceof IFilteredCardStore)) {
 			return 0;
 		}
-		int size = ((IFilteredCardStore) input).getCardGroups().length;
-		return size;
+		synchronized (root) {
+			int size = ((IFilteredCardStore) input).getCardGroups().length;
+			return size;
+		}
 	}
 }
