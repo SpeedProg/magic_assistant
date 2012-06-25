@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -17,7 +18,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class OwnershipColumn extends GenColumn {
 	/**
@@ -29,14 +30,19 @@ public class OwnershipColumn extends GenColumn {
 
 	@Override
 	public Image getImage(Object element) {
+		boolean own = false;
 		if (element instanceof MagicCardPhysical) {
 			MagicCardPhysical m = (MagicCardPhysical) element;
-			if (m.isOwn())
-				return MagicUIActivator.getDefault().getImage("icons/obj16/ilib16.png");
-			else
-				return MagicUIActivator.getDefault().getImage("icons/obj16/monitor.gif");
+			own = m.isOwn();
+		} else if (element instanceof CardGroup) {
+			IMagicCard base = ((CardGroup) element).getBase();
+			if (base instanceof MagicCardPhysical)
+				own = ((MagicCardPhysical) base).isOwn();
 		}
-		return null;
+		if (own)
+			return MagicUIActivator.getDefault().getImage("icons/obj16/check16.png");
+		else
+			return MagicUIActivator.getDefault().getImage("icons/obj16/cross16.png");
 	}
 
 	@Override
@@ -61,8 +67,12 @@ public class OwnershipColumn extends GenColumn {
 		return "Ownership";
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface.viewers.ColumnViewer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface
+	 * .viewers.ColumnViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
@@ -78,9 +88,8 @@ public class OwnershipColumn extends GenColumn {
 			@Override
 			protected CellEditor getCellEditor(final Object element) {
 				final Integer pos = (Integer) getValue(element);
-				CellEditor editor = new ComboBoxCellEditor((Composite) viewer.getControl(), new String[] {
-				        "own",
-				        "virtual" }, SWT.READ_ONLY) {
+				CellEditor editor = new ComboBoxCellEditor((Composite) viewer.getControl(), new String[] { "own", "virtual" },
+						SWT.READ_ONLY) {
 				};
 				editor.setValue(pos);
 				return editor;
@@ -110,7 +119,7 @@ public class OwnershipColumn extends GenColumn {
 						card.setOwn(false);
 					// update
 					cardStore.update(card);
-					//viewer.update(element, null);
+					// viewer.update(element, null);
 				}
 			}
 		};

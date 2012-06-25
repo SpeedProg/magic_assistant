@@ -20,6 +20,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
@@ -29,6 +30,7 @@ import com.reflexit.magiccards.ui.views.columns.GenColumn;
 public class ProgressColumn extends GenColumn implements Listener {
 	final Color barColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_GREEN);
 	final Color missColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_RED);
+	final Color partColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
 
 	public ProgressColumn(ICardField field, String columnName) {
 		super(field, columnName);
@@ -51,7 +53,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 				if (size > 0) {
 					per = count * 100 / (float) size;
 				}
-				cardGroup.setProperty(getColumnName() + ".per", (int) per);
+				cardGroup.setProperty(getColumnName() + ".per", per);
 				if (per < 5 && per > 0)
 					return String.format("%3d / %3d (%2.1f%%)", count, size, per);
 				else if (size > 0)
@@ -63,7 +65,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 		} else if (element instanceof MagicCardPhysical) {
 			return getSizeCountText(element);
 		} else if (element instanceof MagicCard) {
-			return "0";
+			return "no";
 		}
 		return super.getText(element);
 	}
@@ -80,6 +82,8 @@ public class ProgressColumn extends GenColumn implements Listener {
 		int count = 0;
 		Collection children = cardGroup.getChildren();
 		ICardField field = cardGroup.getFieldIndex();
+		if (field == MagicCardField.NAME)
+			return 1; // name group contains always 1 unique card
 		String name = cardGroup.getName();
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
@@ -133,26 +137,36 @@ public class ProgressColumn extends GenColumn implements Listener {
 			if (event.index == this.columnIndex) {
 				Item item = (Item) event.item;
 				Object row = item.getData();
+				Rectangle bounds;
+				if (item instanceof TableItem)
+					bounds = ((TableItem) item).getBounds(event.index);
+				else if (item instanceof TreeItem)
+					bounds = ((TreeItem) item).getBounds(event.index);
+				else
+					return;
+				float per = 100;
 				if (row instanceof CardGroup) {
-					Integer per = (Integer) ((CardGroup) row).getProperty(getColumnName() + ".per");
-					if (per == null)
-						per = Integer.valueOf(0);
-					Rectangle bounds;
-					if (item instanceof TableItem)
-						bounds = ((TableItem) item).getBounds(event.index);
-					else if (item instanceof TreeItem)
-						bounds = ((TreeItem) item).getBounds(event.index);
+					Float per1 = (Float) ((CardGroup) row).getProperty(getColumnName() + ".per");
+					if (per1 == null)
+						per = Float.valueOf(0);
 					else
-						return;
-					event.gc.setBackground(barColor);
-					event.gc.setAlpha(64);
-					int width = bounds.width * per / 100;
-					event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
+						per = per1;
 				} else if (row instanceof MagicCard || row instanceof MagicCardPhysical
 						&& (((MagicCardPhysical) row).getCount() == 0 || ((MagicCardPhysical) row).isOwn() == false)) {
-					event.gc.setBackground(missColor);
+					per = 0;
+				}
+				if (per > 0) {
+					int width = (int) (bounds.width * per / 100);
+					event.gc.setBackground(barColor);
+					event.gc.setForeground(partColor);
 					event.gc.setAlpha(64);
-					event.gc.fillRectangle(event.x, event.y, event.width, event.height);
+					event.gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width - width, bounds.height, false);
+					event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
+				} else {
+					event.gc.setBackground(missColor);
+					event.gc.setForeground(partColor);
+					event.gc.setAlpha(64);
+					event.gc.fillRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 				}
 			}
 			break;
@@ -167,11 +181,12 @@ public class ProgressColumn extends GenColumn implements Listener {
 				base = 1;
 			}
 			int icount = ((MagicCardPhysical) element).getCount();
+			String prefix = base == 0 ? "no" : "yes";
 			if (icount != base)
-				return base + " (" + String.valueOf(icount) + ")";
+				return prefix + " (" + String.valueOf(icount) + ")";
 			else
-				return base + "";
+				return prefix + "";
 		}
-		return "0";
+		return "no";
 	}
 }

@@ -12,17 +12,9 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 		ILazyTreeContentProvider {
-	/**
-	 * 
-	 */
-	/**
-	 * @param view
-	 */
 	LazyTreeViewContentProvider() {
 	}
 
-	// private MagicCardResultHandler resultSet;
-	// private DeferredTreeContentManager manager;
 	private TreeViewer treeViewer;
 	private IFilteredCardStore root;
 
@@ -36,26 +28,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 			this.root = null;
 	}
 
-	public void dispose() {
-	}
-
 	public Object getParent(Object child) {
-		// if (child instanceof IMagicCard) {
-		// // System.err.println("get parent " + child);
-		// IFilteredCardStore fstore = root;
-		// if (root == null)
-		// return null;
-		// CardGroup[] cardGroups = fstore.getCardGroups();
-		// for (int i = 0; i < cardGroups.length; i++) {
-		// CardGroup cardGroup = cardGroups[i];
-		// Collection children = cardGroup.getChildren();
-		// for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-		// Object object = iterator.next();
-		// if (object == child)
-		// return cardGroup;
-		// }
-		// }
-		// }
 		return null;
 	}
 
@@ -73,21 +46,6 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 				this.treeViewer.setChildCount(element, count);
 		}
 	}
-
-	// private void init(Object element) {
-	// if (MagicCardResultHandler == null && element instanceof
-	// MagicCardResultHandler) {
-	// try {
-	// MagicCardResultHandler = (MagicCardResultHandler) element;
-	// MagicCardResultHandlerMetaData metaData =
-	// MagicCardResultHandler.getMetaData();
-	// columns = metaData.getColumnCount();
-	// } catch (SQLException e) {
-	// Activator.log(e);
-	// }
-	// }
-	// }
-	private int level = 0;
 
 	public void updateElement(Object parent, int index) {
 		synchronized (root) {
@@ -122,5 +80,9 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 			int size = ((IFilteredCardStore) input).getCardGroups().length;
 			return size;
 		}
+	}
+
+	public void dispose() {
+		root = null;
 	}
 }
