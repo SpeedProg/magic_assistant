@@ -26,7 +26,7 @@ public class CardGroup implements ICardCountable {
 	private int usize;
 	private ArrayList children;
 	private HashMap<String, Object> props;
-	private IMagicCard base;
+	private MagicCardPhysical base;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
@@ -40,6 +40,7 @@ public class CardGroup implements ICardCountable {
 				return getFirstCard();
 			base = new MagicCardPhysical(new MagicCard(), null);
 			base.getBase().setName(name);
+			base.setOwn(true);
 			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 				Object o = iterator.next();
 				if (o instanceof CardGroup) {
@@ -54,10 +55,10 @@ public class CardGroup implements ICardCountable {
 
 	private void addBase(IMagicCard o) {
 		ICardField[] allNonTransientFields;
-		if (o instanceof MagicCard)
-			allNonTransientFields = MagicCardField.allNonTransientFields();
-		else
-			allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
+		// if (o instanceof MagicCard)
+		// allNonTransientFields = MagicCardField.allNonTransientFields();
+		// else
+		allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
 		for (int i = 0; i < allNonTransientFields.length; i++) {
 			ICardField field = allNonTransientFields[i];
 			if (field == MagicCardField.NAME) {
@@ -81,6 +82,8 @@ public class CardGroup implements ICardCountable {
 						int count = ((ICardCountable) o).getCount();
 						newmine = fmain + fvalue * count;
 					}
+				} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
+					newmine = "false";
 				} else {
 					// ...
 				}
