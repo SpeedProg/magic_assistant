@@ -351,7 +351,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	public boolean copyCards(Collection cards1, Location to) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		expandGroups(cards, cards1);
+		CardGroup.expandGroups(cards, cards1);
 		ICardStore<IMagicCard> store = LibraryXmlFilteredCardStore.getInstance().getStore(to);
 		if (store == null)
 			return false;
@@ -371,19 +371,9 @@ public class XmlCardHolder implements ICardHandler {
 		return store.addAll(list);
 	}
 
-	private void expandGroups(Collection res, Collection cards) {
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			if (o instanceof CardGroup)
-				expandGroups(res, ((CardGroup) o).getChildren());
-			else
-				res.add(o);
-		}
-	}
-
 	public boolean moveCards(Collection cards1, Location from, Location to) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		expandGroups(cards, cards1);
+		CardGroup.expandGroups(cards, cards1);
 		ICardStore<IMagicCard> sto = LibraryXmlFilteredCardStore.getInstance().getStore(to);
 		if (sto == null)
 			return false;
