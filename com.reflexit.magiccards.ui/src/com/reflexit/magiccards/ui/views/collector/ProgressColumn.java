@@ -20,7 +20,6 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
@@ -82,8 +81,6 @@ public class ProgressColumn extends GenColumn implements Listener {
 		int count = 0;
 		Collection children = cardGroup.getChildren();
 		ICardField field = cardGroup.getFieldIndex();
-		if (field == MagicCardField.NAME)
-			return 1; // name group contains always 1 unique card
 		String name = cardGroup.getName();
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
