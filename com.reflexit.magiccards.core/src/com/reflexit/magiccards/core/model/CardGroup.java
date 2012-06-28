@@ -282,4 +282,14 @@ public class CardGroup implements ICardCountable {
 		}
 		return false;
 	}
+
+	public static void expandGroups(Collection result, Collection cards) {
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof CardGroup)
+				expandGroups(result, ((CardGroup) o).getChildren());
+			else
+				result.add(o);
+		}
+	}
 }
