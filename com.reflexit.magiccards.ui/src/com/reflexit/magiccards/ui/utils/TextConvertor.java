@@ -10,26 +10,39 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.utils;
 
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class TextConvertor {
-	public static String toText(IMagicCard card) {
+	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+	public static String toText(Object line) {
 		StringBuffer buf = new StringBuffer();
-		buf.append(card.getName());
-		buf.append(" ");
-		buf.append(card.getCost());
-		buf.append("\n");
-		buf.append(card.getType());
-		buf.append(" [");
-		buf.append(card.getSet() + " - " + card.getRarity());
-		buf.append("]");
-		buf.append("\n");
-		buf.append(card.getOracleText());
-		buf.append("\n");
+		IMagicCard card;
+		if (line instanceof IMagicCard) {
+			card = (IMagicCard) line;
+			buf.append(card.getName());
+			buf.append(" ");
+			buf.append(card.getCost());
+			buf.append(LINE_SEPARATOR);
+			buf.append(card.getType());
+			buf.append(" [");
+			buf.append(card.getSet() + " - " + card.getRarity());
+			buf.append("]");
+			buf.append(LINE_SEPARATOR);
+			buf.append(card.getOracleText());
+		} else if (line instanceof CardGroup) {
+			buf.append(((CardGroup) line).getName());
+		} else {
+			buf.append(line.toString());
+		}
+		buf.append(LINE_SEPARATOR);
+		buf.append("--------------------------");
+		buf.append(LINE_SEPARATOR);
 		return buf.toString();
 	}
 }

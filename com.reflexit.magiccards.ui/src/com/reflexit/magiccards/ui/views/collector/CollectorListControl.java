@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.collector;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
@@ -10,6 +11,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -30,6 +32,13 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
 		groupMenu.add(new GroupAction("Artist", MagicCardField.ARTIST));
 		return groupMenu;
+	}
+
+	@Override
+	protected void runShowFilter() {
+		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getLocalPreferenceStore());
+		if (cardFilterDialog.open() == IStatus.OK)
+			reloadData();
 	}
 
 	@Override

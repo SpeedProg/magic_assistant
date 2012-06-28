@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,6 +48,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -110,7 +112,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	private SearchControl searchControl;
 	private Label statusLine;
 	private Composite topBar;
-	protected Action actionCopy;
 	protected Action actionGroupMenu;
 	protected Action actionShowFilter;
 	protected Action actionResetFilter;
@@ -632,12 +633,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			}
 		};
 		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
-		this.actionCopy = new Action("Copy") {
-			@Override
-			public void run() {
-				runCopy();
-			}
-		};
 	}
 
 	@Override
@@ -668,16 +663,17 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			return;
 		StringBuffer buf = new StringBuffer();
 		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			buf.append(TextConvertor.toText(card));
-			buf.append("--------------------------\n");
+			Object line = iterator.next();
+			buf.append(TextConvertor.toText(line));
 		}
 		String textData = buf.toString();
 		if (textData.length() > 0) {
 			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 			TextTransfer textTransfer = TextTransfer.getInstance();
 			MagicCardTransfer mt = MagicCardTransfer.getInstance();
-			IMagicCard[] cards = (IMagicCard[]) sel.toList().toArray(new IMagicCard[sel.size()]);
+			List list = new ArrayList(sel.size());
+			CardGroup.expandGroups(list, sel.toList());
+			IMagicCard[] cards = (IMagicCard[]) list.toArray(new IMagicCard[sel.size()]);
 			cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
 		}
 	}

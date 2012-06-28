@@ -70,6 +70,7 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
+		super.setGlobalHandlers(bars);
 	}
 
 	@Override
