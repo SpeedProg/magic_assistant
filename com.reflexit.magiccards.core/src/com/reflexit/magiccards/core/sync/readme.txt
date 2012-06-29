@@ -6,11 +6,11 @@ Flip cards (from Kamigawa block)
 Split cards (from ?)
 Reverse side cards (from Innistrad)
 
-         BrotherId    Rotate   Page       Extra         
-Flip     Same         0/180    Same                     
-Split    Same         90/90    Different  part=<name>
-SplitOld Different    90/90    Different  part=<name>    
-Reverse  Different    0/0      Same
+         BrotherId    Rotate   Page       ListedInSet Extra         
+Flip     Same         0/180    Same       One              
+Split    Same         90/90    Different  Two          part=<name>
+SplitOld Different    90/90    Different  Four(?!)     part=<name>    
+Reverse  Different    0/0      Same       Two
 
 
 Extraction of Name/Type/Text

@@ -229,12 +229,18 @@ public class ParseGathererDetails extends ParseGathererPage {
 			if (card.getCardId() == 0)
 				return;
 			html0 = html0.replaceAll("\r?\n", " ");
+			if (html0.contains("’")) {
+				html0 = html0.replace('’', '\'');
+			}
 			String nameOrig = card.getName(); // original name
-			IMagicCard cardB = card.cloneCard();
-			extractField(cardB, null, html0, MagicCardField.NAME, titleNamePattern, false);
-			String nameTitle = cardB.getName(); // title name of the page
-			if (nameTitle.contains("’")) {
-				nameTitle = nameTitle.replace('’', '\'');
+			if (nameOrig.indexOf('(') > 0) {
+				nameOrig = nameOrig.substring(0, nameOrig.indexOf('(') - 1);
+			}
+			String nameTitle = extractPatternValue(html0, titleNamePattern, false);
+			// name update
+			if (nameOrig == null) {
+				nameOrig = nameTitle;
+				((ICardModifiable) card).setObjectByField(MagicCardField.NAME, nameTitle);
 			}
 			Matcher matcher0 = singleCardPattern.matcher(html0);
 			ArrayList<String> cardSides = new ArrayList<String>(2);
@@ -243,69 +249,74 @@ public class ParseGathererDetails extends ParseGathererPage {
 				cardSides.add(html);
 			}
 			String html = null;
-			String nameCur = null;
 			int sides = cardSides.size();
 			if (sides == 1) {
 				html = cardSides.get(0);
 			} else if (sides == 2) {
 				String htmlB = null;
-				for (Iterator iterator = cardSides.iterator(); iterator.hasNext();) {
-					String htmlA = (String) iterator.next();
-					extractField(cardB, null, htmlA, MagicCardField.NAME, cardNamePattern, false);
-					nameCur = cardB.getName();
-					if ((nameTitle != null && nameTitle.equals(nameCur)) || (nameOrig != null && nameOrig.equals(nameCur))) {
-						html = htmlA;
-					} else {
-						htmlB = htmlA;
+				Iterator<String> iterator = cardSides.iterator();
+				String htmlS[] = { iterator.next(), iterator.next() };
+				int titleIndex = -1, nameIndex = -1;
+				for (int i = 0; i < htmlS.length; i++) {
+					String nameCur = extractPatternValue(htmlS[i], cardNamePattern, false);
+					if (nameTitle != null && nameTitle.equals(nameCur) && titleIndex == -1) {
+						titleIndex = i;
+					}
+					if (nameOrig != null && nameOrig.equals(nameCur) && nameIndex == -1) {
+						nameIndex = i;
+						nameTitle = nameCur;
 					}
 				}
+				if (nameIndex >= 0) {
+					html = htmlS[nameIndex];
+					htmlB = htmlS[1 - nameIndex];
+				} else if (titleIndex >= 0) {
+					html = htmlS[titleIndex];
+					htmlB = htmlS[1 - titleIndex];
+				}
 				if (html == null) {
-					MagicLogger.log("Problems parsing card - cannot find matching name " + card.getCardId());
+					MagicLogger.log("Problems parsing card - cannot find matching name " + nameOrig + " " + card.getCardId());
 					return;
 				}
-				if (htmlB != null) { // printed sides are the same ignore for now
+				if (htmlB != null) {
+					IMagicCard cardB = card.cloneCard();
+					extractField(cardB, null, htmlB, MagicCardField.NAME, cardNamePattern, false);
 					extractField(cardB, null, htmlB, MagicCardField.ID, cardIdPattern, false);
-					int pairId = cardB.getCardId();
 					extractField(cardB, null, htmlB, MagicCardField.PART, cardRotatePattern, false);
-					extractField(cardB, null, htmlB, MagicCardField.ARTIST, artistPattern, false);
-					extractField(cardB, null, htmlB, MagicCardField.COLLNUM, cardnumPattern, false);
+					int pairId = cardB.getCardId();
 					if (pairId != 0) {
+						if (magicDb != null && !magicDb.contains(cardB)) {
+							extractField(cardB, null, htmlB, MagicCardField.ARTIST, artistPattern, false);
+							extractField(cardB, null, htmlB, MagicCardField.COLLNUM, cardnumPattern, false);
+							((ICardModifiable) cardB).setObjectByField(MagicCardField.FLIPID, String.valueOf(card.getCardId()));
+							magicDb.add(cardB);
+						}
 						String part1 = card.getBase().getProperty(MagicCardField.PART);
 						String part = cardB.getBase().getProperty(MagicCardField.PART);
 						if (part != null && part.length() > 0) {
 							if (part.equals(part1))
 								return; // second part updated - no support
 							((ICardModifiable) card).setObjectByField(MagicCardField.OTHER_PART, part);
-							((ICardModifiable) cardB).setObjectByField(MagicCardField.FLIPID, String.valueOf(card.getCardId()));
 						}
 						((ICardModifiable) card).setObjectByField(MagicCardField.FLIPID, String.valueOf(pairId));
 					}
-					if (magicDb != null && !magicDb.contains(cardB))
-						magicDb.add(cardB);
 				}
 			} else if (sides == 0) {
 				MagicLogger.log("Problems parsing card " + card.getCardId());
 				return;
 			}
-			// name update
-			if (nameOrig == null)
-				extractField(card, fieldMapFilter, html0, MagicCardField.NAME, titleNamePattern, true);
-			else if (!nameOrig.equals(nameTitle)) {
-				MagicLogger.log("Name is not set: " + nameOrig + ", title " + nameTitle + ", card " + nameCur);
+			if (nameOrig == null || !nameOrig.equals(nameTitle)) {
+				MagicLogger.log("Name is not set: " + nameOrig + ", title " + nameTitle);
 				return; // do not update if part is not matching
 			}
 			// extractField(card, fieldMapFilter, html, MagicCardField.NAME, cardAltPattern, true);
 			// monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.RULINGS, rulingPattern, true);
-			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.RATING, ratingPattern, false);
-			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.ARTIST, artistPattern, false);
-			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.COLLNUM, cardnumPattern, false);
-			monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.TYPE, typesPattern, false);
-			monitor.worked(1);
+			monitor.worked(5);
 			Matcher matcher = textPattern.matcher(html);
 			if (matcher.find()) {
 				String text = matcher.group(1);
