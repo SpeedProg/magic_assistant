@@ -1,8 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -16,8 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableColumn;
-
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class LazyTableViewerManager extends ViewerManager {
@@ -59,9 +56,9 @@ public class LazyTableViewerManager extends ViewerManager {
 		getColumnsCollection().createColumnLabelProviders();
 		int columnsNumber = getColumnsCollection().getColumnsNumber();
 		for (int i = 0; i < columnsNumber; i++) {
-			AbstractColumn man = getColumn(i);
+			final AbstractColumn man = getColumn(i);
 			TableViewerColumn colv = new TableViewerColumn(this.viewer, i);
-			TableColumn col = colv.getColumn();
+			final TableColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
 			col.setWidth(man.getColumnWidth());
 			col.setToolTipText(man.getColumnTooltip());
@@ -83,61 +80,45 @@ public class LazyTableViewerManager extends ViewerManager {
 		this.viewer.getTable().setHeaderVisible(true);
 	}
 
+	public String getColumnLayout() {
+		ColumnCollection columnsCollection = getColumnsCollection();
+		int[] columnOrder = this.viewer.getTable().getColumnOrder();
+		String line = "";
+		for (int i = 0; i < columnOrder.length; i++) {
+			int index = columnOrder[i];
+			AbstractColumn column = columnsCollection.getColumn(index);
+			String key = column.getColumnFullName();
+			if (column.isHidden()) {
+				key = "-" + key;
+			}
+			line += key;
+			if (i + 1 < columnOrder.length)
+				line += ",";
+		}
+		columnsCollection.updateColumnsFromPropery(line);
+		return line;
+	}
+
 	@Override
 	public ColumnViewer getViewer() {
 		return this.viewer;
 	}
 
-	public void updateColumns(String newValue) {
+	public void updateColumns(String value) {
+		getColumnsCollection().updateColumnsFromPropery(value);
+		this.viewer.getTable().setColumnOrder(getColumnsCollection().getColumnsOrder());
 		TableColumn[] acolumns = this.viewer.getTable().getColumns();
-		int order[] = new int[acolumns.length];
-		String[] prefValues = newValue.split(",");
-		if (prefValues.length == 0)
-			return;
-		HashMap<String, Integer> colOrder = new HashMap<String, Integer>();
-		HashSet<Integer> orderGaps = new HashSet<Integer>();
-		for (int i = 0; i < prefValues.length; i++) {
-			Integer integer = Integer.valueOf(i);
-			colOrder.put(prefValues[i], integer);
-		}
-		for (int i = 0; i < order.length; i++) {
-			order[i] = -1;
-		}
 		for (int i = 0; i < acolumns.length; i++) {
 			TableColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
-			boolean checked = true;
-			String key = mcol.getColumnFullName();
-			Integer pos = colOrder.get(key);
-			if (pos == null) {
-				pos = colOrder.get("-" + key);
-				if (pos != null)
-					checked = false;
-			}
-			if (pos != null) {
-				order[pos.intValue()] = i;
-			} else {
-				orderGaps.add(Integer.valueOf(i)); // i'th column has no
-													// position
-			}
-			if (checked && !(mcol instanceof GroupColumn)) {
+			boolean visible = !mcol.isHidden();
+			if (visible && !(mcol instanceof GroupColumn)) {
 				if (acol.getWidth() <= 0)
-					acol.setWidth(getColumn(i).getColumnWidth());
+					acol.setWidth(getColumn(i).getUserWidth());
 			} else {
 				acol.setWidth(0);
 			}
 		}
-		// fill order for columns which were not in the properly list
-		for (int i = 0; i < order.length; i++) {
-			int pos = order[i];
-			if (pos < 0)
-				if (orderGaps.size() > 0) {
-					Integer next = orderGaps.iterator().next();
-					orderGaps.remove(next);
-					order[i] = next.intValue();
-				}
-		}
-		this.viewer.getTable().setColumnOrder(order);
 	}
 
 	public void setLinesVisible(boolean grid) {

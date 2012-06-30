@@ -11,7 +11,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 public abstract class AbstractColumn extends ColumnLabelProvider {
 	protected final ICardField dataIndex;
 	protected int columnIndex = -1;
-	protected int orderIndex = -1;
 	protected int userwidth;
 	protected boolean hidden = false;
 
@@ -21,7 +20,6 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 
 	public void setColumnIndex(int columnIndex) {
 		this.columnIndex = columnIndex;
-		this.orderIndex = columnIndex;
 	}
 
 	public AbstractColumn(ICardField dataIndex) {
@@ -83,19 +81,11 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		return null;
 	}
 
-	public int getOrderIndex() {
-		return orderIndex;
-	}
-
-	public void setOrderIndex(int orderIndex) {
-		this.orderIndex = orderIndex;
-	}
-
-	public int getWidth() {
+	public int getUserWidth() {
 		return userwidth;
 	}
 
-	public void setWidth(int width) {
+	public void setUserWidth(int width) {
 		this.userwidth = width;
 	}
 

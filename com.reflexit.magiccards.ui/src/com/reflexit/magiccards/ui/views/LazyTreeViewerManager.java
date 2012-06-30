@@ -1,8 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -17,6 +14,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.NameColumn;
 
@@ -81,41 +79,16 @@ public class LazyTreeViewerManager extends ViewerManager {
 	}
 
 	public void updateColumns(String value) {
-		String newValue = moveGroupOnTop(value);
+		getColumnsCollection().updateColumnsFromPropery(moveGroupOnTop(value));
+		this.viewer.getTree().setColumnOrder(getColumnsCollection().getColumnsOrder());
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
-		int order[] = new int[acolumns.length];
-		String[] prefValues = newValue.split(",");
-		if (prefValues.length == 0)
-			return;
-		HashMap<String, Integer> colOrger = new HashMap<String, Integer>();
-		HashSet<Integer> orderGaps = new HashSet<Integer>();
-		for (int i = 0; i < prefValues.length; i++) {
-			Integer integer = Integer.valueOf(i);
-			colOrger.put(prefValues[i], integer);
-		}
-		for (int i = 0; i < order.length; i++) {
-			order[i] = -1;
-		}
 		for (int i = 0; i < acolumns.length; i++) {
 			TreeColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
-			boolean checked = true;
-			String key = mcol.getColumnFullName();
-			Integer pos = colOrger.get(key);
-			if (pos == null) {
-				pos = colOrger.get("-" + key);
-				if (pos != null)
-					checked = false;
-			}
-			if (pos != null && pos.intValue() < order.length) {
-				order[pos.intValue()] = i;
-			} else {
-				orderGaps.add(Integer.valueOf(i)); // i'th column has no
-													// position
-			}
-			if (checked || mcol instanceof GroupColumn) {
+			boolean visible = !mcol.isHidden();
+			if (visible || mcol instanceof GroupColumn) {
 				if (acol.getWidth() <= 0)
-					acol.setWidth(getColumn(i).getColumnWidth());
+					acol.setWidth(getColumn(i).getUserWidth());
 			} else {
 				acol.setWidth(0);
 			}
@@ -124,18 +97,25 @@ public class LazyTreeViewerManager extends ViewerManager {
 				acol.setWidth(0);
 			}
 		}
-		// fill order for columns which were not in the properly list
-		for (int i = 0; i < order.length; i++) {
-			int pos = order[i];
-			if (pos < 0) {
-				if (orderGaps.size() > 0) {
-					Integer next = orderGaps.iterator().next();
-					orderGaps.remove(next);
-					order[i] = next.intValue();
-				}
+	}
+
+	public String getColumnLayout() {
+		ColumnCollection columnsCollection = getColumnsCollection();
+		int[] columnOrder = this.viewer.getTree().getColumnOrder();
+		String line = "";
+		for (int i = 0; i < columnOrder.length; i++) {
+			int index = columnOrder[i];
+			AbstractColumn column = columnsCollection.getColumn(index);
+			String key = column.getColumnFullName();
+			if (column.isHidden()) {
+				key = "-" + key;
 			}
+			line += key;
+			if (i + 1 < columnOrder.length)
+				line += ",";
 		}
-		this.viewer.getTree().setColumnOrder(order);
+		columnsCollection.updateColumnsFromPropery(line);
+		return line;
 	}
 
 	public void setLinesVisible(boolean grid) {

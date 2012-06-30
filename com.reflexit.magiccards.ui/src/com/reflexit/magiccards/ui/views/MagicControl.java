@@ -62,7 +62,7 @@ public abstract class MagicControl implements IMagicControl {
 		//
 	}
 
-	private IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
+	protected IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			MagicControl.this.propertyChange(event);
 		}
@@ -135,4 +135,6 @@ public abstract class MagicControl implements IMagicControl {
 	}
 
 	public abstract ISelection getSelection();
+
+	public abstract void saveColumnLayout();
 }

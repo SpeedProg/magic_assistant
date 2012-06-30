@@ -48,4 +48,6 @@ public interface IMagicColumnViewer {
 	public abstract Control createContents(Composite comp);
 
 	void hookDragAndDrop();
+
+	public abstract String getColumnLayout();
 }

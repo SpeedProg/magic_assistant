@@ -14,7 +14,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -34,7 +33,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -58,7 +56,6 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected IMagicControl control;
 	private Composite partControl;
 	private Action actionRefresh;
-	private Action actionShowPrefs;
 	protected Action actionCopy;
 	protected Action actionPaste;
 	protected Action showPrintings;
@@ -168,17 +165,6 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void makeActions() {
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.actionShowPrefs = new Action("Preferences...") {
-			@Override
-			public void run() {
-				String id = getPreferencePageId();
-				if (id != null) {
-					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
-					dialog.open();
-				}
-			}
-		};
-		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
 		this.actionCopy = new Action("Copy") {
 			@Override
 			public void run() {
@@ -222,6 +208,13 @@ public abstract class AbstractCardsView extends ViewPart {
 				}
 			}
 		};
+	}
+
+	protected void saveColumnLayout() {
+		String id = getPreferencePageId();
+		if (id != null && control instanceof MagicControl) {
+			((MagicControl) control).saveColumnLayout();
+		}
 	}
 
 	protected void refresh() {

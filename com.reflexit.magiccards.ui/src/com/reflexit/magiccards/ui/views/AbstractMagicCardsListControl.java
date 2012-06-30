@@ -620,6 +620,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			public void run() {
 				String id = getPreferencePageId();
 				if (id != null) {
+					saveColumnLayout();
 					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
 					dialog.open();
 				}
@@ -819,6 +820,17 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
 			reloadData();
+		}
+	}
+
+	@Override
+	public void saveColumnLayout() {
+		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
+		try {
+			String value = manager.getColumnLayout();
+			prefStore.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
+		} finally {
+			MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
 		}
 	}
 }
