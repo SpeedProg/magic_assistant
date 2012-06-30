@@ -69,6 +69,25 @@ public class ProgressColumn extends GenColumn implements Listener {
 		return super.getText(element);
 	}
 
+	@Override
+	public String getToolTipText(Object element) {
+		if (element instanceof MagicCard) {
+			return "This card is not in any of your card collections";
+		}
+		if (element instanceof MagicCardPhysical) {
+			MagicCardPhysical card = (MagicCardPhysical) element;
+			if (card.isOwn()) {
+				return "You own " + card.getCount() + "of these cards";
+			} else {
+				return "This means you have " + card.getCount() + " virtual cards (you don't own them)";
+			}
+		}
+		if (element instanceof CardGroup) {
+			return "X/Y (Z%) - Means you have X unique cards you own out of Y possible in this class, which represents Z%";
+		}
+		return null;
+	}
+
 	protected ICardStore<IMagicCard> getSetStore(CardGroup cardGroup) {
 		if (cardGroup.size() == 0)
 			return null;
