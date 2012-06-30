@@ -23,8 +23,8 @@ public class CardGroup implements ICardCountable {
 	private String name;
 	private ICardField groupField;
 	private int count;
-	private int usize;
-	private ArrayList children;
+	private ArrayList<Object> children;
+	private static final String OWNUSIZE_KEY = "ownusize";
 	private HashMap<String, Object> props;
 	private MagicCardPhysical base;
 
@@ -108,12 +108,6 @@ public class CardGroup implements ICardCountable {
 		return this.count;
 	}
 
-	public synchronized int getUSize() {
-		if (usize == 0)
-			calculateUSize();
-		return this.usize;
-	}
-
 	public synchronized int calculateCount() {
 		count = 0;
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
@@ -129,17 +123,24 @@ public class CardGroup implements ICardCountable {
 		return count;
 	}
 
-	public synchronized int calculateUSize() {
-		usize = 0;
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			if (o instanceof CardGroup) {
-				usize += ((CardGroup) o).calculateUSize();
-			} else {
-				usize++;
+	public int getOwnUSize() {
+		Integer iOwn = (Integer) getProperty(OWNUSIZE_KEY);
+		if (iOwn != null) {
+			return iOwn.intValue();
+		}
+		int ownusize = 0;
+		for (Iterator<Object> iterator = children.iterator(); iterator.hasNext();) {
+			Object object = iterator.next();
+			if (object instanceof MagicCardPhysical) {
+				if (((MagicCardPhysical) object).isOwn()) {
+					ownusize++;
+				}
+			} else if (object instanceof CardGroup) {
+				ownusize += ((CardGroup) object).getOwnUSize();
 			}
 		}
-		return usize;
+		setProperty(OWNUSIZE_KEY, ownusize);
+		return ownusize;
 	}
 
 	public ICardField getFieldIndex() {
