@@ -25,7 +25,7 @@ public class PreferenceConstants {
 	public static final String PRICE_PROVIDER = PREFIX + ".priceProvider";
 	public static final String SHOW_GRID = PREFIX + ".grid";
 	public static final String LOCAL_SHOW_QUICKFILTER = "quickfilter";
-	public static final String LOCAL_COLUMNS = "columns";
+	public static final String LOCAL_COLUMNS = "columnlayout";
 	public static final String CHECK_FOR_UPDATES = "updates";
 	public static final String CHECK_FOR_CARDS = "cardUpdates";
 }

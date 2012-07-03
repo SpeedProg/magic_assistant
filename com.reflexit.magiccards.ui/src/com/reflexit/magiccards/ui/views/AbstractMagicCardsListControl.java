@@ -827,7 +827,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public void saveColumnLayout() {
 		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
 		try {
-			String value = manager.getColumnLayout();
+			String value = manager.getColumnLayoutProperty();
 			prefStore.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 		} finally {
 			MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);

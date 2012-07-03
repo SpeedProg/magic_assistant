@@ -12,7 +12,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	protected final ICardField dataIndex;
 	protected int columnIndex = -1;
 	protected int userwidth;
-	protected boolean hidden = false;
+	private boolean visible = true;
 
 	public int getColumnIndex() {
 		return columnIndex;
@@ -89,11 +89,11 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		this.userwidth = width;
 	}
 
-	public boolean isHidden() {
-		return hidden;
+	public boolean isVisible() {
+		return visible;
 	}
 
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 }

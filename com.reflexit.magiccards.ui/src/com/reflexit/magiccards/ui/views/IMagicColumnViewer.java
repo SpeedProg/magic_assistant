@@ -49,5 +49,5 @@ public interface IMagicColumnViewer {
 
 	void hookDragAndDrop();
 
-	public abstract String getColumnLayout();
+	public abstract String getColumnLayoutProperty();
 }

@@ -5,7 +5,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.reflexit.magiccards.ui.preferences.feditors.CheckedListEditor;
+import com.reflexit.magiccards.ui.preferences.feditors.ColumnFieldEditor;
 import com.reflexit.magiccards.ui.views.collector.CollectorColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 
@@ -21,8 +21,8 @@ public class CollectorViewPreferencePage extends FieldEditorPreferencePage imple
 		ColumnCollection columnCollection = new CollectorColumnCollection();
 		columnCollection.createColumnLabelProviders();
 		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
-		addField(new CheckedListEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),
-				columnCollection.getColumnNames()));
+		addField(new ColumnFieldEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),
+				columnCollection));
 	}
 
 	public void init(IWorkbench workbench) {

@@ -173,10 +173,10 @@ public class CompositeViewerManager extends ViewerManager {
 		return this.managers[this.activeIndex].getSortDirection();
 	}
 
-	public String getColumnLayout() {
+	public String getColumnLayoutProperty() {
 		for (IMagicColumnViewer m : this.managers) {
-			m.getColumnLayout();
+			m.getColumnLayoutProperty();
 		}
-		return this.managers[this.activeIndex].getColumnLayout();
+		return this.managers[this.activeIndex].getColumnLayoutProperty();
 	}
 }

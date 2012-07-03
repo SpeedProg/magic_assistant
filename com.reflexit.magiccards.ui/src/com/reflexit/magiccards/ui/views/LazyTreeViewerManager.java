@@ -46,7 +46,7 @@ public class LazyTreeViewerManager extends ViewerManager {
 			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
 			TreeColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
-			col.setWidth(man.getColumnWidth());
+			col.setWidth(man.getUserWidth());
 			col.setToolTipText(man.getColumnTooltip());
 			final int coln = i;
 			col.addSelectionListener(new SelectionAdapter() {
@@ -71,24 +71,19 @@ public class LazyTreeViewerManager extends ViewerManager {
 		return this.viewer;
 	}
 
-	protected String moveGroupOnTop(String value) {
-		String newValue = value;
-		newValue = newValue.replaceAll("-?" + GroupColumn.COL_NAME + ",", "");
-		newValue = GroupColumn.COL_NAME + "," + newValue;
-		return newValue;
-	}
-
 	public void updateColumns(String value) {
-		getColumnsCollection().updateColumnsFromPropery(moveGroupOnTop(value));
+		ColumnCollection columnsCollection = getColumnsCollection();
+		columnsCollection.updateColumnsFromPropery(value);
+		columnsCollection.moveColumnOnTop(columnsCollection.getColumn(GroupColumn.COL_NAME));
 		this.viewer.getTree().setColumnOrder(getColumnsCollection().getColumnsOrder());
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		for (int i = 0; i < acolumns.length; i++) {
 			TreeColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
-			boolean visible = !mcol.isHidden();
+			boolean visible = mcol.isVisible();
 			if (visible || mcol instanceof GroupColumn) {
-				if (acol.getWidth() <= 0)
-					acol.setWidth(getColumn(i).getUserWidth());
+				if (acol.getWidth() != mcol.getUserWidth())
+					acol.setWidth(mcol.getUserWidth());
 			} else {
 				acol.setWidth(0);
 			}
@@ -99,23 +94,11 @@ public class LazyTreeViewerManager extends ViewerManager {
 		}
 	}
 
-	public String getColumnLayout() {
+	public String getColumnLayoutProperty() {
 		ColumnCollection columnsCollection = getColumnsCollection();
-		int[] columnOrder = this.viewer.getTree().getColumnOrder();
-		String line = "";
-		for (int i = 0; i < columnOrder.length; i++) {
-			int index = columnOrder[i];
-			AbstractColumn column = columnsCollection.getColumn(index);
-			String key = column.getColumnFullName();
-			if (column.isHidden()) {
-				key = "-" + key;
-			}
-			line += key;
-			if (i + 1 < columnOrder.length)
-				line += ",";
-		}
-		columnsCollection.updateColumnsFromPropery(line);
-		return line;
+		columnsCollection.setColumnProperties(viewer.getTree().getColumns());
+		columnsCollection.setColumnOrder(viewer.getTree().getColumnOrder());
+		return columnsCollection.getColumnLayoutProperty();
 	}
 
 	public void setLinesVisible(boolean grid) {

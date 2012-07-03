@@ -193,7 +193,7 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		// ignore
 	}
 
-	public String getColumnLayout() {
+	public String getColumnLayoutProperty() {
 		// ignore
 		return "";
 	}

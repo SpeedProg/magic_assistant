@@ -60,7 +60,7 @@ public class LazyTableViewerManager extends ViewerManager {
 			TableViewerColumn colv = new TableViewerColumn(this.viewer, i);
 			final TableColumn col = colv.getColumn();
 			col.setText(man.getColumnName());
-			col.setWidth(man.getColumnWidth());
+			col.setWidth(man.getUserWidth());
 			col.setToolTipText(man.getColumnTooltip());
 			final int coln = i;
 			col.addSelectionListener(new SelectionAdapter() {
@@ -80,23 +80,11 @@ public class LazyTableViewerManager extends ViewerManager {
 		this.viewer.getTable().setHeaderVisible(true);
 	}
 
-	public String getColumnLayout() {
+	public String getColumnLayoutProperty() {
 		ColumnCollection columnsCollection = getColumnsCollection();
-		int[] columnOrder = this.viewer.getTable().getColumnOrder();
-		String line = "";
-		for (int i = 0; i < columnOrder.length; i++) {
-			int index = columnOrder[i];
-			AbstractColumn column = columnsCollection.getColumn(index);
-			String key = column.getColumnFullName();
-			if (column.isHidden()) {
-				key = "-" + key;
-			}
-			line += key;
-			if (i + 1 < columnOrder.length)
-				line += ",";
-		}
-		columnsCollection.updateColumnsFromPropery(line);
-		return line;
+		columnsCollection.setColumnProperties(viewer.getTable().getColumns());
+		columnsCollection.setColumnOrder(viewer.getTable().getColumnOrder());
+		return columnsCollection.getColumnLayoutProperty();
 	}
 
 	@Override
@@ -111,10 +99,10 @@ public class LazyTableViewerManager extends ViewerManager {
 		for (int i = 0; i < acolumns.length; i++) {
 			TableColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
-			boolean visible = !mcol.isHidden();
+			boolean visible = mcol.isVisible();
 			if (visible && !(mcol instanceof GroupColumn)) {
-				if (acol.getWidth() <= 0)
-					acol.setWidth(getColumn(i).getUserWidth());
+				if (acol.getWidth() != mcol.getUserWidth())
+					acol.setWidth(mcol.getUserWidth());
 			} else {
 				acol.setWidth(0);
 			}

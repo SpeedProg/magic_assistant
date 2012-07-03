@@ -34,24 +34,21 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * An abstract field editor that manages a list of input values. The editor
- * displays a list containing the values, and Up and Down buttons to adjust the
- * order of elements in the list.
+ * An abstract field editor that manages a list of input values. The editor displays a list
+ * containing the values, and Up and Down buttons to adjust the order of elements in the list.
  * <p>
- * Subclasses must implement the <code>parseString</code>,
- * <code>createList</code>, and <code>getNewInputObject</code> framework
- * methods.
+ * Subclasses must implement the <code>parseString</code>, <code>createList</code>, and
+ * <code>getNewInputObject</code> framework methods.
  * </p>
  */
 public class CheckedListEditor extends FieldEditor {
 	/**
-	 * The list widget; <code>null</code> if none (before creation or after
-	 * disposal).
+	 * The list widget; <code>null</code> if none (before creation or after disposal).
 	 */
-	private Table list;
+	protected Table list;
 	/**
-	 * The button box containing the Add, Remove, Up, and Down buttons;
-	 * <code>null</code> if none (before creation or after disposal).
+	 * The button box containing the Add, Remove, Up, and Down buttons; <code>null</code> if none
+	 * (before creation or after disposal).
 	 */
 	private Composite buttonBox;
 	/**
@@ -187,7 +184,7 @@ public class CheckedListEditor extends FieldEditor {
 	protected void doLoad() {
 		if (this.list != null) {
 			String s = getPreferenceStore().getString(getPreferenceName());
-			loadFromString(s);
+			parseString(s);
 		}
 	}
 
@@ -199,7 +196,7 @@ public class CheckedListEditor extends FieldEditor {
 		if (this.list != null) {
 			this.list.removeAll();
 			String s = getPreferenceStore().getDefaultString(getPreferenceName());
-			loadFromString(s);
+			parseString(s);
 		}
 	}
 
@@ -222,8 +219,7 @@ public class CheckedListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Returns this field editor's button box containing the Add, Remove, Up,
-	 * and Down button.
+	 * Returns this field editor's button box containing the Add, Remove, Up, and Down button.
 	 * 
 	 * @param parent
 	 *            the parent control
@@ -282,8 +278,7 @@ public class CheckedListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Returns this field editor's selection listener. The listener is created
-	 * if nessessary.
+	 * Returns this field editor's selection listener. The listener is created if nessessary.
 	 * 
 	 * @return the selection listener
 	 */
@@ -297,8 +292,7 @@ public class CheckedListEditor extends FieldEditor {
 	/**
 	 * Returns this field editor's shell.
 	 * <p>
-	 * This method is internal to the framework; subclassers should not call
-	 * this method.
+	 * This method is internal to the framework; subclassers should not call this method.
 	 * </p>
 	 * 
 	 * @return the shell
@@ -311,8 +305,8 @@ public class CheckedListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Splits the given string into a list of strings. This method is the
-	 * converse of <code>createList</code>.
+	 * Splits the given string into a list of strings. This method is the converse of
+	 * <code>createList</code>.
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
@@ -322,7 +316,7 @@ public class CheckedListEditor extends FieldEditor {
 	 * @return an array of <code>String</code>
 	 * @see #createList
 	 */
-	protected void loadFromString(String stringList) {
+	protected void parseString(String stringList) {
 		String[] prefValues = stringList.split(",");
 		LinkedHashSet<String> prefs = new LinkedHashSet<String>();
 		prefs.addAll(Arrays.asList(prefValues));
@@ -357,8 +351,8 @@ public class CheckedListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Combines the given list of items into a single string. This method is the
-	 * converse of <code>parseString</code>.
+	 * Combines the given list of items into a single string. This method is the converse of
+	 * <code>parseString</code>.
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
@@ -407,8 +401,8 @@ public class CheckedListEditor extends FieldEditor {
 	 * Moves the currently selected item up or down.
 	 * 
 	 * @param up
-	 *            <code>true</code> if the item should move up, and
-	 *            <code>false</code> if it should move down
+	 *            <code>true</code> if the item should move up, and <code>false</code> if it should
+	 *            move down
 	 */
 	private void swap(boolean up) {
 		setPresentsDefaultValue(false);
