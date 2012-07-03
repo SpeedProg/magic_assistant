@@ -279,7 +279,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 					return;
 				}
 				if (htmlB != null) {
-					IMagicCard cardB = card.cloneCard();
+					IMagicCard cardB = card.getBase().cloneCard();
 					extractField(cardB, null, htmlB, MagicCardField.NAME, cardNamePattern, false);
 					extractField(cardB, null, htmlB, MagicCardField.ID, cardIdPattern, false);
 					extractField(cardB, null, htmlB, MagicCardField.PART, cardRotatePattern, false);
@@ -326,7 +326,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 			extractOtherSets(card, fieldMapFilter, html);
 			monitor.worked(1);
 			if (magicDb != null)
-				magicDb.update(card);
+				magicDb.update(card.getBase());
 		} finally {
 			monitor.done();
 		}
