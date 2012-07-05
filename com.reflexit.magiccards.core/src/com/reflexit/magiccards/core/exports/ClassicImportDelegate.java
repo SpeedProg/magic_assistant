@@ -49,7 +49,7 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 	 * @throws InvocationTargetException
 	 */
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
-		DeckParser parser = new DeckParser(getStream());
+		DeckParser parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]\\s*(\\d+)"), new ICardField[] { MagicCardField.NAME,
 				MagicCardField.SET, MagicCardFieldPhysical.COUNT });
 		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"), new ICardField[] {

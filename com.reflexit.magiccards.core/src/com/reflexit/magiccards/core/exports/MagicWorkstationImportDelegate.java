@@ -67,7 +67,7 @@ public class MagicWorkstationImportDelegate extends CsvImportDelegate {
 	}
 
 	@Override
-	protected void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
+	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (i == 0 && value.endsWith(")")) {
 			value = value.replaceAll(" \\(\\d+\\)$", "");
 		}

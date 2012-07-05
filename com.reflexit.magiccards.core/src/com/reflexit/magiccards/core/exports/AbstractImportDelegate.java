@@ -125,7 +125,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return card;
 	}
 
-	protected void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
+	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (field == MagicCardField.EDITION_ABBR) {
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)

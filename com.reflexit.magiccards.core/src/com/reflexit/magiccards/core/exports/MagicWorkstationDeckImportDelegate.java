@@ -78,9 +78,12 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 
 	 */
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
-		DeckParser parser = new DeckParser(getStream());
+		DeckParser parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
 				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.SET, MagicCardField.NAME });
+		parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
+				new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR,
+						MagicCardField.NAME });
 		do {
 			line++;
 			try {
@@ -98,5 +101,18 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 			}
 		} while (true);
 		parser.close();
+	}
+
+	@Override
+	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
+		if (field == MagicCardFieldPhysical.SIDEBOARD) {
+			if (value.equals("SB")) {
+				card.setLocation(getLocation().toSideboard());
+			}
+		} else if (field == MagicCardField.SET) {
+			super.setFieldValue(card, MagicCardField.EDITION_ABBR, i, value);
+		} else {
+			super.setFieldValue(card, field, i, value);
+		}
 	}
 }

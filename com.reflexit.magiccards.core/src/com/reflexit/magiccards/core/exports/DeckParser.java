@@ -9,18 +9,18 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class DeckParser implements Closeable {
 	private BufferedReader reader;
 	private String lineSep;
+	private IImportDelegate delegate;
 
-	public DeckParser(InputStream st) {
+	public DeckParser(InputStream st, IImportDelegate delegate) {
 		reader = new BufferedReader(new InputStreamReader(st));
 		lineSep = System.getProperty("line.separator");
+		this.delegate = delegate;
 	}
 
 	private LinkedHashMap<Pattern, ICardField[]> patternList = new LinkedHashMap<Pattern, ICardField[]>();
@@ -50,13 +50,11 @@ public class DeckParser implements Closeable {
 						try {
 							String group = m.group(i + 1);
 							if (group != null) {
-								if (cardField == MagicCardField.SET) {
-									String setName = Editions.getInstance().getNameByAbbr(group);
-									if (setName == null)
-										setName = group;
-									group = setName.trim();
+								if (delegate != null) {
+									delegate.setFieldValue(res, cardField, i, group.trim());
+								} else {
+									res.setObjectByField(cardField, group.trim());
 								}
-								res.setObjectByField(cardField, group.trim());
 							}
 						} catch (Exception e) {
 							// nothing

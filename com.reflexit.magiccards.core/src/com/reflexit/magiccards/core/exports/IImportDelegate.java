@@ -14,7 +14,9 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -33,4 +35,6 @@ public interface IImportDelegate<T> {
 	public PreviewResult getPreview();
 
 	public Collection<T> getImportedCards();
+
+	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value);
 }

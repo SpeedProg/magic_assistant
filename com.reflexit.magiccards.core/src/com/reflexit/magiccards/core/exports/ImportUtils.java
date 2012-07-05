@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -74,6 +75,8 @@ public class ImportUtils {
 			if (location.isSideboard()) {
 				ModelRoot root = DataManager.getModelRoot();
 				String containerName = location.getParent().getPath();
+				if (containerName.startsWith(File.separator))
+					containerName = containerName.substring(File.separator.length());
 				final CardElement resource = root.findElement(new LocationPath(containerName));
 				if (!(resource instanceof CollectionsContainer)) {
 					continue; // ???
@@ -156,8 +159,8 @@ public class ImportUtils {
 		String name = card.getName();
 		if (name == null)
 			return null;
-		if (name.contains("Aet")) // Æther
-			name = name.replaceAll("Aet", "Æt");
+		if (name.contains("Aet")) // ï¿½ther
+			name = name.replaceAll("Aet", "ï¿½t");
 		else
 			return name;
 		card.setName(name);
