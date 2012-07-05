@@ -201,18 +201,20 @@ public final class CardStoreUtils {
 	}
 
 	public static Collection<CardGroup> buildSpellColorStats(Iterable store) {
-		HashMap<CardGroup, CardGroup> groupsList = new HashMap();
+		HashMap<String, CardGroup> groupsList = new HashMap();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
 			if (elem.getType() == null || MTYPES.hasType(elem, CardTypes.TYPES.Type_Land))
 				continue;
 			String name = Colors.getColorName(elem.getCost());
-			CardGroup g = new CardGroup(MagicCardField.COST, name);
-			if (!groupsList.containsKey(g)) {
-				groupsList.put(g, g);
+			if (!groupsList.containsKey(name)) {
+				CardGroup g = new CardGroup(MagicCardField.COST, name);
+				groupsList.put(name, g);
 			}
+			CardGroup real = groupsList.get(name);
+			real.add(elem);
 		}
-		return groupsList.keySet();
+		return groupsList.values();
 	}
 
 	public CardGroup buildTypeGroups(Iterable iterable) {
