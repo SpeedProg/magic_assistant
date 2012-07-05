@@ -2,7 +2,7 @@
 <feature
       id="com.reflexit.magicassistant.p2.feature"
       label="Magic Assistant Software Update"
-      version="1.2.4.qualifier"
+      version="1.2.5.qualifier"
       provider-name="Reflex IT">
 
    <description url="http://mtgbrowser.sf.net">
@@ -10,7 +10,7 @@
    </description>
 
    <copyright url="http://mtgbrowser.wiki.sourceforge.net/copyright">
-      Copyright (c) 2008,2010 Alena Laskavaia.
+      Copyright (c) 2008,2012 Alena Laskavaia.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License
 v1.0
