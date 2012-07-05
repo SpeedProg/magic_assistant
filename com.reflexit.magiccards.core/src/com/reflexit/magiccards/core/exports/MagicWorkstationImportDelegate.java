@@ -40,6 +40,7 @@ public class MagicWorkstationImportDelegate extends CsvImportDelegate {
 		fields[1] = MagicCardFieldPhysical.COUNT;
 		fields[3] = MagicCardField.EDITION_ABBR;
 		setFields(fields);
+		MagicWorkstationDeckImportDelegate.fixEditions();
 	}
 
 	@Override

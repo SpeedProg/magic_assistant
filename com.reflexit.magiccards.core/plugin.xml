@@ -56,4 +56,13 @@
            xmlFormat="false">
      </deckFormat>  
    </extension>
+   <extension
+         point="com.reflexit.magiccards.core.deckFormat">
+      <deckFormat
+            id="mwdeck"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationDeckImportDelegate"
+            label="Magic Workstation mwDeck"
+            xmlFormat="false">
+      </deckFormat>
+   </extension>
 </plugin>

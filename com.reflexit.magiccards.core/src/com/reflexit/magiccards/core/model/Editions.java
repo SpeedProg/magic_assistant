@@ -103,9 +103,13 @@ public class Editions implements ISearchableProperty {
 			return abbrs[0];
 		}
 
-		public String getExtraAbbreviation() {
+		public String getExtraAbbreviations() {
 			if (abbrs.length > 1) {
-				return abbrs[1];
+				String line = abbrs[1];
+				for (int i = 2; i < abbrs.length; i++) {
+					line += "," + abbrs[i];
+				}
+				return line;
 			}
 			return "";
 		}
@@ -247,6 +251,12 @@ public class Editions implements ISearchableProperty {
 		return edition;
 	}
 
+	public void addAbbreviation(String name, String abbr) {
+		Edition ed = getEditionByName(name);
+		if (ed != null)
+			ed.addAbbreviation(abbr);
+	}
+
 	public synchronized Edition addEdition(Edition set) {
 		String name = set.getName();
 		if (name.length() == 0)
@@ -323,8 +333,13 @@ public class Editions implements ISearchableProperty {
 					String abbrOther = attrs[2].trim();
 					if (abbrOther.equals("en-us") || abbrOther.equals("EN"))
 						continue; // old style
-					if (abbrOther.length() > 0)
-						set.addAbbreviation(abbrOther);
+					if (abbrOther.length() > 0) {
+						String[] abbrs = abbrOther.trim().split(",");
+						for (int i = 0; i < abbrs.length; i++) {
+							String string = abbrs[i];
+							set.addAbbreviation(string.trim());
+						}
+					}
 					String releaseDate = attrs[3].trim();
 					if (releaseDate != null && releaseDate.length() > 0)
 						set.setReleaseDate(releaseDate);
@@ -375,7 +390,7 @@ public class Editions implements ISearchableProperty {
 				if (ed.getType() != null) {
 					type = ed.getType();
 				}
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviation() + "|" + rel + "|" + type + "||"
+				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "||"
 						+ ed.getFormatString());
 			}
 		} finally {
