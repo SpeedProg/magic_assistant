@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant Xml Fragment
 Bundle-SymbolicName: com.reflexit.magiccards.core.xml
-Bundle-Version: 1.2.4.qualifier
+Bundle-Version: 1.2.5.qualifier
 Bundle-Vendor: Alena Laskavaia
 Fragment-Host: com.reflexit.magiccards.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
