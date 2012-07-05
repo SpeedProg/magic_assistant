@@ -25,7 +25,9 @@ public class P2Util {
 		UpdateOperation operation = new UpdateOperation(session);
 		SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
 		IStatus status = operation.resolveModal(sub.newChild(100));
+		Activator.getDefault().getLog().log(status);
 		if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
+			Activator.getDefault().getLog().log(new Status(0, Activator.PLUGIN_ID, "Nothing to update"));
 			return status;
 		}
 		if (status.getSeverity() == IStatus.CANCEL)
