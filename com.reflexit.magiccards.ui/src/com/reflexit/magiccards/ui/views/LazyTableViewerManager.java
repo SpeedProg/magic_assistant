@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
+import com.reflexit.magiccards.ui.views.columns.NameColumn;
 
 public class LazyTableViewerManager extends ViewerManager {
 	static class MyTableViewer extends TableViewer {
@@ -100,7 +101,7 @@ public class LazyTableViewerManager extends ViewerManager {
 			TableColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
 			boolean visible = mcol.isVisible();
-			if (visible && !(mcol instanceof GroupColumn)) {
+			if (visible || (mcol instanceof NameColumn) && !(mcol instanceof GroupColumn)) {
 				if (acol.getWidth() != mcol.getUserWidth())
 					acol.setWidth(mcol.getUserWidth());
 			} else {
