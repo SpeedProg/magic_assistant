@@ -1,7 +1,7 @@
 Portal|PO|POR|June 1997|Starter||
 Coldsnap|CSP||July 2006|Expansion||Modern
 Scars of Mirrodin|SOM||October 2010|Expansion||Standard, Modern, Extended
-Limited Edition Beta|2E|LEB|October 1993|Core||
+Limited Edition Beta|2E|LEB,B|October 1993|Core||
 Planar Chaos|PLC||February 2007|Expansion||Modern
 Mirrodin Besieged|MBS||February 2011|Expansion||Standard, Modern, Extended
 From the Vault: Legends|V11||August 2011|Starter||
@@ -20,12 +20,12 @@ Promo set for Gatherer|PPR||October 2006|Online||
 New Phyrexia|NPH||May 2011|Expansion||Standard, Modern, Extended
 Duel Decks: Knights vs. Dragons|DDG||April 2011|Starter||
 Unhinged|UNH||November 2004|Un_set||
-Limited Edition Alpha|1E|LEA|August 1993|Core||
+Limited Edition Alpha|1E|LEA,A|August 1993|Core||
 Lorwyn|LRW||October 2007|Expansion||Modern
 Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter||
 From the Vault: Dragons|DRB||August 2011|Starter||
 Duel Decks: Phyrexia vs. the Coalition|DDE||March 2010|Starter||
-Mirrodin|MRD||October 2003|Expansion||Modern
+Mirrodin|MRD|MR|October 2003|Expansion||Modern
 Visions|VI|VIS|February 1997|Expansion||
 Duel Decks: Divine vs. Demonic|DDC||April 2009|Starter||
 Starter 1999|P3|S99|July 1999|Starter||
@@ -38,13 +38,13 @@ Fallen Empires|FE|FEM|November 1994|Expansion||
 Masters Edition|MED||September 2007|Online||
 Masters Edition IV|ME4||January 2011|Starter||
 Magic Online Promo Cards|PRM||October 2006|Online||
-Onslaught|ONS||October 2002|Expansion||
+Onslaught|ONS|ON|October 2002|Expansion||
 Masters Edition II|ME2||September 2008|Online||
-Judgment|JUD||May 2002|Expansion||
+Judgment|JUD|JU|May 2002|Expansion||
 Masters Edition III|ME3||September 2009|Online||
 Archenemy|ARC||June 2010|Starter||
 Duel Decks: Garruk vs. Liliana|DDD||October 2009|Starter||
-Fifth Dawn|5DN||June 2004|Expansion||Modern
+Fifth Dawn|5DN|FD|June 2004|Expansion||Modern
 Guildpact|GPT||February 2006|Expansion||Modern
 Portal Second Age|P2|P02|June 1998|Starter||
 Revised Edition|3E|3ED|April 1994|Core||
@@ -64,7 +64,7 @@ Duel Decks: Venser vs. Koth|DDI||May 2012|?||
 Fifth Edition|5E|5ED|March 1997|Core||
 Invasion|IN|INV|October 2000|Expansion||
 Chronicles|CH|CHR|July 1995|Reprint||
-Scourge|SCG||May 2003|Expansion||
+Scourge|SCG|SC|May 2003|Expansion||
 Shards of Alara|ALA||October 2008|Expansion||Modern, Extended
 Alara Reborn|ARB||April 2009|Expansion||Modern, Extended
 Duel Decks: Ajani vs. Nicol Bolas|DDH||August 2011|Starter||
@@ -76,18 +76,18 @@ Classic Sixth Edition|6E|6ED|April 1999|Core||
 Tenth Edition|10E||July 2007|Core||Modern
 Conflux|CON||February 2009|Expansion||Modern, Extended
 Weatherlight|WL|WTH|June 1997|Expansion||
-Urza's Destiny|CG|UDS|June 1999|Expansion||
+Urza's Destiny|CG|UDS,UD|June 1999|Expansion||
 Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter||
 Premium Deck Series: Graveborn|PD3||May 2012|?||
 Planechase|HOP||July 2011|Starter||
 Premium Deck Series: Slivers|H09||November 2009|Starter||
 Nemesis|NE|NMS|February 2000|Expansion||
 Avacyn Restored|AVR||May 2012|?||Standard, Modern, Extended
-Stronghold|ST|STH|March 1998|Expansion||
+Stronghold|ST|STH,SH|March 1998|Expansion||
 Ravnica: City of Guilds|RAV||October 2005|Expansion||Modern
 Future Sight|FUT||May 2007|Expansion||Modern
 Tempest|TE|TMP|October 1997|Expansion||
-Urza's Legacy|GU|ULG|February 1999|Expansion||
+Urza's Legacy|GU|ULG,UL|February 1999|Expansion||
 Duel Decks: Jace vs. Chandra|DD2||November 2008|Starter||
 From the Vault: Relics|V10||August 2011|Starter||
 From the Vault: Exiled|V09||August 2011|Starter||
@@ -95,16 +95,17 @@ Magic: The Gathering-Commander|CMD||June 2011|Starter||
 Unglued|UG|UGL|August 1998|Un_set||
 Eighth Edition|8ED|8E|July 2003|Core||Modern
 Morningtide|MOR||February 2008|Expansion||Modern
-Urza's Saga|UZ|USG|October 1998|Expansion||
+Urza's Saga|UZ|USG,US|October 1998|Expansion||
 Legions|LGN||February 2003|Expansion||
 Arabian Nights|AN|ARN|December 1993|Expansion||
 Zendikar|ZEN||October 2009|Expansion||Modern, Extended
 Ice Age|IA|ICE|June 1995|Expansion||
 The Dark|DK|DRK|August 1994|Expansion||
-Torment|TOR||February 2002|Expansion||
+Torment|TOR|TO|February 2002|Expansion||
 Innistrad|ISD||September 2011|Expansion||Standard, Modern, Extended
 Homelands|HM|HML|October 1995|Expansion||
 Dissension|DIS||May 2006|Expansion||Modern
 Worldwake|WWK||February 2010|Expansion||Modern, Extended
 Seventh Edition|7E|7ED|April 2001|Core||
-Planechase 2012 Edition|PC2||June 2012|?||
+Planechase 2012 Edition|PC2||June 2012|Expansion||
+Anthologies|AT||April 1998|Starter||
