@@ -64,7 +64,7 @@ public class ModelRoot extends CardOrganizer {
 	 */
 	@Override
 	public LocationPath getPath() {
-		return new LocationPath("");
+		return LocationPath.ROOT;
 	}
 
 	public CollectionsContainer getDeckContainer() {

@@ -119,7 +119,10 @@ public class Location implements Comparable<Location> {
 	public Location getParent() {
 		if (this == NO_WHERE)
 			return NO_WHERE;
-		return new Location(new File(location).getParent());
+		String parent = new File(location).getParent();
+		if (parent.equals("") || parent.equals(File.separator) || parent.equals("/"))
+			return NO_WHERE;
+		return new Location(parent);
 	}
 
 	public String getPath() {

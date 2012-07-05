@@ -5,6 +5,12 @@ import java.io.File;
 public class LocationPath {
 	private final String SEP = "/";
 	private String path;
+	public static final LocationPath ROOT = new LocationPath("") {
+		@Override
+		public LocationPath append(String end) {
+			return new LocationPath(end);
+		}
+	};
 
 	public LocationPath(String path) {
 		super();
