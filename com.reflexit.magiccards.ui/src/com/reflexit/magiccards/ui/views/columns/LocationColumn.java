@@ -58,9 +58,6 @@ public class LocationColumn extends GenColumn {
 		else if (loc.endsWith(".xml")) {
 			loc = loc.replaceFirst("\\.xml$", "");
 		}
-		if (loc.startsWith("/")) {
-			loc = loc.substring(1);
-		}
 		return loc;
 	}
 
