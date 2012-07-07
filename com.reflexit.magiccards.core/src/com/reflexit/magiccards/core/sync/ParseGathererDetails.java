@@ -233,14 +233,14 @@ public class ParseGathererDetails extends ParseGathererPage {
 				html0 = html0.replace('’', '\'');
 			}
 			String nameOrig = card.getName(); // original name
-			if (nameOrig.indexOf('(') > 0) {
-				nameOrig = nameOrig.substring(0, nameOrig.indexOf('(') - 1);
-			}
 			String nameTitle = extractPatternValue(html0, titleNamePattern, false);
 			// name update
 			if (nameOrig == null) {
 				nameOrig = nameTitle;
 				((ICardModifiable) card).setObjectByField(MagicCardField.NAME, nameTitle);
+			}
+			if (nameOrig.indexOf('(') > 0) {
+				nameOrig = nameOrig.substring(0, nameOrig.indexOf('(') - 1);
 			}
 			Matcher matcher0 = singleCardPattern.matcher(html0);
 			ArrayList<String> cardSides = new ArrayList<String>(2);
@@ -307,7 +307,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 			}
 			if (nameOrig == null || !nameOrig.equals(nameTitle)) {
 				MagicLogger.log("Name is not set: " + nameOrig + ", title " + nameTitle);
-				return; // do not update if part is not matching
+				// return; // do not update if part is not matching
 			}
 			// extractField(card, fieldMapFilter, html, MagicCardField.NAME, cardAltPattern, true);
 			// monitor.worked(1);
