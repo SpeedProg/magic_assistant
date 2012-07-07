@@ -1,10 +1,14 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererBasicInfoTest extends TestCase {
@@ -13,6 +17,12 @@ public class ParseGathererBasicInfoTest extends TestCase {
 	@Override
 	protected void setUp() {
 		parser = new ParseGathererBasicInfo();
+		Set<ICardField> filter = new HashSet<ICardField>();
+		filter.add(MagicCardField.NAME);
+		filter.add(MagicCardField.TYPE);
+		filter.add(MagicCardField.TEXT);
+		filter.add(MagicCardField.COLLNUM);
+		parser.setFilter(filter);
 	}
 
 	public void testLoad() throws IOException {
