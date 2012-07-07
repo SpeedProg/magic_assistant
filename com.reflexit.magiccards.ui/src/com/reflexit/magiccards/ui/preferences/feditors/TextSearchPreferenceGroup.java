@@ -3,21 +3,16 @@ package com.reflexit.magiccards.ui.preferences.feditors;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.IContentProposal;
-import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.Languages;
+import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
 public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 	private Collection<String> ids = new ArrayList<String>(6);
@@ -100,41 +95,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 
 	private void addContextAssist(StringFieldEditor sfe, String[] proposals) {
 		Text t = sfe.getTextControl(getFieldEditorParent());
-		SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(proposals) {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.eclipse.jface.fieldassist.SimpleContentProposalProvider#
-			 * getProposals(java.lang.String, int)
-			 */
-			@Override
-			public IContentProposal[] getProposals(String contents, int position) {
-				int k = contents.lastIndexOf(' ');
-				if (k >= 0) {
-					return super.getProposals(contents.substring(k + 1), position);
-				}
-				return super.getProposals(contents, position);
-			}
-		};
-		proposalProvider.setFiltering(true);
-		TextContentAdapter controlContentAdapter = new TextContentAdapter() {
-			@Override
-			public void insertControlContents(Control control, String text, int cursorPosition) {
-				Text textCon = (Text) control;
-				Point selection = textCon.getSelection();
-				String old = textCon.getText();
-				int k = old.lastIndexOf(' ');
-				int l = old.length() - k - 1;
-				textCon.insert(text.substring(l));
-				// Insert will leave the cursor at the end of the inserted text.
-				// If this
-				// is not what we wanted, reset the selection.
-				if (cursorPosition < text.length()) {
-					textCon.setSelection(selection.x + cursorPosition, selection.x + cursorPosition);
-				}
-			}
-		};
-		ContentProposalAdapter adapter = new ContentProposalAdapter(t, controlContentAdapter, proposalProvider, null, null);
+		ContextAssist.addContextAssist(t, proposals, true);
 	}
 
 	@Override

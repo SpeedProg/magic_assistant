@@ -22,8 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * A field editor for a combo box that allows the drop-down selection of one of
- * a list of items.
+ * A field editor for a combo box that allows the drop-down selection of one of a list of items.
  * 
  * @since 3.3
  */
@@ -37,7 +36,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	 */
 	private String fValue;
 	/**
-	 * The names (labels) and underlying values to populate the combo widget.  These should be
+	 * The names (labels) and underlying values to populate the combo widget. These should be
 	 * arranged as: { {name1, value1}, {name2, value2}, ...}
 	 */
 	private String[][] fEntryNamesAndValues;
@@ -46,14 +45,17 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	/**
 	 * Create the combo box field editor.
 	 * 
-	 * @param name the name of the preference this field editor works on
-	 * @param labelText the label text of the field editor
-	 * @param entryNamesAndValues the names (labels) and underlying values to populate the combo widget.  These should be
-	 * arranged as: { {name1, value1}, {name2, value2}, ...}
-	 * @param parent the parent composite
+	 * @param name
+	 *            the name of the preference this field editor works on
+	 * @param labelText
+	 *            the label text of the field editor
+	 * @param entryNamesAndValues
+	 *            the names (labels) and underlying values to populate the combo widget. These
+	 *            should be arranged as: { {name1, value1}, {name2, value2}, ...}
+	 * @param parent
+	 *            the parent composite
 	 */
-	public SpecialComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues, Composite parent,
-	        int modifiers) {
+	public SpecialComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues, Composite parent, int modifiers) {
 		init(name, labelText);
 		Assert.isTrue(checkArray(entryNamesAndValues));
 		this.fEntryNamesAndValues = entryNamesAndValues;
@@ -62,9 +64,8 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Checks whether given <code>String[][]</code> is of "type" 
-	 * <code>String[][2]</code>.
-	 *
+	 * Checks whether given <code>String[][]</code> is of "type" <code>String[][2]</code>.
+	 * 
 	 * @return <code>true</code> if it is ok, and <code>false</code> otherwise
 	 */
 	private boolean checkArray(String[][] table) {
@@ -80,7 +81,9 @@ public class SpecialComboFieldEditor extends FieldEditor {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
 	 */
 	@Override
@@ -102,8 +105,12 @@ public class SpecialComboFieldEditor extends FieldEditor {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
+	 * int)
 	 */
 	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
@@ -123,7 +130,9 @@ public class SpecialComboFieldEditor extends FieldEditor {
 		control.setFont(parent.getFont());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
 	 */
 	@Override
@@ -131,7 +140,9 @@ public class SpecialComboFieldEditor extends FieldEditor {
 		updateComboForValue(getPreferenceStore().getString(getPreferenceName()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
 	 */
 	@Override
@@ -139,7 +150,9 @@ public class SpecialComboFieldEditor extends FieldEditor {
 		updateComboForValue(getPreferenceStore().getDefaultString(getPreferenceName()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.FieldEditor#doStore()
 	 */
 	@Override
@@ -151,7 +164,9 @@ public class SpecialComboFieldEditor extends FieldEditor {
 		getPreferenceStore().setValue(getPreferenceName(), this.fValue);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
 	 */
 	@Override
@@ -229,11 +244,15 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.jface.preference.FieldEditor#setEnabled(boolean,
-	 *      org.eclipse.swt.widgets.Composite)
+	 * org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getComboBoxControl(parent).setEnabled(enabled);
+	}
+
+	public Combo getComboControl() {
+		return fCombo;
 	}
 }

@@ -36,7 +36,7 @@ public class QuickFilterControl extends Composite {
 	private Runnable runnable;
 	private Combo typeCombo;
 	private ToolBar toolbar;
-	private Combo setCombo;
+	private Text setCombo;
 
 	public QuickFilterControl(Composite composite, Runnable run) {
 		super(composite, SWT.NONE);
@@ -153,13 +153,14 @@ public class QuickFilterControl extends Composite {
 	}
 
 	private void createEditionField(ToolBar toolbar) {
-		setCombo = new Combo(toolbar, SWT.BORDER);
-		setCombo.add(ALL_TYPES);
-		setCombo.setText(ALL_TYPES);
+		setCombo = new Text(toolbar, SWT.BORDER);
 		Collection<String> names = Editions.getInstance().getNames();
+		String proposals[] = new String[names.size()];
+		int i = 0;
 		for (String type : names) {
-			setCombo.add(type);
+			proposals[i++] = type;
 		}
+		ContextAssist.addContextAssist(setCombo, proposals, false);
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		setCombo.setLayoutData(td);
 		setCombo.addModifyListener(new ModifyListener() {

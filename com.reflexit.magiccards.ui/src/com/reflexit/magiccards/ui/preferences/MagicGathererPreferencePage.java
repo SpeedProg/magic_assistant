@@ -33,6 +33,7 @@ import com.reflexit.magiccards.core.model.Languages;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.commands.UpdateDbHandler;
 import com.reflexit.magiccards.ui.preferences.feditors.SpecialComboFieldEditor;
+import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
 public class MagicGathererPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public static final String STANDARD = "Standard";
@@ -86,6 +87,13 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_SPECIAL, "Load special items", getFieldEditorParent()));
 		addField(this.lang = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_LANGUAGE, "Also load localized version in:",
 				createLanguagesArray(), getFieldEditorParent(), SWT.DROP_DOWN));
+		Collection<String> names = Editions.getInstance().getNames();
+		String proposals[] = new String[names.size()];
+		int i = 0;
+		for (String type : names) {
+			proposals[i++] = type;
+		}
+		ContextAssist.addContextAssist(fSet.getComboControl(), proposals, false);
 	}
 
 	/**
