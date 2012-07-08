@@ -28,7 +28,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				"http://ww2.wizards.com/gatherer/index.aspx?output=Spoiler&setfilter=Standard");
 		store.setDefault(PreferenceConstants.CACHE_IMAGES, true);
 		store.setDefault(PreferenceConstants.LOAD_IMAGES, true);
-		store.setDefault(PreferenceConstants.LOAD_RULINGS, true);
+		store.setDefault(PreferenceConstants.LOAD_RULINGS, false);
 		store.setDefault(PreferenceConstants.LOAD_EXTRAS, false);
 		store.setDefault(PreferenceConstants.LOAD_PRINTINGS, false);
 		store.setDefault(PreferenceConstants.SHOW_GRID, false);
