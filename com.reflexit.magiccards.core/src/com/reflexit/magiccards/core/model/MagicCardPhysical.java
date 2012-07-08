@@ -418,7 +418,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 	}
 
 	public boolean matches(ICardField left, TextValue right) {
-		return card.matches(left, right);
+		String value = String.valueOf(getObjectByField(left));
+		if (left == MagicCardField.TYPE && !right.regex) {
+			return CardTypes.getInstance().hasType(this, right.getText());
+		}
+		return right.toPattern().matcher(value).find();
 	}
 
 	public int getEnglishCardId() {
