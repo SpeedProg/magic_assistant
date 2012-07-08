@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Alexander Wingård  - initial API and implementation
+ *    Alexander Wingï¿½rd  - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
@@ -41,7 +41,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (monitor == null)
 			monitor = ICoreProgressMonitor.NONE;
-		monitor.beginTask("Exporting to wagic...", store.getSize());
+		monitor.beginTask("Exporting to html...", store.getSize());
 		PrintStream stream = new PrintStream(st);
 		String ename = getName();
 		Location location = null;
