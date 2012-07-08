@@ -128,7 +128,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	protected ExportAction createExportAction() {
-		return new ExportAction(new StructuredSelection());
+		return new ExportAction(new StructuredSelection(), getPreferencePageId());
 	}
 
 	@Override

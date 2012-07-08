@@ -82,7 +82,7 @@ public class DeckExportWizard extends Wizard implements IExportWizard {
 				final IExportDelegate<IMagicCard> worker;
 				try {
 					worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
-					worker.setColumns(columns == null ? MagicCardFieldPhysical.allNonTransientFields() : columns);
+					worker.setColumns(columns == null || columns.length == 0 ? MagicCardFieldPhysical.allNonTransientFields() : columns);
 				} catch (Exception e) {
 					throw new InvocationTargetException(e);
 				}

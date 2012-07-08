@@ -45,6 +45,8 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 
 	public ExportAction(StructuredSelection structuredSelection, String prefId) {
 		this(structuredSelection);
+		if (prefId == null)
+			throw new NullPointerException();
 		this.prefId = prefId;
 	}
 

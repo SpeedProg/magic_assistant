@@ -52,20 +52,13 @@ public abstract class ColumnCollection {
 
 	public ICardField[] getSelectedColumnFields(String propertyValue) {
 		if (columns.size() == 0)
-			createColumns();
+			createColumnLabelProviders();
+		updateColumnsFromPropery(propertyValue);
 		ArrayList<ICardField> cf = new ArrayList<ICardField>();
-		String names[] = propertyValue.split(",");
-		for (int i = 0; i < names.length; i++) {
-			String colName = names[i];
-			if (colName.startsWith("-"))
-				continue;
-			for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
-				AbstractColumn col = iterator.next();
-				if (colName.equals(col.getColumnFullName())) {
-					cf.add(col.getDataField());
-					break;
-				}
-			}
+		for (Iterator iterator = order.values().iterator(); iterator.hasNext();) {
+			AbstractColumn col = (AbstractColumn) iterator.next();
+			if (col.isVisible())
+				cf.add(col.getDataField());
 		}
 		return cf.toArray(new ICardField[cf.size()]);
 	}
