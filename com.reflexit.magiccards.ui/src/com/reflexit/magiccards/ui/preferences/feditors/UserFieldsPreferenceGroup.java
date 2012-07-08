@@ -7,9 +7,12 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.SpecialTags;
+import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
 public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 	private Collection<String> ids = new ArrayList<String>(6);
@@ -51,6 +54,8 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		StringFieldEditor var = new StringFieldEditor(id, "Special Tags", getFieldEditorParent());
 		addField(var);
 		addTooltip(var, "Card tags, i.e. foil, premium, mint, online, etc\n" + toolTip);
+		Text tags = var.getTextControl(getFieldEditorParent());
+		ContextAssist.addContextAssist(tags, SpecialTags.getTags(), true);
 		ids.add(id);
 		// ownership
 		id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);

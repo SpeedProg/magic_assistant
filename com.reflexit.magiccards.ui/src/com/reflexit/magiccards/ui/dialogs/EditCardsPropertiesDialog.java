@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.SpecialTags;
+import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
 public class EditCardsPropertiesDialog extends TrayDialog {
 	private static final String VIRTUAL_VALUE = "Virtual";
@@ -26,9 +28,10 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 	public static final String SPECIAL_FIELD = MagicCardFieldPhysical.SPECIAL.name();
 	public static final String OWNERSHIP_FIELD = MagicCardFieldPhysical.OWNERSHIP.name();
 	public static final String COUNT_FIELD = MagicCardFieldPhysical.COUNT.name();
+	public static final String COUNT_FOR_TRADE = MagicCardFieldPhysical.FORTRADECOUNT.name();
 	public static final String NAME_FIELD = MagicCardField.NAME.name();
 	public static final String PRICE_FIELD = MagicCardFieldPhysical.PRICE.name();
-	public static final String UNCHANGED = "<unchanged>";;
+	public static final String UNCHANGED = "<unchanged>";
 	private PreferenceStore store;
 
 	public EditCardsPropertiesDialog(Shell parentShell, PreferenceStore store) {
@@ -49,28 +52,25 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 		createTextLabel(area, "Name");
 		createTextLabel(area, store.getString(NAME_FIELD));
 		// Count
-		createTextLabel(area, "Count");
-		final Text count = new Text(area, SWT.BORDER);
-		count.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		count.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				count.setFocus();
-				store.setValue(COUNT_FIELD, count.getText());
-			}
-		});
-		count.setText(store.getString(COUNT_FIELD));
-		// Count
-		createTextLabel(area, "Price");
-		final Text price = new Text(area, SWT.BORDER);
-		price.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		price.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				price.setFocus();
-				store.setValue(PRICE_FIELD, price.getText());
-			}
-		});
-		price.setText(store.getString(PRICE_FIELD));
+		Text count = createTextFieldEditor(area, "Count", COUNT_FIELD);
+		// count for trade
+		createTextFieldEditor(area, "Count For Trade", COUNT_FOR_TRADE);
+		// Price
+		createTextFieldEditor(area, "Price", PRICE_FIELD);
 		// ownership
+		createOwnershipFieldEditor(area);
+		// comment
+		createTextFieldEditor(area, "Comment", COMMENT_FIELD, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		// special
+		Text special = createTextFieldEditor(area, "Special Tags", SPECIAL_FIELD, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		special.setToolTipText("Set card tags, such as foil, mint, premium, etc. Tags are separated by ','.\n To add tag use +, to remove tag use -. For example \"+foil,-online\".");
+		ContextAssist.addContextAssist(special, SpecialTags.getTags(), true);
+		// end
+		count.setFocus();
+		return area;
+	}
+
+	public void createOwnershipFieldEditor(Composite area) {
 		createTextLabel(area, "Ownership");
 		final Combo ownership = new Combo(area, SWT.READ_ONLY);
 		ownership.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -86,36 +86,28 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 				store.setValue(OWNERSHIP_FIELD, String.valueOf(own));
 			}
 		});
-		// comment
-		createTextLabel(area, "Comment");
-		final Text comm = new Text(area, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+	}
+
+	public Text createTextFieldEditor(Composite area, String labelString, final String property) {
+		return createTextFieldEditor(area, labelString, property, SWT.BORDER);
+	}
+
+	public Text createTextFieldEditor(Composite area, String labelString, final String property, int flags) {
+		createTextLabel(area, labelString);
+		final Text text = new Text(area, flags);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = convertHeightInCharsToPixels(4);
-		comm.setLayoutData(gd);
-		comm.addModifyListener(new ModifyListener() {
+		text.setLayoutData(gd);
+		if ((flags & SWT.WRAP) != 0) {
+			gd.heightHint = convertHeightInCharsToPixels(4);
+		}
+		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				comm.setFocus();
-				store.setValue(COMMENT_FIELD, comm.getText());
+				text.setFocus();
+				store.setValue(property, text.getText());
 			}
 		});
-		comm.setText(store.getString(COMMENT_FIELD));
-		// special
-		createTextLabel(area, "Special Tags");
-		final Text special = new Text(area, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		special.setToolTipText("Set card tags, such as foil, mint, premium, etc. Tags are separated by ','.\n To add tag use +, to remove tag use -. For example \"+foil,-online\".");
-		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
-		gd1.heightHint = convertHeightInCharsToPixels(4);
-		special.setLayoutData(gd);
-		special.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				special.setFocus();
-				store.setValue(SPECIAL_FIELD, special.getText());
-			}
-		});
-		special.setText(store.getString(SPECIAL_FIELD));
-		// end
-		count.setFocus();
-		return area;
+		text.setText(store.getString(property));
+		return text;
 	}
 
 	private void setComboChoices(Combo ownership, String[] strings, String defaultString) {
