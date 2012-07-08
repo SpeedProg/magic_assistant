@@ -67,7 +67,7 @@ cp -r $RESULT/site.p2 $OUTPUT
 rm -rf "$EXPORT_DIR/$RELEASE"
 mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
-cp $WORKSPACE/com.reflexit.magiccards-metadata/READEME.TXT $EXPORT_DIR/$RELEASE/
+cp $WORKSPACE/com.reflexit.magiccards-metadata/README.TXT $EXPORT_DIR/$RELEASE/
 rm -rf $EXPORT_DIR/update
 mkdir $EXPORT_DIR/update
 cp -r $RESULT/site.p2 $EXPORT_DIR/update/1.2
