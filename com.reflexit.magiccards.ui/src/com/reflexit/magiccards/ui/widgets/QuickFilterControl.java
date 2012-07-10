@@ -354,7 +354,7 @@ public class QuickFilterControl extends Composite {
 		for (Iterator iterator = editions.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			store.setValue(id, "false");
-			if (editions.getNameById(id).equals(text)) {
+			if (editions.getNameById(id).equalsIgnoreCase(text)) {
 				selId = id;
 			}
 		}
