@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererRulingsTest extends TestCase {
+public class ParseGathererDetailsTest extends TestCase {
 	private ParseGathererDetails parser;
 
 	@Override

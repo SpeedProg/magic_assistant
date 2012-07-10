@@ -1,8 +1,8 @@
-#Wed Aug 10 20:56:48 EDT 2011
+#Mon Jul 09 22:16:29 EDT 2012
 eclipse.preferences.version=1
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererBasicInfoTest.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererCardLanguagesTest.java=UTF-8
+encoding//src/com/reflexit/magiccards/core/sync/ParseGathererDetailsTest.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererLegalityTest.java=UTF-8
-encoding//src/com/reflexit/magiccards/core/sync/ParseGathererRulingsTest.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererSetsTest.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/test/CardTextNL1Test.java=UTF-8

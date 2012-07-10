@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.model.nav.CardElementTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererLegalityTest;
-import com.reflexit.magiccards.core.sync.ParseGathererRulingsTest;
+import com.reflexit.magiccards.core.sync.ParseGathererDetailsTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSetsTest;
 
 /**
@@ -53,7 +53,7 @@ public class AllTests {
 		suite.addTestSuite(ParseGathererCardLanguagesTest.class);
 		suite.addTestSuite(ParseGathererSetsTest.class);
 		suite.addTestSuite(ParseGathererLegalityTest.class);
-		suite.addTestSuite(ParseGathererRulingsTest.class);
+		suite.addTestSuite(ParseGathererDetailsTest.class);
 		suite.addTestSuite(ParseGathererBasicInfoTest.class);
 		// $JUnit-END$
 		return suite;

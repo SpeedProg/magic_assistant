@@ -28,6 +28,7 @@ public class ParseGathererBasicInfoTest extends TestCase {
 	public void testLoad() throws IOException {
 		MagicCard card = new MagicCard();
 		card.setCardId(172550);
+		card.setName("Name");
 		parser.setCard(card);
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("Бурав Выжженной Пустоши", card.getName());
@@ -40,6 +41,16 @@ public class ParseGathererBasicInfoTest extends TestCase {
 		parser.setCard(card);
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("149b", card.getCollNumber());
-		assertEquals("Wildblood Pack", card.getName()); // XXX bug in gatherer
+		assertEquals("Стая Дикой Крови", card.getName());
+	}
+
+	public void testInnistradSide2English() throws IOException {
+		MagicCard card = new MagicCard();
+		card.setCardId(227419);
+		card.setName("Name");
+		parser.setCard(card);
+		parser.load(ICoreProgressMonitor.NONE);
+		assertEquals("149b", card.getCollNumber());
+		assertEquals("Wildblood Pack", card.getName());
 	}
 }
