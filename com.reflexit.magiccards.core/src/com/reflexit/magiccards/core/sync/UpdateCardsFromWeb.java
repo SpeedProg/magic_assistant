@@ -33,16 +33,20 @@ public class UpdateCardsFromWeb {
 			ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading additional info...", size * 100 + 10);
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
-		ParseGathererDetails rulParser = new ParseGathererDetails();
-		rulParser.setMagicDb(magicDb);
+		ParseGathererDetails oracleParser = new ParseGathererDetails();
+		oracleParser.setMagicDb(magicDb);
 		ParseGathererBasicInfo linfoParser = new ParseGathererBasicInfo();
-		ParseGathererBasicInfo textParser = new ParseGathererBasicInfo();
+		ParseGathererBasicInfo printedParser = new ParseGathererBasicInfo();
 		ParseGathererCardLanguages langParser = new ParseGathererCardLanguages();
 		langParser.setLanguage(lang);
 		monitor.worked(5);
 		boolean loadText = fieldMaps.contains(MagicCardField.TEXT);
 		boolean loadLang = fieldMaps.contains(MagicCardField.LANG);
 		boolean loadImage = fieldMaps.contains(MagicCardField.ID);
+		if (loadText) {
+			printedParser.addFilter(MagicCardField.TEXT);
+		}
+		boolean localized = false;
 		// load
 		storage.setAutoCommit(false);
 		try {
@@ -51,14 +55,23 @@ public class UpdateCardsFromWeb {
 				MagicCard magicCard = card.getBase();
 				if (monitor.isCanceled())
 					return;
+				if (magicCard.getEnglishCardId() != 0) {
+					// localized
+					localized = true;
+					if (fieldMaps.contains(MagicCardField.NAME))
+						printedParser.addFilter(MagicCardField.NAME);
+					if (fieldMaps.contains(MagicCardField.TYPE))
+						printedParser.addFilter(MagicCardField.TYPE);
+				} else {
+					localized = false;
+				}
 				// load individual card
 				monitor.subTask("Updating card " + i + " of " + size);
 				try {
-					rulParser.parseSingleCard(card, fieldMaps, new SubCoreProgressMonitor(monitor, 50));
-					if (loadText) {
-						textParser.setCard(card);
-						textParser.addFilter(MagicCardField.TEXT);
-						textParser.load(new SubCoreProgressMonitor(monitor, 10));
+					oracleParser.parseSingleCard(card, fieldMaps, new SubCoreProgressMonitor(monitor, 50));
+					if (loadText || localized) {
+						printedParser.setCard(card);
+						printedParser.load(new SubCoreProgressMonitor(monitor, 10));
 					}
 					if (loadLang) {
 						langParser.setCardId(card.getCardId());

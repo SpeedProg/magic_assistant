@@ -252,6 +252,9 @@ public class ParseGathererDetails extends ParseGathererPage {
 			int sides = cardSides.size();
 			if (sides == 1) {
 				html = cardSides.get(0);
+				if (!nameOrig.equals(nameTitle)) { // Localized title
+					((ICardModifiable) card).setObjectByField(MagicCardField.NAME, nameTitle);
+				}
 			} else if (sides == 2) {
 				String htmlB = null;
 				Iterator<String> iterator = cardSides.iterator();
@@ -301,13 +304,12 @@ public class ParseGathererDetails extends ParseGathererPage {
 						((ICardModifiable) card).setObjectByField(MagicCardField.FLIPID, String.valueOf(pairId));
 					}
 				}
+				if (!nameOrig.equals(nameTitle)) {
+					extractField(card, null, html, MagicCardField.NAME, cardNamePattern, false);
+				}
 			} else if (sides == 0) {
 				MagicLogger.log("Problems parsing card " + card.getCardId());
 				return;
-			}
-			if (nameOrig == null || !nameOrig.equals(nameTitle)) {
-				MagicLogger.log("Name is not set: " + nameOrig + ", title " + nameTitle);
-				// return; // do not update if part is not matching
 			}
 			// extractField(card, fieldMapFilter, html, MagicCardField.NAME, cardAltPattern, true);
 			// monitor.worked(1);

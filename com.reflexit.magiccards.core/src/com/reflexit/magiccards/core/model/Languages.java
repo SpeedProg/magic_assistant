@@ -15,7 +15,7 @@ public class Languages implements ISearchableProperty {
 		SPANISH(LocalizedText.SPANISH),
 		GERMAN(LocalizedText.GERMAN),
 		ITALIAN(LocalizedText.ITALIAN),
-		PORTUGESE(LocalizedText.PORTUGESE),
+		PORTUGUESE(LocalizedText.PORTUGUESE),
 		JAPANESE(LocalizedText.JAPANESE),
 		CHINESE("Chinese Standard", LocalizedText.CHINESE);
 		private String lang;

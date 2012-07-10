@@ -11,7 +11,7 @@ public abstract class LocalizedText {
 	public static final Locale FRENCH = Locale.FRENCH;
 	public static final Locale SPANISH = new Locale("es");
 	public static final Locale CHINESE = Locale.CHINESE;
-	public static final Locale PORTUGESE = new Locale("pt");
+	public static final Locale PORTUGUESE = new Locale("pt");
 	public static final Locale GERMAN = new Locale("de");
 	public static final Locale ITALIAN = new Locale("it");
 	public static final Locale JAPANESE = Locale.JAPANESE;
