@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views.collector;
 
+import java.util.Iterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
@@ -16,6 +18,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -93,7 +96,31 @@ public class ProgressColumn extends GenColumn implements Listener {
 		ICardStore<IMagicCard> store = getSetStore(cardGroup);
 		if (store == null)
 			return 0;
-		return store.size();
+		int count = 0;
+		String rarity = null;
+		String artist = null;
+		if (cardGroup.getFieldIndex() == MagicCardField.RARITY) {
+			rarity = cardGroup.getBase().getRarity();
+		} else if (cardGroup.getFieldIndex() == MagicCardField.ARTIST) {
+			artist = cardGroup.getBase().getArtist();
+		}
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card.getEnglishCardId() == 0) {
+				if (rarity != null) {
+					if (rarity.equals(card.getRarity()))
+						count++;
+					continue;
+				}
+				if (artist != null) {
+					if (artist.equals(card.getArtist()))
+						count++;
+					continue;
+				}
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public void handleEvent(Event event) {

@@ -482,7 +482,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(this.actionGroupMenu);
+		if (actionGroupMenu != null)
+			manager.add(this.actionGroupMenu);
 		manager.add(this.actionShowPrefs);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
@@ -580,6 +581,31 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			};
 			this.menuSort.add(ac);
 		}
+		createGroupAction();
+		this.menuGroup = createGroupMenu();
+		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
+		this.actionShowPrefs = new Action("Preferences...") {
+			@Override
+			public void run() {
+				String id = getPreferencePageId();
+				if (id != null) {
+					saveColumnLayout();
+					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
+					dialog.open();
+				}
+			}
+		};
+		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
+		this.actionShowFind = new Action("Find...") {
+			@Override
+			public void run() {
+				runFind();
+			}
+		};
+		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
+	}
+
+	protected void createGroupAction() {
 		this.actionGroupMenu = new Action("Group By", Action.AS_DROP_DOWN_MENU) {
 			{
 				setMenuCreator(new IMenuCreator() {
@@ -613,27 +639,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			}
 		};
 		this.actionGroupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.menuGroup = createGroupMenu();
-		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.actionShowPrefs = new Action("Preferences...") {
-			@Override
-			public void run() {
-				String id = getPreferencePageId();
-				if (id != null) {
-					saveColumnLayout();
-					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
-					dialog.open();
-				}
-			}
-		};
-		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
-		this.actionShowFind = new Action("Find...") {
-			@Override
-			public void run() {
-				runFind();
-			}
-		};
-		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
 	}
 
 	@Override

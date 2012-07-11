@@ -14,7 +14,7 @@ public class MagicColumnCollection extends ColumnCollection {
 	@Override
 	protected void createColumns() {
 		String dbPrefId = MagicDbViewPreferencePage.class.getName();
-		this.columns.add(new GroupColumn());
+		this.columns.add(createGroupColumn());
 		this.columns.add(new NameColumn());
 		this.columns.add(new IdColumn());
 		this.columns.add(new CostColumn());
@@ -49,5 +49,9 @@ public class MagicColumnCollection extends ColumnCollection {
 		}
 		this.columns.add(new LanguageColumn());
 		this.columns.add(new TextColumn());
+	}
+
+	protected GroupColumn createGroupColumn() {
+		return new GroupColumn();
 	}
 }
