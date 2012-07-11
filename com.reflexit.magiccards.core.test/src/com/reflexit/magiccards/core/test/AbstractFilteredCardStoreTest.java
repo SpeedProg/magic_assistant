@@ -33,7 +33,7 @@ import com.reflexit.magiccards.core.test.assist.MemCardHandler;
  * @author Alena
  * 
  */
-public class MemCardHandlerTest extends TestCase {
+public class AbstractFilteredCardStoreTest extends TestCase {
 	private static final String INSTANT = "Instant";
 	private static final String ARTIFACT = "Artifact";
 	private static final String RED_COST = "{R}";

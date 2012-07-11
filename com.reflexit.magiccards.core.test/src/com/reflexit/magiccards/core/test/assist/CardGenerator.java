@@ -10,12 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.test.assist;
 
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CardGenerator {
 	static int id = 33;
@@ -43,6 +44,14 @@ public class CardGenerator {
 
 	static public MagicCardPhysical generatePhysicalCardWithValues() {
 		MagicCard card = generateCardWithValues();
+		MagicCardPhysical phi = new MagicCardPhysical(card, null);
+		phi.setCount(id % 10);
+		phi.setComment("comment " + id);
+		phi.setOwn(id % 2 == 0 ? true : false);
+		return phi;
+	}
+
+	static public MagicCardPhysical generatePhysicalCardWithValues(IMagicCard card) {
 		MagicCardPhysical phi = new MagicCardPhysical(card, null);
 		phi.setCount(id % 10);
 		phi.setComment("comment " + id);
