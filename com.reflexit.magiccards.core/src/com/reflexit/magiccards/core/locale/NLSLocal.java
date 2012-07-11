@@ -18,27 +18,26 @@ import org.eclipse.osgi.framework.log.FrameworkLog;
 import org.eclipse.osgi.framework.log.FrameworkLogEntry;
 
 /**
- * Common superclass for all message bundle classes. Provides convenience
- * methods for manipulating messages.
+ * Common superclass for all message bundle classes. Provides convenience methods for manipulating
+ * messages.
  * <p>
- * The <code>#bind</code> methods perform string substitution and should be
- * considered a convenience and <em>not</em> a full substitute replacement for
- * <code>MessageFormat#format</code> method calls.
+ * The <code>#bind</code> methods perform string substitution and should be considered a convenience
+ * and <em>not</em> a full substitute replacement for <code>MessageFormat#format</code> method
+ * calls.
  * </p>
  * <p>
- * Text appearing within curly braces in the given message, will be interpreted
- * as a numeric index to the corresponding substitution object in the given
- * array. Calling the <code>#bind</code> methods with text that does not map to
- * an integer will result in an {@link IllegalArgumentException}.
+ * Text appearing within curly braces in the given message, will be interpreted as a numeric index
+ * to the corresponding substitution object in the given array. Calling the <code>#bind</code>
+ * methods with text that does not map to an integer will result in an
+ * {@link IllegalArgumentException}.
  * </p>
  * <p>
- * Text appearing within single quotes is treated as a literal. A single quote
- * is escaped by a preceeding single quote.
+ * Text appearing within single quotes is treated as a literal. A single quote is escaped by a
+ * preceeding single quote.
  * </p>
  * <p>
- * Clients who wish to use the full substitution power of the
- * <code>MessageFormat</code> class should call that class directly and not use
- * these <code>#bind</code> methods.
+ * Clients who wish to use the full substitution power of the <code>MessageFormat</code> class
+ * should call that class directly and not use these <code>#bind</code> methods.
  * </p>
  * <p>
  * Clients may subclass this type.
@@ -53,15 +52,14 @@ public abstract class NLSLocal {
 	@SuppressWarnings("restriction")
 	private static final boolean ignoreWarnings = IGNORE.equals(FrameworkProperties.getProperty(PROP_WARNINGS));
 	/*
-	 * NOTE do not change the name of this field; it is set by the Framework
-	 * using reflection
+	 * NOTE do not change the name of this field; it is set by the Framework using reflection
 	 */
 	private static FrameworkLog frameworkLog;
 	static final int SEVERITY_ERROR = 0x04;
 	static final int SEVERITY_WARNING = 0x02;
 	/*
-	 * This object is assigned to the value of a field map to indicate that a
-	 * translated message has already been assigned to that field.
+	 * This object is assigned to the value of a field map to indicate that a translated message has
+	 * already been assigned to that field.
 	 */
 	static final Object ASSIGNED = new Object();
 
@@ -73,8 +71,7 @@ public abstract class NLSLocal {
 	}
 
 	/**
-	 * Initialize the given class with the values from the specified message
-	 * bundle.
+	 * Initialize the given class with the values from the specified message bundle.
 	 * 
 	 * @param bundleName
 	 *            fully qualified path of the class name
@@ -95,10 +92,9 @@ public abstract class NLSLocal {
 	}
 
 	/*
-	 * Build an array of property files to search. The returned array contains
-	 * the property fields in order from most specific to most generic. So, in
-	 * the FR_fr locale, it will return file_fr_FR.properties, then
-	 * file_fr.properties, and finally file.properties.
+	 * Build an array of property files to search. The returned array contains the property fields
+	 * in order from most specific to most generic. So, in the FR_fr locale, it will return
+	 * file_fr_FR.properties, then file_fr.properties, and finally file.properties.
 	 */
 	private static String[] buildVariants(String root, Locale locale) {
 		String[] nlSuffixes = buildNlSuffixes(locale);
@@ -170,15 +166,14 @@ public abstract class NLSLocal {
 	}
 
 	/*
-	 * The method adds a log entry based on the error message and exception. The
-	 * output is written to the System.err.
+	 * The method adds a log entry based on the error message and exception. The output is written
+	 * to the System.err.
 	 * 
-	 * This method is only expected to be called if there is a problem in the
-	 * NLS mechanism. As a result, translation facility is not available here
-	 * and messages coming out of this log are generally not translated.
+	 * This method is only expected to be called if there is a problem in the NLS mechanism. As a
+	 * result, translation facility is not available here and messages coming out of this log are
+	 * generally not translated.
 	 * 
-	 * @param severity - severity of the message (SEVERITY_ERROR or
-	 * SEVERITY_WARNING)
+	 * @param severity - severity of the message (SEVERITY_ERROR or SEVERITY_WARNING)
 	 * 
 	 * @param message - message to log
 	 * 
@@ -211,8 +206,8 @@ public abstract class NLSLocal {
 	}
 
 	/*
-	 * Class which sub-classes java.util.Properties and uses the #put method to
-	 * set field values rather than storing the values in the table.
+	 * Class which sub-classes java.util.Properties and uses the #put method to set field values
+	 * rather than storing the values in the table.
 	 */
 	private static class MessagesProperties extends Properties {
 		private static final int MOD_EXPECTED = Modifier.PUBLIC;

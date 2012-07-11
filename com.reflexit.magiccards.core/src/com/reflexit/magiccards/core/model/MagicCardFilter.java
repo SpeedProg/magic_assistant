@@ -10,7 +10,7 @@ public class MagicCardFilter {
 	private Expr root;
 	private int limit = Integer.MAX_VALUE;
 	private SortOrder sortOrder = new SortOrder();
-	private ICardField groupField = null;
+	private ICardField groupFields[];
 	private boolean onlyLastSet = false;
 
 	public static class Expr {
@@ -694,11 +694,23 @@ public class MagicCardFilter {
 	}
 
 	public ICardField getGroupField() {
-		return this.groupField;
+		if (groupFields != null)
+			return groupFields[0];
+		return null;
+	}
+
+	public ICardField[] getGroupFields() {
+		return this.groupFields;
 	}
 
 	public void setGroupField(ICardField groupField) {
-		this.groupField = groupField;
+		setGroupField(0, groupField);
+	}
+
+	public void setGroupField(int index, ICardField groupField) {
+		if (groupFields == null)
+			groupFields = new ICardField[10];
+		this.groupFields[index] = groupField;
 	}
 
 	public void setLimit(int limit) {

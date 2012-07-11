@@ -26,12 +26,14 @@ public class CardGroup implements ICardCountable {
 	private ArrayList<Object> children;
 	private static final String OWNUSIZE_KEY = "ownusize";
 	private HashMap<String, Object> props;
+	private HashMap<String, CardGroup> subs;
 	private MagicCardPhysical base;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
 		this.name = name;
 		this.children = new ArrayList(2);
+		this.subs = new HashMap<String, CardGroup>(2);
 	}
 
 	public synchronized IMagicCard getBase() {
@@ -69,11 +71,13 @@ public class CardGroup implements ICardCountable {
 			Object newmine = null;
 			if (mine == null) {
 				newmine = value;
-			} else if (mine.equals(value)) {
-				// good
 			} else {
 				if (field.getType() == String.class) {
-					newmine = "*";
+					if (mine.equals(value)) {
+						// good
+					} else {
+						newmine = "*";
+					}
 				} else if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE) {
 					Float fvalue = (Float) value;
 					Float fmain = (Float) mine;
@@ -81,6 +85,8 @@ public class CardGroup implements ICardCountable {
 						// && ((MagicCardPhysical) o).isOwn()
 						int count = ((ICardCountable) o).getCount();
 						newmine = fmain + fvalue * count;
+					} else {
+						newmine = fmain + (fvalue == null ? 0 : fvalue);
 					}
 				} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
 					newmine = "false";
@@ -157,12 +163,20 @@ public class CardGroup implements ICardCountable {
 
 	public synchronized void add(Object elem) {
 		this.children.add(elem);
+		if (elem instanceof CardGroup) {
+			CardGroup cardGroup = (CardGroup) elem;
+			subs.put(cardGroup.getName(), (CardGroup) elem);
+		}
 		count = 0;
 		base = null;
 	}
 
 	public void remove(Object elem) {
 		children.remove(elem);
+		if (elem instanceof CardGroup) {
+			CardGroup cardGroup = (CardGroup) elem;
+			subs.remove(cardGroup.getName());
+		}
 		count = 0;
 		base = null;
 	}
@@ -208,9 +222,11 @@ public class CardGroup implements ICardCountable {
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			if (o instanceof CardGroup) {
-				((CardGroup) o).removeEmptyChildren();
-				if (((CardGroup) o).getChildren().size() == 0) {
+				CardGroup cardGroup = (CardGroup) o;
+				cardGroup.removeEmptyChildren();
+				if (cardGroup.getChildren().size() == 0) {
 					iterator.remove();
+					subs.remove(cardGroup.getName());
 				}
 			}
 		}
@@ -241,20 +257,18 @@ public class CardGroup implements ICardCountable {
 	}
 
 	public synchronized CardGroup getSubGroup(String key) {
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			if (o instanceof CardGroup) {
-				if (((CardGroup) o).getName().equals(key))
-					return (CardGroup) o;
-			}
-		}
-		return null;
+		return subs.get(key);
 	}
 
 	public void clear() {
+		children.clear();
+		refresh();
+	}
+
+	public void refresh() {
 		count = 0;
 		props = null;
-		children.clear();
+		base = null;
 	}
 
 	public synchronized IMagicCard getFirstCard() {
