@@ -8,3 +8,4 @@ Fragment-Host: com.reflexit.magiccards.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: $nl$,
  .
+Export-Package: com.reflexit.magiccards.core.locale
