@@ -360,7 +360,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
 	 */
-	public CardGroup[] getCardGroups() {
+	public synchronized CardGroup[] getCardGroups() {
 		if (this.groupsList.size() == 0)
 			return EMPTY_CARD_GROUP;
 		return this.groupsList.values().toArray(new CardGroup[this.groupsList.size()]);

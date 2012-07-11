@@ -262,6 +262,7 @@ public class CardGroup implements ICardCountable {
 
 	public void clear() {
 		children.clear();
+		subs.clear();
 		refresh();
 	}
 
