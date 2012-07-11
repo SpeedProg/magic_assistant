@@ -333,7 +333,8 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void updateViewer() {
 		super.updateViewer();
-		getSelectionProvider().setSelection(new StructuredSelection(card));
+		if (card != null)
+			getSelectionProvider().setSelection(new StructuredSelection(card));
 	}
 
 	@Override

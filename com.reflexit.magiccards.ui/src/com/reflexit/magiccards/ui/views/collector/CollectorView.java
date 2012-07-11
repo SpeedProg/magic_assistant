@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -34,6 +35,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -102,6 +104,7 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 
 			@Override
 			public void run() {
+				populateStore(new NullProgressMonitor());
 				updateViewer();
 			}
 		};
@@ -122,24 +125,32 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 			IMagicCard card = (IMagicCard) iterator.next();
 			list.add(card);
 		}
-		getFilteredStore().getCardStore().addAll(list);
-		getFilteredStore().update(getFilter());
-		CardGroup[] elements = getFilteredStore().getCardGroups();
+		ICardStore cardStore = getFilteredStore().getCardStore();
+		cardStore.addAll(list);
+		CardGroup[] elements;
+		synchronized (getFilteredStore()) {
+
+			getFilteredStore().update(getFilter());
+			elements = getFilteredStore().getCardGroups();
+		}
+		System.err.println(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			CardGroup cardGroup = elements[i];
 			// suppose to be groupped by set
+			if (cardGroup.getFieldIndex() != MagicCardField.SET)
+				continue;
 			IMagicCard firstCard = cardGroup.getFirstCard();
 			String set = firstCard == null ? cardGroup.getName() : firstCard.getSet();
 			Location loc = Location.createLocationFromSet(set);
 			ICardStore<IMagicCard> store = ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc);
 			for (Iterator iterator = store.iterator(); iterator.hasNext();) {
 				IMagicCard card = (IMagicCard) iterator.next();
-				if (!cardGroup.contains(card)) {
-					System.err.println("Does not contain " + card);
-					getFilteredStore().getCardStore().add(card);
+				if (!cardStore.contains(card)) {
+					cardStore.add(card);
 				}
 			}
 		}
+		getFilteredStore().update(getFilter());
 	}
 
 	@Override

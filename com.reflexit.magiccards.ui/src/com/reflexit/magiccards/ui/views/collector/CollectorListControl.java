@@ -36,7 +36,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void createGroupAction() {
-		// skip
+		// super.createGroupAction();
 	}
 
 	@Override
