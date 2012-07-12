@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Pattern;
@@ -736,5 +737,12 @@ public class MagicCardFilter {
 
 	public void setNoSort() {
 		sortOrder.clear();
+	}
+
+	public void setGroupFields(ICardField[] fields) {
+		if (fields == null)
+			groupFields = null;
+		else
+			groupFields = Arrays.copyOf(fields, fields.length);
 	}
 }

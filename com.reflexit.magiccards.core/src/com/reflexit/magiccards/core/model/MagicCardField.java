@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public enum MagicCardField implements ICardField {
 	ID,
@@ -78,5 +79,10 @@ public enum MagicCardField implements ICardField {
 
 	public Field getJavaField() {
 		return field;
+	}
+
+	public String getGroupLabel() {
+		String name = name();
+		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
 	}
 }

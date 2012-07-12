@@ -6,13 +6,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeSet;
 
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -39,7 +37,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	private static final CardGroup[] EMPTY_CARD_GROUP = new CardGroup[0];
 	protected Collection filteredList = null;
-	protected Map<String, CardGroup> groupsList = new LinkedHashMap<String, CardGroup>();
+	protected CardGroup rootGroup = new CardGroup(null, "Root");
 	protected boolean initialized = false;
 	protected MagicCardFilter filter;
 
@@ -157,9 +155,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		initialize();
 		if (filter == null)
 			return;
-		for (CardGroup g : groupsList.values()) {
-			g.clear();
-		}
+		rootGroup.clear();
 		setFilteredList(null);
 		Collection filterCards = filterCards(this.filter);
 		getFilteredList().addAll(filterCards);
@@ -174,23 +170,19 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	protected void groupCards(MagicCardFilter filter, Collection<IMagicCard> filteredList) {
 		if (filter.getGroupField() != null) {
-			if (groupsList.size() > 0) {
-				CardGroup g = groupsList.values().iterator().next();
-				if (g.getFieldIndex() != filter.getGroupField())
-					groupsList.clear();
-			}
+			rootGroup.clear(); // was already
 			if (filter.getGroupField() == MagicCardField.TYPE) {
 				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
 				for (Object o : buildTypeGroups.getChildren()) {
 					if (o instanceof CardGroup) {
 						CardGroup gr = (CardGroup) o;
-						groupsList.put(gr.getName(), gr);
+						rootGroup.add(gr);
 					}
 				}
 			} else {
 				for (Object element : filteredList) {
 					IMagicCard elem = (IMagicCard) element;
-					CardGroup group = findGroupIndex(elem, filter.getGroupField());
+					CardGroup group = findGroupIndex(elem, filter);
 					if (group != null) {
 						addToNameGroup(elem, group);
 					}
@@ -233,13 +225,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected void removeEmptyGroups() {
-		for (Iterator iterator = groupsList.values().iterator(); iterator.hasNext();) {
-			CardGroup g = (CardGroup) iterator.next();
-			g.removeEmptyChildren();
-			if (g.getChildren().size() == 0) {
-				iterator.remove();
-			}
-		}
+		rootGroup.removeEmptyChildren();
 	}
 
 	protected Collection<IMagicCard> sortCards(MagicCardFilter filter) {
@@ -310,45 +296,27 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	/**
 	 * @param elem
-	 * @param cardField
+	 * @param filter2
 	 * @return
 	 */
-	private CardGroup findGroupIndex(IMagicCard elem, ICardField cardField) {
-		String name = null;
-		try {
-			if (cardField == MagicCardField.COST) {
-				name = Colors.getColorName(elem.getCost());
-			} else if (cardField == MagicCardField.CMC) {
-				int ccc = elem.getCmc();
-				if (ccc == 0 && elem.getType().contains("Land")) {
-					name = "Land";
-				} else {
-					name = String.valueOf(ccc);
-				}
-			} else {
-				name = String.valueOf(elem.getObjectByField(cardField));
+	private CardGroup findGroupIndex(IMagicCard elem, MagicCardFilter filter) {
+		ICardField[] groupFields = filter.getGroupFields();
+		CardGroup parent = rootGroup;
+		for (int i = 0; i < groupFields.length; i++) {
+			ICardField field = groupFields[i];
+			if (field == null)
+				continue;
+			String name = CardGroup.getGroupName(elem, field);
+			if (name == null)
+				return null;
+			CardGroup g = parent.getSubGroup(name);
+			if (g == null) {
+				g = new CardGroup(field, name);
+				parent.add(g);
 			}
-		} catch (Exception e) {
-			name = "Unknown";
+			parent = g;
 		}
-		if (name == null)
-			return null;
-		CardGroup g = this.groupsList.get(name);
-		if (g == null) {
-			g = new CardGroup(cardField, name);
-			this.groupsList.put(name, g);
-		}
-		if (cardField == MagicCardField.SET) {
-			// g is set group, now add rariry subgroup
-			name = elem.getRarity();
-			CardGroup r = g.getSubGroup(name);
-			if (r == null) {
-				r = new CardGroup(MagicCardField.RARITY, elem.getRarity());
-				g.add(r);
-			}
-			return r;
-		}
-		return g;
+		return parent;
 	}
 
 	protected Collection<T> doCreateList() {
@@ -361,9 +329,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
 	 */
 	public synchronized CardGroup[] getCardGroups() {
-		if (this.groupsList.size() == 0)
+		if (rootGroup.size() == 0)
 			return EMPTY_CARD_GROUP;
-		return this.groupsList.values().toArray(new CardGroup[this.groupsList.size()]);
+		return rootGroup.getCardGroups();
 	}
 
 	public CardGroup getCardGroup(int index) {

@@ -342,7 +342,7 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		case RULINGS:
 			return (this.rulings);
 		case LANG:
-			return (this.lang);
+			return getLanguage();
 		case COLLNUM:
 			return (this.num);
 		case TEXT:
@@ -396,11 +396,16 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	}
 
 	public String getLanguage() {
+		if (lang == null)
+			return "English";
 		return lang;
 	}
 
 	public void setLanguage(String lang) {
-		this.lang = lang;
+		if (lang == null || lang.equals("English"))
+			this.lang = null;
+		else
+			this.lang = lang.intern();
 	}
 
 	public String getCollNumber() {
@@ -413,7 +418,7 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		if (collNumber == null || collNumber.trim().length() == 0)
 			this.num = null;
 		else
-			this.num = collNumber;
+			this.num = collNumber.intern();
 	}
 
 	public boolean setObjectByField(ICardField field, String value) {

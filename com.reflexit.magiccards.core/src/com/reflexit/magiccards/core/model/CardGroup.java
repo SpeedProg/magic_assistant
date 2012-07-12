@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -135,16 +136,18 @@ public class CardGroup implements ICardCountable {
 			return iOwn.intValue();
 		}
 		int ownusize = 0;
+		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
 		for (Iterator<Object> iterator = children.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
 				if (((MagicCardPhysical) object).isOwn()) {
-					ownusize++;
+					uniq.add(((MagicCardPhysical) object).getBase());
 				}
 			} else if (object instanceof CardGroup) {
 				ownusize += ((CardGroup) object).getOwnUSize();
 			}
 		}
+		ownusize += uniq.size();
 		setProperty(OWNUSIZE_KEY, ownusize);
 		return ownusize;
 	}
@@ -307,5 +310,39 @@ public class CardGroup implements ICardCountable {
 			else
 				result.add(o);
 		}
+	}
+
+	public CardGroup[] getCardGroups() {
+		return subs.values().toArray(new CardGroup[size()]);
+	}
+
+	public static String getGroupName(IMagicCard elem, ICardField field) {
+		try {
+			if (field == MagicCardField.COST) {
+				return Colors.getColorName(elem.getCost());
+			} else if (field == MagicCardField.CMC) {
+				int ccc = elem.getCmc();
+				if (ccc == 0 && elem.getType().contains("Land")) {
+					return "Land";
+				} else {
+					return String.valueOf(ccc);
+				}
+			} else if (field == MagicCardField.LANG) {
+				if (elem.getLanguage() == null)
+					return "English";
+				else
+					return elem.getLanguage();
+			} else {
+				return String.valueOf(elem.getObjectByField(field));
+			}
+		} catch (Exception e) {
+			return "Unknown";
+		}
+	}
+
+	public Collection<IMagicCard> expand() {
+		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
+		expandGroups(res, children);
+		return res;
 	}
 }
