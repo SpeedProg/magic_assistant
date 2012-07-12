@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -17,6 +18,8 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
+	private static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY };
+
 	public CollectorListControl(AbstractCardsView abstractCardsView) {
 		super(abstractCardsView);
 	}
@@ -29,14 +32,16 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By");
-		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
-		groupMenu.add(new GroupAction("Artist", MagicCardField.ARTIST));
+		groupMenu.add(createGroupAction("Set/Lang/Rarity", DEF_GROUP));
+		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
+		groupMenu.add(createGroupAction(MagicCardField.SET));
+		// groupMenu.add(createGroupAction(MagicCardField.ARTIST));
 		return groupMenu;
 	}
 
 	@Override
 	protected void createGroupAction() {
-		// super.createGroupAction();
+		super.createGroupAction();
 	}
 
 	@Override
@@ -48,7 +53,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void initManager() {
-		getLocalPreferenceStore().setDefault(FilterHelper.GROUP_FIELD, MagicCardField.SET.toString());
+		getLocalPreferenceStore().setDefault(FilterHelper.GROUP_FIELD, createGroupName(DEF_GROUP));
 		super.initManager();
 	}
 

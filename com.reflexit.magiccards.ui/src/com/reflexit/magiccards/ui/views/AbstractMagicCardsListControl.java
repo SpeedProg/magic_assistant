@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -86,13 +87,12 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl, ICardEventListener {
 	public class GroupAction extends Action {
-		ICardField field;
+		ICardField field[];
 
-		public GroupAction(String name, ICardField field) {
+		public GroupAction(String name, ICardField fields[], boolean checked) {
 			super(name, IAction.AS_RADIO_BUTTON);
-			this.field = field;
-			String val = prefStore.getString(FilterHelper.GROUP_FIELD);
-			if (field == null && val.length() == 0 || field != null && field.toString().equals(val)) {
+			this.field = fields;
+			if (checked) {
 				setChecked(true);
 			}
 		}
@@ -150,6 +150,49 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		createTableControl(partControl);
 		createSearchControl(partControl);
 		getSelectionProvider().addSelectionChangedListener(selectionListener);
+	}
+
+	public GroupAction createGroupAction(ICardField field) {
+		return createGroupAction(field.getGroupLabel(), field);
+	}
+
+	public GroupAction createGroupAction(String name, ICardField[] fields) {
+		String val = prefStore.getString(FilterHelper.GROUP_FIELD);
+		String vname = createGroupName(fields);
+		boolean checked = vname.equals(val);
+		return new GroupAction(name, fields, checked);
+	}
+
+	public GroupAction createGroupAction(String name, ICardField field) {
+		return createGroupAction(name, new ICardField[] { field });
+	}
+
+	public GroupAction createGroupActionNone() {
+		String val = prefStore.getString(FilterHelper.GROUP_FIELD);
+		return new GroupAction("None", null, val == null || val.length() == 0);
+	}
+
+	protected String createGroupName(ICardField[] fields) {
+		String res = "";
+		for (int i = 0; i < fields.length; i++) {
+			ICardField field = fields[i];
+			if (i != 0) {
+				res += "/";
+			}
+			res += field.toString();
+		}
+		return res;
+	}
+
+	private ICardField[] getGroupFieldsByName(String name) {
+		if (name == null || name.length() == 0)
+			return null;
+		String sfields[] = name.split("/");
+		ICardField[] res = new ICardField[sfields.length];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = MagicCardFieldPhysical.fieldByName(sfields[i]);
+		}
+		return res;
 	}
 
 	/*
@@ -378,35 +421,37 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/**
 	 * @param indexCost
 	 */
-	protected void actionGroupBy(ICardField field) {
-		prefStore.setValue(FilterHelper.GROUP_FIELD, field == null ? "" : field.toString());
-		updateGroupBy(field);
+	protected void actionGroupBy(ICardField[] fields) {
+		prefStore.setValue(FilterHelper.GROUP_FIELD, fields == null ? "" : createGroupName(fields));
+		updateGroupBy(fields);
 		reloadData();
 	}
 
 	/**
 	 * @param indexCmc
 	 */
-	public void updateGroupBy(ICardField field) {
+	public void updateGroupBy(ICardField[] fields) {
 		MagicCardFilter filter = getFilter();
-		ICardField oldIndex = filter.getGroupField();
-		if (oldIndex == field)
+		ICardField[] oldIndex = filter.getGroupFields();
+		if (Arrays.equals(oldIndex, fields))
 			return;
-		boolean hasGroups = field != null;
+		boolean hasGroups = fields != null;
 		if (hasGroups)
-			filter.setSortField(field, true);
-		filter.setGroupField(field);
+			filter.setSortField(fields[0], true);
+		filter.setGroupFields(fields);
 		manager.flip(hasGroups);
 	}
 
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
-		groupMenu.add(new GroupAction("None", null));
-		groupMenu.add(new GroupAction("Color", MagicCardField.COST));
-		groupMenu.add(new GroupAction("Cost", MagicCardField.CMC));
-		groupMenu.add(new GroupAction("Type", MagicCardField.TYPE));
-		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
-		groupMenu.add(new GroupAction("Rarity", MagicCardField.RARITY));
+		groupMenu.add(createGroupActionNone());
+		groupMenu.add(createGroupAction("Color", MagicCardField.COST));
+		groupMenu.add(createGroupAction("Cost", MagicCardField.CMC));
+		groupMenu.add(createGroupAction(MagicCardField.TYPE));
+		groupMenu.add(createGroupAction(MagicCardField.SET));
+		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
+		groupMenu.add(createGroupAction(MagicCardField.RARITY));
+		groupMenu.setRemoveAllWhenShown(false);
 		// groupMenu.add(new GroupAction("Name", MagicCardField.NAME));
 		return groupMenu;
 	}
@@ -522,9 +567,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	protected void initManager() {
 		String field = prefStore.getString(FilterHelper.GROUP_FIELD);
-		if (field == null)
-			field = "";
-		updateGroupBy(MagicCardFieldPhysical.fieldByName(field));
+		updateGroupBy(getGroupFieldsByName(field));
 		IColumnSortAction sortAction = new IColumnSortAction() {
 			public void sort(int i) {
 				AbstractMagicCardsListControl.this.sort(i);
@@ -605,40 +648,43 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
 	}
 
+	class GroupByToolBarAction extends Action {
+		public GroupByToolBarAction() {
+			super("Group By", IAction.AS_DROP_DOWN_MENU);
+			setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
+			setMenuCreator(new IMenuCreator() {
+				private Menu listMenu;
+
+				public void dispose() {
+					if (listMenu != null)
+						listMenu.dispose();
+				}
+
+				public Menu getMenu(Control parent) {
+					if (listMenu != null)
+						listMenu.dispose();
+					listMenu = createGroupMenu().createContextMenu(parent);
+					return listMenu;
+				}
+
+				public Menu getMenu(Menu parent) {
+					return null;
+				}
+			});
+		}
+
+		@Override
+		public void run() { // group button itself
+			String group = prefStore.getString(FilterHelper.GROUP_FIELD);
+			if (group == null || group.length() == 0)
+				actionGroupBy(new ICardField[] { MagicCardField.CMC });
+			else
+				actionGroupBy(null);
+		}
+	}
+
 	protected void createGroupAction() {
-		this.actionGroupMenu = new Action("Group By", Action.AS_DROP_DOWN_MENU) {
-			{
-				setMenuCreator(new IMenuCreator() {
-					private Menu listMenu;
-
-					public void dispose() {
-						if (listMenu != null)
-							listMenu.dispose();
-					}
-
-					public Menu getMenu(Control parent) {
-						if (listMenu != null)
-							listMenu.dispose();
-						listMenu = createGroupMenu().createContextMenu(parent);
-						return listMenu;
-					}
-
-					public Menu getMenu(Menu parent) {
-						return null;
-					}
-				});
-			}
-
-			@Override
-			public void run() {
-				String group = prefStore.getString(FilterHelper.GROUP_FIELD);
-				if (group == null || group.length() == 0)
-					actionGroupBy(MagicCardField.CMC);
-				else
-					actionGroupBy(null);
-			}
-		};
-		this.actionGroupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
+		this.actionGroupMenu = new GroupByToolBarAction();
 	}
 
 	@Override

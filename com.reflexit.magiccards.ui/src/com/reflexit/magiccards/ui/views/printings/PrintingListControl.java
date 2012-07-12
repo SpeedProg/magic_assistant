@@ -29,10 +29,10 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By");
-		groupMenu.add(new GroupAction("None", null));
-		groupMenu.add(new GroupAction("Set", MagicCardField.SET));
-		groupMenu.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
-		groupMenu.add(new GroupAction("Ownership", MagicCardFieldPhysical.OWNERSHIP));
+		groupMenu.add(createGroupActionNone());
+		groupMenu.add(createGroupAction(MagicCardField.SET));
+		groupMenu.add(createGroupAction(MagicCardFieldPhysical.LOCATION));
+		groupMenu.add(createGroupAction(MagicCardFieldPhysical.OWNERSHIP));
 		return groupMenu;
 	}
 
@@ -78,7 +78,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public void updateGroupBy(ICardField field) {
+	public void updateGroupBy(ICardField[] field) {
 		if (((PrintingsManager) manager).isDbMode())
 			return;
 		super.updateGroupBy(field);

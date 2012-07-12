@@ -23,7 +23,7 @@ public class MyCardsListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected MenuManager createGroupMenu() {
 		MenuManager x = super.createGroupMenu();
-		x.add(new GroupAction("Location", MagicCardFieldPhysical.LOCATION));
+		x.add(createGroupAction(MagicCardFieldPhysical.LOCATION));
 		return x;
 	}
 

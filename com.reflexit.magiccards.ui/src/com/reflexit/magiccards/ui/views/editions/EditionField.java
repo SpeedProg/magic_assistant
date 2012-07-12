@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.editions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Locale;
 
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -41,5 +42,10 @@ public enum EditionField implements ICardField {
 
 	public boolean isTransient() {
 		return field == null ? true : Modifier.isTransient(field.getModifiers());
+	}
+
+	public String getGroupLabel() {
+		String name = name();
+		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
 	}
 }
