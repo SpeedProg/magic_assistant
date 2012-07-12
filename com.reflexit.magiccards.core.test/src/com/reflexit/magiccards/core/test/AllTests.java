@@ -48,7 +48,7 @@ public class AllTests {
 		suite.addTestSuite(CollectionStoreTest.class);
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
-		suite.addTestSuite(CardTextNL1Test.class);
+		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);
 		// gatherer
