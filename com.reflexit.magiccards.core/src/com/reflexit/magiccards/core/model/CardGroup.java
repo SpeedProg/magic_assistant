@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  * @author Alena
@@ -27,14 +28,14 @@ public class CardGroup implements ICardCountable {
 	private ArrayList<Object> children;
 	private static final String OWNUSIZE_KEY = "ownusize";
 	private HashMap<String, Object> props;
-	private HashMap<String, CardGroup> subs;
+	private LinkedHashMap<String, CardGroup> subs;
 	private MagicCardPhysical base;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
 		this.name = name;
 		this.children = new ArrayList(2);
-		this.subs = new HashMap<String, CardGroup>(2);
+		this.subs = new LinkedHashMap<String, CardGroup>(2);
 	}
 
 	public synchronized IMagicCard getBase() {
