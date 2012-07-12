@@ -15,7 +15,6 @@ public class MagicColumnCollection extends ColumnCollection {
 	protected void createColumns() {
 		String dbPrefId = MagicDbViewPreferencePage.class.getName();
 		this.columns.add(createGroupColumn());
-		this.columns.add(new NameColumn());
 		this.columns.add(new IdColumn());
 		this.columns.add(new CostColumn());
 		this.columns.add(new TypeColumn());

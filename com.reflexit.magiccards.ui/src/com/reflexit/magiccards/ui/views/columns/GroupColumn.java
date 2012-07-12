@@ -9,11 +9,11 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 public class GroupColumn extends GenColumn {
-	public static final String COL_NAME = "Group";
+	public static final String COL_NAME = "Name";
 	private ICardField groupField;
 
 	public GroupColumn() {
-		super(null, COL_NAME);
+		super(MagicCardField.NAME, COL_NAME);
 	}
 
 	public GroupColumn(ICardField field, String columnName) {
@@ -66,5 +66,18 @@ public class GroupColumn extends GenColumn {
 	@Override
 	public ICardField getDataField() {
 		return super.getDataField();
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(true); // always visible
+	}
+
+	@Override
+	public void setUserWidth(int width) {
+		if (width == 0)
+			super.setUserWidth(getColumnWidth());
+		else
+			super.setUserWidth(width);
 	}
 }

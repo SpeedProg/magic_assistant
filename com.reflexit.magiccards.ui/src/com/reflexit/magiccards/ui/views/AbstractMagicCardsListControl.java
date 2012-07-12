@@ -648,7 +648,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
 	}
 
-	class GroupByToolBarAction extends Action {
+	public class GroupByToolBarAction extends Action {
 		public GroupByToolBarAction() {
 			super("Group By", IAction.AS_DROP_DOWN_MENU);
 			setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));

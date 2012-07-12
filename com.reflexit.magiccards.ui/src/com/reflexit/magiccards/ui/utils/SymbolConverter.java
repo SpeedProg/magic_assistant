@@ -136,7 +136,7 @@ public class SymbolConverter {
 						String im = (String) manaMap.get(sym);
 						ImageDescriptor imageDescriptor = MagicUIActivator.getImageDescriptor(im);
 						if (imageDescriptor == null) {
-							System.err.println("Cannot find images for " + im + " " + text1);
+							MagicUIActivator.log("Cannot find images for " + im + " " + text1);
 							continue;
 						}
 						Image manaImage = imageDescriptor.createImage();

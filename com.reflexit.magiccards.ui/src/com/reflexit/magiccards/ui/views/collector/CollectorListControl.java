@@ -41,7 +41,12 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void createGroupAction() {
-		super.createGroupAction();
+		this.actionGroupMenu = new GroupByToolBarAction() {
+			@Override
+			public void run() {
+				// does not do anything
+			}
+		};
 	}
 
 	@Override

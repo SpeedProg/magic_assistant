@@ -118,7 +118,7 @@ public class ImageCreator {
 			newGC.dispose();
 			return centeredImage;
 		} catch (SWTException e) {
-			System.err.println("Cannot load image: " + url + ": " + e.getMessage());
+			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
 			return null;
 		}
 	}
