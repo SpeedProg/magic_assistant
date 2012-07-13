@@ -829,6 +829,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			ICardField sortField = man.getSortField();
 			if (sortField == null && man instanceof GroupColumn)
 				sortField = filter.getGroupField();
+			if (sortField == null)
+				sortField = MagicCardField.NAME;
 			boolean acc = true;
 			SortOrder sortOrder = getFilter().getSortOrder();
 			if (sortOrder.isTop(sortField)) {
