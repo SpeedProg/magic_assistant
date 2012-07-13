@@ -1,6 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
@@ -184,8 +184,7 @@ public class CardGroupTest extends TestCase {
 	public void testExpandGroups() {
 		group.add(set);
 		set.add(generateCard());
-		ArrayList<IMagicCard> result = new ArrayList<IMagicCard>();
-		CardGroup.expandGroups(result, group.getChildren());
+		Collection<IMagicCard> result = group.expand();
 		assertEquals(result.size(), group.getCount());
 		assertEquals(result.size(), cards.length + 1);
 	}
