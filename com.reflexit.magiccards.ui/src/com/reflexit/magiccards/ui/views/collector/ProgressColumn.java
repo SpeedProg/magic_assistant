@@ -93,17 +93,19 @@ public class ProgressColumn extends GenColumn implements Listener {
 	}
 
 	public int getSetSize(CardGroup cardGroup) {
-		int size = 0;
-		HashSet<IMagicCard> base = new HashSet<IMagicCard>();
-		for (Iterator<Object> iterator = cardGroup.getChildren().iterator(); iterator.hasNext();) {
-			Object object = iterator.next();
-			if (object instanceof CardGroup) {
-				size += getSetSize((CardGroup) object);
-			} else if (object instanceof IMagicCard) {
-				base.add(((IMagicCard) object).getBase());
+		synchronized (cardGroup) {
+			int size = 0;
+			HashSet<IMagicCard> base = new HashSet<IMagicCard>();
+			for (Iterator<Object> iterator = cardGroup.iterator(); iterator.hasNext();) {
+				Object object = iterator.next();
+				if (object instanceof CardGroup) {
+					size += getSetSize((CardGroup) object);
+				} else if (object instanceof IMagicCard) {
+					base.add(((IMagicCard) object).getBase());
+				}
 			}
+			return size + base.size();
 		}
-		return size + base.size();
 	}
 
 	public void handleEvent(Event event) {

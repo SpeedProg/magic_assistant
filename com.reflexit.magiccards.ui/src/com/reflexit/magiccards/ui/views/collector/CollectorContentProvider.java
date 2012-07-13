@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class CollectorContentProvider<T> implements ITreeContentProvider {
@@ -18,8 +17,7 @@ public class CollectorContentProvider<T> implements ITreeContentProvider {
 
 	public Object[] getChildren(Object element) {
 		if (element instanceof CardGroup) {
-			Collection<IMagicCard> children = ((CardGroup) element).getChildren();
-			return children.toArray(new Object[children.size()]);
+			return ((CardGroup) element).getChildren();
 		} else if (element instanceof Collection) {
 			Collection children = (Collection) element;
 			return children.toArray(new Object[children.size()]);
@@ -43,8 +41,7 @@ public class CollectorContentProvider<T> implements ITreeContentProvider {
 
 	public boolean hasChildren(Object element) {
 		if (element instanceof CardGroup) {
-			Collection<IMagicCard> children = ((CardGroup) element).getChildren();
-			return children.size() > 0;
+			return ((CardGroup) element).size() > 0;
 		} else if (element instanceof Collection) {
 			Collection children = (Collection) element;
 			return children.size() > 0;

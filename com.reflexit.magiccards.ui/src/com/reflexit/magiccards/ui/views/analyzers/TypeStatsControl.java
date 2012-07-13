@@ -31,10 +31,8 @@ public class TypeStatsControl extends AbstractDeckPage implements IDeckPage {
 		public Object[] getChildren(Object element) {
 			if (element instanceof CardGroup) {
 				CardGroup node = (CardGroup) element;
-				if (node.getChildren() == null)
-					return new Object[] {};
-				if (node.getChildren().size() > 0)
-					return node.getChildren().toArray();
+				if (node.size() > 0)
+					return node.getChildren();
 			}
 			return new Object[] {};
 		}
@@ -46,9 +44,7 @@ public class TypeStatsControl extends AbstractDeckPage implements IDeckPage {
 		public boolean hasChildren(Object element) {
 			if (element instanceof CardGroup) {
 				CardGroup node = (CardGroup) element;
-				if (node.getChildren() == null)
-					return false;
-				if (node.getChildren().size() > 0)
+				if (node.size() > 0)
 					return true;
 			}
 			return false;
