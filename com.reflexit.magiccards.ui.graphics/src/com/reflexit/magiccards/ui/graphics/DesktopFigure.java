@@ -254,7 +254,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 	}
 
 	private int addFromGroup(CardGroup cardGroup, HashMap<IMagicCard, Integer> map, int i) {
-		for (Iterator iterator = cardGroup.getChildren().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = cardGroup.iterator(); iterator.hasNext();) {
 			Object el = iterator.next();
 			if (el instanceof IMagicCard)
 				map.put((IMagicCard) el, i);
