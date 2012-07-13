@@ -396,13 +396,13 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	}
 
 	public String getLanguage() {
-		if (lang == null)
+		if (lang == null || lang.length() == 0)
 			return "English";
 		return lang;
 	}
 
 	public void setLanguage(String lang) {
-		if (lang == null || lang.equals("English"))
+		if (lang == null || lang.equals("English") || lang.length() == 0)
 			this.lang = null;
 		else
 			this.lang = lang.intern();
