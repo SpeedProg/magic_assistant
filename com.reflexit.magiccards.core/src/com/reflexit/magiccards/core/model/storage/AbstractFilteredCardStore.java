@@ -335,7 +335,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	public CardGroup getCardGroup(int index) {
-		return getCardGroups()[index];
+		CardGroup[] cardGroups = getCardGroups();
+		return cardGroups[index];
 	}
 
 	public Location getLocation() {
