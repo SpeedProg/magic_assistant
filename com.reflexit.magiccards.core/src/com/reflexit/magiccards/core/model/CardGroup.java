@@ -118,7 +118,7 @@ public class CardGroup implements ICardCountable {
 
 	public synchronized int calculateCount() {
 		count = 0;
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			if (o instanceof CardGroup) {
 				count += ((CardGroup) o).calculateCount();
@@ -131,7 +131,7 @@ public class CardGroup implements ICardCountable {
 		return count;
 	}
 
-	public int getOwnUSize() {
+	public synchronized int getOwnUSize() {
 		Integer iOwn = (Integer) getProperty(OWNUSIZE_KEY);
 		if (iOwn != null) {
 			return iOwn.intValue();
@@ -157,11 +157,15 @@ public class CardGroup implements ICardCountable {
 		return this.groupField;
 	}
 
-	public Collection getChildren() {
-		return this.children;
+	public synchronized Object[] getChildren() {
+		return children.toArray(new Object[children.size()]);
 	}
 
-	public int size() {
+	public synchronized Iterator iterator() {
+		return children.iterator(); // XXX
+	}
+
+	public synchronized int size() {
 		return this.children.size();
 	}
 
@@ -175,7 +179,7 @@ public class CardGroup implements ICardCountable {
 		base = null;
 	}
 
-	public void remove(Object elem) {
+	public synchronized void remove(Object elem) {
 		children.remove(elem);
 		if (elem instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) elem;
@@ -188,7 +192,7 @@ public class CardGroup implements ICardCountable {
 	/**
 	 * @param index
 	 */
-	public Object getChildAtIndex(int index) {
+	public synchronized Object getChildAtIndex(int index) {
 		return this.children.get(index);
 	}
 
@@ -197,7 +201,7 @@ public class CardGroup implements ICardCountable {
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
 	 */
-	public String getLabelByField(ICardField f) {
+	public synchronized String getLabelByField(ICardField f) {
 		if (f == this.groupField)
 			return this.name;
 		if (children.size() == 0)
@@ -217,18 +221,18 @@ public class CardGroup implements ICardCountable {
 	public boolean equals(Object arg0) {
 		if (arg0 instanceof CardGroup) {
 			CardGroup group = (CardGroup) arg0;
-			return name.equals(group.name) && children.equals(group.getChildren());
+			return name.equals(group.name) && children.equals(group.children);
 		}
 		return false;
 	}
 
 	public synchronized void removeEmptyChildren() {
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			if (o instanceof CardGroup) {
 				CardGroup cardGroup = (CardGroup) o;
 				cardGroup.removeEmptyChildren();
-				if (cardGroup.getChildren().size() == 0) {
+				if (cardGroup.children.size() == 0) {
 					iterator.remove();
 					subs.remove(cardGroup.getName());
 				}
@@ -264,13 +268,13 @@ public class CardGroup implements ICardCountable {
 		return subs.get(key);
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		children.clear();
 		subs.clear();
 		refresh();
 	}
 
-	public void refresh() {
+	public synchronized void refresh() {
 		count = 0;
 		props = null;
 		base = null;
@@ -307,13 +311,13 @@ public class CardGroup implements ICardCountable {
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			if (o instanceof CardGroup)
-				expandGroups(result, ((CardGroup) o).getChildren());
+				expandGroups(result, ((CardGroup) o).children);
 			else
 				result.add(o);
 		}
 	}
 
-	public CardGroup[] getCardGroups() {
+	public synchronized CardGroup[] getCardGroups() {
 		return subs.values().toArray(new CardGroup[size()]);
 	}
 
@@ -341,7 +345,7 @@ public class CardGroup implements ICardCountable {
 		}
 	}
 
-	public Collection<IMagicCard> expand() {
+	public synchronized Collection<IMagicCard> expand() {
 		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
 		expandGroups(res, children);
 		return res;

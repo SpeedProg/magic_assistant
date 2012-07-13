@@ -173,11 +173,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			rootGroup.clear(); // was already
 			if (filter.getGroupField() == MagicCardField.TYPE) {
 				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
-				for (Object o : buildTypeGroups.getChildren()) {
-					if (o instanceof CardGroup) {
-						CardGroup gr = (CardGroup) o;
-						rootGroup.add(gr);
-					}
+				for (CardGroup gr : buildTypeGroups.getCardGroups()) {
+					rootGroup.add(gr);
 				}
 			} else {
 				for (Object element : filteredList) {
@@ -197,9 +194,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			group.add(elem);
 		} else {
 			String key = elem.getName();
-			Collection children = group.getChildren();
 			IMagicCard card = null;
-			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = group.iterator(); iterator.hasNext();) {
 				Object o = iterator.next();
 				if (o instanceof CardGroup) {
 					CardGroup nameGroup = (CardGroup) o;
