@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,8 +21,9 @@ import com.reflexit.magiccards.core.model.Location;
 
 /**
  * ArrayList based implementation for AbstractCardStore
+ * 
  * @author Alena
- *
+ * 
  */
 public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	protected List<T> list;
@@ -83,9 +84,10 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	}
 
 	@Override
-	protected void doSave() throws FileNotFoundException {
+	protected void doSave() throws IOException {
 		// nothing
 	}
+
 	private final Location MEM_LOC = new Location("mem");
 
 	public Location getLocation() {

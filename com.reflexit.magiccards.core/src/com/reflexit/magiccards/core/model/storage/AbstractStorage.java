@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.MagicException;
@@ -57,7 +57,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		try {
 			doSave();
 			setNeedToSave(false);
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			throw new MagicException(e);
 		}
 	}
@@ -74,7 +74,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		return modified;
 	}
 
-	protected abstract void doSave() throws FileNotFoundException;
+	protected abstract void doSave() throws IOException;
 
 	public boolean addAll(Collection<? extends T> list) {
 		load();
