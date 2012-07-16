@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -16,12 +14,11 @@ import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
-public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStore implements ICardEventListener {
-	private static LibraryXmlFilteredCardStore instance;
+public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileStore implements ICardEventListener {
+	private static LibraryFilteredCardFileStore instance;
 
 	@Override
 	protected void doInitialize() throws MagicException {
@@ -39,13 +36,13 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 	}
 
 	@SuppressWarnings("unused")
-	public static LibraryXmlFilteredCardStore getInstance() {
+	public static LibraryFilteredCardFileStore getInstance() {
 		if (instance == null)
-			new LibraryXmlFilteredCardStore();
+			new LibraryFilteredCardFileStore();
 		return instance;
 	}
 
-	private LibraryXmlFilteredCardStore() {
+	private LibraryFilteredCardFileStore() {
 		super(new CollectionMultiFileCardStore());
 		instance = this;
 	}
@@ -91,34 +88,5 @@ public class LibraryXmlFilteredCardStore extends BasicLibraryXmlFilteredCardStor
 				}
 			}
 		}
-	}
-
-	@Override
-	protected void reload() {
-		this.table.setInitialized(false);
-		super.reload();
-		update();
-	}
-
-	@Override
-	public int getCount() {
-		initialize();
-		int count = 0;
-		Collection<IMagicCard> list = getFilteredList();
-		for (Object element : list) {
-			IMagicCard magicCard = (IMagicCard) element;
-			if (magicCard instanceof ICardCountable) {
-				count += ((ICardCountable) magicCard).getCount();
-			}
-		}
-		return count;
-	}
-
-	@Override
-	public ICardStore<IMagicCard> getStore(Location location) {
-		initialize();
-		if (location == null)
-			return table.getStore(table.getLocation());
-		return table.getStore(location);
 	}
 }

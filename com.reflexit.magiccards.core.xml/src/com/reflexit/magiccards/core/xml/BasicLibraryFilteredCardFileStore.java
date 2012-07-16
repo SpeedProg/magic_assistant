@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
-public class BasicLibraryXmlFilteredCardStore extends AbstractFilteredCardStore<IMagicCard> implements ICardCountable {
+public class BasicLibraryFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
 	protected CollectionMultiFileCardStore table;
 
 	public ICardStore<IMagicCard> getCardStore() {
@@ -17,7 +17,7 @@ public class BasicLibraryXmlFilteredCardStore extends AbstractFilteredCardStore<
 		return this.table;
 	}
 
-	public BasicLibraryXmlFilteredCardStore(CollectionMultiFileCardStore store) {
+	public BasicLibraryFilteredCardFileStore(CollectionMultiFileCardStore store) {
 		table = store;
 	}
 
@@ -34,6 +34,7 @@ public class BasicLibraryXmlFilteredCardStore extends AbstractFilteredCardStore<
 		update();
 	}
 
+	@Override
 	public int getCount() {
 		initialize();
 		int count = 0;

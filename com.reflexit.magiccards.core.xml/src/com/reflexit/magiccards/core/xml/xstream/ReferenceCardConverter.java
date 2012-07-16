@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.xml.data;
+package com.reflexit.magiccards.core.xml.xstream;
 
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.thoughtworks.xstream.converters.Converter;

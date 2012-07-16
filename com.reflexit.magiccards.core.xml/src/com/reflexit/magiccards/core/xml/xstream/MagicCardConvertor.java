@@ -8,10 +8,11 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.xml.data;
+package com.reflexit.magiccards.core.xml.xstream;
 
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -24,26 +25,21 @@ import com.thoughtworks.xstream.mapper.Mapper;
 /**
  * Converter for magic card physical
  */
-public class MagicCardPhysicalConvertor implements Converter {
+public class MagicCardConvertor implements Converter {
 	private ReflectionConverter reflectionConvertor;
 
-	public MagicCardPhysicalConvertor(Mapper mapper, ReflectionProvider provider) {
+	public MagicCardConvertor(Mapper mapper, ReflectionProvider provider) {
 		reflectionConvertor = new ReflectionConverter(mapper, provider);
 	}
 
 	public boolean canConvert(Class arg0) {
-		return arg0.equals(MagicCardPhysical.class);
+		return arg0.equals(MagicCard.class);
 	}
 
 	public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
-		MagicCardPhysical card = (MagicCardPhysical) value;
-		writer.startNode("card");
-		context.convertAnother(card.getCard(), new ReferenceCardConverter());
-		writer.endNode();
-		MagicCardFieldPhysical[] values = MagicCardFieldPhysical.values();
-		for (MagicCardFieldPhysical field : values) {
-			if (field.isTransient())
-				continue;
+		MagicCard card = (MagicCard) value;
+		ICardField[] values = MagicCardField.allNonTransientFields();
+		for (ICardField field : values) {
 			Object o = card.getObjectByField(field);
 			if (o == null)
 				continue; // skip this
@@ -55,14 +51,14 @@ public class MagicCardPhysicalConvertor implements Converter {
 				continue;
 			else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
 				continue;
-			writer.startNode(field.getJavaField().getName());
+			writer.startNode(((MagicCardField) field).getJavaField().getName());
 			context.convertAnother(o);
 			writer.endNode();
 		}
 	}
 
 	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-		MagicCardPhysical card = new MagicCardPhysical(null, null);
-		return context.convertAnother(card, MagicCardPhysical.class, reflectionConvertor);
+		MagicCard card = new MagicCard();
+		return context.convertAnother(card, MagicCard.class, reflectionConvertor);
 	}
 }

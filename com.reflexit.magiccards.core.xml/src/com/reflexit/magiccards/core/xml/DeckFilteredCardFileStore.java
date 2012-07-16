@@ -8,7 +8,7 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
-public class DeckXmlFilteredCardStore extends AbstractFilteredCardStore<IMagicCard> {
+public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
 	private CollectionSingleFileCardStore table;
 
 	public ICardStore<IMagicCard> getCardStore() {
@@ -20,14 +20,14 @@ public class DeckXmlFilteredCardStore extends AbstractFilteredCardStore<IMagicCa
 		this.table.initialize();
 	}
 
-	public DeckXmlFilteredCardStore(String filename) {
+	public DeckFilteredCardFileStore(String filename) {
 		CardCollection d = DataManager.getModelRoot().findCardCollectionById(filename);
 		if (d == null)
 			d = DataManager.getModelRoot().findCardCollectionById(filename + ".xml");
 		if (d == null)
 			throw new IllegalArgumentException("Not found: " + filename);
 		if (!d.isOpen()) {
-			LibraryXmlFilteredCardStore magicLibraryHandler = (LibraryXmlFilteredCardStore) DataManager.getCardHandler()
+			LibraryFilteredCardFileStore magicLibraryHandler = (LibraryFilteredCardFileStore) DataManager.getCardHandler()
 					.getLibraryFilteredStore();
 			ICardStore<IMagicCard> store = magicLibraryHandler.getStore(d.getLocation());
 			d.open(store);

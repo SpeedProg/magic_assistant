@@ -18,8 +18,9 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 
 /**
  * Single File store with card count and caching
+ * 
  * @author Alena
- *
+ * 
  */
 public class CollectionSingleFileCardStore extends CollectionCardStore implements ICardCountable {
 	/**

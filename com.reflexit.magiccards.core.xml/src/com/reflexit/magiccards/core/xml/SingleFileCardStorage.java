@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,26 +12,29 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements ILocatable, IStorageInfo {
-	private transient static final String VIRTUAL = "virtual";
-	private transient File file;
-	private Location location;
-	private String name;
-	private String comment;
-	private String type;
-	private Properties properties = new Properties();
+public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> {
+	private static final transient String VIRTUAL = "virtual";
+	protected transient File file;
+	protected Location location;
+	protected String name;
+	protected String comment;
+	protected String type;
+	protected Properties properties = new Properties();
 
-	SingleFileCardStorage(File file, Location location) {
+	public SingleFileCardStorage() {
+		super();
+	}
+
+	public SingleFileCardStorage(File file, Location location) {
 		this(file, location, false);
 	}
 
-	SingleFileCardStorage(File file, Location location, boolean initialize) {
+	public SingleFileCardStorage(File file, Location location, boolean initialize) {
 		this.file = file;
 		this.location = location;
 		if (location != null)
@@ -53,22 +55,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		return location + " 0x" + Integer.toHexString(System.identityHashCode(this));
 	}
 
-	@Override
-	protected synchronized void doLoad() {
-		CardCollectionStoreObject obj = null;
-		try {
-			// System.err.println("Loading " + file);
-			obj = CardCollectionStoreObject.initFromFile(this.file);
-			loadFields(obj);
-			updateLocations();
-			updateDbRef();
-		} catch (IOException e) {
-			MagicLogger.log(e);
-		}
-	}
-
 	protected void updateDbRef() {
-		VirtualMultiFileCardStore db = null;
+		AbstractMultiStore db = null;
 		for (Object object : this) {
 			if (object instanceof MagicCardPhysical) {
 				MagicCardPhysical mp = (MagicCardPhysical) object;
@@ -86,10 +74,10 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		}
 	}
 
-	protected VirtualMultiFileCardStore waitForDb() {
+	protected AbstractMultiStore waitForDb() {
 		IFilteredCardStore databaseHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 		databaseHandler.getSize(); // should trigger initialization
-		VirtualMultiFileCardStore db = (VirtualMultiFileCardStore) databaseHandler.getCardStore();
+		AbstractMultiStore db = (AbstractMultiStore) databaseHandler.getCardStore();
 		int count = 20;
 		while (!db.isInitialized() && count-- > 0) {
 			try {
@@ -110,43 +98,6 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 				mp.setLocation(getLocation());
 			}
 		}
-	}
-
-	/**
-	 * @param obj
-	 */
-	protected void loadFields(CardCollectionStoreObject obj) {
-		if (obj.list != null)
-			this.doSetList(obj.list);
-		else
-			this.doSetList(new ArrayList<IMagicCard>());
-		if (getLocation() == null)
-			this.location = new Location(obj.key);
-		if (obj.name != null)
-			this.name = obj.name;
-		this.comment = obj.comment;
-		this.properties = obj.properties;
-		this.type = obj.type;
-	}
-
-	/**
-	 * @param obj
-	 */
-	protected void storeFields(CardCollectionStoreObject obj) {
-		obj.list = new ArrayList(this.getList());
-		obj.key = getLocation().toString();
-		obj.name = getName();
-		obj.comment = getComment();
-		obj.type = getType();
-		obj.properties = properties;
-	}
-
-	@Override
-	protected synchronized void doSave() throws FileNotFoundException {
-		CardCollectionStoreObject obj = new CardCollectionStoreObject();
-		obj.file = this.file;
-		storeFields(obj);
-		obj.save();
 	}
 
 	@Override
@@ -236,5 +187,56 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	public void setVirtual(boolean value) {
 		setProperty(VIRTUAL, String.valueOf(value));
+	}
+
+	@Override
+	protected synchronized void doSave() throws IOException {
+		CardCollectionStoreObject obj = new CardCollectionStoreObject();
+		obj.file = this.file;
+		storeFields(obj);
+		obj.save();
+	}
+
+	@Override
+	protected synchronized void doLoad() {
+		CardCollectionStoreObject obj = null;
+		try {
+			// System.err.println("Loading " + file);
+			obj = CardCollectionStoreObject.initFromFile(this.file);
+			loadFields(obj);
+			updateLocations();
+			updateDbRef();
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		}
+	}
+
+	/**
+	 * @param obj
+	 */
+	protected void loadFields(CardCollectionStoreObject obj) {
+		if (obj.list != null)
+			this.doSetList(obj.list);
+		else
+			this.doSetList(new ArrayList<IMagicCard>());
+		if (getLocation() == null)
+			this.location = new Location(obj.key);
+		if (obj.name != null)
+			this.name = obj.name;
+		this.comment = obj.comment;
+		this.properties = obj.properties;
+		this.type = obj.type;
+	}
+
+	/**
+	 * @param obj
+	 */
+	protected void storeFields(CardCollectionStoreObject obj) {
+		obj.list = new ArrayList(this.getList());
+		obj.key = getLocation().toString();
+		obj.name = getName();
+		obj.comment = getComment();
+		obj.type = getType();
+		obj.properties = properties;
 	}
 }

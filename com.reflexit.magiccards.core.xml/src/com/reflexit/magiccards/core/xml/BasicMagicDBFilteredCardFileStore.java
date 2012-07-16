@@ -5,14 +5,14 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
-public class BasicMagicDBXmlFilteredCardStore extends AbstractFilteredCardStore<IMagicCard> {
+public class BasicMagicDBFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
 	protected VirtualMultiFileCardStore table;
 
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
 	}
 
-	protected BasicMagicDBXmlFilteredCardStore(VirtualMultiFileCardStore store) {
+	protected BasicMagicDBFilteredCardFileStore(VirtualMultiFileCardStore store) {
 		this.table = store;
 	}
 

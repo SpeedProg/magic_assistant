@@ -11,19 +11,9 @@
 package com.reflexit.magiccards.core.xml.data;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
-
-import com.reflexit.magiccards.core.DataManager;
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Object that holds xml. Fields should not be renamed as well as class anme itself.
@@ -38,56 +28,35 @@ public class CardCollectionStoreObject {
 	public Properties properties = new Properties();
 	public List list;
 	public transient File file;
-	public transient static XStream xstream;
-	static {
-		xstream = DataManager.getXStream();
-		xstream.alias("com.reflexit.magiccards.core.xml.LibraryCardStore", CardCollectionStoreObject.class);
-		xstream.alias("com.reflexit.magiccards.core.xml.DeckFileCardStore", CardCollectionStoreObject.class);
-		xstream.alias("cards", CardCollectionStoreObject.class);
-		xstream.setClassLoader(CardCollectionStoreObject.class.getClassLoader());
-		xstream.registerConverter(new MagicCardPhysicalConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
-		xstream.registerConverter(new MagicCardConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
-	}
+	public static transient IStoreHandler formatHandler = new MagicXmlStreamHandler();
 
 	public CardCollectionStoreObject() {
 		// private constructor
 	}
 
 	public static CardCollectionStoreObject initFromFile(File file) throws IOException {
-		if (file.exists() && file.length() > 0) {
-			FileInputStream is = new FileInputStream(file);
-			Charset encoding = Charset.forName("utf-8");
-			Object object = xstream.fromXML(new InputStreamReader(is, encoding));
-			is.close();
-			CardCollectionStoreObject store = convertToStore(object);
-			store.file = file;
-			return store;
-		} else {
-			// create empty file
-			CardCollectionStoreObject store = new CardCollectionStoreObject();
-			store.file = file;
-			store.save();
-			return store;
-		}
-	}
-
-	public void save() throws FileNotFoundException {
-		OutputStream out = new FileOutputStream(this.file);
-		xstream.toXML(this, new OutputStreamWriter(out, Charset.forName("utf-8")));
+		long time = System.currentTimeMillis();
 		try {
-			out.close();
-		} catch (IOException e) {
-			// ignore
+			if (file.exists() && file.length() > 0) {
+				return formatHandler.load(file);
+			} else {
+				// create empty file
+				CardCollectionStoreObject store = new CardCollectionStoreObject();
+				store.file = file;
+				store.save();
+				return store;
+			}
+		} finally {
+			System.err.println("load " + file.getName() + "  took " + (System.currentTimeMillis() - time) + " ms");
 		}
 	}
 
-	/**
-	 * @param object
-	 * @return
-	 */
-	private static CardCollectionStoreObject convertToStore(Object object) {
-		if (object instanceof CardCollectionStoreObject)
-			return (CardCollectionStoreObject) object;
-		return null;
+	public void save() throws IOException {
+		long time = System.currentTimeMillis();
+		try {
+			formatHandler.save(this);
+		} finally {
+			System.err.println("save " + file.getName() + "  took " + (System.currentTimeMillis() - time) + "  ms");
+		}
 	}
 }

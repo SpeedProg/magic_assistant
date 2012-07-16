@@ -11,11 +11,11 @@ import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStore {
-	private static MagicDBXmlFilteredCardStore instance;
+public class MagicDBFilteredCardFileStore extends BasicMagicDBFilteredCardFileStore {
+	private static MagicDBFilteredCardFileStore instance;
 	private ArrayList<File> files;
 
-	private MagicDBXmlFilteredCardStore() {
+	private MagicDBFilteredCardFileStore() {
 		super(new VirtualMultiFileCardStore());
 		instance = this;
 	}
@@ -57,7 +57,7 @@ public class MagicDBXmlFilteredCardStore extends BasicMagicDBXmlFilteredCardStor
 
 	public static IFilteredCardStore getInstance() {
 		if (instance == null)
-			new MagicDBXmlFilteredCardStore();
+			new MagicDBFilteredCardFileStore();
 		return instance;
 	}
 }

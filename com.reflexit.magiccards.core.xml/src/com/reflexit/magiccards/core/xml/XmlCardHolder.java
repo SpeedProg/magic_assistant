@@ -26,7 +26,6 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -46,7 +45,7 @@ public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
 
 	public IFilteredCardStore getMagicDBFilteredStore() {
-		return MagicDBXmlFilteredCardStore.getInstance();
+		return MagicDBFilteredCardFileStore.getInstance();
 	}
 
 	public ICardStore getMagicDBStore() {
@@ -54,15 +53,15 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
-		return new BasicMagicDBXmlFilteredCardStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
+		return new BasicMagicDBFilteredCardFileStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
 	}
 
 	public IFilteredCardStore getLibraryFilteredStore() {
-		return LibraryXmlFilteredCardStore.getInstance();
+		return LibraryFilteredCardFileStore.getInstance();
 	}
 
 	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy() {
-		return new BasicLibraryXmlFilteredCardStore((CollectionMultiFileCardStore) getLibraryCardStore());
+		return new BasicLibraryFilteredCardFileStore((CollectionMultiFileCardStore) getLibraryCardStore());
 	}
 
 	public ICardStore getLibraryCardStore() {
@@ -70,7 +69,7 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public IFilteredCardStore getCardCollectionFilteredStore(String filename) {
-		return new DeckXmlFilteredCardStore(filename);
+		return new DeckFilteredCardFileStore(filename);
 	}
 
 	public ICardStore loadFromXml(String filename) {
@@ -86,7 +85,8 @@ public class XmlCardHolder implements ICardHandler {
 			try {
 				long time = System.currentTimeMillis();
 				loadFromFlatResource(abbr + ".txt");
-				System.err.println("Loading " + abbr + " took " + (System.currentTimeMillis() - time) / 1000 + " s");
+				long nowtime = System.currentTimeMillis() - time;
+				System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " + nowtime % 1000 + " ms");
 			} catch (IOException e) {
 				// ignore
 			}
@@ -128,49 +128,6 @@ public class XmlCardHolder implements ICardHandler {
 		// store.addAll(more);
 		int rec = store.size() - init;
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
-	}
-
-	// private ArrayList<IMagicCard> fixCards(ArrayList<IMagicCard> list) {
-	// ArrayList<IMagicCard> more = new ArrayList<IMagicCard>();
-	// try {
-	// for (int i = 0; i < list.size(); i++) {
-	// MagicCard card = (MagicCard) list.get(i);
-	// card.setExtraFields();
-	// if (card.getPart() != null) {
-	// MagicCard brother = null;
-	// if (i + 1 < list.size()) {
-	// MagicCard next = (MagicCard) list.get(i + 1);
-	// if (next.getName().equals(card.getName())) {
-	// brother = next;
-	// i++;
-	// }
-	// }
-	// if (brother == null) {
-	// // no brother - they have same mid
-	// brother = card.cloneCard();
-	// flipParts(brother);
-	// more.add(brother);
-	// } else {
-	// brother.setExtraFields();
-	// if (card.getCardId() < brother.getCardId()) {
-	// flipParts(brother, card.getCardId());
-	// } else {
-	// flipParts(card, brother.getCardId());
-	// }
-	// }
-	// }
-	// }
-	// } catch (Exception e) {
-	// MagicLogger.log(e);
-	// }
-	// return more;
-	// }
-	protected void flipParts(MagicCard card) {
-		String opart = card.getPart();
-		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
-		((ICardModifiable) card).setObjectByField(MagicCardField.PART, part);
-		((ICardModifiable) card).setObjectByField(MagicCardField.OTHER_PART, opart);
-		((ICardModifiable) card).setObjectByField(MagicCardField.NAME, card.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
 	}
 
 	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
@@ -352,7 +309,7 @@ public class XmlCardHolder implements ICardHandler {
 	public boolean copyCards(Collection cards1, Location to) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
 		CardGroup.expandGroups(cards, cards1);
-		ICardStore<IMagicCard> store = LibraryXmlFilteredCardStore.getInstance().getStore(to);
+		ICardStore<IMagicCard> store = LibraryFilteredCardFileStore.getInstance().getStore(to);
 		if (store == null)
 			return false;
 		boolean virtual = store.isVirtual();
@@ -374,7 +331,7 @@ public class XmlCardHolder implements ICardHandler {
 	public boolean moveCards(Collection cards1, Location from, Location to) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
 		CardGroup.expandGroups(cards, cards1);
-		ICardStore<IMagicCard> sto = LibraryXmlFilteredCardStore.getInstance().getStore(to);
+		ICardStore<IMagicCard> sto = LibraryFilteredCardFileStore.getInstance().getStore(to);
 		if (sto == null)
 			return false;
 		boolean virtual = sto.isVirtual();
@@ -410,7 +367,7 @@ public class XmlCardHolder implements ICardHandler {
 				}
 			}
 			if (from != null && allthesame) {
-				ICardStore<IMagicCard> sfrom2 = LibraryXmlFilteredCardStore.getInstance().getStore(from);
+				ICardStore<IMagicCard> sfrom2 = LibraryFilteredCardFileStore.getInstance().getStore(from);
 				if (sfrom2 != null)
 					sfrom2.removeAll(cards);
 			} else {
@@ -419,7 +376,7 @@ public class XmlCardHolder implements ICardHandler {
 					if (!(card instanceof MagicCardPhysical))
 						continue;
 					Location from2 = ((MagicCardPhysical) card).getLocation();
-					ICardStore<IMagicCard> sfrom2 = LibraryXmlFilteredCardStore.getInstance().getStore(from2);
+					ICardStore<IMagicCard> sfrom2 = LibraryFilteredCardFileStore.getInstance().getStore(from2);
 					sfrom2.remove(card);
 				}
 			}
