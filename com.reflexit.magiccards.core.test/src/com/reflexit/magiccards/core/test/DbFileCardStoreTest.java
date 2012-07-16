@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.test;
 
 import java.io.File;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -17,10 +18,11 @@ public class DbFileCardStoreTest extends TestCase {
 	protected MagicCard m1;
 	protected MagicCard m2;
 	protected File tempFile;
+	private Location loc;
 
 	@Override
 	protected void setUp() throws Exception {
-		Location loc = new Location("aaa.xml");
+		loc = new Location("aaa.xml");
 		tempFile = File.createTempFile("aaa", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new DbFileCardStore(tempFile, loc, true);
@@ -47,5 +49,17 @@ public class DbFileCardStoreTest extends TestCase {
 		this.store.add(a2);
 		assertEquals(2, this.store.size());
 		assertEquals(2, this.store.getCount());
+	}
+
+	public void testSaveLoad() {
+		MagicCard a1 = m1.cloneCard();
+		MagicCard a2 = m1.cloneCard();
+		this.store.add(a1);
+		a2.setProperty(MagicCardField.PART, "test");
+		this.store.add(a2);
+		DbFileCardStore store2 = new DbFileCardStore(tempFile, loc, true);
+		Iterator<IMagicCard> iterator = store2.iterator();
+		assertEquals(a1, iterator.next());
+		assertEquals(a2, iterator.next());
 	}
 }

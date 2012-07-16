@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
-import com.reflexit.magiccards.core.xml.data.MagicCardPhysicalConvertor;
+import com.reflexit.magiccards.core.xml.xstream.MagicCardPhysicalConvertor;
 import com.thoughtworks.xstream.XStream;
 
 /**
