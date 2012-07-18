@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
@@ -275,7 +274,7 @@ public class XmlCardHolder implements ICardHandler {
 					try {
 						rec += downloadAndStoreSet(edition.getName(), options, list, new SubCoreProgressMonitor(pm, 100));
 					} catch (Exception e) {
-						Activator.log(e);
+						MagicLogger.log(e);
 					}
 				}
 			} finally {
