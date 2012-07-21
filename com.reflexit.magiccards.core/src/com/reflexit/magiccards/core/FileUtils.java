@@ -69,6 +69,22 @@ public class FileUtils {
 		return fileData.toString();
 	}
 
+	public static int readFileAsBytes(File file, byte[] buf) throws IOException {
+		InputStream st = new FileInputStream(file);
+		int numRead = 0;
+		int offset = 0;
+		int len = buf.length;
+		while ((numRead = st.read(buf, offset, len)) != -1) {
+			// just fill the buffer
+			offset += numRead;
+			len -= numRead;
+			if (len >= 0)
+				break;
+		}
+		st.close();
+		return offset;
+	}
+
 	public static File getWorkspaceFile() {
 		String str = System.getProperty("osgi.instance.area");
 		if (str != null) {
