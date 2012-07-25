@@ -218,12 +218,8 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 	private void layout() {
 		if (children == null)
 			return;
-		CardGroup[] cardGroups = fstore.getCardGroups();
 		HashMap<IMagicCard, Integer> map = new HashMap<IMagicCard, Integer>();
-		for (int i = 0; i < cardGroups.length; i++) {
-			CardGroup cardGroup = cardGroups[i];
-			i = addFromGroup(cardGroup, map, i);
-		}
+		addFromGroup(fstore.getCardGroupRoot(), map, -1);
 		CardStackLayout layout = new CardStackLayout();
 		int j = 0;
 		for (Iterator<CardFigure> iterator = children.iterator(); iterator.hasNext(); j++) {
@@ -254,12 +250,14 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 	}
 
 	private int addFromGroup(CardGroup cardGroup, HashMap<IMagicCard, Integer> map, int i) {
+		int gi = i;
 		for (Iterator iterator = cardGroup.iterator(); iterator.hasNext();) {
 			Object el = iterator.next();
 			if (el instanceof IMagicCard)
-				map.put((IMagicCard) el, i);
+				map.put((IMagicCard) el, gi);
 			else if (el instanceof CardGroup) {
-				i = addFromGroup((CardGroup) el, map, ++i);
+				i++;
+				i = addFromGroup((CardGroup) el, map, i);
 			}
 		}
 		return i;
