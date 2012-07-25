@@ -4,8 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.reflexit.magiccards.core.xml"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/com.reflexit.magiccards.core.nl1"/>
-	<classpathentry kind="lib" path="/com.reflexit.magiccards.core.nl1/bin"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

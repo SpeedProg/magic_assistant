@@ -58,5 +58,7 @@ public class MagicCardPhysicalConvertorTest extends TestCase {
 		String xml = xstream.toXML(phi);
 		Object object = xstream.fromXML(xml);
 		assertEquals(phi, object);
+		MagicCardPhysical p = (MagicCardPhysical) object;
+		assert (p.getBase().getPhysicalCards().contains(p));
 	}
 }

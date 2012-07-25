@@ -24,9 +24,9 @@ public class CardGroupTest extends TestCase {
 		}
 	}
 
-	public void populateGroup(CardGroup g, Object[] some) {
+	public void populateGroup(CardGroup g, ICard[] some) {
 		for (int i = 0; i < some.length; i++) {
-			Object object = some[i];
+			ICard object = some[i];
 			g.add(object);
 		}
 	}
@@ -53,7 +53,7 @@ public class CardGroupTest extends TestCase {
 		for (int j = 0; j < cards.length; j++) {
 			((ICardModifiable) cards[j]).setObjectByField(field, value);
 		}
-		group.refresh();
+		group.rehash();
 		assertEquals(expected, group.getBase().getObjectByField(field));
 	}
 

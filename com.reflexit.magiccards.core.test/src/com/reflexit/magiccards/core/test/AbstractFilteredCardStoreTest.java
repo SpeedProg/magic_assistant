@@ -88,7 +88,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		this.filter.setSortField(MagicCardField.COST, true);
 		this.filter.setGroupField(MagicCardField.COST);
 		this.deck.update(this.filter);
-		Object[] cardGroups = this.deck.getCardGroups();
+		Object[] cardGroups = this.deck.getCardGroupRoot().getChildren();
 		assertEquals(3, cardGroups.length);
 		assertEquals("White", ((CardGroup) cardGroups[0]).getName());
 		assertEquals("Black", ((CardGroup) cardGroups[1]).getName());
@@ -169,6 +169,23 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		assertEquals(card1, cards[0]);
 		assertEquals(card2, cards[1]);
 		assertEquals(card3, cards[2]);
+	}
+
+	public void testSortAndGroup() {
+		MagicCard a0 = addCard(RED_COST, INSTANT, "b1");
+		MagicCard a1 = addCard(BLACK_COST, INSTANT, "a1");
+		MagicCard a2 = addCard(WHITE_COST, INSTANT, "a2");
+		MagicCard a3 = addCard(RED_COST, INSTANT, "a3");
+		MagicCard a4 = addCard(ONE_COST, ARTIFACT, "b2");
+		this.filter.setGroupField(MagicCardField.COST);
+		this.filter.setSortField(MagicCardField.NAME, true);
+		MagicCard[] cards = getFilteredCards();
+		assertEquals(5, cards.length);
+		assertEquals(a1, cards[0]);
+		assertEquals(a2, cards[1]);
+		assertEquals(a3, cards[2]);
+		assertEquals(a0, cards[3]);
+		assertEquals(a4, cards[4]);
 	}
 
 	public void testSortBy2() {
