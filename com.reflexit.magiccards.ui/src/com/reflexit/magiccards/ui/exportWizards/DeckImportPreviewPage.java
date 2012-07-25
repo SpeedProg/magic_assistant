@@ -73,9 +73,9 @@ public class DeckImportPreviewPage extends WizardPage {
 						textFile += line + "\n";
 						i++;
 					}
+					st.close();
 				}
 				text.setText(textFile);
-				st.close();
 			} catch (IOException e) {
 				setErrorMessage("Cannot open file: " + e.getMessage());
 				return;
