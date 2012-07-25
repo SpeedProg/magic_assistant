@@ -4,9 +4,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 
-import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.IMagicCard;
 
 public abstract class AbstractColumn extends ColumnLabelProvider {
 	protected final ICardField dataIndex;
@@ -31,12 +30,8 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof CardGroup) {
-			ICardField field = getDataField();
-			return ((CardGroup) element).getLabelByField(field);
-		}
-		if (element instanceof IMagicCard) {
-			IMagicCard card = (IMagicCard) element;
+		if (element instanceof ICard) {
+			ICard card = (ICard) element;
 			try {
 				ICardField field = getDataField();
 				Object value = card.getObjectByField(field);

@@ -127,13 +127,13 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 		}
 		ICardStore cardStore = getFilteredStore().getCardStore();
 		cardStore.addAll(list);
-		CardGroup[] elements;
+		Object[] elements;
 		synchronized (getFilteredStore()) {
 			getFilteredStore().update(getFilter());
-			elements = getFilteredStore().getCardGroups();
+			elements = getFilteredStore().getCardGroupRoot().getChildren();
 		}
 		for (int i = 0; i < elements.length; i++) {
-			CardGroup cardGroup = elements[i];
+			CardGroup cardGroup = (CardGroup) elements[i];
 			// suppose to be groupped by set
 			if (cardGroup.getFieldIndex() != MagicCardField.SET)
 				continue;

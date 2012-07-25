@@ -48,6 +48,10 @@ public class MagicColumnCollection extends ColumnCollection {
 		}
 		this.columns.add(new LanguageColumn());
 		this.columns.add(new TextColumn());
+		if (!myCards) {
+			columns.add(new OwnCountColumn());
+			columns.add(new OwnUniqueColumn());
+		}
 	}
 
 	protected GroupColumn createGroupColumn() {

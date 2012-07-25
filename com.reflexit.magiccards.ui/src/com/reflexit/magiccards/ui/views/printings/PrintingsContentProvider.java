@@ -26,7 +26,7 @@ public class PrintingsContentProvider<T> implements ITreeContentProvider {
 			if (isFlat(fstore)) {
 				return fstore.getElements();
 			} else
-				return fstore.getCardGroups();
+				return fstore.getCardGroupRoot().getChildren();
 		}
 		return null;
 	}
@@ -50,7 +50,7 @@ public class PrintingsContentProvider<T> implements ITreeContentProvider {
 			if (isFlat(fstore)) {
 				return fstore.getSize() > 0;
 			} else
-				return fstore.getCardGroups().length > 0;
+				return fstore.getCardGroupRoot().size() > 0;
 		}
 		return false;
 	}
