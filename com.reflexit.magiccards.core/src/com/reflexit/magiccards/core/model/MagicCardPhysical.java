@@ -35,9 +35,15 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 			this.forTrade = phi.forTrade;
 			this.special = phi.special;
 		}
+		if (card != null)
+			this.card.addPhysicalCard(this);
 		if (location == null)
 			this.location = Location.NO_WHERE;
 		this.location = location;
+	}
+
+	public void delete() {
+		this.card.removePhysicalCard(this);
 	}
 
 	@Override
@@ -85,6 +91,7 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 
 	public void setMagicCard(MagicCard card) {
 		this.card = card;
+		card.addPhysicalCard(this);
 	}
 
 	public int getCount() {
@@ -252,34 +259,34 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 			return false;
 		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
 		switch (pfield) {
-		case COUNT:
-			setCount(Integer.parseInt(value));
-			break;
-		case PRICE:
-			setPrice(Float.parseFloat(value));
-			break;
-		case COMMENT:
-			setComment(value);
-			break;
-		case LOCATION:
-			setLocation(new Location(value));
-			break;
-		case CUSTOM:
-			setCustom(value);
-			break;
-		case OWNERSHIP:
-			setOwn(Boolean.parseBoolean(value));
-			break;
-		case SPECIAL:
-			setSpecial(value);
-			break;
-		case FORTRADECOUNT:
-			setForTrade(Integer.parseInt(value));
-			break;
-		case SIDEBOARD:
-			return false; // not settable
-		default:
-			return false;
+			case COUNT:
+				setCount(Integer.parseInt(value));
+				break;
+			case PRICE:
+				setPrice(Float.parseFloat(value));
+				break;
+			case COMMENT:
+				setComment(value);
+				break;
+			case LOCATION:
+				setLocation(new Location(value));
+				break;
+			case CUSTOM:
+				setCustom(value);
+				break;
+			case OWNERSHIP:
+				setOwn(Boolean.parseBoolean(value));
+				break;
+			case SPECIAL:
+				setSpecial(value);
+				break;
+			case FORTRADECOUNT:
+				setForTrade(Integer.parseInt(value));
+				break;
+			case SIDEBOARD:
+				return false; // not settable
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -292,24 +299,24 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 			return null;
 		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
 		switch (pfield) {
-		case COUNT:
-			return getCount();
-		case PRICE:
-			return getPrice();
-		case COMMENT:
-			return getComment();
-		case LOCATION:
-			return getLocation();
-		case CUSTOM:
-			return getCustom();
-		case OWNERSHIP:
-			return isOwn();
-		case FORTRADECOUNT:
-			return getForTrade();
-		case SPECIAL:
-			return getSpecial();
-		case SIDEBOARD:
-			return isSideboard();
+			case COUNT:
+				return getCount();
+			case PRICE:
+				return getPrice();
+			case COMMENT:
+				return getComment();
+			case LOCATION:
+				return getLocation();
+			case CUSTOM:
+				return getCustom();
+			case OWNERSHIP:
+				return isOwn();
+			case FORTRADECOUNT:
+				return getForTrade();
+			case SPECIAL:
+				return getSpecial();
+			case SIDEBOARD:
+				return isSideboard();
 		}
 		return null;
 	}
@@ -431,5 +438,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 
 	public int getFlipId() {
 		return card.getFlipId();
+	}
+
+	public int getOwnCount() {
+		if (isOwn())
+			return getCount();
+		return 0;
 	}
 }

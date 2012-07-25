@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -37,7 +38,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	private static final CardGroup[] EMPTY_CARD_GROUP = new CardGroup[0];
 	protected Collection filteredList = null;
-	protected CardGroup rootGroup = new CardGroup(null, "Root");
+	protected final CardGroup rootGroup = new CardGroup(null, "Root");
 	protected boolean initialized = false;
 	protected MagicCardFilter filter;
 
@@ -173,8 +174,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			rootGroup.clear(); // was already
 			if (filter.getGroupField() == MagicCardField.TYPE) {
 				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
-				for (CardGroup gr : buildTypeGroups.getCardGroups()) {
-					rootGroup.add(gr);
+				for (Object gr : buildTypeGroups.getChildren()) {
+					rootGroup.add((ICard) gr);
 				}
 			} else {
 				for (Object element : filteredList) {
@@ -186,6 +187,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 			removeEmptyGroups();
+			rootGroup.setComparator(getSortComparator(filter));
 		}
 	}
 
@@ -238,7 +240,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 		} else {
-			Comparator<IMagicCard> comp = getSortComparator(filter);
+			Comparator<ICard> comp = getSortComparator(filter);
 			filteredList = new TreeSet<IMagicCard>(comp);
 			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
 				IMagicCard elem = iterator.next();
@@ -285,8 +287,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return filteredList;
 	}
 
-	protected Comparator<IMagicCard> getSortComparator(MagicCardFilter filter) {
-		Comparator<IMagicCard> comp = filter.getSortOrder().getComparator();
+	protected Comparator<ICard> getSortComparator(MagicCardFilter filter) {
+		Comparator<ICard> comp = filter.getSortOrder().getComparator();
 		return comp;
 	}
 
@@ -319,20 +321,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return new ArrayList<T>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getCardGroups()
-	 */
-	public synchronized CardGroup[] getCardGroups() {
-		if (rootGroup.size() == 0)
-			return EMPTY_CARD_GROUP;
-		return rootGroup.getCardGroups();
-	}
-
-	public CardGroup getCardGroup(int index) {
-		CardGroup[] cardGroups = getCardGroups();
-		return cardGroups[index];
+	public synchronized CardGroup getCardGroupRoot() {
+		return rootGroup;
 	}
 
 	public Location getLocation() {

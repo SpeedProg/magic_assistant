@@ -43,9 +43,7 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	 * 
 	 * @return
 	 */
-	public CardGroup[] getCardGroups();
-
-	public CardGroup getCardGroup(int index);
+	public CardGroup getCardGroupRoot();
 
 	public boolean contains(T card);
 }

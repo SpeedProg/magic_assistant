@@ -58,6 +58,8 @@ public class CollectionsContainer extends CardOrganizer {
 			InputStream openStream = new FileInputStream(mem);
 			try {
 				int k = openStream.read(headerBytes);
+				if (k == -1)
+					return false;
 				String header = new String(headerBytes, 0, k);
 				if (header.contains("<type>deck</type"))
 					return true;

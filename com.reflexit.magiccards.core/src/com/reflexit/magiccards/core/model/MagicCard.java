@@ -2,8 +2,11 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +34,7 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	private transient int cmc = -1;
 	private int enId;
 	private LinkedHashMap<String, String> properties;
+	private transient Set<MagicCardPhysical> realcards;
 
 	/*
 	 * (non-Javadoc)
@@ -311,54 +315,58 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			return null;
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
-		case ID:
-			return Integer.valueOf(getCardId());
-		case NAME:
-			return (this.name);
-		case COST:
-			return (this.cost);
-		case TYPE:
-			return (this.type);
-		case POWER:
-			return (this.power);
-		case TOUGHNESS:
-			return (this.toughness);
-		case ORACLE:
-			return (this.oracleText);
-		case SET:
-			return (this.edition);
-		case RARITY:
-			return (this.rarity);
-		case CTYPE:
-			return (getColorType());
-		case CMC:
-			return (Integer.valueOf(getCmc()));
-		case DBPRICE:
-			return (this.dbprice);
-		case RATING:
-			return (this.rating);
-		case ARTIST:
-			return (this.artist);
-		case RULINGS:
-			return (this.rulings);
-		case LANG:
-			return getLanguage();
-		case COLLNUM:
-			return (this.num);
-		case TEXT:
-			return getText();
-		case ENID:
-			return (this.enId);
-		case PROPERTIES:
-			return (this.properties);
-		case FLIPID:
-			return getProperty(MagicCardField.FLIPID);
-		case OTHER_PART:
-			return getProperty(MagicCardField.OTHER_PART);
-		case PART:
-			return getProperty(MagicCardField.PART);
-		default:
-			break;
+			case ID:
+				return Integer.valueOf(getCardId());
+			case NAME:
+				return (this.name);
+			case COST:
+				return (this.cost);
+			case TYPE:
+				return (this.type);
+			case POWER:
+				return (this.power);
+			case TOUGHNESS:
+				return (this.toughness);
+			case ORACLE:
+				return (this.oracleText);
+			case SET:
+				return (this.edition);
+			case RARITY:
+				return (this.rarity);
+			case CTYPE:
+				return (getColorType());
+			case CMC:
+				return (Integer.valueOf(getCmc()));
+			case DBPRICE:
+				return (this.dbprice);
+			case RATING:
+				return (this.rating);
+			case ARTIST:
+				return (this.artist);
+			case RULINGS:
+				return (this.rulings);
+			case LANG:
+				return getLanguage();
+			case COLLNUM:
+				return (this.num);
+			case TEXT:
+				return getText();
+			case ENID:
+				return (this.enId);
+			case PROPERTIES:
+				return (this.properties);
+			case FLIPID:
+				return getProperty(MagicCardField.FLIPID);
+			case OTHER_PART:
+				return getProperty(MagicCardField.OTHER_PART);
+			case PART:
+				return getProperty(MagicCardField.PART);
+			case OWN_COUNT:
+				return getOwnCount();
+			case UNIQUE:
+				return getOwnUnique();
+			default:
+				break;
 		}
 		return null;
 	}
@@ -426,77 +434,77 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			return false;
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
-		case ID:
-			setCardId(Integer.parseInt(value));
-			break;
-		case NAME:
-			setName(value);
-			break;
-		case COST:
-			setCost(value);
-			break;
-		case TYPE:
-			setType(value);
-			break;
-		case POWER:
-			setPower(value);
-			break;
-		case TOUGHNESS:
-			setToughness(value);
-			break;
-		case ORACLE:
-			setOracleText(value);
-			break;
-		case SET:
-			setSet(value);
-			break;
-		case RARITY:
-			setRarity(value);
-			break;
-		case CTYPE:
-			setColorType(value);
-			break;
-		case CMC:
-			setCmc(Integer.parseInt(value));
-			break;
-		case DBPRICE:
-			setDbPrice(Float.parseFloat(value));
-			break;
-		case RATING:
-			setCommunityRating(Float.parseFloat(value));
-			break;
-		case ARTIST:
-			setArtist(value);
-			break;
-		case RULINGS:
-			setRulings(value);
-			break;
-		case LANG:
-			setLanguage(value);
-			break;
-		case COLLNUM:
-			setCollNumber(value);
-			break;
-		case TEXT:
-			setText(value);
-			break;
-		case ENID:
-			setEnglishCardId(Integer.parseInt(value));
-			break;
-		case PROPERTIES:
-			setProperties(value);
-			break;
-		case FLIPID:
-			setProperty(MagicCardField.FLIPID, value);
-			break;
-		case PART:
-			setProperty(MagicCardField.PART, value);
-			break;
-		case OTHER_PART:
-			setProperty(MagicCardField.OTHER_PART, value);
-			break;
-		default:
-			return false;
+			case ID:
+				setCardId(Integer.parseInt(value));
+				break;
+			case NAME:
+				setName(value);
+				break;
+			case COST:
+				setCost(value);
+				break;
+			case TYPE:
+				setType(value);
+				break;
+			case POWER:
+				setPower(value);
+				break;
+			case TOUGHNESS:
+				setToughness(value);
+				break;
+			case ORACLE:
+				setOracleText(value);
+				break;
+			case SET:
+				setSet(value);
+				break;
+			case RARITY:
+				setRarity(value);
+				break;
+			case CTYPE:
+				setColorType(value);
+				break;
+			case CMC:
+				setCmc(Integer.parseInt(value));
+				break;
+			case DBPRICE:
+				setDbPrice(Float.parseFloat(value));
+				break;
+			case RATING:
+				setCommunityRating(Float.parseFloat(value));
+				break;
+			case ARTIST:
+				setArtist(value);
+				break;
+			case RULINGS:
+				setRulings(value);
+				break;
+			case LANG:
+				setLanguage(value);
+				break;
+			case COLLNUM:
+				setCollNumber(value);
+				break;
+			case TEXT:
+				setText(value);
+				break;
+			case ENID:
+				setEnglishCardId(Integer.parseInt(value));
+				break;
+			case PROPERTIES:
+				setProperties(value);
+				break;
+			case FLIPID:
+				setProperty(MagicCardField.FLIPID, value);
+				break;
+			case PART:
+				setProperty(MagicCardField.PART, value);
+				break;
+			case OTHER_PART:
+				setProperty(MagicCardField.OTHER_PART, value);
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -624,5 +632,51 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	public String getPart() {
 		String part = getProperty(MagicCardField.PART);
 		return part;
+	}
+
+	public void addPhysicalCard(MagicCardPhysical p) {
+		if (p.getBase() != this)
+			throw new IllegalArgumentException("Mistmatched parent");
+		if (realcards == null) {
+			realcards = Collections.newSetFromMap(new WeakHashMap<MagicCardPhysical, Boolean>(3));
+			realcards.add(p);
+			return;
+		}
+		realcards.add(p);
+	}
+
+	public Set<MagicCardPhysical> getPhysicalCards() {
+		if (realcards == null)
+			return Collections.emptySet();
+		return realcards;
+	}
+
+	public void removePhysicalCard(MagicCardPhysical p) {
+		if (realcards == null) {
+			throw new IllegalStateException();
+		}
+		realcards.remove(p);
+	}
+
+	public int getOwnCount() {
+		if (realcards == null)
+			return 0;
+		int ocount = 0;
+		for (MagicCardPhysical p : realcards) {
+			if (p.isOwn())
+				ocount += p.getCount();
+		}
+		return ocount;
+	}
+
+	public int getOwnUnique() {
+		if (realcards == null)
+			return 0;
+		int ocount = 0;
+		for (MagicCardPhysical p : realcards) {
+			if (p.isOwn())
+				return 1;
+		}
+		return ocount;
 	}
 }

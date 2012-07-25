@@ -12,17 +12,19 @@ public class SortOrder extends ArrayList<MagicCardComparator> implements Compara
 		SortOrder sortOrder = this;
 		int dir = sortOrder.isAccending() ? 1 : -1;
 		int d = 0;
-		if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
-			IMagicCard c1 = (IMagicCard) o1;
-			IMagicCard c2 = (IMagicCard) o2;
-			for (int i = sortOrder.size() - 1; i >= 0; i--) {
-				MagicCardComparator elem = sortOrder.get(i);
-				d = elem.compare(o1, o2);
-				if (d != 0)
-					return d;
-			}
-			if (d == 0 && c1.getCardId() != 0) {
-				d = dir * (c1.getCardId() - c2.getCardId());
+		for (int i = sortOrder.size() - 1; i >= 0; i--) {
+			MagicCardComparator elem = sortOrder.get(i);
+			d = elem.compare(o1, o2);
+			if (d != 0)
+				return d;
+		}
+		if (d == 0) {
+			if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
+				IMagicCard c1 = (IMagicCard) o1;
+				IMagicCard c2 = (IMagicCard) o2;
+				if (c1.getCardId() != 0) {
+					d = dir * (c1.getCardId() - c2.getCardId());
+				}
 			}
 		}
 		if (d != 0)

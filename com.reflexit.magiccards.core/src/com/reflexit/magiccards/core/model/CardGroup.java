@@ -12,30 +12,39 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Alena
  * 
  */
-public class CardGroup implements ICardCountable {
+public class CardGroup implements ICardCountable, ICard {
 	private String name;
 	private ICardField groupField;
 	private int count;
-	private ArrayList<Object> children;
+	private List<ICard> children;
 	private static final String OWNUSIZE_KEY = "ownusize";
+	private static final String OWNCOUNT_KEY = "owncount";
 	private HashMap<String, Object> props;
-	private LinkedHashMap<String, CardGroup> subs;
+	private Map<String, CardGroup> subs;
 	private MagicCardPhysical base;
+	private Comparator comparator;
+	private boolean sorted = false;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
 		this.name = name;
 		this.children = new ArrayList(2);
-		this.subs = new LinkedHashMap<String, CardGroup>(2);
+		this.subs = new LinkedHashMap<String, CardGroup>(4);
+		this.sorted = true;
 	}
 
 	public synchronized IMagicCard getBase() {
@@ -131,6 +140,28 @@ public class CardGroup implements ICardCountable {
 		return count;
 	}
 
+	public synchronized int getOwnCount() {
+		Integer iOwn = (Integer) getProperty(OWNCOUNT_KEY);
+		if (iOwn != null) {
+			return iOwn.intValue();
+		}
+		int owncount = 0;
+		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
+			ICard object = iterator.next();
+			if (object instanceof MagicCardPhysical) {
+				if (((MagicCardPhysical) object).isOwn()) {
+					owncount += ((MagicCardPhysical) object).getCount();
+				}
+			} else if (object instanceof MagicCard) {
+				owncount += ((MagicCard) object).getOwnCount();
+			} else if (object instanceof CardGroup) {
+				owncount += ((CardGroup) object).getOwnCount();
+			}
+		}
+		setProperty(OWNCOUNT_KEY, owncount);
+		return owncount;
+	}
+
 	public synchronized int getOwnUSize() {
 		Integer iOwn = (Integer) getProperty(OWNUSIZE_KEY);
 		if (iOwn != null) {
@@ -138,11 +169,19 @@ public class CardGroup implements ICardCountable {
 		}
 		int ownusize = 0;
 		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
-		for (Iterator<Object> iterator = children.iterator(); iterator.hasNext();) {
-			Object object = iterator.next();
+		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
+			ICard object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
 				if (((MagicCardPhysical) object).isOwn()) {
 					uniq.add(((MagicCardPhysical) object).getBase());
+				}
+			} else if (object instanceof MagicCard) {
+				Set<MagicCardPhysical> physicalCards = ((MagicCard) object).getPhysicalCards();
+				for (MagicCardPhysical p : physicalCards) {
+					if (p.isOwn()) {
+						uniq.add((IMagicCard) object);
+						break;
+					}
 				}
 			} else if (object instanceof CardGroup) {
 				ownusize += ((CardGroup) object).getOwnUSize();
@@ -157,26 +196,34 @@ public class CardGroup implements ICardCountable {
 		return this.groupField;
 	}
 
+	private List getChildrenList() {
+		if (!sorted) {
+			if (comparator != null && children.size() > 1)
+				Collections.sort(children, comparator);
+			sorted = true;
+		}
+		return children;
+	}
+
 	public synchronized Object[] getChildren() {
-		return children.toArray(new Object[children.size()]);
+		return getChildrenList().toArray(new Object[children.size()]);
 	}
 
 	public synchronized Iterator iterator() {
-		return children.iterator(); // XXX
+		return children.iterator();
 	}
 
 	public synchronized int size() {
 		return this.children.size();
 	}
 
-	public synchronized void add(Object elem) {
+	public synchronized void add(ICard elem) {
 		this.children.add(elem);
 		if (elem instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) elem;
 			subs.put(cardGroup.getName(), (CardGroup) elem);
 		}
-		count = 0;
-		base = null;
+		rehash();
 	}
 
 	public synchronized void remove(Object elem) {
@@ -185,15 +232,15 @@ public class CardGroup implements ICardCountable {
 			CardGroup cardGroup = (CardGroup) elem;
 			subs.remove(cardGroup.getName());
 		}
-		count = 0;
-		base = null;
+		rehash();
 	}
 
 	/**
 	 * @param index
 	 */
 	public synchronized Object getChildAtIndex(int index) {
-		return this.children.get(index);
+		Object object = getChildrenList().get(index);
+		return object;
 	}
 
 	/*
@@ -206,7 +253,7 @@ public class CardGroup implements ICardCountable {
 			return this.name;
 		if (children.size() == 0)
 			return "";
-		Object value = getBase().getObjectByField(f);
+		Object value = getObjectByField(f);
 		if (value == null)
 			return "";
 		return String.valueOf(value);
@@ -271,13 +318,15 @@ public class CardGroup implements ICardCountable {
 	public synchronized void clear() {
 		children.clear();
 		subs.clear();
-		refresh();
+		comparator = null;
+		rehash();
 	}
 
-	public synchronized void refresh() {
+	public synchronized void rehash() {
 		count = 0;
 		props = null;
 		base = null;
+		sorted = false;
 	}
 
 	public synchronized IMagicCard getFirstCard() {
@@ -317,17 +366,13 @@ public class CardGroup implements ICardCountable {
 		}
 	}
 
-	public synchronized CardGroup[] getCardGroups() {
-		return subs.values().toArray(new CardGroup[size()]);
-	}
-
 	public static String getGroupName(IMagicCard elem, ICardField field) {
 		try {
 			if (field == MagicCardField.COST) {
 				return Colors.getColorName(elem.getCost());
 			} else if (field == MagicCardField.CMC) {
 				int ccc = elem.getCmc();
-				if (ccc == 0 && elem.getType().contains("Land")) {
+				if (ccc == 0 && elem.getType() != null && elem.getType().contains("Land")) {
 					return "Land";
 				} else {
 					return String.valueOf(ccc);
@@ -349,5 +394,30 @@ public class CardGroup implements ICardCountable {
 		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
 		expandGroups(res, children);
 		return res;
+	}
+
+	public Object getObjectByField(ICardField field) {
+		if (field == MagicCardField.NAME || field == groupField)
+			return getName();
+		if (size() == 0)
+			return null;
+		if (field == MagicCardField.OWN_COUNT)
+			return getOwnCount();
+		if (field == MagicCardField.UNIQUE)
+			return getOwnUSize();
+		return getBase().getObjectByField(field);
+	}
+
+	public ICard cloneCard() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setComparator(Comparator comparator) {
+		this.comparator = comparator;
+		this.sorted = false;
+		for (Iterator<CardGroup> iterator = subs.values().iterator(); iterator.hasNext();) {
+			CardGroup o = iterator.next();
+			o.setComparator(comparator);
+		}
 	}
 }

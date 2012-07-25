@@ -49,22 +49,21 @@ class MagicCardComparator implements Comparator {
 	public int compare(Object o1, Object o2) {
 		if (o1 == o2)
 			return 0;
-		if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
-			IMagicCard c1 = (IMagicCard) o1;
-			IMagicCard c2 = (IMagicCard) o2;
+		if (o1 instanceof ICard && o2 instanceof ICard) {
+			ICard c1 = (ICard) o1;
+			ICard c2 = (ICard) o2;
 			return compare(c1, c2);
 		}
 		return 0;
 	}
 
-	public int compare(IMagicCard c1, IMagicCard c2) {
+	public int compare(ICard c1, ICard c2) {
 		if (c1 == c2)
 			return 0;
 		int dir = accending ? 1 : -1;
 		ICardField sort = field;
-		ICardField sby = sort;
-		Object a1 = c1.getObjectByField(sby);
-		Object a2 = c2.getObjectByField(sby);
+		Object a1 = c1.getObjectByField(sort);
+		Object a2 = c2.getObjectByField(sort);
 		int d = 0;
 		if (sort == MagicCardField.COST) {
 			a1 = Colors.getColorSort((String) a1);
