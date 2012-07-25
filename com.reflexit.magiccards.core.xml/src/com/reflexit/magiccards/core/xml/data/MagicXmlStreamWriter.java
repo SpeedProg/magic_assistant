@@ -213,14 +213,16 @@ public class MagicXmlStreamWriter {
 			Object o = card.getObjectByField(field);
 			if (o == null)
 				continue; // skip this
-			if (o instanceof Float && ((Float) o).floatValue() == 0)
-				continue;
-			else if (o instanceof Integer && ((Integer) o).intValue() == 0)
-				continue;
-			else if (o instanceof String && ((String) o).length() == 0)
-				continue;
-			else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
-				continue;
+			if (field != MagicCardFieldPhysical.COUNT) {
+				if (o instanceof Float && ((Float) o).floatValue() == 0)
+					continue;
+				else if (o instanceof Integer && ((Integer) o).intValue() == 0)
+					continue;
+				else if (o instanceof String && ((String) o).length() == 0)
+					continue;
+				else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
+					continue;
+			}
 			writer.writeStartElement(field.getJavaField().getName());
 			writer.writeCharacters(String.valueOf(o));
 			writer.writeEndElement();
