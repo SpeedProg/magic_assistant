@@ -6,6 +6,7 @@ public final class CardText extends NLS {
 	private static final String BUNDLE_NAME = CardText.class.getName();
 	public static String Type_Artifact;
 	public static String Type_Basic;
+	public static String Type_Non_Basic;
 	public static String Type_Creature;
 	public static String Type_Enchantment;
 	public static String Type_Instant;

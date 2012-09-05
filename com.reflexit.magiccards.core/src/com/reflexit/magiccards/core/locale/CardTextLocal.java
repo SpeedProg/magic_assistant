@@ -7,6 +7,7 @@ public class CardTextLocal extends LocalizedText {
 	private static final String BUNDLE_NAME = CardText.class.getName();
 	public String Type_Artifact;
 	public String Type_Basic;
+	public String Type_Non_Basic;
 	public String Type_Creature;
 	public String Type_Enchantment;
 	public String Type_Instant;
