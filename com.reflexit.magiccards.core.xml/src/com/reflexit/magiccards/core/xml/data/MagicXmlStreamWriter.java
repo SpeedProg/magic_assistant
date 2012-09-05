@@ -196,7 +196,7 @@ public class MagicXmlStreamWriter {
 				// writer.writeEmptyElement("property");
 				// writer.writeAttribute("name", key);
 				// writer.writeAttribute("value", properties.getProperty(key));
-				writer.writeDirect("<property name=\">" + key + "\" value=\"" + properties.getProperty(key) + "\"");
+				writer.writeDirect("<property name=\"" + key + "\" value=\"" + properties.getProperty(key) + "\"/>");
 			}
 			writer.writeEndElement();
 		}
