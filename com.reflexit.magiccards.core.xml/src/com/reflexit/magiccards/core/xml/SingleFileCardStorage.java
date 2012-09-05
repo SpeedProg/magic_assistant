@@ -14,10 +14,11 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
-public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> {
+public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements IStorageInfo {
 	private static final transient String VIRTUAL = "virtual";
 	protected transient File file;
 	protected Location location;
