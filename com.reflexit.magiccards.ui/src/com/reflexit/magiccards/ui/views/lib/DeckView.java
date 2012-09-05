@@ -40,10 +40,12 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-import com.reflexit.magiccards.ui.views.analyzers.ColorControl;
+import com.reflexit.magiccards.ui.views.analyzers.CreaturePage;
+import com.reflexit.magiccards.ui.views.analyzers.SpellColourPage;
 import com.reflexit.magiccards.ui.views.analyzers.HandView;
-import com.reflexit.magiccards.ui.views.analyzers.ManaCurveControl;
-import com.reflexit.magiccards.ui.views.analyzers.TypeStatsControl;
+import com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage;
+import com.reflexit.magiccards.ui.views.analyzers.AbilityPage;
+import com.reflexit.magiccards.ui.views.analyzers.TypePage;
 
 public class DeckView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
@@ -223,10 +225,12 @@ public class DeckView extends AbstractMyCardsView {
 		cardsList.setShowClose(false);
 		Control control1 = control.createPartControl(folder);
 		cardsList.setControl(control1);
-		// Pages
-		createDeckTab("Mana Curve", new ManaCurveControl());
-		createDeckTab("Card Types", new TypeStatsControl());
-		createDeckTab("Colors", new ColorControl());
+		// Pages		
+		createDeckTab("Mana Curve", new ManaCurvePage());
+		createDeckTab("Types", new TypePage());
+		createDeckTab("Creatures", new CreaturePage());
+		createDeckTab("Colors", new SpellColourPage());
+		createDeckTab("Abilities", new AbilityPage());
 		createExtendedTabs();
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {

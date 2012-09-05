@@ -20,7 +20,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
 
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -49,8 +51,14 @@ public class AbstractDeckPage implements IDeckPage {
 		return area;
 	}
 
+	@Override
 	public String getStatusMessage() {
-		return "";
+		ICardEventManager cardStore = store;
+		String cardCountTotal = "";
+		if (cardStore instanceof ICardCountable) {
+			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
+		}
+		return cardCountTotal;
 	}
 
 	public void setDeckView(DeckView view) {
@@ -100,5 +108,10 @@ public class AbstractDeckPage implements IDeckPage {
 		statusLine.setLayoutData(gd);
 		statusLine.setText("Status");
 		return statusLine;
+	}
+
+	protected int getCount(Object element) {
+		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
+		return count;
 	}
 }

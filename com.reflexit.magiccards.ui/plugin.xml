@@ -103,7 +103,7 @@
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.analyzers.HandView"
             icon="icons/hand32.png"
-            id="com.reflexit.magiccards.ui.views.analyzers.HandView"
+            id="com.reflexit.magiccards.ui.views.analyzers.HandViewPage"
             name="Draw"
             restorable="true">
       </view>
@@ -118,6 +118,7 @@
       </view>
       <view
             allowMultiple="false"
+            category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.collector.CollectorView"
             icon="icons/card_coll24.png"
             id="com.reflexit.magiccards.ui.views.collector.CollectorView"
@@ -425,7 +426,7 @@
         <page
         name="Info"
         id="info"
-        class="com.reflexit.magiccards.ui.views.analyzers.InfoControl"
+        class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"
         />
                 <page
         name="Legality"
