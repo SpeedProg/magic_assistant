@@ -173,7 +173,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (filter.getGroupField() != null) {
 			rootGroup.clear(); // was already
 			if (filter.getGroupField() == MagicCardField.TYPE) {
-				CardGroup buildTypeGroups = CardStoreUtils.getInstance().buildTypeGroups(filteredList);
+				CardGroup buildTypeGroups = CardStoreUtils.buildTypeGroups(filteredList);
 				for (Object gr : buildTypeGroups.getChildren()) {
 					rootGroup.add((ICard) gr);
 				}
