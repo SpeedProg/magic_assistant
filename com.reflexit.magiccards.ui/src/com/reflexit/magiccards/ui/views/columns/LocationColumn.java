@@ -19,6 +19,7 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
@@ -139,7 +140,11 @@ public class LocationColumn extends GenColumn {
 						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 						ICardStore<IMagicCard> cardStore = target.getCardStore();
 						cardStore.remove(card);
-						card.setLocation((Location) value);
+						if (value instanceof Location)
+							card.setLocation((Location) value);
+						else if (value instanceof String) {
+							card.setLocation(Location.createLocation(new LocationPath((String) value)));
+						}
 						cardStore.add(card);
 						// update
 						viewer.update(element, null);
