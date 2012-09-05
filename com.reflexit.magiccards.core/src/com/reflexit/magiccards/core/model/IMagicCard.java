@@ -4,7 +4,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
 public interface IMagicCard extends ICard {
 	public static final MagicCard DEFAULT = new MagicCard();
-	public static final float STAR_POWER = 911.0F;
+	public static final float STAR_POWER = 0.99F;
 	public static final float NOT_APPLICABLE_POWER = Float.NaN;
 
 	public abstract String getCost();
