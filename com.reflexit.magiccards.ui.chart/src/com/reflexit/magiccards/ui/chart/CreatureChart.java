@@ -26,15 +26,16 @@ import org.eclipse.birt.chart.model.layout.Legend;
 import org.eclipse.birt.chart.model.type.PieSeries;
 import org.eclipse.birt.chart.model.type.impl.PieSeriesImpl;
 
-import com.reflexit.magiccards.core.locale.CardText;
+public class CreatureChart implements IChartGenerator {
+	private double[] series;
+	private String[] labels;
 
-public class TypeStats implements IChartGenerator {
-	private double[] bars;
-
-	public TypeStats(int[] ibars) {
-		this.bars = new double[ibars.length];
+	public CreatureChart(Integer[] ibars, String[] seriesLabels) {
+		this.series = new double[ibars.length];
+		this.labels = new String[seriesLabels.length];
 		for (int i = 0; i < ibars.length; i++) {
-			bars[i] = ibars[i];
+			series[i] = ibars[i];
+			labels[i] = seriesLabels[i];
 		}
 	}
 
@@ -45,18 +46,17 @@ public class TypeStats implements IChartGenerator {
 		cwoaPie.setSubType("Standard Pie Chart"); //$NON-NLS-1$
 		// Plot
 		cwoaPie.setSeriesThickness(5);
-		// cwoaPie.setMinSlice(0.1);
-		// cwoaPie.setMinSliceLabel("Other");
+		cwoaPie.setMinSlice(0.1);
+		cwoaPie.setMinSliceLabel("Other");
 		// Legend
 		Legend lg = cwoaPie.getLegend();
 		lg.setVisible(false);
 		lg.getOutline().setVisible(false);
 		// Title
-		cwoaPie.getTitle().getLabel().getCaption().setValue("Card Types");//$NON-NLS-1$
+		cwoaPie.getTitle().getLabel().getCaption().setValue("Creatures");//$NON-NLS-1$
 		// Data Set
-		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { CardText.Type_Land, CardText.Type_Creature,
-				CardText.Type_Non_Creature });
-		NumberDataSet seriesOneValues = NumberDataSetImpl.create(bars);
+		TextDataSet categoryValues = TextDataSetImpl.create(labels);
+		NumberDataSet seriesOneValues = NumberDataSetImpl.create(series);
 		SampleData sdata = DataFactory.eINSTANCE.createSampleData();
 		BaseSampleData sdBase = DataFactory.eINSTANCE.createBaseSampleData();
 		sdBase.setDataSetRepresentation("");//$NON-NLS-1$
@@ -71,7 +71,6 @@ public class TypeStats implements IChartGenerator {
 		seCategory.setDataSet(categoryValues);
 		SeriesDefinition sd = SeriesDefinitionImpl.create();
 		cwoaPie.getSeriesDefinitions().add(sd);
-		sd.getSeriesPalette().shift(0);
 		sd.getSeries().add(seCategory);
 		// Orthogonal Series
 		PieSeries sePie = (PieSeries) PieSeriesImpl.create();
@@ -88,9 +87,10 @@ public class TypeStats implements IChartGenerator {
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
 		DataPointComponent dpc1 = DataPointComponentImpl.create(DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
-				JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
-		DataPointComponent dpc2 = DataPointComponentImpl.create(DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL,
-				JavaNumberFormatSpecifierImpl.create(" (##.##%)")); //$NON-NLS-1$
+		        JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
+		DataPointComponent dpc2 = DataPointComponentImpl.create(
+		        DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL, JavaNumberFormatSpecifierImpl
+		                .create(" (##.##%)")); //$NON-NLS-1$
 		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL, null);
 		dataPoint.getComponents().add(dpc3);
 		dataPoint.getComponents().add(dpc1);

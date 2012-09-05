@@ -28,11 +28,11 @@ import org.eclipse.birt.chart.model.layout.Legend;
 import org.eclipse.birt.chart.model.type.PieSeries;
 import org.eclipse.birt.chart.model.type.impl.PieSeriesImpl;
 
-public class SpellColors implements IChartGenerator {
+public class SpellColorChart implements IChartGenerator {
 	private double[] series;
 	private String[] labels;
 
-	public SpellColors(int[] ibars, String[] seriesLabels) {
+	public SpellColorChart(Integer[] ibars, String[] seriesLabels) {
 		this.series = new double[ibars.length];
 		this.labels = new String[seriesLabels.length];
 		for (int i = 0; i < ibars.length; i++) {
@@ -52,7 +52,7 @@ public class SpellColors implements IChartGenerator {
 		cwoaPie.setMinSliceLabel("Other");
 		// Legend
 		Legend lg = cwoaPie.getLegend();
-		lg.setVisible(true);
+		lg.setVisible(false);
 		lg.getOutline().setVisible(false);
 		// Title
 		cwoaPie.getTitle().getLabel().getCaption().setValue("Colours");//$NON-NLS-1$
