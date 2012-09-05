@@ -32,6 +32,7 @@ public class CardGroup implements ICardCountable, ICard {
 	private int count;
 	private List<ICard> children;
 	private static final String OWNUSIZE_KEY = "ownusize";
+	private static final String CREATURECOUNT_KEY = "creaturecount";
 	private static final String OWNCOUNT_KEY = "owncount";
 	private HashMap<String, Object> props;
 	private Map<String, CardGroup> subs;
@@ -83,13 +84,7 @@ public class CardGroup implements ICardCountable, ICard {
 			if (mine == null) {
 				newmine = value;
 			} else {
-				if (field.getType() == String.class) {
-					if (mine.equals(value)) {
-						// good
-					} else {
-						newmine = "*";
-					}
-				} else if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE) {
+				if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE) {
 					Float fvalue = (Float) value;
 					Float fmain = (Float) mine;
 					if (o instanceof MagicCardPhysical) {
@@ -98,6 +93,26 @@ public class CardGroup implements ICardCountable, ICard {
 						newmine = fmain + fvalue * count;
 					} else {
 						newmine = fmain + (fvalue == null ? 0 : fvalue);
+					}
+				} else if (field == MagicCardField.POWER || field == MagicCardField.TOUGHNESS) {
+					Float fvalue = MagicCard.convertFloat((String) value);
+					Float fmain = MagicCard.convertFloat((String) mine);
+					if (fvalue == IMagicCard.NOT_APPLICABLE_POWER)
+						fvalue = 0f;
+					if (fmain == IMagicCard.NOT_APPLICABLE_POWER)
+						fmain = 0f;
+					if (o instanceof MagicCardPhysical) {
+						// && ((MagicCardPhysical) o).isOwn()
+						int count = ((ICardCountable) o).getCount();
+						newmine = fmain + fvalue * count;
+					} else {
+						newmine = fmain + fvalue;
+					}
+				} else if (field.getType() == String.class) {
+					if (mine.equals(value)) {
+						// good
+					} else {
+						newmine = "*";
 					}
 				} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
 					newmine = "false";
@@ -138,6 +153,32 @@ public class CardGroup implements ICardCountable, ICard {
 			}
 		}
 		return count;
+	}
+
+	public synchronized int getCreatureCount() {
+		Integer cc = (Integer) getProperty(CREATURECOUNT_KEY);
+		if (cc != null) {
+			return cc.intValue();
+		}
+		int cci = 0;
+		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
+		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
+			ICard object = iterator.next();
+			if (object instanceof IMagicCard) {
+				if (((IMagicCard) object).getPower() != null) {
+					if (object instanceof MagicCard) {
+						cci++;
+					} else if (object instanceof ICardCountable) {
+						cci += ((ICardCountable) object).getCount();
+					}
+				}
+			} else if (object instanceof CardGroup) {
+				cci += ((CardGroup) object).getCreatureCount();
+			}
+		}
+		cci += uniq.size();
+		setProperty(CREATURECOUNT_KEY, cci);
+		return cci;
 	}
 
 	public synchronized int getOwnCount() {
