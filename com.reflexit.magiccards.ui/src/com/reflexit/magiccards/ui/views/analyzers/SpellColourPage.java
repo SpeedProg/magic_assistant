@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.util.HashMap;
 
+import org.eclipse.swt.widgets.Composite;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
@@ -19,5 +21,12 @@ public class SpellColourPage extends AbstractDeckStatsPage {
 	@Override
 	protected CardGroup buildTree() {
 		return CardStoreUtils.buildSpellColorGroups(store);
+	}
+
+	@Override
+	public Composite createContents(Composite parent) {
+		Composite area = super.createContents(parent);
+		stats.setAutoExpandLevel(2);
+		return area;
 	}
 }
