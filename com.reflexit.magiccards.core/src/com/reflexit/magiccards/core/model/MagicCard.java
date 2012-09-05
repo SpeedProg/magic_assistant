@@ -177,7 +177,7 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		} else if (str.equals("2+*")) {
 			t = STAR_POWER + 2;
 		} else if (str.equals("*{^2}")) {
-			t = STAR_POWER + 3;
+			t = STAR_POWER + 0.009f;
 		} else {
 			if (str.contains("/"))
 				str = str.replaceAll("\\Q{1/2}", ".5");
