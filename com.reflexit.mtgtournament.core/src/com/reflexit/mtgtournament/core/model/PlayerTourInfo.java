@@ -146,10 +146,12 @@ public class PlayerTourInfo {
 		for (Iterator<Player> iterator = opponents.iterator(); iterator.hasNext();) {
 			Player next = iterator.next();
 			PlayerTourInfo oppInfo = tournament.findPlayerTourInfo(next);
-			w += oppInfo.getWin();
-			m += oppInfo.getRoundsPlayed();
-			gw += oppInfo.getGamesWon();
-			gm += oppInfo.getGamesWon() + oppInfo.getGamesLost() + oppInfo.getGamesDrawn();
+			if (oppInfo != null) {
+				w += oppInfo.getWin();
+				m += oppInfo.getRoundsPlayed();
+				gw += oppInfo.getGamesWon();
+				gm += oppInfo.getGamesWon() + oppInfo.getGamesLost() + oppInfo.getGamesDrawn();
+			}
 		}
 		if (m == 0)
 			omw = 0;
@@ -192,17 +194,17 @@ public class PlayerTourInfo {
 			return;
 		matches++;
 		switch (result) {
-		case WIN:
-			roundsWon++;
-			break;
-		case LOOSE:
-			roundsLost++;
-			break;
-		case DRAW:
-			roundsDrawn++;
-			break;
-		default:
-			break;
+			case WIN:
+				roundsWon++;
+				break;
+			case LOOSE:
+				roundsLost++;
+				break;
+			case DRAW:
+				roundsDrawn++;
+				break;
+			default:
+				break;
 		}
 		gamesWon += roundInfo.getWin();
 		gamesLost += roundInfo.getLost();
