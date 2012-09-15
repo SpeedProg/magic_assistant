@@ -29,7 +29,7 @@ import com.reflexit.mtgtournament.core.model.Player;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class PlayerDetailsSection extends TSectionPart {
 	private Player player;
@@ -38,7 +38,6 @@ public class PlayerDetailsSection extends TSectionPart {
 
 	/**
 	 * @param managedForm
-	
 	 */
 	public PlayerDetailsSection(IManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -106,7 +105,9 @@ public class PlayerDetailsSection extends TSectionPart {
 		return text;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.reflexit.mtgtournament.ui.tour.views.TSectionPart#setFormInput(java.lang.Object)
 	 */
 	@Override
@@ -114,6 +115,11 @@ public class PlayerDetailsSection extends TSectionPart {
 		if (input instanceof Player) {
 			this.player = (Player) input;
 			updateFields();
+		} else if (input == null) {
+			this.player = null;
+			for (String key : fields.keySet()) {
+				fields.get(key).setEnabled(false);
+			}
 		}
 		return super.setFormInput(input);
 	}
@@ -122,6 +128,9 @@ public class PlayerDetailsSection extends TSectionPart {
 	 * 
 	 */
 	private void updateFields() {
+		for (String key : fields.keySet()) {
+			fields.get(key).setEnabled(true);
+		}
 		fields.get("name").setText(player.getName());
 		fields.get("pin").setText(player.getId());
 		fields.get("points").setText(player.getPoints() + "");
