@@ -12,11 +12,17 @@ package com.reflexit.magiccards.core.model.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.locale.CardText;
 import com.reflexit.magiccards.core.model.Abilities;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -33,6 +39,8 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
  * 
  */
 public final class CardStoreUtils {
+	private static final String OTHERS = "Others";
+
 	public static CardStoreUtils getInstance() {
 		if (instance == null)
 			instance = new CardStoreUtils();
@@ -113,33 +121,28 @@ public final class CardStoreUtils {
 					continue;
 				}
 				if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
-					String trimmedType = elem.getType().trim();
-					int subTypeSeparatorPos = trimmedType.indexOf("-");
-					String creatureSubTypeText = "";
-					String creatureSubSubTypeText = "";
-					if (subTypeSeparatorPos >= 0) {
-						creatureSubTypeText = trimmedType.substring(0, subTypeSeparatorPos).trim();
-						creatureSubSubTypeText = trimmedType.substring(subTypeSeparatorPos + 1).trim();
-						int subSubTypeSeparatorPos = creatureSubSubTypeText.indexOf(" ");
-						if (subSubTypeSeparatorPos >= 0) {
-							creatureSubSubTypeText = creatureSubSubTypeText.substring(0, subSubTypeSeparatorPos).trim();
+					String subAnsSuperTypes[] = type.split("[:-]+", 2); // : in french
+					String creatureSuperType = subAnsSuperTypes[0].trim();
+					String creatureSubType = subAnsSuperTypes.length > 1 ? subAnsSuperTypes[1].trim() : "";
+					if (!creatureSuperType.isEmpty()) {
+						CardGroup superCardGroup = creatureNode.getSubGroup(creatureSuperType);
+						if (superCardGroup == null) {
+							superCardGroup = new CardGroup(MagicCardField.TYPE, creatureSuperType);
+							creatureNode.add(superCardGroup);
 						}
-					}
-					if (!creatureSubTypeText.isEmpty()) {
-						CardGroup subTypeCardGroup = creatureNode.getSubGroup(creatureSubTypeText);
-						if (subTypeCardGroup == null) {
-							subTypeCardGroup = new CardGroup(MagicCardField.TYPE, creatureSubTypeText);
-							creatureNode.add(subTypeCardGroup);
-						}
-						if (!creatureSubSubTypeText.isEmpty()) {
-							CardGroup subSubTypeCardGroup = subTypeCardGroup.getSubGroup(creatureSubSubTypeText);
-							if (subSubTypeCardGroup == null) {
-								subSubTypeCardGroup = new CardGroup(MagicCardField.TYPE, creatureSubSubTypeText);
-								subTypeCardGroup.add(subSubTypeCardGroup);
+						if (!creatureSubType.isEmpty()) {
+							String subTypes[] = creatureSubType.split("[ ,]+");
+							for (int i = 0; i < subTypes.length; i++) {
+								String key = subTypes[i];
+								CardGroup subTypeCardGroup = superCardGroup.getSubGroup(key);
+								if (subTypeCardGroup == null) {
+									subTypeCardGroup = new CardGroup(MagicCardField.TYPE, key);
+									superCardGroup.add(subTypeCardGroup);
+								}
+								subTypeCardGroup.add(elem);
 							}
-							subSubTypeCardGroup.add(elem);
 						} else {
-							subTypeCardGroup.add(elem);
+							superCardGroup.add(elem);
 						}
 					} else {
 						creatureNode.add(elem);
@@ -156,6 +159,46 @@ public final class CardStoreUtils {
 		return root;
 	}
 
+	public static class Pair {
+		public String key;
+		public int value;
+
+		public Pair(String key, int value) {
+			super();
+			this.key = key;
+			this.value = value;
+		}
+	}
+
+	public static Map<String, Integer> top(int n, HashMap<String, Integer> stats) {
+		List<Pair> list = new ArrayList<Pair>();
+		for (Iterator<String> iterator = stats.keySet().iterator(); iterator.hasNext();) {
+			String key = iterator.next();
+			if (!key.equals(OTHERS)) {
+				list.add(new Pair(key, stats.get(key)));
+			}
+		}
+		Collections.sort(list, new Comparator<Pair>() {
+			public int compare(Pair o1, Pair o2) {
+				return o2.value - o1.value;
+			}
+		});
+		LinkedHashMap<String, Integer> res = new LinkedHashMap<String, Integer>();
+		int i = 0;
+		Integer iothers = stats.get(OTHERS);
+		int others = iothers == null ? 0 : iothers;
+		for (Iterator iterator = list.iterator(); iterator.hasNext(); i++) {
+			Pair pair = (Pair) iterator.next();
+			if (i < n)
+				res.put(pair.key, pair.value);
+			else
+				others += pair.value;
+		}
+		if (others > 0)
+			res.put(OTHERS, others);
+		return res;
+	}
+
 	public static HashMap<String, Integer> buildCreatureStats(ICardStore store) {
 		HashMap<String, Integer> subCreaturesCount = new HashMap<String, Integer>();
 		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
@@ -170,44 +213,32 @@ public final class CardStoreUtils {
 					count = ((ICardCountable) elem).getCount();
 				}
 				if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
-					String trimmedType = elem.getType().trim();
-					int subTypeSeparatorPos = trimmedType.indexOf("-");
-					String creatureSubTypeText = "";
-					String creatureSubSubTypeText = "";
-					if (subTypeSeparatorPos >= 0) {
-						creatureSubTypeText = trimmedType.substring(0, subTypeSeparatorPos).trim();
-						creatureSubSubTypeText = trimmedType.substring(subTypeSeparatorPos + 1).trim();
-						int subSubTypeSeparatorPos = creatureSubSubTypeText.indexOf(" ");
-						if (subSubTypeSeparatorPos >= 0) {
-							creatureSubSubTypeText = creatureSubSubTypeText.substring(0, subSubTypeSeparatorPos).trim();
-						}
-					}
-					if (!creatureSubTypeText.isEmpty()) {
-						if (!creatureSubSubTypeText.isEmpty()) {
-							if (!subCreaturesCount.containsKey(creatureSubSubTypeText)) {
-								subCreaturesCount.put(creatureSubSubTypeText, count);
-							} else {
-								subCreaturesCount.put(creatureSubSubTypeText, subCreaturesCount.get(creatureSubSubTypeText) + count);
-							}
-						} else {
-							if (!subCreaturesCount.containsKey("Others")) {
-								subCreaturesCount.put("Others", count);
-							} else {
-								subCreaturesCount.put("Others", subCreaturesCount.get("Others") + count);
-							}
+					String subAnsSuperTypes[] = type.split("[:-]+", 2); // : in french
+					// String creatureSuperType = subAnsSuperTypes[0].trim();
+					String creatureSubType = subAnsSuperTypes.length > 1 ? subAnsSuperTypes[1].trim() : "";
+					if (!creatureSubType.isEmpty()) {
+						String subTypes[] = creatureSubType.split("[ ,]+");
+						for (int i = 0; i < subTypes.length; i++) {
+							String key = subTypes[i];
+							inc(subCreaturesCount, key, count);
 						}
 					} else {
-						if (!subCreaturesCount.containsKey("Others")) {
-							subCreaturesCount.put("Others", count);
-						} else {
-							subCreaturesCount.put("Others", subCreaturesCount.get("Others") + count);
-						}
+						inc(subCreaturesCount, OTHERS, count);
 					}
 				}
 			} catch (Exception e) {
+				Activator.log(e);
 			}
 		}
 		return subCreaturesCount;
+	}
+
+	private static void inc(HashMap<String, Integer> subCreaturesCount, String key, int count) {
+		if (!subCreaturesCount.containsKey(key)) {
+			subCreaturesCount.put(key, count);
+		} else {
+			subCreaturesCount.put(key, subCreaturesCount.get(key) + count);
+		}
 	}
 
 	/**

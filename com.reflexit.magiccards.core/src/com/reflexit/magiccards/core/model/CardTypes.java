@@ -15,9 +15,9 @@ public class CardTypes implements ISearchableProperty {
 	private CardTypes() {
 		this.names = new LinkedHashMap();
 		add(TYPES.Type_Land);
+		add(TYPES.Type_Creature);
 		add(TYPES.Type_Instant);
 		add(TYPES.Type_Sorcery);
-		add(TYPES.Type_Creature);
 		add(TYPES.Type_Enchantment);
 		add(TYPES.Type_Artifact);
 		add(TYPES.Type_Planeswalker);
@@ -52,7 +52,7 @@ public class CardTypes implements ISearchableProperty {
 	}
 
 	private boolean containsType(String text, String type) {
-		return Pattern.compile("\\b\\Q" + type + "\\E\\b", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(text).find();
+		return Pattern.compile(type, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(text).find();
 	}
 
 	/*
