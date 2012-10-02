@@ -257,7 +257,7 @@ public class ParseGathererNewVisualSpoiler {
 	static Pattern idPattern = Pattern.compile("href=.*/Card/Details.aspx\\?multiverseid=(\\d+)");
 	static Pattern setPattern = Pattern.compile("title=\"(.*) \\((.*)\\)\" src=.*set=(\\w+)");
 	static Pattern namePattern = Pattern.compile(".*>(.*)</a></span>");
-	static Pattern powPattern = Pattern.compile("\\((\\d+/)?(\\d+)\\)");
+	static Pattern powPattern = Pattern.compile("\\(([+*\\d]+/)?([+*\\d]+)\\)");
 
 	private static void parseRecord(String line, ILoadCardHander handler) {
 		MagicCard card = new MagicCard();
