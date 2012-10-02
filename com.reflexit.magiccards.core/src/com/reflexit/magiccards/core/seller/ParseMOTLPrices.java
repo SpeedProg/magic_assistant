@@ -11,7 +11,6 @@ import java.util.HashMap;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -154,7 +153,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 			String name = fields[0].trim();
 			String price = fields[1].trim();
 			if (name.contains("AE")) {
-				name = name.replaceAll("AE", "Æ");
+				name = name.replaceAll("AE", "ï¿½");
 			}
 			try {
 				float f = Float.parseFloat(price);
@@ -182,7 +181,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 		card2.setName("AEther Adept");
 		fstore.getCardStore().add(card);
 		fstore.getCardStore().add(card2);
-		fstore.update(new MagicCardFilter());
+		fstore.update();
 		prices.updateStore(fstore, ICoreProgressMonitor.NONE);
 		System.err.println(card2.getName() + " " + card2.getDbPrice());
 	}

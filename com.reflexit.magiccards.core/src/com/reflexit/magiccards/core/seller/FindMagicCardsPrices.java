@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -297,7 +296,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 		card.setSet("Time Spiral");
 		card.setName("Amrou Scout");
 		fstore.getCardStore().add(card);
-		fstore.update(new MagicCardFilter());
+		fstore.update();
 		prices.updateStore(fstore, ICoreProgressMonitor.NONE);
 	}
 }

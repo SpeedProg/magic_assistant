@@ -94,4 +94,12 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	public Location getLocation() {
 		return deck.getLocation();
 	}
+
+	public void clear() {
+		this.deck = null;
+	}
+
+	public void addAll(ICardStore store) {
+		setStore(store);
+	}
 }

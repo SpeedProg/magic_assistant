@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
 import com.reflexit.magiccards.core.model.ICardHandler;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.db.DbActivator;
@@ -115,7 +114,7 @@ public class FileUtils {
 		ICardHandler cardHandler = DataManager.getCardHandler();
 		cardHandler.loadInitialIfNot(ICoreProgressMonitor.NONE);
 		IFilteredCardStore fstore = cardHandler.getMagicDBFilteredStore();
-		fstore.update(new MagicCardFilter());
+		fstore.update();
 		System.err.println("Loaded " + fstore.getSize() + " cards");
 	}
 }

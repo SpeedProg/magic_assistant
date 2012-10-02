@@ -40,14 +40,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	protected Collection filteredList = null;
 	protected final CardGroup rootGroup = new CardGroup(null, "Root");
 	protected boolean initialized = false;
-	protected MagicCardFilter filter;
+	protected MagicCardFilter filter = new MagicCardFilter();
 
 	public MagicCardFilter getFilter() {
 		return filter;
-	}
-
-	public void setFilter(MagicCardFilter filter) {
-		this.filter = filter;
 	}
 
 	/*
@@ -145,11 +141,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (this.filteredList == null)
 			this.filteredList = doCreateList();
 		return this.filteredList;
-	}
-
-	public synchronized void update(MagicCardFilter filter) throws MagicException {
-		setFilter(filter);
-		update();
 	}
 
 	public synchronized void update() {
@@ -361,5 +352,15 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	@Override
 	public String toString() {
 		return filteredList.toString();
+	}
+
+	public void clear() {
+		filteredList.clear();
+	}
+
+	public void addAll(ICardStore<T> store) {
+		for (T object : store) {
+			addFilteredCard(object);
+		}
 	}
 }

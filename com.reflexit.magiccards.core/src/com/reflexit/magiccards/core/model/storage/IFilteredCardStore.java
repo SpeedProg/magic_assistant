@@ -8,7 +8,7 @@ import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCountable {
-	public void update(MagicCardFilter filter) throws MagicException;
+	public void update() throws MagicException;
 
 	public MagicCardFilter getFilter();
 
@@ -46,4 +46,8 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	public CardGroup getCardGroupRoot();
 
 	public boolean contains(T card);
+
+	public void clear();
+
+	public void addAll(ICardStore<T> store);
 }
