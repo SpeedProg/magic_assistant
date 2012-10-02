@@ -49,7 +49,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		this.deck = new MemCardHandler();
-		this.filter = new MagicCardFilter();
+		this.filter = this.deck.getFilter();
 	}
 
 	private void add3cards() {
@@ -87,7 +87,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		add3cards();
 		this.filter.setSortField(MagicCardField.COST, true);
 		this.filter.setGroupField(MagicCardField.COST);
-		this.deck.update(this.filter);
+		this.deck.update();
 		Object[] cardGroups = this.deck.getCardGroupRoot().getChildren();
 		assertEquals(3, cardGroups.length);
 		assertEquals("White", ((CardGroup) cardGroups[0]).getName());
@@ -96,7 +96,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 	}
 
 	protected MagicCard[] getFilteredCards() {
-		this.deck.update(this.filter);
+		this.deck.update();
 		Object[] cards = this.deck.getElements();
 		List<Object> collection = Arrays.asList(cards);
 		return collection.toArray(new MagicCard[collection.size()]);
