@@ -70,7 +70,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 					if (toDropArray.length == 1) {
 						IMagicCard single = toDropArray[0];
 						DesktopFigure desktop = panel.getDesktop();
-						fstore.update(fstore.getFilter());
+						fstore.update();
 						single = (IMagicCard) fstore.getCardStore().getCard(single.getCardId());
 						CardFigure figure = desktop.addNewFigureIfNotFound(single);
 						Point control = panel.toControl(curEvent.x, curEvent.y);
