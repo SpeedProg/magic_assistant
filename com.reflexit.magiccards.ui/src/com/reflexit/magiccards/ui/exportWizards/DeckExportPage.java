@@ -468,8 +468,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		return ce;
 	}
 
-	public MagicCardFilter getLocationFilter() {
-		MagicCardFilter locFilter = new MagicCardFilter();
+	public MagicCardFilter updateToLocationFilter(MagicCardFilter locFilter) {
 		boolean sideboard = getIncludeSideBoard();
 		locFilter.update(storeToMap(sideboard));
 		return locFilter;

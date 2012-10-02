@@ -43,8 +43,13 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	}
 
 	@Override
-	public IFilteredCardStore doGetFilteredStore() {
-		return DataManager.getCardHandler().getLibraryFilteredStore();
+	protected MyCardsListControl doGetViewControl() {
+		return new MyCardsListControl(this) {
+			@Override
+			public IFilteredCardStore doGetFilteredStore() {
+				return DataManager.getCardHandler().getLibraryFilteredStore();
+			}
+		};
 	}
 
 	@Override

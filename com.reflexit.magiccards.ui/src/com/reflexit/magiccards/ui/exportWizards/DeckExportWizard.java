@@ -21,7 +21,6 @@ import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
@@ -88,12 +87,12 @@ public class DeckExportWizard extends Wizard implements IExportWizard {
 				}
 				// TODO: export selection only
 				final boolean header = mainPage.getIncludeHeader();
-				final MagicCardFilter locationFilter = mainPage.getLocationFilter();
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
 						try {
-							filteredLibrary.update(locationFilter);
+							mainPage.updateToLocationFilter(filteredLibrary.getFilter());
+							filteredLibrary.update();
 							worker.init(new FileOutputStream(fileName), header, filteredLibrary);
 							worker.run(new CoreMonitorAdapter(monitor));
 						} catch (FileNotFoundException e) {

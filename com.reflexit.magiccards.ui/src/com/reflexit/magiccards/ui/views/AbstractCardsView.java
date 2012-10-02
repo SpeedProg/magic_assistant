@@ -1,11 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -13,7 +7,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -21,7 +14,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
@@ -38,12 +30,10 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
@@ -60,16 +50,12 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected Action actionCopy;
 	protected Action actionPaste;
 	protected Action showPrintings;
-	protected IFilteredCardStore fstore;
-	private MagicCardFilter filter = new MagicCardFilter();
 
 	/**
 	 * The constructor.
 	 */
 	public AbstractCardsView() {
 		control = doGetViewControl();
-		if (control instanceof IMagicCardListControl)
-			((IMagicCardListControl) control).setFilter(filter);
 	}
 
 	protected abstract AbstractMagicCardsListControl doGetViewControl();
@@ -290,10 +276,8 @@ public abstract class AbstractCardsView extends ViewPart {
 		return getViewSite().getShell();
 	}
 
-	public abstract IFilteredCardStore doGetFilteredStore();
-
 	public IFilteredCardStore getFilteredStore() {
-		return fstore;
+		return ((IMagicCardListControl) control).getFilteredStore();
 	}
 
 	/**
@@ -361,101 +345,8 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	public abstract String getId();
 
-	private Object jobFamility = new Object();
-	private Job loadingJob;
-
-	public void loadData(final Runnable postLoad) {
-		Job[] jobs = Job.getJobManager().find(jobFamility);
-		if (jobs.length >= 2) {
-			// System.err.println(jobs.length +
-			// " already running skipping refresh");
-			return;
-		}
-		final Display display = PlatformUI.getWorkbench().getDisplay();
-		loadingJob = new Job("Loading cards") {
-			@Override
-			public boolean belongsTo(Object family) {
-				return family == jobFamility;
-			}
-
-			@Override
-			public boolean shouldSchedule() {
-				Job[] jobs = Job.getJobManager().find(jobFamility);
-				if (jobs.length >= 2)
-					return false;
-				return super.shouldSchedule();
-			}
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				synchronized (jobFamility) {
-					try {
-						setName("Loading cards");
-						checkInit();
-						if (monitor.isCanceled())
-							return Status.CANCEL_STATUS;
-						monitor.subTask("Loading cards...");
-						populateStore(monitor);
-						if (monitor.isCanceled())
-							return Status.CANCEL_STATUS;
-						if (getFilteredStore() == null)
-							return Status.OK_STATUS;
-						getFilteredStore().update(getFilter());
-					} catch (final Exception e) {
-						display.syncExec(new Runnable() {
-							public void run() {
-								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage());
-							}
-						});
-						MagicUIActivator.log(e);
-						return Status.OK_STATUS;
-					}
-					// asyncUpdateViewer();
-					return Status.OK_STATUS;
-				}
-			}
-		};
-		// loadingJob.setRule(jobRule);
-		loadingJob.addJobChangeListener(new JobChangeAdapter() {
-			@Override
-			public void done(IJobChangeEvent event) {
-				if (postLoad != null)
-					display.syncExec(postLoad);
-				else
-					display.syncExec(new Runnable() {
-						public void run() {
-							updateViewer();
-						}
-					});
-				super.done(event);
-			}
-		});
-		loadingJob.schedule(100);
-	}
-
-	protected void populateStore(IProgressMonitor monitor) {
-		if (getFilteredStore() == null) {
-			setFilteredCardStore(doGetFilteredStore());
-		}
-	}
-
-	public void setFilteredCardStore(IFilteredCardStore fstore) {
-		this.fstore = fstore;
-		if (control instanceof IMagicCardListControl)
-			((IMagicCardListControl) control).setFilteredCardStore(fstore);
-	}
-
 	public MagicCardFilter getFilter() {
-		return filter;
-	}
-
-	private void checkInit() {
-		try {
-			DataManager.getCardHandler().loadInitialIfNot(ICoreProgressMonitor.NONE);
-			// DataManager.getCardHandler().getMagicCardHandler().getTotal();
-		} catch (MagicException e) {
-			MagicUIActivator.log(e);
-		}
+		return getFilteredStore().getFilter();
 	}
 
 	@Override

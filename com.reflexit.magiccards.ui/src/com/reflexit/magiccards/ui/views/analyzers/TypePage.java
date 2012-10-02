@@ -3,12 +3,18 @@ package com.reflexit.magiccards.ui.views.analyzers;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.TypeChart;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckStatsPage;
 
 public class TypePage extends AbstractDeckStatsPage {
+	@Override
+	protected ICardField[] getGroupFields() {
+		return new ICardField[] { MagicCardField.TYPE };
+	}
+
 	@Override
 	protected IChartGenerator createChartGenerator() {
 		IChartGenerator gen = new TypeChart(CardStoreUtils.buildTypeStats(store));

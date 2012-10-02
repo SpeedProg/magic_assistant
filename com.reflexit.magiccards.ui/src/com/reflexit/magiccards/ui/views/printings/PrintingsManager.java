@@ -2,26 +2,16 @@ package com.reflexit.magiccards.ui.views.printings;
 
 import java.util.Collection;
 
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.window.ToolTip;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.views.ViewerManager;
-import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.TreeViewerManager;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
@@ -30,9 +20,7 @@ import com.reflexit.magiccards.ui.views.columns.LocationColumn;
 import com.reflexit.magiccards.ui.views.columns.OwnershipColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
-public class PrintingsManager extends ViewerManager implements IDisposable {
-	private TreeViewer viewer;
-	private PrintingsViewerComparator vcomp = new PrintingsViewerComparator();
+public class PrintingsManager extends TreeViewerManager implements IDisposable {
 	private boolean dbMode = true;
 	private boolean groupped = false;
 
@@ -42,13 +30,8 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 
 	@Override
 	public Control createContents(Composite parent) {
-		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.VIRTUAL);
-		// drillDownAdapter = new DrillDownAdapter(viewer);
-		// this.viewer.setContentProvider(new RegularViewContentProvider());
-		this.viewer.setContentProvider(new PrintingsContentProvider());
-		this.viewer.setUseHashlookup(true);
+		super.createContents(parent);
 		this.viewer.setComparator(null);
-		createDefaultColumns();
 		updateDbMode(true);
 		hookDragAndDrop();
 		return this.viewer.getControl();
@@ -67,17 +50,6 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 	}
 
 	@Override
-	public ColumnViewer getViewer() {
-		return this.viewer;
-	}
-
-	@Override
-	public void dispose() {
-		this.viewer.getControl().dispose();
-		this.viewer = null;
-	}
-
-	@Override
 	protected ColumnCollection doGetColumnCollection(String viewId) {
 		return new ColumnCollection() {
 			@Override
@@ -90,65 +62,6 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 				columns.add(new LanguageColumn());
 			}
 		};
-	}
-
-	protected void createDefaultColumns() {
-		getColumnsCollection().createColumnLabelProviders();
-		for (int i = 0; i < getColumnsNumber(); i++) {
-			AbstractColumn man = getColumn(i);
-			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
-			TreeColumn col = colv.getColumn();
-			col.setText(man.getColumnName());
-			col.setWidth(man.getColumnWidth());
-			col.setToolTipText(man.getColumnTooltip());
-			final int coln = i;
-			col.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					sortColumn(coln);
-				}
-			});
-			col.setMoveable(false);
-			colv.setLabelProvider(man);
-			if (man instanceof Listener) {
-				this.viewer.getTree().addListener(SWT.PaintItem, (Listener) man);
-			}
-			colv.setEditingSupport(man.getEditingSupport(this.viewer));
-		}
-		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
-		this.viewer.getTree().setHeaderVisible(true);
-	}
-
-	public void setSortColumn(int index, int direction) {
-		boolean sort = index >= 0;
-		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
-		this.viewer.getTree().setSortColumn(column);
-		if (sort) {
-			int sortDirection = getSortDirection();
-			if (sortDirection != SWT.DOWN)
-				sortDirection = SWT.DOWN;
-			else
-				sortDirection = SWT.UP;
-			this.viewer.getTree().setSortDirection(sortDirection);
-			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
-			vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
-			this.viewer.setComparator(vcomp);
-		} else {
-			this.viewer.setComparator(null);
-		}
-	}
-
-	@Override
-	public int getSortDirection() {
-		return this.viewer.getTree().getSortDirection();
-	}
-
-	public void updateViewer(Object input) {
-		if (this.viewer.getControl().isDisposed())
-			return;
-		updateTableHeader();
-		updateGrid();
-		this.viewer.setInput(input);
 	}
 
 	@Override
@@ -177,10 +90,6 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		}
 	}
 
-	public void setLinesVisible(boolean grid) {
-		this.viewer.getTree().setLinesVisible(grid);
-	}
-
 	public void updateDbMode(boolean checked) {
 		dbMode = checked;
 	}
@@ -189,10 +98,12 @@ public class PrintingsManager extends ViewerManager implements IDisposable {
 		return dbMode;
 	}
 
+	@Override
 	public void updateColumns(String preferenceValue) {
 		// ignore
 	}
 
+	@Override
 	public String getColumnLayoutProperty() {
 		// ignore
 		return "";

@@ -19,8 +19,6 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract void reloadData();
 
-	public abstract void setFilteredCardStore(IFilteredCardStore<ICard> fstore);
-
 	public abstract void updateSingle(ICard source);
 
 	public abstract void setNextSelection(ISelection structuredSelection);
@@ -28,6 +26,4 @@ public interface IMagicCardListControl extends IMagicControl {
 	public abstract void setStatus(String string);
 
 	public abstract IMenuManager getGroupMenu();
-
-	public abstract void setFilter(MagicCardFilter filter);
 }

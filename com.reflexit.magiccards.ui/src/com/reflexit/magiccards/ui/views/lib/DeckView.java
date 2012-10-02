@@ -225,7 +225,7 @@ public class DeckView extends AbstractMyCardsView {
 		cardsList.setShowClose(false);
 		Control control1 = control.createPartControl(folder);
 		cardsList.setControl(control1);
-		// Pages		
+		// Pages
 		createDeckTab("Mana Curve", new ManaCurvePage());
 		createDeckTab("Types", new TypePage());
 		createDeckTab("Creatures", new CreaturePage());
@@ -241,6 +241,11 @@ public class DeckView extends AbstractMyCardsView {
 		});
 		folder.setSelection(0);
 		refresh();
+	}
+
+	@Override
+	protected AbstractMagicCardsListControl doGetViewControl() {
+		return new DeckListControl(this);
 	}
 
 	private void createExtendedTabs() {
@@ -260,8 +265,8 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	private void createDeckTab(String name, final IDeckPage page) {
-		page.createContents(folder);
 		page.setDeckView(this);
+		page.createContents(folder);
 		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
 		item.setText(name);
 		item.setShowClose(false);
@@ -286,12 +291,6 @@ public class DeckView extends AbstractMyCardsView {
 		super.fillLocalPullDown(manager);
 		manager.add(this.shuffle);
 		manager.add(this.sideboard);
-	}
-
-	@Override
-	public IFilteredCardStore doGetFilteredStore() {
-		String secondaryId = getViewSite().getSecondaryId();
-		return DataManager.getCardHandler().getCardCollectionFilteredStore(secondaryId);
 	}
 
 	@Override
@@ -348,7 +347,7 @@ public class DeckView extends AbstractMyCardsView {
 			return;
 		super.updateViewer();
 		updatePartName();
-		updateActivePage();
+		// updateActivePage();
 	}
 
 	protected synchronized void updateActivePage() {

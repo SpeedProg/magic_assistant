@@ -1,4 +1,7 @@
-package com.reflexit.magiccards.ui.views.printings;
+/**
+ * 
+ */
+package com.reflexit.magiccards.ui.views;
 
 import java.util.Collection;
 
@@ -8,7 +11,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class PrintingsContentProvider<T> implements ITreeContentProvider {
+public class TreeViewContentProvider<T> implements ITreeContentProvider {
 	public void dispose() {
 	}
 

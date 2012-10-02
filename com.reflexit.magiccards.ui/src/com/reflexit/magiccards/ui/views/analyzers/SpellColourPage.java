@@ -5,10 +5,11 @@ import java.util.HashMap;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.SpellColorChart;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckStatsPage;
 
 public class SpellColourPage extends AbstractDeckStatsPage {
 	@Override
@@ -28,5 +29,10 @@ public class SpellColourPage extends AbstractDeckStatsPage {
 		Composite area = super.createContents(parent);
 		stats.setAutoExpandLevel(2);
 		return area;
+	}
+
+	@Override
+	protected ICardField[] getGroupFields() {
+		return new ICardField[] { MagicCardField.COST };
 	}
 }

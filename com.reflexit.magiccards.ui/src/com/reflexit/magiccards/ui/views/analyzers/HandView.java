@@ -60,12 +60,22 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		public String getStatusMessage() {
 			if (deck == null)
 				return "To populate this view use 'Emulate Draw' command from a Deck view";
-			return deck.getName() + ": drawn " + store.getSize() + " of " + ((ICardCountable) deck.getStore()).getCount();
+			return deck.getName() + ": drawn " + deckstore.getSize() + " of " + ((ICardCountable) deck.getStore()).getCount();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#doGetFilteredStore()
+		 */
+		@Override
+		public IFilteredCardStore doGetFilteredStore() {
+			return deckstore;
 		}
 	}
 
 	public static final String ID = HandView.class.getName();
-	private PlayingDeck store = new PlayingDeck(new MemoryCardStore());
+	private PlayingDeck deckstore = new PlayingDeck(new MemoryCardStore());
 	private IAction shuffle;
 	private Action draw;
 	private CardCollection deck;
@@ -78,19 +88,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#doGetFilteredStore()
-	 */
-	@Override
-	public IFilteredCardStore doGetFilteredStore() {
-		return this.store;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
 	 * org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
@@ -124,7 +122,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 		this.draw = new Action("Draw") {
 			@Override
 			public void run() {
-				HandView.this.store.draw(1);
+				HandView.this.deckstore.draw(1);
 				control.reloadData();
 			}
 		};
@@ -150,8 +148,8 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
-	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui. IWorkbenchPart,
+	 * org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IStructuredSelection sel = (IStructuredSelection) selection;
@@ -160,7 +158,7 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 			if (deck.isOpen()) {
 				this.deck = deck;
 				ICardStore<IMagicCard> store2 = deck.getStore();
-				this.store.setStore(store2);
+				this.deckstore.setStore(store2);
 				runShuffle();
 			}
 		}
@@ -177,8 +175,8 @@ public class HandView extends AbstractCardsView implements ISelectionListener {
 	}
 
 	public void runShuffle() {
-		HandView.this.store.shuffle();
-		HandView.this.store.draw(7);
+		HandView.this.deckstore.shuffle();
+		HandView.this.deckstore.draw(7);
 		((HandViewListControl) control).unsort();
 		control.reloadData();
 	}

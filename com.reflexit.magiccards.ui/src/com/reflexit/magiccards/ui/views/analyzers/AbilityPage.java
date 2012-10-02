@@ -6,7 +6,6 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.AbilityChart;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckStatsPage;
 
 public class AbilityPage extends AbstractDeckStatsPage {
 	@Override

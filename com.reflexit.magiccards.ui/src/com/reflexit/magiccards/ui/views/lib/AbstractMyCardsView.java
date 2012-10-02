@@ -70,11 +70,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected IDeckAction copyToDeck;
 
 	@Override
-	protected MyCardsListControl doGetViewControl() {
-		return new MyCardsListControl(this);
-	}
-
-	@Override
 	protected void makeActions() {
 		super.makeActions();
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();

@@ -7,7 +7,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
@@ -18,6 +23,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -39,6 +45,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
@@ -49,6 +56,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.ICard;
@@ -64,6 +72,7 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -105,7 +114,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public static final String FIND = "org.eclipse.ui.edit.findReplace";
-	private final AbstractCardsView abstractCardsView;
+	protected final AbstractCardsView abstractCardsView;
 	private MenuManager menuGroup;
 	private PrefixedPreferenceStore prefStore;
 	private QuickFilterControl quickFilter;
@@ -120,8 +129,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected IMagicColumnViewer manager;
 	private MenuManager menuSort;
 	protected ISelection revealSelection;
-	private MagicCardFilter filter;
-	private IFilteredCardStore<ICard> fstore;
+	protected IFilteredCardStore<ICard> fstore;
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
 		public void selectionChanged(SelectionChangedEvent event) {
 			// selection changes on own view
@@ -138,10 +146,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.abstractCardsView = abstractCardsView;
 		prefStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
 		this.manager = createViewerManager();
-	}
-
-	public void setFilter(MagicCardFilter filter) {
-		this.filter = filter;
 	}
 
 	@Override
@@ -215,7 +219,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilter()
 	 */
 	public MagicCardFilter getFilter() {
-		return filter;
+		if (getFilteredStore() == null)
+			return null;
+		return getFilteredStore().getFilter();
 	}
 
 	/*
@@ -224,6 +230,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
 	public IFilteredCardStore getFilteredStore() {
+		if (fstore == null)
+			fstore = doGetFilteredStore();
 		return fstore;
 	}
 
@@ -315,7 +323,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		return topBar;
 	}
 
-	private ColumnViewer getViewer() {
+	protected ColumnViewer getViewer() {
 		return this.manager.getViewer();
 	}
 
@@ -355,8 +363,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	public void reloadData() {
 		setNextSelection(getSelection());
-		updateFilter(getFilter());
-		abstractCardsView.loadData(null);
+		update();
+		loadData(null);
 	}
 
 	public void runFind() {
@@ -364,10 +372,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		actionShowFind.setEnabled(false);
 	}
 
-	public void setFilteredCardStore(IFilteredCardStore<ICard> fstore) {
-		this.fstore = fstore;
-	}
-
+	// public void setFilteredCardStore(IFilteredCardStore<ICard> fstore) {
+	// this.fstore = fstore;
+	// }
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
@@ -432,6 +439,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	public void updateGroupBy(ICardField[] fields) {
 		MagicCardFilter filter = getFilter();
+		if (filter == null)
+			return;
 		ICardField[] oldIndex = filter.getGroupFields();
 		if (Arrays.equals(oldIndex, fields))
 			return;
@@ -781,14 +790,17 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	protected void sort(int index) {
 		updateSortColumn(index);
-		abstractCardsView.loadData(null);
+		loadData(null);
 	}
 
 	protected void unsort() {
 		updateSortColumn(-1);
 	}
 
-	protected void updateFilter(MagicCardFilter filter) {
+	protected void update() {
+		MagicCardFilter filter = getFilter();
+		if (filter == null)
+			return;
 		IPreferenceStore store = getLocalPreferenceStore();
 		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
@@ -828,7 +840,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
 			ICardField sortField = man.getSortField();
 			if (sortField == null && man instanceof GroupColumn)
-				sortField = filter.getGroupField();
+				sortField = getFilter().getGroupField();
 			if (sortField == null)
 				sortField = MagicCardField.NAME;
 			boolean acc = true;
@@ -886,4 +898,93 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
 		}
 	}
+
+	private Object jobFamility = new Object();
+	private Job loadingJob;
+
+	public void loadData(final Runnable postLoad) {
+		Job[] jobs = Job.getJobManager().find(jobFamility);
+		if (jobs.length >= 2) {
+			// System.err.println(jobs.length +
+			// " already running skipping refresh");
+			return;
+		}
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		loadingJob = new Job("Loading cards") {
+			@Override
+			public boolean belongsTo(Object family) {
+				return family == jobFamility;
+			}
+
+			@Override
+			public boolean shouldSchedule() {
+				Job[] jobs = Job.getJobManager().find(jobFamility);
+				if (jobs.length >= 2)
+					return false;
+				return super.shouldSchedule();
+			}
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				synchronized (jobFamility) {
+					try {
+						setName("Loading cards");
+						checkInit();
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						monitor.subTask("Loading cards...");
+						populateStore(monitor);
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						if (getFilteredStore() == null)
+							return Status.OK_STATUS;
+						getFilteredStore().update();
+					} catch (final Exception e) {
+						display.syncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage());
+							}
+						});
+						MagicUIActivator.log(e);
+						return Status.OK_STATUS;
+					}
+					// asyncUpdateViewer();
+					return Status.OK_STATUS;
+				}
+			}
+		};
+		// loadingJob.setRule(jobRule);
+		loadingJob.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				if (postLoad != null)
+					display.syncExec(postLoad);
+				else
+					display.syncExec(new Runnable() {
+						public void run() {
+							updateViewer();
+						}
+					});
+				super.done(event);
+			}
+		});
+		loadingJob.schedule(100);
+	}
+
+	private void checkInit() {
+		try {
+			DataManager.getCardHandler().loadInitialIfNot(ICoreProgressMonitor.NONE);
+			// DataManager.getCardHandler().getMagicCardHandler().getTotal();
+		} catch (MagicException e) {
+			MagicUIActivator.log(e);
+		}
+	}
+
+	protected void populateStore(IProgressMonitor monitor) {
+		if (fstore == null) {
+			fstore = doGetFilteredStore();
+		}
+	}
+
+	protected abstract IFilteredCardStore<ICard> doGetFilteredStore();
 }

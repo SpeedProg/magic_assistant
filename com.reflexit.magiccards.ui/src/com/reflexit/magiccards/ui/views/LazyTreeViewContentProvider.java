@@ -35,6 +35,8 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	}
 
 	public void updateChildCount(Object element, int currentChildCount) {
+		if (root == null)
+			return;
 		synchronized (root) {
 			int count = 0;
 			if (element instanceof IFilteredCardStore) {
@@ -50,6 +52,8 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	}
 
 	public void updateElement(Object parent, int index) {
+		if (root == null)
+			return;
 		synchronized (root) {
 			CardGroup group = null;
 			if (parent instanceof IFilteredCardStore) {

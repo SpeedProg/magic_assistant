@@ -203,9 +203,9 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		}
 		monitor.worked(1);
 		ICardStore<IMagicCard> store = col.getStore();
-		MagicCardFilter filter = new MagicCardFilter();
 		HashMap<String, String> filterset = new HashMap<String, String>();
 		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
+		MagicCardFilter filter = dbcards.getFilter();
 		try {
 			for (Edition ed : sets) {
 				String editionId = Editions.getInstance().getPrefConstantByName(ed.getName());
@@ -217,7 +217,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			String rarity1 = Rarity.getInstance().getPrefConstant(Rarity.MYTHIC_RARE);
 			filterset.put(rarity1, "true");
 			filter.update(filterset);
-			dbcards.update(filter);
+			dbcards.update();
 			if (dbcards.getSize() == 0) {
 				throw new MagicException("No cards found in the selected sets");
 			}
@@ -229,7 +229,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			rarity = Rarity.getInstance().getPrefConstant(Rarity.UNCOMMON);
 			filterset.put(rarity, "true");
 			filter.update(filterset);
-			dbcards.update(filter);
+			dbcards.update();
 			generateRandom(3 * packs, dbcards, store, col);
 			monitor.worked(3);
 			// 11*packs common
@@ -237,7 +237,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			rarity = Rarity.getInstance().getPrefConstant(Rarity.COMMON);
 			filterset.put(rarity, "true");
 			filter.update(filterset);
-			dbcards.update(filter);
+			dbcards.update();
 			generateRandom(11 * packs, dbcards, store, col);
 		} finally {
 			monitor.done();

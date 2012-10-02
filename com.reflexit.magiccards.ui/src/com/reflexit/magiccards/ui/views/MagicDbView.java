@@ -53,16 +53,16 @@ public class MagicDbView extends AbstractCardsView {
 	}
 
 	@Override
-	public IFilteredCardStore doGetFilteredStore() {
-		return DataManager.getCardHandler().getMagicDBFilteredStore();
-	}
-
-	@Override
 	protected AbstractMagicCardsListControl doGetViewControl() {
 		return new AbstractMagicCardsListControl(this) {
 			@Override
 			public IMagicColumnViewer createViewerManager() {
 				return new CompositeViewerManager(getPreferencePageId());
+			}
+
+			@Override
+			public IFilteredCardStore doGetFilteredStore() {
+				return DataManager.getCardHandler().getMagicDBFilteredStore();
 			}
 		};
 	}

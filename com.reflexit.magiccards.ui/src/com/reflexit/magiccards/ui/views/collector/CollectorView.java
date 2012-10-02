@@ -10,11 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.collector;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -31,15 +26,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -52,7 +38,6 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	public static final String ID = CollectorView.class.getName();
 	private Action delete;
 	private Action refresh;
-	private MemoryFilteredCardStore<IMagicCard> fstore = new MemoryFilteredCardStore<IMagicCard>();
 
 	/**
 	 * The constructor.
@@ -104,56 +89,9 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 
 			@Override
 			public void run() {
-				populateStore(new NullProgressMonitor());
-				updateViewer();
+				reloadData();
 			}
 		};
-	}
-
-	@Override
-	protected void populateStore(IProgressMonitor monitor) {
-		super.populateStore(monitor);
-		fstore.clear();
-		ICardStore lib = DataManager.getCardHandler().getLibraryFilteredStore().getCardStore();
-		// ICardStore magicDB = DataManager.getCardHandler().getMagicDBStore();
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(lib.size());
-		// for (Iterator iterator = magicDB.iterator(); iterator.hasNext();) {
-		// IMagicCard card = (IMagicCard) iterator.next();
-		// list.add(card);
-		// }
-		for (Iterator iterator = lib.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			list.add(card);
-		}
-		ICardStore cardStore = getFilteredStore().getCardStore();
-		cardStore.addAll(list);
-		Object[] elements;
-		synchronized (getFilteredStore()) {
-			getFilteredStore().update(getFilter());
-			elements = getFilteredStore().getCardGroupRoot().getChildren();
-		}
-		for (int i = 0; i < elements.length; i++) {
-			CardGroup cardGroup = (CardGroup) elements[i];
-			// suppose to be groupped by set
-			if (cardGroup.getFieldIndex() != MagicCardField.SET)
-				continue;
-			IMagicCard firstCard = cardGroup.getFirstCard();
-			String set = firstCard == null ? cardGroup.getName() : firstCard.getSet();
-			Location loc = Location.createLocationFromSet(set);
-			ICardStore<IMagicCard> store = ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc);
-			for (Iterator iterator = store.iterator(); iterator.hasNext();) {
-				IMagicCard card = (IMagicCard) iterator.next();
-				if (!cardStore.contains(card)) {
-					cardStore.add(card);
-				}
-			}
-		}
-		getFilteredStore().update(getFilter());
-	}
-
-	@Override
-	public IFilteredCardStore doGetFilteredStore() {
-		return fstore;
 	}
 
 	/**
