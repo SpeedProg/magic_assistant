@@ -253,7 +253,8 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	public void handleEvent(CardEvent event) {
 		// Propagate event from sub storages
 		doInitialize();
-		fireEvent(event);
+		if (isListenerAttached())
+			fireEvent(event);
 	}
 
 	IStorage<T> storageWrapper = new IStorage<T>() {

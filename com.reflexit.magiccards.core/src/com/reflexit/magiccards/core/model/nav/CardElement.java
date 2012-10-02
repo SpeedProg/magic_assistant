@@ -141,7 +141,8 @@ public abstract class CardElement extends EventManager {
 	}
 
 	public void update() {
-		fireEvent(new CardEvent(this, CardEvent.UPDATE_CONTAINER, null));
+		if (isListenerAttached())
+			fireEvent(new CardEvent(this, CardEvent.UPDATE_CONTAINER, null));
 		return;
 	}
 

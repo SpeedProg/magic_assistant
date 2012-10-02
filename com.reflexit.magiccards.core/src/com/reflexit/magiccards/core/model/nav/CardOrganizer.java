@@ -47,7 +47,8 @@ public class CardOrganizer extends CardElement {
 
 	public void addChild(CardElement a) {
 		this.children.add(a);
-		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER, a));
+		if (isListenerAttached())
+			fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER, a));
 	}
 
 	public void create() throws IOException {

@@ -29,7 +29,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	public boolean addAll(final Collection<? extends T> cards) {
 		initialize();
 		boolean modified = doAddAll(cards);
-		if (modified) {
+		if (modified && isListenerAttached()) {
 			fireEvent(new CardEvent(this, CardEvent.ADD, cards));
 		}
 		return modified;
@@ -69,7 +69,8 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 			if (!doAddCard(card))
 				return false;
 		}
-		fireEvent(new CardEvent(this, CardEvent.ADD, card));
+		if (isListenerAttached())
+			fireEvent(new CardEvent(this, CardEvent.ADD, card));
 		return true;
 	}
 
@@ -79,7 +80,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		synchronized (this) {
 			res = doRemoveCard(o);
 		}
-		if (res)
+		if (res && isListenerAttached())
 			fireEvent(new CardEvent(this, CardEvent.REMOVE, o));
 		return res;
 	}
@@ -87,7 +88,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	public boolean removeAll(Collection<? extends T> list) {
 		initialize();
 		boolean modified = doRemoveAll(list);
-		if (modified) {
+		if (modified && isListenerAttached()) {
 			fireEvent(new CardEvent(this, CardEvent.REMOVE, list));
 		}
 		return modified;
@@ -96,7 +97,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	public boolean removeAll() {
 		initialize();
 		boolean modified = doRemoveAll();
-		if (modified) {
+		if (modified && isListenerAttached()) {
 			fireEvent(new CardEvent(this, CardEvent.REMOVE, null));
 		}
 		return modified;
@@ -178,7 +179,8 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 			if (!doUpdate(card))
 				return;
 		}
-		fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
+		if (isListenerAttached())
+			fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
 		return;
 	}
 
