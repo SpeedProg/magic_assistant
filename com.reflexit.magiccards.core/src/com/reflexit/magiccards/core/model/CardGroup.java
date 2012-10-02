@@ -97,11 +97,11 @@ public class CardGroup implements ICardCountable, ICard {
 				} else if (field == MagicCardField.POWER || field == MagicCardField.TOUGHNESS) {
 					Float fvalue = MagicCard.convertFloat((String) value);
 					Float fmain = MagicCard.convertFloat((String) mine);
-					if (fvalue == IMagicCard.NOT_APPLICABLE_POWER)
+					if (fvalue.isNaN())
 						fvalue = 0f;
-					if (fmain == IMagicCard.NOT_APPLICABLE_POWER)
+					if (fmain.isNaN())
 						fmain = 0f;
-					if (o instanceof MagicCardPhysical) {
+					if (o instanceof ICardCountable) {
 						// && ((MagicCardPhysical) o).isOwn()
 						int count = ((ICardCountable) o).getCount();
 						newmine = fmain + fvalue * count;
@@ -161,7 +161,6 @@ public class CardGroup implements ICardCountable, ICard {
 			return cc.intValue();
 		}
 		int cci = 0;
-		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
 		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
 			if (object instanceof IMagicCard) {
@@ -176,7 +175,6 @@ public class CardGroup implements ICardCountable, ICard {
 				cci += ((CardGroup) object).getCreatureCount();
 			}
 		}
-		cci += uniq.size();
 		setProperty(CREATURECOUNT_KEY, cci);
 		return cci;
 	}
