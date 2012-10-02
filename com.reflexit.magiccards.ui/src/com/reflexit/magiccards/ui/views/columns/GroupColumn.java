@@ -11,13 +11,15 @@ import com.reflexit.magiccards.ui.utils.ImageCreator;
 public class GroupColumn extends GenColumn {
 	public static final String COL_NAME = "Name";
 	private ICardField groupField;
+	private boolean showCount = true;
 
 	public GroupColumn() {
 		super(MagicCardField.NAME, COL_NAME);
 	}
 
-	public GroupColumn(ICardField field, String columnName) {
-		super(field, columnName);
+	public GroupColumn(boolean showCount) {
+		this();
+		this.showCount = showCount;
 	}
 
 	@Override
@@ -42,7 +44,11 @@ public class GroupColumn extends GenColumn {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardGroup) {
-			return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getCount() + ")";
+			if (!showCount) {
+				return ((CardGroup) element).getName();
+			} else {
+				return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getCount() + ")";
+			}
 		}
 		if (element instanceof IMagicCard) {
 			return ((IMagicCard) element).getName();
@@ -60,7 +66,7 @@ public class GroupColumn extends GenColumn {
 
 	@Override
 	public ICardField getSortField() {
-		return groupField;
+		return groupField == null ? dataIndex : groupField;
 	}
 
 	@Override
