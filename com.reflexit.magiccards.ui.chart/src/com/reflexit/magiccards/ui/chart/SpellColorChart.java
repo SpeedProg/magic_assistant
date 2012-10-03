@@ -3,13 +3,14 @@ package com.reflexit.magiccards.ui.chart;
 import org.eclipse.birt.chart.model.Chart;
 import org.eclipse.birt.chart.model.ChartWithoutAxes;
 import org.eclipse.birt.chart.model.attribute.ChartDimension;
-import org.eclipse.birt.chart.model.attribute.ColorDefinition;
 import org.eclipse.birt.chart.model.attribute.DataPoint;
 import org.eclipse.birt.chart.model.attribute.DataPointComponent;
 import org.eclipse.birt.chart.model.attribute.DataPointComponentType;
+import org.eclipse.birt.chart.model.attribute.Fill;
 import org.eclipse.birt.chart.model.attribute.Position;
 import org.eclipse.birt.chart.model.attribute.impl.ColorDefinitionImpl;
 import org.eclipse.birt.chart.model.attribute.impl.DataPointComponentImpl;
+import org.eclipse.birt.chart.model.attribute.impl.GradientImpl;
 import org.eclipse.birt.chart.model.attribute.impl.JavaNumberFormatSpecifierImpl;
 import org.eclipse.birt.chart.model.component.Series;
 import org.eclipse.birt.chart.model.component.impl.SeriesImpl;
@@ -90,10 +91,9 @@ public class SpellColorChart implements IChartGenerator {
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
 		DataPointComponent dpc1 = DataPointComponentImpl.create(DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
-		        JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
-		DataPointComponent dpc2 = DataPointComponentImpl.create(
-		        DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL, JavaNumberFormatSpecifierImpl
-		                .create(" (##.##%)")); //$NON-NLS-1$
+				JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
+		DataPointComponent dpc2 = DataPointComponentImpl.create(DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL,
+				JavaNumberFormatSpecifierImpl.create(" (##.##%)")); //$NON-NLS-1$
 		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL, null);
 		dataPoint.getComponents().add(dpc3);
 		dataPoint.getComponents().add(dpc1);
@@ -104,12 +104,12 @@ public class SpellColorChart implements IChartGenerator {
 	private void createPallette(SeriesDefinition sd) {
 		sd.getSeriesPalette().getEntries().clear();
 		for (String colorName : labels) {
-			ColorDefinition colorDef = getColorByName(colorName);
+			Fill colorDef = getColorByName(colorName);
 			sd.getSeriesPalette().getEntries().add(colorDef);
 		}
 	}
 
-	private ColorDefinition getColorByName(String colorName) {
+	private Fill getColorByName(String colorName) {
 		if (colorName.equals("Black"))
 			return ColorDefinitionImpl.BLACK();
 		if (colorName.equals("Red"))
@@ -120,26 +120,26 @@ public class SpellColorChart implements IChartGenerator {
 			return ColorDefinitionImpl.WHITE();
 		if (colorName.equals("Blue"))
 			return ColorDefinitionImpl.BLUE();
-		if (colorName.equals("Black-White"))
-			return ColorDefinitionImpl.GREY().brighter();
-		if (colorName.equals("Black-Green"))
-			return ColorDefinitionImpl.GREEN().darker();
-		if (colorName.equals("Black-Blue"))
-			return ColorDefinitionImpl.BLUE().darker();
-		if (colorName.equals("Black-Red"))
-			return ColorDefinitionImpl.RED().darker();
+		if (colorName.equals("White-Black"))
+			return GradientImpl.create(ColorDefinitionImpl.WHITE(), ColorDefinitionImpl.BLACK());
+		if (colorName.equals("White-Green"))
+			return GradientImpl.create(ColorDefinitionImpl.WHITE(), ColorDefinitionImpl.GREEN());
+		if (colorName.equals("White-Red"))
+			return GradientImpl.create(ColorDefinitionImpl.WHITE(), ColorDefinitionImpl.RED());
+		if (colorName.equals("White-Blue"))
+			return GradientImpl.create(ColorDefinitionImpl.WHITE(), ColorDefinitionImpl.BLUE());
+		if (colorName.equals("Blue-Black"))
+			return GradientImpl.create(ColorDefinitionImpl.BLUE(), ColorDefinitionImpl.BLACK());
 		if (colorName.equals("Blue-Green"))
-			return ColorDefinitionImpl.create(0xcc, 0xff, 0xff);
+			return GradientImpl.create(ColorDefinitionImpl.BLUE(), ColorDefinitionImpl.GREEN());
 		if (colorName.equals("Blue-Red"))
-			return ColorDefinitionImpl.create(0xff, 0x88, 0xee);
-		if (colorName.equals("Blue-White"))
-			return ColorDefinitionImpl.BLUE().brighter();
-		if (colorName.equals("Green-Red"))
-			return ColorDefinitionImpl.create(0xdd, 0xcc, 0x77);
-		if (colorName.equals("Green-White"))
-			return ColorDefinitionImpl.GREEN().brighter();
-		if (colorName.equals("Red-White"))
-			return ColorDefinitionImpl.create(0xff, 0xcc, 0xcc);
+			return GradientImpl.create(ColorDefinitionImpl.BLUE(), ColorDefinitionImpl.RED());
+		if (colorName.equals("Black-Red"))
+			return GradientImpl.create(ColorDefinitionImpl.BLACK(), ColorDefinitionImpl.RED());
+		if (colorName.equals("Black-Green"))
+			return GradientImpl.create(ColorDefinitionImpl.BLACK(), ColorDefinitionImpl.GREEN());
+		if (colorName.equals("Red-Green"))
+			return GradientImpl.create(ColorDefinitionImpl.RED(), ColorDefinitionImpl.GREEN());
 		if (colorName.equals("Colorless"))
 			return ColorDefinitionImpl.GREY().transparent();
 		// Other golds
