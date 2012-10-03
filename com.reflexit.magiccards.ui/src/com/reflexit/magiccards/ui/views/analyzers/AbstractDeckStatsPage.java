@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -21,10 +22,7 @@ import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
-import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
-import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
-import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 
 public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
@@ -57,18 +55,6 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 		listControl.createPartControl(parent);
 		// listControl.getFilter().setGroupFields(getGroupFields());
 		stats = (TreeViewer) listControl.getManager().getViewer();
-		// stats = new TreeViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL |
-		// SWT.V_SCROLL | SWT.BORDER);
-		// stats.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-		// TreeViewerColumn col1 = new TreeViewerColumn(stats, SWT.NONE);
-		// col1.getColumn().setText("Name");
-		// col1.getColumn().setWidth(200);
-		// TreeViewerColumn col2 = new TreeViewerColumn(stats, SWT.NONE);
-		// col2.getColumn().setText("Count");
-		// col2.getColumn().setWidth(60);
-		// TreeViewerColumn col3 = new TreeViewerColumn(stats, SWT.NONE);
-		// col3.getColumn().setText("Percent");
-		// col3.getColumn().setWidth(60);
 		stats.setAutoExpandLevel(3);
 		stats.getTree().setHeaderVisible(true);
 		// stats.setContentProvider(new GroupContentProvider());
@@ -81,35 +67,6 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 				}
 			}
 		});
-		// col1.setLabelProvider(new ColumnLabelProvider() {
-		// @Override
-		// public String getText(Object element) {
-		// if (element instanceof CardGroup) {
-		// CardGroup node = (CardGroup) element;
-		// return node.getName();
-		// } else if (element instanceof IMagicCard) {
-		// IMagicCard node = (IMagicCard) element;
-		// return node.getName();
-		// }
-		// return null;
-		// }
-		// });
-		// col2.setLabelProvider(new ColumnLabelProvider() {
-		// @Override
-		// public String getText(Object element) {
-		// int count = getCount(element);
-		// return count + "";
-		// }
-		// });
-		// col3.setLabelProvider(new ColumnLabelProvider() {
-		// @Override
-		// public String getText(Object element) {
-		// int count = getCount(element);
-		// final int total = ((CardGroup) stats.getInput()).getCount();
-		// float per = count / (float) total;
-		// return new DecimalFormat("00.00%").format(per);
-		// }
-		// });
 	}
 
 	public GroupListControl doGetMagicCardListControl() {
@@ -118,13 +75,9 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 			public IMagicColumnViewer createViewerManager() {
 				return new GroupTreeManager(getPreferencePageId()) {
 					@Override
-					protected ColumnCollection doGetColumnCollection(String prefPageId) {
-						return new GroupTreeColumnCollection() {
-							@Override
-							protected void createColumns() {
-								createCustomColumns(columns);
-							}
-						};
+					protected void createCustomColumns(ArrayList<AbstractColumn> columns) {
+						super.createCustomColumns(columns);
+						AbstractDeckStatsPage.this.createCustomColumns(columns);
 					}
 				};
 			}
@@ -132,8 +85,6 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 	}
 
 	protected void createCustomColumns(List<AbstractColumn> columns) {
-		columns.add(new GroupColumn(false));
-		columns.add(new CountColumn());
 		columns.add(new GenColumn(MagicCardFieldPhysical.COUNT, "Percent") {
 			@Override
 			public String getText(Object element) {
@@ -145,7 +96,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 
 			@Override
 			public int getColumnWidth() {
-				return 45;
+				return 52;
 			}
 		});
 	}

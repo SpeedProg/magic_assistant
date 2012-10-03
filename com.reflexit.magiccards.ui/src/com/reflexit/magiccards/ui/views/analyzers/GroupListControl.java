@@ -1,22 +1,23 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.TreeViewerManager;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.CountColumn;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public class GroupListControl extends AbstractMagicCardsListControl {
@@ -34,33 +35,23 @@ public class GroupListControl extends AbstractMagicCardsListControl {
 		}
 
 		@Override
-		public void hookDragAndDrop() {
-			this.getViewer().getControl().setDragDetect(true);
-			int ops = DND.DROP_COPY | DND.DROP_MOVE;
-			Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-			getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
+		protected ColumnCollection doGetColumnCollection(String prefPageId) {
+			return new MagicColumnCollection(prefPageId) {
+				@Override
+				protected void createColumns() {
+					createCustomColumns(columns);
+				}
+			};
 		}
 
-		@Override
-		protected ColumnCollection doGetColumnCollection(String prefPageId) {
-			// return super.doGetColumnCollection(prefPageId);
-			return new GroupTreeColumnCollection();
+		protected void createCustomColumns(ArrayList<AbstractColumn> columns) {
+			columns.add(new GroupColumn(false));
+			columns.add(new CountColumn());
 		}
 
 		@Override
 		public void updateColumns(String value) {
 			// no update
-		}
-	}
-
-	public class GroupTreeColumnCollection extends MagicColumnCollection {
-		public GroupTreeColumnCollection() {
-			super(null);
-		}
-
-		@Override
-		protected void createColumns() {
-			super.createColumns();
 		}
 	}
 

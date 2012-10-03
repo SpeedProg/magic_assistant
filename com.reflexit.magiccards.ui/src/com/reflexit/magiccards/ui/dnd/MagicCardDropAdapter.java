@@ -25,7 +25,6 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -68,8 +67,9 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 	}
 
 	private Location determineLocation() {
-		IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-		Location targetLocation = ((ILocatable) target).getLocation();
+		Object input = getViewer().getInput();
+		ILocatable target = (ILocatable) input;
+		Location targetLocation = target.getLocation();
 		return targetLocation;
 	}
 
