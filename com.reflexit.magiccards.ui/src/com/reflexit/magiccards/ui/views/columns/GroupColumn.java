@@ -12,26 +12,30 @@ public class GroupColumn extends GenColumn {
 	public static final String COL_NAME = "Name";
 	private ICardField groupField;
 	private boolean showCount = true;
+	private boolean showImage = true;
 
 	public GroupColumn() {
 		super(MagicCardField.NAME, COL_NAME);
 	}
 
-	public GroupColumn(boolean showCount) {
+	public GroupColumn(boolean showCount, boolean showSetImage) {
 		this();
 		this.showCount = showCount;
+		this.showImage = showSetImage;
 	}
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof CardGroup) {
-			if (((CardGroup) element).getFieldIndex() == MagicCardField.NAME) {
-				return ImageCreator.getInstance().getSetImage(((CardGroup) element).getFirstCard());
+		if (showImage) {
+			if (element instanceof CardGroup) {
+				if (((CardGroup) element).getFieldIndex() == MagicCardField.NAME) {
+					return ImageCreator.getInstance().getSetImage(((CardGroup) element).getFirstCard());
+				}
 			}
-		}
-		if (element instanceof IMagicCard) {
-			IMagicCard card = (IMagicCard) element;
-			return ImageCreator.getInstance().getSetImage(card);
+			if (element instanceof IMagicCard) {
+				IMagicCard card = (IMagicCard) element;
+				return ImageCreator.getInstance().getSetImage(card);
+			}
 		}
 		return null;
 	}

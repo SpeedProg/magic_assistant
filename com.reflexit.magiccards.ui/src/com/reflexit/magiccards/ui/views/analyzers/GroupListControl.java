@@ -45,7 +45,7 @@ public class GroupListControl extends AbstractMagicCardsListControl {
 		}
 
 		protected void createCustomColumns(ArrayList<AbstractColumn> columns) {
-			columns.add(new GroupColumn(false));
+			columns.add(new GroupColumn(false, false));
 			columns.add(new CountColumn());
 		}
 
