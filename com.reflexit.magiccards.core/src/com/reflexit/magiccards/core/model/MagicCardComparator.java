@@ -61,6 +61,8 @@ class MagicCardComparator implements Comparator {
 		if (c1 == c2)
 			return 0;
 		int dir = accending ? 1 : -1;
+		if (c1.getClass() != c2.getClass())
+			return dir * c1.getClass().getName().compareTo(c2.getClass().getName());
 		ICardField sort = field;
 		Object a1 = c1.getObjectByField(sort);
 		Object a2 = c2.getObjectByField(sort);

@@ -11,24 +11,27 @@ public class SortOrder extends ArrayList<MagicCardComparator> implements Compara
 			return 0; // this is only case it is 0
 		SortOrder sortOrder = this;
 		int dir = sortOrder.isAccending() ? 1 : -1;
-		int d = 0;
 		for (int i = sortOrder.size() - 1; i >= 0; i--) {
 			MagicCardComparator elem = sortOrder.get(i);
-			d = elem.compare(o1, o2);
+			int d = elem.compare(o1, o2);
 			if (d != 0)
 				return d;
 		}
-		if (d == 0) {
-			if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
-				IMagicCard c1 = (IMagicCard) o1;
-				IMagicCard c2 = (IMagicCard) o2;
-				if (c1.getCardId() != 0) {
-					d = dir * (c1.getCardId() - c2.getCardId());
-				}
+		// everything is equal try id's
+		if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
+			IMagicCard c1 = (IMagicCard) o1;
+			IMagicCard c2 = (IMagicCard) o2;
+			if (c1.getCardId() != 0 && c2.getCardId() != 0) {
+				return dir * (c1.getCardId() - c2.getCardId());
 			}
 		}
-		if (d != 0)
-			return d;
+		// everything is equal try name
+		if (o1 instanceof ICard && o2 instanceof ICard) {
+			String name1 = (String) (((ICard) o1).getObjectByField(MagicCardField.NAME));
+			String name2 = (String) ((ICard) o2).getObjectByField(MagicCardField.NAME);
+			if (name1 != null && name2 != null)
+				return dir * name1.compareTo(name2);
+		}
 		return dir * (System.identityHashCode(o1) - System.identityHashCode(o2));
 	}
 
