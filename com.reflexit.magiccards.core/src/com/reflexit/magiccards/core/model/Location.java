@@ -90,11 +90,15 @@ public class Location implements Comparable<Location> {
 		return CardElement.nameFromFile(location);
 	}
 
-	public static Location createLocation(LocationPath path) {
-		String str = path.toPortableString();
+	public static Location valueOf(String str) {
 		if (str.length() == 0)
 			return NO_WHERE;
 		return new Location(str);
+	}
+
+	public static Location createLocation(LocationPath path) {
+		String str = path.toPortableString();
+		return Location.valueOf(str);
 	}
 
 	public static Location createLocation(File file, Location parent) {

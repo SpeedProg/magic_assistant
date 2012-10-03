@@ -114,7 +114,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 					if (mine.equals(value)) {
 						// good
 					} else {
-						newmine = new Location("unknown");
+						newmine = Location.NO_WHERE;
 					}
 				} else if (field.getType() == String.class) {
 					if (mine.equals(value)) {

@@ -269,7 +269,7 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 				setComment(value);
 				break;
 			case LOCATION:
-				setLocation(new Location(value));
+				setLocation(Location.valueOf(value));
 				break;
 			case CUSTOM:
 				setCustom(value);
