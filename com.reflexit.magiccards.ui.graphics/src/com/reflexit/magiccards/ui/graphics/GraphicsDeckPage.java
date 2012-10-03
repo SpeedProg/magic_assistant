@@ -21,7 +21,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
+import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckPage;
 
 public class GraphicsDeckPage extends AbstractDeckPage {
 	private DesktopCanvas panel;
