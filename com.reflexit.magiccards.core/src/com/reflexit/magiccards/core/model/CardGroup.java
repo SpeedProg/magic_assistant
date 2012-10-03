@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.reflexit.magiccards.core.model.storage.ILocatable;
+
 /**
  * @author Alena
  * 
  */
-public class CardGroup implements ICardCountable, ICard {
+public class CardGroup implements ICardCountable, ICard, ILocatable {
 	private String name;
 	private ICardField groupField;
 	private int count;
@@ -73,8 +75,8 @@ public class CardGroup implements ICardCountable, ICard {
 		// allNonTransientFields = MagicCardField.allNonTransientFields();
 		// else
 		allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
-		for (int i = 0; i < allNonTransientFields.length; i++) {
-			ICardField field = allNonTransientFields[i];
+		for (int i = 0; i < allNonTransientFields.length + 1; i++) {
+			ICardField field = i == 0 ? MagicCardFieldPhysical.LOCATION : allNonTransientFields[i - 1];
 			if (field == MagicCardField.NAME) {
 				continue;
 			}
@@ -107,6 +109,12 @@ public class CardGroup implements ICardCountable, ICard {
 						newmine = fmain + fvalue * count;
 					} else {
 						newmine = fmain + fvalue;
+					}
+				} else if (field == MagicCardFieldPhysical.LOCATION) {
+					if (mine.equals(value)) {
+						// good
+					} else {
+						newmine = new Location("unknown");
 					}
 				} else if (field.getType() == String.class) {
 					if (mine.equals(value)) {
@@ -458,5 +466,15 @@ public class CardGroup implements ICardCountable, ICard {
 			CardGroup o = iterator.next();
 			o.setComparator(comparator);
 		}
+	}
+
+	public void setLocation(Location location) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Location getLocation() {
+		if (getBase() instanceof ILocatable)
+			return ((ILocatable) getBase()).getLocation();
+		return null;
 	}
 }
