@@ -286,7 +286,7 @@ public final class CardStoreUtils {
 			real.add(elem);
 		}
 		CardGroup root = new CardGroup(MagicCardField.COST, ""); //$NON-NLS-1$
-		CardGroup colorNode = new CardGroup(MagicCardField.COST, "Color");
+		CardGroup colorNode = new CardGroup(MagicCardField.COST, "Colour");
 		root.add(colorNode);
 		for (CardGroup cardGroup : groupsList.values()) {
 			colorNode.add(cardGroup);
