@@ -28,7 +28,6 @@ import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 public class InfoPage extends AbstractDeckPage implements IDeckPage {

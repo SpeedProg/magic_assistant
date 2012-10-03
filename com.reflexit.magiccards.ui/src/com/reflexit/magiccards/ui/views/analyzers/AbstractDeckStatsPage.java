@@ -23,7 +23,6 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 
 public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 	protected ChartCanvas canvas;

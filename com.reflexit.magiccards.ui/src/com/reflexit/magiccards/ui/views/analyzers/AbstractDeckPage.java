@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.views.lib;
+package com.reflexit.magiccards.ui.views.analyzers;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -25,6 +25,8 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.views.lib.DeckView;
+import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 /**
  * AbstractDeckPage class

@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
-import com.reflexit.magiccards.ui.views.lib.AbstractDeckPage;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 /**
