@@ -103,7 +103,7 @@
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.analyzers.HandView"
             icon="icons/hand32.png"
-            id="com.reflexit.magiccards.ui.views.analyzers.HandViewPage"
+            id="com.reflexit.magiccards.ui.views.analyzers.HandView"
             name="Draw"
             restorable="true">
       </view>
