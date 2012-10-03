@@ -82,6 +82,20 @@ public abstract class CardElement extends EventManager {
 		removeListenerObject(lis);
 	}
 
+	protected void fireEvent(int type, Object data) {
+		if (isListenerAttachedRecurse()) {
+			fireEvent(new CardEvent(this, type, data));
+		}
+	}
+
+	public boolean isListenerAttachedRecurse() {
+		if (isListenerAttached())
+			return true;
+		if (parent != null)
+			return parent.isListenerAttachedRecurse();
+		return false;
+	}
+
 	protected void fireEvent(CardEvent event) {
 		Object[] listeners = getListeners();
 		for (Object listener : listeners) {
@@ -136,13 +150,12 @@ public abstract class CardElement extends EventManager {
 		File newFile = new File(parent.getFile(), value + ".xml");
 		getFile().renameTo(newFile);
 		CardElement x = newElement(value, getParent());
-		fireEvent(new CardEvent(x, CardEvent.RENAME_CONTAINER, oldName));
+		x.fireEvent(CardEvent.RENAME_CONTAINER, oldName);
 		return x;
 	}
 
 	public void update() {
-		if (isListenerAttached())
-			fireEvent(new CardEvent(this, CardEvent.UPDATE_CONTAINER, null));
+		fireEvent(CardEvent.UPDATE_CONTAINER, null);
 		return;
 	}
 
@@ -178,7 +191,7 @@ public abstract class CardElement extends EventManager {
 				fireRecorsiveRename(el, oldName.append(el.getName()));
 			}
 		}
-		cardElement.fireEvent(new CardEvent(cardElement, CardEvent.RENAME_CONTAINER, oldName));
+		cardElement.fireEvent(CardEvent.RENAME_CONTAINER, oldName);
 	}
 
 	public abstract CardElement newElement(String name, CardOrganizer parent);
