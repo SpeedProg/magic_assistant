@@ -54,6 +54,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		if (this.deck != store) {
 			this.deck = store;
 			shuffle();
+			draw(7);
 		}
 	}
 
@@ -95,10 +96,12 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		return deck.getLocation();
 	}
 
+	@Override
 	public void clear() {
 		this.deck = null;
 	}
 
+	@Override
 	public void addAll(ICardStore store) {
 		setStore(store);
 	}
