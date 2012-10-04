@@ -10,8 +10,10 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.analyzers;
 
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -70,6 +72,7 @@ public class AbstractDeckPage implements IDeckPage {
 	public void activate() {
 		// toolbar
 		IActionBars bars = view.getViewSite().getActionBars();
+		setGlobalHandlers(bars);
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
@@ -79,10 +82,31 @@ public class AbstractDeckPage implements IDeckPage {
 		viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
+		// context menu
+		hookContextMenu();
+		bars.updateActionBars();
 		// selection provider
 		getCardStore();
 		if (store == null)
 			return;
+	}
+
+	protected void setGlobalHandlers(IActionBars bars) {
+	}
+
+	protected MenuManager hookContextMenu() {
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}
+		});
+		return menuMgr;
+	}
+
+	protected void fillContextMenu(IMenuManager viewMenuManager) {
+		// override if need view menu
 	}
 
 	protected void fillLocalPullDown(IMenuManager viewMenuManager) {

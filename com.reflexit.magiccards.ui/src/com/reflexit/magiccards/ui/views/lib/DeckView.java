@@ -18,9 +18,11 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
@@ -40,11 +42,11 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-import com.reflexit.magiccards.ui.views.analyzers.CreaturePage;
-import com.reflexit.magiccards.ui.views.analyzers.SpellColourPage;
-import com.reflexit.magiccards.ui.views.analyzers.HandView;
-import com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage;
 import com.reflexit.magiccards.ui.views.analyzers.AbilityPage;
+import com.reflexit.magiccards.ui.views.analyzers.CreaturePage;
+import com.reflexit.magiccards.ui.views.analyzers.DrawPage;
+import com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage;
+import com.reflexit.magiccards.ui.views.analyzers.SpellColourPage;
 import com.reflexit.magiccards.ui.views.analyzers.TypePage;
 
 public class DeckView extends AbstractMyCardsView {
@@ -54,6 +56,7 @@ public class DeckView extends AbstractMyCardsView {
 	private CTabFolder folder;
 	private ArrayList<IDeckPage> pages;
 	private Action sideboard;
+	private DrawPage drawPage;
 
 	private static class DeckPageExtension {
 		private String name;
@@ -161,12 +164,13 @@ public class DeckView extends AbstractMyCardsView {
 	 *
 	 */
 	protected void runShuffle() {
-		try {
-			HandView view = (HandView) getViewSite().getWorkbenchWindow().getActivePage().showView(HandView.ID);
-			view.selectionChanged(this, new StructuredSelection(this.deck));
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		CTabItem[] items = folder.getItems();
+		for (int i = 0; i < items.length; i++) {
+			CTabItem cTabItem = items[i];
+			if (cTabItem.getData() == drawPage) {
+				folder.setSelection(cTabItem);
+				drawPage.activate();
+			}
 		}
 	}
 
@@ -231,6 +235,8 @@ public class DeckView extends AbstractMyCardsView {
 		createDeckTab("Creatures", new CreaturePage());
 		createDeckTab("Colors", new SpellColourPage());
 		createDeckTab("Abilities", new AbilityPage());
+		drawPage = new DrawPage();
+		createDeckTab("Draw", drawPage);
 		createExtendedTabs();
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
@@ -240,6 +246,11 @@ public class DeckView extends AbstractMyCardsView {
 			}
 		});
 		folder.setSelection(0);
+		folder.setSimple(false);
+		Display display = folder.getDisplay();
+		// folder.setBackground(display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
+		folder.setBackground(new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND), display.getSystemColor(SWT.COLOR_WHITE) },
+				new int[] { 50 });
 		refresh();
 	}
 

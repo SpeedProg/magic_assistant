@@ -93,6 +93,8 @@ public class LazyTableViewerManager extends ViewerManager {
 	}
 
 	public void updateColumns(String value) {
+		if (this.viewer.getTable().isDisposed())
+			return;
 		getColumnsCollection().updateColumnsFromPropery(value);
 		this.viewer.getTable().setColumnOrder(getColumnsCollection().getColumnsOrder());
 		TableColumn[] acolumns = this.viewer.getTable().getColumns();

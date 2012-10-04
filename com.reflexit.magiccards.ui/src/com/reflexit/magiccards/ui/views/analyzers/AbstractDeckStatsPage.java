@@ -55,7 +55,6 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 		// listControl.getFilter().setGroupFields(getGroupFields());
 		stats = (TreeViewer) listControl.getManager().getViewer();
 		stats.setAutoExpandLevel(3);
-		stats.getTree().setHeaderVisible(true);
 		// stats.setContentProvider(new GroupContentProvider());
 		stats.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override

@@ -146,6 +146,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.abstractCardsView = abstractCardsView;
 		prefStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
 		this.manager = createViewerManager();
+		setSite(abstractCardsView.getViewSite());
 	}
 
 	@Override
@@ -369,7 +370,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	public void runFind() {
 		searchControl.setVisible(true);
-		actionShowFind.setEnabled(false);
+		// actionShowFind.setEnabled(false);
 	}
 
 	// public void setFilteredCardStore(IFilteredCardStore<ICard> fstore) {
