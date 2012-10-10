@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views.collector;
 
 import java.util.HashSet;
 import java.util.Iterator;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
@@ -13,15 +12,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
 public class ProgressColumn extends GenColumn implements Listener {
@@ -57,10 +52,8 @@ public class ProgressColumn extends GenColumn implements Listener {
 				return String.format("%3d / %3d (%2d%%)", count, size, (int) per);
 			else
 				return String.format("%3d / ?", count);
-		} else if (element instanceof MagicCardPhysical) {
+		} else if (element instanceof IMagicCard) {
 			return getSizeCountText(element);
-		} else if (element instanceof MagicCard) {
-			return "no";
 		}
 		return super.getText(element);
 	}
@@ -68,12 +61,17 @@ public class ProgressColumn extends GenColumn implements Listener {
 	@Override
 	public String getToolTipText(Object element) {
 		if (element instanceof MagicCard) {
-			return "This card is not in any of your card collections";
+			if (((MagicCard) element).getPhysicalCards().size() == 0)
+				return "This card is not in any of your card collections";
+			int ownCount = ((MagicCard) element).getOwnCount();
+			if (ownCount == 0)
+				return "This means you have some virtual cards (you don't own them)";
+			return "You own " + ownCount + " of these cards";
 		}
 		if (element instanceof MagicCardPhysical) {
 			MagicCardPhysical card = (MagicCardPhysical) element;
 			if (card.isOwn()) {
-				return "You own " + card.getCount() + "of these cards";
+				return "You own " + card.getCount() + " of these cards";
 			} else {
 				return "This means you have " + card.getCount() + " virtual cards (you don't own them)";
 			}
@@ -82,14 +80,6 @@ public class ProgressColumn extends GenColumn implements Listener {
 			return "X/Y (Z%) - Means you have X unique cards you own out of Y possible in this class, which represents Z%";
 		}
 		return null;
-	}
-
-	protected ICardStore<IMagicCard> getSetStore(CardGroup cardGroup) {
-		if (cardGroup.size() == 0)
-			return null;
-		Location loc = Location.createLocationFromSet(cardGroup.getFirstCard().getSet());
-		ICardStore<IMagicCard> store = ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc);
-		return store;
 	}
 
 	public int getSetSize(CardGroup cardGroup) {
@@ -110,60 +100,74 @@ public class ProgressColumn extends GenColumn implements Listener {
 
 	public void handleEvent(Event event) {
 		switch (event.type) {
-		case SWT.PaintItem: {
-			if (event.index == this.columnIndex) {
-				Item item = (Item) event.item;
-				Object row = item.getData();
-				Rectangle bounds;
-				if (item instanceof TableItem)
-					bounds = ((TableItem) item).getBounds(event.index);
-				else if (item instanceof TreeItem)
-					bounds = ((TreeItem) item).getBounds(event.index);
-				else
-					return;
-				float per = 100;
-				if (row instanceof CardGroup) {
-					Float per1 = (Float) ((CardGroup) row).getProperty(PERCENT_KEY);
-					if (per1 == null)
-						per = Float.valueOf(0);
+			case SWT.PaintItem: {
+				if (event.index == this.columnIndex) {
+					Item item = (Item) event.item;
+					Object row = item.getData();
+					Rectangle bounds;
+					if (item instanceof TableItem)
+						bounds = ((TableItem) item).getBounds(event.index);
+					else if (item instanceof TreeItem)
+						bounds = ((TreeItem) item).getBounds(event.index);
 					else
-						per = per1;
-				} else if (row instanceof MagicCard || row instanceof MagicCardPhysical
-						&& (((MagicCardPhysical) row).getCount() == 0 || ((MagicCardPhysical) row).isOwn() == false)) {
-					per = 0;
+						return;
+					float per = 100;
+					if (row instanceof CardGroup) {
+						Float per1 = (Float) ((CardGroup) row).getProperty(PERCENT_KEY);
+						if (per1 == null)
+							per = Float.valueOf(0);
+						else
+							per = per1;
+					} else if (row instanceof MagicCard && ((MagicCard) row).getOwnCount() == 0) {
+						per = 0;
+					} else if (row instanceof MagicCardPhysical
+							&& (((MagicCardPhysical) row).getCount() == 0 || ((MagicCardPhysical) row).isOwn() == false)) {
+						per = 0;
+					}
+					if (per > 0) {
+						int width = (int) (bounds.width * per / 100);
+						event.gc.setBackground(barColor);
+						event.gc.setForeground(partColor);
+						event.gc.setAlpha(64);
+						event.gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width - width, bounds.height, false);
+						event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
+					} else {
+						event.gc.setBackground(missColor);
+						event.gc.setForeground(partColor);
+						event.gc.setAlpha(64);
+						event.gc.fillRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
+					}
 				}
-				if (per > 0) {
-					int width = (int) (bounds.width * per / 100);
-					event.gc.setBackground(barColor);
-					event.gc.setForeground(partColor);
-					event.gc.setAlpha(64);
-					event.gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width - width, bounds.height, false);
-					event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
-				} else {
-					event.gc.setBackground(missColor);
-					event.gc.setForeground(partColor);
-					event.gc.setAlpha(64);
-					event.gc.fillRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
-				}
+				break;
 			}
-			break;
-		}
 		}
 	}
 
 	public String getSizeCountText(Object element) {
+		int base = 0;
+		int virtual = 0;
+		int count = 0;
+		if (element instanceof MagicCard) {
+			MagicCard mc = (MagicCard) element;
+			base = mc.getOwnUnique();
+			virtual = mc.getPhysicalCards().size();
+			count = mc.getOwnCount();
+		}
 		if (element instanceof MagicCardPhysical) {
-			int base = 0;
+			count = ((MagicCardPhysical) element).getCount();
 			if (((MagicCardPhysical) element).isOwn()) {
 				base = 1;
+			} else {
+				virtual = 1;
+				count = 0;
 			}
-			int icount = ((MagicCardPhysical) element).getCount();
-			String prefix = base == 0 ? "no" : "yes";
-			if (icount != base)
-				return prefix + " (" + String.valueOf(icount) + ")";
-			else
-				return prefix + "";
 		}
-		return "no";
+		if (base == 0 && virtual == 0)
+			return "no";
+		String prefix = base == 0 ? "no" : "yes";
+		if (count != base && count > 0)
+			return prefix + " (" + String.valueOf(count) + ")";
+		else
+			return prefix + "";
 	}
 }

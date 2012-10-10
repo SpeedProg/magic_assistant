@@ -13,7 +13,6 @@ package com.reflexit.magiccards.ui.views.collector;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -24,8 +23,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
-
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -54,9 +51,7 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
-		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
+		activateActionHandler(delete, "org.eclipse.ui.edit.delete");
 		super.setGlobalHandlers(bars);
 	}
 
