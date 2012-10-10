@@ -8,93 +8,93 @@ Legends|LE|LEG|June 1994|Expansion||
 The Dark|DK|DRK|August 1994|Expansion||
 Fallen Empires|FE|FEM|November 1994|Expansion||
 Fourth Edition|4E|4ED|April 1995|Core||
-Ice Age|IA|ICE|June 1995|Expansion||
+Ice Age|IA|ICE|June 1995|Expansion|Ice Age|
 Chronicles|CH|CHR|July 1995|Reprint||
 Homelands|HM|HML|October 1995|Expansion||
-Alliances|AL|ALL|June 1996|Expansion||
-Mirage|MI|MIR|October 1996|Expansion||
-Visions|VI|VIS|February 1997|Expansion||
+Alliances|AL|ALL|June 1996|Expansion|Ice Age|
+Mirage|MI|MIR|October 1996|Expansion|Mirage|
+Visions|VI|VIS|February 1997|Expansion|Mirage|
 Fifth Edition|5E|5ED|March 1997|Core||
-Weatherlight|WL|WTH|June 1997|Expansion||
+Weatherlight|WL|WTH|June 1997|Expansion|Mirage|
 Portal|PO|POR|June 1997|Starter||
 Vanguard|VAN||August 1997|Modifiers||
-Tempest|TE|TMP|October 1997|Expansion||
-Stronghold|ST|STH,SH|March 1998|Expansion||
+Tempest|TE|TMP|October 1997|Expansion|Tempest|
+Stronghold|ST|STH,SH|March 1998|Expansion|Tempest|
 Anthologies|AT||April 1998|Starter||
-Exodus|EX|EXO|June 1998|Expansion||
+Exodus|EX|EXO|June 1998|Expansion|Tempest|
 Portal Second Age|P2|P02|June 1998|Starter||
 Unglued|UG|UGL|August 1998|Un_set||
-Urza's Saga|UZ|USG,US|October 1998|Expansion||
+Urza's Saga|UZ|USG,US|October 1998|Expansion|Urza|
 Battle Royale Box Set|BR|BRB|November 1998|Reprint||
-Urza's Legacy|GU|ULG,UL|February 1999|Expansion||
+Urza's Legacy|GU|ULG,UL|February 1999|Expansion|Urza|
 Classic Sixth Edition|6E|6ED|April 1999|Core||
 Portal Three Kingdoms|PK|PTK|May 1999|Starter||
-Urza's Destiny|CG|UDS,UD|June 1999|Expansion||
+Urza's Destiny|CG|UDS,UD|June 1999|Expansion|Urza|
 Starter 1999|P3|S99|July 1999|Starter||
-Mercadian Masques|MM|MMQ|October 1999|Expansion||
-Nemesis|NE|NMS|February 2000|Expansion||
-Prophecy|PR|PCY|June 2000|Expansion||
+Mercadian Masques|MM|MMQ|October 1999|Expansion|Masques|
+Nemesis|NE|NMS|February 2000|Expansion|Masques|
+Prophecy|PR|PCY|June 2000|Expansion|Masques|
 Starter 2000|P4|S00|July 2000|Starter||
-Invasion|IN|INV|October 2000|Expansion||
+Invasion|IN|INV|October 2000|Expansion|Invasion|
 Beatdown Box Set|BD|BTD|December 2000|Reprint||
-Planeshift|PS|PLS|February 2001|Expansion||
+Planeshift|PS|PLS|February 2001|Expansion|Invasion|
 Seventh Edition|7E|7ED|April 2001|Core||
-Apocalypse|AP|APC|June 2001|Expansion||
-Odyssey|OD|ODY|October 2001|Expansion||
-Torment|TOR|TO|February 2002|Expansion||
-Judgment|JUD|JU|May 2002|Expansion||
-Onslaught|ONS|ON|October 2002|Expansion||
-Legions|LGN||February 2003|Expansion||
+Apocalypse|AP|APC|June 2001|Expansion|Invasion|
+Odyssey|OD|ODY|October 2001|Expansion|Odyssey|
+Torment|TOR|TO|February 2002|Expansion|Odyssey|
+Judgment|JUD|JU|May 2002|Expansion|Odyssey|
+Onslaught|ONS|ON|October 2002|Expansion|Onslaught|
+Legions|LGN||February 2003|Expansion|Onslaught|
 Eighth Edition|8ED|8E|July 2003|Core||Modern
-Scourge|SCG|SC|May 2003|Expansion||
-Mirrodin|MRD|MR|October 2003|Expansion||Modern
-Champions of Kamigawa|CHK||October 2004|Expansion||Modern
-Darksteel|DST||February 2004|Expansion||Modern
-Fifth Dawn|5DN|FD|June 2004|Expansion||Modern
+Scourge|SCG|SC|May 2003|Expansion|Onslaught|
+Mirrodin|MRD|MR|October 2003|Expansion|Mirrodin|Modern
+Champions of Kamigawa|CHK||October 2004|Expansion|Kamigawa|Modern
+Darksteel|DST||February 2004|Expansion|Mirrodin|Modern
+Fifth Dawn|5DN|FD|June 2004|Expansion|Mirrodin|Modern
 Unhinged|UNH||November 2004|Un_set||
-Betrayers of Kamigawa|BOK||February 2005|Expansion||Modern
-Saviors of Kamigawa|SOK||June 2005|Expansion||Modern
+Betrayers of Kamigawa|BOK||February 2005|Expansion|Kamigawa|Modern
+Saviors of Kamigawa|SOK||June 2005|Expansion|Kamigawa|Modern
 Ninth Edition|9ED||July 2005|Core||Modern
-Ravnica: City of Guilds|RAV||October 2005|Expansion||Modern
-Guildpact|GPT||February 2006|Expansion||Modern
-Dissension|DIS||May 2006|Expansion||Modern
-Coldsnap|CSP||July 2006|Expansion||Modern
+Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern
+Guildpact|GPT||February 2006|Expansion|Ravnica|Modern
+Dissension|DIS||May 2006|Expansion|Ravnica|Modern
+Coldsnap|CSP||July 2006|Expansion|Ice Age|Modern
 Time Spiral "Timeshifted"|TSB||October 2006|Expansion||
 Magic Online Promo Cards|PRM||October 2006|Online||
 Promo set for Gatherer|PPR||October 2006|Online||
-Time Spiral|TSP||October 2006|Expansion||Modern
-Planar Chaos|PLC||February 2007|Expansion||Modern
-Future Sight|FUT||May 2007|Expansion||Modern
+Time Spiral|TSP||October 2006|Expansion|Time Spiral|Modern
+Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern
+Future Sight|FUT||May 2007|Expansion|Time Spiral|Modern
 Tenth Edition|10E||July 2007|Core||Modern
 Masters Edition|MED||September 2007|Online||
-Lorwyn|LRW||October 2007|Expansion||Modern
+Lorwyn|LRW||October 2007|Expansion|Lorwyn|Modern
 Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter||
-Morningtide|MOR||February 2008|Expansion||Modern
-Shadowmoor|SHM||May 2008|Expansion||Modern
-Eventide|EVE||July 2008|Expansion||Modern
+Morningtide|MOR||February 2008|Expansion|Lorwyn|Modern
+Shadowmoor|SHM||May 2008|Expansion|Shadowmoor|Modern
+Eventide|EVE||July 2008|Expansion|Shadowmoor|Modern
 Masters Edition II|ME2||September 2008|Online||
-Shards of Alara|ALA||October 2008|Expansion||Modern, Extended
+Shards of Alara|ALA||October 2008|Expansion|Shards of Alara|Modern, Extended
 Duel Decks: Jace vs. Chandra|DD2||November 2008|Starter||
-Conflux|CON||February 2009|Expansion||Modern, Extended
+Conflux|CON||February 2009|Expansion|Shards of Alara|Modern, Extended
 Duel Decks: Divine vs. Demonic|DDC||April 2009|Starter||
-Alara Reborn|ARB||April 2009|Expansion||Modern, Extended
+Alara Reborn|ARB||April 2009|Expansion|Shards of Alara|Modern, Extended
 Magic 2010|M10||July 2009|Core||Modern, Extended
 Masters Edition III|ME3||September 2009|Online||
 Duel Decks: Garruk vs. Liliana|DDD||October 2009|Starter||
-Zendikar|ZEN||October 2009|Expansion||Modern, Extended
+Zendikar|ZEN||October 2009|Expansion|Zendikar|Modern, Extended
 Premium Deck Series: Slivers|H09||November 2009|Starter||
-Worldwake|WWK||February 2010|Expansion||Modern, Extended
-Rise of the Eldrazi|ROE||April 2010|Expansion||Modern, Extended
+Worldwake|WWK||February 2010|Expansion|Zendikar|Modern, Extended
+Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar|Modern, Extended
 Archenemy|ARC||June 2010|Starter||
 Magic 2011|M11||July 2010|Core||Modern, Extended
 Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter||
 Duel Decks: Phyrexia vs. the Coalition|DDE||March 2010|Starter||
-Scars of Mirrodin|SOM||October 2010|Expansion||Standard, Modern, Extended
+Scars of Mirrodin|SOM||October 2010|Expansion|Scars of Mirrodin|Standard, Modern, Extended
 Premium Deck Series: Fire and Lightning|PD2||November 2010|Starter||
 Masters Edition IV|ME4||January 2011|Starter||
-Mirrodin Besieged|MBS||February 2011|Expansion||Standard, Modern, Extended
+Mirrodin Besieged|MBS||February 2011|Expansion|Scars of Mirrodin|Standard, Modern, Extended
 Duel Decks: Knights vs. Dragons|DDG||April 2011|Starter||
-New Phyrexia|NPH||May 2011|Expansion||Standard, Modern, Extended
+New Phyrexia|NPH||May 2011|Expansion|Scars of Mirrodin|Standard, Modern, Extended
 From the Vault: Dragons|DRB||August 2011|Starter||
 From the Vault: Legends|V11||August 2011|Starter||
 Magic 2012|M12||July 2011|Core||Standard, Modern, Extended
@@ -103,10 +103,10 @@ Planechase|HOP||July 2011|Starter||
 From the Vault: Relics|V10||August 2011|Starter||
 From the Vault: Exiled|V09||August 2011|Starter||
 Magic: The Gathering-Commander|CMD||June 2011|Starter||
-Innistrad|ISD||September 2011|Expansion||Standard, Modern, Extended
-Dark Ascension|DKA||April 2012|Expansion||Standard, Modern, Extended
+Innistrad|ISD||September 2011|Expansion|Innistrad|Standard, Modern, Extended
+Dark Ascension|DKA||April 2012|Expansion|Innistrad|Standard, Modern, Extended
 Duel Decks: Venser vs. Koth|DDI||May 2012|Starter||
 Premium Deck Series: Graveborn|PD3||May 2012|Starter||
-Avacyn Restored|AVR||May 2012|Expansion||Standard, Modern, Extended
+Avacyn Restored|AVR||May 2012|Expansion|Innistrad|Standard, Modern, Extended
 Planechase 2012 Edition|PC2||June 2012|Expansion||
 Magic 2013|M13||July 2012|Core||Standard, Modern, Extended
