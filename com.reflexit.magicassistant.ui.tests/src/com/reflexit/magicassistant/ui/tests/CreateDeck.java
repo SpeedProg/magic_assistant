@@ -18,7 +18,7 @@ public class CreateDeck extends MagicTestCase {
 		setAlaraRebornInDb();
 		ViewLocator mdbLocator = new ViewLocator(MagicDbView.ID);
 		// ui.click(new SWTWidgetLocator(Table.class, mdbLocator));
-		TableCellLocator tableItemLocator1 = new TableCellLocator(1, 2).in(mdbLocator);
+		TableCellLocator tableItemLocator1 = new TableCellLocator(1, 1).in(mdbLocator);
 		ui.click(tableItemLocator1);
 		ui.assertThat(new HasTextCondition(tableItemLocator1, "Anathemancer"));
 	}

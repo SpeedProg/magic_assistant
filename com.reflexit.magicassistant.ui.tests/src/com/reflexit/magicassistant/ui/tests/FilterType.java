@@ -29,7 +29,7 @@ public class FilterType extends MagicTestCase {
 	}
 
 	protected void assertHasType(String pattern, String viewId) throws WidgetSearchException {
-		TableCellLocator tableItemLocator = new TableCellLocator(1, 5);
+		TableCellLocator tableItemLocator = new TableCellLocator(1, 4);
 		if (viewId != null)
 			tableItemLocator.in(new ViewLocator(viewId));
 		ui.assertThat(new HasTextCondition(tableItemLocator, pattern));

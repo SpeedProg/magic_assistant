@@ -21,7 +21,7 @@ public class GroupByCost extends MagicTestCase {
 	}
 
 	protected void expand0() throws WidgetSearchException {
-		IWidgetReference errorNode = ((IWidgetReference) getUI().find(treeItem("2 .*").in(new ViewLocator(MagicDbView.ID))));
+		IWidgetReference errorNode = ((IWidgetReference) getUI().find(treeItem("2 (29)").in(new ViewLocator(MagicDbView.ID))));
 		TreeItem errorItem = (TreeItem) errorNode.getWidget();
 		if (!isExpanded(errorItem))
 			expand(errorNode);
