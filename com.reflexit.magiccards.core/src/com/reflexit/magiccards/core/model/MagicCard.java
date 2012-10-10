@@ -178,6 +178,8 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 			t = STAR_POWER + 2;
 		} else if (str.equals("*{^2}")) {
 			t = STAR_POWER + 0.009f;
+		} else if (str.contains("*")) {
+			t = STAR_POWER;
 		} else {
 			if (str.contains("/"))
 				str = str.replaceAll("\\Q{1/2}", ".5");
@@ -365,6 +367,18 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 				return getOwnCount();
 			case UNIQUE:
 				return getOwnUnique();
+			case SET_CORE:
+				if (edition == null)
+					return null;
+				if (edition.equals("*"))
+					return "*";
+				return Editions.getInstance().getEditionByName(edition).getType();
+			case SET_BLOCK:
+				if (edition == null)
+					return null;
+				if (edition.equals("*"))
+					return "*";
+				return Editions.getInstance().getEditionByName(edition).getBlock();
 			default:
 				break;
 		}

@@ -31,7 +31,9 @@ public enum MagicCardField implements ICardField {
 	PART(null),
 	OTHER_PART(null),
 	OWN_COUNT(null),
-	UNIQUE(null)
+	UNIQUE(null), // unique count
+	SET_BLOCK(null),
+	SET_CORE(null)
 	// end
 	;
 	private final Field field;
