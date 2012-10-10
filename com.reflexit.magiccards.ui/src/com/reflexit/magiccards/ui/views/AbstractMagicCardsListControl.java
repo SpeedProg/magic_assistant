@@ -21,7 +21,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -53,8 +52,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.handlers.IHandlerService;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -777,11 +774,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @param bars
 	 */
 	@Override
-	public void setGlobalHandlers(IActionBars bars) {
-		actionShowFind.setActionDefinitionId(FIND);
-		ActionHandler findHandler = new ActionHandler(this.actionShowFind);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler(FIND, findHandler);
+	public void setGlobalControlHandlers(IActionBars bars) {
+		abstractCardsView.activateActionHandler(actionShowFind, FIND);
 	}
 
 	protected void setQuickFilterVisible(boolean qf) {
@@ -794,7 +788,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		loadData(null);
 	}
 
-	protected void unsort() {
+	public void unsort() {
 		updateSortColumn(-1);
 	}
 

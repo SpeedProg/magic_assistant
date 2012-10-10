@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.HashMap;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -26,6 +28,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -119,14 +122,34 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void setGlobalHandlers(IActionBars bars) {
 		activateActionHandler(actionCopy, "org.eclipse.ui.edit.copy");
 		activateActionHandler(actionPaste, "org.eclipse.ui.edit.paste");
-		control.setGlobalHandlers(bars);
+		setGlobalControlHandlers(bars);
 	}
 
-	protected void activateActionHandler(Action action, String actionId) {
+	protected void setGlobalControlHandlers(IActionBars bars) {
+		control.setGlobalControlHandlers(bars);
+	}
+
+	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
+
+	public IHandlerActivation activateActionHandler(Action action, String actionId) {
+		IHandlerActivation activation = activations.get(actionId);
+		if (activation != null) {
+			deactivateActionHandler(activation);
+		}
 		action.setActionDefinitionId(actionId);
 		ActionHandler handler = new ActionHandler(action);
 		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler(actionId, handler);
+		activation = service.activateHandler(actionId, handler);
+		// System.err.println("activating " + activation.getCommandId());
+		activations.put(actionId, activation);
+		return activation;
+	}
+
+	public void deactivateActionHandler(IHandlerActivation activation) {
+		// stem.err.println("deactivating " + activation.getCommandId());
+		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		service.deactivateHandler(activation);
+		activations.remove(activation);
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {

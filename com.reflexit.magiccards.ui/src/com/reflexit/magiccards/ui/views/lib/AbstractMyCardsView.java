@@ -19,7 +19,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
@@ -33,8 +32,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -279,9 +276,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
 		super.setGlobalHandlers(bars);
-		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
+		activateActionHandler(delete, "org.eclipse.ui.edit.delete");
 	}
 
 	@Override

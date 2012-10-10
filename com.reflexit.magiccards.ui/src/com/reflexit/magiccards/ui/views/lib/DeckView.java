@@ -42,7 +42,9 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.analyzers.AbilityPage;
+import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
 import com.reflexit.magiccards.ui.views.analyzers.CreaturePage;
 import com.reflexit.magiccards.ui.views.analyzers.DrawPage;
 import com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage;
@@ -56,7 +58,7 @@ public class DeckView extends AbstractMyCardsView {
 	private CTabFolder folder;
 	private ArrayList<IDeckPage> pages;
 	private Action sideboard;
-	private DrawPage drawPage;
+	private AbstractDeckListPage drawPage;
 
 	private static class DeckPageExtension {
 		private String name;
@@ -380,6 +382,38 @@ public class DeckView extends AbstractMyCardsView {
 		}
 	}
 
+	protected synchronized IMagicControl getActiveControl() {
+		CTabItem sel = folder.getSelection();
+		if (sel.isDisposed())
+			return null;
+		if (sel.getControl() == control.getControl()) {
+			return control;
+		}
+		// System.err.println(sel + " " + sel.getData());
+		for (IDeckPage deckPage : pages) {
+			IDeckPage page = deckPage;
+			// System.err.println(deckPage);
+			if (sel.getData() == page) {
+				if (page instanceof AbstractDeckListPage) {
+					return ((AbstractDeckListPage) page).getListControl();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	protected void runCopy() {
+		IMagicControl active = getActiveControl();
+		active.runCopy();
+	}
+
+	@Override
+	protected void runPaste() {
+		IMagicControl active = getActiveControl();
+		active.runPaste();
+	}
+
 	protected void activateCardsTab() {
 		// toolbar
 		IActionBars bars = getViewSite().getActionBars();
@@ -392,6 +426,15 @@ public class DeckView extends AbstractMyCardsView {
 		viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
+		// global
+		setGlobalControlHandlers(bars);
+	}
+
+	@Override
+	protected void setGlobalControlHandlers(IActionBars bars) {
+		IMagicControl active = getActiveControl();
+		if (active != null)
+			active.setGlobalControlHandlers(bars);
 	}
 
 	@Override

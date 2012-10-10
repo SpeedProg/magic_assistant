@@ -4,9 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -19,12 +16,11 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
-public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
+public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	protected ChartCanvas canvas;
 	protected TreeViewer stats;
 
@@ -47,26 +43,14 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckPage {
 		return area;
 	}
 
-	AbstractMagicCardsListControl listControl;
-
+	@Override
 	public void createCardsTree(Composite parent) {
-		listControl = doGetMagicCardListControl();
-		listControl.createPartControl(parent);
-		// listControl.getFilter().setGroupFields(getGroupFields());
-		stats = (TreeViewer) listControl.getManager().getViewer();
+		super.createCardsTree(parent);
+		stats = (TreeViewer) getListControl().getManager().getViewer();
 		stats.setAutoExpandLevel(3);
-		// stats.setContentProvider(new GroupContentProvider());
-		stats.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				if (!sel.isEmpty()) {
-					view.getSite().getSelectionProvider().setSelection(sel);
-				}
-			}
-		});
 	}
 
+	@Override
 	public GroupListControl doGetMagicCardListControl() {
 		return new GroupListControl(view) {
 			@Override

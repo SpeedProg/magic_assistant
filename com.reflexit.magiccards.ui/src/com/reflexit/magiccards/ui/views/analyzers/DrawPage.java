@@ -4,17 +4,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IActionBars;
-
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
@@ -25,8 +16,7 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
 
-public class DrawPage extends AbstractDeckPage {
-	private DrawListControl listControl;
+public class DrawPage extends AbstractDeckListPage {
 	private PlayingDeck deckstore = new PlayingDeck(new MemoryCardStore());
 	private IAction shuffle;
 	private Action draw;
@@ -40,11 +30,6 @@ public class DrawPage extends AbstractDeckPage {
 		@Override
 		public IMagicColumnViewer createViewerManager() {
 			return new LazyTableViewerManager(getId());
-		}
-
-		@Override
-		public void unsort() {
-			super.unsort();
 		}
 
 		@Override
@@ -75,18 +60,10 @@ public class DrawPage extends AbstractDeckPage {
 	}
 
 	@Override
-	protected void setGlobalHandlers(IActionBars bars) {
-		// activateActionHandler(view.actionCopy, "org.eclipse.ui.edit.copy");
-		// activateActionHandler(view.actionPaste, "org.eclipse.ui.edit.paste");
-		// listControl.setGlobalHandlers(bars);
-	}
-
-	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
-		super.fillLocalToolBar(manager);
 		manager.add(this.draw);
 		manager.add(this.shuffle);
-		listControl.fillLocalToolBar(manager);
+		super.fillLocalToolBar(manager);
 	}
 
 	@Override
@@ -94,16 +71,7 @@ public class DrawPage extends AbstractDeckPage {
 		manager.add(draw);
 		manager.add(shuffle);
 		manager.add(new Separator());
-		listControl.fillContextMenu(manager);
-	}
-
-	@Override
-	protected MenuManager hookContextMenu() {
-		MenuManager menuMgr = super.hookContextMenu();
-		Control control = listControl.getManager().getControl();
-		Menu menu = menuMgr.createContextMenu(control);
-		control.setMenu(menu);
-		return menuMgr;
+		super.fillContextMenu(manager);
 	}
 
 	protected void makeActions() {
@@ -127,7 +95,7 @@ public class DrawPage extends AbstractDeckPage {
 			@Override
 			public void run() {
 				deckstore.draw(1);
-				listControl.reloadData();
+				getListControl().reloadData();
 			}
 		};
 	}
@@ -135,28 +103,17 @@ public class DrawPage extends AbstractDeckPage {
 	public void runShuffle() {
 		deckstore.shuffle();
 		deckstore.draw(7);
-		listControl.unsort();
-		listControl.reloadData();
+		getListControl().unsort();
+		getListControl().reloadData();
 	}
 
+	@Override
 	public void createCardsTree(Composite parent) {
-		listControl = doGetMagicCardListControl();
-		listControl.createPartControl(parent);
-		// listControl.getFilter().setGroupFields(getGroupFields());
-		ColumnViewer stats = listControl.getManager().getViewer();
-		// stats.setContentProvider(new GroupContentProvider());
-		stats.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				if (!sel.isEmpty()) {
-					view.getSite().getSelectionProvider().setSelection(sel);
-				}
-			}
-		});
+		super.createCardsTree(parent);
 	}
 
-	private DrawListControl doGetMagicCardListControl() {
+	@Override
+	public DrawListControl doGetMagicCardListControl() {
 		return new DrawListControl(view);
 	}
 
@@ -177,6 +134,6 @@ public class DrawPage extends AbstractDeckPage {
 	@Override
 	public void activate() {
 		super.activate();
-		listControl.reloadData();
+		getListControl().reloadData();
 	}
 }

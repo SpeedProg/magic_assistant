@@ -94,7 +94,7 @@ public abstract class MagicControl implements IMagicControl {
 	/**
 	 * @param bars
 	 */
-	public void setGlobalHandlers(IActionBars bars) {
+	public void setGlobalControlHandlers(IActionBars bars) {
 	}
 
 	public void fillLocalPullDown(IMenuManager manager) {

@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
-
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
@@ -72,7 +71,6 @@ public class AbstractDeckPage implements IDeckPage {
 	public void activate() {
 		// toolbar
 		IActionBars bars = view.getViewSite().getActionBars();
-		setGlobalHandlers(bars);
 		IToolBarManager toolBarManager = bars.getToolBarManager();
 		toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
@@ -82,16 +80,15 @@ public class AbstractDeckPage implements IDeckPage {
 		viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
-		// context menu
-		hookContextMenu();
-		bars.updateActionBars();
+		// global handlers
+		setGlobalControlHandlers(bars);
 		// selection provider
 		getCardStore();
 		if (store == null)
 			return;
 	}
 
-	protected void setGlobalHandlers(IActionBars bars) {
+	protected void setGlobalControlHandlers(IActionBars bars) {
 	}
 
 	protected MenuManager hookContextMenu() {
