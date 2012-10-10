@@ -328,51 +328,51 @@ public class MagicCardFilter {
 			while (tokenReady == false && cur <= seq.length()) {
 				char c = cur < seq.length() ? seq.charAt(cur) : 0;
 				switch (state) {
-				case INIT:
-					switch (c) {
-					case '"':
-						pushToken(TokenType.WORD);
-						state = State.IN_QUOTE;
+					case INIT:
+						switch (c) {
+							case '"':
+								pushToken(TokenType.WORD);
+								state = State.IN_QUOTE;
+								break;
+							case 'm':
+								if (cur + 1 < seq.length() && seq.charAt(cur + 1) == '/') {
+									pushToken(TokenType.WORD);
+									state = State.IN_REG;
+									cur++;
+								} else {
+									str.append(c);
+								}
+								break;
+							case '-':
+								pushToken(TokenType.WORD);
+								str.append('-');
+								pushToken(TokenType.NOT);
+								break;
+							case ' ':
+							case 0:
+								pushToken(TokenType.WORD);
+								break;
+							default:
+								str.append(c);
+								break;
+						}
 						break;
-					case 'm':
-						if (cur + 1 < seq.length() && seq.charAt(cur + 1) == '/') {
-							pushToken(TokenType.WORD);
-							state = State.IN_REG;
-							cur++;
+					case IN_REG:
+						if (c == '/' || c == 0) {
+							pushToken(TokenType.REGEX);
+							state = State.INIT;
 						} else {
 							str.append(c);
 						}
 						break;
-					case '-':
-						pushToken(TokenType.WORD);
-						str.append('-');
-						pushToken(TokenType.NOT);
+					case IN_QUOTE:
+						if (c == '"' || c == 0) {
+							pushToken(TokenType.QUOTED);
+							state = State.INIT;
+						} else {
+							str.append(c);
+						}
 						break;
-					case ' ':
-					case 0:
-						pushToken(TokenType.WORD);
-						break;
-					default:
-						str.append(c);
-						break;
-					}
-					break;
-				case IN_REG:
-					if (c == '/' || c == 0) {
-						pushToken(TokenType.REGEX);
-						state = State.INIT;
-					} else {
-						str.append(c);
-					}
-					break;
-				case IN_QUOTE:
-					if (c == '"' || c == 0) {
-						pushToken(TokenType.QUOTED);
-						state = State.INIT;
-					} else {
-						str.append(c);
-					}
-					break;
 				}
 				cur++;
 			}
@@ -508,7 +508,13 @@ public class MagicCardFilter {
 		} else if (MagicCardFieldPhysical.SPECIAL.name().equals(requestedId)) {
 			res = textSearch(MagicCardFieldPhysical.SPECIAL, value);
 		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
+			BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
+			Expr b2;
+			if ("true".equals(value))
+				b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, ">=1");
+			else
+				b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, "==0");
+			res = new BinaryExpr(b1, Operation.OR, b2);
 		} else if (FilterHelper.LANG.equals(requestedId)) {
 			if (value.equals("")) {
 				res = TRUE;
