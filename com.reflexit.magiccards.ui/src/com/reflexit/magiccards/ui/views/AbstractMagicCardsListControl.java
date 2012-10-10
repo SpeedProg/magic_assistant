@@ -455,6 +455,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		groupMenu.add(createGroupAction("Color", MagicCardField.COST));
 		groupMenu.add(createGroupAction("Cost", MagicCardField.CMC));
 		groupMenu.add(createGroupAction(MagicCardField.TYPE));
+		groupMenu.add(createGroupAction("Core/Block/Set/Rarity", new ICardField[] { MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
+				MagicCardField.SET, MagicCardField.RARITY }));
 		groupMenu.add(createGroupAction(MagicCardField.SET));
 		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
 		groupMenu.add(createGroupAction(MagicCardField.RARITY));
