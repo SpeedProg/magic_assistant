@@ -34,6 +34,7 @@ public class Editions implements ISearchableProperty {
 		private Date release;
 		private String type = "?";
 		private Set<String> format;
+		private String block;
 		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
 		public Edition(String name, String abbr) {
@@ -132,6 +133,12 @@ public class Editions implements ISearchableProperty {
 			return type;
 		}
 
+		public String getBlock() {
+			if (block == null)
+				return name;
+			return block;
+		}
+
 		public String getBaseFileName() {
 			String a = getMainAbbreviation();
 			if (a.equals("CON")) {
@@ -197,6 +204,10 @@ public class Editions implements ISearchableProperty {
 				String string = legs[i];
 				addFormat(string.trim());
 			}
+		}
+
+		public void setBlock(String block) {
+			this.block = block;
 		}
 	}
 
@@ -293,6 +304,7 @@ public class Editions implements ISearchableProperty {
 		if (!file.exists()) {
 			initializeEditions();
 		} else {
+			initializeEditions();
 			InputStream st = new FileInputStream(file);
 			loadEditions(st);
 		}
@@ -350,8 +362,14 @@ public class Editions implements ISearchableProperty {
 						set.setType(type);
 					else
 						System.err.println("Missing type " + line);
+					if (attrs.length <= 5)
+						continue;
 					// Block
-					// skipping
+					String block = attrs[5].trim();
+					if (block != null && block.length() > 0)
+						set.setBlock(block);
+					else if (!"Core".equals(type))
+						System.err.println("Missing block " + line);
 					if (attrs.length <= 6)
 						continue;
 					// Legality
@@ -390,8 +408,8 @@ public class Editions implements ISearchableProperty {
 				if (ed.getType() != null) {
 					type = ed.getType();
 				}
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "||"
-						+ ed.getFormatString());
+				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "|"
+						+ (ed.block == null ? "" : ed.block) + "|" + ed.getFormatString());
 			}
 		} finally {
 			st.close();
