@@ -154,4 +154,10 @@ public class DesktopCanvas extends ScrollableCanvas {
 	public DesktopFigure getDesktop() {
 		return desktop;
 	}
+
+	@Override
+	public void dispose() {
+		desktop.dispose();
+		super.dispose();
+	}
 }

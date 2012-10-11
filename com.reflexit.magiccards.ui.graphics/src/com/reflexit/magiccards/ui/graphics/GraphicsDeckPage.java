@@ -55,6 +55,12 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		return getArea();
 	}
 
+	@Override
+	public void dispose() {
+		panel.dispose();
+		super.dispose();
+	}
+
 	public void hookDragAndDrop() {
 		// panel.setDragDetect(true);
 		StructuredViewer viewer = getViewer();

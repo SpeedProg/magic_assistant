@@ -6,8 +6,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.services.IDisposable;
 
-public class XFigure extends EventManager {
+public class XFigure extends EventManager implements IDisposable {
 	private Image image;
 	protected XFigure parent;
 	protected Point location;
