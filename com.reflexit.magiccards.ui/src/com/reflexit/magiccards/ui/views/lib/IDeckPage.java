@@ -2,13 +2,14 @@ package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public interface IDeckPage {
+public interface IDeckPage extends IDisposable {
 	/**
-	 * Create page contents (composite). Method getControl() should return same
-	 * composite as this method returns.
+	 * Create page contents (composite). Method getControl() should return same composite as this
+	 * method returns.
 	 */
 	public Composite createContents(Composite parent);
 

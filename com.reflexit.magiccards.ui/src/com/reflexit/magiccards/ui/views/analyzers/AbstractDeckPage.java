@@ -137,4 +137,9 @@ public class AbstractDeckPage implements IDeckPage {
 		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
 		return count;
 	}
+
+	@Override
+	public void dispose() {
+		area.dispose();
+	}
 }

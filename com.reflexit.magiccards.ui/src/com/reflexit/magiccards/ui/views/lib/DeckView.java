@@ -185,6 +185,10 @@ public class DeckView extends AbstractMyCardsView {
 	public void dispose() {
 		if (deck != null)
 			this.deck.close();
+		for (IDeckPage deckPage : pages) {
+			IDeckPage page = deckPage;
+			page.dispose();
+		}
 		super.dispose();
 	}
 

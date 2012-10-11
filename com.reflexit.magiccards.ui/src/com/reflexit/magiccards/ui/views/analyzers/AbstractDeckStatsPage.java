@@ -96,6 +96,12 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		// listControl.reloadData();
 	}
 
+	@Override
+	public void dispose() {
+		canvas.dispose();
+		super.dispose();
+	}
+
 	abstract protected CardGroup buildTree();
 
 	abstract protected IChartGenerator createChartGenerator();
