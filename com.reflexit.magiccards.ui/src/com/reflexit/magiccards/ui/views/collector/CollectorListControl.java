@@ -96,7 +96,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
-		return DataManager.getCardHandler().getMagicDBFilteredStore();
+		return DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 	}
 	/*
 	 * @Override public IFilteredCardStore doGetFilteredStore() {

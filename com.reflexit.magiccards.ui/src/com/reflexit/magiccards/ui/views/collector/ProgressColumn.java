@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
@@ -31,7 +32,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 	}
 
 	public ProgressColumn() {
-		super(null, "Progress");
+		super(MagicCardField.OWN_COUNT, "Progress");
 	}
 
 	@Override

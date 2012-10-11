@@ -11,8 +11,11 @@
 package com.reflexit.magiccards.ui.views.collector;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -23,6 +26,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
+import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -35,6 +40,8 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	public static final String ID = CollectorView.class.getName();
 	private Action delete;
 	private Action refresh;
+	private Action onlyOwn;
+	private boolean onlyOwnFiltred;
 
 	/**
 	 * The constructor.
@@ -58,6 +65,13 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
+	}
+
+	@Override
+	protected void fillLocalToolBar(IToolBarManager manager) {
+		// manager.add(onlyOwn);
+		// onlyOwn.setChecked(isOnlyOwn());
+		super.fillLocalToolBar(manager);
 	}
 
 	@Override
@@ -87,6 +101,34 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 				reloadData();
 			}
 		};
+		this.onlyOwn = new Action("Show Only Own", IAction.AS_CHECK_BOX) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/check16.png"));
+			}
+
+			@Override
+			public void run() {
+				triggerOnlyOwn(!isOnlyOwn());
+			}
+		};
+	}
+
+	protected boolean isOnlyOwn() {
+		return onlyOwnFiltred;
+	}
+
+	public void triggerOnlyOwn(boolean mode) {
+		System.err.println("mode " + mode);
+		onlyOwnFiltred = mode;
+		onlyOwn.setChecked(mode);
+		if (!mode)
+			onlyOwn.setToolTipText("Check to show only own cards");
+		else
+			onlyOwn.setToolTipText("Uncheck to show cards in database which you don't own");
+		String id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
+		IPreferenceStore store = getLocalPreferenceStore();
+		store.putValue(id, onlyOwnFiltred ? "true" : "");
+		reloadData();
 	}
 
 	/**
