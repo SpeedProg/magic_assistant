@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class ChartCanvas extends Canvas {
 	private IDeviceRenderer render;
@@ -71,8 +71,7 @@ public class ChartCanvas extends Canvas {
 				final Rectangle chartBounds = co.getClientArea();
 				if (ChartCanvas.this.cachedImage != null) {
 					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
-					if (cachedImage.getBounds().width != chartBounds.width
-					        || cachedImage.getBounds().height != chartBounds.height) {
+					if (cachedImage.getBounds().width != chartBounds.width || cachedImage.getBounds().height != chartBounds.height) {
 						needRebuild = true;
 					}
 				} else {
@@ -80,7 +79,7 @@ public class ChartCanvas extends Canvas {
 				}
 				if (needRebuild || needRender) {
 					drawToCachedImage(chartBounds, e.gc);
-					if (cachedImage!=null)
+					if (cachedImage != null)
 						e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
 				}
 			}
@@ -145,7 +144,7 @@ public class ChartCanvas extends Canvas {
 			gc.setBackground(gcOrig.getBackground());
 			gc.setForeground(gcOrig.getForeground());
 			gc.setFont(gcOrig.getFont());
-			// Fills background. 
+			// Fills background.
 			gc.fillRectangle(0, 0, size.width + 1, size.height + 1);
 			// rebuild
 			this.render.setProperty(IDeviceRenderer.GRAPHICS_CONTEXT, gc);
@@ -164,6 +163,7 @@ public class ChartCanvas extends Canvas {
 				gc.dispose();
 		}
 	}
+
 	class CallBackNotifier implements ICallBackNotifier {
 		public Chart getDesignTimeModel() {
 			return chart;
@@ -196,5 +196,12 @@ public class ChartCanvas extends Canvas {
 
 	public Image getImage() {
 		return cachedImage;
+	}
+
+	@Override
+	public void dispose() {
+		render.dispose();
+		chart = null;
+		super.dispose();
 	}
 }
