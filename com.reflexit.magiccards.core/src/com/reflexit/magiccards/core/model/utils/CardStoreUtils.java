@@ -396,7 +396,7 @@ public final class CardStoreUtils {
 						} else if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Planeswalker)) {
 							walker.add(elem);
 						} else {
-							noncreatureNode.add(elem);
+							unknownNode.add(elem);
 						}
 					}
 				}
