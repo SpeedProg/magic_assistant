@@ -39,15 +39,12 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 	private HashMap<String, Object> props;
 	private Map<String, CardGroup> subs;
 	private MagicCardPhysical base;
-	private Comparator comparator;
-	private boolean sorted = false;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		this.groupField = fieldIndex;
 		this.name = name;
 		this.children = new ArrayList(2);
 		this.subs = new LinkedHashMap<String, CardGroup>(4);
-		this.sorted = true;
 	}
 
 	public synchronized IMagicCard getBase() {
@@ -243,12 +240,18 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		return this.groupField;
 	}
 
-	private List getChildrenList() {
-		if (!sorted) {
-			if (comparator != null && children.size() > 1)
-				Collections.sort(children, comparator);
-			sorted = true;
+	public void sort(Comparator comparator) {
+		if (comparator == null)
+			return;
+		if (children.size() > 1)
+			Collections.sort(children, comparator);
+		for (Iterator<CardGroup> iterator = subs.values().iterator(); iterator.hasNext();) {
+			CardGroup o = iterator.next();
+			o.sort(comparator);
 		}
+	}
+
+	private List getChildrenList() {
 		return children;
 	}
 
@@ -365,7 +368,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 	public synchronized void clear() {
 		children.clear();
 		subs.clear();
-		comparator = null;
 		rehash();
 	}
 
@@ -373,7 +375,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		count = 0;
 		props = null;
 		base = null;
-		sorted = false;
 	}
 
 	public synchronized IMagicCard getFirstCard() {
@@ -457,15 +458,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 
 	public ICard cloneCard() {
 		throw new UnsupportedOperationException();
-	}
-
-	public void setComparator(Comparator comparator) {
-		this.comparator = comparator;
-		this.sorted = false;
-		for (Iterator<CardGroup> iterator = subs.values().iterator(); iterator.hasNext();) {
-			CardGroup o = iterator.next();
-			o.setComparator(comparator);
-		}
 	}
 
 	public void setLocation(Location location) {

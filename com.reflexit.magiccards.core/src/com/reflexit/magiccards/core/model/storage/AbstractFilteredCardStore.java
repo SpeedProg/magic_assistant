@@ -178,7 +178,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				}
 			}
 			removeEmptyGroups();
-			rootGroup.setComparator(getSortComparator(filter));
+			rootGroup.sort(getSortComparator(filter));
 		}
 	}
 
