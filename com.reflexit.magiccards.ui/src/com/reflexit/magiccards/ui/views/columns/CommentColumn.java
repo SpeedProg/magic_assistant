@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -28,7 +29,7 @@ public class CommentColumn extends GenColumn {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof MagicCardPhysical) {
-			MagicCardPhysical m = (MagicCardPhysical) element;
+			IMagicCardPhysical m = (IMagicCardPhysical) element;
 			String comm = m.getComment();
 			return comm;
 		} else {
@@ -59,7 +60,7 @@ public class CommentColumn extends GenColumn {
 			@Override
 			protected Object getValue(Object element) {
 				if (element instanceof MagicCardPhysical) {
-					MagicCardPhysical card = (MagicCardPhysical) element;
+					IMagicCardPhysical card = (IMagicCardPhysical) element;
 					String loc = card.getComment();
 					return loc;
 				}

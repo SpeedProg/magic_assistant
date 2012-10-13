@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -32,12 +33,12 @@ public class OwnershipColumn extends GenColumn {
 	public Image getImage(Object element) {
 		boolean own = false;
 		if (element instanceof MagicCardPhysical) {
-			MagicCardPhysical m = (MagicCardPhysical) element;
+			IMagicCardPhysical m = (IMagicCardPhysical) element;
 			own = m.isOwn();
 		} else if (element instanceof CardGroup) {
 			IMagicCard base = ((CardGroup) element).getBase();
 			if (base instanceof MagicCardPhysical)
-				own = ((MagicCardPhysical) base).isOwn();
+				own = ((IMagicCardPhysical) base).isOwn();
 		}
 		if (own)
 			return MagicUIActivator.getDefault().getImage("icons/obj16/check16.png");
@@ -53,7 +54,7 @@ public class OwnershipColumn extends GenColumn {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof MagicCardPhysical) {
-			MagicCardPhysical m = (MagicCardPhysical) element;
+			IMagicCardPhysical m = (IMagicCardPhysical) element;
 			if (m.isOwn())
 				return "own";
 			else
@@ -98,7 +99,7 @@ public class OwnershipColumn extends GenColumn {
 			@Override
 			protected Object getValue(Object element) {
 				if (element instanceof MagicCardPhysical) {
-					MagicCardPhysical card = (MagicCardPhysical) element;
+					IMagicCardPhysical card = (IMagicCardPhysical) element;
 					Boolean ow = card.isOwn();
 					return ow ? 0 : 1;
 				}

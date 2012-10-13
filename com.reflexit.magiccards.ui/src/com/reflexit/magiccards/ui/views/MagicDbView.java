@@ -20,6 +20,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -32,12 +33,16 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public class MagicDbView extends AbstractCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.MagicDbView";
-	MenuManager addToDeck;
+	protected MenuManager addToDeck;
 	protected Action showOtherSets;
+	protected IDeckAction copyToDeck;
 	protected Action exportDatabase;
 
 	/**
@@ -57,7 +62,33 @@ public class MagicDbView extends AbstractCardsView {
 		return new AbstractMagicCardsListControl(this) {
 			@Override
 			public IMagicColumnViewer createViewerManager() {
-				return new CompositeViewerManager(getPreferencePageId());
+				return new CompositeViewerManager(getPreferencePageId()) {
+					@Override
+					protected ColumnCollection doGetColumnCollection(String prefPageId) {
+						return new MagicColumnCollection(prefPageId) {
+							@Override
+							protected GroupColumn createGroupColumn() {
+								return new GroupColumn() {
+									@Override
+									public String getText(Object element) {
+										if (element instanceof CardGroup) {
+											if (!showCount) {
+												return ((CardGroup) element).getName();
+											} else {
+												return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getUniqueCount()
+														+ ")";
+											}
+										}
+										if (element instanceof IMagicCard) {
+											return ((IMagicCard) element).getName();
+										}
+										return null;
+									}
+								};
+							}
+						};
+					}
+				};
 			}
 
 			@Override
@@ -75,8 +106,6 @@ public class MagicDbView extends AbstractCardsView {
 			MagicUIActivator.log(e);
 		}
 	}
-
-	protected IDeckAction copyToDeck;
 
 	@Override
 	protected void makeActions() {

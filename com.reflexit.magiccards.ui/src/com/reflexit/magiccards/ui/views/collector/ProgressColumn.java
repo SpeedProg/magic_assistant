@@ -15,8 +15,9 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
@@ -32,7 +33,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 	}
 
 	public ProgressColumn() {
-		super(MagicCardField.OWN_COUNT, "Progress");
+		super(MagicCardFieldPhysical.OWN_COUNT, "Progress");
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 		if (element instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) element;
 			int size = getSetSize(cardGroup);
-			int count = cardGroup.getOwnUSize();
+			int count = cardGroup.getOwnUnique();
 			float per = 0;
 			if (size > 0) {
 				per = count * 100 / (float) size;
@@ -122,7 +123,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 					} else if (row instanceof MagicCard && ((MagicCard) row).getOwnCount() == 0) {
 						per = 0;
 					} else if (row instanceof MagicCardPhysical
-							&& (((MagicCardPhysical) row).getCount() == 0 || ((MagicCardPhysical) row).isOwn() == false)) {
+							&& (((MagicCardPhysical) row).getCount() == 0 || ((IMagicCardPhysical) row).isOwn() == false)) {
 						per = 0;
 					}
 					if (per > 0) {
@@ -156,7 +157,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 		}
 		if (element instanceof MagicCardPhysical) {
 			count = ((MagicCardPhysical) element).getCount();
-			if (((MagicCardPhysical) element).isOwn()) {
+			if (((IMagicCardPhysical) element).isOwn()) {
 				base = 1;
 			} else {
 				virtual = 1;

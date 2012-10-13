@@ -21,6 +21,8 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+
 /**
  * @author Alena
  * 
@@ -35,8 +37,18 @@ public class CompositeViewerManager extends ViewerManager {
 	public CompositeViewerManager(String id) {
 		super(id);
 		this.managers = new ViewerManager[2];
-		this.managers[0] = new LazyTableViewerManager(id);
-		this.managers[1] = new LazyTreeViewerManager(id);
+		this.managers[0] = new LazyTableViewerManager(id) {
+			@Override
+			protected ColumnCollection doGetColumnCollection(String prefPageId) {
+				return CompositeViewerManager.this.doGetColumnCollection(prefPageId);
+			}
+		};
+		this.managers[1] = new LazyTreeViewerManager(id) {
+			@Override
+			protected ColumnCollection doGetColumnCollection(String prefPageId) {
+				return CompositeViewerManager.this.doGetColumnCollection(prefPageId);
+			}
+		};
 		this.selectionProvider = new ISelectionProvider() {
 			public void addSelectionChangedListener(ISelectionChangedListener listener) {
 				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {

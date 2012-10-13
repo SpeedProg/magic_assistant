@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -26,18 +26,16 @@ public class OwnCountColumn extends GenColumn {
 	/**
 	 */
 	public OwnCountColumn() {
-		super(MagicCardField.OWN_COUNT, "Own Count");
+		super(MagicCardFieldPhysical.OWN_COUNT, "Own Count");
 	}
 
 	@Override
 	public String getText(Object element) {
 		int ocount = 0;
-		if (element instanceof MagicCard) {
-			ocount = ((MagicCard) element).getOwnCount();
+		if (element instanceof IMagicCardPhysical) {
+			ocount = ((IMagicCardPhysical) element).getOwnCount();
 		} else if (element instanceof CardGroup) {
 			ocount = ((CardGroup) element).getOwnCount();
-		} else if (element instanceof MagicCardPhysical) {
-			ocount = ((MagicCardPhysical) element).getOwnCount();
 		} else {
 			return "";
 		}

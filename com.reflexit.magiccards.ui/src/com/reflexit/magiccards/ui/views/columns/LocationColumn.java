@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import java.util.Set;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -16,7 +14,6 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -49,13 +46,6 @@ public class LocationColumn extends GenColumn {
 		if (element instanceof ILocatable) {
 			ILocatable m = (ILocatable) element;
 			return pretty(m.getLocation());
-		} else if (element instanceof MagicCard) {
-			Set<MagicCardPhysical> set = ((MagicCard) element).getPhysicalCards();
-			if (set.size() == 1) {
-				return pretty(set.iterator().next().getLocation());
-			} else if (set.size() > 1) {
-				return "*";
-			}
 		}
 		return super.getText(element);
 	}

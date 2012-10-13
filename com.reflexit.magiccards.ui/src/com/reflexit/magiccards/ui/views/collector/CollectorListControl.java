@@ -8,6 +8,7 @@ import org.eclipse.jface.action.MenuManager;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -70,7 +71,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
-				if (((MagicCardPhysical) object).isOwn())
+				if (((IMagicCardPhysical) object).isOwn())
 					count++;
 			}
 		}

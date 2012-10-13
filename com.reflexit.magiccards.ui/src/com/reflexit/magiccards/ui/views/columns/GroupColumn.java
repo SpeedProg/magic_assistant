@@ -11,7 +11,7 @@ import com.reflexit.magiccards.ui.utils.ImageCreator;
 public class GroupColumn extends GenColumn {
 	public static final String COL_NAME = "Name";
 	private ICardField groupField;
-	private boolean showCount = true;
+	protected boolean showCount = true;
 	private boolean showImage = true;
 
 	public GroupColumn() {
