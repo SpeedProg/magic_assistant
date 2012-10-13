@@ -53,7 +53,8 @@ public class MagicTestCase extends UITestCaseSWT {
 	public void setFilterSet(String set) throws Exception {
 		ui.click(new SWTWidgetLocator(ToolItem.class, "", 3, new SWTWidgetLocator(ToolBar.class, 1, new SWTWidgetLocator(Composite.class))));
 		ui.wait(new ShellShowingCondition("Preferences"));
-		ui.click(new TreeItemLocator("Set Filter"));
+		TreeItemLocator treeItemLocator = new TreeItemLocator("Set Filter");
+		ui.click(treeItemLocator);
 		FilteredTreeItemLocator treeItem = new FilteredTreeItemLocator(set) {
 			{
 				setSelectionModifiers(WT.CHECK);

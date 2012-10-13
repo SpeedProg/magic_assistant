@@ -5,8 +5,11 @@ import static com.windowtester.runtime.swt.locator.SWTLocators.treeItem;
 import org.eclipse.swt.widgets.TreeItem;
 
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;
+import com.windowtester.runtime.locator.IWidgetLocator;
 import com.windowtester.runtime.locator.IWidgetReference;
+import com.windowtester.runtime.swt.locator.TreeItemLocator;
 import com.windowtester.runtime.swt.locator.eclipse.PullDownMenuItemLocator;
 import com.windowtester.runtime.swt.locator.eclipse.ViewLocator;
 
@@ -21,9 +24,17 @@ public class GroupByCost extends MagicTestCase {
 	}
 
 	protected void expand0() throws WidgetSearchException {
-		IWidgetReference errorNode = ((IWidgetReference) getUI().find(treeItem("2 (29)").in(new ViewLocator(MagicDbView.ID))));
-		TreeItem errorItem = (TreeItem) errorNode.getWidget();
-		if (!isExpanded(errorItem))
-			expand(errorNode);
+		IUIContext ui = getUI();
+		ViewLocator magicDbView = new ViewLocator(MagicDbView.ID);
+		TreeItemLocator treeItemLocator = treeItem("2 (29)").in(magicDbView);
+		IWidgetLocator[] findAll = treeItemLocator.findAll(ui);
+		for (int i = 0; i < findAll.length; i++) {
+			IWidgetLocator iWidgetLocator = findAll[i];
+			System.err.println(iWidgetLocator);
+		}
+		IWidgetReference treeNode = (IWidgetReference) (ui.find(treeItemLocator));
+		TreeItem item = (TreeItem) treeNode.getWidget();
+		if (!isExpanded(item))
+			expand(treeNode);
 	}
 }
