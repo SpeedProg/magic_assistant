@@ -153,7 +153,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 			String name = fields[0].trim();
 			String price = fields[1].trim();
 			if (name.contains("AE")) {
-				name = name.replaceAll("AE", "�");
+				name = name.replaceAll("AE", "Æ");
 			}
 			try {
 				float f = Float.parseFloat(price);
