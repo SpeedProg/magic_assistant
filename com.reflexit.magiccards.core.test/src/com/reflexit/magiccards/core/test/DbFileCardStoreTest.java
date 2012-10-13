@@ -48,7 +48,7 @@ public class DbFileCardStoreTest extends TestCase {
 		a2.setProperty(MagicCardField.PART, "test");
 		this.store.add(a2);
 		assertEquals(2, this.store.size());
-		assertEquals(2, this.store.getCount());
+		assertEquals(2, this.store.getUniqueCount());
 	}
 
 	public void testSaveLoad() {

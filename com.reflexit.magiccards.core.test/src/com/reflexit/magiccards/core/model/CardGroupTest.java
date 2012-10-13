@@ -90,23 +90,28 @@ public class CardGroupTest extends TestCase {
 
 	@Test
 	public void testGetCount() {
-		assertEquals(cards.length, group.getCount());
+		assertEquals(0, group.getCount());
+	}
+
+	@Test
+	public void testUniqueCount() {
+		assertEquals(cards.length, group.getUniqueCount());
 	}
 
 	@Test
 	public void testGetOwnUSize() {
-		assertEquals(cards.length, group.getCount());
+		assertEquals(0, group.getOwnUnique());
 	}
 
 	@Test
 	public void testSize() {
-		assertEquals(cards.length, group.getCount());
+		assertEquals(cards.length, group.size());
 	}
 
 	@Test
 	public void testRemove() {
 		group.remove(cards[0]);
-		assertEquals(cards.length - 1, group.getCount());
+		assertEquals(cards.length - 1, group.getUniqueCount());
 	}
 
 	@Test
@@ -136,7 +141,7 @@ public class CardGroupTest extends TestCase {
 	public void testRemoveEmptyChildren() {
 		group.add(set);
 		assertEquals(cards.length + 1, group.size());
-		assertEquals(cards.length, group.getCount());
+		assertEquals(cards.length, group.getUniqueCount());
 		group.removeEmptyChildren();
 		assertEquals(cards.length, group.size());
 	}
@@ -185,7 +190,7 @@ public class CardGroupTest extends TestCase {
 		group.add(set);
 		set.add(generateCard());
 		Collection<IMagicCard> result = group.expand();
-		assertEquals(result.size(), group.getCount());
+		assertEquals(result.size(), group.getUniqueCount());
 		assertEquals(result.size(), cards.length + 1);
 	}
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
@@ -54,7 +55,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Aven Brigadier", card1.getName());
 		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Onslaught", card1.getSet());
-		String comment = ((MagicCardPhysical) card1).getSpecial();
+		String comment = ((IMagicCardPhysical) card1).getSpecial();
 		assertTrue(comment, comment.contains("premium"));
 	}
 
@@ -68,7 +69,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Arrogant Bloodlord", card1.getName());
 		assertEquals(9, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Rise of the Eldrazi", card1.getSet());
-		assertEquals("premium,", ((MagicCardPhysical) card2).getSpecial());
+		assertEquals("premium,", ((IMagicCardPhysical) card2).getSpecial());
 		// assertEquals("248", ((MagicCardPhysical) card2).getCard().getCollNumber());
 	}
 }
