@@ -26,6 +26,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -341,7 +342,7 @@ public class XmlCardHolder implements ICardHandler {
 			if (card instanceof MagicCard) {
 				phi.setOwn(!virtual);
 			} else if (card instanceof MagicCardPhysical) {
-				if (((MagicCardPhysical) card).isOwn() && virtual)
+				if (((IMagicCardPhysical) card).isOwn() && virtual)
 					throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
 			}
 			list.add(phi);
