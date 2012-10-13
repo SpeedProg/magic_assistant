@@ -187,4 +187,8 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	protected boolean doUpdate(T card) {
 		return true;
 	}
+
+	public int getUniqueCount() {
+		return size();
+	}
 }

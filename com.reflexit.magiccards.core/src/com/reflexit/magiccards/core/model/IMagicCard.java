@@ -52,4 +52,6 @@ public interface IMagicCard extends ICard {
 	public abstract int getEnglishCardId();
 
 	public abstract int getFlipId();
+
+	public int getUniqueCount();
 }

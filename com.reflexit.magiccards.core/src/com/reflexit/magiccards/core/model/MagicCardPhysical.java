@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
 
-public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModifiable, ILocatable {
+public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 	private MagicCard card;
 	private int count;
 	private float price;
@@ -110,6 +109,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 		this.price = price;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getComment()
+	 */
 	public String getComment() {
 		if (this.comment == null)
 			return "";
@@ -123,6 +127,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 			this.comment = comment.trim();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getLocation()
+	 */
 	public Location getLocation() {
 		return this.location;
 	}
@@ -183,6 +192,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 		return this.card.getType();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isOwn()
+	 */
 	public boolean isOwn() {
 		return this.ownership;
 	}
@@ -317,6 +331,10 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 				return getSpecial();
 			case SIDEBOARD:
 				return isSideboard();
+			case OWN_COUNT:
+				return getOwnCount();
+			case OWN_UNIQUE:
+				return getOwnUnique();
 		}
 		return null;
 	}
@@ -333,6 +351,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 		card.setRulings(rulings);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getForTrade()
+	 */
 	public int getForTrade() {
 		return forTrade;
 	}
@@ -341,6 +364,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 		this.forTrade = forSale;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getSpecial()
+	 */
 	public String getSpecial() {
 		if (this.special == null)
 			return "";
@@ -404,6 +432,11 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isSideboard()
+	 */
 	public boolean isSideboard() {
 		return location.isSideboard();
 	}
@@ -444,5 +477,15 @@ public class MagicCardPhysical implements IMagicCard, ICardCountable, ICardModif
 		if (isOwn())
 			return getCount();
 		return 0;
+	}
+
+	public int getOwnUnique() {
+		if (isOwn())
+			return 1;
+		return 0;
+	}
+
+	public int getUniqueCount() {
+		return 1;
 	}
 }

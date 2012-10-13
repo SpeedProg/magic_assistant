@@ -5,15 +5,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
-public class MagicCard implements IMagicCard, ICardModifiable {
+public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysical {
 	private int id;
 	private String name;
 	private String cost;
@@ -34,7 +32,7 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	private transient int cmc = -1;
 	private int enId;
 	private LinkedHashMap<String, String> properties;
-	private transient Set<MagicCardPhysical> realcards;
+	private transient CardGroup realcards;
 
 	/*
 	 * (non-Javadoc)
@@ -363,10 +361,6 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 				return getProperty(MagicCardField.OTHER_PART);
 			case PART:
 				return getProperty(MagicCardField.PART);
-			case OWN_COUNT:
-				return getOwnCount();
-			case UNIQUE:
-				return getOwnUnique();
 			case SET_CORE:
 				if (edition == null)
 					return null;
@@ -379,6 +373,8 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 				if (edition.equals("*"))
 					return "*";
 				return Editions.getInstance().getEditionByName(edition).getBlock();
+			case UNIQUE_COUNT:
+				return getUniqueCount();
 			default:
 				break;
 		}
@@ -652,17 +648,18 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 		if (p.getBase() != this)
 			throw new IllegalArgumentException("Mistmatched parent");
 		if (realcards == null) {
-			realcards = Collections.newSetFromMap(new WeakHashMap<MagicCardPhysical, Boolean>(3));
+			realcards = new CardGroup(MagicCardField.ID, name);
 			realcards.add(p);
 			return;
 		}
-		realcards.add(p);
+		if (!realcards.contains(p))
+			realcards.add(p);
 	}
 
-	public Set<MagicCardPhysical> getPhysicalCards() {
+	public Collection<MagicCardPhysical> getPhysicalCards() {
 		if (realcards == null)
 			return Collections.emptySet();
-		return realcards;
+		return realcards.getChildrenList();
 	}
 
 	public void removePhysicalCard(MagicCardPhysical p) {
@@ -675,22 +672,62 @@ public class MagicCard implements IMagicCard, ICardModifiable {
 	public int getOwnCount() {
 		if (realcards == null)
 			return 0;
-		int ocount = 0;
-		for (MagicCardPhysical p : realcards) {
-			if (p.isOwn())
-				ocount += p.getCount();
-		}
-		return ocount;
+		return realcards.getOwnCount();
 	}
 
 	public int getOwnUnique() {
 		if (realcards == null)
 			return 0;
-		int ocount = 0;
-		for (MagicCardPhysical p : realcards) {
-			if (p.isOwn())
-				return 1;
-		}
-		return ocount;
+		return realcards.getOwnCount();
+	}
+
+	public void setLocation(Location location) {
+		throw new UnsupportedOperationException();
+	}
+
+	public int getCount() {
+		if (realcards == null)
+			return 0;
+		return realcards.getCount();
+	}
+
+	public String getComment() {
+		if (realcards == null)
+			return "";
+		return (String) realcards.getObjectByField(MagicCardFieldPhysical.COMMENT);
+	}
+
+	public Location getLocation() {
+		if (realcards == null)
+			return Location.NO_WHERE;
+		return (Location) realcards.getObjectByField(MagicCardFieldPhysical.LOCATION);
+	}
+
+	public boolean isOwn() {
+		if (realcards == null)
+			return false;
+		return (Boolean) realcards.getObjectByField(MagicCardFieldPhysical.OWNERSHIP);
+	}
+
+	public int getForTrade() {
+		if (realcards == null)
+			return 0;
+		return (Integer) realcards.getObjectByField(MagicCardFieldPhysical.FORTRADECOUNT);
+	}
+
+	public String getSpecial() {
+		if (realcards == null)
+			return "";
+		return (String) realcards.getObjectByField(MagicCardFieldPhysical.SPECIAL);
+	}
+
+	public boolean isSideboard() {
+		if (realcards == null)
+			return false;
+		return (Boolean) realcards.getObjectByField(MagicCardFieldPhysical.SIDEBOARD);
+	}
+
+	public int getUniqueCount() {
+		return 1;
 	}
 }

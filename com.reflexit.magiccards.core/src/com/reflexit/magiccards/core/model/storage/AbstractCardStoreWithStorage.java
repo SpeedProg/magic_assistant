@@ -114,5 +114,5 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 
 	public boolean contains(T card) {
 		return storage.contains(card);
-	};
+	}
 }

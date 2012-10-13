@@ -11,9 +11,10 @@
 package com.reflexit.magiccards.core.model;
 
 /**
- * @author Alena
- * Interface for cards and card collection to return total card count
+ * @author Alena Interface for cards and card collection to return total card count
  */
 public interface ICardCountable {
 	int getCount();
+
+	int getUniqueCount();
 }

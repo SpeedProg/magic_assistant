@@ -17,7 +17,9 @@ public enum MagicCardFieldPhysical implements ICardField {
 	OWNERSHIP,
 	FORTRADECOUNT("forTrade"),
 	SPECIAL, // like foil, premium, mint, played, online etc
-	SIDEBOARD(null)
+	SIDEBOARD(null),
+	OWN_COUNT(null), // count of own card (normal count counts own and virtual)
+	OWN_UNIQUE(null), // count of own unique cards (only applies to groups usually)
 	// end of fields
 	;
 	// fields

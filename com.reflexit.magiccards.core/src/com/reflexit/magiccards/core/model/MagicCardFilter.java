@@ -511,9 +511,9 @@ public class MagicCardFilter {
 			BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
 			Expr b2;
 			if ("true".equals(value))
-				b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, ">=1");
+				b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, ">=1");
 			else
-				b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, "==0");
+				b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, "==0");
 			res = new BinaryExpr(b1, Operation.OR, b2);
 		} else if (FilterHelper.LANG.equals(requestedId)) {
 			if (value.equals("")) {

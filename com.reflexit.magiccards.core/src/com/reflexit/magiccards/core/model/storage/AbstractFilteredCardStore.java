@@ -363,4 +363,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			addFilteredCard(object);
 		}
 	}
+
+	public int getUniqueCount() {
+		return filteredList.size();
+	}
 }

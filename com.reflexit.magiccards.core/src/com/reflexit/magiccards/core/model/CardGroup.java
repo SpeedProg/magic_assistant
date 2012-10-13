@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
@@ -33,9 +31,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 	private ICardField groupField;
 	private int count;
 	private List<ICard> children;
-	private static final String OWNUSIZE_KEY = "ownusize";
 	private static final String CREATURECOUNT_KEY = "creaturecount";
-	private static final String OWNCOUNT_KEY = "owncount";
 	private HashMap<String, Object> props;
 	private Map<String, CardGroup> subs;
 	private MagicCardPhysical base;
@@ -185,7 +181,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 	}
 
 	public synchronized int getOwnCount() {
-		Integer iOwn = (Integer) getProperty(OWNCOUNT_KEY);
+		Integer iOwn = (Integer) getProperty(MagicCardFieldPhysical.OWN_COUNT.name());
 		if (iOwn != null) {
 			return iOwn.intValue();
 		}
@@ -193,7 +189,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
-				if (((MagicCardPhysical) object).isOwn()) {
+				if (((IMagicCardPhysical) object).isOwn()) {
 					owncount += ((MagicCardPhysical) object).getCount();
 				}
 			} else if (object instanceof MagicCard) {
@@ -202,12 +198,12 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 				owncount += ((CardGroup) object).getOwnCount();
 			}
 		}
-		setProperty(OWNCOUNT_KEY, owncount);
+		setProperty(MagicCardFieldPhysical.OWN_COUNT.name(), owncount);
 		return owncount;
 	}
 
-	public synchronized int getOwnUSize() {
-		Integer iOwn = (Integer) getProperty(OWNUSIZE_KEY);
+	public synchronized int getOwnUnique() {
+		Integer iOwn = (Integer) getProperty(MagicCardFieldPhysical.OWN_UNIQUE.name());
 		if (iOwn != null) {
 			return iOwn.intValue();
 		}
@@ -216,24 +212,46 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
-				if (((MagicCardPhysical) object).isOwn()) {
+				if (((IMagicCardPhysical) object).isOwn()) {
 					uniq.add(((MagicCardPhysical) object).getBase());
 				}
 			} else if (object instanceof MagicCard) {
-				Set<MagicCardPhysical> physicalCards = ((MagicCard) object).getPhysicalCards();
-				for (MagicCardPhysical p : physicalCards) {
+				Collection<MagicCardPhysical> physicalCards = ((MagicCard) object).getPhysicalCards();
+				for (IMagicCardPhysical p : physicalCards) {
 					if (p.isOwn()) {
 						uniq.add((IMagicCard) object);
 						break;
 					}
 				}
 			} else if (object instanceof CardGroup) {
-				ownusize += ((CardGroup) object).getOwnUSize();
+				ownusize += ((CardGroup) object).getOwnUnique();
 			}
 		}
 		ownusize += uniq.size();
-		setProperty(OWNUSIZE_KEY, ownusize);
+		setProperty(MagicCardFieldPhysical.OWN_UNIQUE.name(), ownusize);
 		return ownusize;
+	}
+
+	public synchronized int getUniqueCount() {
+		Integer ucount = (Integer) getProperty(MagicCardField.UNIQUE_COUNT.name());
+		if (ucount != null) {
+			return ucount.intValue();
+		}
+		int usize = 0;
+		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
+		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
+			ICard object = iterator.next();
+			if (object instanceof MagicCardPhysical) {
+				uniq.add(((MagicCardPhysical) object).getBase());
+			} else if (object instanceof MagicCard) {
+				uniq.add((IMagicCard) object);
+			} else if (object instanceof CardGroup) {
+				usize += ((CardGroup) object).getUniqueCount();
+			}
+		}
+		usize += uniq.size();
+		setProperty(MagicCardField.UNIQUE_COUNT.name(), usize);
+		return usize;
 	}
 
 	public ICardField getFieldIndex() {
@@ -251,7 +269,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		}
 	}
 
-	private List getChildrenList() {
+	public List getChildrenList() {
 		return children;
 	}
 
@@ -449,10 +467,10 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 			return getName();
 		if (size() == 0)
 			return null;
-		if (field == MagicCardField.OWN_COUNT)
+		if (field == MagicCardFieldPhysical.OWN_COUNT)
 			return getOwnCount();
-		if (field == MagicCardField.UNIQUE)
-			return getOwnUSize();
+		if (field == MagicCardFieldPhysical.OWN_UNIQUE)
+			return getOwnUnique();
 		return getBase().getObjectByField(field);
 	}
 
