@@ -23,7 +23,9 @@ public class TextConvertor {
 	public static String toText(Object line) {
 		StringBuffer buf = new StringBuffer();
 		IMagicCard card;
-		if (line instanceof IMagicCard) {
+		if (line instanceof CardGroup) {
+			buf.append(((CardGroup) line).getName());
+		} else if (line instanceof IMagicCard) {
 			card = (IMagicCard) line;
 			buf.append(card.getName());
 			buf.append(" ");
@@ -35,8 +37,6 @@ public class TextConvertor {
 			buf.append("]");
 			buf.append(LINE_SEPARATOR);
 			buf.append(card.getOracleText());
-		} else if (line instanceof CardGroup) {
-			buf.append(((CardGroup) line).getName());
 		} else {
 			buf.append(line.toString());
 		}

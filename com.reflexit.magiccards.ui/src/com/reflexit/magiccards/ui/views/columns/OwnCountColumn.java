@@ -10,7 +10,6 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -34,8 +33,6 @@ public class OwnCountColumn extends GenColumn {
 		int ocount = 0;
 		if (element instanceof IMagicCardPhysical) {
 			ocount = ((IMagicCardPhysical) element).getOwnCount();
-		} else if (element instanceof CardGroup) {
-			ocount = ((CardGroup) element).getOwnCount();
 		} else {
 			return "";
 		}

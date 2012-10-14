@@ -44,16 +44,6 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void createGroupAction() {
-		this.actionGroupMenu = new GroupByToolBarAction() {
-			@Override
-			public void run() {
-				// does not do anything
-			}
-		};
-	}
-
-	@Override
 	protected void runShowFilter() {
 		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getLocalPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)

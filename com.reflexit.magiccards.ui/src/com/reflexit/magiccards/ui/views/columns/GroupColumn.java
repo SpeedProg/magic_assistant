@@ -31,8 +31,7 @@ public class GroupColumn extends GenColumn {
 				if (((CardGroup) element).getFieldIndex() == MagicCardField.NAME) {
 					return ImageCreator.getInstance().getSetImage(((CardGroup) element).getFirstCard());
 				}
-			}
-			if (element instanceof IMagicCard) {
+			} else if (element instanceof IMagicCard) {
 				IMagicCard card = (IMagicCard) element;
 				return ImageCreator.getInstance().getSetImage(card);
 			}
@@ -53,8 +52,7 @@ public class GroupColumn extends GenColumn {
 			} else {
 				return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getCount() + ")";
 			}
-		}
-		if (element instanceof IMagicCard) {
+		} else if (element instanceof IMagicCard) {
 			return ((IMagicCard) element).getName();
 		}
 		return null;
