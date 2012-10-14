@@ -11,7 +11,9 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -59,7 +61,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 							if (set2.equals(set)) {
 								if (prices.containsKey(magicCard.getName())) {
 									Float price = prices.get(magicCard.getName());
-									magicCard.setDbPrice(price);
+									((ICardModifiable) magicCard).setObjectByField(MagicCardField.DBPRICE, String.valueOf(price));
 									store.update(magicCard);
 									monitor.worked(1);
 								}

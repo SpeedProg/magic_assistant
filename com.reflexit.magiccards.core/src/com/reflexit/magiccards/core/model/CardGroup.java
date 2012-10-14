@@ -20,13 +20,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
  * @author Alena
  * 
  */
-public class CardGroup implements ICardCountable, ICard, ILocatable {
+public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardPhysical {
 	private String name;
 	private ICardField groupField;
 	private int count;
@@ -43,7 +45,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		this.subs = new LinkedHashMap<String, CardGroup>(4);
 	}
 
-	public synchronized IMagicCard getBase() {
+	public IMagicCard getBase() {
+		return getGroupBase();
+	}
+
+	private synchronized IMagicCardPhysical getGroupBase() {
 		if (base == null) {
 			if (children.size() == 1 && !(children.get(0) instanceof CardGroup))
 				return getFirstCard();
@@ -53,7 +59,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 				Object o = iterator.next();
 				if (o instanceof CardGroup) {
-					addBase(((CardGroup) o).getBase());
+					addBase(((CardGroup) o).getGroupBase());
 				} else if (o instanceof IMagicCard) {
 					addBase((IMagicCard) o);
 				}
@@ -74,7 +80,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 				continue;
 			}
 			Object value = o.getObjectByField(field);
-			Object mine = base.getObjectByField(field);
+			Object mine = getGroupBase().getObjectByField(field);
 			Object newmine = null;
 			if (mine == null) {
 				newmine = value;
@@ -116,13 +122,17 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 						newmine = "*";
 					}
 				} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
-					newmine = "false";
+					if (mine.equals(value)) {
+						// good
+					} else {
+						newmine = "false";
+					}
 				} else {
 					// ...
 				}
 			}
 			if (newmine != null) {
-				((ICardModifiable) base).setObjectByField(field, String.valueOf(newmine));
+				((ICardModifiable) getGroupBase()).setObjectByField(field, String.valueOf(newmine));
 			}
 		}
 	}
@@ -395,14 +405,14 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 		base = null;
 	}
 
-	public synchronized IMagicCard getFirstCard() {
+	public synchronized IMagicCardPhysical getFirstCard() {
 		if (children.size() == 0)
 			return null;
 		Object card = children.get(0);
 		if (card instanceof CardGroup)
 			return ((CardGroup) card).getFirstCard();
-		if (card instanceof IMagicCard)
-			return (IMagicCard) card;
+		if (card instanceof IMagicCardPhysical)
+			return (IMagicCardPhysical) card;
 		return null;
 	}
 
@@ -471,10 +481,10 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 			return getOwnCount();
 		if (field == MagicCardFieldPhysical.OWN_UNIQUE)
 			return getOwnUnique();
-		return getBase().getObjectByField(field);
+		return getGroupBase().getObjectByField(field);
 	}
 
-	public ICard cloneCard() {
+	public IMagicCard cloneCard() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -483,8 +493,102 @@ public class CardGroup implements ICardCountable, ICard, ILocatable {
 	}
 
 	public Location getLocation() {
-		if (getBase() instanceof ILocatable)
-			return ((ILocatable) getBase()).getLocation();
-		return null;
+		return getGroupBase().getLocation();
+	}
+
+	public String getComment() {
+		return getGroupBase().getComment();
+	}
+
+	public boolean isOwn() {
+		return getGroupBase().isOwn();
+	}
+
+	public int getForTrade() {
+		return getGroupBase().getForTrade();
+	}
+
+	public String getSpecial() {
+		return getGroupBase().getSpecial();
+	}
+
+	public String getCost() {
+		return getGroupBase().getCost();
+	}
+
+	public boolean isSideboard() {
+		return getGroupBase().isSideboard();
+	}
+
+	public int getCardId() {
+		return getGroupBase().getCardId();
+	}
+
+	public String getOracleText() {
+		return getGroupBase().getOracleText();
+	}
+
+	public String getRarity() {
+		return getGroupBase().getRarity();
+	}
+
+	public String getSet() {
+		return getGroupBase().getSet();
+	}
+
+	public String getType() {
+		return getGroupBase().getType();
+	}
+
+	public String getPower() {
+		return getGroupBase().getPower();
+	}
+
+	public String getToughness() {
+		return getGroupBase().getToughness();
+	}
+
+	public String getColorType() {
+		return getGroupBase().getColorType();
+	}
+
+	public int getCmc() {
+		return getGroupBase().getCmc();
+	}
+
+	public float getDbPrice() {
+		return getGroupBase().getDbPrice();
+	}
+
+	public float getCommunityRating() {
+		return getGroupBase().getCommunityRating();
+	}
+
+	public String getArtist() {
+		return getGroupBase().getArtist();
+	}
+
+	public String getRulings() {
+		return getGroupBase().getRulings();
+	}
+
+	public String getText() {
+		return getGroupBase().getText();
+	}
+
+	public String getLanguage() {
+		return getGroupBase().getLanguage();
+	}
+
+	public boolean matches(ICardField left, TextValue right) {
+		return getGroupBase().matches(left, right);
+	}
+
+	public int getEnglishCardId() {
+		return getGroupBase().getEnglishCardId();
+	}
+
+	public int getFlipId() {
+		return getGroupBase().getFlipId();
 	}
 }

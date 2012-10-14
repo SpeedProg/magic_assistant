@@ -9,8 +9,10 @@ import java.net.URL;
 import java.util.HashMap;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -92,7 +94,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 				if (price > 0) {
 					// if (!setIdMap.containsKey(set))
 					// setIdMap.put(set, id);
-					magicCard.setDbPrice(price);
+					((ICardModifiable) magicCard).setObjectByField(MagicCardField.DBPRICE, String.valueOf(price));
 					store.update(magicCard);
 				}
 				monitor.worked(1);

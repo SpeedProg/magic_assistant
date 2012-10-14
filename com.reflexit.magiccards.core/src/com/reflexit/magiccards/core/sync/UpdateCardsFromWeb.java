@@ -52,7 +52,7 @@ public class UpdateCardsFromWeb {
 		try {
 			for (int i = 0; iter.hasNext(); i++) {
 				IMagicCard card = iter.next();
-				MagicCard magicCard = card.getBase();
+				IMagicCard magicCard = card.getBase();
 				if (monitor.isCanceled())
 					return;
 				if (magicCard.getEnglishCardId() != 0) {
@@ -78,7 +78,7 @@ public class UpdateCardsFromWeb {
 						langParser.load(new SubCoreProgressMonitor(monitor, 40));
 						int langId = langParser.getLangCardId();
 						if (langId != 0) {
-							MagicCard newMagicCard = magicCard.cloneCard();
+							MagicCard newMagicCard = (MagicCard) magicCard.cloneCard();
 							newMagicCard.setCardId(langId);
 							newMagicCard.setEnglishCardId(card.getCardId());
 							newMagicCard.setLanguage(lang);

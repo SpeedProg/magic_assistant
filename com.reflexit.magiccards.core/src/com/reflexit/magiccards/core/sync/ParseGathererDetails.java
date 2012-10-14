@@ -162,7 +162,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 				String set = matcher.group(2).trim();
 				String rarity = matcher.group(3).trim();
 				// other printings
-				MagicCard mcard = card.getBase();
+				MagicCard mcard = (MagicCard) card.getBase();
 				MagicCard card2 = mcard.cloneCard();
 				card2.setId(id);
 				card2.setSet(set.trim());
@@ -294,8 +294,8 @@ public class ParseGathererDetails extends ParseGathererPage {
 							((ICardModifiable) cardB).setObjectByField(MagicCardField.FLIPID, String.valueOf(card.getCardId()));
 							magicDb.add(cardB);
 						}
-						String part1 = card.getBase().getProperty(MagicCardField.PART);
-						String part = cardB.getBase().getProperty(MagicCardField.PART);
+						String part1 = (String) card.getBase().getObjectByField(MagicCardField.PART);
+						String part = (String) cardB.getBase().getObjectByField(MagicCardField.PART);
 						if (part != null && part.length() > 0) {
 							if (part.equals(part1))
 								return; // second part updated - no support
