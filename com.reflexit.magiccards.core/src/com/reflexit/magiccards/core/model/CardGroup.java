@@ -174,7 +174,9 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		int cci = 0;
 		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
-			if (object instanceof IMagicCard) {
+			if (object instanceof CardGroup) {
+				cci += ((CardGroup) object).getCreatureCount();
+			} else if (object instanceof IMagicCard) {
 				if (((IMagicCard) object).getPower() != null) {
 					if (object instanceof MagicCard) {
 						cci++;
@@ -182,8 +184,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 						cci += ((ICardCountable) object).getCount();
 					}
 				}
-			} else if (object instanceof CardGroup) {
-				cci += ((CardGroup) object).getCreatureCount();
 			}
 		}
 		setProperty(CREATURECOUNT_KEY, cci);
@@ -198,14 +198,8 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		int owncount = 0;
 		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
-			if (object instanceof MagicCardPhysical) {
-				if (((IMagicCardPhysical) object).isOwn()) {
-					owncount += ((MagicCardPhysical) object).getCount();
-				}
-			} else if (object instanceof MagicCard) {
-				owncount += ((MagicCard) object).getOwnCount();
-			} else if (object instanceof CardGroup) {
-				owncount += ((CardGroup) object).getOwnCount();
+			if (object instanceof IMagicCardPhysical) {
+				owncount += ((IMagicCardPhysical) object).getOwnCount();
 			}
 		}
 		setProperty(MagicCardFieldPhysical.OWN_COUNT.name(), owncount);
