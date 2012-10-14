@@ -16,7 +16,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
@@ -26,7 +28,7 @@ import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckPage;
 public class GraphicsDeckPage extends AbstractDeckPage {
 	private DesktopCanvas panel;
 	private Label status;
-	private IFilteredCardStore fstore;
+	private IFilteredCardStore fstore = new MemoryFilteredCardStore<IMagicCard>();
 	private Action refresh;
 
 	@Override
@@ -52,6 +54,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 			}
 		});
 		hookDragAndDrop();
+		fstore.getFilter().setGroupField(MagicCardField.CMC);
 		return getArea();
 	}
 
@@ -93,8 +96,10 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	}
 
 	@Override
-	public void setFilteredStore(IFilteredCardStore store) {
-		this.fstore = store;
+	public void setFilteredStore(IFilteredCardStore nfstore) {
+		super.setFilteredStore(nfstore);
+		fstore.clear();
+		fstore.addAll(nfstore.getCardStore());
 	}
 
 	@Override
@@ -105,6 +110,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	public void activate() {
 		super.activate();
+		fstore.update();
 		panel.setInput(fstore);
 		panel.forceFocus();
 		status.setText(getStatusMessage());
@@ -118,7 +124,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
 		super.fillLocalToolBar(toolBarManager);
-		toolBarManager.add(view.getGroupAction());
+		// toolBarManager.add(view.getGroupAction());
 		toolBarManager.add(refresh);
 	}
 }
