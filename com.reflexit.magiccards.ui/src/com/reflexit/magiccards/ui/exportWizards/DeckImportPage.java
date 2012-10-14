@@ -186,7 +186,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 								String corr = badSets.get(set);
 								if (corr != null) {
 									if (!corr.equals(CorrectSetDialog.SKIP)) {
-										MagicCard newCard = card.getBase();
+										MagicCard newCard = (MagicCard) card.getBase();
 										newCard.setSet(corr);
 										ImportUtils.updateCardReference((MagicCardPhysical) card, magicDbHandler.getCardStore());
 										if (card.getCardId() != 0) {

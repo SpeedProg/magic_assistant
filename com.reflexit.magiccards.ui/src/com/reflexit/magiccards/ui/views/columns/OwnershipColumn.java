@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -32,13 +31,9 @@ public class OwnershipColumn extends GenColumn {
 	@Override
 	public Image getImage(Object element) {
 		boolean own = false;
-		if (element instanceof MagicCardPhysical) {
+		if (element instanceof IMagicCardPhysical) {
 			IMagicCardPhysical m = (IMagicCardPhysical) element;
 			own = m.isOwn();
-		} else if (element instanceof CardGroup) {
-			IMagicCard base = ((CardGroup) element).getBase();
-			if (base instanceof MagicCardPhysical)
-				own = ((IMagicCardPhysical) base).isOwn();
 		}
 		if (own)
 			return MagicUIActivator.getDefault().getImage("icons/obj16/check16.png");
