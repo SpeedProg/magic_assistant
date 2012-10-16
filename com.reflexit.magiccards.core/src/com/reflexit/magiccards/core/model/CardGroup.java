@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,15 +52,14 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 
 	private synchronized IMagicCardPhysical getGroupBase() {
 		if (base == null) {
-			if (children.size() == 1 && !(children.get(0) instanceof CardGroup))
-				return getFirstCard();
-			base = new MagicCardPhysical(new MagicCard(), null);
-			base.getBase().setName(name);
-			base.setOwn(true);
+			if (size() == 0)
+				return null;
 			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 				Object o = iterator.next();
 				if (o instanceof CardGroup) {
-					addBase(((CardGroup) o).getGroupBase());
+					CardGroup g = (CardGroup) o;
+					if (g.size() > 0)
+						addBase(g.getGroupBase());
 				} else if (o instanceof IMagicCard) {
 					addBase((IMagicCard) o);
 				}
@@ -68,32 +68,60 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return base;
 	}
 
-	private void addBase(IMagicCard o) {
-		ICardField[] allNonTransientFields;
-		// if (o instanceof MagicCard)
-		// allNonTransientFields = MagicCardField.allNonTransientFields();
-		// else
-		allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
-		for (int i = 0; i < allNonTransientFields.length + 1; i++) {
-			ICardField field = i == 0 ? MagicCardFieldPhysical.LOCATION : allNonTransientFields[i - 1];
-			if (field == MagicCardField.NAME) {
-				continue;
+	public void createBase(IMagicCard card) {
+		if (card instanceof MagicCardPhysical) {
+			base = (MagicCardPhysical) card.cloneCard();
+			base.setMagicCard((MagicCard) card.getBase().cloneCard());
+		} else if (card instanceof MagicCard) {
+			base = new MagicCardPhysical(card.cloneCard(), null);
+		}
+		base.getBase().setName(name);
+	}
+
+	public boolean isPhysical() {
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o instanceof IMagicCardPhysical) {
+				if (!((IMagicCardPhysical) o).isPhysical())
+					return false;
 			}
+		}
+		return true;
+	}
+
+	private void addBase(IMagicCard o) {
+		if (base == null) {
+			createBase(o);
+			return;
+		}
+		ICardField[] allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
+		List<ICardField> list = new ArrayList<ICardField>(Arrays.asList(allNonTransientFields));
+		list.remove(MagicCardField.ORACLE);
+		list.remove(MagicCardField.NAME); // no need, processes separately
+		list.add(MagicCardFieldPhysical.LOCATION); // need to add loctation because it is transient
+		list.add(MagicCardField.ORACLE); // move to end, because want to set text first
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			ICardField field = (ICardField) iterator.next();
 			Object value = o.getObjectByField(field);
 			Object mine = getGroupBase().getObjectByField(field);
 			Object newmine = null;
 			if (mine == null) {
 				newmine = value;
 			} else {
-				if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE) {
+				// Aggregate fields
+				if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE || field == MagicCardField.RATING) {
 					Float fvalue = (Float) value;
 					Float fmain = (Float) mine;
-					if (o instanceof MagicCardPhysical) {
+					if (fvalue == null || fvalue.isNaN())
+						fvalue = 0f;
+					if (fmain.isNaN())
+						fmain = 0f;
+					if (o instanceof MagicCardPhysical && o.getCardId() != 0) {
 						// && ((MagicCardPhysical) o).isOwn()
 						int count = ((ICardCountable) o).getCount();
 						newmine = fmain + fvalue * count;
 					} else {
-						newmine = fmain + (fvalue == null ? 0 : fvalue);
+						newmine = fmain + fvalue;
 					}
 				} else if (field == MagicCardField.POWER || field == MagicCardField.TOUGHNESS) {
 					Float fvalue = MagicCard.convertFloat((String) value);
@@ -102,33 +130,39 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 						fvalue = 0f;
 					if (fmain.isNaN())
 						fmain = 0f;
-					if (o instanceof ICardCountable) {
+					if (o instanceof MagicCardPhysical && o.getCardId() != 0) {
 						// && ((MagicCardPhysical) o).isOwn()
 						int count = ((ICardCountable) o).getCount();
 						newmine = fmain + fvalue * count;
 					} else {
 						newmine = fmain + fvalue;
 					}
-				} else if (field == MagicCardFieldPhysical.LOCATION) {
-					if (mine.equals(value)) {
-						// good
-					} else {
-						newmine = Location.NO_WHERE;
-					}
-				} else if (field.getType() == String.class) {
-					if (mine.equals(value)) {
-						// good
-					} else {
-						newmine = "*";
-					}
-				} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
-					if (mine.equals(value)) {
-						// good
-					} else {
-						newmine = "false";
-					}
+				} else if (field == MagicCardFieldPhysical.COUNT || field == MagicCardFieldPhysical.FORTRADECOUNT) {
+					Integer fvalue = (Integer) value;
+					Integer fmain = (Integer) mine;
+					newmine = fmain + ((fvalue == null) ? 0 : fvalue);
 				} else {
-					// ...
+					// Join Fiels
+					if (mine.equals(value)) {
+						// good
+					} else {
+						if (field == MagicCardFieldPhysical.LOCATION) {
+							newmine = Location.NO_WHERE;
+						} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
+							newmine = "false";
+						} else if (field.getType() == String.class) {
+							if (mine.toString().length() == 0) {
+								newmine = value;
+							} else {
+								// System.err.println("join " + mine + "<>" + value);
+								newmine = "*";
+							}
+						} else if (field == MagicCardField.ID) {
+							newmine = 0;
+						} else {
+							// ...
+						}
+					}
 				}
 			}
 			if (newmine != null) {
@@ -475,6 +509,8 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			return getOwnCount();
 		if (field == MagicCardFieldPhysical.OWN_UNIQUE)
 			return getOwnUnique();
+		if (field == MagicCardField.UNIQUE_COUNT)
+			return getUniqueCount();
 		return getGroupBase().getObjectByField(field);
 	}
 
@@ -487,90 +523,134 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public Location getLocation() {
+		if (size() == 0)
+			return Location.NO_WHERE;
 		return getGroupBase().getLocation();
 	}
 
 	public String getComment() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getComment();
 	}
 
 	public boolean isOwn() {
+		if (size() == 0)
+			return false;
 		return getGroupBase().isOwn();
 	}
 
 	public int getForTrade() {
+		if (size() == 0)
+			return 0;
 		return getGroupBase().getForTrade();
 	}
 
 	public String getSpecial() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getSpecial();
 	}
 
 	public String getCost() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getCost();
 	}
 
 	public boolean isSideboard() {
+		if (size() == 0)
+			return false;
 		return getGroupBase().isSideboard();
 	}
 
 	public int getCardId() {
+		if (size() == 0)
+			return 0;
 		return getGroupBase().getCardId();
 	}
 
 	public String getOracleText() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getOracleText();
 	}
 
 	public String getRarity() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getRarity();
 	}
 
 	public String getSet() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getSet();
 	}
 
 	public String getType() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getType();
 	}
 
 	public String getPower() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getPower();
 	}
 
 	public String getToughness() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getToughness();
 	}
 
 	public String getColorType() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getColorType();
 	}
 
 	public int getCmc() {
+		if (size() == 0)
+			return 0;
 		return getGroupBase().getCmc();
 	}
 
 	public float getDbPrice() {
+		if (size() == 0)
+			return 0f;
 		return getGroupBase().getDbPrice();
 	}
 
 	public float getCommunityRating() {
+		if (size() == 0)
+			return 0f;
 		return getGroupBase().getCommunityRating();
 	}
 
 	public String getArtist() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getArtist();
 	}
 
 	public String getRulings() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getRulings();
 	}
 
 	public String getText() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getText();
 	}
 
 	public String getLanguage() {
+		if (size() == 0)
+			return null;
 		return getGroupBase().getLanguage();
 	}
 
@@ -579,10 +659,23 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public int getEnglishCardId() {
+		if (size() == 0)
+			return 0;
 		return getGroupBase().getEnglishCardId();
 	}
 
 	public int getFlipId() {
+		if (size() == 0)
+			return 0;
 		return getGroupBase().getFlipId();
+	}
+
+	public Collection getValues() {
+		ArrayList list = new ArrayList();
+		ICardField[] xfields = MagicCardFieldPhysical.allNonTransientFields();
+		for (ICardField field : xfields) {
+			list.add(getObjectByField(field));
+		}
+		return list;
 	}
 }

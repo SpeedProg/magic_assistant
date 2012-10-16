@@ -311,72 +311,74 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public Object getObjectByField(ICardField field) {
-		if (!(field instanceof MagicCardField))
-			return null;
-		MagicCardField mf = (MagicCardField) field;
-		switch (mf) {
-			case ID:
-				return Integer.valueOf(getCardId());
-			case NAME:
-				return (this.name);
-			case COST:
-				return (this.cost);
-			case TYPE:
-				return (this.type);
-			case POWER:
-				return (this.power);
-			case TOUGHNESS:
-				return (this.toughness);
-			case ORACLE:
-				return (this.oracleText);
-			case SET:
-				return (this.edition);
-			case RARITY:
-				return (this.rarity);
-			case CTYPE:
-				return (getColorType());
-			case CMC:
-				return (Integer.valueOf(getCmc()));
-			case DBPRICE:
-				return (this.dbprice);
-			case RATING:
-				return (this.rating);
-			case ARTIST:
-				return (this.artist);
-			case RULINGS:
-				return (this.rulings);
-			case LANG:
-				return getLanguage();
-			case COLLNUM:
-				return (this.num);
-			case TEXT:
-				return getText();
-			case ENID:
-				return (this.enId);
-			case PROPERTIES:
-				return (this.properties);
-			case FLIPID:
-				return getProperty(MagicCardField.FLIPID);
-			case OTHER_PART:
-				return getProperty(MagicCardField.OTHER_PART);
-			case PART:
-				return getProperty(MagicCardField.PART);
-			case SET_CORE:
-				if (edition == null)
-					return null;
-				if (edition.equals("*"))
-					return "*";
-				return Editions.getInstance().getEditionByName(edition).getType();
-			case SET_BLOCK:
-				if (edition == null)
-					return null;
-				if (edition.equals("*"))
-					return "*";
-				return Editions.getInstance().getEditionByName(edition).getBlock();
-			case UNIQUE_COUNT:
-				return getUniqueCount();
-			default:
-				break;
+		if (field instanceof MagicCardField) {
+			MagicCardField mf = (MagicCardField) field;
+			switch (mf) {
+				case ID:
+					return Integer.valueOf(getCardId());
+				case NAME:
+					return (this.name);
+				case COST:
+					return (this.cost);
+				case TYPE:
+					return (this.type);
+				case POWER:
+					return (this.power);
+				case TOUGHNESS:
+					return (this.toughness);
+				case ORACLE:
+					return (this.oracleText);
+				case SET:
+					return (this.edition);
+				case RARITY:
+					return (this.rarity);
+				case CTYPE:
+					return (getColorType());
+				case CMC:
+					return (Integer.valueOf(getCmc()));
+				case DBPRICE:
+					return (this.dbprice);
+				case RATING:
+					return (this.rating);
+				case ARTIST:
+					return (this.artist);
+				case RULINGS:
+					return (this.rulings);
+				case LANG:
+					return getLanguage();
+				case COLLNUM:
+					return (this.num);
+				case TEXT:
+					return getText();
+				case ENID:
+					return (this.enId);
+				case PROPERTIES:
+					return (this.properties);
+				case FLIPID:
+					return getFlipId();
+				case OTHER_PART:
+					return getProperty(MagicCardField.OTHER_PART);
+				case PART:
+					return getPart();
+				case SET_CORE:
+					if (edition == null)
+						return null;
+					if (edition.equals("*"))
+						return "*";
+					return Editions.getInstance().getEditionByName(edition).getType();
+				case SET_BLOCK:
+					if (edition == null)
+						return null;
+					if (edition.equals("*"))
+						return "*";
+					return Editions.getInstance().getEditionByName(edition).getBlock();
+				case UNIQUE_COUNT:
+					return getUniqueCount();
+				default:
+					break;
+			}
+		} else if (field instanceof MagicCardFieldPhysical && realcards != null) {
+			return realcards.getObjectByField(field);
 		}
 		return null;
 	}
@@ -414,8 +416,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public String getLanguage() {
-		if (lang == null || lang.length() == 0)
-			return "English";
 		return lang;
 	}
 
@@ -687,13 +687,13 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public int getCount() {
 		if (realcards == null)
-			return 0;
+			return 1;
 		return realcards.getCount();
 	}
 
 	public String getComment() {
 		if (realcards == null)
-			return "";
+			return null;
 		return (String) realcards.getObjectByField(MagicCardFieldPhysical.COMMENT);
 	}
 
@@ -717,7 +717,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public String getSpecial() {
 		if (realcards == null)
-			return "";
+			return null;
 		return (String) realcards.getObjectByField(MagicCardFieldPhysical.SPECIAL);
 	}
 
@@ -729,5 +729,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public int getUniqueCount() {
 		return 1;
+	}
+
+	public boolean isPhysical() {
+		return false;
 	}
 }

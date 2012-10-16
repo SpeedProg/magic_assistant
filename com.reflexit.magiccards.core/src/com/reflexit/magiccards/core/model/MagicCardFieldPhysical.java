@@ -47,9 +47,7 @@ public enum MagicCardFieldPhysical implements ICardField {
 	}
 
 	public Class getType() {
-		if (field == null)
-			return null;
-		return field.getClass();
+		return field == null ? String.class : field.getType();
 	}
 
 	public boolean isTransient() {

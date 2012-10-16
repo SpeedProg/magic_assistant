@@ -115,8 +115,6 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getComment()
 	 */
 	public String getComment() {
-		if (this.comment == null)
-			return "";
 		return this.comment;
 	}
 
@@ -144,8 +142,11 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 		return this.custom;
 	}
 
-	public void setCustom(String cutom) {
-		this.custom = cutom;
+	public void setCustom(String custom) {
+		if (custom == null || custom.trim().length() == 0)
+			this.custom = null;
+		else
+			this.custom = custom;
 	}
 
 	public int getCardId() {
@@ -306,9 +307,11 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 	}
 
 	public Object getObjectByField(ICardField field) {
-		Object x = card.getObjectByField(field);
-		if (x != null)
-			return x;
+		if (field instanceof MagicCardField) {
+			Object x = card.getObjectByField(field);
+			if (x != null)
+				return x;
+		}
 		if (!(field instanceof MagicCardFieldPhysical))
 			return null;
 		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
@@ -397,11 +400,15 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 					add = true;
 				} else {
 					if (add)
-						addTag(value, tag);
-					else
+						value = addTag(value, tag);
+					else {
 						value = tag + ",";
+						add = true;
+					}
 				}
 			}
+			if (value.endsWith(","))
+				value = value.substring(0, value.length() - 1);
 			this.special = value;
 		}
 	}
@@ -487,5 +494,18 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 
 	public int getUniqueCount() {
 		return 1;
+	}
+
+	public boolean isPhysical() {
+		return true;
+	}
+
+	public Collection getValues() {
+		ArrayList list = new ArrayList();
+		ICardField[] xfields = MagicCardFieldPhysical.allNonTransientFields();
+		for (ICardField field : xfields) {
+			list.add(getObjectByField(field));
+		}
+		return list;
 	}
 }
