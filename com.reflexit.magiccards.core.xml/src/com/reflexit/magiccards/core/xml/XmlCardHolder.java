@@ -86,7 +86,8 @@ public class XmlCardHolder implements ICardHandler {
 				long time = System.currentTimeMillis();
 				loadFromFlatResource(abbr + ".txt");
 				long nowtime = System.currentTimeMillis() - time;
-				System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " + nowtime % 1000 + " ms");
+				// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " +
+				// nowtime % 1000 + " ms");
 			} catch (IOException e) {
 				// ignore
 			}

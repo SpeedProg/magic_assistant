@@ -47,7 +47,8 @@ public class CardCollectionStoreObject {
 				return store;
 			}
 		} finally {
-			System.err.println("load " + file.getName() + "  took " + (System.currentTimeMillis() - time) + " ms");
+			// System.err.println("load " + file.getName() + "  took " + (System.currentTimeMillis()
+			// - time) + " ms");
 		}
 	}
 
@@ -56,7 +57,8 @@ public class CardCollectionStoreObject {
 		try {
 			formatHandler.save(this);
 		} finally {
-			System.err.println("save " + file.getName() + "  took " + (System.currentTimeMillis() - time) + "  ms");
+			// System.err.println("save " + file.getName() + "  took " + (System.currentTimeMillis()
+			// - time) + "  ms");
 		}
 	}
 }
