@@ -58,7 +58,7 @@ public class CardGenerator {
 		MagicCardPhysical phi = new MagicCardPhysical(card, null);
 		phi.setCount(id % 10);
 		phi.setComment("comment " + id);
-		phi.setOwn(id % 2 == 0 ? true : false);
+		phi.setOwn(true);
 		return phi;
 	}
 

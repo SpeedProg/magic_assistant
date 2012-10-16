@@ -69,7 +69,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Arrogant Bloodlord", card1.getName());
 		assertEquals(9, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Rise of the Eldrazi", card1.getSet());
-		assertEquals("premium,", ((IMagicCardPhysical) card2).getSpecial());
+		assertEquals("premium", ((IMagicCardPhysical) card2).getSpecial());
 		// assertEquals("248", ((MagicCardPhysical) card2).getCard().getCollNumber());
 	}
 }
