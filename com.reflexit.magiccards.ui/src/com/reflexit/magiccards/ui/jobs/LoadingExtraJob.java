@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
@@ -55,20 +56,20 @@ public class LoadingExtraJob extends Job {
 			int size = 0;
 			Iterator list = null;
 			switch (listChoice) {
-			case LoadExtrasDialog.USE_SELECTION:
-				size = selection.size();
-				list = selection.iterator();
-				break;
-			case LoadExtrasDialog.USE_FILTER:
-				size = view.getFilteredStore().getSize();
-				list = view.getFilteredStore().iterator();
-				break;
-			case LoadExtrasDialog.USE_ALL:
-				size = view.getFilteredStore().getCardStore().size();
-				list = view.getFilteredStore().getCardStore().iterator();
-				break;
-			default:
-				return Status.CANCEL_STATUS;
+				case LoadExtrasDialog.USE_SELECTION:
+					size = selection.size();
+					list = selection.iterator();
+					break;
+				case LoadExtrasDialog.USE_FILTER:
+					size = view.getFilteredStore().getSize();
+					list = view.getFilteredStore().iterator();
+					break;
+				case LoadExtrasDialog.USE_ALL:
+					size = view.getFilteredStore().getCardStore().size();
+					list = view.getFilteredStore().getCardStore().iterator();
+					break;
+				default:
+					return Status.CANCEL_STATUS;
 			}
 			ICardStore magicDb = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
 			UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
@@ -81,6 +82,8 @@ public class LoadingExtraJob extends Job {
 			});
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
+		} catch (MagicException e) {
+			return new Status(Status.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage());
 		}
 		return Status.OK_STATUS;
 	}
