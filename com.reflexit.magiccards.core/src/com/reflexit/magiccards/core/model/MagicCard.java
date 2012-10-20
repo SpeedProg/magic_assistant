@@ -686,9 +686,10 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public int getCount() {
-		if (realcards == null)
-			return 1;
-		return realcards.getCount();
+		return 1;
+		// if (realcards == null)
+		// return 1;
+		// return realcards.getCount();
 	}
 
 	public String getComment() {

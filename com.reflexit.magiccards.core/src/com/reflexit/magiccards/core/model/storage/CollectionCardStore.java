@@ -51,7 +51,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				}
 			} else {
 				int count = 1;
-				if (card instanceof ICardCountable) {
+				if (card instanceof MagicCardPhysical) {
 					count = ((ICardCountable) card).getCount();
 				}
 				MagicCardPhysical add = new MagicCardPhysical(card, loc);
