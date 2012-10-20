@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -50,6 +51,7 @@ public class UpdateCardsFromWeb {
 		// load
 		storage.setAutoCommit(false);
 		try {
+			int failedLangUpdate = 0;
 			for (int i = 0; iter.hasNext(); i++) {
 				IMagicCard card = iter.next();
 				IMagicCard magicCard = card.getBase();
@@ -89,6 +91,8 @@ public class UpdateCardsFromWeb {
 								// System.err.println("Added " +
 								// newMagicCard.getName());
 							}
+						} else {
+							failedLangUpdate++;
 						}
 					}
 				} catch (IOException e) {
@@ -102,6 +106,9 @@ public class UpdateCardsFromWeb {
 					CardCache.loadCardImageOffline(card, false);
 				}
 				monitor.worked(1);
+			}
+			if (failedLangUpdate > 0) {
+				throw new MagicException("Localized version for " + lang + " for " + failedLangUpdate + " cards is not available");
 			}
 		} finally {
 			storage.setAutoCommit(true);

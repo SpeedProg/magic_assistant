@@ -60,8 +60,8 @@ public class ParseGathererCardLanguages extends ParseGathererPage {
 	}
 
 	@Override
-	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
-		html = html.replaceAll("\r?\n", " ");
+	protected void loadHtml(String html1, ICoreProgressMonitor monitor) {
+		String html = html1.replaceAll("\r?\n", " ");
 		Matcher matcher = rowPattern.matcher(html);
 		int count = 0;
 		while (matcher.find()) {
