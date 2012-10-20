@@ -303,8 +303,13 @@ public class Editions implements ISearchableProperty {
 		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
 		if (!file.exists()) {
 			initializeEditions();
+			save();
 		} else {
-			initializeEditions();
+			try {
+				initializeEditions();
+			} catch (Exception e) {
+				// ignore
+			}
 			InputStream st = new FileInputStream(file);
 			loadEditions(st);
 		}
@@ -327,7 +332,6 @@ public class Editions implements ISearchableProperty {
 				loadEditions(ist);
 			}
 		}
-		save();
 	}
 
 	private synchronized void loadEditions(InputStream st) throws IOException {
