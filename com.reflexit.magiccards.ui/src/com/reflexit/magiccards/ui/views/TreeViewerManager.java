@@ -29,6 +29,7 @@ public class TreeViewerManager extends ViewerManager {
 	@Override
 	public Control createContents(Composite parent) {
 		this.viewer = new TreeViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+		this.viewer.getTree().setFont(getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new TreeViewContentProvider());

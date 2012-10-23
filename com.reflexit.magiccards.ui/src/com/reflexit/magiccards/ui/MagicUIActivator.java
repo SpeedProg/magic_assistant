@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -13,12 +14,16 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.themes.ITheme;
+import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.BundleContext;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -217,5 +222,15 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	public IEclipsePreferences getEclipseDefaultPreferences() {
 		return DefaultScope.INSTANCE.getNode(DataManager.ID);
+	}
+
+	public Font getFont() {
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		ITheme currentTheme = themeManager.getCurrentTheme();
+		FontRegistry fontRegistry = currentTheme.getFontRegistry();
+		Set keySet = fontRegistry.getKeySet();
+		Font font = fontRegistry.get("org.eclipse.jface.textfont");
+		System.err.println("Font " + font.getFontData()[0]);
+		return font;
 	}
 }

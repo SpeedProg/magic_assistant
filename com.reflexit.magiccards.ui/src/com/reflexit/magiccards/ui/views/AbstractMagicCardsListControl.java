@@ -39,6 +39,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -707,6 +708,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		} else if (property.equals(prefStore.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
 			boolean qf = (Boolean) event.getNewValue();
 			setQuickFilterVisible(qf);
+		} else if (event.getNewValue() instanceof FontData[]) {
+			refresh();
 		}
 	}
 

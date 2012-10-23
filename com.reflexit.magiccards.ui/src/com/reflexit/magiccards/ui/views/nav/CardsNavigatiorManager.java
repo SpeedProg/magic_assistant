@@ -10,6 +10,7 @@ import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class CardsNavigatiorManager implements IDisposable {
 	private TreeViewer viewer;
@@ -19,6 +20,7 @@ public class CardsNavigatiorManager implements IDisposable {
 
 	public Control createContents(Composite parent, int flags) {
 		this.viewer = new TreeViewer(parent, flags | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		this.viewer.getTree().setFont(MagicUIActivator.getDefault().getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new CardsNavigatorContentProvider());

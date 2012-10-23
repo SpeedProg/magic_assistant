@@ -6,11 +6,11 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
@@ -147,6 +147,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	protected void updateGrid() {
 		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
 		setLinesVisible(grid);
+		getViewer().getControl().setFont(getFont());
 	}
 
 	/*
@@ -163,4 +164,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	}
 
 	public abstract int getSortDirection();
+
+	public Font getFont() {
+		return MagicUIActivator.getDefault().getFont();
+	}
 }

@@ -38,6 +38,7 @@ public class LazyTableViewerManager extends ViewerManager {
 	@Override
 	public Control createContents(Composite parent) {
 		this.viewer = new MyTableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
+		this.viewer.getTable().setFont(getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new LazyTableViewContentProvider());
