@@ -15,22 +15,27 @@ public class SortOrder extends ArrayList<MagicCardComparator> implements Compara
 			MagicCardComparator elem = sortOrder.get(i);
 			int d = elem.compare(o1, o2);
 			if (d != 0)
-				return d;
+				return d; // no "dir" since comparator has it already
 		}
 		// everything is equal try id's
 		if (o1 instanceof IMagicCard && o2 instanceof IMagicCard) {
 			IMagicCard c1 = (IMagicCard) o1;
 			IMagicCard c2 = (IMagicCard) o2;
 			if (c1.getCardId() != 0 && c2.getCardId() != 0) {
-				return dir * (c1.getCardId() - c2.getCardId());
+				int d = c1.getCardId() - c2.getCardId();
+				if (d != 0)
+					return dir * d;
 			}
 		}
 		// everything is equal try name
 		if (o1 instanceof ICard && o2 instanceof ICard) {
 			String name1 = (String) (((ICard) o1).getObjectByField(MagicCardField.NAME));
 			String name2 = (String) ((ICard) o2).getObjectByField(MagicCardField.NAME);
-			if (name1 != null && name2 != null)
-				return dir * name1.compareTo(name2);
+			if (name1 != null && name2 != null) {
+				int d = name1.compareTo(name2);
+				if (d != 0)
+					return dir * d;
+			}
 		}
 		return dir * (System.identityHashCode(o1) - System.identityHashCode(o2));
 	}
