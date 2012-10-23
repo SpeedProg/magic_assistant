@@ -230,7 +230,6 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		FontRegistry fontRegistry = currentTheme.getFontRegistry();
 		Set keySet = fontRegistry.getKeySet();
 		Font font = fontRegistry.get("org.eclipse.jface.textfont");
-		System.err.println("Font " + font.getFontData()[0]);
 		return font;
 	}
 }
