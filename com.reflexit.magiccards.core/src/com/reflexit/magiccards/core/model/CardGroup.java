@@ -68,14 +68,19 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return base;
 	}
 
-	public void createBase(IMagicCard card) {
+	private void createBase(IMagicCard card) {
+		MagicCardPhysical base;
 		if (card instanceof MagicCardPhysical) {
 			base = (MagicCardPhysical) card.cloneCard();
-			base.setMagicCard((MagicCard) card.getBase().cloneCard());
+			MagicCard refCard = (MagicCard) card.getBase().cloneCard();
+			base.setMagicCard(refCard);
 		} else if (card instanceof MagicCard) {
 			base = new MagicCardPhysical(card.cloneCard(), null);
+		} else {
+			throw new IllegalArgumentException();
 		}
 		base.getBase().setName(name);
+		this.base = base;
 	}
 
 	public boolean isPhysical() {
@@ -90,9 +95,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	private void addBase(IMagicCard o) {
-		if (base == null) {
-			createBase(o);
-			return;
+		synchronized (this) {
+			if (base == null) {
+				createBase(o);
+				return;
+			}
 		}
 		ICardField[] allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
 		List<ICardField> list = new ArrayList<ICardField>(Arrays.asList(allNonTransientFields));
@@ -512,6 +519,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		if (field == MagicCardField.UNIQUE_COUNT)
 			return getUniqueCount();
 		return getGroupBase().getObjectByField(field);
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
 	}
 
 	public IMagicCard cloneCard() {

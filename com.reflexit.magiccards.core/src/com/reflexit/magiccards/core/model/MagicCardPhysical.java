@@ -17,6 +17,10 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 	private String special;
 
 	public MagicCardPhysical(IMagicCard card, Location location) {
+		this(card, location, true);
+	}
+
+	public MagicCardPhysical(IMagicCard card, Location location, boolean add) {
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;
@@ -34,11 +38,12 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 			this.forTrade = phi.forTrade;
 			this.special = phi.special;
 		}
-		if (card != null)
-			this.card.addPhysicalCard(this);
 		if (location == null)
 			this.location = Location.NO_WHERE;
-		this.location = location;
+		else
+			this.location = location;
+		if (add && card != null)
+			this.card.addPhysicalCard(this);
 	}
 
 	public void delete() {

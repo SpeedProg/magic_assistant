@@ -525,6 +525,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			MagicCard obj = (MagicCard) super.clone();
 			if (this.properties != null)
 				obj.properties = (LinkedHashMap<String, String>) this.properties.clone();
+			obj.realcards = null;
 			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;

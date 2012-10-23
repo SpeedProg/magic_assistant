@@ -481,7 +481,7 @@ public final class CardStoreUtils {
 				ICardCountable card = (ICardCountable) elem;
 				count = card.getCount();
 				for (int i = 0; i < count; i++) {
-					MagicCardPhysical nc = new MagicCardPhysical(elem, store.getLocation());
+					MagicCardPhysical nc = new MagicCardPhysical(elem, store.getLocation(), false);
 					nc.setCount(1);
 					filteredList.add(nc);
 				}
