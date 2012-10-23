@@ -68,6 +68,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	@Override
 	protected Control createContents(Composite parent) {
 		this.panel = new Composite(parent, SWT.NONE);
+		this.panel.setFont(parent.getFont());
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -93,6 +94,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 400;
 		this.treeViewer.getControl().setLayoutData(gd);
+		this.treeViewer.getControl().setFont(parent.getFont());
 		initializeTree();
 		return this.panel;
 	}

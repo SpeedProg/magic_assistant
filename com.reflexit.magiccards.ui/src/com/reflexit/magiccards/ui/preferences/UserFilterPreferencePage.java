@@ -9,6 +9,8 @@ import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.UserFieldsPreferenceGroup;
 
 public class UserFilterPreferencePage extends AbstractFilterPreferencePage {
+	private Composite panel;
+
 	public UserFilterPreferencePage(CardFilterDialog dialog) {
 		super(dialog);
 		setTitle("User Filter");

@@ -9,6 +9,8 @@ import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.LoadFilterPreferenceGroup;
 
 public class SaveFilterPreferencePage extends AbstractFilterPreferencePage {
+	private Composite panel;
+
 	public SaveFilterPreferencePage(CardFilterDialog dialog) {
 		super(dialog);
 		setTitle("Save/Load Filter");

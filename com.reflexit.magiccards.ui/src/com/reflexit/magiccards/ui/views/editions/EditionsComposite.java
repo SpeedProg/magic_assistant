@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -75,6 +76,7 @@ public class EditionsComposite extends Composite {
 		super(parent, SWT.NONE);
 		this.buttons = buttons;
 		this.setLayout(new GridLayout());
+		this.setFont(parent.getFont());
 		Composite one = (Composite) createContents(this, treeStyle);
 		one.setLayoutData(new GridData(GridData.FILL_BOTH));
 		setPreferenceStore(new PreferenceStore());
@@ -107,12 +109,21 @@ public class EditionsComposite extends Composite {
 				}
 				return EditionsComposite.this.treeViewer;
 			}
+
+			@Override
+			protected Text doCreateFilterText(Composite parent) {
+				Text text = super.doCreateFilterText(parent);
+				text.setFont(parent.getFont());
+				return text;
+			}
 		};
+		filteredTree.setFont(panel.getFont());
 		// this.treeViewer.setLabelProvider(null);
 		this.treeViewer.setContentProvider(new EditionsContentProvider());
 		vcomp = new EditionsViewerComparator();
 		this.treeViewer.setComparator(vcomp);
 		this.treeViewer.setUseHashlookup(true);
+		treeViewer.getControl().setFont(parent.getFont());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 300;
 		gd.horizontalSpan = 3;
@@ -217,6 +228,8 @@ public class EditionsComposite extends Composite {
 					deselectAll();
 				}
 			});
+			selAll.setFont(panel.getFont());
+			deselAll.setFont(panel.getFont());
 		}
 	}
 

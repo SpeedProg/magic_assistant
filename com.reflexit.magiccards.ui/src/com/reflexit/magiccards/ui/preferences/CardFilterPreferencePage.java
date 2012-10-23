@@ -15,6 +15,8 @@ import com.reflexit.magiccards.ui.preferences.feditors.TextSearchPreferenceGroup
 import com.reflexit.magiccards.ui.preferences.feditors.TypesPreferenceGroup;
 
 public class CardFilterPreferencePage extends AbstractFilterPreferencePage {
+	private Composite panel;
+
 	public CardFilterPreferencePage(CardFilterDialog cardFilterDialog) {
 		super(cardFilterDialog);
 		this.subPages = new ArrayList();

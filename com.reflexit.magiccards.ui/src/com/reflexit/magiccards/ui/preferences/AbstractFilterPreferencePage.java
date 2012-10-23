@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.preferences;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -17,16 +20,15 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.MFieldEditorPreferencePage;
@@ -35,7 +37,6 @@ import com.reflexit.magiccards.ui.preferences.feditors.MFieldEditorPreferencePag
  * Generic filter preference page
  */
 public abstract class AbstractFilterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	protected Composite panel;
 	protected Collection<MFieldEditorPreferencePage> subPages = new ArrayList();
 	protected CardFilterDialog dialog;
 
@@ -109,8 +110,22 @@ public abstract class AbstractFilterPreferencePage extends PreferencePage implem
 		subPage.createControl(parent);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.verticalAlignment = SWT.BEGINNING;
-		subPage.getControl().setLayoutData(gd);
+		Control control = subPage.getControl();
+		control.setLayoutData(gd);
+		// setFontRec(control, parent.getFont());
 		this.subPages.add(subPage);
+	}
+
+	public void setFontRec(Control control, Font font) {
+		control.setFont(getFont());
+		if (control instanceof Composite) {
+			Control[] children = ((Composite) control).getChildren();
+			for (int i = 0; i < children.length; i++) {
+				Control s = children[i];
+				s.setFont(getFont());
+				setFontRec(s, font);
+			}
+		}
 	}
 
 	@Override

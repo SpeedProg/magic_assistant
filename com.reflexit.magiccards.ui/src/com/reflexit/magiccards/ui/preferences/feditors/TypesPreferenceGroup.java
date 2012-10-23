@@ -22,6 +22,7 @@ public class TypesPreferenceGroup extends MFieldEditorPreferencePage {
 		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.group.setText("Type");
+		this.group.setFont(getFieldEditorParent().getFont());
 		Composite parent = this.group;
 		// artifact, creature, enchantment, instant, land, or sorcery.
 		// addCheckBox("Any", parent);

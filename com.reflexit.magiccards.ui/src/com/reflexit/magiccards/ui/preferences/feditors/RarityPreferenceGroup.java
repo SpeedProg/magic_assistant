@@ -22,6 +22,7 @@ public class RarityPreferenceGroup extends MFieldEditorPreferencePage {
 		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.group.setText("Rarity");
+		this.group.setFont(getFieldEditorParent().getFont());
 		Composite parent = this.group;
 		Rarity coreTypes = Rarity.getInstance();
 		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {

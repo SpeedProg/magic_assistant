@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.preferences.feditors;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,10 +32,14 @@ public class ColorsPreferenceGroup extends MFieldEditorPreferencePage {
 		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.group.setText("Color");
 		this.group.setLayout(new GridLayout(2, false));
+		Font font = getFieldEditorParent().getFont();
+		this.group.setFont(font);
 		Composite left = new Composite(group, SWT.NONE);
 		Composite right = new Composite(group, SWT.NONE);
 		left.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		left.setFont(font);
 		right.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		right.setFont(font);
 		Colors coreColors = Colors.getInstance();
 		for (Iterator iterator = coreColors.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();

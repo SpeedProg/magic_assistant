@@ -26,6 +26,7 @@ public class SuperTypesPreferenceGroup extends FieldEditorPreferencePage {
 		this.group = new Group(getFieldEditorParent(), SWT.NONE);
 		this.group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.group.setText("Supertype");
+		this.group.setFont(getFieldEditorParent().getFont());
 		Composite parent = this.group;
 		SuperTypes coreSuperTypes = SuperTypes.getInstance();
 		for (Iterator iterator = coreSuperTypes.getIds().iterator(); iterator.hasNext();) {
