@@ -148,6 +148,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
 		setLinesVisible(grid);
 		getViewer().getControl().setFont(getFont());
+		getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
 	}
 
 	/*

@@ -22,6 +22,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -68,7 +70,7 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
-public class CardsNavigatorView extends ViewPart implements ICardEventListener {
+public class CardsNavigatorView extends ViewPart implements ICardEventListener, IPropertyChangeListener {
 	public static final String ID = CardsNavigatorView.class.getName();
 	private Action doubleClickAction;
 	private CardsNavigatiorManager manager;
@@ -410,6 +412,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		DataManager.getModelRoot().addListener(this);
+		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(this);
 	}
 
 	@Override
@@ -417,6 +420,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		DataManager.getModelRoot().removeListener(this);
 		this.manager.dispose();
 		clipboard.dispose();
+		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(this);
 		super.dispose();
 	}
 
@@ -471,18 +475,18 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		switch (type) {
-		case CardEvent.ADD_CONTAINER:
-		case CardEvent.REMOVE_CONTAINER:
-		case CardEvent.RENAME_CONTAINER:
-		case CardEvent.UPDATE_CONTAINER:
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					CardsNavigatorView.this.manager.getViewer().refresh(true);
-				}
-			});
-			break;
-		default:
-			break;
+			case CardEvent.ADD_CONTAINER:
+			case CardEvent.REMOVE_CONTAINER:
+			case CardEvent.RENAME_CONTAINER:
+			case CardEvent.UPDATE_CONTAINER:
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						CardsNavigatorView.this.manager.getViewer().refresh(true);
+					}
+				});
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -491,5 +495,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener {
 		boolean state = !showSideboards.isChecked();
 		prop.put(CardsNavigatorContentProvider.FILTER_SIDEBOARDS, state);
 		getViewer().setFilters(new ViewerFilter[] { CardsNavigatorContentProvider.getFilter(prop) });
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		manager.refresh();
 	}
 }

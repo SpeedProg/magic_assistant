@@ -2,8 +2,6 @@ package com.reflexit.magiccards.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -14,9 +12,11 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -228,8 +228,15 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		ITheme currentTheme = themeManager.getCurrentTheme();
 		FontRegistry fontRegistry = currentTheme.getFontRegistry();
-		Set keySet = fontRegistry.getKeySet();
-		Font font = fontRegistry.get("org.eclipse.jface.textfont");
+		Font font = fontRegistry.get("com.reflexit.magiccards.ui.preferences.font");
 		return font;
+	}
+
+	public Color getTextColor() {
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		ITheme currentTheme = themeManager.getCurrentTheme();
+		ColorRegistry registry = currentTheme.getColorRegistry();
+		Color color = registry.get("com.reflexit.magiccards.ui.preferences.color");
+		return color;
 	}
 }

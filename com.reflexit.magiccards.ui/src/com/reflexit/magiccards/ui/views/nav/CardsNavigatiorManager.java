@@ -20,7 +20,6 @@ public class CardsNavigatiorManager implements IDisposable {
 
 	public Control createContents(Composite parent, int flags) {
 		this.viewer = new TreeViewer(parent, flags | SWT.FULL_SELECTION | SWT.VIRTUAL);
-		this.viewer.getTree().setFont(MagicUIActivator.getDefault().getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.viewer.setContentProvider(new CardsNavigatorContentProvider());
@@ -35,6 +34,7 @@ public class CardsNavigatiorManager implements IDisposable {
 			}
 		});
 		this.viewer.setInput(DataManager.getModelRoot());
+		this.refresh();
 		return this.viewer.getControl();
 	}
 
@@ -44,5 +44,10 @@ public class CardsNavigatiorManager implements IDisposable {
 
 	public void dispose() {
 		this.viewer = null;
+	}
+
+	public void refresh() {
+		getViewer().getControl().setFont(MagicUIActivator.getDefault().getFont());
+		getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
 	}
 }

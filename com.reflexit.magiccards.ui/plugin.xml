@@ -407,7 +407,7 @@
   <extension
         point="org.eclipse.ui.importWizards">
      <wizard
-           class="com.reflexit.magiccards.ui.views.collector"
+           class="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
            id="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
            name="Import Collection">
      </wizard>
@@ -426,5 +426,32 @@
         />
   </extension>
 
+<extension point="org.eclipse.ui.themes">
+	<themeElementCategory
+		id="com.reflexit.magiccards.ui.preferences.themeElementCategory" label="Magic Assistant">
+		<description>
+			Magic Assistant fonts and colors
+		</description>
+	</themeElementCategory>
+
+	<colorDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.color" label="Magic Assistant Lists Text Color"
+		value="COLOR_BLACK">
+		<description>
+			Color of text shown in Magic Assistant tables and trees
+        </description>
+	</colorDefinition>
+
+	<fontDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.font" label="Magic Assistant Lists Font"
+		value="Arial-12">
+		<description>
+			Font of text shown in Magic Assistant tables and trees
+        </description>
+	</fontDefinition>
+
+</extension>
 
 </plugin>
