@@ -68,6 +68,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 					Collection<IMagicCard> cards = db.getCards(mp.getCardId());
 					if (cards.size() > 0) {
 						MagicCard c = (MagicCard) cards.iterator().next();
+						mp.getBase().removePhysicalCard(mp);
 						mp.setMagicCard(c);
 					}
 				}
