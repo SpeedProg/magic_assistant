@@ -35,13 +35,18 @@ public class ContextAssist {
 		}
 	}
 
-	public static void addContextAssist(Control t, String[] proposals, boolean multi) {
+	public static void addContextAssist(Control t, String[] proposals, final boolean multi) {
 		IControlContentAdapter controlContentAdapter = null;
 		if (t instanceof Text) {
 			controlContentAdapter = new TextContentAdapter() {
 				@Override
 				public void insertControlContents(Control control, String text, int cursorPosition) {
 					Text textCon = (Text) control;
+					if (multi == false) {
+						textCon.setText(text);
+						textCon.setSelection(cursorPosition, cursorPosition);
+						return;
+					}
 					Point selection = textCon.getSelection();
 					String old = textCon.getText();
 					int k = old.lastIndexOf(' ');
@@ -62,7 +67,7 @@ public class ContextAssist {
 					Combo combo = (Combo) control;
 					Point selection = combo.getSelection();
 					combo.setText(text);
-					selection.x = 0;
+					selection.x = cursorPosition;
 					selection.y = cursorPosition;
 					combo.setSelection(selection);
 				}
