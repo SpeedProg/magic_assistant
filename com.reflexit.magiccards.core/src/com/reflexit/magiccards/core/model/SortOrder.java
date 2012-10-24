@@ -44,8 +44,8 @@ public class SortOrder implements Comparator {
 				break;
 			}
 		}
-		while (size() > MAX) {
-			remove(REM);
+		while (size() >= MAX) {
+			order.remove(REM);
 		}
 		push(elem);
 	}
@@ -82,7 +82,7 @@ public class SortOrder implements Comparator {
 		return elem.getField().equals(sortField);
 	}
 
-	private MagicCardComparator peek() {
+	MagicCardComparator peek() {
 		return get(size() - 1);
 	}
 
