@@ -52,6 +52,8 @@ public class CardTypes implements ISearchableProperty {
 	}
 
 	private boolean containsType(String text, String type) {
+		if (text == null)
+			return false;
 		return Pattern.compile(type, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(text).find();
 	}
 
