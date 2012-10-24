@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.ICardModifiable;
@@ -226,7 +227,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 	protected void loadHtml(String html0, ICoreProgressMonitor monitor) {
 		monitor.beginTask("Updating card", 10);
 		try {
-			if (card.getCardId() == 0)
+			if (card.getCardId() == 0 || card instanceof CardGroup)
 				return;
 			html0 = html0.replaceAll("\r?\n", " ");
 			if (html0.contains("’")) {
