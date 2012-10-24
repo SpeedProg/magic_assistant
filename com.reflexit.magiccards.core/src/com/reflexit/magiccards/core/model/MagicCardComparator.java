@@ -90,10 +90,7 @@ class MagicCardComparator implements Comparator {
 				d = s1.compareTo(s2);
 			}
 		} else if (a1 instanceof Comparable) {
-			if (a2 == null)
-				d = 1;
-			else
-				d = ((Comparable) a1).compareTo(a2);
+			d = ((Comparable) a1).compareTo(a2);
 		}
 		if (d == 0 && sort == MagicCardField.CMC) {
 			int d1 = Colors.getColorSort((String) c1.getObjectByField(MagicCardField.COST));
