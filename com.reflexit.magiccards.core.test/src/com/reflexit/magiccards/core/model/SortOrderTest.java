@@ -87,6 +87,14 @@ public class SortOrderTest extends TestCase {
 		}
 	}
 
+	public void setFieldMass(ICardField field, Object... args) {
+		int i = 0;
+		for (Object object : args) {
+			setField(cards[i], field, object);
+			i++;
+		}
+	}
+
 	@Test
 	public void testIdEmpty() {
 		cloneAndSet(MagicCardField.ID, 1, 2, 3);
@@ -137,5 +145,31 @@ public class SortOrderTest extends TestCase {
 		order.setSortField(MagicCardFieldPhysical.SPECIAL, true);
 		cloneAndSet(MagicCardFieldPhysical.SPECIAL, "a", "b", "c");
 		contractTest3();
+	}
+
+	public void testFieldSpec2() {
+		order.setSortField(MagicCardField.NAME, true);
+		order.setSortField(MagicCardFieldPhysical.SPECIAL, true);
+		order.setSortField(MagicCardField.CMC, true);
+		order.setSortField(MagicCardField.COST, true);
+		order.setSortField(MagicCardField.TYPE, true);
+		cloneAndSet(MagicCardFieldPhysical.SPECIAL, "a", "b", "c");
+		setFieldMass(MagicCardField.NAME, "c", "b", "a");
+		contractTest3();
+	}
+
+	public void testFieldSpecGone() {
+		order.setSortField(MagicCardField.NAME, true);
+		order.setSortField(MagicCardFieldPhysical.SPECIAL, true);
+		order.setSortField(MagicCardField.CMC, true);
+		order.setSortField(MagicCardField.COST, true);
+		order.setSortField(MagicCardField.TYPE, true);
+		order.setSortField(MagicCardField.TEXT, true);
+		order.setSortField(MagicCardField.ARTIST, true);
+		assertEquals(MagicCardField.ARTIST, order.peek().getField());
+		assertEquals(7, order.size());
+		cloneAndSet(MagicCardFieldPhysical.SPECIAL, "a", "b", "c");
+		setFieldMass(MagicCardField.NAME, "c", "b", "a");
+		contractTest(cards[2], cards[1], cards[0]);
 	}
 }
