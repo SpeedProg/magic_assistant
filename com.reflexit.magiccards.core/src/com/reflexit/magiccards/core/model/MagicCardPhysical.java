@@ -38,10 +38,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
 			this.forTrade = phi.forTrade;
 			this.special = phi.special;
 		}
-		if (location == null)
-			this.location = Location.NO_WHERE;
-		else
-			this.location = location;
+		this.location = location;
 		if (add && card != null)
 			this.card.addPhysicalCard(this);
 	}
