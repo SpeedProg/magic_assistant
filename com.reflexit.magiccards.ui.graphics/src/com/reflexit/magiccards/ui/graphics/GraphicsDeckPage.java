@@ -104,6 +104,9 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 
 	@Override
 	public String getStatusMessage() {
+		if (fstore.getSize() > 100) {
+			return "Cannot show graphics for " + fstore.getSize() + " cards";
+		}
 		return "This page is under contruction...";
 	}
 
@@ -111,8 +114,10 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	public void activate() {
 		super.activate();
 		fstore.update();
-		panel.setInput(fstore);
-		panel.forceFocus();
+		if (fstore.getSize() <= 100) {
+			panel.setInput(fstore);
+			panel.forceFocus();
+		}
 		status.setText(getStatusMessage());
 	}
 
