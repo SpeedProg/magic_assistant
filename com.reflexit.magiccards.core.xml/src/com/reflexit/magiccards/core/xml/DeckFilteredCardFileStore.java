@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
-	private CollectionSingleFileCardStore table;
+	private ICardStore<IMagicCard> table;
 
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
@@ -32,7 +32,7 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 			ICardStore<IMagicCard> store = magicLibraryHandler.getStore(d.getLocation());
 			d.open(store);
 		}
-		this.table = (CollectionSingleFileCardStore) d.getStore();
+		this.table = d.getStore();
 		if (table == null) {
 			throw new NullPointerException();
 		}
