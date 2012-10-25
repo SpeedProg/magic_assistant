@@ -32,14 +32,7 @@ Export-Package: com.reflexit.magiccards.core;
  com.reflexit.magiccards.core.monitor,
  com.reflexit.magiccards.core.seller;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage",
  com.reflexit.magiccards.core.sync;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage,com.reflexit.magiccards.core.model",
- com.thoughtworks.xstream;
-  uses:="com.thoughtworks.xstream.converters,
-   com.thoughtworks.xstream.io,
-   com.thoughtworks.xstream.converters.reflection,
-   com.thoughtworks.xstream.mapper,
-   com.thoughtworks.xstream.core,
-   com.thoughtworks.xstream.core.util,
-   com.thoughtworks.xstream.alias"
+ com.thoughtworks.xstream
 Bundle-ClassPath: .,
  lib/xstream-1.4.2.jar,
  lib/xpp3_min-1.1.4c.jar,

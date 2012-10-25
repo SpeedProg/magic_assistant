@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.model.Location;
  */
 public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	protected List<T> list;
+	private Location location = Location.NO_WHERE;
 
 	/**
 	 * creates empty card store
@@ -88,14 +89,12 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		// nothing
 	}
 
-	private final Location MEM_LOC = new Location("mem");
-
 	public Location getLocation() {
-		return MEM_LOC;
+		return location;
 	}
 
 	public void setLocation(Location location) {
-		throw new UnsupportedOperationException();
+		this.location = location;
 	}
 
 	public String getComment() {
@@ -103,7 +102,7 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	}
 
 	public String getName() {
-		return "mem";
+		return location.getName();
 	}
 
 	public boolean isVirtual() {

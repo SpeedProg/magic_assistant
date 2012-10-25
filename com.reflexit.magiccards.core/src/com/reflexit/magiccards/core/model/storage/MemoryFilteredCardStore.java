@@ -40,14 +40,15 @@ public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 
 	@Override
 	public void setLocation(Location location) {
-		throw new UnsupportedOperationException();
+		cards.setLocation(location);
 	}
 
 	@Override
 	public Location getLocation() {
-		throw new UnsupportedOperationException();
+		return cards.getLocation();
 	}
 
+	@Override
 	public void clear() {
 		cards.removeAll();
 	}
@@ -57,6 +58,7 @@ public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 		return cards.contains(card);
 	}
 
+	@Override
 	public void addAll(ICardStore store) {
 		for (Object object : store) {
 			cards.add(object);

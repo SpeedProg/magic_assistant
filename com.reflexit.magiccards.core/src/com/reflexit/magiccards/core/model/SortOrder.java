@@ -112,4 +112,8 @@ public class SortOrder implements Comparator {
 			order.remove(i);
 		}
 	}
+
+	private MagicCardComparator remove(int index) {
+		return order.remove(index);
+	}
 }
