@@ -56,6 +56,12 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		super.initManager();
 	}
 
+	@Override
+	public void fillContextMenu(org.eclipse.jface.action.IMenuManager manager) {
+		manager.add(this.actionShowFind);
+		super.fillContextMenu(manager);
+	}
+
 	public int getOwnSize(Iterable children) {
 		int count = 0;
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {

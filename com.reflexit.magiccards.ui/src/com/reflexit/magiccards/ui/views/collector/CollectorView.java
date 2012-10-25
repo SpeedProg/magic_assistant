@@ -14,7 +14,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -22,7 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -30,13 +28,13 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.model.FilterHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.lib.AbstractMyCardsView;
 
 /**
  * Shows sets and how many cards collected per set
  * 
  */
-public class CollectorView extends AbstractCardsView implements ISelectionListener {
+public class CollectorView extends AbstractMyCardsView implements ISelectionListener {
 	public static final String ID = CollectorView.class.getName();
 	private Action delete;
 	private Action refresh;
@@ -76,10 +74,7 @@ public class CollectorView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
-		// manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
-		// drillDownAdapter.addNavigationActions(manager);
-		// Other plug-ins can contribute there actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		super.fillContextMenu(manager);
 	}
 
 	@Override
