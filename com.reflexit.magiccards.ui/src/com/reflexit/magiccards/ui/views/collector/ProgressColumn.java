@@ -167,7 +167,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 		if (base == 0 && virtual == 0)
 			return "no";
 		String prefix = base == 0 ? "no" : "yes";
-		if (count != base && count > 0)
+		if (count > 1)
 			return prefix + " (" + String.valueOf(count) + ")";
 		else
 			return prefix + "";
