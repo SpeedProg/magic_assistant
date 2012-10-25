@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.LocationFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
@@ -28,7 +28,7 @@ import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckPage;
 public class GraphicsDeckPage extends AbstractDeckPage {
 	private DesktopCanvas panel;
 	private Label status;
-	private IFilteredCardStore fstore = new MemoryFilteredCardStore<IMagicCard>();
+	private IFilteredCardStore fstore = new LocationFilteredCardStore();
 	private Action refresh;
 
 	@Override
@@ -98,6 +98,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	public void setFilteredStore(IFilteredCardStore nfstore) {
 		super.setFilteredStore(nfstore);
+		fstore.setLocation(nfstore.getLocation());
 		fstore.clear();
 		fstore.addAll(nfstore.getCardStore());
 	}
