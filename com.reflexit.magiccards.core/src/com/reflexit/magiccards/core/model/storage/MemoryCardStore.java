@@ -41,7 +41,7 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 	}
 
 	public T getCard(int id) {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	public Collection<T> getCards(int id) {
