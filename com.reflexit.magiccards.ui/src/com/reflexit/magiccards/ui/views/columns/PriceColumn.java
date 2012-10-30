@@ -87,7 +87,12 @@ public class PriceColumn extends GenColumn {
 			protected void setValue(Object element, Object value) {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
-					float price = value == null ? 0 : Float.parseFloat(value.toString());
+					float price;
+					if (value instanceof String && ((String) value).length() == 0) {
+						price = 0;
+					} else {
+						price = value == null ? 0 : Float.parseFloat(value.toString());
+					}
 					// save
 					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
