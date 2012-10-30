@@ -370,14 +370,17 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (first) {
 					ICardField[] allFields = MagicCardFieldPhysical.allFields();
 					for (ICardField f : allFields) {
-						store.setDefault(f.name(), String.valueOf(card.getObjectByField(f)));
+						Object value = card.getObjectByField(f);
+						String svalue = String.valueOf(value == null ? "" : value);
+						store.setDefault(f.name(), svalue);
 					}
 					first = false;
 				} else {
 					ICardField[] allFields = MagicCardFieldPhysical.allFields();
 					for (ICardField f : allFields) {
-						String value = String.valueOf(card.getObjectByField(f));
-						if (!value.equals(store.getDefaultString(f.name()))) {
+						Object value = card.getObjectByField(f);
+						String svalue = String.valueOf(value == null ? "" : value);
+						if (!svalue.equals(store.getDefaultString(f.name()))) {
 							store.setDefault(f.name(), UNCHANGED);
 						}
 					}
