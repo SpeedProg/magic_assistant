@@ -33,7 +33,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 	}
 
 	public ProgressColumn() {
-		super(MagicCardFieldPhysical.OWN_COUNT, "Progress");
+		super(MagicCardFieldPhysical.OWN_UNIQUE, "Progress");
 	}
 
 	@Override
