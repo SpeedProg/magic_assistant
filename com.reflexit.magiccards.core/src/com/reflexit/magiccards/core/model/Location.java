@@ -51,6 +51,12 @@ public class Location implements Comparable<Location> {
 		return new Location(set.replaceAll("[\\W]", "_"));
 	}
 
+	public static Location createLocation(String loc) {
+		if (loc == null || loc.length() == 0)
+			return Location.NO_WHERE;
+		return new Location(loc);
+	}
+
 	private Location(String loc, Location parent) {
 		if (loc == null || loc.length() == 0)
 			throw new IllegalArgumentException(loc);

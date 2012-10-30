@@ -340,7 +340,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
 			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
-				return new Location(bin.getRight().toString());
+				return Location.createLocation(bin.getRight().toString());
 			}
 			Location loc = findLocationFilter(bin.getLeft());
 			if (loc != null)
