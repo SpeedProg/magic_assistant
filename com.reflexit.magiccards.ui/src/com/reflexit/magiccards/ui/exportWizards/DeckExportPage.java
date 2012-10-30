@@ -35,7 +35,6 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -70,7 +69,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		store = new PreferenceStore();
 	}
 
-	private HashMap<String, String> storeToMap(boolean sideboard) {
+	HashMap<String, String> storeToMap(boolean sideboard) {
 		IPreferenceStore store = getPreferenceStore();
 		HashMap<String, String> map = new HashMap<String, String>();
 		Locations locs = Locations.getInstance();
@@ -466,11 +465,5 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 			ce = (CardElement) object;
 		}
 		return ce;
-	}
-
-	public MagicCardFilter updateToLocationFilter(MagicCardFilter locFilter) {
-		boolean sideboard = getIncludeSideBoard();
-		locFilter.update(storeToMap(sideboard));
-		return locFilter;
 	}
 }
