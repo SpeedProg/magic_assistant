@@ -32,8 +32,8 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 	}
 
 	/**
-	 * the command has been executed, so extract extract the needed information
-	 * from the application context.
+	 * the command has been executed, so extract extract the needed information from the application
+	 * context.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
@@ -47,7 +47,10 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 		if (activePart instanceof DeckView) {
 			activeDeckHandler = ((DeckView) activePart).getFilteredStore();
 			increase(window, iss, activeDeckHandler);
-		} else if (activePart instanceof MagicDbView || activePart instanceof MyCardsView) {
+		} else if (activePart instanceof MagicDbView) {
+			activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+			DataManager.getCardHandler().copyCards(iss.toList(), activeDeckHandler.getLocation());
+		} else if (activePart instanceof MyCardsView) {
 			activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 			increase(window, iss, activeDeckHandler);
 		}
