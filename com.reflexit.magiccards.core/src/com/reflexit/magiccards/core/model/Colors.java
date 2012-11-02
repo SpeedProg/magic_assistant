@@ -21,7 +21,7 @@ public class Colors implements ISearchableProperty {
 		add("Red", "R");
 		add("Green", "G");
 		add("Colorless", "1");
-	};
+	}
 
 	private void add(String string, String code) {
 		String id = getPrefConstant(string);
@@ -83,13 +83,6 @@ public class Colors implements ISearchableProperty {
 			}
 			buf.append(name);
 		}
-	}
-
-	private static boolean hasColor(String abbr, String cost) {
-		if (cost.indexOf(abbr) >= 0) {
-			return true;
-		}
-		return false;
 	}
 
 	/*

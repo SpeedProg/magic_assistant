@@ -447,10 +447,8 @@ public class MagicCardFilter {
 		String requestedId = bin.getLeft().toString();
 		String value = bin.getRight().toString();
 		if (Colors.getInstance().getIdPrefix().equals(requestedId)) {
-			String en = Colors.getInstance().getEncodeByName(value);
-			if (en != null) {
-				res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
-			} else if (value.equals("Multi-Color")) {
+			String en;
+			if (value.equals("Multi-Color")) {
 				res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "multi");
 			} else if (value.equals("Mono-Color")) {
 				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
@@ -462,6 +460,8 @@ public class MagicCardFilter {
 				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
 				BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "land");
 				res = new BinaryExpr(b1, Operation.OR, b2);
+			} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
+				res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
 			}
 		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
 			res = textSearch(MagicCardField.TYPE, value);
