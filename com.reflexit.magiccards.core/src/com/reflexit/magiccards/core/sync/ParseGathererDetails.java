@@ -172,7 +172,8 @@ public class ParseGathererDetails extends ParseGathererPage {
 				card2.setText(card.getOracleText());
 				if (magicDb != null && magicDb.getCard(card2.getCardId()) == null) {
 					magicDb.add(card2);
-					System.err.println("Added " + card2.getName() + " " + id + " " + set + " " + rarity);
+					// MagicLogger.log("Added " + card2.getName() + " " + id + " " + set + " " +
+					// rarity);
 				}
 			}
 		}

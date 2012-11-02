@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -48,7 +49,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 			if (monitor.isCanceled())
 				return;
 			if (id != null) {
-				System.err.println("found " + set + " " + id);
+				// System.err.println("found " + set + " " + id);
 				HashMap<String, Float> prices = parse(id);
 				if (prices.size() > 0) {
 					IStorage storage = store.getStorage();
@@ -116,7 +117,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 			return parseSets.get(set.replaceAll(" Box Set", ""));
 		if (set.endsWith(" Edition"))
 			return parseSets.get(set.replaceAll(" Edition", ""));
-		System.err.println("Cannot find prices for " + set);
+		MagicLogger.log("Cannot find prices for " + set);
 		return null;
 	}
 

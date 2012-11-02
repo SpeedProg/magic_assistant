@@ -360,12 +360,12 @@ public class Editions implements ISearchableProperty {
 					if (releaseDate != null && releaseDate.length() > 0)
 						set.setReleaseDate(releaseDate);
 					else
-						System.err.println("Missing release date " + line);
+						MagicLogger.log("Missing release date " + line);
 					String type = attrs[4].trim();
 					if (type != null && type.length() > 0)
 						set.setType(type);
 					else
-						System.err.println("Missing type " + line);
+						MagicLogger.log("Missing type " + line);
 					if (attrs.length <= 5)
 						continue;
 					// Block
@@ -373,7 +373,7 @@ public class Editions implements ISearchableProperty {
 					if (block != null && block.length() > 0)
 						set.setBlock(block);
 					else if (!"Core".equals(type))
-						System.err.println("Missing block " + line);
+						MagicLogger.log("Missing block " + line);
 					if (attrs.length <= 6)
 						continue;
 					// Legality
@@ -385,8 +385,8 @@ public class Editions implements ISearchableProperty {
 						set.addFormat(string.trim());
 					}
 				} catch (Exception e) {
-					System.err.println("bad editions record: " + line);
-					e.printStackTrace();
+					MagicLogger.log("bad editions record: " + line);
+					MagicLogger.log(e);
 				}
 			}
 		} finally {

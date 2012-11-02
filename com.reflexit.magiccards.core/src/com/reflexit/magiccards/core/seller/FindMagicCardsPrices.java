@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -100,7 +101,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 								try {
 									price = parseSingleCard(id, magicCard);
 								} catch (IOException e) {
-									System.err.println("Cannot load card " + e.getMessage() + " " + set);
+									MagicLogger.log("Cannot load card " + e.getMessage() + " " + set);
 								}
 							}
 							if (price > 0) {
@@ -139,7 +140,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 			if (testSetUrl(t12))
 				return t12;
 		}
-		System.err.println("Cannot find prices for " + set);
+		MagicLogger.log("Cannot find prices for " + set);
 		return null;
 	}
 

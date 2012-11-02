@@ -81,7 +81,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				table.initialize();
 				Location newLocation = table.getLocation();
 				if (!newLocation.equals(oldLocation)) {
-					System.err.println("Key conflict - fixing: " + newLocation + " -> " + oldLocation);
+					MagicLogger.log("Key conflict - fixing: " + newLocation + " -> " + oldLocation);
 					table.setLocation(oldLocation);
 				}
 			} catch (Exception e) {
@@ -145,7 +145,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			s++;
 		}
 		if (size != s) {
-			System.err.println("Size mismatch: " + s + " " + size);
+			MagicLogger.log("Size mismatch: " + s + " " + size);
 			size = s;
 		}
 		return s;

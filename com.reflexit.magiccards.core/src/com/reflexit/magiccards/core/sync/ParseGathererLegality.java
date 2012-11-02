@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardSet;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -146,7 +147,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 							String legal = matcher.group(1).trim();
 							legalityMap.put(format, legal);
 						} else {
-							System.err.println("? " + row);
+							MagicLogger.log("? " + row);
 						}
 					}
 				}

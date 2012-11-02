@@ -140,7 +140,7 @@ public class ParseGathererNewVisualSpoiler {
 			out = new PrintStream(new File(to));
 		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
 		for (String string : urls) {
-			System.err.println("Loading " + string);
+			MagicLogger.log("Loading " + string);
 			loadUrl(new URL(string), createOutputHandler(out, options));
 		}
 		out.close();
