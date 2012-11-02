@@ -3,9 +3,7 @@ package com.reflexit.magiccards.ui.graphics;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -47,15 +45,14 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 				activate();
 			}
 		};
-		panel.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				view.getSite().getSelectionProvider().setSelection(sel);
-			}
-		});
 		hookDragAndDrop();
 		fstore.getFilter().setGroupField(MagicCardField.CMC);
 		return getArea();
+	}
+
+	@Override
+	protected ISelectionProvider getSelectionProvider() {
+		return panel.getSelectionProvider();
 	}
 
 	@Override

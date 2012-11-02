@@ -114,7 +114,7 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	public void mouseMove(MouseEvent e) {
 		if (isButton1Pressed(e)) {
 			Point newpoint = new Point(e.x, e.y);
-			if (dragCanvas) {
+			if (dragCanvas && mousePos != null) {
 				hBar.setSelection(hBar.getSelection() + mousePos.x - newpoint.x);
 				vBar.setSelection(vBar.getSelection() + mousePos.y - newpoint.y);
 				scroll(hBar.getSelection(), vBar.getSelection());
