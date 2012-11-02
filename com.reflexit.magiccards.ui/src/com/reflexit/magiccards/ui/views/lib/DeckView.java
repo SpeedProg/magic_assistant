@@ -59,6 +59,7 @@ public class DeckView extends AbstractMyCardsView {
 	private ArrayList<IDeckPage> pages;
 	private Action sideboard;
 	private AbstractDeckListPage drawPage;
+	private SelectionProviderIntermediate selProvider = new SelectionProviderIntermediate();
 
 	private static class DeckPageExtension {
 		private String name;
@@ -203,6 +204,11 @@ public class DeckView extends AbstractMyCardsView {
 		super.createPartControl(parent);
 		updatePartName();
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewdeck"));
+	}
+
+	@Override
+	public SelectionProviderIntermediate getSelectionProvider() {
+		return selProvider;
 	}
 
 	protected void updatePartName() {
@@ -432,6 +438,7 @@ public class DeckView extends AbstractMyCardsView {
 		viewMenuManager.updateAll(true);
 		// global
 		setGlobalControlHandlers(bars);
+		getSelectionProvider().setSelectionProviderDelegate(control.getSelectionProvider());
 	}
 
 	@Override

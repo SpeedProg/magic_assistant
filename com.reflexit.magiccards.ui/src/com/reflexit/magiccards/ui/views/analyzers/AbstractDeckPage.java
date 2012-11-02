@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -83,9 +84,14 @@ public class AbstractDeckPage implements IDeckPage {
 		// global handlers
 		setGlobalControlHandlers(bars);
 		// selection provider
+		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
 		getCardStore();
 		if (store == null)
 			return;
+	}
+
+	protected ISelectionProvider getSelectionProvider() {
+		return null;
 	}
 
 	protected void setGlobalControlHandlers(IActionBars bars) {

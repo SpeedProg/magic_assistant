@@ -113,7 +113,6 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 	}
 
 	public void triggerOnlyOwn(boolean mode) {
-		System.err.println("mode " + mode);
 		onlyOwnFiltred = mode;
 		onlyOwn.setChecked(mode);
 		if (!mode)

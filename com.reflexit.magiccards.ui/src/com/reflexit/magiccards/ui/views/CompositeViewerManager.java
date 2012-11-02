@@ -13,8 +13,6 @@ package com.reflexit.magiccards.ui.views;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -22,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.lib.SelectionProviderIntermediate;
 
 /**
  * @author Alena
@@ -32,7 +31,7 @@ public class CompositeViewerManager extends ViewerManager {
 	private int activeIndex = 0;
 	private StackLayout stackLayout;
 	private Composite comp;
-	private ISelectionProvider selectionProvider;
+	private SelectionProviderIntermediate selectionProvider;
 
 	public CompositeViewerManager(String id) {
 		super(id);
@@ -49,30 +48,8 @@ public class CompositeViewerManager extends ViewerManager {
 				return CompositeViewerManager.this.doGetColumnCollection(prefPageId);
 			}
 		};
-		this.selectionProvider = new ISelectionProvider() {
-			public void addSelectionChangedListener(ISelectionChangedListener listener) {
-				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
-					m.getViewer().addSelectionChangedListener(listener);
-				}
-			}
-
-			public ISelection getSelection() {
-				return getViewer().getSelection();
-			}
-
-			public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
-					if (m.getViewer() != null)
-						m.getViewer().removeSelectionChangedListener(listener);
-				}
-			}
-
-			public void setSelection(ISelection selection) {
-				for (IMagicColumnViewer m : CompositeViewerManager.this.managers) {
-					m.getViewer().setSelection(selection, true);
-				}
-			}
-		};
+		this.selectionProvider = new SelectionProviderIntermediate();
+		this.selectionProvider.setSelectionProviderDelegate(getViewer());
 	}
 
 	/*
@@ -98,6 +75,7 @@ public class CompositeViewerManager extends ViewerManager {
 	public void setActivePage(int i) {
 		this.stackLayout.topControl = this.managers[i].getViewer().getControl();
 		// this.view.getSite().setSelectionProvider(selectionProvider);
+		this.selectionProvider.setSelectionProviderDelegate(managers[i].getViewer());
 	}
 
 	/*
