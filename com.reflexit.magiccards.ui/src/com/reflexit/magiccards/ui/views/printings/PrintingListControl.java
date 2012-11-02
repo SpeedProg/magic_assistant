@@ -147,6 +147,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 				}
 			} catch (Exception e) {
 				MagicUIActivator.log("Bad card: " + next);
+				MagicUIActivator.log(e);
 			}
 		}
 		if (multilang) {
@@ -166,6 +167,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 					}
 				} catch (Exception e) {
 					MagicUIActivator.log("Bad card: " + next);
+					MagicUIActivator.log(e);
 				}
 			}
 			res.addAll(res2);
