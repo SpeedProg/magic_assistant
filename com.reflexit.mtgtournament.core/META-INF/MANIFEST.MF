@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MTG Tournament Organizer Core
 Bundle-SymbolicName: com.reflexit.mtgtournament.core
-Bundle-Version: 1.2.5.qualifier
+Bundle-Version: 1.2.6.qualifier
 Bundle-Activator: com.reflexit.mtgtournament.core.Activator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime,
