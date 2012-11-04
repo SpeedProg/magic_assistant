@@ -27,7 +27,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 	private HashMap<String, String> setIdMap = new HashMap<String, String>();
 
 	public ParseMOTLPrices() {
-		baseURL = "http://magictraders.com/pricelists/current-magic-excel.txt";
+		baseURL = "http://classic.magictraders.com/pricelists/current-magic-excel.txt";
 		// hardcoded setIdMap
 		setIdMap.put("Limited Edition Alpha", "A");
 		setIdMap.put("Limited Edition Beta", "B");
