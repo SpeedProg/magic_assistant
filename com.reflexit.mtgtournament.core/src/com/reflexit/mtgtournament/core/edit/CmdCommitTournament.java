@@ -12,9 +12,11 @@ package com.reflexit.mtgtournament.core.edit;
 
 import java.util.List;
 
+import com.reflexit.magiccards.core.Activator;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.core.xml.TournamentManager;
 
 /**
  * Command to add Round Table Scheduling into the round
@@ -37,6 +39,12 @@ public class CmdCommitTournament implements ITCommand {
 			player.setGames(player.getGames() + pt.getRoundsPlayed());
 		}
 		t.setClosed(true);
+		try {
+			TournamentManager.save(t);
+			TournamentManager.save(TournamentManager.getCube().getPlayerList());
+		} catch (Exception e) {
+			Activator.log(e);
+		}
 		return true;
 	}
 
