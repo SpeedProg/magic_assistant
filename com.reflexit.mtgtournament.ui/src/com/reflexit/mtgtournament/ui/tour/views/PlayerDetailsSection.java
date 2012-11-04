@@ -78,9 +78,15 @@ public class PlayerDetailsSection extends TSectionPart {
 		} else if (id.equals("pin")) {
 			player.setId(text);
 		} else if (id.equals("games")) {
-			player.setGames(Integer.parseInt(text));
+			if (text.length() == 0)
+				player.setGames(0);
+			else
+				player.setGames(Integer.parseInt(text));
 		} else if (id.equals("points")) {
-			player.setPoints(Integer.parseInt(text));
+			if (text.length() == 0)
+				player.setPoints(0);
+			else
+				player.setPoints(Integer.parseInt(text));
 		}
 	}
 

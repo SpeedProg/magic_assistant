@@ -34,20 +34,15 @@ import java.util.Date;
 import com.reflexit.mtgtournament.ui.tour.Activator;
 
 /**
- * This sample class demonstrates how to plug-in a new
- * workbench view. The view shows data obtained from the
- * model. The sample creates a dummy model on the fly,
- * but a real implementation would connect to the model
- * available either in this or another plug-in (e.g. the workspace).
- * The view is connected to the model using a content provider.
+ * This sample class demonstrates how to plug-in a new workbench view. The view shows data obtained
+ * from the model. The sample creates a dummy model on the fly, but a real implementation would
+ * connect to the model available either in this or another plug-in (e.g. the workspace). The view
+ * is connected to the model using a content provider.
  * <p>
- * The view uses a label provider to define how model
- * objects should be presented in the view. Each
- * view can present the same model objects using
- * different labels and icons, if needed. Alternatively,
- * a single label provider can be shared between views
- * in order to ensure that objects of the same type are
- * presented in the same way everywhere.
+ * The view uses a label provider to define how model objects should be presented in the view. Each
+ * view can present the same model objects using different labels and icons, if needed.
+ * Alternatively, a single label provider can be shared between views in order to ensure that
+ * objects of the same type are presented in the same way everywhere.
  * <p>
  */
 public class TimerView extends ViewPart {
@@ -108,8 +103,7 @@ public class TimerView extends ViewPart {
 	}
 
 	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -161,6 +155,8 @@ public class TimerView extends ViewPart {
 	private void updateTime() {
 		Date time = Calendar.getInstance().getTime();
 		String label = clockFormat.format(time);
+		if (clockLabel.isDisposed())
+			return;
 		clockLabel.setText(label);
 		if (paused == false) {
 			long curTime = System.currentTimeMillis();
@@ -183,7 +179,7 @@ public class TimerView extends ViewPart {
 		});
 		Menu menu = menuMgr.createContextMenu(timerLabel);
 		timerLabel.setMenu(menu);
-		//getSite().registerContextMenu(menuMgr, viewer);
+		// getSite().registerContextMenu(menuMgr, viewer);
 	}
 
 	private void contributeToActionBars() {
@@ -193,10 +189,10 @@ public class TimerView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		//		manager.add(pause);
-		//		manager.add(play);
-		//		manager.add(setTimer);
-		//		manager.add(new Separator());
+		// manager.add(pause);
+		// manager.add(play);
+		// manager.add(setTimer);
+		// manager.add(new Separator());
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -224,6 +220,7 @@ public class TimerView extends ViewPart {
 
 	private void makeActions() {
 		pause = new Action() {
+			@Override
 			public void run() {
 				lastTime = System.currentTimeMillis();
 				paused = true;
@@ -234,6 +231,7 @@ public class TimerView extends ViewPart {
 		pause.setToolTipText("Pause Timer");
 		pause.setImageDescriptor(Activator.getImageDescriptor("icons/suspend_co.png"));
 		play = new Action() {
+			@Override
 			public void run() {
 				lastTime = System.currentTimeMillis();
 				paused = false;
@@ -244,6 +242,7 @@ public class TimerView extends ViewPart {
 		play.setToolTipText("Resume timer");
 		play.setImageDescriptor(Activator.getImageDescriptor("icons/resume_co.png"));
 		setTimer = new Action() {
+			@Override
 			public void run() {
 				setTimer();
 			}
@@ -252,6 +251,7 @@ public class TimerView extends ViewPart {
 		setTimer.setToolTipText("Set Timer");
 		setTimer.setImageDescriptor(Activator.getImageDescriptor("icons/launch_profile.gif"));
 		doubleClickAction = new Action() {
+			@Override
 			public void run() {
 				setTimer();
 			}
@@ -260,8 +260,7 @@ public class TimerView extends ViewPart {
 
 	protected void setTimer() {
 		InputDialog d = new InputDialog(area.getShell(), "Set Timer",
-		        "Enter timer value hh:mm:ss. After timer is set press \"Play\" button to start the countdown.",
-		        lastTimerValue, null);
+				"Enter timer value hh:mm:ss. After timer is set press \"Play\" button to start the countdown.", lastTimerValue, null);
 		if (d.open() == Dialog.OK) {
 			pause.run();
 			String t = d.getValue();
