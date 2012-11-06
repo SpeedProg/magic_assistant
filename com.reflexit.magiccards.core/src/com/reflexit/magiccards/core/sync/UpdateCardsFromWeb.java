@@ -1,13 +1,16 @@
 package com.reflexit.magiccards.core.sync;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -21,6 +24,11 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public class UpdateCardsFromWeb {
+	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
+	public static final String UPDATE_OTHER_PRINTINGS = "other.printings";
+	public static final String UPDATE_LANGUAGE = "lang";
+	public static final String UPDATE_SPECIAL = "special";
+
 	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb, ICoreProgressMonitor monitor)
 			throws IOException {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(1);
@@ -116,6 +124,12 @@ public class UpdateCardsFromWeb {
 			monitor.worked(5);
 			monitor.done();
 		}
+	}
+
+	public static BufferedReader openUrlReader(URL url) throws IOException {
+		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, FileUtils.CHARSET_UTF_8));
+		return st;
 	}
 
 	public static InputStream openUrl(URL url) throws IOException {

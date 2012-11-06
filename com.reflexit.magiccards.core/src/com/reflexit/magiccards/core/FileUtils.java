@@ -3,10 +3,13 @@ package com.reflexit.magiccards.core;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -15,6 +18,7 @@ import com.reflexit.magiccards.db.DbActivator;
 
 public class FileUtils {
 	public static final String UTF8 = "UTF-8";
+	public static Charset CHARSET_UTF_8 = Charset.forName("utf-8");
 	static {
 		File stateLocationFile = getStateLocationFile();
 		if (!stateLocationFile.exists() && !stateLocationFile.mkdirs()) {
@@ -35,6 +39,11 @@ public class FileUtils {
 			if (outChannel != null)
 				outChannel.close();
 		}
+	}
+
+	public static BufferedReader openFileReader(File file) throws FileNotFoundException {
+		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file), FileUtils.CHARSET_UTF_8));
+		return st;
 	}
 
 	/**

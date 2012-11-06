@@ -2,40 +2,26 @@ package com.reflexit.magiccards.core.sync;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererNewVisualSpoiler {
-	public static final String UPDATE_BASIC_LAND_PRINTINGS = "land";
-	public static final String UPDATE_OTHER_PRINTINGS = "other.printings";
-	public static final String UPDATE_LANGUAGE = "lang";
-	public static final String UPDATE_SPECIAL = "special";
-	private static Charset UTF_8 = Charset.forName("utf-8");
-
+public class ParseGathererNewVisualSpoiler extends GatherHelper {
 	/*-
 	  <tr class="cardItem evenItem">
 	                <td class="leftCol">
@@ -147,17 +133,16 @@ public class ParseGathererNewVisualSpoiler {
 	}
 
 	private static OutputHandler createOutputHandler(PrintStream out, Properties options) {
-		String land = (String) options.get(UPDATE_BASIC_LAND_PRINTINGS);
+		String land = (String) options.get(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS);
 		boolean bland = "true".equals(land);
-		String other = (String) options.get(UPDATE_OTHER_PRINTINGS);
+		String other = (String) options.get(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS);
 		boolean bother = "true".equals(other);
 		return new OutputHandler(out, bland, bother);
 	}
 
 	public static boolean loadUrl(URL url, ILoadCardHander handler) throws IOException {
 		try {
-			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
-			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
+			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
 			boolean res = processFile(st, handler);
 			st.close();
 			return res;
@@ -168,7 +153,7 @@ public class ParseGathererNewVisualSpoiler {
 	}
 
 	public static void loadFile(File file, ILoadCardHander handler) throws IOException {
-		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
+		BufferedReader st = FileUtils.openFileReader(file);
 		processFile(st, handler);
 		st.close();
 	}
@@ -320,34 +305,6 @@ public class ParseGathererNewVisualSpoiler {
 		}
 	}
 
-	private static String getMatch(Pattern textPattern, String typeF) {
-		return getMatch(textPattern, typeF, 1);
-	}
-
-	private static String getMatch(Pattern textPattern, String line, int g) {
-		Matcher matcher;
-		matcher = textPattern.matcher(line);
-		String text = "";
-		if (matcher.find()) {
-			text = matcher.group(g);
-			if (text == null)
-				text = "";
-		}
-		String res = htmlToString(text).trim();
-		if (res.length() == 0)
-			res = " ";
-		return res;
-	}
-
-	static Map manaMap = new LinkedHashMap();
-	static {
-		manaMap.put("\\Q{500}", "{0.5}");
-		manaMap.put("\\{(\\d)([BUGRW])\\}", "{$1/$2}");
-		manaMap.put("\\{([BUGRW])([BUGRW])\\}", "{$1/$2}");
-		manaMap.put("\\Q{tap}", "{T}");
-		manaMap.put("\\Q{untap}", "{Q}");
-	}
-
 	private static String fixText(String str1) {
 		String str = str1;
 		str = str.replaceAll("</p><p>", "<br>");
@@ -378,56 +335,6 @@ public class ParseGathererNewVisualSpoiler {
 		}
 	} // class
 
-	private static String LONG_MINUS;
-	static {
-		try {
-			LONG_MINUS = new String(new byte[] { (byte) 0xe2, (byte) 0x80, (byte) 0x94 }, UTF_8.name());
-		} catch (UnsupportedEncodingException e) {
-			// hmm
-		}
-	}
-
-	public static String htmlToString(String str) {
-		str = str.replaceAll("\\Q " + LONG_MINUS, "-");
-		str = str.replaceAll("&nbsp;", " ");
-		str = str.replaceAll("&amp;", "&");
-		str = str.replaceAll("&apos;", "'");
-		str = str.replaceAll("&quot;", "\"");
-		if (str.contains("img")) {
-			str = str.replaceAll("<img [^<]*name=([^&]*)&[^>]*/>", "{$1}");
-			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext();) {
-				String alt = (String) iterator.next();
-				String to = (String) manaMap.get(alt);
-				str = str.replaceAll(alt, to);
-			}
-		}
-		return str;
-	}
-
-	@NotNull
-	public static URL createImageURL(int cardId, String editionAbbr) throws MalformedURLException {
-		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
-	}
-
-	public static URL createSetImageURL(String editionAbbr, String rarity) {
-		try {
-			String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr + "&size=small&rarity="
-					+ rarLetter);
-		} catch (MalformedURLException e) {
-			return null;
-		}
-	}
-
-	public static URL createManaImageURL(String symbol) {
-		String manaName = symbol.replaceAll("[{}/]", "");
-		try {
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=" + manaName + "&type=symbol");
-		} catch (MalformedURLException e) {
-			return null;
-		}
-	}
-
 	public static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
@@ -443,8 +350,8 @@ public class ParseGathererNewVisualSpoiler {
 					url = base + "&set=[%22" + set.replaceAll(" ", "%20") + "%22]&sort=cn+";
 				}
 			}
-			if (options.get(UPDATE_SPECIAL) != null)
-				url += "&special=" + options.getProperty(UPDATE_SPECIAL);
+			if (options.get(UpdateCardsFromWeb.UPDATE_SPECIAL) != null)
+				url += "&special=" + options.getProperty(UpdateCardsFromWeb.UPDATE_SPECIAL);
 			options.put("set", set);
 		}
 		parseFileOrUrl(url, file, options, pm);

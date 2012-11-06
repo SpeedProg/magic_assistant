@@ -83,13 +83,13 @@ public class CardCache {
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
 		if (editionAbbr == null)
 			throw new CannotDetermineSetAbbriviation(card);
-		return ParseGathererNewVisualSpoiler.createImageURL(card.getCardId(), editionAbbr);
+		return GatherHelper.createImageURL(card.getCardId(), editionAbbr);
 	}
 
 	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) throws MalformedURLException {
 		if (!CardCache.isLoadingEnabled())
 			return null;
-		return ParseGathererNewVisualSpoiler.createSetImageURL(editionAbbr, rarity);
+		return GatherHelper.createSetImageURL(editionAbbr, rarity);
 	}
 
 	@NotNull

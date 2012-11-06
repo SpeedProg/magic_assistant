@@ -25,6 +25,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 
 public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> {
@@ -104,7 +105,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 		for (int i = 0; i < manasplit.length; i++) {
 			String mana = manasplit[i];
 			String mana1 = mana.replaceAll("/", "");
-			text += img(ParseGathererNewVisualSpoiler.createManaImageURL(mana1), "{" + mana + "}");
+			text += img(GatherHelper.createManaImageURL(mana1), "{" + mana + "}");
 		}
 		return text;
 	}
