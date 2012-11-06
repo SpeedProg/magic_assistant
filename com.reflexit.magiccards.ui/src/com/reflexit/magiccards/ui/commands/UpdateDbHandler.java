@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardHandler;
-import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -74,14 +74,14 @@ public class UpdateDbHandler extends AbstractHandler {
 				try {
 					ICardHandler ch = DataManager.getCardHandler();
 					Properties options = new Properties();
-					options.put(ParseGathererNewVisualSpoiler.UPDATE_BASIC_LAND_PRINTINGS, updateLand);
-					options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, updatePrintings);
-					options.put(ParseGathererNewVisualSpoiler.UPDATE_SPECIAL,
+					options.put(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS, updateLand);
+					options.put(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS, updatePrintings);
+					options.put(UpdateCardsFromWeb.UPDATE_SPECIAL,
 							event.getParameter(PreferenceConstants.GATHERER_UPDATE_SPECIAL));
 					if (set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
-						options.put(ParseGathererNewVisualSpoiler.UPDATE_OTHER_PRINTINGS, "true");
+						options.put(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS, "true");
 					}
-					options.put(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE,
+					options.put(UpdateCardsFromWeb.UPDATE_LANGUAGE,
 							event.getParameter(PreferenceConstants.GATHERER_UPDATE_LANGUAGE));
 					final int rec = ch.downloadUpdates(set, options, new CoreMonitorAdapter(pm));
 					shell.getDisplay().syncExec(new Runnable() {

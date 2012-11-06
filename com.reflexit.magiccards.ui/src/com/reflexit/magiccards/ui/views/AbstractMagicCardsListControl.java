@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -560,8 +561,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/**
 	 * @param last
 	 */
-	protected void highlightCard(IMagicCard last) {
-		getSelectionProvider().setSelection(new StructuredSelection(last));
+	protected void highlightCard(Object last) {
+		ISelectionProvider selectionProvider = getSelectionProvider();
+		StructuredSelection selection = new StructuredSelection(last);
+		if (selectionProvider instanceof TreeViewer) {
+			((TreeViewer) selectionProvider).setSelection(selection, true);
+		} else {
+			selectionProvider.setSelection(selection);
+		}
 	}
 
 	@Override
@@ -749,9 +756,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected void runSearch(final SearchContext context) {
 		TableSearch.search(context, getFilteredStore());
 		if (context.isFound()) {
+			final Object last = context.getLast();
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					highlightCard((IMagicCard) context.getLast());
+					highlightCard(last);
 				}
 			});
 		}

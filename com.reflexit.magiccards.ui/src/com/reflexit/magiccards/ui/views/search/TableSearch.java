@@ -12,6 +12,10 @@ package com.reflexit.magiccards.ui.views.search;
 
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.viewers.TreePath;
+
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -21,21 +25,20 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  */
 public class TableSearch {
 	public static void search(SearchContext context, IFilteredCardStore store) {
-		IMagicCard last;
+		Object last;
 		String inputText;
 		boolean wholeWord;
 		boolean matchCase;
 		boolean needWrap;
 		synchronized (context) {
 			inputText = context.getText();
-			last = (IMagicCard) context.getLast();
+			last = context.getLast();
 			wholeWord = context.isWholeWord();
 			matchCase = context.isMatchCase();
 			needWrap = context.isWrapAround();
 			context.setFound(false); // don't reset last yet
 			context.setDidWrap(false);
 		}
-		Object[] elements = store.getElements();
 		if (isCamelCase(inputText)) {
 			matchCase = true;
 		} else {
@@ -50,16 +53,92 @@ public class TableSearch {
 		if (matchCase)
 			flags = 0;
 		Pattern pat = Pattern.compile(pattern, flags);
-		int lastIndex = -1;
+		if (store != null && store.getCardGroupRoot() != null && store.getCardGroupRoot().size() > 0) {
+			if (last instanceof TreePath) {
+				searchTree(context, (TreePath) last, needWrap, pat, store.getCardGroupRoot(), TreePath.EMPTY);
+				if (!context.isFound() && needWrap) {
+					context.setDidWrap(true);
+					searchTree(context, null, needWrap, pat, store.getCardGroupRoot(), TreePath.EMPTY);
+				}
+			} else {
+				searchTree(context, null, needWrap, pat, store.getCardGroupRoot(), TreePath.EMPTY);
+			}
+		} else {
+			if (last instanceof TreePath) {
+				last = ((TreePath) last).getLastSegment();
+			}
+			searchFlat(context, store, last, needWrap, pat);
+		}
+	}
+
+	public static int getIndex(Object last, Object[] elements) {
 		if (last != null) {
 			for (int i = 0; i < elements.length; i++) {
-				IMagicCard card = (IMagicCard) elements[i];
+				Object card = elements[i];
 				if (card == last) {
-					lastIndex = i;
-					break;
+					return i;
 				}
 			}
 		}
+		return -1;
+	}
+
+	private static void searchTree(SearchContext context, TreePath last, boolean needWrap, Pattern pat, CardGroup group, TreePath path) {
+		Object[] elements = group.getChildren();
+		int lastIndex = -1;
+		int len = elements.length;
+		int i1 = 0, i2 = len - 1;
+		if (last != null) {
+			lastIndex = getIndex(last.getFirstSegment(), elements);
+			if (lastIndex != -1) {
+				if (last.getSegmentCount() == 1) {
+					i1 = lastIndex + 1;
+				} else {
+					i1 = lastIndex;
+				}
+			}
+		}
+		int start = i1, end = i2, off = 1;
+		if (context.isForward() == false) {
+			start = i2;
+			end = i1;
+			off = -1;
+		}
+		for (int i = start; i * off <= end * off && context.isFound() == false && context.isCancelled() == false; i += off) {
+			int j = i % elements.length;
+			ICard card = (ICard) elements[j];
+			TreePath fullPath = path.createChildPath(card);
+			if (j != lastIndex && match(pat, card)) {
+				context.setFound(true, fullPath);
+				break;
+			}
+			if (card instanceof CardGroup) {
+				if (j == lastIndex) {
+					searchTree(context, cutHead(last), needWrap, pat, (CardGroup) card, fullPath);
+					lastIndex = -1;
+				} else
+					searchTree(context, null, needWrap, pat, (CardGroup) card, fullPath);
+			}
+		}
+	}
+
+	private static TreePath cutHead(TreePath last) {
+		int l = last.getSegmentCount();
+		if (l <= 1)
+			throw new IllegalArgumentException();
+		Object[] arr = new Object[l - 1];
+		for (int i = 1; i < l; i++) {
+			Object segment = last.getSegment(i);
+			arr[i - 1] = segment;
+		}
+		return new TreePath(arr);
+	}
+
+	private static void searchFlat(SearchContext context, IFilteredCardStore store, Object last, boolean needWrap, Pattern pat) {
+		if (store == null)
+			return;
+		Object[] elements = store.getElements();
+		int lastIndex = getIndex(last, elements);
 		if (context.isForward()) {
 			lastIndex++;
 			for (int i = lastIndex; i < elements.length; i++) {
@@ -148,7 +227,7 @@ public class TableSearch {
 	 * @param card
 	 * @return
 	 */
-	protected static boolean match(Pattern pat, IMagicCard card) {
+	protected static boolean match(Pattern pat, ICard card) {
 		if (pat.matcher(card.getName()).matches())
 			return true;
 		return false;
