@@ -227,7 +227,7 @@ public class XmlCardHolder implements ICardHandler {
 	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException {
 		int rec;
 		try {
-			String lang = (String) options.get(ParseGathererNewVisualSpoiler.UPDATE_LANGUAGE);
+			String lang = (String) options.get(UpdateCardsFromWeb.UPDATE_LANGUAGE);
 			if (lang != null && lang.length() == 0) {
 				lang = null;
 			}
