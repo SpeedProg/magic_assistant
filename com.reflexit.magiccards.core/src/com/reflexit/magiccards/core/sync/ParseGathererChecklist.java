@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler.ILoadCardHander;
-import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler.OutputHandler;
+import com.reflexit.magiccards.core.sync.ParseGathererStandardList.ILoadCardHander;
+import com.reflexit.magiccards.core.sync.ParseGathererStandardList.OutputHandler;
 
 public class ParseGathererChecklist {
 	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=checklist";

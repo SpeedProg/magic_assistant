@@ -26,7 +26,6 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.GatherHelper;
-import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 
 public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public HtmlTableExportDelegate() {
@@ -83,7 +82,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 							value = replaceSymbolsWithLinksOnline(str);
 					}
 					if (field == MagicCardField.NAME) {
-						value = img(ParseGathererNewVisualSpoiler.createSetImageURL(abbr, card.getRarity()), "") + "&nbsp;" + value;
+						value = img(GatherHelper.createSetImageURL(abbr, card.getRarity()), "") + "&nbsp;" + value;
 					}
 					line += ("<td>" + value + "</td>");
 				}

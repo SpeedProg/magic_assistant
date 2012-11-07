@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererNewVisualSpoiler extends GatherHelper {
+public class ParseGathererStandardList extends GatherHelper {
 	/*-
 	  <tr class="cardItem evenItem">
 	                <td class="leftCol">
@@ -335,7 +335,7 @@ public class ParseGathererNewVisualSpoiler extends GatherHelper {
 		}
 	} // class
 
-	public static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
+	static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
 		if (set != null && set.startsWith("http")) {
