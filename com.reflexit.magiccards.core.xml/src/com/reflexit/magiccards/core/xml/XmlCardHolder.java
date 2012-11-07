@@ -36,7 +36,6 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.ParseGathererNewVisualSpoiler;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
@@ -220,7 +219,7 @@ public class XmlCardHolder implements ICardHandler {
 	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
 			IOException {
 		String file = new File(FileUtils.getStateLocationFile(), "downloaded.txt").getPath();
-		ParseGathererNewVisualSpoiler.downloadUpdates(set, file, options, pm);
+		UpdateCardsFromWeb.downloadUpdates(set, file, options, pm);
 		return file;
 	}
 
