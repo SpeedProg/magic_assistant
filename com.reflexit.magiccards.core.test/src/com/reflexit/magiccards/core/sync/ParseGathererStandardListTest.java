@@ -22,9 +22,11 @@ public class ParseGathererStandardListTest extends TestCase {
 	private String wall;
 	private GatherHelper.StashLoadHandler handler;
 	private URL wallUrl;
+	private ParseGathererSearchStandard parser;
 
 	@Override
 	public void setUp() throws Exception {
+		parser = new ParseGathererSearchStandard();
 		options = new Properties();
 		monitor = ICoreProgressMonitor.NONE;
 		file = File.createTempFile("magic", "txt");
@@ -36,21 +38,21 @@ public class ParseGathererStandardListTest extends TestCase {
 	}
 
 	public void testDownloadUpdates() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererStandardList.downloadUpdates(magicSet, file.toString(), options, monitor);
+		parser.downloadUpdates(magicSet, file.toString(), options, monitor);
 		String magicFile = FileUtils.readFileAsString(FileUtils.openFileReader(file));
 		assertTrue(magicFile.length() > 0);
 		assertTrue(magicFile.contains("Zombie Goliath"));
 	}
 
 	public void testDownloadWall() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererStandardList.parseFileOrUrl(wall, file.toString(), options, monitor);
+		parser.downloadUpdates(wall, file.toString(), options, monitor);
 		String magicFile = FileUtils.readFileAsString(FileUtils.openFileReader(file));
 		assertTrue(magicFile.length() > 0);
 		assertTrue(magicFile.contains("Bloodfire Colossus"));
 	}
 
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererStandardList.loadMultiPageUrl(wallUrl, handler, monitor);
+		parser.loadMultiPageUrl(wallUrl, handler, monitor);
 		assertEquals(4, handler.getCardCount());
 		ArrayList<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
@@ -59,7 +61,7 @@ public class ParseGathererStandardListTest extends TestCase {
 	}
 
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererStandardList.loadSingleUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
+		parser.loadSingleUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
 		assertEquals(234, handler.getCardCount());
 		ArrayList<MagicCard> stash = handler.getPrimary();
 		assertEquals(25, stash.size());

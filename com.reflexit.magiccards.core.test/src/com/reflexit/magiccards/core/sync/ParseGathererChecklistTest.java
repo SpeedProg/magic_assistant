@@ -19,9 +19,11 @@ public class ParseGathererChecklistTest extends TestCase {
 	private String magicSet;
 	private String wall;
 	private GatherHelper.StashLoadHandler handler;
+	private ParseGathererSearchChecklist parser;
 
 	@Override
 	public void setUp() throws Exception {
+		parser = new ParseGathererSearchChecklist();
 		options = new Properties();
 		monitor = ICoreProgressMonitor.NONE;
 		file = File.createTempFile("magic", "txt");
@@ -32,7 +34,7 @@ public class ParseGathererChecklistTest extends TestCase {
 	}
 
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererChecklist.loadSet(wall + "&output=checklist", handler);
+		parser.loadSet(wall + "&output=checklist", handler, monitor);
 		assertEquals(4, handler.getCardCount());
 		ArrayList<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
@@ -40,7 +42,7 @@ public class ParseGathererChecklistTest extends TestCase {
 	}
 
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererChecklist.loadSet(magicSet, handler);
+		parser.loadSet(magicSet, handler, monitor);
 		assertEquals(234, handler.getCardCount());
 		ArrayList<MagicCard> stash = handler.getPrimary();
 		assertEquals(234, stash.size());
