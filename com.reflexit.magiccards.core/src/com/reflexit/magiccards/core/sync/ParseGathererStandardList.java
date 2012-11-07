@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
@@ -66,11 +65,12 @@ public class ParseGathererStandardList extends GatherHelper {
 		return new GatherHelper.OutputHandler(out, bland, bother);
 	}
 
-	public static boolean loadUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
+	public static boolean loadSingleUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
 		try {
 			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
-			boolean res = processFile(st, handler);
+			String html = FileUtils.readFileAsString(st);
 			st.close();
+			boolean res = processFromReader(FileUtils.openStringReader(html), handler);
 			return res;
 		} catch (IOException e) {
 			MagicLogger.log("Loading url exception: " + url + ": " + e.getMessage());
@@ -78,9 +78,14 @@ public class ParseGathererStandardList extends GatherHelper {
 		}
 	}
 
+	public static boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException {
+		loadMultiPageUrl(GatherHelper.getSearchQuery("standard", set, true), handler, mon);
+		return true;
+	}
+
 	public static void loadFile(File file, GatherHelper.ILoadCardHander handler) throws IOException {
 		BufferedReader st = FileUtils.openFileReader(file);
-		processFile(st, handler);
+		processFromReader(st, handler);
 		st.close();
 	}
 
@@ -93,7 +98,7 @@ public class ParseGathererStandardList extends GatherHelper {
 		GatherHelper.OutputHandler handler = createOutputHandler(out, options);
 		try {
 			if (from.startsWith("http:")) {
-				localMultiPageUrl(from, handler, pm);
+				loadMultiPageUrl(new URL(from), handler, pm);
 			} else {
 				File input = new File(from);
 				loadFile(input, handler);
@@ -103,15 +108,15 @@ public class ParseGathererStandardList extends GatherHelper {
 		}
 	}
 
-	public static void localMultiPageUrl(String mainUrl, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
+	public static void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
 			throws MalformedURLException, IOException {
 		monitor.beginTask("Downloading cards", 10000);
 		try {
 			int i = 0;
 			boolean lastPage = false;
 			while (lastPage == false && i < 2000 && monitor.isCanceled() == false) {
-				URL url = new URL(mainUrl + "&page=" + i);
-				lastPage = loadUrl(url, handler);
+				URL url = new URL(urlOrig.toExternalForm() + "&page=" + i);
+				lastPage = loadSingleUrl(url, handler);
 				i++;
 				if (handler.getCardCount() == 0)
 					monitor.worked(100);
@@ -119,8 +124,6 @@ public class ParseGathererStandardList extends GatherHelper {
 					int pages = handler.getCardCount() / 25 + 1;
 					monitor.subTask("Page " + i + " of " + pages);
 					monitor.worked(10000 / pages);
-					if (handler.getRealCount() == handler.getCardCount())
-						break;
 				}
 			}
 		} finally {
@@ -129,8 +132,10 @@ public class ParseGathererStandardList extends GatherHelper {
 	}
 
 	private static Pattern lastPagePattern = Pattern.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
+	private static Pattern itemPattern = Pattern.compile("tr class=\"cardItem");
+	private static Pattern itemEndPattern = Pattern.compile("</tr>");
 
-	private static boolean processFile(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
+	private static boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
 		String line = "";
 		int state = 0;
 		boolean lastPage = false;
@@ -138,18 +143,15 @@ public class ParseGathererStandardList extends GatherHelper {
 		while ((state == 0 && (line = st.readLine()) != null) || (state == 1)) {
 			if (line == null)
 				break;
-			Matcher cm = countPattern.matcher(line);
-			if (cm.find()) {
-				int countCards = Integer.parseInt(cm.group(1));
-				handler.setCardCount(countCards);
-			}
-			if (lastPagePattern.matcher(line).find()) {
+			int cardCount = findIntegerMatch(countPattern, line, 1, -1);
+			if (cardCount != -1) {
+				handler.setCardCount(cardCount);
+			} else if (lastPagePattern.matcher(line).find()) {
 				lastPage = true;
-			}
-			if (line.matches(".*tr class=\"cardItem .*")) {
+			} else if (itemPattern.matcher(line).find()) {
 				String tr = "";
 				do {
-					if (line.matches(".*</tr>.*")) {
+					if (itemEndPattern.matcher(line).find()) {
 						state = 1;
 						break;
 					}
@@ -195,11 +197,11 @@ public class ParseGathererStandardList extends GatherHelper {
 		card.setToughness(tou);
 		fixGathererBugs(card);
 		String[] sets = rows[3].split("<a onclick");
-		for (String set : sets) {
-			String edition = getMatch(setPattern, set, 1);
-			String rarity = getMatch(setPattern, set, 2);
-			String abbr = getMatch(setPattern, set, 3);
-			String setId = getMatch(idPattern, set, 1);
+		for (String setHtml : sets) {
+			String edition = getMatch(setPattern, setHtml, 1);
+			String rarity = getMatch(setPattern, setHtml, 2);
+			String abbr = getMatch(setPattern, setHtml, 3);
+			String setId = getMatch(idPattern, setHtml, 1);
 			if (edition.length() <= 1)
 				continue;
 			edition = edition.trim();

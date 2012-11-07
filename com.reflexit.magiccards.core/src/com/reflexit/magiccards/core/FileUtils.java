@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,6 +47,11 @@ public class FileUtils {
 		return st;
 	}
 
+	public static BufferedReader openStringReader(String str) {
+		BufferedReader st = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(str.getBytes()), FileUtils.CHARSET_UTF_8));
+		return st;
+	}
+
 	/**
 	 * @param in
 	 * @param out
@@ -68,8 +74,9 @@ public class FileUtils {
 	}
 
 	public static String readFileAsString(BufferedReader reader) throws IOException {
-		StringBuffer fileData = new StringBuffer(1024 * 4);
-		char[] buf = new char[1024 * 4];
+		int bufSize = 1024 * 256;
+		StringBuilder fileData = new StringBuilder(1024 * 4);
+		char[] buf = new char[bufSize];
 		int numRead = 0;
 		while ((numRead = reader.read(buf)) != -1) {
 			fileData.append(buf, 0, numRead);

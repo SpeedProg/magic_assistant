@@ -214,6 +214,37 @@ public class GatherHelper {
 		super();
 	}
 
+	/**
+	 * If pattern does not match return null, otherwise return group number, or empty string if
+	 * group is set to -1
+	 * 
+	 * @param textPattern
+	 * @param line
+	 * @param g
+	 * @return
+	 */
+	public static String findMatch(Pattern textPattern, String line, int g) {
+		Matcher matcher = textPattern.matcher(line);
+		if (matcher.find()) {
+			if (g == -1)
+				return "";
+			return matcher.group(g);
+		}
+		return null;
+	}
+
+	public static int findIntegerMatch(Pattern textPattern, String line, int g, int def) {
+		String x = findMatch(textPattern, line, g);
+		if (x == null)
+			return def;
+		try {
+			int res = Integer.parseInt(x);
+			return res;
+		} catch (NumberFormatException e) {
+			return def;
+		}
+	}
+
 	public static String getMatch(Pattern textPattern, String line) {
 		return getMatch(textPattern, line, 1);
 	}
