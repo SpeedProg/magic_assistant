@@ -1,18 +1,18 @@
 package com.reflexit.magiccards.core.sync;
 
+import static com.reflexit.magiccards.core.sync.GatherHelper.countPattern;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.sync.ParseGathererStandardList.ILoadCardHander;
-import com.reflexit.magiccards.core.sync.ParseGathererStandardList.OutputHandler;
 
 public class ParseGathererChecklist {
-	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=checklist";
 	/*-
 	 <tr class="cardItem">
 	    <td class="number">159</td>
@@ -30,12 +30,20 @@ public class ParseGathererChecklist {
 	static Pattern setPattern = Pattern.compile("set\">(.*)</td>");
 	static Pattern numberPattern = Pattern.compile("number\">(.*)</td>");
 
-	public static boolean processFile(BufferedReader st, ILoadCardHander handler) throws IOException {
+	public static boolean processFile(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
 		String line = "";
-		boolean lastPage = false;
 		boolean cards = false;
 		while ((line = st.readLine()) != null) {
-			if (cardItemPattern.matcher(line).find()) {
+			if (countPattern.matcher(line).find()) {
+				Matcher matcher = countPattern.matcher(line);
+				try {
+					matcher.find();
+					int c = Integer.parseInt(matcher.group(1));
+					handler.setCardCount(c);
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+			} else if (cardItemPattern.matcher(line).find()) {
 				parseRecord(line, handler);
 				cards = true;
 				continue;
@@ -43,10 +51,10 @@ public class ParseGathererChecklist {
 		}
 		if (cards == false)
 			throw new RuntimeException("No results");
-		return lastPage;
+		return true;
 	}
 
-	private static void parseRecord(String line, ILoadCardHander handler) {
+	private static void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
 		MagicCard card = new MagicCard();
 		// split by td
 		String[] rows = line.split("<td");
@@ -63,10 +71,10 @@ public class ParseGathererChecklist {
 		String set = GatherHelper.getMatch(setPattern, rows[6]);
 		card.setSet(set);
 		// print
-		handler.handle(card);
+		handler.handleCard(card);
 	}
 
-	public static boolean loadUrl(URL url, ILoadCardHander handler) throws IOException {
+	public static boolean loadUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
 		try {
 			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
 			boolean res = processFile(st, handler);
@@ -78,12 +86,13 @@ public class ParseGathererChecklist {
 		}
 	}
 
-	public static URL getSetListUrl(String set) throws MalformedURLException {
-		return new URL(base + "&set=[\"" + set.replaceAll(" ", "+") + "\"]");
+	public static boolean loadSet(String set, GatherHelper.ILoadCardHander handler) throws IOException {
+		return loadUrl(GatherHelper.getSearchQuery("checklist", set, true), handler);
 	}
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
-		OutputHandler handler = new OutputHandler(System.out, true, true);
-		loadUrl(getSetListUrl("Magic 2013"), handler);
+		GatherHelper.OutputHandler handler = new GatherHelper.OutputHandler(System.out, true, true);
+		loadUrl(GatherHelper.getSearchQuery("checklist", "Magic 2013", false), handler);
+		System.err.println("Total " + handler.getCardCount());
 	}
 }

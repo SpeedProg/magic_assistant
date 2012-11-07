@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,124 +22,51 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererStandardList extends GatherHelper {
 	/*-
-	  <tr class="cardItem evenItem">
-	                <td class="leftCol">
-	                    <div class="clear"></div>
-	                    <a href="../Card/Details.aspx?multiverseid=154408" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-	                        <img src="../../Handlers/Image.ashx?multiverseid=154408&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImage" width="95" height="132" alt="Advice from the Fae" border="0" />
-	                    </a>
-	                    <div class="clear"></div>
-	                </td>
-	                <td class="middleCol">
-	                    <div class="clear"></div>
-	                    <div class="cardInfo">
-	                        <span class="cardTitle">
-	                            <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=154408">Advice from the Fae</a></span> <span class="manaCost">
-	                                <img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /></span> (<span class="convertedManaCost">6</span>)
-	                        <br />
-	                        <span class="typeLine">
-	                            Sorcery
-	                            </span>
-	                        <br />
-	                        <div class="rulesText">
-	                            <p><i>(<img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /> can be paid with any two mana or with <img src="/Handlers/Image.ashx?size=small&amp;name=U&amp;type=symbol" alt="Blue" align="absbottom" />. This card's converted mana cost is 6.)</i></p><p>Look at the top five cards of your library. If you control more creatures than any other player, put two of those cards into your hand. Otherwise, put one of them into your hand. Then put the rest on the bottom of your library in any order.</p></div>
-	                    </div>
-	                </td>
-	                <td class="rightCol setVersions">
-	                    <div class="clear"></div>
-	                    <div>
-	                        <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardSetCurrent" class="rightCol">
+	<tr class="cardItem evenItem">
+	              <td class="leftCol">
+	                  <div class="clear"></div>
+	                  <a href="../Card/Details.aspx?multiverseid=154408" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
+	                      <img src="../../Handlers/Image.ashx?multiverseid=154408&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImage" width="95" height="132" alt="Advice from the Fae" border="0" />
+	                  </a>
+	                  <div class="clear"></div>
+	              </td>
+	              <td class="middleCol">
+	                  <div class="clear"></div>
+	                  <div class="cardInfo">
+	                      <span class="cardTitle">
+	                          <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=154408">Advice from the Fae</a></span> <span class="manaCost">
+	                              <img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /></span> (<span class="convertedManaCost">6</span>)
+	                      <br />
+	                      <span class="typeLine">
+	                          Sorcery
+	                          </span>
+	                      <br />
+	                      <div class="rulesText">
+	                          <p><i>(<img src="/Handlers/Image.ashx?size=small&amp;name=2U&amp;type=symbol" alt="Two or Blue" align="absbottom" /> can be paid with any two mana or with <img src="/Handlers/Image.ashx?size=small&amp;name=U&amp;type=symbol" alt="Blue" align="absbottom" />. This card's converted mana cost is 6.)</i></p><p>Look at the top five cards of your library. If you control more creatures than any other player, put two of those cards into your hand. Otherwise, put one of them into your hand. Then put the rest on the bottom of your library in any order.</p></div>
+	                  </div>
+	              </td>
+	              <td class="rightCol setVersions">
+	                  <div class="clear"></div>
+	                  <div>
+	                      <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardSetCurrent" class="rightCol">
 	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=154408"><img title="Shadowmoor (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=SHM&amp;size=small&amp;rarity=U" alt="Shadowmoor (Uncommon)" style="border-width:0px;" /></a>
 	</div>
-	                    </div>
+	                  </div>
 
-	                </td>
-	            </tr>
+	              </td>
+	          </tr>
 
 	 *
-	 * */
-	public static interface ILoadCardHander {
-		void handle(MagicCard card);
-
-		void handleSecondary(MagicCard primary, MagicCard secondary);
-
-		void edition(Edition ed);
-	}
-
-	public static class OutputHandler implements ILoadCardHander {
-		private PrintStream out;
-		private boolean loadLandPrintings;
-		private boolean loadOtherPrintings;
-
-		public OutputHandler(PrintStream st, boolean loadLandPrintings, boolean loadOtherPrintings) {
-			this.out = st;
-			this.loadLandPrintings = loadLandPrintings;
-			this.loadOtherPrintings = loadOtherPrintings;
-		}
-
-		public void handle(MagicCard card) {
-			TextPrinter.print(card, this.out);
-		}
-
-		public void edition(Edition ed) {
-			Edition res = Editions.getInstance().addEdition(ed.getName(), ed.getMainAbbreviation());
-			if (res.getReleaseDate() == null)
-				res.setReleaseDate(Calendar.getInstance().getTime());
-		}
-
-		public void handleSecondary(MagicCard primary, MagicCard secondary) {
-			if (loadLandPrintings && primary.getSet() != null && primary.getSet().equals(secondary.getSet())) {
-				handle(secondary);
-			} else if (loadOtherPrintings) {
-				handle(secondary);
-			}
-		}
-	}
-
-	private static String base = "http://gatherer.wizards.com/Pages/Search/Default.aspx?output=standard";
-	private static String[] updateAll = { //
-	base + "&format=[%22Legacy%22]", //
-			base + "&set=[%22Unhinged%22]", //
-			base + "&set=[%22Unglued%22]", //
-	};
-	private static String[] updateLatest = { base + "&format=[%22Standard%22]" };
-	private static ICoreProgressMonitor monitor;
-
-	public static void main(String[] args) throws IOException {
-		String from = args[0];
-		String to = null;
-		if (args.length > 1) {
-			to = args[1];
-		}
-		Properties options = new Properties();
-		if (from.equals("updateAll")) {
-			updateAll(to, updateAll, options);
-		} else
-			parseFileOrUrl(from, to, options, ICoreProgressMonitor.NONE);
-		Editions.getInstance().save();
-	}
-
-	private static void updateAll(String to, String[] urls, Properties options) throws MalformedURLException, IOException {
-		PrintStream out = System.out;
-		if (to != null)
-			out = new PrintStream(new File(to));
-		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
-		for (String string : urls) {
-			MagicLogger.log("Loading " + string);
-			loadUrl(new URL(string), createOutputHandler(out, options));
-		}
-		out.close();
-	}
-
-	private static OutputHandler createOutputHandler(PrintStream out, Properties options) {
+	 */
+	private static GatherHelper.OutputHandler createOutputHandler(PrintStream out, Properties options) {
 		String land = (String) options.get(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS);
 		boolean bland = "true".equals(land);
 		String other = (String) options.get(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS);
 		boolean bother = "true".equals(other);
-		return new OutputHandler(out, bland, bother);
+		return new GatherHelper.OutputHandler(out, bland, bother);
 	}
 
-	public static boolean loadUrl(URL url, ILoadCardHander handler) throws IOException {
+	public static boolean loadUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
 		try {
 			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
 			boolean res = processFile(st, handler);
@@ -152,7 +78,7 @@ public class ParseGathererStandardList extends GatherHelper {
 		}
 	}
 
-	public static void loadFile(File file, ILoadCardHander handler) throws IOException {
+	public static void loadFile(File file, GatherHelper.ILoadCardHander handler) throws IOException {
 		BufferedReader st = FileUtils.openFileReader(file);
 		processFile(st, handler);
 		st.close();
@@ -160,64 +86,67 @@ public class ParseGathererStandardList extends GatherHelper {
 
 	public static void parseFileOrUrl(String from, String to, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
-		monitor = pm;
-		monitor.beginTask("Downloading", 10000);
 		PrintStream out = System.out;
 		if (to != null)
-			out = new PrintStream(new FileOutputStream(new File(to)), true, UTF_8.toString());
+			out = new PrintStream(new FileOutputStream(new File(to)), true, FileUtils.UTF8);
 		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
-		OutputHandler handler = createOutputHandler(out, options);
-		String message = "cards";
-		if (options.get("set") != null) {
-			message = options.getProperty("set");
-		}
+		GatherHelper.OutputHandler handler = createOutputHandler(out, options);
 		try {
-			countCards = 0;
 			if (from.startsWith("http:")) {
-				// http://ww2.wizards.com/gatherer/index.aspx?setfilter=All%20sets&colorfilter=White&output=Spoiler
-				int i = 0;
-				boolean lastPage = false;
-				while (lastPage == false && i < 2000 && monitor.isCanceled() == false) {
-					URL url = new URL(from + "&page=" + i);
-					lastPage = loadUrl(url, handler);
-					i++;
-					int pages = countCards / 25 + 1;
-					if (countCards == 0)
-						monitor.worked(100);
-					else {
-						monitor.subTask("Downloading " + message + ". Page " + i + " of " + pages);
-						monitor.worked(10000 / pages);
-					}
-				}
+				localMultiPageUrl(from, handler, pm);
 			} else {
 				File input = new File(from);
 				loadFile(input, handler);
 			}
 		} finally {
 			out.close();
+		}
+	}
+
+	public static void localMultiPageUrl(String mainUrl, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
+			throws MalformedURLException, IOException {
+		monitor.beginTask("Downloading cards", 10000);
+		try {
+			int i = 0;
+			boolean lastPage = false;
+			while (lastPage == false && i < 2000 && monitor.isCanceled() == false) {
+				URL url = new URL(mainUrl + "&page=" + i);
+				lastPage = loadUrl(url, handler);
+				i++;
+				if (handler.getCardCount() == 0)
+					monitor.worked(100);
+				else {
+					int pages = handler.getCardCount() / 25 + 1;
+					monitor.subTask("Page " + i + " of " + pages);
+					monitor.worked(10000 / pages);
+					if (handler.getRealCount() == handler.getCardCount())
+						break;
+				}
+			}
+		} finally {
 			monitor.done();
 		}
 	}
 
-	private static Pattern countPattern = Pattern
-			.compile("Search:<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"><i>.*</i>  \\((\\d+)\\)</span>");
 	private static Pattern lastPagePattern = Pattern.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
-	private static int countCards;
 
-	private static boolean processFile(BufferedReader st, ILoadCardHander handler) throws IOException {
+	private static boolean processFile(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
 		String line = "";
 		int state = 0;
 		boolean lastPage = false;
 		boolean cards = false;
 		while ((state == 0 && (line = st.readLine()) != null) || (state == 1)) {
+			if (line == null)
+				break;
 			Matcher cm = countPattern.matcher(line);
 			if (cm.find()) {
-				countCards = Integer.parseInt(cm.group(1));
+				int countCards = Integer.parseInt(cm.group(1));
+				handler.setCardCount(countCards);
 			}
 			if (lastPagePattern.matcher(line).find()) {
 				lastPage = true;
 			}
-			if (line.matches(".*class=\"cardItem .*")) {
+			if (line.matches(".*tr class=\"cardItem .*")) {
 				String tr = "";
 				do {
 					if (line.matches(".*</tr>.*")) {
@@ -244,7 +173,7 @@ public class ParseGathererStandardList extends GatherHelper {
 	static Pattern namePattern = Pattern.compile(".*>(.*)</a></span>");
 	static Pattern powPattern = Pattern.compile("\\(([+*\\d]+/)?([+*\\d]+)\\)");
 
-	private static void parseRecord(String line, ILoadCardHander handler) {
+	private static void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
 		MagicCard card = new MagicCard();
 		// split by td
 		String[] rows = line.split("<td");
@@ -278,19 +207,19 @@ public class ParseGathererStandardList extends GatherHelper {
 			if (id.equals(setId)) {
 				card.setSet(edition);
 				card.setRarity(rarity.trim());
-				handler.edition(ed);
+				handler.handleEdition(ed);
 			} else {
 				// other printings
 				MagicCard card2 = (MagicCard) card.clone();
 				card2.setId(setId);
 				card2.setSet(edition);
 				card2.setRarity(rarity.trim());
-				handler.edition(ed);
+				handler.handleEdition(ed);
 				handler.handleSecondary(card, card2);
 			}
 		}
 		// print
-		handler.handle(card);
+		handler.handleCard(card);
 	}
 
 	private static void fixGathererBugs(MagicCard card) {
@@ -313,47 +242,29 @@ public class ParseGathererStandardList extends GatherHelper {
 		return str;
 	}
 
-	public static void printBytes(byte[] array, String name) {
-		for (int k = 0; k < array.length; k++) {
-			System.out.println(name + "[" + k + "] = " + "0x" + UnicodeFormatter.byteToHex(array[k]));
-		}
-	}
-
-	static class UnicodeFormatter {
-		static public String byteToHex(byte b) {
-			// Returns hex String representation of byte b
-			char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-			char[] array = { hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f] };
-			return new String(array);
-		}
-
-		static public String charToHex(char c) {
-			// Returns hex String representation of char c
-			byte hi = (byte) (c >>> 8);
-			byte lo = (byte) (c & 0xff);
-			return byteToHex(hi) + byteToHex(lo);
-		}
-	} // class
-
 	static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
 		if (set != null && set.startsWith("http")) {
 			url = set;
 		} else {
-			if (set == null || set.equals("Standard")) {
-				url = updateLatest[0];
-			} else {
-				if (set.equalsIgnoreCase("All")) {
-					url = base + "&set=[%22%22]";
-				} else {
-					url = base + "&set=[%22" + set.replaceAll(" ", "%20") + "%22]&sort=cn+";
-				}
-			}
-			if (options.get(UpdateCardsFromWeb.UPDATE_SPECIAL) != null)
-				url += "&special=" + options.getProperty(UpdateCardsFromWeb.UPDATE_SPECIAL);
 			options.put("set", set);
+			boolean special = false;
+			if (options.get(UpdateCardsFromWeb.UPDATE_SPECIAL) != null)
+				special = Boolean.valueOf((String) options.get(UpdateCardsFromWeb.UPDATE_SPECIAL));
+			url = GatherHelper.getSearchQuery("standard", set, special).toExternalForm();
 		}
 		parseFileOrUrl(url, file, options, pm);
+	}
+
+	public static void main(String[] args) throws IOException {
+		String from = args[0];
+		String to = null;
+		if (args.length > 1) {
+			to = args[1];
+		}
+		Properties options = new Properties();
+		parseFileOrUrl(from, to, options, ICoreProgressMonitor.NONE);
+		Editions.getInstance().save();
 	}
 }
