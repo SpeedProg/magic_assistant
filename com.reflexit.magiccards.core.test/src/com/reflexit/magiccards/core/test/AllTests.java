@@ -22,9 +22,11 @@ import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
+import com.reflexit.magiccards.core.sync.ParseGathererChecklistTest;
 import com.reflexit.magiccards.core.sync.ParseGathererLegalityTest;
 import com.reflexit.magiccards.core.sync.ParseGathererDetailsTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSetsTest;
+import com.reflexit.magiccards.core.sync.ParseGathererStandardListTest;
 
 /**
  * @author Alena
@@ -60,6 +62,8 @@ public class AllTests {
 		suite.addTestSuite(ParseGathererLegalityTest.class);
 		suite.addTestSuite(ParseGathererDetailsTest.class);
 		suite.addTestSuite(ParseGathererBasicInfoTest.class);
+		suite.addTestSuite(ParseGathererStandardListTest.class);
+		suite.addTestSuite(ParseGathererChecklistTest.class);
 		// $JUnit-END$
 		return suite;
 	}
