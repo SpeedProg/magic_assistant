@@ -161,6 +161,6 @@ public class UpdateCardsFromWeb {
 
 	public static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
-		ParseGathererStandardList.downloadUpdates(set, file, options, pm);
+		new ParseGathererSearchStandard().downloadUpdates(set, file, options, pm);
 	}
 }

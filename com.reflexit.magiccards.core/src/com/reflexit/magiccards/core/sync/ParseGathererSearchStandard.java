@@ -12,14 +12,13 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererStandardList extends GatherHelper {
+public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 	/*-
 	<tr class="cardItem evenItem">
 	              <td class="leftCol">
@@ -65,31 +64,13 @@ public class ParseGathererStandardList extends GatherHelper {
 		return new GatherHelper.OutputHandler(out, bland, bother);
 	}
 
-	public static boolean loadSingleUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
-		try {
-			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
-			String html = FileUtils.readFileAsString(st);
-			st.close();
-			boolean res = processFromReader(FileUtils.openStringReader(html), handler);
-			return res;
-		} catch (IOException e) {
-			MagicLogger.log("Loading url exception: " + url + ": " + e.getMessage());
-			throw e;
-		}
-	}
-
-	public static boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException {
+	@Override
+	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException {
 		loadMultiPageUrl(GatherHelper.getSearchQuery("standard", set, true), handler, mon);
 		return true;
 	}
 
-	public static void loadFile(File file, GatherHelper.ILoadCardHander handler) throws IOException {
-		BufferedReader st = FileUtils.openFileReader(file);
-		processFromReader(st, handler);
-		st.close();
-	}
-
-	public static void parseFileOrUrl(String from, String to, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
+	private void parseFileOrUrl(String from, String to, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		PrintStream out = System.out;
 		if (to != null)
@@ -108,7 +89,7 @@ public class ParseGathererStandardList extends GatherHelper {
 		}
 	}
 
-	public static void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
+	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
 			throws MalformedURLException, IOException {
 		monitor.beginTask("Downloading cards", 10000);
 		try {
@@ -135,7 +116,8 @@ public class ParseGathererStandardList extends GatherHelper {
 	private static Pattern itemPattern = Pattern.compile("tr class=\"cardItem");
 	private static Pattern itemEndPattern = Pattern.compile("</tr>");
 
-	private static boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
+	@Override
+	protected boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
 		String line = "";
 		int state = 0;
 		boolean lastPage = false;
@@ -175,7 +157,7 @@ public class ParseGathererStandardList extends GatherHelper {
 	static Pattern namePattern = Pattern.compile(".*>(.*)</a></span>");
 	static Pattern powPattern = Pattern.compile("\\(([+*\\d]+/)?([+*\\d]+)\\)");
 
-	private static void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
+	private void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
 		MagicCard card = new MagicCard();
 		// split by td
 		String[] rows = line.split("<td");
@@ -244,7 +226,7 @@ public class ParseGathererStandardList extends GatherHelper {
 		return str;
 	}
 
-	static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
+	void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
 		if (set != null && set.startsWith("http")) {
@@ -266,7 +248,7 @@ public class ParseGathererStandardList extends GatherHelper {
 			to = args[1];
 		}
 		Properties options = new Properties();
-		parseFileOrUrl(from, to, options, ICoreProgressMonitor.NONE);
+		new ParseGathererSearchStandard().parseFileOrUrl(from, to, options, ICoreProgressMonitor.NONE);
 		Editions.getInstance().save();
 	}
 }
