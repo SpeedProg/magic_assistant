@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -20,6 +21,7 @@ public class ParseGathererStandardListTest extends TestCase {
 	private String magicSet;
 	private String wall;
 	private GatherHelper.StashLoadHandler handler;
+	private URL wallUrl;
 
 	@Override
 	public void setUp() throws Exception {
@@ -29,6 +31,7 @@ public class ParseGathererStandardListTest extends TestCase {
 		file.deleteOnExit();
 		magicSet = "Magic 2013";
 		wall = "http://gatherer.wizards.com/pages/search/default.aspx?name=+[%22Bloodfire%22]";
+		wallUrl = new URL(wall);
 		handler = new GatherHelper.StashLoadHandler();
 	}
 
@@ -47,7 +50,7 @@ public class ParseGathererStandardListTest extends TestCase {
 	}
 
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererStandardList.localMultiPageUrl(wall, handler, monitor);
+		ParseGathererStandardList.loadMultiPageUrl(wallUrl, handler, monitor);
 		assertEquals(4, handler.getCardCount());
 		ArrayList<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
@@ -56,7 +59,7 @@ public class ParseGathererStandardListTest extends TestCase {
 	}
 
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
-		ParseGathererStandardList.loadUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
+		ParseGathererStandardList.loadSingleUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
 		assertEquals(234, handler.getCardCount());
 		ArrayList<MagicCard> stash = handler.getPrimary();
 		assertEquals(25, stash.size());
