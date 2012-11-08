@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -54,18 +54,26 @@ public class ParseGathererSearchStandardTest extends TestCase {
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadMultiPageUrl(wallUrl, handler, monitor);
 		assertEquals(4, handler.getCardCount());
-		ArrayList<MagicCard> stash = handler.getPrimary();
+		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
 		assertEquals(4, handler.getSecondary().size());
-		assertEquals("Bloodfire Colossus", stash.get(0).getName());
+		assertEquals("Bloodfire Colossus", stash.iterator().next().getName());
 	}
 
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadSingleUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
 		assertEquals(234, handler.getCardCount());
-		ArrayList<MagicCard> stash = handler.getPrimary();
+		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(25, stash.size());
-		assertEquals("Acidic Slime", stash.get(0).getName());
+		assertEquals("Acidic Slime", stash.iterator().next().getName());
+	}
+
+	public void testDownloadUpdatesWeb() throws FileNotFoundException, MalformedURLException, IOException {
+		UpdateCardsFromWeb.downloadUpdates(magicSet, file.toString(), options, monitor);
+		String magicFile = FileUtils.readFileAsString(FileUtils.openFileReader(file));
+		assertTrue(magicFile.length() > 0);
+		assertTrue(magicFile.contains("Zombie Goliath"));
+		assertTrue(magicFile.contains("Chris Rahn|147"));
 	}
 
 	@Override

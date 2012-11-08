@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -36,17 +36,17 @@ public class ParseGathererSearchChecklistTest extends TestCase {
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadSet(wall + "&output=checklist", handler, monitor);
 		assertEquals(4, handler.getCardCount());
-		ArrayList<MagicCard> stash = handler.getPrimary();
+		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
-		assertEquals("Bloodfire Colossus", stash.get(0).getName());
+		assertEquals("Bloodfire Colossus", stash.iterator().next().getName());
 	}
 
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadSet(magicSet, handler, monitor);
 		assertEquals(234, handler.getCardCount());
-		ArrayList<MagicCard> stash = handler.getPrimary();
+		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(234, stash.size());
-		assertEquals("Acidic Slime", stash.get(0).getName());
+		assertEquals("Acidic Slime", stash.iterator().next().getName());
 	}
 
 	@Override
