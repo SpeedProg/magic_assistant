@@ -83,7 +83,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 
 	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
 			throws MalformedURLException, IOException {
-		monitor.beginTask("Downloading cards", 10000);
+		monitor.beginTask("Downloading cards:", 10000);
 		try {
 			int i = 0;
 			boolean lastPage = false;

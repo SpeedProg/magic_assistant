@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 
 public class GatherHelper {
 	protected static Pattern countPattern = Pattern
-			.compile("Search:<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"><i>[^<]*</i>  \\((\\d+)\\)</span>");
+			.compile("Search:<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"[^>]*><i>[^<]*</i>  \\((\\d+)\\)</span>");
 
 	public static interface ILoadCardHander {
 		void handleCard(MagicCard card);
