@@ -1,15 +1,20 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
 
@@ -159,8 +164,63 @@ public class UpdateCardsFromWeb {
 		throw new RuntimeException("Not possible");
 	}
 
-	public static void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
-			MalformedURLException, IOException {
-		new ParseGathererSearchStandard().downloadUpdates(set, file, options, pm);
+	public static void downloadUpdates(String set, String toFile, Properties options, ICoreProgressMonitor pm)
+			throws FileNotFoundException, MalformedURLException, IOException {
+		PrintStream out = System.out;
+		if (toFile != null)
+			out = new PrintStream(new FileOutputStream(new File(toFile)), true, FileUtils.UTF8);
+		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
+		String land = (String) options.get(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS);
+		final boolean bland = "true".equals(land);
+		String other = (String) options.get(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS);
+		final boolean bother = "true".equals(other);
+		final GatherHelper.ILoadCardHander handler2 = new GatherHelper.OutputHandler(out, bland, bother);
+		GatherHelper.StashLoadHandler handler = new GatherHelper.StashLoadHandler() {
+			LinkedHashMap<Integer, MagicCard> cards = new LinkedHashMap<Integer, MagicCard>();
+
+			@Override
+			public void handleCard(MagicCard card) {
+				int cardId = card.getCardId();
+				Integer id = Integer.valueOf(cardId);
+				MagicCard prev = cards.get(id);
+				if (prev != null) {
+					if (prev.getCollNumber().length() > 0)
+						return; // bug in gatherer
+					// merge with info from checklist
+					prev.setArtist(card.getArtist());
+					prev.setCollNumber(card.getCollNumber());
+				} else {
+					cards.put(id, card);
+				}
+			}
+
+			@Override
+			public Collection<MagicCard> getPrimary() {
+				return cards.values();
+			}
+
+			@Override
+			public void handleSecondary(MagicCard primary, MagicCard secondary) {
+				if (bland && primary.getSet() != null && primary.getSet().equals(secondary.getSet())) {
+					handleCard(secondary);
+				} else if (bother) {
+					handleCard(secondary);
+				}
+			}
+		};
+		pm.beginTask("Downloading...", 10000);
+		try {
+			new ParseGathererSearchStandard().loadSet(set, handler, new SubCoreProgressMonitor(pm, 5000,
+					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
+			new ParseGathererSearchChecklist().loadSet(set, handler, new SubCoreProgressMonitor(pm, 5000,
+					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
+			for (Iterator<MagicCard> iterator = handler.getPrimary().iterator(); iterator.hasNext();) {
+				MagicCard c = iterator.next();
+				handler2.handleCard(c);
+			}
+		} finally {
+			out.close();
+			pm.done();
+		}
 	}
 }

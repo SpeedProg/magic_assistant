@@ -6,9 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,6 +85,14 @@ public class GatherHelper {
 		}
 	}
 
+	static GatherHelper.OutputHandler createOutputHandler(PrintStream out, Properties options) {
+		String land = (String) options.get(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS);
+		boolean bland = "true".equals(land);
+		String other = (String) options.get(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS);
+		boolean bother = "true".equals(other);
+		return new GatherHelper.OutputHandler(out, bland, bother);
+	}
+
 	public static class StashLoadHandler implements ILoadCardHander {
 		private int count;
 		private int cardCount;
@@ -120,11 +130,11 @@ public class GatherHelper {
 			return count;
 		}
 
-		public ArrayList<MagicCard> getPrimary() {
+		public Collection<MagicCard> getPrimary() {
 			return primary;
 		}
 
-		public ArrayList<MagicCard> getSecondary() {
+		public Collection<MagicCard> getSecondary() {
 			return secondary;
 		}
 	}
@@ -147,7 +157,7 @@ public class GatherHelper {
 				url += "&set=[%22" + set.replaceAll(" ", "%20") + "%22]";
 			}
 			if (special)
-				url += "&special=true";
+				url += "&special=1";
 		}
 		return new URL(url);
 	}

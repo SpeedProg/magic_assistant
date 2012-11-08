@@ -56,14 +56,6 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 
 	 *
 	 */
-	private static GatherHelper.OutputHandler createOutputHandler(PrintStream out, Properties options) {
-		String land = (String) options.get(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS);
-		boolean bland = "true".equals(land);
-		String other = (String) options.get(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS);
-		boolean bother = "true".equals(other);
-		return new GatherHelper.OutputHandler(out, bland, bother);
-	}
-
 	@Override
 	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException {
 		loadMultiPageUrl(GatherHelper.getSearchQuery("standard", set, true), handler, mon);
