@@ -14,7 +14,7 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererStandardListTest extends TestCase {
+public class ParseGathererSearchStandardTest extends TestCase {
 	private Properties options;
 	private ICoreProgressMonitor monitor;
 	private File file;

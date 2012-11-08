@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererChecklistTest extends TestCase {
+public class ParseGathererSearchChecklistTest extends TestCase {
 	private Properties options;
 	private ICoreProgressMonitor monitor;
 	private File file;
