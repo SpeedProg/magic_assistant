@@ -22,7 +22,8 @@ public class PriceProviderManager {
 		providers.add(new ParseMOTLPrices());
 		providers.add(mtgFanatic);
 		providers.add(findMagicCards);
-		providers.add(new ParseTcgPlayerPrices());
+		providers.add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Medium));
+		providers.add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low));
 		MagicUIActivator.getDefault().getEclipseDefaultPreferences().put(PROVIDER_PROP, getDefaultProvider().getName());
 	}
 
