@@ -125,7 +125,9 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 		String set = setMap.get(setm);
 		if (set == null)
 			set = setm;
-		String name = magicCard.getName().replaceAll("Æ", "AE");
+		String name = magicCard.getName();
+		name = name.replaceAll("Æ", "AE");
+		name = name.replaceAll(" \\(.*$", "");
 		String url = "http://partner.tcgplayer.com/x/phl.asmx/p?pk=TCGTEST&s=" + set + "&p=" + name;
 		url = url.replaceAll(" ", "%20");
 		return new URL(url);
