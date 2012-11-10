@@ -8,6 +8,7 @@ import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
+import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class PriceProviderManager {
@@ -21,6 +22,7 @@ public class PriceProviderManager {
 		providers.add(new ParseMOTLPrices());
 		providers.add(mtgFanatic);
 		providers.add(findMagicCards);
+		providers.add(new ParseTcgPlayerPrices());
 		MagicUIActivator.getDefault().getEclipseDefaultPreferences().put(PROVIDER_PROP, getDefaultProvider().getName());
 	}
 
