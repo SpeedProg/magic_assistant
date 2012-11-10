@@ -62,10 +62,17 @@ public class Activator extends Plugin {
 	}
 
 	static public void log(String message) {
-		getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
+		if (getDefault() == null) {
+			System.err.println(message);
+		} else
+			getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
 	}
 
 	static public void log(Throwable e) {
-		getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
+		if (getDefault() == null) {
+			e.printStackTrace();
+		} else
+			getDefault().getLog()
+					.log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
 	}
 }
