@@ -39,9 +39,21 @@ public class ParseTcgPlayerPricesTest extends TestCase {
 		}
 	}
 
-	public void testgetPrice1() {
+	public void testgetPriceMed() {
 		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
 		assertEquals(0.11f, card.getDbPrice());
+	}
+
+	public void testgetPriceHigh() {
+		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.High);
+		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
+		assertEquals(0.5f, card.getDbPrice());
+	}
+
+	public void testgetPriceLow() {
+		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low);
+		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
+		assertEquals(0.01f, card.getDbPrice());
 	}
 
 	public void testSwamp() {
