@@ -1,0 +1,61 @@
+package com.reflexit.magiccards.core.seller.test;
+
+import java.io.IOException;
+
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
+
+import junit.framework.TestCase;
+
+public class ParseTcgPlayerPricesTest extends TestCase {
+	private MemoryCardStore<IMagicCard> store;
+	private ParseTcgPlayerPrices parser;
+	private ICoreProgressMonitor monitor;
+
+	@Override
+	protected void setUp() {
+		store = new MemoryCardStore<IMagicCard>();
+		parser = new ParseTcgPlayerPrices();
+		monitor = ICoreProgressMonitor.NONE;
+	}
+
+	public MagicCard addcard(String name, String set) {
+		MagicCard card1 = new MagicCard();
+		card1.setName(name);
+		card1.setSet(set);
+		store.add(card1);
+		doit();
+		return card1;
+	}
+
+	public void doit() {
+		try {
+			parser.updateStore(store, null, 0, monitor);
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testgetPrice1() {
+		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
+		assertEquals(0.11f, card.getDbPrice());
+	}
+
+	public void testSwamp() {
+		MagicCard card = addcard("Swamp", "Magic 2013");
+		assertTrue(0 < card.getDbPrice());
+	}
+
+	public void testMagic2010() {
+		MagicCard card = addcard("Coat of Arms", "Magic 2010");
+		assertTrue(card.getDbPrice() > 3);
+	}
+
+	public void testAether() {
+		MagicCard card = addcard("Æther Shockwave", "Saviors of Kamigawa");
+		assertTrue(0 < card.getDbPrice());
+	}
+}

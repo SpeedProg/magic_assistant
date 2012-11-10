@@ -20,6 +20,7 @@ import com.reflexit.magiccards.core.exports.TablePipedImportTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
+import com.reflexit.magiccards.core.seller.test.ParseTcgPlayerPricesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSearchChecklistTest;
@@ -64,6 +65,8 @@ public class AllTests {
 		suite.addTestSuite(ParseGathererBasicInfoTest.class);
 		suite.addTestSuite(ParseGathererSearchStandardTest.class);
 		suite.addTestSuite(ParseGathererSearchChecklistTest.class);
+		// prive providers
+		suite.addTestSuite(ParseTcgPlayerPricesTest.class);
 		// $JUnit-END$
 		return suite;
 	}
