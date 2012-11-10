@@ -23,6 +23,27 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 public class ParseTcgPlayerPrices implements IPriceProvider {
+	public static enum Type {
+		Low("lowprice"),
+		Medium("avgprice"),
+		High("hiprice"), ;
+		String tag;
+
+		Type(String tag) {
+			this.tag = tag;
+		}
+	}
+
+	private Type type;
+
+	public ParseTcgPlayerPrices() {
+		this.type = Type.Medium;
+	}
+
+	public ParseTcgPlayerPrices(Type type) {
+		this.type = type;
+	}
+
 	private static HashMap<String, String> setMap;
 	static {
 		setMap = new HashMap<String, String>();
@@ -40,6 +61,7 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 		setMap.put("Limited Edition Beta", "Beta Edition");
 		setMap.put("Classic Sixth Edition", "Sixth Edition");
 		setMap.put("Time Spiral \"Timeshifted\"", "Timeshifted");
+		setMap.put("Magic: The Gathering-Commander", "Commander");
 	}
 
 	@Override
@@ -106,7 +128,7 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 
 	private float parsePrice(String xml) {
 		// <avgprice>0.14</avgprice>
-		String pricetag = "avgprice";
+		String pricetag = type.tag;
 		try {
 			int i = xml.indexOf(pricetag);
 			if (i == -1) {
@@ -135,7 +157,7 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 
 	@Override
 	public String getName() {
-		return "TCG Player";
+		return "TCG Player (" + type.name() + ")";
 	}
 
 	@Override
