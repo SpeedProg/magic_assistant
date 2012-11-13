@@ -85,6 +85,7 @@ public class UpdateCardsFromWeb {
 				}
 				// load individual card
 				monitor.subTask("Updating card " + i + " of " + size);
+				int cardId = card.getCardId();
 				try {
 					oracleParser.parseSingleCard(card, fieldMaps, new SubCoreProgressMonitor(monitor, 50));
 					if (loadText || localized) {
@@ -92,13 +93,16 @@ public class UpdateCardsFromWeb {
 						printedParser.load(new SubCoreProgressMonitor(monitor, 10));
 					}
 					if (loadLang) {
-						langParser.setCardId(card.getCardId());
+						langParser.setCardId(cardId);
 						langParser.load(new SubCoreProgressMonitor(monitor, 40));
 						int langId = langParser.getLangCardId();
 						if (langId != 0) {
 							MagicCard newMagicCard = (MagicCard) magicCard.cloneCard();
 							newMagicCard.setCardId(langId);
-							newMagicCard.setEnglishCardId(card.getCardId());
+							int englishCardId = card.getEnglishCardId();
+							if (englishCardId == 0)
+								englishCardId = cardId;
+							newMagicCard.setEnglishCardId(englishCardId);
 							newMagicCard.setLanguage(lang);
 							linfoParser.setCard(newMagicCard);
 							linfoParser.load(new SubCoreProgressMonitor(monitor, 40));
@@ -112,7 +116,7 @@ public class UpdateCardsFromWeb {
 						}
 					}
 				} catch (IOException e) {
-					MagicLogger.log("Cannot load card " + e.getMessage() + " " + card.getCardId());
+					MagicLogger.log("Cannot load card " + e.getMessage() + " " + cardId);
 				}
 				if (monitor.isCanceled())
 					return;
