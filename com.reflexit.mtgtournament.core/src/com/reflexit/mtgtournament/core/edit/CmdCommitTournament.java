@@ -12,7 +12,7 @@ package com.reflexit.mtgtournament.core.edit;
 
 import java.util.List;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -43,7 +43,7 @@ public class CmdCommitTournament implements ITCommand {
 			TournamentManager.save(t);
 			TournamentManager.save(TournamentManager.getCube().getPlayerList());
 		} catch (Exception e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 		}
 		return true;
 	}
