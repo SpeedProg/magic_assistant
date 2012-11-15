@@ -1,26 +1,26 @@
 package com.reflexit.magiccards.core.model;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
 @SuppressWarnings("serial")
 public class SortOrder implements Comparator {
-	private ArrayList<MagicCardComparator> order = new ArrayList<MagicCardComparator>();
 	private static int MAX = 7;
 	private static int REM = 2;
+	private MagicCardComparator order[] = new MagicCardComparator[MAX];
+	private int curSize = REM;
 
 	public SortOrder() {
 		// these are always there
-		order.add(new MagicCardComparator(MagicCardField.NAME, true));
-		order.add(new MagicCardComparator(MagicCardField.ID, true));
+		order[0] = (new MagicCardComparator(MagicCardField.NAME, true));
+		order[1] = (new MagicCardComparator(MagicCardField.ID, true));
 	}
 
 	public int compare(Object o1, Object o2) {
 		if (o1 == o2)
 			return 0; // this is only case it is 0
 		int dir = isAccending() ? 1 : -1;
-		for (int i = size() - 1; i >= 0; i--) {
-			MagicCardComparator elem = get(i);
+		for (int i = curSize - 1; i >= 0; i--) {
+			MagicCardComparator elem = order[i];
 			int d = elem.compare(o1, o2);
 			if (d != 0)
 				return d; // no "dir" since comparator has it already
@@ -32,28 +32,24 @@ public class SortOrder implements Comparator {
 		return this;
 	}
 
-	public void push(MagicCardComparator elem) {
-		add(elem);
-	}
-
 	public void setSortField(ICardField sortField, boolean accending) {
 		MagicCardComparator elem = new MagicCardComparator(sortField, accending);
-		for (int i = REM; i < size(); i++) {
-			if (elem.equals(get(i))) {
-				remove(elem);
+		for (int i = REM; i < curSize; i++) {
+			if (elem.equals(order[i])) {
+				remove(i);
 				break;
 			}
 		}
-		while (size() >= MAX) {
-			order.remove(REM);
+		while (curSize >= MAX) {
+			remove(REM);
 		}
-		push(elem);
+		add(elem);
 	}
 
 	public MagicCardComparator getComparator(ICardField sortField) {
-		int size = size();
+		int size = curSize;
 		for (int i = REM; i < size; i++) {
-			MagicCardComparator elem = get(i);
+			MagicCardComparator elem = order[i];
 			if (sortField.equals(elem.getField())) {
 				return elem;
 			}
@@ -73,47 +69,50 @@ public class SortOrder implements Comparator {
 	}
 
 	public boolean isAccending() {
-		MagicCardComparator elem = peek();
+		MagicCardComparator elem = order[curSize - 1];
 		return elem.isAccending();
 	}
 
 	public boolean isTop(ICardField sortField) {
-		MagicCardComparator elem = peek();
+		MagicCardComparator elem = order[curSize - 1];
 		return elem.getField().equals(sortField);
 	}
 
-	MagicCardComparator peek() {
-		return get(size() - 1);
+	public int size() {
+		return curSize;
 	}
 
-	public int size() {
-		return order.size();
+	MagicCardComparator peek() {
+		return order[curSize - 1];
 	}
 
 	public MagicCardComparator get(int index) {
-		return order.get(index);
+		return order[index];
 	}
 
-	public boolean remove(Object o) {
-		return order.remove(o);
-	}
-
-	public boolean add(MagicCardComparator e) {
-		return order.add(e);
+	private boolean add(MagicCardComparator e) {
+		order[curSize] = e;
+		curSize++;
+		return true;
 	}
 
 	public boolean isEmpty() {
-		return size() <= 2;
+		return curSize <= 2;
 	}
 
 	public void clear() {
-		int size = size();
-		for (int i = size - 1; i >= REM; i--) {
-			order.remove(i);
+		for (; curSize >= REM; curSize--) {
+			order[curSize] = null;
 		}
 	}
 
 	private MagicCardComparator remove(int index) {
-		return order.remove(index);
+		MagicCardComparator c = order[index];
+		for (; index < curSize - 1; index++) {
+			order[index] = order[index + 1];
+		}
+		order[index] = null;
+		curSize--;
+		return c;
 	}
 }

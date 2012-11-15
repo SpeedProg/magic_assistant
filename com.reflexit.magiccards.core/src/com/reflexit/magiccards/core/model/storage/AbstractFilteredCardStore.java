@@ -190,26 +190,11 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			group.add(elem);
 		} else {
 			String key = getEnglishName(elem);
-			IMagicCard card = null;
-			for (Iterator iterator = group.iterator(); iterator.hasNext();) {
-				Object o = iterator.next();
-				if (o instanceof CardGroup) {
-					CardGroup nameGroup = (CardGroup) o;
-					if (nameGroup.getFieldIndex() == MagicCardField.NAME && nameGroup.getName().equals(key)) {
-						nameGroup.add(elem);
-						return;
-					}
-				} else if (o instanceof IMagicCard && getEnglishName((IMagicCard) o).equals(key)) {
-					card = (IMagicCard) o;
-					break;
-				}
-			}
-			if (card == null) {
-				group.add(elem);
+			CardGroup nameGroup = group.getSubGroup(key);
+			if (nameGroup != null) {
+				nameGroup.add(elem);
 			} else {
-				group.remove(card);
-				CardGroup nameGroup = new CardGroup(MagicCardField.NAME, key);
-				nameGroup.add(card);
+				nameGroup = new CardGroup(MagicCardField.NAME, key);
 				nameGroup.add(elem);
 				group.add(nameGroup);
 			}
@@ -219,7 +204,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	public String getEnglishName(IMagicCard elem) {
 		int enId = elem.getEnglishCardId();
 		String key = null;
-		if (enId != 0 && enId != elem.getCardId()) {
+		if (enId != 0) {
 			Object card = getCardStore().getCard(enId);
 			if (card instanceof IMagicCard) {
 				key = ((IMagicCard) card).getName();

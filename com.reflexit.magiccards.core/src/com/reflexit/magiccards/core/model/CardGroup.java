@@ -47,7 +47,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public IMagicCard getBase() {
-		return getGroupBase();
+		throw new UnsupportedOperationException();
 	}
 
 	private synchronized IMagicCardPhysical getGroupBase() {
@@ -75,7 +75,14 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			MagicCard refCard = (MagicCard) card.getBase().cloneCard();
 			base.setMagicCard(refCard);
 		} else if (card instanceof MagicCard) {
-			base = new MagicCardPhysical(card.cloneCard(), null);
+			MagicCard mc = (MagicCard) card;
+			if (mc.realcards == null)
+				base = new MagicCardPhysical(card.cloneCard(), null);
+			else {
+				base = (MagicCardPhysical) mc.realcards.getGroupBase().cloneCard();
+				MagicCard refCard = mc.cloneCard();
+				base.setMagicCard(refCard);
+			}
 		} else {
 			throw new IllegalArgumentException();
 		}

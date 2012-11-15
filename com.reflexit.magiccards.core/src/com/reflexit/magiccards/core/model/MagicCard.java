@@ -32,7 +32,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	private transient int cmc = -1;
 	private int enId;
 	private LinkedHashMap<String, String> properties;
-	private transient CardGroup realcards;
+	transient CardGroup realcards;
 
 	/*
 	 * (non-Javadoc)

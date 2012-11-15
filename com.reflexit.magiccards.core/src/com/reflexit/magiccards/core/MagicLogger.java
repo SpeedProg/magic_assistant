@@ -43,8 +43,10 @@ public class MagicLogger {
 	}
 
 	public static void traceStart(String string) {
-		if (tracing)
+		if (tracing) {
+			tracer.addTimer(string);
 			tracer.trace(string, "start");
+		}
 	}
 
 	public static void traceEnd(String string) {
