@@ -394,4 +394,35 @@ public class CardGroupTest extends TestCase {
 		// checkConsistency(MagicCardField.POWER, group.getPower(), "6.0");
 		checkAllConsistency();
 	}
+
+	public void testNameGroup() {
+		MagicCard m = (MagicCard) generateCard();
+		group = new CardGroup(MagicCardField.NAME, m.getName());
+		Location loc = Location.createLocation("xxx");
+		for (int j = 0; j < cards.length; j++) {
+			cards[j] = CardGenerator.generatePhysicalCardWithValues(m);
+			((MagicCardPhysical) cards[j]).setLocation(loc);
+			((MagicCardPhysical) cards[j]).setOwn(true);
+		}
+		group.add(m);
+		assertEquals(loc, group.getLocation());
+		assertEquals(true, group.isOwn());
+	}
+
+	public void testNameGroupPhy() {
+		MagicCard m = (MagicCard) generateCard();
+		group = new CardGroup(MagicCardField.NAME, m.getName());
+		Location loc = Location.createLocation("xxx");
+		for (int j = 0; j < cards.length; j++) {
+			cards[j] = CardGenerator.generatePhysicalCardWithValues(m);
+			((MagicCardPhysical) cards[j]).setLocation(loc);
+			((MagicCardPhysical) cards[j]).setOwn(true);
+		}
+		group.add(cards[0]);
+		assertEquals(loc, group.getLocation());
+		assertEquals(true, group.isOwn());
+		group.add(cards[1]);
+		assertEquals(loc, group.getLocation());
+		assertEquals(true, group.isOwn());
+	}
 }
