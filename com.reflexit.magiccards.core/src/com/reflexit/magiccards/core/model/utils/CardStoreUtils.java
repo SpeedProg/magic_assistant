@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.reflexit.magiccards.core.Activator;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.locale.CardText;
 import com.reflexit.magiccards.core.model.Abilities;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -227,7 +227,7 @@ public final class CardStoreUtils {
 					}
 				}
 			} catch (Exception e) {
-				Activator.log(e);
+				MagicLogger.log(e);
 			}
 		}
 		return subCreaturesCount;

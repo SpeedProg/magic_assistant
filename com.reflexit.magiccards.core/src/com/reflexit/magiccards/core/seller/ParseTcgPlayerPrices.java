@@ -9,8 +9,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardModifiable;
@@ -110,11 +110,11 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 			String xml = FileUtils.readFileAsString(st);
 			float price = parsePrice(xml);
 			if (price == -1) {
-				Activator.log("Failed to load price for " + url);
+				MagicLogger.log("Failed to load price for " + url);
 			}
 			return price;
 		} catch (Exception e) {
-			Activator.log(e);
+			MagicLogger.log(e);
 			return -1;
 		} finally {
 			try {

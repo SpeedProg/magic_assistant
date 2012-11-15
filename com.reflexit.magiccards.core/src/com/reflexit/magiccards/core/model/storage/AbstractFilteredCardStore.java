@@ -144,6 +144,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	public synchronized void update() {
+		String key = "udpate " + getClass().getSimpleName();
+		MagicLogger.traceStart(key);
 		initialize();
 		if (filter == null)
 			return;
@@ -151,6 +153,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		setFilteredList(null);
 		Collection filterCards = filterCards(this.filter);
 		getFilteredList().addAll(filterCards);
+		MagicLogger.traceEnd(key);
 	}
 
 	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
@@ -215,12 +218,14 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	public String getEnglishName(IMagicCard elem) {
 		int enId = elem.getEnglishCardId();
-		String key = elem.getName();
-		if (enId != 0) {
-			Object card = getCardStore().getCard(elem.getEnglishCardId());
+		String key = null;
+		if (enId != 0 && enId != elem.getCardId()) {
+			Object card = getCardStore().getCard(enId);
 			if (card instanceof IMagicCard) {
 				key = ((IMagicCard) card).getName();
 			}
+		} else {
+			key = elem.getName();
 		}
 		return key;
 	}

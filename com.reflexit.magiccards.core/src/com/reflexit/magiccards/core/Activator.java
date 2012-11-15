@@ -23,6 +23,7 @@ public class Activator extends Plugin {
 	private static final String PLUGIN_ID = "com.reflexit.magiccards.core";
 	// The shared instance
 	private static Activator plugin;
+	private boolean TRACE_CORE = false;
 
 	/**
 	 * The constructor
@@ -39,6 +40,8 @@ public class Activator extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		TRACE_CORE = isDebugging();
+		MagicLogger.setTracing(TRACE_CORE);
 	}
 
 	/*
@@ -61,14 +64,14 @@ public class Activator extends Plugin {
 		return plugin;
 	}
 
-	static public void log(String message) {
+	static void log(String message) {
 		if (getDefault() == null) {
 			System.err.println(message);
 		} else
 			getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
 	}
 
-	static public void log(Throwable e) {
+	static void log(Throwable e) {
 		if (getDefault() == null) {
 			e.printStackTrace();
 		} else
