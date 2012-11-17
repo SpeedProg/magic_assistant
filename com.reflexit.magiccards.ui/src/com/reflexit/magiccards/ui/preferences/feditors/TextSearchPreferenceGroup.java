@@ -31,7 +31,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		// Composite parent = this.group;
 		// addCheckBox("Any", parent);
 		String id;
-		id = FilterField.getPrefConstant(FilterField.NAME_LINE, FilterField.TEXT_POSTFIX);
+		id = FilterField.NAME_LINE.getPrefConstant();
 		getPreferenceStore().setDefault(id, "");
 		ids.add(id);
 		StringFieldEditor nameSfe = new StringFieldEditor(id, "Name", getFieldEditorParent());
@@ -43,7 +43,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 				+ "See help for details.";
 		addTooltip(nameSfe, toolTip);
 		// type
-		String typeId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
+		String typeId = FilterField.TYPE_LINE.getPrefConstant();
 		getPreferenceStore().setDefault(typeId, "");
 		StringFieldEditor sfe = new StringFieldEditor(typeId, "Type", getFieldEditorParent());
 		addContextAssist(sfe, CardTypes.getProposals());
@@ -51,7 +51,7 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		addTooltip(sfe, toolTip);
 		ids.add(typeId);
 		// text
-		String textId = FilterField.getPrefConstant(FilterField.TEXT_LINE, FilterField.TEXT_POSTFIX);
+		String textId = FilterField.TEXT_LINE.getPrefConstant();
 		getPreferenceStore().setDefault(textId, "");
 		StringFieldEditor textSfe = new StringFieldEditor(textId, "Text", getFieldEditorParent());
 		addContextAssist(textSfe, getTextProposals());
@@ -59,14 +59,14 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		addTooltip(textSfe, toolTip);
 		ids.add(textId);
 		// artist
-		String artistId = FilterField.getPrefConstant(FilterField.ARTIST, FilterField.TEXT_POSTFIX);
+		String artistId = FilterField.ARTIST.getPrefConstant();
 		getPreferenceStore().setDefault(artistId, "");
 		StringFieldEditor artistSfe = new StringFieldEditor(artistId, "Artist", getFieldEditorParent());
 		addField(artistSfe);
 		addTooltip(artistSfe, toolTip);
 		ids.add(artistId);
 		// language
-		String langId = FilterField.getPrefConstant(FilterField.LANG, FilterField.TEXT_POSTFIX);
+		String langId = FilterField.LANG.getPrefConstant();
 		getPreferenceStore().setDefault(langId, "");
 		String[][] langs;
 		String[] langValues = Languages.getInstance().getLangValues();

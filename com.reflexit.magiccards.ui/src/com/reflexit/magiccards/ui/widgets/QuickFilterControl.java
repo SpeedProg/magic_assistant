@@ -241,7 +241,7 @@ public class QuickFilterControl extends Composite {
 	public void refresh() {
 		if (searchText != null && store != null) {
 			// text
-			String textId = FilterField.getPrefConstant(FilterField.NAME_LINE, FilterField.TEXT_POSTFIX);
+			String textId = FilterField.NAME_LINE.getPrefConstant();
 			String text = store.getString(textId);
 			if (text == null || text.trim().length() == 0) {
 				searchText.setText(ALL_NAMES);
@@ -253,7 +253,7 @@ public class QuickFilterControl extends Composite {
 			}
 			// type
 			String type = ALL_TYPES;
-			String typeId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
+			String typeId = FilterField.TYPE_LINE.getPrefConstant();
 			String type1 = store.getString(typeId);
 			int typehit = 0;
 			CardTypes coreTypes = CardTypes.getInstance();
@@ -311,7 +311,7 @@ public class QuickFilterControl extends Composite {
 			return;
 		if (ALL_NAMES.equals(text))
 			text = "";
-		String textId = FilterField.getPrefConstant(FilterField.NAME_LINE, FilterField.TEXT_POSTFIX);
+		String textId = FilterField.NAME_LINE.getPrefConstant();
 		if (text.trim().length() == 0) {
 			this.store.setValue(textId, "");
 		} else {
@@ -327,7 +327,7 @@ public class QuickFilterControl extends Composite {
 			text = "";
 		CardTypes coreTypes = CardTypes.getInstance();
 		String selId = null;
-		String textId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
+		String textId = FilterField.TYPE_LINE.getPrefConstant();
 		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			store.setValue(id, "false");

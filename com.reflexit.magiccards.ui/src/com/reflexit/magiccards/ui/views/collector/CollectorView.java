@@ -119,14 +119,14 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 			onlyOwn.setToolTipText("Check to show only own cards");
 		else
 			onlyOwn.setToolTipText("Uncheck to show cards in database which you don't own");
-		String id = FilterField.getPrefConstant(FilterField.OWNERSHIP, FilterField.TEXT_POSTFIX);
+		String id = FilterField.OWNERSHIP.getPrefConstant();
 		IPreferenceStore store = getLocalPreferenceStore();
 		store.putValue(id, onlyOwnFiltred ? "true" : "");
 		reloadData();
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	protected void actionDelete() {
 		// TODO

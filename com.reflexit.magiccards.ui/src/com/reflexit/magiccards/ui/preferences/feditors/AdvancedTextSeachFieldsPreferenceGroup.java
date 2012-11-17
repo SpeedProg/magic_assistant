@@ -23,8 +23,7 @@ public class AdvancedTextSeachFieldsPreferenceGroup extends MFieldEditorPreferen
 	}
 
 	private StringFieldEditor createTextField(String label, FilterField f) {
-		String id1 = f.toString();
-		String id = FilterField.getPrefConstant(id1, FilterField.TEXT_POSTFIX);
+		String id = f.getPrefConstant();
 		ids.add(id);
 		getPreferenceStore().setDefault(id, "");
 		StringFieldEditor nameSfe = new StringFieldEditor(id, label, getFieldEditorParent());
