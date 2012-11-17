@@ -14,6 +14,11 @@ public class MagicCardFilter {
 	private ICardField groupFields[];
 	private boolean onlyLastSet = false;
 
+	@Override
+	public String toString() {
+		return root.toString();
+	}
+
 	public static class Expr {
 		boolean translated = false;
 
@@ -270,8 +275,9 @@ public class MagicCardFilter {
 				return fieldOp(field, Operation.EQ, value.substring(2).trim());
 			} else if (value.equals("0")) {
 				return TRUE;
+			} else {
+				return fieldOp(field, Operation.EQ, value.trim());
 			}
-			return null;
 		}
 	}
 
@@ -605,8 +611,10 @@ public class MagicCardFilter {
 	}
 
 	private Expr createTextSearch(HashMap map, FilterField fieldId) {
+		if (!fieldId.getPostfix().equals(FilterField.Postfix.TEXT_POSTFIX))
+			throw new IllegalArgumentException();
 		Expr sub = null;
-		String valueKey = FilterField.getPrefConstant(fieldId, FilterField.TEXT_POSTFIX);
+		String valueKey = fieldId.getPrefConstant();
 		String value = (String) map.get(valueKey);
 		if (value != null && value.length() > 0) {
 			sub = new BinaryExpr(new Node(fieldId.toString()), Operation.EQUALS, new Node(value));
@@ -615,8 +623,10 @@ public class MagicCardFilter {
 	}
 
 	private Expr createNumericSearch(HashMap map, FilterField fieldId) {
+		if (!fieldId.getPostfix().equals(FilterField.Postfix.NUMERIC_POSTFIX))
+			throw new IllegalArgumentException();
 		Expr sub = null;
-		String valueKey = FilterField.getPrefConstant(fieldId, FilterField.NUMERIC_POSTFIX);
+		String valueKey = fieldId.getPrefConstant();
 		String value = (String) map.get(valueKey);
 		if (value != null && value.length() > 0) {
 			sub = new BinaryExpr(new Node(fieldId.toString()), Operation.EQUALS, new Node(value));
