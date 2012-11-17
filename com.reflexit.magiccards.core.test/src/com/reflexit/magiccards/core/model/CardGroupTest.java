@@ -141,7 +141,7 @@ public class CardGroupTest extends TestCase {
 
 	@Test
 	public void testEqualsObject() {
-		CardGroup old = group;
+		ICardGroup old = group;
 		group = new CardGroup(MagicCardField.RARITY, Rarity.COMMON);
 		for (int j = 0; j < cards.length; j++) {
 			group.add(cards[j]);
@@ -371,7 +371,7 @@ public class CardGroupTest extends TestCase {
 				System.err.print("--");
 			}
 			System.err.println(o.getCardId() + ": " + o.getName() + " x " + o.getCount() + " $" + o.getDbPrice());
-			if (o instanceof CardGroup) {
+			if (o instanceof ICardGroup) {
 				printTree((CardGroup) o, level + 1);
 			}
 		}

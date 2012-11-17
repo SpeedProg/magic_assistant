@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -143,7 +143,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 	public void testFilterByTypeText() {
 		add3cards();
 		HashMap map = new HashMap();
-		String typeId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
+		String typeId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
 		map.put(typeId, "Elf");
 		this.filter.update(map);
 		Object[] cards = getFilteredCards();
