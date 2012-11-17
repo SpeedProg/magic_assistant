@@ -143,7 +143,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 	public void testFilterByTypeText() {
 		add3cards();
 		HashMap map = new HashMap();
-		String typeId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
+		String typeId = FilterField.TYPE_LINE.getPrefConstant();
 		map.put(typeId, "Elf");
 		this.filter.update(map);
 		Object[] cards = getFilteredCards();

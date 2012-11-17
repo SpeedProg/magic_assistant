@@ -13,13 +13,6 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import com.reflexit.magiccards.core.exports.DeckParserTest;
-import com.reflexit.magiccards.core.exports.MagicWorkstationImportTest;
-import com.reflexit.magiccards.core.exports.MtgoImportTest;
-import com.reflexit.magiccards.core.exports.TablePipedImportTest;
-import com.reflexit.magiccards.core.model.CardGroupTest;
-import com.reflexit.magiccards.core.model.SortOrderTest;
-import com.reflexit.magiccards.core.model.nav.CardElementTest;
 import com.reflexit.magiccards.core.seller.test.ParseTcgPlayerPricesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
@@ -37,26 +30,7 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magiccards.core.test");
 		// $JUnit-BEGIN$
-		// import
-		suite.addTestSuite(TablePipedImportTest.class);
-		suite.addTestSuite(MtgoImportTest.class);
-		suite.addTestSuite(MagicWorkstationImportTest.class);
-		suite.addTestSuite(DeckParserTest.class);
-		// core
-		suite.addTestSuite(VirtualMultiFileCardStoreTest.class);
-		suite.addTestSuite(MultiFileCollectionStoreTest.class);
-		suite.addTestSuite(CardOrganizerTest.class);
-		suite.addTestSuite(AbstractFilteredCardStoreTest.class);
-		suite.addTestSuite(DeckStoreTest.class);
-		suite.addTestSuite(CardCollectionStoreObjectTest.class);
-		suite.addTestSuite(DbFileCardStoreTest.class);
-		suite.addTestSuite(CollectionStoreTest.class);
-		suite.addTestSuite(MagicCardFilterTest.class);
-		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
-		// suite.addTestSuite(CardTextNL1Test.class); TODO
-		suite.addTestSuite(CardElementTest.class);
-		suite.addTestSuite(CardGroupTest.class);
-		suite.addTestSuite(SortOrderTest.class);
+		suite.addTest(AllLocalTests.suite());
 		// gatherer
 		suite.addTestSuite(ParseGathererCardLanguagesTest.class);
 		suite.addTestSuite(ParseGathererSetsTest.class);
