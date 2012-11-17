@@ -9,7 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.SpecialTags;
 import com.reflexit.magiccards.ui.widgets.ContextAssist;
@@ -25,22 +25,22 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 	// private Group group;
 	@Override
 	protected void createFieldEditors() {
-		String id = FilterHelper.getPrefConstant(FilterHelper.PRICE, FilterHelper.NUMERIC_POSTFIX);
+		String id = FilterField.getPrefConstant(FilterField.PRICE, FilterField.NUMERIC_POSTFIX);
 		getPreferenceStore().setDefault(id, "0");
 		addField(new NumericalComparisonFieldEditor(id, "Price", getFieldEditorParent()));
 		ids.add(id);
 		// count
-		id = FilterHelper.getPrefConstant(FilterHelper.COUNT, FilterHelper.NUMERIC_POSTFIX);
+		id = FilterField.getPrefConstant(FilterField.COUNT, FilterField.NUMERIC_POSTFIX);
 		getPreferenceStore().setDefault(id, "0");
 		addField(new NumericalComparisonFieldEditor(id, "Count", getFieldEditorParent()));
 		ids.add(id);
 		// for sale
-		id = FilterHelper.getPrefConstant(MagicCardFieldPhysical.FORTRADECOUNT.name(), FilterHelper.NUMERIC_POSTFIX);
+		id = FilterField.getPrefConstant(MagicCardFieldPhysical.FORTRADECOUNT.name(), FilterField.NUMERIC_POSTFIX);
 		getPreferenceStore().setDefault(id, "0");
 		addField(new NumericalComparisonFieldEditor(id, "For Trade", getFieldEditorParent()));
 		ids.add(id);
 		// comment
-		id = FilterHelper.getPrefConstant(FilterHelper.COMMENT, FilterHelper.TEXT_POSTFIX);
+		id = FilterField.getPrefConstant(FilterField.COMMENT, FilterField.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(id, "");
 		StringFieldEditor nameSfe = new StringFieldEditor(id, "Comment", getFieldEditorParent());
 		addField(nameSfe);
@@ -49,7 +49,7 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		addTooltip(nameSfe, toolTip);
 		ids.add(id);
 		// special
-		id = FilterHelper.getPrefConstant(MagicCardFieldPhysical.SPECIAL.name(), FilterHelper.TEXT_POSTFIX);
+		id = FilterField.getPrefConstant(MagicCardFieldPhysical.SPECIAL.name(), FilterField.TEXT_POSTFIX);
 		getPreferenceStore().setDefault(id, "");
 		StringFieldEditor var = new StringFieldEditor(id, "Special Tags", getFieldEditorParent());
 		addField(var);
@@ -58,7 +58,7 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		ContextAssist.addContextAssist(tags, SpecialTags.getTags(), true);
 		ids.add(id);
 		// ownership
-		id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
+		id = FilterField.getPrefConstant(FilterField.OWNERSHIP, FilterField.TEXT_POSTFIX);
 		RadioGroupFieldEditor radios = new RadioGroupFieldEditor(id, "Ownership", 1, new String[][] { { "Show all cards", "", },
 				{ "Show only own cards (determined by ownership attribute)", "true", }, { "Show only virtual cards", "false", }, },
 				getFieldEditorParent(), true);

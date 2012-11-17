@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
@@ -241,7 +241,7 @@ public class QuickFilterControl extends Composite {
 	public void refresh() {
 		if (searchText != null && store != null) {
 			// text
-			String textId = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
+			String textId = FilterField.getPrefConstant(FilterField.NAME_LINE, FilterField.TEXT_POSTFIX);
 			String text = store.getString(textId);
 			if (text == null || text.trim().length() == 0) {
 				searchText.setText(ALL_NAMES);
@@ -253,7 +253,7 @@ public class QuickFilterControl extends Composite {
 			}
 			// type
 			String type = ALL_TYPES;
-			String typeId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
+			String typeId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
 			String type1 = store.getString(typeId);
 			int typehit = 0;
 			CardTypes coreTypes = CardTypes.getInstance();
@@ -311,7 +311,7 @@ public class QuickFilterControl extends Composite {
 			return;
 		if (ALL_NAMES.equals(text))
 			text = "";
-		String textId = FilterHelper.getPrefConstant(FilterHelper.NAME_LINE, FilterHelper.TEXT_POSTFIX);
+		String textId = FilterField.getPrefConstant(FilterField.NAME_LINE, FilterField.TEXT_POSTFIX);
 		if (text.trim().length() == 0) {
 			this.store.setValue(textId, "");
 		} else {
@@ -327,7 +327,7 @@ public class QuickFilterControl extends Composite {
 			text = "";
 		CardTypes coreTypes = CardTypes.getInstance();
 		String selId = null;
-		String textId = FilterHelper.getPrefConstant(FilterHelper.TYPE_LINE, FilterHelper.TEXT_POSTFIX);
+		String textId = FilterField.getPrefConstant(FilterField.TYPE_LINE, FilterField.TEXT_POSTFIX);
 		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			store.setValue(id, "false");

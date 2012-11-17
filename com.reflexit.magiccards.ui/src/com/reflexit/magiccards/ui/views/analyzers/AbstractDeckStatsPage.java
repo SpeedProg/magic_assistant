@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
@@ -89,7 +90,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		IChartGenerator gen = createChartGenerator();
 		canvas.setChartGenerator(gen);
 		canvas.redraw();
-		CardGroup root = buildTree();
+		ICardGroup root = buildTree();
 		stats.setInput(root);
 		// listControl.getFilteredStore().clear();
 		// listControl.getFilteredStore().addAll(store);
@@ -102,7 +103,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		super.dispose();
 	}
 
-	abstract protected CardGroup buildTree();
+	abstract protected ICardGroup buildTree();
 
 	abstract protected IChartGenerator createChartGenerator();
 }

@@ -14,6 +14,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -38,7 +39,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof CardGroup) {
+		if (element instanceof ICardGroup) {
 			CardGroup cardGroup = (CardGroup) element;
 			int size = getSetSize(cardGroup);
 			int count = cardGroup.getOwnUnique();
@@ -78,7 +79,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 				return "This means you have " + card.getCount() + " virtual cards (you don't own them)";
 			}
 		}
-		if (element instanceof CardGroup) {
+		if (element instanceof ICardGroup) {
 			return "X/Y (Z%) - Means you have X unique cards you own out of Y possible in this class, which represents Z%";
 		}
 		return null;
@@ -90,7 +91,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 			HashSet<IMagicCard> base = new HashSet<IMagicCard>();
 			for (Iterator<Object> iterator = cardGroup.iterator(); iterator.hasNext();) {
 				Object object = iterator.next();
-				if (object instanceof CardGroup) {
+				if (object instanceof ICardGroup) {
 					size += getSetSize((CardGroup) object);
 				} else if (object instanceof IMagicCard) {
 					base.add(((IMagicCard) object).getBase());
@@ -114,7 +115,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 					else
 						return;
 					float per = 100;
-					if (row instanceof CardGroup) {
+					if (row instanceof ICardGroup) {
 						Float per1 = (Float) ((CardGroup) row).getProperty(PERCENT_KEY);
 						if (per1 == null)
 							per = Float.valueOf(0);

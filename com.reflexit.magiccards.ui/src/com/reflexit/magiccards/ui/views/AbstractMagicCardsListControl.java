@@ -58,7 +58,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -162,7 +162,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public GroupAction createGroupAction(String name, ICardField[] fields) {
-		String val = prefStore.getString(FilterHelper.GROUP_FIELD);
+		String val = prefStore.getString(FilterField.GROUP_FIELD.toString());
 		String vname = createGroupName(fields);
 		boolean checked = vname.equals(val);
 		return new GroupAction(name, fields, checked);
@@ -173,7 +173,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public GroupAction createGroupActionNone() {
-		String val = prefStore.getString(FilterHelper.GROUP_FIELD);
+		String val = prefStore.getString(FilterField.GROUP_FIELD.toString());
 		return new GroupAction("None", null, val == null || val.length() == 0);
 	}
 
@@ -414,7 +414,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	private HashMap<String, String> storeToMap(IPreferenceStore store) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		Collection col = FilterHelper.getAllIds();
+		Collection col = FilterField.getAllIds();
 		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			String value = store.getString(id);
@@ -430,7 +430,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @param indexCost
 	 */
 	protected void actionGroupBy(ICardField[] fields) {
-		prefStore.setValue(FilterHelper.GROUP_FIELD, fields == null ? "" : createGroupName(fields));
+		prefStore.setValue(FilterField.GROUP_FIELD.toString(), fields == null ? "" : createGroupName(fields));
 		updateGroupBy(fields);
 		reloadData();
 	}
@@ -584,7 +584,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 *
 	 */
 	protected void initManager() {
-		String field = prefStore.getString(FilterHelper.GROUP_FIELD);
+		String field = prefStore.getString(FilterField.GROUP_FIELD.toString());
 		updateGroupBy(getGroupFieldsByName(field));
 		IColumnSortAction sortAction = new IColumnSortAction() {
 			public void sort(int i) {
@@ -693,7 +693,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 		@Override
 		public void run() { // group button itself
-			String group = prefStore.getString(FilterHelper.GROUP_FIELD);
+			String group = prefStore.getString(FilterField.GROUP_FIELD.toString());
 			if (group == null || group.length() == 0)
 				actionGroupBy(new ICardField[] { MagicCardField.CMC });
 			else
@@ -775,7 +775,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void runResetFilter() {
-		Collection<String> allIds = FilterHelper.getAllIds();
+		Collection<String> allIds = FilterField.getAllIds();
 		for (Iterator<String> iterator = allIds.iterator(); iterator.hasNext();) {
 			String id = iterator.next();
 			prefStore.setToDefault(id);

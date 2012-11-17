@@ -4,6 +4,7 @@ import org.eclipse.swt.graphics.Image;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
@@ -27,7 +28,7 @@ public class GroupColumn extends GenColumn {
 	@Override
 	public Image getImage(Object element) {
 		if (showImage) {
-			if (element instanceof CardGroup) {
+			if (element instanceof ICardGroup) {
 				if (((CardGroup) element).getFieldIndex() == MagicCardField.NAME) {
 					return ImageCreator.getInstance().getSetImage(((CardGroup) element).getFirstCard());
 				}
@@ -46,7 +47,7 @@ public class GroupColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof CardGroup) {
+		if (element instanceof ICardGroup) {
 			if (!showCount) {
 				return ((CardGroup) element).getName();
 			} else {

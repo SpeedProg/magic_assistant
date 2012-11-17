@@ -2,7 +2,7 @@ package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.util.Map;
 
-import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.AbilityChart;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
@@ -17,7 +17,7 @@ public class AbilityPage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	protected CardGroup buildTree() {
+	protected ICardGroup buildTree() {
 		return CardStoreUtils.buildAbilityGroups(store);
 	}
 }

@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LazyTreeViewContentProvider implements // IStructuredContentProvider,
@@ -17,7 +18,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 
 	private TreeViewer treeViewer;
 	private IFilteredCardStore root;
-	private CardGroup rootGroup;
+	private ICardGroup rootGroup;
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (viewer instanceof TreeViewer) {
@@ -41,8 +42,8 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 			int count = 0;
 			if (element instanceof IFilteredCardStore) {
 				count = rootGroup.size();
-			} else if (element instanceof CardGroup) {
-				count = ((CardGroup) element).size();
+			} else if (element instanceof ICardGroup) {
+				count = ((ICardGroup) element).size();
 			}
 			if (count == 0)
 				treeViewer.setHasChildren(element, false);
@@ -55,17 +56,17 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		if (root == null)
 			return;
 		synchronized (root) {
-			CardGroup group = null;
+			ICardGroup group = null;
 			if (parent instanceof IFilteredCardStore) {
 				group = rootGroup;
-			} else if (parent instanceof CardGroup) {
+			} else if (parent instanceof ICardGroup) {
 				group = (CardGroup) parent;
 			} else
 				return;
 			Object child = group.getChildAtIndex(index);
 			this.treeViewer.replace(parent, index, child);
 			// System.err.println("grpup: " + " index " + index);
-			if (child instanceof CardGroup)
+			if (child instanceof ICardGroup)
 				updateChildCount(child, -1);
 			else
 				updateChildCount(child, 0);

@@ -41,6 +41,7 @@ import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -360,8 +361,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		if (sel instanceof IStructuredSelection) {
 			IStructuredSelection ss = (IStructuredSelection) sel;
 			Object firstElement = ss.getFirstElement();
-			if (firstElement instanceof CardGroup) {
-				if (((CardGroup) firstElement).size() == 0)
+			if (firstElement instanceof ICardGroup) {
+				if (((ICardGroup) firstElement).size() == 0)
 					return IMagicCard.DEFAULT;
 				return ((CardGroup) firstElement).getFirstCard();
 			}

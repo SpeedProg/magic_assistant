@@ -23,6 +23,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -71,7 +72,7 @@ public class MagicDbView extends AbstractCardsView {
 								return new GroupColumn() {
 									@Override
 									public String getText(Object element) {
-										if (element instanceof CardGroup) {
+										if (element instanceof ICardGroup) {
 											if (!showCount) {
 												return ((CardGroup) element).getName();
 											} else {

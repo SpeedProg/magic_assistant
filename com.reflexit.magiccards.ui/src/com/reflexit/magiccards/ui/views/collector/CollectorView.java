@@ -25,7 +25,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
 import com.reflexit.magiccards.ui.views.lib.AbstractMyCardsView;
@@ -119,7 +119,7 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 			onlyOwn.setToolTipText("Check to show only own cards");
 		else
 			onlyOwn.setToolTipText("Uncheck to show cards in database which you don't own");
-		String id = FilterHelper.getPrefConstant(FilterHelper.OWNERSHIP, FilterHelper.TEXT_POSTFIX);
+		String id = FilterField.getPrefConstant(FilterField.OWNERSHIP, FilterField.TEXT_POSTFIX);
 		IPreferenceStore store = getLocalPreferenceStore();
 		store.putValue(id, onlyOwnFiltred ? "true" : "");
 		reloadData();

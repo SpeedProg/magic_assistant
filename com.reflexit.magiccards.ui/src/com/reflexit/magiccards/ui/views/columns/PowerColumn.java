@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCard;
 
 public class PowerColumn extends GenColumn {
@@ -24,7 +25,7 @@ public class PowerColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof CardGroup) {
+		if (element instanceof ICardGroup) {
 			CardGroup node = (CardGroup) element;
 			int cc = node.getCreatureCount();
 			if (cc > 0) {

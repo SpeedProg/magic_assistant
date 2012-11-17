@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.ui.utils;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
@@ -23,7 +24,7 @@ public class TextConvertor {
 	public static String toText(Object line) {
 		StringBuffer buf = new StringBuffer();
 		IMagicCard card;
-		if (line instanceof CardGroup) {
+		if (line instanceof ICardGroup) {
 			buf.append(((CardGroup) line).getName());
 		} else if (line instanceof IMagicCard) {
 			card = (IMagicCard) line;

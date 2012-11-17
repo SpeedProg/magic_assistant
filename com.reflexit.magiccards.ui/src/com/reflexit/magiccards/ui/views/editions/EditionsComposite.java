@@ -41,7 +41,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 
 /**
  * Composite that contains checked tree selection for editions. If supplied with preferenceStore can
@@ -273,7 +273,7 @@ public class EditionsComposite extends Composite {
 		for (Iterator<Edition> iterator = names.iterator(); iterator.hasNext();) {
 			Edition ed = iterator.next();
 			String abbr = ed.getMainAbbreviation();
-			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
+			String id = FilterField.getPrefConstant(FilterField.EDITION, abbr);
 			boolean checked = getPreferenceStore().getBoolean(id);
 			if (checked) {
 				if (this.checkedTree) {
@@ -330,7 +330,7 @@ public class EditionsComposite extends Composite {
 				checked = ((CheckboxTreeViewer) this.treeViewer).getChecked(ed);
 			}
 			String abbr = ed.getMainAbbreviation();
-			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
+			String id = FilterField.getPrefConstant(FilterField.EDITION, abbr);
 			getPreferenceStore().setValue(id, checked);
 		}
 		if (!this.checkedTree) {
@@ -338,7 +338,7 @@ public class EditionsComposite extends Composite {
 			for (Iterator<Edition> iterator = selection.iterator(); iterator.hasNext();) {
 				Edition ed = iterator.next();
 				String abbr = ed.getMainAbbreviation();
-				String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
+				String id = FilterField.getPrefConstant(FilterField.EDITION, abbr);
 				getPreferenceStore().setValue(id, true);
 			}
 		}
@@ -356,7 +356,7 @@ public class EditionsComposite extends Composite {
 			String abbr = Editions.getInstance().getAbbrByName(ed);
 			if (abbr == null)
 				abbr = ed.replaceAll("\\W", "_");
-			String id = FilterHelper.getPrefConstant(FilterHelper.EDITION, abbr);
+			String id = FilterField.getPrefConstant(FilterField.EDITION, abbr);
 			res.add(id);
 		}
 		return res.toArray(new String[res.size()]);

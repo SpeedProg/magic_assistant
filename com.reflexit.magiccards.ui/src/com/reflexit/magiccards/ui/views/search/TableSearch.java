@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.viewers.TreePath;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICard;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -83,7 +83,7 @@ public class TableSearch {
 		return -1;
 	}
 
-	private static void searchTree(SearchContext context, TreePath last, boolean needWrap, Pattern pat, CardGroup group, TreePath path) {
+	private static void searchTree(SearchContext context, TreePath last, boolean needWrap, Pattern pat, ICardGroup group, TreePath path) {
 		Object[] elements = group.getChildren();
 		int lastIndex = -1;
 		int len = elements.length;
@@ -112,12 +112,12 @@ public class TableSearch {
 				context.setFound(true, fullPath);
 				break;
 			}
-			if (card instanceof CardGroup) {
+			if (card instanceof ICardGroup) {
 				if (j == lastIndex) {
-					searchTree(context, cutHead(last), needWrap, pat, (CardGroup) card, fullPath);
+					searchTree(context, cutHead(last), needWrap, pat, (ICardGroup) card, fullPath);
 					lastIndex = -1;
 				} else
-					searchTree(context, null, needWrap, pat, (CardGroup) card, fullPath);
+					searchTree(context, null, needWrap, pat, (ICardGroup) card, fullPath);
 			}
 		}
 	}

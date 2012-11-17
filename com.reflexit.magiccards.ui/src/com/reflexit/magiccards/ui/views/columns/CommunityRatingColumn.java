@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.columns;
 import java.text.DecimalFormat;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
@@ -18,7 +19,7 @@ public class CommunityRatingColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof CardGroup) {
+		if (element instanceof ICardGroup) {
 			CardGroup m = (CardGroup) element;
 			float rating = m.getCommunityRating();
 			if (rating == 0)

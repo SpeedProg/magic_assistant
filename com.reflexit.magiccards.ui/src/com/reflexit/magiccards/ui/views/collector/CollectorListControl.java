@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -52,7 +52,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void initManager() {
-		getLocalPreferenceStore().setDefault(FilterHelper.GROUP_FIELD, createGroupName(DEF_GROUP));
+		getLocalPreferenceStore().setDefault(FilterField.GROUP_FIELD.toString(), createGroupName(DEF_GROUP));
 		super.initManager();
 	}
 

@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 
 public class AdvancedTextSeachFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 	private Collection<String> ids = new ArrayList<String>(6);
@@ -14,16 +14,17 @@ public class AdvancedTextSeachFieldsPreferenceGroup extends MFieldEditorPreferen
 	// private Group group;
 	@Override
 	protected void createFieldEditors() {
-		createTextField("Text", FilterHelper.TEXT_LINE);
-		createTextField("Or", FilterHelper.TEXT_LINE_2);
-		createTextField("Or", FilterHelper.TEXT_LINE_3);
-		createTextField("Excluding", FilterHelper.TEXT_NOT_1);
-		createTextField("Excluding", FilterHelper.TEXT_NOT_2);
-		createTextField("Excluding", FilterHelper.TEXT_NOT_3);
+		createTextField("Text", FilterField.TEXT_LINE);
+		createTextField("Or", FilterField.TEXT_LINE_2);
+		createTextField("Or", FilterField.TEXT_LINE_3);
+		createTextField("Excluding", FilterField.TEXT_NOT_1);
+		createTextField("Excluding", FilterField.TEXT_NOT_2);
+		createTextField("Excluding", FilterField.TEXT_NOT_3);
 	}
 
-	private StringFieldEditor createTextField(String label, String id1) {
-		String id = FilterHelper.getPrefConstant(id1, FilterHelper.TEXT_POSTFIX);
+	private StringFieldEditor createTextField(String label, FilterField f) {
+		String id1 = f.toString();
+		String id = FilterField.getPrefConstant(id1, FilterField.TEXT_POSTFIX);
 		ids.add(id);
 		getPreferenceStore().setDefault(id, "");
 		StringFieldEditor nameSfe = new StringFieldEditor(id, label, getFieldEditorParent());

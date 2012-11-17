@@ -2,8 +2,8 @@ package com.reflexit.magiccards.ui.views.analyzers;
 
 import org.eclipse.swt.widgets.Composite;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
@@ -22,7 +22,7 @@ public class TypePage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	protected CardGroup buildTree() {
+	protected ICardGroup buildTree() {
 		return CardStoreUtils.buildTypeGroups(store);
 	}
 

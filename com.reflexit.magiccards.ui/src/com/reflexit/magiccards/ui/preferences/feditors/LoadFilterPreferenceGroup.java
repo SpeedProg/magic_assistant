@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.FilterHelper;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 
@@ -46,7 +46,7 @@ public class LoadFilterPreferenceGroup extends MFieldEditorPreferencePage {
 				InputDialog d = new InputDialog(getShell(), "Filter Name", "Save filter as", dname, null);
 				if (d.open() == Dialog.OK) {
 					String name = d.getValue();
-					Collection allIds = FilterHelper.getAllIds();
+					Collection allIds = FilterField.getAllIds();
 					dialog.performOk(); // saved current values
 					IPreferenceStore store = getPreferenceStore();
 					Properties props = new Properties();
