@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -19,7 +20,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
@@ -249,11 +252,12 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		}
 	}
 
-	private int addFromGroup(CardGroup cardGroup, HashMap<IMagicCard, Integer> map, int i) {
+	private int addFromGroup(ICardGroup cardGroup, HashMap<IMagicCard, Integer> map, int i) {
 		int gi = i;
-		for (Iterator iterator = cardGroup.iterator(); iterator.hasNext();) {
+		List<? extends ICard> childrenList = cardGroup.getChildrenList();
+		for (Iterator iterator = childrenList.iterator(); iterator.hasNext();) {
 			Object el = iterator.next();
-			if (el instanceof CardGroup) {
+			if (el instanceof ICardGroup) {
 				i++;
 				i = addFromGroup((CardGroup) el, map, i);
 			} else if (el instanceof IMagicCard)
