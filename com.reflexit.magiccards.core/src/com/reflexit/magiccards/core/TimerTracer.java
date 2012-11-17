@@ -6,34 +6,123 @@ import java.util.HashMap;
 
 public class TimerTracer {
 	private static SimpleDateFormat timestampFormat = new SimpleDateFormat("<kk:mm:ss.SSS>");
-	private HashMap<String, TimerStats> timers = new HashMap<String, TimerStats>();
+	private static boolean tracing;
+	private HashMap<String, Timer> timers = new HashMap<String, Timer>();
 
-	static class TimerStats {
+	public static class Timer {
 		long start;
 		long end;
+		long diff;
+		int count;
+		private String name;
 
-		public TimerStats() {
+		public Timer(String name) {
+			this.name = name;
+			start();
+		}
+
+		public void start() {
 			this.start = this.end = System.currentTimeMillis();
+		}
+
+		public long end() {
+			this.end = System.currentTimeMillis();
+			long curr = end - start;
+			diff += curr;
+			count++;
+			return curr;
+		}
+
+		public long prob() {
+			this.end = System.currentTimeMillis();
+			long curr = end - start;
+			diff += curr;
+			count++;
+			this.start = this.end;
+			return curr;
+		}
+
+		public long getStart() {
+			return start;
+		}
+
+		public long getEnd() {
+			return end;
+		}
+
+		public long getDiff() {
+			return diff;
+		}
+
+		public int getCount() {
+			return count;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void reset() {
+			diff = 0;
+			count = 0;
+			start();
 		}
 	}
 
 	public void addTimer(String timer) {
-		timers.put(timer, new TimerStats());
+		timers.put(timer, new Timer(timer));
 	}
 
 	public void trace(String timer, String message) {
-		long time = System.currentTimeMillis();
-		String prefix = timestampFormat.format(Calendar.getInstance().getTime());
-		TimerStats timerStats = getTimerStats(timer);
-		System.out.println(prefix + " " + timer + " +" + (time - timerStats.end) + "ms (" + (time - timerStats.start) + "ms): " + message);
-		timerStats.end = time;
+		Timer t = getTimer(timer);
+		long diff = t.prob();
+		if (tracing) {
+			long time = System.currentTimeMillis();
+			String prefix = timestampFormat.format(Calendar.getInstance().getTime());
+			Timer timerStats = getTimer(timer);
+			if (t.count == 0) {
+				System.out.println(prefix + " " + timer + ": " + message);
+			} else {
+				System.out.println(prefix + " " + timer + " +" + (diff) + "ms (" + timerStats.count + " times " + t.diff
+						/ (float) timerStats.count + " ave " + (t.diff) + "ms): " + message);
+			}
+			timerStats.end = time;
+		}
 	}
 
-	private TimerStats getTimerStats(String timer) {
-		TimerStats timerStats = timers.get(timer);
+	public void trace(Timer t, String message) {
+		if (tracing) {
+			String prefix = timestampFormat.format(Calendar.getInstance().getTime());
+			if (t.count == 0) {
+				System.out.println(prefix + " " + t.name + ": " + message);
+			} else {
+				System.out.println(prefix + " " + t.name + " +" + (t.end - t.start) + "ms (" + t.count + " times " + t.diff
+						/ (float) t.count + " ave " + t.diff + " ms): " + message);
+			}
+		}
+	}
+
+	public void traceStart(String string) {
+		Timer t = getTimer(string);
+		t.start();
+		trace(t, "start");
+	}
+
+	public void traceEnd(String string) {
+		Timer t = getTimer(string);
+		t.end();
+		trace(t, "end");
+	}
+
+	public Timer getTimer(String timer) {
+		Timer timerStats = timers.get(timer);
 		if (timerStats != null)
 			return timerStats;
-		timers.put(timer, timerStats = new TimerStats());
+		timers.put(timer, timerStats = new Timer(timer));
 		return timerStats;
+	}
+
+	public void setTracing(boolean tracing) {
+		this.tracing = tracing;
 	}
 }

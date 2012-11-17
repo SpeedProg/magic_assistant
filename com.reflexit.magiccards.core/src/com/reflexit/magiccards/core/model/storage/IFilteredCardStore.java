@@ -3,8 +3,8 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCountable {
@@ -43,7 +43,7 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	 * 
 	 * @return
 	 */
-	public CardGroup getCardGroupRoot();
+	public ICardGroup getCardGroupRoot();
 
 	public boolean contains(T card);
 

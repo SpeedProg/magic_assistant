@@ -85,13 +85,13 @@ public class Colors implements ISearchableProperty {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
-	 */
 	public String getIdPrefix() {
-		return "colors";
+		return getFilterField().toString();
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.COLOR;
 	}
 
 	public static Colors getInstance() {
@@ -107,7 +107,7 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
 	public String getNameById(String id) {

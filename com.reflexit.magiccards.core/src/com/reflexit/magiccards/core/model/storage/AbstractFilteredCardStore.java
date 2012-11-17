@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -36,7 +37,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
-	private static final CardGroup[] EMPTY_CARD_GROUP = new CardGroup[0];
+	private static final ICardGroup[] EMPTY_CARD_GROUP = new ICardGroup[0];
 	protected Collection filteredList = null;
 	protected final CardGroup rootGroup = new CardGroup(null, "Root");
 	protected boolean initialized = false;
@@ -167,14 +168,14 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (filter.getGroupField() != null) {
 			rootGroup.clear(); // was already
 			if (filter.getGroupField() == MagicCardField.TYPE) {
-				CardGroup buildTypeGroups = CardStoreUtils.buildTypeGroups(filteredList);
+				ICardGroup buildTypeGroups = CardStoreUtils.buildTypeGroups(filteredList);
 				for (Object gr : buildTypeGroups.getChildren()) {
 					rootGroup.add((ICard) gr);
 				}
 			} else {
 				for (Object element : filteredList) {
 					IMagicCard elem = (IMagicCard) element;
-					CardGroup group = findGroupIndex(elem, filter);
+					ICardGroup group = findGroupIndex(elem, filter);
 					if (group != null) {
 						addToNameGroup(elem, group);
 					}
@@ -185,12 +186,14 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 	}
 
-	public void addToNameGroup(IMagicCard elem, CardGroup group) {
+	public void addToNameGroup(IMagicCard elem, ICardGroup group) {
 		if (group.getFieldIndex() == MagicCardField.NAME) {
 			group.add(elem);
 		} else {
 			String key = getEnglishName(elem);
-			CardGroup nameGroup = group.getSubGroup(key);
+			ICardGroup nameGroup = null;
+			if (group instanceof CardGroup)
+				nameGroup = ((CardGroup) group).getSubGroup(key);
 			if (nameGroup != null) {
 				nameGroup.add(elem);
 			} else {
@@ -203,16 +206,13 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	public String getEnglishName(IMagicCard elem) {
 		int enId = elem.getEnglishCardId();
-		String key = null;
 		if (enId != 0) {
 			Object card = getCardStore().getCard(enId);
 			if (card instanceof IMagicCard) {
-				key = ((IMagicCard) card).getName();
+				return ((IMagicCard) card).getName();
 			}
-		} else {
-			key = elem.getName();
 		}
-		return key;
+		return elem.getName();
 	}
 
 	protected void removeEmptyGroups() {
@@ -220,6 +220,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected Collection<IMagicCard> sortCards(MagicCardFilter filter) {
+		String key = "sort" + hashCode();
+		MagicLogger.traceStart(key);
 		Collection<IMagicCard> filteredList;
 		if (filter.getSortOrder().isEmpty()) {
 			filteredList = new ArrayList<IMagicCard>();
@@ -248,6 +250,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 		if (filter.isOnlyLastSet())
 			filteredList = removeSetDuplicates(filteredList);
+		MagicLogger.traceEnd(key);
 		return filteredList;
 	}
 
@@ -290,7 +293,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	 * @param filter2
 	 * @return
 	 */
-	private CardGroup findGroupIndex(IMagicCard elem, MagicCardFilter filter) {
+	private ICardGroup findGroupIndex(IMagicCard elem, MagicCardFilter filter) {
 		ICardField[] groupFields = filter.getGroupFields();
 		CardGroup parent = rootGroup;
 		for (int i = 0; i < groupFields.length; i++) {
@@ -314,7 +317,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return new ArrayList<T>();
 	}
 
-	public synchronized CardGroup getCardGroupRoot() {
+	public synchronized ICardGroup getCardGroupRoot() {
 		return rootGroup;
 	}
 

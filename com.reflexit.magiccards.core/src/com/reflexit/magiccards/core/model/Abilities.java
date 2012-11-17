@@ -213,14 +213,19 @@ public class Abilities {
 
 	static class TextSeach implements ISearchableProperty {
 		public String getIdPrefix() {
-			return FilterHelper.TEXT_LINE;
+			return getFilterField().toString();
+		}
+
+		@Override
+		public FilterField getFilterField() {
+			return FilterField.TEXT_LINE;
 		}
 
 		public Collection getIds() {
 			Collection list = new ArrayList<String>();
-			list.add(FilterHelper.TEXT_LINE);
-			list.add(FilterHelper.TEXT_LINE_2);
-			list.add(FilterHelper.TEXT_LINE_3);
+			list.add(FilterField.TEXT_LINE);
+			list.add(FilterField.TEXT_LINE_2);
+			list.add(FilterField.TEXT_LINE_3);
 			return list;
 		}
 
@@ -237,14 +242,19 @@ public class Abilities {
 
 	static class TextSeachNot implements ISearchableProperty {
 		public String getIdPrefix() {
-			return FilterHelper.TEXT_LINE;
+			return getFilterField().toString();
+		}
+
+		@Override
+		public FilterField getFilterField() {
+			return FilterField.TEXT_LINE;
 		}
 
 		public Collection getIds() {
 			Collection list = new ArrayList<String>();
-			list.add(FilterHelper.TEXT_NOT_1);
-			list.add(FilterHelper.TEXT_NOT_2);
-			list.add(FilterHelper.TEXT_NOT_3);
+			list.add(FilterField.TEXT_NOT_1);
+			list.add(FilterField.TEXT_NOT_2);
+			list.add(FilterField.TEXT_NOT_3);
 			return list;
 		}
 

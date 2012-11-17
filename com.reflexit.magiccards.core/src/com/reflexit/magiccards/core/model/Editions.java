@@ -421,7 +421,12 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public String getIdPrefix() {
-		return FilterHelper.EDITION;
+		return getFilterField().toString();
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.EDITION;
 	}
 
 	public Collection<String> getIds() {
@@ -435,12 +440,12 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public String getPrefConstant(String abbr) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), abbr);
+		return FilterField.getPrefConstant(getIdPrefix(), abbr);
 	}
 
 	public String getPrefConstantByName(String name) {
 		String abbr = getAbbrByName(name);
-		return FilterHelper.getPrefConstant(getIdPrefix(), abbr);
+		return FilterField.getPrefConstant(getIdPrefix(), abbr);
 	}
 
 	public String getNameById(String id) {

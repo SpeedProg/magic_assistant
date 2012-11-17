@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
-public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical {
+public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, ICard {
 	private MagicCard card;
 	private int count;
 	private float price;

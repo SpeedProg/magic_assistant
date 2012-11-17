@@ -14,6 +14,7 @@ public class SuperTypes implements ISearchableProperty {
 		add("Snow");
 		add("Land");
 	}
+
 	static SuperTypes instance = new SuperTypes();
 	private LinkedHashMap names;
 
@@ -22,13 +23,13 @@ public class SuperTypes implements ISearchableProperty {
 		this.names.put(id, string);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
-	 */
 	public String getIdPrefix() {
 		return "supertypes";
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.CARD_TYPE;
 	}
 
 	public static SuperTypes getInstance() {
@@ -44,7 +45,7 @@ public class SuperTypes implements ISearchableProperty {
 	}
 
 	private String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
 	public String getNameById(String id) {

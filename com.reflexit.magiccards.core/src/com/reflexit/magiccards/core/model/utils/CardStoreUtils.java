@@ -29,6 +29,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -54,7 +55,7 @@ public final class CardStoreUtils {
 		// CardTextEN.EN = "EN"; // fake initializion
 	}
 
-	public static CardGroup buildManaCurveGroup(Iterable iterable) {
+	public static ICardGroup buildManaCurveGroup(Iterable iterable) {
 		CardGroup manaNode = new CardGroup(MagicCardField.COST, "Mana Curve");
 		CardGroup zeroNode = new CardGroup(MagicCardField.COST, "0");
 		CardGroup oneNode = new CardGroup(MagicCardField.COST, "1");
@@ -78,7 +79,7 @@ public final class CardStoreUtils {
 			else if (cost >= 7)
 				cardGroups[7].add(elem);
 		}
-		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
+		ICardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
 		for (CardGroup cardGroup : cardGroups) {
 			manaNode.add(cardGroup);
 		}
@@ -109,7 +110,7 @@ public final class CardStoreUtils {
 		return res;
 	}
 
-	public static CardGroup buildCreatureGroups(Iterable iterable) {
+	public static ICardGroup buildCreatureGroups(Iterable iterable) {
 		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Unknown);
 		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Creature);
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
@@ -152,7 +153,7 @@ public final class CardStoreUtils {
 				unknownNode.add(elem);
 			}
 		}
-		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
+		ICardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
 		root.add(creatureNode);
 		if (unknownNode.getCount() > 0)
 			root.add(unknownNode);
@@ -271,7 +272,7 @@ public final class CardStoreUtils {
 		return bars;
 	}
 
-	public static CardGroup buildSpellColorGroups(Iterable store) {
+	public static ICardGroup buildSpellColorGroups(Iterable store) {
 		HashMap<String, CardGroup> groupsList = new HashMap<String, CardGroup>();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
@@ -282,10 +283,10 @@ public final class CardStoreUtils {
 				CardGroup g = new CardGroup(MagicCardField.COST, name);
 				groupsList.put(name, g);
 			}
-			CardGroup real = groupsList.get(name);
+			ICardGroup real = groupsList.get(name);
 			real.add(elem);
 		}
-		CardGroup root = new CardGroup(MagicCardField.COST, ""); //$NON-NLS-1$
+		ICardGroup root = new CardGroup(MagicCardField.COST, ""); //$NON-NLS-1$
 		CardGroup colorNode = new CardGroup(MagicCardField.COST, "Colour");
 		root.add(colorNode);
 		for (CardGroup cardGroup : groupsList.values()) {
@@ -499,7 +500,7 @@ public final class CardStoreUtils {
 		return newList;
 	}
 
-	public static CardGroup buildAbilityGroups(Iterable iterable) {
+	public static ICardGroup buildAbilityGroups(Iterable iterable) {
 		HashMap<String, CardGroup> abilityGroups = new HashMap<String, CardGroup>();
 		HashMap<String, CardGroup> minedAbilityGroups = new HashMap<String, CardGroup>();
 		Abilities.IAbilityMatcher[] abilities = Abilities.getAbilities();
@@ -526,7 +527,7 @@ public final class CardStoreUtils {
 				}
 			}
 		}
-		CardGroup root = new CardGroup(MagicCardField.TEXT, ""); //$NON-NLS-1$
+		ICardGroup root = new CardGroup(MagicCardField.TEXT, ""); //$NON-NLS-1$
 		CardGroup abilityNode = new CardGroup(MagicCardField.TEXT, "Ability");
 		CardGroup abilityKeywordNode = new CardGroup(MagicCardField.TEXT, "Keyword Ability");
 		CardGroup minedAbilityNode = new CardGroup(MagicCardField.TEXT, "Mined Ability");

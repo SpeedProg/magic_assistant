@@ -471,43 +471,43 @@ public class MagicCardFilter {
 			BinaryExpr b1 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " .*");
 			BinaryExpr b2 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " -.*");
 			res = new BinaryExpr(b1, Operation.AND, new BinaryExpr(b2, Operation.NOT, null));
-		} else if (FilterHelper.TYPE_LINE.equals(requestedId)) {
+		} else if (FilterField.TYPE_LINE.toString().equals(requestedId)) {
 			res = textSearch(MagicCardField.TYPE, value);
-		} else if (FilterHelper.NAME_LINE.equals(requestedId)) {
+		} else if (FilterField.NAME_LINE.toString().equals(requestedId)) {
 			res = textSearch(MagicCardField.NAME, value);
-		} else if (FilterHelper.CCC.equals(requestedId)) {
+		} else if (FilterField.CCC.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardField.CMC, value);
-		} else if (FilterHelper.POWER.equals(requestedId)) {
+		} else if (FilterField.POWER.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardField.POWER, value);
-		} else if (FilterHelper.TOUGHNESS.equals(requestedId)) {
+		} else if (FilterField.TOUGHNESS.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardField.TOUGHNESS, value);
-		} else if (FilterHelper.LOCATION.equals(requestedId)) {
+		} else if (FilterField.LOCATION.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.LOCATION, value);
-		} else if (FilterHelper.RARITY.equals(requestedId)) {
+		} else if (FilterField.RARITY.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldEquals(MagicCardField.RARITY, value);
-		} else if (FilterHelper.COUNT.equals(requestedId)) {
+		} else if (FilterField.COUNT.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.COUNT, value);
 		} else if (MagicCardFieldPhysical.FORTRADECOUNT.name().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.FORTRADECOUNT, value);
-		} else if (FilterHelper.DBPRICE.equals(requestedId)) {
+		} else if (FilterField.DBPRICE.toString().equals(requestedId)) {
 			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
 			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
-		} else if (FilterHelper.COMMUNITYRATING.equals(requestedId)) {
+		} else if (FilterField.COMMUNITYRATING.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardField.RATING, value);
-		} else if (FilterHelper.COLLNUM.equals(requestedId)) {
+		} else if (FilterField.COLLNUM.toString().equals(requestedId)) {
 			res = BinaryExpr.fieldInt(MagicCardField.COLLNUM, value);
-		} else if (FilterHelper.ARTIST.equals(requestedId)) {
+		} else if (FilterField.ARTIST.toString().equals(requestedId)) {
 			res = textSearch(MagicCardField.ARTIST, value);
-		} else if (FilterHelper.PRICE.equals(requestedId)) {
+		} else if (FilterField.PRICE.toString().equals(requestedId)) {
 			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
 			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
 			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
-		} else if (FilterHelper.COMMENT.equals(requestedId)) {
+		} else if (FilterField.COMMENT.toString().equals(requestedId)) {
 			res = textSearch(MagicCardFieldPhysical.COMMENT, value);
 		} else if (MagicCardFieldPhysical.SPECIAL.name().equals(requestedId)) {
 			res = textSearch(MagicCardFieldPhysical.SPECIAL, value);
-		} else if (FilterHelper.OWNERSHIP.equals(requestedId)) {
+		} else if (FilterField.OWNERSHIP.toString().equals(requestedId)) {
 			BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
 			Expr b2;
 			if ("true".equals(value))
@@ -515,7 +515,7 @@ public class MagicCardFilter {
 			else
 				b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, "==0");
 			res = new BinaryExpr(b1, Operation.OR, b2);
-		} else if (FilterHelper.LANG.equals(requestedId)) {
+		} else if (FilterField.LANG.toString().equals(requestedId)) {
 			if (value.equals("")) {
 				res = TRUE;
 			} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
@@ -524,7 +524,7 @@ public class MagicCardFilter {
 			} else {
 				res = BinaryExpr.fieldEquals(MagicCardField.LANG, value);
 			}
-		} else if (requestedId.startsWith(FilterHelper.TEXT_LINE)) {
+		} else if (requestedId.startsWith(FilterField.TEXT_LINE.toString())) {
 			res = textSearch(MagicCardField.TEXT, value);
 			res = new BinaryExpr(res, Operation.OR, textSearch(MagicCardField.ORACLE, value));
 			if (requestedId.contains("_exclude_")) {
@@ -538,17 +538,17 @@ public class MagicCardFilter {
 		return res;
 	}
 
-	public static class Operation {
-		public static final Operation AND = new Operation("AND");
-		public static final Operation OR = new Operation("OR");
-		public static final Operation EQUALS = new Operation("eq");
-		public static final Operation MATCHES = new Operation("matches");
-		public static final Operation NOT = new Operation("NOT");
-		public static final Operation GE = new Operation(">=");
-		public static final Operation LE = new Operation("<=");
-		public static final Operation EQ = new Operation("==");
-		public static final Operation LIKE = new Operation("LIKE");
-		String name;
+	public static enum Operation {
+		AND("AND"),
+		OR("OR"),
+		EQUALS("eq"),
+		MATCHES("matches"),
+		NOT("NOT"),
+		GE(">="),
+		LE("<="),
+		EQ("=="),
+		LIKE("LIKE"), ;
+		private String name;
 
 		Operation(String name) {
 			this.name = name;
@@ -577,49 +577,49 @@ public class MagicCardFilter {
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Rarity.getInstance()), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.LANG), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.TYPE_LINE), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.NAME_LINE), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.POWER), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.TOUGHNESS), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.CCC), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.COUNT), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.PRICE), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.DBPRICE), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.COMMENT), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.OWNERSHIP), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.COMMUNITYRATING), expr);
-		expr = createAndGroup(createNumericSearch(map, FilterHelper.COLLNUM), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.ARTIST), expr);
-		expr = createAndGroup(createTextSearch(map, MagicCardFieldPhysical.SPECIAL.name()), expr);
-		expr = createAndGroup(createNumericSearch(map, MagicCardFieldPhysical.FORTRADECOUNT.name()), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.LANG), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.TYPE_LINE), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.NAME_LINE), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.POWER), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.TOUGHNESS), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.CCC), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.COUNT), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.PRICE), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.DBPRICE), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.COMMENT), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.OWNERSHIP), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.COMMUNITYRATING), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.COLLNUM), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.ARTIST), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.SPECIAL), expr);
+		expr = createAndGroup(createNumericSearch(map, FilterField.FORTRADECOUNT), expr);
 		// text fields
-		Expr text = createTextSearch(map, FilterHelper.TEXT_LINE);
-		text = createOrGroup(text, createTextSearch(map, FilterHelper.TEXT_LINE_2));
-		text = createOrGroup(text, createTextSearch(map, FilterHelper.TEXT_LINE_3));
+		Expr text = createTextSearch(map, FilterField.TEXT_LINE);
+		text = createOrGroup(text, createTextSearch(map, FilterField.TEXT_LINE_2));
+		text = createOrGroup(text, createTextSearch(map, FilterField.TEXT_LINE_3));
 		expr = createAndGroup(expr, text);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_NOT_1), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_NOT_2), expr);
-		expr = createAndGroup(createTextSearch(map, FilterHelper.TEXT_NOT_3), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.TEXT_NOT_1), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.TEXT_NOT_2), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.TEXT_NOT_3), expr);
 		this.root = expr;
 	}
 
-	private Expr createTextSearch(HashMap map, String fieldId) {
+	private Expr createTextSearch(HashMap map, FilterField fieldId) {
 		Expr sub = null;
-		String valueKey = FilterHelper.getPrefConstant(fieldId, FilterHelper.TEXT_POSTFIX);
+		String valueKey = FilterField.getPrefConstant(fieldId, FilterField.TEXT_POSTFIX);
 		String value = (String) map.get(valueKey);
 		if (value != null && value.length() > 0) {
-			sub = new BinaryExpr(new Node(fieldId), Operation.EQUALS, new Node(value));
+			sub = new BinaryExpr(new Node(fieldId.toString()), Operation.EQUALS, new Node(value));
 		}
 		return sub;
 	}
 
-	private Expr createNumericSearch(HashMap map, String fieldId) {
+	private Expr createNumericSearch(HashMap map, FilterField fieldId) {
 		Expr sub = null;
-		String valueKey = FilterHelper.getPrefConstant(fieldId, FilterHelper.NUMERIC_POSTFIX);
+		String valueKey = FilterField.getPrefConstant(fieldId, FilterField.NUMERIC_POSTFIX);
 		String value = (String) map.get(valueKey);
 		if (value != null && value.length() > 0) {
-			sub = new BinaryExpr(new Node(fieldId), Operation.EQUALS, new Node(value));
+			sub = new BinaryExpr(new Node(fieldId.toString()), Operation.EQUALS, new Node(value));
 		}
 		return sub;
 	}

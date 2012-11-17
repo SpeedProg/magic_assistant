@@ -5,7 +5,6 @@ import com.reflexit.magiccards.core.Activator;
 public class MagicLogger {
 	private static TimerTracer tracer = new TimerTracer();
 	static boolean rcp = false;
-	private static boolean tracing = false;
 	static {
 		if (System.getProperty("eclipse.home.location") != null) {
 			rcp = true;
@@ -29,28 +28,26 @@ public class MagicLogger {
 	}
 
 	public static void trace(String message) {
-		if (tracing)
-			tracer.trace("m", message);
+		tracer.trace("m", message);
 	}
 
 	public static void tracet(String key, String message) {
-		if (tracing)
-			tracer.trace(key, message);
+		tracer.trace(key, message);
 	}
 
 	public static void setTracing(boolean trace) {
-		MagicLogger.tracing = trace;
+		tracer.setTracing(trace);
 	}
 
 	public static void traceStart(String string) {
-		if (tracing) {
-			tracer.addTimer(string);
-			tracer.trace(string, "start");
-		}
+		tracer.traceStart(string);
 	}
 
 	public static void traceEnd(String string) {
-		if (tracing)
-			tracer.trace(string, "end");
+		tracer.traceEnd(string);
+	}
+
+	public static TimerTracer getTracer() {
+		return tracer;
 	}
 }

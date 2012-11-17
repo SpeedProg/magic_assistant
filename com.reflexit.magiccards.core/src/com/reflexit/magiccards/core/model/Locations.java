@@ -14,13 +14,13 @@ public class Locations implements ISearchableProperty {
 
 	static Locations instance = new Locations();
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
-	 */
 	public String getIdPrefix() {
-		return FilterHelper.LOCATION;
+		return getFilterField().toString();
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.LOCATION;
 	}
 
 	public static Locations getInstance() {
@@ -55,7 +55,7 @@ public class Locations implements ISearchableProperty {
 	}
 
 	public String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
 	public String getNameById(String id1) {

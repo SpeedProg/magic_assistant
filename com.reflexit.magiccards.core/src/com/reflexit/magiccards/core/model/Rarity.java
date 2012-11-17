@@ -30,13 +30,13 @@ public class Rarity implements ISearchableProperty {
 		this.names.put(id, string);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
-	 */
 	public String getIdPrefix() {
-		return FilterHelper.RARITY;
+		return getFilterField().toString();
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.RARITY;
 	}
 
 	public static Rarity getInstance() {
@@ -52,7 +52,7 @@ public class Rarity implements ISearchableProperty {
 	}
 
 	public String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
 	public String getNameById(String id) {

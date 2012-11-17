@@ -69,7 +69,12 @@ public class Languages implements ISearchableProperty {
 	}
 
 	public String getIdPrefix() {
-		return FilterHelper.LANG;
+		return getFilterField().toString();
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.LANG;
 	}
 
 	public Collection getNames() {
@@ -81,7 +86,7 @@ public class Languages implements ISearchableProperty {
 	}
 
 	public String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
 	public String getNameById(String id) {

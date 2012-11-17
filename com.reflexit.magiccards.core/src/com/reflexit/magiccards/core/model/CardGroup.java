@@ -29,7 +29,7 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
  * @author Alena
  * 
  */
-public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardPhysical {
+public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardPhysical, ICardGroup {
 	private String name;
 	private ICardField groupField;
 	private int count;
@@ -185,6 +185,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		}
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -321,22 +322,47 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		}
 	}
 
-	public List getChildrenList() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.ICardGroup#getChildrenList()
+	 */
+	@Override
+	public List<? extends ICard> getChildrenList() {
 		return children;
 	}
 
-	public synchronized Object[] getChildren() {
-		return getChildrenList().toArray(new Object[children.size()]);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.ICardGroup#getChildren()
+	 */
+	@Override
+	public synchronized ICard[] getChildren() {
+		return ((List<ICard>) getChildrenList()).toArray(new ICard[children.size()]);
 	}
 
 	public synchronized Iterator iterator() {
 		return children.iterator();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.ICardGroup#size()
+	 */
+	@Override
 	public synchronized int size() {
 		return this.children.size();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.core.model.ICardGroup#add(com.reflexit.magiccards.core.model.ICard)
+	 */
+	@Override
 	public synchronized void add(ICard elem) {
 		this.children.add(elem);
 		if (elem instanceof CardGroup) {
@@ -346,7 +372,13 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		rehash();
 	}
 
-	public synchronized void remove(Object elem) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.reflexit.magiccards.core.model.ICardGroup#remove(java.lang.Object)
+	 */
+	@Override
+	public synchronized void remove(ICard elem) {
 		children.remove(elem);
 		if (elem instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) elem;
@@ -358,8 +390,8 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	/**
 	 * @param index
 	 */
-	public synchronized Object getChildAtIndex(int index) {
-		Object object = getChildrenList().get(index);
+	public synchronized ICard getChildAtIndex(int index) {
+		ICard object = getChildrenList().get(index);
 		return object;
 	}
 

@@ -57,13 +57,13 @@ public class CardTypes implements ISearchableProperty {
 		return Pattern.compile(type, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(text).find();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ISearchableProperty#getIdPrefix()
-	 */
 	public String getIdPrefix() {
-		return "types";
+		return getFilterField().toString();
+	}
+
+	@Override
+	public FilterField getFilterField() {
+		return FilterField.CARD_TYPE;
 	}
 
 	public static CardTypes getInstance() {
@@ -79,7 +79,7 @@ public class CardTypes implements ISearchableProperty {
 	}
 
 	public String getPrefConstant(String name) {
-		return FilterHelper.getPrefConstant(getIdPrefix(), name);
+		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
 	public String getNameById(String id) {
