@@ -84,7 +84,6 @@ public enum FilterField {
 		ids.addAll(Colors.getInstance().getIds());
 		ids.addAll(ColorTypes.getInstance().getIds());
 		ids.addAll(CardTypes.getInstance().getIds());
-		ids.addAll(SuperTypes.getInstance().getIds());
 		ids.addAll(Editions.getInstance().getIds());
 		ids.addAll(Rarity.getInstance().getIds());
 		ids.addAll(Locations.getInstance().getIds());

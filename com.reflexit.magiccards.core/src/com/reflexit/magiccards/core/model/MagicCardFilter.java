@@ -29,6 +29,121 @@ public class MagicCardFilter {
 		public Object getFieldValue(Object o) {
 			return null;
 		}
+
+		public void translate() {
+			try {
+				if (!(this instanceof BinaryExpr)) {
+					return;
+				}
+				BinaryExpr bin = (BinaryExpr) this;
+				BinaryExpr res = null;
+				String value = bin.getRight().toString();
+				if (bin.getLeft() instanceof FilterFieldExpr) {
+					FilterField ff = ((FilterFieldExpr) bin.getLeft()).getFilterField();
+					switch (ff) {
+						case RARITY:
+						case LOCATION:
+						case EDITION:
+							res = BinaryExpr.fieldEquals(ff.getField(), value);
+							break;
+						case TYPE_LINE:
+						case NAME_LINE:
+						case ARTIST:
+						case COMMENT:
+						case SPECIAL:
+						case CARD_TYPE:
+							res = MagicCardFilter.textSearch(ff.getField(), value);
+							break;
+						case CCC:
+						case POWER:
+						case TOUGHNESS:
+						case COUNT:
+						case FORTRADECOUNT:
+						case COMMUNITYRATING:
+						case COLLNUM:
+							res = BinaryExpr.fieldInt(ff.getField(), value);
+							break;
+						case COLOR: {
+							String en;
+							if (value.equals("Multi-Color")) {
+								res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "multi");
+							} else if (value.equals("Mono-Color")) {
+								BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
+								BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "mono");
+								res = new BinaryExpr(b1, Operation.OR, b2);
+							} else if (value.equals("Hybrid")) {
+								res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "hybrid");
+							} else if (value.equals("Colorless")) {
+								BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
+								BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "land");
+								res = new BinaryExpr(b1, Operation.OR, b2);
+							} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
+								res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
+							}
+							break;
+						}
+						case DBPRICE: {
+							BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
+							res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
+							res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
+							break;
+						}
+						case PRICE: {
+							BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
+							res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
+							res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
+							break;
+						}
+						case OWNERSHIP: {
+							BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
+							Expr b2;
+							if ("true".equals(value))
+								b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, ">=1");
+							else
+								b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, "==0");
+							res = new BinaryExpr(b1, Operation.OR, b2);
+							break;
+						}
+						case LANG: {
+							if (value.equals("")) {
+								res = new BinaryExpr(MagicCardFilter.TRUE, Operation.AND, MagicCardFilter.TRUE);
+							} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
+								res = BinaryExpr.fieldEquals(MagicCardField.LANG, null);
+								res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldEquals(MagicCardField.LANG, value));
+							} else {
+								res = BinaryExpr.fieldEquals(MagicCardField.LANG, value);
+							}
+							break;
+						}
+						case TEXT_LINE:
+						case TEXT_LINE_2:
+						case TEXT_LINE_3:
+							res = MagicCardFilter.textSearch(MagicCardField.TEXT, value);
+							res = new BinaryExpr(res, Operation.OR, MagicCardFilter.textSearch(MagicCardField.ORACLE, value));
+							break;
+						case TEXT_NOT_1:
+						case TEXT_NOT_2:
+						case TEXT_NOT_3:
+							res = MagicCardFilter.textSearch(MagicCardField.TEXT, value);
+							res = new BinaryExpr(res, Operation.OR, MagicCardFilter.textSearch(MagicCardField.ORACLE, value));
+							res = new BinaryExpr(res, Operation.NOT, TRUE);
+							break;
+						default:
+							break;
+					}
+					if (res != null) {
+						bin.left = res.left;
+						bin.right = res.right;
+						bin.op = res.op;
+					}
+				} else {
+					bin.left.translate();
+					bin.right.translate();
+				}
+			} finally {
+				translated = true;
+			}
+		}
 	}
 
 	public static Expr TRUE = new Expr() {
@@ -70,10 +185,10 @@ public class MagicCardFilter {
 		}
 	}
 
-	public static class Field extends Expr {
+	public static class CardFieldExpr extends Expr {
 		ICardField field;
 
-		Field(ICardField field) {
+		CardFieldExpr(ICardField field) {
 			this.field = field;
 		}
 
@@ -88,6 +203,31 @@ public class MagicCardFilter {
 				return ((IMagicCard) o).getObjectByField(field);
 			}
 			return null;
+		}
+	}
+
+	public static class FilterFieldExpr extends Expr {
+		FilterField field;
+
+		FilterFieldExpr(FilterField field) {
+			this.field = field;
+		}
+
+		@Override
+		public String toString() {
+			return this.field.toString();
+		}
+
+		@Override
+		public Object getFieldValue(Object o) {
+			if (o instanceof IMagicCard) {
+				return ((IMagicCard) o).getObjectByField(field.getField());
+			}
+			return null;
+		}
+
+		public FilterField getFilterField() {
+			return field;
 		}
 	}
 
@@ -106,6 +246,7 @@ public class MagicCardFilter {
 		public boolean wordBoundary = true;
 		public boolean caseSensitive = false;
 		public boolean regex = false;
+		public Pattern pattern;
 
 		public TextValue(String name, boolean wordBoundary, boolean caseSensitive, boolean regex) {
 			super(name);
@@ -118,7 +259,14 @@ public class MagicCardFilter {
 			this.wordBoundary = b;
 		}
 
-		public Pattern toPattern() {
+		public Pattern getPattern() {
+			if (pattern == null) {
+				pattern = toPattern();
+			}
+			return pattern;
+		}
+
+		private Pattern toPattern() {
 			if (regex)
 				return Pattern.compile(name);
 			int flags = 0;
@@ -141,6 +289,8 @@ public class MagicCardFilter {
 		Operation op;
 
 		BinaryExpr(Expr left, Operation op, Expr right) {
+			if (right == null)
+				throw new NullPointerException();
 			this.left = left;
 			this.right = right;
 			this.op = op;
@@ -167,23 +317,28 @@ public class MagicCardFilter {
 		}
 
 		public static BinaryExpr fieldEquals(ICardField field, String value) {
-			return new BinaryExpr(new Field(field), Operation.EQUALS, new Value(value));
+			return new BinaryExpr(new CardFieldExpr(field), Operation.EQUALS, new Value(value));
 		}
 
 		public static BinaryExpr fieldMatches(ICardField field, String value) {
-			return new BinaryExpr(new Field(field), Operation.MATCHES, new Value(value));
+			return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, new Value(value));
 		}
 
 		public static BinaryExpr fieldLike(ICardField field, String value) {
-			return new BinaryExpr(new Field(field), Operation.LIKE, new Value(value));
+			return new BinaryExpr(new CardFieldExpr(field), Operation.LIKE, new Value(value));
 		}
 
 		public static BinaryExpr fieldOp(ICardField field, Operation op, String value) {
-			return new BinaryExpr(new Field(field), op, new Value(value));
+			BinaryExpr res = new BinaryExpr(new CardFieldExpr(field), op, new Value(value));
+			res.translated = true;
+			return res;
 		}
 
 		@Override
 		public boolean evaluate(Object o) {
+			if (!translated) {
+				translate();
+			}
 			if (this.op == Operation.AND) {
 				boolean res = this.left.evaluate(o);
 				if (res == false)
@@ -197,9 +352,6 @@ public class MagicCardFilter {
 			} else if (this.op == Operation.NOT) {
 				boolean res = this.left.evaluate(o);
 				return !res;
-			}
-			if (!this.translated) {
-				return translate(this).evaluate(o);
 			}
 			if (this.op == Operation.EQUALS) {
 				Object x = this.left.getFieldValue(o);
@@ -253,8 +405,8 @@ public class MagicCardFilter {
 				return true;
 			if (x == null || y == null)
 				return false;
-			if (this.left instanceof Field && o instanceof IMagicCard && this.right instanceof TextValue) {
-				return ((IMagicCard) o).matches(((Field) this.left).field, (TextValue) this.right);
+			if (this.left instanceof CardFieldExpr && o instanceof IMagicCard && this.right instanceof TextValue) {
+				return ((IMagicCard) o).matches(((CardFieldExpr) this.left).field, (TextValue) this.right);
 			}
 			if (x instanceof String && y instanceof String) {
 				String pattern = (String) y;
@@ -264,9 +416,9 @@ public class MagicCardFilter {
 			return false;
 		}
 
-		public static Expr fieldInt(ICardField field, String value) {
+		public static BinaryExpr fieldInt(ICardField field, String value) {
 			if (value.equals(">= 0")) {
-				return TRUE;
+				return new BinaryExpr(TRUE, Operation.AND, TRUE);
 			} else if (value.startsWith(">=")) {
 				return fieldOp(field, Operation.GE, value.substring(2).trim());
 			} else if (value.startsWith("<=")) {
@@ -274,7 +426,7 @@ public class MagicCardFilter {
 			} else if (value.startsWith("=")) {
 				return fieldOp(field, Operation.EQ, value.substring(2).trim());
 			} else if (value.equals("0")) {
-				return TRUE;
+				return new BinaryExpr(TRUE, Operation.AND, TRUE);
 			} else {
 				return fieldOp(field, Operation.EQ, value.trim());
 			}
@@ -416,22 +568,22 @@ public class MagicCardFilter {
 		String value = token.getValue();
 		if (token.getType() == TokenType.REGEX) {
 			TextValue tvalue = new TextValue(value, false, false, true);
-			return new BinaryExpr(new Field(field), Operation.MATCHES, tvalue);
+			return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
 		} else {
 			TextValue tvalue = new TextValue(value, false, false, false);
 			char c = value.charAt(0);
 			if (Character.isLetter(c) && token.getType() != TokenType.QUOTED) {
 				tvalue.setWordBoundary(true);
 			}
-			return new BinaryExpr(new Field(field), Operation.MATCHES, tvalue);
+			return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
 		}
 	}
 
-	static public Expr textSearch(ICardField field, String text) {
+	static public BinaryExpr textSearch(ICardField field, String text) {
 		SearchStringTokenizer tokenizer = new SearchStringTokenizer();
 		tokenizer.init(text);
 		SearchToken token;
-		Expr res = null;
+		BinaryExpr res = null;
 		while ((token = tokenizer.nextToken()) != null) {
 			BinaryExpr cur;
 			if (token.getType() == TokenType.NOT) {
@@ -439,108 +591,12 @@ public class MagicCardFilter {
 				if (token == null)
 					break;
 				cur = tokenSearch(field, token);
-				cur = new BinaryExpr(cur, Operation.NOT, null);
+				cur = new BinaryExpr(cur, Operation.NOT, TRUE);
 			} else {
 				cur = tokenSearch(field, token);
 			}
 			res = createAndGroup(res, cur);
 		}
-		return res;
-	}
-
-	private static Expr translate(BinaryExpr bin) {
-		Expr res = bin;
-		String requestedId = bin.getLeft().toString();
-		String value = bin.getRight().toString();
-		if (Colors.getInstance().getIdPrefix().equals(requestedId)) {
-			String en;
-			if (value.equals("Multi-Color")) {
-				res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "multi");
-			} else if (value.equals("Mono-Color")) {
-				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
-				BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "mono");
-				res = new BinaryExpr(b1, Operation.OR, b2);
-			} else if (value.equals("Hybrid")) {
-				res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "hybrid");
-			} else if (value.equals("Colorless")) {
-				BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
-				BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "land");
-				res = new BinaryExpr(b1, Operation.OR, b2);
-			} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-				res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
-			}
-		} else if (CardTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			res = textSearch(MagicCardField.TYPE, value);
-		} else if (Editions.getInstance().getIdPrefix().equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardField.SET, value);
-		} else if (SuperTypes.getInstance().getIdPrefix().equals(requestedId)) {
-			BinaryExpr b1 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " .*");
-			BinaryExpr b2 = BinaryExpr.fieldMatches(MagicCardField.TYPE, ".*" + value + " -.*");
-			res = new BinaryExpr(b1, Operation.AND, new BinaryExpr(b2, Operation.NOT, null));
-		} else if (FilterField.TYPE_LINE.toString().equals(requestedId)) {
-			res = textSearch(MagicCardField.TYPE, value);
-		} else if (FilterField.NAME_LINE.toString().equals(requestedId)) {
-			res = textSearch(MagicCardField.NAME, value);
-		} else if (FilterField.CCC.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardField.CMC, value);
-		} else if (FilterField.POWER.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardField.POWER, value);
-		} else if (FilterField.TOUGHNESS.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardField.TOUGHNESS, value);
-		} else if (FilterField.LOCATION.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardFieldPhysical.LOCATION, value);
-		} else if (FilterField.RARITY.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldEquals(MagicCardField.RARITY, value);
-		} else if (FilterField.COUNT.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.COUNT, value);
-		} else if (MagicCardFieldPhysical.FORTRADECOUNT.name().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardFieldPhysical.FORTRADECOUNT, value);
-		} else if (FilterField.DBPRICE.toString().equals(requestedId)) {
-			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
-			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
-			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
-		} else if (FilterField.COMMUNITYRATING.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardField.RATING, value);
-		} else if (FilterField.COLLNUM.toString().equals(requestedId)) {
-			res = BinaryExpr.fieldInt(MagicCardField.COLLNUM, value);
-		} else if (FilterField.ARTIST.toString().equals(requestedId)) {
-			res = textSearch(MagicCardField.ARTIST, value);
-		} else if (FilterField.PRICE.toString().equals(requestedId)) {
-			BinaryExpr b1 = new BinaryExpr(new Field(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
-			res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
-			res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
-		} else if (FilterField.COMMENT.toString().equals(requestedId)) {
-			res = textSearch(MagicCardFieldPhysical.COMMENT, value);
-		} else if (MagicCardFieldPhysical.SPECIAL.name().equals(requestedId)) {
-			res = textSearch(MagicCardFieldPhysical.SPECIAL, value);
-		} else if (FilterField.OWNERSHIP.toString().equals(requestedId)) {
-			BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
-			Expr b2;
-			if ("true".equals(value))
-				b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, ">=1");
-			else
-				b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, "==0");
-			res = new BinaryExpr(b1, Operation.OR, b2);
-		} else if (FilterField.LANG.toString().equals(requestedId)) {
-			if (value.equals("")) {
-				res = TRUE;
-			} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
-				res = BinaryExpr.fieldEquals(MagicCardField.LANG, null);
-				res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldEquals(MagicCardField.LANG, value));
-			} else {
-				res = BinaryExpr.fieldEquals(MagicCardField.LANG, value);
-			}
-		} else if (requestedId.startsWith(FilterField.TEXT_LINE.toString())) {
-			res = textSearch(MagicCardField.TEXT, value);
-			res = new BinaryExpr(res, Operation.OR, textSearch(MagicCardField.ORACLE, value));
-			if (requestedId.contains("_exclude_")) {
-				res = new BinaryExpr(res, Operation.NOT, null);
-			}
-			// TODO: Other
-		} else {
-			res = bin;
-		}
-		res.translated = true;
 		return res;
 	}
 
@@ -579,7 +635,6 @@ public class MagicCardFilter {
 		}
 		expr = createAndGroup(createOrGroup(map, ColorTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, CardTypes.getInstance()), expr);
-		expr = createAndGroup(createOrGroup(map, SuperTypes.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Editions.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Locations.getInstance()), expr);
 		expr = createAndGroup(createOrGroup(map, Rarity.getInstance()), expr);
@@ -617,7 +672,7 @@ public class MagicCardFilter {
 		String valueKey = fieldId.getPrefConstant();
 		String value = (String) map.get(valueKey);
 		if (value != null && value.length() > 0) {
-			sub = new BinaryExpr(new Node(fieldId.toString()), Operation.EQUALS, new Node(value));
+			sub = new BinaryExpr(new FilterFieldExpr(fieldId), Operation.EQUALS, new Node(value));
 		}
 		return sub;
 	}
@@ -629,18 +684,26 @@ public class MagicCardFilter {
 		String valueKey = fieldId.getPrefConstant();
 		String value = (String) map.get(valueKey);
 		if (value != null && value.length() > 0) {
-			sub = new BinaryExpr(new Node(fieldId.toString()), Operation.EQUALS, new Node(value));
+			sub = new BinaryExpr(new FilterFieldExpr(fieldId), Operation.EQUALS, new Node(value));
 		}
 		return sub;
 	}
 
-	private static Expr createAndGroup(Expr first, Expr expr) {
-		if (expr == null)
-			return first;
-		if (first == null)
-			return expr;
-		BinaryExpr and = new BinaryExpr(first, Operation.AND, expr);
-		return and;
+	private static BinaryExpr createAndGroup(Expr a, Expr b) {
+		Expr res = null;
+		if (a == null && b == null) {
+			res = TRUE;
+		} else if (b == null)
+			res = a;
+		else if (a == null)
+			res = b;
+		else {
+			res = new BinaryExpr(a, Operation.AND, b);
+		}
+		if (res instanceof BinaryExpr)
+			return (BinaryExpr) res;
+		else
+			return new BinaryExpr(res, Operation.AND, TRUE);
 	}
 
 	private Expr createOrGroup(Expr or, Expr res) {
@@ -670,17 +733,18 @@ public class MagicCardFilter {
 			String id = (String) iterator.next();
 			String value = (String) map.get(id);
 			BinaryExpr or = null;
+			FilterFieldExpr ffe = new FilterFieldExpr(sp.getFilterField());
 			if (value != null && value.equals("true")) {
-				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
+				or = new BinaryExpr(ffe, Operation.EQUALS, new Node(sp.getNameById(id)));
 			} else if (value == null || value.equals("false")) {
 				if (notOp) {
-					or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Node(sp.getNameById(id)));
-					or = new BinaryExpr(or, Operation.NOT, null);
+					or = new BinaryExpr(ffe, Operation.EQUALS, new Node(sp.getNameById(id)));
+					or = new BinaryExpr(or, Operation.NOT, TRUE);
 				} else {
 					// skip or = null;
 				}
 			} else if (value.length() > 0) {
-				or = new BinaryExpr(new Node(sp.getIdPrefix()), Operation.EQUALS, new Value(value));
+				or = new BinaryExpr(ffe, Operation.EQUALS, new Value(value));
 			}
 			if (or == null) {
 				continue;

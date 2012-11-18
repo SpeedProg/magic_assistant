@@ -114,13 +114,13 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 				try {
 					setFieldValue(card, f, i, value.trim());
 				} catch (Exception e) {
-					throw new IllegalArgumentException("Error: Line " + line + ",Field " + (i + 1) + ": Expecting " + f + ", text was: "
+					throw new IllegalArgumentException("Error: Line " + line + ",CardFieldExpr " + (i + 1) + ": Expecting " + f + ", text was: "
 							+ value);
 				}
 			}
 		}
 		if (card.getName() == null || card.getName().length() == 0) {
-			throw new IllegalArgumentException("Error: Line " + line + ", Field 2: Expected NAME value is empty");
+			throw new IllegalArgumentException("Error: Line " + line + ", CardFieldExpr 2: Expected NAME value is empty");
 		}
 		return card;
 	}

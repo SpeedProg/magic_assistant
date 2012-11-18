@@ -133,7 +133,7 @@ public abstract class NLSLocal {
 		final Field[] fieldArray = clazz.getDeclaredFields();
 		ClassLoader loader = clazz.getClassLoader();
 		boolean isAccessible = (clazz.getModifiers() & Modifier.PUBLIC) != 0;
-		// build a map of field names to Field objects
+		// build a map of field names to CardFieldExpr objects
 		final int len = fieldArray.length;
 		Map fields = new HashMap(len * 2);
 		for (int i = 0; i < len; i++)
@@ -188,13 +188,13 @@ public abstract class NLSLocal {
 		}
 		String statusMsg;
 		switch (severity) {
-		case SEVERITY_ERROR:
-			statusMsg = "Error: "; //$NON-NLS-1$
-			break;
-		case SEVERITY_WARNING:
-			// intentionally fall through:
-		default:
-			statusMsg = "Warning: "; //$NON-NLS-1$
+			case SEVERITY_ERROR:
+				statusMsg = "Error: "; //$NON-NLS-1$
+				break;
+			case SEVERITY_WARNING:
+				// intentionally fall through:
+			default:
+				statusMsg = "Warning: "; //$NON-NLS-1$
 		}
 		if (message != null)
 			statusMsg += message;

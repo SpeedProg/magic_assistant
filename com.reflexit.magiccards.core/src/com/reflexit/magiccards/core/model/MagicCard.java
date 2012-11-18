@@ -571,7 +571,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		if (left == MagicCardField.TYPE && !right.regex) {
 			return CardTypes.getInstance().hasType(this, right.getText());
 		}
-		return right.toPattern().matcher(value).find();
+		return right.getPattern().matcher(value).find();
 	}
 
 	public void setCollNumber(int cnum) {

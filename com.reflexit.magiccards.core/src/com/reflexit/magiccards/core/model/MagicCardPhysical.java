@@ -471,7 +471,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		if (left == MagicCardField.TYPE && !right.regex) {
 			return CardTypes.getInstance().hasType(this, right.getText());
 		}
-		return right.toPattern().matcher(value).find();
+		return right.getPattern().matcher(value).find();
 	}
 
 	public int getEnglishCardId() {
