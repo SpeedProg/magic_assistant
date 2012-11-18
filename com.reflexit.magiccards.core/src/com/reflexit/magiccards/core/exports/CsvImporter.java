@@ -34,49 +34,49 @@ public class CsvImporter implements Closeable {
 			line.getChars(0, line.length(), bytes, 0);
 			for (char c : bytes) {
 				switch (state) {
-				case 0: // normal
-					if (c == '"') {
-						state = 1; // quoted string
-						continue;
-					}
-					if (c == sep) {
-						res.add(curField.toString());
-						curField = new StringBuffer();
-						continue;
-					}
-					curField.append(c);
-					break;
-				case 1: // quoted
-					if (c == '"') {
-						state = 2; // escape quote or close quote
-						continue;
-					}
-					curField.append(c);
-					break;
-				case 2:
-					if (c == '"') { // escape
+					case 0: // normal
+						if (c == '"') {
+							state = 1; // quoted string
+							continue;
+						}
+						if (c == sep) {
+							res.add(curField.toString());
+							curField = new StringBuffer();
+							continue;
+						}
 						curField.append(c);
-						state = 1;
-						continue;
-					}
-					state = 0;
-					if (c == sep) {
-						res.add(curField.toString());
-						curField = new StringBuffer();
-						continue;
-					}
-					curField.append(c);
-					break;
+						break;
+					case 1: // quoted
+						if (c == '"') {
+							state = 2; // escape quote or close quote
+							continue;
+						}
+						curField.append(c);
+						break;
+					case 2:
+						if (c == '"') { // escape
+							curField.append(c);
+							state = 1;
+							continue;
+						}
+						state = 0;
+						if (c == sep) {
+							res.add(curField.toString());
+							curField = new StringBuffer();
+							continue;
+						}
+						curField.append(c);
+						break;
 				}
 			}
 			switch (state) {
-			case 0: // normal
-			case 2: // close quote
-				res.add(curField.toString());
-				break nextline;
-			case 1: // quoted
-				curField.append(lineSep);
-				continue nextline;
+				case 0: // normal
+				case 2: // close quote
+					res.add(curField.toString());
+					break nextline;
+				case 1: // quoted
+					curField.append(lineSep);
+					continue nextline;
 			}
 		} while (true);
 		return res;

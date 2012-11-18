@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model.nav;
 
-
 /**
  * Organizer for magic database
  * 

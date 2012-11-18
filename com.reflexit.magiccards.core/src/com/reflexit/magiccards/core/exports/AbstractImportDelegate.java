@@ -114,8 +114,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 				try {
 					setFieldValue(card, f, i, value.trim());
 				} catch (Exception e) {
-					throw new IllegalArgumentException("Error: Line " + line + ",CardFieldExpr " + (i + 1) + ": Expecting " + f + ", text was: "
-							+ value);
+					throw new IllegalArgumentException("Error: Line " + line + ",CardFieldExpr " + (i + 1) + ": Expecting " + f
+							+ ", text was: " + value);
 				}
 			}
 		}

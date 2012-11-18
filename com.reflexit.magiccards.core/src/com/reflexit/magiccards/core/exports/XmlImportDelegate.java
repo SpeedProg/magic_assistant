@@ -38,7 +38,7 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 
 	/**
 	 * @param monitor
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		try {

@@ -23,7 +23,8 @@ public class PreviewResult {
 	private Location location;
 
 	/**
-	 * @param error the error to set
+	 * @param error
+	 *            the error to set
 	 */
 	public void setError(Exception error) {
 		this.error = error;
@@ -37,7 +38,8 @@ public class PreviewResult {
 	}
 
 	/**
-	 * @param fields the fields to set
+	 * @param fields
+	 *            the fields to set
 	 */
 	public void setFields(ICardField[] fields) {
 		this.fields = fields;
@@ -51,7 +53,8 @@ public class PreviewResult {
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
@@ -65,7 +68,8 @@ public class PreviewResult {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(ReportType type) {
 		this.type = type;
@@ -79,7 +83,8 @@ public class PreviewResult {
 	}
 
 	/**
-	 * @param values the values to set
+	 * @param values
+	 *            the values to set
 	 */
 	public void setValues(ArrayList<String[]> values) {
 		this.values = values;

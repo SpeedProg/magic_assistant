@@ -7,8 +7,9 @@ import java.util.Iterator;
 
 /**
  * Export objects in text table-line format
+ * 
  * @author Alena
- *
+ * 
  */
 public class TableExporter {
 	protected PrintStream exportStream;
@@ -40,6 +41,7 @@ public class TableExporter {
 
 	/**
 	 * default escaping -kind of dump - just gets rid of separator in string
+	 * 
 	 * @param element
 	 * @return
 	 */

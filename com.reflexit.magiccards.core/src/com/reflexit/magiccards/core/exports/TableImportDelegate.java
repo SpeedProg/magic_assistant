@@ -35,7 +35,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 
 	/**
 	 * @param monitor
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		runTablePipedImport(monitor);
@@ -67,8 +67,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 						MagicCardPhysical card = createCard(Arrays.asList(split));
 						importCard(card);
 					} else {
-						throw new IllegalArgumentException("Error: Line " + line
-						        + ". Fields seprated by | are not found: " + input);
+						throw new IllegalArgumentException("Error: Line " + line + ". Fields seprated by | are not found: " + input);
 					}
 					if (previewMode && line >= 10)
 						break;

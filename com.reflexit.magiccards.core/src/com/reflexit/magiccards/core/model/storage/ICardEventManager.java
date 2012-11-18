@@ -9,6 +9,7 @@ public interface ICardEventManager<T> {
 
 	/**
 	 * card values were updated
+	 * 
 	 * @param card
 	 */
 	public void update(T card);

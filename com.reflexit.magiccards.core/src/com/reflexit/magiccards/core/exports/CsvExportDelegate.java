@@ -25,6 +25,7 @@ public class CsvExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	protected boolean isForExport(ICardField field) {
 		return super.isForExport(field) || field == MagicCardFieldPhysical.SIDEBOARD;
 	}
+
 	public void runCsvExport(ICoreProgressMonitor monitor) throws InvocationTargetException {
 		CsvExporter exporter = null;
 		try {
