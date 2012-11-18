@@ -35,7 +35,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	}
 
 	/**
-	 * Creates the field editors. Field editors are abstractions of the common
+	 * Creates the field editors. CardFieldExpr editors are abstractions of the common
 	 * GUI blocks needed to manipulate various types of preferences. Each field
 	 * editor knows how to save and restore itself.
 	 */
