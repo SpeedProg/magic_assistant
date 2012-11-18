@@ -100,12 +100,12 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			if (element instanceof String) {
 				String format = (String) element;
 				switch (columnIndex) {
-				case 0:
-					return format;
-				case 1:
-					return deckInput.get(format);
-				default:
-					break;
+					case 0:
+						return format;
+					case 1:
+						return deckInput.get(format);
+					default:
+						break;
 				}
 			}
 			return null;
@@ -126,20 +126,20 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			if (element instanceof MagicCardPhysical) {
 				MagicCardPhysical card = (MagicCardPhysical) element;
 				switch (columnIndex) {
-				case 0:
-					return card.getName();
-				case 1:
-					return card.getCount() + "";
-				case 2:
-					Map<String, String> map = cardLegalities.get(card.getCardId());
-					if (map == null)
-						return NOT_PRESENT;
-					String legality = map.get(selectedFormat);
-					if (legality == null)
-						return NOT_PRESENT;
-					return legality;
-				default:
-					break;
+					case 0:
+						return card.getName();
+					case 1:
+						return card.getCount() + "";
+					case 2:
+						Map<String, String> map = cardLegalities.get(card.getCardId());
+						if (map == null)
+							return NOT_PRESENT;
+						String legality = map.get(selectedFormat);
+						if (legality == null)
+							return NOT_PRESENT;
+						return legality;
+					default:
+						break;
 				}
 			}
 			return null;

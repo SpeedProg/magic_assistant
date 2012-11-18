@@ -31,7 +31,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatiorManager;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CardNavigatorSelectionDialog extends SelectionDialog {
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
@@ -43,24 +43,26 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	private boolean allowNewContainerName = true;
 	// the validation message
 	Label statusMessage;
-	//for validating the selection
+	// for validating the selection
 	ISelectionValidator validator;
 	private ViewerFilter[] filters;
 
 	/**
-	 * Creates a resource container selection dialog rooted at the given resource.
-	 * All selections are considered valid. 
-	 *
-	 * @param parentShell the parent shell
-	 * @param root the initial root in the tree
-	 * @param allowNewContainerName <code>true</code> to enable the user to type in
-	 *  a new container name, and <code>false</code> to restrict the user to just
-	 *  selecting from existing ones
-	 * @param message the message to be displayed at the top of this dialog, or
-	 *    <code>null</code> to display a default message
+	 * Creates a resource container selection dialog rooted at the given resource. All selections
+	 * are considered valid.
+	 * 
+	 * @param parentShell
+	 *            the parent shell
+	 * @param root
+	 *            the initial root in the tree
+	 * @param allowNewContainerName
+	 *            <code>true</code> to enable the user to type in a new container name, and
+	 *            <code>false</code> to restrict the user to just selecting from existing ones
+	 * @param message
+	 *            the message to be displayed at the top of this dialog, or <code>null</code> to
+	 *            display a default message
 	 */
-	public CardNavigatorSelectionDialog(Shell parentShell, Object initialRoot, boolean allowNewContainerName,
-	        String message) {
+	public CardNavigatorSelectionDialog(Shell parentShell, Object initialRoot, boolean allowNewContainerName, String message) {
 		super(parentShell);
 		setTitle("Container Selection");
 		this.root = initialRoot;
@@ -73,17 +75,16 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 		this.manager = new CardsNavigatiorManager();
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on Dialog.
+	/*
+	 * (non-Javadoc) Method declared on Dialog.
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		// create composite 
+		// create composite
 		Composite area = (Composite) super.createDialogArea(parent);
 		ISelectionChangedListener listener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (CardNavigatorSelectionDialog.this.statusMessage != null
-				        && CardNavigatorSelectionDialog.this.validator != null) {
+				if (CardNavigatorSelectionDialog.this.statusMessage != null && CardNavigatorSelectionDialog.this.validator != null) {
 					String errorMsg = CardNavigatorSelectionDialog.this.validator.isValid(getSelection());
 					if (errorMsg == null || errorMsg.equals(EMPTY_STRING)) {
 						CardNavigatorSelectionDialog.this.statusMessage.setText(EMPTY_STRING);
@@ -122,9 +123,9 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	}
 
 	/**
-	 * The <code>ContainerSelectionDialog</code> implementation of this 
-	 * <code>Dialog</code> method builds a list of the selected resource containers
-	 * for later retrieval by the client and closes this dialog.
+	 * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method
+	 * builds a list of the selected resource containers for later retrieval by the client and
+	 * closes this dialog.
 	 */
 	@Override
 	protected void okPressed() {
@@ -140,9 +141,10 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	}
 
 	/**
-	 * Sets the validator to use.  
+	 * Sets the validator to use.
 	 * 
-	 * @param validator A selection validator
+	 * @param validator
+	 *            A selection validator
 	 */
 	public void setValidator(ISelectionValidator validator) {
 		this.validator = validator;

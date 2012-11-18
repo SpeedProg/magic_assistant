@@ -61,11 +61,10 @@ public class CardsNavigatorContentProvider implements ITreeContentProvider {
 		return getFilter(prop);
 	}
 
-	public static ViewerFilter getFilter(final Map<String,Object> prop) {
+	public static ViewerFilter getFilter(final Map<String, Object> prop) {
 		return new ViewerFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (element instanceof CardElement) {
 					return !isFiltered((CardElement) element);
 				} else
@@ -85,9 +84,9 @@ public class CardsNavigatorContentProvider implements ITreeContentProvider {
 			}
 
 			private boolean checkSet(String key) {
-			    Object value = prop.get(key);
+				Object value = prop.get(key);
 				if (value instanceof Boolean)
-					return (Boolean)value;
+					return (Boolean) value;
 				if (value instanceof String)
 					return Boolean.valueOf((String) value);
 				return false;

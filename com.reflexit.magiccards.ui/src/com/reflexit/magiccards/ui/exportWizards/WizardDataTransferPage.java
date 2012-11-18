@@ -27,6 +27,7 @@ import java.util.List;
  * <p>
  * This class is not intended to be subclassed outside of the workbench.
  * </p>
+ * 
  * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class WizardDataTransferPage extends WizardPage implements Listener, IOverwriteQuery {
@@ -36,20 +37,23 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 
 	/**
 	 * Creates a new wizard page.
-	 *
-	 * @param pageName the name of the page
+	 * 
+	 * @param pageName
+	 *            the name of the page
 	 */
 	protected WizardDataTransferPage(String pageName) {
 		super(pageName);
 	}
 
 	/**
-	 * Adds an entry to a history, while taking care of duplicate history items
-	 * and excessively long histories.  The assumption is made that all histories
-	 * should be of length <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
-	 *
-	 * @param history the current history
-	 * @param newEntry the entry to add to the history
+	 * Adds an entry to a history, while taking care of duplicate history items and excessively long
+	 * histories. The assumption is made that all histories should be of length
+	 * <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
+	 * 
+	 * @param history
+	 *            the current history
+	 * @param newEntry
+	 *            the entry to add to the history
 	 */
 	protected String[] addToHistory(String[] history, String newEntry) {
 		java.util.ArrayList l = new java.util.ArrayList(Arrays.asList(history));
@@ -60,12 +64,14 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	}
 
 	/**
-	 * Adds an entry to a history, while taking care of duplicate history items
-	 * and excessively long histories.  The assumption is made that all histories
-	 * should be of length <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
-	 *
-	 * @param history the current history
-	 * @param newEntry the entry to add to the history
+	 * Adds an entry to a history, while taking care of duplicate history items and excessively long
+	 * histories. The assumption is made that all histories should be of length
+	 * <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
+	 * 
+	 * @param history
+	 *            the current history
+	 * @param newEntry
+	 *            the entry to add to the history
 	 */
 	protected void addToHistory(List history, String newEntry) {
 		history.remove(newEntry);
@@ -78,22 +84,24 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	}
 
 	/**
-	 * Return whether the user is allowed to enter a new container name or just
-	 * choose from existing ones.
+	 * Return whether the user is allowed to enter a new container name or just choose from existing
+	 * ones.
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
-	 *
-	 * @return <code>true</code> if new ones are okay, and <code>false</code>
-	 *  if only existing ones are allowed
+	 * 
+	 * @return <code>true</code> if new ones are okay, and <code>false</code> if only existing ones
+	 *         are allowed
 	 */
 	protected abstract boolean allowNewContainerName();
 
 	/**
 	 * Creates a new label with a bold font.
-	 *
-	 * @param parent the parent control
-	 * @param text the label text
+	 * 
+	 * @param parent
+	 *            the parent control
+	 * @param text
+	 *            the label text
 	 * @return the new label control
 	 */
 	protected Label createBoldLabel(Composite parent, String text) {
@@ -110,21 +118,23 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	/**
 	 * Creates the import/export options group controls.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does
-	 * nothing. Subclasses wishing to define such components should reimplement
-	 * this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
+	 * Subclasses wishing to define such components should reimplement this hook method.
 	 * </p>
-	 *
-	 * @param optionsGroup the parent control
+	 * 
+	 * @param optionsGroup
+	 *            the parent control
 	 */
 	protected void createOptionsGroupButtons(Group optionsGroup) {
 	}
 
 	/**
 	 * Creates a new label with a bold font.
-	 *
-	 * @param parent the parent control
-	 * @param text the label text
+	 * 
+	 * @param parent
+	 *            the parent control
+	 * @param text
+	 *            the label text
 	 * @return the new label control
 	 */
 	protected Label createPlainLabel(Composite parent, String text) {
@@ -140,8 +150,9 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 
 	/**
 	 * Creates a horizontal spacer line that fills the width of its container.
-	 *
-	 * @param parent the parent control
+	 * 
+	 * @param parent
+	 *            the parent control
 	 */
 	protected void createSpacer(Composite parent) {
 		Label spacer = new Label(parent, SWT.NONE);
@@ -152,13 +163,12 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	}
 
 	/**
-	 * Returns whether this page is complete. This determination is made based upon
-	 * the current contents of this page's controls.  Subclasses wishing to include
-	 * their controls in this determination should override the hook methods 
-	 * <code>validateSourceGroup</code> and/or <code>validateOptionsGroup</code>.
-	 *
-	 * @return <code>true</code> if this page is complete, and <code>false</code> if
-	 *   incomplete
+	 * Returns whether this page is complete. This determination is made based upon the current
+	 * contents of this page's controls. Subclasses wishing to include their controls in this
+	 * determination should override the hook methods <code>validateSourceGroup</code> and/or
+	 * <code>validateOptionsGroup</code>.
+	 * 
+	 * @return <code>true</code> if this page is complete, and <code>false</code> if incomplete
 	 * @see #validateSourceGroup
 	 * @see #validateOptionsGroup
 	 */
@@ -174,11 +184,12 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 
 	/**
 	 * Get a path from the supplied text widget.
+	 * 
 	 * @return org.eclipse.core.runtime.IPath
 	 */
 	protected IPath getPathFromText(Text textField) {
 		String text = textField.getText();
-		//Do not make an empty path absolute so as not to confuse with the root
+		// Do not make an empty path absolute so as not to confuse with the root
 		if (text.length() == 0) {
 			return new Path(text);
 		}
@@ -187,9 +198,9 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 
 	/**
 	 * Queries the user to supply a container resource.
-	 *
-	 * @return the path to an existing or new container, or <code>null</code> if the
-	 *    user cancelled the dialog
+	 * 
+	 * @return the path to an existing or new container, or <code>null</code> if the user cancelled
+	 *         the dialog
 	 */
 	protected IPath queryForContainer(IContainer initialSelection, String msg) {
 		return queryForContainer(initialSelection, msg, null);
@@ -197,55 +208,51 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 
 	/**
 	 * Queries the user to supply a container resource.
-	 *
-	 * @return the path to an existing or new container, or <code>null</code> if the
-	 *    user cancelled the dialog
+	 * 
+	 * @return the path to an existing or new container, or <code>null</code> if the user cancelled
+	 *         the dialog
 	 */
 	protected IPath queryForContainer(IContainer initialSelection, String msg, String title) {
-		//		ContainerSelectionDialog dialog = new ContainerSelectionDialog(getControl().getShell(), initialSelection,
-		//		        allowNewContainerName(), msg);
-		//		if (title != null) {
-		//			dialog.setTitle(title);
-		//		}
-		//		dialog.showClosedProjects(false);
-		//		dialog.open();
-		//		Object[] result = dialog.getResult();
-		//		if (result != null && result.length == 1) {
-		//			return (IPath) result[0];
-		//		}
+		// ContainerSelectionDialog dialog = new ContainerSelectionDialog(getControl().getShell(),
+		// initialSelection,
+		// allowNewContainerName(), msg);
+		// if (title != null) {
+		// dialog.setTitle(title);
+		// }
+		// dialog.showClosedProjects(false);
+		// dialog.open();
+		// Object[] result = dialog.getResult();
+		// if (result != null && result.length == 1) {
+		// return (IPath) result[0];
+		// }
 		return null;
 	}
 
 	/**
-	 * The <code>WizardDataTransfer</code> implementation of this 
-	 * <code>IOverwriteQuery</code> method asks the user whether the existing 
-	 * resource at the given path should be overwritten.
-	 *
-	 * @param pathString 
-	 * @return the user's reply: one of <code>"YES"</code>, <code>"NO"</code>, <code>"ALL"</code>, 
-	 *   or <code>"CANCEL"</code>
+	 * The <code>WizardDataTransfer</code> implementation of this <code>IOverwriteQuery</code>
+	 * method asks the user whether the existing resource at the given path should be overwritten.
+	 * 
+	 * @param pathString
+	 * @return the user's reply: one of <code>"YES"</code>, <code>"NO"</code>, <code>"ALL"</code>,
+	 *         or <code>"CANCEL"</code>
 	 */
 	public String queryOverwrite(String pathString) {
 		Path path = new Path(pathString);
 		String messageString;
-		//Break the message up if there is a file name and a directory
-		//and there are at least 2 segments.
+		// Break the message up if there is a file name and a directory
+		// and there are at least 2 segments.
 		if (path.getFileExtension() == null || path.segmentCount() < 2) {
 			messageString = NLS.bind("File {0} already exists, overwrite?", pathString);
 		} else {
-			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?", path.lastSegment(), path
-			        .removeLastSegments(1).toOSString());
+			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?", path.lastSegment(), path.removeLastSegments(1)
+					.toOSString());
 		}
-		final MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", null, messageString,
-		        MessageDialog.QUESTION, new String[] {
-		                IDialogConstants.YES_LABEL,
-		                IDialogConstants.YES_TO_ALL_LABEL,
-		                IDialogConstants.NO_LABEL,
-		                IDialogConstants.NO_TO_ALL_LABEL,
-		                IDialogConstants.CANCEL_LABEL }, 0);
+		final MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", null, messageString, MessageDialog.QUESTION,
+				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL, IDialogConstants.NO_LABEL,
+						IDialogConstants.NO_TO_ALL_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		String[] response = new String[] { YES, ALL, NO, NO_ALL, CANCEL };
-		//run in syncExec because callback is from an operation,
-		//which is probably not running in the UI thread.
+		// run in syncExec because callback is from an operation,
+		// which is probably not running in the UI thread.
 		getControl().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				dialog.open();
@@ -255,43 +262,42 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	}
 
 	/**
-	 * Displays a Yes/No question to the user with the specified message and returns
-	 * the user's response.
-	 *
-	 * @param message the question to ask
+	 * Displays a Yes/No question to the user with the specified message and returns the user's
+	 * response.
+	 * 
+	 * @param message
+	 *            the question to ask
 	 * @return <code>true</code> for Yes, and <code>false</code> for No
 	 */
 	protected boolean queryYesNoQuestion(String message) {
-		MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", (Image) null, message,
-		        MessageDialog.NONE, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
+		MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", (Image) null, message, MessageDialog.NONE,
+				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
 		// ensure yes is the default
 		return dialog.open() == 0;
 	}
 
 	/**
-	 * Restores control settings that were saved in the previous instance of this
-	 * page.  
+	 * Restores control settings that were saved in the previous instance of this page.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does
-	 * nothing. Subclasses may override this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
+	 * Subclasses may override this hook method.
 	 * </p>
 	 */
 	protected void restoreWidgetValues() {
 	}
 
 	/**
-	 * Saves control settings that are to be restored in the next instance of
-	 * this page.  
+	 * Saves control settings that are to be restored in the next instance of this page.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does
-	 * nothing. Subclasses may override this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
+	 * Subclasses may override this hook method.
 	 * </p>
 	 */
 	protected void saveWidgetValues() {
 	}
 
 	/**
-	 * Determine if the page is complete and update the page appropriately. 
+	 * Determine if the page is complete and update the page appropriately.
 	 */
 	protected void updatePageCompletion() {
 		boolean pageComplete = determinePageCompletion();
@@ -304,62 +310,60 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	/**
 	 * Updates the enable state of this page's controls.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does
-	 * nothing. Subclasses may extend this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
+	 * Subclasses may extend this hook method.
 	 * </p>
 	 */
 	protected void updateWidgetEnablements() {
 	}
 
 	/**
-	 * Returns whether this page's destination specification controls currently all
-	 * contain valid values.
+	 * Returns whether this page's destination specification controls currently all contain valid
+	 * values.
 	 * <p>
 	 * The <code>WizardDataTransferPage</code> implementation of this method returns
 	 * <code>true</code>. Subclasses may reimplement this hook method.
 	 * </p>
-	 *
-	 * @return <code>true</code> indicating validity of all controls in the 
-	 *   destination specification group
+	 * 
+	 * @return <code>true</code> indicating validity of all controls in the destination
+	 *         specification group
 	 */
 	protected boolean validateDestinationGroup() {
 		return true;
 	}
 
 	/**
-	 * Returns whether this page's options group's controls currently all contain
-	 * valid values.
+	 * Returns whether this page's options group's controls currently all contain valid values.
 	 * <p>
 	 * The <code>WizardDataTransferPage</code> implementation of this method returns
 	 * <code>true</code>. Subclasses may reimplement this hook method.
 	 * </p>
-	 *
-	 * @return <code>true</code> indicating validity of all controls in the options
-	 *   group
+	 * 
+	 * @return <code>true</code> indicating validity of all controls in the options group
 	 */
 	protected boolean validateOptionsGroup() {
 		return true;
 	}
 
 	/**
-	 * Returns whether this page's source specification controls currently all
-	 * contain valid values.
+	 * Returns whether this page's source specification controls currently all contain valid values.
 	 * <p>
 	 * The <code>WizardDataTransferPage</code> implementation of this method returns
 	 * <code>true</code>. Subclasses may reimplement this hook method.
 	 * </p>
-	 *
-	 * @return <code>true</code> indicating validity of all controls in the 
-	 *   source specification group
+	 * 
+	 * @return <code>true</code> indicating validity of all controls in the source specification
+	 *         group
 	 */
 	protected boolean validateSourceGroup() {
 		return true;
 	}
 
 	/**
-	 *	Create the options specification widgets.
-	 *
-	 *	@param parent org.eclipse.swt.widgets.Composite
+	 * Create the options specification widgets.
+	 * 
+	 * @param parent
+	 *            org.eclipse.swt.widgets.Composite
 	 */
 	protected void createOptionsGroup(Composite parent) {
 		// options group
@@ -374,8 +378,9 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 
 	/**
 	 * Display an error dialog with the specified message.
-	 *
-	 * @param message the error message
+	 * 
+	 * @param message
+	 *            the error message
 	 */
 	protected void displayErrorDialog(final String message) {
 		getContainer().getShell().getDisplay().syncExec(new Runnable() {
@@ -386,13 +391,14 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	}
 
 	/**
-	 * Display an error dislog with the information from the
-	 * supplied exception.
-	 * @param exception Throwable
+	 * Display an error dislog with the information from the supplied exception.
+	 * 
+	 * @param exception
+	 *            Throwable
 	 */
 	protected void displayErrorDialog(Throwable exception) {
 		String message = exception.getMessage();
-		//Some system exceptions have no message
+		// Some system exceptions have no message
 		if (message == null) {
 			message = NLS.bind("Error: {0}", exception);
 		}
@@ -400,8 +406,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	}
 
 	/**
-	 * Get the title for an error dialog. Subclasses should
-	 * override.
+	 * Get the title for an error dialog. Subclasses should override.
 	 */
 	protected String getErrorDialogTitle() {
 		return "Error";

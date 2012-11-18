@@ -31,140 +31,140 @@ import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 public class InfoPage extends AbstractDeckPage implements IDeckPage {
-    private Text text;
-    private Label total;
-    private Label dbprice;
-    String prefix = "Deck";
-    DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-    private Label colors;
-    private Label ownership;
-    private Link editButton;
-    private Label decktype;
-    private Label averagecost;
-    private Composite stats;
+	private Text text;
+	private Label total;
+	private Label dbprice;
+	String prefix = "Deck";
+	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+	private Label colors;
+	private Label ownership;
+	private Link editButton;
+	private Label decktype;
+	private Label averagecost;
+	private Composite stats;
 
-    @Override
-    public Composite createContents(Composite parent) {
-        super.createContents(parent);
-        getArea().setLayout(new GridLayout(3, false));
-        createStatsArea().setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
-        createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        createEditButton(stats).setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.BEGINNING, SWT.END).create());
-        return getArea();
-    }
+	@Override
+	public Composite createContents(Composite parent) {
+		super.createContents(parent);
+		getArea().setLayout(new GridLayout(3, false));
+		createStatsArea().setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
+		createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		createEditButton(stats).setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.BEGINNING, SWT.END).create());
+		return getArea();
+	}
 
-    protected Control createEditButton(Composite parent) {
-        editButton = new Link(parent, SWT.PUSH);
-        editButton.setText("<a>Edit...</a>");
-        editButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                try {
-                    if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
-                        activate();
-                    }
-                } catch (Exception x) {
-                    x.printStackTrace();
-                }
-            }
-        });
-        return editButton;
-    }
+	protected Control createEditButton(Composite parent) {
+		editButton = new Link(parent, SWT.PUSH);
+		editButton.setText("<a>Edit...</a>");
+		editButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
+						activate();
+					}
+				} catch (Exception x) {
+					x.printStackTrace();
+				}
+			}
+		});
+		return editButton;
+	}
 
-    @Override
-    public String getStatusMessage() {
-        return "";
-    }
+	@Override
+	public String getStatusMessage() {
+		return "";
+	}
 
-    private Composite createStatsArea() {
-        stats = new Composite(getArea(), SWT.NONE);
-        stats.setLayout(new GridLayout(2, false));
-        decktype = createTextLabel("Type: ");
-        total = createTextLabel("Total Cards: ");
-        dbprice = createTextLabel("Money Cost: ");
-        dbprice.setToolTipText("Cost of a deck using Seller's Price column," + " in brackets cost of a deck using User's Price column");
-        colors = createTextLabel("Colors: ");
-        ownership = createTextLabel("Ownership: ");
-        averagecost = createTextLabel("Average Mana Cost: ");
-        // stats.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-        return stats;
-    }
+	private Composite createStatsArea() {
+		stats = new Composite(getArea(), SWT.NONE);
+		stats.setLayout(new GridLayout(2, false));
+		decktype = createTextLabel("Type: ");
+		total = createTextLabel("Total Cards: ");
+		dbprice = createTextLabel("Money Cost: ");
+		dbprice.setToolTipText("Cost of a deck using Seller's Price column," + " in brackets cost of a deck using User's Price column");
+		colors = createTextLabel("Colors: ");
+		ownership = createTextLabel("Ownership: ");
+		averagecost = createTextLabel("Average Mana Cost: ");
+		// stats.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+		return stats;
+	}
 
-    private Label createTextLabel(String string) {
-        Label label = new Label(stats, SWT.NONE);
-        label.setText(string);
-        label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
-        Label text = new Label(stats, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(gd);
-        return text;
-    }
+	private Label createTextLabel(String string) {
+		Label label = new Label(stats, SWT.NONE);
+		label.setText(string);
+		label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
+		Label text = new Label(stats, SWT.NONE);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(gd);
+		return text;
+	}
 
-    private Group createTextArea() {
-        Group group = new Group(getArea(), SWT.NONE);
-        group.setText("Description");
-        GridData gd = new GridData(GridData.FILL_BOTH);
-        group.setLayoutData(gd);
-        group.setLayout(new GridLayout());
-        text = new Text(group, SWT.WRAP | SWT.READ_ONLY);
-        text.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                setComment(text.getText());
-            }
-        });
-        text.setLayoutData(new GridData(GridData.FILL_BOTH));
-        return group;
-    }
+	private Group createTextArea() {
+		Group group = new Group(getArea(), SWT.NONE);
+		group.setText("Description");
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		group.setLayoutData(gd);
+		group.setLayout(new GridLayout());
+		text = new Text(group, SWT.WRAP | SWT.READ_ONLY);
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				setComment(text.getText());
+			}
+		});
+		text.setLayoutData(new GridData(GridData.FILL_BOTH));
+		return group;
+	}
 
-    protected void setComment(String text2) {
-        IStorageInfo si = getInfo();
-        if (si == null)
-            return;
-        si.setComment(text2);
-    }
+	protected void setComment(String text2) {
+		IStorageInfo si = getInfo();
+		if (si == null)
+			return;
+		si.setComment(text2);
+	}
 
-    private IStorageInfo getInfo() {
-        getCardStore();
-        IStorage storage = store.getStorage();
-        if (storage instanceof IStorageInfo) {
-            IStorageInfo si = ((IStorageInfo) storage);
-            return si;
-        }
-        return null;
-    }
+	private IStorageInfo getInfo() {
+		getCardStore();
+		IStorage storage = store.getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si;
+		}
+		return null;
+	}
 
-    @Override
-    public void activate() {
-        super.activate();
-        IStorageInfo si = getInfo();
-        String type = null;
-        if (si != null) {
-            String comment = si.getComment();
-            if (comment != null)
-                text.setText(comment);
-            type = si.getType();
-        }
-        prefix = (type != null && type.equals(IStorageInfo.DECK_TYPE)) ? "Deck" : "Collection";
-        if (store instanceof ICardCountable) {
-            total.setText(((ICardCountable) store).getCount() + "");
-        }
-        float cost = 0;
-        float ucost = 0;
-        for (Iterator iterator = store.iterator(); iterator.hasNext();) {
-            MagicCardPhysical elem = (MagicCardPhysical) iterator.next();
-            cost += elem.getDbPrice() * elem.getCount();
-            ucost += elem.getPrice() * elem.getCount();
-            if (elem.getDbPrice() == 0)
-                cost += elem.getPrice() * elem.getCount();
-        }
-        dbprice.setText("$" + decimalFormat.format(cost) + " ($" + decimalFormat.format(ucost) + ")");
-        String costs = CardStoreUtils.buildColors(store);
-        Image buildCostImage = SymbolConverter.buildCostImage(costs);
-        colors.setImage(buildCostImage);
-        ownership.setText(store.isVirtual() ? "Virtual" : "Own");
-        decktype.setText(prefix);
-        float acost = CardStoreUtils.getAverageManaCost(store);
-        averagecost.setText(String.valueOf(acost));
-        getArea().layout(true);
-    }
+	@Override
+	public void activate() {
+		super.activate();
+		IStorageInfo si = getInfo();
+		String type = null;
+		if (si != null) {
+			String comment = si.getComment();
+			if (comment != null)
+				text.setText(comment);
+			type = si.getType();
+		}
+		prefix = (type != null && type.equals(IStorageInfo.DECK_TYPE)) ? "Deck" : "Collection";
+		if (store instanceof ICardCountable) {
+			total.setText(((ICardCountable) store).getCount() + "");
+		}
+		float cost = 0;
+		float ucost = 0;
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			MagicCardPhysical elem = (MagicCardPhysical) iterator.next();
+			cost += elem.getDbPrice() * elem.getCount();
+			ucost += elem.getPrice() * elem.getCount();
+			if (elem.getDbPrice() == 0)
+				cost += elem.getPrice() * elem.getCount();
+		}
+		dbprice.setText("$" + decimalFormat.format(cost) + " ($" + decimalFormat.format(ucost) + ")");
+		String costs = CardStoreUtils.buildColors(store);
+		Image buildCostImage = SymbolConverter.buildCostImage(costs);
+		colors.setImage(buildCostImage);
+		ownership.setText(store.isVirtual() ? "Virtual" : "Own");
+		decktype.setText(prefix);
+		float acost = CardStoreUtils.getAverageManaCost(store);
+		averagecost.setText(String.valueOf(acost));
+		getArea().layout(true);
+	}
 }

@@ -12,7 +12,7 @@ package com.reflexit.magiccards.ui.views.search;
 
 /**
  * @author Alena
- *
+ * 
  */
 public interface ISearchRunnable {
 	void run(SearchContext context);

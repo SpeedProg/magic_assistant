@@ -75,8 +75,7 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
+	 * @see org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
 	 */
 	@Override
 	public void setEnabled(Object eo) {

@@ -212,17 +212,17 @@ public class ImageCreator {
 	public Image getRotated(Image image, int angle) {
 		int dir = 0;
 		switch (angle) {
-		case 180:
-			dir = SWT.DOWN;
-			break;
-		case 90:
-			dir = SWT.RIGHT;
-			break;
-		case -90:
-			dir = SWT.LEFT;
-			break;
-		default:
-			break;
+			case 180:
+				dir = SWT.DOWN;
+				break;
+			case 90:
+				dir = SWT.RIGHT;
+				break;
+			case -90:
+				dir = SWT.LEFT;
+				break;
+			default:
+				break;
 		}
 		ImageData data = rotate(image.getImageData(), dir);
 		return new Image(image.getDevice(), data);
@@ -237,24 +237,24 @@ public class ImageCreator {
 			for (int srcX = 0; srcX < srcData.width; srcX++) {
 				int destX = 0, destY = 0, destIndex = 0, srcIndex = 0;
 				switch (direction) {
-				case SWT.LEFT: // left 90 degrees
-					destX = srcY;
-					destY = srcData.width - srcX - 1;
-					width = srcData.height;
-					height = srcData.width;
-					break;
-				case SWT.RIGHT: // right 90 degrees
-					destX = srcData.height - srcY - 1;
-					destY = srcX;
-					width = srcData.height;
-					height = srcData.width;
-					break;
-				case SWT.DOWN: // 180 degrees
-					destX = srcData.width - srcX - 1;
-					destY = srcData.height - srcY - 1;
-					width = srcData.width;
-					height = srcData.height;
-					break;
+					case SWT.LEFT: // left 90 degrees
+						destX = srcY;
+						destY = srcData.width - srcX - 1;
+						width = srcData.height;
+						height = srcData.width;
+						break;
+					case SWT.RIGHT: // right 90 degrees
+						destX = srcData.height - srcY - 1;
+						destY = srcX;
+						width = srcData.height;
+						height = srcData.width;
+						break;
+					case SWT.DOWN: // 180 degrees
+						destX = srcData.width - srcX - 1;
+						destY = srcData.height - srcY - 1;
+						width = srcData.width;
+						height = srcData.height;
+						break;
 				}
 				destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
 				srcIndex = (srcY * srcData.bytesPerLine) + (srcX * bytesPerPixel);

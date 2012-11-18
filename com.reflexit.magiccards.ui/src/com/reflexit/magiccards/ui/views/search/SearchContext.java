@@ -11,7 +11,7 @@
 package com.reflexit.magiccards.ui.views.search;
 
 public class SearchContext {
-	//input
+	// input
 	private boolean matchCase;
 	private boolean wholeWord;
 	private String text;

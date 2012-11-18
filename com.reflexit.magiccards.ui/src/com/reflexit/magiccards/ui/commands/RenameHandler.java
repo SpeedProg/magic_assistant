@@ -37,13 +37,10 @@ public class RenameHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-	 * ExecutionEvent)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = HandlerUtil
-				.getActiveWorkbenchWindowChecked(event);
+		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelection selection = window.getSelectionService().getSelection();
 		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
 			return null;
@@ -59,16 +56,12 @@ public class RenameHandler extends AbstractHandler {
 		if (f instanceof CardCollection) {
 			wasOpen = ((CardCollection) f).isOpen();
 		}
-		InputDialog inputDialog = new InputDialog(window.getShell(), "Rename",
-				"New Name", f.getName(), null);
-		if (inputDialog.open() == Dialog.OK
-				&& !f.getName().equals(inputDialog.getValue())) {
+		InputDialog inputDialog = new InputDialog(window.getShell(), "Rename", "New Name", f.getName(), null);
+		if (inputDialog.open() == Dialog.OK && !f.getName().equals(inputDialog.getValue())) {
 			CardElement el = f.rename(inputDialog.getValue());
 			if (wasOpen && el instanceof CardCollection) {
 				try {
-					window.getActivePage().showView(DeckView.ID,
-							((CardCollection) el).getFileName(),
-							IWorkbenchPage.VIEW_ACTIVATE);
+					window.getActivePage().showView(DeckView.ID, ((CardCollection) el).getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
 				} catch (PartInitException e) {
 					MagicUIActivator.log(e);
 				}
@@ -81,18 +74,15 @@ public class RenameHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
+	 * @see org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
 	 */
 	@Override
 	public void setEnabled(Object eo) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
 			return;
 		ISelection selection = window.getSelectionService().getSelection();
-		if (selection == null || selection.isEmpty()
-				|| !(selection instanceof IStructuredSelection)) {
+		if (selection == null || selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
 			setBaseEnabled(false);
 			return;
 		}

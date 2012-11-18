@@ -25,8 +25,7 @@ public class StringEditorColumn extends GenColumn {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
 	 * (org.eclipse.jface.viewers.ColumnViewer)
 	 */
 	@Override

@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class SplitDialog extends TrayDialog {
 	private int split;
@@ -37,7 +37,7 @@ public class SplitDialog extends TrayDialog {
 
 	/**
 	 * @param parentShell
-	 * @param max 
+	 * @param max
 	 */
 	protected SplitDialog(Shell parentShell, int max) {
 		super(parentShell);
@@ -65,7 +65,7 @@ public class SplitDialog extends TrayDialog {
 		this.scale.setMinimum(1);
 		from.setText("1:" + String.valueOf(this.max - 1));
 		this.scale.setMaximum(this.max - 1);
-		//	scale.add
+		// scale.add
 		this.scale.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -112,7 +112,7 @@ public class SplitDialog extends TrayDialog {
 	}
 
 	/**
-	 * @param shell 
+	 * @param shell
 	 * @return
 	 */
 	public static int askSplitType(Shell shell, int max) {

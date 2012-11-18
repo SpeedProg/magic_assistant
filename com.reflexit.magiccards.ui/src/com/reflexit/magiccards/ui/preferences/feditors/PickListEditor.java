@@ -18,24 +18,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * An abstract field editor that manages a list of input values. 
- * The editor displays a list containing the values, buttons for
- * adding and removing values
+ * An abstract field editor that manages a list of input values. The editor displays a list
+ * containing the values, buttons for adding and removing values
  * <p>
- * Subclasses must implement the <code>parseString</code>,
- * <code>createList</code>, and <code>getNewInputObject</code>
- * framework methods.
+ * Subclasses must implement the <code>parseString</code>, <code>createList</code>, and
+ * <code>getNewInputObject</code> framework methods.
  * </p>
  */
 public abstract class PickListEditor extends FieldEditor {
 	/**
-	 * The list widget; <code>null</code> if none
-	 * (before creation or after disposal).
+	 * The list widget; <code>null</code> if none (before creation or after disposal).
 	 */
 	private List list;
 	/**
-	 * The button box containing the Add, Remove, Up, and Down buttons;
-	 * <code>null</code> if none (before creation or after disposal).
+	 * The button box containing the Add, Remove, Up, and Down buttons; <code>null</code> if none
+	 * (before creation or after disposal).
 	 */
 	private Composite buttonBox;
 	/**
@@ -53,7 +50,7 @@ public abstract class PickListEditor extends FieldEditor {
 	private SelectionListener selectionListener;
 
 	/**
-	 * Creates a new list field editor 
+	 * Creates a new list field editor
 	 */
 	protected PickListEditor() {
 	}
@@ -61,9 +58,12 @@ public abstract class PickListEditor extends FieldEditor {
 	/**
 	 * Creates a list field editor.
 	 * 
-	 * @param name the name of the preference this field editor works on
-	 * @param labelText the label text of the field editor
-	 * @param parent the parent of the field editor's control
+	 * @param name
+	 *            the name of the preference this field editor works on
+	 * @param labelText
+	 *            the label text of the field editor
+	 * @param parent
+	 *            the parent of the field editor's control
 	 */
 	protected PickListEditor(String name, String labelText, Composite parent) {
 		init(name, labelText);
@@ -87,8 +87,8 @@ public abstract class PickListEditor extends FieldEditor {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	protected void adjustForNumColumns(int numColumns) {
 		Control control = getLabelControl();
@@ -98,8 +98,9 @@ public abstract class PickListEditor extends FieldEditor {
 
 	/**
 	 * Creates the Add, Remove, Up, and Down button in the given button box.
-	 *
-	 * @param box the box for the buttons
+	 * 
+	 * @param box
+	 *            the box for the buttons
 	 */
 	private void createButtons(Composite box) {
 		saveButton = createPushButton(box, "Save As...");//$NON-NLS-1$
@@ -110,8 +111,10 @@ public abstract class PickListEditor extends FieldEditor {
 	/**
 	 * Helper method to create a push button.
 	 * 
-	 * @param parent the parent control
-	 * @param key the resource name used to supply the button's label text
+	 * @param parent
+	 *            the parent control
+	 * @param key
+	 *            the resource name used to supply the button's label text
 	 * @return Button
 	 */
 	private Button createPushButton(Composite parent, String key) {
@@ -146,8 +149,8 @@ public abstract class PickListEditor extends FieldEditor {
 		};
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		Control control = getLabelControl(parent);
@@ -166,8 +169,8 @@ public abstract class PickListEditor extends FieldEditor {
 		buttonBox.setLayoutData(gd);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	protected void doLoad() {
 		if (list != null) {
@@ -187,8 +190,8 @@ public abstract class PickListEditor extends FieldEditor {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	protected void doLoadDefault() {
 		if (list != null) {
@@ -208,8 +211,8 @@ public abstract class PickListEditor extends FieldEditor {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	protected void doStore() {
 		int i = list.getSelectionIndex();
@@ -224,10 +227,10 @@ public abstract class PickListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Returns this field editor's button box containing the Add, Remove,
-	 * Up, and Down button.
-	 *
-	 * @param parent the parent control
+	 * Returns this field editor's button box containing the Add, Remove, Up, and Down button.
+	 * 
+	 * @param parent
+	 *            the parent control
 	 * @return the button box
 	 */
 	public Composite getButtonBoxControl(Composite parent) {
@@ -254,8 +257,9 @@ public abstract class PickListEditor extends FieldEditor {
 
 	/**
 	 * Returns this field editor's list control.
-	 *
-	 * @param parent the parent control
+	 * 
+	 * @param parent
+	 *            the parent control
 	 * @return the list control
 	 */
 	public List getListControl(Composite parent) {
@@ -279,22 +283,21 @@ public abstract class PickListEditor extends FieldEditor {
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
-	 *
+	 * 
 	 * @return a new item
 	 */
 	protected abstract String getNewInputObject();
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	public int getNumberOfControls() {
 		return 2;
 	}
 
 	/**
-	 * Returns this field editor's selection listener.
-	 * The listener is created if nessessary.
-	 *
+	 * Returns this field editor's selection listener. The listener is created if nessessary.
+	 * 
 	 * @return the selection listener
 	 */
 	private SelectionListener getSelectionListener() {
@@ -307,10 +310,9 @@ public abstract class PickListEditor extends FieldEditor {
 	/**
 	 * Returns this field editor's shell.
 	 * <p>
-	 * This method is internal to the framework; subclassers should not call
-	 * this method.
+	 * This method is internal to the framework; subclassers should not call this method.
 	 * </p>
-	 *
+	 * 
 	 * @return the shell
 	 */
 	protected Shell getShell() {
@@ -328,12 +330,12 @@ public abstract class PickListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Splits the given string into a list of strings.
-	 * This method is the converse of <code>createList</code>. 
+	 * Splits the given string into a list of strings. This method is the converse of
+	 * <code>createList</code>.
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
-	 *
+	 * 
 	 * @return an array of <code>String</code>
 	 * @see #createList
 	 */
@@ -360,8 +362,8 @@ public abstract class PickListEditor extends FieldEditor {
 		loadButton.setEnabled(index >= 0);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on FieldEditor.
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	public void setFocus() {
 		if (list != null) {

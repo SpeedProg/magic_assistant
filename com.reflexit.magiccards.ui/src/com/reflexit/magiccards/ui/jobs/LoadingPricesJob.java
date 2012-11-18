@@ -38,20 +38,20 @@ public class LoadingPricesJob extends Job {
 		int size = 0;
 		Iterable<IMagicCard> list = null;
 		switch (listChoice) {
-		case LoadExtrasDialog.USE_SELECTION:
-			size = selection.size();
-			list = selection.toList();
-			break;
-		case LoadExtrasDialog.USE_FILTER:
-			size = view.getFilteredStore().getSize();
-			list = view.getFilteredStore();
-			break;
-		case LoadExtrasDialog.USE_ALL:
-			size = view.getFilteredStore().getCardStore().size();
-			list = view.getFilteredStore().getCardStore();
-			break;
-		default:
-			return Status.CANCEL_STATUS;
+			case LoadExtrasDialog.USE_SELECTION:
+				size = selection.size();
+				list = selection.toList();
+				break;
+			case LoadExtrasDialog.USE_FILTER:
+				size = view.getFilteredStore().getSize();
+				list = view.getFilteredStore();
+				break;
+			case LoadExtrasDialog.USE_ALL:
+				size = view.getFilteredStore().getCardStore().size();
+				list = view.getFilteredStore().getCardStore();
+				break;
+			default:
+				return Status.CANCEL_STATUS;
 		}
 		IPriceProvider parser = PriceProviderManager.getInstance().getProvider();
 		try {

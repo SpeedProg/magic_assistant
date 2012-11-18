@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CommentColumn extends GenColumn {
 	/**
@@ -37,8 +37,12 @@ public class CommentColumn extends GenColumn {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface.viewers.ColumnViewer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface
+	 * .viewers.ColumnViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
@@ -76,8 +80,8 @@ public class CommentColumn extends GenColumn {
 					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					card.setComment((String) value);
 					cardStore.update(card);
-					//					// update
-					//					viewer.update(element, null);
+					// // update
+					// viewer.update(element, null);
 				}
 			}
 		};

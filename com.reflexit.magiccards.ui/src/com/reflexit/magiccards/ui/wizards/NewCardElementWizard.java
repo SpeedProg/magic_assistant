@@ -28,7 +28,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 
 /**
  * @author Alena
- *
+ * 
  */
 public abstract class NewCardElementWizard extends Wizard {
 	protected NewCardElementWizardPage page;
@@ -40,7 +40,8 @@ public abstract class NewCardElementWizard extends Wizard {
 	}
 
 	/**
-	 * @param element the element to set
+	 * @param element
+	 *            the element to set
 	 */
 	public void setElement(CardElement element) {
 		this.element = element;
@@ -55,9 +56,8 @@ public abstract class NewCardElementWizard extends Wizard {
 	}
 
 	/**
-	 * This method is called when 'Finish' button is pressed in
-	 * the wizard. We will create an operation and run it
-	 * using wizard as execution context.
+	 * This method is called when 'Finish' button is pressed in the wizard. We will create an
+	 * operation and run it using wizard as execution context.
 	 */
 	@Override
 	public boolean performFinish() {
@@ -98,11 +98,10 @@ public abstract class NewCardElementWizard extends Wizard {
 	/**
 	 * @param containerName
 	 * @param fileName
-	 * @param virtual 
+	 * @param virtual
 	 * @param monitor
 	 */
-	protected abstract void doFinish(String containerName, String fileName, boolean virtual, IProgressMonitor monitor)
-	        throws CoreException;
+	protected abstract void doFinish(String containerName, String fileName, boolean virtual, IProgressMonitor monitor) throws CoreException;
 
 	protected void throwCoreException(String message) throws CoreException {
 		IStatus status = new Status(IStatus.ERROR, "com.reflexit.magiccards.ui", IStatus.OK, message, null);
@@ -110,8 +109,8 @@ public abstract class NewCardElementWizard extends Wizard {
 	}
 
 	/**
-	 * We will accept the selection in the workbench to see if
-	 * we can initialize from it.
+	 * We will accept the selection in the workbench to see if we can initialize from it.
+	 * 
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {

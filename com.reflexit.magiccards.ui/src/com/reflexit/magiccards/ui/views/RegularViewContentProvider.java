@@ -37,6 +37,7 @@ public class RegularViewContentProvider implements ITreeContentProvider {
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
+
 	private TreeViewer viewer;
 	private IFilteredCardStore root;
 

@@ -39,7 +39,7 @@ import java.util.Collection;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CheckedTreeSelectionComposite extends Composite {
 	private CheckboxTreeViewer fViewer;
@@ -88,8 +88,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 	}
 
 	/**
-	 * Sets the initial selection in this selection dialog to the given
-	 * elements.
+	 * Sets the initial selection in this selection dialog to the given elements.
 	 * 
 	 * @param selectedElements
 	 *            the array of elements to select
@@ -126,17 +125,18 @@ public class CheckedTreeSelectionComposite extends Composite {
 	}
 
 	/*
-	 *  (non-Javadoc)
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.window.Window#create()
 	 */
 	public void initialize() {
 		BusyIndicator.showWhile(null, new Runnable() {
 			public void run() {
-				CheckedTreeSelectionComposite.this.fViewer
-				        .setCheckedElements(CheckedTreeSelectionComposite.this.fInitialSelections.toArray());
+				CheckedTreeSelectionComposite.this.fViewer.setCheckedElements(CheckedTreeSelectionComposite.this.fInitialSelections
+						.toArray());
 				if (CheckedTreeSelectionComposite.this.fExpandedElements != null) {
-					CheckedTreeSelectionComposite.this.fViewer
-					        .setExpandedElements(CheckedTreeSelectionComposite.this.fExpandedElements.toArray());
+					CheckedTreeSelectionComposite.this.fViewer.setExpandedElements(CheckedTreeSelectionComposite.this.fExpandedElements
+							.toArray());
 				}
 				updateOKStatus();
 			}
@@ -160,7 +160,8 @@ public class CheckedTreeSelectionComposite extends Composite {
 	 * 
 	 * @param parent
 	 *            the parent composite
-	 * @param flags TODO
+	 * @param flags
+	 *            TODO
 	 * @return the tree viewer
 	 */
 	protected CheckboxTreeViewer createTreeViewer(Composite parent, int flags) {
@@ -203,7 +204,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 		data.grabExcessHorizontalSpace = true;
 		composite.setData(data);
 		Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
-		        WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
+				WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
 		SelectionListener listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -214,7 +215,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 		};
 		selectButton.addSelectionListener(listener);
 		Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
-		        WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
+				WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
 		listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -252,7 +253,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 				shell.setDefaultButton(button);
 			}
 		}
-		//buttons.put(new Integer(id), button);
+		// buttons.put(new Integer(id), button);
 		setButtonLayoutData(button);
 		return button;
 	}

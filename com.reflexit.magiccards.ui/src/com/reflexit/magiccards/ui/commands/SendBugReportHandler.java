@@ -26,10 +26,12 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class SendBugReportHandler extends AbstractHandler {
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -38,14 +40,13 @@ public class SendBugReportHandler extends AbstractHandler {
 		try {
 			IWebBrowser browser = browserSupport.createBrowser(MagicUIActivator.PLUGIN_ID);
 			browser.openURL(new URL("http://sourceforge.net/tracker/?func=add&group_id=231732&atid=1084662"));
-			MessageDialog.openInformation(window.getShell(), "Send Bug",
-			        "Web Browser is open, please use form to submit a bug");
+			MessageDialog.openInformation(window.getShell(), "Send Bug", "Web Browser is open, please use form to submit a bug");
 		} catch (Exception e) {
 			MessageDialog
-			        .openInformation(
-			                window.getShell(),
-			                "Send Bug",
-			                "I tried to open browser with URL for submitting the bug, but it failed :(. You can go to page: http://sourceforge.net/tracker/?func=add&group_id=231732&atid=1084662 and submit problem report.");
+					.openInformation(
+							window.getShell(),
+							"Send Bug",
+							"I tried to open browser with URL for submitting the bug, but it failed :(. You can go to page: http://sourceforge.net/tracker/?func=add&group_id=231732&atid=1084662 and submit problem report.");
 		}
 		return null;
 	}
