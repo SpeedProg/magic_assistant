@@ -3,13 +3,17 @@ package com.reflexit.magiccards.core.test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.xml.DbFileCardStore;
 import com.reflexit.magiccards.core.xml.VirtualMultiFileCardStore;
 
 public class VirtualMultiFileCardStoreTest extends TestCase {
@@ -18,6 +22,7 @@ public class VirtualMultiFileCardStoreTest extends TestCase {
 	VirtualMultiFileCardStore store;
 	protected MagicCard m1;
 	protected MagicCard m2;
+	private HashMap<String, File> files = new HashMap();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -35,6 +40,7 @@ public class VirtualMultiFileCardStoreTest extends TestCase {
 	private void addStore(String name) throws IOException {
 		File tempFile1 = File.createTempFile(name, ".xml");
 		tempFile1.deleteOnExit();
+		files.put(name, tempFile1);
 		this.store.addFile(tempFile1, new Location(name), false);
 	}
 
@@ -85,5 +91,31 @@ public class VirtualMultiFileCardStoreTest extends TestCase {
 			}
 		}
 		assertEquals("Card not found", 2, found);
+	}
+
+	public void testAddSplit() {
+		MagicCard a1 = m1.cloneCard();
+		MagicCard a2 = m1.cloneCard();
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
+		this.store.add(a2);
+		assertEquals(1, this.store.size());
+		MagicCard a3 = m1.cloneCard();
+		a3.setProperty(MagicCardField.PART, "test");
+		this.store.add(a3);
+		assertEquals(2, this.store.size());
+		assertEquals(2, this.store.getUniqueCount());
+	}
+
+	public void testSaveLoad() {
+		MagicCard a1 = m1.cloneCard();
+		MagicCard a2 = m1.cloneCard();
+		this.store.add(a1);
+		a2.setProperty(MagicCardField.PART, "test");
+		this.store.add(a2);
+		DbFileCardStore store2 = (DbFileCardStore) this.store.getStore(Location.createLocation(LORWYN));
+		Iterator<IMagicCard> iterator = store2.iterator();
+		assertEquals(a1, iterator.next());
+		assertEquals(a2, iterator.next());
 	}
 }
