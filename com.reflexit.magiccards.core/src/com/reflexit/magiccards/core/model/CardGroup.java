@@ -621,6 +621,12 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return getGroupBase().getCardId();
 	}
 
+	public int getGathererId() {
+		if (size() == 0)
+			return 0;
+		return getGroupBase().getGathererId();
+	}
+
 	public String getOracleText() {
 		if (size() == 0)
 			return null;

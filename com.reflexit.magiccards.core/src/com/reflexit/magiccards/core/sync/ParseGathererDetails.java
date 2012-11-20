@@ -288,7 +288,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 					extractField(cardB, null, htmlB, MagicCardField.NAME, cardNamePattern, false);
 					extractField(cardB, null, htmlB, MagicCardField.ID, cardIdPattern, false);
 					extractField(cardB, null, htmlB, MagicCardField.PART, cardRotatePattern, false);
-					int pairId = cardB.getCardId();
+					int pairId = cardB.getGathererId();
 					if (pairId != 0) {
 						if (magicDb != null && !magicDb.contains(cardB)) {
 							extractField(cardB, null, htmlB, MagicCardField.ARTIST, artistPattern, false);
@@ -310,7 +310,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 					extractField(card, null, html, MagicCardField.NAME, cardNamePattern, false);
 				}
 			} else if (sides == 0) {
-				MagicLogger.log("Problems parsing card " + card.getCardId());
+				MagicLogger.log("Problems parsing card " + card.getGathererId());
 				return;
 			}
 			// extractField(card, fieldMapFilter, html, MagicCardField.NAME, cardAltPattern, true);

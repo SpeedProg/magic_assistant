@@ -360,6 +360,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 					return getProperty(MagicCardField.OTHER_PART);
 				case PART:
 					return getPart();
+				case SIDE:
+					return getSide();
 				case SET_CORE:
 					if (edition == null)
 						return null;
@@ -513,6 +515,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			case OTHER_PART:
 				setProperty(MagicCardField.OTHER_PART, value);
 				break;
+			case SIDE:
+				setProperty(MagicCardField.SIDE, value);
+				break;
 			default:
 				return false;
 		}
@@ -645,6 +650,29 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return part;
 	}
 
+	public int getSide() {
+		String prop = getProperty(MagicCardField.SIDE);
+		if (prop == null) {
+			String part = getProperty(MagicCardField.PART);
+			if (part == null) {
+				return 0;
+			} else if (part.startsWith("@")) {
+				return 1;
+			} else if (name.startsWith(part)) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			try {
+				return Integer.parseInt(prop);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+
 	public void addPhysicalCard(MagicCardPhysical p) {
 		if (p.getBase() != this)
 			throw new IllegalArgumentException("Mistmatched parent");
@@ -735,5 +763,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public boolean isPhysical() {
 		return false;
+	}
+
+	@Override
+	public int getGathererId() {
+		if (id > 0)
+			return id;
+		if (id < 0 && (id & (1 << 31)) != 0)
+			return -id;
+		return 0;
 	}
 }

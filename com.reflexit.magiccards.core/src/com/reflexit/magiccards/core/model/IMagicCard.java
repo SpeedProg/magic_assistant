@@ -11,6 +11,8 @@ public interface IMagicCard extends ICard {
 
 	public abstract int getCardId();
 
+	public abstract int getGathererId();
+
 	public abstract String getName();
 
 	public abstract String getOracleText();

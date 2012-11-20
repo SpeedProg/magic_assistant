@@ -482,6 +482,11 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return card.getFlipId();
 	}
 
+	@Override
+	public int getGathererId() {
+		return card.getGathererId();
+	}
+
 	public int getOwnCount() {
 		if (isOwn())
 			return getCount();

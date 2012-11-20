@@ -85,7 +85,7 @@ public class UpdateCardsFromWeb {
 				}
 				// load individual card
 				monitor.subTask("Updating card " + i + " of " + size);
-				int cardId = card.getCardId();
+				int cardId = card.getGathererId();
 				try {
 					oracleParser.parseSingleCard(card, fieldMaps, new SubCoreProgressMonitor(monitor, 50));
 					if (loadText || localized) {

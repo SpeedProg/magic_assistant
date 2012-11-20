@@ -134,6 +134,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 		if (field == MagicCardFieldPhysical.LOCATION) {
 			// ignore this field
+			return;
 		}
 		if (field == MagicCardFieldPhysical.SIDEBOARD) {
 			if (Boolean.valueOf(value).booleanValue()) {
