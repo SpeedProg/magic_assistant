@@ -138,7 +138,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 							setMessage(e.getMessage());
 						else if (!CardCache.isLoadingEnabled())
 							setMessage("Image loading is disabled");
-						else if (card.getCardId() == 0)
+						else if (card.getGathererId() == 0)
 							setMessage("Card does not exist in dababase");
 						if (!isStillNeeded(card))
 							return;

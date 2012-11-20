@@ -103,6 +103,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		try {
 			final boolean header = includeHeader.getSelection();
 			final InputStream st = openInputStream();
+			final boolean newdeck = createNewDeck.getSelection();
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -119,7 +120,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
 							Location selectedLocation = getSelectedLocation();
-							if (selectedLocation == null) {
+							if (newdeck) {
 								// create a new deck
 								createNewDeck(getNewDeckName());
 								selectedLocation = getSelectedLocation();
@@ -188,6 +189,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 									if (!corr.equals(CorrectSetDialog.SKIP)) {
 										MagicCard newCard = (MagicCard) card.getBase();
 										newCard.setSet(corr);
+										if (set.equals(corr)) {
+											// import int DB
+											magicDbHandler.getCardStore().add(newCard);
+										}
 										ImportUtils.updateCardReference((MagicCardPhysical) card, magicDbHandler.getCardStore());
 										if (card.getCardId() != 0) {
 											errors--;

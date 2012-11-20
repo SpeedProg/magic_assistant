@@ -178,7 +178,7 @@ public class ImageCreator {
 			String path = CardCache.createLocalImageFilePath(card);
 			try {
 				File file = new File(path);
-				if (file.exists()) {
+				if (file.exists() && remote == false) {
 					return createCardImage(path);
 				}
 				if (remote == false)
