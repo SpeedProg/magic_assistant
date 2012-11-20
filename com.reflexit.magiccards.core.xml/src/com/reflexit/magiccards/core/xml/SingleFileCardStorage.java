@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.xml;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -65,9 +64,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 					if (db == null) {
 						db = waitForDb();
 					}
-					Collection<IMagicCard> cards = db.getCards(mp.getCardId());
-					if (cards.size() > 0) {
-						MagicCard c = (MagicCard) cards.iterator().next();
+					MagicCard c = (MagicCard) db.getCard(mp.getCardId());
+					if (c != null) {
 						mp.getBase().removePhysicalCard(mp);
 						mp.setMagicCard(c);
 					}
