@@ -13,10 +13,13 @@ package com.reflexit.magiccards.core.exports;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
@@ -34,6 +37,7 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.TextPrinter;
 
 /**
  * Utils to perform import
@@ -65,6 +69,13 @@ public class ImportUtils {
 		if (importedCards != null) {
 			Collection<Location> importedLocations = getLocations(importedCards);
 			createDecks(importedLocations);
+			// set the hard reference from database
+			for (Iterator iterator = importedCards.iterator(); iterator.hasNext();) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				if (card instanceof MagicCardPhysical)
+					((MagicCardPhysical) card).setMagicCard((MagicCard) card.getBase());
+			}
+			// import into card store
 			cardStore.addAll(importedCards);
 		}
 	}
@@ -132,26 +143,34 @@ public class ImportUtils {
 
 	public static String getFixedSet(MagicCard card) {
 		String set = card.getSet();
-		if (set == null)
+		set = resolveSet(set);
+		if (set != null)
+			card.setSet(set);
+		return set;
+	}
+
+	public static String resolveSet(String orig) {
+		if (orig == null)
 			return null;
 		Editions eds = Editions.getInstance();
-		if (eds.getEditionByName(set) != null)
-			return set;
-		if (set.toLowerCase(Locale.ENGLISH).startsWith("token ")) {
-			set = set.replace("token ", "").trim();
-		} else if (set.contains("''")) {
-			set = set.replaceAll("''", "\"");
-		} else if (set.contains(" : ")) {
-			set = set.replaceAll(" : ", ": ");
+		if (eds.getEditionByName(orig) != null)
+			return orig;
+		String set = null;
+		if (orig.toLowerCase(Locale.ENGLISH).startsWith("token ")) {
+			set = orig.replace("token ", "").trim();
+		} else if (orig.contains("''")) {
+			set = orig.replaceAll("''", "\"");
+		} else if (orig.contains(" : ")) {
+			set = orig.replaceAll(" : ", ": ");
 		} else
 			return set;
 		for (Iterator<Edition> iterator = eds.getEditions().iterator(); iterator.hasNext();) {
 			Edition ed = iterator.next();
-			if (set.equalsIgnoreCase(ed.getName())) {
+			if (orig.equalsIgnoreCase(ed.getName())) {
 				set = ed.getName();
+				break;
 			}
 		}
-		card.setSet(set);
 		return set;
 	}
 
@@ -159,28 +178,50 @@ public class ImportUtils {
 		String name = card.getName();
 		if (name == null)
 			return null;
-		if (name.contains("Aet")) // �ther
-			name = name.replaceAll("Aet", "�t");
+		if (name.contains("Aet")) // Æther
+			name = name.replaceAll("Aet", "Æt");
 		else
 			return name;
 		card.setName(name);
 		return name;
 	}
 
-	public static void updateCardReference(MagicCardPhysical card, ICardStore lookupStore) {
-		if (card == null)
-			return;
-		MagicCard ref = findRef(card.getCard(), lookupStore);
-		if (ref != null) {
-			if (card.getSet() == null || ref.getSet().equalsIgnoreCase(card.getSet()))
-				card.setMagicCard(ref);
-			else if (card.getSet() != null) {
-				MagicCard newCard = (MagicCard) ref.clone();
-				newCard.setSet(card.getSet());
-				newCard.setId("0");
-				card.setMagicCard(newCard);
+	public static Map<String, String> getSetCandidates(Iterable<IMagicCard> cards) {
+		Editions editions = Editions.getInstance();
+		HashMap<String, String> badSets = new HashMap<String, String>();
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card.getCardId() == 0 && card.getSet() != null) {
+				String set = card.getSet();
+				String rset = resolveSet(set);
+				Edition eset = editions.getEditionByName(rset);
+				if (eset == null) {
+					if (rset == null || rset.equals(set))
+						rset = null;
+					badSets.put(set, rset);
+				}
 			}
 		}
+		return badSets;
+	}
+
+	public static MagicCard updateCardReference(MagicCardPhysical card, ICardStore lookupStore) {
+		if (card == null)
+			return null;
+		MagicCard ref = findRef(card.getCard(), lookupStore);
+		if (ref != null) {
+			if (card.getSet() == null || ref.getSet().equalsIgnoreCase(card.getSet())) {
+				card.setMagicCardSoft(ref);
+				return null;
+			} else if (card.getSet() != null) {
+				MagicCard newCard = (MagicCard) ref.clone();
+				newCard.setSet(card.getSet());
+				newCard.setCardId(0);
+				card.setMagicCardSoft(newCard);
+				return newCard;
+			}
+		}
+		return card.getBase();
 	}
 
 	public static PreviewResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header,
@@ -192,5 +233,71 @@ public class ImportUtils {
 		PreviewResult previewResult = worker.getPreview();
 		worker.run(monitor);
 		return previewResult;
+	}
+
+	/**
+	 * Finds and associates imported cards with magic db cards. If card not found in db creates new
+	 * db cards and adds to newdbrecords
+	 */
+	public static void performPreImportWithDb(Collection<IMagicCard> result, ArrayList<IMagicCard> newdbrecords) {
+		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
+		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card instanceof MagicCardPhysical) {
+				MagicCard newCard = (MagicCard) card.getBase();
+				newCard = ImportUtils.updateCardReference((MagicCardPhysical) card, magicDbHandler.getCardStore());
+				if (newCard != null) {
+					// import int DB
+					newdbrecords.add(newCard);
+				}
+			}
+		}
+	}
+
+	public static void validateDbRecords(ArrayList<IMagicCard> newdbrecords, ArrayList<String> lerrors) {
+		int row = 0;
+		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext(); row++) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			MagicCard newCard = (MagicCard) card.getBase();
+			String prefix = TextPrinter.toString(newCard) + ": Cannot import new card into db: ";
+			if (newCard.getName() == null) {
+				lerrors.add(prefix + " name is missing");
+				iterator.remove();
+			} else if (newCard.getSet() == null) {
+				lerrors.add(prefix + " set is missing");
+				iterator.remove();
+			} else if (newCard.getType() == null) {
+				lerrors.add(prefix + " type is missing");
+				iterator.remove();
+			} else if (newCard.getCollectorNumberId() == 0) {
+				lerrors.add(prefix + " collector number is missing (required to import new card into db)");
+				iterator.remove();
+			}
+		}
+	}
+
+	public static void importIntoDb(Collection<IMagicCard> newdbrecords) {
+		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
+		int row = 0;
+		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext(); row++) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			MagicCard newCard = (MagicCard) card.getBase();
+			magicDbHandler.getCardStore().add(newCard);
+		}
+	}
+
+	public static void fixSets(Collection<IMagicCard> result, Map<String, String> badSets) {
+		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			String set = card.getSet();
+			String corr = badSets.get(set);
+			if (set != null && corr != null) {
+				if (corr.equals("Skip Import")) { // XXX!
+					iterator.remove();
+				}
+				MagicCard newCard = (MagicCard) card.getBase();
+				newCard.setSet(corr);
+			}
+		}
 	}
 }

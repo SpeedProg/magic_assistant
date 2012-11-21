@@ -95,6 +95,10 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		card.addPhysicalCard(this);
 	}
 
+	public void setMagicCardSoft(MagicCard card) {
+		this.card = card;
+	}
+
 	public int getCount() {
 		return this.count;
 	}
@@ -514,5 +518,13 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			list.add(getObjectByField(field));
 		}
 		return list;
+	}
+
+	public int getSide() {
+		return card.getSide();
+	}
+
+	public int getCollectorNumberId() {
+		return card.getCollectorNumberId();
 	}
 }

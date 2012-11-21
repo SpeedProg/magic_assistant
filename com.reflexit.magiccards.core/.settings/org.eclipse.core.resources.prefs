@@ -1,5 +1,6 @@
-#Mon Jul 09 21:36:34 EDT 2012
+#Tue Nov 20 21:36:19 EST 2012
 eclipse.preferences.version=1
+encoding//src/com/reflexit/magiccards/core/exports/ImportUtils.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererBasicInfo.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererCardLanguages.java=UTF-8
 encoding//src/com/reflexit/magiccards/core/sync/ParseGathererDetails.java=UTF-8

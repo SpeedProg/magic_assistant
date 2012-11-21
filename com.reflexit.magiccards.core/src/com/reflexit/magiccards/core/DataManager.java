@@ -50,7 +50,8 @@ public class DataManager {
 
 	public static synchronized ModelRoot getModelRoot() {
 		if (root == null) {
-			DataManager.setRootDir(new File(FileUtils.getWorkspaceFile(), "magiccards"));
+			if (rootDir == null)
+				DataManager.setRootDir(new File(FileUtils.getWorkspaceFile(), "magiccards"));
 			root = ModelRoot.getInstance();
 		}
 		return root;

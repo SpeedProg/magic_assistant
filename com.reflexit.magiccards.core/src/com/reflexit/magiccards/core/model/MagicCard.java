@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
 public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysical {
@@ -772,5 +773,28 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		if (id < 0 && (id & (1 << 31)) != 0)
 			return -id;
 		return 0;
+	}
+
+	@Override
+	public int getCollectorNumberId() {
+		try {
+			return Integer.parseInt(num);
+		} catch (NumberFormatException e) {
+			try {
+				return Integer.parseInt(num.substring(0, num.length() - 1));
+			} catch (Exception e1) {
+				return 0;
+			}
+		}
+	}
+
+	public int syntesizeId() {
+		MagicCard card = this;
+		Edition ed = Editions.getInstance().getEditionByName(card.getSet());
+		if (ed == null) {
+			throw new IllegalStateException("Set is not registered for the card");
+		}
+		int sid = 1 << 31 | ed.getId() & 0x7f << 15 | card.getSide() << 10 | card.getCollectorNumberId();
+		return sid;
 	}
 }

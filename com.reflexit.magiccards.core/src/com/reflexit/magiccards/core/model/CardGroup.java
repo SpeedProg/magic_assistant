@@ -735,4 +735,16 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		}
 		return list;
 	}
+
+	public int getSide() {
+		if (size() == 0)
+			return 0;
+		return getGroupBase().getSide();
+	}
+
+	public int getCollectorNumberId() {
+		if (size() == 0)
+			return 0;
+		return getGroupBase().getCollectorNumberId();
+	}
 }

@@ -27,6 +27,7 @@ public class Editions implements ISearchableProperty {
 	private static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance;
 	private LinkedHashMap<String, Edition> name2ed;
+	private static int idcounter = 0;
 
 	public static class Edition {
 		private String name;
@@ -35,11 +36,13 @@ public class Editions implements ISearchableProperty {
 		private String type = "?";
 		private Set<String> format;
 		private String block;
+		private int id;
 		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
 		public Edition(String name, String abbr) {
 			this.name = name;
 			this.abbrs = new String[] { abbr == null ? fakeAbbr(name) : abbr };
+			this.id = ++idcounter;
 		}
 
 		private String fakeAbbr(String xname) {
@@ -208,6 +211,10 @@ public class Editions implements ISearchableProperty {
 
 		public void setBlock(String block) {
 			this.block = block;
+		}
+
+		public int getId() {
+			return id;
 		}
 	}
 
