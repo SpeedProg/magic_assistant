@@ -149,24 +149,24 @@ public class ImportUtils {
 		return set;
 	}
 
-	public static String resolveSet(String orig) {
-		if (orig == null)
+	public static String resolveSet(String orig1) {
+		if (orig1 == null)
 			return null;
+		String set = orig1;
 		Editions eds = Editions.getInstance();
-		if (eds.getEditionByName(orig) != null)
-			return orig;
-		String set = null;
-		if (orig.toLowerCase(Locale.ENGLISH).startsWith("token ")) {
-			set = orig.replace("token ", "").trim();
-		} else if (orig.contains("''")) {
-			set = orig.replaceAll("''", "\"");
-		} else if (orig.contains(" : ")) {
-			set = orig.replaceAll(" : ", ": ");
-		} else
+		if (eds.getEditionByName(set) != null)
 			return set;
+		if (set.toLowerCase(Locale.ENGLISH).startsWith("token ")) {
+			set = set.substring(6);
+		} else if (set.contains("''")) {
+			set = set.replaceAll("''", "\"");
+		} else if (set.contains(" : ")) {
+			set = set.replaceAll(" : ", ": ");
+		}
+		set = set.trim();
 		for (Iterator<Edition> iterator = eds.getEditions().iterator(); iterator.hasNext();) {
 			Edition ed = iterator.next();
-			if (orig.equalsIgnoreCase(ed.getName())) {
+			if (set.equalsIgnoreCase(ed.getName())) {
 				set = ed.getName();
 				break;
 			}
