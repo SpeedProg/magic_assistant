@@ -19,10 +19,12 @@ public class CorrectSetDialog extends TrayDialog {
 	public static final String SKIP = "Skip Import";
 	private String set;
 	private Combo combo;
+	private String initialSet;
 
-	public CorrectSetDialog(Shell shell, String set) {
+	public CorrectSetDialog(Shell shell, String set, String selSet) {
 		super(shell);
 		this.setSet(set);
+		this.initialSet = selSet;
 	}
 
 	@Override
@@ -41,7 +43,11 @@ public class CorrectSetDialog extends TrayDialog {
 			String x = iterator.next();
 			combo.add(x);
 		}
-		combo.select(0);
+		if (initialSet == null)
+			combo.select(0);
+		else {
+			combo.setText(initialSet);
+		}
 		return area;
 	}
 

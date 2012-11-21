@@ -9,10 +9,10 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -50,17 +50,14 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.PreviewResult;
 import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CorrectSetDialog;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
@@ -91,6 +88,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private CardElement element;
 	private Button createNewDeck;
 	private Button importIntoExisting;
+	private Button importIntoDb;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -104,6 +102,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			final boolean header = includeHeader.getSelection();
 			final InputStream st = openInputStream();
 			final boolean newdeck = createNewDeck.getSelection();
+			final boolean dbImport = importIntoDb.getSelection();
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -128,7 +127,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 							Collection<IMagicCard> result = ImportUtils.performPreImport(st, worker, header, selectedLocation,
 									new CoreMonitorAdapter(monitor));
 							if (fixErrors(result)) {
-								ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
+								if (!dbImport)
+									ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
 							}
 						}
 					}
@@ -146,32 +146,20 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private boolean fixErrors(final Collection<IMagicCard> result) {
+		final boolean yesres[] = new boolean[] { true };
 		getControl().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				int size = result.size();
-				int errors = 0;
-				Editions editions = Editions.getInstance();
-				HashMap<String, String> badSets = new HashMap<String, String>();
-				for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-					IMagicCard card = (IMagicCard) iterator.next();
-					if (card.getCardId() == 0) {
-						errors++;
-						String set = card.getSet();
-						Edition eset = editions.getEditionByName(set);
-						if (eset == null)
-							badSets.put(set, set);
-					}
-				}
-				if (errors != 0) {
-					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve " + errors + " cards of " + size
-							+ ". The following sets are not found: " + badSets.keySet()
+				Map<String, String> badSets = ImportUtils.getSetCandidates(result);
+				if (badSets.size() > 0) {
+					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve " + badSets.size()
+							+ ". The following sets are not found or ambigues: " + badSets.keySet()
 							+ ".\n Do you want to attempt to fix import errors?");
 					if (yes) {
-						List x = new ArrayList(badSets.keySet());
-						// ...
-						for (Iterator<String> iterator = x.iterator(); iterator.hasNext();) {
+						// ask user to fix sets
+						for (Iterator<String> iterator = badSets.keySet().iterator(); iterator.hasNext();) {
 							String set = iterator.next();
-							CorrectSetDialog dialog = new CorrectSetDialog(getShell(), set);
+							CorrectSetDialog dialog = new CorrectSetDialog(getShell(), set, badSets.get(set));
 							if (dialog.open() == Window.OK) {
 								String newSet = dialog.getSet();
 								badSets.put(set, newSet);
@@ -179,40 +167,52 @@ public class DeckImportPage extends WizardDataTransferPage {
 								break;
 							}
 						}
-						IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
-						for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-							IMagicCard card = (IMagicCard) iterator.next();
-							if (card.getCardId() == 0 && card instanceof MagicCardPhysical) {
-								String set = card.getSet();
-								String corr = badSets.get(set);
-								if (corr != null) {
-									if (!corr.equals(CorrectSetDialog.SKIP)) {
-										MagicCard newCard = (MagicCard) card.getBase();
-										newCard.setSet(corr);
-										if (set.equals(corr)) {
-											// import int DB
-											magicDbHandler.getCardStore().add(newCard);
-										}
-										ImportUtils.updateCardReference((MagicCardPhysical) card, magicDbHandler.getCardStore());
-										if (card.getCardId() != 0) {
-											errors--;
-										}
-									} else {
-										iterator.remove();
-										errors--;
-									}
-								}
+						// fix cards for these sets
+						ImportUtils.fixSets(result, badSets);
+						ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
+						ImportUtils.performPreImportWithDb(result, newdbrecords);
+						ArrayList<String> lerrors = new ArrayList<String>();
+						ImportUtils.validateDbRecords(newdbrecords, lerrors);
+						if (newdbrecords.size() > 0 && lerrors.size() == 0) {
+							boolean yes2 = MessageDialog.openQuestion(getShell(), "Import into DB",
+									"Some cards are not found in the database. Do you want to add new cards into database?");
+							if (yes2)
+								ImportUtils.importIntoDb(newdbrecords);
+						} else if (lerrors.size() > 0) {
+							String message = "Some cards are not found in the database " + lerrors.size()
+									+ "\nThe following errors preventing import all of them into database:\n";
+							for (Iterator iterator = lerrors.iterator(); iterator.hasNext();) {
+								String str = (String) iterator.next();
+								message += str + "\n";
 							}
+							message += "Do you want to proceed with importing cards partually? No would abort the import";
+							boolean yes2 = MessageDialog.openQuestion(getShell(), "Import", message);
+							if (yes2)
+								ImportUtils.importIntoDb(newdbrecords);
 						}
-						if (errors != 0) {
-							MessageDialog.openInformation(getShell(), "Import", "After all this effort I cannot resolve " + errors
-									+ " cards of " + size);
+					}
+					ArrayList<String> cerrors = new ArrayList<String>();
+					ICardStore magicDb = DataManager.getCardHandler().getMagicDBStore();
+					for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+						IMagicCard card = (IMagicCard) iterator.next();
+						if (card.getCardId() == 0 || magicDb.getCard(card.getCardId()) == null) {
+							iterator.remove();
+							cerrors.add(TextPrinter.toString(card));
 						}
+					}
+					if (cerrors.size() != 0) {
+						String message = "After all this effort I cannot resolve " + cerrors.size() + " cards of " + size + ":\n";
+						for (Iterator iterator = cerrors.iterator(); iterator.hasNext();) {
+							String str = (String) iterator.next();
+							message += str + "\n";
+						}
+						message += "Do you want to proceed with importing cards partually? No would abort the import";
+						yesres[0] = MessageDialog.openQuestion(getShell(), "Import", message);
 					}
 				}
 			}
 		});
-		return true;
+		return yesres[0];
 	}
 
 	protected void createNewDeck(final String newDeckName) {
@@ -300,6 +300,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 				}
 			}
 		});
+		importIntoDb = new Button(group, SWT.RADIO);
+		importIntoDb.setText("Import cards info into local MTG database (do not create new deck or collection)");
+		importIntoDb.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
+		importIntoDb.setSelection(false);
 	}
 
 	protected void setFileName(final String string) {
