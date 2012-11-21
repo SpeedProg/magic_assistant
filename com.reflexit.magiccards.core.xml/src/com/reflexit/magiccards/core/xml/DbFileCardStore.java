@@ -24,7 +24,6 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.ICardSet;
-import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.utils.IntHashtable;
 
 /**
@@ -51,28 +50,16 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	@Override
 	public boolean doAddCard(IMagicCard card) {
 		// db does not actually add cards but rather updates
-		storeCard(card, storage, storage);
+		storeCard(card, storage, storage, false);
 		return true;
 	}
 
 	@Override
 	protected void doInitialize() throws MagicException {
 		super.doInitialize();
-		MemoryCardStorage<IMagicCard> toRemove = new MemoryCardStorage<IMagicCard>() {
-			@Override
-			public boolean remove(IMagicCard card) {
-				return super.add(card); // yes add
-			}
-		};
-		MemoryCardStorage<IMagicCard> toAdd = new MemoryCardStorage<IMagicCard>();
 		for (Iterator iterator = storage.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			storeCard(card, toRemove, toAdd);
-		}
-		if (toRemove.size() > 0 || toAdd.size() > 0) {
-			storage.removeAll(toRemove.getList());
-			storage.addAll(toAdd.getList());
-			storage.save();
+			hash.put(card.getCardId(), card);
 		}
 	}
 
@@ -102,28 +89,28 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	 * @param card
 	 * @param toAdd
 	 * @param toRemove
+	 * @param b
 	 */
-	private void storeCard(IMagicCard card, ICardSet<IMagicCard> toRemove, ICardSet<IMagicCard> toAdd) {
+	private void storeCard(IMagicCard card, ICardSet<IMagicCard> toRemove, ICardSet<IMagicCard> toAdd, boolean instorage) {
 		int id = card.getCardId();
 		if (id == 0) {
 			// create syntetic id
 			// Local db bitset
 			// [t2][s15][l4][v1][i10]
-			id = 1 << 31 | card.getSet().hashCode() & 0x7f << 15 | card.getName().hashCode() & 0x3f;
+			id = ((MagicCard) card).syntesizeId();
 			((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(id));
 		}
 		IMagicCard prev = (IMagicCard) this.hash.get(id);
 		if (prev == null) {
 			// add
 			this.hash.put(id, card);
-			toAdd.add(card);
+			if (instorage == false)
+				toAdd.add(card);
 			return;
 		}
 		if (prev instanceof MagicCard && card.equals(prev)) {
 			// merge
-			toRemove.remove(card);
 			((MagicCard) prev).copyFrom(card);
-			toAdd.add(prev);
 			return;
 		}
 		// redo
@@ -140,7 +127,8 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 				hash.put(-id, prev);
 				hash.put(id, card);
 				toAdd.add(prev);
-				toAdd.add(card);
+				if (instorage == false)
+					toAdd.add(card);
 				return;
 			} else if (cur == 1) {
 				((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(-id));
@@ -150,7 +138,8 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 			}
 		}
 		this.hash.put(id, card);
-		toAdd.add(card);
+		if (instorage == false)
+			toAdd.add(card);
 		return;
 	}
 }
