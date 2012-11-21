@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import com.reflexit.magiccards.core.exports.DeckParserTest;
+import com.reflexit.magiccards.core.exports.ImportUtilsTest;
 import com.reflexit.magiccards.core.exports.MagicWorkstationImportTest;
 import com.reflexit.magiccards.core.exports.MtgoImportTest;
 import com.reflexit.magiccards.core.exports.TablePipedImportTest;
@@ -34,6 +35,7 @@ public class AllLocalTests {
 		suite.addTestSuite(MtgoImportTest.class);
 		suite.addTestSuite(MagicWorkstationImportTest.class);
 		suite.addTestSuite(DeckParserTest.class);
+		suite.addTestSuite(ImportUtilsTest.class);
 		// core
 		suite.addTestSuite(VirtualMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);

@@ -3,8 +3,8 @@ package com.reflexit.magiccards.core.exports;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -43,13 +43,18 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 			fail(e.getMessage());
 		}
 		ArrayList<IMagicCard> res = extractStorageCards();
-		resSize = res.size();
+		setout(res);
+	}
+
+	public void setout(Collection<IMagicCard> preimport) {
+		resSize = preimport.size();
+		Iterator<IMagicCard> iter = preimport.iterator();
 		if (resSize >= 1)
-			card1 = res.get(0);
+			card1 = iter.next();
 		if (resSize >= 2)
-			card2 = res.get(1);
+			card2 = iter.next();
 		if (resSize >= 3)
-			card3 = res.get(2);
+			card3 = iter.next();
 	}
 
 	protected void addLine(String string) {
