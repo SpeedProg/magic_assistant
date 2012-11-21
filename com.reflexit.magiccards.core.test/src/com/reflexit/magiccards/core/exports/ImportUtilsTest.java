@@ -2,7 +2,9 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class ImportUtilsTest extends AbstarctImportTest {
 	@Override
@@ -49,9 +52,14 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertNotNull(card1.getSet());
 	}
 
-	public void preimport() throws InvocationTargetException, InterruptedException {
-		preimport = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, deck.getLocation(), monitor);
-		setout(preimport);
+	public void preimport() {
+		try {
+			preimport = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, deck.getLocation(),
+					monitor);
+			setout(preimport);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 	}
 
 	@Test
@@ -74,23 +82,35 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	}
 
 	@Test
-	public void testGetFixedSet() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testResolveSet() {
-		fail("Not yet implemented");
+		assertEquals("\"Timeshifted\"", ImportUtils.resolveSet("''Timeshifted''"));
+		assertEquals("Duel Decks: Ajani vs. Nicol Bolas", ImportUtils.resolveSet("Duel decks : Ajani vs. Nicol Bolas"));
+		assertEquals("Lorwyn", ImportUtils.resolveSet("Token Lorwyn "));
 	}
 
 	@Test
 	public void testGetFixedName() {
-		fail("Not yet implemented");
+		MagicCard card = new MagicCard();
+		card.setName("Aether");
+		assertEquals("Æther", ImportUtils.getFixedName(card));
 	}
 
 	@Test
 	public void testGetSetCandidates() {
-		fail("Not yet implemented");
+		addLine("NAME|SET|COUNT");
+		addLine("Counterspell|Bla|2");
+		addLine("Light|Foo|1");
+		addLine("Light|Duel decks : Ajani vs. Nicol Bolas|1");
+		preimport();
+		Map<String, String> setCandidates = ImportUtils.getSetCandidates(preimport);
+		assertTrue(setCandidates.containsKey("Bla"));
+		assertTrue(setCandidates.containsKey("Foo"));
+		assertNull(setCandidates.get("Foo"));
+		assertEquals(2, setCandidates.size());
+		setCandidates.put("Foo", "Lorwyn");
+		ImportUtils.fixSets(preimport, setCandidates);
+		assertEquals("Bla", card1.getSet());
+		assertEquals("Lorwyn", card2.getSet());
 	}
 
 	@Test
@@ -110,16 +130,24 @@ public class ImportUtilsTest extends AbstarctImportTest {
 
 	@Test
 	public void testValidateDbRecords() {
-		fail("Not yet implemented");
+		card1 = new MagicCard();
+		card2 = new MagicCard();
+		((MagicCard) card2).setName("name");
+		card3 = CardGenerator.generateCardWithValues();
+		((MagicCard) card3).setCollNumber(0);
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>();
+		cards.add(card1);
+		cards.add(card2);
+		cards.add(card3);
+		cards.add(CardGenerator.generateCardWithValues());
+		ArrayList<String> errors = new ArrayList<String>();
+		ImportUtils.validateDbRecords(cards, errors);
+		assertEquals(3, errors.size());
+		System.err.println(errors);
 	}
 
 	@Test
 	public void testImportIntoDb() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testFixSets() {
 		fail("Not yet implemented");
 	}
 }
