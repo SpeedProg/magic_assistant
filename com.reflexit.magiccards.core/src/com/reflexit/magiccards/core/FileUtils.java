@@ -133,4 +133,15 @@ public class FileUtils {
 		fstore.update();
 		System.err.println("Loaded " + fstore.getSize() + " cards");
 	}
+
+	public static void deleteTree(File rootDir) {
+		File[] listFiles = rootDir.listFiles();
+		if (listFiles != null) {
+			for (int i = 0; i < listFiles.length; i++) {
+				File file = listFiles[i];
+				deleteTree(file);
+			}
+		}
+		rootDir.delete();
+	}
 }

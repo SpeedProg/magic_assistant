@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 
 public class Editions implements ISearchableProperty {
-	private static final String EDITIONS_FILE = "editions.txt";
+	public static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance;
 	private LinkedHashMap<String, Edition> name2ed;
 	private static int idcounter = 0;

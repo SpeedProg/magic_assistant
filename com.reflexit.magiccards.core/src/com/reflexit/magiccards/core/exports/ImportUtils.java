@@ -239,7 +239,7 @@ public class ImportUtils {
 	 * Finds and associates imported cards with magic db cards. If card not found in db creates new
 	 * db cards and adds to newdbrecords
 	 */
-	public static void performPreImportWithDb(Collection<IMagicCard> result, ArrayList<IMagicCard> newdbrecords) {
+	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords) {
 		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
