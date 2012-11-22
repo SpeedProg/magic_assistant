@@ -5,7 +5,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
@@ -20,9 +23,16 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		File temp = new File("/tmp/magiccards");
-		DataManager.setRootDir(temp);
 		this.deck = new MemCardHandler();
+	}
+
+	static {
+		File temp = new File("/tmp/magiccards");
+		temp.delete();
+		File file = new File(FileUtils.getStateLocationFile(), Editions.EDITIONS_FILE);
+		file.delete();
+		FileUtils.deleteTree(temp);
+		DataManager.setRootDir(temp);
 	}
 
 	protected ArrayList<IMagicCard> extractStorageCards() {

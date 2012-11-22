@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -115,17 +116,39 @@ public class ImportUtilsTest extends AbstarctImportTest {
 
 	@Test
 	public void testUpdateCardReference() {
-		fail("Not yet implemented");
+		MagicCard card = new MagicCard();
+		card.setName("Lightning Bolt");
+		card.setSet("Magic 2010");
+		MagicCardPhysical mcp = new MagicCardPhysical(card, null);
+		ImportUtils.updateCardReference(mcp, DataManager.getCardHandler().getMagicDBStore());
+		assertNotSame(card, mcp.getCard());
+		assertEquals(card.getSet(), mcp.getBase().getSet());
+		assertEquals(191089, mcp.getBase().getCardId());
 	}
 
 	@Test
-	public void testPerformPreview() {
-		fail("Not yet implemented");
+	public void testPerformPreview() throws InvocationTargetException, InterruptedException {
+		addLine("NAME|SET|COUNT");
+		addLine("Counterspell|Bla|2");
+		PreviewResult performPreview = ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), tableImport, true, monitor);
+		ArrayList<String[]> values = performPreview.getValues();
+		assertEquals(1, values.size());
+		String[] fielsValues = values.get(0);
+		assertEquals(25, fielsValues.length);
+		// assertEquals("Counterspell", fielsValues[0]);
 	}
 
 	@Test
 	public void testPerformPreImportWithDb() {
-		fail("Not yet implemented");
+		addLine("NAME|SET|COUNT");
+		addLine("Counterspell|Foo|2");
+		addLine("Light|Foo|1");
+		preimport();
+		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
+		ImportUtils.performPreImportWithDb(preimport, mdb);
+		assertEquals(2, mdb.size());
+		Editions.getInstance().addEdition("Foo", null);
+		ImportUtils.importIntoDb(mdb);
 	}
 
 	@Test
@@ -144,10 +167,5 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		ImportUtils.validateDbRecords(cards, errors);
 		assertEquals(3, errors.size());
 		System.err.println(errors);
-	}
-
-	@Test
-	public void testImportIntoDb() {
-		fail("Not yet implemented");
 	}
 }
