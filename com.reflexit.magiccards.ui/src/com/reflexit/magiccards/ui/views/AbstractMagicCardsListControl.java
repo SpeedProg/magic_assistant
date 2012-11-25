@@ -550,7 +550,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected String getPreferencePageId() {
-		return abstractCardsView.getPreferencePageId();
+		if (abstractCardsView != null)
+			return abstractCardsView.getPreferencePageId();
+		return getClass().getName();
 	}
 
 	@Override
@@ -789,7 +791,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void setGlobalControlHandlers(IActionBars bars) {
-		abstractCardsView.activateActionHandler(actionShowFind, FIND);
+		if (abstractCardsView != null)
+			abstractCardsView.activateActionHandler(actionShowFind, FIND);
 	}
 
 	protected void setQuickFilterVisible(boolean qf) {
