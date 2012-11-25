@@ -67,7 +67,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testFindRefByName() {
 		MagicCard card = new MagicCard();
 		card.setName("Lightning Bolt");
-		MagicCard ref = ImportUtils.findRef(card, DataManager.getCardHandler().getMagicDBStore());
+		MagicCard ref = ImportUtils.findRef(card);
 		assertNotNull(ref);
 		assertNotNull(ref.getSet());
 	}
@@ -77,7 +77,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		MagicCard card = new MagicCard();
 		card.setName("Lightning Bolt");
 		card.setSet("Magic 2010");
-		MagicCard ref = ImportUtils.findRef(card, DataManager.getCardHandler().getMagicDBStore());
+		MagicCard ref = ImportUtils.findRef(card);
 		assertNotNull(ref);
 		assertEquals("Magic 2010", ref.getSet());
 	}
@@ -100,15 +100,15 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testGetSetCandidates() {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Bla|2");
-		addLine("Light|Foo|1");
+		addLine("Light|Foot|1");
 		addLine("Light|Duel decks : Ajani vs. Nicol Bolas|1");
 		preimport();
 		Map<String, String> setCandidates = ImportUtils.getSetCandidates(preimport);
 		assertTrue(setCandidates.containsKey("Bla"));
-		assertTrue(setCandidates.containsKey("Foo"));
-		assertNull(setCandidates.get("Foo"));
+		assertTrue(setCandidates.containsKey("Foot"));
+		assertNull(setCandidates.get("Foot"));
 		assertEquals(2, setCandidates.size());
-		setCandidates.put("Foo", "Lorwyn");
+		setCandidates.put("Foot", "Lorwyn");
 		ImportUtils.fixSets(preimport, setCandidates);
 		assertEquals("Bla", card1.getSet());
 		assertEquals("Lorwyn", card2.getSet());
@@ -120,7 +120,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		card.setName("Lightning Bolt");
 		card.setSet("Magic 2010");
 		MagicCardPhysical mcp = new MagicCardPhysical(card, null);
-		ImportUtils.updateCardReference(mcp, DataManager.getCardHandler().getMagicDBStore());
+		ImportUtils.updateCardReference(mcp);
 		assertNotSame(card, mcp.getCard());
 		assertEquals(card.getSet(), mcp.getBase().getSet());
 		assertEquals(191089, mcp.getBase().getCardId());
