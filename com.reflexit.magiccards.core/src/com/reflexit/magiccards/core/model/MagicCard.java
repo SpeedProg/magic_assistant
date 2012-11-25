@@ -692,6 +692,10 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Collection<MagicCardPhysical>) realcards.getChildrenList();
 	}
 
+	public ICardGroup getPhysicalCardsGroup() {
+		return realcards;
+	}
+
 	public void removePhysicalCard(MagicCardPhysical p) {
 		if (realcards == null) {
 			throw new IllegalStateException();
