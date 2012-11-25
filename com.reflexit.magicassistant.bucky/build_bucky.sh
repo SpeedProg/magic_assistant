@@ -12,7 +12,7 @@ die() {
   exit 1
 }
 
-PATH="/usr/local/bin:/mingw/bin:/c/mingw/bin:/bin:/c/Windows/system32:/c/Windows:/c/Program Files (x86)/Vim/vim72:/c/Program Files/Subversion/bin:/C/Program Files (x86)/PuTTy"
+PATH="/usr/local/bin:/mingw/bin:/c/mingw/bin:/bin:/c/Windows/system32:/c/Windows:/c/Program Files (x86)/Vim/vim72:/c/Program Files/Subversion/bin:/C/Program Files (x86)/PuTTy:/C/Program Files/7-Zip"
 Path=$PATH
 export PATH
 
@@ -59,6 +59,20 @@ $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
   
 test $? -eq 0 || { grep -i Error $LOG; die Build failed see $LOG; }
 
+echo Creating self extracting archive
+(
+cd $RESULT
+mkdir repack
+cd repack
+unzip ../magicassistant*win32*x86.zip
+cd MagicAssistant
+cp -r "/C/Program Files (x86)/Java/jre7u9" jre 
+cd ..
+7z.exe a -t7z -mx5 -sfx7z.sfx ../magicassistant-intaller-$RELEASE-win32.exe MagicAssistant
+)
+
+
+
 echo Posting results
 OUTPUT=$BUILD_DIR/output
 rm -rf $OUTPUT
@@ -67,6 +81,7 @@ cp -r $RESULT/site.p2 $OUTPUT
 rm -rf "$EXPORT_DIR/$RELEASE"
 mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
+cp $RESULT/magicassistant*.exe $EXPORT_DIR/$RELEASE/
 cp $WORKSPACE/com.reflexit.magiccards-metadata/README.TXT $EXPORT_DIR/$RELEASE/
 rm -rf $EXPORT_DIR/update
 mkdir $EXPORT_DIR/update

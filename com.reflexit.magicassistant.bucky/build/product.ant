@@ -1,17 +1,17 @@
 <project>
-	 <pathconvert property="equinox.launcher.jar">
-	   <first count="1">
-	     <sort>
-	       <fileset dir="${eclipse.home}/plugins" includes="**/org.eclipse.equinox.launcher_*.jar"/>
-	       <reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
-	         <date/>
-	       </reverse>
-	     </sort>
-	   </first>
-	 </pathconvert>
+
 
 	<target name="create.product">
-		
+		 <pathconvert property="equinox.launcher.jar">
+		   <first count="1">
+		     <sort>
+		       <fileset dir="${eclipse.home}/plugins" includes="**/org.eclipse.equinox.launcher_*.jar"/>
+		       <reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+		         <date/>
+		       </reverse>
+		     </sort>
+		   </first>
+		 </pathconvert>
 		<property name="destination" location="${sp:destination}"/>
 		<delete dir="${destination}"/>
 		<makeurl property="repository" file="${sp:repository}"/>
@@ -48,9 +48,27 @@
 		<!-- Create the dropins/ folder. -->
 		<mkdir dir="${destination}/dropins"/>
 		<chmod perm="777" dir="${destination}/dropins"/>
+		
+	    <!-- <antcall target="copy.jre"/> -->
 	</target>
+	<!-- 
+	Create a self extracting archive using 7zip
+	c:\Develop\magic\export\1.2.6.7>"c:\Program Files\7-Zip\7z.exe" a -t7z -mx5 -sfx7z.sfx archive.exe MagicAssistant
+	-->
 	<target name="prepare" depends="clean,sync.files,fix.about">
 	</target>
+	<target name="eval.iswin32"> 
+	    <condition 
+	         property="iswin32"> 
+	         <equals arg1="${target.os}" arg2="win32"/> 
+	    </condition> 
+	</target> 
+	<target name="copy.jre" 
+	    if="iswin32" depends="eval.iswin32"> 
+	    <echo>Windows!</echo> 
+		<copydir dest="${destination}/jre" src="C:/Program Files (x86)/Java/jre7u9"/>
+	</target> 
+	
 	<target name="clean">
 		<echo message="Deleting ${buckminster.output.root}"/>
 		<delete dir="${buckminster.output.root}" failonerror="false" verbose="on"></delete>
