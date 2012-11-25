@@ -64,12 +64,23 @@ public class CompositeViewerManager extends ViewerManager {
 		this.stackLayout = new StackLayout();
 		this.comp.setLayout(this.stackLayout);
 		for (IMagicColumnViewer m : this.managers) {
-			Control control = m.createContents(this.comp);
-			m.hookDragAndDrop();
+			m.createContents(this.comp);
 		}
+		hookDragAndDrop();
 		setActivePage(this.activeIndex);
 		this.comp.layout();
 		return this.comp;
+	}
+
+	@Override
+	public final void hookDragAndDrop() {
+		for (IMagicColumnViewer m : this.managers) {
+			hookDragAndDrop(m);
+		}
+	}
+
+	protected void hookDragAndDrop(IMagicColumnViewer m) {
+		m.hookDragAndDrop();
 	}
 
 	public void setActivePage(int i) {
