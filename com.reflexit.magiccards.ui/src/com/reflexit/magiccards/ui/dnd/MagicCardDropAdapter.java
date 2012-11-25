@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.dnd;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -23,8 +26,12 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -48,14 +55,15 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
+		ArrayList<IMagicCard> cards = repareLinks(Arrays.asList(toDropArray));
 		try {
 			Location targetLocation = determineLocation();
 			if (targetLocation == null)
 				throw new MagicException("Invalid drop target");
 			if (curEvent.detail == DND.DROP_MOVE)
-				return DataManager.getCardHandler().moveCards(Arrays.asList(toDropArray), null, targetLocation);
+				return DataManager.getCardHandler().moveCards(cards, null, targetLocation);
 			else
-				return DataManager.getCardHandler().copyCards(Arrays.asList(toDropArray), targetLocation);
+				return DataManager.getCardHandler().copyCards(cards, targetLocation);
 		} catch (MagicException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
 					"Cannot perform this operation: " + e.getMessage());
@@ -64,6 +72,32 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 			MagicUIActivator.log(e);
 			return false;
 		}
+	}
+
+	public ArrayList<IMagicCard> repareLinks(List<IMagicCard> cards1) {
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
+		CardGroup.expandGroups(cards, cards1);
+		ArrayList<IMagicCard> cards2 = new ArrayList<IMagicCard>();
+		ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			// Need to repair references to MagicCard instances
+			if (card instanceof MagicCard) {
+				iterator.remove();
+				card = (IMagicCard) lookupStore.getCard(card.getCardId());
+				if (card != null)
+					cards2.add(card);
+			} else if (card instanceof MagicCardPhysical) {
+				IMagicCard base = (IMagicCard) lookupStore.getCard(card.getCardId());
+				if (base != null) {
+					((MagicCardPhysical) card).setMagicCard((MagicCard) base);
+				} else {
+					iterator.remove();
+				}
+			}
+		}
+		cards.addAll(cards2);
+		return cards;
 	}
 
 	private Location determineLocation() {
