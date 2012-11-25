@@ -17,7 +17,6 @@ import java.util.Collection;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -26,7 +25,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public interface IImportDelegate<T> {
 	public ReportType getType();
 
-	public void init(InputStream st, boolean preview, Location location, ICardStore<T> lookupStore);
+	public void init(InputStream st, boolean preview, Location location);
 
 	public void setHeader(boolean header);
 

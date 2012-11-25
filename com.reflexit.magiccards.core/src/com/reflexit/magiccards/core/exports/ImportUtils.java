@@ -50,7 +50,7 @@ public class ImportUtils {
 			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force
 																				// initialization
 			ReportType reportType = worker.getType();
-			worker.init(st, false, location, magicDbHandler.getCardStore());
+			worker.init(st, false, location);
 			worker.setHeader(header);
 			worker.run(monitor);
 			Collection<IMagicCard> importedCards = worker.getImportedCards();
@@ -115,16 +115,17 @@ public class ImportUtils {
 		return res;
 	}
 
-	public static MagicCard findRef(MagicCard card, ICardStore lookupStore) {
+	public static MagicCard findRef(MagicCard card) {
+		ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
 		if (lookupStore == null)
 			return card;
-		MagicCard cand = null;
+		MagicCard cand = (MagicCard) lookupStore.getCard(card.getCardId());
+		if (cand != null)
+			return cand;
 		String name = getFixedName(card);
 		String set = getFixedSet(card);
 		for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
 			MagicCard a = (MagicCard) iterator.next();
-			if (card.getCardId() != 0 && a.getCardId() == card.getCardId())
-				return a;
 			String lname = a.getName();
 			if (name != null && name.equalsIgnoreCase(lname)) {
 				if (set == null)
@@ -205,10 +206,10 @@ public class ImportUtils {
 		return badSets;
 	}
 
-	public static MagicCard updateCardReference(MagicCardPhysical card, ICardStore lookupStore) {
+	public static MagicCard updateCardReference(MagicCardPhysical card) {
 		if (card == null)
 			return null;
-		MagicCard ref = findRef(card.getCard(), lookupStore);
+		MagicCard ref = findRef(card.getCard());
 		if (ref != null) {
 			if (card.getSet() == null || ref.getSet().equalsIgnoreCase(card.getSet())) {
 				card.setMagicCardSoft(ref);
@@ -227,7 +228,7 @@ public class ImportUtils {
 	public static PreviewResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
-		worker.init(st, true, null, magicDbHandler.getCardStore());
+		worker.init(st, true, null);
 		worker.setHeader(header);
 		// init preview
 		PreviewResult previewResult = worker.getPreview();
@@ -240,12 +241,11 @@ public class ImportUtils {
 	 * db cards and adds to newdbrecords
 	 */
 	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords) {
-		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof MagicCardPhysical) {
 				MagicCard newCard = (MagicCard) card.getBase();
-				newCard = ImportUtils.updateCardReference((MagicCardPhysical) card, magicDbHandler.getCardStore());
+				newCard = ImportUtils.updateCardReference((MagicCardPhysical) card);
 				if (newCard != null) {
 					// import int DB
 					newdbrecords.add(newCard);

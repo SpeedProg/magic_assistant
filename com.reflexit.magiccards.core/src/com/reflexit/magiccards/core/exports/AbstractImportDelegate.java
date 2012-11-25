@@ -14,7 +14,6 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
@@ -24,7 +23,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	private Location location;
 	private ReportType type;
 	private ICardField[] fields = getNonTransientFeilds();
-	private ICardStore lookupStore = null;
 	protected boolean previewMode = false;
 	protected PreviewResult previewResult = new PreviewResult();
 	private ArrayList<IMagicCard> toImport = new ArrayList<IMagicCard>();
@@ -51,10 +49,9 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.stream = stream;
 	}
 
-	public void init(InputStream st, boolean preview, Location location, ICardStore lookupStore) {
+	public void init(InputStream st, boolean preview, Location location) {
 		this.stream = st;
 		this.location = location;
-		this.lookupStore = lookupStore;
 		this.previewMode = preview;
 	}
 
@@ -91,7 +88,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected void importCard(MagicCardPhysical card) {
 		if (card == null)
 			return;
-		ImportUtils.updateCardReference(card, lookupStore);
+		ImportUtils.updateCardReference(card);
 		if (previewMode) {
 			String[] res = new String[previewResult.getFields().length];
 			for (int i = 0; i < previewResult.getFields().length; i++) {
@@ -151,14 +148,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	static ICardField[] getNonTransientFeilds() {
 		return MagicCardFieldPhysical.allNonTransientFields();
-	}
-
-	public ICardStore getLookupStore() {
-		return lookupStore;
-	}
-
-	public void setLookupStore(ICardStore lookupStore) {
-		this.lookupStore = lookupStore;
 	}
 
 	public boolean isPreviewMode() {
