@@ -5,14 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
@@ -53,40 +49,6 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	@Override
 	public String toString() {
 		return location + " 0x" + Integer.toHexString(System.identityHashCode(this));
-	}
-
-	protected void updateDbRef() {
-		AbstractMultiStore db = null;
-		for (Object object : this) {
-			if (object instanceof MagicCardPhysical) {
-				MagicCardPhysical mp = (MagicCardPhysical) object;
-				if (mp.getCard().getType() == null) {
-					if (db == null) {
-						db = waitForDb();
-					}
-					MagicCard c = (MagicCard) db.getCard(mp.getCardId());
-					if (c != null) {
-						mp.getBase().removePhysicalCard(mp);
-						mp.setMagicCard(c);
-					}
-				}
-			}
-		}
-	}
-
-	protected AbstractMultiStore waitForDb() {
-		IFilteredCardStore databaseHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
-		databaseHandler.getSize(); // should trigger initialization
-		AbstractMultiStore db = (AbstractMultiStore) databaseHandler.getCardStore();
-		int count = 20;
-		while (!db.isInitialized() && count-- > 0) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				break;
-			}
-		}
-		return db;
 	}
 
 	protected void updateLocations() {
@@ -205,7 +167,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			obj = CardCollectionStoreObject.initFromFile(this.file);
 			loadFields(obj);
 			updateLocations();
-			updateDbRef();
+			// DataManager.reconcileAdd(this);
 		} catch (IOException e) {
 			MagicLogger.log(e);
 		}

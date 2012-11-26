@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -21,7 +22,8 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 	private static LibraryFilteredCardFileStore instance;
 
 	@Override
-	protected void doInitialize() throws MagicException {
+	protected synchronized void doInitialize() throws MagicException {
+		MagicLogger.traceStart("lfcs init");
 		ModelRoot container = DataManager.getModelRoot();
 		Collection<CardElement> colls = container.getAllElements();
 		// init super
@@ -33,18 +35,20 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 		this.table.initialize();
 		container.addListener(this);
 		table.addListener(this);
+		initialized = true;
+		DataManager.reconcile();
+		MagicLogger.traceEnd("lfcs init");
 	}
 
 	@SuppressWarnings("unused")
-	public static LibraryFilteredCardFileStore getInstance() {
+	public synchronized static LibraryFilteredCardFileStore getInstance() {
 		if (instance == null)
-			new LibraryFilteredCardFileStore();
+			instance = new LibraryFilteredCardFileStore();
 		return instance;
 	}
 
 	private LibraryFilteredCardFileStore() {
 		super(new CollectionMultiFileCardStore());
-		instance = this;
 	}
 
 	public void handleEvent(CardEvent event) {

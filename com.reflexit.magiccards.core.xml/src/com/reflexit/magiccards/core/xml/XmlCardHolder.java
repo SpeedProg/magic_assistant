@@ -20,18 +20,15 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -52,11 +49,16 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
-		return new BasicMagicDBFilteredCardFileStore((VirtualMultiFileCardStore) getMagicDBFilteredStore().getCardStore());
+		return new BasicMagicDBFilteredCardFileStore((DbMultiFileCardStore) getMagicDBStore());
 	}
 
 	public IFilteredCardStore getLibraryFilteredStore() {
 		return LibraryFilteredCardFileStore.getInstance();
+	}
+
+	@Override
+	public ICardStore getCardStore(Location to) {
+		return LibraryFilteredCardFileStore.getInstance().getStore(to);
 	}
 
 	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy() {
@@ -118,7 +120,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws MagicException,
 			IOException {
-		ICardStore store = getMagicDBFilteredStore().getCardStore();
+		ICardStore store = getMagicDBStore();
 		int init = store.size();
 		loadFromFlat(st, list, markCn);
 		boolean hasAny = list.size() > 0;
@@ -304,84 +306,6 @@ public class XmlCardHolder implements ICardHandler {
 		} finally {
 			pm.done();
 		}
-	}
-
-	public boolean copyCards(Collection cards1, Location to) {
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
-		ICardStore<IMagicCard> store = LibraryFilteredCardFileStore.getInstance().getStore(to);
-		if (store == null)
-			return false;
-		boolean virtual = store.isVirtual();
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhysical phi = new MagicCardPhysical(card, to);
-			if (card instanceof MagicCard) // moving from db
-				phi.setOwn(!virtual);
-			else if (virtual) {
-				phi.setOwn(false); // copied cards will have collection
-									// ownership for virtual
-			}
-			list.add(phi);
-		}
-		return store.addAll(list);
-	}
-
-	public boolean moveCards(Collection cards1, Location from, Location to) {
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
-		ICardStore<IMagicCard> sto = LibraryFilteredCardFileStore.getInstance().getStore(to);
-		if (sto == null)
-			return false;
-		boolean virtual = sto.isVirtual();
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhysical phi = new MagicCardPhysical(card, to);
-			if (card instanceof MagicCard) {
-				phi.setOwn(!virtual);
-			} else if (card instanceof MagicCardPhysical) {
-				if (((IMagicCardPhysical) card).isOwn() && virtual)
-					throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
-			}
-			list.add(phi);
-		}
-		boolean res = sto.addAll(list);
-		if (res) {
-			boolean allthesame = true;
-			if (from == null) {
-				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-					IMagicCard card = (IMagicCard) iterator.next();
-					if (!(card instanceof MagicCardPhysical))
-						break;
-					Location from2 = ((MagicCardPhysical) card).getLocation();
-					if (from2 != null) {
-						if (from == null)
-							from = from2;
-						else if (!from.equals(from2)) {
-							allthesame = false;
-							break;
-						}
-					}
-				}
-			}
-			if (from != null && allthesame) {
-				ICardStore<IMagicCard> sfrom2 = LibraryFilteredCardFileStore.getInstance().getStore(from);
-				if (sfrom2 != null)
-					sfrom2.removeAll(cards);
-			} else {
-				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-					IMagicCard card = (IMagicCard) iterator.next();
-					if (!(card instanceof MagicCardPhysical))
-						continue;
-					Location from2 = ((MagicCardPhysical) card).getLocation();
-					ICardStore<IMagicCard> sfrom2 = LibraryFilteredCardFileStore.getInstance().getStore(from2);
-					sfrom2.remove(card);
-				}
-			}
-		}
-		return res;
 	}
 
 	public IFilteredCardStore getActiveDeckHandler() {
