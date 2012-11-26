@@ -159,11 +159,11 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testPOWER() {
-		genericFieldText(FilterField.POWER, "2");
+		genericFieldText(FilterField.POWER, "22");
 	}
 
 	public void testTOUGHNESS() {
-		genericFieldText(FilterField.TOUGHNESS, "2");
+		genericFieldText(FilterField.TOUGHNESS, "22");
 	}
 
 	public void testCCC() {
@@ -217,6 +217,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testOWNERSHIP() {
+		mcp.setOwn(true);
 		genericFieldText(FilterField.OWNERSHIP, "false");
 	}
 

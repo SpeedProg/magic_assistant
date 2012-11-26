@@ -9,8 +9,10 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.xml.DbMultiFileCardStore;
 
 public class CardGroupTest extends TestCase {
 	private CardGroup group;
@@ -404,6 +406,9 @@ public class CardGroupTest extends TestCase {
 			((MagicCardPhysical) cards[j]).setLocation(loc);
 			((MagicCardPhysical) cards[j]).setOwn(true);
 		}
+		((DbMultiFileCardStore) DataManager.getMagicDBStore()).setLoad(false);
+		DataManager.getMagicDBStore().add(m);
+		DataManager.reconcileAdd(Arrays.asList(cards));
 		group.add(m);
 		assertEquals(loc, group.getLocation());
 		assertEquals(true, group.isOwn());

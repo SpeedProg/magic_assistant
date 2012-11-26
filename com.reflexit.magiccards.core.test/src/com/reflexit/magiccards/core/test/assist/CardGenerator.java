@@ -24,15 +24,19 @@ public class CardGenerator {
 	static int id = 33;
 
 	static public MagicCard generateRandomCard() {
-		MagicCard card = new MagicCard();
-		card.setCardId(++id);
-		return card;
+		try {
+			MagicCard card = new MagicCard();
+			card.setCardId(-id);
+			return card;
+		} finally {
+			id++;
+		}
 	}
 
 	static public MagicCard generateCardWithValues() {
 		try {
 			MagicCard card = new MagicCard();
-			card.setCardId(id);
+			card.setCardId(-id);
 			card.setName("name " + id);
 			card.setRarity(Rarity.COMMON);
 			card.setType("type " + id % 100);

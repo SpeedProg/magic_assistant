@@ -194,6 +194,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		MagicCard a2 = addCard(WHITE_COST, INSTANT, "a");
 		MagicCard a3 = addCard(RED_COST, INSTANT, "a3");
 		MagicCard a4 = addCard(ONE_COST, ARTIFACT, "b");
+		this.filter.setSortField(MagicCardField.COST, false);
 		this.filter.setSortField(MagicCardField.NAME, true);
 		this.filter.setSortField(MagicCardField.TYPE, true);
 		MagicCard[] cards = getFilteredCards();

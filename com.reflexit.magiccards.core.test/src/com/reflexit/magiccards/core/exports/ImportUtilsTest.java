@@ -22,7 +22,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		DataManager.getCardHandler().getMagicDBFilteredStore().getSize();
+		DataManager.getMagicDBStore().initialize();
 	}
 
 	TableImportDelegate tableImport = new TableImportDelegate();

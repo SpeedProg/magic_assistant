@@ -37,7 +37,7 @@ public class AllLocalTests {
 		suite.addTestSuite(DeckParserTest.class);
 		suite.addTestSuite(ImportUtilsTest.class);
 		// core
-		suite.addTestSuite(VirtualMultiFileCardStoreTest.class);
+		suite.addTestSuite(DbMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
 		suite.addTestSuite(CardOrganizerTest.class);
 		suite.addTestSuite(AbstractFilteredCardStoreTest.class);
