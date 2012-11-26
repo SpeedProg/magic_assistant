@@ -112,7 +112,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						DataManager.getCardHandler().copyCards(sel.toList(), loc);
+						DataManager.copyCards(sel.toList(), loc);
 					}
 				}
 			}
@@ -142,7 +142,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 								list.add((IMagicCard) o);
 						}
 						Location location = DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
-						DataManager.getCardHandler().moveCards(list, null, location);
+						DataManager.moveCards(list, null, location);
 					}
 				}
 			} catch (MagicException e) {
@@ -158,7 +158,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		Object contents = cb.getContents(mt);
 		if (contents instanceof IMagicCard[]) {
 			IMagicCard[] cards = (IMagicCard[]) contents;
-			DataManager.getCardHandler().copyCards(Arrays.asList(cards), ((ILocatable) getFilteredStore().getCardStore()).getLocation());
+			DataManager.copyCards(Arrays.asList(cards), ((ILocatable) getFilteredStore().getCardStore()).getLocation());
 		} else {
 			super.runPaste();
 		}
@@ -205,7 +205,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
-				cardStore.removeAll(sel.toList());
+				DataManager.remove(cardStore, sel.toList());
 			}
 		}
 		refresh();
@@ -326,8 +326,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().addListener(this);
-		DataManager.getModelRoot().addListener(this);
+		DataManager.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+		DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
 	}
 
 	/*

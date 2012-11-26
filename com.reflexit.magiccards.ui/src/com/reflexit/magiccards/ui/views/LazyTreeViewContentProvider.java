@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardGroup;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LazyTreeViewContentProvider implements // IStructuredContentProvider,
@@ -44,11 +45,13 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 				count = rootGroup.size();
 			} else if (element instanceof ICardGroup) {
 				count = ((ICardGroup) element).size();
+			} else if (element instanceof MagicCard) {
+				// count = ((MagicCard) element).getPhysicalCards().size();
 			}
 			if (count == 0)
-				treeViewer.setHasChildren(element, false);
+				treeViewer.setChildCount(element, 0);
 			else
-				this.treeViewer.setChildCount(element, count);
+				treeViewer.setChildCount(element, count);
 		}
 	}
 
@@ -61,15 +64,14 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 				group = rootGroup;
 			} else if (parent instanceof ICardGroup) {
 				group = (CardGroup) parent;
-			} else
+			} else if (parent instanceof MagicCard) {
+				// group = ((MagicCard) parent).getPhysicalCardsGroup();
+			}
+			if (group == null)
 				return;
 			Object child = group.getChildAtIndex(index);
 			this.treeViewer.replace(parent, index, child);
-			// System.err.println("grpup: " + " index " + index);
-			if (child instanceof ICardGroup)
-				updateChildCount(child, -1);
-			else
-				updateChildCount(child, 0);
+			updateChildCount(child, -1);
 		}
 	}
 

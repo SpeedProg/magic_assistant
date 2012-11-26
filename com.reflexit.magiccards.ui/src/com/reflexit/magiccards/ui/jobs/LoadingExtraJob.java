@@ -71,7 +71,7 @@ public class LoadingExtraJob extends Job {
 				default:
 					return Status.CANCEL_STATUS;
 			}
-			ICardStore magicDb = DataManager.getCardHandler().getMagicDBFilteredStore().getCardStore();
+			ICardStore magicDb = DataManager.getMagicDBStore();
 			UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
 			// parser.set
 			parser.updateStore(list, size, fields, lang, magicDb, new CoreMonitorAdapter(monitor));

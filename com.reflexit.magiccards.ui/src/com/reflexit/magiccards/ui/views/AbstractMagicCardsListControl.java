@@ -346,7 +346,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void init(IViewSite site) {
 		super.init(site);
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().addListener(this);
+		DataManager.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
 	}
 
 	/*
@@ -896,6 +896,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			}
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
+			reloadData();
+		} else if (type == CardEvent.REMOVE) {
+			// todo set selection to next element
 			reloadData();
 		}
 	}

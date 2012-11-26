@@ -42,7 +42,7 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 		IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
-			DataManager.getCardHandler().copyCards(list, activeDeckHandler.getLocation());
+			DataManager.copyCards(list, activeDeckHandler.getLocation());
 		} else {
 			Display display = window.getShell().getDisplay();
 			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");

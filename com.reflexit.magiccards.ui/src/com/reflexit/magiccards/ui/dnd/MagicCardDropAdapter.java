@@ -61,9 +61,9 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 			if (targetLocation == null)
 				throw new MagicException("Invalid drop target");
 			if (curEvent.detail == DND.DROP_MOVE)
-				return DataManager.getCardHandler().moveCards(cards, null, targetLocation);
+				return DataManager.moveCards(cards, null, targetLocation);
 			else
-				return DataManager.getCardHandler().copyCards(cards, targetLocation);
+				return DataManager.copyCards(cards, targetLocation);
 		} catch (MagicException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
 					"Cannot perform this operation: " + e.getMessage());
@@ -74,7 +74,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		}
 	}
 
-	public ArrayList<IMagicCard> repareLinks(List<IMagicCard> cards1) {
+	public static ArrayList<IMagicCard> repareLinks(List<IMagicCard> cards1) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
 		CardGroup.expandGroups(cards, cards1);
 		ArrayList<IMagicCard> cards2 = new ArrayList<IMagicCard>();
