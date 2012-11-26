@@ -33,9 +33,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 
@@ -46,9 +44,7 @@ public class ImportUtils {
 	public static Collection<IMagicCard> performPreImport(InputStream st, IImportDelegate worker, boolean header, Location location,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
-			IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
-			((AbstractFilteredCardStore<IMagicCard>) magicDbHandler).getSize(); // force
-																				// initialization
+			DataManager.getMagicDBStore().initialize();
 			ReportType reportType = worker.getType();
 			worker.init(st, false, location);
 			worker.setHeader(header);
@@ -77,6 +73,7 @@ public class ImportUtils {
 			}
 			// import into card store
 			cardStore.addAll(importedCards);
+			DataManager.reconcileAdd(importedCards);
 		}
 	}
 
@@ -212,13 +209,13 @@ public class ImportUtils {
 		MagicCard ref = findRef(card.getCard());
 		if (ref != null) {
 			if (card.getSet() == null || ref.getSet().equalsIgnoreCase(card.getSet())) {
-				card.setMagicCardSoft(ref);
+				card.setMagicCard(ref);
 				return null;
 			} else if (card.getSet() != null) {
 				MagicCard newCard = (MagicCard) ref.clone();
 				newCard.setSet(card.getSet());
 				newCard.setCardId(0);
-				card.setMagicCardSoft(newCard);
+				card.setMagicCard(newCard);
 				return newCard;
 			}
 		}
@@ -227,7 +224,6 @@ public class ImportUtils {
 
 	public static PreviewResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
 		worker.init(st, true, null);
 		worker.setHeader(header);
 		// init preview
@@ -277,12 +273,12 @@ public class ImportUtils {
 	}
 
 	public static void importIntoDb(Collection<IMagicCard> newdbrecords) {
-		IFilteredCardStore magicDbHandler = DataManager.getCardHandler().getMagicDBFilteredStore();
+		ICardStore magicDbHandler = DataManager.getMagicDBStore();
 		int row = 0;
 		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext(); row++) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			MagicCard newCard = (MagicCard) card.getBase();
-			magicDbHandler.getCardStore().add(newCard);
+			magicDbHandler.add(newCard);
 		}
 	}
 

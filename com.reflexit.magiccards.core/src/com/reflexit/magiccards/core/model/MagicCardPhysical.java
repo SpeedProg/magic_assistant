@@ -39,12 +39,6 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			this.special = phi.special;
 		}
 		this.location = location;
-		if (add && card != null)
-			this.card.addPhysicalCard(this);
-	}
-
-	public void delete() {
-		this.card.removePhysicalCard(this);
 	}
 
 	@Override
@@ -91,11 +85,6 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public void setMagicCard(MagicCard card) {
-		this.card = card;
-		card.addPhysicalCard(this);
-	}
-
-	public void setMagicCardSoft(MagicCard card) {
 		this.card = card;
 	}
 

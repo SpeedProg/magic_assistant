@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
@@ -33,7 +34,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	private transient int cmc = -1;
 	private int enId;
 	private LinkedHashMap<String, String> properties;
-	transient CardGroup realcards;
 
 	/*
 	 * (non-Javadoc)
@@ -380,8 +380,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				default:
 					break;
 			}
-		} else if (field instanceof MagicCardFieldPhysical && realcards != null) {
-			return realcards.getObjectByField(field);
+		} else if (field instanceof MagicCardFieldPhysical && getRealCards() != null) {
+			return getRealCards().getObjectByField(field);
 		}
 		return null;
 	}
@@ -531,7 +531,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			MagicCard obj = (MagicCard) super.clone();
 			if (this.properties != null)
 				obj.properties = (LinkedHashMap<String, String>) this.properties.clone();
-			obj.realcards = null;
 			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;
@@ -674,45 +673,25 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return 0;
 	}
 
-	public void addPhysicalCard(MagicCardPhysical p) {
-		if (p.getBase() != this)
-			throw new IllegalArgumentException("Mistmatched parent");
-		if (realcards == null) {
-			realcards = new CardGroup(MagicCardField.ID, name);
-			realcards.add(p);
-			return;
-		}
-		if (!realcards.contains(p))
-			realcards.add(p);
-	}
-
 	public Collection<MagicCardPhysical> getPhysicalCards() {
-		if (realcards == null)
+		CardGroup rc = getRealCards();
+		if (rc == null)
 			return Collections.emptySet();
-		return (Collection<MagicCardPhysical>) realcards.getChildrenList();
-	}
-
-	public ICardGroup getPhysicalCardsGroup() {
-		return realcards;
-	}
-
-	public void removePhysicalCard(MagicCardPhysical p) {
-		if (realcards == null) {
-			throw new IllegalStateException();
-		}
-		realcards.remove(p);
+		return (Collection<MagicCardPhysical>) rc.getChildrenList();
 	}
 
 	public int getOwnCount() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return 0;
-		return realcards.getOwnCount();
+		return realCards.getOwnCount();
 	}
 
 	public int getOwnUnique() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return 0;
-		return realcards.getOwnCount();
+		return realCards.getOwnCount();
 	}
 
 	public void setLocation(Location location) {
@@ -727,39 +706,45 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public String getComment() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return null;
-		return (String) realcards.getObjectByField(MagicCardFieldPhysical.COMMENT);
+		return (String) realCards.getObjectByField(MagicCardFieldPhysical.COMMENT);
 	}
 
 	public Location getLocation() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return Location.NO_WHERE;
-		return (Location) realcards.getObjectByField(MagicCardFieldPhysical.LOCATION);
+		return (Location) realCards.getObjectByField(MagicCardFieldPhysical.LOCATION);
 	}
 
 	public boolean isOwn() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return false;
-		return (Boolean) realcards.getObjectByField(MagicCardFieldPhysical.OWNERSHIP);
+		return (Boolean) realCards.getObjectByField(MagicCardFieldPhysical.OWNERSHIP);
 	}
 
 	public int getForTrade() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return 0;
-		return (Integer) realcards.getObjectByField(MagicCardFieldPhysical.FORTRADECOUNT);
+		return (Integer) realCards.getObjectByField(MagicCardFieldPhysical.FORTRADECOUNT);
 	}
 
 	public String getSpecial() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return null;
-		return (String) realcards.getObjectByField(MagicCardFieldPhysical.SPECIAL);
+		return (String) realCards.getObjectByField(MagicCardFieldPhysical.SPECIAL);
 	}
 
 	public boolean isSideboard() {
-		if (realcards == null)
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
 			return false;
-		return (Boolean) realcards.getObjectByField(MagicCardFieldPhysical.SIDEBOARD);
+		return (Boolean) realCards.getObjectByField(MagicCardFieldPhysical.SIDEBOARD);
 	}
 
 	public int getUniqueCount() {
@@ -800,5 +785,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		}
 		int sid = 1 << 31 | ed.getId() & 0x7f << 15 | card.getSide() << 10 | card.getCollectorNumberId();
 		return sid;
+	}
+
+	public CardGroup getRealCards() {
+		return DataManager.getRealCards(this);
 	}
 }

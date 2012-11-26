@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class TimerTracer {
 	private static SimpleDateFormat timestampFormat = new SimpleDateFormat("<kk:mm:ss.SSS>");
-	private static boolean tracing;
+	private static boolean tracing = false;
 	private HashMap<String, Timer> timers = new HashMap<String, Timer>();
 
 	public static class Timer {

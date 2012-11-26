@@ -76,10 +76,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			base.setMagicCard(refCard);
 		} else if (card instanceof MagicCard) {
 			MagicCard mc = (MagicCard) card;
-			if (mc.realcards == null)
+			CardGroup realCards = mc.getRealCards();
+			if (realCards == null)
 				base = new MagicCardPhysical(card.cloneCard(), null);
 			else {
-				base = (MagicCardPhysical) mc.realcards.getGroupBase().cloneCard();
+				base = (MagicCardPhysical) realCards.getGroupBase().cloneCard();
 				MagicCard refCard = mc.cloneCard();
 				base.setMagicCard(refCard);
 			}

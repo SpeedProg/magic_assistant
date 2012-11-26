@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import java.util.Collection;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.MagicException;
@@ -17,6 +16,8 @@ public interface ICardHandler {
 
 	public ICardStore getLibraryCardStore();
 
+	public ICardStore getMagicDBStore();
+
 	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy();
 
 	public IFilteredCardStore getCardCollectionFilteredStore(String id);
@@ -27,13 +28,9 @@ public interface ICardHandler {
 
 	public void setActiveDeckHandler(IFilteredCardStore store);
 
-	public boolean copyCards(Collection cards, Location to);
-
-	public boolean moveCards(Collection cards, Location from, Location to);
-
 	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException;
 
 	public void loadInitialIfNot(ICoreProgressMonitor monitor) throws MagicException;
 
-	public ICardStore getMagicDBStore();
+	public ICardStore getCardStore(Location to);
 }
