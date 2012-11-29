@@ -134,6 +134,13 @@ public class EditionsComposite extends Composite {
 		return this.panel;
 	}
 
+	@Override
+	public void dispose() {
+		treeViewer = null;
+		columns = null;
+		super.dispose();
+	}
+
 	protected void createDefaultColumns() {
 		createColumnLabelProviders();
 		for (int i = 0; i < columns.size(); i++) {

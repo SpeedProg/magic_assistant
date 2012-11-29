@@ -14,10 +14,10 @@ import com.reflexit.magiccards.ui.preferences.feditors.RarityPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.TextSearchPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.TypesPreferenceGroup;
 
-public class CardFilterPreferencePage extends AbstractFilterPreferencePage {
+public class BasicFilterPreferencePage extends AbstractFilterPreferencePage {
 	private Composite panel;
 
-	public CardFilterPreferencePage(CardFilterDialog cardFilterDialog) {
+	public BasicFilterPreferencePage(CardFilterDialog cardFilterDialog) {
 		super(cardFilterDialog);
 		this.subPages = new ArrayList();
 		setTitle("Basic Filter");

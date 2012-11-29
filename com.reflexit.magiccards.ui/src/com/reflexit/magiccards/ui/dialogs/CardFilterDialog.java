@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.AbilitiesFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.AbstractFilterPreferencePage;
-import com.reflexit.magiccards.ui.preferences.CardFilterPreferencePage;
+import com.reflexit.magiccards.ui.preferences.BasicFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.SaveFilterPreferencePage;
 
@@ -26,7 +26,7 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		else
 			this.store = store;
 		//
-		addNode(new PreferenceNode("basic", new CardFilterPreferencePage(this)));
+		addNode(new PreferenceNode("basic", new BasicFilterPreferencePage(this)));
 		addNode(new PreferenceNode("editions", new EditionsFilterPreferencePage(this)));
 		addNode(new PreferenceNode("abilities", new AbilitiesFilterPreferencePage(this)));
 		addSavePage();
@@ -47,6 +47,11 @@ public class CardFilterDialog extends PreferenceDialog implements IPreferencePag
 		for (IPreferenceNode node : rootSubNodes) {
 			node.getPage().performOk();
 		}
+	}
+
+	@Override
+	public boolean close() {
+		return super.close();
 	}
 
 	@Override
