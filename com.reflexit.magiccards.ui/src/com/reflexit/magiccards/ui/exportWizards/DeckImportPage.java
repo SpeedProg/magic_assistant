@@ -89,6 +89,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button createNewDeck;
 	private Button importIntoExisting;
 	private Button importIntoDb;
+	private Collection<ReportType> types;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -455,6 +456,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			public void modifyText(final ModifyEvent e) {
 				File file = new File(editor.getStringValue());
 				setFileName(file.getPath());
+				updateTypeSelection();
 				updatePageCompletion();
 			}
 		});
@@ -462,6 +464,22 @@ public class DeckImportPage extends WizardDataTransferPage {
 		editor.setFileExtensions(extensions);
 		setFileName("");
 		// fileSelectionArea.moveAbove(null);
+	}
+
+	protected void updateTypeSelection() {
+		if (fileName == null || fileName.trim().length() == 0)
+			return;
+		int k = fileName.lastIndexOf('.');
+		String ext = "";
+		if (k > 0 && k < fileName.length() - 1) {
+			ext = fileName.substring(k + 1, fileName.length());
+		}
+		for (ReportType reportType : types) {
+			if (ext.equalsIgnoreCase(reportType.getExtension())) {
+				selectReportType(reportType);
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -479,7 +497,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText("Import Type:");
 		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
-		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getImportTypes();
+		types = new ImportExportFactory<IMagicCard>().getImportTypes();
 		for (ReportType reportType : types) {
 			addComboType(reportType);
 		}
