@@ -5,6 +5,7 @@
    <extension
          point="com.reflexit.magiccards.core.deckFormat">
       <deckFormat
+            extension="xml"
             id="xml"
             importDelegate="com.reflexit.magiccards.core.exports.XmlImportDelegate"
             label="xml"
@@ -19,6 +20,7 @@
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
+            extension="csv"
             id="csv"
             importDelegate="com.reflexit.magiccards.core.exports.CsvImportDelegate"
             label="csv">
@@ -36,6 +38,7 @@
             xmlFormat="false">
       </deckFormat>
       <deckFormat
+            extension="mwCsv"
             id="mwcsv"
             importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationImportDelegate"
             label="Magic Workstation CSV"
@@ -43,6 +46,7 @@
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.WagicExportDelegate"
+            extension="wth"
             id="wth"
             label="Wagic: The Homebrew"
             xmlFormat="false">
@@ -55,13 +59,25 @@
            label="HTML Table "
            xmlFormat="false">
      </deckFormat>  
-   </extension>
-   <extension
-         point="com.reflexit.magiccards.core.deckFormat">
       <deckFormat
+            extension="mwDeck"
             id="mwdeck"
             importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationDeckImportDelegate"
-            label="Magic Workstation mwDeck"
+            label="Magic Workstation .mwDeck"
+            xmlFormat="false">      
+      </deckFormat>
+      <deckFormat
+            extension="dec"
+            id="apprentice"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationDeckImportDelegate"
+            label="Apprentice .dec"
+            xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            extension="dck"
+            id="manadeck"
+            importDelegate="com.reflexit.magiccards.core.exports.ManaDeckDckImportDelegate"
+            label="Mana Deck .dck"
             xmlFormat="false">
       </deckFormat>
    </extension>

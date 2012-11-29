@@ -23,11 +23,16 @@ public class DeckParser implements Closeable {
 		this.delegate = delegate;
 	}
 
-	private LinkedHashMap<Pattern, ICardField[]> patternList = new LinkedHashMap<Pattern, ICardField[]>();
+	private LinkedHashMap<Pattern, Object> patternList = new LinkedHashMap<Pattern, Object>();
 	private ICardField[] currentFields;
+	protected String state;
 
 	public void addPattern(Pattern p, ICardField fieldsMap[]) {
 		patternList.put(p, fieldsMap);
+	}
+
+	public void addPattern(Pattern p, String state) {
+		patternList.put(p, state);
 	}
 
 	public ICardField[] getCurrentFields() {
@@ -44,24 +49,31 @@ public class DeckParser implements Closeable {
 				Matcher m = p.matcher(line);
 				while (m.find()) {
 					found = true;
-					ICardField[] cardFields = patternList.get(p);
-					for (int i = 0; i < cardFields.length; i++) {
-						ICardField cardField = cardFields[i];
-						try {
-							String group = m.group(i + 1);
-							if (group != null) {
-								if (delegate != null) {
-									delegate.setFieldValue(res, cardField, i, group.trim());
-								} else {
-									res.setObjectByField(cardField, group.trim());
+					Object what = patternList.get(p);
+					if (what instanceof ICardField[]) {
+						ICardField[] cardFields = (ICardField[]) what;
+						for (int i = 0; i < cardFields.length; i++) {
+							ICardField cardField = cardFields[i];
+							try {
+								String group = m.group(i + 1);
+								if (group != null) {
+									if (delegate != null) {
+										delegate.setFieldValue(res, cardField, i, group.trim());
+									} else {
+										res.setObjectByField(cardField, group.trim());
+									}
 								}
+							} catch (Exception e) {
+								// nothing
 							}
-						} catch (Exception e) {
-							// nothing
 						}
+						currentFields = cardFields;
+						break;
+					} else if (what instanceof String) {
+						this.state = (String) what;
+					} else if (what == null) {
+						// skip - comment
 					}
-					currentFields = cardFields;
-					break;
 				}
 				if (found)
 					break;
