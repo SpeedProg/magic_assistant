@@ -50,7 +50,7 @@ public enum MagicCardField implements ICardField {
 	}
 
 	MagicCardField() {
-		String javaField = name().toLowerCase();
+		String javaField = name().toLowerCase(Locale.ENGLISH);
 		try {
 			field = MagicCard.class.getDeclaredField(javaField);
 		} catch (Exception e) {
