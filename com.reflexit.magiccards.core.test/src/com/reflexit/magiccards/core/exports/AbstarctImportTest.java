@@ -20,6 +20,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected IMagicCard card1;
 	protected IMagicCard card2;
 	protected IMagicCard card3;
+	protected ArrayList<IMagicCard> result;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -52,8 +53,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		ArrayList<IMagicCard> res = extractStorageCards();
-		setout(res);
+		result = extractStorageCards();
+		setout(result);
 	}
 
 	public void setout(Collection<IMagicCard> preimport) {
