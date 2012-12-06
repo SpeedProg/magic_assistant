@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
 
 /**
  * IPostSelectionProvider implementation that delegates to another ISelectionProvider or
@@ -98,7 +99,11 @@ public class SelectionProviderIntermediate implements IPostSelectionProvider {
 
 	public void setSelection(ISelection selection) {
 		if (delegate != null) {
-			delegate.setSelection(selection);
+			if (delegate instanceof Viewer) {
+				((Viewer) delegate).setSelection(selection, true);
+			} else {
+				delegate.setSelection(selection);
+			}
 		}
 	}
 }

@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -55,6 +55,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -566,8 +567,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected void highlightCard(Object last) {
 		ISelectionProvider selectionProvider = getSelectionProvider();
 		StructuredSelection selection = new StructuredSelection(last);
-		if (selectionProvider instanceof TreeViewer) {
-			((TreeViewer) selectionProvider).setSelection(selection, true);
+		if (selectionProvider instanceof Viewer) {
+			((Viewer) selectionProvider).setSelection(selection, true);
 		} else {
 			selectionProvider.setSelection(selection);
 		}
