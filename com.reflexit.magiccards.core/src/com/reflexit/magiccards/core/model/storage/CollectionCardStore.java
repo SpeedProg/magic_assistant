@@ -51,12 +51,15 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 				}
 			} else {
 				int count = 1;
+				int trade = 0;
 				if (card instanceof MagicCardPhysical) {
 					count = ((ICardCountable) card).getCount();
+					trade = ((MagicCardPhysical) card).getForTrade();
 				}
 				MagicCardPhysical add = new MagicCardPhysical(card, loc);
 				MagicCardPhysical old = phi;
 				add.setCount(old.getCount() + count);
+				add.setForTrade(old.getForTrade() + trade);
 				doRemoveCard(old);
 				this.hashpart.storeCard(add);
 				if (storageAdd(add))
