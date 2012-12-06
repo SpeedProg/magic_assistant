@@ -145,10 +145,14 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	}
 
 	protected void updateGrid() {
-		boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
-		setLinesVisible(grid);
-		getViewer().getControl().setFont(getFont());
-		getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
+		try {
+			boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+			setLinesVisible(grid);
+			getViewer().getControl().setFont(getFont());
+			getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/*
