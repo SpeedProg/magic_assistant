@@ -260,11 +260,21 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 							continue;
 						if (type == EVEN)
 							left = count / 2;
+						int right = count - left;
+						int trade = card.getForTrade();
+						int tradeLeft = 0;
+						if (trade <= right) {
+							tradeLeft = 0;
+						} else {
+							tradeLeft = trade - right;
+						}
 						MagicCardPhysical card2 = new MagicCardPhysical(card, card.getLocation());
 						card.setCount(left);
-						cardStore.update(card);
-						card2.setCount(count - left);
+						card.setForTrade(tradeLeft);
+						card2.setCount(right);
+						card2.setForTrade(trade - tradeLeft);
 						cardStore.setMergeOnAdd(false);
+						cardStore.update(card);
 						cardStore.add(card2);
 						cardStore.setMergeOnAdd(true);
 					}
