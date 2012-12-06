@@ -75,6 +75,13 @@
       </deckFormat>
       <deckFormat
             extension="dck"
+            id="sha"
+            importDelegate="com.reflexit.magiccards.core.exports.ShandalarDeckDckImportDelegate"
+            label="Shandalar .dck"
+            xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            extension="dck"
             id="manadeck"
             importDelegate="com.reflexit.magiccards.core.exports.ManaDeckDckImportDelegate"
             label="Mana Deck .dck"

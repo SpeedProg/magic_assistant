@@ -37,51 +37,60 @@ public class DeckParser implements Closeable {
 
 	public ICardField[] getCurrentFields() {
 		return currentFields;
-	};
+	}
+
+	public String readLine() throws IOException {
+		return reader.readLine();
+	}
 
 	public MagicCardPhysical readLine(MagicCardPhysical res) throws IOException {
-		nextline: do {
+		do {
 			String line = reader.readLine();
 			if (line == null)
 				return null;
-			boolean found = false;
-			for (Pattern p : patternList.keySet()) {
-				Matcher m = p.matcher(line);
-				while (m.find()) {
-					found = true;
-					Object what = patternList.get(p);
-					if (what instanceof ICardField[]) {
-						ICardField[] cardFields = (ICardField[]) what;
-						for (int i = 0; i < cardFields.length; i++) {
-							ICardField cardField = cardFields[i];
-							try {
-								String group = m.group(i + 1);
-								if (group != null) {
-									if (delegate != null) {
-										delegate.setFieldValue(res, cardField, i, group.trim());
-									} else {
-										res.setObjectByField(cardField, group.trim());
-									}
-								}
-							} catch (Exception e) {
-								// nothing
-							}
-						}
-						currentFields = cardFields;
-						break;
-					} else if (what instanceof String) {
-						this.state = (String) what;
-					} else if (what == null) {
-						// skip - comment
-					}
-				}
-				if (found)
-					break;
-			}
+			boolean found = parseLine(res, line);
 			if (found)
 				break;
 		} while (true);
 		return res;
+	}
+
+	public boolean parseLine(MagicCardPhysical res, String line) {
+		boolean found = false;
+		for (Pattern p : patternList.keySet()) {
+			Matcher m = p.matcher(line);
+			while (m.find()) {
+				found = true;
+				Object what = patternList.get(p);
+				if (what instanceof ICardField[]) {
+					ICardField[] cardFields = (ICardField[]) what;
+					for (int i = 0; i < cardFields.length; i++) {
+						ICardField cardField = cardFields[i];
+						try {
+							String group = m.group(i + 1);
+							if (group != null) {
+								if (delegate != null) {
+									delegate.setFieldValue(res, cardField, i, group.trim());
+								} else {
+									res.setObjectByField(cardField, group.trim());
+								}
+							}
+						} catch (Exception e) {
+							// nothing
+						}
+					}
+					currentFields = cardFields;
+					break;
+				} else if (what instanceof String) {
+					this.state = (String) what;
+				} else if (what == null) {
+					// skip - comment
+				}
+			}
+			if (found)
+				break;
+		}
+		return found;
 	}
 
 	public void close() {
