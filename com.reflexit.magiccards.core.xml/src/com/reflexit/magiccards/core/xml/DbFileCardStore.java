@@ -23,7 +23,6 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
-import com.reflexit.magiccards.core.model.storage.ICardSet;
 import com.reflexit.magiccards.core.model.utils.IntHashtable;
 
 /**
@@ -45,22 +44,81 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	public DbFileCardStore(File file, Location location, IntHashtable hash, boolean initialize) {
 		super(new SingleFileCardStorage(file, location, initialize), false);
 		this.hash = hash;
+		if (initialize) {
+			initialize();
+		}
 	}
 
 	@Override
 	public boolean doAddCard(IMagicCard card) {
-		// db does not actually add cards but rather updates
-		storeCard(card, storage, storage, false);
+		// this would be called when new cards are added or loading from resources
+		storeCard(card);
 		return true;
 	}
 
 	@Override
 	protected void doInitialize() throws MagicException {
 		super.doInitialize();
-		for (Iterator iterator = storage.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			hash.put(card.getCardId(), card);
+		setAutoCommit(false);
+		try {
+			for (Iterator iterator = ((SingleFileCardStorage) storage).getList().iterator(); iterator.hasNext();) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				if (hashAndResolve(card)) {
+					iterator.remove();
+				}
+			}
+		} finally {
+			setAutoCommit(true);
 		}
+	}
+
+	private boolean hashAndResolve(IMagicCard card) {
+		int id = card.getCardId();
+		IMagicCard prev = (IMagicCard) this.hash.get(id);
+		if (prev != null) {
+			boolean delcur = conflictMerge(prev, card);
+			hash.put(prev.getCardId(), prev); // rehash prev it could have changed
+			if (delcur) {
+				return true;
+			} else {
+				hash.put(card.getCardId(), card); // id could have changed
+			}
+		} else
+			hash.put(id, card);
+		return false;
+	}
+
+	private boolean conflictMerge(IMagicCard prev, IMagicCard card) {
+		if (prev.equals(card)) {
+			// merge
+			((MagicCard) prev).copyFrom(card);
+			return true;
+		}
+		int id = card.getCardId();
+		// redo
+		Integer old = (Integer) prev.getObjectByField(MagicCardField.SIDE);
+		Integer cur = (Integer) card.getObjectByField(MagicCardField.SIDE);
+		Object prevPart = prev.getObjectByField(MagicCardField.PART);
+		Object curPart = card.getObjectByField(MagicCardField.PART);
+		if (old == 0 && cur == 0) {
+			if (prevPart != null)
+				old = 1;
+			if (curPart != null)
+				cur = 1;
+		}
+		if (old == cur) {
+			System.err.println("STORE DOUBLE: " + prev + " " + old + "[" + prevPart + "] -> new " + card + "[" + curPart + "] " + cur);
+			return true;
+		} else {
+			if (old == 1) {
+				((ICardModifiable) prev).setObjectByField(MagicCardField.ID, String.valueOf(-id));
+				return false;
+			} else if (cur == 1) {
+				((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(-id));
+				return false;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -91,7 +149,7 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	 * @param toRemove
 	 * @param b
 	 */
-	private void storeCard(IMagicCard card, ICardSet<IMagicCard> toRemove, ICardSet<IMagicCard> toAdd, boolean instorage) {
+	private void storeCard(IMagicCard card) {
 		int id = card.getCardId();
 		if (id == 0) {
 			// create syntetic id
@@ -100,46 +158,8 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 			id = ((MagicCard) card).syntesizeId();
 			((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(id));
 		}
-		IMagicCard prev = (IMagicCard) this.hash.get(id);
-		if (prev == null) {
-			// add
-			this.hash.put(id, card);
-			if (instorage == false)
-				toAdd.add(card);
-			return;
+		if (hashAndResolve(card) == false) {
+			storage.add(card);
 		}
-		if (prev instanceof MagicCard && card.equals(prev)) {
-			// merge
-			((MagicCard) prev).copyFrom(card);
-			return;
-		}
-		// redo
-		Integer old = (Integer) prev.getObjectByField(MagicCardField.SIDE);
-		Integer cur = (Integer) card.getObjectByField(MagicCardField.SIDE);
-		if (old == cur) {
-			System.err.println("STORE DOUBLE: " + prev + " " + old + "[" + prev.getObjectByField(MagicCardField.PART) + "] -> new " + card
-					+ "[" + card.getObjectByField(MagicCardField.PART) + "] " + cur);
-		} else {
-			if (old == 1) {
-				toRemove.remove(prev);
-				hash.remove(id);
-				((ICardModifiable) prev).setObjectByField(MagicCardField.ID, String.valueOf(-id));
-				hash.put(-id, prev);
-				hash.put(id, card);
-				toAdd.add(prev);
-				if (instorage == false)
-					toAdd.add(card);
-				return;
-			} else if (cur == 1) {
-				((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(-id));
-				hash.put(-id, card);
-				toRemove.add(card);
-				return;
-			}
-		}
-		this.hash.put(id, card);
-		if (instorage == false)
-			toAdd.add(card);
-		return;
 	}
 }
