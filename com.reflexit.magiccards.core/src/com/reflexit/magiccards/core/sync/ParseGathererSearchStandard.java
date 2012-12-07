@@ -153,6 +153,8 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		MagicCard card = new MagicCard();
 		// split by td
 		String[] rows = line.split("<td");
+		if (rows.length < 3)
+			return;
 		String[] fields = rows[2].split("<span|<div");
 		String id = getMatch(idPattern, fields[3]);
 		card.setId(id);
