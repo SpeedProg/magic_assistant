@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -11,7 +12,9 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -130,11 +133,12 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreview() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Bla|2");
-		PreviewResult performPreview = ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), tableImport, true, monitor);
-		ArrayList<String[]> values = performPreview.getValues();
+		ImportResult performPreview = ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), tableImport, true,
+				Location.createLocation("test"), monitor);
+		List<ICard> values = performPreview.getList();
 		assertEquals(1, values.size());
-		String[] fielsValues = values.get(0);
-		assertEquals(25, fielsValues.length);
+		Object[] fielsValues = performPreview.getFields();
+		assertEquals(3, fielsValues.length);
 		// assertEquals("Counterspell", fielsValues[0]);
 	}
 
