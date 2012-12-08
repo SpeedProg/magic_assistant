@@ -49,7 +49,7 @@ public class MagicCardPhysicalConvertorTest extends TestCase {
 		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
 		phi.setForTrade(1);
 		String xml = xstream.toXML(phi);
-		assertTrue(xml.contains("<forTrade>1"));
+		assertTrue(xml.contains("<pfield>FORTRADECOUNT</pfield>"));
 	}
 
 	public void testXStreamAround() {
