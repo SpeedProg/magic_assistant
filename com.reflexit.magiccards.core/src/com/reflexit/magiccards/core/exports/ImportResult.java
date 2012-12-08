@@ -11,16 +11,16 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.Location;
 
-public class PreviewResult {
-	private ArrayList<String[]> values = new ArrayList<String[]>();
+public class ImportResult {
+	private ArrayList<ICard> toImport = new ArrayList<ICard>();
 	private ICardField[] fields = new ICardField[0];
 	private ReportType type;
 	private Exception error;
-	private Location location;
 
 	/**
 	 * @param error
@@ -53,21 +53,6 @@ public class PreviewResult {
 	}
 
 	/**
-	 * @param location
-	 *            the location to set
-	 */
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-	/**
-	 * @return the location
-	 */
-	public Location getLocation() {
-		return location;
-	}
-
-	/**
 	 * @param type
 	 *            the type to set
 	 */
@@ -83,17 +68,17 @@ public class PreviewResult {
 	}
 
 	/**
-	 * @param values
-	 *            the values to set
+	 * @param toImport
+	 *            the toImport to set
 	 */
-	public void setValues(ArrayList<String[]> values) {
-		this.values = values;
+	public void add(ICard card) {
+		toImport.add(card);
 	}
 
 	/**
-	 * @return the values
+	 * @return the toImport
 	 */
-	public ArrayList<String[]> getValues() {
-		return values;
+	public List<ICard> getList() {
+		return toImport;
 	}
 }

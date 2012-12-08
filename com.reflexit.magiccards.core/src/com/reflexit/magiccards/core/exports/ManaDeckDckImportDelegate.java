@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -58,19 +59,18 @@ public class ManaDeckDckImportDelegate extends AbstractImportDelegate {
 				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
 		parser.addPattern(Pattern.compile("^#SIDEBOARD#"), //
 				"SIDEBOARD");
+		importResult.setFields(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET,
+				MagicCardFieldPhysical.SIDEBOARD });
 		do {
 			line++;
 			try {
 				MagicCardPhysical card = createDefaultCard();
 				card = parser.readLine(card);
-				previewResult.setFields(parser.getCurrentFields());
 				if (card == null)
 					break;
 				if (card.getCardId() == 0 && card.getName() == null)
 					continue;
 				importCard(card);
-				if (previewMode && line >= 10)
-					break;
 				monitor.worked(1);
 			} catch (IOException e) {
 				throw e;
@@ -82,7 +82,8 @@ public class ManaDeckDckImportDelegate extends AbstractImportDelegate {
 	@Override
 	public synchronized void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if ("SIDEBOARD".equals(parser.state)) {
-			card.setLocation(getLocation().toSideboard());
+			Location sideboard = getSideboardLocation();
+			card.setLocation(sideboard);
 		}
 		super.setFieldValue(card, field, i, value);
 	}

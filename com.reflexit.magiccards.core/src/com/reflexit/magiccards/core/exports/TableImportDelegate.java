@@ -37,6 +37,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 	 * @param monitor
 	 * @throws IOException
 	 */
+	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		runTablePipedImport(monitor);
 	}
@@ -69,8 +70,6 @@ public class TableImportDelegate extends AbstractImportDelegate {
 					} else {
 						throw new IllegalArgumentException("Error: Line " + line + ". Fields seprated by | are not found: " + input);
 					}
-					if (previewMode && line >= 10)
-						break;
 					monitor.worked(1);
 				} while (true);
 			} catch (FileNotFoundException e) {

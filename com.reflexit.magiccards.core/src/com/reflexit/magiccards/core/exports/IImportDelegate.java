@@ -31,7 +31,7 @@ public interface IImportDelegate<T> {
 
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 
-	public PreviewResult getPreview();
+	public ImportResult getPreview();
 
 	public Collection<T> getImportedCards();
 

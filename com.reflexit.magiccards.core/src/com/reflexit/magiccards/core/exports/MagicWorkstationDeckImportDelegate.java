@@ -80,21 +80,20 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
 		DeckParser parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
-				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.SET, MagicCardField.NAME });
+				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
 		parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
 				new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR,
 						MagicCardField.NAME });
+		importResult.setFields(new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME,
+				MagicCardField.EDITION_ABBR, MagicCardField.SET });
 		do {
 			line++;
 			try {
 				MagicCardPhysical card = createDefaultCard();
 				card = parser.readLine(card);
-				previewResult.setFields(parser.getCurrentFields());
 				if (card == null)
 					break;
 				importCard(card);
-				if (previewMode && line >= 10)
-					break;
 				monitor.worked(1);
 			} catch (IOException e) {
 				throw e;
@@ -107,7 +106,7 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (field == MagicCardFieldPhysical.SIDEBOARD) {
 			if (value.equals("SB")) {
-				card.setLocation(getLocation().toSideboard());
+				card.setLocation(getSideboardLocation());
 			}
 		} else if (field == MagicCardField.SET) {
 			super.setFieldValue(card, MagicCardField.EDITION_ABBR, i, value);

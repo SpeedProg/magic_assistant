@@ -60,8 +60,6 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 					}
 					MagicCardPhysical card = createCard(list);
 					importCard(card);
-					if (previewMode && line >= 10)
-						break;
 					monitor.worked(1);
 				} while (true);
 			} catch (FileNotFoundException e) {

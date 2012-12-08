@@ -40,6 +40,7 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 	 * @param monitor
 	 * @throws IOException
 	 */
+	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		try {
 			File tmp = File.createTempFile("magic", ".xml");
@@ -49,7 +50,6 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 				ICardStore store = DataManager.getCardHandler().loadFromXml(tmp.getAbsolutePath());
 				IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>) store).getStorage();
 				Location location = storage.getLocation();
-				previewResult.setLocation(location);
 				Iterator iterator = store.iterator();
 				while (iterator.hasNext()) {
 					line++;
@@ -60,8 +60,6 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 						card.setLocation(getLocation());
 					} else if (next instanceof IMagicCard)
 						importCard(new MagicCardPhysical((IMagicCard) next, null));
-					if (previewMode && line >= 10)
-						break;
 					monitor.worked(1);
 				}
 			} catch (IOException e) {

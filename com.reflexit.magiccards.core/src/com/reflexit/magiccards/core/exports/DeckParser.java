@@ -26,17 +26,27 @@ public class DeckParser implements Closeable {
 	private LinkedHashMap<Pattern, Object> patternList = new LinkedHashMap<Pattern, Object>();
 	private ICardField[] currentFields;
 	protected String state;
+	private ICardField[] reqFields;
 
 	public void addPattern(Pattern p, ICardField fieldsMap[]) {
 		patternList.put(p, fieldsMap);
+		setRequiredFeilds(fieldsMap);
+	}
+
+	public void setRequiredFeilds(ICardField[] fieldsMap) {
+		reqFields = fieldsMap;
 	}
 
 	public void addPattern(Pattern p, String state) {
 		patternList.put(p, state);
 	}
 
-	public ICardField[] getCurrentFields() {
+	private ICardField[] getCurrentFields() {
 		return currentFields;
+	}
+
+	public ICardField[] getFields() {
+		return reqFields;
 	}
 
 	public String readLine() throws IOException {

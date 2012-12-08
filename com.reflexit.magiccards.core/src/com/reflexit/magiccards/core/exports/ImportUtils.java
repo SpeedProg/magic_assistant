@@ -45,7 +45,6 @@ public class ImportUtils {
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
 			DataManager.getMagicDBStore().initialize();
-			ReportType reportType = worker.getType();
 			worker.init(st, false, location);
 			worker.setHeader(header);
 			worker.run(monitor);
@@ -222,12 +221,12 @@ public class ImportUtils {
 		return card.getBase();
 	}
 
-	public static PreviewResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header,
+	public static ImportResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header, Location loc,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		worker.init(st, true, null);
+		worker.init(st, true, loc);
 		worker.setHeader(header);
 		// init preview
-		PreviewResult previewResult = worker.getPreview();
+		ImportResult previewResult = worker.getPreview();
 		worker.run(monitor);
 		return previewResult;
 	}

@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.exports;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.reflexit.magiccards.core.model.Editions;
@@ -21,38 +20,33 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	private InputStream stream;
 	private boolean header;
 	private Location location;
-	private ReportType type;
-	private ICardField[] fields = getNonTransientFeilds();
 	protected boolean previewMode = false;
-	protected PreviewResult previewResult = new PreviewResult();
-	private ArrayList<IMagicCard> toImport = new ArrayList<IMagicCard>();
+	protected ImportResult importResult;
 	protected int line = 0;
 
 	public AbstractImportDelegate() {
-		previewResult.setType(getType());
-		previewResult.setFields(getNonTransientFeilds());
 	}
 
-	public ReportType getType() {
-		return type;
-	}
-
-	public void setType(ReportType type) {
-		this.type = type;
-	}
+	public abstract ReportType getType();
 
 	public InputStream getStream() {
 		return stream;
-	}
-
-	public void setStream(InputStream stream) {
-		this.stream = stream;
 	}
 
 	public void init(InputStream st, boolean preview, Location location) {
 		this.stream = st;
 		this.location = location;
 		this.previewMode = preview;
+		this.importResult = new ImportResult();
+		importResult.setType(getType());
+		importResult.setFields(getNonTransientFeilds());
+	}
+
+	public Location getSideboardLocation() {
+		if (location == null)
+			return Location.createLocation("sideboard");
+		Location sideboard = location.toSideboard();
+		return sideboard;
 	}
 
 	public void setHeader(boolean header) {
@@ -64,7 +58,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		try {
 			doRun(monitor);
 		} catch (Exception e) {
-			previewResult.setError(e);
+			importResult.setError(e);
 		} finally {
 			monitor.done();
 		}
@@ -72,12 +66,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	protected abstract void doRun(ICoreProgressMonitor monitor) throws IOException;
 
-	public PreviewResult getPreview() {
-		return previewResult;
+	public ImportResult getPreview() {
+		return importResult;
 	}
 
-	public ArrayList<IMagicCard> getImportedCards() {
-		return toImport;
+	public List getImportedCards() {
+		return importResult.getList();
 	}
 
 	protected MagicCardPhysical createDefaultCard() {
@@ -89,21 +83,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		if (card == null)
 			return;
 		ImportUtils.updateCardReference(card);
-		if (previewMode) {
-			String[] res = new String[previewResult.getFields().length];
-			for (int i = 0; i < previewResult.getFields().length; i++) {
-				ICardField fi = previewResult.getFields()[i];
-				Object o = card.getObjectByField(fi);
-				res[i] = o == null ? null : o.toString();
-			}
-			previewResult.getValues().add(res);
-		} else {
-			toImport.add(card);
-		}
+		importResult.add(card);
 	}
 
 	protected MagicCardPhysical createCard(List<String> list) {
 		MagicCardPhysical card = createDefaultCard();
+		ICardField[] fields = importResult.getFields();
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
 			String value = list.get(i);
@@ -135,7 +120,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 		if (field == MagicCardFieldPhysical.SIDEBOARD) {
 			if (Boolean.valueOf(value).booleanValue()) {
-				card.setLocation(getLocation().toSideboard());
+				card.setLocation(getSideboardLocation());
 			}
 		} else {
 			card.setObjectByField(field, value);
@@ -158,12 +143,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.previewMode = previewMode;
 	}
 
-	public PreviewResult getPreviewResult() {
-		return previewResult;
+	public ImportResult getPreviewResult() {
+		return importResult;
 	}
 
-	public void setPreviewResult(PreviewResult previewResult) {
-		this.previewResult = previewResult;
+	public void setPreviewResult(ImportResult previewResult) {
+		this.importResult = previewResult;
 	}
 
 	public void setLocation(Location location) {
@@ -174,11 +159,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return header;
 	}
 
-	public ICardField[] getFields() {
-		return fields;
-	}
-
 	public void setFields(ICardField[] fields) {
-		this.fields = fields;
+		importResult.setFields(fields);
 	}
 }

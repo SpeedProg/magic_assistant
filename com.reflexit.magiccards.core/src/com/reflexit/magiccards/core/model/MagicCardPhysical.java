@@ -440,6 +440,8 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isSideboard()
 	 */
 	public boolean isSideboard() {
+		if (location == null)
+			return false;
 		return location.isSideboard();
 	}
 
