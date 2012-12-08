@@ -62,7 +62,7 @@ public class MagicXmlStreamReader {
 			store = object;
 			for (MagicCardFieldPhysical f : MagicCardFieldPhysical.values()) {
 				if (!f.isTransient())
-					mcpFields.put(f.getJavaField().getName(), f);
+					mcpFields.put(f.getTag(), f);
 			}
 			for (MagicCardField f : MagicCardField.values()) {
 				if (!f.isTransient())

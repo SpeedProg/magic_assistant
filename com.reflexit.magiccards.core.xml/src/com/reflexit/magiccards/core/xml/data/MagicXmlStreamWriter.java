@@ -223,7 +223,7 @@ public class MagicXmlStreamWriter {
 				else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
 					continue;
 			}
-			writer.writeStartElement(field.getJavaField().getName());
+			writer.writeStartElement(field.getTag());
 			writer.writeCharacters(String.valueOf(o));
 			writer.writeEndElement();
 		}

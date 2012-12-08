@@ -40,23 +40,20 @@ public class MagicCardPhysicalConvertor implements Converter {
 		writer.startNode("card");
 		context.convertAnother(card.getCard(), new ReferenceCardConverter());
 		writer.endNode();
-		MagicCardFieldPhysical[] values = MagicCardFieldPhysical.values();
-		for (MagicCardFieldPhysical field : values) {
-			if (field.isTransient())
-				continue;
-			Object o = card.getObjectByField(field);
-			if (o == null)
-				continue; // skip this
-			if (o instanceof Float && ((Float) o).floatValue() == 0)
-				continue;
-			else if (o instanceof Integer && ((Integer) o).intValue() == 0)
-				continue;
-			else if (o instanceof String && ((String) o).length() == 0)
-				continue;
-			else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
-				continue;
-			writer.startNode(field.getJavaField().getName());
-			context.convertAnother(o);
+		// count
+		writer.startNode(MagicCardFieldPhysical.COUNT.getTag());
+		context.convertAnother(card.getCount());
+		writer.endNode();
+		// ownership
+		if (card.isOwn()) {
+			writer.startNode(MagicCardFieldPhysical.OWNERSHIP.getTag());
+			context.convertAnother(Boolean.TRUE);
+			writer.endNode();
+		}
+		// other fields
+		if (card.getProperties() != null) {
+			writer.startNode("properties");
+			context.convertAnother(card.getProperties());
 			writer.endNode();
 		}
 	}
