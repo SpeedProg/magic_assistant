@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -20,7 +21,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.core.exports.PreviewResult;
+import com.reflexit.magiccards.core.exports.ImportResult;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 
@@ -28,12 +30,13 @@ public class DeckImportPreviewPage extends WizardPage {
 	private static final Object[] EMPTY_ARRAY = new Object[] {};
 	private TableViewer tableViewer;
 	private Text text;
+	protected ImportResult previewResult;
 
 	protected DeckImportPreviewPage(String pageName) {
 		super(pageName);
 	}
 
-	static class TabLabelProvder extends BaseLabelProvider implements ITableLabelProvider {
+	class TabLabelProvder extends BaseLabelProvider implements ITableLabelProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
 			return null;
@@ -41,10 +44,19 @@ public class DeckImportPreviewPage extends WizardPage {
 
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof Object[]) {
-				Object object = ((Object[]) element)[columnIndex];
+				Object[] arr = (Object[]) element;
+				if (arr.length <= columnIndex)
+					return "[]";
+				Object object = arr[columnIndex];
 				if (object == null)
 					return "";
 				return object.toString();
+			} else if (element instanceof ICard) {
+				ICard card = (ICard) element;
+				ICardField[] pfields = previewResult.getFields();
+				ICardField fi = pfields[columnIndex];
+				Object o = card.getObjectByField(fi);
+				return o == null ? null : o.toString();
 			}
 			return null;
 		}
@@ -81,7 +93,8 @@ public class DeckImportPreviewPage extends WizardPage {
 				return;
 			}
 			startingPage.performImport(true);
-			PreviewResult result = (PreviewResult) wizard.getData();
+			ImportResult result = (ImportResult) wizard.getData();
+			previewResult = result;
 			TableColumn[] columns = tableViewer.getTable().getColumns();
 			for (TableColumn tableColumn : columns) {
 				tableColumn.dispose();
@@ -94,11 +107,11 @@ public class DeckImportPreviewPage extends WizardPage {
 						col.setText(f.toString());
 					}
 				}
-			if (result.getValues().size() > 0)
-				tableViewer.setInput(result.getValues());
+			if (result.getList().size() > 0)
+				tableViewer.setInput(result.getList());
 			if (result.getError() != null)
 				setErrorMessage("Cannot parse data file: " + result.getError().getMessage());
-			else if (result.getValues().size() == 0)
+			else if (result.getList().size() == 0)
 				setErrorMessage("Cannot parse data file");
 		}
 	}
@@ -116,6 +129,10 @@ public class DeckImportPreviewPage extends WizardPage {
 			public Object[] getElements(Object inputElement) {
 				if (inputElement instanceof Collection) {
 					return ((Collection) inputElement).toArray();
+				}
+				if (inputElement instanceof ImportResult) {
+					List<ICard> values = ((ImportResult) inputElement).getList();
+					return values.toArray();
 				}
 				return EMPTY_ARRAY;
 			}

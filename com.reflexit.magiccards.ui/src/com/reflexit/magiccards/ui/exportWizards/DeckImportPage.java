@@ -48,7 +48,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.IImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
-import com.reflexit.magiccards.core.exports.PreviewResult;
+import com.reflexit.magiccards.core.exports.ImportResult;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -83,7 +83,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button fileRadio;
 	private Button clipboardRadio;
 	private Composite fileSelectionArea;
-	private PreviewResult previewResult;
+	private ImportResult previewResult;
 	private CardElement element;
 	private Button createNewDeck;
 	private Button importIntoExisting;
@@ -113,9 +113,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 							throw new InvocationTargetException(e);
 						}
 						if (preview) {
-							// if error occurs previewResult.error would be set
+							// if error occurs importResult.error would be set
 							// to exception
-							previewResult = ImportUtils.performPreview(st, worker, header, new CoreMonitorAdapter(monitor));
+							previewResult = ImportUtils.performPreview(st, worker, header, Location.createLocation("preview"),
+									new CoreMonitorAdapter(monitor));
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
 							Location selectedLocation = getSelectedLocation();
