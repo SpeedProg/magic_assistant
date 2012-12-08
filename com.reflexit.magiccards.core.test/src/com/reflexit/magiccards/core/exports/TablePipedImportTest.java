@@ -93,4 +93,14 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals(1, ((MagicCardPhysical) card1).getCount());
 		assertEquals("Fifth Edition", card1.getSet());
 	}
+
+	public void test_N_x_C_bad() {
+		addLine("NAME|SET|COUNT");
+		addLine("Counterspell|Fifth Edition|2.1");
+		parse();
+		assertEquals(1, resSize);
+		assertEquals("Counterspell", card1.getName());
+		assertEquals("Fifth Edition", card1.getSet());
+		assertNotNull(((MagicCardPhysical) card1).getError());
+	}
 }
