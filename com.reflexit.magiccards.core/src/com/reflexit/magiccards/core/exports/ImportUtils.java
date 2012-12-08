@@ -215,8 +215,11 @@ public class ImportUtils {
 				newCard.setSet(card.getSet());
 				newCard.setCardId(0);
 				card.setMagicCard(newCard);
+				card.setError("Set not found");
 				return newCard;
 			}
+		} else {
+			card.setError("Card not found in DB");
 		}
 		return card.getBase();
 	}

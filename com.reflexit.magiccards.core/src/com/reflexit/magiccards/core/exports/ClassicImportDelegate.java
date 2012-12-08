@@ -54,7 +54,7 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 				MagicCardField.SET, MagicCardFieldPhysical.COUNT });
 		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]?\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"), new ICardField[] {
 				MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
-		importResult.setFields(parser.getFields());
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET });
 		do {
 			lineNum++;
 			try {

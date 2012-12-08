@@ -88,13 +88,9 @@ public class TableImportDelegate extends AbstractImportDelegate {
 				try {
 					setFieldValue(card, f, i, value.trim());
 				} catch (Exception e) {
-					throw new IllegalArgumentException("Error: Line " + lineNum + ",CardFieldExpr " + (i + 1) + ": Expecting " + f
-							+ ", text was: " + value);
+					card.setError("Cannot set to " + f + ": " + e.getMessage());
 				}
 			}
-		}
-		if (card.getName() == null || card.getName().length() == 0) {
-			throw new IllegalArgumentException("Error: Line " + lineNum + ": Expected NAME value is empty");
 		}
 		return card;
 	}

@@ -81,11 +81,15 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 		DeckParser parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
 				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
+		parser.addPattern(Pattern.compile("^\\s*(\\d+)\\s+([^(]*)"), //
+				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
 		parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
 				new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR,
 						MagicCardField.NAME });
-		importResult.setFields(new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME,
-				MagicCardField.EDITION_ABBR, MagicCardField.SET });
+		parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+)\\s+([^(]*)"), //
+				new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET,
+				MagicCardFieldPhysical.SIDEBOARD });
 		do {
 			lineNum++;
 			try {
