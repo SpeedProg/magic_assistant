@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -233,6 +234,7 @@ public class DataManager {
 		XStream xstream = new XStream();
 		xstream.alias("mc", MagicCard.class);
 		xstream.alias("mcp", MagicCardPhysical.class);
+		xstream.alias("pfield", MagicCardFieldPhysical.class);
 		return xstream;
 	}
 

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.reflexit.magiccards.core.MagicLogger;
@@ -17,6 +18,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Format example "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
@@ -28,24 +30,29 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
  * "Swamp (3)";"2";"C";"4E";"Lnd";"";"";"Land";"0";"378";""
  * "Swamp (1)";"3";"C";"4E";"Lnd";"";"";"Land";"0";"376";""
  */
-public class MagicWorkstationImportDelegate extends CsvImportDelegate {
+public class MagicWorkstationXmlImportDelegate extends CsvImportDelegate {
 	@Override
 	public ReportType getType() {
 		return ReportType.createReportType("mwcsv", "Magic Workstation CSV");
 	}
 
-	public MagicWorkstationImportDelegate() {
-		ICardField fields[] = new ICardField[7];
-		fields[0] = MagicCardField.NAME;
-		fields[1] = MagicCardFieldPhysical.COUNT;
-		fields[3] = MagicCardField.EDITION_ABBR;
-		setFields(fields);
+	public MagicWorkstationXmlImportDelegate() {
 		MagicWorkstationDeckImportDelegate.fixEditions();
 	}
 
 	@Override
 	public char getSeparator() {
 		return ';';
+	}
+
+	@Override
+	public void doRun(ICoreProgressMonitor monitor) throws IOException {
+		ICardField fields[] = new ICardField[7];
+		fields[0] = MagicCardField.NAME;
+		fields[1] = MagicCardFieldPhysical.COUNT;
+		fields[3] = MagicCardField.EDITION_ABBR;
+		setFields(fields);
+		super.doRun(monitor);
 	}
 
 	@Override

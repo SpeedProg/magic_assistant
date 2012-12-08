@@ -87,7 +87,7 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 		importResult.setFields(new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME,
 				MagicCardField.EDITION_ABBR, MagicCardField.SET });
 		do {
-			line++;
+			lineNum++;
 			try {
 				MagicCardPhysical card = createDefaultCard();
 				card = parser.readLine(card);

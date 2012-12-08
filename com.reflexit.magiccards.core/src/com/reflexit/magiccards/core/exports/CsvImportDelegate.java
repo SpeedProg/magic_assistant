@@ -14,15 +14,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
- * Import for classic text deck format
+ * Import for CVS deck format
  */
-public class CsvImportDelegate extends AbstractImportDelegate {
+public class CsvImportDelegate extends TableImportDelegate {
 	@Override
 	public ReportType getType() {
 		return ReportType.CSV;
@@ -40,6 +38,7 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 		runCsvImport(monitor);
 	}
 
+	@Override
 	public char getSeparator() {
 		return ',';
 	}
@@ -50,11 +49,11 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 			try {
 				importer = new CsvImporter(getStream(), getSeparator());
 				do {
-					line++;
+					lineNum++;
 					List<String> list = importer.readLine();
 					if (list == null)
 						break;
-					if (line == 1 && isHeader()) {
+					if (lineNum == 1 && isHeader()) {
 						setHeaderFields(list);
 						continue;
 					}
@@ -71,15 +70,5 @@ public class CsvImportDelegate extends AbstractImportDelegate {
 		} catch (IOException e) {
 			throw e;
 		}
-	}
-
-	protected void setHeaderFields(List<String> list) {
-		ICardField fields[] = new ICardField[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			String hd = list.get(i);
-			ICardField field = MagicCardFieldPhysical.fieldByName(hd);
-			fields[i] = field;
-		}
-		setFields(fields);
 	}
 }

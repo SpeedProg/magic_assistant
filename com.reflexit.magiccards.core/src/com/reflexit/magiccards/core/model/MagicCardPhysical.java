@@ -2,19 +2,17 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
 public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, ICard {
 	private MagicCard card;
 	private int count;
-	private float price;
-	private String comment;
 	private transient Location location;
-	private String custom;
 	private boolean ownership;
-	private int forTrade;
-	private String special;
+	private HashMap<ICardField, Object> properties;
 
 	public MagicCardPhysical(IMagicCard card, Location location) {
 		this(card, location, true);
@@ -25,18 +23,16 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			this.card = (MagicCard) card;
 			this.count = 1;
 			this.ownership = false;
-			this.forTrade = 0;
-			this.special = null;
 		} else if (card instanceof MagicCardPhysical) {
 			MagicCardPhysical phi = (MagicCardPhysical) card;
 			this.card = phi.getCard();
 			this.count = phi.getCount();
-			this.comment = phi.getComment();
-			this.custom = phi.getCustom();
-			this.price = phi.getPrice();
 			this.ownership = phi.ownership;
-			this.forTrade = phi.forTrade;
-			this.special = phi.special;
+			setComment(phi.getComment());
+			setCustom(phi.getCustom());
+			setPrice(phi.getPrice());
+			setForTrade(phi.getForTrade());
+			setSpecial(phi.getSpecial());
 		}
 		this.location = location;
 	}
@@ -44,7 +40,10 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	@Override
 	public Object clone() {
 		try {
-			return super.clone();
+			MagicCardPhysical obj = (MagicCardPhysical) super.clone();
+			if (this.properties != null)
+				obj.properties = (HashMap<ICardField, Object>) this.properties.clone();
+			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
@@ -97,11 +96,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public float getPrice() {
-		return this.price;
+		Float p = (Float) getProperty(MagicCardFieldPhysical.PRICE);
+		if (p == null)
+			return 0;
+		return p;
 	}
 
 	public void setPrice(float price) {
-		this.price = price;
+		setProperty(MagicCardFieldPhysical.PRICE, price);
 	}
 
 	/*
@@ -110,14 +112,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getComment()
 	 */
 	public String getComment() {
-		return this.comment;
+		return (String) getProperty(MagicCardFieldPhysical.COMMENT);
 	}
 
 	public void setComment(String comment) {
 		if (comment == null || comment.trim().length() == 0)
-			this.comment = null;
+			setProperty(MagicCardFieldPhysical.COMMENT, null);
 		else
-			this.comment = comment.trim();
+			setProperty(MagicCardFieldPhysical.COMMENT, comment.trim());
 	}
 
 	/*
@@ -134,14 +136,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public String getCustom() {
-		return this.custom;
+		return (String) getProperty(MagicCardFieldPhysical.CUSTOM);
 	}
 
 	public void setCustom(String custom) {
 		if (custom == null || custom.trim().length() == 0)
-			this.custom = null;
+			setProperty(MagicCardFieldPhysical.CUSTOM, null);
 		else
-			this.custom = custom;
+			setProperty(MagicCardFieldPhysical.CUSTOM, custom);
 	}
 
 	public int getCardId() {
@@ -237,13 +239,13 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			return false;
 		if (phi1.isOwn() != phi2.isOwn())
 			return false;
-		if (Math.abs(phi1.price - phi2.price) >= 0.01)
-			return false;
 		if (!eqNull(phi1.getCustom(), phi2.getCustom()))
 			return false;
 		if (!eqNull(phi1.getComment(), phi2.getComment()))
 			return false;
-		if (!eqNull(phi1.special, phi2.special))
+		if (!eqNull(phi1.getSpecial(), phi2.getSpecial()))
+			return false;
+		if (!eqNull(phi1.getPrice(), phi2.getPrice()))
 			return false;
 		return true;
 	}
@@ -262,79 +264,89 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public boolean setObjectByField(ICardField field, String value) {
-		boolean is = card.setObjectByField(field, value);
-		if (is == true)
+		if (field instanceof MagicCardFieldPhysical) {
+			switch ((MagicCardFieldPhysical) field) {
+				case COUNT:
+					setCount(Integer.parseInt(value));
+					break;
+				case PRICE:
+					setPrice(Float.parseFloat(value));
+					break;
+				case COMMENT:
+					setComment(value);
+					break;
+				case LOCATION:
+					setLocation(Location.valueOf(value));
+					break;
+				case CUSTOM:
+					setCustom(value);
+					break;
+				case OWNERSHIP:
+					setOwn(Boolean.parseBoolean(value));
+					break;
+				case SPECIAL:
+					setSpecial(value);
+					break;
+				case FORTRADECOUNT:
+					setForTrade(Integer.parseInt(value));
+					break;
+				case SIDEBOARD:
+					return false; // not settable
+				case ERROR:
+					setError(value);
+					break;
+				default:
+					throw new IllegalArgumentException("Not supported field?");
+			}
 			return true;
-		if (!(field instanceof MagicCardFieldPhysical))
-			return false;
-		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
-		switch (pfield) {
-			case COUNT:
-				setCount(Integer.parseInt(value));
-				break;
-			case PRICE:
-				setPrice(Float.parseFloat(value));
-				break;
-			case COMMENT:
-				setComment(value);
-				break;
-			case LOCATION:
-				setLocation(Location.valueOf(value));
-				break;
-			case CUSTOM:
-				setCustom(value);
-				break;
-			case OWNERSHIP:
-				setOwn(Boolean.parseBoolean(value));
-				break;
-			case SPECIAL:
-				setSpecial(value);
-				break;
-			case FORTRADECOUNT:
-				setForTrade(Integer.parseInt(value));
-				break;
-			case SIDEBOARD:
-				return false; // not settable
-			default:
-				return false;
+		} else if (field instanceof MagicCardField) {
+			return card.setObjectByField(field, value);
 		}
-		return true;
+		return false;
 	}
 
 	public Object getObjectByField(ICardField field) {
 		if (field instanceof MagicCardField) {
-			Object x = card.getObjectByField(field);
-			if (x != null)
-				return x;
-		}
-		if (!(field instanceof MagicCardFieldPhysical))
-			return null;
-		MagicCardFieldPhysical pfield = (MagicCardFieldPhysical) field;
-		switch (pfield) {
-			case COUNT:
-				return getCount();
-			case PRICE:
-				return getPrice();
-			case COMMENT:
-				return getComment();
-			case LOCATION:
-				return getLocation();
-			case CUSTOM:
-				return getCustom();
-			case OWNERSHIP:
-				return isOwn();
-			case FORTRADECOUNT:
-				return getForTrade();
-			case SPECIAL:
-				return getSpecial();
-			case SIDEBOARD:
-				return isSideboard();
-			case OWN_COUNT:
-				return getOwnCount();
-			case OWN_UNIQUE:
-				return getOwnUnique();
+			return card.getObjectByField(field);
+		} else if (field instanceof MagicCardFieldPhysical) {
+			switch ((MagicCardFieldPhysical) field) {
+				case COUNT:
+					return getCount();
+				case PRICE:
+					return getPrice();
+				case COMMENT:
+					return getComment();
+				case LOCATION:
+					return getLocation();
+				case CUSTOM:
+					return getCustom();
+				case OWNERSHIP:
+					return isOwn();
+				case FORTRADECOUNT:
+					return getForTrade();
+				case SPECIAL:
+					return getSpecial();
+				case SIDEBOARD:
+					return isSideboard();
+				case OWN_COUNT:
+					return getOwnCount();
+				case OWN_UNIQUE:
+					return getOwnUnique();
+				case ERROR:
+					return getError();
+				default:
+					throw new IllegalArgumentException("Not supported field?");
+			}
 		}
 		return null;
+	}
+
+	public Object getError() {
+		return getProperty(MagicCardFieldPhysical.ERROR);
+	}
+
+	public void setError(Object value) {
+		setProperty(MagicCardFieldPhysical.ERROR, value);
 	}
 
 	public void setCommunityRating(float parseFloat) {
@@ -355,11 +367,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getForTrade()
 	 */
 	public int getForTrade() {
-		return forTrade;
+		Integer f = (Integer) getProperty(MagicCardFieldPhysical.FORTRADECOUNT);
+		if (f == null)
+			return 0;
+		return f;
 	}
 
-	public void setForTrade(int forSale) {
-		this.forTrade = forSale;
+	public void setForTrade(int forTrade) {
+		setProperty(MagicCardFieldPhysical.FORTRADECOUNT, forTrade);
 	}
 
 	/*
@@ -368,14 +383,15 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getSpecial()
 	 */
 	public String getSpecial() {
-		if (this.special == null)
+		String f = (String) getProperty(MagicCardFieldPhysical.SPECIAL);
+		if (f == null)
 			return "";
-		return special;
+		return f;
 	}
 
 	public void setSpecial(String special) {
 		if (special == null || special.trim().length() == 0) {
-			this.special = null;
+			setProperty(MagicCardFieldPhysical.SPECIAL, null);
 			return;
 		} else {
 			String value = getSpecial();
@@ -404,7 +420,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			}
 			if (value.endsWith(","))
 				value = value.substring(0, value.length() - 1);
-			this.special = value;
+			setProperty(MagicCardFieldPhysical.SPECIAL, value);
 		}
 	}
 
@@ -517,5 +533,34 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 
 	public int getCollectorNumberId() {
 		return card.getCollectorNumberId();
+	}
+
+	public void setProperty(ICardField key, Object value) {
+		if (key == null)
+			throw new NullPointerException();
+		if (properties == null) {
+			if (value == null)
+				return;
+			properties = new HashMap<ICardField, Object>(3);
+		}
+		if (value == null) {
+			properties.remove(key);
+			if (properties.size() == 0) {
+				properties = null;
+			}
+		} else
+			properties.put(key, value);
+	}
+
+	public Object getProperty(ICardField key) {
+		if (properties == null)
+			return null;
+		if (key == null)
+			throw new NullPointerException();
+		return properties.get(key);
+	}
+
+	public Map<ICardField, Object> getProperties() {
+		return properties;
 	}
 }

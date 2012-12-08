@@ -56,7 +56,7 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 				MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
 		importResult.setFields(parser.getFields());
 		do {
-			line++;
+			lineNum++;
 			try {
 				MagicCardPhysical card = createDefaultCard();
 				card = parser.readLine(card);

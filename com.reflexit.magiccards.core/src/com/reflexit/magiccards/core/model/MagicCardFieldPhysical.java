@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -20,40 +18,24 @@ public enum MagicCardFieldPhysical implements ICardField {
 	SIDEBOARD(null),
 	OWN_COUNT(null), // count of own card (normal count counts own and virtual)
 	OWN_UNIQUE(null), // count of own unique cards (only applies to groups usually)
+	ERROR(null), // error field for import
 	// end of fields
 	;
 	// fields
-	private final Field field;
+	private final String tag;
 
 	MagicCardFieldPhysical(String javaField) {
-		if (javaField != null) {
-			try {
-				field = MagicCardPhysical.class.getDeclaredField(javaField);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e);
-			}
-		} else {
-			field = null;
-		}
+		tag = javaField;
 	}
 
 	MagicCardFieldPhysical() {
-		String javaField = name().toLowerCase(Locale.ENGLISH);
-		try {
-			field = MagicCardPhysical.class.getDeclaredField(javaField);
-		} catch (Exception e) {
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	public Class getType() {
-		return field == null ? String.class : field.getType();
+		tag = name().toLowerCase(Locale.ENGLISH);
 	}
 
 	public boolean isTransient() {
-		if (field == null)
+		if (tag == null)
 			return true;
-		return Modifier.isTransient(field.getModifiers());
+		return false;
 	}
 
 	public static ICardField[] allFields() {
@@ -105,8 +87,8 @@ public enum MagicCardFieldPhysical implements ICardField {
 		return null;
 	}
 
-	public Field getJavaField() {
-		return field;
+	public String getTag() {
+		return tag;
 	}
 
 	public static ICardField[] toFields(String line, String sep) {

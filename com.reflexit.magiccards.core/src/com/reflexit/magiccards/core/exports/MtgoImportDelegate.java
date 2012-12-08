@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of
@@ -46,7 +48,12 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	}
 
 	public MtgoImportDelegate() {
+	}
+
+	@Override
+	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		setUpFields();
+		super.doRun(monitor);
 	}
 
 	@Override

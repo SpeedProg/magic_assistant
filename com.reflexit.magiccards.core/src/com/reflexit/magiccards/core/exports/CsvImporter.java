@@ -18,7 +18,7 @@ public class CsvImporter implements Closeable {
 
 	public CsvImporter(InputStream st, char sep) {
 		reader = new BufferedReader(new InputStreamReader(st));
-		lineSep = System.getProperty("line.separator");
+		lineSep = System.getProperty("lineNum.separator");
 		this.sep = sep;
 	}
 

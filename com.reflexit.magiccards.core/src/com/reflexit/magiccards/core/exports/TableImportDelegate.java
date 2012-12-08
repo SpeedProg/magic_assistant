@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.List;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -33,42 +34,36 @@ public class TableImportDelegate extends AbstractImportDelegate {
 	public TableImportDelegate() {
 	}
 
+	public char getSeparator() {
+		return '|';
+	}
+
 	/**
 	 * @param monitor
 	 * @throws IOException
 	 */
 	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
-		runTablePipedImport(monitor);
-	}
-
-	public void runTablePipedImport(ICoreProgressMonitor monitor) throws IOException {
 		try {
 			BufferedReader importer = null;
 			try {
 				importer = new BufferedReader(new InputStreamReader(getStream()));
 				do {
-					line++;
+					lineNum++;
 					String input = importer.readLine();
 					if (input == null)
 						break;
 					input = input.trim();
-					String[] split = input.split("\\|");
+					String[] split = input.split("\\Q" + getSeparator());
 					if (split.length > 1) {
-						if (line == 1 && isHeader()) {
-							ICardField fields[] = new ICardField[split.length];
-							for (int i = 0; i < split.length; i++) {
-								String hd = split[i];
-								ICardField field = MagicCardFieldPhysical.fieldByName(hd);
-								fields[i] = field;
-							}
-							setFields(fields);
+						if (lineNum == 1 && isHeader()) {
+							setHeaderFields(split);
 							continue;
 						}
 						MagicCardPhysical card = createCard(Arrays.asList(split));
 						importCard(card);
 					} else {
-						throw new IllegalArgumentException("Error: Line " + line + ". Fields seprated by | are not found: " + input);
+						throw new IllegalArgumentException("Error: Line " + lineNum + ". Fields seprated by | are not found: " + input);
 					}
 					monitor.worked(1);
 				} while (true);
@@ -81,5 +76,54 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		} catch (IOException e) {
 			throw e;
 		}
+	}
+
+	protected MagicCardPhysical createCard(List<String> list) {
+		MagicCardPhysical card = createDefaultCard();
+		ICardField[] fields = getFields();
+		for (int i = 0; i < fields.length && i < list.size(); i++) {
+			ICardField f = fields[i];
+			String value = list.get(i);
+			if (value != null && value.length() > 0 && f != null) {
+				try {
+					setFieldValue(card, f, i, value.trim());
+				} catch (Exception e) {
+					throw new IllegalArgumentException("Error: Line " + lineNum + ",CardFieldExpr " + (i + 1) + ": Expecting " + f
+							+ ", text was: " + value);
+				}
+			}
+		}
+		if (card.getName() == null || card.getName().length() == 0) {
+			throw new IllegalArgumentException("Error: Line " + lineNum + ": Expected NAME value is empty");
+		}
+		return card;
+	}
+
+	public ICardField[] getFields() {
+		return importResult.getFields();
+	}
+
+	public void setHeaderFields(String[] split) {
+		ICardField fields[] = new ICardField[split.length];
+		for (int i = 0; i < split.length; i++) {
+			String hd = split[i];
+			ICardField field = MagicCardFieldPhysical.fieldByName(hd);
+			fields[i] = field;
+		}
+		setFields(fields);
+	}
+
+	protected void setHeaderFields(List<String> list) {
+		ICardField fields[] = new ICardField[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			String hd = list.get(i);
+			ICardField field = MagicCardFieldPhysical.fieldByName(hd);
+			fields[i] = field;
+		}
+		setFields(fields);
+	}
+
+	public void setFields(ICardField[] fields) {
+		importResult.setFields(fields);
 	}
 }

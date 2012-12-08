@@ -19,7 +19,7 @@ public class DeckParser implements Closeable {
 
 	public DeckParser(InputStream st, IImportDelegate delegate) {
 		reader = new BufferedReader(new InputStreamReader(st));
-		lineSep = System.getProperty("line.separator");
+		lineSep = System.getProperty("lineNum.separator");
 		this.delegate = delegate;
 	}
 

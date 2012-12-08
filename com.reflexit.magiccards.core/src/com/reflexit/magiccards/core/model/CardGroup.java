@@ -165,17 +165,16 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 							newmine = Location.NO_WHERE;
 						} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
 							newmine = "false";
-						} else if (field.getType() == String.class) {
+						} else if (field == MagicCardField.ID) {
+							newmine = 0;
+						} else if (value != null && value.getClass() == String.class) {
+							// string?
 							if (mine.toString().length() == 0) {
 								newmine = value;
 							} else {
 								// System.err.println("join " + mine + "<>" + value);
 								newmine = "*";
 							}
-						} else if (field == MagicCardField.ID) {
-							newmine = 0;
-						} else {
-							// ...
 						}
 					}
 				}

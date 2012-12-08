@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Export objects in text table-line format
+ * Export objects in text table-lineNum format
  * 
  * @author Alena
  * 

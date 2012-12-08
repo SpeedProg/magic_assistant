@@ -22,7 +22,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	private Location location;
 	protected boolean previewMode = false;
 	protected ImportResult importResult;
-	protected int line = 0;
+	protected int lineNum = 0;
 
 	public AbstractImportDelegate() {
 	}
@@ -86,39 +86,15 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		importResult.add(card);
 	}
 
-	protected MagicCardPhysical createCard(List<String> list) {
-		MagicCardPhysical card = createDefaultCard();
-		ICardField[] fields = importResult.getFields();
-		for (int i = 0; i < fields.length && i < list.size(); i++) {
-			ICardField f = fields[i];
-			String value = list.get(i);
-			if (value != null && value.length() > 0 && f != null) {
-				try {
-					setFieldValue(card, f, i, value.trim());
-				} catch (Exception e) {
-					throw new IllegalArgumentException("Error: Line " + line + ",CardFieldExpr " + (i + 1) + ": Expecting " + f
-							+ ", text was: " + value);
-				}
-			}
-		}
-		if (card.getName() == null || card.getName().length() == 0) {
-			throw new IllegalArgumentException("Error: Line " + line + ", CardFieldExpr 2: Expected NAME value is empty");
-		}
-		return card;
-	}
-
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (field == MagicCardField.EDITION_ABBR) {
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)
 				nameByAbbr = "Unknown";
 			card.setObjectByField(MagicCardField.SET, nameByAbbr);
-		}
-		if (field == MagicCardFieldPhysical.LOCATION) {
+		} else if (field == MagicCardFieldPhysical.LOCATION) {
 			// ignore this field
-			return;
-		}
-		if (field == MagicCardFieldPhysical.SIDEBOARD) {
+		} else if (field == MagicCardFieldPhysical.SIDEBOARD) {
 			if (Boolean.valueOf(value).booleanValue()) {
 				card.setLocation(getSideboardLocation());
 			}
@@ -157,9 +133,5 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	public boolean isHeader() {
 		return header;
-	}
-
-	public void setFields(ICardField[] fields) {
-		importResult.setFields(fields);
 	}
 }

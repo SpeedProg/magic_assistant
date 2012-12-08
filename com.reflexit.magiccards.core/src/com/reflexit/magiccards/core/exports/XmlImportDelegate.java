@@ -52,7 +52,7 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 				Location location = storage.getLocation();
 				Iterator iterator = store.iterator();
 				while (iterator.hasNext()) {
-					line++;
+					lineNum++;
 					Object next = iterator.next();
 					if (next instanceof MagicCardPhysical) {
 						MagicCardPhysical card = (MagicCardPhysical) next;

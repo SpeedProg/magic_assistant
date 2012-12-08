@@ -49,22 +49,23 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 	.336	3	Bog Imp
 	.113	4	Howl from Beyond
 	 */
-	public synchronized void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
+	@Override
+	protected void doRun(ICoreProgressMonitor monitor) throws IOException {
 		parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("^\\.\\d+\\s*(\\d+)\\s+(.*)"), //
 				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
-		importResult.setFields(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET });
-		line = 0;
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET });
+		lineNum = 0;
 		String set = "";
 		// read header
 		do {
-			line++;
+			lineNum++;
 			try {
 				String sline = parser.readLine();
 				if (sline == null)
 					break;
 				if (sline.startsWith(";")) {
-					if (line == 7) {
+					if (lineNum == 7) {
 						set = sline.substring(1).trim();
 					}
 				} else if (sline.startsWith(".")) {
@@ -80,10 +81,5 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 			}
 		} while (true);
 		parser.close();
-	}
-
-	@Override
-	protected void doRun(ICoreProgressMonitor monitor) throws IOException {
-		runDeckImport(monitor);
 	}
 }
