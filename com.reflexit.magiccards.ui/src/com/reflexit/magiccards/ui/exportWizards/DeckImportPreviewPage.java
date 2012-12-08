@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.exports.ImportResult;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 
 public class DeckImportPreviewPage extends WizardPage {
@@ -44,17 +45,25 @@ public class DeckImportPreviewPage extends WizardPage {
 
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof Object[]) {
+				if (columnIndex == 0)
+					return "";
 				Object[] arr = (Object[]) element;
-				if (arr.length <= columnIndex)
+				if (arr.length <= columnIndex - 1)
 					return "[]";
-				Object object = arr[columnIndex];
+				Object object = arr[columnIndex - 1];
 				if (object == null)
 					return "";
 				return object.toString();
 			} else if (element instanceof ICard) {
 				ICard card = (ICard) element;
+				if (columnIndex == 0 && card instanceof MagicCardPhysical) {
+					Object err = ((MagicCardPhysical) card).getError();
+					if (err == null)
+						return "";
+					return err.toString();
+				}
 				ICardField[] pfields = previewResult.getFields();
-				ICardField fi = pfields[columnIndex];
+				ICardField fi = pfields[columnIndex - 1];
 				Object o = card.getObjectByField(fi);
 				return o == null ? null : o.toString();
 			}
@@ -99,6 +108,9 @@ public class DeckImportPreviewPage extends WizardPage {
 			for (TableColumn tableColumn : columns) {
 				tableColumn.dispose();
 			}
+			TableColumn cole = new TableColumn(tableViewer.getTable(), SWT.NONE);
+			cole.setWidth(100);
+			cole.setText("Errors");
 			if (result.getFields() != null)
 				for (ICardField f : result.getFields()) {
 					TableColumn col = new TableColumn(tableViewer.getTable(), SWT.NONE);
