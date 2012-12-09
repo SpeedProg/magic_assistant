@@ -70,7 +70,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testFindRefByName() {
 		MagicCard card = new MagicCard();
 		card.setName("Lightning Bolt");
-		MagicCard ref = ImportUtils.findRef(card);
+		MagicCard ref = ImportUtils.findRef(card, DataManager.getMagicDBStore());
 		assertNotNull(ref);
 		assertNotNull(ref.getSet());
 	}
@@ -80,16 +80,16 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		MagicCard card = new MagicCard();
 		card.setName("Lightning Bolt");
 		card.setSet("Magic 2010");
-		MagicCard ref = ImportUtils.findRef(card);
+		MagicCard ref = ImportUtils.findRef(card, DataManager.getMagicDBStore());
 		assertNotNull(ref);
 		assertEquals("Magic 2010", ref.getSet());
 	}
 
 	@Test
 	public void testResolveSet() {
-		assertEquals("\"Timeshifted\"", ImportUtils.resolveSet("''Timeshifted''"));
-		assertEquals("Duel Decks: Ajani vs. Nicol Bolas", ImportUtils.resolveSet("Duel decks : Ajani vs. Nicol Bolas"));
-		assertEquals("Lorwyn", ImportUtils.resolveSet("Token Lorwyn "));
+		assertEquals("Time Spiral \"Timeshifted\"", ImportUtils.resolveSet("''Timeshifted''").getName());
+		assertEquals("Duel Decks: Ajani vs. Nicol Bolas", ImportUtils.resolveSet("Duel decks : Ajani vs. Nicol Bolas").getName());
+		assertEquals("Lorwyn", ImportUtils.resolveSet("Token Lorwyn ").getName());
 	}
 
 	@Test

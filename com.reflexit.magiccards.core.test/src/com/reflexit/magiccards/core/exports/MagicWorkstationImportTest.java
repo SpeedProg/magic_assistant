@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
  */
 public class MagicWorkstationImportTest extends AbstarctImportTest {
 	// "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
-	private final MagicWorkstationXmlImportDelegate worker = new MagicWorkstationXmlImportDelegate();
+	private final MagicWorkstationCsvImportDelegate worker = new MagicWorkstationCsvImportDelegate();
 
 	private void parse() {
 		parse(true, worker);

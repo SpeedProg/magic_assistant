@@ -55,11 +55,17 @@ public class ManaDeckImportTest extends AbstarctImportTest {
 				+ "1 Ray of Revelation\r\n" + "2 Quiet Speculation\r\n" + "#SIDEBOARD#\r\n" + "2 Ray of Revelation\r\n" + "2 Gigapede\r\n"
 				+ "2 Counterspell\r\n" + "2 Turbulent Dreams\r\n" + "2 Upheaval\r\n" + "2 Ravenous Baloth\r\n" + "2 Merfolk Looter\r\n"
 				+ "1 Krosan Reclamation\n");
+		preview(true, mimport);
+		assertEquals(23, resSize);
+		assertEquals("City of Brass", card1.getName());
+		assertEquals(2, ((MagicCardPhysical) card1).getCount());
+		assertFalse(((MagicCardPhysical) card1).isSideboard());
+		assertTrue(((MagicCardPhysical) cardN).isSideboard());
 		parse();
 		assertEquals(23, resSize);
 		assertEquals("City of Brass", card1.getName());
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
-		MagicCardPhysical card = (MagicCardPhysical) result.get(resSize - 1);
-		assertTrue(card.isSideboard());
+		assertFalse(((MagicCardPhysical) card1).isSideboard());
+		assertTrue(((MagicCardPhysical) cardN).isSideboard());
 	}
 }

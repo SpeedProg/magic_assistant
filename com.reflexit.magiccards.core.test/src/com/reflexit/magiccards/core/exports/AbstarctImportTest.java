@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
@@ -20,7 +21,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected IMagicCard card1;
 	protected IMagicCard card2;
 	protected IMagicCard card3;
-	protected ArrayList<IMagicCard> result;
+	protected IMagicCard cardN;
+	protected List<IMagicCard> result;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -57,6 +59,17 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		setout(result);
 	}
 
+	protected void preview(boolean header, IImportDelegate<IMagicCard> worker) {
+		try {
+			ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(),
+					ICoreProgressMonitor.NONE);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		result = (List) worker.getPreview().getList();
+		setout(result);
+	}
+
 	public void setout(Collection<IMagicCard> preimport) {
 		resSize = preimport.size();
 		Iterator<IMagicCard> iter = preimport.iterator();
@@ -66,6 +79,9 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 			card2 = iter.next();
 		if (resSize >= 3)
 			card3 = iter.next();
+		for (Iterator iterator = preimport.iterator(); iterator.hasNext();) {
+			cardN = (IMagicCard) iterator.next();
+		}
 	}
 
 	protected void addLine(String string) {

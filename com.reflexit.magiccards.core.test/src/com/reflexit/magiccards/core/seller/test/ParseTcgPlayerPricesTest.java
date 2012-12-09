@@ -47,7 +47,7 @@ public class ParseTcgPlayerPricesTest extends TestCase {
 	public void testgetPriceHigh() {
 		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.High);
 		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
-		assertEquals(0.5f, card.getDbPrice());
+		assertEquals(0.45f, card.getDbPrice());
 	}
 
 	public void testgetPriceLow() {
