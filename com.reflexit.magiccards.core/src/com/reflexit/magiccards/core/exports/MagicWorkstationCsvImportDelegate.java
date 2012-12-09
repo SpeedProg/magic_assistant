@@ -30,13 +30,13 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * "Swamp (3)";"2";"C";"4E";"Lnd";"";"";"Land";"0";"378";""
  * "Swamp (1)";"3";"C";"4E";"Lnd";"";"";"Land";"0";"376";""
  */
-public class MagicWorkstationXmlImportDelegate extends CsvImportDelegate {
+public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 	@Override
 	public ReportType getType() {
 		return ReportType.createReportType("mwcsv", "Magic Workstation CSV");
 	}
 
-	public MagicWorkstationXmlImportDelegate() {
+	public MagicWorkstationCsvImportDelegate() {
 		MagicWorkstationDeckImportDelegate.fixEditions();
 	}
 

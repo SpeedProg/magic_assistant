@@ -40,7 +40,7 @@
       <deckFormat
             extension="mwCsv"
             id="mwcsv"
-            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationXmlImportDelegate"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationCsvImportDelegate"
             label="Magic Workstation CSV"
             xmlFormat="false">
       </deckFormat>

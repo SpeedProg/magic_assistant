@@ -70,7 +70,7 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 					}
 				} else if (sline.startsWith(".")) {
 					MagicCardPhysical card = createDefaultCard();
-					// card.getBase().setSet(set);
+					card.getBase().setSet(set);
 					if (parser.parseLine(card, sline)) {
 						importCard(card);
 					}

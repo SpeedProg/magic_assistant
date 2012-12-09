@@ -88,8 +88,8 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 						price = getPrice(flipCard);
 				}
 				if (price > 0) {
-					// if (!setMap.containsKey(set))
-					// setMap.put(set, id);
+					// if (!setAlias.containsKey(set))
+					// setAlias.put(set, id);
 					((ICardModifiable) magicCard).setObjectByField(MagicCardField.DBPRICE, String.valueOf(price));
 					store.update(magicCard);
 				}
