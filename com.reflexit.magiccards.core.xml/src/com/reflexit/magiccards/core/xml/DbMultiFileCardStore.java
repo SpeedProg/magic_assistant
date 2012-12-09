@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -26,6 +28,7 @@ import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.utils.IntHashtable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -33,7 +36,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Card Store for Magic DB
  * 
  */
-public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
+public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
 	private IntHashtable hash = new IntHashtable();
 	private boolean load;
 
@@ -180,5 +183,20 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	public void setLoad(boolean load) {
 		this.load = load;
+	}
+
+	@Override
+	public List<IMagicCard> getCandidates(String name) {
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(2);
+		if (name == null)
+			return cards;
+		for (Iterator iterator = iterator(); iterator.hasNext();) {
+			MagicCard a = (MagicCard) iterator.next();
+			String lname = a.getName();
+			if (name.equalsIgnoreCase(lname)) {
+				cards.add(a);
+			}
+		}
+		return cards;
 	}
 }

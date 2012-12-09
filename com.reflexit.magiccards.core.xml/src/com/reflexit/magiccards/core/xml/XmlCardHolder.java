@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
@@ -44,8 +45,8 @@ public class XmlCardHolder implements ICardHandler {
 		return MagicDBFilteredCardFileStore.getInstance();
 	}
 
-	public ICardStore getMagicDBStore() {
-		return getMagicDBFilteredStore().getCardStore();
+	public IDbCardStore getMagicDBStore() {
+		return (IDbCardStore) getMagicDBFilteredStore().getCardStore();
 	}
 
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
