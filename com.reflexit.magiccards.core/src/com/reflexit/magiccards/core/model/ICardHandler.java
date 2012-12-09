@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -16,7 +17,7 @@ public interface ICardHandler {
 
 	public ICardStore getLibraryCardStore();
 
-	public ICardStore getMagicDBStore();
+	public IDbCardStore getMagicDBStore();
 
 	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy();
 

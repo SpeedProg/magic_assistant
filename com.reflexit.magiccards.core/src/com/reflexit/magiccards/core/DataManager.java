@@ -25,6 +25,7 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.utils.IntHashtable;
 import com.thoughtworks.xstream.XStream;
 
@@ -117,7 +118,7 @@ public class DataManager {
 		return handler.getLibraryCardStore();
 	}
 
-	public static ICardStore getMagicDBStore() {
+	public static IDbCardStore getMagicDBStore() {
 		return handler.getMagicDBStore();
 	}
 
