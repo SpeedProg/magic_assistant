@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -52,6 +53,7 @@ import com.reflexit.magiccards.core.exports.ImportResult;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
@@ -125,8 +127,19 @@ public class DeckImportPage extends WizardDataTransferPage {
 								createNewDeck(getNewDeckName());
 								selectedLocation = getSelectedLocation();
 							}
-							Collection<IMagicCard> result = ImportUtils.performPreImport(st, worker, header, selectedLocation,
-									new CoreMonitorAdapter(monitor));
+							Collection<IMagicCard> result;
+							if (previewResult == null) {
+								result = ImportUtils
+										.performPreImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
+							} else {
+								result = (List<IMagicCard>) previewResult.getList();
+								for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+									IMagicCard iMagicCard = (IMagicCard) iterator.next();
+									if (iMagicCard instanceof MagicCardPhysical) {
+										((MagicCardPhysical) iMagicCard).setLocation(selectedLocation);
+									}
+								}
+							}
 							if (fixErrors(result, dbImport)) {
 								if (!dbImport)
 									ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
@@ -177,7 +190,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 						if (newdbrecords.size() > 0 && lerrors.size() == 0) {
 							boolean yes2 = dbImport;
 							if (yes2 == false) {
-								MessageDialog.openQuestion(getShell(), "Import into DB", newdbrecords.size()
+								yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", newdbrecords.size()
 										+ " cards are not found in the database. Do you want to add new cards into database?");
 							}
 							if (yes2)
