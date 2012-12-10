@@ -9,12 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.BaseLabelProvider;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.WizardPage;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportResult;
+import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -44,6 +47,7 @@ public class DeckImportPreviewPage extends WizardPage {
 	private Text text;
 	protected ImportResult previewResult;
 	private EditingSupport setStringEditingSupport;
+	private EditingSupport nameEditingSupport;
 
 	protected DeckImportPreviewPage(String pageName) {
 		super(pageName);
@@ -140,6 +144,16 @@ public class DeckImportPreviewPage extends WizardPage {
 										cell.setText("[NEW] " + card.getSet());
 									else
 										cell.setText(card.getSet());
+								}
+							});
+						} else if (f == MagicCardField.NAME) {
+							TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, col);
+							tableViewerColumn.setEditingSupport(nameEditingSupport);
+							tableViewerColumn.setLabelProvider(new CellLabelProvider() {
+								@Override
+								public void update(ViewerCell cell) {
+									IMagicCard card = (IMagicCard) cell.getElement();
+									cell.setText(card.getName());
 								}
 							});
 						}
@@ -250,6 +264,42 @@ public class DeckImportPreviewPage extends WizardPage {
 								break;
 							}
 						}
+					tableViewer.refresh(true);
+				}
+			}
+		};
+		nameEditingSupport = new EditingSupport(tableViewer) {
+			@Override
+			protected boolean canEdit(Object element) {
+				if (element instanceof MagicCardPhysical)
+					return true;
+				else
+					return false;
+			}
+
+			@Override
+			protected CellEditor getCellEditor(final Object element) {
+				TextCellEditor editor = new TextCellEditor((Composite) tableViewer.getControl(), SWT.NONE);
+				return editor;
+			}
+
+			@Override
+			protected Object getValue(Object element) {
+				if (element instanceof MagicCardPhysical) {
+					return ((MagicCardPhysical) element).getName();
+				}
+				return null;
+			}
+
+			@Override
+			protected void setValue(Object element, Object value) {
+				if (element instanceof MagicCardPhysical) {
+					MagicCardPhysical card = (MagicCardPhysical) element;
+					MagicCard base = (MagicCard) card.getBase().clone();
+					base.setName((String) value);
+					base.setCardId(0);
+					card.setMagicCard(base);
+					ImportUtils.updateCardReference(card);
 					tableViewer.refresh(true);
 				}
 			}
