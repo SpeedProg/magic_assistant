@@ -24,6 +24,7 @@ import java.util.Map;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -197,6 +198,15 @@ public class ImportUtils {
 			}
 		}
 		return badSets;
+	}
+
+	public static void updateCardReference(Collection<ICard> result) {
+		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card instanceof MagicCardPhysical) {
+				ImportUtils.updateCardReference((MagicCardPhysical) card);
+			}
+		}
 	}
 
 	public static MagicCard updateCardReference(MagicCardPhysical card) {

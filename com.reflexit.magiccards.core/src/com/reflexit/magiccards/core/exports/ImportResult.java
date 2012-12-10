@@ -78,7 +78,7 @@ public class ImportResult {
 	/**
 	 * @return the toImport
 	 */
-	public List<ICard> getList() {
+	public List<? extends ICard> getList() {
 		return toImport;
 	}
 }
