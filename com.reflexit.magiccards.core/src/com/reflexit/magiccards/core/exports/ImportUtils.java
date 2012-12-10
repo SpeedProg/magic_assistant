@@ -240,7 +240,7 @@ public class ImportUtils {
 				}
 			}
 		} else {
-			card.setError("Card not found in DB");
+			card.setError("Name not found in DB");
 		}
 		return card.getBase();
 	}
