@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -135,7 +134,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		addLine("Counterspell|Bla|2");
 		ImportResult performPreview = ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), tableImport, true,
 				Location.createLocation("test"), monitor);
-		List<ICard> values = performPreview.getList();
+		List values = performPreview.getList();
 		assertEquals(1, values.size());
 		Object[] fielsValues = performPreview.getFields();
 		assertEquals(3, fielsValues.length);
