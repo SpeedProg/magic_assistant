@@ -40,6 +40,8 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 		editions.addAbbreviation("Scourge", "SC");
 		editions.addAbbreviation("Mirrodin", "MR");
 		editions.addAbbreviation("Fifth Dawn", "FD");
+		editions.addAbbreviation("Homelands", "HL");
+		editions.addAbbreviation("Prophecy", "PY");
 		// editions.addAbbreviation("Anthologies", "AT");
 	}
 

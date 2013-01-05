@@ -87,5 +87,12 @@
             label="Mana Deck .dck"
             xmlFormat="false">
       </deckFormat>
+       <deckFormat
+            extension="csv"
+            id="mtgstudiocsv"
+            importDelegate="com.reflexit.magiccards.core.exports.MTGStudioCsvImportDelegate"
+            label="MTG Studio .csv"
+            xmlFormat="false">
+      </deckFormat>
    </extension>
 </plugin>
