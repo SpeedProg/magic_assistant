@@ -42,7 +42,6 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 	}
 
 	public MTGStudioCsvImportDelegate() {
-		MagicWorkstationDeckImportDelegate.fixEditions();
 	}
 
 	@Override
@@ -77,6 +76,9 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 	@Override
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (field == MagicCardField.SET) {
+			if (value.equals("LE")) {
+				value = "LGN"; // special case LE uses for diffrent set in gatherer
+			}
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)
 				nameByAbbr = value;

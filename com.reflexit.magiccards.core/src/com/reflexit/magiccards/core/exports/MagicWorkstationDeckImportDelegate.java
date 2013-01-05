@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.exports;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -22,27 +21,7 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 
 	@Override
 	protected void doRun(ICoreProgressMonitor monitor) throws IOException {
-		fixEditions();
 		runDeckImport(monitor);
-	}
-
-	static void fixEditions() {
-		Editions editions = Editions.getInstance();
-		editions.addAbbreviation("Limited Edition Beta", "B");
-		editions.addAbbreviation("Limited Edition Alpha", "A");
-		editions.addAbbreviation("Torment", "TO");
-		editions.addAbbreviation("Judgment", "JU");
-		editions.addAbbreviation("Urza's Legacy", "UL");
-		editions.addAbbreviation("Urza's Saga", "US");
-		editions.addAbbreviation("Urza's Destiny", "UD");
-		editions.addAbbreviation("Stronghold", "SH");
-		editions.addAbbreviation("Onslaught", "ON");
-		editions.addAbbreviation("Scourge", "SC");
-		editions.addAbbreviation("Mirrodin", "MR");
-		editions.addAbbreviation("Fifth Dawn", "FD");
-		editions.addAbbreviation("Homelands", "HL");
-		editions.addAbbreviation("Prophecy", "PY");
-		// editions.addAbbreviation("Anthologies", "AT");
 	}
 
 	/*-

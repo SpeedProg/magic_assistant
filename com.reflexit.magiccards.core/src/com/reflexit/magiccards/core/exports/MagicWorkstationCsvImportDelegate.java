@@ -37,7 +37,6 @@ public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 	}
 
 	public MagicWorkstationCsvImportDelegate() {
-		MagicWorkstationDeckImportDelegate.fixEditions();
 	}
 
 	@Override
