@@ -62,6 +62,7 @@ import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
+import com.reflexit.magiccards.ui.commands.DeleteHandler;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.exportWizards.ImportAction;
@@ -216,14 +217,14 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			if (sel.size() == 1) {
 				CardElement el = (CardElement) sel.getFirstElement();
 				if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete " + el.getName() + "?")) {
-					el.remove();
+					DeleteHandler.remove(el);
 				}
 			} else {
 				if (MessageDialog.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete these " + sel.size()
 						+ " elements?")) {
 					for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 						CardElement el = (CardElement) iterator.next();
-						el.remove();
+						DeleteHandler.remove(el);
 					}
 				}
 			}
@@ -237,8 +238,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 				CardElement el = (CardElement) iterator.next();
 				if (el.getParent() == DataManager.getModelRoot())
-					return false;
-				if (el instanceof CardOrganizer && ((CardOrganizer) el).hasChildren())
 					return false;
 			}
 			return true;

@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views.nav;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DND;
@@ -8,7 +10,9 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.PluginTransferData;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
 public class MagicNavDragListener implements DragSourceListener {
 	private ColumnViewer viewer;
@@ -31,7 +35,22 @@ public class MagicNavDragListener implements DragSourceListener {
 	 * Method declared on DragSourceListener
 	 */
 	public void dragStart(DragSourceEvent event) {
-		event.doit = !this.viewer.getSelection().isEmpty();
+		event.doit = isEnabled();
+	}
+
+	public boolean isEnabled() {
+		IStructuredSelection sel = (IStructuredSelection) this.viewer.getSelection();
+		if (sel.isEmpty())
+			return false;
+		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+			CardElement el = (CardElement) iterator.next();
+			ModelRoot root = DataManager.getModelRoot();
+			if (el.getParent() == root)
+				return false;
+			if (el == root.getDefaultLib() || el == root.getDeckContainer() || el == root.getCollectionsContainer())
+				return false;
+		}
+		return true;
 	}
 
 	/**

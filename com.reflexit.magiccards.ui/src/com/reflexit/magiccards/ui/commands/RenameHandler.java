@@ -15,6 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
@@ -22,10 +23,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -55,6 +57,23 @@ public class RenameHandler extends AbstractHandler {
 		boolean wasOpen = false;
 		if (f instanceof CardCollection) {
 			wasOpen = ((CardCollection) f).isOpen();
+		}
+		ModelRoot root = ModelRoot.getInstance();
+		if (f == root.getDefaultLib()) {
+			MessageDialog.openInformation(window.getShell(), "Cannot Rename", "'" + f
+					+ "' is a special collection which cannot be renamed or moved. "
+					+ "Move the cards from it using multi-select if you need to.");
+			return null;
+		}
+		if (f instanceof CardOrganizer) {
+			if (f == root.getDeckContainer() || f == root.getCollectionsContainer()) {
+				MessageDialog.openInformation(window.getShell(), "Cannot Rename", "This is special container which cannot be renamed");
+				return null;
+			}
+			MessageDialog.openInformation(window.getShell(), "Cannot Rename", "Rename of the containers is not implement. "
+					+ "To rename the container exit the App, "
+					+ "then go to your workspace and rename the directory in the file system, then restart the app.");
+			return null;
 		}
 		InputDialog inputDialog = new InputDialog(window.getShell(), "Rename", "New Name", f.getName(), null);
 		if (inputDialog.open() == Dialog.OK && !f.getName().equals(inputDialog.getValue())) {

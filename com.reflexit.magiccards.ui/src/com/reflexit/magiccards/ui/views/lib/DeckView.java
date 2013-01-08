@@ -319,7 +319,7 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
-		if (folder.isDisposed())
+		if (folder == null || folder.isDisposed())
 			return;
 		folder.getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -331,6 +331,11 @@ public class DeckView extends AbstractMyCardsView {
 					}
 				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 					// ignore
+				} else if (event.getType() == CardEvent.RENAME_CONTAINER) {
+					if (deck.getLocation().equals(((CardCollection) event.getSource()).getLocation())) {
+						reloadData();
+						// TODO does not work properly when moving to another container
+					}
 				} else {
 					// System.err.println(event);
 					updateActivePage();
