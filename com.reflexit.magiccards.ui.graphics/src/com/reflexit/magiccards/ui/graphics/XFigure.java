@@ -84,7 +84,8 @@ public class XFigure extends EventManager implements IDisposable {
 	}
 
 	public void dispose() {
-		image.dispose();
+		if (image != null)
+			image.dispose();
 		image = null;
 	}
 
