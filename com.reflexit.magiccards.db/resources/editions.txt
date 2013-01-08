@@ -48,13 +48,13 @@ Legions|LGN||February 2003|Expansion|Onslaught|
 Eighth Edition|8ED|8E|July 2003|Core||Modern
 Scourge|SCG|SC|May 2003|Expansion|Onslaught|
 Mirrodin|MRD|MR|October 2003|Expansion|Mirrodin|Modern
-Champions of Kamigawa|CHK||October 2004|Expansion|Kamigawa|Modern
-Darksteel|DST||February 2004|Expansion|Mirrodin|Modern
+Champions of Kamigawa|CHK|COK|October 2004|Expansion|Kamigawa|Modern
+Darksteel|DST|DS|February 2004|Expansion|Mirrodin|Modern
 Fifth Dawn|5DN|FD|June 2004|Expansion|Mirrodin|Modern
 Unhinged|UNH||November 2004|Un_set||
 Betrayers of Kamigawa|BOK||February 2005|Expansion|Kamigawa|Modern
 Saviors of Kamigawa|SOK||June 2005|Expansion|Kamigawa|Modern
-Ninth Edition|9ED||July 2005|Core||Modern
+Ninth Edition|9ED|9E|July 2005|Core||Modern
 Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern
 Guildpact|GPT||February 2006|Expansion|Ravnica|Modern
 Dissension|DIS||May 2006|Expansion|Ravnica|Modern
@@ -80,9 +80,9 @@ Duel Decks: Divine vs. Demonic|DDC|DVD|April 2009|Starter||
 Alara Reborn|ARB||April 2009|Expansion|Shards of Alara|Modern, Extended
 Magic 2010|M10||July 2009|Core||Modern, Extended
 Masters Edition III|ME3||September 2009|Online||
-Duel Decks: Garruk vs. Liliana|DDD||October 2009|Starter||
+Duel Decks: Garruk vs. Liliana|DDD|GVL|October 2009|Starter||
 Zendikar|ZEN||October 2009|Expansion|Zendikar|Modern, Extended
-Premium Deck Series: Slivers|H09||November 2009|Starter||
+Premium Deck Series: Slivers|H09|PDS|November 2009|Starter||
 Worldwake|WWK||February 2010|Expansion|Zendikar|Modern, Extended
 Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar|Modern, Extended
 Archenemy|ARC||June 2010|Starter||
@@ -108,7 +108,7 @@ Dark Ascension|DKA||April 2012|Expansion|Innistrad|Standard, Modern, Extended
 Duel Decks: Venser vs. Koth|DDI||May 2012|Starter||
 Premium Deck Series: Graveborn|PD3||May 2012|Starter||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad|Standard, Modern, Extended
-Planechase 2012 Edition|PC2||June 2012|Expansion||
+Planechase 2012 Edition|PC2|PCH|June 2012|Expansion||
 Magic 2013|M13||July 2012|Core||Standard, Modern, Extended
 Commander's Arsenal|CM1||November 2012|Starter|Commander|
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter||
