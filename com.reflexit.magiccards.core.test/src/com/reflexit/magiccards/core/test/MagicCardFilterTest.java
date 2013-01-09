@@ -126,7 +126,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void checkNotFound() {
-		assertTrue("Matching " + filter, filter.isFiltered(mcp));
+		assertTrue("Card matches the filter, but should not " + filter + " " + mcp, filter.isFiltered(mcp));
 	}
 
 	public void testNameBoo() {
@@ -175,6 +175,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testCOUNT() {
+		mcp.setCount(1);
 		genericFieldText(FilterField.COUNT, "3");
 	}
 
@@ -218,6 +219,7 @@ public class MagicCardFilterTest extends TestCase {
 
 	public void testOWNERSHIP() {
 		mcp.setOwn(true);
+		mcp.setCount(1);
 		genericFieldText(FilterField.OWNERSHIP, "false");
 	}
 
