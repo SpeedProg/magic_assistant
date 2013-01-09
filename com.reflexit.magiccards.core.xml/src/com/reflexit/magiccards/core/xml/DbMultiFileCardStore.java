@@ -187,13 +187,16 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	@Override
 	public List<IMagicCard> getCandidates(String name) {
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(2);
+		List cards = Collections.EMPTY_LIST;
 		if (name == null)
 			return cards;
 		for (Iterator iterator = iterator(); iterator.hasNext();) {
 			MagicCard a = (MagicCard) iterator.next();
 			String lname = a.getName();
 			if (name.equalsIgnoreCase(lname)) {
+				if (cards == Collections.EMPTY_LIST) {
+					cards = new ArrayList<IMagicCard>(2);
+				}
 				cards.add(a);
 			}
 		}
