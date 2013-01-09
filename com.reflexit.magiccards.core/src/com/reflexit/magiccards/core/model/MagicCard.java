@@ -265,7 +265,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	@Override
 	public String toString() {
-		return this.id + ": " + this.name;
+		return this.id + ": " + this.name + " [" + this.edition + "]";
 	}
 
 	private final static Pattern mpartnamePattern = Pattern.compile("(.*)//(.*)\\s*\\((.*)\\)");

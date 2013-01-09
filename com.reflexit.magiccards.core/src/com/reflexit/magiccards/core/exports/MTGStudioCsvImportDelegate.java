@@ -14,12 +14,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /*-
@@ -57,16 +60,25 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 
 	@Override
 	protected synchronized MagicCardPhysical createCard(List<String> list) {
-		String name = list.get(cardNameIndex);
-		if (name.length() == 0)
-			return null;
+		try {
+			if (list.get(cardNameIndex).length() == 0)
+				return null;
+			if (list.get(setIndex).length() == 0)
+				return null;
+		} catch (Exception e) {
+			MagicLogger.log(e);
+		}
+		// set standard fields
 		MagicCardPhysical x = super.createCard(list);
+		// special fields
 		try {
 			String comment = "";
-			if (list.get(foilIndex).equals("true"))
+			if (foilIndex >= 0 && list.get(foilIndex).equals("true"))
 				comment += "foil,";
-			comment += list.get(addedIndex);
-			x.setComment(comment);
+			if (addedIndex >= 0)
+				comment += list.get(addedIndex);
+			if (comment.length() > 0)
+				x.setComment(comment);
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
@@ -83,16 +95,63 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			if (nameByAbbr == null)
 				nameByAbbr = value;
 			card.setObjectByField(MagicCardField.SET, nameByAbbr);
-		} else if (field == MagicCardField.NAME && value.endsWith(")")) {
-			value = value.replaceAll(" \\(\\d+\\)$", "");
-			card.setObjectByField(field, value);
-		} else {
-			card.setObjectByField(field, value);
+			return;
+		} else if (field == MagicCardField.NAME) {
+			String name = value;
+			if (name.endsWith(")")) {
+				name = name.replaceAll(" \\(\\d+\\)$", "");
+			}
+			if (name.endsWith("]")) {
+				name = name.replaceAll(" \\[.*\\]$", "");
+			}
+			if (name.contains("Aether")) {
+				name = name.replaceAll("Ae", "Æ");
+			}
+			card.setObjectByField(field, name);
+			return;
 		}
+		card.setObjectByField(field, value);
+	}
+
+	@Override
+	protected void importCard(MagicCardPhysical card) {
+		super.importCard(card);
+		Object err = card.getError();
+		if (err != null && err.toString().startsWith("Name not found")) {
+			ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
+			if (lookupStore != null) {
+				String name = card.getName();
+				String tryName = name;
+				if (tryName.contains("/")) {
+					tryName = tryName.substring(0, tryName.indexOf('/'));
+				}
+				if (tryToFindName(card, lookupStore, tryName)) {
+					// System.err.println("^^^ resolved " + card + ": " + card.getError());
+				} else {
+					MagicLogger.log("NOT resolved " + card + ": " + err);
+				}
+			}
+		}
+	}
+
+	public boolean tryToFindName(MagicCardPhysical card, ICardStore lookupStore, String tryName) {
+		String set = card.getSet();
+		List<IMagicCard> candidates = ImportUtils.getCandidates(tryName, set, lookupStore, true);
+		if (candidates.size() > 0) {
+			IMagicCard base = candidates.get(0);
+			card.setError(null);
+			card.setObjectByField(MagicCardField.NAME, base.getName());
+			// card.setObjectByField(MagicCardField.ID, base.getCardId());
+			ImportUtils.updateCardReference(card);
+			if (card.getError() == null)
+				return true;
+		}
+		return false;
 	}
 
 	@Override
 	protected void setHeaderFields(List<String> list) {
+		cardNameIndex = setIndex = countIndex = foilIndex = addedIndex = -1;
 		fields = list.size();
 		int i = 0;
 		for (Iterator iterator = list.iterator(); iterator.hasNext(); i++) {
@@ -115,8 +174,10 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 	protected void setUpFields() {
 		ICardField fields[] = new ICardField[this.fields];
 		fields[cardNameIndex] = MagicCardField.NAME;
-		fields[countIndex] = MagicCardFieldPhysical.COUNT;
-		fields[setIndex] = MagicCardField.SET;
+		if (countIndex >= 0)
+			fields[countIndex] = MagicCardFieldPhysical.COUNT;
+		if (setIndex >= 0)
+			fields[setIndex] = MagicCardField.SET;
 		setFields(fields);
 	}
 }

@@ -15,9 +15,11 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -212,9 +214,12 @@ public class ImportUtils {
 	public static MagicCard updateCardReference(MagicCardPhysical card) {
 		if (card == null)
 			return null;
-		Edition ed = resolveSet(card.getSet());
-		if (ed != null)
+		String originalSet = card.getSet();
+		Edition ed = resolveSet(originalSet);
+		if (ed != null) {
 			card.getBase().setSet(ed.getName());
+			originalSet = ed.getName();
+		}
 		MagicCard base = card.getCard();
 		ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
 		if (lookupStore == null) {
@@ -223,20 +228,20 @@ public class ImportUtils {
 		}
 		MagicCard ref = findRef(base, lookupStore);
 		if (ref != null) {
-			if (card.getSet() == null || ref.getSet().equals(card.getSet())) {
+			if (originalSet == null || ref.getSet().equals(originalSet)) {
 				card.setMagicCard(ref);
 				return null;
-			} else if (card.getSet() != null) {
+			} else {
 				if (ed == null) {
 					MagicCard newCard = (MagicCard) ref.clone();
-					newCard.setSet(card.getSet());
+					newCard.setSet(originalSet);
 					newCard.setCardId(0);
 					card.setMagicCard(newCard);
 					card.setError("Set not found");
 					return newCard;
 				} else {
 					card.setMagicCard(ref);
-					card.setError("Card not found in the set");
+					card.setError("Name not found in the set: " + originalSet);
 				}
 			}
 		} else {
@@ -246,6 +251,7 @@ public class ImportUtils {
 	}
 
 	public static MagicCard findRef(MagicCard base, ICardStore lookupStore) {
+		// System.err.println("*** LOOKING FOR  " + base);
 		MagicCard ref = null;
 		// by id
 		if (base.getCardId() != 0) {
@@ -262,16 +268,95 @@ public class ImportUtils {
 				MagicCard a = (MagicCard) iterator.next();
 				String lname = a.getName();
 				if (name != null && name.equalsIgnoreCase(lname)) {
+					// System.err.println("*** name candidate " + a);
 					if (set != null && set.equals(a.getSet())) {
 						ref = a;
+						// System.err.println("*** set match " + a);
 						break;
 					}
-					if (ref == null || ref.getCardId() <= a.getCardId())
+					if (ref == null || ref.getCardId() <= a.getCardId()) {
 						ref = a;
+						// System.err.println("*** set candidate " + a);
+					}
 				}
 			}
 		}
 		return ref;
+	}
+
+	public static class LookupHash {
+		private ICardStore store;
+		private HashMap<String, List<IMagicCard>> mapNames = new HashMap<String, List<IMagicCard>>();
+		private HashMap<String, HashMap<String, IMagicCard>> mapSetNames = new HashMap<String, HashMap<String, IMagicCard>>();
+
+		public LookupHash(ICardStore lookupStore) {
+			this.store = lookupStore;
+			for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
+				MagicCard a = (MagicCard) iterator.next();
+				String lname = a.getName().toLowerCase(Locale.ENGLISH);
+				addToLookup(a, lname);
+			}
+		}
+
+		public void addToLookup(MagicCard a, String lname) {
+			addName(lname, a);
+			addSetName(a.getSet(), lname, a);
+		}
+
+		private void addName(String lname, MagicCard a) {
+			List<IMagicCard> x = mapNames.get(lname);
+			if (x == null) {
+				x = new ArrayList<IMagicCard>(1);
+				mapNames.put(lname, x);
+			}
+			x.add(a);
+		}
+
+		private void addSetName(String set, String lname, MagicCard a) {
+			HashMap<String, IMagicCard> setmap = mapSetNames.get(set);
+			if (setmap == null) {
+				setmap = new HashMap<String, IMagicCard>(50);
+				mapSetNames.put(set, setmap);
+			}
+			setmap.put(lname, a);
+		}
+	}
+
+	public static List<IMagicCard> getCandidates(String name, String set, ICardStore lookupStore, boolean stopatfirst) {
+		List cards = Collections.EMPTY_LIST;
+		if (name == null)
+			return cards;
+		for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
+			MagicCard a = (MagicCard) iterator.next();
+			if (set == null || set.equals(a.getSet())) {
+				boolean found = false;
+				String lname = a.getName().toLowerCase(Locale.ENGLISH);
+				name = name.toLowerCase(Locale.ENGLISH);
+				if (name.equals(lname)) {
+					found = true;
+				} else if (lname.contains("(")) {
+					if (lname.endsWith("(" + name + ")")) {
+						found = true;
+					} else if (lname.startsWith(name + " (")) {
+						found = true;
+					}
+				} else if (lname.length() != lname.getBytes().length) {
+					String patname = lname.replaceAll("[^a-z '-]", ".");
+					if (name.matches(patname)) {
+						found = true;
+					}
+				}
+				if (found) {
+					if (cards == Collections.EMPTY_LIST) {
+						cards = new ArrayList<IMagicCard>(2);
+					}
+					cards.add(a);
+					if (stopatfirst)
+						break;
+				}
+			}
+		}
+		return cards;
 	}
 
 	public static ImportResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header, Location loc,

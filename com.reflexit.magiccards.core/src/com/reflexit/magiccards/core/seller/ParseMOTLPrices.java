@@ -49,7 +49,6 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 		setIdMap.put("Revised Edition", "RV"); // web
 		setIdMap.put("Seventh Edition", "7th");
 		setIdMap.put("Shadowmoor", "SHM");
-		setIdMap.put("Shadowmoor", "SHM"); // web
 		setIdMap.put("Tenth Edition", "10th");
 		setIdMap.put("Urza's Destiny", "UD"); // web
 		setIdMap.put("Urza's Legacy", "UY"); // web
