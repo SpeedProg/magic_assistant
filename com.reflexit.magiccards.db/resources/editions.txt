@@ -30,7 +30,7 @@ Urza's Legacy|GU|ULG,UL|February 1999|Expansion|Urza|
 Classic Sixth Edition|6E|6ED|April 1999|Core||
 Portal Three Kingdoms|PK|PTK|May 1999|Starter||
 Urza's Destiny|CG|UDS,UD|June 1999|Expansion|Urza|
-Starter 1999|P3|S99,ST|July 1999|Starter||
+Starter 1999|P3|S99,ST,S1|July 1999|Starter||
 Mercadian Masques|MM|MMQ|October 1999|Expansion|Masques|
 Nemesis|NE|NMS|February 2000|Expansion|Masques|
 Prophecy|PR|PCY,PY|June 2000|Expansion|Masques|
@@ -66,7 +66,7 @@ Time Spiral|TSP||October 2006|Expansion|Time Spiral|Modern
 Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern
 Future Sight|FUT||May 2007|Expansion|Time Spiral|Modern
 Tenth Edition|10E||July 2007|Core||Modern
-Masters Edition|MED||September 2007|Online||
+Masters Edition|MED|DM|September 2007|Online||
 Lorwyn|LRW|LWN|October 2007|Expansion|Lorwyn|Modern
 Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter||
 Morningtide|MOR||February 2008|Expansion|Lorwyn|Modern
@@ -98,8 +98,8 @@ New Phyrexia|NPH||May 2011|Expansion|Scars of Mirrodin|Standard, Modern, Extende
 From the Vault: Dragons|DRB||August 2011|Starter||
 From the Vault: Legends|V11||August 2011|Starter||
 Magic 2012|M12||July 2011|Core||Standard, Modern, Extended
-Duel Decks: Ajani vs. Nicol Bolas|DDH|AVG|August 2011|Starter||
-Planechase|HOP||July 2011|Starter||
+Duel Decks: Ajani vs. Nicol Bolas|DDH|AVN|August 2011|Starter||
+Planechase|HOP|PCH|July 2011|Starter||
 From the Vault: Relics|V10|FVR|August 2011|Starter||
 From the Vault: Exiled|V09|FVE|August 2011|Starter||
 Magic: The Gathering-Commander|CMD||June 2011|Starter||
@@ -108,7 +108,7 @@ Dark Ascension|DKA||April 2012|Expansion|Innistrad|Standard, Modern, Extended
 Duel Decks: Venser vs. Koth|DDI||May 2012|Starter||
 Premium Deck Series: Graveborn|PD3||May 2012|Starter||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad|Standard, Modern, Extended
-Planechase 2012 Edition|PC2|PCH|June 2012|Expansion||
+Planechase 2012 Edition|PC2||June 2012|Expansion||
 Magic 2013|M13||July 2012|Core||Standard, Modern, Extended
 Commander's Arsenal|CM1||November 2012|Starter|Commander|
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter||
