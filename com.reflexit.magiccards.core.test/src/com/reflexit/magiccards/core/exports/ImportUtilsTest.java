@@ -11,11 +11,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.exports.ImportUtils.LookupHash;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
@@ -170,5 +172,11 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		ImportUtils.validateDbRecords(cards, errors);
 		assertEquals(3, errors.size());
 		System.err.println(errors);
+	}
+
+	public void testLookup() {
+		IDbCardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
+		LookupHash lookupHash = new ImportUtils.LookupHash(magicDBStore);
+		assertTrue(lookupHash.getCandidates("Junún Efreet").size() > 0);
 	}
 }
