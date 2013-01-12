@@ -61,6 +61,32 @@ public class DataManager {
 		reconcileAdd(lib);
 	}
 
+	public static void reconcile(IMagicCard card) {
+		ICardStore db = getMagicDBStore();
+		// Need to repair references to MagicCard instances
+		if (card instanceof MagicCardPhysical) {
+			MagicCardPhysical mcp = (MagicCardPhysical) card;
+			int id = mcp.getCardId();
+			CardGroup realcards = (CardGroup) links.get(id);
+			if (realcards != null) {
+				realcards.remove(mcp);
+			}
+			IMagicCard base = (IMagicCard) db.getCard(id);
+			if (base != null && base != mcp.getCard()) {
+				mcp.setMagicCard((MagicCard) base);
+			}
+			if (base == null) {
+				System.err.println("Cannot reconsile " + mcp);
+				base = mcp.getBase();
+			}
+			if (realcards == null) {
+				realcards = new CardGroup(MagicCardField.ID, base.getName());
+				links.put(id, realcards);
+			}
+			realcards.add(mcp);
+		}
+	}
+
 	public static void reconcileAdd(Iterable cards) {
 		ICardStore db = getMagicDBStore();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {

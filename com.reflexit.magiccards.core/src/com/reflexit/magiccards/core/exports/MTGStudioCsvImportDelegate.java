@@ -16,13 +16,16 @@ import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.exports.ImportError.Type;
+import com.reflexit.magiccards.core.exports.ImportUtils.LookupHash;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /*-
@@ -38,6 +41,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 	private int foilIndex = 3;
 	private int addedIndex;
 	private int fields = 13;
+	private LookupHash lookup;
 
 	@Override
 	public ReportType getType() {
@@ -54,8 +58,10 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 
 	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
+		lookup = new ImportUtils.LookupHash(DataManager.getCardHandler().getMagicDBStore());
 		setUpFields();
 		super.doRun(monitor);
+		lookup = null;
 	}
 
 	@Override
@@ -115,28 +121,39 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 
 	@Override
 	protected void importCard(MagicCardPhysical card) {
-		super.importCard(card);
+		Edition ed = ImportUtils.resolveSet(card.getSet());
+		if (ed != null) {
+			card.getBase().setSet(ed.getName());
+		}
+		List<IMagicCard> candidates = lookup.getCandidates(card.getName(), card.getSet());
+		if (candidates.size() > 0) {
+			IMagicCard base = candidates.get(0);
+			card.setMagicCard((MagicCard) base);
+			importResult.add(card);
+		} else {
+			super.importCard(card);
+			// System.err.println(card);
+		}
 		Object err = card.getError();
-		if (err != null && err.toString().startsWith("Name not found")) {
-			ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
-			if (lookupStore != null) {
-				String name = card.getName();
-				String tryName = name;
-				if (tryName.contains("/")) {
-					tryName = tryName.substring(0, tryName.indexOf('/'));
-				}
-				if (tryToFindName(card, lookupStore, tryName)) {
-					// System.err.println("^^^ resolved " + card + ": " + card.getError());
-				} else {
-					MagicLogger.log("NOT resolved " + card + ": " + err);
-				}
+		if (err instanceof ImportError
+				&& (((ImportError) err).getType().equals(Type.NAME_NOT_FOUND_IN_DB) || ((ImportError) err).getType().equals(
+						Type.NAME_NOT_FOUND_IN_SET))) {
+			String name = card.getName();
+			String tryName = name;
+			if (tryName.contains("/")) {
+				tryName = tryName.substring(0, tryName.indexOf('/'));
+			}
+			if (tryToFindName(card, tryName)) {
+				// System.err.println("^^^ resolved " + card + ": " + card.getError());
+			} else {
+				MagicLogger.log("NOT resolved " + card + ": " + err);
 			}
 		}
 	}
 
-	public boolean tryToFindName(MagicCardPhysical card, ICardStore lookupStore, String tryName) {
+	public boolean tryToFindName(MagicCardPhysical card, String tryName) {
 		String set = card.getSet();
-		List<IMagicCard> candidates = ImportUtils.getCandidates(tryName, set, lookupStore, true);
+		List<IMagicCard> candidates = lookup.getCandidates(tryName, set);
 		if (candidates.size() > 0) {
 			IMagicCard base = candidates.get(0);
 			card.setError(null);

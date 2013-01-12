@@ -88,7 +88,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 				try {
 					setFieldValue(card, f, i, value.trim());
 				} catch (Exception e) {
-					card.setError("Cannot set to " + f + ": " + e.getMessage());
+					card.setError(ImportError.createFieldNotSetError(f, e));
 				}
 			}
 		}

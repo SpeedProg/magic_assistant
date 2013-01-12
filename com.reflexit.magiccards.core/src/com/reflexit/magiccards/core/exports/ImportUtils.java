@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
@@ -223,7 +225,7 @@ public class ImportUtils {
 		MagicCard base = card.getCard();
 		ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
 		if (lookupStore == null) {
-			card.setError("DB not found");
+			card.setError(ImportError.NO_DB_ERROR);
 			return base;
 		}
 		MagicCard ref = findRef(base, lookupStore);
@@ -237,15 +239,15 @@ public class ImportUtils {
 					newCard.setSet(originalSet);
 					newCard.setCardId(0);
 					card.setMagicCard(newCard);
-					card.setError("Set not found");
+					card.setError(ImportError.SET_NOT_FOUND_ERROR);
 					return newCard;
 				} else {
 					card.setMagicCard(ref);
-					card.setError("Name not found in the set: " + originalSet);
+					card.setError(ImportError.NAME_NOT_FOUND_IN_SET_ERROR);
 				}
 			}
 		} else {
-			card.setError("Name not found in DB");
+			card.setError(ImportError.NAME_NOT_FOUND_IN_DB_ERROR);
 		}
 		return card.getBase();
 	}
@@ -286,77 +288,75 @@ public class ImportUtils {
 
 	public static class LookupHash {
 		private ICardStore store;
-		private HashMap<String, List<IMagicCard>> mapNames = new HashMap<String, List<IMagicCard>>();
-		private HashMap<String, HashMap<String, IMagicCard>> mapSetNames = new HashMap<String, HashMap<String, IMagicCard>>();
+		private static String ALL = "All";
+		private HashMap<String, HashMap<String, List<IMagicCard>>> mapSetNames = new HashMap<String, HashMap<String, List<IMagicCard>>>();
+		private Pattern brackers = Pattern.compile("(.*) \\((.*)\\)");
 
 		public LookupHash(ICardStore lookupStore) {
 			this.store = lookupStore;
-			for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
-				MagicCard a = (MagicCard) iterator.next();
-				String lname = a.getName().toLowerCase(Locale.ENGLISH);
-				addToLookup(a, lname);
-			}
+			mapSetNames.put(ALL, new HashMap<String, List<IMagicCard>>());
+			if (lookupStore != null)
+				for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
+					MagicCard a = (MagicCard) iterator.next();
+					String lname = a.getName().toLowerCase(Locale.ENGLISH);
+					addToLookup(a, lname);
+					if (lname.contains("(")) {
+						Matcher m = brackers.matcher(lname);
+						if (m.matches()) {
+							String one = m.group(1);
+							String two = m.group(2);
+							addToLookup(a, one);
+							addToLookup(a, two);
+						}
+					} else if (lname.length() != lname.getBytes().length) {
+						String x = decompose(lname);
+						x = x.replaceAll("æ", "ae");
+						// System.err.println(lname + "->" + x);
+						addToLookup(a, x);
+					}
+				}
 		}
 
 		public void addToLookup(MagicCard a, String lname) {
-			addName(lname, a);
+			addName(lname, a, mapSetNames.get(ALL));
 			addSetName(a.getSet(), lname, a);
 		}
 
-		private void addName(String lname, MagicCard a) {
-			List<IMagicCard> x = mapNames.get(lname);
+		private void addName(String lname, MagicCard a, HashMap<String, List<IMagicCard>> map) {
+			List<IMagicCard> x = map.get(lname);
 			if (x == null) {
 				x = new ArrayList<IMagicCard>(1);
-				mapNames.put(lname, x);
+				map.put(lname, x);
 			}
 			x.add(a);
 		}
 
-		private void addSetName(String set, String lname, MagicCard a) {
-			HashMap<String, IMagicCard> setmap = mapSetNames.get(set);
+		private void addSetName(String set, String name, MagicCard a) {
+			HashMap<String, List<IMagicCard>> setmap = mapSetNames.get(set);
 			if (setmap == null) {
-				setmap = new HashMap<String, IMagicCard>(50);
+				setmap = new HashMap<String, List<IMagicCard>>(50);
 				mapSetNames.put(set, setmap);
 			}
-			setmap.put(lname, a);
+			addName(name, a, setmap);
 		}
-	}
 
-	public static List<IMagicCard> getCandidates(String name, String set, ICardStore lookupStore, boolean stopatfirst) {
-		List cards = Collections.EMPTY_LIST;
-		if (name == null)
-			return cards;
-		for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
-			MagicCard a = (MagicCard) iterator.next();
-			if (set == null || set.equals(a.getSet())) {
-				boolean found = false;
-				String lname = a.getName().toLowerCase(Locale.ENGLISH);
-				name = name.toLowerCase(Locale.ENGLISH);
-				if (name.equals(lname)) {
-					found = true;
-				} else if (lname.contains("(")) {
-					if (lname.endsWith("(" + name + ")")) {
-						found = true;
-					} else if (lname.startsWith(name + " (")) {
-						found = true;
-					}
-				} else if (lname.length() != lname.getBytes().length) {
-					String patname = lname.replaceAll("[^a-z '-]", ".");
-					if (name.matches(patname)) {
-						found = true;
-					}
-				}
-				if (found) {
-					if (cards == Collections.EMPTY_LIST) {
-						cards = new ArrayList<IMagicCard>(2);
-					}
-					cards.add(a);
-					if (stopatfirst)
-						break;
-				}
-			}
+		public static String decompose(String s) {
+			return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 		}
-		return cards;
+
+		public List<IMagicCard> getCandidates(String name) {
+			return getCandidates(name, ALL);
+		}
+
+		public List<IMagicCard> getCandidates(String name, String set) {
+			HashMap<String, List<IMagicCard>> map = mapSetNames.get(set);
+			if (map == null)
+				return Collections.EMPTY_LIST;
+			List<IMagicCard> list = map.get(name.toLowerCase(Locale.ENGLISH));
+			if (list == null)
+				return Collections.EMPTY_LIST;
+			return list;
+		}
 	}
 
 	public static ImportResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header, Location loc,
