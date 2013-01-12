@@ -4,28 +4,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.CellLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -36,14 +30,19 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.ui.views.TableViewerManager;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.SetColumn;
 import com.reflexit.magiccards.ui.widgets.ComboStringEditingSupport;
 
 public class DeckImportPreviewPage extends WizardPage {
 	private static final Object[] EMPTY_ARRAY = new Object[] {};
-	private TableViewer tableViewer;
+	private TableViewerManager manager;
 	private Text text;
 	protected ImportResult previewResult;
 	private EditingSupport setStringEditingSupport;
@@ -120,47 +119,18 @@ public class DeckImportPreviewPage extends WizardPage {
 			startingPage.performImport(true);
 			ImportResult result = (ImportResult) wizard.getData();
 			previewResult = result;
-			TableColumn[] columns = tableViewer.getTable().getColumns();
-			for (TableColumn tableColumn : columns) {
-				tableColumn.dispose();
-			}
-			TableColumn cole = new TableColumn(tableViewer.getTable(), SWT.NONE);
-			cole.setWidth(100);
-			cole.setText("Errors");
-			if (result.getFields() != null)
-				for (ICardField f : result.getFields()) {
-					TableColumn col = new TableColumn(tableViewer.getTable(), SWT.NONE);
-					col.setWidth(100);
-					if (f != null) {
-						col.setText(f.toString());
-						if (f == MagicCardField.SET) {
-							TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, col);
-							tableViewerColumn.setEditingSupport(setComboEditingSupport);
-							tableViewerColumn.setLabelProvider(new CellLabelProvider() {
-								@Override
-								public void update(ViewerCell cell) {
-									IMagicCard card = (IMagicCard) cell.getElement();
-									if (card.getCardId() == 0)
-										cell.setText("[NEW] " + card.getSet());
-									else
-										cell.setText(card.getSet());
-								}
-							});
-						} else if (f == MagicCardField.NAME) {
-							TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, col);
-							tableViewerColumn.setEditingSupport(nameEditingSupport);
-							tableViewerColumn.setLabelProvider(new CellLabelProvider() {
-								@Override
-								public void update(ViewerCell cell) {
-									IMagicCard card = (IMagicCard) cell.getElement();
-									cell.setText(card.getName());
-								}
-							});
-						}
-					}
+			ICardField[] fields = result.getFields();
+			if (fields != null) {
+				ColumnCollection colls = manager.getColumnsCollection();
+				String prefColumns = colls.getColumn(MagicCardFieldPhysical.ERROR).getColumnFullName();
+				for (int i = 0; i < fields.length; i++) {
+					ICardField field = fields[i];
+					prefColumns += "," + colls.getColumn(field).getColumnFullName();
 				}
+				manager.updateColumns(prefColumns);
+			}
 			if (result.getList().size() > 0)
-				tableViewer.setInput(result.getList());
+				manager.updateViewer(result.getList());
 			if (result.getError() != null)
 				setErrorMessage("Cannot parse data file: " + result.getError().getMessage());
 			else if (result.getList().size() == 0)
@@ -177,31 +147,46 @@ public class DeckImportPreviewPage extends WizardPage {
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL);
 		ld.heightHint = text.getLineHeight() * 5;
 		text.setLayoutData(ld);
-		tableViewer = new TableViewer(comp, SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-		tableViewer.setContentProvider(new IStructuredContentProvider() {
-			public Object[] getElements(Object inputElement) {
-				if (inputElement instanceof Collection) {
-					return ((Collection) inputElement).toArray();
-				}
-				if (inputElement instanceof ImportResult) {
-					List values = ((ImportResult) inputElement).getList();
-					return values.toArray();
-				}
-				return EMPTY_ARRAY;
-			}
+		manager = new TableViewerManager(null) {
+			@Override
+			protected ColumnCollection doGetColumnCollection(String prefPageId) {
+				return new MagicColumnCollection(prefPageId) {
+					@Override
+					protected GroupColumn createGroupColumn() {
+						return new GroupColumn() {
+							@Override
+							public EditingSupport getEditingSupport(ColumnViewer viewer) {
+								return nameEditingSupport;
+							}
+						};
+					}
 
-			public void dispose() {
-				// TODO Auto-generated method stub
-			}
+					@Override
+					protected SetColumn createSetColumn() {
+						return new SetColumn() {
+							@Override
+							public EditingSupport getEditingSupport(ColumnViewer viewer) {
+								return setComboEditingSupport;
+							}
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				// TODO Auto-generated method stub
+							@Override
+							public String getText(Object element) {
+								IMagicCard card = (IMagicCard) element;
+								if (card.getCardId() == 0)
+									return ("[NEW] " + card.getSet());
+								else
+									return (card.getSet());
+							}
+						};
+					}
+				};
 			}
-		});
-		tableViewer.setLabelProvider(new TabLabelProvder());
-		tableViewer.getTable().setHeaderVisible(true);
-		setComboEditingSupport = new ComboStringEditingSupport(tableViewer) {
+		};
+		Control control = manager.createContents(comp);
+		GridData tld = new GridData(GridData.FILL_BOTH);
+		tld.widthHint = 100 * 5;
+		control.setLayoutData(tld);
+		setComboEditingSupport = new ComboStringEditingSupport(manager.getViewer()) {
 			@Override
 			protected boolean canEdit(Object element) {
 				if (element instanceof MagicCardPhysical)
@@ -250,11 +235,13 @@ public class DeckImportPreviewPage extends WizardPage {
 			protected void setValue(Object element, Object value) {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
+					final String oldSet = card.getSet();
 					// set
 					List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 					String set = (String) value;
 					if (set.startsWith("[NEW] ")) {
 						set = set.substring(6);
+						card.getBase().setSet(set);
 					} else
 						for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 							IMagicCard iMagicCard = (IMagicCard) iterator.next();
@@ -264,11 +251,11 @@ public class DeckImportPreviewPage extends WizardPage {
 								break;
 							}
 						}
-					tableViewer.refresh(true);
+					manager.getViewer().refresh(true);
 				}
 			}
 		};
-		nameEditingSupport = new EditingSupport(tableViewer) {
+		nameEditingSupport = new EditingSupport(manager.getViewer()) {
 			@Override
 			protected boolean canEdit(Object element) {
 				if (element instanceof MagicCardPhysical)
@@ -279,7 +266,7 @@ public class DeckImportPreviewPage extends WizardPage {
 
 			@Override
 			protected CellEditor getCellEditor(final Object element) {
-				TextCellEditor editor = new TextCellEditor((Composite) tableViewer.getControl(), SWT.NONE);
+				TextCellEditor editor = new TextCellEditor((Composite) manager.getViewer().getControl(), SWT.NONE);
 				return editor;
 			}
 
@@ -300,7 +287,7 @@ public class DeckImportPreviewPage extends WizardPage {
 					base.setCardId(0);
 					card.setMagicCard(base);
 					ImportUtils.updateCardReference(card);
-					tableViewer.refresh(true);
+					manager.getViewer().refresh(true);
 				}
 			}
 		};

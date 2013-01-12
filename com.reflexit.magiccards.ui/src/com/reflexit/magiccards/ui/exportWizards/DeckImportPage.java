@@ -56,6 +56,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -153,6 +154,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 					st.close();
 			}
 			return true;
+		} catch (InvocationTargetException e) {
+			displayErrorDialog(e.getCause());
 		} catch (Exception e) {
 			displayErrorDialog(e);
 		}
@@ -298,12 +301,21 @@ public class DeckImportPage extends WizardDataTransferPage {
 		group.setLayoutData(GridDataFactory.fillDefaults().create());
 		group.setText("Import into");
 		group.setLayout(new GridLayout(3, false));
+		SelectionAdapter updateListener = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updatePageCompletion();
+				updateWidgetEnablements();
+			}
+		};
 		createNewDeck = new Button(group, SWT.RADIO);
 		createNewDeck.setText("Create a new deck");
 		createNewDeck.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
 		createNewDeck.setSelection(true);
+		createNewDeck.addSelectionListener(updateListener);
 		importIntoExisting = new Button(group, SWT.RADIO);
 		importIntoExisting.setText("Import into existing deck/collection");
+		importIntoExisting.addSelectionListener(updateListener);
 		final Text text = new Text(group, SWT.BORDER);
 		text.setEditable(false);
 		text.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).create());
@@ -330,6 +342,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		importIntoDb.setText("Import cards info into local MTG database (do not create new deck or collection)");
 		importIntoDb.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
 		importIntoDb.setSelection(false);
+		importIntoDb.addSelectionListener(updateListener);
 	}
 
 	protected void setFileName(final String string) {
@@ -549,9 +562,17 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateDestinationGroup() {
-		if (element == null && importIntoExisting.getSelection()) {
-			setMessage("Select a deck or collection to import data into or select to import to a new deck.");
-			return false;
+		if (importIntoExisting.getSelection()) {
+			if (element == null) {
+				setErrorMessage("Select a deck or collection to import data into or select to import to a new deck.");
+				return false;
+			}
+			Location loc = getSelectedLocation();
+			CardElement cont = DataManager.getModelRoot().findElement(loc.toString());
+			if (cont instanceof CardOrganizer) {
+				setErrorMessage("Invalid location selection to import cards into. Select a deck or collection");
+				return false;
+			}
 		}
 		return true;
 	}
@@ -559,7 +580,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected boolean validateSourceGroup() {
 		if (clipboard == false && ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0))) {
-			setMessage("Imput file is not selected");
+			setErrorMessage("Imput file is not selected");
 			return false;
 		}
 		return true;

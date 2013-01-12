@@ -17,6 +17,6 @@ public class CollectorColumnCollection extends MagicColumnCollection {
 
 	@Override
 	protected GroupColumn createGroupColumn() {
-		return new GroupColumn(false, true);
+		return new GroupColumn(false, true, false);
 	}
 }

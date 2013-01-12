@@ -4,8 +4,12 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public abstract class AbstractColumn extends ColumnLabelProvider {
 	protected final ICardField dataIndex;
@@ -90,5 +94,19 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	public void updateOnEdit(final ColumnViewer viewer, IMagicCard card) {
+		Object input = viewer.getInput();
+		if (input instanceof IFilteredCardStore) {
+			IFilteredCardStore target = (IFilteredCardStore) input;
+			ICardStore<IMagicCard> cardStore = target.getCardStore();
+			DataManager.reconcile();
+			// update
+			cardStore.update(card);
+		} else {
+			// update
+			viewer.refresh(true);
+		}
 	}
 }

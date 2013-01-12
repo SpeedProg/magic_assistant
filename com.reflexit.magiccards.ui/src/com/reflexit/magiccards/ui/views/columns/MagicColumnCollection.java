@@ -13,7 +13,10 @@ public class MagicColumnCollection extends ColumnCollection {
 
 	@Override
 	protected void createColumns() {
-		String dbPrefId = MagicDbViewPreferencePage.class.getName();
+		boolean myCards = true;
+		if (id != null && id.equals(MagicDbViewPreferencePage.class.getName())) {
+			myCards = false;
+		}
 		this.columns.add(createGroupColumn());
 		this.columns.add(new IdColumn());
 		this.columns.add(new CostColumn());
@@ -21,23 +24,17 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
 		this.columns.add(new PowerColumn(MagicCardField.TOUGHNESS, "T", "Toughness"));
 		this.columns.add(new OracleTextColumn());
-		this.columns.add(new SetColumn());
+		this.columns.add(createSetColumn());
 		this.columns.add(new GenColumn(MagicCardField.RARITY, "Rarity"));
 		this.columns.add(new GenColumn(MagicCardField.CTYPE, "Color Type"));
-		boolean myCards = true;
-		if (id != null && id.equals(dbPrefId)) {
-			myCards = false;
-		}
 		if (myCards) {
 			this.columns.add(new CountColumn());
 			this.columns.add(new LocationColumn());
-		}
-		this.columns.add(new ColorColumn());
-		if (myCards) {
 			this.columns.add(new OwnershipColumn());
 			this.columns.add(new CommentColumn());
 			this.columns.add(new PriceColumn());
 		}
+		this.columns.add(new ColorColumn());
 		this.columns.add(new SellerPriceColumn());
 		this.columns.add(new CommunityRatingColumn());
 		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
@@ -50,6 +47,13 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new TextColumn());
 		columns.add(new OwnCountColumn());
 		columns.add(new OwnUniqueColumn());
+		if (myCards) {
+			columns.add(new GenColumn(MagicCardFieldPhysical.ERROR, "Error"));
+		}
+	}
+
+	protected SetColumn createSetColumn() {
+		return new SetColumn();
 	}
 
 	protected GroupColumn createGroupColumn() {

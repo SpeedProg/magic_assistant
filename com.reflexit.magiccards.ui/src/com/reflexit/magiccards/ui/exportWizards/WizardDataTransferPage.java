@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
+import com.reflexit.magiccards.ui.MagicUIActivator;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -397,6 +399,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements Liste
 	 *            Throwable
 	 */
 	protected void displayErrorDialog(Throwable exception) {
+		MagicUIActivator.log(exception);
 		String message = exception.getMessage();
 		// Some system exceptions have no message
 		if (message == null) {

@@ -129,8 +129,23 @@ public abstract class ColumnCollection {
 		}
 	}
 
+	/**
+	 * Get column by its name
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public AbstractColumn getColumn(String key) {
 		return order.get(key);
+	}
+
+	public AbstractColumn getColumn(ICardField field) {
+		for (Iterator<AbstractColumn> iterator = order.values().iterator(); iterator.hasNext();) {
+			AbstractColumn column = iterator.next();
+			if (column.getDataField() == field)
+				return column;
+		}
+		return null;
 	}
 
 	public void moveColumnOnTop(AbstractColumn acolumn) {

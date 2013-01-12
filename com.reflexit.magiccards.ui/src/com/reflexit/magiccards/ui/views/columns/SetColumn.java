@@ -12,8 +12,6 @@ import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.widgets.ComboStringEditingSupport;
 
@@ -93,8 +91,6 @@ public class SetColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					// set
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 					String set = (String) value;
 					for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
@@ -104,10 +100,7 @@ public class SetColumn extends GenColumn {
 							break;
 						}
 					}
-					DataManager.reconcile();
-					// update
-					cardStore.update(card);
-					// viewer.update(element, null);
+					updateOnEdit(viewer, card);
 				}
 			}
 		};
