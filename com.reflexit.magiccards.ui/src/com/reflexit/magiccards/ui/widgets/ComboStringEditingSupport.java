@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
 
 public abstract class ComboStringEditingSupport extends EditingSupport {
@@ -18,8 +19,12 @@ public abstract class ComboStringEditingSupport extends EditingSupport {
 		String[] sets = getItems(element);
 		if (sets == null)
 			return null;
-		CellEditor editor = new ComboBoxCellEditor((Composite) getViewer().getControl(), sets, SWT.READ_ONLY);
+		CellEditor editor = new ComboBoxCellEditor((Composite) getViewer().getControl(), sets, getStyle());
 		return editor;
+	}
+
+	public int getStyle() {
+		return SWT.READ_ONLY;
 	}
 
 	public abstract String[] getItems(final Object element);
@@ -42,7 +47,13 @@ public abstract class ComboStringEditingSupport extends EditingSupport {
 	protected void saveCellEditorValue(CellEditor cellEditor, ViewerCell cell) {
 		Object value = cellEditor.getValue();
 		try {
-			String set = ((ComboBoxCellEditor) cellEditor).getItems()[(Integer) value];
+			int index = (Integer) value;
+			String set = "";
+			if (index < 0) {
+				set = ((CCombo) ((ComboBoxCellEditor) cellEditor).getControl()).getText();
+			} else {
+				set = ((ComboBoxCellEditor) cellEditor).getItems()[index];
+			}
 			setValue(cell.getElement(), set);
 		} catch (Exception e) {
 			e.printStackTrace();
