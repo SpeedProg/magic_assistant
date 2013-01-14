@@ -185,6 +185,8 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 				addedIndex = i;
 			}
 		}
+		if (cardNameIndex < 0)
+			throw new IllegalArgumentException("Name field is not found. Wrong format?");
 		setUpFields();
 	}
 
