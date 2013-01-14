@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -366,10 +370,10 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	protected void editSelected() {
-		IStructuredSelection selection = (IStructuredSelection) getSelectionProvider().getSelection();
+		final IStructuredSelection selection = (IStructuredSelection) getSelectionProvider().getSelection();
 		if (selection.isEmpty())
 			return;
-		PreferenceStore store = new PreferenceStore();
+		final PreferenceStore store = new PreferenceStore();
 		boolean first = true;
 		boolean any = false;
 		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
@@ -400,16 +404,28 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		}
 		if (any) {
 			new EditCardsPropertiesDialog(getViewSite().getShell(), store).open();
-			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-				MagicCardPhysical card = (MagicCardPhysical) iterator.next();
-				editCard(card, store);
-			}
+			new Job("Updating edited cards") {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					int i = 0;
+					int len = selection.size();
+					for (Iterator iterator = selection.iterator(); iterator.hasNext(); i++) {
+						MagicCardPhysical card = (MagicCardPhysical) iterator.next();
+						editCard(card, store, false);
+						if (i % 1000 == 0 || i == len - 1) {
+							getFilteredStore().getCardStore().update(card); // XXX
+						}
+					}
+					DataManager.reconcile();
+					return Status.OK_STATUS;
+				}
+			}.schedule();
 		}
 	}
 
 	private final static String UNCHANGED = EditCardsPropertiesDialog.UNCHANGED;
 
-	private void editCard(MagicCardPhysical card, PreferenceStore store) {
+	private void editCard(MagicCardPhysical card, PreferenceStore store, boolean update) {
 		boolean modified = false;
 		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
 		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
@@ -421,7 +437,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			card.setSpecial(especial);
 			modified = true;
 		}
-		if (modified) {
+		if (modified && update) {
 			getFilteredStore().getCardStore().update(card);
 		}
 	}
