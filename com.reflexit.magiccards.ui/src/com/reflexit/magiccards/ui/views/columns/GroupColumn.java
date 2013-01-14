@@ -139,6 +139,7 @@ public class GroupColumn extends GenColumn {
 					base.setName((String) value);
 					base.setCardId(0);
 					card.setMagicCard(base);
+					card.setError(null);
 					ImportUtils.updateCardReference(card);
 					Object input = getViewer().getInput();
 					if (input instanceof IFilteredCardStore) {
