@@ -67,6 +67,8 @@ class MagicCardComparator implements Comparator {
 		Object a1 = c1.getObjectByField(sort);
 		Object a2 = c2.getObjectByField(sort);
 		int d = 0;
+		if (a1 == a2)
+			return 0;
 		if (sort == MagicCardField.COST) {
 			a1 = Colors.getColorSort((String) a1);
 			a2 = Colors.getColorSort((String) a2);
