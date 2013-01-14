@@ -76,6 +76,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	protected MagicCardPhysical createDefaultCard() {
 		MagicCardPhysical card = new MagicCardPhysical(new MagicCard(), getLocation());
+		card.setOwn(true);
 		return card;
 	}
 
