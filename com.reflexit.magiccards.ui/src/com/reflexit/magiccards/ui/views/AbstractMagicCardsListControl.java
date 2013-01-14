@@ -396,7 +396,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public void updateSingle(ICard source) {
 		getViewer().update(source, null);
 		updateStatus();
-		getSelectionProvider().setSelection(new StructuredSelection(source));
+		// getSelectionProvider().setSelection(new StructuredSelection(source));
 	}
 
 	private Composite createStatusLine(Composite composite) {
