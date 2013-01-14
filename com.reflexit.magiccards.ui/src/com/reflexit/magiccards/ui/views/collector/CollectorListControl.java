@@ -9,6 +9,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -68,6 +69,9 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 			Object object = iterator.next();
 			if (object instanceof MagicCardPhysical) {
 				if (((IMagicCardPhysical) object).isOwn())
+					count++;
+			} else if (object instanceof MagicCard) {
+				if (((MagicCard) object).getOwnCount() > 0)
 					count++;
 			}
 		}
