@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 
 import com.reflexit.magiccards.core.model.ICardField;
 
-class ImportError {
+public class ImportError {
 	enum Type {
 		SET_NOT_FOUND("Set not found"),
 		NAME_NOT_FOUND_IN_SET("Name not found in the set"),
