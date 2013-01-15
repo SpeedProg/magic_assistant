@@ -17,10 +17,10 @@ Path=$PATH
 export PATH
 
 MAGIC_DIR=/C/Develop/magic
-BUILD_DIR=$MAGIC_DIR/build
+BUILD_DIR=${BUILD_DIR:-$MAGIC_DIR/build}
 INSTALL_DIR=$MAGIC_DIR/install
 EXPORT_DIR=$MAGIC_DIR/export
-WORKSPACE=$MAGIC_DIR/workspace
+MA_WORKSPACE=$MAGIC_DIR/workspace
 LOG=$BUILD_DIR/log
 SF_USER=elaskavaia
 SF_PRIVATE_KEY=$MAGIC_DIR/.ssh/id_rsa
@@ -33,26 +33,29 @@ UPDATE_SITE=${UPDATE_SITE:-0}
 UPDATE_SITE_FULL=${UPDATE_SITE_FULL:-0}
 UPDATE_DOCS=${UPDATE_DOCS:-0}
 BUILD=${BUILD:-1}
-VERSION=`grep Bundle-Version $WORKSPACE/com.reflexit.magiccards-rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'` 
+VERSION=`grep Bundle-Version $MA_WORKSPACE/com.reflexit.magiccards-rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'` 
 RELEASE=$VERSION
 if [ "$QUAL" != "" ]; then
   RELEASE=$VERSION.$QUAL
 fi
  
-mkdir -p /c/tmp/w
+
 echo Building $RELEASE
+echo $BUILD_DIR
+
+
 if [ "$BUILD" -eq 1 ]; then
 
 RESULT="$BUILD_DIR/result/com.reflexit.magicassistant.bucky_1.0.0-eclipse.feature"
 
-
 echo Bucky build $TIMESTAMP
 $MAGIC_DIR/Bucky/buckminster/buckminster -data $BUILD_DIR/bucky_workspace/ \
-  -S $WORKSPACE/com.reflexit.magicassistant.bucky/build.script \
+  -S $MA_WORKSPACE/com.reflexit.magicassistant.bucky/build.script \
   -vmargs \
-  -Dorig.workspace.root=$WORKSPACE \
+  -Dorig.workspace.root=$MA_WORKSPACE \
   -Dsource.root=$BUILD_DIR/sources \
-  -Dbuckyprops=$WORKSPACE/com.reflexit.magicassistant.bucky/buckminster.properties \
+  -Dmagic.build=$BUILD_DIR \
+  -Dbuckyprops=$MA_WORKSPACE/com.reflexit.magicassistant.bucky/buckminster.properties \
   -Dbuild.id=${TIMESTAMP} \
   -Dbuckminster.build.timestamp=${TIMESTAMP} \
   -Dma.version=${VERSION} -Dma.release=${RELEASE} -Dmagic.build=${BUILD_DIR} 2>&1 | tee $LOG 
@@ -62,13 +65,15 @@ test $? -eq 0 || { grep -i Error $LOG; die Build failed see $LOG; }
 echo Creating self extracting archive
 (
 cd $RESULT
-mkdir repack
+mkdir -p repack
 cd repack
-unzip ../magicassistant*win32*x86.zip
-cd MagicAssistant
+type unzip
+rm -rf /c/tmp/w
+unzip -o ../magicassistant*win32*x86.zip -d /c/tmp/w
+cd /c/tmp/w/MagicAssistant
 cp -r "/C/Program Files (x86)/Java/jre7u9" jre 
 cd ..
-7z.exe a -t7z -mx5 -sfx7z.sfx ../magicassistant-intaller-$RELEASE-win32.exe MagicAssistant
+7z.exe a -t7z -mx5 -sfx7z.sfx $RESULT/magicassistant-intaller-$RELEASE-win32.exe MagicAssistant
 )
 
 
@@ -82,7 +87,7 @@ rm -rf "$EXPORT_DIR/$RELEASE"
 mkdir "$EXPORT_DIR/$RELEASE"
 cp $RESULT/magicassistant*.zip $EXPORT_DIR/$RELEASE/
 cp $RESULT/magicassistant*.exe $EXPORT_DIR/$RELEASE/
-cp $WORKSPACE/com.reflexit.magiccards-metadata/README.TXT $EXPORT_DIR/$RELEASE/
+cp $MA_WORKSPACE/com.reflexit.magiccards-metadata/README.TXT $EXPORT_DIR/$RELEASE/
 rm -rf $EXPORT_DIR/update
 mkdir $EXPORT_DIR/update
 cp -r $RESULT/site.p2 $EXPORT_DIR/update/1.2
@@ -135,7 +140,7 @@ fi
 
 if [ "$UPDATE_DOCS" -eq 1 ]; then
 	echo "Uploading docs for $RELEASE..."
-	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.help/toc.html"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
-	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.help/html/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
-	#$SCP -r -batch -i "$SF_PRIVATE_KEY" "$WORKSPACE/com.reflexit.magiccards.ui/icons/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.ui/icons/
+	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$MA_WORKSPACE/com.reflexit.magiccards.help/toc.html"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
+	"$SCP" -v -r -i "$SF_PRIVATE_KEY" "$MA_WORKSPACE/com.reflexit.magiccards.help/html/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.help/
+	#$SCP -r -batch -i "$SF_PRIVATE_KEY" "$MA_WORKSPACE/com.reflexit.magiccards.ui/icons/"  $SF_USER,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins/com.reflexit.magiccards.ui/icons/
 fi
