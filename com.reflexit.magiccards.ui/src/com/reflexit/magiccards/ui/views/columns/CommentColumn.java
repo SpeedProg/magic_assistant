@@ -31,6 +31,8 @@ public class CommentColumn extends GenColumn {
 		if (element instanceof MagicCardPhysical) {
 			IMagicCardPhysical m = (IMagicCardPhysical) element;
 			String comm = m.getComment();
+			if (comm == null)
+				return "";
 			return comm;
 		} else {
 			return super.getText(element);
@@ -66,6 +68,8 @@ public class CommentColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					IMagicCardPhysical card = (IMagicCardPhysical) element;
 					String loc = card.getComment();
+					if (loc == null)
+						return "";
 					return loc;
 				}
 				return null;
