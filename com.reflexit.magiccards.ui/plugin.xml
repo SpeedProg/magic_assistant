@@ -393,7 +393,17 @@
                      hasPages="true"
                      icon="icons/obj16/m16.png"
                      id="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
-                     name="Booster Pack">
+                     name="Booster Pack from Set">
+               </wizard>
+               <wizard
+                     canFinishEarly="true"
+                     category="com.reflexit.magiccards.ui"
+                     class="com.reflexit.magiccards.ui.wizards.BoosterGeneratorCollectionWizard"
+                     finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+                     hasPages="true"
+                     icon="icons/obj16/m16.png"
+                     id="com.reflexit.magiccards.ui.wizards.BoosterGeneratorCollectionWizard"
+                     name="Booster Pack from Collection">
                </wizard>
   </extension>
   <extension
