@@ -123,6 +123,7 @@ if [ "$UPDATE_SITE" -eq 1 -o "$UPDATE_SITE_FULL" -eq 1 ]; then
 	echo "Uploading update sute for $RELEASE..."
 	(
 	cd $UPDATE_SITE_DIR || die "No update site ready"
+	REMOTE_PATH="htdocs/update/1.2"
 	unzip content.jar
 	unzip artifacts.jar
 	if [ "$UPDATE_SITE" -eq 1 ]; then
