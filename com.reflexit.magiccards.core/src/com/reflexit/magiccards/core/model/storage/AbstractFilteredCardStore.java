@@ -138,7 +138,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		this.filteredList = list;
 	}
 
-	protected synchronized Collection<T> getFilteredList() {
+	public synchronized Collection<T> getFilteredList() {
 		if (this.filteredList == null)
 			this.filteredList = doCreateList();
 		return this.filteredList;
