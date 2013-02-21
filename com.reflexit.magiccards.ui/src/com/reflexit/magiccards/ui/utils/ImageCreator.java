@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
@@ -110,13 +111,27 @@ public class ImageCreator {
 				y = 0;
 				x = (int) ((size - width * zoom) / 2);
 			}
-			Image scaledImage = new Image(Display.getDefault(), origImage.getImageData().scaledTo((int) (width * zoom),
+			Display display = Display.getDefault();
+			ImageData imageData = origImage.getImageData();
+			// if (imageData.transparentPixel == -1)
+			// try {
+			// imageData.transparentPixel = imageData.palette.getPixel(new RGB(255, 255, 255));
+			// } catch (IllegalArgumentException e) {
+			// // pallete does not have white hmm
+			// }
+			Image imageWithTransparentBg = new Image(display, imageData);
+			Image scaledImage = new Image(display, imageWithTransparentBg.getImageData().scaledTo((int) (width * zoom),
 					(int) (height * zoom)));
-			Image centeredImage = new Image(Display.getDefault(), size, size);
+			Image centeredImage = new Image(display, size, size);
 			GC newGC = new GC(centeredImage);
 			newGC.drawImage(scaledImage, x, y);
 			newGC.dispose();
-			return centeredImage;
+			ImageData finalImageData = centeredImage.getImageData();
+			finalImageData.transparentPixel = finalImageData.palette.getPixel(new RGB(255, 255, 255));
+			centeredImage.dispose();
+			imageWithTransparentBg.dispose();
+			scaledImage.dispose();
+			return new Image(display, finalImageData);
 		} catch (SWTException e) {
 			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
 			return null;
@@ -302,6 +317,15 @@ public class ImageCreator {
 		// String oracleText = card.getOracleText();
 		// oracleText = oracleText.replaceAll("<br>", "\n");
 		// gc.drawText(oracleText, 20, 200, true);
+		gc.setFont(getFount(TITLE_FONT_KEY));
+		String pt = "";
+		String tou = card.getToughness();
+		if (tou != null && tou.length() > 0) {
+			pt = card.getPower() + "/" + tou;
+		}
+		gc.drawText(pt, 204 - 20, 283, true);
+		Image set = getSetImage(card);
+		gc.drawImage(set, 204 - set.getBounds().width, 177);
 		gc.dispose();
 		return im;
 	}
