@@ -142,7 +142,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		}
 	}
 
-	protected void setChecked(CardElement root, boolean checked) {
+	public void setChecked(CardElement root, boolean checked) {
 		if (treeViewer instanceof CheckboxTreeViewer) {
 			((CheckboxTreeViewer) treeViewer).setChecked(root, checked);
 		} else {

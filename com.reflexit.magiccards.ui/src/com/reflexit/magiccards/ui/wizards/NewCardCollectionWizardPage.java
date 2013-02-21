@@ -33,6 +33,11 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	}
 
 	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+	}
+
+	@Override
 	protected void updateInitialSelection() {
 		super.updateInitialSelection();
 		Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();

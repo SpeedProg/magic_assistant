@@ -1,12 +1,16 @@
 package com.reflexit.magiccards.ui.wizards;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -30,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -39,6 +44,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
@@ -125,6 +131,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			locPage.noDefaultAndApplyButton();
 			locPage.setPreferenceStore(store);
 			locPage.createControl(parent);
+			locPage.setChecked(DataManager.getModelRoot().getCollectionsContainer(), true);
 			listViewer = (CheckboxTreeViewer) locPage.getViewer();
 			GridData data = new GridData(GridData.FILL_BOTH);
 			listViewer.getControl().setLayoutData(data);
@@ -162,7 +169,15 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		this.page = new NewCardCollectionWizardPage(this.selection) {
 			@Override
 			public String getResourceNameHint() {
-				return "";
+				String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				return "booster_" + time;
+			}
+
+			@Override
+			protected void createOptionsGroup(Composite container) {
+				super.createOptionsGroup(container);
+				virtual.setSelection(true);
+				virtual.setEnabled(false);
 			}
 		};
 		addPage(this.page);
@@ -209,8 +224,17 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		monitor.worked(1);
 		CardOrganizer parent = (CardOrganizer) resource;
 		final CardCollection col = new CardCollection(name + ".xml", parent, false);
-		populateLibrary(BoosterGeneratorCollectionWizard.this.sets, BoosterGeneratorCollectionWizard.this.packs, col,
-				new SubProgressMonitor(monitor, 7));
+		col.setVirtual(virtual);
+		boolean succ = false;
+		try {
+			populateLibrary(BoosterGeneratorCollectionWizard.this.sets, BoosterGeneratorCollectionWizard.this.packs, col,
+					new SubProgressMonitor(monitor, 7));
+			succ = true;
+		} finally {
+			if (!succ) {
+				col.remove();
+			}
+		}
 		monitor.worked(1);
 		try {
 			Thread.sleep(1000);
@@ -256,17 +280,15 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 					filterset.put((String) o, "true");
 				}
 			}
-			for (int i = 0; i < packs; i++) {
-				// 1*packs rare cards
-				generateRarity(countRare, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
-				monitor.worked(3);
-				// 3*packs uncommon
-				generateRarity(countUncommon, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
-				monitor.worked(3);
-				// 11*packs common
-				generateRarity(countCommon, filterset, filter, dbcards, col, Rarity.COMMON);
-				monitor.worked(3);
-			}
+			// 1*packs rare cards
+			generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
+			monitor.worked(3 * packs);
+			// 3*packs uncommon
+			generateRarity(countUncommon * packs, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
+			monitor.worked(3 * packs);
+			// 11*packs common
+			generateRarity(countCommon * packs, filterset, filter, dbcards, col, Rarity.COMMON);
+			monitor.worked(3 * packs);
 		} finally {
 			monitor.done();
 		}
@@ -274,39 +296,88 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 
 	public void generateRarity(int cards, HashMap<String, String> filterset, MagicCardFilter filter,
 			IFilteredCardStore<IMagicCard> dbcards, CardCollection col, String... rarity) {
+		if (cards == 0)
+			return;
 		for (int i = 0; i < rarity.length; i++) {
 			String r = rarity[i];
 			String id = Rarity.getInstance().getPrefConstant(r);
 			filterset.put(id, "true");
 		}
-		filter.update(filterset);
-		dbcards.update();
-		if (dbcards.getSize() == 0) {
-			throw new MagicException("No cards of rarity " + rarity[0] + " found in the selected collections");
-		}
-		generateRandom(cards, dbcards, col.getStore(), col);
-		for (int i = 0; i < rarity.length; i++) {
-			String r = rarity[i];
-			String id = Rarity.getInstance().getPrefConstant(r);
-			filterset.remove(id);
+		try {
+			filter.update(filterset);
+			dbcards.update();
+			if (dbcards.getSize() == 0) {
+				prompt("No cards found of rarity " + Arrays.asList(rarity));
+				return;
+			}
+			try {
+				generateRandom(cards, dbcards, col.getStore(), col);
+			} catch (MagicException e) {
+				prompt(e.getMessage() + " of rarity " + Arrays.asList(rarity));
+			}
+		} finally {
+			for (int i = 0; i < rarity.length; i++) {
+				String r = rarity[i];
+				String id = Rarity.getInstance().getPrefConstant(r);
+				filterset.remove(id);
+			}
 		}
 	}
 
+	private boolean prompt(final String str) {
+		final Boolean result[] = new Boolean[] { false };
+		getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				boolean ok = MessageDialog.openConfirm(getShell(), "Confirm", str
+						+ ". Press OK to continue generation and Cancel to abort and change selection and options");
+				result[0] = ok;
+			}
+		});
+		if (!result[0]) {
+			throw new MagicException("Booster generation aborted. Modify parameters and try again.");
+		}
+		return result[0];
+	}
+
 	/**
-	 * @param packs
+	 * @param num
 	 * @param dbcards
 	 * @param store
 	 * @param col
 	 */
-	private void generateRandom(int packs, IFilteredCardStore<IMagicCard> dbcards, ICardStore<IMagicCard> store, CardElement col) {
-		int rcards = dbcards.getSize();
-		if (rcards == 0)
-			return;
-		for (int i = 0; i < packs; i++) {
+	private void generateRandom(int num, IFilteredCardStore<IMagicCard> dbcards, ICardStore<IMagicCard> store, CardElement col) {
+		for (int i = 0; i < num; i++) {
+			try {
+				generateRandom(dbcards, store);
+			} catch (MagicException e) {
+				throw new MagicException("Only can add " + i + " of " + num + " cards");
+			}
+		}
+	}
+
+	private void generateRandom(IFilteredCardStore<IMagicCard> sourceCards, ICardStore<IMagicCard> store) {
+		boolean succ = false;
+		while (!succ) {
+			int rcards = sourceCards.getSize();
+			if (rcards == 0)
+				throw new MagicException("No more cards found");
 			int index = (int) (Math.random() * rcards);
-			IMagicCard card = (IMagicCard) dbcards.getElement(index);
-			MagicCardPhysical pcard = new MagicCardPhysical(card, col.getLocation());
+			IMagicCard card = (IMagicCard) sourceCards.getElement(index);
+			MagicCardPhysical pcard = new MagicCardPhysical(card, store.getLocation());
+			pcard.setOwn(!store.isVirtual());
+			pcard.setCount(1);
+			pcard.setForTrade(0);
+			IMagicCard old = store.getCard(pcard.getCardId());
+			if (old != null) {
+				int ncount = ((MagicCardPhysical) old).getCount();
+				if (ncount >= ((ICardCountable) card).getCount()) {
+					((AbstractFilteredCardStore) sourceCards).getFilteredList().remove(card);
+					continue;
+				}
+			}
 			store.add(pcard);
+			succ = true;
 		}
 	}
 }

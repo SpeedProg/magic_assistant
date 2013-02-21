@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -22,8 +24,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 
-import java.lang.reflect.InvocationTargetException;
-
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 
 /**
@@ -79,6 +80,9 @@ public abstract class NewCardElementWizard extends Wizard {
 		try {
 			getContainer().run(true, false, op);
 		} catch (InterruptedException e) {
+			return false;
+		} catch (MagicException e) {
+			MessageDialog.openError(getShell(), "Error", e.getMessage());
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
