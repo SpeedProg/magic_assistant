@@ -163,7 +163,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public GroupAction createGroupAction(String name, ICardField[] fields) {
-		String val = prefStore.getString(FilterField.GROUP_FIELD.toString());
+		String val = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
 		String vname = createGroupName(fields);
 		boolean checked = vname.equals(val);
 		return new GroupAction(name, fields, checked);
@@ -174,7 +174,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public GroupAction createGroupActionNone() {
-		String val = prefStore.getString(FilterField.GROUP_FIELD.toString());
+		String val = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
 		return new GroupAction("None", null, val == null || val.length() == 0);
 	}
 
@@ -249,6 +249,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @return
 	 */
 	public PrefixedPreferenceStore getLocalPreferenceStore() {
+		return this.prefStore;
+	}
+
+	public PrefixedPreferenceStore getFilterPreferenceStore() {
 		return this.prefStore;
 	}
 
@@ -431,7 +435,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @param indexCost
 	 */
 	protected void actionGroupBy(ICardField[] fields) {
-		prefStore.setValue(FilterField.GROUP_FIELD.toString(), fields == null ? "" : createGroupName(fields));
+		getLocalPreferenceStore().setValue(FilterField.GROUP_FIELD.toString(), fields == null ? "" : createGroupName(fields));
 		updateGroupBy(fields);
 		reloadData();
 	}
@@ -587,7 +591,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 *
 	 */
 	protected void initManager() {
-		String field = prefStore.getString(FilterField.GROUP_FIELD.toString());
+		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
 		updateGroupBy(getGroupFieldsByName(field));
 		IColumnSortAction sortAction = new IColumnSortAction() {
 			public void sort(int i) {
@@ -599,11 +603,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	@Override
 	protected void loadInitial() {
+		PrefixedPreferenceStore ps = getLocalPreferenceStore();
 		// update manager columns
-		String value = prefStore.getString(PreferenceConstants.LOCAL_COLUMNS);
+		String value = ps.getString(PreferenceConstants.LOCAL_COLUMNS);
 		AbstractMagicCardsListControl.this.manager.updateColumns(value);
-		quickFilter.setPreferenceStore(prefStore);
-		boolean qf = prefStore.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
+		quickFilter.setPreferenceStore(getFilterPreferenceStore());
+		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
 		reloadData();
 	}
@@ -696,7 +701,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 		@Override
 		public void run() { // group button itself
-			String group = prefStore.getString(FilterField.GROUP_FIELD.toString());
+			String group = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
 			if (group == null || group.length() == 0)
 				actionGroupBy(new ICardField[] { MagicCardField.CMC });
 			else
@@ -711,12 +716,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	protected void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
-		if (property.equals(prefStore.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
+		PrefixedPreferenceStore ps = getLocalPreferenceStore();
+		if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
 			this.manager.updateColumns((String) event.getNewValue());
 			refresh();
 		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
 			refresh();
-		} else if (property.equals(prefStore.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
+		} else if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
 			boolean qf = (Boolean) event.getNewValue();
 			setQuickFilterVisible(qf);
 		} else if (event.getNewValue() instanceof FontData[] || event.getNewValue() instanceof RGB) {
@@ -770,7 +776,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
-		Dialog cardFilterDialog = new CardFilterDialog(getShell(), prefStore);
+		Dialog cardFilterDialog = new CardFilterDialog(getShell(), getFilterPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK) {
 			reloadData();
 			quickFilter.refresh();
@@ -781,7 +787,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		Collection<String> allIds = FilterField.getAllIds();
 		for (Iterator<String> iterator = allIds.iterator(); iterator.hasNext();) {
 			String id = iterator.next();
-			prefStore.setToDefault(id);
+			getFilterPreferenceStore().setToDefault(id);
 		}
 		reloadData();
 		quickFilter.refresh();
@@ -814,7 +820,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		MagicCardFilter filter = getFilter();
 		if (filter == null)
 			return;
-		IPreferenceStore store = getLocalPreferenceStore();
+		IPreferenceStore store = getFilterPreferenceStore();
 		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
@@ -909,7 +915,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
 		try {
 			String value = manager.getColumnLayoutProperty();
-			prefStore.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
+			getLocalPreferenceStore().setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 		} finally {
 			MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
 		}

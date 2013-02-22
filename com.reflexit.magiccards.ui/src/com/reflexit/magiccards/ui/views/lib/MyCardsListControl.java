@@ -32,7 +32,7 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected void runShowFilter() {
 		// CardFilter.open(getViewSite().getShell());
-		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getLocalPreferenceStore());
+		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getFilterPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			reloadData();
 	}

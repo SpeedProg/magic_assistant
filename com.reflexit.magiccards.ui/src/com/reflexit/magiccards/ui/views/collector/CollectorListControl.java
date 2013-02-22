@@ -46,7 +46,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void runShowFilter() {
-		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getLocalPreferenceStore());
+		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getFilterPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			reloadData();
 	}
