@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.nav;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -22,9 +24,10 @@ import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Class for serializing decks to/from a byte array
@@ -48,19 +51,20 @@ public class MagicDeckTransfer extends ByteArrayTransfer {
 	}
 
 	public CardElement[] fromByteArray(byte[] bytes) {
-		DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
+		BufferedReader in = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), FileUtils.CHARSET_UTF_8));
 		try {
-			XStream xs = DataManager.getXStream();
-			@SuppressWarnings("unchecked")
-			ArrayList<String> res = (ArrayList<String>) xs.fromXML(in);
-			CardElement[] arr = new CardElement[res.size()];
+			String name;
 			Map<Location, CardElement> locationsMap = DataManager.getModelRoot().getLocationsMap();
-			int i = 0;
-			for (String name : res) {
+			ArrayList<CardElement> list = new ArrayList<CardElement>();
+			while ((name = in.readLine()) != null) {
 				CardElement cardElement = locationsMap.get(new Location(name));
-				arr[i++] = cardElement;
+				list.add(cardElement);
 			}
-			return arr;
+			return list.toArray(new CardElement[list.size()]);
+		} catch (IOException e) {
+			// hmm
+			MagicLogger.log(e);
+			return null;
 		} finally {
 			try {
 				in.close();
@@ -107,19 +111,20 @@ public class MagicDeckTransfer extends ByteArrayTransfer {
 
 	public byte[] toByteArray(CardElement[] decks) {
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		DataOutputStream out = new DataOutputStream(byteOut);
-		XStream xs = DataManager.getXStream();
-		ArrayList<String> res = new ArrayList<String>();
-		for (CardElement cardElement : decks) {
-			res.add(cardElement.getLocation().getPath());
-		}
-		xs.toXML(res, out);
+		PrintStream st;
 		try {
-			out.close();
-		} catch (IOException e) {
+			st = new PrintStream(byteOut, true, FileUtils.UTF8);
+			for (CardElement cardElement : decks) {
+				st.println(cardElement.getLocation().getPath());
+			}
+			st.close();
 			// ok
+			byte[] bytes = byteOut.toByteArray();
+			return bytes;
+		} catch (UnsupportedEncodingException e) {
+			// ignore
+			MagicLogger.log(e);
+			return null;
 		}
-		byte[] bytes = byteOut.toByteArray();
-		return bytes;
 	}
 }

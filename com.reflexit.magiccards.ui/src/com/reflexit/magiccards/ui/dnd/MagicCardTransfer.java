@@ -13,24 +13,15 @@ package com.reflexit.magiccards.ui.dnd;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-
+import java.util.Arrays;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
-import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
+import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Class for serializing gadgets to/from a byte array
@@ -54,26 +45,15 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 	}
 
 	protected IMagicCard[] fromByteArray(byte[] bytes) {
-		InputStreamReader in;
+		ByteArrayInputStream in;
+		in = new ByteArrayInputStream(bytes);
 		try {
-			in = new InputStreamReader(new ByteArrayInputStream(bytes), FileUtils.UTF8);
-		} catch (UnsupportedEncodingException e) {
-			MagicUIActivator.log(e);
-			return new MagicCard[0];
-		}
-		try {
-			XStream xs = DataManager.getXStream();
-			LinkedHashMap<IMagicCard, Location> res = (LinkedHashMap<IMagicCard, Location>) xs.fromXML(in);
-			IMagicCard[] arr = new IMagicCard[res.size()];
-			int i = 0;
-			for (Iterator iterator = res.keySet().iterator(); iterator.hasNext(); i++) {
-				IMagicCard card = (IMagicCard) iterator.next();
-				if (card instanceof MagicCardPhysical) {
-					((MagicCardPhysical) card).setLocation(res.get(card));
-				}
-				arr[i] = card;
-			}
-			return arr;
+			MagicXmlStreamHandler xmlHanlder = new MagicXmlStreamHandler();
+			CardCollectionStoreObject object = xmlHanlder.load(in);
+			return (IMagicCard[]) object.list.toArray(new IMagicCard[object.list.size()]);
+		} catch (IOException e) {
+			MagicLogger.log(e);
+			return null;
 		} finally {
 			try {
 				in.close();
@@ -119,20 +99,14 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 	}
 
 	protected byte[] toByteArray(IMagicCard[] gadgets) {
+		MagicXmlStreamHandler xmlHanlder = new MagicXmlStreamHandler();
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+		CardCollectionStoreObject o = new CardCollectionStoreObject();
+		o.list = Arrays.asList(gadgets);
 		try {
-			Writer out = new OutputStreamWriter(byteOut, FileUtils.UTF8);
-			XStream xs = DataManager.getXStream();
-			LinkedHashMap<IMagicCard, Location> cards = new LinkedHashMap<IMagicCard, Location>();
-			for (IMagicCard c : gadgets) {
-				Location loc = Location.NO_WHERE;
-				if (c instanceof MagicCardPhysical)
-					loc = ((MagicCardPhysical) c).getLocation();
-				cards.put(c, loc);
-			}
-			xs.toXML(cards, out);
+			xmlHanlder.save(o, byteOut);
 			try {
-				out.close();
+				byteOut.close();
 			} catch (IOException e) {
 				// ok
 			}
