@@ -32,6 +32,7 @@ Export-Package: com.reflexit.magiccards.core;
  com.reflexit.magiccards.core.monitor,
  com.reflexit.magiccards.core.seller;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage",
  com.reflexit.magiccards.core.sync;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage,com.reflexit.magiccards.core.model",
+ com.reflexit.magiccards.core.xml,
  com.thoughtworks.xstream
 Bundle-ClassPath: .,
  lib/xstream-1.4.2.jar,

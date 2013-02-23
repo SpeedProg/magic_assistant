@@ -161,7 +161,7 @@ public class MagicXmlStreamWriter {
 	}
 
 	public synchronized void write(CardCollectionStoreObject object, OutputStream st) throws IOException {
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(object.file), 256 * 1024);
+		OutputStream out = new BufferedOutputStream(st, 256 * 1024);
 		try {
 			writer = new MyXMLStreamWriter(st);
 			try {
