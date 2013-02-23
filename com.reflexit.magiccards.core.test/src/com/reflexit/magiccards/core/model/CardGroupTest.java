@@ -10,8 +10,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.xml.DbMultiFileCardStore;
 
 public class CardGroupTest extends TestCase {

@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class CardCollectionStoreObjectTest extends TestCase {

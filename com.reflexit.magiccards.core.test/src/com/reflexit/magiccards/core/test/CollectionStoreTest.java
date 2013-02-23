@@ -13,7 +13,7 @@ package com.reflexit.magiccards.core.test;
 import java.io.File;
 
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionMultiFileCardStore;
 
 /**
