@@ -13,6 +13,7 @@ package com.reflexit.magicassistant.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.ui.dnd.MagicCardTransferTest;
 import com.reflexit.magiccards.ui.views.nav.MagicDeckTransferTest;
 
 /**
@@ -23,10 +24,12 @@ public class AllUiTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magicassistant.ui.tests");
 		// $JUnit-BEGIN$
+		suite.addTestSuite(MagicDeckTransferTest.class);
+		suite.addTestSuite(MagicCardTransferTest.class);
+		// window tester
 		suite.addTestSuite(FilterType.class);
 		suite.addTestSuite(CreateDeck.class);
 		suite.addTestSuite(GroupByCost.class);
-		suite.addTestSuite(MagicDeckTransferTest.class);
 		// $JUnit-END$
 		return suite;
 	}
