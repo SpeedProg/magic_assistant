@@ -150,8 +150,8 @@ public class UpdateCardsFromWeb {
 			// 3 attempts
 			try {
 				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-				huc.setConnectTimeout(30 * 1000);
-				huc.setReadTimeout(30 * 1000);
+				huc.setConnectTimeout(60 * 1000);
+				huc.setReadTimeout(60 * 1000);
 				huc.connect();
 				InputStream openStream = huc.getInputStream();
 				return openStream;
