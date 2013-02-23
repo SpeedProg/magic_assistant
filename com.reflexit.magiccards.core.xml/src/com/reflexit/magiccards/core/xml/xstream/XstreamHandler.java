@@ -11,8 +11,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
-import com.reflexit.magiccards.core.xml.data.IStoreHandler;
+import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
+import com.reflexit.magiccards.core.xml.IStoreHandler;
 import com.thoughtworks.xstream.XStream;
 
 public class XstreamHandler implements IStoreHandler {

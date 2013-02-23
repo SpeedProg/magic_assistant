@@ -11,7 +11,6 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
-import com.reflexit.magiccards.core.xml.data.CardCollectionStoreObject;
 
 public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements IStorageInfo {
 	private static final transient String VIRTUAL = "virtual";
