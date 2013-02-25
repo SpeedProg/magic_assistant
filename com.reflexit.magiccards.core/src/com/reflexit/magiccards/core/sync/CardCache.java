@@ -191,8 +191,11 @@ public class CardCache {
 			FileUtils.saveStream(st, file2);
 			st.close();
 			if (file2.exists()) {
-				file2.renameTo(file);
-				if (!file.exists()) {
+				boolean rem = file.delete();
+				if (rem == false)
+					throw new IOException("failed to delete " + file.toString());
+				boolean did = file2.renameTo(file);
+				if (!file.exists() || did == false) {
 					throw new IOException("failed to rename into " + file.toString());
 				}
 				return file;
