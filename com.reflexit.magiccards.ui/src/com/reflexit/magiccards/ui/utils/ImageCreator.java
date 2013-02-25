@@ -208,7 +208,7 @@ public class ImageCreator {
 				// failed to create image
 				MagicUIActivator.log("Failed to create an image for: " + card);
 				MagicUIActivator.log(e);
-				throw e;
+				throw new IOException(e.getMessage());
 			}
 		}
 	}

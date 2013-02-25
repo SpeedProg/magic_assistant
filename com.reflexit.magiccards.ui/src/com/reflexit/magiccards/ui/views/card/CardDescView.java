@@ -81,7 +81,14 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		protected IStatus run(IProgressMonitor monitor) {
 			setName("Loading card info: " + card.getName());
 			monitor.beginTask("Loading info for " + card.getName(), 100);
-			if (!forceUpdate) {
+			if (forceUpdate) {
+				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						setMessage("Loading...");
+						CardDescView.this.panel.reload(card);
+					}
+				});
+			} else {
 				CardDescView.this.panel.setCard(card);
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
@@ -134,6 +141,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				final IOException e = e1;
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					public void run() {
+						setMessage("");
 						if (e != null)
 							setMessage(e.getMessage());
 						else if (!CardCache.isLoadingEnabled())
