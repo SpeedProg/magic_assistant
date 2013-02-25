@@ -19,7 +19,11 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
@@ -43,14 +47,14 @@ public class ImageCreator {
 	private ImageCreator() {
 		// private
 		fontRegistry = new FontRegistry(Display.getCurrent());
-		String fontName = "Times New Roman";
+		String fontName = fontRegistry.defaultFont().getFontData()[0].getName();
 		fontRegistry.put(TITLE_FONT_KEY, new FontData[] { new FontData(fontName, 9, SWT.BOLD) });
 		fontRegistry.put(TYPE_FONT_KEY, new FontData[] { new FontData(fontName, 8, SWT.BOLD) });
 		fontRegistry.put(TEXT_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.NORMAL) });
 		fontRegistry.put(TEXT_ITALIC_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.ITALIC) });
 	}
 
-	public Font getFount(String key) {
+	public Font getFont(String key) {
 		return fontRegistry.get(key);
 	}
 
@@ -306,18 +310,19 @@ public class ImageCreator {
 		GC gc = new GC(im);
 		// gc.setAntialias(SWT.ON);
 		// gc.setInterpolation(SWT.HIGH);
-		gc.setFont(getFount(TITLE_FONT_KEY));
+		gc.setFont(getFont(TITLE_FONT_KEY));
 		gc.drawText(card.getName(), 20, 17, true);
 		Image costImage = SymbolConverter.buildCostImage(card.getCost());
 		gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
-		gc.setFont(getFount(TYPE_FONT_KEY));
+		gc.setFont(getFont(TYPE_FONT_KEY));
 		gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);
-		gc.setFont(getFount(TEXT_FONT_KEY));
+		gc.setFont(getFont(TEXT_FONT_KEY));
 		gc.drawText("Image not found", 30, 46, true);
-		// String oracleText = card.getOracleText();
+		String oracleText = card.getOracleText();
+		renderHtml(gc, 18, 195, 180, 80, oracleText);
 		// oracleText = oracleText.replaceAll("<br>", "\n");
 		// gc.drawText(oracleText, 20, 200, true);
-		gc.setFont(getFount(TITLE_FONT_KEY));
+		gc.setFont(getFont(TITLE_FONT_KEY));
 		String pt = "";
 		String tou = card.getToughness();
 		if (tou != null && tou.length() > 0) {
@@ -328,6 +333,45 @@ public class ImageCreator {
 		gc.drawImage(set, 204 - set.getBounds().width, 177);
 		gc.dispose();
 		return im;
+	}
+
+	private void renderHtml(GC parentGc, int x, int y, int w, int h, String html) {
+		Shell shell = new Shell(Display.getCurrent());
+		shell.setSize(w + 18, h + 100);
+		shell.setFont(parentGc.getFont());
+		shell.setBackground(parentGc.getBackground());
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		shell.setLayout(layout);
+		Image im = new Image(Display.getCurrent(), w, h);
+		GC gc = new GC(im);
+		Label br = new Label(shell, SWT.WRAP | SWT.INHERIT_DEFAULT);
+		String text = html;
+		text = text.replaceAll("<br>", "\n");
+		text = text.replaceAll("<i>", "");
+		text = text.replaceAll("</i>", "");
+		br.setText(text);
+		// Browser br = new Browser(shell, SWT.WRAP | SWT.INHERIT_DEFAULT);
+		br.setFont(shell.getFont());
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		layoutData.widthHint = w - 2;
+		br.setLayoutData(layoutData);
+		// String wrapHtml = SymbolConverter.wrapHtml(html, shell);
+		// System.err.println(wrapHtml);
+		// br.setText(wrapHtml, true);
+		// shell.pack();
+		shell.layout();
+		while (true) {
+			if (!shell.getDisplay().readAndDispatch()) {
+				br.print(gc);
+				break;
+			}
+		}
+		shell.dispose();
+		parentGc.drawImage(im, x + 2, y);
+		im.dispose();
+		gc.dispose();
 	}
 
 	private static final int FULL_OPAQUE = 255;
