@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WT Tests
+Bundle-SymbolicName: com.reflexit.magicassistant.ui.wt.tests
+Bundle-Activator: com.reflexit.magicassistant.ui.wt.tests.Activator
+Bundle-Vendor: Reflex IT
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.ui,
+ com.windowtester.runtime,
+ com.windowtester.swt.runtime,
+ com.instantiations.eclipse.debug,
+ org.eclipse.jface,
+ com.instantiations.common.core,
+ com.instantiations.eclipse.util,
+ org.eclipse.swt,
+ org.eclipse.core.runtime,
+ com.reflexit.magiccards.ui,
+ org.junit,
+ com.windowtester.swing.runtime,
+ com.reflexit.magiccards.core
+Bundle-ActivationPolicy: lazy
+Bundle-Version: 1.2.7.qualifier
