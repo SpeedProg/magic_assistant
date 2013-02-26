@@ -190,7 +190,7 @@ public class CardCache {
 			File file2 = new File(path + ".part");
 			FileUtils.saveStream(st, file2);
 			st.close();
-			if (file2.exists()) {
+			if (file2.exists() && file2.length() > 0) {
 				if (file.exists()) {
 					boolean rem = file.delete();
 					if (rem == false)
