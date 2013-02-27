@@ -21,7 +21,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -75,7 +74,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
+import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -775,12 +774,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void runShowFilter() {
-		// CardFilter.open(getViewSite().getShell());
-		Dialog cardFilterDialog = new CardFilterDialog(getShell(), getFilterPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK) {
+		if (ShowFilterHandler.execute()) {
 			reloadData();
 			quickFilter.refresh();
 		}
+		// CardFilter.open(getViewSite().getShell());
+		// Dialog cardFilterDialog = new CardFilterDialog(getShell(), getFilterPreferenceStore());
+		// if (cardFilterDialog.open() == IStatus.OK) {
+		// reloadData();
+		// quickFilter.refresh();
+		// }
 	}
 
 	protected void runResetFilter() {
@@ -979,6 +982,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		loadingJob.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
+				if (display.isDisposed())
+					return;
 				if (postLoad != null)
 					display.syncExec(postLoad);
 				else

@@ -44,7 +44,7 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 	private MagicCardTransfer() {
 	}
 
-	protected IMagicCard[] fromByteArray(byte[] bytes) {
+	public IMagicCard[] fromByteArray(byte[] bytes) {
 		ByteArrayInputStream in;
 		in = new ByteArrayInputStream(bytes);
 		try {
@@ -98,7 +98,7 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 		return fromByteArray(bytes);
 	}
 
-	protected byte[] toByteArray(IMagicCard[] gadgets) {
+	public byte[] toByteArray(IMagicCard[] gadgets) {
 		MagicXmlStreamHandler xmlHanlder = new MagicXmlStreamHandler();
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		CardCollectionStoreObject o = new CardCollectionStoreObject();

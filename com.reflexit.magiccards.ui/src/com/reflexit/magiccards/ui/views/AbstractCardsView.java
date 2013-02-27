@@ -319,6 +319,12 @@ public abstract class AbstractCardsView extends ViewPart {
 		return null;
 	}
 
+	public PrefixedPreferenceStore getFilterPreferenceStore() {
+		if (control instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) control).getFilterPreferenceStore();
+		return getLocalPreferenceStore();
+	}
+
 	public static interface IDeckAction {
 		public void run(String id);
 	}

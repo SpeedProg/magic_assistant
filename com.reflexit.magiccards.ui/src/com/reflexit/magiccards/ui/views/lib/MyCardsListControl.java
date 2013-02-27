@@ -1,12 +1,11 @@
 package com.reflexit.magiccards.ui.views.lib;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
+import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.CompositeViewerManager;
@@ -31,10 +30,14 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void runShowFilter() {
-		// CardFilter.open(getViewSite().getShell());
-		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getFilterPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK)
+		if (ShowFilterHandler.execute()) {
 			reloadData();
+		}
+		// CardFilter.open(getViewSite().getShell());
+		// MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(),
+		// getFilterPreferenceStore());
+		// if (cardFilterDialog.open() == IStatus.OK)
+		// reloadData();
 	}
 
 	@Override

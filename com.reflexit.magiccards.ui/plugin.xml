@@ -166,6 +166,10 @@
             class="com.reflexit.magiccards.ui.commands.UpdateDbDialogHandler"
             commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog">
       </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.ShowFilterHandler"
+            commandId="com.reflexit.magiccards.ui.commands.filterCommand">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -204,6 +208,12 @@
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="NUMPAD_ADD">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.filterCommand"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+6">
       </key>
    </extension>
    <extension
@@ -252,6 +262,22 @@
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.EditDeckProperties"
             name="Edit Properties...">
+      </command>
+      <category
+            id="com.reflexit.magiccards.ui.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.filterCommand"
+            name="Show Filter">
+         <commandParameter
+               id="com.reflexit.magiccards.ui.viewId"
+               name="viewId"
+               optional="true"
+               typeId="string"
+               values="org.eclipse.ui.internal.registry.ViewParameterValues">
+         </commandParameter>
       </command>
    </extension>
    <extension
@@ -353,6 +379,18 @@
               style="push">
         </command>
      </menuContribution>
+     <!--
+     <menuContribution
+           locationURI="menu:window?after=additions">
+
+           <command
+                 commandId="com.reflexit.magiccards.ui.commands.filterCommand"
+                 id="com.reflexit.magiccards.ui.menus.filterCommand"
+                 mnemonic="S">
+           </command>
+       
+     </menuContribution>
+     -->
   </extension>
   <extension
         point="org.eclipse.ui.newWizards">
