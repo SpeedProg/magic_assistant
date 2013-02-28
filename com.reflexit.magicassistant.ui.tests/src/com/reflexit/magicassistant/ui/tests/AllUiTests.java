@@ -26,10 +26,6 @@ public class AllUiTests {
 		// $JUnit-BEGIN$
 		suite.addTestSuite(MagicDeckTransferTest.class);
 		suite.addTestSuite(MagicCardTransferTest.class);
-		// window tester
-		suite.addTestSuite(FilterType.class);
-		suite.addTestSuite(CreateDeck.class);
-		suite.addTestSuite(GroupByCost.class);
 		// $JUnit-END$
 		return suite;
 	}
