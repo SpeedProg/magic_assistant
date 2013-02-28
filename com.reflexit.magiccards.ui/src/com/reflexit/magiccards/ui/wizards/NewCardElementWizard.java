@@ -78,7 +78,7 @@ public abstract class NewCardElementWizard extends Wizard {
 			}
 		};
 		try {
-			getContainer().run(true, false, op);
+			getContainer().run(false, false, op);
 		} catch (InterruptedException e) {
 			return false;
 		} catch (MagicException e) {
