@@ -33,7 +33,6 @@ public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";
 	private static ICardHandler handler;
 	private static ModelRoot root;
-	private static File rootDir;
 	private static IntHashtable links = new IntHashtable();
 	static {
 		try {
@@ -150,18 +149,17 @@ public class DataManager {
 
 	public static synchronized ModelRoot getModelRoot() {
 		if (root == null) {
-			if (rootDir == null)
-				DataManager.setRootDir(new File(FileUtils.getWorkspaceFile(), "magiccards"));
-			root = ModelRoot.getInstance();
+			root = ModelRoot.getInstance(new File(FileUtils.getWorkspaceFile(), "magiccards"));
 		}
 		return root;
 	}
 
-	public static void setRootDir(File dir) {
-		rootDir = dir;
+	public static void reset(File dir) {
+		root = ModelRoot.getInstance(new File(FileUtils.getWorkspaceFile(), "magiccards"));
 	}
 
 	public static File getRootDir() {
+		File rootDir = getModelRoot().getRootDir();
 		if (rootDir == null)
 			throw new NullPointerException();
 		return rootDir;

@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.model.nav;
 import java.io.File;
 import java.io.IOException;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
@@ -37,7 +36,7 @@ public abstract class CardElement extends EventManager {
 	protected void setParent(CardOrganizer parent) {
 		this.parent = parent;
 		if (parent != null) {
-			if (parent != DataManager.getModelRoot())
+			if (!parent.isRoot())
 				this.path = parent.getPath().append(path.lastSegment());
 		}
 	}
@@ -63,7 +62,13 @@ public abstract class CardElement extends EventManager {
 		LocationPath p = getPath();
 		if (p == null)
 			return null;
-		return new File(DataManager.getRootDir(), p.toString());
+		return new File(getRootDir(), p.toString());
+	}
+
+	public File getRootDir() {
+		if (!isRoot())
+			return getParent().getRootDir();
+		return null; // this will be overriden in root
 	}
 
 	public String getName() {
@@ -195,4 +200,8 @@ public abstract class CardElement extends EventManager {
 	}
 
 	public abstract CardElement newElement(String name, CardOrganizer parent);
+
+	public boolean isRoot() {
+		return false;
+	}
 }

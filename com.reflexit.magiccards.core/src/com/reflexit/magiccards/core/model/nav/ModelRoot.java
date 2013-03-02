@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.nav;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,20 +26,20 @@ import com.reflexit.magiccards.core.model.Location;
  * 
  */
 public class ModelRoot extends CardOrganizer {
-	private static ModelRoot instance;
 	private CollectionsContainer fDecks;
 	private MagicDbContainter db;
 	private CollectionsContainer fLib;
 	private CardCollection fLibFile;
 	private CollectionsContainer fMyCards;
+	private File rootDir;
 
 	/**
 	 * @param name
 	 * @param parent2
 	 */
-	private ModelRoot() {
+	private ModelRoot(File dir) {
 		super("Root", null);
-		instance = this;
+		rootDir = dir;
 		initRoot();
 	}
 
@@ -67,6 +68,11 @@ public class ModelRoot extends CardOrganizer {
 		return LocationPath.ROOT;
 	}
 
+	@Override
+	public boolean isRoot() {
+		return true;
+	}
+
 	public CollectionsContainer getDeckContainer() {
 		return this.fDecks;
 	}
@@ -86,16 +92,15 @@ public class ModelRoot extends CardOrganizer {
 	/**
 	 * @return
 	 */
-	public static synchronized ModelRoot getInstance() {
-		if (instance == null)
-			new ModelRoot();
-		return instance;
+	public static synchronized ModelRoot getInstance(File dir) {
+		return new ModelRoot(dir);
 	}
 
 	/**
-	 *
+	 * @param temp
+	 * 
 	 */
-	public void reset() {
+	public void clear() {
 		getDeckContainer().removeChildren();
 		getCollectionsContainer().removeChildren();
 		this.fLibFile = new CardCollection("main.xml", this.fLib);
@@ -156,5 +161,12 @@ public class ModelRoot extends CardOrganizer {
 			no.newParent(newParent);
 		}
 		// System.err.println("drop to " + newParent);
+	}
+
+	@Override
+	public File getRootDir() {
+		if (rootDir == null)
+			throw new NullPointerException();
+		return rootDir;
 	}
 }

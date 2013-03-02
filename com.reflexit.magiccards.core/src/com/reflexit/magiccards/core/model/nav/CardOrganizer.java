@@ -25,17 +25,14 @@ public class CardOrganizer extends CardElement {
 
 	public CardOrganizer(String name, LocationPath path, CardOrganizer parent) {
 		super(name, path);
-		createDir();
 		setParentInit(parent);
+		createDir();
 	}
 
 	private void createDir() {
 		try {
-			File file = getFile();
-			if (!file.exists()) {
-				if (file.mkdir() == false)
-					throw new IOException("Directory name " + file + " is invalid");
-			}
+			if (!isRoot())
+				create();
 		} catch (Exception e) {
 			throw new MagicException(e);
 		}

@@ -28,8 +28,8 @@ public class CardCollection extends CardElement {
 	public CardCollection(String filename, CardOrganizer parent, boolean deck) {
 		super(filename, parent, false);
 		this.deck = deck;
-		createFile();
 		setParentInit(parent);
+		createFile();
 	}
 
 	private void createFile() {
