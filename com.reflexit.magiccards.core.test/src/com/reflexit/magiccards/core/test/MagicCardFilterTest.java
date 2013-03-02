@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -164,6 +165,15 @@ public class MagicCardFilterTest extends TestCase {
 
 	public void testTOUGHNESS() {
 		genericFieldText(FilterField.TOUGHNESS, "22");
+	}
+
+	public void testEDITION() {
+		FilterField ff = FilterField.EDITION;
+		propMap.put(Editions.getInstance().getPrefConstantByName("Alara Reborn"), "true");
+		filter.update(propMap);
+		checkNotFound();
+		mcp.setObjectByField(ff.getField(), "Alara Reborn");
+		checkFound();
 	}
 
 	public void testCCC() {

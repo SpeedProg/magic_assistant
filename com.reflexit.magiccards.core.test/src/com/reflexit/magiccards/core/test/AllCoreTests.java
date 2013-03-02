@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.sync.ParseGathererSearchStandardTest;
  * @author Alena
  * 
  */
-public class AllTests {
+public class AllCoreTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magiccards.core.test");
 		// $JUnit-BEGIN$
