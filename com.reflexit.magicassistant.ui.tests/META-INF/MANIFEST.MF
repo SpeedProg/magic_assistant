@@ -21,3 +21,6 @@ Bundle-ActivationPolicy: lazy
 Manifest-Version: 1.0
 Bundle-SymbolicName: com.reflexit.magicassistant.ui.tests
 Bundle-Version: 1.2.7.qualifier
+Export-Package: com.reflexit.magicassistant.ui.tests,
+ com.reflexit.magiccards.ui.dnd,
+ com.reflexit.magiccards.ui.views.nav

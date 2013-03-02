@@ -19,7 +19,7 @@ public class MagicDeckTransferTest extends TestCase {
 	protected void setUp() {
 		trans = MagicDeckTransfer.getInstance();
 		root = DataManager.getModelRoot();
-		root.reset();
+		root.clear();
 		defaultLib = root.getDefaultLib();
 	}
 
