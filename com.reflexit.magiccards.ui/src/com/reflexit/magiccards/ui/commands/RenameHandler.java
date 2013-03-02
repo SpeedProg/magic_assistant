@@ -58,7 +58,7 @@ public class RenameHandler extends AbstractHandler {
 		if (f instanceof CardCollection) {
 			wasOpen = ((CardCollection) f).isOpen();
 		}
-		ModelRoot root = ModelRoot.getInstance();
+		ModelRoot root = DataManager.getModelRoot();
 		if (f == root.getDefaultLib()) {
 			MessageDialog.openInformation(window.getShell(), "Cannot Rename", "'" + f
 					+ "' is a special collection which cannot be renamed or moved. "

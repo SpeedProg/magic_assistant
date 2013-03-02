@@ -54,7 +54,7 @@ public class DeleteHandler extends AbstractHandler {
 	}
 
 	public static void remove(CardElement f) {
-		ModelRoot root = ModelRoot.getInstance();
+		ModelRoot root = DataManager.getModelRoot();
 		if (f == root.getDefaultLib()) {
 			info("'" + f + "' is a special collection which cannot be renamed or moved. "
 					+ "Move the cards from it using multi-select if you need to.");
