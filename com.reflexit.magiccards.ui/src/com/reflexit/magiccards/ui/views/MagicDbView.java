@@ -161,7 +161,6 @@ public class MagicDbView extends AbstractCardsView {
 		ICardStore<IMagicCard> store = getFilteredStore().getCardStore();
 		ICardField[] fields = MagicCardField.allNonTransientFields();
 		String curset = null;
-		TextPrinter exporter = null;
 		File dir = new File("C:/tmp/madatabase");
 		dir.mkdirs();
 		Editions editions = Editions.getInstance();
@@ -182,11 +181,11 @@ public class MagicDbView extends AbstractCardsView {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					exporter.printHeader((MagicCard) card, ps);
+					TextPrinter.printHeader((MagicCard) card, ps);
 					curset = set;
 				}
 				MagicCard mc = (MagicCard) card;
-				exporter.print(mc, ps);
+				TextPrinter.print(mc, ps);
 			}
 		}
 		if (ps != null) {
