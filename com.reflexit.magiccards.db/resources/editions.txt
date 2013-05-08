@@ -110,7 +110,9 @@ Premium Deck Series: Graveborn|PD3||May 2012|Starter||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad|Standard, Modern, Extended
 Planechase 2012 Edition|PC2||June 2012|Expansion||
 Magic 2013|M13||July 2012|Core||Standard, Modern, Extended
-Commander's Arsenal|CM1||November 2012|Starter|Commander|
+Commander's Arsenal|CM1||November 2012|Expansion|Commander|
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter||
 From the Vault: Realms|V12||August 2012|Starter||
 Return to Ravnica|RTR||September 2012|Expansion|Return to Ravnica|Standard, Modern, Extended
+Duel Decks: Sorin vs. Tibalt|DDK||April 2013|Starter||
+Gatecrash|GTC||April 2013|Expansion||Standard, Modern, Extended
