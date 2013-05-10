@@ -43,7 +43,7 @@ UPDATE_ROOT="$EXPORT_DIR/update"
 UPDATE_SITE_DIR="$UPDATE_ROOT/1.2"
 
 echo Building $RELEASE
-echo $BUILD_DIR
+echo Build Dir $BUILD_DIR
 
 RESULT="$BUILD_DIR/result/com.reflexit.magicassistant.bucky_1.0.0-eclipse.feature"
 if [ "$BUILD" -eq 1 ]; then

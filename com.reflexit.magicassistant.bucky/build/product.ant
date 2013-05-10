@@ -91,6 +91,6 @@
 		
 		<replace file="${source.root}/com.reflexit.magiccards-rcp/plugin.xml" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
 		<replace file="${source.root}/com.reflexit.magiccards.ui/about.properties" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
-
+		<replace file="${source.root}/com.reflexit.mtgtournament.ui/about.properties" token="xxxxxxxx" value="${ma.release} (${build.id})"/>
 	</target>
 </project>
