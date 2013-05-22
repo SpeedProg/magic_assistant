@@ -22,19 +22,19 @@ import org.eclipse.jface.dialogs.MessageDialog;
  * @since 3.4
  */
 public class UpdateHandler extends PreloadingRepositoryHandler {
-
 	boolean hasNoRepos = false;
 	UpdateOperation operation;
 
+	@Override
 	protected void doExecute(LoadMetadataRepositoryJob job) {
 		if (hasNoRepos) {
 			if (getProvisioningUI().getPolicy().getRepositoriesVisible()) {
-				boolean goToSites = MessageDialog.openQuestion(getShell(), Messages.UpdateHandler_NoSitesTitle, Messages.UpdateHandler_NoSitesMessage);
+				boolean goToSites = MessageDialog.openQuestion(getShell(), Messages.UpdateHandler_NoSitesTitle,
+						Messages.UpdateHandler_NoSitesMessage);
 				if (goToSites) {
-					getProvisioningUI().manipulateRepositories(getShell());
+					openManipulateRepositories();
 				}
 			}
-			return;
 		}
 		// Report any missing repositories.
 		job.reportAccumulatedStatus();
@@ -43,6 +43,11 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 		}
 	}
 
+	public void openManipulateRepositories() {
+		getProvisioningUI().manipulateRepositories(getShell());
+	}
+
+	@Override
 	protected void doPostLoadBackgroundWork(IProgressMonitor monitor) throws OperationCanceledException {
 		operation = getProvisioningUI().getUpdateOperation(null, null);
 		// check for updates
@@ -51,6 +56,7 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 			throw new OperationCanceledException();
 	}
 
+	@Override
 	protected boolean preloadRepositories() {
 		hasNoRepos = false;
 		RepositoryTracker repoMan = getProvisioningUI().getRepositoryTracker();

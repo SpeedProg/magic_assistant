@@ -1,6 +1,7 @@
 package com.reflexit.magicassistant.p2;
 
 import java.net.URI;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -59,7 +60,10 @@ public class P2Util {
 
 	public static void loadRepository(IProvisioningAgent agent) {
 		try {
-			URI repoLocation = new URI("http://mtgbrowser.sourceforge.net/update/1.2/");
+			String url = System.getProperty("ma.repo");
+			if (url == null)
+				url = "http://mtgbrowser.sourceforge.net/update/1.2/";
+			URI repoLocation = new URI(url);
 			// Load repository manager
 			IMetadataRepositoryManager metadataManager = (IMetadataRepositoryManager) agent
 					.getService(IMetadataRepositoryManager.SERVICE_NAME);
@@ -69,6 +73,7 @@ public class P2Util {
 			// Load repo
 			metadataManager.loadRepository(repoLocation, null);
 			artifactManager.loadRepository(repoLocation, null);
+			Activator.getDefault().getLog().log(new Status(1, Activator.PLUGIN_ID, "Adding repository: " + url));
 		} catch (Exception pe) {
 			Activator.getDefault().getLog().log(new Status(1, Activator.PLUGIN_ID, pe.getMessage()));
 		}

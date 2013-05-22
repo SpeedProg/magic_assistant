@@ -24,16 +24,19 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		registerP2Policy(context);
-		//getPreferenceStore().addPropertyChangeListener(getPreferenceListener());
+		// getPreferenceStore().addPropertyChangeListener(getPreferenceListener());
 	}
 
 	private void registerP2Policy(BundleContext context) {
 		MaPolicy policy = new MaPolicy();
 		context.registerService(Policy.class.getName(), policy, null);
 	}
+
 	public class MaPolicy extends Policy {
 		public MaPolicy() {
-			//setRepositoriesVisible(false);
+			if (System.getProperty("ma.showrepo") != null) {
+				setRepositoriesVisible(true);
+			}
 			setRestartPolicy(RESTART_POLICY_PROMPT);
 			setShowDrilldownRequirements(true);
 		}
@@ -41,8 +44,10 @@ public class Activator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
@@ -50,7 +55,7 @@ public class Activator extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
