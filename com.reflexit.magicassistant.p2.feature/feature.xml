@@ -2,7 +2,7 @@
 <feature
       id="com.reflexit.magicassistant.p2.feature"
       label="Magic Assistant Software Update"
-      version="1.2.7.qualifier"
+      version="1.2.8.qualifier"
       provider-name="Reflex IT">
 
    <description url="http://mtgbrowser.sf.net">
