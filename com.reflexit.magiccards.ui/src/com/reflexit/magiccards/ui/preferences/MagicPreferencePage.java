@@ -9,10 +9,15 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.reflexit.magicassistant.p2.UpdateHandler;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -79,6 +84,18 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		BooleanFieldEditor grid = new BooleanFieldEditor(PreferenceConstants.SHOW_GRID, "Show grid lines in card tables",
 				getFieldEditorParent());
 		addField(grid);
+		createButtons(getFieldEditorParent());
+	}
+
+	private void createButtons(Composite fieldEditorParent) {
+		Button pressMe = new Button(fieldEditorParent, SWT.PUSH);
+		pressMe.setText("Add Software Update Site...");
+		pressMe.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new UpdateHandler().openManipulateRepositories();
+			}
+		});
 	}
 
 	@Override
