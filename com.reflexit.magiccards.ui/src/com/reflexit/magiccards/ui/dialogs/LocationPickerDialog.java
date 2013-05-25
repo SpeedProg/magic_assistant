@@ -156,7 +156,7 @@ public class LocationPickerDialog extends TrayDialog {
 		locPage.load();
 	}
 
-	public void setSelection(IStructuredSelection initialResourceSelection) {
-		// TODO Auto-generated method stub
+	public void setSelection(IStructuredSelection sel) {
+		initialResourceSelection = sel;
 	}
 }

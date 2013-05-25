@@ -10,13 +10,10 @@ import java.util.Iterator;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -38,13 +35,13 @@ import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
+import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.FileSaveFieldEditor;
 
 /**
  * First and only page of Deck Export Wizard
  */
-public class DeckExportPage extends WizardDataTransferPage implements ICheckStateListener {
+public class DeckExportPage extends WizardDataTransferPage {
 	private static final String EXPORTED_RESOURCES_SETTING = "exportedResources"; //$NON-NLS-1$
 	private static final String OUTPUT_FILE_SETTING = "outputFile"; //$NON-NLS-1$
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
@@ -52,49 +49,34 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	private static final String INCLUDE_SIDEBOARD = "includeSideBoard"; //$NON-NLS-1$
 	FileFieldEditor editor;
 	private String fileName;
-	private IStructuredSelection initialResourceSelection;
-	private TreeViewer listViewer;
+	private IStructuredSelection resourceSelection;
 	private Button includeHeader;
 	private final ArrayList typeButtons = new ArrayList();
 	private static final String ID = DeckExportPage.class.getName();
 	private ReportType reportType;
-	private PreferenceStore store;
-	private LocationFilterPreferencePage locPage;
+	// private LocationFilterPreferencePage locPage;
 	private Combo typeCombo;
 	private Button includeSideBoard;
+	private StringButtonFieldEditor collection;
 
 	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
-		initialResourceSelection = selection;
-		store = new PreferenceStore();
+		resourceSelection = new StructuredSelection(selection.toList());
 	}
 
 	HashMap<String, String> storeToMap(boolean sideboard) {
-		IPreferenceStore store = getPreferenceStore();
 		HashMap<String, String> map = new HashMap<String, String>();
 		Locations locs = Locations.getInstance();
-		Collection<String> col = locs.getIds();
-		for (Iterator<String> iterator = col.iterator(); iterator.hasNext();) {
-			String id = iterator.next();
-			String value = store.getString(id);
-			if (locs.isSideboard(id)) {
-				String deckId = locs.getMainDeckId(id);
-				if (sideboard) {
-					value = store.getString(deckId);
-				} else {
-					value = "false";
-				}
-			}
-			if (value != null && value.length() > 0) {
-				map.put(id, value);
-				// System.err.println(id + "=" + value);
-			}
+		CardElement myDeck = (CardElement) resourceSelection.getFirstElement();
+		String deckId = locs.getPrefConstant(myDeck.getLocation().toMainDeck());
+		String sbId = locs.getPrefConstant(myDeck.getLocation().toSideboard());
+		if (sideboard) {
+			map.put(sbId, "true");
+			map.put(deckId, "true");
+		} else {
+			map.put(deckId, "true");
 		}
 		return map;
-	}
-
-	protected IPreferenceStore getPreferenceStore() {
-		return store;
 	}
 
 	protected IRunnableContext getRunnableContext() {
@@ -169,7 +151,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		createDestinationGroup(composite);
 		// restoreResourceSpecificationWidgetValues(); // ie.- local
 		restoreWidgetValues(); // ie.- subclass hook
-		if (initialResourceSelection != null) {
+		if (resourceSelection != null) {
 			setupBasedOnInitialSelections();
 		}
 		updateWidgetEnablements();
@@ -207,8 +189,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		// restore selection
 		String ids = dialogSettings.get(EXPORTED_RESOURCES_SETTING);
 		if (ids != null) {
-			locPage.loadFromMemento(ids);
-			locPage.load();
+			loadFromMemento(ids);
 		}
 		// restore options
 		String type = dialogSettings.get(REPORT_TYPE_SETTING);
@@ -222,6 +203,10 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		if (dialogSettings.get(INCLUDE_SIDEBOARD) != null) {
 			includeSideBoard.setSelection(dialogSettings.getBoolean(INCLUDE_SIDEBOARD));
 		}
+	}
+
+	private void loadFromMemento(String ids) {
+		// TODO Auto-generated method stub
 	}
 
 	private void selectTypeButtons(final String type) {
@@ -246,13 +231,11 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 	protected void saveWidgetValues() {
 		try {
 			// save pref page
-			locPage.performOk();
 			IDialogSettings dialogSettings = MagicUIActivator.getDefault().getDialogSettings(ID);
 			// save file name
 			dialogSettings.put(OUTPUT_FILE_SETTING, fileName);
 			// save selection
-			String ids = locPage.getMemento();
-			dialogSettings.put(EXPORTED_RESOURCES_SETTING, ids);
+			dialogSettings.put(EXPORTED_RESOURCES_SETTING, collection.getStringValue());
 			// save options
 			dialogSettings.put(REPORT_TYPE_SETTING, reportType.toString());
 			dialogSettings.put(INCLUDE_HEADER_SETTING, includeHeader.getSelection());
@@ -264,38 +247,38 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		}
 	}
 
-	protected void createResourcesGroup(final Composite parent) {
-		locPage = new LocationFilterPreferencePage(SWT.MULTI);
-		locPage.noDefaultAndApplyButton();
-		locPage.setPreferenceStore(store);
-		locPage.createControl(parent);
-		listViewer = locPage.getViewer();
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = 200;
-		data.widthHint = 300;
-		listViewer.getControl().setLayoutData(data);
-		((CheckboxTreeViewer) listViewer).addCheckStateListener(this);
-	}
-
-	public void checkStateChanged(final CheckStateChangedEvent event) {
-		// in case we need some restrictions on checked elements, for
-		// example only one at a time allowed
-		// Object[] data = listViewer.getCheckedElements();
-		// for (int i = 0; i < data.length; ++i) {
-		// listViewer.setChecked(data[i], false);
-		// }
-		// listViewer.setCheckedElements(NO_OBJECTS);
-		// event.getCheckable().setChecked(event.getElement(), true);
-		updatePageCompletion();
-		updateWidgetEnablements();
+	protected void createResourcesGroup(final Composite parent2) {
+		Composite parent = new Composite(parent2, SWT.NONE);
+		parent.setLayout(new GridLayout());
+		parent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		collection = new StringButtonFieldEditor("deckSelect", "Collection:", parent) {
+			@Override
+			protected String changePressed() {
+				LocationPickerDialog dialog = new LocationPickerDialog(getShell(), SWT.SINGLE);
+				dialog.setSelection(resourceSelection);
+				if (dialog.open() == Window.OK) {
+					if (dialog.getSelection() != null) {
+						resourceSelection = dialog.getSelection();
+					}
+					return resourceSelection.getFirstElement().toString();
+				}
+				return null;
+			}
+		};
+		collection.getTextControl(parent).addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				updatePageCompletion();
+				updateWidgetEnablements();
+			}
+		});
 	}
 
 	/**
 	 * Set the initial selections in the resource group.
 	 */
 	protected void setupBasedOnInitialSelections() {
-		locPage.loadPreferenceFromSelection(initialResourceSelection);
-		locPage.load();
+		collection.setStringValue(resourceSelection.getFirstElement().toString());
 	}
 
 	@Override
@@ -351,7 +334,7 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 
 	@Override
 	protected boolean validateSourceGroup() {
-		if (locPage.isEmptySelection()) {
+		if (collection.getStringValue().equals("")) {
 			setMessage("Select an element to export");
 			return false;
 		}
@@ -446,18 +429,13 @@ public class DeckExportPage extends WizardDataTransferPage implements ICheckStat
 		return includeHeader.getSelection();
 	}
 
-	public PreferenceStore getStore() {
-		return store;
-	}
-
 	public boolean getIncludeSideBoard() {
 		return includeSideBoard.getSelection();
 	}
 
 	public CardElement getFirstCardElement() {
-		Object[] el = ((CheckboxTreeViewer) listViewer).getCheckedElements();
 		CardElement ce = null;
-		for (Object object : el) {
+		for (Object object : resourceSelection.toList()) {
 			if (object instanceof CardOrganizer)
 				continue;
 			if (ce != null)
