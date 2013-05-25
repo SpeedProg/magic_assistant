@@ -116,3 +116,4 @@ From the Vault: Realms|V12||August 2012|Starter||
 Return to Ravnica|RTR||September 2012|Expansion|Return to Ravnica|Standard, Modern, Extended
 Duel Decks: Sorin vs. Tibalt|DDK||April 2013|Starter||
 Gatecrash|GTC||April 2013|Expansion||Standard, Modern, Extended
+Dragon's Maze|DGM||May 2013|Expansion||Standard, Modern, Extended
