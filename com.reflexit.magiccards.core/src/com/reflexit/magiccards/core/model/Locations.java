@@ -59,14 +59,9 @@ public class Locations implements ISearchableProperty {
 	}
 
 	public String getNameById(String id1) {
-		ModelRoot modelRoot = DataManager.getModelRoot();
-		Map map = modelRoot.getLocationsMap();
-		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			Location loc = (Location) iterator.next();
-			String id = getPrefConstant(loc);
-			if (id1.equals(id))
-				return loc.toString();
-		}
+		Location loc = findLocation(id1);
+		if (loc != null)
+			return loc.toString();
 		return null;
 	}
 
