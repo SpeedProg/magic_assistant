@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
@@ -69,7 +70,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 /**
  * First and only page of Deck Export Wizard
  */
-public class DeckImportPage extends WizardDataTransferPage {
+public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	private static final String IMPUT_FILE_SETTING = "outputFile"; //$NON-NLS-1$
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
 	private static final String IMPORT_HEADER_SETTING = "headerRow"; //$NON-NLS-1$

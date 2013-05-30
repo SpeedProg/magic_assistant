@@ -15,7 +15,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
@@ -32,7 +31,7 @@ import java.util.List;
  * 
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class WizardDataTransferPage extends WizardPage implements Listener, IOverwriteQuery {
+public abstract class WizardDataTransferPage extends WizardPage implements IOverwriteQuery {
 	// constants
 	protected static final int SIZING_TEXT_FIELD_WIDTH = 250;
 	protected static final int COMBO_HISTORY_LENGTH = 5;

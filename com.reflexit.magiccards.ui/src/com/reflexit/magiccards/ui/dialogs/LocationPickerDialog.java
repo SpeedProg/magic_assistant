@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.dialogs;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -146,6 +147,19 @@ public class LocationPickerDialog extends TrayDialog {
 
 	public IStructuredSelection getSelection() {
 		return selection;
+	}
+
+	public String getStringValue() {
+		String res = "";
+		if (selection == null)
+			return "";
+		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+			CardElement deck = (CardElement) iterator.next();
+			res += deck.getLocation().getPath();
+			if (iterator.hasNext())
+				res += ",";
+		}
+		return res;
 	}
 
 	/**
