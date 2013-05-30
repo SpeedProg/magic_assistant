@@ -138,9 +138,9 @@ public class CardOrganizer extends CardElement {
 			if (el.getPath().equals(p))
 				return el;
 			if (top.equals(el.getName())) {
+				if (rest.isEmpty())
+					return el;
 				if (el instanceof CardOrganizer) {
-					if (rest.isEmpty())
-						return el;
 					return ((CardOrganizer) el).findElement(rest);
 				}
 			}

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
@@ -61,16 +62,17 @@ public class FileUtils {
 		out.getAbsoluteFile().getParentFile().mkdirs();
 		FileOutputStream fos = new FileOutputStream(out);
 		try {
-			byte[] buf = new byte[1024 * 4];
-			int i = 0;
-			while ((i = in.read(buf)) != -1) {
-				fos.write(buf, 0, i);
-			}
-		} catch (IOException e) {
-			throw e;
+			copyStream(in, fos);
 		} finally {
 			fos.close();
 		}
+	}
+
+	public static void copyStream(InputStream in, OutputStream out) throws IOException {
+		int count;
+		byte[] buffer = new byte[1024 * 4];
+		while ((count = in.read(buffer)) > 0)
+			out.write(buffer, 0, count);
 	}
 
 	public static String readFileAsString(BufferedReader reader) throws IOException {

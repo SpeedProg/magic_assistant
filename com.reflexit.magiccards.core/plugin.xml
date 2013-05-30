@@ -94,5 +94,11 @@
             label="MTG Studio .csv"
             xmlFormat="false">
       </deckFormat>
+            <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.CustomExportDelegate"
+            id="custom"
+            label="Custom Export .txt"
+            extension="txt">
+      </deckFormat>
    </extension>
 </plugin>
