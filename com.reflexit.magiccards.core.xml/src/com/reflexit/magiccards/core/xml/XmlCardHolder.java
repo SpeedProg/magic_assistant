@@ -277,6 +277,8 @@ public class XmlCardHolder implements ICardHandler {
 					Edition edition = (Edition) iterator.next();
 					try {
 						rec += downloadAndStoreSet(edition.getName(), options, list, new SubCoreProgressMonitor(pm, 100));
+					} catch (InterruptedException e) {
+						throw e;
 					} catch (Exception e) {
 						MagicLogger.log(e);
 					}
