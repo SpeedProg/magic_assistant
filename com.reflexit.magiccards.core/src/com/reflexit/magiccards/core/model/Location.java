@@ -12,6 +12,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.io.File;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.LocationPath;
 
@@ -137,6 +138,10 @@ public class Location implements Comparable<Location> {
 
 	public String getPath() {
 		return location;
+	}
+
+	public File getFile() {
+		return new File(DataManager.getRootDir(), location + XML_SUFFIX);
 	}
 
 	public String getBaseFileName() {
