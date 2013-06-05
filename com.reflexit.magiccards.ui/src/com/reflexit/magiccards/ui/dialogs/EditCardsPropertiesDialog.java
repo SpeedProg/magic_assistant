@@ -1,10 +1,7 @@
 package com.reflexit.magiccards.ui.dialogs;
 
-import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -12,7 +9,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -21,7 +17,7 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.SpecialTags;
 import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
-public class EditCardsPropertiesDialog extends TrayDialog {
+public class EditCardsPropertiesDialog extends MagicDialog {
 	private static final String VIRTUAL_VALUE = "Virtual";
 	private static final String OWN_VALUE = "Own";
 	public static final String COMMENT_FIELD = MagicCardFieldPhysical.COMMENT.name();
@@ -32,12 +28,9 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 	public static final String NAME_FIELD = MagicCardField.NAME.name();
 	public static final String PRICE_FIELD = MagicCardFieldPhysical.PRICE.name();
 	public static final String UNCHANGED = "<unchanged>";
-	private PreferenceStore store;
 
 	public EditCardsPropertiesDialog(Shell parentShell, PreferenceStore store) {
-		super(parentShell);
-		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.store = store;
+		super(parentShell, store);
 	}
 
 	@Override
@@ -86,50 +79,5 @@ public class EditCardsPropertiesDialog extends TrayDialog {
 				store.setValue(OWNERSHIP_FIELD, String.valueOf(own));
 			}
 		});
-	}
-
-	public Text createTextFieldEditor(Composite area, String labelString, final String property) {
-		return createTextFieldEditor(area, labelString, property, SWT.BORDER);
-	}
-
-	public Text createTextFieldEditor(Composite area, String labelString, final String property, int flags) {
-		createTextLabel(area, labelString);
-		final Text text = new Text(area, flags);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		text.setLayoutData(gd);
-		if ((flags & SWT.WRAP) != 0) {
-			gd.heightHint = convertHeightInCharsToPixels(4);
-		}
-		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				text.setFocus();
-				store.setValue(property, text.getText());
-			}
-		});
-		text.setText(store.getString(property));
-		return text;
-	}
-
-	private void setComboChoices(Combo ownership, String[] strings, String defaultString) {
-		boolean hasDefault = false;
-		for (String string : strings) {
-			ownership.add(string);
-			if (string.equals(defaultString)) {
-				hasDefault = true;
-			}
-		}
-		if (!hasDefault) {
-			ownership.add(defaultString);
-		}
-		ownership.setText(defaultString);
-	}
-
-	private Label createTextLabel(Composite area, String string) {
-		Label label = new Label(area, SWT.NONE);
-		label.setText(string);
-		GridData ld = new GridData();
-		ld.verticalAlignment = SWT.TOP;
-		label.setLayoutData(ld);
-		return label;
 	}
 }

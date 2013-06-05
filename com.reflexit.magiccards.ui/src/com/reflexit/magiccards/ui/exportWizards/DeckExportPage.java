@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.exportWizards;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,22 +40,19 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
+import com.reflexit.magiccards.ui.jobs.ExportDeckJob;
 import com.reflexit.magiccards.ui.preferences.feditors.FileSaveFieldEditor;
-import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 
 /**
  * First and only page of Deck Export Wizard
@@ -78,6 +74,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	private Button includeSideBoard;
 	private StringButtonFieldEditor collection;
 	private Text previewText;
+	private Job previewJob;
 
 	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -315,7 +312,6 @@ public class DeckExportPage extends WizardDataTransferPage {
 		label.setText("Export Type:");
 		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
 		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
-		types.add(ReportType.XML);
 		for (ReportType rt : types) {
 			addComboType(rt);
 		}
@@ -507,25 +503,33 @@ public class DeckExportPage extends WizardDataTransferPage {
 		saveWidgetValues();
 		final boolean header = getIncludeHeader();
 		final boolean sideboard = getIncludeSideBoard();
-		new Job("Generating preview") {
+		final ReportType type = getReportType();
+		if (previewJob != null) {
+			previewJob.cancel();
+		}
+		previewJob = new Job("Generating preview") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					exportDeck(outStream, monitor, reportType, header, sideboard);
-					updatePreview(outStream.toString());
+					System.err.println("gen preview for type " + type);
+					exportDeck(outStream, monitor, type, header, sideboard);
+					if (!monitor.isCanceled())
+						updatePreview(outStream.toString());
 				} catch (InvocationTargetException e) {
 					if (e.getTargetException() instanceof InterruptedException) {
 						//
-					} else
+					} else if (!monitor.isCanceled())
 						updatePreview(e.getCause().getMessage());
 				} catch (InterruptedException e) {
 					//
 				} catch (Exception e) {
-					updatePreview(e.getMessage());
+					if (!monitor.isCanceled())
+						updatePreview(e.getMessage());
 				}
 				return Status.OK_STATUS;
 			}
-		}.schedule();
+		};
+		previewJob.schedule();
 	}
 
 	protected void updatePreview(final String string) {
@@ -559,6 +563,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						exportDeck(outStream, monitor, reportType, header, sideboard);
+						outStream.close();
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					}
@@ -581,31 +586,13 @@ public class DeckExportPage extends WizardDataTransferPage {
 
 	public void exportDeck(final OutputStream outStream, IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
 			throws FileNotFoundException, IOException, InvocationTargetException, InterruptedException {
-		if (reportType == reportType.XML) {
-			monitor.beginTask("Exporting xml", 100);
-			// TODO: export multiple files? zip?
-			CardElement ce = getFirstCardElement();
-			FileInputStream in = new FileInputStream(ce.getFile());
-			FileUtils.copyStream(in, outStream);
-			in.close();
-			monitor.done();
-		} else {
-			final IExportDelegate<IMagicCard> worker;
-			try {
-				worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
-				worker.setColumns(columns == null || columns.length == 0 ? MagicCardFieldPhysical.allNonTransientFields() : columns);
-			} catch (Exception e) {
-				throw new InvocationTargetException(e);
-			}
-			// TODO: export selection only
-			final HashMap<String, String> map = storeToMap(sideboard);
-			IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
-			MagicCardFilter locFilter = filteredLibrary.getFilter();
-			locFilter.update(map);
-			filteredLibrary.update();
-			worker.init(outStream, header, filteredLibrary);
-			worker.run(new CoreMonitorAdapter(monitor));
-		}
+		// TODO: export selection only
+		final HashMap<String, String> map = storeToMap(sideboard);
+		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
+		MagicCardFilter locFilter = filteredLibrary.getFilter();
+		locFilter.update(map);
+		filteredLibrary.update();
+		new ExportDeckJob(outStream, reportType, header, filteredLibrary, columns).syncRun();
 	}
 
 	private ICardField[] columns;
