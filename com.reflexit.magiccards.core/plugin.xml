@@ -8,7 +8,8 @@
             extension="xml"
             id="xml"
             importDelegate="com.reflexit.magiccards.core.exports.XmlImportDelegate"
-            label="xml"
+            exportDelegate="com.reflexit.magiccards.core.exports.XmlExportDelegate"
+            label="Magic Assistant XML"
             xmlFormat="true">
       </deckFormat>
       <deckFormat
@@ -93,12 +94,6 @@
             importDelegate="com.reflexit.magiccards.core.exports.MTGStudioCsvImportDelegate"
             label="MTG Studio .csv"
             xmlFormat="false">
-      </deckFormat>
-            <deckFormat
-            exportDelegate="com.reflexit.magiccards.core.exports.CustomExportDelegate"
-            id="custom"
-            label="Custom Export .txt"
-            extension="txt">
       </deckFormat>
    </extension>
 </plugin>

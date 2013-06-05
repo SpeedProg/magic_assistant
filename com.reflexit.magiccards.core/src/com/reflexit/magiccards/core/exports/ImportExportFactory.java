@@ -26,8 +26,8 @@ import com.reflexit.magiccards.core.DataManager;
  * Import/Export factory - gets instance of worker class by its type
  */
 public class ImportExportFactory<T> {
-	private static Map<ReportType, String> importRegistry = new LinkedHashMap<ReportType, String>();
-	private static Map<ReportType, String> exportRegistry = new LinkedHashMap<ReportType, String>();
+	private static Map<ReportType, Object> importRegistry = new LinkedHashMap<ReportType, Object>();
+	private static Map<ReportType, Object> exportRegistry = new LinkedHashMap<ReportType, Object>();
 
 	public IImportDelegate<T> getImportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
@@ -35,13 +35,18 @@ public class ImportExportFactory<T> {
 			initRegistry();
 		}
 		IImportDelegate<T> newInstance;
-		String className = importRegistry.get(type);
-		if (className == null)
-			return null;
-		Class loadClass = getClass().getClassLoader().loadClass(className);
-		newInstance = (IImportDelegate<T>) loadClass.newInstance();
-		return newInstance;
-	};
+		Object className = importRegistry.get(type);
+		if (className instanceof IImportDelegate) {
+			return (IImportDelegate) className;
+		}
+		if (className instanceof String) {
+			Class loadClass = getClass().getClassLoader().loadClass((String) className);
+			newInstance = (IImportDelegate<T>) loadClass.newInstance();
+			importRegistry.put(type, newInstance);
+			return newInstance;
+		}
+		return null;
+	}
 
 	public IExportDelegate<T> getExportWorker(ReportType type) throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
@@ -49,15 +54,20 @@ public class ImportExportFactory<T> {
 			initRegistry();
 		}
 		IExportDelegate<T> newInstance;
-		String className = exportRegistry.get(type);
-		if (className == null)
-			return null;
-		Class loadClass = getClass().getClassLoader().loadClass(className);
-		newInstance = (IExportDelegate<T>) loadClass.newInstance();
-		return newInstance;
-	};
+		Object className = exportRegistry.get(type);
+		if (className instanceof IExportDelegate) {
+			return (IExportDelegate<T>) className;
+		}
+		if (className instanceof String) {
+			Class loadClass = getClass().getClassLoader().loadClass((String) className);
+			newInstance = (IExportDelegate<T>) loadClass.newInstance();
+			exportRegistry.put(type, newInstance);
+			return newInstance;
+		}
+		return null;
+	}
 
-	private void initRegistry() {
+	private static void initRegistry() {
 		loadExtensions();
 	}
 
@@ -83,27 +93,32 @@ public class ImportExportFactory<T> {
 		addExportWorker(rt, exp);
 	}
 
-	public static void addImportWorker(ReportType type, String clazz) {
-		addWorker(importRegistry, type, clazz);
+	public static void addImportWorker(ReportType type, Object delegate) {
+		if (delegate instanceof String || delegate instanceof IImportDelegate)
+			importRegistry.put(type, delegate);
+		else if (delegate == null)
+			importRegistry.remove(type);
+		else
+			throw new ClassCastException();
 	}
 
-	public static void addExportWorker(ReportType type, String clazz) {
-		addWorker(exportRegistry, type, clazz);
+	public static void addExportWorker(ReportType type, Object delegate) {
+		if (delegate instanceof String || delegate instanceof IExportDelegate)
+			exportRegistry.put(type, delegate);
+		else if (delegate == null)
+			exportRegistry.remove(type);
+		else
+			throw new ClassCastException();
 	}
 
-	private static void addWorker(Map<ReportType, String> registry, ReportType type, String clazz) {
-		if (clazz != null)
-			registry.put(type, clazz);
-	}
-
-	public Collection<ReportType> getImportTypes() {
+	public static Collection<ReportType> getImportTypes() {
 		if (importRegistry.size() == 0) {
 			initRegistry();
 		}
 		return new ArrayList<ReportType>(importRegistry.keySet());
 	}
 
-	public Collection<ReportType> getExportTypes() {
+	public static Collection<ReportType> getExportTypes() {
 		if (exportRegistry.size() == 0) {
 			initRegistry();
 		}
