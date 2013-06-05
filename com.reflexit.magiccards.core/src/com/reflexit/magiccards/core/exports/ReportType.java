@@ -1,7 +1,9 @@
 package com.reflexit.magiccards.core.exports;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class ReportType {
 	private String id;
@@ -13,6 +15,7 @@ public class ReportType {
 	public static final ReportType CSV = createReportType("csv", "Magic Assistant CSV");
 	public static final ReportType TEXT_DECK_CLASSIC = createReportType("classic", "Deck Classic (Text)", "txt", false);
 	public static final ReportType TABLE_PIPED = createReportType("table", "Piped Table");
+	private Properties properties = new Properties();
 
 	private ReportType(String key, String label, boolean xml, String extension) {
 		this.id = key;
@@ -59,7 +62,30 @@ public class ReportType {
 		return types.get(key);
 	}
 
+	public static ReportType getByLabel(String label) {
+		if (label == null)
+			return null;
+		for (Iterator<ReportType> iterator = types.values().iterator(); iterator.hasNext();) {
+			ReportType type = iterator.next();
+			if (type.getLabel().equals(label))
+				return type;
+		}
+		return null;
+	}
+
 	public String getExtension() {
 		return extension;
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public void setProperty(String key, String value) {
+		this.properties.setProperty(key, value);
+	}
+
+	public String getProperty(String key) {
+		return properties.getProperty(key);
 	}
 }
