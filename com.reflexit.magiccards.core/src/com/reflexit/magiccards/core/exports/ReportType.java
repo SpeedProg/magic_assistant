@@ -16,6 +16,7 @@ public class ReportType {
 	public static final ReportType TEXT_DECK_CLASSIC = createReportType("classic", "Deck Classic (Text)", "txt", false);
 	public static final ReportType TABLE_PIPED = createReportType("table", "Piped Table");
 	private Properties properties = new Properties();
+	private boolean custom;
 
 	private ReportType(String key, String label, boolean xml, String extension) {
 		this.id = key;
@@ -87,5 +88,25 @@ public class ReportType {
 
 	public String getProperty(String key) {
 		return properties.getProperty(key);
+	}
+
+	public void setExtension(String ext) {
+		this.extension = ext;
+	}
+
+	public void setCustom(boolean b) {
+		this.custom = b;
+	}
+
+	public boolean isCustom() {
+		return custom;
+	}
+
+	public void setProperties(Properties prop) {
+		this.properties = prop;
+		String ext = prop.getProperty("ext");
+		if (ext != null) {
+			setExtension(ext);
+		}
 	}
 }

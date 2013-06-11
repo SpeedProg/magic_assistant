@@ -12,8 +12,7 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Formatter;
-
+import java.text.MessageFormat;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -28,6 +27,10 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public static final String ROW_FORMAT = "row.format";
 	public static final String ROW_FIELDS = "row.fields";
+	public static final String FIELD_SEP = "field.sep";
+	public static final String HEADER = "main.header";
+	public static final String SB_HEADER = "sideboard.header";
+	public static final String DECK_NAME_VAR = "${DECK.NAME}";
 	private ReportType rtype;
 
 	public ReportType getType() {
@@ -45,10 +48,13 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		String format = rtype.getProperty(ROW_FORMAT);
 		String fields = rtype.getProperty(ROW_FIELDS);
+		String sep = rtype.getProperty(FIELD_SEP);
+		String headerStr = rtype.getProperty(HEADER);
+		String sbHeaderStr = rtype.getProperty(SB_HEADER);
+		if (sep == null)
+			sep = " ";
 		ICardField[] xfields = fields == null ? new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME }
 				: MagicCardFieldPhysical.toFields(fields, ",");
-		if (format == null)
-			format = "%2d %s";
 		PrintStream exportStream = new PrintStream(st);
 		Location location = null;
 		for (IMagicCard card : store) {
@@ -62,10 +68,34 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 				Location curLocation = ((MagicCardPhysical) card).getLocation();
 				if (location != curLocation) {
 					location = ((MagicCardPhysical) card).getLocation();
-					exportStream.println("# " + location.getName());
+					String deckName = location.getName();
+					if (location.isSideboard() && sbHeaderStr != null) {
+						String xheader = sbHeaderStr.replace(DECK_NAME_VAR, deckName);
+						exportStream.println(xheader);
+					} else {
+						if (header && headerStr != null) {
+							String xheader = headerStr.replace(DECK_NAME_VAR, deckName);
+							exportStream.println(xheader);
+						}
+					}
 				}
 			}
-			String line = new Formatter().format(format, values).toString();
+			String line;
+			if (format != null) {
+				try {
+					line = new MessageFormat(format).format(values);
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				}
+			} else {
+				line = "";
+				for (int j = 0; j < values.length; j++) {
+					Object object = values[j];
+					if (j > 0)
+						line += sep;
+					line += object;
+				}
+			}
 			exportStream.println(line);
 			monitor.worked(1);
 		}

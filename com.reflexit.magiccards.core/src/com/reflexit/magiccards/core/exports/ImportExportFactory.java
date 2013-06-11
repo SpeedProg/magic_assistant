@@ -10,17 +10,24 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 
 /**
  * Import/Export factory - gets instance of worker class by its type
@@ -69,6 +76,41 @@ public class ImportExportFactory<T> {
 
 	private static void initRegistry() {
 		loadExtensions();
+		loadCustom();
+	}
+
+	private static void loadCustom() {
+		IPath exportersPath = getExportersPath();
+		File[] listFiles = exportersPath.toFile().listFiles();
+		for (int i = 0; i < listFiles.length; i++) {
+			File file = listFiles[i];
+			try {
+				ReportType type = loadExporter(file);
+				addExportWorker(type, new CustomExportDelegate(type));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private static ReportType loadExporter(File file) throws IOException {
+		String name = file.getName().replaceAll("\\.ini$", "");
+		ReportType type = ReportType.createReportType(name, name);
+		Properties prop = new Properties();
+		FileInputStream fs = new FileInputStream(file);
+		prop.load(fs);
+		fs.close();
+		type.setProperties(prop);
+		type.setCustom(true);
+		return type;
+	}
+
+	public static IPath getExportersPath() {
+		IPath stateLocation = new Path(FileUtils.getStateLocationFile().toString());
+		IPath filters = stateLocation.append("/exporters");
+		filters.toFile().mkdir();
+		return filters;
 	}
 
 	private static void loadExtensions() {

@@ -104,6 +104,8 @@ public enum MagicCardFieldPhysical implements ICardField {
 
 	public String getGroupLabel() {
 		String name = name();
-		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+		name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+		name = name.replace('_', ' ');
+		return name;
 	}
 }
