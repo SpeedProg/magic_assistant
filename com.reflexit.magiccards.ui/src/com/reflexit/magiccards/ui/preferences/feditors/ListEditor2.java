@@ -1,19 +1,6 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
 package com.reflexit.magiccards.ui.preferences.feditors;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -28,29 +15,37 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
  * An abstract field editor that manages a list of input values. The editor displays a list
- * containing the values, and Up and Down buttons to adjust the order of elements in the list.
+ * containing the values, buttons for adding and removing values, and Up and Down buttons to adjust
+ * the order of elements in the list.
  * <p>
  * Subclasses must implement the <code>parseString</code>, <code>createList</code>, and
  * <code>getNewInputObject</code> framework methods.
  * </p>
  */
-public class CheckedListEditor extends FieldEditor {
+public abstract class ListEditor2 extends FieldEditor {
 	/**
 	 * The list widget; <code>null</code> if none (before creation or after disposal).
 	 */
-	protected Table list;
+	protected List list;
 	/**
 	 * The button box containing the Add, Remove, Up, and Down buttons; <code>null</code> if none
 	 * (before creation or after disposal).
 	 */
 	private Composite buttonBox;
+	/**
+	 * The Add button.
+	 */
+	private Button addButton;
+	/**
+	 * The Remove button.
+	 */
+	private Button removeButton;
 	/**
 	 * The Up button.
 	 */
@@ -63,12 +58,11 @@ public class CheckedListEditor extends FieldEditor {
 	 * The selection listener.
 	 */
 	private SelectionListener selectionListener;
-	private LinkedHashMap<String, String> keysValus = new LinkedHashMap<String, String>();
 
 	/**
 	 * Creates a new list field editor
 	 */
-	protected CheckedListEditor() {
+	protected ListEditor2() {
 	}
 
 	/**
@@ -81,16 +75,25 @@ public class CheckedListEditor extends FieldEditor {
 	 * @param parent
 	 *            the parent of the field editor's control
 	 */
-	public CheckedListEditor(String name, String labelText, Composite parent, String[] values) {
-		this(name, labelText, parent, values, values);
-	}
-
-	public CheckedListEditor(String name, String labelText, Composite parent, String[] values, String[] keys) {
+	protected ListEditor2(String name, String labelText, Composite parent) {
 		init(name, labelText);
 		createControl(parent);
-		for (int i = 0; i < keys.length; i++) {
-			String key = keys[i];
-			keysValus.put(key, values[i]);
+	}
+
+	/**
+	 * Notifies that the Add button has been pressed.
+	 */
+	protected void addPressed() {
+		setPresentsDefaultValue(false);
+		String input = getNewInputObject();
+		if (input != null) {
+			int index = list.getSelectionIndex();
+			if (index >= 0) {
+				list.add(input, index + 1);
+			} else {
+				list.add(input, 0);
+			}
+			selectionChanged();
 		}
 	}
 
@@ -101,7 +104,7 @@ public class CheckedListEditor extends FieldEditor {
 	protected void adjustForNumColumns(int numColumns) {
 		Control control = getLabelControl();
 		((GridData) control.getLayoutData()).horizontalSpan = numColumns;
-		((GridData) this.list.getLayoutData()).horizontalSpan = numColumns - 1;
+		((GridData) list.getLayoutData()).horizontalSpan = numColumns - 1;
 	}
 
 	/**
@@ -111,9 +114,25 @@ public class CheckedListEditor extends FieldEditor {
 	 *            the box for the buttons
 	 */
 	protected void createButtons(Composite box) {
-		this.upButton = createPushButton(box, "ListEditor2.up");//$NON-NLS-1$
-		this.downButton = createPushButton(box, "ListEditor2.down");//$NON-NLS-1$
+		addButton = createPushButton(box, "New...");//$NON-NLS-1$
+		removeButton = createPushButton(box, "Remove");//$NON-NLS-1$
+		upButton = createPushButton(box, "Up");//$NON-NLS-1$
+		downButton = createPushButton(box, "Down");//$NON-NLS-1$
 	}
+
+	/**
+	 * Combines the given list of items into a single string. This method is the converse of
+	 * <code>parseString</code>.
+	 * <p>
+	 * Subclasses must implement this method.
+	 * </p>
+	 * 
+	 * @param items
+	 *            the list of items
+	 * @return the combined string
+	 * @see #parseString
+	 */
+	protected abstract String createList(String[] items);
 
 	/**
 	 * Helper method to create a push button.
@@ -124,7 +143,7 @@ public class CheckedListEditor extends FieldEditor {
 	 *            the resource name used to supply the button's label text
 	 * @return Button
 	 */
-	protected Button createPushButton(Composite parent, String key) {
+	protected final Button createPushButton(Composite parent, String key) {
 		Button button = new Button(parent, SWT.PUSH);
 		button.setText(JFaceResources.getString(key));
 		button.setFont(parent.getFont());
@@ -140,15 +159,19 @@ public class CheckedListEditor extends FieldEditor {
 	 * Creates a selection listener.
 	 */
 	public void createSelectionListener() {
-		this.selectionListener = new SelectionAdapter() {
+		selectionListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				Widget widget = event.widget;
-				if (widget == CheckedListEditor.this.upButton) {
+				if (widget == addButton) {
+					addPressed();
+				} else if (widget == removeButton) {
+					removePressed();
+				} else if (widget == upButton) {
 					upPressed();
-				} else if (widget == CheckedListEditor.this.downButton) {
+				} else if (widget == downButton) {
 					downPressed();
-				} else if (widget == CheckedListEditor.this.list) {
+				} else if (widget == list) {
 					selectionChanged();
 				}
 			}
@@ -164,17 +187,16 @@ public class CheckedListEditor extends FieldEditor {
 		GridData gd = new GridData();
 		gd.horizontalSpan = numColumns;
 		control.setLayoutData(gd);
-		this.list = getListControl(parent);
+		list = getListControl(parent);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.verticalAlignment = GridData.BEGINNING;
-		gd.heightHint = 400;
+		gd.verticalAlignment = GridData.FILL;
 		gd.horizontalSpan = numColumns - 1;
 		gd.grabExcessHorizontalSpace = true;
-		this.list.setLayoutData(gd);
-		this.buttonBox = getButtonBoxControl(parent);
+		list.setLayoutData(gd);
+		buttonBox = getButtonBoxControl(parent);
 		gd = new GridData();
 		gd.verticalAlignment = GridData.BEGINNING;
-		this.buttonBox.setLayoutData(gd);
+		buttonBox.setLayoutData(gd);
 	}
 
 	/*
@@ -182,9 +204,12 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	@Override
 	protected void doLoad() {
-		if (this.list != null) {
+		if (list != null) {
 			String s = getPreferenceStore().getString(getPreferenceName());
-			parseString(s);
+			String[] array = parseString(s);
+			for (int i = 0; i < array.length; i++) {
+				list.add(array[i]);
+			}
 		}
 	}
 
@@ -193,10 +218,13 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	@Override
 	protected void doLoadDefault() {
-		if (this.list != null) {
-			this.list.removeAll();
+		if (list != null) {
+			list.removeAll();
 			String s = getPreferenceStore().getDefaultString(getPreferenceName());
-			parseString(s);
+			String[] array = parseString(s);
+			for (int i = 0; i < array.length; i++) {
+				list.add(array[i]);
+			}
 		}
 	}
 
@@ -205,7 +233,7 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	@Override
 	protected void doStore() {
-		String s = createList();
+		String s = createList(list.getItems());
 		if (s != null) {
 			getPreferenceStore().setValue(getPreferenceName(), s);
 		}
@@ -226,24 +254,26 @@ public class CheckedListEditor extends FieldEditor {
 	 * @return the button box
 	 */
 	public Composite getButtonBoxControl(Composite parent) {
-		if (this.buttonBox == null) {
-			this.buttonBox = new Composite(parent, SWT.NULL);
+		if (buttonBox == null) {
+			buttonBox = new Composite(parent, SWT.NULL);
 			GridLayout layout = new GridLayout();
 			layout.marginWidth = 0;
-			this.buttonBox.setLayout(layout);
-			createButtons(this.buttonBox);
-			this.buttonBox.addDisposeListener(new DisposeListener() {
+			buttonBox.setLayout(layout);
+			createButtons(buttonBox);
+			buttonBox.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent event) {
-					CheckedListEditor.this.upButton = null;
-					CheckedListEditor.this.downButton = null;
-					CheckedListEditor.this.buttonBox = null;
+					addButton = null;
+					removeButton = null;
+					upButton = null;
+					downButton = null;
+					buttonBox = null;
 				}
 			});
 		} else {
-			checkParent(this.buttonBox, parent);
+			checkParent(buttonBox, parent);
 		}
 		selectionChanged();
-		return this.buttonBox;
+		return buttonBox;
 	}
 
 	/**
@@ -253,21 +283,31 @@ public class CheckedListEditor extends FieldEditor {
 	 *            the parent control
 	 * @return the list control
 	 */
-	public Table getListControl(Composite parent) {
-		if (this.list == null) {
-			this.list = new Table(parent, SWT.BORDER | SWT.CHECK | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
-			this.list.setFont(parent.getFont());
-			this.list.addSelectionListener(getSelectionListener());
-			this.list.addDisposeListener(new DisposeListener() {
+	public List getListControl(Composite parent) {
+		if (list == null) {
+			list = new List(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
+			list.setFont(parent.getFont());
+			list.addSelectionListener(getSelectionListener());
+			list.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent event) {
-					CheckedListEditor.this.list = null;
+					list = null;
 				}
 			});
 		} else {
-			checkParent(this.list, parent);
+			checkParent(list, parent);
 		}
-		return this.list;
+		return list;
 	}
+
+	/**
+	 * Creates and returns a new item for the list.
+	 * <p>
+	 * Subclasses must implement this method.
+	 * </p>
+	 * 
+	 * @return a new item
+	 */
+	protected abstract String getNewInputObject();
 
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
@@ -283,10 +323,10 @@ public class CheckedListEditor extends FieldEditor {
 	 * @return the selection listener
 	 */
 	private SelectionListener getSelectionListener() {
-		if (this.selectionListener == null) {
+		if (selectionListener == null) {
 			createSelectionListener();
 		}
-		return this.selectionListener;
+		return selectionListener;
 	}
 
 	/**
@@ -298,10 +338,10 @@ public class CheckedListEditor extends FieldEditor {
 	 * @return the shell
 	 */
 	protected Shell getShell() {
-		if (this.upButton == null) {
+		if (addButton == null) {
 			return null;
 		}
-		return this.upButton.getShell();
+		return addButton.getShell();
 	}
 
 	/**
@@ -316,75 +356,40 @@ public class CheckedListEditor extends FieldEditor {
 	 * @return an array of <code>String</code>
 	 * @see #createList
 	 */
-	protected void parseString(String stringList) {
-		String[] prefValues = stringList.split(",");
-		LinkedHashSet<String> prefs = new LinkedHashSet<String>();
-		prefs.addAll(Arrays.asList(prefValues));
-		@SuppressWarnings("unchecked")
-		LinkedHashMap<String, String> rem = (LinkedHashMap<String, String>) keysValus.clone();
-		for (String k : prefValues) {
-			if (k.startsWith("-")) {
-				k = k.substring(1);
-			}
-			rem.remove(k);
-		}
-		// add field which are in the list for the control but not in the
-		// preferences
-		for (String k : rem.keySet()) {
-			prefs.add("-" + k);
-		}
-		for (String k : prefs) {
-			boolean checked = true;
-			if (k.startsWith("-")) {
-				checked = false;
-				k = k.substring(1);
-			}
-			TableItem item = new TableItem(this.list, SWT.NONE);
-			item.setData(k);
-			String value = keysValus.get(k);
-			if (value == null) {
-				value = k;
-			}
-			item.setText(value);
-			item.setChecked(checked);
+	protected abstract String[] parseString(String stringList);
+
+	/**
+	 * Notifies that the Remove button has been pressed.
+	 */
+	private void removePressed() {
+		setPresentsDefaultValue(false);
+		int index = list.getSelectionIndex();
+		if (index >= 0) {
+			list.remove(index);
+			selectionChanged();
 		}
 	}
 
 	/**
-	 * Combines the given list of items into a single string. This method is the converse of
-	 * <code>parseString</code>.
+	 * Invoked when the selection in the list has changed.
+	 * 
 	 * <p>
-	 * Subclasses must implement this method.
+	 * The default implementation of this method utilizes the selection index and the size of the
+	 * list to toggle the enablement of the up, down and remove buttons.
 	 * </p>
 	 * 
-	 * @return the combined string
-	 * @see #parseString
+	 * <p>
+	 * Sublcasses may override.
+	 * </p>
+	 * 
+	 * @since 3.5
 	 */
-	protected String createList() {
-		String res = "";
-		TableItem[] items = this.list.getItems();
-		for (TableItem tableItem : items) {
-			String text;
-			if (tableItem.getData() != null) {
-				text = tableItem.getData().toString();
-			} else {
-				text = tableItem.getText();
-			}
-			res += tableItem.getChecked() ? "" : "-";
-			res += text;
-			res += ",";
-		}
-		return res;
-	}
-
-	/**
-	 * Notifies that the list selection has changed.
-	 */
-	private void selectionChanged() {
-		int index = this.list.getSelectionIndex();
-		int size = this.list.getItemCount();
-		this.upButton.setEnabled(size > 1 && index > 0);
-		this.downButton.setEnabled(size > 1 && index >= 0 && index < size - 1);
+	protected void selectionChanged() {
+		int index = list.getSelectionIndex();
+		int size = list.getItemCount();
+		removeButton.setEnabled(index >= 0);
+		upButton.setEnabled(size > 1 && index > 0);
+		downButton.setEnabled(size > 1 && index >= 0 && index < size - 1);
 	}
 
 	/*
@@ -392,8 +397,8 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	@Override
 	public void setFocus() {
-		if (this.list != null) {
-			this.list.setFocus();
+		if (list != null) {
+			list.setFocus();
 		}
 	}
 
@@ -406,21 +411,14 @@ public class CheckedListEditor extends FieldEditor {
 	 */
 	private void swap(boolean up) {
 		setPresentsDefaultValue(false);
-		int index = this.list.getSelectionIndex();
+		int index = list.getSelectionIndex();
 		int target = up ? index - 1 : index + 1;
 		if (index >= 0) {
-			TableItem item = this.list.getItem(index);
-			String text = item.getText();
-			boolean check = item.getChecked();
-			Object data = item.getData();
-			TableItem targetItem = this.list.getItem(target);
-			item.setText(targetItem.getText());
-			item.setChecked(targetItem.getChecked());
-			item.setData(targetItem.getData());
-			targetItem.setText(text);
-			targetItem.setChecked(check);
-			targetItem.setData(data);
-			this.list.setSelection(target);
+			String[] selection = list.getSelection();
+			Assert.isTrue(selection.length == 1);
+			list.remove(index);
+			list.add(selection[0], target);
+			list.setSelection(target);
 		}
 		selectionChanged();
 	}
@@ -439,7 +437,59 @@ public class CheckedListEditor extends FieldEditor {
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getListControl(parent).setEnabled(enabled);
-		this.upButton.setEnabled(enabled);
-		this.downButton.setEnabled(enabled);
+		addButton.setEnabled(enabled);
+		removeButton.setEnabled(enabled);
+		upButton.setEnabled(enabled);
+		downButton.setEnabled(enabled);
+	}
+
+	/**
+	 * Return the Add button.
+	 * 
+	 * @return the button
+	 * @since 3.5
+	 */
+	protected Button getAddButton() {
+		return addButton;
+	}
+
+	/**
+	 * Return the Remove button.
+	 * 
+	 * @return the button
+	 * @since 3.5
+	 */
+	protected Button getRemoveButton() {
+		return removeButton;
+	}
+
+	/**
+	 * Return the Up button.
+	 * 
+	 * @return the button
+	 * @since 3.5
+	 */
+	protected Button getUpButton() {
+		return upButton;
+	}
+
+	/**
+	 * Return the Down button.
+	 * 
+	 * @return the button
+	 * @since 3.5
+	 */
+	protected Button getDownButton() {
+		return downButton;
+	}
+
+	/**
+	 * Return the List.
+	 * 
+	 * @return the list
+	 * @since 3.5
+	 */
+	protected List getList() {
+		return list;
 	}
 }

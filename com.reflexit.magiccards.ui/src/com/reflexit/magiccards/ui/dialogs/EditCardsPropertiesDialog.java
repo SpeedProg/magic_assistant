@@ -8,7 +8,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -34,9 +33,10 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	protected void createBodyArea(Composite parent) {
 		getShell().setText("Edit Card Properties");
-		Composite area = (Composite) super.createDialogArea(parent);
+		setTitle("Edit Card Properties");
+		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(2, false));
 		GridData gda = new GridData();
 		gda.widthHint = convertWidthInCharsToPixels(60);
@@ -60,7 +60,6 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 		ContextAssist.addContextAssist(special, SpecialTags.getTags(), true);
 		// end
 		count.setFocus();
-		return area;
 	}
 
 	public void createOwnershipFieldEditor(Composite area) {

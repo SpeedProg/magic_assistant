@@ -42,6 +42,7 @@
              id="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
              name="Collector View">
        </page>
+       
        <page
             name="Manage Deck Exporters"
             class="com.reflexit.magiccards.ui.preferences.ExportersPreferencePage"
@@ -49,6 +50,7 @@
             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
             >
       </page>
+      
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

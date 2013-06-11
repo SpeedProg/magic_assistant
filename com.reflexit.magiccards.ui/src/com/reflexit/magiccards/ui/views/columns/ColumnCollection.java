@@ -54,6 +54,10 @@ public abstract class ColumnCollection {
 		if (columns.size() == 0)
 			createColumnLabelProviders();
 		updateColumnsFromPropery(propertyValue);
+		return getColumnFields();
+	}
+
+	public ICardField[] getColumnFields() {
 		ArrayList<ICardField> cf = new ArrayList<ICardField>();
 		for (Iterator iterator = order.values().iterator(); iterator.hasNext();) {
 			AbstractColumn col = (AbstractColumn) iterator.next();
@@ -64,9 +68,14 @@ public abstract class ColumnCollection {
 	}
 
 	public void updateColumnsFromPropery(String value) {
-		String[] prefValues = value.split(",");
-		if (prefValues.length == 0)
+		String allModifier = "";
+		if (value.equals("+") || value.equals("-")) {
+			allModifier = value;
+			value = "";
+		}
+		if (value.length() == 0 && allModifier.length() == 0)
 			return;
+		String[] prefValues = value.split(",");
 		LinkedHashMap<String, AbstractColumn> oldorder = order;
 		order = new LinkedHashMap<String, AbstractColumn>();
 		for (int i = 0; i < prefValues.length; i++) {
@@ -102,10 +111,11 @@ public abstract class ColumnCollection {
 			oldorder.remove(key);
 		}
 		// now deal with leftovers
+		boolean visible = allModifier.equals("+");
 		for (Iterator<String> iterator = oldorder.keySet().iterator(); iterator.hasNext();) {
 			String key = iterator.next();
 			AbstractColumn column = oldorder.get(key);
-			column.setVisible(!true);
+			column.setVisible(visible);
 			order.put(key, column);
 		}
 	}

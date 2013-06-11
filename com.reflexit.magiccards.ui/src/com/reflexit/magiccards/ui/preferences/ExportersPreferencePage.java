@@ -2,17 +2,19 @@ package com.reflexit.magiccards.ui.preferences;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -39,9 +41,11 @@ import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditExporterDialog;
 import com.reflexit.magiccards.ui.jobs.ExportDeckJob;
+import com.reflexit.magiccards.ui.preferences.feditors.ListEditor2;
+import com.reflexit.magiccards.ui.preferences.feditors.StringListFieldEditor;
 
 public class ExportersPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	private ListEditor listEditor;
+	private ListEditor2 listEditor;
 	private Text previewText;
 
 	public ExportersPreferencePage() {
@@ -51,21 +55,19 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 	@Override
 	protected void createFieldEditors() {
 		final Composite parent = getFieldEditorParent();
-		listEditor = new ListEditor("exp", "Exporters", parent) {
-			@Override
-			protected String[] parseString(String stringList) {
-				String ids[] = stringList.split(",");
-				return ids;
-			}
-
+		listEditor = new StringListFieldEditor("exp", "Exporters", parent) {
 			@Override
 			protected String getNewInputObject() {
-				return createNewExportType();
+				String newType = createNewExportType();
+				// listEditor.getListControl(parent).setSelection(new String[] { newType });
+				return newType;
 			}
 
 			@Override
-			protected String createList(String[] items) {
-				return ExportersPreferencePage.this.createList(items);
+			protected void editElements(String[] selection) {
+				if (selection.length == 0)
+					return;
+				selection[0] = editType(selection[0]);
 			}
 		};
 		IPreferenceStore store = getPreferenceStore();
@@ -90,24 +92,69 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		createPreviewGroup(getFieldEditorParent());
 	}
 
+	protected String editType(String string) {
+		ReportType type = ReportType.getByLabel(string);
+		if (!type.isCustom())
+			return string;
+		PreferenceStore store = new PreferenceStore();
+		String[] preferenceNames = type.getProperties().keySet().toArray(new String[type.getProperties().size()]);
+		for (int i = 0; i < preferenceNames.length; i++) {
+			String key = preferenceNames[i];
+			store.setValue(key, type.getProperty(key));
+		}
+		store.setValue(EditExporterDialog.PROP_EXT, type.getExtension());
+		store.setValue(EditExporterDialog.PROP_NAME, type.getLabel());
+		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), store);
+		if (dialog.open() == Window.OK) {
+			String name = store.getString(EditExporterDialog.PROP_NAME);
+			if (!name.equals(type.getLabel())) {
+				ReportType type2 = ReportType.createReportType(name, name);
+				type2.setCustom(true);
+				ImportExportFactory.addExportWorker(type, null); // remove old
+				ImportExportFactory.addExportWorker(type2, new CustomExportDelegate(type2));
+				type = type2;
+			}
+			copyFromStore(type, store);
+		}
+		save(type);
+		return type.getLabel();
+	}
+
 	protected String createNewExportType() {
 		PreferenceStore store = new PreferenceStore();
 		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), store);
 		if (dialog.open() == Window.OK) {
-			String name = store.getString("name");
-			String ext = store.getString("ext");
-			if (ext.startsWith("."))
-				ext = ext.substring(1);
-			ReportType type = ReportType.createReportType(name, name, ext, false);
-			String[] preferenceNames = store.preferenceNames();
-			for (int i = 0; i < preferenceNames.length; i++) {
-				String key = preferenceNames[i];
-				type.setProperty(key, store.getString(key));
-			}
+			String name = store.getString(EditExporterDialog.PROP_NAME);
+			ReportType type = ReportType.createReportType(name, name);
+			type.setCustom(true);
+			copyFromStore(type, store);
 			ImportExportFactory.addExportWorker(type, new CustomExportDelegate(type));
+			save(type);
 			return name;
 		}
 		return null;
+	}
+
+	private void save(ReportType type) {
+		IPath dir = ImportExportFactory.getExportersPath();
+		IPath fname = dir.addTrailingSeparator().append(type.getLabel()).addFileExtension("ini");
+		try {
+			type.getProperties().store(new FileOutputStream(fname.toFile()), "filter " + type.getLabel());
+		} catch (IOException e) {
+			MessageDialog.openError(getShell(), "Error", "Cannot save exporter to " + fname);
+		}
+	}
+
+	public void copyFromStore(ReportType type, PreferenceStore store) {
+		String ext = store.getString(EditExporterDialog.PROP_EXT);
+		if (ext.startsWith("."))
+			ext = ext.substring(1);
+		type.setExtension(ext);
+		String[] preferenceNames = store.preferenceNames();
+		for (int i = 0; i < preferenceNames.length; i++) {
+			String key = preferenceNames[i];
+			type.setProperty(key, store.getString(key));
+		}
 	}
 
 	@Override
