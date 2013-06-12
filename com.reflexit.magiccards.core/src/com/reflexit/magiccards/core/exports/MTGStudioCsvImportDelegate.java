@@ -45,7 +45,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 
 	@Override
 	public ReportType getType() {
-		return ReportType.createReportType("csv", "MTG Studio CSV");
+		return ReportType.createReportType("MTG Studio CSV");
 	}
 
 	public MTGStudioCsvImportDelegate() {

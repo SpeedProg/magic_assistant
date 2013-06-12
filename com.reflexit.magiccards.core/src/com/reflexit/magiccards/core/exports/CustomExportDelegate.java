@@ -38,7 +38,7 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	}
 
 	public CustomExportDelegate() {
-		this(ReportType.createReportType("", "Custom Format", "txt", false));
+		this(ReportType.createReportType("Custom", "txt", false));
 	}
 
 	public CustomExportDelegate(ReportType type) {
@@ -81,7 +81,7 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 				}
 			}
 			String line;
-			if (format != null) {
+			if (format != null && format.length() > 0) {
 				try {
 					line = new MessageFormat(format).format(values);
 				} catch (Exception e) {

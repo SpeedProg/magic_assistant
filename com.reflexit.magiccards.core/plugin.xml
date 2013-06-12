@@ -17,20 +17,20 @@
             extension="txt"
             id="classic"
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
-            label="classic">
+            label="Deck Classic X">
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
             extension="csv"
             id="csv"
             importDelegate="com.reflexit.magiccards.core.exports.CsvImportDelegate"
-            label="csv">
+            label="Magic Assistant CSV">
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.TableExportDelegate"
             id="table"
             importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
-            label="table">
+            label="Piped Table">
       </deckFormat>
       <deckFormat
             id="mtgo"

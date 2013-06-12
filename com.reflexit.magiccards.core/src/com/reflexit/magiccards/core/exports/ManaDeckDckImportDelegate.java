@@ -19,7 +19,7 @@ public class ManaDeckDckImportDelegate extends AbstractImportDelegate {
 
 	@Override
 	public ReportType getType() {
-		return ReportType.createReportType("dck", "Mana Deck .dck");
+		return ReportType.createReportType("Mana Deck .dck");
 	}
 
 	@Override

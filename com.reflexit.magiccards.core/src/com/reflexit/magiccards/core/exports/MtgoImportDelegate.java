@@ -44,7 +44,7 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 
 	@Override
 	public ReportType getType() {
-		return ReportType.createReportType("mtgo", "Magic the Gathering Online");
+		return ReportType.createReportType("Magic the Gathering Online");
 	}
 
 	public MtgoImportDelegate() {

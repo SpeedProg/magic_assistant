@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Alexander Wingård  - initial API and implementation
+ *    Alexander Wingï¿½rd  - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
@@ -56,6 +56,6 @@ public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	}
 
 	public ReportType getType() {
-		return ReportType.createReportType("wth", "Wagic: The Homebrew");
+		return ReportType.createReportType("Wagic: The Homebrew");
 	}
 }

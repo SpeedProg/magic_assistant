@@ -114,6 +114,6 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 	}
 
 	public ReportType getType() {
-		return ReportType.createReportType("html", "HTML Table (with Symbols)");
+		return ReportType.createReportType("HTML Table (with Symbols)");
 	}
 }

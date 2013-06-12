@@ -18,7 +18,7 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 
 	@Override
 	public ReportType getType() {
-		return ReportType.createReportType("dck", "Shandalar .dck");
+		return ReportType.createReportType("Shandalar .dck");
 	}
 
 	/*-

@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	@Override
 	public ReportType getType() {
-		return ReportType.createReportType("mwdeck", "Magic Workstation Deck");
+		return ReportType.createReportType("Magic Workstation Deck");
 	}
 
 	@Override
