@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui.dialogs;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -25,8 +27,18 @@ public abstract class MagicDialog extends TitleAreaDialog {
 		this.store = store;
 	}
 
+	protected void validate() {
+		// override to validate store fields
+	}
+
 	public Text createTextFieldEditor(Composite area, String labelString, final String property) {
 		return createTextFieldEditor(area, labelString, property, SWT.BORDER);
+	}
+
+	public Text createTextFieldEditor(Composite area, String labelString, final String property, String tooltip) {
+		Text text = createTextFieldEditor(area, labelString, property, SWT.BORDER);
+		text.setToolTipText(tooltip);
+		return text;
 	}
 
 	@Override
@@ -42,6 +54,12 @@ public abstract class MagicDialog extends TitleAreaDialog {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
 		createBodyArea(composite);
+		this.store.addPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				validate();
+			}
+		});
 		return area;
 	}
 

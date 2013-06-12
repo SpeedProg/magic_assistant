@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
 import com.reflexit.magiccards.core.exports.IExportDelegate;
-import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -27,7 +26,7 @@ public class ExportDeckJob extends Job {
 	private ICardField[] columns;
 
 	public ExportDeckJob(OutputStream outStream, ReportType reportType, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
-		super("Exporting " + reportType);
+		super("Exporting " + reportType.getLabel());
 		this.reportType = reportType;
 		this.header = header;
 		this.filteredLibrary = filteredLibrary;
@@ -44,7 +43,7 @@ public class ExportDeckJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		final IExportDelegate<IMagicCard> worker;
 		try {
-			worker = new ImportExportFactory<IMagicCard>().getExportWorker(reportType);
+			worker = reportType.getExportDelegate();
 			worker.setColumns(columns == null ? MagicCardFieldPhysical.allNonTransientFields() : columns);
 		} catch (Exception e) {
 			return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage(), e);

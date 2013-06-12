@@ -204,7 +204,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		// restore options
 		String type = dialogSettings.get(REPORT_TYPE_SETTING);
 		if (type != null)
-			selectReportType(ReportType.valueOf(type));
+			selectReportType(ReportType.getByLabel(type));
 		else
 			selectReportType(ReportType.CSV);
 		// restore file
@@ -239,7 +239,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 			// save selection
 			dialogSettings.put(EXPORTED_RESOURCES_SETTING, collection.getStringValue());
 			// save options
-			dialogSettings.put(REPORT_TYPE_SETTING, reportType.toString());
+			dialogSettings.put(REPORT_TYPE_SETTING, reportType.getLabel());
 			dialogSettings.put(INCLUDE_HEADER_SETTING, includeHeader.getSelection());
 			dialogSettings.put(INCLUDE_SIDEBOARD, includeSideBoard.getSelection());
 			// save into file
@@ -511,7 +511,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					System.err.println("gen preview for type " + type);
+					System.err.println("gen preview for type " + type.getLabel());
 					exportDeck(outStream, monitor, type, header, sideboard);
 					if (!monitor.isCanceled())
 						updatePreview(outStream.toString());

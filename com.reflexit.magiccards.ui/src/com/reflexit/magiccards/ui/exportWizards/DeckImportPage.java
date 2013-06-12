@@ -112,7 +112,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						IImportDelegate<IMagicCard> worker;
 						try {
-							worker = new ImportExportFactory<IMagicCard>().getImportWorker(reportType);
+							worker = reportType.getImportDelegate();
 						} catch (Exception e) {
 							throw new InvocationTargetException(e);
 						}
@@ -420,7 +420,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		// restore options
 		String type = dialogSettings.get(REPORT_TYPE_SETTING);
 		if (type != null)
-			selectReportType(ReportType.valueOf(type));
+			selectReportType(ReportType.getByLabel(type));
 		else
 			selectReportType(ReportType.TEXT_DECK_CLASSIC);
 		if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {

@@ -90,8 +90,10 @@ public abstract class ListEditor2 extends FieldEditor {
 			int index = list.getSelectionIndex();
 			if (index >= 0) {
 				list.add(input, index + 1);
+				list.setSelection(index + 1);
 			} else {
 				list.add(input, 0);
+				list.setSelection(0);
 			}
 			selectionChanged();
 		}
@@ -361,11 +363,16 @@ public abstract class ListEditor2 extends FieldEditor {
 	/**
 	 * Notifies that the Remove button has been pressed.
 	 */
-	private void removePressed() {
+	protected void removePressed() {
 		setPresentsDefaultValue(false);
 		int index = list.getSelectionIndex();
 		if (index >= 0) {
 			list.remove(index);
+			if (index < list.getItemCount())
+				list.setSelection(index);
+			else if (index != 0) {
+				list.setSelection(index - 1);
+			}
 			selectionChanged();
 		}
 	}

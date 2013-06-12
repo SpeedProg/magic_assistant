@@ -34,6 +34,21 @@ public abstract class StringListFieldEditor extends ListEditor2 {
 		});
 	}
 
+	@Override
+	protected void removePressed() {
+		int index = list.getSelectionIndex();
+		if (index >= 0) {
+			if (removeElements(list.getSelection())) {
+				super.removePressed();
+			}
+		}
+	}
+
+	protected boolean removeElements(String[] selection) {
+		// override to react
+		return true;
+	}
+
 	protected void editPressed() {
 		int[] selectionIndices = list.getSelectionIndices();
 		String[] selection = list.getSelection();
@@ -42,6 +57,7 @@ public abstract class StringListFieldEditor extends ListEditor2 {
 			int j = selectionIndices[i];
 			list.setItem(j, selection[i]);
 		}
+		selectionChanged();
 	}
 
 	protected abstract void editElements(String[] selection);

@@ -2,20 +2,16 @@ package com.reflexit.magiccards.ui.preferences;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -23,14 +19,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.exports.CustomExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -69,6 +63,29 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 					return;
 				selection[0] = editType(selection[0]);
 			}
+
+			@Override
+			protected boolean removeElements(String[] selection) {
+				if (selection.length == 0)
+					return false;
+				ReportType type = ReportType.getByLabel(selection[0]);
+				if (type.isCustom()) {
+					try {
+						type.delete();
+						return true;
+					} catch (IOException e) {
+						// ignore
+						e.printStackTrace();
+					}
+				}
+				return false;
+			}
+
+			@Override
+			protected void selectionChanged() {
+				super.selectionChanged();
+				updatePreview(list.getSelection());
+			}
 		};
 		IPreferenceStore store = getPreferenceStore();
 		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
@@ -96,71 +113,20 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		ReportType type = ReportType.getByLabel(string);
 		if (!type.isCustom())
 			return string;
-		PreferenceStore store = new PreferenceStore();
-		String[] preferenceNames = type.getProperties().keySet().toArray(new String[type.getProperties().size()]);
-		for (int i = 0; i < preferenceNames.length; i++) {
-			String key = preferenceNames[i];
-			store.setValue(key, type.getProperty(key));
-		}
-		store.setValue(EditExporterDialog.PROP_EXT, type.getExtension());
-		store.setValue(EditExporterDialog.PROP_NAME, type.getLabel());
-		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), store);
+		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), type);
 		if (dialog.open() == Window.OK) {
-			String name = store.getString(EditExporterDialog.PROP_NAME);
-			if (!name.equals(type.getLabel())) {
-				ReportType type2 = ReportType.createReportType(name, name);
-				type2.setCustom(true);
-				ImportExportFactory.addExportWorker(type, null); // remove old
-				ImportExportFactory.addExportWorker(type2, new CustomExportDelegate(type2));
-				type = type2;
-			}
-			copyFromStore(type, store);
+			type = dialog.getReportType();
 		}
-		save(type);
 		return type.getLabel();
 	}
 
 	protected String createNewExportType() {
-		PreferenceStore store = new PreferenceStore();
-		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), store);
+		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), null);
 		if (dialog.open() == Window.OK) {
-			String name = store.getString(EditExporterDialog.PROP_NAME);
-			ReportType type = ReportType.createReportType(name, name);
-			type.setCustom(true);
-			copyFromStore(type, store);
-			ImportExportFactory.addExportWorker(type, new CustomExportDelegate(type));
-			save(type);
-			return name;
+			ReportType type = dialog.getReportType();
+			return type.getLabel();
 		}
 		return null;
-	}
-
-	private void save(ReportType type) {
-		IPath dir = ImportExportFactory.getExportersPath();
-		IPath fname = dir.addTrailingSeparator().append(type.getLabel()).addFileExtension("ini");
-		try {
-			type.getProperties().store(new FileOutputStream(fname.toFile()), "filter " + type.getLabel());
-		} catch (IOException e) {
-			MessageDialog.openError(getShell(), "Error", "Cannot save exporter to " + fname);
-		}
-	}
-
-	public void copyFromStore(ReportType type, PreferenceStore store) {
-		String ext = store.getString(EditExporterDialog.PROP_EXT);
-		if (ext.startsWith("."))
-			ext = ext.substring(1);
-		type.setExtension(ext);
-		String[] preferenceNames = store.preferenceNames();
-		for (int i = 0; i < preferenceNames.length; i++) {
-			String key = preferenceNames[i];
-			type.setProperty(key, store.getString(key));
-		}
-	}
-
-	@Override
-	protected Control createContents(Composite parent) {
-		// TODO Auto-generated method stub
-		return super.createContents(parent);
 	}
 
 	protected void createPreviewGroup(Composite parent) {
@@ -180,6 +146,8 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 	}
 
 	protected void updatePreview(String[] selection) {
+		if (previewText == null)
+			return;
 		if (selection.length == 0) {
 			previewText.setText("");
 		} else {
@@ -203,7 +171,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		return Arrays.toString(items).replace(", ", ",").replaceAll("[\\[\\]]", "");
 	}
 
-	public String exportDeck(IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
+	public static String exportDeck(IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
 			throws FileNotFoundException, IOException, InvocationTargetException, InterruptedException {
 		final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		IFilteredCardStore filteredLibrary = createExample(sideboard);
@@ -212,7 +180,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		return outStream.toString();
 	}
 
-	private IFilteredCardStore createExample(boolean sideboard) {
+	private static IFilteredCardStore createExample(boolean sideboard) {
 		IFilteredCardStore store = new MemoryFilteredCardStore<IMagicCard>();
 		IMagicCard card = (IMagicCard) DataManager.getMagicDBStore().getCard(151097);
 		IMagicCard card2 = (IMagicCard) DataManager.getMagicDBStore().getCard(83035);
