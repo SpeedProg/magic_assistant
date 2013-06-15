@@ -13,12 +13,14 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.core.exports.CsvExportDelegateTest;
 import com.reflexit.magiccards.core.exports.DeckParserTest;
 import com.reflexit.magiccards.core.exports.ImportUtilsTest;
 import com.reflexit.magiccards.core.exports.MTGStudioImportTest;
 import com.reflexit.magiccards.core.exports.MagicWorkstationImportTest;
 import com.reflexit.magiccards.core.exports.ManaDeckImportTest;
 import com.reflexit.magiccards.core.exports.MtgoImportTest;
+import com.reflexit.magiccards.core.exports.PipedTableExportText;
 import com.reflexit.magiccards.core.exports.ShandalarImportTest;
 import com.reflexit.magiccards.core.exports.TablePipedImportTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
@@ -42,6 +44,8 @@ public class AllLocalTests {
 		suite.addTestSuite(ManaDeckImportTest.class);
 		suite.addTestSuite(ShandalarImportTest.class);
 		suite.addTestSuite(MTGStudioImportTest.class);
+		suite.addTestSuite(PipedTableExportText.class);
+		suite.addTestSuite(CsvExportDelegateTest.class);
 		// core
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
