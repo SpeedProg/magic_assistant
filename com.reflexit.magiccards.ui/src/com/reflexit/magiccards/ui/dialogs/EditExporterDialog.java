@@ -1,27 +1,26 @@
 package com.reflexit.magiccards.ui.dialogs;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.exports.CustomExportDelegate;
-import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.ui.preferences.ExportersPreferencePage;
 
 public class EditExporterDialog extends MagicDialog {
@@ -30,6 +29,9 @@ public class EditExporterDialog extends MagicDialog {
 	private boolean newexporter;
 	private Text previewText;
 	private ReportType origType;
+	private Combo comboFormatMethod;
+	private Label formatLabel;
+	private Text format;
 
 	public EditExporterDialog(Shell parentShell, ReportType orig) {
 		super(parentShell, new PreferenceStore());
@@ -38,9 +40,16 @@ public class EditExporterDialog extends MagicDialog {
 		store.setDefault(PROP_NAME, "My Format");
 		store.setDefault(PROP_EXT, ReportType.TEXT_DECK_CLASSIC.getExtension());
 		store.setDefault(CustomExportDelegate.ROW_FIELDS, "COUNT,NAME");
-		store.setDefault(CustomExportDelegate.ROW_FORMAT, "{0,number,#} {1}");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT, "");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT_TYPE, "C Printf Format");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, "1");
 		store.setDefault(CustomExportDelegate.HEADER, "# " + CustomExportDelegate.DECK_NAME_VAR);
 		store.setDefault(CustomExportDelegate.SB_HEADER, "Sideboard");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT + ".0", "{0,number,#} {1}");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT + ".1", "%d %s");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT + ".2", ",");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT + ".3", ",");
+		store.setDefault(CustomExportDelegate.ROW_FORMAT + ".4", ",");
 		if (orig != null) {
 			copyFromType(orig);
 		}
@@ -60,15 +69,30 @@ public class EditExporterDialog extends MagicDialog {
 		Text name = createTextFieldEditor(area, "Name", PROP_NAME);
 		createTextFieldEditor(area, "File Extension", PROP_EXT, "Default file extension for exported file");
 		createTextFieldEditor(area, "Header", CustomExportDelegate.HEADER, "Line separating multiple decks or file header, "
-				+ "leave empty to ommit.\n" + "User can also disable it from export dialog using 'Generate header row' checkbox");
+				+ "leave empty to ommit.\n" + "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
+				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
 		createTextFieldEditor(area, "Sideboard Header", CustomExportDelegate.SB_HEADER,
 				"Line separating sideboard from the deck, leave empty to ommit");
-		createTextFieldEditor(area, "Formatter (Java Style)", CustomExportDelegate.ROW_FORMAT,
-				"Formatter for fields values, i.e {0} x {1}, would result in 3 x Naturalize, if fields set to COUNT,NAME");
-		createTextFieldEditor(area, "Field Separator", CustomExportDelegate.FIELD_SEP, "Instead of formatter can use field separator");
+		createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER, "File footer, " + "leave empty to ommit.\n"
+				+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
+				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
+		// filler
+		createTextLabel(area, "");
+		createTextLabel(area, "");
+		createFormatterControl(area);
+		// createTextFieldEditor(area, "Field Separator", CustomExportDelegate.FIELD_SEP,
+		// "Instead of formatter can use field separator");
+		createFieldsControl(area);
+		GridData ld1 = new GridData(GridData.FILL_BOTH);
+		ld1.horizontalSpan = 4;
+		createPreviewGroup(area).setLayoutData(ld1);
+		name.setFocus();
+	}
+
+	public void createFieldsControl(Composite area) {
 		Composite fparent = new Composite(area, SWT.NONE);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 4;
+		layoutData.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
 		fparent.setLayoutData(layoutData);
 		StringButtonFieldEditor fields = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Fields", fparent) {
 			@Override
@@ -80,10 +104,47 @@ public class EditExporterDialog extends MagicDialog {
 		};
 		fields.setPreferenceStore(store);
 		fields.load();
-		GridData ld1 = new GridData(GridData.FILL_BOTH);
-		ld1.horizontalSpan = 4;
-		createPreviewGroup(fparent).setLayoutData(ld1);
-		name.setFocus();
+	}
+
+	public void createFormatterControl(Composite area) {
+		String[] values = new String[] { "Java Message Format", "C Printf Format", //
+				"Separated Fields", "Separated with Quites Escape", "Separated with Backslash Escape" };
+		comboFormatMethod = createComboFieldEditor(area, "Method", CustomExportDelegate.ROW_FORMAT_TYPE, //
+				values);
+		formatLabel = createTextLabel(area, "Formatter");
+		format = createTextFieldEditor(area, null, CustomExportDelegate.ROW_FORMAT, "");
+		format.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int index = comboFormatMethod.getSelectionIndex();
+				store.setValue(CustomExportDelegate.ROW_FORMAT + "." + index, format.getText());
+			}
+		});
+		comboFormatMethod.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateFormatterControls();
+			}
+		});
+		updateFormatterControls();
+	}
+
+	public void updateFormatterControls() {
+		formatLabel.setText(comboFormatMethod.getText().startsWith("Separated") ? "Separator" : "Format    ");
+		int index = comboFormatMethod.getSelectionIndex();
+		switch (index) {
+			case 0:
+				format.setToolTipText("Java Formatter for fields values, i.e '{0} x {1}', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
+				break;
+			case 1:
+				format.setToolTipText("C printf formatter, i.e. '%d x %s', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
+				break;
+			default:
+				format.setToolTipText("Separator for the fields, i.e. ',' or '|' or ' ', etc");
+				break;
+		}
+		format.setText(store.getString(CustomExportDelegate.ROW_FORMAT + "." + index));
+		formatLabel.setToolTipText(format.getToolTipText());
+		updatePreview();
 	}
 
 	protected Group createPreviewGroup(Composite parent) {
@@ -114,6 +175,8 @@ public class EditExporterDialog extends MagicDialog {
 	}
 
 	protected void updatePreview() {
+		if (previewText == null)
+			return;
 		ReportType type = getReportType("preview");
 		String text;
 		try {
@@ -138,18 +201,6 @@ public class EditExporterDialog extends MagicDialog {
 		if (ext == null || ext.length() == 0) {
 			setErrorMessage("File extension should not be empty");
 		}
-	}
-
-	protected void createFromCombo(Composite area) {
-		store.setDefault("parent", ReportType.TEXT_DECK_CLASSIC.getLabel());
-		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
-		String ids[] = new String[types.size()];
-		int i = 0;
-		for (Iterator iterator = types.iterator(); iterator.hasNext(); i++) {
-			ReportType reportType = (ReportType) iterator.next();
-			ids[i] = reportType.getLabel();
-		}
-		createComboFieldEditor(area, "Copy From", "parent", ids);
 	}
 
 	@Override

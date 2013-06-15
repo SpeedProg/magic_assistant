@@ -3,7 +3,6 @@ package com.reflexit.magiccards.ui.preferences.feditors;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -147,7 +146,7 @@ public abstract class ListEditor2 extends FieldEditor {
 	 */
 	protected final Button createPushButton(Composite parent, String key) {
 		Button button = new Button(parent, SWT.PUSH);
-		button.setText(JFaceResources.getString(key));
+		button.setText(key);
 		button.setFont(parent.getFont());
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		int widthHint = convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH);

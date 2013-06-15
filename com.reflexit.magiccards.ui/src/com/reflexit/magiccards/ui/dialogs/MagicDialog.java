@@ -68,7 +68,8 @@ public abstract class MagicDialog extends TitleAreaDialog {
 	}
 
 	public Text createTextFieldEditor(Composite area, String labelString, final String property, int flags) {
-		createTextLabel(area, labelString);
+		if (labelString != null)
+			createTextLabel(area, labelString);
 		final Text text = new Text(area, flags);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gd);
@@ -77,7 +78,6 @@ public abstract class MagicDialog extends TitleAreaDialog {
 		}
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				text.setFocus();
 				store.setValue(property, text.getText());
 			}
 		});
@@ -85,7 +85,7 @@ public abstract class MagicDialog extends TitleAreaDialog {
 		return text;
 	}
 
-	public void createComboFieldEditor(Composite area, String labelString, final String property, String[] values) {
+	public Combo createComboFieldEditor(Composite area, String labelString, final String property, String[] values) {
 		createTextLabel(area, labelString);
 		final Combo combo = new Combo(area, SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -94,8 +94,10 @@ public abstract class MagicDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				store.setValue(property, combo.getText());
+				store.setValue(property + ".num", combo.getSelectionIndex());
 			}
 		});
+		return combo;
 	}
 
 	protected void setComboChoices(Combo combo, String[] strings, String defaultString) {

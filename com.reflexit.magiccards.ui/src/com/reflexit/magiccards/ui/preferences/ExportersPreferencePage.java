@@ -84,7 +84,16 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 			@Override
 			protected void selectionChanged() {
 				super.selectionChanged();
-				updatePreview(list.getSelection());
+				String[] selection = list.getSelection();
+				boolean custom = true;
+				for (String string : selection) {
+					ReportType type = ReportType.getByLabel(string);
+					if (!type.isCustom())
+						custom = false;
+				}
+				getEditButton().setEnabled(selection.length == 1 && custom);
+				getRemoveButton().setEnabled(selection.length > 0 && custom);
+				updatePreview(selection);
 			}
 		};
 		IPreferenceStore store = getPreferenceStore();
@@ -136,10 +145,10 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		GridData ld1 = new GridData(GridData.FILL_BOTH);
 		ld1.horizontalSpan = 2;
 		previewGroup.setLayoutData(ld1);
-		previewGroup.setText("Preview");
+		previewGroup.setText("Example");
 		previewGroup.setFont(parent.getFont());
 		previewText = new Text(previewGroup, SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-		previewText.setText("preview...");
+		previewText.setText("Select an exporter to see example of output");
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.heightHint = 100;
 		previewText.setLayoutData(layoutData);

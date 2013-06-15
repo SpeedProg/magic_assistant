@@ -111,8 +111,8 @@ public class CheckedListEditor extends FieldEditor {
 	 *            the box for the buttons
 	 */
 	protected void createButtons(Composite box) {
-		this.upButton = createPushButton(box, "ListEditor2.up");//$NON-NLS-1$
-		this.downButton = createPushButton(box, "ListEditor2.down");//$NON-NLS-1$
+		this.upButton = createPushButton(box, "Up");//$NON-NLS-1$
+		this.downButton = createPushButton(box, "Down");//$NON-NLS-1$
 	}
 
 	/**

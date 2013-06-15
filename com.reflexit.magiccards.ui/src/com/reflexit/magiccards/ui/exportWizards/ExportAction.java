@@ -41,6 +41,7 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 		setId(ID);
 		setToolTipText("Export data to a file");
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_EXPORT_WIZ));
+		// prefId = DeckViewPreferencePage.class.getName();
 	}
 
 	public ExportAction(StructuredSelection structuredSelection, String prefId) {

@@ -66,4 +66,8 @@ public abstract class StringListFieldEditor extends ListEditor2 {
 	protected String createList(String[] items) {
 		return Arrays.toString(items).replace(", ", ",").replaceAll("[\\[\\]]", "");
 	}
+
+	public Button getEditButton() {
+		return editButton;
+	}
 }
