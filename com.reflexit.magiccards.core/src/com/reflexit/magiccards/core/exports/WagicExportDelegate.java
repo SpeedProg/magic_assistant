@@ -10,52 +10,31 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Export to Wagic: The Homebrew (http://wololo.net/wagic/) TODO: add description
  */
 public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public WagicExportDelegate() {
-	}
-
-	public String getName() {
-		if (store != null) {
-			return ((ILocatable) store).getLocation().getName();
-		}
-		return "deck";
-	}
-
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		if (monitor == null)
-			monitor = ICoreProgressMonitor.NONE;
-		monitor.beginTask("Exporting to wagic...", store.getSize());
-		PrintStream stream = new PrintStream(st);
-		String name = getName();
-		stream.println("#NAME:" + name);
-		for (IMagicCard magicCard : store) {
-			if (magicCard instanceof MagicCardPhysical) {
-				MagicCardPhysical physical = ((MagicCardPhysical) magicCard);
-				for (int i = 0; i < physical.getCount(); i++)
-					stream.println(physical.getCardId());
-			} else if (magicCard instanceof MagicCard) {
-				MagicCard card = (MagicCard) magicCard;
-				stream.println(card.getCardId());
-			}
-			monitor.worked(1);
-		}
-		stream.close();
-		monitor.done();
-	}
-
 	public ReportType getType() {
 		return ReportType.createReportType("Wagic: The Homebrew");
+	}
+
+	@Override
+	public void printHeader() {
+		stream.println("#NAME:" + getName());
+	}
+
+	@Override
+	public void printCard(IMagicCard card) {
+		if (card instanceof MagicCardPhysical) {
+			MagicCardPhysical physical = ((MagicCardPhysical) card);
+			for (int i = 0; i < physical.getCount(); i++)
+				stream.println(physical.getCardId());
+		} else if (card instanceof MagicCard) {
+			stream.println(card.getCardId());
+		}
 	}
 }

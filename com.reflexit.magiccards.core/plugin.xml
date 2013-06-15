@@ -17,7 +17,7 @@
             extension="txt"
             id="classic"
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
-            label="Deck Classic X">
+            label="Deck Classic Text (1 x Name)">
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
@@ -30,7 +30,7 @@
             exportDelegate="com.reflexit.magiccards.core.exports.TableExportDelegate"
             id="table"
             importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
-            label="Piped Table">
+            label="Magic Assistant Piped Table">
       </deckFormat>
       <deckFormat
             id="mtgo"
@@ -57,7 +57,7 @@
            exportDelegate="com.reflexit.magiccards.core.exports.HtmlTableExportDelegate"
            extension="html"
            id="htmlWithSymbols"
-           label="HTML Table "
+           label="Magic Assistant HTML Table "
            xmlFormat="false">
      </deckFormat>  
       <deckFormat
@@ -92,7 +92,7 @@
             extension="csv"
             id="mtgstudiocsv"
             importDelegate="com.reflexit.magiccards.core.exports.MTGStudioCsvImportDelegate"
-            label="MTG Studio .csv"
+            label="MTG Studio CSV"
             xmlFormat="false">
       </deckFormat>
    </extension>

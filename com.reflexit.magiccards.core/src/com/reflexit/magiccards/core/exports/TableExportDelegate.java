@@ -10,32 +10,28 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
- * TODO: add description
+ * Pipe separated table
  */
 public class TableExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public void runTablePipeExport(ICoreProgressMonitor monitor) throws InvocationTargetException {
-		TableExporter exporter = null;
-		try {
-			exporter = new TableExporter(st, "|");
-			exportToTable(monitor, store, exporter, header);
-			;
-		} finally {
-			if (exporter != null)
-				exporter.close();
-		}
-	}
+	private final String SEP = "|";
 
 	public ReportType getType() {
 		return ReportType.TABLE_PIPED;
 	}
 
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		runTablePipeExport(monitor);
+	@Override
+	public String getSeparator() {
+		return SEP;
+	}
+
+	@Override
+	protected String escape(String element) {
+		if (element.contains(SEP)) {
+			return element.replaceAll("\\Q" + SEP, "?");
+		}
+		return element;
 	}
 }

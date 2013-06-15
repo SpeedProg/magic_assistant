@@ -10,42 +10,61 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
 public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public HtmlTableExportDelegate() {
 	}
 
-	public String getName() {
-		if (store != null) {
-			return ((ILocatable) store).getLocation().getName();
-		}
-		return "deck";
+	public ReportType getType() {
+		return ReportType.createReportType("Magic Assistant HTML Table");
 	}
 
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		if (monitor == null)
-			monitor = ICoreProgressMonitor.NONE;
-		monitor.beginTask("Exporting to html...", store.getSize());
-		PrintStream stream = new PrintStream(st);
-		String ename = getName();
-		Location location = null;
-		stream.println("<html><head><title>" + ename + "</title></head><body>");
+	@Override
+	public void printCard(IMagicCard card) {
+		String abbr = Editions.getInstance().getAbbrByName(card.getSet());
+		String line = "<tr>";
+		for (int i = 0; i < columns.length; i++) {
+			ICardField field = columns[i];
+			Object value = card.getObjectByField(field);
+			if (value == null)
+				value = "";
+			if (field == MagicCardField.COST) {
+				String str = String.valueOf(value);
+				if (str.length() > 0)
+					value = replaceSymbolsWithLinksOnline(str);
+			}
+			if (field == MagicCardField.NAME) {
+				value = img(GatherHelper.createSetImageURL(abbr, card.getRarity()), "") + "&nbsp;" + value;
+			}
+			line += ("<td>" + value + "</td>");
+		}
+		stream.println(line + "</tr>");
+	}
+
+	@Override
+	public void printFooter() {
+		stream.println("</table>");
+		stream.println("</body></html>");
+	}
+
+	@Override
+	public void printLocationHeader() {
+		stream.println("<tr>");
+		stream.println("<td colspan=" + columns.length + "><h2>" + location.getName() + "</h2></td>");
+		stream.println("</tr>");
+	}
+
+	@Override
+	public void printHeader() {
+		stream.println("<html><head><title>" + getName() + "</title></head><body>");
 		stream.println("<table>");
 		String line = "<tr>";
 		for (int i = 0; i < columns.length; i++) {
@@ -60,42 +79,6 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 			line += "<th>" + name + "</th>";
 		}
 		stream.println(line + "</tr>");
-		for (IMagicCard mc : store) {
-			if (mc instanceof MagicCardPhysical) {
-				MagicCardPhysical card = ((MagicCardPhysical) mc);
-				String abbr = Editions.getInstance().getAbbrByName(card.getSet());
-				if (location != card.getLocation()) {
-					location = card.getLocation();
-					stream.println("<tr>");
-					stream.println("<td colspan=" + columns.length + "><h2>" + location.getName() + "</h2></td>");
-					stream.println("</tr>");
-				}
-				line = "<tr>";
-				for (int i = 0; i < columns.length; i++) {
-					ICardField field = columns[i];
-					Object value = card.getObjectByField(field);
-					if (value == null)
-						value = "";
-					if (field == MagicCardField.COST) {
-						String str = String.valueOf(value);
-						if (str.length() > 0)
-							value = replaceSymbolsWithLinksOnline(str);
-					}
-					if (field == MagicCardField.NAME) {
-						value = img(GatherHelper.createSetImageURL(abbr, card.getRarity()), "") + "&nbsp;" + value;
-					}
-					line += ("<td>" + value + "</td>");
-				}
-				stream.println(line + "</tr>");
-				monitor.worked(1);
-			} else if (mc instanceof MagicCard) {
-				MagicLogger.log("Skipping " + mc);
-			}
-		}
-		stream.println("</table>");
-		stream.println("</body></html>");
-		stream.close();
-		monitor.done();
 	}
 
 	private String replaceSymbolsWithLinksOnline(String cost) {
@@ -111,9 +94,5 @@ public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> 
 
 	private String img(URL createSetImageURL, String alt) {
 		return "<img  style=\"float:left\"  src=\"" + createSetImageURL + "\" alt=\"" + alt + "\"/>";
-	}
-
-	public ReportType getType() {
-		return ReportType.createReportType("HTML Table (with Symbols)");
 	}
 }

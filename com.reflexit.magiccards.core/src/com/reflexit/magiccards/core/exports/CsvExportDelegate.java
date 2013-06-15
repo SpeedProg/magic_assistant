@@ -10,38 +10,43 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Export of magic assistant csv
  */
 public class CsvExportDelegate extends AbstractExportDelegate<IMagicCard> {
+	public ReportType getType() {
+		return ReportType.CSV;
+	}
+
 	@Override
 	protected boolean isForExport(ICardField field) {
 		return super.isForExport(field) || field == MagicCardFieldPhysical.SIDEBOARD;
 	}
 
-	public void runCsvExport(ICoreProgressMonitor monitor) throws InvocationTargetException {
-		CsvExporter exporter = null;
-		try {
-			exporter = new CsvExporter(st);
-			exportToTable(monitor, store, exporter, header);
-		} finally {
-			if (exporter != null)
-				exporter.close();
+	@Override
+	public String getSeparator() {
+		return ",";
+	}
+
+	@Override
+	public String escape(String str) {
+		// fields containing " must be in quotes and all " changed to ""
+		if (str.indexOf('"') >= 0) {
+			return "\"" + str.replaceAll("\"", "\"\"") + "\"";
 		}
-	}
-
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		runCsvExport(monitor);
-	}
-
-	public ReportType getType() {
-		return ReportType.CSV;
+		// fields containing carriage return must be surrounded by double quotes
+		if (str.indexOf('\n') >= 0)
+			return "\"" + str + "\"";
+		// fields that contain , must be surrounded by double quotes
+		if (str.indexOf(',') >= 0)
+			return "\"" + str + "\"";
+		// fields starts or ends with spaces must be in double quotes
+		if (str.startsWith(" ") || str.endsWith(" "))
+			return "\"" + str + "\"";
+		return str;
 	}
 }

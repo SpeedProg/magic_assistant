@@ -10,14 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Formatter;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * export in format 4x Plain ...
@@ -27,28 +20,14 @@ public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
 		return ReportType.TEXT_DECK_CLASSIC;
 	}
 
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		PrintStream exportStream = new PrintStream(st);
-		Location location = null;
-		for (IMagicCard magicCard : store) {
-			IMagicCard card = magicCard;
-			String name;
-			int count = 1;
-			if (card instanceof MagicCardPhysical) {
-				MagicCardPhysical mc = (MagicCardPhysical) card;
-				if (location != mc.getLocation()) {
-					location = mc.getLocation();
-					exportStream.println("# " + location.getName());
-				}
-				name = mc.getName();
-				count = mc.getCount();
-			} else {
-				name = card.getName();
-			}
-			String line = new Formatter().format("%2dx %s", count, name).toString();
-			exportStream.println(line);
-			monitor.worked(1);
-		}
-		exportStream.close();
+	@Override
+	public void printLine(Object[] values) {
+		String line = String.format("%2dx %s", values);
+		stream.println(line);
+	}
+
+	@Override
+	public void printLocationHeader() {
+		stream.println("# " + location.getName());
 	}
 }

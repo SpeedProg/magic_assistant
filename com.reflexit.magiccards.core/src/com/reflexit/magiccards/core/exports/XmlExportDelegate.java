@@ -15,6 +15,11 @@ import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
 
 public class XmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	@Override
+	public ReportType getType() {
+		return ReportType.XML;
+	}
+
+	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException {
 		monitor.beginTask("Exporting xml", 100);
 		try {
@@ -23,30 +28,20 @@ public class XmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
 				CardCollectionStoreObject o = new CardCollectionStoreObject();
 				o.list = Arrays.asList(store.getElements());
 				try {
-					xmlHanlder.save(o, st);
+					xmlHanlder.save(o, stream);
 				} catch (Exception e) {
 					throw new InvocationTargetException(e);
 				}
 			} else {
 				File path = store.getLocation().getFile();
 				FileInputStream in = new FileInputStream(path);
-				FileUtils.copyStream(in, st);
+				FileUtils.copyStream(in, stream);
 				in.close();
 			}
 		} catch (IOException e) {
 			throw new InvocationTargetException(e);
 		} finally {
-			try {
-				st.close();
-			} catch (IOException e) {
-				// ignore
-			}
 			monitor.done();
 		}
-	}
-
-	@Override
-	public ReportType getType() {
-		return ReportType.XML;
 	}
 }
