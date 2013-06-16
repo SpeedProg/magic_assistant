@@ -139,7 +139,7 @@ class CardDescComposite extends Composite {
 				}
 			});
 			swapVisibility(textBrowser, textBackup);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			MagicUIActivator.log(e);
 			swapVisibility(textBackup, textBrowser);
 		}
@@ -219,24 +219,27 @@ class CardDescComposite extends Composite {
 			return;
 		}
 		try {
-			String data = getCardDataHtml(card);
-			String text = getText(card);
-			String links = getLinks(card);
-			String oracle = getOracle(card, text);
-			String rulings = getCardRulingsHtml(card);
-			this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, this));
-			swapVisibility(textBrowser, textBackup);
+			if (textBrowser != null) {
+				String data = getCardDataHtml(card);
+				String text = getText(card);
+				String links = getLinks(card);
+				String oracle = getOracle(card, text);
+				String rulings = getCardRulingsHtml(card);
+				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, this));
+				swapVisibility(textBrowser, textBackup);
+				return;
+			}
 		} catch (Exception e) {
 			if (logOnce == false) {
 				MagicUIActivator.log(e);
 				logOnce = true;
 			}
-			String data = getCardDataText(card);
-			String text = getText(card);
-			text = text.replaceAll("<br>", "\n");
-			this.textBackup.setText(data + text);
-			swapVisibility(textBackup, textBrowser);
 		}
+		String data = getCardDataText(card);
+		String text = getText(card);
+		text = text.replaceAll("<br>", "\n");
+		this.textBackup.setText(data + text);
+		swapVisibility(textBackup, textBrowser);
 	}
 
 	protected String getText(IMagicCard card) {
