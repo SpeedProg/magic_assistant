@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextService;
-
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class MagicControl implements IMagicControl {
@@ -70,8 +68,6 @@ public abstract class MagicControl implements IMagicControl {
 	};
 
 	public void init(IViewSite site) {
-		IContextService contextService = (IContextService) site.getService(IContextService.class);
-		contextService.activateContext("com.reflexit.magiccards.ui.context");
 		site.setSelectionProvider(getSelectionProvider());
 		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
 		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(preferenceListener);

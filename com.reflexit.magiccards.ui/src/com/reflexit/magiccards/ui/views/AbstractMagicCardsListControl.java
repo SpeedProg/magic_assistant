@@ -49,7 +49,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -502,6 +504,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected void createTableControl(Composite parent) {
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
+		this.manager.hookContext("com.reflexit.magiccards.ui.context");
 	}
 
 	protected Composite createTopBar(Composite composite) {
@@ -738,23 +741,32 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 *
 	 */
 	public void runCopy() {
-		IStructuredSelection sel = (IStructuredSelection) getSelectionProvider().getSelection();
-		if (sel.isEmpty())
-			return;
-		StringBuffer buf = new StringBuffer();
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-			Object line = iterator.next();
-			buf.append(TextConvertor.toText(line));
-		}
-		String textData = buf.toString();
-		if (textData.length() > 0) {
-			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-			TextTransfer textTransfer = TextTransfer.getInstance();
-			MagicCardTransfer mt = MagicCardTransfer.getInstance();
-			List list = new ArrayList(sel.size());
-			CardGroup.expandGroups(list, sel.toList());
-			IMagicCard[] cards = (IMagicCard[]) list.toArray(new IMagicCard[sel.size()]);
-			cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
+		Control fc = partControl.getDisplay().getFocusControl();
+		if (fc instanceof Text)
+			((Text) fc).copy();
+		else if (fc instanceof Combo)
+			((Combo) fc).copy();
+		else if (fc instanceof Tree || fc instanceof Table) {
+			IStructuredSelection sel = (IStructuredSelection) getSelectionProvider().getSelection();
+			if (sel.isEmpty())
+				return;
+			StringBuffer buf = new StringBuffer();
+			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
+				Object line = iterator.next();
+				buf.append(TextConvertor.toText(line));
+			}
+			String textData = buf.toString();
+			if (textData.length() > 0) {
+				final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				MagicCardTransfer mt = MagicCardTransfer.getInstance();
+				List list = new ArrayList(sel.size());
+				CardGroup.expandGroups(list, sel.toList());
+				IMagicCard[] cards = (IMagicCard[]) list.toArray(new IMagicCard[sel.size()]);
+				cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
+			}
+		} else {
+			MagicUIActivator.log("Copy from " + fc + "?");
 		}
 	}
 
@@ -801,8 +813,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void setGlobalControlHandlers(IActionBars bars) {
-		if (abstractCardsView != null)
+		if (abstractCardsView != null) {
 			abstractCardsView.activateActionHandler(actionShowFind, FIND);
+		}
 	}
 
 	protected void setQuickFilterVisible(boolean qf) {

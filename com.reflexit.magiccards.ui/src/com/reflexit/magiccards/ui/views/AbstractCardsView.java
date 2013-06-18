@@ -27,7 +27,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
@@ -77,8 +76,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		makeActions();
 		hookContextMenu();
 		contributeToActionBars();
-		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
-		contextService.activateContext("com.reflexit.magiccards.ui.context");
 		getSite().setSelectionProvider(getSelectionProvider());
 	}
 

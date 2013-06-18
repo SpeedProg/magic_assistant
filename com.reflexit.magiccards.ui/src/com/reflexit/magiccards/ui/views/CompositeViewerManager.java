@@ -18,7 +18,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.lib.SelectionProviderIntermediate;
 
@@ -76,6 +75,13 @@ public class CompositeViewerManager extends ViewerManager {
 	public final void hookDragAndDrop() {
 		for (IMagicColumnViewer m : this.managers) {
 			hookDragAndDrop(m);
+		}
+	}
+
+	@Override
+	public void hookContext(String id) {
+		for (IMagicColumnViewer m : this.managers) {
+			m.hookContext(id);
 		}
 	}
 

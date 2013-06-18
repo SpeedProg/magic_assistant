@@ -6,11 +6,18 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
+
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
@@ -59,6 +66,24 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	protected int getColumnsNumber() {
 		return collumns.getColumnsNumber();
+	}
+
+	@Override
+	public void hookContext(String id) {
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		final IContextService contextService = (IContextService) workbench.getService(IContextService.class);
+		final IContextActivation[] contextActivationRef = new IContextActivation[1];
+		getViewer().getControl().addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				contextService.deactivateContext(contextActivationRef[0]);
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				contextActivationRef[0] = contextService.activateContext("com.reflexit.magiccards.ui.context");
+			}
+		});
 	}
 
 	/*

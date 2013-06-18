@@ -50,4 +50,6 @@ public interface IMagicColumnViewer {
 	void hookDragAndDrop();
 
 	public abstract String getColumnLayoutProperty();
+
+	public abstract void hookContext(String id);
 }
