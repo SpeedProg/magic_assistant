@@ -13,6 +13,8 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.core.exports.ClassicExportDelegateTest;
+import com.reflexit.magiccards.core.exports.ClassicImportDelegateTest;
 import com.reflexit.magiccards.core.exports.CsvExportDelegateTest;
 import com.reflexit.magiccards.core.exports.DeckParserTest;
 import com.reflexit.magiccards.core.exports.ImportUtilsTest;
@@ -46,6 +48,8 @@ public class AllLocalTests {
 		suite.addTestSuite(MTGStudioImportTest.class);
 		suite.addTestSuite(PipedTableExportText.class);
 		suite.addTestSuite(CsvExportDelegateTest.class);
+		suite.addTestSuite(ClassicExportDelegateTest.class);
+		suite.addTestSuite(ClassicImportDelegateTest.class);
 		// core
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);

@@ -8,6 +8,12 @@ import com.reflexit.magiccards.core.model.utils.CardGenerator;
 public class CsvExportDelegateTest extends AbstarctExportTest {
 	private CsvExportDelegate exporter = new CsvExportDelegate();
 
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		exporter.setReportType(ReportType.createReportType("test"));
+	}
+
 	public void test1() {
 		run(exporter);
 		assertEquals(4, lines.length);

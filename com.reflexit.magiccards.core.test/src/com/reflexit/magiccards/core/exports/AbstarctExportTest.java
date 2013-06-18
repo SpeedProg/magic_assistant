@@ -27,6 +27,9 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 		this.card1 = CardGenerator.generatePhysicalCardWithValues();
 		this.card2 = CardGenerator.generatePhysicalCardWithValues();
 		this.card3 = CardGenerator.generatePhysicalCardWithValues();
+		card1.setLocation(deck.getLocation());
+		card2.setLocation(deck.getLocation());
+		((MagicCardPhysical) card3).setLocation(deck.getLocation());
 	}
 
 	public void makeDeck() {

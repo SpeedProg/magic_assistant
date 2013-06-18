@@ -7,6 +7,12 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 public class PipedTableExportText extends AbstarctExportTest {
 	private TableExportDelegate exporter = new TableExportDelegate();
 
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		exporter.setReportType(ReportType.createReportType("test"));
+	}
+
 	public void test1() {
 		run(exporter);
 		assertEquals(4, lines.length);
