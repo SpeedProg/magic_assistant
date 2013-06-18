@@ -16,11 +16,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 	private DeckParser parser;
 
-	@Override
-	public ReportType getType() {
-		return ReportType.createReportType("Shandalar .dck");
-	}
-
 	/*-
 	;Azaar - Lichlord
 	;Black

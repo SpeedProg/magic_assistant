@@ -15,11 +15,6 @@ import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
 
 public class XmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	@Override
-	public ReportType getType() {
-		return ReportType.XML;
-	}
-
-	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException {
 		monitor.beginTask("Exporting xml", 100);
 		try {

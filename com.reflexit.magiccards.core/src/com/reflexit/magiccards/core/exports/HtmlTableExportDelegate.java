@@ -20,13 +20,6 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
 public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public HtmlTableExportDelegate() {
-	}
-
-	public ReportType getType() {
-		return ReportType.createReportType("Magic Assistant HTML Table");
-	}
-
 	@Override
 	public void printCard(IMagicCard card) {
 		String abbr = Editions.getInstance().getAbbrByName(card.getSet());

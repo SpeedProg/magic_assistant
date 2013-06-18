@@ -15,11 +15,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  */
 public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	@Override
-	public ReportType getType() {
-		return ReportType.createReportType("Magic Workstation Deck");
-	}
-
-	@Override
 	protected void doRun(ICoreProgressMonitor monitor) throws IOException {
 		runDeckImport(monitor);
 	}

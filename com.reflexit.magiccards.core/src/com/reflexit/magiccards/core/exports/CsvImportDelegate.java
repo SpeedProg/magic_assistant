@@ -21,11 +21,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Import for CVS deck format
  */
 public class CsvImportDelegate extends TableImportDelegate {
-	@Override
-	public ReportType getType() {
-		return ReportType.CSV;
-	}
-
 	public CsvImportDelegate() {
 	}
 

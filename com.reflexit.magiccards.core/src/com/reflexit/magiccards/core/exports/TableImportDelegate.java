@@ -26,14 +26,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Import for table piped import
  */
 public class TableImportDelegate extends AbstractImportDelegate {
-	@Override
-	public ReportType getType() {
-		return ReportType.TABLE_PIPED;
-	}
-
-	public TableImportDelegate() {
-	}
-
 	public char getSeparator() {
 		return '|';
 	}

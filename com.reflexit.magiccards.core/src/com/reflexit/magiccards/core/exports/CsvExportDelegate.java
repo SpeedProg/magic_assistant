@@ -18,10 +18,6 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
  * Export of magic assistant csv
  */
 public class CsvExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public ReportType getType() {
-		return ReportType.CSV;
-	}
-
 	@Override
 	protected boolean isForExport(ICardField field) {
 		return super.isForExport(field) || field == MagicCardFieldPhysical.SIDEBOARD;

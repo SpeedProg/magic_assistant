@@ -25,6 +25,7 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 	protected PrintStream stream;
 	protected ICardField[] columns;
 	protected Location location;
+	protected ReportType type;
 
 	public void init(OutputStream st, boolean header, IFilteredCardStore<T> filteredLibrary) {
 		try {
@@ -37,7 +38,19 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 	}
 
 	@Override
+	public void setReportType(ReportType reportType) {
+		this.type = reportType;
+	}
+
+	@Override
+	public ReportType getType() {
+		return type;
+	}
+
+	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		if (getType() == null)
+			throw new IllegalArgumentException("Delegate is not initialized");
 		export(monitor);
 	}
 
@@ -59,6 +72,8 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 				if (!location.equals(curLocation)) {
 					printLocationFooter();
 					location = ((ILocatable) card).getLocation();
+					if (location == null)
+						location = Location.NO_WHERE;
 					printLocationHeader();
 				}
 				printCard(card);

@@ -28,14 +28,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Xml Import
  */
 public class XmlImportDelegate extends AbstractImportDelegate {
-	@Override
-	public ReportType getType() {
-		return ReportType.XML;
-	}
-
-	public XmlImportDelegate() {
-	}
-
 	/**
 	 * @param monitor
 	 * @throws IOException

@@ -24,11 +24,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Import for classic text deck format
  */
 public class ClassicImportDelegate extends AbstractImportDelegate {
-	@Override
-	public ReportType getType() {
-		return ReportType.TEXT_DECK_CLASSIC;
-	}
-
 	public ClassicImportDelegate() {
 	}
 
@@ -50,8 +45,8 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 	 */
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
 		DeckParser parser = new DeckParser(getStream(), this);
-		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]?\\s*(\\d+)"), new ICardField[] { MagicCardField.NAME,
-				MagicCardField.SET, MagicCardFieldPhysical.COUNT });
+		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]?\\s*(\\d+)\\s*$"), new ICardField[] {
+				MagicCardField.NAME, MagicCardField.SET, MagicCardFieldPhysical.COUNT });
 		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]?\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"), new ICardField[] {
 				MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
 		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET });

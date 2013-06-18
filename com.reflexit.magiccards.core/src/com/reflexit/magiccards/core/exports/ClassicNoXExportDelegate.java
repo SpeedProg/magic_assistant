@@ -10,24 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
-
 /**
- * Pipe separated table
+ * export in format 4 Plain ...
  */
-public class TableExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	private final String SEP = "|";
-
+public class ClassicNoXExportDelegate extends ClassicExportDelegate {
 	@Override
-	public String getSeparator() {
-		return SEP;
-	}
-
-	@Override
-	protected String escape(String element) {
-		if (element.contains(SEP)) {
-			return element.replaceAll("\\Q" + SEP, "?");
-		}
-		return element;
+	public void printLine(Object[] values) {
+		String line = String.format("%d %s", values);
+		stream.println(line);
 	}
 }

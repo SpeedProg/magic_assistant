@@ -32,14 +32,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  */
 public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 	@Override
-	public ReportType getType() {
-		return ReportType.createReportType("Magic Workstation CSV");
-	}
-
-	public MagicWorkstationCsvImportDelegate() {
-	}
-
-	@Override
 	public char getSeparator() {
 		return ';';
 	}

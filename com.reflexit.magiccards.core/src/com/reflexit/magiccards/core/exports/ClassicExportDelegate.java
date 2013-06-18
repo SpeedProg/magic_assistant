@@ -10,24 +10,39 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.lang.reflect.InvocationTargetException;
+
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * export in format 4x Plain ...
  */
 public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public ReportType getType() {
-		return ReportType.TEXT_DECK_CLASSIC;
+	@Override
+	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		super.run(monitor);
+	}
+
+	@Override
+	public void printHeader() {
+		// nothing
 	}
 
 	@Override
 	public void printLine(Object[] values) {
-		String line = String.format("%2dx %s", values);
+		String line = String.format("%dx %s", values);
 		stream.println(line);
 	}
 
 	@Override
 	public void printLocationHeader() {
-		stream.println("# " + location.getName());
+		if (header) {
+			stream.println("# " + location.getName());
+		}
 	}
 }

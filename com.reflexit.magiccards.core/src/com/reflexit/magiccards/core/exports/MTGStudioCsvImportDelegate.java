@@ -43,11 +43,6 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 	private int fields = 13;
 	private LookupHash lookup;
 
-	@Override
-	public ReportType getType() {
-		return ReportType.createReportType("MTG Studio CSV");
-	}
-
 	public MTGStudioCsvImportDelegate() {
 	}
 

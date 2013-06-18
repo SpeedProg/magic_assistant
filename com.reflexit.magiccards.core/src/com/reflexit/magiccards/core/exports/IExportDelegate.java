@@ -28,4 +28,6 @@ public interface IExportDelegate<T> {
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 
 	public void setColumns(ICardField[] columnsForExport);
+
+	public void setReportType(ReportType reportType);
 }

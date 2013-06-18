@@ -18,10 +18,6 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
  * Export to Wagic: The Homebrew (http://wololo.net/wagic/) TODO: add description
  */
 public class WagicExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public ReportType getType() {
-		return ReportType.createReportType("Wagic: The Homebrew");
-	}
-
 	@Override
 	public void printHeader() {
 		stream.println("#NAME:" + getName());

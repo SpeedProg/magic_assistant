@@ -42,11 +42,6 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	private int premiumIndex = -1;
 	private int numIndex = 6;
 
-	@Override
-	public ReportType getType() {
-		return ReportType.createReportType("Magic the Gathering Online");
-	}
-
 	public MtgoImportDelegate() {
 	}
 

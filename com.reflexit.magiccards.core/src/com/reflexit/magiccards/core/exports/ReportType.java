@@ -169,6 +169,7 @@ public class ReportType {
 			try {
 				Class loadClass = getClass().getClassLoader().loadClass((String) className);
 				IExportDelegate newInstance = (IExportDelegate) loadClass.newInstance();
+				newInstance.setReportType(this);
 				exportWorker = newInstance;
 				return newInstance;
 			} catch (Exception e) {
@@ -188,6 +189,7 @@ public class ReportType {
 			try {
 				loadClass = getClass().getClassLoader().loadClass((String) className);
 				IImportDelegate newInstance = (IImportDelegate) loadClass.newInstance();
+				newInstance.setReportType(this);
 				importWorker = newInstance;
 				return newInstance;
 			} catch (Exception e) {

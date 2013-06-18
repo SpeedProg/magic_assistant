@@ -18,11 +18,6 @@ public class ManaDeckDckImportDelegate extends AbstractImportDelegate {
 	private boolean sideboard;
 
 	@Override
-	public ReportType getType() {
-		return ReportType.createReportType("Mana Deck .dck");
-	}
-
-	@Override
 	public synchronized void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (sideboard) {
 			card.setLocation(getSideboardLocation());

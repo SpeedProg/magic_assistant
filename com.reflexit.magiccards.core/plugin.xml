@@ -19,6 +19,13 @@
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
             label="Deck Classic Text (1 x Name)">
       </deckFormat>
+            <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.ClassicNoXExportDelegate"
+            extension="txt"
+            id="classic2"
+            importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
+            label="Deck Classic Text (2 Name)">
+      </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
             extension="csv"

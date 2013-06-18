@@ -36,4 +36,6 @@ public interface IImportDelegate<T> {
 	public Collection<T> getImportedCards();
 
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value);
+
+	public void setReportType(ReportType reportType);
 }

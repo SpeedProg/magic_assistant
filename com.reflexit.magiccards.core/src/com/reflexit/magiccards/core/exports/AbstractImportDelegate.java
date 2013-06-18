@@ -23,14 +23,23 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected boolean previewMode = false;
 	protected ImportResult importResult;
 	protected int lineNum = 0;
+	private ReportType type;
 
 	public AbstractImportDelegate() {
 	}
 
-	public abstract ReportType getType();
-
 	public InputStream getStream() {
 		return stream;
+	}
+
+	@Override
+	public void setReportType(ReportType reportType) {
+		this.type = reportType;
+	}
+
+	@Override
+	public ReportType getType() {
+		return type;
 	}
 
 	public void init(InputStream st, boolean preview, Location location) {

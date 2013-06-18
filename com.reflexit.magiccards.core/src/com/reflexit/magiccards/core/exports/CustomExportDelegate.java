@@ -33,21 +33,18 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public static final String FOOTER = "main.footer";
 	public static final String SB_HEADER = "sideboard.header";
 	public static final String DECK_NAME_VAR = "${DECK.NAME}";
-	private ReportType rtype;
-
-	public ReportType getType() {
-		return rtype;
-	}
 
 	public CustomExportDelegate() {
 		this(ReportType.createReportType("Custom", "txt", false));
 	}
 
 	public CustomExportDelegate(ReportType type) {
-		rtype = type;
+		setReportType(type);
 	}
 
+	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		ReportType rtype = getType();
 		String format = rtype.getProperty(ROW_FORMAT);
 		String fields = rtype.getProperty(ROW_FIELDS);
 		String headerStr = rtype.getProperty(HEADER);
