@@ -220,7 +220,7 @@
       </key>
       <key
             commandId="com.reflexit.magiccards.ui.commands.filterCommand"
-            contextId="com.reflexit.magiccards.ui.context"
+            contextId="org.eclipse.ui.contexts.window"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+6">
       </key>
