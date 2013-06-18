@@ -444,7 +444,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			dialogSettings.put(IMPUT_FILE_SETTING, fileName);
 			dialogSettings.put(IMPORT_CLIPBOARD, clipboard);
 			// save options
-			dialogSettings.put(REPORT_TYPE_SETTING, reportType.toString());
+			dialogSettings.put(REPORT_TYPE_SETTING, reportType.getLabel());
 			dialogSettings.put(IMPORT_HEADER_SETTING, includeHeader.getSelection());
 			// save into file
 			MagicUIActivator.getDefault().saveDialogSetting(dialogSettings);
