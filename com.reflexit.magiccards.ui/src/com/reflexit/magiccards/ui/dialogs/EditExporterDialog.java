@@ -106,6 +106,7 @@ public class EditExporterDialog extends MagicDialog {
 		};
 		fields.setPreferenceStore(store);
 		fields.load();
+		fields.getTextControl(fparent).setEditable(false);
 	}
 
 	public void createFormatterControl(Composite area) {

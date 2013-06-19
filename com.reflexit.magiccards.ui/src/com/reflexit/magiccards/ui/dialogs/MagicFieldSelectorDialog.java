@@ -17,6 +17,7 @@ public class MagicFieldSelectorDialog extends Dialog {
 
 	protected MagicFieldSelectorDialog(Shell parentShell, PreferenceStore store) {
 		super(parentShell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.store = store;
 	}
 
