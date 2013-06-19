@@ -32,6 +32,8 @@ public class EditExporterDialog extends MagicDialog {
 	private Combo comboFormatMethod;
 	private Label formatLabel;
 	private Text format;
+	private Text sbHeader;
+	private Text footer;
 
 	public EditExporterDialog(Shell parentShell, ReportType orig) {
 		super(parentShell, new PreferenceStore());
@@ -68,24 +70,24 @@ public class EditExporterDialog extends MagicDialog {
 		// createFromCombo(area);
 		Text name = createTextFieldEditor(area, "Name", PROP_NAME);
 		createTextFieldEditor(area, "File Extension", PROP_EXT, "Default file extension for exported file");
+		createFormatterControl(area);
 		createTextFieldEditor(area, "Header", CustomExportDelegate.HEADER, "Line separating multiple decks or file header, "
 				+ "leave empty to ommit.\n" + "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
 				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
-		createTextFieldEditor(area, "Sideboard Header", CustomExportDelegate.SB_HEADER,
-				"Line separating sideboard from the deck, leave empty to ommit");
-		createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER, "File footer, " + "leave empty to ommit.\n"
+		footer = createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER, "File footer, " + "leave empty to ommit.\n"
 				+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
 				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
-		// filler
-		createTextLabel(area, "");
-		createTextLabel(area, "");
-		createFormatterControl(area);
+		sbHeader = createTextFieldEditor(area, "Sideboard Header", CustomExportDelegate.SB_HEADER,
+				"Line separating sideboard from the deck, leave empty to ommit");
+		createTextFieldEditor(area, "Sideboard Field", CustomExportDelegate.SB_FIELD,
+				"When using separated field how to output sideboard field, i.e. Yes/No, true/false, SB");
 		// createTextFieldEditor(area, "Field Separator", CustomExportDelegate.FIELD_SEP,
 		// "Instead of formatter can use field separator");
 		createFieldsControl(area);
 		GridData ld1 = new GridData(GridData.FILL_BOTH);
 		ld1.horizontalSpan = 4;
 		createPreviewGroup(area).setLayoutData(ld1);
+		updateFormatterControls();
 		name.setFocus();
 	}
 
@@ -107,8 +109,7 @@ public class EditExporterDialog extends MagicDialog {
 	}
 
 	public void createFormatterControl(Composite area) {
-		String[] values = new String[] { "Java Message Format", "C Printf Format", //
-				"Separated Fields", "Separated with Quites Escape", "Separated with Backslash Escape" };
+		String[] values = CustomExportDelegate.getFormatLabels();
 		comboFormatMethod = createComboFieldEditor(area, "Method", CustomExportDelegate.ROW_FORMAT_TYPE, //
 				values);
 		formatLabel = createTextLabel(area, "Formatter");
@@ -125,12 +126,13 @@ public class EditExporterDialog extends MagicDialog {
 				updateFormatterControls();
 			}
 		});
-		updateFormatterControls();
 	}
 
 	public void updateFormatterControls() {
 		formatLabel.setText(comboFormatMethod.getText().startsWith("Separated") ? "Separator" : "Format    ");
 		int index = comboFormatMethod.getSelectionIndex();
+		footer.setEnabled(true);
+		sbHeader.setEnabled(true);
 		switch (index) {
 			case 0:
 				format.setToolTipText("Java Formatter for fields values, i.e '{0} x {1}', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
@@ -140,6 +142,8 @@ public class EditExporterDialog extends MagicDialog {
 				break;
 			default:
 				format.setToolTipText("Separator for the fields, i.e. ',' or '|' or ' ', etc");
+				footer.setEnabled(false);
+				sbHeader.setEnabled(false);
 				break;
 		}
 		format.setText(store.getString(CustomExportDelegate.ROW_FORMAT + "." + index));
