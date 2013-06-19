@@ -89,6 +89,10 @@ public class ReportType {
 		return properties;
 	}
 
+	public void setProperty(String key, int value) {
+		this.properties.setProperty(key, String.valueOf(value));
+	}
+
 	public void setProperty(String key, String value) {
 		this.properties.setProperty(key, value);
 	}

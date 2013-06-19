@@ -96,10 +96,14 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 		Object values[] = new Object[columns.length];
 		int i = 0;
 		for (ICardField field : columns) {
-			values[i] = ((ICard) card).getObjectByField(field);
+			values[i] = getObjectByField(card, field);
 			i++;
 		}
 		return values;
+	}
+
+	public Object getObjectByField(T card, ICardField field) {
+		return ((ICard) card).getObjectByField(field);
 	}
 
 	public void printLine(Object[] values) {
@@ -177,5 +181,22 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 			return ((ILocatable) store).getLocation().getName();
 		}
 		return "deck";
+	}
+
+	public String escapeQuot(String str) {
+		// fields containing " must be in quotes and all " changed to ""
+		if (str.indexOf('"') >= 0) {
+			return "\"" + str.replaceAll("\"", "\"\"") + "\"";
+		}
+		// fields containing carriage return must be surrounded by double quotes
+		if (str.indexOf('\n') >= 0)
+			return "\"" + str + "\"";
+		// fields that contain separator must be surrounded by double quotes
+		if (str.indexOf(getSeparator()) >= 0)
+			return "\"" + str + "\"";
+		// fields starts or ends with spaces must be in double quotes
+		if (str.startsWith(" ") || str.endsWith(" "))
+			return "\"" + str + "\"";
+		return str;
 	}
 }

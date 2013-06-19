@@ -10,16 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
+import java.io.OutputStream;
 import java.text.MessageFormat;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * export in format 4x Plain ...
@@ -33,6 +30,17 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public static final String FOOTER = "main.footer";
 	public static final String SB_HEADER = "sideboard.header";
 	public static final String DECK_NAME_VAR = "${DECK.NAME}";
+	public static final String SB_FIELD = "sideboard.field";
+	public static final int FORMAT_JAVA = 0;
+	public static final int FORMAT_PRINTF = 1;
+	public static final int FORMAT_SEP = 2;
+	public static final int FORMAT_SEP_QUOT = 3;
+	private String format;
+	private String headerStr;
+	private String footerStr;
+	private String sbHeaderStr;
+	private int itype;
+	private String sbFieldStr;
 
 	public CustomExportDelegate() {
 		this(ReportType.createReportType("Custom", "txt", false));
@@ -42,78 +50,122 @@ public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
 		setReportType(type);
 	}
 
+	public static String[] getFormatLabels() {
+		String[] values = new String[] { "Java Message Format", "C Printf Format", //
+				"Separated Fields", "Separated with Quites Escape" };
+		return values;
+	}
+
 	@Override
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void init(OutputStream st, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
+		super.init(st, header, filteredLibrary);
 		ReportType rtype = getType();
-		String format = rtype.getProperty(ROW_FORMAT);
+		format = rtype.getProperty(ROW_FORMAT);
 		String fields = rtype.getProperty(ROW_FIELDS);
-		String headerStr = rtype.getProperty(HEADER);
-		String footerStr = rtype.getProperty(FOOTER);
-		String sbHeaderStr = rtype.getProperty(SB_HEADER);
+		if (fields != null && fields.length() > 0)
+			columns = MagicCardFieldPhysical.toFields(fields, ",");
+		else if (columns == null) {
+			columns = new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME };
+		}
+		headerStr = rtype.getProperty(HEADER);
+		footerStr = rtype.getProperty(FOOTER);
+		sbHeaderStr = rtype.getProperty(SB_HEADER);
+		sbFieldStr = rtype.getProperty(SB_FIELD);
 		String ftype = rtype.getProperty(ROW_FORMAT_TYPE_NUM);
-		int itype = 0;
+		itype = 1;
 		if (ftype != null) {
 			itype = Integer.valueOf(ftype);
 		}
-		ICardField[] xfields = fields == null ? new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME }
-				: MagicCardFieldPhysical.toFields(fields, ",");
-		PrintStream exportStream = new PrintStream(stream);
-		Location location = Location.NO_WHERE;
-		for (IMagicCard card : store) {
-			Object values[] = new Object[xfields.length];
-			int i = 0;
-			for (ICardField field : xfields) {
-				values[i] = card.getObjectByField(field);
-				if (values[i] == null)
-					values[i] = "";
-				i++;
-			}
-			if (card instanceof MagicCardPhysical) {
-				Location curLocation = ((MagicCardPhysical) card).getLocation();
-				if (location != curLocation) {
-					location = ((MagicCardPhysical) card).getLocation();
-					String deckName = location.getName();
-					if (location.isSideboard() && sbHeaderStr != null) {
-						String xheader = sbHeaderStr.replace(DECK_NAME_VAR, deckName);
-						exportStream.println(xheader);
-					} else {
-						if (header && headerStr != null) {
-							String xheader = headerStr.replace(DECK_NAME_VAR, deckName);
-							exportStream.println(xheader);
-						}
-					}
-				}
-			}
-			String line;
-			if (itype == 0) {
-				try {
-					line = new MessageFormat(format).format(values);
-				} catch (Exception e) {
-					throw new InvocationTargetException(e);
-				}
-			} else if (itype == 1) {
-				try {
-					line = String.format(format, values);
-				} catch (Exception e) {
-					throw new InvocationTargetException(e);
-				}
-			} else {
-				line = "";
-				for (int j = 0; j < values.length; j++) {
-					Object object = values[j];
-					if (j > 0)
-						line += format;
-					line += object;
-				}
-			}
-			exportStream.println(line);
-			monitor.worked(1);
+		if (format == null) {
+			if (isFieldSeparated())
+				format = ",";
+			else
+				format = "%d %s";
 		}
-		if (header && footerStr != null) {
+	}
+
+	@Override
+	public void printHeader() {
+		if (isFieldSeparated()) {
+			super.printHeader();
+		} else if (header && headerStr != null && headerStr.length() > 0) {
+			String deckName = location.getName();
+			String xheader = headerStr.replace(DECK_NAME_VAR, deckName);
+			stream.println(xheader);
+		}
+	}
+
+	@Override
+	public String getSeparator() {
+		return format;
+	}
+
+	@Override
+	public void printLocationHeader() {
+		if (location.isSideboard() && sbHeaderStr != null && sbHeaderStr.length() > 0 && !isFieldSeparated()) {
+			String deckName = location.getName();
+			String xheader = sbHeaderStr.replace(DECK_NAME_VAR, deckName);
+			stream.println(xheader);
+		}
+	}
+
+	@Override
+	public void printFooter() {
+		if (header && footerStr != null && footerStr.length() > 0 && !isFieldSeparated()) {
 			String deckName = location.getName();
 			String xheader = footerStr.replace(DECK_NAME_VAR, deckName);
-			exportStream.println(xheader);
+			stream.println(xheader);
 		}
-		exportStream.close();
+	}
+
+	protected boolean isFieldSeparated() {
+		return itype == FORMAT_SEP || itype == FORMAT_SEP_QUOT;
+	}
+
+	@Override
+	public void printLine(Object[] values) {
+		String line;
+		if (itype == FORMAT_JAVA) {
+			line = new MessageFormat(format).format(values);
+		} else if (itype == FORMAT_PRINTF) {
+			line = String.format(format, values);
+		} else {
+			super.printLine(values);
+			return;
+		}
+		stream.println(line);
+	}
+
+	@Override
+	public Object getObjectByField(IMagicCard card, ICardField field) {
+		Object value = super.getObjectByField(card, field);
+		if (field == MagicCardFieldPhysical.SIDEBOARD && sbFieldStr != null && sbFieldStr.length() > 0) {
+			String choice[] = sbFieldStr.split("/");
+			if (Boolean.valueOf(value.toString())) {
+				return choice[0];
+			} else {
+				if (choice.length > 1) {
+					return choice[1];
+				} else {
+					return "";
+				}
+			}
+		}
+		if (value == null)
+			return "";
+		return value;
+	}
+
+	@Override
+	protected String escape(String element) {
+		switch (itype) {
+			case FORMAT_SEP:
+				break;
+			case FORMAT_SEP_QUOT:
+				return escapeQuot(element);
+			default:
+				break;
+		}
+		return element;
 	}
 }
