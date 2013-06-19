@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import com.reflexit.magiccards.core.exports.ClassicExportDelegateTest;
 import com.reflexit.magiccards.core.exports.ClassicImportDelegateTest;
 import com.reflexit.magiccards.core.exports.CsvExportDelegateTest;
+import com.reflexit.magiccards.core.exports.CustomExportDelegateTest;
 import com.reflexit.magiccards.core.exports.DeckParserTest;
 import com.reflexit.magiccards.core.exports.ImportUtilsTest;
 import com.reflexit.magiccards.core.exports.MTGStudioImportTest;
@@ -50,6 +51,7 @@ public class AllLocalTests {
 		suite.addTestSuite(CsvExportDelegateTest.class);
 		suite.addTestSuite(ClassicExportDelegateTest.class);
 		suite.addTestSuite(ClassicImportDelegateTest.class);
+		suite.addTestSuite(CustomExportDelegateTest.class);
 		// core
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
