@@ -271,17 +271,22 @@ public class XmlCardHolder implements ICardHandler {
 		int rec = 0;
 		if (set.equalsIgnoreCase("All")) {
 			Collection<Edition> editions = Editions.getInstance().getEditions();
-			pm.beginTask("Downloading all cards", editions.size() * 100);
+			pm.beginTask("Downloading all cards", editions.size() * 1000);
 			try {
-				for (Iterator iterator = editions.iterator(); iterator.hasNext();) {
+				int i = 1;
+				int n = editions.size();
+				for (Iterator iterator = editions.iterator(); iterator.hasNext(); i++) {
 					Edition edition = (Edition) iterator.next();
 					try {
-						rec += downloadAndStoreSet(edition.getName(), options, list, new SubCoreProgressMonitor(pm, 100));
+						pm.setTaskName("Downloading " + edition.getName() + " (" + i + " of " + n + ")");
+						rec += downloadAndStoreSet(edition.getName(), options, list, new SubCoreProgressMonitor(pm, 1000));
 					} catch (InterruptedException e) {
 						throw e;
 					} catch (Exception e) {
 						MagicLogger.log(e);
 					}
+					if (pm.isCanceled())
+						throw new InterruptedException();
 				}
 			} finally {
 				pm.done();
@@ -294,13 +299,13 @@ public class XmlCardHolder implements ICardHandler {
 
 	public int downloadAndStoreSet(String set, Properties options, ArrayList<IMagicCard> list, ICoreProgressMonitor pm)
 			throws FileNotFoundException, MalformedURLException, IOException, InterruptedException {
-		pm.beginTask("Downloading " + set, 100);
+		pm.beginTask("Downloading set", 100);
 		try {
 			int rec;
 			String file = download(set, options, new SubCoreProgressMonitor(pm, 70));
 			if (pm.isCanceled())
 				throw new InterruptedException();
-			pm.subTask("Updating database...");
+			pm.subTask("Updating database for " + set);
 			BufferedReader st = new BufferedReader(new FileReader(file));
 			rec = loadtFromFlatIntoXml(st, list, isSingleSet(set));
 			st.close();
