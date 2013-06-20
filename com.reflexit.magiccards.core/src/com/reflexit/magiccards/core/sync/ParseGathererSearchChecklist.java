@@ -53,33 +53,44 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 	}
 
 	private void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
-		MagicCard card = new MagicCard();
-		// split by td
-		String[] rows = line.split("<td");
-		if (rows.length == 0)
-			return;
-		String id = GatherHelper.getMatch(idPattern, rows[2]);
-		card.setId(id);
-		String num = GatherHelper.getMatch(numberPattern, rows[1]);
-		card.setCollNumber(num);
-		String name = GatherHelper.getMatch(namePattern, rows[2]);
-		card.setName(name);
-		String artist = GatherHelper.getMatch(artistPattern, rows[3]);
-		card.setArtist(artist);
-		String set = GatherHelper.getMatch(setPattern, rows[6]);
-		card.setSet(set);
-		// print
-		handler.handleCard(card);
+		String[] trs = line.split("<tr");
+		for (int i = 0; i < trs.length; i++) {
+			String tdline = trs[i];
+			if (!tdline.contains("<td"))
+				continue;
+			MagicCard card = new MagicCard();
+			// split by td
+			String[] rows = tdline.split("<td");
+			if (rows.length == 0)
+				continue;
+			String id = GatherHelper.getMatch(idPattern, rows[2]);
+			card.setId(id);
+			String num = GatherHelper.getMatch(numberPattern, rows[1]);
+			card.setCollNumber(num);
+			String name = GatherHelper.getMatch(namePattern, rows[2]);
+			card.setName(name);
+			String artist = GatherHelper.getMatch(artistPattern, rows[3]);
+			card.setArtist(artist);
+			String set = GatherHelper.getMatch(setPattern, rows[6]);
+			card.setSet(set);
+			// print
+			handler.handleCard(card);
+		}
 	}
 
 	@Override
 	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor) throws IOException {
-		return loadSingleUrl(GatherHelper.getSearchQuery("checklist", set, true), handler);
+		try {
+			monitor.beginTask("Downloading " + set + " checklist", 100);
+			return loadSingleUrl(GatherHelper.getSearchQuery("checklist", set, true), handler);
+		} finally {
+			monitor.done();
+		}
 	}
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		GatherHelper.OutputHandler handler = new GatherHelper.OutputHandler(System.out, true, true);
-		new ParseGathererSearchChecklist().loadSingleUrl(GatherHelper.getSearchQuery("checklist", "Magic 2013", false), handler);
+		new ParseGathererSearchChecklist().loadSingleUrl(GatherHelper.getSearchQuery("checklist&sort=cn+", "Magic 2013", false), handler);
 		System.err.println("Total " + handler.getCardCount());
 	}
 }
