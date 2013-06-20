@@ -58,7 +58,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 	 */
 	@Override
 	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException {
-		loadMultiPageUrl(GatherHelper.getSearchQuery("standard", set, true), handler, mon);
+		loadMultiPageUrl(GatherHelper.getSearchQuery("standard", set, true), handler, set, mon);
 		return true;
 	}
 
@@ -71,7 +71,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		GatherHelper.OutputHandler handler = createOutputHandler(out, options);
 		try {
 			if (from.startsWith("http:")) {
-				loadMultiPageUrl(new URL(from), handler, pm);
+				loadMultiPageUrl(new URL(from), handler, "unknown", pm);
 			} else {
 				File input = new File(from);
 				loadFile(input, handler);
@@ -81,9 +81,9 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		}
 	}
 
-	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
+	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, String set, ICoreProgressMonitor monitor)
 			throws MalformedURLException, IOException {
-		monitor.beginTask("Downloading cards:", 10000);
+		monitor.beginTask("Downloading " + set + ":", 10000);
 		try {
 			int i = 0;
 			boolean lastPage = false;

@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Properties;
@@ -188,12 +189,20 @@ public class UpdateCardsFromWeb {
 				Integer id = Integer.valueOf(cardId);
 				MagicCard prev = cards.get(id);
 				if (prev != null) {
-					if (prev.getCollNumber().length() > 0)
+					if (prev.getCollNumber().length() > 0 && !prev.getCollNumber().equals(card.getCollNumber())) {
+						// land cards have mismatching id link in checklist
+						prev.setCollNumber("x");
+						prev.setArtist(null);
 						return; // bug in gatherer
+					}
 					// merge with info from checklist
 					prev.setArtist(card.getArtist());
 					prev.setCollNumber(card.getCollNumber());
 				} else {
+					if (card.getName().equals("Mountain")) {
+						card.setText("R");
+						card.setOracleText("R");
+					}
 					cards.put(id, card);
 				}
 			}
@@ -212,16 +221,31 @@ public class UpdateCardsFromWeb {
 				}
 			}
 		};
-		pm.beginTask("Downloading...", 10000);
+		pm.beginTask("Downloading...", 15000);
 		try {
 			new ParseGathererSearchStandard().loadSet(set, handler, new SubCoreProgressMonitor(pm, 5000,
 					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 			new ParseGathererSearchChecklist().loadSet(set, handler, new SubCoreProgressMonitor(pm, 5000,
 					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
-			for (Iterator<MagicCard> iterator = handler.getPrimary().iterator(); iterator.hasNext();) {
+			Set<ICardField> fieldMap = new HashSet<ICardField>();
+			fieldMap.add(MagicCardField.COLLNUM);
+			fieldMap.add(MagicCardField.ARTIST);
+			SubCoreProgressMonitor pm2 = new SubCoreProgressMonitor(pm, 5000, SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
+			int n = handler.getPrimary().size();
+			pm2.beginTask("Updating", n);
+			int i = 0;
+			for (Iterator<MagicCard> iterator = handler.getPrimary().iterator(); iterator.hasNext(); i++) {
 				MagicCard c = iterator.next();
+				if (c.getCollNumber().equals("x")) {
+					pm2.subTask(c.toString() + " (" + i + " of " + n + ")");
+					new ParseGathererDetails().updateCard(c, fieldMap, ICoreProgressMonitor.NONE);
+				}
 				handler2.handleCard(c);
+				pm2.worked(1);
+				if (pm2.isCanceled() || pm.isCanceled())
+					break;
 			}
+			pm2.done();
 		} finally {
 			out.close();
 			pm.done();
