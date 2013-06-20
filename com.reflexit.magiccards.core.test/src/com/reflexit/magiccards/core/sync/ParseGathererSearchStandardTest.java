@@ -52,7 +52,7 @@ public class ParseGathererSearchStandardTest extends TestCase {
 	}
 
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
-		parser.loadMultiPageUrl(wallUrl, handler, monitor);
+		parser.loadMultiPageUrl(wallUrl, handler, "unknown", monitor);
 		assertEquals(4, handler.getCardCount());
 		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
