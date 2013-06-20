@@ -233,18 +233,18 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 194097|Wing Puncture|{G}|Instant|||Target creature you control deals damage equal to its power to target creature with flying.|Scars of Mirrodin|Common|0.0||2.388|jD|133||Target creature you control deals damage equal to its power to target creature with flying.|0|
 209035|Withstand Death|{G}|Instant|||Target creature is indestructible this turn. <i>(Lethal damage and effects that say "destroy" don't destroy it. If its toughness is 0 or less, it's still put into its owner's graveyard.)</i>|Scars of Mirrodin|Common|0.0||3.787|Tomasz Jedruszek|134||Target creature is indestructible this turn. <i>(Lethal damage and effects that say "destroy" don't destroy it. If its toughness is 0 or less, it's still put into its owner's graveyard.)</i>|0|
 207875|Wurmcoil Engine|{6}|Artifact Creature - Wurm|6|6|Deathtouch, lifelink<br>When Wurmcoil Engine dies, put a 3/3 colorless Wurm artifact creature token with deathtouch and a 3/3 colorless Wurm artifact creature token with lifelink onto the battlefield.|Scars of Mirrodin|Mythic Rare|0.0||4.597|Raymond Swanland|223||Deathtouch, lifelink<br>When Wurmcoil Engine dies, put a 3/3 colorless Wurm artifact creature token with deathtouch and a 3/3 colorless Wurm artifact creature token with lifelink onto the battlefield.|0|
-214665|Forest||Basic Land - Forest|||G|Scars of Mirrodin|Land|0.0||0.0||246||G|0|
-214680|Forest||Basic Land - Forest|||G|Scars of Mirrodin|Land|0.0||0.0||248||G|0|
-214670|Forest||Basic Land - Forest|||G|Scars of Mirrodin|Land|0.0||0.0||249||G|0|
-214672|Island||Basic Land - Island|||U|Scars of Mirrodin|Land|0.0||0.0||234||U|0|
-214678|Island||Basic Land - Island|||U|Scars of Mirrodin|Land|0.0||0.0||236||U|0|
-214682|Island||Basic Land - Island|||U|Scars of Mirrodin|Land|0.0||0.0||237||U|0|
-214667|Mountain||Basic Land - Mountain|||R|Scars of Mirrodin|Land|0.0||0.0||242||R|0|
-214675|Mountain||Basic Land - Mountain|||R|Scars of Mirrodin|Land|0.0||0.0||244||R|0|
-214681|Mountain||Basic Land - Mountain|||R|Scars of Mirrodin|Land|0.0||0.0||245||R|0|
-214677|Plains||Basic Land - Plains|||W|Scars of Mirrodin|Land|0.0||0.0||230||W|0|
-214671|Plains||Basic Land - Plains|||W|Scars of Mirrodin|Land|0.0||0.0||232||W|0|
-214683|Plains||Basic Land - Plains|||W|Scars of Mirrodin|Land|0.0||0.0||233||W|0|
-214684|Swamp||Basic Land - Swamp|||B|Scars of Mirrodin|Land|0.0||0.0||238||B|0|
-214676|Swamp||Basic Land - Swamp|||B|Scars of Mirrodin|Land|0.0||0.0||240||B|0|
-214674|Swamp||Basic Land - Swamp|||B|Scars of Mirrodin|Land|0.0||0.0||241||B|0|
+214665|Forest||Basic Land - Forest|||G|Scars of Mirrodin|Land|0.0||0.0|Mark Tedin|246||G|0|
+214680|Forest||Basic Land - Forest|||G|Scars of Mirrodin|Land|0.0||0.0|Mark Tedin|248||G|0|
+214670|Forest||Basic Land - Forest|||G|Scars of Mirrodin|Land|0.0||0.0|Mark Tedin|249||G|0|
+214672|Island||Basic Land - Island|||U|Scars of Mirrodin|Land|0.0||0.0|Jung Park|234||U|0|
+214678|Island||Basic Land - Island|||U|Scars of Mirrodin|Land|0.0||0.0|Jung Park|236||U|0|
+214682|Island||Basic Land - Island|||U|Scars of Mirrodin|Land|0.0||0.0|Jung Park|237||U|0|
+214667|Mountain||Basic Land - Mountain|||R|Scars of Mirrodin|Land|0.0||0.0|Tomasz Jedruszek|242||R|0|
+214675|Mountain||Basic Land - Mountain|||R|Scars of Mirrodin|Land|0.0||0.0|Tomasz Jedruszek|244||R|0|
+214681|Mountain||Basic Land - Mountain|||R|Scars of Mirrodin|Land|0.0||0.0|Tomasz Jedruszek|245||R|0|
+214677|Plains||Basic Land - Plains|||W|Scars of Mirrodin|Land|0.0||0.0|James Paick|230||W|0|
+214671|Plains||Basic Land - Plains|||W|Scars of Mirrodin|Land|0.0||0.0|James Paick|232||W|0|
+214683|Plains||Basic Land - Plains|||W|Scars of Mirrodin|Land|0.0||0.0|James Paick|233||W|0|
+214684|Swamp||Basic Land - Swamp|||B|Scars of Mirrodin|Land|0.0||0.0|Lars Grant-West|238||B|0|
+214676|Swamp||Basic Land - Swamp|||B|Scars of Mirrodin|Land|0.0||0.0|Lars Grant-West|240||B|0|
+214674|Swamp||Basic Land - Swamp|||B|Scars of Mirrodin|Land|0.0||0.0|Lars Grant-West|241||B|0|

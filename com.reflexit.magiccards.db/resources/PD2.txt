@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
 234719|Vulshok Sorcerer|{1}{R}{R}|Creature - Human Shaman|1|1|Haste<br>{T}: Vulshok Sorcerer deals 1 damage to target creature or player.|Premium Deck Series: Fire and Lightning|Common|0.0||4.28|rk post|11||Haste<br>{T}: Vulshok Sorcerer deals 1 damage to target creature or player.|0|
-234738|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0||||R|0|
-234739|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0||||R|0|
-234740|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0||||R|0|
-234741|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0||||R|0|
+234738|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0|John Avon|31||R|0|
+234739|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0|Aleksi Briclot|32||R|0|
+234740|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0|Aleksi Briclot|33||R|0|
+234741|Mountain||Basic Land - Mountain|||R|Premium Deck Series: Fire and Lightning|Land|0.0||0.0|Richard Wright|34||R|0|
 234703|Fireball|{X}{R}|Sorcery|||Fireball deals X damage divided evenly, rounded down, among any number of target creatures and/or players.<br>Fireball costs {1} more to cast for each target beyond the first.|Premium Deck Series: Fire and Lightning|Uncommon|0.0||0.0||||Fireball deals X damage divided evenly, rounded down, among any number of target creatures and/or players.<br>Fireball costs {1} more to cast for each target beyond the first.|0|
 234704|Lightning Bolt|{R}|Instant|||Lightning Bolt deals 3 damage to target creature or player.|Premium Deck Series: Fire and Lightning|Common|0.0||0.0||||Lightning Bolt deals 3 damage to target creature or player.|0|
 234709|Keldon Marauders|{1}{R}|Creature - Human Warrior|3|3|Vanishing 2 <i>(This permanent enters the battlefield with two time counters on it. At the beginning of your upkeep, remove a time counter from it. When the last is removed, sacrifice it.)</i><br>When Keldon Marauders enters the battlefield or leaves the battlefield, it deals 1 damage to target player.|Premium Deck Series: Fire and Lightning|Common|0.0||0.0||||Vanishing 2 <i>(This permanent enters the battlefield with two time counters on it. At the beginning of your upkeep, remove a time counter from it. When the last is removed, sacrifice it.)</i><br>When Keldon Marauders enters the battlefield or leaves the battlefield, it deals 1 damage to target player.|0|

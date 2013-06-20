@@ -1,14 +1,14 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
-284491|Island||Basic Land - Island|||U|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||U|0|
-284490|Island||Basic Land - Island|||U|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||U|0|
-284492|Island||Basic Land - Island|||U|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||U|0|
-284494|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||R|0|
-284496|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||R|0|
-284493|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||R|0|
-284495|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||R|0|
-284497|Plains||Basic Land - Plains|||W|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||W|0|
-284499|Plains||Basic Land - Plains|||W|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||W|0|
-284498|Plains||Basic Land - Plains|||W|Duel Decks: Venser vs. Koth|Land|0.0||0.0||||W|0|
+284491|Island||Basic Land - Island|||U|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Rob Alexander|41||U|0|
+284490|Island||Basic Land - Island|||U|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Jung Park|42||U|0|
+284492|Island||Basic Land - Island|||U|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Martina Pilcerova|43||U|0|
+284494|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Tomasz Jedruszek|74||R|0|
+284496|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Tomasz Jedruszek|75||R|0|
+284493|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Martina Pilcerova|76||R|0|
+284495|Mountain||Basic Land - Mountain|||R|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Mark Tedin|77||R|0|
+284497|Plains||Basic Land - Plains|||W|Duel Decks: Venser vs. Koth|Land|0.0||0.0|John Avon|38||W|0|
+284499|Plains||Basic Land - Plains|||W|Duel Decks: Venser vs. Koth|Land|0.0||0.0|James Paick|39||W|0|
+284498|Plains||Basic Land - Plains|||W|Duel Decks: Venser vs. Koth|Land|0.0||0.0|Martina Pilcerova|40||W|0|
 279857|Greater Stone Spirit|{4}{R}{R}|Creature - Elemental Spirit|4|4|Greater Stone Spirit can't be blocked by creatures with flying.<br>{2}{R}: Until end of turn, target creature gets +0/+2 and gains "{R}: This creature gets +1/+0 until end of turn."|Duel Decks: Venser vs. Koth|Uncommon|0.0||0.0||||Greater Stone Spirit can't be blocked by creatures with flying.<br>{2}{R}: Until end of turn, target creature gets +0/+2 and gains "{R}: This creature gets +1/+0 until end of turn."|0|
 270831|Vanish into Memory|{2}{W}{U}|Instant|||Exile target creature. You draw cards equal to that creature's power. At the beginning of your next upkeep, return that card to the battlefield under its owner's control. If you do, discard cards equal to its toughness.|Duel Decks: Venser vs. Koth|Uncommon|0.0||0.0||||Exile target creature. You draw cards equal to that creature's power. At the beginning of your next upkeep, return that card to the battlefield under its owner's control. If you do, discard cards equal to its toughness.|0|
 284488|Revoke Existence|{1}{W}|Sorcery|||Exile target artifact or enchantment.|Duel Decks: Venser vs. Koth|Common|0.0||0.0||||Exile target artifact or enchantment.|0|

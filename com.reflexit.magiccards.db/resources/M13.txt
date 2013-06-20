@@ -98,7 +98,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 259695|Liliana of the Dark Realms|{2}{B}{B}|Planeswalker - Liliana||3|+1: Search your library for a Swamp card, reveal it, and put it into your hand. Then shuffle your library.<br>-3: Target creature gets +X/+X or -X/-X until end of turn, where X is the number of Swamps you control.<br>-6: You get an emblem with "Swamps you control have ‘{T}: Add {B}{B}{B}{B} to your mana pool.'"|Magic 2013|Mythic Rare|0.0||0.0|D. Alexander Gregory|97||+1: Search your library for a Swamp card, reveal it, and put it into your hand. Then shuffle your library.<br>-3: Target creature gets +X/+X or -X/-X until end of turn, where X is the number of Swamps you control.<br>-6: You get an emblem with "Swamps you control have ‘{T}: Add {B}{B}{B}{B} to your mana pool.'"|0|
 260992|Liliana's Shade|{2}{B}{B}|Creature - Shade|1|1|When Liliana's Shade enters the battlefield, you may search your library for a Swamp card, reveal it, put it into your hand, then shuffle your library.<br>{B}: Liliana's Shade gets +1/+1 until end of turn.|Magic 2013|Common|0.0||0.0|Eric Deschamps|98||When Liliana's Shade enters the battlefield, you may search your library for a Swamp card, reveal it, put it into your hand, then shuffle your library.<br>{B}: Liliana's Shade gets +1/+1 until end of turn.|0|
 253723|Mark of the Vampire|{3}{B}|Enchantment - Aura|||Enchant creature<br>Enchanted creature gets +2/+2 and has lifelink. <i>(Damage dealt by the creature also causes its controller to gain that much life.)</i>|Magic 2013|Common|0.0||0.0|Winona Nelson|29||Enchant creature<br>Enchanted creature gets +2/+2 and has lifelink. <i>(Damage dealt by the creature also causes its controller to gain that much life.)</i>|0|
-260980|Mind Rot|{2}{B}|Sorcery|||Target player discards two cards.|Magic 2013|Common|0.0||0.0||100||Target player discards two cards.|0|
+260980|Mind Rot|{2}{B}|Sorcery|||Target player discards two cards.|Magic 2013|Common|0.0||0.0|Steve Luke|100||Target player discards two cards.|0|
 259677|Murder|{1}{B}{B}|Instant|||Destroy target creature.|Magic 2013|Common|0.0||0.0|Allen Williams|101||Destroy target creature.|0|
 265134|Mutilate|{2}{B}{B}|Sorcery|||All creatures get -1/-1 until end of turn for each Swamp you control.|Magic 2013|Rare|0.0||0.0|Zoltan Boros & Gabor Szikszai|55||All creatures get -1/-1 until end of turn for each Swamp you control.|0|
 259679|Nefarox, Overlord of Grixis|{4}{B}{B}|Legendary Creature - Demon|5|5|Flying<br>Exalted <i>(Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.)</i><br>Whenever Nefarox, Overlord of Grixis attacks alone, defending player sacrifices a creature.|Magic 2013|Rare|0.0||0.0|Aleksi Briclot|103||Flying<br>Exalted <i>(Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn.)</i><br>Whenever Nefarox, Overlord of Grixis attacks alone, defending player sacrifices a creature.|0|
@@ -228,8 +228,23 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 288876|Reliquary Tower||Land|||You have no maximum hand size.<br>{T}: Add {1} to your mana pool.|Magic 2013|Uncommon|0.0||0.0|Jesper Ejsing|143||You have no maximum hand size.<br>{T}: Add {1} to your mana pool.|0|
 249735|Rootbound Crag||Land|||Rootbound Crag enters the battlefield tapped unless you control a Mountain or a Forest.<br>{T}: Add {R} or {G} to your mana pool.|Magic 2013|Rare|0.0||0.0|Matt Stewart|32||Rootbound Crag enters the battlefield tapped unless you control a Mountain or a Forest.<br>{T}: Add {R} or {G} to your mana pool.|0|
 249736|Sunpetal Grove||Land|||Sunpetal Grove enters the battlefield tapped unless you control a Forest or a Plains.<br>{T}: Add {G} or {W} to your mana pool.|Magic 2013|Rare|0.0||0.0|Jason Chan|228||Sunpetal Grove enters the battlefield tapped unless you control a Forest or a Plains.<br>{T}: Add {G} or {W} to your mana pool.|0|
-249732|Plains||Basic Land - Plains|||W|Magic 2013|Land|0.0||0.0||231||W|0|
-249725|Island||Basic Land - Island|||U|Magic 2013|Land|0.0||0.0||235||U|0|
-249740|Swamp||Basic Land - Swamp|||B|Magic 2013|Land|0.0||0.0||239||B|0|
-249730|Mountain||Basic Land - Mountain|||R|Magic 2013|Land|0.0||0.0||243||R|0|
-249719|Forest||Basic Land - Forest|||G|Magic 2013|Land|0.0||0.0||247||G|0|
+249732|Plains||Basic Land - Plains|||W|Magic 2013|Land|0.0||0.0|Noah Bradley|231||W|0|
+249725|Island||Basic Land - Island|||U|Magic 2013|Land|0.0||0.0|Noah Bradley|235||U|0|
+249740|Swamp||Basic Land - Swamp|||B|Magic 2013|Land|0.0||0.0|Mike Bierek|239||B|0|
+249730|Mountain||Basic Land - Mountain|||R|Magic 2013|Land|0.0||0.0|Nils Hamm|243||R|0|
+249719|Forest||Basic Land - Forest|||G|Magic 2013|Land|0.0||0.0|Steven Belledin|247||G|0|
+249718|Forest||Basic Land - Forest|||G|Magic 2013|Land|0.0||0.0|Volkan Baga|246||G|0|
+249720|Forest||Basic Land - Forest|||G|Magic 2013|Land|0.0||0.0|Noah Bradley|248||G|0|
+249721|Forest||Basic Land - Forest|||G|Magic 2013|Land|0.0||0.0|Jim Nelson|249||G|0|
+249726|Island||Basic Land - Island|||U|Magic 2013|Land|0.0||0.0|Rob Alexander|234||U|0|
+249723|Island||Basic Land - Island|||U|Magic 2013|Land|0.0||0.0|Cliff Childs|236||U|0|
+249724|Island||Basic Land - Island|||U|Magic 2013|Land|0.0||0.0|Peter Mohrbacher|237||U|0|
+249729|Mountain||Basic Land - Mountain|||R|Magic 2013|Land|0.0||0.0|Cliff Childs|242||R|0|
+249728|Mountain||Basic Land - Mountain|||R|Magic 2013|Land|0.0||0.0|Karl Kopinski|244||R|0|
+249727|Mountain||Basic Land - Mountain|||R|Magic 2013|Land|0.0||0.0|Robh Ruppel|245||R|0|
+249733|Plains||Basic Land - Plains|||W|Magic 2013|Land|0.0||0.0|John Avon|230||W|0|
+249731|Plains||Basic Land - Plains|||W|Magic 2013|Land|0.0||0.0|Nils Hamm|232||W|0|
+249734|Plains||Basic Land - Plains|||W|Magic 2013|Land|0.0||0.0|Charles Urbach|233||W|0|
+249739|Swamp||Basic Land - Swamp|||B|Magic 2013|Land|0.0||0.0|Mike Bierek|238||B|0|
+249738|Swamp||Basic Land - Swamp|||B|Magic 2013|Land|0.0||0.0|Cliff Childs|240||B|0|
+249737|Swamp||Basic Land - Swamp|||B|Magic 2013|Land|0.0||0.0|Jung Park|241||B|0|

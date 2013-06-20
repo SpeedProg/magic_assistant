@@ -169,8 +169,8 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 218045|Whispering Specter|{1}{B}{B}|Creature - Specter|1|1|Flying<br>Infect <i>(This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)</i><br>Whenever Whispering Specter deals combat damage to a player, you may sacrifice it. If you do, that player discards a card for each poison counter he or she has.|New Phyrexia|Uncommon|0.0||0.0||77||Flying<br>Infect <i>(This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)</i><br>Whenever Whispering Specter deals combat damage to a player, you may sacrifice it. If you do, that player discards a card for each poison counter he or she has.|0|
 233037|Wing Splicer|{3}{U}|Creature - Human Artificer|1|1|When Wing Splicer enters the battlefield, put a 3/3 colorless Golem artifact creature token onto the battlefield.<br>Golem creatures you control have flying.|New Phyrexia|Uncommon|0.0||0.0||50||When Wing Splicer enters the battlefield, put a 3/3 colorless Golem artifact creature token onto the battlefield.<br>Golem creatures you control have flying.|0|
 227544|Xenograft|{4}{U}|Enchantment|||As Xenograft enters the battlefield, choose a creature type.<br>Each creature you control is the chosen type in addition to its other types.|New Phyrexia|Rare|0.0||0.0||51||As Xenograft enters the battlefield, choose a creature type.<br>Each creature you control is the chosen type in addition to its other types.|0|
-230081|Forest||Basic Land - Forest|||G|New Phyrexia|Land|0.0||0.0||174||G|0|
-227530|Island||Basic Land - Island|||U|New Phyrexia|Land|0.0||0.0||168||U|0|
-227507|Mountain||Basic Land - Mountain|||R|New Phyrexia|Land|0.0||0.0||172||R|0|
-227552|Plains||Basic Land - Plains|||W|New Phyrexia|Land|0.0||0.0||166||W|0|
-227519|Swamp||Basic Land - Swamp|||B|New Phyrexia|Land|0.0||0.0||170||B|0|
+230081|Forest||Basic Land - Forest|||G|New Phyrexia|Land|0.0||0.0|Mark Tedin|174||G|0|
+227530|Island||Basic Land - Island|||U|New Phyrexia|Land|0.0||0.0|Jung Park|168||U|0|
+227507|Mountain||Basic Land - Mountain|||R|New Phyrexia|Land|0.0||0.0|Tomasz Jedruszek|172||R|0|
+227552|Plains||Basic Land - Plains|||W|New Phyrexia|Land|0.0||0.0|James Paick|166||W|0|
+227519|Swamp||Basic Land - Swamp|||B|New Phyrexia|Land|0.0||0.0|Lars Grant-West|170||B|0|

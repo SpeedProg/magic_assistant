@@ -36,11 +36,11 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 240157|Yew Spirit|{4}{G}|Creature - Spirit Treefolk|3|3|{2}{G}{G}: Yew Spirit gets +X/+X until end of turn, where X is its power.|Avacyn Restored|Uncommon|0.0||0.0|Dan Scott|207||{2}{G}{G}: Yew Spirit gets +X/+X until end of turn, where X is its power.|0|
 240082|Zealous Conscripts|{4}{R}|Creature - Human Warrior|3|3|Haste<br>When Zealous Conscripts enters the battlefield, gain control of target permanent until end of turn. Untap that permanent. It gains haste until end of turn.|Avacyn Restored|Rare|0.0||0.0|Steve Prescott|166||Haste<br>When Zealous Conscripts enters the battlefield, gain control of target permanent until end of turn. Untap that permanent. It gains haste until end of turn.|0|
 240019|Zealous Strike|{1}{W}|Instant|||Target creature gets +2/+2 and gains first strike until end of turn.|Avacyn Restored|Common|0.0||0.0|Bud Cook|41||Target creature gets +2/+2 and gains first strike until end of turn.|0|
-269629|Forest||Basic Land - Forest|||G|Avacyn Restored|Land|0.0||0.0||244||G|0|
-269633|Island||Basic Land - Island|||U|Avacyn Restored|Land|0.0||0.0||235||U|0|
-269622|Mountain||Basic Land - Mountain|||R|Avacyn Restored|Land|0.0||0.0||241||R|0|
-269638|Plains||Basic Land - Plains|||W|Avacyn Restored|Land|0.0||0.0||232||W|0|
-269641|Swamp||Basic Land - Swamp|||B|Avacyn Restored|Land|0.0||0.0||238||B|0|
+269629|Forest||Basic Land - Forest|||G|Avacyn Restored|Land|0.0||0.0|Eytan Zana|244||G|0|
+269633|Island||Basic Land - Island|||U|Avacyn Restored|Land|0.0||0.0|Jung Park|235||U|0|
+269622|Mountain||Basic Land - Mountain|||R|Avacyn Restored|Land|0.0||0.0|Eytan Zana|241||R|0|
+269638|Plains||Basic Land - Plains|||W|Avacyn Restored|Land|0.0||0.0|Eytan Zana|232||W|0|
+269641|Swamp||Basic Land - Swamp|||B|Avacyn Restored|Land|0.0||0.0|Jung Park|238||B|0|
 240017|Abundant Growth|{G}|Enchantment - Aura|||Enchant land<br>When Abundant Growth enters the battlefield, draw a card.<br>Enchanted land has "{T}: Add one mana of any color to your mana pool."|Avacyn Restored|Common|0.0||0.0|Vincent Proce|167||Enchant land<br>When Abundant Growth enters the battlefield, draw a card.<br>Enchanted land has "{T}: Add one mana of any color to your mana pool."|0|
 275707|Aggravate|{3}{R}{R}|Instant|||Aggravate deals 1 damage to each creature target player controls. Each creature dealt damage this way attacks this turn if able.|Avacyn Restored|Uncommon|0.0||0.0|Matt Stewart|125||Aggravate deals 1 damage to each creature target player controls. Each creature dealt damage this way attacks this turn if able.|0|
 240031|Alchemist's Apprentice|{1}{U}|Creature - Human Wizard|1|1|Sacrifice Alchemist's Apprentice: Draw a card.|Avacyn Restored|Common|0.0||0.0|David Palumbo|42||Sacrifice Alchemist's Apprentice: Draw a card.|0|
@@ -233,13 +233,13 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 240069|Stern Mentor|{3}{U}|Creature - Human Wizard|2|2|Soulbond <i>(You may pair this creature with another unpaired creature when either enters the battlefield. They remain paired for as long as you control both of them.)</i><br>As long as Stern Mentor is paired with another creature, each of those creatures has "{T}: Target player puts the top two cards of his or her library into his or her graveyard."|Avacyn Restored|Uncommon|0.0||0.0|Igor Kieryluk|77||Soulbond <i>(You may pair this creature with another unpaired creature when either enters the battlefield. They remain paired for as long as you control both of them.)</i><br>As long as Stern Mentor is paired with another creature, each of those creatures has "{T}: Target player puts the top two cards of his or her library into his or her graveyard."|0|
 275718|Stolen Goods|{3}{U}|Sorcery|||Target opponent exiles cards from the top of his or her library until he or she exiles a nonland card. Until end of turn, you may cast that card without paying its mana cost.|Avacyn Restored|Rare|0.0||0.0|Anthony Francisco|78||Target opponent exiles cards from the top of his or her library until he or she exiles a nonland card. Until end of turn, you may cast that card without paying its mana cost.|0|
 239975|Stonewright|{R}|Creature - Human Shaman|1|1|Soulbond <i>(You may pair this creature with another unpaired creature when either enters the battlefield. They remain paired for as long as you control both of them.)</i><br>As long as Stonewright is paired with another creature, each of those creatures has "{R}: This creature gets +1/+0 until end of turn."|Avacyn Restored|Uncommon|0.0||0.0|Wesley Burt|157||Soulbond <i>(You may pair this creature with another unpaired creature when either enters the battlefield. They remain paired for as long as you control both of them.)</i><br>As long as Stonewright is paired with another creature, each of those creatures has "{R}: This creature gets +1/+0 until end of turn."|0|
-269636|Forest||Basic Land - Forest|||G|Avacyn Restored|Land|0.0||0.0||242||G|0|
-269635|Forest||Basic Land - Forest|||G|Avacyn Restored|Land|0.0||0.0||243||G|0|
-269639|Island||Basic Land - Island|||U|Avacyn Restored|Land|0.0||0.0||233||U|0|
-269625|Island||Basic Land - Island|||U|Avacyn Restored|Land|0.0||0.0||234||U|0|
-269632|Mountain||Basic Land - Mountain|||R|Avacyn Restored|Land|0.0||0.0||239||R|0|
-269630|Mountain||Basic Land - Mountain|||R|Avacyn Restored|Land|0.0||0.0||240||R|0|
-269637|Plains||Basic Land - Plains|||W|Avacyn Restored|Land|0.0||0.0||230||W|0|
-269634|Plains||Basic Land - Plains|||W|Avacyn Restored|Land|0.0||0.0||231||W|0|
-269631|Swamp||Basic Land - Swamp|||B|Avacyn Restored|Land|0.0||0.0||236||B|0|
-269627|Swamp||Basic Land - Swamp|||B|Avacyn Restored|Land|0.0||0.0||237||B|0|
+269636|Forest||Basic Land - Forest|||G|Avacyn Restored|Land|0.0||0.0|James Paick|242||G|0|
+269635|Forest||Basic Land - Forest|||G|Avacyn Restored|Land|0.0||0.0|Jung Park|243||G|0|
+269639|Island||Basic Land - Island|||U|Avacyn Restored|Land|0.0||0.0|James Paick|233||U|0|
+269625|Island||Basic Land - Island|||U|Avacyn Restored|Land|0.0||0.0|Adam Paquette|234||U|0|
+269632|Mountain||Basic Land - Mountain|||R|Avacyn Restored|Land|0.0||0.0|James Paick|239||R|0|
+269630|Mountain||Basic Land - Mountain|||R|Avacyn Restored|Land|0.0||0.0|Adam Paquette|240||R|0|
+269637|Plains||Basic Land - Plains|||W|Avacyn Restored|Land|0.0||0.0|Adam Paquette|230||W|0|
+269634|Plains||Basic Land - Plains|||W|Avacyn Restored|Land|0.0||0.0|Jung Park|231||W|0|
+269631|Swamp||Basic Land - Swamp|||B|Avacyn Restored|Land|0.0||0.0|James Paick|236||B|0|
+269627|Swamp||Basic Land - Swamp|||B|Avacyn Restored|Land|0.0||0.0|Adam Paquette|237||B|0|

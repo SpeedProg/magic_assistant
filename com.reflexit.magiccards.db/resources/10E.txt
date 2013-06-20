@@ -61,8 +61,8 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 129553|Shimmering Wings|{U}|Enchantment - Aura|||Enchant creature <i>(Target a creature as you cast this. This card enters the battlefield attached to that creature.)</i><br>Enchanted creature has flying. <i>(It can't be blocked except by creatures with flying or reach.)</i><br>{U}: Return Shimmering Wings to its owner's hand.|Tenth Edition|Common|0.0||3.923|Carl Critchlow|107||Enchant creature <i>(Target a creature as you cast this. This card enters the battlefield attached to that creature.)</i><br>Enchanted creature has flying. <i>(It can't be blocked except by creatures with flying or reach.)</i><br>{U}: Return Shimmering Wings to its owner's hand.|0|
 129554|Earth Elemental|{3}{R}{R}|Creature - Elemental|4|5||Tenth Edition|Uncommon|0.0||2.757|Anthony S. Waters|199|||0|
 129557|Wild Griffin|{2}{W}|Creature - Griffin|2|2|Flying|Tenth Edition|Common|0.0||2.684|Matt Cavotta|59||Flying|0|
-129559|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.595|Anthony S. Waters|380||G|0|
-129562|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.333|Stephan Martiniere|383||G|0|
+129559|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.577|Anthony S. Waters|380||G|0|
+129562|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.432|Stephan Martiniere|383||G|0|
 129564|Highway Robber|{2}{B}{B}|Creature - Human Rogue Mercenary|2|2|When Highway Robber enters the battlefield, target opponent loses 2 life and you gain 2 life.|Tenth Edition|Common|0.0||3.056|Kev Walker|150||When Highway Robber enters the battlefield, target opponent loses 2 life and you gain 2 life.|0|
 129566|Furnace of Rath|{1}{R}{R}{R}|Enchantment|||If a source would deal damage to a creature or player, it deals double that damage to that creature or player instead.|Tenth Edition|Rare|0.0||4.037|John Matson|204||If a source would deal damage to a creature or player, it deals double that damage to that creature or player instead.|0|
 129568|Giant Growth|{G}|Instant|||Target creature gets +3/+3 until end of turn.|Tenth Edition|Common|0.0||4.403|Matt Cavotta|266||Target creature gets +3/+3 until end of turn.|0|
@@ -89,7 +89,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 129600|Hypnotic Specter|{1}{B}{B}|Creature - Specter|2|2|Flying<br>Whenever Hypnotic Specter deals damage to an opponent, that player discards a card at random.|Tenth Edition|Rare|0.0||4.667|Greg Staples|151||Flying<br>Whenever Hypnotic Specter deals damage to an opponent, that player discards a card at random.|0|
 129601|Icy Manipulator|{4}|Artifact|||{1}, {T}: Tap target artifact, creature, or land.|Tenth Edition|Uncommon|0.0||4.319|Matt Cavotta|326||{1}, {T}: Tap target artifact, creature, or land.|0|
 129604|Tundra Wolves|{W}|Creature - Wolf|1|1|First strike <i>(This creature deals combat damage before creatures without first strike.)</i>|Tenth Edition|Common|0.0||2.909|Richard Sardinha|54||First strike <i>(This creature deals combat damage before creatures without first strike.)</i>|0|
-129608|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.476|Martina Pilcerova|370||U|0|
+129608|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.629|Martina Pilcerova|370||U|0|
 129610|True Believer|{W}{W}|Creature - Human Cleric|2|2|You have shroud. <i>(You can't be the target of spells or abilities.)</i>|Tenth Edition|Rare|0.0||4.512|Alex Horley-Orlandelli|53||You have shroud. <i>(You can't be the target of spells or abilities.)</i>|0|
 129614|Karplusan Forest||Land|||{T}: Add {1} to your mana pool.<br>{T}: Add {R} or {G} to your mana pool. Karplusan Forest deals 1 damage to you.|Tenth Edition|Rare|0.0||4.375|John Avon|354||{T}: Add {1} to your mana pool.<br>{T}: Add {R} or {G} to your mana pool. Karplusan Forest deals 1 damage to you.|0|
 129619|Kraken's Eye|{2}|Artifact|||Whenever a player casts a blue spell, you may gain 1 life.|Tenth Edition|Uncommon|0.0||2.6|Alan Pollack|329||Whenever a player casts a blue spell, you may gain 1 life.|0|
@@ -109,7 +109,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 129644|Mind Bend|{U}|Instant|||Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another. <i>(For example, you may change "nonblack creature" to "nongreen creature" or "forestwalk" to "islandwalk." This effect lasts indefinitely.)</i>|Tenth Edition|Rare|0.0||3.75|Mike Dringenberg|93||Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another. <i>(For example, you may change "nonblack creature" to "nongreen creature" or "forestwalk" to "islandwalk." This effect lasts indefinitely.)</i>|0|
 129645|Mind Rot|{2}{B}|Sorcery|||Target player discards two cards.|Tenth Edition|Common|0.0||3.326|Steve Luke|159||Target player discards two cards.|0|
 129648|Mortivore|{2}{B}{B}|Creature - Lhurgoyf|*|*|Mortivore's power and toughness are each equal to the number of creature cards in all graveyards.<br>{B}: Regenerate Mortivore.|Tenth Edition|Rare|0.0||4.5|Anthony S. Waters|161||Mortivore's power and toughness are each equal to the number of creature cards in all graveyards.<br>{B}: Regenerate Mortivore.|0|
-129649|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||4.214|John Avon|376||R|0|
+129649|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||4.176|John Avon|376||R|0|
 129653|Nantuko Husk|{2}{B}|Creature - Zombie Insect|2|2|Sacrifice a creature: Nantuko Husk gets +2/+2 until end of turn.|Tenth Edition|Uncommon|0.0||4.225|Carl Critchlow|162||Sacrifice a creature: Nantuko Husk gets +2/+2 until end of turn.|0|
 129655|Natural Spring|{3}{G}{G}|Sorcery|||Target player gains 8 life.|Tenth Edition|Common|0.0||2.143|Jeffrey R. Busch|281||Target player gains 8 life.|0|
 129656|Naturalize|{1}{G}|Instant|||Destroy target artifact or enchantment.|Tenth Edition|Common|0.0||4.2|Tim Hildebrandt|282||Destroy target artifact or enchantment.|0|
@@ -123,7 +123,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 129677|Time Stretch|{8}{U}{U}|Sorcery|||Target player takes two extra turns after this one.|Tenth Edition|Rare|0.0||4.412|Matt Cavotta|118||Target player takes two extra turns after this one.|0|
 129678|Plague Beetle|{B}|Creature - Insect|1|1|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Tenth Edition|Common|0.0||2.391|Tom Fleming|168||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
 129679|Plague Wind|{7}{B}{B}|Sorcery|||Destroy all creatures you don't control. They can't be regenerated.|Tenth Edition|Rare|0.0||4.36|Alan Pollack|169||Destroy all creatures you don't control. They can't be regenerated.|0|
-129680|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.028|Rob Alexander|364||W|0|
+129680|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.083|Rob Alexander|364||W|0|
 129685|Puppeteer|{2}{U}|Creature - Human Wizard|1|2|{U}, {T}: You may tap or untap target creature.|Tenth Edition|Uncommon|0.0||3.21|Kev Walker|98||{U}, {T}: You may tap or untap target creature.|0|
 129687|Quicksand||Land|||{T}: Add {1} to your mana pool.<br>{T}, Sacrifice Quicksand: Target attacking creature without flying gets -1/-2 until end of turn.|Tenth Edition|Uncommon|0.0||3.812|Roger Raupp|356||{T}: Add {1} to your mana pool.<br>{T}, Sacrifice Quicksand: Target attacking creature without flying gets -1/-2 until end of turn.|0|
 129688|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Tenth Edition|Common|0.0||3.446|Jeff Miracola|224||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
@@ -162,7 +162,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 129750|Sudden Impact|{3}{R}|Instant|||Sudden Impact deals damage to target player equal to the number of cards in that player's hand.|Tenth Edition|Uncommon|0.0||2.737|Wayne Reynolds|241||Sudden Impact deals damage to target player equal to the number of cards in that player's hand.|0|
 129751|Sulfurous Springs||Land|||{T}: Add {1} to your mana pool.<br>{T}: Add {B} or {R} to your mana pool. Sulfurous Springs deals 1 damage to you.|Tenth Edition|Rare|0.0||4.368|Rob Alexander|359||{T}: Add {1} to your mana pool.<br>{T}: Add {B} or {R} to your mana pool. Sulfurous Springs deals 1 damage to you.|0|
 129753|Suntail Hawk|{W}|Creature - Bird|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Tenth Edition|Common|0.0||3.962|Heather Hudson|50||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0|
-129757|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.5|Richard Wright|375||B|0|
+129757|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.547|Richard Wright|375||B|0|
 129761|Telepathy|{U}|Enchantment|||Your opponents play with their hands revealed.|Tenth Edition|Uncommon|0.0||3.962|Matthew D. Wilson|113||Your opponents play with their hands revealed.|0|
 129764|Thieving Magpie|{2}{U}{U}|Creature - Bird|1|3|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i> <br>Whenever Thieving Magpie deals damage to an opponent, draw a card.|Tenth Edition|Uncommon|0.0||4.45|Una Fricker|115||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i> <br>Whenever Thieving Magpie deals damage to an opponent, draw a card.|0|
 129767|Threaten|{2}{R}|Sorcery|||Untap target creature and gain control of it until end of turn. That creature gains haste until end of turn. <i>(It can attack and {T} this turn.)</i>|Tenth Edition|Uncommon|0.0||4.12|Pete Venters|242||Untap target creature and gain control of it until end of turn. That creature gains haste until end of turn. <i>(It can attack and {T} this turn.)</i>|0|
@@ -213,7 +213,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 130378|Flamewave Invoker|{2}{R}|Creature - Goblin Mutant|2|2|{7}{R}: Flamewave Invoker deals 5 damage to target player.|Tenth Edition|Uncommon|0.0||2.925|Dave Dorman|202||{7}{R}: Flamewave Invoker deals 5 damage to target player.|0|
 130379|Fists of the Anvil|{1}{R}|Instant|||Target creature gets +4/+0 until end of turn.|Tenth Edition|Common|0.0||3.453|Pete Venters|201||Target creature gets +4/+0 until end of turn.|0|
 130380|Goblin Elite Infantry|{1}{R}|Creature - Goblin Warrior|2|2|Whenever Goblin Elite Infantry blocks or becomes blocked, it gets -1/-1 until end of turn.|Tenth Edition|Common|0.0||1.171|Robert Bliss|206||Whenever Goblin Elite Infantry blocks or becomes blocked, it gets -1/-1 until end of turn.|0|
-130381|Thundering Giant|{3}{R}{R}|Creature - Giant|4|3|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Tenth Edition|Uncommon|0.0||2.75|Mark Zug|243||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
+130381|Thundering Giant|{3}{R}{R}|Creature - Giant|4|3|Haste|Tenth Edition|Uncommon|0.0||2.75|Mark Zug|243||Haste|0|
 130384|Bloodrock Cyclops|{2}{R}|Creature - Cyclops|3|3|Bloodrock Cyclops attacks each turn if able.|Tenth Edition|Common|0.0||3.271|Alex Horley-Orlandelli|192||Bloodrock Cyclops attacks each turn if able.|0|
 130385|Starlight Invoker|{1}{W}|Creature - Human Cleric Mutant|1|3|{7}{W}: You gain 5 life.|Tenth Edition|Uncommon|0.0||3.038|Glen Angus|47||{7}{W}: You gain 5 life.|0|
 130386|Furnace Whelp|{2}{R}{R}|Creature - Dragon|2|2|Flying<br>{R}: Furnace Whelp gets +1/+0 until end of turn.|Tenth Edition|Uncommon|0.0||3.88|Matt Cavotta|205||Flying<br>{R}: Furnace Whelp gets +1/+0 until end of turn.|0|
@@ -368,17 +368,17 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 136291|Rule of Law|{2}{W}|Enchantment|||Each player can't cast more than one spell each turn.|Tenth Edition|Uncommon|0.0||3.864|Scott M. Fischer|37||Each player can't cast more than one spell each turn.|0|
 136509|Spitting Earth|{1}{R}|Sorcery|||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|Tenth Edition|Common|0.0||3.54|Michael Koelsch|238||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|0|
 143024|Dragon Roost|{4}{R}{R}|Enchantment|||{5}{R}{R}: Put a 5/5 red Dragon creature token with flying onto the battlefield. <i>(It can't be blocked except by creatures with flying or reach.)</i>|Tenth Edition|Rare|0.0||3.963|Jim Pavelec|197||{5}{R}{R}: Put a 5/5 red Dragon creature token with flying onto the battlefield. <i>(It can't be blocked except by creatures with flying or reach.)</i>|0|
-129560|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.8|John Avon|381||G|0|
-129561|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.265|Rob Alexander|382||G|0|
-129606|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.34|Donato Giancola|368||U|0|
-129607|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.139|John Avon|369||U|0|
-129609|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.788|Stephan Martiniere|371||U|0|
-129650|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||3.95|Glen Angus|377||R|0|
-129651|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||4.841|John Avon|378||R|0|
-129652|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||4.938|Stephan Martiniere|379||R|0|
-129681|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.294|John Avon|365||W|0|
-129682|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.441|Greg Staples|366||W|0|
-129683|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.667|Richard Wright|367||W|0|
-129754|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.947|John Avon|372||B|0|
-129755|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.333|Ron Spencer|373||B|0|
-129756|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.719|Jim Nelson|374||B|0|
+129560|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.65|John Avon|381||G|0|
+129561|Forest||Basic Land - Forest|||G|Tenth Edition|Land|0.0||4.34|Rob Alexander|382||G|0|
+129606|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.391|Donato Giancola|368||U|0|
+129607|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.25|John Avon|369||U|0|
+129609|Island||Basic Land - Island|||U|Tenth Edition|Land|0.0||4.779|Stephan Martiniere|371||U|0|
+129650|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||3.854|Glen Angus|377||R|0|
+129651|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||4.641|John Avon|378||R|0|
+129652|Mountain||Basic Land - Mountain|||R|Tenth Edition|Land|0.0||4.667|Stephan Martiniere|379||R|0|
+129681|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.478|John Avon|365||W|0|
+129682|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.405|Greg Staples|366||W|0|
+129683|Plains||Basic Land - Plains|||W|Tenth Edition|Land|0.0||4.72|Richard Wright|367||W|0|
+129754|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.875|John Avon|372||B|0|
+129755|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.238|Ron Spencer|373||B|0|
+129756|Swamp||Basic Land - Swamp|||B|Tenth Edition|Land|0.0||4.705|Jim Nelson|374||B|0|

@@ -150,7 +150,7 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 213777|Virulent Wound|{B}|Instant|||Put a -1/-1 counter on target creature. When that creature dies this turn, its controller gets a poison counter.|Mirrodin Besieged|Common|0.0||0.0||57||Put a -1/-1 counter on target creature. When that creature dies this turn, its controller gets a poison counter.|0|
 213735|Vivisection|{3}{U}|Sorcery|||As an additional cost to cast Vivisection, sacrifice a creature.<br>Draw three cards.|Mirrodin Besieged|Common|0.0||0.0||38||As an additional cost to cast Vivisection, sacrifice a creature.<br>Draw three cards.|0|
 221555|White Sun's Zenith|{X}{W}{W}{W}|Instant|||Put X 2/2 white Cat creature tokens onto the battlefield. Shuffle White Sun's Zenith into its owner's library.|Mirrodin Besieged|Rare|0.0||0.0||19||Put X 2/2 white Cat creature tokens onto the battlefield. Shuffle White Sun's Zenith into its owner's library.|0|
-214031|Forest||Basic Land - Forest|||G|Mirrodin Besieged|Land|0.0||0.0||154||G|0|
-214075|Forest||Basic Land - Forest|||G|Mirrodin Besieged|Land|0.0||0.0||155||G|0|
-220369|Island||Basic Land - Island|||U|Mirrodin Besieged|Land|0.0||0.0||148||U|0|
-220365|Island||Basic Land - Island|||U|Mirrodin Besieged|Land|0.0||0.0||149||U|0|
+214031|Forest||Basic Land - Forest|||G|Mirrodin Besieged|Land|0.0||0.0|Mark Tedin|154||G|0|
+214075|Forest||Basic Land - Forest|||G|Mirrodin Besieged|Land|0.0||0.0|Mark Tedin|155||G|0|
+220369|Island||Basic Land - Island|||U|Mirrodin Besieged|Land|0.0||0.0|Jung Park|148||U|0|
+220365|Island||Basic Land - Island|||U|Mirrodin Besieged|Land|0.0||0.0|Jung Park|149||U|0|

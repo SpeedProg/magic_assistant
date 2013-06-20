@@ -1,8 +1,8 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
-270475|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0||||B|0|
-270473|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0||||B|0|
-270474|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0||||B|0|
-270476|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0||||B|0|
+270475|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0|Aleksi Briclot|27||B|0|
+270473|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0|James Paick|28||B|0|
+270474|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0|Jung Park|29||B|0|
+270476|Swamp||Basic Land - Swamp|||B|Premium Deck Series: Graveborn|Land|0.0||0.0|Alan Pollack|30||B|0|
 265167|Animate Dead|{1}{B}|Enchantment - Aura|||Enchant creature card in a graveyard<br>When Animate Dead enters the battlefield, if it's on the battlefield, it loses "enchant creature card in a graveyard" and gains "enchant creature put onto the battlefield with Animate Dead." Return enchanted creature card to the battlefield under your control and attach Animate Dead to it. When Animate Dead leaves the battlefield, that creature's controller sacrifices it.<br>Enchanted creature gets -1/-0.|Premium Deck Series: Graveborn|Uncommon|0.0||0.0||||Enchant creature card in a graveyard<br>When Animate Dead enters the battlefield, if it's on the battlefield, it loses "enchant creature card in a graveyard" and gains "enchant creature put onto the battlefield with Animate Dead." Return enchanted creature card to the battlefield under your control and attach Animate Dead to it. When Animate Dead leaves the battlefield, that creature's controller sacrifices it.<br>Enchanted creature gets -1/-0.|0|
 270455|Buried Alive|{2}{B}|Sorcery|||Search your library for up to three creature cards and put them into your graveyard. Then shuffle your library.|Premium Deck Series: Graveborn|Uncommon|0.0||0.0||||Search your library for up to three creature cards and put them into your graveyard. Then shuffle your library.|0|
 270456|Entomb|{B}|Instant|||Search your library for a card and put that card into your graveyard. Then shuffle your library.|Premium Deck Series: Graveborn|Rare|0.0||0.0||||Search your library for a card and put that card into your graveyard. Then shuffle your library.|0|
