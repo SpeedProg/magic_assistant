@@ -29,7 +29,7 @@ public class ParseGathererSearchChecklistTest extends TestCase {
 		file = File.createTempFile("magic", "txt");
 		file.deleteOnExit();
 		magicSet = "Magic 2013";
-		wall = "http://gatherer.wizards.com/pages/search/default.aspx?name=+[%22Bloodfire%22]";
+		wall = "http://gatherer.wizards.com/pages/search/default.aspx?name=+[%22Bloodfire%22]&action=advanced";
 		handler = new GatherHelper.StashLoadHandler();
 	}
 
@@ -37,7 +37,7 @@ public class ParseGathererSearchChecklistTest extends TestCase {
 		parser.loadSet(wall + "&output=checklist", handler, monitor);
 		assertEquals(4, handler.getCardCount());
 		Collection<MagicCard> stash = handler.getPrimary();
-		assertEquals(4, stash.size());
+		assertEquals(8, stash.size());
 		assertEquals("Bloodfire Colossus", stash.iterator().next().getName());
 	}
 
@@ -45,7 +45,7 @@ public class ParseGathererSearchChecklistTest extends TestCase {
 		parser.loadSet(magicSet, handler, monitor);
 		assertEquals(234, handler.getCardCount());
 		Collection<MagicCard> stash = handler.getPrimary();
-		assertEquals(234, stash.size());
+		assertEquals(249, stash.size());
 		assertEquals("Acidic Slime", stash.iterator().next().getName());
 	}
 

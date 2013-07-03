@@ -65,7 +65,7 @@ public class ParseGathererDetailsTest extends TestCase {
 
 	public void testDouble() throws IOException {
 		MagicCard card = load(126419);
-		assertEquals("113", card.getCollNumber());
-		assertEquals("Dead // Gone", card.getName());
+		assertEquals(113, card.getCollectorNumberId());
+		assertEquals("Dead", card.getName());
 	}
 }
