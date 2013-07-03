@@ -766,6 +766,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	@Override
 	public int getCollectorNumberId() {
+		if (num == null)
+			return 0;
 		try {
 			return Integer.parseInt(num);
 		} catch (NumberFormatException e) {
