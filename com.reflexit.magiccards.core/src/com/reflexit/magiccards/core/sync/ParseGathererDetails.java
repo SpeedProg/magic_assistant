@@ -264,12 +264,13 @@ public class ParseGathererDetails extends ParseGathererPage {
 				Iterator<String> iterator = cardSides.iterator();
 				String htmlS[] = { iterator.next(), iterator.next() };
 				int titleIndex = -1, nameIndex = -1;
+				String namesOrig[] = nameOrig.split(" // ");
 				for (int i = 0; i < htmlS.length; i++) {
 					String nameCur = extractPatternValue(htmlS[i], cardNamePattern, false);
 					if (nameTitle != null && nameTitle.equals(nameCur) && titleIndex == -1) {
 						titleIndex = i;
 					}
-					if (nameOrig != null && nameOrig.equals(nameCur) && nameIndex == -1) {
+					if (namesOrig[0].equals(nameCur) && nameIndex == -1) {
 						nameIndex = i;
 						nameTitle = nameCur;
 					}
