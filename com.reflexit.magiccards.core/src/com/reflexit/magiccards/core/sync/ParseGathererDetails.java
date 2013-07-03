@@ -210,6 +210,8 @@ public class ParseGathererDetails extends ParseGathererPage {
 				// empty
 				if (field == MagicCardField.PART) {
 					value = null;
+				} else if (field == MagicCardField.COLLNUM) {
+					return; // do not change
 				}
 			}
 			((ICardModifiable) card).setObjectByField(field, value);
