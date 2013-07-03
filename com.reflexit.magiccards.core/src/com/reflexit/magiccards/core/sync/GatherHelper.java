@@ -139,7 +139,7 @@ public class GatherHelper {
 		}
 	}
 
-	private static String baseSearch = "http://gatherer.wizards.com/Pages/Search/Default.aspx?";
+	private static String baseSearch = "http://gatherer.wizards.com/Pages/Search/Default.aspx?action=advanced&";
 
 	public static URL getSearchQuery(String output, String set, boolean special) throws MalformedURLException {
 		String url;
