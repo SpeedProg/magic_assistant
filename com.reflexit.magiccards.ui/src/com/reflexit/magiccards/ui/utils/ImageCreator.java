@@ -249,9 +249,26 @@ public class ImageCreator {
 
 	public ImageData rotate(ImageData srcData, int direction) {
 		int bytesPerPixel = srcData.bytesPerLine / srcData.width;
-		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine : srcData.height * bytesPerPixel;
-		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length : srcData.width * destBytesPerLine];
 		int width = 0, height = 0;
+		switch (direction) {
+			case SWT.LEFT: // left 90 degrees
+				width = srcData.height;
+				height = srcData.width;
+				break;
+			case SWT.RIGHT: // right 90 degrees
+				width = srcData.height;
+				height = srcData.width;
+				break;
+			case SWT.DOWN: // 180 degrees
+				width = srcData.width;
+				height = srcData.height;
+				break;
+		}
+		int scanlinePad = srcData.scanlinePad;
+		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1)) / scanlinePad * scanlinePad;
+		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4 : bytesPerLine;
+		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine : minBytesPerLine;
+		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length : height * destBytesPerLine];
 		for (int srcY = 0; srcY < srcData.height; srcY++) {
 			for (int srcX = 0; srcX < srcData.width; srcX++) {
 				int destX = 0, destY = 0, destIndex = 0, srcIndex = 0;
@@ -259,20 +276,14 @@ public class ImageCreator {
 					case SWT.LEFT: // left 90 degrees
 						destX = srcY;
 						destY = srcData.width - srcX - 1;
-						width = srcData.height;
-						height = srcData.width;
 						break;
 					case SWT.RIGHT: // right 90 degrees
 						destX = srcData.height - srcY - 1;
 						destY = srcX;
-						width = srcData.height;
-						height = srcData.width;
 						break;
 					case SWT.DOWN: // 180 degrees
 						destX = srcData.width - srcX - 1;
 						destY = srcData.height - srcY - 1;
-						width = srcData.width;
-						height = srcData.height;
 						break;
 				}
 				destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
