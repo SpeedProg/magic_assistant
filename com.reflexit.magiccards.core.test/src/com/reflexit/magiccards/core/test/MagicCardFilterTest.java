@@ -1,13 +1,15 @@
 package com.reflexit.magiccards.core.test;
 
 import java.util.HashMap;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.model.ColorTypes;
+import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -26,7 +28,7 @@ public class MagicCardFilterTest extends TestCase {
 		propMap = new HashMap();
 		filter = new MagicCardFilter();
 		mc = CardGenerator.generateCardWithValues();
-		mcp = CardGenerator.generatePhysicalCardWithValues();
+		mcp = mcp();
 	}
 
 	private void search(String expr, String text) {
@@ -112,6 +114,13 @@ public class MagicCardFilterTest extends TestCase {
 		filter.update(propMap);
 	}
 
+	public void setFilterTrue(String... ids) {
+		for (int i = 0; i < ids.length; i++) {
+			propMap.put(ids[i], "true");
+		}
+		filter.update(propMap);
+	}
+
 	public void genericFieldText(FilterField ff, String value) {
 		setQuickFilter(ff, value);
 		checkNotFound();
@@ -127,7 +136,11 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void checkNotFound() {
-		assertTrue("Card matches the filter, but should not " + filter + " " + mcp, filter.isFiltered(mcp));
+		checkNotFound(mcp);
+	}
+
+	public void checkNotFound(ICard o) {
+		assertTrue("Card matches the filter, but should not " + filter + " " + o, filter.isFiltered(o));
 	}
 
 	public void testNameBoo() {
@@ -200,7 +213,11 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void checkFound() {
-		assertFalse("Not matching " + filter, filter.isFiltered(mcp));
+		checkFound(mcp);
+	}
+
+	public void checkFound(ICard o) {
+		assertFalse("Not matching " + filter, filter.isFiltered(o));
 	}
 
 	public void testPRICE() {
@@ -263,5 +280,99 @@ public class MagicCardFilterTest extends TestCase {
 
 	public void testLANG() {
 		genericFieldText(FilterField.LANG, "Boo");
+	}
+
+	private static final String BLACK_COST = "{B}";
+	private static final String RED_COST = "{R}";
+	private static final String WHITE_COST = "{W}";
+
+	public void testColorBlack() {
+		mcp.getCard().setCost(RED_COST);
+		String id = Colors.getInstance().getPrefConstant(Colors.getColorName(BLACK_COST));
+		setFilterTrue(id);
+		checkNotFound();
+		mcp.getCard().setCost(BLACK_COST);
+		checkFound();
+	}
+
+	String black_id = Colors.getInstance().getPrefConstant(Colors.getColorName(BLACK_COST));
+	String red_id = Colors.getInstance().getPrefConstant(Colors.getColorName(RED_COST));
+
+	public MagicCardPhysical mcp() {
+		return CardGenerator.generatePhysicalCardWithValues();
+	}
+
+	public MagicCardPhysical mcpCost(String cost) {
+		MagicCardPhysical b = mcp();
+		b.getCard().setCost(cost);
+		return b;
+	}
+
+	public void testColorBlackOrRed() {
+		MagicCardPhysical b = mcpCost(BLACK_COST);
+		MagicCardPhysical r = mcpCost(RED_COST);
+		MagicCardPhysical w = mcpCost(WHITE_COST);
+		MagicCardPhysical wb = mcpCost(WHITE_COST + BLACK_COST);
+		setFilterTrue(black_id, red_id);
+		checkFound(b);
+		checkFound(r);
+		checkNotFound(w);
+		checkFound(wb);
+	}
+
+	public void testColorBlackOrRedOnly() {
+		MagicCardPhysical b = mcpCost(BLACK_COST);
+		MagicCardPhysical r = mcpCost(RED_COST);
+		MagicCardPhysical w = mcpCost(WHITE_COST);
+		MagicCardPhysical wb = mcpCost(WHITE_COST + BLACK_COST);
+		MagicCardPhysical br = mcpCost(BLACK_COST + RED_COST);
+		setFilterTrue(black_id, red_id, ColorTypes.ONLY_ID);
+		checkFound(b);
+		checkFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkFound(br);
+		setFilterTrue(black_id, red_id, ColorTypes.ONLY_ID, ColorTypes.AND_ID);
+		checkNotFound(b);
+		checkNotFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkFound(br);
+		setFilterTrue(black_id, red_id, ColorTypes.AND_ID);
+		MagicCardPhysical wbr = mcpCost(WHITE_COST + BLACK_COST + RED_COST);
+		checkNotFound(b);
+		checkNotFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkFound(br);
+		checkFound(wbr);
+	}
+
+	public void testColorBlackOnly() {
+		MagicCardPhysical b = mcpCost(BLACK_COST);
+		MagicCardPhysical r = mcpCost(RED_COST);
+		MagicCardPhysical w = mcpCost(WHITE_COST);
+		MagicCardPhysical wb = mcpCost(WHITE_COST + BLACK_COST);
+		MagicCardPhysical br = mcpCost(BLACK_COST + RED_COST);
+		setFilterTrue(black_id, ColorTypes.ONLY_ID);
+		checkFound(b);
+		checkNotFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkNotFound(br);
+		setFilterTrue(black_id, ColorTypes.ONLY_ID, ColorTypes.AND_ID);
+		checkFound(b);
+		checkNotFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkNotFound(br);
+		setFilterTrue(black_id, ColorTypes.AND_ID);
+		MagicCardPhysical wbr = mcpCost(WHITE_COST + BLACK_COST + RED_COST);
+		checkFound(b);
+		checkNotFound(r);
+		checkNotFound(w);
+		checkFound(wb);
+		checkFound(br);
+		checkFound(wbr);
 	}
 }
