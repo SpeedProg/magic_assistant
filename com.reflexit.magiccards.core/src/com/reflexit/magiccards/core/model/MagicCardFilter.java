@@ -624,12 +624,16 @@ public class MagicCardFilter {
 
 	public void update(HashMap map) {
 		Expr expr;
-		if (map.containsKey(ColorTypes.AND_ID)) {
+		if (map.containsKey(ColorTypes.ONLY_ID) && map.containsKey(ColorTypes.AND_ID)) {
+			map.remove(ColorTypes.ONLY_ID);
+			map.remove(ColorTypes.AND_ID);
+			expr = createAndNotGroup(map, Colors.getInstance());
+		} else if (map.containsKey(ColorTypes.AND_ID)) {
 			map.remove(ColorTypes.AND_ID);
 			expr = createAndGroup(map, Colors.getInstance());
 		} else if (map.containsKey(ColorTypes.ONLY_ID)) {
 			map.remove(ColorTypes.ONLY_ID);
-			expr = createAndNotGroup(map, Colors.getInstance());
+			expr = createOrNotGroup(map, Colors.getInstance());
 		} else {
 			expr = createOrGroup(map, Colors.getInstance());
 		}
@@ -727,8 +731,29 @@ public class MagicCardFilter {
 		return createGroup(map, sp, false, true);
 	}
 
+	private Expr createOrNotGroup(HashMap map, ISearchableProperty sp) {
+		return createGroup(map, sp, true, true);
+	}
+
 	private Expr createGroup(HashMap map, ISearchableProperty sp, boolean orOp, boolean notOp) {
 		Expr res = null;
+		Expr nres = null;
+		if (notOp) {
+			for (Iterator iterator = sp.getIds().iterator(); iterator.hasNext();) {
+				String id = (String) iterator.next();
+				String value = (String) map.get(id);
+				BinaryExpr expr = null;
+				FilterFieldExpr ffe = new FilterFieldExpr(sp.getFilterField());
+				if (value == null || value.equals("false")) {
+					expr = new BinaryExpr(new BinaryExpr(ffe, Operation.EQUALS, new Node(sp.getNameById(id))),//
+							Operation.NOT, TRUE);
+				}
+				if (expr == null) {
+					continue;
+				}
+				nres = createAndGroup(expr, nres);
+			}
+		}
 		for (Iterator iterator = sp.getIds().iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
 			String value = (String) map.get(id);
@@ -737,12 +762,7 @@ public class MagicCardFilter {
 			if (value != null && value.equals("true")) {
 				or = new BinaryExpr(ffe, Operation.EQUALS, new Node(sp.getNameById(id)));
 			} else if (value == null || value.equals("false")) {
-				if (notOp) {
-					or = new BinaryExpr(ffe, Operation.EQUALS, new Node(sp.getNameById(id)));
-					or = new BinaryExpr(or, Operation.NOT, TRUE);
-				} else {
-					// skip or = null;
-				}
+				// skip false unless notOp defined
 			} else if (value.length() > 0) {
 				or = new BinaryExpr(ffe, Operation.EQUALS, new Value(value));
 			}
@@ -753,6 +773,9 @@ public class MagicCardFilter {
 				res = createOrGroup(or, res);
 			else
 				res = createAndGroup(or, res);
+		}
+		if (nres != null) {
+			res = createAndGroup(res, nres);
 		}
 		return res;
 	}
