@@ -19,6 +19,7 @@ import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
@@ -78,6 +79,13 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 		dialog.getShell().setText(wizard.getWindowTitle());
 		int result = dialog.open();
 		boolean succ = result == Window.OK;
+		if (succ) {
+			try {
+				java.awt.Desktop.getDesktop().open(wizard.getFile());
+			} catch (Throwable e) {
+				MagicUIActivator.log(e);
+			}
+		}
 		return succ;
 	}
 

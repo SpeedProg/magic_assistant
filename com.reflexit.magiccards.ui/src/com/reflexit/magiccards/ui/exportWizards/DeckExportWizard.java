@@ -1,9 +1,12 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
+import java.io.File;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
+
 import com.reflexit.magiccards.core.model.ICardField;
 
 public class DeckExportWizard extends Wizard implements IExportWizard {
@@ -24,6 +27,11 @@ public class DeckExportWizard extends Wizard implements IExportWizard {
 		if (save)
 			return true;
 		return false;
+	}
+
+	public File getFile() {
+		final String fileName = mainPage.getFileName();
+		return new File(fileName);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
