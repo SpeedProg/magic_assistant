@@ -36,7 +36,7 @@ public class NewSetDialog extends TitleAreaDialog {
 		Label label = new Label(area, SWT.NONE);
 		label.setText("Name:");
 		name = new Text(area, SWT.BORDER);
-		name.setTextLimit(25);
+		name.setTextLimit(50);
 		name.setText(setStart);
 		name.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
