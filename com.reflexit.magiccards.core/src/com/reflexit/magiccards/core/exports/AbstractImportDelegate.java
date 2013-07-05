@@ -49,6 +49,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.importResult = new ImportResult();
 		importResult.setType(getType());
 		importResult.setFields(getNonTransientFeilds());
+		lineNum = 0;
 	}
 
 	public Location getSideboardLocation() {
@@ -109,7 +110,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 				card.setLocation(getSideboardLocation());
 			}
 		} else {
-			card.setObjectByField(field, value);
+			if (!field.isTransient())
+				card.setObjectByField(field, value);
 		}
 	}
 
