@@ -292,6 +292,10 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 					break;
 				case SIDEBOARD:
 					return false; // not settable
+				case OWN_COUNT:
+					break; // calculated
+				case OWN_UNIQUE:
+					break; // calculated
 				case ERROR:
 					setError(value);
 					break;

@@ -34,6 +34,7 @@ public enum MagicCardField implements ICardField {
 	SET_CORE(null), // type of the set (Core, Expantions, etc)
 	UNIQUE_COUNT(null), // count of unique cards (usually only make sense for group)
 	SIDE(null), // for multi sides/duble/flip card represent version of card (0 or 1)
+	IMAGE_URL(null), // for non gatherer cards
 	// end
 	;
 	private final Field field;

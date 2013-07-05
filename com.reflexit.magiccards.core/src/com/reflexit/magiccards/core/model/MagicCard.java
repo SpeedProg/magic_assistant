@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,6 +14,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+import com.reflexit.magiccards.core.sync.GatherHelper;
 
 public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysical {
 	private int id;
@@ -377,6 +380,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 					return Editions.getInstance().getEditionByName(edition).getBlock();
 				case UNIQUE_COUNT:
 					return getUniqueCount();
+				case IMAGE_URL:
+					return getImageUrl();
 				default:
 					break;
 			}
@@ -518,6 +523,12 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				break;
 			case SIDE:
 				setProperty(MagicCardField.SIDE, value);
+				break;
+			case IMAGE_URL:
+				String x = getImageUrl();
+				if (x != null && x.equals(value))
+					break;
+				setProperty(MagicCardField.IMAGE_URL, value);
 				break;
 			default:
 				return false;
@@ -759,7 +770,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	public int getGathererId() {
 		if (id > 0)
 			return id;
-		if (id < 0 && (id & (1 << 31)) != 0)
+		if (id < 0 && (id & (1 << 30)) != 0)
 			return -id;
 		return 0;
 	}
@@ -791,5 +802,22 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public CardGroup getRealCards() {
 		return DataManager.getRealCards(this);
+	}
+
+	public String getImageUrl() {
+		String x = getProperty(MagicCardField.IMAGE_URL);
+		if (x != null)
+			return x;
+		int gathererId = getGathererId();
+		if (gathererId != 0) {
+			URL url;
+			try {
+				url = GatherHelper.createImageURL(gathererId, null);
+			} catch (MalformedURLException e) {
+				return null;
+			}
+			return url.toExternalForm();
+		}
+		return null;
 	}
 }

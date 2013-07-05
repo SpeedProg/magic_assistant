@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 /**
  * @author Alena
@@ -79,14 +80,13 @@ public class CardCache {
 	}
 
 	public static URL createRemoteImageURL(IMagicCard card) throws MalformedURLException {
-		String edition = card.getSet();
-		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
-		if (editionAbbr == null)
-			throw new CannotDetermineSetAbbriviation(card);
-		return GatherHelper.createImageURL(card.getGathererId(), editionAbbr);
+		String strUrl = (String) card.getObjectByField(MagicCardField.IMAGE_URL);
+		if (strUrl == null)
+			return null;
+		return new URL(strUrl);
 	}
 
-	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) throws MalformedURLException {
+	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) {
 		if (!CardCache.isLoadingEnabled())
 			return null;
 		return GatherHelper.createSetImageURL(editionAbbr, rarity);

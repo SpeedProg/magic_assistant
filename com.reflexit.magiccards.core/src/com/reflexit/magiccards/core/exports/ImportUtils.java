@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -126,8 +127,13 @@ public class ImportUtils {
 		return set;
 	}
 
-	static Map<String, String> setAlias = new HashMap<String, String>();
+	static Map<String, String> setAlias;
 	static {
+		setupSetAliases();
+	}
+
+	public static void setupSetAliases() {
+		setAlias = new LinkedHashMap<String, String>();
 		setAlias.put("alpha", "Limited Edition Alpha");
 		setAlias.put("beta", "Limited Edition Beta");
 		setAlias.put("alpha edition", "Limited Edition Alpha");
@@ -361,6 +367,7 @@ public class ImportUtils {
 
 	public static ImportResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header, Location loc,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		setupSetAliases();
 		worker.init(st, true, loc);
 		worker.setHeader(header);
 		// init preview

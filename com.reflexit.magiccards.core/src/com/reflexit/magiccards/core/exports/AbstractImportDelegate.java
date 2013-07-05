@@ -110,8 +110,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 				card.setLocation(getSideboardLocation());
 			}
 		} else {
-			if (!field.isTransient())
-				card.setObjectByField(field, value);
+			card.setObjectByField(field, value);
 		}
 	}
 
