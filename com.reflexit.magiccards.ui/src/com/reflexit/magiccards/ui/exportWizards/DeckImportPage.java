@@ -116,6 +116,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 						} catch (Exception e) {
 							throw new InvocationTargetException(e);
 						}
+						if (worker == null)
+							throw new IllegalArgumentException("Import is not defined for " + reportType.getLabel());
 						if (preview) {
 							// if error occurs importResult.error would be set
 							// to exception

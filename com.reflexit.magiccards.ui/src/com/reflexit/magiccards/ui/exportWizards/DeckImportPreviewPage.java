@@ -69,6 +69,10 @@ public class DeckImportPreviewPage extends WizardPage {
 			}
 			startingPage.performImport(true);
 			ImportResult result = (ImportResult) wizard.getData();
+			if (result == null) {
+				setErrorMessage("Cannot import");
+				return;
+			}
 			previewResult = result;
 			ICardField[] fields = result.getFields();
 			if (fields != null) {
