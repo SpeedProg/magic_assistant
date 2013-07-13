@@ -118,3 +118,4 @@ Duel Decks: Sorin vs. Tibalt|DDK||April 2013|Starter||
 Gatecrash|GTC||April 2013|Expansion||Standard, Modern, Extended
 Dragon's Maze|DGM||May 2013|Expansion||Standard, Modern, Extended
 Modern Masters|MMA||June 2013|Expansion||Standard, Modern, Extended
+Magic 2014 Core Set|M14||July 2013|Core||Standard
