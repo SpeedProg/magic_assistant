@@ -97,7 +97,12 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	@Override
 	protected boolean doUpdate(IMagicCard card) {
-		getStorage(getLocation(card)).getStorage().autoSave();
+		AbstractCardStoreWithStorage storage = getStorage(getLocation(card));
+		if (storage == null) {
+			storage = newStorage(card);
+			addCardStore(storage);
+		}
+		storage.getStorage().autoSave();
 		return super.doUpdate(card);
 	}
 
