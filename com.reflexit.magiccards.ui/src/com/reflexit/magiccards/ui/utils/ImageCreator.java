@@ -158,10 +158,12 @@ public class ImageCreator {
 						return null;
 					return MagicUIActivator.getDefault().getImage(key, image);
 				} else {
-					synchronized (editionImageQueue) {
-						editionImageQueue.put(key, card);
+					if (card.getGathererId() != 0) {
+						synchronized (editionImageQueue) {
+							editionImageQueue.put(key, card);
+						}
+						editionImageLoadingJob.schedule(0);
 					}
-					editionImageLoadingJob.schedule(0);
 					return null;
 				}
 			} else {

@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.dialogs;
 
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class CorrectSetDialog extends TrayDialog {
 	public static final String NEW = "Create New Set";
@@ -61,6 +63,11 @@ public class CorrectSetDialog extends TrayDialog {
 				if (newdia.open() == Window.OK) {
 					nset = newdia.getSet().getName();
 					Editions.getInstance().addEdition(newdia.getSet());
+					try {
+						Editions.getInstance().save();
+					} catch (FileNotFoundException e) {
+						MagicUIActivator.log(e);
+					}
 				} else {
 					nset = CorrectSetDialog.SKIP;
 					combo.setText(nset);
