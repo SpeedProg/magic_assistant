@@ -214,18 +214,26 @@ public class ImageCreator {
 	}
 
 	private Image createCardImage(String path) {
-		Image image = new Image(Display.getCurrent(), path);
-		return image;
+		ImageData data = getResizedCardImage(new ImageData(path));
+		return new Image(Display.getCurrent(), data);
 	}
 
-	public Image getResized(Image image, int width, int height) {
-		Image scaled = new Image(Display.getDefault(), width, height);
-		GC gc = new GC(scaled);
-		gc.setAntialias(SWT.ON);
-		gc.setInterpolation(SWT.HIGH);
-		gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height);
-		gc.dispose();
-		return scaled;
+	public ImageData getResizedCardImage(ImageData data) {
+		int width = data.width;
+		int height = data.height;
+		float ratio = width / (float) height;
+		if (ratio > 0.68 && ratio < 0.73) {
+			// regular card
+			// gather cards are 223 x 310, if card is bigger lets resize it
+			if (height > 320) {
+				return data.scaledTo((int) (310 * ratio), 310);
+			}
+		}
+		return data;
+	}
+
+	public Image getResized(Image origImage, int width, int height) {
+		return new Image(Display.getDefault(), origImage.getImageData().scaledTo(width, height));
 	}
 
 	public Image getRotated(Image image, int angle) {

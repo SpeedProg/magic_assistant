@@ -163,8 +163,11 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 							} else if (options.contains("rotate90")) {
 								rotate = 90;
 							}
-							if (rotate != 0)
-								image = ImageCreator.getInstance().getRotated(image, rotate);
+							if (rotate != 0) {
+								Image rimage = ImageCreator.getInstance().getRotated(image, rotate);
+								image.dispose();
+								image = rimage;
+							}
 						}
 						if (!isStillNeeded(card))
 							return;
