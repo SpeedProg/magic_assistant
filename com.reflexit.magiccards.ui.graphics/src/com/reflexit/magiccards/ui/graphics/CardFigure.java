@@ -62,9 +62,11 @@ public class CardFigure extends XFigure {
 	}
 
 	public void setImageData(ImageData imageData) {
+		imageData = ImageCreator.getInstance().getResizedCardImage(imageData);
 		ImageCreator.getInstance().setAlphaBlendingForCorners(imageData);
 		Image im = new Image(Display.getCurrent(), imageData);
 		setCardImage(im);
+		resize(im.getBounds());
 		imageNotFound = false;
 	}
 

@@ -42,7 +42,7 @@ public class XFigure extends EventManager implements IDisposable {
 				gc.dispose();
 			}
 		} catch (IllegalArgumentException e) {
-			System.err.println("Something wrong with image..." + toString());
+			Activator.log(e);
 		}
 	}
 
