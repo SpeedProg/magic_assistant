@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -103,8 +104,8 @@ public class CardCache {
 			Editions editions = Editions.getInstance();
 			Edition set = editions.getEditionByName(editionName);
 			if (set == null)
-				throw new CannotDetermineSetAbbriviation(card);
-			String editionAbbr = set.getBaseFileName();
+				MagicLogger.log("Cannot determine set for " + editionName);
+			String editionAbbr = set == null ? "unknown" : set.getBaseFileName();
 			int cardId = card.getCardId();
 			String locale = "EN";
 			// if card getPart != null add partPostfix or CardNum XXX
@@ -114,7 +115,7 @@ public class CardCache {
 		return file;
 	}
 
-	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) throws MalformedURLException {
+	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) {
 		File loc = FileUtils.getStateLocationFile();
 		String part = "Sets/" + editionAbbr + "-" + rarity + ".jpg";
 		String file = new File(loc, part).getPath();
