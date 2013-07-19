@@ -20,7 +20,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,6 +37,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -75,7 +75,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
 	private static final String IMPORT_HEADER_SETTING = "headerRow"; //$NON-NLS-1$
 	private static final String IMPORT_CLIPBOARD = "clipboard"; //$NON-NLS-1$
-	FileFieldEditor editor;
+	Text editor;
 	private String fileName;
 	private IStructuredSelection initialResourceSelection;
 	private Button includeHeader;
@@ -302,7 +302,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	protected void createDestinationGroup(final Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
 		group.setLayoutData(GridDataFactory.fillDefaults().create());
-		group.setText("Import into");
+		group.setText("Import choice");
 		group.setLayout(new GridLayout(3, false));
 		SelectionAdapter updateListener = new SelectionAdapter() {
 			@Override
@@ -317,7 +317,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		createNewDeck.setSelection(true);
 		createNewDeck.addSelectionListener(updateListener);
 		importIntoExisting = new Button(group, SWT.RADIO);
-		importIntoExisting.setText("Import into existing deck/collection");
+		importIntoExisting.setText("Add cards into existing deck/collection");
 		importIntoExisting.addSelectionListener(updateListener);
 		final Text text = new Text(group, SWT.BORDER);
 		text.setEditable(false);
@@ -342,7 +342,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			}
 		});
 		importIntoDb = new Button(group, SWT.RADIO);
-		importIntoDb.setText("Import cards info into local MTG database (do not create new deck or collection)");
+		importIntoDb.setText("Extends cards database (do not create new deck or collection)");
 		importIntoDb.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
 		importIntoDb.setSelection(false);
 		importIntoDb.addSelectionListener(updateListener);
@@ -393,7 +393,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	}
 
 	private void defaultPrompt() {
-		String mess = "You have selected '" + reportType.getLabel() + "' format. ";
+		String mess = "You have selected '" + reportType.getLabel() + "' format.\n";
 		if (reportType == ReportType.XML)
 			setMessage(mess);
 		else if (reportType == ReportType.CSV)
@@ -414,7 +414,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		String file = dialogSettings.get(IMPUT_FILE_SETTING);
 		if (file != null) {
 			setFileName(file);
-			editor.setStringValue(file);
+			editor.setText(file);
 		}
 		clipboard = dialogSettings.getBoolean(IMPORT_CLIPBOARD);
 		fileRadio.setSelection(!clipboard);
@@ -459,9 +459,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		fileSelectionArea = new Composite(parent, SWT.NONE);
 		GridData fileSelectionData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		fileSelectionArea.setLayoutData(fileSelectionData);
-		GridLayout fileSelectionLayout = new GridLayout();
-		fileSelectionLayout.numColumns = 3;
-		fileSelectionLayout.makeColumnsEqualWidth = false;
+		GridLayout fileSelectionLayout = new GridLayout(3, false);
 		fileSelectionLayout.marginWidth = 0;
 		fileSelectionLayout.marginHeight = 0;
 		fileSelectionArea.setLayout(fileSelectionLayout);
@@ -476,6 +474,40 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			}
 		});
 		fileRadio.setSelection(true);
+		editor = new Text(fileSelectionArea, SWT.BORDER);
+		editor.addModifyListener(new ModifyListener() {
+			public void modifyText(final ModifyEvent e) {
+				File file = new File(editor.getText());
+				setFileName(file.getPath());
+				updateTypeSelection();
+				updatePageCompletion();
+			}
+		});
+		editor.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		final Button browse = new Button(fileSelectionArea, SWT.PUSH);
+		browse.setText("Browse...");
+		browse.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				super.widgetSelected(e);
+				FileDialog fileDialog = new FileDialog(browse.getShell());
+				fileDialog.setFileName(editor.getText());
+				String file = fileDialog.open();
+				if (file != null) {
+					editor.setText(file);
+					setFileName(file);
+					clipboard = false;
+					fileRadio.setSelection(!clipboard);
+					clipboardRadio.setSelection(clipboard);
+					updateWidgetEnablements();
+					updateTypeSelection();
+					updatePageCompletion();
+				}
+			}
+		});
+		setFileName("");
+		// clipboard control
 		clipboard = false;
 		clipboardRadio = new Button(fileSelectionArea, SWT.RADIO | SWT.LEFT);
 		clipboardRadio.setText("Clipboard");
@@ -488,22 +520,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			}
 		});
 		GridData bgd = new GridData();
-		bgd.horizontalSpan = 2;
+		bgd.horizontalSpan = 3;
 		clipboardRadio.setLayoutData(bgd);
-		editor = new FileFieldEditor("fileSelect", "Select input file", fileSelectionArea); // NON-NLS-1
-		// //NON-NLS-2
-		//
-		editor.getTextControl(fileSelectionArea).addModifyListener(new ModifyListener() {
-			public void modifyText(final ModifyEvent e) {
-				File file = new File(editor.getStringValue());
-				setFileName(file.getPath());
-				updateTypeSelection();
-				updatePageCompletion();
-			}
-		});
-		String[] extensions = new String[] { "*" }; // NON-NLS-1 //$NON-NLS-1$
-		editor.setFileExtensions(extensions);
-		setFileName("");
 		// fileSelectionArea.moveAbove(null);
 	}
 
@@ -528,10 +546,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		// top level group
 		Composite buttonComposite = new Composite(optionsPanel, SWT.NONE);
 		buttonComposite.setFont(optionsPanel.getFont());
-		GridLayout layout1 = new GridLayout();
-		layout1.numColumns = 2;
-		layout1.makeColumnsEqualWidth = true;
-		buttonComposite.setLayout(layout1);
+		GridLayout layout = new GridLayout(3, false);
+		buttonComposite.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		buttonComposite.setLayoutData(gd);
 		// create report type
@@ -543,9 +559,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			addComboType(reportType);
 		}
 		selectReportType(ReportType.TEXT_DECK_CLASSIC);
-		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
-		gd1.horizontalSpan = 1;
-		typeCombo.setLayoutData(gd1);
+		typeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// options to include header
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
 		includeHeader.setText("Data has a header row");
@@ -582,7 +596,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 
 	@Override
 	protected boolean validateSourceGroup() {
-		if (clipboard == false && ((fileName == null) || (fileName.length() == 0) || (editor.getStringValue().length() == 0))) {
+		if (clipboard == false && ((fileName == null) || (fileName.length() == 0) || (editor.getText().length() == 0))) {
 			setErrorMessage("Imput file is not selected");
 			return false;
 		}
@@ -644,7 +658,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		// type
 		includeHeader.setEnabled(isExportCsvFlag());
 		includeHeader.setVisible(isExportCsvFlag());
-		editor.setEnabled(!clipboard, fileSelectionArea);
+		editor.setEnabled(!clipboard);
 	}
 
 	private boolean isExportCsvFlag() {

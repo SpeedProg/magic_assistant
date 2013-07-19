@@ -50,6 +50,12 @@
             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
             >
       </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.EditionsPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.EditionsPreferencePage"
+             name="Magic Card Sets">
+       </page>
       
    </extension>
    <extension

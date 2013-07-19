@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.editions;
 
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -129,7 +130,7 @@ public class EditionsComposite extends Composite {
 		gd.horizontalSpan = 3;
 		filteredTree.setLayoutData(gd);
 		createDefaultColumns();
-		createButtonsControls();
+		createButtonsControls(panel);
 		this.treeViewer.setInput(Editions.getInstance());
 		return this.panel;
 	}
@@ -184,6 +185,21 @@ public class EditionsComposite extends Composite {
 				return 180;
 			}
 		});
+		columns.add(new AbstractEditionColumn("Abbr", EditionField.NAME) {
+			@Override
+			public String getText(Object element) {
+				Editions.Edition ed = (Edition) element;
+				String abbrs = ed.getMainAbbreviation();
+				if (ed.getExtraAbbreviations().length() > 0)
+					abbrs += " (" + ed.getExtraAbbreviations() + ")";
+				return abbrs;
+			}
+
+			@Override
+			public int getColumnWidth() {
+				return 100;
+			}
+		});
 		columns.add(new DateColumn());
 		columns.add(new TypeColumn());
 		columns.add(new FormatColumn());
@@ -216,7 +232,7 @@ public class EditionsComposite extends Composite {
 		}
 	}
 
-	protected void createButtonsControls() {
+	protected void createButtonsControls(Composite panel) {
 		// buttons
 		if (buttons) {
 			this.selAll = new Button(panel, SWT.PUSH);
@@ -275,6 +291,7 @@ public class EditionsComposite extends Composite {
 	}
 
 	public void initialize() {
+		this.treeViewer.setInput(Editions.getInstance());
 		Collection<Edition> names = Editions.getInstance().getEditions();
 		ArrayList<Edition> sel = new ArrayList<Edition>();
 		for (Iterator<Edition> iterator = names.iterator(); iterator.hasNext();) {
@@ -312,7 +329,7 @@ public class EditionsComposite extends Composite {
 					break;
 				}
 			}
-		treeViewer.refresh();
+		treeViewer.refresh(true);
 	}
 
 	/**
@@ -348,6 +365,11 @@ public class EditionsComposite extends Composite {
 				String id = FilterField.getPrefConstant(FilterField.EDITION, abbr);
 				getPreferenceStore().setValue(id, true);
 			}
+		}
+		try {
+			Editions.getInstance().save();
+		} catch (FileNotFoundException e) {
+			// ignore
 		}
 	}
 
