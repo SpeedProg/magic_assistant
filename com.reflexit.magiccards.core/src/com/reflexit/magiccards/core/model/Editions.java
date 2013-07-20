@@ -20,8 +20,10 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class Editions implements ISearchableProperty {
 	public static final String EDITIONS_FILE = "editions.txt";
@@ -215,6 +217,16 @@ public class Editions implements ISearchableProperty {
 
 		public int getId() {
 			return id;
+		}
+
+		public boolean isUsed() {
+			ICardStore<IMagicCard> magicDb = DataManager.getMagicDBStore();
+			for (IMagicCard card : magicDb) {
+				if (name.equals(card.getSet())) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 
@@ -467,5 +479,9 @@ public class Editions implements ISearchableProperty {
 
 	public Collection<String> getNames() {
 		return new ArrayList<String>(this.name2ed.keySet());
+	}
+
+	public synchronized void remove(Edition ed) {
+		name2ed.remove(ed.getName());
 	}
 }
