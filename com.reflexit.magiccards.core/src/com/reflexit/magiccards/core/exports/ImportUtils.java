@@ -248,7 +248,6 @@ public class ImportUtils {
 					card.setError(ImportError.SET_NOT_FOUND_ERROR);
 					return newCard;
 				} else {
-					card.setMagicCard(ref);
 					card.setError(ImportError.NAME_NOT_FOUND_IN_SET_ERROR);
 				}
 			}
@@ -424,6 +423,7 @@ public class ImportUtils {
 			MagicCard newCard = (MagicCard) card.getBase();
 			magicDbHandler.add(newCard);
 		}
+		magicDbHandler.getStorage().save();
 	}
 
 	public static void fixSets(Collection<IMagicCard> result, Map<String, String> badSets) {
