@@ -796,7 +796,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		if (ed == null) {
 			throw new IllegalStateException("Set is not registered for the card");
 		}
-		int sid = 1 << 31 | ed.getId() & 0x7f << 15 | card.getSide() << 10 | card.getCollectorNumberId();
+		int sid = 1 << 31 | (ed.getId() & 0x7f) << 15 | card.getSide() << 10 | card.getCollectorNumberId();
 		return sid;
 	}
 
