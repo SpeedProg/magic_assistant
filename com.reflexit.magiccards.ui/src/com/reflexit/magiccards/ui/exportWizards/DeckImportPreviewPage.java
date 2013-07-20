@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -31,6 +32,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -212,8 +214,6 @@ public class DeckImportPreviewPage extends WizardPage {
 											MagicCardPhysical card = (MagicCardPhysical) element;
 											final String oldSet = card.getSet();
 											String set = (String) value;
-											if (set.equals(oldSet))
-												return;
 											// set
 											List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 											boolean found = false;
@@ -227,8 +227,14 @@ public class DeckImportPreviewPage extends WizardPage {
 												}
 											}
 											if (!found) {
-												card.getBase().setSet(set);
-												card.setError(ImportError.SET_NOT_FOUND_ERROR);
+												NewSetDialog newdia = new NewSetDialog(getShell(), set);
+												if (newdia.open() == Window.OK) {
+													card.getBase().setSet(newdia.getSet().getName());
+													card.setError(null);
+												} else {
+													card.getBase().setSet(set);
+													card.setError(ImportError.SET_NOT_FOUND_ERROR);
+												}
 											}
 											manager.getViewer().refresh(true);
 										}

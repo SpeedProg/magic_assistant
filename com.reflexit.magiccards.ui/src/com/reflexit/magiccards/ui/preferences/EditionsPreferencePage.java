@@ -1,10 +1,12 @@
 package com.reflexit.magiccards.ui.preferences;
 
 import java.io.FileNotFoundException;
+import java.util.Iterator;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,6 +17,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
@@ -22,6 +25,7 @@ import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 public class EditionsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private EditionsComposite comp;
 	private Button addSet;
+	private Button delSet;
 
 	public EditionsPreferencePage() {
 		setTitle("Magic Card Sets");
@@ -61,18 +65,43 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 			}
 		});
 		addSet.setFont(panel.getFont());
+		this.delSet = new Button(panel, SWT.PUSH);
+		this.delSet.setText("Delete Selected");
+		this.delSet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				deleteSets();
+				comp.performApply();
+				comp.initialize();
+			}
+		});
+		delSet.setFont(panel.getFont());
 	}
 
 	protected void addSet() {
 		// .. create new set
 		NewSetDialog newdia = new NewSetDialog(getShell(), "");
-		if (newdia.open() == Window.OK && newdia.getSet() != null) {
-			Editions.getInstance().addEdition(newdia.getSet());
-			try {
-				Editions.getInstance().save();
-			} catch (FileNotFoundException e) {
-				MagicUIActivator.log(e);
-			}
+		newdia.open();
+	}
+
+	protected void deleteSets() {
+		IStructuredSelection selection = comp.getSelection();
+		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+			Editions.Edition ed = (Edition) iterator.next();
+			deleteSet(ed);
+		}
+	}
+
+	private void deleteSet(Edition ed) {
+		if (ed.isUsed()) {
+			MessageDialog.openInformation(getShell(), "No Way", ed.getName() + " is used in database by some cards, cannot delete");
+			return;
+		}
+		Editions.getInstance().remove(ed);
+		try {
+			Editions.getInstance().save();
+		} catch (FileNotFoundException e) {
+			MagicUIActivator.log(e);
 		}
 	}
 

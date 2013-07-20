@@ -22,29 +22,29 @@
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
-             name="Magic Database View">
+             name="View: Magic Database">
        </page>
        <page
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
-             name="Library View">
+             name="View: Library">
        </page>
        <page
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
-             name="Deck View">
+             name="View: Deck">
        </page>
        <page
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
-             name="Collector View">
+             name="View: Collector">
        </page>
        
        <page
-            name="Manage Deck Exporters"
+            name="Card Export"
             class="com.reflexit.magiccards.ui.preferences.ExportersPreferencePage"
             id="com.reflexit.magiccards.ui.preferences.ExportersPreferencePage"
             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
@@ -54,7 +54,7 @@
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.EditionsPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.EditionsPreferencePage"
-             name="Magic Card Sets">
+             name="Card Sets">
        </page>
       
    </extension>

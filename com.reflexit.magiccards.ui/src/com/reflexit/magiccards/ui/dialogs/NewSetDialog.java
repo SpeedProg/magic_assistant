@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.dialogs;
 
+import java.io.FileNotFoundException;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -12,7 +14,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class NewSetDialog extends TitleAreaDialog {
 	private String setStart = "";
@@ -53,6 +57,7 @@ public class NewSetDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
+		validate();
 		return area1;
 	}
 
@@ -61,16 +66,24 @@ public class NewSetDialog extends TitleAreaDialog {
 		if (name.getText().trim().length() == 0) {
 			setErrorMessage("Enter set name");
 		} else if (abbr.getText().trim().length() == 0) {
-			setErrorMessage("Enter set name");
+			setErrorMessage("Enter main abbreviation");
 		}
 	}
 
 	@Override
 	protected void okPressed() {
+		validate();
+		if (getErrorMessage() != null)
+			return;
 		String nset = name.getText();
 		Edition set1 = new Edition(nset, abbr.getText());
 		if (nset.length() > 0) {
-			set = set1;
+			set = Editions.getInstance().addEdition(set1);
+			try {
+				Editions.getInstance().save();
+			} catch (FileNotFoundException e) {
+				MagicUIActivator.log(e);
+			}
 		}
 		super.okPressed();
 	}

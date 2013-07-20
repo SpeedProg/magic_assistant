@@ -174,7 +174,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 				if (badSets.size() > 0) {
 					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve " + badSets.size()
 							+ " set(s). The following sets are not found or ambigues: " + badSets.keySet()
-							+ ".\n Do you want to attempt to fix import errors?");
+							+ ".\n Do you want to fix these?");
 					if (yes) {
 						// ask user to fix sets
 						for (Iterator<String> iterator = badSets.keySet().iterator(); iterator.hasNext();) {
@@ -189,57 +189,57 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 						}
 						// fix cards for these sets
 						ImportUtils.fixSets(result, badSets);
-						ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
-						ImportUtils.performPreImportWithDb(result, newdbrecords);
-						ArrayList<String> lerrors = new ArrayList<String>();
-						ImportUtils.validateDbRecords(newdbrecords, lerrors);
-						if (newdbrecords.size() > 0 && lerrors.size() == 0) {
-							boolean yes2 = dbImport;
-							if (yes2 == false) {
-								yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", newdbrecords.size()
-										+ " cards are not found in the database. Do you want to add new cards into database?");
-							}
-							if (yes2)
-								ImportUtils.importIntoDb(newdbrecords);
-						} else if (lerrors.size() > 0) {
-							String message = newdbrecords.size() + " cards are not found in the database " + lerrors.size()
-									+ "\nThe following errors preventing import all of them into database:\n";
-							for (Iterator iterator = lerrors.iterator(); iterator.hasNext();) {
-								String str = (String) iterator.next();
-								message += str + "\n";
-							}
-							message += "Do you want to proceed with importing cards partually? No would abort the import into DB";
-							boolean yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", message);
-							if (yes2)
-								ImportUtils.importIntoDb(newdbrecords);
-						}
 					}
-					ArrayList<String> cerrors = new ArrayList<String>();
-					ICardStore magicDb = DataManager.getCardHandler().getMagicDBStore();
-					for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-						IMagicCard card = (IMagicCard) iterator.next();
-						if (card.getCardId() == 0 || magicDb.getCard(card.getCardId()) == null) {
-							iterator.remove();
-							cerrors.add(card.getName() + " (" + card.getSet() + ")");
-						}
+				}
+				ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
+				ImportUtils.performPreImportWithDb(result, newdbrecords);
+				ArrayList<String> lerrors = new ArrayList<String>();
+				ImportUtils.validateDbRecords(newdbrecords, lerrors);
+				if (newdbrecords.size() > 0 && lerrors.size() == 0) {
+					boolean yes2 = dbImport;
+					if (yes2 == false) {
+						yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", newdbrecords.size()
+								+ " cards are not found in the database. Do you want to add new cards into database?");
 					}
-					if (cerrors.size() != 0) {
-						String message = "After all this effort I cannot resolve " + cerrors.size() + " cards of " + size + ":\n";
-						int i = 0;
-						for (Iterator iterator = cerrors.iterator(); iterator.hasNext() && i < 10; i++) {
-							String str = (String) iterator.next();
-							message += str + "\n";
-						}
-						if (i < cerrors.size())
-							message += "... + " + (cerrors.size() - i) + " more\n";
-						if (cerrors.size() >= size) {
-							message += "No good cards to import :(";
-							yesres[0] = false;
-							MessageDialog.openError(getShell(), "Import", message);
-						} else {
-							message += "Do you want to proceed with importing cards partually? No would abort the import";
-							yesres[0] = MessageDialog.openQuestion(getShell(), "Import", message);
-						}
+					if (yes2)
+						ImportUtils.importIntoDb(newdbrecords);
+				} else if (lerrors.size() > 0) {
+					String message = newdbrecords.size() + " cards are not found in the database " + lerrors.size()
+							+ "\nThe following errors preventing import all of them into database:\n";
+					for (Iterator iterator = lerrors.iterator(); iterator.hasNext();) {
+						String str = (String) iterator.next();
+						message += str + "\n";
+					}
+					message += "Do you want to proceed with importing cards partually? No would abort the import into DB";
+					boolean yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", message);
+					if (yes2)
+						ImportUtils.importIntoDb(newdbrecords);
+				}
+				ArrayList<String> cerrors = new ArrayList<String>();
+				ICardStore magicDb = DataManager.getCardHandler().getMagicDBStore();
+				for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+					IMagicCard card = (IMagicCard) iterator.next();
+					if (card.getCardId() == 0 || magicDb.getCard(card.getCardId()) == null) {
+						iterator.remove();
+						cerrors.add(card.getName() + " (" + card.getSet() + ")");
+					}
+				}
+				if (cerrors.size() != 0) {
+					String message = "After all this effort I cannot resolve " + cerrors.size() + " cards of " + size + ":\n";
+					int i = 0;
+					for (Iterator iterator = cerrors.iterator(); iterator.hasNext() && i < 10; i++) {
+						String str = (String) iterator.next();
+						message += str + "\n";
+					}
+					if (i < cerrors.size())
+						message += "... + " + (cerrors.size() - i) + " more\n";
+					if (cerrors.size() >= size) {
+						message += "No good cards to import :(";
+						yesres[0] = false;
+						MessageDialog.openError(getShell(), "Import", message);
+					} else {
+						message += "Do you want to proceed with importing cards partually? No would abort the import";
+						yesres[0] = MessageDialog.openQuestion(getShell(), "Import", message);
 					}
 				}
 			}
