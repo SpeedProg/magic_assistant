@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -40,17 +41,20 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.exports.CustomExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
+import com.reflexit.magiccards.ui.dialogs.MagicFieldSelectorDialog;
 import com.reflexit.magiccards.ui.jobs.ExportDeckJob;
 import com.reflexit.magiccards.ui.preferences.feditors.FileSaveFieldEditor;
 
@@ -75,6 +79,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	private StringButtonFieldEditor collection;
 	private Text previewText;
 	private Job previewJob;
+	private StringButtonFieldEditor columnsChoice;
 
 	protected DeckExportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -158,8 +163,8 @@ public class DeckExportPage extends WizardDataTransferPage {
 		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 		composite.setFont(parent.getFont());
 		createResourcesGroup(composite);
-		createOptionsGroup(composite);
 		createDestinationGroup(composite);
+		createOptionsGroup(composite);
 		createPreviewGroup(composite);
 		restoreWidgetValues(); // ie.- subclass hook
 		setTextFromSelection();
@@ -265,7 +270,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		Composite parent = new Composite(parent2, SWT.NONE);
 		parent.setLayout(new GridLayout());
 		parent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		collection = new StringButtonFieldEditor("deckSelect", "Collection:", parent) {
+		collection = new StringButtonFieldEditor("deckSelect", "From Collection:", parent) {
 			@Override
 			protected String changePressed() {
 				LocationPickerDialog dialog = new LocationPickerDialog(getShell(), SWT.SINGLE);
@@ -350,6 +355,40 @@ public class DeckExportPage extends WizardDataTransferPage {
 				updatePageCompletion();
 			}
 		});
+		createFieldsControl(buttonComposite);
+	}
+
+	public void createFieldsControl(Composite area) {
+		final PreferenceStore store = new PreferenceStore();
+		Composite fparent = new Composite(area, SWT.NONE);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
+		fparent.setLayoutData(layoutData);
+		columnsChoice = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Columns:", fparent) {
+			@Override
+			protected String changePressed() {
+				new MagicFieldSelectorDialog(getShell(), store).open();
+				// validate();
+				String fields = store.getString(CustomExportDelegate.ROW_FIELDS);
+				columns = MagicCardFieldPhysical.toFields(fields, ",");
+				generatePreview();
+				return fields;
+			}
+		};
+		columnsChoice.setTextLimit(60);
+		columnsChoice.setPreferenceStore(store);
+		if (columns != null) {
+			columnsChoice.getTextControl(fparent).setEditable(false);
+			String value = "";
+			for (int i = 0; i < columns.length; i++) {
+				ICardField field = columns[i];
+				if (i != 0)
+					value += ",";
+				value += field.name();
+			}
+			columnsChoice.getPreferenceStore().setValue(CustomExportDelegate.ROW_FIELDS, value);
+		}
+		columnsChoice.load();
 	}
 
 	private void addComboType(ReportType rt) {

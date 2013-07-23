@@ -15,7 +15,7 @@ public class MagicFieldSelectorDialog extends Dialog {
 	private MagicFieldFieldEditor columnFieldEditor;
 	private PreferenceStore store;
 
-	protected MagicFieldSelectorDialog(Shell parentShell, PreferenceStore store) {
+	public MagicFieldSelectorDialog(Shell parentShell, PreferenceStore store) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.store = store;
