@@ -39,6 +39,8 @@ public interface IMagicColumnViewer {
 
 	public abstract void updateViewer(Object input);
 
+	public abstract void refresh();
+
 	public abstract void flip(boolean hasGroups);
 
 	public abstract void setLinesVisible(boolean grid);

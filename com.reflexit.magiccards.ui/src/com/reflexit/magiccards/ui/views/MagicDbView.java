@@ -93,6 +93,16 @@ public class MagicDbView extends AbstractCardsView {
 			}
 
 			@Override
+			protected void addStoreChangeListener() {
+				// do not add library listener
+			}
+
+			@Override
+			protected void removeStoreChangeListener() {
+				// ignore
+			}
+
+			@Override
 			public IFilteredCardStore doGetFilteredStore() {
 				return DataManager.getCardHandler().getMagicDBFilteredStore();
 			}

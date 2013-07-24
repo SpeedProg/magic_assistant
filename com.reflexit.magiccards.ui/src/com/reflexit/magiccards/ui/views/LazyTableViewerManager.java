@@ -67,16 +67,16 @@ public class LazyTableViewerManager extends TableViewerManager {
 			return;
 		updateTableHeader();
 		updateGrid();
-		long time = System.currentTimeMillis();
+		// long time = System.currentTimeMillis();
 		int size = getContentProvider().getSize(filteredStore);
 		if (this.viewer.getInput() != filteredStore) {
 			this.viewer.setInput(filteredStore);
-			this.viewer.setItemCount(filteredStore == null ? 0 : size);
+			this.viewer.setItemCount(size);
 		} else {
 			this.viewer.setSelection(new StructuredSelection());
 			this.viewer.getTable().clearAll();
 			((MyTableViewer) this.viewer).unmapAllElements();
-			this.viewer.setItemCount(filteredStore == null ? 0 : size);
+			this.viewer.setItemCount(size);
 			this.viewer.refresh(true);
 		}
 		// System.err.println("set input time: " + (System.currentTimeMillis() -

@@ -59,6 +59,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.ICard;
@@ -352,6 +353,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void init(IViewSite site) {
 		super.init(site);
+		addStoreChangeListener();
+	}
+
+	protected void addStoreChangeListener() {
 		DataManager.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
 	}
 
@@ -363,9 +368,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void dispose() {
 		// this.manager.dispose(); TODO
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().removeListener(this);
+		removeStoreChangeListener();
 		getSelectionProvider().removeSelectionChangedListener(selectionListener);
 		super.dispose();
+	}
+
+	protected void removeStoreChangeListener() {
+		DataManager.getLibraryCardStore().removeListener(this);
 	}
 
 	public void reloadData() {
@@ -734,7 +743,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	@Override
 	public void refresh() {
-		reloadData();
+		manager.refresh();
 	}
 
 	/**
@@ -850,11 +859,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * Update view in UI thread after data load is finished
 	 */
 	public void updateViewer() {
+		MagicLogger.traceStart("updateViewer");
 		if (manager.getControl().isDisposed())
 			return;
 		ISelection selection = getSelection();
 		IFilteredCardStore filteredStore = getFilteredStore();
 		manager.updateViewer(filteredStore);
+		MagicLogger.trace("updateViewer", "setSelection");
 		if (revealSelection != null) {
 			// set desired selection
 			getSelectionProvider().setSelection(revealSelection);
@@ -864,6 +875,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			getSelectionProvider().setSelection(selection);
 		}
 		updateStatus();
+		MagicLogger.traceEnd("updateViewer");
 	}
 
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {

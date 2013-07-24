@@ -127,11 +127,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		return new ExportAction(new StructuredSelection(), getPreferencePageId());
 	}
 
-	@Override
-	protected void refresh() {
-		reloadData();
-	}
-
 	protected IDeckAction moveToDeck = new IDeckAction() {
 		public void run(String id) {
 			try {
@@ -212,7 +207,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				DataManager.remove(cardStore, sel.toList());
 			}
 		}
-		refresh();
 	}
 
 	/**

@@ -137,6 +137,14 @@ public class CompositeViewerManager extends ViewerManager {
 		this.comp.layout();
 	}
 
+	@Override
+	public void refresh() {
+		if (this.comp.isDisposed())
+			return;
+		this.managers[this.activeIndex].refresh();
+		this.comp.layout();
+	}
+
 	public void setLinesVisible(boolean grid) {
 		for (IMagicColumnViewer m : this.managers) {
 			m.setLinesVisible(grid);

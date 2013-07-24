@@ -58,7 +58,7 @@ public class LoadingPricesJob extends Job {
 			parser.updateStore(DataManager.getCardHandler().getMagicDBStore(), list, size, new CoreMonitorAdapter(monitor));
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					view.reloadData();
+					view.refresh();
 				}
 			});
 		} catch (IOException e) {

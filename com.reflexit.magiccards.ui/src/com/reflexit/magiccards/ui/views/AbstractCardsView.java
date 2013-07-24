@@ -193,7 +193,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.actionRefresh = new Action("Refresh") {
 			@Override
 			public void run() {
-				refresh();
+				reloadData();
 			}
 		};
 		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
@@ -224,7 +224,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	}
 
-	protected void refresh() {
+	public void refresh() {
 		control.refresh();
 	}
 

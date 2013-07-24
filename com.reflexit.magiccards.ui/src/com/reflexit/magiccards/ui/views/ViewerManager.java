@@ -180,6 +180,14 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		}
 	}
 
+	public void refresh() {
+		if (getViewer().getControl().isDisposed())
+			return;
+		updateTableHeader();
+		updateGrid();
+		getViewer().refresh(true);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
