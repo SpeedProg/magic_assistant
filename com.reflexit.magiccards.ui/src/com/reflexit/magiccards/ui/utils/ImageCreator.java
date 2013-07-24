@@ -154,8 +154,9 @@ public class ImageCreator {
 				File file = new File(url.getFile());
 				if (file.exists()) {
 					image = ImageCreator.createNewSetImage(url);
-					if (image == null)
-						return null;
+					if (image == null) {
+						image = ImageCreator.createSetNotFoundImage(card.getRarity());
+					}
 					return MagicUIActivator.getDefault().getImage(key, image);
 				} else {
 					if (card.getGathererId() != 0) {
@@ -177,6 +178,14 @@ public class ImageCreator {
 			// huh
 		}
 		return null;
+	}
+
+	public static Image createSetNotFoundImage(String rarity) {
+		Image im = new Image(Display.getCurrent(), 16, 16);
+		GC gc = new GC(im);
+		gc.drawText("?", 0, 0);
+		gc.dispose();
+		return im;
 	}
 
 	/**
