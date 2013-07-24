@@ -117,6 +117,8 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 			return parseSets.get(set.replaceAll(" Box Set", ""));
 		if (set.endsWith(" Edition"))
 			return parseSets.get(set.replaceAll(" Edition", ""));
+		if (set.endsWith(" Core Set"))
+			return parseSets.get(set.replaceAll(" Core Set", ""));
 		MagicLogger.log("Cannot find prices for " + set);
 		return null;
 	}

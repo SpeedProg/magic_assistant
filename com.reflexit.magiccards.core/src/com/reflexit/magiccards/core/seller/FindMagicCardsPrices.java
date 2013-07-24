@@ -145,9 +145,8 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 	}
 
 	private boolean testSetUrl(String abbr) {
-		String testurl = "http://findmagiccards.com/Cards/" + abbr;
 		try {
-			URL url = new URL(testurl);
+			URL url = new URL(baseURL.toString().replace("${SetAbbr}", abbr));
 			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 			BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 			st.readLine();

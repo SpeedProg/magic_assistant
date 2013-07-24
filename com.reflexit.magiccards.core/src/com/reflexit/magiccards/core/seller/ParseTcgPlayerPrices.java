@@ -53,8 +53,9 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 			Edition set = iterator.next();
 			String name = set.getName();
 			if (name.startsWith("Magic 20")) {
-				String year = name.substring(8, 10);
-				setMap.put(name, name + " (M" + year + ")");
+				String name2 = name.replaceFirst(" Core Set", "");
+				String year = name2.substring(8, 10);
+				setMap.put(name, name2 + " (M" + year + ")");
 			}
 		}
 		setMap.put("Limited Edition Alpha", "Alpha Edition");
