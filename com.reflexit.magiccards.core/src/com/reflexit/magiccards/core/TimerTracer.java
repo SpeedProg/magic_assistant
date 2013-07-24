@@ -114,6 +114,10 @@ public class TimerTracer {
 		trace(t, "end");
 	}
 
+	public void removeTimer(String t) {
+		timers.remove(t);
+	}
+
 	public Timer getTimer(String timer) {
 		Timer timerStats = timers.get(timer);
 		if (timerStats != null)

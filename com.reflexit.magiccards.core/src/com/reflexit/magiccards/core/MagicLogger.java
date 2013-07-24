@@ -31,7 +31,7 @@ public class MagicLogger {
 		tracer.trace("m", message);
 	}
 
-	public static void tracet(String key, String message) {
+	public static void trace(String key, String message) {
 		tracer.trace(key, message);
 	}
 
