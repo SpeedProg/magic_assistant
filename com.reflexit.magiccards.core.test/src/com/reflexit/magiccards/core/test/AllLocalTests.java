@@ -29,6 +29,7 @@ import com.reflexit.magiccards.core.exports.TablePipedImportTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
 
 /**
  * @author Alena
@@ -67,6 +68,7 @@ public class AllLocalTests {
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);
 		suite.addTestSuite(SortOrderTest.class);
+		suite.addTestSuite(SearchStringTokenizerTest.class);
 		// $JUnit-END$
 		return suite;
 	}
