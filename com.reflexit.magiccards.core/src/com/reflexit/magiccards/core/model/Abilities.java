@@ -27,6 +27,8 @@ public class Abilities {
 		public String getDisplayName();
 
 		public boolean isKeyword();
+
+		public Pattern getPattern();
 	}
 
 	public static class RegexAbilityMatcher implements IAbilityMatcher {
@@ -50,6 +52,11 @@ public class Abilities {
 
 		public boolean isKeyword() {
 			return keyword;
+		}
+
+		@Override
+		public Pattern getPattern() {
+			return compiledPattern;
 		}
 	}
 
@@ -167,40 +174,70 @@ public class Abilities {
 			/*
 			 * Hand mined abilities from A to Ardent Militia name initialized cards
 			 */
-			createMinedAbility("Tap/Untap", "(\\b(tap([s]|ped)?)|(untap([s]|ped)?)\\b)"),
-			createMinedAbility("Sacrifice", "(\\bsacrifices?\\bb)"), createMinedAbility("Search", "(\\bsearch\\b)"),
-			createMinedAbility("Reveal", "(\\breveal\\b)"), createMinedAbility("Hand", "(\\bhand\\b)"),
-			createMinedAbility("Shuffle", "(\\b(re)?shuffles?\\b)"), createMinedAbility("Target", "(\\btarget\\b)"),
-			createMinedAbility("Creature", "((\\bcreatures?\\b|[0-9]*/[0-9]*))"), createMinedAbility("Player", "(\\bplayers?\\b)"),
-			createMinedAbility("Power/Toughness", "([\\+\\-][0-9]/[\\+\\-][0-9])"),
-			createMinedAbility("Power/Toughness", "(\\b(power|toughness)\\b)"), createMinedAbility("Upkeep", "(\\bupkeep\\b)"),
-			createMinedAbility("Name", "(\\bnamed?\\b)"), createMinedAbility("Remove", "(\\bremove\\b)"),
-			createMinedAbility("Turn", "(\\bturn\\b)"), createMinedAbility("Mana", "(\\bmana\\b)"),
+			createMinedAbility("Tap/Untap", "(\\b(tap([s]|ped)?)|(untap([s]|ped)?)\\b)"), //
+			createMinedAbility("Sacrifice", "(\\bsacrifices?\\bb)"), //
+			createMinedAbility("Search", "(\\bsearch\\b)"), //
+			createMinedAbility("Reveal", "(\\breveal\\b)"), //
+			createMinedAbility("Hand", "(\\bhand\\b)"), //
+			createMinedAbility("Shuffle", "(\\b(re)?shuffles?\\b)"), //
+			createMinedAbility("Target", "(\\btarget\\b)"), //
+			createMinedAbility("Creature", "((\\bcreatures?\\b|[0-9]*/[0-9]*))"), //
+			createMinedAbility("Player", "(\\bplayers?\\b)"), //
+			createMinedAbility("Power/Toughness", "([\\+\\-][0-9]/[\\+\\-][0-9])|(\\\\b(power|toughness)\\\\b)"), //
+			createMinedAbility("Upkeep", "(\\bupkeep\\b)"),
+			createMinedAbility("Name", "(\\bnamed?\\b)"), //
+			createMinedAbility("Remove", "(\\bremove\\b)"),
+			createMinedAbility("Turn", "(\\bturn\\b)"), //
+			createMinedAbility("Mana", "(\\bmana\\b)"), //
 			createMinedAbility("Attack", "(\\b(non)?attack(ing|s|ed)?\\b)"),
-			createMinedAbility("Defend", "(\\b(non)?defend(ing|s|ed)?\\b)"), createMinedAbility("Block", "(\\b(non)?block(ing|s|ed)?\\b)"),
-			createMinedAbility("Discard", "(\\bdiscards?\\b)"), createMinedAbility("Look", "(\\blook\\b)"),
-			createMinedAbility("Choose", "(\\bchooses?\\b)"), createMinedAbility("Color", "(\\bcolor(s|ed|less)?\\b)"),
-			createMinedAbility("Life", "(\\blife\\b)"), createMinedAbility("Control", "(\\bcontrol(s|ler)?\\b)"),
-			createMinedAbility("Owner", "(\\bowners?\\b)"), createMinedAbility("Graveyard", "(\\bgraveyard\\b)"),
-			createMinedAbility("Activation", "(\\bactivat(e|ion){1}\\b)"), createMinedAbility("Draw", "(\\bdraws?\\b)"),
-			createMinedAbility("Permanent", "(\\bpermanents?\\b)"), createMinedAbility("Blue", "(\\b(non)?blue\\b)"),
-			createMinedAbility("Black", "(\\b(non)?black\\b)"), createMinedAbility("White", "(\\b(non)?white\\b)"),
-			createMinedAbility("Green", "(\\b(non)?green\\b)"), createMinedAbility("Red", "(\\b(non)?red\\b)"),
-			createMinedAbility("Counter target spells", "(\\bcounter target spell\\b)"), createMinedAbility("Destroy", "(\\bdestroy\\b)"),
-			createMinedAbility("Cost", "(\\bcost\\b)"), createMinedAbility("Cumulative", "(\\bcumulative\\b)"),
-			createMinedAbility("Counter", "(\\bcounters?\\b)"), createMinedAbility("Combat", "(\\bcombat\\b)"),
-			createMinedAbility("Battlefield", "(\\bbattlefield\\b)"), createMinedAbility("Game", "(\\bgame\\b)"),
-			createMinedAbility("Attach", "(\\battach(ed)?\\b)"), createMinedAbility("Step/Phase", "(\\b(step|phase)\\b)"),
-			createMinedAbility("Random", "(\\brandom\\b)"), createMinedAbility("Mountain", "(\\bmontains?(walk)?\\b)"),
-			createMinedAbility("Plain", "(\\bplains?(walk)?\\b)"), createMinedAbility("Swamp", "(\\bswamps?(walk)?\\b)"),
-			createMinedAbility("Forest", "(\\bforests?(walk)?\\b)"), createMinedAbility("Island", "(\\bislands?(walk)?\\b)"),
-			createMinedAbility("Bury", "(\\bbury\\b)"), createMinedAbility("Token", "(\\b(non)?tokens?\\b)"),
-			createMinedAbility("Library", "(\\blibrary\\b)"), createMinedAbility("Gain", "(\\bgains?\\b)"),
-			createMinedAbility("Flip", "(\\bflip\\b)"), createMinedAbility("Exile", "(\\bexiled?\\b)"),
-			createMinedAbility("Summon", "(\\bsummon(ing)? sick(ness)?\\b)"), createMinedAbility("Ante", "(\\bante\\b)"),
-			createMinedAbility("Type", "(\\btype\\b)"), createMinedAbility("Return", "(\\breturn\\b)"),
-			createMinedAbility("Indestructible", "(\\bindestructible\\b)"), createMinedAbility("Opponent", "(\\bopponents?\\b)"),
-			createMinedAbility("Face", "(\\bface\\b)"), createMinedAbility("Pay", "(\\bpay\\b)"),
+			createMinedAbility("Defend", "(\\b(non)?defend(ing|s|ed)?\\b)"), //
+			createMinedAbility("Block", "(\\b(non)?block(ing|s|ed)?\\b)"), //
+			createMinedAbility("Discard", "(\\bdiscards?\\b)"), //
+			createMinedAbility("Look", "(\\blook\\b)"), //
+			createMinedAbility("Choose", "(\\bchooses?\\b)"), //
+			createMinedAbility("Color", "(\\bcolor(s|ed|less)?\\b)"), //
+			createMinedAbility("Life", "(\\blife\\b)"), //
+			createMinedAbility("Control", "(\\bcontrol(s|ler)?\\b)"), //
+			createMinedAbility("Owner", "(\\bowners?\\b)"), //
+			createMinedAbility("Graveyard", "(\\bgraveyard\\b)"), //
+			createMinedAbility("Activation", "(\\bactivat(e|ion){1}\\b)"), //
+			createMinedAbility("Draw", "(\\bdraws?\\b)"), //
+			createMinedAbility("Permanent", "(\\bpermanents?\\b)"), //
+			createMinedAbility("Blue", "(\\b(non)?blue\\b)"), //
+			createMinedAbility("Black", "(\\b(non)?black\\b)"), //
+			createMinedAbility("White", "(\\b(non)?white\\b)"), //
+			createMinedAbility("Green", "(\\b(non)?green\\b)"), //
+			createMinedAbility("Red", "(\\b(non)?red\\b)"), //
+			createMinedAbility("Counter target spells", "(\\bcounter target spell\\b)"), //
+			createMinedAbility("Destroy", "(\\bdestroy\\b)"), //
+			createMinedAbility("Cost", "(\\bcost\\b)"), //
+			createMinedAbility("Cumulative", "(\\bcumulative\\b)"), //
+			createMinedAbility("Counter", "(\\bcounters?\\b)"), //
+			createMinedAbility("Combat", "(\\bcombat\\b)"), //
+			createMinedAbility("Battlefield", "(\\bbattlefield\\b)"), //
+			createMinedAbility("Game", "(\\bgame\\b)"), //
+			createMinedAbility("Attach", "(\\battach(ed)?\\b)"), //
+			createMinedAbility("Step/Phase", "(\\b(step|phase)\\b)"), //
+			createMinedAbility("Random", "(\\brandom\\b)"), //
+			createMinedAbility("Mountain", "(\\bmontains?(walk)?\\b)"), //
+			createMinedAbility("Plain", "(\\bplains?(walk)?\\b)"), //
+			createMinedAbility("Swamp", "(\\bswamps?(walk)?\\b)"), //
+			createMinedAbility("Forest", "(\\bforests?(walk)?\\b)"), //
+			createMinedAbility("Island", "(\\bislands?(walk)?\\b)"), //
+			createMinedAbility("Bury", "(\\bbury\\b)"), //
+			createMinedAbility("Token", "(\\b(non)?tokens?\\b)"), //
+			createMinedAbility("Library", "(\\blibrary\\b)"), //
+			createMinedAbility("Gain", "(\\bgains?\\b)"), //
+			createMinedAbility("Flip", "(\\bflip\\b)"), //
+			createMinedAbility("Exile", "(\\bexiled?\\b)"), //
+			createMinedAbility("Summon", "(\\bsummon(ing)? sick(ness)?\\b)"), //
+			createMinedAbility("Ante", "(\\bante\\b)"), //
+			createMinedAbility("Type", "(\\btype\\b)"), //
+			createMinedAbility("Return", "(\\breturn\\b)"), //
+			createMinedAbility("Indestructible", "(\\bindestructible\\b)"), //
+			createMinedAbility("Opponent", "(\\bopponents?\\b)"), //
+			createMinedAbility("Face", "(\\bface\\b)"), //
+			createMinedAbility("Pay", "(\\bpay\\b)"), //
 			createMinedAbility("Interrupt", "(\\binterrupt\\b)"), };
 
 	private static IAbilityMatcher createKeywordAbility(String string) {
@@ -279,5 +316,16 @@ public class Abilities {
 
 	static ISearchableProperty getTextNotFields() {
 		return new TextSeachNot();
+	}
+
+	public static Pattern getPattern(String value) {
+		for (int i = 0; i < abilities.length; i++) {
+			IAbilityMatcher a = abilities[i];
+			if (a.getDisplayName().equalsIgnoreCase(value)) {
+				return a.getPattern();
+			}
+		}
+		// not found
+		return null;
 	}
 }

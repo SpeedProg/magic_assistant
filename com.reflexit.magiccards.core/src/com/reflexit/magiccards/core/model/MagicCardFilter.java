@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter.SearchToken.TokenType;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
 public class MagicCardFilter {
 	private Expr root;
@@ -255,6 +257,14 @@ public class MagicCardFilter {
 			this.regex = regex;
 		}
 
+		public TextValue(Pattern pattern) {
+			super(pattern.toString());
+			this.wordBoundary = false;
+			this.caseSensitive = false;
+			this.regex = true;
+			this.pattern = pattern;
+		}
+
 		public void setWordBoundary(boolean b) {
 			this.wordBoundary = b;
 		}
@@ -433,119 +443,6 @@ public class MagicCardFilter {
 		}
 	}
 
-	static class SearchToken {
-		static enum TokenType {
-			WORD,
-			QUOTED,
-			REGEX,
-			NOT;
-		}
-
-		public TokenType getType() {
-			return type;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		private TokenType type;
-		private String value;;
-
-		SearchToken(TokenType type, String value) {
-			this.type = type;
-			this.value = value;
-		}
-	}
-
-	public static class SearchStringTokenizer {
-		static enum State {
-			INIT,
-			IN_QUOTE,
-			IN_REG
-		};
-
-		private CharSequence seq;
-		private int cur;
-		private State state;
-
-		public void init(CharSequence seq) {
-			this.seq = seq;
-			this.cur = 0;
-			this.state = State.INIT;
-		}
-
-		boolean tokenReady = false;
-		StringBuffer str;
-		SearchToken token = null;
-
-		public SearchToken nextToken() {
-			tokenReady = false;
-			str = new StringBuffer();
-			token = null;
-			while (tokenReady == false && cur <= seq.length()) {
-				char c = cur < seq.length() ? seq.charAt(cur) : 0;
-				switch (state) {
-					case INIT:
-						switch (c) {
-							case '"':
-								pushToken(TokenType.WORD);
-								state = State.IN_QUOTE;
-								break;
-							case 'm':
-								if (cur + 1 < seq.length() && seq.charAt(cur + 1) == '/') {
-									pushToken(TokenType.WORD);
-									state = State.IN_REG;
-									cur++;
-								} else {
-									str.append(c);
-								}
-								break;
-							case '-':
-								pushToken(TokenType.WORD);
-								str.append('-');
-								pushToken(TokenType.NOT);
-								break;
-							case ' ':
-							case 0:
-								pushToken(TokenType.WORD);
-								break;
-							default:
-								str.append(c);
-								break;
-						}
-						break;
-					case IN_REG:
-						if (c == '/' || c == 0) {
-							pushToken(TokenType.REGEX);
-							state = State.INIT;
-						} else {
-							str.append(c);
-						}
-						break;
-					case IN_QUOTE:
-						if (c == '"' || c == 0) {
-							pushToken(TokenType.QUOTED);
-							state = State.INIT;
-						} else {
-							str.append(c);
-						}
-						break;
-				}
-				cur++;
-			}
-			return token;
-		}
-
-		private void pushToken(TokenType type) {
-			if (str.length() > 0) {
-				token = new SearchToken(type, str.toString());
-				str.delete(0, str.length());
-				tokenReady = true;
-			}
-		}
-	}
-
 	static BinaryExpr ignoreCase1SearchDb(ICardField field, String value) {
 		char c = value.charAt(0);
 		if (Character.isLetter(c)) {
@@ -569,14 +466,21 @@ public class MagicCardFilter {
 		if (token.getType() == TokenType.REGEX) {
 			TextValue tvalue = new TextValue(value, false, false, true);
 			return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
-		} else {
-			TextValue tvalue = new TextValue(value, false, false, false);
-			char c = value.charAt(0);
-			if (Character.isLetter(c) && token.getType() != TokenType.QUOTED) {
-				tvalue.setWordBoundary(true);
+		} else if (token.getType() == TokenType.ABI) {
+			Pattern pattern = Abilities.getPattern(value);
+			if (pattern != null) {
+				TextValue tvalue = new TextValue(pattern);
+				return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
+			} else {
+				// fall back to text value
 			}
-			return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
 		}
+		TextValue tvalue = new TextValue(value, false, false, false);
+		char c = value.charAt(0);
+		if (Character.isLetter(c) && token.getType() != TokenType.QUOTED) {
+			tvalue.setWordBoundary(true);
+		}
+		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
 	}
 
 	static public BinaryExpr textSearch(ICardField field, String text) {
