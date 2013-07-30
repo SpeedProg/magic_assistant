@@ -12,6 +12,7 @@ package com.reflexit.mtgtournament.core.edit;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Player;
@@ -75,6 +76,10 @@ public class CmdCommitRounds implements ITCommand {
 
 	public PlayerTourInfo[] updatePlace() {
 		List<PlayerTourInfo> players = t.getPlayersInfo();
+		for (Iterator iterator = players.iterator(); iterator.hasNext();) {
+			PlayerTourInfo pti = (PlayerTourInfo) iterator.next();
+			pti.calclulateOMW();
+		}
 		PlayerTourInfo[] pti = players.toArray(new PlayerTourInfo[players.size()]);
 		Arrays.sort(pti, new Comparator<PlayerTourInfo>() {
 			public int compare(PlayerTourInfo a, PlayerTourInfo b) {

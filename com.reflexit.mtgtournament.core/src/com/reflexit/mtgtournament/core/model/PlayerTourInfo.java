@@ -211,7 +211,6 @@ public class PlayerTourInfo {
 		gamesDrawn += roundInfo.getDraw();
 		updatePoints();
 		addOpponents(roundInfo.getTableInfo());
-		calclulateOMW();
 	}
 
 	/**
