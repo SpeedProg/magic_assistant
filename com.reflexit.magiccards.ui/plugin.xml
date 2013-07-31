@@ -487,6 +487,11 @@
         id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
         class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage"
         />
+                <page
+                      class="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
+                      id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
+                      name="Wizards">
+                </page>
   </extension>
 
 <extension point="org.eclipse.ui.themes">
