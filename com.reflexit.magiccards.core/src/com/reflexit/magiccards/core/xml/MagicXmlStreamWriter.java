@@ -3,16 +3,13 @@ package com.reflexit.magiccards.core.xml;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Stack;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -22,135 +19,6 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class MagicXmlStreamWriter {
-	class MyOutputStreamWriter {
-		final Charset UTF_8 = Charset.forName("utf-8");
-		OutputStream st;
-		int bufSize = 256 * 1024;
-		StringBuilder builder = new StringBuilder(bufSize);
-
-		public MyOutputStreamWriter(File file) throws FileNotFoundException {
-			st = new FileOutputStream(file);
-		}
-
-		public MyOutputStreamWriter(OutputStream st) {
-			this.st = st;
-		}
-
-		public void write(String string) throws IOException {
-			builder.append(string);
-			if (builder.length() > bufSize)
-				flush();
-		}
-
-		public void flush() throws IOException {
-			st.write(builder.toString().getBytes(UTF_8));
-			builder.delete(0, builder.length());
-		}
-
-		public void write(char c) throws IOException {
-			builder.append(c);
-			if (builder.length() > bufSize)
-				flush();
-		}
-
-		public void close() throws IOException {
-			flush();
-			st.close();
-		}
-	}
-
-	class MyXMLStreamWriter {
-		private MyOutputStreamWriter out;
-		private Stack<String> stack;
-
-		public MyXMLStreamWriter(File file) throws FileNotFoundException {
-			this.out = new MyOutputStreamWriter(file);
-			this.stack = new Stack<String>();
-		}
-
-		public MyXMLStreamWriter(OutputStream st) {
-			this.out = new MyOutputStreamWriter(st);
-			this.stack = new Stack<String>();
-		}
-
-		public void writeStartElement(String string) throws XMLStreamException {
-			try {
-				int indent = stack.size();
-				for (int i = 0; i < indent; i++) {
-					out.write("  ");
-				}
-				out.write('<');
-				out.write(string);
-				out.write('>');
-				stack.push(string);
-			} catch (IOException e) {
-				throw new XMLStreamException(e);
-			}
-		}
-
-		public void writeEndElement() throws XMLStreamException {
-			try {
-				String string = stack.pop();
-				// int indent = stack.size();
-				// for (int i = 0; i < indent; i++) {
-				// out.write("  ");
-				// }
-				out.write("</");
-				out.write(string);
-				out.write('>');
-				out.write('\n');
-			} catch (IOException e) {
-				throw new XMLStreamException(e);
-			}
-		}
-
-		public void writeCharacters(String string) throws XMLStreamException {
-			try {
-				if (string != null) {
-					if (string.indexOf('&') >= 0) {
-						string = string.replaceAll("&", "\\&amp;");
-					}
-					if (string.indexOf('<') >= 0) {
-						string = string.replaceAll("<", "&lt;");
-					}
-					if (string.indexOf('>') >= 0) {
-						string = string.replaceAll(">", "&gt;");
-					}
-					out.write(string);
-				}
-			} catch (IOException e) {
-				throw new XMLStreamException(e);
-			}
-		}
-
-		public void writeDirect(String string) throws XMLStreamException {
-			try {
-				int indent = stack.size();
-				for (int i = 0; i < indent; i++) {
-					out.write("  ");
-				}
-				out.write(string);
-			} catch (IOException e) {
-				throw new XMLStreamException(e);
-			}
-		}
-
-		public void close() {
-			try {
-				out.close();
-			} catch (IOException e) {
-				// ignore
-				e.printStackTrace();
-			}
-		}
-	}
-
-	class XMLStreamException extends Exception {
-		public XMLStreamException(Throwable e) {
-			super(e);
-		}
-	}
-
 	private MyXMLStreamWriter writer;
 
 	MagicXmlStreamWriter() {
@@ -165,32 +33,32 @@ public class MagicXmlStreamWriter {
 		try {
 			writer = new MyXMLStreamWriter(st);
 			try {
-				writer.writeStartElement("cards");
-				writeSimpleElement("name", object.name);
-				writeSimpleElement("key", object.key);
-				writeSimpleElement("comment", object.comment);
-				writeSimpleElement("type", object.type);
+				writer.startEl("cards");
+				writer.el("name", object.name);
+				writer.el("key", object.key);
+				writer.el("comment", object.comment);
+				writer.el("type", object.type);
 				Properties properties = object.properties;
 				marshal(properties);
 				// list
 				if (object.list != null) {
-					writer.writeStartElement("list");
+					writer.startEl("list");
 					int i = 0;
 					for (Iterator iterator = object.list.iterator(); iterator.hasNext(); i++) {
 						Object o = iterator.next();
 						if (o instanceof MagicCardPhysical) {
-							writer.writeStartElement("mcp");
+							writer.startEl("mcp");
 							marshal((MagicCardPhysical) o);
-							writer.writeEndElement();
+							writer.endEl();
 						} else if (o instanceof MagicCard) {
-							writer.writeStartElement("mc");
+							writer.startEl("mc");
 							marshal((MagicCard) o);
-							writer.writeEndElement();
+							writer.endEl();
 						}
 					}
-					writer.writeEndElement();
+					writer.endEl();
 				}
-				writer.writeEndElement();
+				writer.endEl();
 			} catch (XMLStreamException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -203,22 +71,21 @@ public class MagicXmlStreamWriter {
 
 	public void marshal(Properties properties) throws XMLStreamException {
 		if (properties != null && properties.size() > 0) {
-			writer.writeStartElement("properties");
+			writer.startEl("properties");
 			for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
 				String key = (String) iterator.next();
-				// writer.writeEmptyElement("property");
-				// writer.writeAttribute("name", key);
-				// writer.writeAttribute("value", properties.getProperty(key));
-				writer.writeDirect("<property name=\"" + key + "\" value=\"" + properties.getProperty(key) + "\"/>");
+				writer.lineEl("property", "name", key, "value", properties.getProperty(key));
+				// writer.writeDirect("<property name=\"" + key + "\" value=\"" +
+				// properties.getProperty(key) + "\"/>");
 			}
-			writer.writeEndElement();
+			writer.endEl();
 		}
 	}
 
 	public void marshal(MagicCardPhysical card) throws XMLStreamException {
-		writer.writeStartElement("card");
+		writer.startEl("card");
 		marshalReference(card.getCard());
-		writer.writeEndElement();
+		writer.endEl();
 		MagicCardFieldPhysical[] values = MagicCardFieldPhysical.values();
 		for (MagicCardFieldPhysical field : values) {
 			if (field.isTransient())
@@ -236,22 +103,14 @@ public class MagicXmlStreamWriter {
 				else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
 					continue;
 			}
-			writer.writeStartElement(field.getTag());
-			writer.writeCharacters(String.valueOf(o));
-			writer.writeEndElement();
+			writer.el(field.getTag(), String.valueOf(o));
 		}
 	}
 
 	public void marshalReference(MagicCard card) throws XMLStreamException {
-		writer.writeStartElement("id");
-		writer.writeCharacters(String.valueOf(card.getCardId()));
-		writer.writeEndElement();
-		writer.writeStartElement("name");
-		writer.writeCharacters(String.valueOf(card.getName()));
-		writer.writeEndElement();
-		writer.writeStartElement("edition");
-		writer.writeCharacters(String.valueOf(card.getSet()));
-		writer.writeEndElement();
+		writer.el("id", String.valueOf(card.getCardId()));
+		writer.el("name", String.valueOf(card.getName()));
+		writer.el("edition", String.valueOf(card.getSet()));
 	}
 
 	public void marshal(MagicCard card) throws XMLStreamException {
@@ -261,9 +120,9 @@ public class MagicXmlStreamWriter {
 			if (o == null)
 				continue; // skip this
 			if (field == MagicCardField.PROPERTIES) {
-				writer.writeStartElement("properties");
+				writer.startEl("properties");
 				marshalMap((Map) o);
-				writer.writeEndElement();
+				writer.endEl();
 			} else {
 				if (o instanceof Float && ((Float) o).floatValue() == 0)
 					continue;
@@ -275,10 +134,10 @@ public class MagicXmlStreamWriter {
 					continue;
 				else if (field == MagicCardField.LANG && o.equals("English"))
 					continue;
-				writer.writeStartElement(((MagicCardField) field).getJavaField().getName());
+				writer.startEl(((MagicCardField) field).getJavaField().getName());
 				String text = String.valueOf(o);
-				writer.writeCharacters(text);
-				writer.writeEndElement();
+				writer.data(text);
+				writer.endEl();
 			}
 		}
 	}
@@ -286,17 +145,11 @@ public class MagicXmlStreamWriter {
 	private void marshalMap(Map<String, String> properties) throws XMLStreamException {
 		for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
-			writer.writeStartElement("entry");
-			writeSimpleElement("string", key);
-			writeSimpleElement("string", properties.get(key));
-			writer.writeEndElement();
+			writer.startEl("entry");
+			writer.el("string", key);
+			writer.el("string", properties.get(key));
+			writer.endEl();
 		}
-	}
-
-	private void writeSimpleElement(String attname, String value) throws XMLStreamException {
-		writer.writeStartElement(attname);
-		writer.writeCharacters(value);
-		writer.writeEndElement();
 	}
 
 	public static void main(String[] args) throws IOException {
