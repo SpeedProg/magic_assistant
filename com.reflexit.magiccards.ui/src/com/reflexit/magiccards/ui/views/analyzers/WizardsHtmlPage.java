@@ -13,7 +13,6 @@ import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -34,6 +33,7 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 	private static final String CARDID = "cardId=";
 	private Browser textBrowser;
 	private IStructuredSelection selection;
+	private ISelectionProvider selProvider = new MySelectionProvider();
 
 	class MySelectionProvider extends EventManager implements ISelectionProvider {
 		@Override
@@ -71,8 +71,6 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 			addListenerObject(listener);
 		}
 	}
-
-	private ISelectionProvider selProvider = new MySelectionProvider();
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -122,6 +120,7 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 			return;
 		CardCollection deck = view.getCardCollection();
 		store = getMainStore(deck);
+		this.textBrowser.setText("Loading page...");
 		String text = getHtml();
 		// System.err.println(text);
 		this.textBrowser.setText(text);
@@ -130,19 +129,38 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 	private String getHtml() {
 		try {
 			ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
-			MyXMLStreamWriter writer = new MyXMLStreamWriter(byteSt);
-			writer.startEl("html");
-			writer.startEl("body");
-			header(writer);
-			maindeck(writer);
-			footer(writer);
-			writer.endEl();
-			writer.endEl();
-			writer.close();
+			MyXMLStreamWriter w = new MyXMLStreamWriter(byteSt);
+			writeHtml(w);
+			w.close();
 			return byteSt.toString();
 		} catch (XMLStreamException e) {
 			return "Error: " + e.getMessage();
 		}
+	}
+
+	public void writeHtml(MyXMLStreamWriter w) throws XMLStreamException {
+		/*-
+		 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+		<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+		<link href="http://www.wizards.com/magic/legacy.css" type="text/css" rel="stylesheet">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		</head>
+		 */
+		w.writeDirect("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+		w.startEl("html", "xmlns", "http://www.w3.org/1999/xhtml");
+		w.startEl("head");
+		w.lineEl("link", "href", "http://www.wizards.com/magic/legacy.css", "type", "text/css", "rel", "stylesheet");
+		w.lineEl("meta", "http-equiv", "Content-Type", "content", "text/html; charset=utf-8");
+		w.endEl();
+		w.startEl("body", "style", "overflow:auto;");
+		header(w);
+		maindeck(w);
+		footer(w);
+		w.endEl();
+		w.endEl();
 	}
 
 	private void footer(MyXMLStreamWriter w) throws XMLStreamException {
@@ -185,9 +203,11 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 		// endcards
 		w.endEl(); // tbody
 		w.endEl(); // table
+		w.lineEl("br");
 		w.endEl(); // style
 		w.endEl(); // maindeskmiddle
 		w.endEl(); // maindesk
+		w.lineEl("br", "clear", "all");
 	}
 
 	public void maindeckCards(MyXMLStreamWriter w) throws XMLStreamException {
@@ -219,6 +239,8 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 			list(w, sbStore);
 			totals(w, ((ICardCountable) sbStore).getCount() + " sideboad cards");
 		}
+		w.endEl(); // td
+		w.startEl("td", "valign", "top", "width", "185");
 		w.endEl(); // td
 	}
 
