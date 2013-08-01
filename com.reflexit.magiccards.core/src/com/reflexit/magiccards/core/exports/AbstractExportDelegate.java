@@ -4,28 +4,21 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
-public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProgress, IExportDelegate<T> {
-	protected boolean header;
-	protected IFilteredCardStore<T> store;
+public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 	protected PrintStream stream;
 	protected ICardField[] columns;
-	protected Location location;
 	protected ReportType type;
+	protected boolean header;
+	protected IFilteredCardStore<T> store;
+	protected Location location;
 
 	public void init(OutputStream st, boolean header, IFilteredCardStore<T> filteredLibrary) {
 		try {
@@ -35,6 +28,7 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 		}
 		this.header = header;
 		this.store = filteredLibrary;
+		this.location = store.getLocation();
 	}
 
 	@Override
@@ -49,131 +43,25 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 
 	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		if (getType() == null)
-			throw new IllegalArgumentException("Delegate is not initialized");
-		export(monitor);
-	}
-
-	public void export(ICoreProgressMonitor monitor) {
+		if (monitor == null)
+			monitor = ICoreProgressMonitor.NONE;
 		try {
-			if (monitor == null)
-				monitor = ICoreProgressMonitor.NONE;
-			monitor.beginTask("Exporting to " + getType().getLabel() + "...", store.getSize());
-			if (columns == null) {
-				columns = deterimeColumns();
-			}
-			location = store.getLocation();
-			if (location == null)
-				location = Location.NO_WHERE;
-			printHeader();
-			printLocationHeader();
-			for (T card : store) {
-				Location curLocation = ((ILocatable) card).getLocation();
-				if (!location.equals(curLocation)) {
-					printLocationFooter();
-					location = ((ILocatable) card).getLocation();
-					if (location == null)
-						location = Location.NO_WHERE;
-					printLocationHeader();
-				}
-				printCard(card);
-				monitor.worked(1);
-			}
-			printLocationFooter();
-			printFooter();
+			export(monitor);
 		} finally {
+			done();
+		}
+	}
+
+	public void done() {
+		if (stream != null)
 			stream.close();
-			monitor.done();
-		}
 	}
 
-	public void printCard(T card) {
-		Object[] values = getValues(card);
-		printLine(values);
-	}
+	public abstract void export(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 
-	public Object[] getValues(T card) {
-		Object values[] = new Object[columns.length];
-		int i = 0;
-		for (ICardField field : columns) {
-			values[i] = getObjectByField(card, field);
-			i++;
-		}
-		return values;
-	}
-
-	public Object getObjectByField(T card, ICardField field) {
-		return ((ICard) card).getObjectByField(field);
-	}
-
-	public void printLine(Object[] values) {
-		for (int i = 0; i < values.length; i++) {
-			Object element = values[i];
-			stream.print(escape(toString(element)));
-			if (i + 1 < values.length)
-				stream.print(getSeparator());
-		}
-		stream.println();
-	}
-
-	public String getSeparator() {
-		return " ";
-	}
-
-	protected String escape(String element) {
-		return element;
-	}
-
-	protected String toString(Object element) {
-		if (element == null)
-			return "";
-		return element.toString();
-	}
-
-	public void printLocationHeader() {
-		// nothing
-	}
-
-	public void printLocationFooter() {
-		// nothing
-	}
-
-	public void printHeader() {
-		if (header) {
-			printLine(columns);
-		}
-	}
-
-	public void printFooter() {
-		// nothing
-	}
-
-	public ICardField[] deterimeColumns() {
-		Collection<ICardField> fields = new ArrayList<ICardField>();
-		for (T card : store) {
-			Collection<String> names;
-			if (card instanceof MagicCardPhysical) {
-				names = ((MagicCardPhysical) card).getHeaderNames();
-			} else if (card instanceof MagicCard) {
-				names = ((MagicCard) card).getHeaderNames();
-			} else
-				continue;
-			for (String name : names) {
-				ICardField field = MagicCardFieldPhysical.fieldByName(name);
-				if (isForExport(field))
-					fields.add(field);
-			}
-			break;
-		}
-		return fields.toArray(new ICardField[fields.size()]);
-	}
-
+	@Override
 	public void setColumns(ICardField[] columnsForExport) {
 		this.columns = columnsForExport;
-	}
-
-	protected boolean isForExport(ICardField field) {
-		return !field.isTransient();
 	}
 
 	public String getName() {
@@ -181,22 +69,5 @@ public abstract class AbstractExportDelegate<T> implements ICoreRunnableWithProg
 			return ((ILocatable) store).getLocation().getName();
 		}
 		return "deck";
-	}
-
-	public String escapeQuot(String str) {
-		// fields containing " must be in quotes and all " changed to ""
-		if (str.indexOf('"') >= 0) {
-			return "\"" + str.replaceAll("\"", "\"\"") + "\"";
-		}
-		// fields containing carriage return must be surrounded by double quotes
-		if (str.indexOf('\n') >= 0)
-			return "\"" + str + "\"";
-		// fields that contain separator must be surrounded by double quotes
-		if (str.indexOf(getSeparator()) >= 0)
-			return "\"" + str + "\"";
-		// fields starts or ends with spaces must be in double quotes
-		if (str.startsWith(" ") || str.endsWith(" "))
-			return "\"" + str + "\"";
-		return str;
 	}
 }

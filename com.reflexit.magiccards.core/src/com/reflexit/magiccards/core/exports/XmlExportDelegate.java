@@ -13,7 +13,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
 import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
 
-public class XmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
+public class XmlExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException {
 		monitor.beginTask("Exporting xml", 100);

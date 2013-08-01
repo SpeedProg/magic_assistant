@@ -102,5 +102,12 @@
             label="MTG Studio CSV"
             xmlFormat="false">
       </deckFormat>
+       <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate"
+             extension="html"
+             id="htmlWizards"
+             label="Wizards deck HTML"
+             xmlFormat="true">
+       </deckFormat>
    </extension>
 </plugin>

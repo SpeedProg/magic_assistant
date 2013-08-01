@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
-public class HtmlTableExportDelegate extends AbstractExportDelegate<IMagicCard> {
+public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	@Override
 	public void printCard(IMagicCard card) {
 		String abbr = Editions.getInstance().getAbbrByName(card.getSet());

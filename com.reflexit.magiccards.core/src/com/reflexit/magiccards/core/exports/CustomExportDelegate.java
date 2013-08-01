@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 /**
  * export in format 4x Plain ...
  */
-public class CustomExportDelegate extends AbstractExportDelegate<IMagicCard> {
+public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	public static final String ROW_FORMAT = "row.format";
 	public static final String ROW_FIELDS = "row.fields";
 	public static final String ROW_FORMAT_TYPE = "format.type";

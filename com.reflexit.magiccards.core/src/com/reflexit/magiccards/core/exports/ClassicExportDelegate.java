@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * export in format 4x Plain ...
  */
-public class ClassicExportDelegate extends AbstractExportDelegate<IMagicCard> {
+public class ClassicExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });

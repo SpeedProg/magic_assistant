@@ -15,7 +15,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 /**
  * Pipe separated table
  */
-public class TableExportDelegate extends AbstractExportDelegate<IMagicCard> {
+public class TableExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	private final String SEP = "|";
 
 	@Override
