@@ -36,6 +36,7 @@ import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
@@ -145,6 +146,12 @@ public class DeckImportPreviewPage extends WizardPage {
 			@Override
 			protected ColumnCollection doGetColumnCollection(String prefPageId) {
 				return new MagicColumnCollection(prefPageId) {
+					@Override
+					protected void createColumns() {
+						super.createColumns();
+						columns.add(new GenColumn(MagicCardFieldPhysical.SIDEBOARD, "Sideboard"));
+					}
+
 					@Override
 					protected GroupColumn createGroupColumn() {
 						return new GroupColumn(true, true, true) {

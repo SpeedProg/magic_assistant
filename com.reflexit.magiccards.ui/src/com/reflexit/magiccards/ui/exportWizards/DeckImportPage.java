@@ -137,10 +137,15 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 										.performPreImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
 							} else {
 								result = (List<IMagicCard>) previewResult.getList();
+								Location sideboard = selectedLocation.toSideboard();
 								for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 									IMagicCard iMagicCard = (IMagicCard) iterator.next();
 									if (iMagicCard instanceof MagicCardPhysical) {
-										((MagicCardPhysical) iMagicCard).setLocation(selectedLocation);
+										MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
+										if (!mcp.isSideboard())
+											mcp.setLocation(selectedLocation);
+										else
+											mcp.setLocation(sideboard);
 									}
 								}
 							}

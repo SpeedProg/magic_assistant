@@ -28,7 +28,6 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.xml.MyXMLStreamWriter;
 import com.reflexit.magiccards.core.xml.XMLStreamException;
-import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class WizardsHtmlPage extends AbstractDeckPage {
 	private static final String CARD_URI = "card://";
@@ -119,18 +118,26 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 	@Override
 	public void activate() {
 		super.activate();
-		String text = getBodyText();
+		if (view == null)
+			return;
+		CardCollection deck = view.getCardCollection();
+		store = getMainStore(deck);
+		String text = getHtml();
 		// System.err.println(text);
-		this.textBrowser.setText(SymbolConverter.wrapHtml(text, getArea()));
+		this.textBrowser.setText(text);
 	}
 
-	private String getBodyText() {
+	private String getHtml() {
 		try {
 			ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
 			MyXMLStreamWriter writer = new MyXMLStreamWriter(byteSt);
+			writer.startEl("html");
+			writer.startEl("body");
 			header(writer);
 			maindeck(writer);
 			footer(writer);
+			writer.endEl();
+			writer.endEl();
 			writer.close();
 			return byteSt.toString();
 		} catch (XMLStreamException e) {
@@ -184,6 +191,9 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 	}
 
 	public void maindeckCards(MyXMLStreamWriter w) throws XMLStreamException {
+		if (view == null)
+			return;
+		CardCollection deck = view.getCardCollection();
 		CardGroup group = CardStoreUtils.buildTypeGroups(store);
 		CardGroup top = (CardGroup) group.getChildAtIndex(0);
 		CardGroup land = (CardGroup) top.getChildAtIndex(0);
@@ -198,7 +208,7 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 		CardGroup other = (CardGroup) spell.getChildAtIndex(0);
 		listWithTotals(w, other, "other spells");
 		// sideboard
-		ICardStore<IMagicCard> sbStore = getSideboardStore();
+		ICardStore<IMagicCard> sbStore = getSideboardStore(deck);
 		if (sbStore != null) {
 			// <div class="decktitle" style="padding-bottom:8px;"><b><i>Sideboard</i></b></div>
 			w.startEl("div", "class", "decktitle", "style", "padding-bottom:8px;");
@@ -212,10 +222,18 @@ public class WizardsHtmlPage extends AbstractDeckPage {
 		w.endEl(); // td
 	}
 
-	private ICardStore<IMagicCard> getSideboardStore() {
-		if (view == null)
-			return null;
-		CardCollection deck = view.getCardCollection();
+	private ICardStore<IMagicCard> getMainStore(CardCollection deck) {
+		Location location = deck.getLocation().toMainDeck();
+		CollectionsContainer parent = (CollectionsContainer) deck.getParent();
+		CardCollection s = (CardCollection) parent.findChield(location);
+		if (s != null) {
+			s.open();
+			return s.getStore();
+		}
+		return null;
+	}
+
+	private ICardStore<IMagicCard> getSideboardStore(CardCollection deck) {
 		Location sideboardLoc = deck.getLocation().toSideboard();
 		CollectionsContainer parent = (CollectionsContainer) deck.getParent();
 		CardCollection s = (CardCollection) parent.findChield(sideboardLoc);
