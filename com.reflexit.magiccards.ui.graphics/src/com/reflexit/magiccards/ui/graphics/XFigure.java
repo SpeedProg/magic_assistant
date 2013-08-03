@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.graphics;
 
-import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -8,7 +7,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.services.IDisposable;
 
-public class XFigure extends EventManager implements IDisposable {
+import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
+
+public class XFigure extends StoredSelectionProvider implements IDisposable {
 	private Image image;
 	protected XFigure parent;
 	protected Point location;

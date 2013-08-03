@@ -8,10 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -26,7 +23,7 @@ import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class DesktopFigure extends XFigure implements ISelectionProvider {
+public class DesktopFigure extends XFigure {
 	private ArrayList<CardFigure> children;
 	private CardFigure selected;
 	private DesktopCanvas canvas;
@@ -164,7 +161,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 				break;
 			}
 		}
-		selectionChanged(new SelectionChangedEvent(this, getSelection()));
+		fireSelectionChanged(getSelection());
 		if (selected == null)
 			return false;
 		selected.mouseStartDrag(p);
@@ -323,6 +320,7 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 		super.redraw();
 	}
 
+	@Override
 	public IStructuredSelection getSelection() {
 		if (selected != null)
 			return new StructuredSelection(selected.getCard());
@@ -330,32 +328,13 @@ public class DesktopFigure extends XFigure implements ISelectionProvider {
 			return new StructuredSelection();
 	}
 
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		addListenerObject(listener);
-	}
-
-	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		removeListenerObject(listener);
-	}
-
-	private void selectionChanged(final SelectionChangedEvent event) {
-		Object[] listeners = getListeners();
-		for (Object listener : listeners) {
-			ISelectionChangedListener lis = (ISelectionChangedListener) listener;
-			try {
-				lis.selectionChanged(event);
-			} catch (Throwable t) {
-				Activator.log(t);
-			}
-		}
-	}
-
+	@Override
 	public void setSelection(ISelection selection) {
 		IMagicCard firstElement = (IMagicCard) ((IStructuredSelection) selection).getFirstElement();
 		CardFigure findCardFigure = findCardFigure(firstElement);
 		if (findCardFigure == null)
 			return;
 		this.selected = findCardFigure;
-		selectionChanged(new SelectionChangedEvent(this, selection));
+		super.setSelection(selection);
 	}
 }
