@@ -18,8 +18,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
+import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
-import com.reflexit.magiccards.ui.views.lib.SelectionProviderIntermediate;
 
 /**
  * @author Alena

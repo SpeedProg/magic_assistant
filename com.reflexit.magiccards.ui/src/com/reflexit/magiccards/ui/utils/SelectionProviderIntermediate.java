@@ -1,6 +1,5 @@
-package com.reflexit.magiccards.ui.views.lib;
+package com.reflexit.magiccards.ui.utils;
 
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -16,9 +15,7 @@ import org.eclipse.jface.viewers.Viewer;
  * 
  * @author Marc R. Hoffmann
  */
-public class SelectionProviderIntermediate implements IPostSelectionProvider {
-	private final ListenerList selectionListeners = new ListenerList();
-	private final ListenerList postSelectionListeners = new ListenerList();
+public class SelectionProviderIntermediate extends StoredSelectionProvider {
 	private ISelectionProvider delegate;
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
 		public void selectionChanged(SelectionChangedEvent event) {
@@ -59,44 +56,12 @@ public class SelectionProviderIntermediate implements IPostSelectionProvider {
 		}
 	}
 
-	protected void fireSelectionChanged(ISelection selection) {
-		fireSelectionChanged(selectionListeners, selection);
-	}
-
-	protected void firePostSelectionChanged(ISelection selection) {
-		fireSelectionChanged(postSelectionListeners, selection);
-	}
-
-	private void fireSelectionChanged(ListenerList list, ISelection selection) {
-		SelectionChangedEvent event = new SelectionChangedEvent(delegate, selection);
-		Object[] listeners = list.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
-			listener.selectionChanged(event);
-		}
-	}
-
-	// IPostSelectionProvider Implementation
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		selectionListeners.add(listener);
-	}
-
-	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		selectionListeners.remove(listener);
-	}
-
-	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
-		postSelectionListeners.add(listener);
-	}
-
-	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
-		postSelectionListeners.remove(listener);
-	}
-
+	@Override
 	public ISelection getSelection() {
 		return delegate == null ? null : delegate.getSelection();
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		if (delegate != null) {
 			if (delegate instanceof Viewer) {

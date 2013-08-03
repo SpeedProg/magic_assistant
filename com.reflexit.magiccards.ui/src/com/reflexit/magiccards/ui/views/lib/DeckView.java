@@ -41,6 +41,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
+import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.analyzers.AbilityPage;
