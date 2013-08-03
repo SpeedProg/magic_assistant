@@ -146,4 +146,13 @@ public class FileUtils {
 		}
 		rootDir.delete();
 	}
+
+	public static void saveString(String textResult, File file) throws IOException {
+		FileOutputStream fos = new FileOutputStream(file);
+		try {
+			fos.write(textResult.getBytes(CHARSET_UTF_8));
+		} finally {
+			fos.close();
+		}
+	}
 }
