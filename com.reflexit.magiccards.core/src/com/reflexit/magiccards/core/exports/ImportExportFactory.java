@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 
 /**
  * Import/Export factory - gets instance of worker class by its type
@@ -38,8 +39,7 @@ public class ImportExportFactory<T> {
 			try {
 				ReportType.load(file);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				MagicLogger.log(e);
 			}
 		}
 	}

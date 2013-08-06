@@ -16,6 +16,8 @@ import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
 public class XmlExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException {
+		if (monitor == null)
+			monitor = ICoreProgressMonitor.NONE;
 		monitor.beginTask("Exporting xml", 100);
 		try {
 			if (store.getLocation() == Location.NO_WHERE) {
