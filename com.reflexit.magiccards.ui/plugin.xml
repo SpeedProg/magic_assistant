@@ -488,9 +488,9 @@
         class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage"
         />
                 <page
-                      class="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
+                      class="com.reflexit.magiccards.ui.views.analyzers.ExportDeckPage"
                       id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
-                      name="Wizards">
+                      name="Export">
                 </page>
   </extension>
 
