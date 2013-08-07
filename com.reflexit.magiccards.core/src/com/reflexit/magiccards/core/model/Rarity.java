@@ -12,6 +12,7 @@ public class Rarity implements ISearchableProperty {
 	public static final String MYTHIC_RARE = "Mythic Rare";
 	public static final String LAND = "Land";
 	public static final String OTHER = "Other";
+	public static final String SPECIAL = "Special";
 
 	private Rarity() {
 		this.names = new LinkedHashMap();
