@@ -113,7 +113,7 @@ public class SetColumn extends GenColumn {
 	@Override
 	public Color getForeground(Object element) {
 		IMagicCard card = (IMagicCard) element;
-		if (card.getCardId() == 0)
+		if (card.getCardId() == 0 && element instanceof MagicCardPhysical)
 			return Display.getDefault().getSystemColor(SWT.COLOR_RED);
 		return super.getForeground(element);
 	}
