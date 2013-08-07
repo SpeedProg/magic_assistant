@@ -29,6 +29,7 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -41,8 +42,11 @@ import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.FilterField;
+import com.reflexit.magiccards.core.model.Rarity;
+import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 /**
  * Composite that contains checked tree selection for editions. If supplied with preferenceStore can
@@ -183,6 +187,24 @@ public class EditionsComposite extends Composite {
 			@Override
 			public int getColumnWidth() {
 				return 180;
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				Editions.Edition ed = (Edition) element;
+				MagicCard fake = new MagicCard();
+				fake.setSet(ed.getName());
+				fake.setRarity(Rarity.MYTHIC_RARE);
+				Image im = ImageCreator.getInstance().getSetImage(fake);
+				if (im != null)
+					return im;
+				fake.setRarity(Rarity.SPECIAL);
+				im = ImageCreator.getInstance().getSetImage(fake);
+				if (im != null)
+					return im;
+				fake.setRarity(Rarity.RARE);
+				fake.setCardId(1);
+				return ImageCreator.getInstance().getSetImage(fake);
 			}
 		});
 		columns.add(new AbstractEditionColumn("Abbr", EditionField.NAME) {
