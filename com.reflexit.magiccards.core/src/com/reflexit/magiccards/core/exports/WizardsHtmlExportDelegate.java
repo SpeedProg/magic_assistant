@@ -224,4 +224,14 @@ public class WizardsHtmlExportDelegate<T> extends AbstractExportDelegate<T> {
 	private ICardStore<T> getCardStore() {
 		return DataManager.getCardStore(location);
 	}
+
+	@Override
+	public boolean isColumnChoiceSupported() {
+		return false;
+	}
+
+	@Override
+	public boolean isMultipleLocationSupported() {
+		return false;
+	}
 }

@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 /**
  * @author Alena
@@ -63,5 +64,10 @@ public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 		for (Object object : store) {
 			cards.add(object);
 		}
+	}
+
+	public void update(MagicCardFilter filter) {
+		this.filter = filter;
+		update();
 	}
 }

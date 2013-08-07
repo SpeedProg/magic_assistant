@@ -24,6 +24,11 @@ public class WagicExportDelegate extends AbstractExportDelegatePerLine<IMagicCar
 	}
 
 	@Override
+	public boolean isColumnChoiceSupported() {
+		return false;
+	}
+
+	@Override
 	public void printCard(IMagicCard card) {
 		if (card instanceof MagicCardPhysical) {
 			MagicCardPhysical physical = ((MagicCardPhysical) card);

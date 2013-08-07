@@ -51,7 +51,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagi
 	@Override
 	public void printLocationHeader() {
 		stream.println("<tr>");
-		stream.println("<td colspan=" + columns.length + "><h2>" + location.getName() + "</h2></td>");
+		stream.println("<td colspan=" + columns.length + ">" + location.getName() + "</td>");
 		stream.println("</tr>");
 	}
 

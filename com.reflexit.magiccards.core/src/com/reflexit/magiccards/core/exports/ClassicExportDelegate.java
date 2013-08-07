@@ -45,4 +45,9 @@ public class ClassicExportDelegate extends AbstractExportDelegatePerLine<IMagicC
 			stream.println("# " + location.getName());
 		}
 	}
+
+	@Override
+	public boolean isColumnChoiceSupported() {
+		return false;
+	}
 }

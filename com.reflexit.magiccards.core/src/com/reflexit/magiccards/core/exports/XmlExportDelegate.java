@@ -41,4 +41,19 @@ public class XmlExportDelegate extends AbstractExportDelegatePerLine<IMagicCard>
 			monitor.done();
 		}
 	}
+
+	@Override
+	public boolean isColumnChoiceSupported() {
+		return false;
+	}
+
+	@Override
+	public boolean isMultipleLocationSupported() {
+		return false;
+	}
+
+	@Override
+	public boolean isSideboardSupported() {
+		return false;
+	}
 }

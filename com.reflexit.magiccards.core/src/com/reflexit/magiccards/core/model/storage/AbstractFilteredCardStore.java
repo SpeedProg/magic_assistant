@@ -152,13 +152,12 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			return;
 		rootGroup.clear();
 		setFilteredList(null);
-		Collection filterCards = filterCards(this.filter);
+		Collection filterCards = filterCards();
 		getFilteredList().addAll(filterCards);
 		MagicLogger.traceEnd(key);
 	}
 
-	public Collection<IMagicCard> filterCards(MagicCardFilter filter) throws MagicException {
-		initialize();
+	private Collection<IMagicCard> filterCards() throws MagicException {
 		Collection<IMagicCard> filteredList = sortCards(filter);
 		groupCards(filter, filteredList);
 		return filteredList;

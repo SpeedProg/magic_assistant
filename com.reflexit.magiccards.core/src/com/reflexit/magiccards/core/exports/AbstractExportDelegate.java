@@ -70,4 +70,16 @@ public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 		}
 		return "deck";
 	}
+
+	public boolean isColumnChoiceSupported() {
+		return true;
+	}
+
+	public boolean isMultipleLocationSupported() {
+		return true;
+	}
+
+	public boolean isSideboardSupported() {
+		return true;
+	}
 }
