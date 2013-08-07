@@ -51,7 +51,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	}
 
 	@Override
-	protected ISelectionProvider getSelectionProvider() {
+	public ISelectionProvider getSelectionProvider() {
 		return panel.getSelectionProvider();
 	}
 
@@ -120,12 +120,12 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	}
 
 	@Override
-	protected void fillLocalPullDown(IMenuManager viewMenuManager) {
+	public void fillLocalPullDown(IMenuManager viewMenuManager) {
 		super.fillLocalPullDown(viewMenuManager);
 	}
 
 	@Override
-	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
+	public void fillLocalToolBar(IToolBarManager toolBarManager) {
 		super.fillLocalToolBar(toolBarManager);
 		// toolBarManager.add(view.getGroupAction());
 		toolBarManager.add(refresh);
