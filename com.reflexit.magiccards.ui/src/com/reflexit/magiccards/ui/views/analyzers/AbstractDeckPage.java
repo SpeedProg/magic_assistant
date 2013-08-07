@@ -90,11 +90,11 @@ public class AbstractDeckPage implements IDeckPage {
 			return;
 	}
 
-	protected ISelectionProvider getSelectionProvider() {
+	public ISelectionProvider getSelectionProvider() {
 		return null;
 	}
 
-	protected void setGlobalControlHandlers(IActionBars bars) {
+	public void setGlobalControlHandlers(IActionBars bars) {
 	}
 
 	protected MenuManager hookContextMenu() {
@@ -108,15 +108,15 @@ public class AbstractDeckPage implements IDeckPage {
 		return menuMgr;
 	}
 
-	protected void fillContextMenu(IMenuManager viewMenuManager) {
+	public void fillContextMenu(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
 
-	protected void fillLocalPullDown(IMenuManager viewMenuManager) {
+	public void fillLocalPullDown(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
 
-	protected void fillLocalToolBar(IToolBarManager toolBarManager) {
+	public void fillLocalToolBar(IToolBarManager toolBarManager) {
 		// override if need toolbar
 	}
 

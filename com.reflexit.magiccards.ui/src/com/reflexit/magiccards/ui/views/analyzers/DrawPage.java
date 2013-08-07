@@ -60,14 +60,14 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	protected void fillLocalToolBar(IToolBarManager manager) {
+	public void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(this.draw);
 		manager.add(this.shuffle);
 		super.fillLocalToolBar(manager);
 	}
 
 	@Override
-	protected void fillContextMenu(IMenuManager manager) {
+	public void fillContextMenu(IMenuManager manager) {
 		manager.add(draw);
 		manager.add(shuffle);
 		manager.add(new Separator());

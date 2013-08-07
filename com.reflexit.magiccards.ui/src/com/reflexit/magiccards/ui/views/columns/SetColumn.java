@@ -5,17 +5,92 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.widgets.ComboStringEditingSupport;
 
 public class SetColumn extends GenColumn {
+	public class SetEditingSupport extends ComboStringEditingSupport {
+		public SetEditingSupport(ColumnViewer viewer) {
+			super(viewer);
+		}
+
+		@Override
+		protected boolean canEdit(Object element) {
+			if (element instanceof MagicCardPhysical)
+				return true;
+			else
+				return false;
+		}
+
+		@Override
+		public int getStyle() {
+			return SWT.NONE;
+		}
+
+		@Override
+		public String[] getItems(Object element) {
+			IMagicCardPhysical card = (IMagicCardPhysical) element;
+			List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+			int len = cards.size();
+			if (card.getCardId() == 0) {
+				len++;
+			}
+			String sets[] = new String[len];
+			int i = 0;
+			for (Iterator iterator = cards.iterator(); iterator.hasNext(); i++) {
+				IMagicCard mCard = (IMagicCard) iterator.next();
+				sets[i] = mCard.getSet();
+			}
+			if (card.getCardId() == 0) {
+				sets[i] = card.getSet();
+			}
+			return sets;
+		}
+
+		@Override
+		protected Object getValue(Object element) {
+			if (element instanceof MagicCardPhysical) {
+				IMagicCardPhysical card = (IMagicCardPhysical) element;
+				return card.getSet();
+			}
+			return null;
+		}
+
+		@Override
+		protected void setValue(Object element, Object value) {
+			if (element instanceof MagicCardPhysical) {
+				MagicCardPhysical card = (MagicCardPhysical) element;
+				// set
+				List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+				String set = (String) value;
+				String oldSet = card.getSet();
+				if (oldSet != null && oldSet.equals(set))
+					return;
+				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+					IMagicCard base = (IMagicCard) iterator.next();
+					if (base.getSet().equals(set)) {
+						card.setMagicCard((MagicCard) base);
+						updateOnEdit(getViewer(), card);
+						return;
+					}
+				}
+				MagicUIActivator.log("Cannot set new set for " + card + " of value " + set);
+			}
+		}
+	}
+
 	private boolean showImage = false;
 
 	public boolean isShowImage() {
@@ -36,6 +111,14 @@ public class SetColumn extends GenColumn {
 	}
 
 	@Override
+	public Color getForeground(Object element) {
+		IMagicCard card = (IMagicCard) element;
+		if (card.getCardId() == 0)
+			return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+		return super.getForeground(element);
+	}
+
+	@Override
 	public int getColumnWidth() {
 		return 150;
 	}
@@ -53,56 +136,6 @@ public class SetColumn extends GenColumn {
 
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
-		return new ComboStringEditingSupport(viewer) {
-			@Override
-			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhysical)
-					return true;
-				else
-					return false;
-			}
-
-			@Override
-			public String[] getItems(Object element) {
-				IMagicCardPhysical card = (IMagicCardPhysical) element;
-				List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
-				if (cards.size() <= 1)
-					return null;
-				String sets[] = new String[cards.size()];
-				int i = 0;
-				for (Iterator iterator = cards.iterator(); iterator.hasNext(); i++) {
-					IMagicCard iMagicCard = (IMagicCard) iterator.next();
-					sets[i] = iMagicCard.getSet();
-				}
-				return sets;
-			}
-
-			@Override
-			protected Object getValue(Object element) {
-				if (element instanceof MagicCardPhysical) {
-					IMagicCardPhysical card = (IMagicCardPhysical) element;
-					return card.getSet();
-				}
-				return null;
-			}
-
-			@Override
-			protected void setValue(Object element, Object value) {
-				if (element instanceof MagicCardPhysical) {
-					MagicCardPhysical card = (MagicCardPhysical) element;
-					// set
-					List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
-					String set = (String) value;
-					for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-						IMagicCard iMagicCard = (IMagicCard) iterator.next();
-						if (iMagicCard.getSet().equals(set)) {
-							card.setMagicCard((MagicCard) iMagicCard);
-							break;
-						}
-					}
-					updateOnEdit(viewer, card);
-				}
-			}
-		};
+		return new SetEditingSupport(viewer);
 	}
 }

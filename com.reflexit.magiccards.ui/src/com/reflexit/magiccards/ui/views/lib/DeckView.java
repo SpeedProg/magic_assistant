@@ -413,6 +413,9 @@ public class DeckView extends AbstractMyCardsView {
 				if (page instanceof AbstractDeckListPage) {
 					return ((AbstractDeckListPage) page).getListControl();
 				}
+				if (page instanceof IMagicControl) {
+					return (IMagicControl) page;
+				}
 			}
 		}
 		return null;
@@ -421,13 +424,19 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	protected void runCopy() {
 		IMagicControl active = getActiveControl();
-		active.runCopy();
+		if (active != null)
+			active.runCopy();
+		else
+			MagicUIActivator.log("No copy control");
 	}
 
 	@Override
 	protected void runPaste() {
 		IMagicControl active = getActiveControl();
-		active.runPaste();
+		if (active != null)
+			active.runPaste();
+		else
+			MagicUIActivator.log("No paste control");
 	}
 
 	protected void activateCardsTab() {

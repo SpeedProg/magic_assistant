@@ -27,7 +27,6 @@ import com.reflexit.magiccards.core.exports.ImportResult;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -36,11 +35,9 @@ import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
-import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
-import com.reflexit.magiccards.ui.widgets.ComboStringEditingSupport;
 
 public class DeckImportPreviewPage extends WizardPage {
 	private static final Object[] EMPTY_ARRAY = new Object[] {};
@@ -147,12 +144,6 @@ public class DeckImportPreviewPage extends WizardPage {
 			protected ColumnCollection doGetColumnCollection(String prefPageId) {
 				return new MagicColumnCollection(prefPageId) {
 					@Override
-					protected void createColumns() {
-						super.createColumns();
-						columns.add(new GenColumn(MagicCardFieldPhysical.SIDEBOARD, "Sideboard"));
-					}
-
-					@Override
 					protected GroupColumn createGroupColumn() {
 						return new GroupColumn(true, true, true) {
 							@Override
@@ -172,62 +163,19 @@ public class DeckImportPreviewPage extends WizardPage {
 						return new SetColumn() {
 							@Override
 							public EditingSupport getEditingSupport(ColumnViewer viewer) {
-								return new ComboStringEditingSupport(viewer) {
-									@Override
-									protected boolean canEdit(Object element) {
-										if (element instanceof MagicCardPhysical)
-											return true;
-										else
-											return false;
-									}
-
-									@Override
-									public int getStyle() {
-										return SWT.NONE;
-									}
-
-									@Override
-									public String[] getItems(Object element) {
-										IMagicCardPhysical card = (IMagicCardPhysical) element;
-										List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
-										int len = cards.size();
-										if (card.getCardId() == 0) {
-											len++;
-										}
-										String sets[] = new String[len];
-										int i = 0;
-										for (Iterator iterator = cards.iterator(); iterator.hasNext(); i++) {
-											IMagicCard mCard = (IMagicCard) iterator.next();
-											sets[i] = mCard.getSet();
-										}
-										if (card.getCardId() == 0) {
-											sets[i] = card.getSet();
-										}
-										return sets;
-									}
-
-									@Override
-									protected Object getValue(Object element) {
-										if (element instanceof MagicCardPhysical) {
-											IMagicCardPhysical card = (IMagicCardPhysical) element;
-											return card.getSet();
-										}
-										return null;
-									}
-
+								return new SetEditingSupport(viewer) {
 									@Override
 									protected void setValue(Object element, Object value) {
 										if (element instanceof MagicCardPhysical) {
 											MagicCardPhysical card = (MagicCardPhysical) element;
-											final String oldSet = card.getSet();
 											String set = (String) value;
 											// set
 											List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 											boolean found = false;
 											for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-												IMagicCard iMagicCard = (IMagicCard) iterator.next();
-												if (iMagicCard.getSet().equals(set)) {
-													card.setMagicCard((MagicCard) iMagicCard);
+												IMagicCard base = (IMagicCard) iterator.next();
+												if (base.getSet().equals(set)) {
+													card.setMagicCard((MagicCard) base);
 													card.setError(null);
 													found = true;
 													break;
@@ -247,14 +195,6 @@ public class DeckImportPreviewPage extends WizardPage {
 										}
 									}
 								};
-							}
-
-							@Override
-							public Color getForeground(Object element) {
-								IMagicCard card = (IMagicCard) element;
-								if (card.getCardId() == 0)
-									return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-								return super.getForeground(element);
 							}
 						};
 					}

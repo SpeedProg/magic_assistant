@@ -23,12 +23,12 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	public abstract AbstractMagicCardsListControl doGetMagicCardListControl();
 
 	@Override
-	protected ISelectionProvider getSelectionProvider() {
+	public ISelectionProvider getSelectionProvider() {
 		return listControl.getSelectionProvider();
 	}
 
 	@Override
-	protected void setGlobalControlHandlers(IActionBars bars) {
+	public void setGlobalControlHandlers(IActionBars bars) {
 		super.setGlobalControlHandlers(bars);
 		listControl.setGlobalControlHandlers(bars);
 	}
@@ -43,13 +43,13 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	}
 
 	@Override
-	protected void fillLocalToolBar(IToolBarManager manager) {
+	public void fillLocalToolBar(IToolBarManager manager) {
 		super.fillLocalToolBar(manager);
 		listControl.fillLocalToolBar(manager);
 	}
 
 	@Override
-	protected void fillContextMenu(IMenuManager manager) {
+	public void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		listControl.fillContextMenu(manager);
 	}
