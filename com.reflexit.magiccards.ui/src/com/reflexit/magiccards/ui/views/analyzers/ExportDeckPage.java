@@ -45,6 +45,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -275,26 +276,24 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	public void setFStore() {
 		if (getCardStore() == null)
 			return;
+		MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
+		Location loc = store.getLocation();
+		MagicCardFilter filter = (MagicCardFilter) view.getFilter().clone();
 		if (includeSideboard) {
-			Location loc = store.getLocation();
 			ICardStore mainStore = DataManager.getCardStore(loc.toMainDeck());
 			ICardStore sideStore = DataManager.getCardStore(loc.toSideboard());
-			MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
 			mstore.addAll(mainStore);
 			if (sideStore != null)
 				mstore.addAll(sideStore);
 			mstore.setLocation(loc.toMainDeck());
-			mstore.update(view.getFilter());
-			this.fstore = mstore;
+			filter.getSortOrder().setSortField(MagicCardFieldPhysical.SIDEBOARD, true);
 		} else {
-			Location loc = store.getLocation();
 			ICardStore mainStore = DataManager.getCardStore(loc);
-			MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
 			mstore.addAll(mainStore);
 			mstore.setLocation(loc);
-			mstore.update(view.getFilter());
-			this.fstore = mstore;
 		}
+		mstore.update(filter);
+		this.fstore = mstore;
 	}
 
 	private String getText() throws InvocationTargetException, InterruptedException {
