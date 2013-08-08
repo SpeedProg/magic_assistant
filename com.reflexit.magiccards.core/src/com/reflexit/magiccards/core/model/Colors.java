@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class Colors implements ISearchableProperty {
 	static Colors instance = new Colors();
-	private LinkedHashMap names;
-	private HashMap codes;
+	private LinkedHashMap<String, String> names;
+	private HashMap<String, String> codes;
 
 	private Colors() {
-		this.names = new LinkedHashMap();
-		this.codes = new HashMap();
+		this.names = new LinkedHashMap<String, String>();
+		this.codes = new HashMap<String, String>();
 		add("White", "W");
 		add("Blue", "U");
 		add("Black", "B");
@@ -98,12 +98,12 @@ public class Colors implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection getNames() {
-		return new ArrayList(this.names.values());
+	public Collection<String> getNames() {
+		return new ArrayList<String>(this.names.values());
 	}
 
-	public Collection getIds() {
-		return new ArrayList(this.names.keySet());
+	public Collection<String> getIds() {
+		return new ArrayList<String>(this.names.keySet());
 	}
 
 	public String getPrefConstant(String name) {
@@ -111,18 +111,18 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public String getNameById(String id) {
-		return (String) this.names.get(id);
+		return this.names.get(id);
 	}
 
 	public String getEncodeByName(String r) {
-		return (String) this.codes.get(getPrefConstant(r));
+		return this.codes.get(getPrefConstant(r));
 	}
 
 	public String getColorType(String cost) {
 		if (cost == null || cost.length() == 0)
 			return "land";
 		String[] manas = manasplit(cost);
-		Map colors = new HashMap();
+		Map<String, String> colors = new HashMap<String, String>();
 		for (String x : manas) {
 			char firstChar = x.charAt(0);
 			if (firstChar == 'X' || firstChar == 'Y' || firstChar == 'Z')
@@ -134,7 +134,7 @@ public class Colors implements ISearchableProperty {
 			colors.put(x, x);
 		}
 		int diff = 0;
-		for (Iterator iterator = colors.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator<String> iterator = colors.keySet().iterator(); iterator.hasNext();) {
 			iterator.next();
 			diff++;
 		}

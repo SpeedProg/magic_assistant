@@ -8,12 +8,13 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.locale.CardTextLocal;
+import com.reflexit.magiccards.core.locale.LocalizedText;
 
 public class CardTypes implements ISearchableProperty {
-	public static CardTextLocal TYPES = CardTextLocal.getCardText(CardTextLocal.ENGLISH);
+	public static CardTextLocal TYPES = CardTextLocal.getCardText(LocalizedText.ENGLISH);
 
 	private CardTypes() {
-		this.names = new LinkedHashMap();
+		this.names = new LinkedHashMap<String, String>();
 		add(TYPES.Type_Land);
 		add(TYPES.Type_Creature);
 		add(TYPES.Type_Instant);
@@ -24,7 +25,7 @@ public class CardTypes implements ISearchableProperty {
 	}
 
 	static CardTypes instance = new CardTypes();
-	private LinkedHashMap names;
+	private LinkedHashMap<String, String> names;
 
 	private void add(String string) {
 		String id = getPrefConstant(string);
@@ -70,12 +71,12 @@ public class CardTypes implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection getNames() {
-		return new ArrayList(this.names.values());
+	public Collection<String> getNames() {
+		return new ArrayList<String>(this.names.values());
 	}
 
-	public Collection getIds() {
-		return new ArrayList(this.names.keySet());
+	public Collection<String> getIds() {
+		return new ArrayList<String>(this.names.keySet());
 	}
 
 	public String getPrefConstant(String name) {
@@ -83,7 +84,7 @@ public class CardTypes implements ISearchableProperty {
 	}
 
 	public String getNameById(String id) {
-		return (String) this.names.get(id);
+		return this.names.get(id);
 	}
 
 	public String getLocalizedNameById(String id) {
@@ -107,8 +108,8 @@ public class CardTypes implements ISearchableProperty {
 
 	public Collection<String> getLocalizedNames() {
 		ArrayList<String> names2 = new ArrayList<String>();
-		for (Iterator iterator = names.values().iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
+		for (Iterator<String> iterator = names.values().iterator(); iterator.hasNext();) {
+			String string = iterator.next();
 			names2.add(TYPES.translate(string, Locale.getDefault()));
 		}
 		return names2;
