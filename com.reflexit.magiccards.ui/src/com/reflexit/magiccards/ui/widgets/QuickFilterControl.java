@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.widgets;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -37,13 +38,58 @@ public class QuickFilterControl extends Composite {
 	private Combo typeCombo;
 	private ToolBar toolbar;
 	private Text setCombo;
+	private long lastMod = 0;
+	private boolean pendingUpdate = false;
+	private Object updateLock = new Object();
+	private UpdateThread uthread;
+	private int updateDelay = 700;
 
-	public QuickFilterControl(Composite composite, Runnable run) {
+	class UpdateThread extends Thread {
+		public UpdateThread() {
+			super("Quick Filter Update Thread");
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					synchronized (updateLock) {
+						if (pendingUpdate == false) {
+							updateLock.wait();
+							// MagicLogger.trace("QUPDATE", "got update on wait");
+							// we got notification
+							if (pendingUpdate == false)
+								continue; // hmm misfire?
+							while (pendingUpdate && System.currentTimeMillis() - lastMod < updateDelay) {
+								updateLock.wait(updateDelay);
+								// MagicLogger.trace("QUPDATE", "got update on wait " +
+								// (System.currentTimeMillis() - lastMod));
+							}
+							// we got more than 500 ms timeout
+						}
+						// pendingUpdate is true now
+						pendingUpdate = false;
+					}
+					// System.err.println(System.currentTimeMillis() + "  running now");
+					runnable.run();
+				}
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
+	}
+
+	public QuickFilterControl(Composite composite, Runnable run, boolean visible) {
 		super(composite, SWT.NONE);
 		setLayout(new GridLayout());
+		setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		createBar(this);
 		this.runnable = run;
-		setFocus();
+		setVisible(visible);
+	}
+
+	public void setUpdateDelay(int updateDelay) {
+		this.updateDelay = updateDelay;
 	}
 
 	@Override
@@ -53,11 +99,19 @@ public class QuickFilterControl extends Composite {
 		if (!vis) {
 			gd.heightHint = 0;
 			gd.widthHint = 0;
+			if (uthread != null) {
+				uthread.interrupt();
+				uthread = null;
+			}
 		} else {
 			gd.heightHint = SWT.DEFAULT;
 			gd.widthHint = SWT.DEFAULT;
 			// gd.minimumHeight = 32;
 			setFocus();
+			if (uthread != null)
+				uthread.interrupt();
+			uthread = new UpdateThread();
+			uthread.start();
 		}
 		getParent().layout(true);
 	}
@@ -199,7 +253,7 @@ public class QuickFilterControl extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				store.setValue(id, button.getSelection());
-				runnable.run();
+				kickUpdate("color " + id);
 			}
 		});
 		button.setSelection(false);
@@ -257,8 +311,8 @@ public class QuickFilterControl extends Composite {
 			String type1 = store.getString(typeId);
 			int typehit = 0;
 			CardTypes coreTypes = CardTypes.getInstance();
-			for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
-				String id = (String) iterator.next();
+			for (Iterator<String> iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
+				String id = iterator.next();
 				boolean isSet = store.getBoolean(id);
 				// System.err.println(id + " " + isSet);
 				if (isSet) {
@@ -283,8 +337,8 @@ public class QuickFilterControl extends Composite {
 			String set = ALL_TYPES;
 			int sethit = 0;
 			Editions editions = Editions.getInstance();
-			for (Iterator iterator = editions.getIds().iterator(); iterator.hasNext();) {
-				String id = (String) iterator.next();
+			for (Iterator<String> iterator = editions.getIds().iterator(); iterator.hasNext();) {
+				String id = iterator.next();
 				boolean isSet = store.getBoolean(id);
 				// System.err.println(id + " " + isSet);
 				if (isSet) {
@@ -306,6 +360,15 @@ public class QuickFilterControl extends Composite {
 		this.runnable = run;
 	}
 
+	private void kickUpdate(@SuppressWarnings("unused") String text) {
+		synchronized (updateLock) {
+			lastMod = System.currentTimeMillis();
+			pendingUpdate = true;
+			// MagicLogger.trace("QUPDATE", "Sending notification for '" + text + "'");
+			updateLock.notifyAll();
+		}
+	}
+
 	protected void filterText(String text) {
 		if (ADVANCED.equals(text))
 			return;
@@ -317,7 +380,7 @@ public class QuickFilterControl extends Composite {
 		} else {
 			this.store.setValue(textId, "\"" + text + "\"");
 		}
-		runnable.run();
+		kickUpdate(text);
 	}
 
 	protected void filterType(String text) {
@@ -328,8 +391,8 @@ public class QuickFilterControl extends Composite {
 		CardTypes coreTypes = CardTypes.getInstance();
 		String selId = null;
 		String textId = FilterField.TYPE_LINE.getPrefConstant();
-		for (Iterator iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
-			String id = (String) iterator.next();
+		for (Iterator<String> iterator = coreTypes.getIds().iterator(); iterator.hasNext();) {
+			String id = iterator.next();
 			store.setValue(id, "false");
 			if (coreTypes.getLocalizedNameById(id).equals(text)) {
 				selId = id;
@@ -341,7 +404,7 @@ public class QuickFilterControl extends Composite {
 			store.setValue(textId, "");
 			store.setValue(selId, "true");
 		}
-		runnable.run();
+		kickUpdate("type " + text);
 	}
 
 	protected void filterSet(String text) {
@@ -350,17 +413,14 @@ public class QuickFilterControl extends Composite {
 		if (ALL_TYPES.equals(text))
 			text = "";
 		Editions editions = Editions.getInstance();
-		String selId = null;
-		for (Iterator iterator = editions.getIds().iterator(); iterator.hasNext();) {
-			String id = (String) iterator.next();
+		String ltext = text.toLowerCase(Locale.ENGLISH);
+		for (Iterator<String> iterator = editions.getIds().iterator(); iterator.hasNext();) {
+			String id = iterator.next();
 			store.setValue(id, "false");
-			if (editions.getNameById(id).equalsIgnoreCase(text)) {
-				selId = id;
+			if (text.length() > 0 && editions.getNameById(id).toLowerCase().contains(ltext)) {
+				store.setValue(id, "true");
 			}
 		}
-		if (selId != null) {
-			store.setValue(selId, "true");
-		}
-		runnable.run();
+		kickUpdate("set " + text);
 	}
 }

@@ -492,7 +492,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			public void run() {
 				reloadData();
 			}
-		});
+		}, false);
 		return quickFilter;
 	}
 
