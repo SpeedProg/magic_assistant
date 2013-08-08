@@ -9,12 +9,25 @@ import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
-public class MagicCardFilter {
+public class MagicCardFilter implements Cloneable {
 	private Expr root;
 	private int limit = Integer.MAX_VALUE;
 	private SortOrder sortOrder = new SortOrder();
 	private ICardField groupFields[];
 	private boolean onlyLastSet = false;
+
+	@Override
+	public Object clone() {
+		try {
+			MagicCardFilter ret = (MagicCardFilter) super.clone();
+			if (groupFields != null)
+				ret.groupFields = Arrays.copyOf(groupFields, groupFields.length);
+			ret.sortOrder = (SortOrder) sortOrder.clone();
+			return ret;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 
 	@Override
 	public String toString() {

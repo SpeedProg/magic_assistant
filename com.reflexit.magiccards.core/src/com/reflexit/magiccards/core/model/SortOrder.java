@@ -1,13 +1,25 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 @SuppressWarnings("serial")
-public class SortOrder implements Comparator {
+public class SortOrder implements Comparator, Cloneable {
 	private static int MAX = 7;
 	private static int REM = 2;
 	private MagicCardComparator order[] = new MagicCardComparator[MAX];
 	private int curSize = REM;
+
+	@Override
+	protected Object clone() {
+		try {
+			SortOrder ret = (SortOrder) super.clone();
+			ret.order = Arrays.copyOf(order, order.length);
+			return ret;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 
 	public SortOrder() {
 		// these are always there
