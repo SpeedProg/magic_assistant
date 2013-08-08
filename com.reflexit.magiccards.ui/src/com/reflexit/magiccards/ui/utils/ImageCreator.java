@@ -36,6 +36,8 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * 
  */
 public class ImageCreator {
+	public static final int SET_IMG_HEIGHT = 16;
+	public static final int SET_IMG_WIDTH = 30;
 	private static final String TEXT_ITALIC_FONT_KEY = "text_italic";
 	private static final String TEXT_FONT_KEY = "text";
 	private static final String TYPE_FONT_KEY = "type";
@@ -97,49 +99,59 @@ public class ImageCreator {
 		}
 	};
 
+	public static Image createSetNotFoundImage(@SuppressWarnings("unused") String rarity) {
+		Display display = Display.getDefault();
+		Image im = new Image(display, 12, 12);
+		GC gc = new GC(im);
+		gc.drawText("?", 0, 0);
+		gc.dispose();
+		ImageData im2 = scaleAndCenter(im.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false);
+		im.dispose();
+		return new Image(display, im2);
+	}
+
 	public static Image createNewSetImage(URL url) {
 		try {
 			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
-			Image origImage = imageDesc.createImage();
-			final int width = origImage.getBounds().width;
-			final int height = origImage.getBounds().height;
-			float zoom = 1;
-			int size = 12;
-			int x, y;
-			if (width > height) {
-				zoom = size / (float) width;
-				x = 0;
-				y = (int) ((size - height * zoom) / 2);
-			} else {
-				zoom = size / (float) height;
-				y = 0;
-				x = (int) ((size - width * zoom) / 2);
-			}
 			Display display = Display.getDefault();
-			ImageData imageData = origImage.getImageData();
-			// if (imageData.transparentPixel == -1)
-			// try {
-			// imageData.transparentPixel = imageData.palette.getPixel(new RGB(255, 255, 255));
-			// } catch (IllegalArgumentException e) {
-			// // pallete does not have white hmm
-			// }
-			Image imageWithTransparentBg = new Image(display, imageData);
-			Image scaledImage = new Image(display, imageWithTransparentBg.getImageData().scaledTo((int) (width * zoom),
-					(int) (height * zoom)));
-			Image centeredImage = new Image(display, size, size);
-			GC newGC = new GC(centeredImage);
-			newGC.drawImage(scaledImage, x, y);
-			newGC.dispose();
-			ImageData finalImageData = centeredImage.getImageData();
-			finalImageData.transparentPixel = finalImageData.palette.getPixel(new RGB(255, 255, 255));
-			centeredImage.dispose();
-			imageWithTransparentBg.dispose();
-			scaledImage.dispose();
-			return new Image(display, finalImageData);
+			return new Image(display, scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false));
 		} catch (SWTException e) {
 			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
 			return null;
 		}
+	}
+
+	public static ImageData scaleAndCenter(ImageData imageData, int nwidth, int nheight, boolean scaleUp) {
+		final int width = imageData.width;
+		final int height = imageData.height;
+		float zoom;
+		if (width * nheight > nwidth * height) {
+			zoom = nwidth / (float) width;
+		} else {
+			zoom = nheight / (float) height;
+		}
+		if (scaleUp == false && zoom > 1)
+			zoom = 1; // do not scale up
+		int x = (int) ((nwidth - width * zoom) / 2);
+		int y = (int) ((nheight - height * zoom) / 2);
+		Display display = Display.getDefault();
+		Image scaledImage = new Image(display, imageData.scaledTo((int) (width * zoom), (int) (height * zoom)));
+		Image centeredImage = new Image(display, nwidth, nheight);
+		GC newGC = new GC(centeredImage);
+		newGC.drawImage(scaledImage, x, y);
+		newGC.dispose();
+		scaledImage.dispose();
+		ImageData finalImageData = centeredImage.getImageData();
+		if (finalImageData.transparentPixel == -1) {
+			try {
+				finalImageData.transparentPixel = finalImageData.palette.getPixel(new RGB(255, 255, 255));
+			} catch (IllegalArgumentException e) {
+				// pallete does not have white hmm
+				e.printStackTrace();
+			}
+		}
+		centeredImage.dispose();
+		return finalImageData;
 	}
 
 	public Image getSetImage(IMagicCard card) {
@@ -178,14 +190,6 @@ public class ImageCreator {
 			// huh
 		}
 		return null;
-	}
-
-	public static Image createSetNotFoundImage(String rarity) {
-		Image im = new Image(Display.getCurrent(), 16, 16);
-		GC gc = new GC(im);
-		gc.drawText("?", 0, 0);
-		gc.dispose();
-		return im;
 	}
 
 	/**
