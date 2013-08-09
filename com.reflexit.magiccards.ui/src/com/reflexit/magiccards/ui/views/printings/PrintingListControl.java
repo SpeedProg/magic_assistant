@@ -46,11 +46,11 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void updateStatus() {
-		if (card != MagicCard.DEFAULT && card != null)
-			setStatus(card.getName() + ": " + getStatusMessage());
-		else
-			super.updateStatus();
+	public String getStatusMessage() {
+		if (card != MagicCard.DEFAULT && card != null) {
+			return "No card";
+		}
+		return card.getName() + ": " + getStatusMessage1();
 	}
 
 	@Override
@@ -59,8 +59,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 		updateViewer();
 	}
 
-	@Override
-	public String getStatusMessage() {
+	public String getStatusMessage1() {
 		IFilteredCardStore filteredStore = getFilteredStore();
 		if (filteredStore == null)
 			return "";

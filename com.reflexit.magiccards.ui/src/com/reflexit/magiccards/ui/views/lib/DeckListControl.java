@@ -18,11 +18,6 @@ public class DeckListControl extends MyCardsListControl {
 	}
 
 	@Override
-	protected synchronized void updateStatus() {
-		setStatus(getStatusMessage());
-	}
-
-	@Override
 	protected void runShowFilter() {
 		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getFilterPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)

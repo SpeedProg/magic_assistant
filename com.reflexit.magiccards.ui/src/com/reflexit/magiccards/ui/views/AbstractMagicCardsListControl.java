@@ -39,6 +39,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -139,6 +141,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			setStatus(getStatusMessage());
 		}
 	};
+	private Label warning;
 
 	/**
 	 * The constructor.
@@ -301,9 +304,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (storeCount != storeSize) // collection not db
 			shownCount = filteredStore.getCount();
 		String mainMessage = "Total " + cardsUnique(shownCount, storeCount, shownSize, storeSize) + " cards";
-		if (shownSize != storeSize) { // filter is active
-			mainMessage += ". Filtered " + (storeCount - shownCount);
-		}
+		// if (shownSize != storeSize) { // filter is active
+		// mainMessage += ". Filtered " + (storeCount - shownCount);
+		// }
 		IStructuredSelection sel = (IStructuredSelection) getSelection();
 		if (sel != null && !sel.isEmpty()) { // selection
 			int selCount = CardStoreUtils.countCards(sel.toList());
@@ -405,6 +408,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	public void setStatus(String text) {
 		this.statusLine.setText(text);
+		this.statusLine.setToolTipText(text);
+	}
+
+	public void setWarning(boolean war) {
+		warning.setVisible(war);
+		warning.setToolTipText("There are " + getFiltered() + " hidden cards!\nChange filter to see more");
+		warning.getParent().layout(true, true);
 	}
 
 	public void updateSingle(ICard source) {
@@ -413,18 +423,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		// getSelectionProvider().setSelection(new StructuredSelection(source));
 	}
 
-	private Composite createStatusLine(Composite composite) {
-		Composite comp = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		comp.setLayout(layout);
-		this.statusLine = new Label(comp, SWT.NONE);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalIndent = 0;
-		this.statusLine.setLayoutData(gd);
-		this.statusLine.setText("Status");
-		return comp;
+	private Label createStatusLine(Composite composite) {
+		Label statusLine = new Label(composite, SWT.NONE);
+		statusLine.setText("Status");
+		return statusLine;
 	}
 
 	private HashMap<String, String> storeToMap(IPreferenceStore store) {
@@ -488,7 +490,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @return
 	 */
 	protected QuickFilterControl createQuickFilterControl(Composite composite) {
-		this.quickFilter = new QuickFilterControl(composite, new Runnable() {
+		QuickFilterControl quickFilter = new QuickFilterControl(composite, new Runnable() {
 			public void run() {
 				reloadData();
 			}
@@ -518,15 +520,34 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	protected Composite createTopBar(Composite composite) {
 		topBar = new Composite(composite, SWT.BORDER);
-		GridLayout layout = new GridLayout(2, false);
+		topBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		topBar.setLayout(layout);
-		Control two = createQuickFilterControl(topBar);
-		two.setLayoutData(new GridData());
-		Control one = createStatusLine(topBar);
-		one.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		topBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		quickFilter = createQuickFilterControl(topBar);
+		quickFilter.setLayoutData(new GridData());
+		statusLine = createStatusLine(topBar);
+		statusLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		warning = new Label(topBar, SWT.NONE);
+		warning.setImage(MagicUIActivator.getImageDescriptor("icons/clcl16/exclamation.gif").createImage());
+		warning.setToolTipText("There are filtered cards!");
+		warning.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				actionShowFilter.run();
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// nothing
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				actionShowFilter.run();
+			}
+		});
 		return topBar;
 	}
 
@@ -851,8 +872,20 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
 	}
 
-	protected void updateStatus() {
+	protected final void updateStatus() {
 		setStatus(getStatusMessage());
+		setWarning(getFiltered() != 0);
+	}
+
+	protected int getFiltered() {
+		IFilteredCardStore filteredStore = getFilteredStore();
+		if (filteredStore != null) {
+			ICardStore cardStore = filteredStore.getCardStore();
+			int shownSize = filteredStore.getSize();
+			int storeSize = cardStore.size();
+			return storeSize - shownSize;
+		}
+		return 0;
 	}
 
 	/**
