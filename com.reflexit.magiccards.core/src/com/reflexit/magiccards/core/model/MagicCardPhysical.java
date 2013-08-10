@@ -508,6 +508,24 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return 0;
 	}
 
+	/**
+	 * This card total in all collections (same set)
+	 * 
+	 * @return
+	 */
+	public int getOwnTotal() {
+		return getBase().getOwnCount();
+	}
+
+	/**
+	 * This card total ignoring set
+	 * 
+	 * @return
+	 */
+	public int getOwnTotalAll() {
+		return getBase().getOwnTotalAll();
+	}
+
 	public int getOwnUnique() {
 		if (isOwn())
 			return 1;

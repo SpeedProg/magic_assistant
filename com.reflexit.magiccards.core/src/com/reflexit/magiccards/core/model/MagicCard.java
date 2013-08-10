@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -696,6 +697,16 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		if (realCards == null)
 			return 0;
 		return realCards.getOwnCount();
+	}
+
+	public int getOwnTotalAll() {
+		List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(getName());
+		int sum = 0;
+		for (IMagicCard card : cards) {
+			if (card instanceof MagicCard)
+				sum += ((MagicCard) card).getOwnCount();
+		}
+		return sum;
 	}
 
 	public int getOwnUnique() {
