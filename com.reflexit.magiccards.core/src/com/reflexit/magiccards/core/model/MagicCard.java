@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 import com.reflexit.magiccards.core.sync.GatherHelper;
@@ -173,23 +172,11 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		float t;
 		if (str == null || str.length() == 0)
 			t = NOT_APPLICABLE_POWER;
-		else if (str.equals("*")) {
-			t = STAR_POWER;
-		} else if (str.equals("1+*")) {
-			t = STAR_POWER + 1;
-		} else if (str.equals("2+*")) {
-			t = STAR_POWER + 2;
-		} else if (str.equals("*{^2}")) {
-			t = STAR_POWER + 0.009f;
-		} else if (str.contains("*")) {
-			t = STAR_POWER;
-		} else {
-			if (str.contains("/"))
-				str = str.replaceAll("\\Q{1/2}", ".5");
+		else {
 			try {
 				t = Float.parseFloat(str);
 			} catch (NumberFormatException e) {
-				MagicLogger.log(e);
+				// if (str.contains("*"))
 				t = STAR_POWER;
 			}
 		}
