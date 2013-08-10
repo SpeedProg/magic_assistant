@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -26,6 +27,10 @@ public class CountColumn extends GenColumn {
 	 */
 	public CountColumn() {
 		super(MagicCardFieldPhysical.COUNT, "Count");
+	}
+
+	public CountColumn(ICardField field, String name) {
+		super(field, name);
 	}
 
 	@Override
@@ -54,7 +59,7 @@ public class CountColumn extends GenColumn {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (element instanceof MagicCardPhysical && (viewer.getInput() instanceof IFilteredCardStore))
+				if (CountColumn.this.canEdit(element) && (viewer.getInput() instanceof IFilteredCardStore))
 					return true;
 				else
 					return false;
@@ -76,7 +81,7 @@ public class CountColumn extends GenColumn {
 
 			@Override
 			protected Object getValue(Object element) {
-				if (element instanceof MagicCardPhysical) {
+				if (CountColumn.this.canEdit(element)) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					int count = card.getCount();
 					return String.valueOf(count);
@@ -87,7 +92,7 @@ public class CountColumn extends GenColumn {
 			@Override
 			protected void setValue(Object element, Object value) {
 				if (viewer.getInput() instanceof IFilteredCardStore) {
-					if (element instanceof MagicCardPhysical) {
+					if (CountColumn.this.canEdit(element)) {
 						MagicCardPhysical card = (MagicCardPhysical) element;
 						int oldCount = card.getCount();
 						int count = value == null ? 0 : Integer.parseInt(value.toString());
@@ -105,5 +110,9 @@ public class CountColumn extends GenColumn {
 				}
 			}
 		};
+	}
+
+	protected boolean canEdit(Object element) {
+		return element instanceof MagicCardPhysical;
 	}
 }
