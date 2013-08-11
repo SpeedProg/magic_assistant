@@ -5,22 +5,31 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-
+import org.eclipse.swt.widgets.Display;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * @author Alena
  * 
  */
 public class OwnershipColumn extends GenColumn {
+	private final static Color oColor;
+	private final static Color vColor;
+	static {
+		Device device = Display.getDefault();
+		oColor = new Color(device, 255 - 64, 255, 255 - 64);
+		vColor = new Color(device, 255, 255 - 64, 255 - 64);
+	}
+
 	/**
 	 * @param columnName
 	 */
@@ -30,32 +39,37 @@ public class OwnershipColumn extends GenColumn {
 
 	@Override
 	public Image getImage(Object element) {
+		return null;
+	}
+
+	protected boolean isOwn(Object element) {
 		boolean own = false;
 		if (element instanceof IMagicCardPhysical) {
 			IMagicCardPhysical m = (IMagicCardPhysical) element;
 			own = m.isOwn();
 		}
-		if (own)
-			return MagicUIActivator.getDefault().getImage("icons/obj16/check16.png");
-		else
-			return MagicUIActivator.getDefault().getImage("icons/obj16/cross16.png");
+		return own;
 	}
 
 	@Override
 	public int getColumnWidth() {
-		return 20;
+		return 22;
 	}
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof MagicCardPhysical) {
-			IMagicCardPhysical m = (IMagicCardPhysical) element;
-			if (m.isOwn())
-				return "own";
-			else
-				return "virtual";
-		}
-		return null;
+		if (isOwn(element))
+			return "own";
+		else
+			return "virtual";
+	}
+
+	@Override
+	public Color getBackground(Object element) {
+		if (isOwn(element))
+			return oColor;
+		else
+			return vColor;
 	}
 
 	@Override
