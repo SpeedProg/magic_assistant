@@ -57,6 +57,7 @@ class MagicCardComparator implements Comparator {
 		return 0;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public int compare(ICard c1, ICard c2) {
 		if (c1 == c2)
 			return 0;
@@ -67,45 +68,57 @@ class MagicCardComparator implements Comparator {
 		Object a1 = c1.getObjectByField(sort);
 		Object a2 = c2.getObjectByField(sort);
 		int d = 0;
-		if (a1 == a2)
-			return 0;
-		if (sort == MagicCardField.COST) {
-			a1 = Colors.getColorSort((String) a1);
-			a2 = Colors.getColorSort((String) a2);
-		}
-		if (a1 == null && a2 != null) {
-			d = 1;
-		} else if (a1 != null && a2 == null) {
-			d = -1;
-		} else if (sort == MagicCardField.POWER || sort == MagicCardField.TOUGHNESS) {
-			float f1 = MagicCard.convertFloat((String) a1);
-			float f2 = MagicCard.convertFloat((String) a2);
-			d = Float.compare(f1, f2);
-		} else if (sort == MagicCardField.RARITY) {
-			d = Rarity.compare((String) a1, (String) a2);
-		} else if (sort == MagicCardField.COLLNUM && a1 instanceof String) {
-			String s1 = (String) a1;
-			String s2 = (String) a2;
-			try {
-				d = Integer.valueOf(s1) - Integer.valueOf(s2);
-			} catch (NumberFormatException e) {
-				d = s1.compareTo(s2);
+		if (a1 != a2) {
+			if (a1 == null) {
+				d = 1;
+			} else if (a2 == null) {
+				d = -1;
+			} else {
+				boolean generic = true;
+				if (sort instanceof MagicCardField) {
+					generic = false;
+					switch ((MagicCardField) sort) {
+						case COST:
+							int i1 = Colors.getColorSort((String) a1);
+							int i2 = Colors.getColorSort((String) a2);
+							d = i1 - i2;
+							break;
+						case POWER:
+						case TOUGHNESS:
+							float f1 = MagicCard.convertFloat((String) a1);
+							float f2 = MagicCard.convertFloat((String) a2);
+							d = Float.compare(f1, f2);
+							break;
+						case RARITY:
+							d = Rarity.compare((String) a1, (String) a2);
+							break;
+						case COLLNUM:
+							d = ((IMagicCard) c1).getCollectorNumberId() - ((IMagicCard) c2).getCollectorNumberId();
+							if (d != 0)
+								break;
+							generic = true;
+							break;
+						default:
+							generic = true;
+							break;
+					}
+				}
+				if (generic) {
+					if (a1 instanceof Comparable) {
+						d = ((Comparable) a1).compareTo(a2);
+					}
+				}
 			}
-		} else if (a1 instanceof Comparable) {
-			d = ((Comparable) a1).compareTo(a2);
 		}
-		if (d == 0 && sort == MagicCardField.CMC) {
-			int d1 = Colors.getColorSort((String) c1.getObjectByField(MagicCardField.COST));
-			int d2 = Colors.getColorSort((String) c2.getObjectByField(MagicCardField.COST));
-			d = d1 - d2;
+		if (d == 0) { // secondary key
+			if (sort == MagicCardField.CMC) {
+				int d1 = Colors.getColorSort((String) c1.getObjectByField(MagicCardField.COST));
+				int d2 = Colors.getColorSort((String) c2.getObjectByField(MagicCardField.COST));
+				d = d1 - d2;
+			}
 		}
-		// if (d == 0 && c1.getCardId() != 0) {
-		// d = c1.getCardId() - c2.getCardId();
-		// }
 		if (d != 0)
 			return dir * d;
-		// return this.dir * (System.identityHashCode(o1) -
-		// System.identityHashCode(o2));
 		return 0;
 	}
 }

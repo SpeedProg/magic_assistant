@@ -33,8 +33,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	private String num;
 	private String rulings;
 	private String text;
-	private transient String colorType = null;
-	private transient int cmc = -1;
+	private transient String colorType = "land";
+	private transient int cmc = 0;
 	private int enId;
 	private LinkedHashMap<String, String> properties;
 
@@ -49,6 +49,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public void setCost(String cost) {
 		this.cost = cost.intern();
+		Colors cl = Colors.getInstance();
+		colorType = cl.getColorType(this.cost);
+		cmc = cl.getConvertedManaCost(this.cost);
 	}
 
 	/*
@@ -81,8 +84,19 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return this.name;
 	}
 
+	private final static Pattern mpartnamePattern = Pattern.compile("(.*)//(.*)\\s*\\((.*)\\)");
+
 	public void setName(String name) {
 		this.name = name;
+		Matcher matcher = mpartnamePattern.matcher(name);
+		if (matcher.matches()) {
+			String p1 = matcher.group(1).trim();
+			String p2 = matcher.group(2).trim();
+			String pCur = matcher.group(3);
+			setProperty(MagicCardField.PART, pCur);
+			String other = pCur.equals(p1) ? p2 : p1;
+			setProperty(MagicCardField.OTHER_PART, other);
+		}
 	}
 
 	/*
@@ -189,8 +203,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
 	 */
 	public String getColorType() {
-		if (this.colorType == null)
-			setExtraFields();
 		return this.colorType;
 	}
 
@@ -204,16 +216,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
 	 */
 	public int getCmc() {
-		if (this.colorType == null)
-			setExtraFields();
 		return this.cmc;
 	}
 
-	public void setCmc(int cmc) {
+	private void setCmc(int cmc) {
 		this.cmc = cmc;
 	}
 
-	public void setCmc(String cmc) {
+	private void setCmc(String cmc) {
 		setCmc(Integer.parseInt(cmc));
 	}
 
@@ -257,31 +267,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	@Override
 	public String toString() {
 		return this.id + ": " + this.name + " [" + this.edition + "]";
-	}
-
-	private final static Pattern mpartnamePattern = Pattern.compile("(.*)//(.*)\\s*\\((.*)\\)");
-
-	public synchronized void setExtraFields() {
-		try {
-			this.cost = this.cost == null ? "" : this.cost.trim();
-			setColorType(Colors.getInstance().getColorType(this.cost));
-			setCmc(Colors.getInstance().getConvertedManaCost(this.cost));
-			if (text == null)
-				text = oracleText;
-			if (name == null)
-				return;
-			Matcher matcher = mpartnamePattern.matcher(name);
-			if (matcher.matches()) {
-				String p1 = matcher.group(1).trim();
-				String p2 = matcher.group(2).trim();
-				String pCur = matcher.group(3);
-				setProperty(MagicCardField.PART, pCur);
-				String other = pCur.equals(p1) ? p2 : p1;
-				setProperty(MagicCardField.OTHER_PART, other);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public Collection getHeaderNames() {
@@ -468,11 +453,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				setRarity(value);
 				break;
 			case CTYPE:
-				setColorType(value);
-				break;
+				throw new IllegalArgumentException("Not settable");
 			case CMC:
-				setCmc(Integer.parseInt(value));
-				break;
+				throw new IllegalArgumentException("Not settable");
 			case DBPRICE:
 				setDbPrice(Float.parseFloat(value));
 				break;
@@ -562,7 +545,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public String getText() {
 		if (text == null)
-			setExtraFields();
+			text = oracleText;
 		return text;
 	}
 
@@ -628,8 +611,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public String getProperty(String key) {
-		if (colorType == null)
-			setExtraFields();
 		if (properties == null)
 			return null;
 		if (key == null)
