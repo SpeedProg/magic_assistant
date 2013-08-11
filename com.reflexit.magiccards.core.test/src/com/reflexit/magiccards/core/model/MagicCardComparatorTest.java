@@ -70,7 +70,7 @@ public class MagicCardComparatorTest extends TestCase {
 		checkInvariantLess(card1, card2);
 		assertTrue(dec.compare(card1, card2) > 0);
 		setField(card2, field, a);
-		assertTrue(acc.compare(card1, card2) == 0);
+		assertEquals(0, acc.compare(card1, card2));
 	}
 
 	public void compareMcEqual(ICardField field, Object a, Object b) {
@@ -179,7 +179,43 @@ public class MagicCardComparatorTest extends TestCase {
 		compareMcLess(MagicCardField.COLLNUM, "10a", "10b");
 		compareMcLess(MagicCardField.COLLNUM, "1", "");
 		compareMcEqual(MagicCardField.COLLNUM, null, "");
-		compareMcLess(MagicCardField.COLLNUM, "10a", "1a"); // WRONG
+		compareMcLess(MagicCardField.COLLNUM, "1a", "10a");
+	}
+
+	@Test
+	public void testOr() {
+		compareMcLess(MagicCardField.ORACLE, "", null);
+		compareMcLess(MagicCardField.ORACLE, "", "a");
+		compareMcLess(MagicCardField.ORACLE, "a", "b");
+		compareMcLess(MagicCardField.ORACLE, "a", "aa");
+	}
+
+	public void testCMC() {
+		makeComparator(MagicCardField.CMC);
+		setField(card1, MagicCardField.COST, "{B}");
+		setField(card2, MagicCardField.COST, "{3}{W}");
+		checkInvariantLess(card1, card2);
+		setField(card1, MagicCardField.COST, "{W}");
+		setField(card2, MagicCardField.COST, "{W}");
+		checkInvariantSame();
+	}
+
+	public void testCMC_COST() {
+		makeComparator(MagicCardField.CMC);
+		setField(card1, MagicCardField.COST, "{W}");
+		setField(card2, MagicCardField.COST, "{B}");
+		checkInvariantLess(card1, card2);
+	}
+
+	@Test
+	public void testCount() {
+		makeComparator(MagicCardFieldPhysical.COUNT);
+		genMcp();
+		setField(card1, field, "1");
+		setField(card2, field, "2");
+		checkInvariantLess(card1, card2);
+		setField(card2, field, "10");
+		checkInvariantLess(card1, card2);
 	}
 
 	public static void main(String[] args) {
