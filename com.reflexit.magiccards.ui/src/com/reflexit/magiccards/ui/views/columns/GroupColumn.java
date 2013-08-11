@@ -43,8 +43,10 @@ public class GroupColumn extends GenColumn {
 	public Image getImage(Object element) {
 		if (showImage) {
 			if (element instanceof ICardGroup) {
-				if (((CardGroup) element).getFieldIndex() == MagicCardField.NAME) {
-					return ImageCreator.getInstance().getSetImage(((CardGroup) element).getFirstCard());
+				CardGroup cardGroup = (CardGroup) element;
+				String set = cardGroup.getSet();
+				if (set != null && set.length() > 0 && !set.equals("*")) {
+					return ImageCreator.getInstance().getSetImage(cardGroup.getFirstCard());
 				}
 			} else if (element instanceof IMagicCard) {
 				IMagicCard card = (IMagicCard) element;
