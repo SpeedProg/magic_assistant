@@ -47,7 +47,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public String getStatusMessage() {
-		if (card != MagicCard.DEFAULT && card != null) {
+		if (card == MagicCard.DEFAULT || card == null) {
 			return "No card";
 		}
 		return card.getName() + ": " + getStatusMessage1();

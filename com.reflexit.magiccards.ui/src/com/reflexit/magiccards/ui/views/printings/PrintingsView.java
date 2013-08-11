@@ -206,11 +206,15 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
 			if (page == null)
 				return;
-			IViewPart dbview = page.findView(MagicDbView.ID);
-			if (dbview != null) {
-				ISelection sel = dbview.getSite().getSelectionProvider().getSelection();
-				runLoadJob(sel);
+			ISelection sel = page.getSelection();
+			if (sel == null || sel.isEmpty()) {
+				IViewPart dbview = page.findView(MagicDbView.ID);
+				if (dbview != null) {
+					sel = dbview.getSite().getSelectionProvider().getSelection();
+				}
 			}
+			if (sel != null)
+				runLoadJob(sel);
 		} catch (NullPointerException e) {
 			// workbench of active window is null, just ignore then
 		}
@@ -241,7 +245,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		if (cardSel == card)
 			return;
 		this.card = cardSel;
-		// System.err.println(card);
+		// System.err.println("Printings for " + card);
 		((PrintingListControl) control).setCard(card);
 		reloadData();
 	}
