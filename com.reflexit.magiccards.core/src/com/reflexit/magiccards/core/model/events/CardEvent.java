@@ -32,6 +32,28 @@ public class CardEvent {
 
 	@Override
 	public String toString() {
-		return "event: " + type + " from " + source + " data " + data;
+		return "event: " + getTypeStr() + " from " + source + " data " + data;
+	}
+
+	private String getTypeStr() {
+		switch (type) {
+			case ADD:
+				return "ADD";
+			case REMOVE:
+				return "REMOVE";
+			case ADD_CONTAINER:
+				return "ADD_CONTAINER";
+			case REMOVE_CONTAINER:
+				return "REMOVE_CONTAINER";
+			case UPDATE:
+				return "UPDATE";
+			case RENAME_CONTAINER:
+				return "RENAME_CONTAINER";
+			case UPDATE_CONTAINER:
+				return "UPDATE_CONTAINER";
+			default:
+				break;
+		}
+		return "?";
 	}
 }
