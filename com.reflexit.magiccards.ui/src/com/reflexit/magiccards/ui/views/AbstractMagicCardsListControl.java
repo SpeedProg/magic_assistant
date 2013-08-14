@@ -894,7 +894,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	public void updateViewer() {
 		MagicLogger.traceStart("updateViewer");
-		if (manager.getControl().isDisposed())
+		if (manager.getControl() == null || manager.getControl().isDisposed())
 			return;
 		ISelection selection = getSelection();
 		IFilteredCardStore filteredStore = getFilteredStore();
