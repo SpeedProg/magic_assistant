@@ -35,6 +35,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
+import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -219,6 +220,8 @@ public class DeckView extends AbstractMyCardsView {
 		} else {
 			ICardStore<IMagicCard> s = filteredStore.getCardStore();
 			String name = s.getName();
+			if (name.length() == 0)
+				name = s.getLocation().getName();
 			if (deck.getLocation().isSideboard()) {
 				setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());
 				if (sideboard != null)
@@ -324,16 +327,31 @@ public class DeckView extends AbstractMyCardsView {
 			return;
 		folder.getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				if (deck == null)
+					return;
+				Location dataLocation = null;
+				if (event.getData() instanceof CardElement) {
+					dataLocation = ((CardElement) event.getData()).getLocation();
+				}
+				// System.err.println("DeckView " + getPartName() + " got " + event);
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-					if (deck != null && DataManager.getModelRoot().findCardCollectionById(deck.getFileName()) == null) {
+					if (deck != null && deck.getLocation().equals(dataLocation)) {
 						deck.close();
-						getViewSite().getPage().hideView(DeckView.this);
+						deck = null;
+						try {
+							getViewSite().getPage().hideView(DeckView.this);
+						} catch (Exception e) {
+							// ignore
+						}
+						// dispose();
+						// System.err.println("---Removing itself");
 						return;
 					}
 				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 					// ignore
 				} else if (event.getType() == CardEvent.RENAME_CONTAINER) {
-					if (deck.getLocation().equals(((CardCollection) event.getSource()).getLocation())) {
+					Location srcLocation = ((CardElement) event.getSource()).getLocation();
+					if (deck.getLocation().equals(srcLocation)) {
 						reloadData();
 						// TODO does not work properly when moving to another container
 					}
@@ -357,6 +375,7 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void refresh() {
 		setStore();
+		updatePartName();
 		reloadData();
 	}
 
