@@ -62,10 +62,12 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 						((IStorageInfo) storage).setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
 								: IStorageInfo.COLLECTION_TYPE);
 					}
+					DataManager.reconcile();
+					update();
 				}
-				update();
 			} else if (event.getType() == CardEvent.REMOVE_CONTAINER) {
 				this.table.removeLocation(elem.getLocation());
+				DataManager.reconcile();
 				update();
 			}
 		} else if (event.getSource() instanceof CardElement) {
@@ -78,6 +80,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					// path and name changes
 				} else {
 					this.table.renameLocation((Location) event.getData(), elem.getLocation());
+					DataManager.reconcile();
 					update();
 				}
 			}
