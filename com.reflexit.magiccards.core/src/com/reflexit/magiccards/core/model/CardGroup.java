@@ -379,7 +379,14 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	 */
 	@Override
 	public synchronized void remove(ICard elem) {
-		children.remove(elem);
+		// children.remove(elem); cannot use it, use identify removal
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (o == elem) {
+				iterator.remove();
+				break;
+			}
+		}
 		if (elem instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) elem;
 			subs.remove(cardGroup.getName());
