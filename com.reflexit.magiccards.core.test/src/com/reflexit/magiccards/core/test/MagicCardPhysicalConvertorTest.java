@@ -12,10 +12,10 @@ package com.reflexit.magiccards.core.test;
 
 import junit.framework.TestCase;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.xml.xstream.MagicCardPhysicalConvertor;
+import com.reflexit.magiccards.core.xml.xstream.XstreamHandler;
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -26,7 +26,7 @@ public class MagicCardPhysicalConvertorTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		xstream = DataManager.getXStream();
+		xstream = XstreamHandler.getXStream();
 		xstream.registerConverter(new MagicCardPhysicalConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
 		xstream.setClassLoader(MagicCardPhysicalConvertorTest.class.getClassLoader());
 	}
