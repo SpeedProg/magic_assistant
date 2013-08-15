@@ -10,10 +10,10 @@ import org.eclipse.swt.widgets.Event;
  * you need to know precise coordinates where you send events, and for keyboard focus have to be in
  * right location.
  */
-public class SWTHelper {
+public class SWTKeyboardAndMouseUtils {
 	public Display display;
 
-	public SWTHelper(Display display) {
+	public SWTKeyboardAndMouseUtils(Display display) {
 		super();
 		this.display = display;
 	}

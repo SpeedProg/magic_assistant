@@ -3,13 +3,17 @@ package com.reflexit.magicassistant.swtbot.tests;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 
@@ -49,6 +53,19 @@ public abstract class AbstractSwtBotTest {
 		}
 	}
 
+	public void clickMenuItem(final SWTBotMenu menuItem) {
+		menuItem.setFocus();
+		menuItem.click();
+		bot.sleep(100);
+		syncExec(new Runnable() {
+			@Override
+			public void run() {
+				Menu menu = menuItem.widget.getParent();
+				SWTAutomationUtils.hideMenuRec(menu);
+			}
+		});
+	}
+
 	public void openFilterShell() {
 		bot.activeView().toolbarButton("Opens a Card Filter Dialog").click();
 		SWTBotShell shell = bot.shell("Preferences");
@@ -66,5 +83,14 @@ public abstract class AbstractSwtBotTest {
 			// oki
 		}
 		return false;
+	}
+
+	protected void syncExec(final Runnable runnable) {
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				runnable.run();
+			}
+		});
 	}
 }

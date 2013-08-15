@@ -42,17 +42,11 @@ public class GroupByCost extends AbstractSwtBotTest {
 		SWTBotToolbarDropDownButton groupBy = dbView.toolbarDropDownButton("Group By");
 		groupBy.click();
 		bot.sleep(10);
-		SWTBotMenu menuItem = groupBy.menuItem("Cost");
-		menuItem.setFocus();
-		menuItem.click();
-		bot.sleep(5000);
-		bot.sleep(10);
-		// menuItem.click();
-		// menuItem.setFocus();
-		// menuItem.pressShortcut(Keystrokes.ESC);
+		final SWTBotMenu menuItem = groupBy.menuItem("Cost");
+		clickMenuItem(menuItem);
 		dbView.setFocus();
-		bot.sleep(2000);
+		bot.sleep(1000);
 		bot.tree().expandNode("2 (29)");
-		bot.sleep(2000);
+		bot.sleep(1000);
 	}
 }

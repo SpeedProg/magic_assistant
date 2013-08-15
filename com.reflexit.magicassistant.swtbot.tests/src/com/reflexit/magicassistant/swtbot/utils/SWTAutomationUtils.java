@@ -30,7 +30,7 @@ import org.eclipse.ui.progress.IProgressService;
  * Collections for utils to assist automatic junit tests of eclipse ui plugins
  * 
  */
-public class UiUtils {
+public class SWTAutomationUtils {
 	/**
 	 * Widget would notify listeners that event of type 'type' happened with widget being the source
 	 * of the event.
@@ -120,7 +120,7 @@ public class UiUtils {
 			processQueuedDisplayEvents(menu.getDisplay());
 		} else {
 			menu.setVisible(true);
-			UiUtils.notifyListeners(menu, SWT.Show);
+			SWTAutomationUtils.notifyListeners(menu, SWT.Show);
 			menu.setVisible(false);
 			processQueuedDisplayEvents(menu.getDisplay());
 			// postRandomMouseEvent(menu);
@@ -136,7 +136,7 @@ public class UiUtils {
 		if (item == null)
 			throw new IllegalArgumentException("Cannot find item " + name + " in the menu");
 		item.setSelection(true);
-		UiUtils.notifyListeners(item, SWT.Selection);
+		SWTAutomationUtils.notifyListeners(item, SWT.Selection);
 		postRandomMouseEvent(item);
 		processQueuedDisplayEvents(item.getDisplay());
 	}
@@ -150,7 +150,7 @@ public class UiUtils {
 	 */
 	public static void emulateDoubleClick(final Widget w) {
 		w.notifyListeners(SWT.DefaultSelection, null);
-		UiUtils.processQueuedDisplayEvents(w.getDisplay());
+		SWTAutomationUtils.processQueuedDisplayEvents(w.getDisplay());
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class UiUtils {
 	 *            - widget
 	 */
 	public static void postRandomMouseEvent(Widget w) {
-		SWTHelper rawEvents2 = new SWTHelper(w.getDisplay());
+		SWTKeyboardAndMouseUtils rawEvents2 = new SWTKeyboardAndMouseUtils(w.getDisplay());
 		rawEvents2.postMouseMove(10, w.getDisplay().getClientArea().height / 2);
 		rawEvents2.postMouseDown(1);
 	}
@@ -200,7 +200,7 @@ public class UiUtils {
 	 *            - widget
 	 */
 	public static void postRandomKeyboadEvent(Display display) {
-		SWTHelper rawEvents2 = new SWTHelper(display);
+		SWTKeyboardAndMouseUtils rawEvents2 = new SWTKeyboardAndMouseUtils(display);
 		rawEvents2.postModKeyClick(SWT.SHIFT);
 	}
 
@@ -282,8 +282,8 @@ public class UiUtils {
 				}
 			}
 		}
-		UiUtils.processQueuedDisplayEvents(getDisplay());
-		UiUtils.uiSleepSeconds(time);
+		SWTAutomationUtils.processQueuedDisplayEvents(getDisplay());
+		SWTAutomationUtils.uiSleepSeconds(time);
 		return done;
 	}
 
@@ -300,12 +300,20 @@ public class UiUtils {
 	 */
 	public static boolean runContextAction(Control control, String actionName, int time) {
 		try {
-			UiUtils.showMenuAndSelectItem(control.getMenu(), actionName);
-			UiUtils.processQueuedDisplayEvents(getDisplay());
-			UiUtils.uiSleepSeconds(time);
+			SWTAutomationUtils.showMenuAndSelectItem(control.getMenu(), actionName);
+			SWTAutomationUtils.processQueuedDisplayEvents(getDisplay());
+			SWTAutomationUtils.uiSleepSeconds(time);
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
+		}
+	}
+
+	public static void hideMenuRec(final Menu menu) {
+		menu.notifyListeners(SWT.Hide, new Event());
+		menu.setVisible(false);
+		if (menu.getParentMenu() != null) {
+			hideMenuRec(menu.getParentMenu());
 		}
 	}
 }
