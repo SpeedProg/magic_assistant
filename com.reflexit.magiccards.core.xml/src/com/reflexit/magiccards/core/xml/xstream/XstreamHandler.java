@@ -10,7 +10,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
 import com.reflexit.magiccards.core.xml.IStoreHandler;
 import com.thoughtworks.xstream.XStream;
@@ -18,13 +20,21 @@ import com.thoughtworks.xstream.XStream;
 public class XstreamHandler implements IStoreHandler {
 	public transient static XStream xstream;
 	static {
-		xstream = DataManager.getXStream();
+		xstream = getXStream();
 		xstream.alias("com.reflexit.magiccards.core.xml.LibraryCardStore", CardCollectionStoreObject.class);
 		xstream.alias("com.reflexit.magiccards.core.xml.DeckFileCardStore", CardCollectionStoreObject.class);
 		xstream.alias("cards", CardCollectionStoreObject.class);
 		xstream.setClassLoader(CardCollectionStoreObject.class.getClassLoader());
 		xstream.registerConverter(new MagicCardPhysicalConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
 		xstream.registerConverter(new MagicCardConvertor(xstream.getMapper(), xstream.getReflectionProvider()));
+	}
+
+	public static XStream getXStream() {
+		XStream xstream = new XStream();
+		xstream.alias("mc", MagicCard.class);
+		xstream.alias("mcp", MagicCardPhysical.class);
+		xstream.alias("pfield", MagicCardFieldPhysical.class);
+		return xstream;
 	}
 
 	@Override
