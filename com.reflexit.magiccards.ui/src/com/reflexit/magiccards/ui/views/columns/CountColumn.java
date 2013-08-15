@@ -10,12 +10,11 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
@@ -98,14 +97,17 @@ public class CountColumn extends GenColumn {
 						int count = value == null ? 0 : Integer.parseInt(value.toString());
 						if (oldCount == count)
 							return;
-						MagicCardPhysical add = new MagicCardPhysical(card, card.getLocation());
-						add.setCount(count);
+						// MagicCardPhysical add = new MagicCardPhysical(card, card.getLocation());
+						// add.setCount(count);
+						card.setCount(count);
 						// viewer.update(element, null);
 						// save
-						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-						ICardStore<IMagicCard> cardStore = target.getCardStore();
-						cardStore.remove(card);
-						cardStore.add(add);
+						DataManager.update(card);
+						// IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
+						// ICardStore<IMagicCard> cardStore = target.getCardStore();
+						// cardStore.remove(card);
+						// cardStore.add(add);
+						// cardStore.update(add);
 					}
 				}
 			}

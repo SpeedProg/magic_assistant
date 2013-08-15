@@ -191,7 +191,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					Object o = iterator.next();
 					if (o instanceof MagicCardPhysical) {
 						((MagicCardPhysical) o).setOwn(b);
-						cardStore.update(o);
+						DataManager.update((MagicCardPhysical) o);
 					}
 				}
 			}
@@ -271,10 +271,11 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						card.setForTrade(tradeLeft);
 						card2.setCount(right);
 						card2.setForTrade(trade - tradeLeft);
-						cardStore.setMergeOnAdd(false);
 						cardStore.update(card);
+						cardStore.setMergeOnAdd(false);
 						cardStore.add(card2);
 						cardStore.setMergeOnAdd(true);
+						DataManager.reconcile(cardStore.getCards(card.getCardId()));
 					}
 				}
 			}
@@ -407,7 +408,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						MagicCardPhysical card = (MagicCardPhysical) iterator.next();
 						editCard(card, store, false);
 						if (i % 1000 == 0 || i == len - 1) {
-							getFilteredStore().getCardStore().update(card); // XXX
+							DataManager.update(card); // XXX
 						}
 					}
 					DataManager.reconcile();
@@ -432,7 +433,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			modified = true;
 		}
 		if (modified && update) {
-			getFilteredStore().getCardStore().update(card);
+			DataManager.update(card);
 		}
 	}
 

@@ -7,12 +7,10 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
@@ -79,13 +77,8 @@ public class CommentColumn extends GenColumn {
 			protected void setValue(Object element, Object value) {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
-					// move
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					card.setComment((String) value);
-					cardStore.update(card);
-					// // update
-					// viewer.update(element, null);
+					DataManager.update(card);
 				}
 			}
 		};

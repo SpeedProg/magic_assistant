@@ -69,13 +69,12 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
 					int count = mc.getCount();
 					mc.setCount(count + 1);
-					activeDeckHandler.getCardStore().update(mc);
+					DataManager.update(activeDeckHandler.getCardStore(), mc);
 				} else {
 					toAdd.add(magicCard);
 				}
 			}
-			activeDeckHandler.getCardStore().addAll(toAdd);
-			DataManager.reconcileAdd(toAdd);
+			DataManager.add(activeDeckHandler.getCardStore(), toAdd);
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck/collection");
 		}

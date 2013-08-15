@@ -10,12 +10,11 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import com.reflexit.magiccards.core.model.IMagicCard;
+
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
@@ -120,15 +119,13 @@ public class OwnershipColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					// set
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					String string = value.toString();
 					if (string.equals("0")) {
 						card.setOwn(true);
 					} else
 						card.setOwn(false);
 					// update
-					cardStore.update(card);
+					DataManager.update(card);
 					// viewer.update(element, null);
 				}
 			}

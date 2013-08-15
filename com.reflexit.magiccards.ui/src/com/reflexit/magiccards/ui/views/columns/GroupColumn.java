@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
@@ -145,11 +144,8 @@ public class GroupColumn extends GenColumn {
 					ImportUtils.updateCardReference(card);
 					Object input = getViewer().getInput();
 					if (input instanceof IFilteredCardStore) {
-						IFilteredCardStore target = (IFilteredCardStore) input;
-						ICardStore<IMagicCard> cardStore = target.getCardStore();
-						DataManager.reconcile();
+						DataManager.update(card);
 						// update
-						cardStore.update(card);
 					} else {
 						// update
 						viewer.refresh(true);

@@ -12,11 +12,9 @@ import org.eclipse.swt.widgets.Text;
 
 import java.text.DecimalFormat;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
@@ -94,10 +92,8 @@ public class PriceColumn extends GenColumn {
 						price = value == null ? 0 : Float.parseFloat(value.toString());
 					}
 					// save
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					card.setPrice(price);
-					cardStore.update(card);
+					DataManager.update(card);
 				}
 			}
 		};

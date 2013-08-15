@@ -7,11 +7,9 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
@@ -59,10 +57,8 @@ public class StringEditorColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					// move
-					IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-					ICardStore<IMagicCard> cardStore = target.getCardStore();
 					card.setObjectByField(getDataField(), (String) value);
-					cardStore.update(card);
+					DataManager.update(card);
 				}
 			}
 		};

@@ -140,12 +140,14 @@ public class LocationColumn extends GenColumn {
 						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 						ICardStore<IMagicCard> cardStore = target.getCardStore();
 						cardStore.remove(card);
+						DataManager.reconcileRemove(card);
 						if (value instanceof Location)
 							card.setLocation((Location) value);
 						else if (value instanceof String) {
 							card.setLocation(Location.createLocation(new LocationPath((String) value)));
 						}
 						cardStore.add(card);
+						DataManager.reconcile(card);
 						// update
 						viewer.update(element, null);
 					}
