@@ -77,8 +77,7 @@ public class ImportUtils {
 					((MagicCardPhysical) card).setMagicCard((MagicCard) card.getBase());
 			}
 			// import into card store
-			cardStore.addAll(importedCards);
-			DataManager.reconcileAdd(importedCards);
+			DataManager.add(cardStore, importedCards);
 		}
 	}
 
