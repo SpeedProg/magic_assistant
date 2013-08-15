@@ -408,7 +408,7 @@ public class CardGroupTest extends TestCase {
 		}
 		((DbMultiFileCardStore) DataManager.getMagicDBStore()).setLoad(false);
 		DataManager.getMagicDBStore().add(m);
-		DataManager.reconcileAdd(Arrays.asList(cards));
+		DataManager.reconcile(Arrays.asList(cards));
 		group.add(m);
 		assertEquals(loc, group.getLocation());
 		assertEquals(true, group.isOwn());
