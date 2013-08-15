@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
@@ -93,6 +94,7 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 
 			@Override
 			public void run() {
+				DataManager.reconcile();
 				reloadData();
 			}
 		};
