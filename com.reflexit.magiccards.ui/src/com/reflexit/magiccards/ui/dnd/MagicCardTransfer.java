@@ -15,8 +15,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
@@ -115,5 +118,15 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 		}
 		byte[] bytes = byteOut.toByteArray();
 		return bytes;
+	}
+
+	public Object fromClipboard() {
+		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+		Object contents = cb.getContents(this);
+		if (contents instanceof IMagicCard[]) {
+			IMagicCard[] cards = (IMagicCard[]) contents;
+			return DataManager.instanciate(Arrays.asList(cards));
+		}
+		return contents;
 	}
 }

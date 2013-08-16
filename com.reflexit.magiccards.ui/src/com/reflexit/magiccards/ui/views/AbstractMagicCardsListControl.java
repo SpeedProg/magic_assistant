@@ -76,10 +76,12 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
+import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -939,11 +941,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public void runPaste() {
-		Control fc = partControl.getDisplay().getFocusControl();
-		if (fc instanceof Text)
-			((Text) fc).paste();
-		if (fc instanceof Combo)
-			((Combo) fc).paste();
+		MagicCardTransfer mt = MagicCardTransfer.getInstance();
+		Object contents = mt.fromClipboard();
+		if (contents instanceof Collection) {
+			DataManager.copyCards((Collection) contents, ((ILocatable) getFilteredStore().getCardStore()).getLocation());
+		} else {
+			Control fc = partControl.getDisplay().getFocusControl();
+			CopySupport.runPaste(fc);
+		}
 	}
 
 	public void handleEvent(final CardEvent event) {

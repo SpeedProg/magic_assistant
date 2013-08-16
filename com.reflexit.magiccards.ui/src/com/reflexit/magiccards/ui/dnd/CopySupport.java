@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.dnd;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,11 +54,17 @@ public class CopySupport {
 	}
 
 	public static void runPaste(Control fc) {
-		if (fc instanceof Text)
-			((Text) fc).paste();
-		else if (fc instanceof Combo)
-			((Combo) fc).paste();
-		else
-			MagicUIActivator.log("Paste into " + fc + " failed");
+		MagicCardTransfer mt = MagicCardTransfer.getInstance();
+		Object contents = mt.fromClipboard();
+		if (contents instanceof Collection) {
+			MagicUIActivator.log("Paste into " + fc + " failed - cannot find store");
+		} else {
+			if (fc instanceof Text)
+				((Text) fc).paste();
+			else if (fc instanceof Combo)
+				((Combo) fc).paste();
+			else
+				MagicUIActivator.log("Paste into " + fc + " failed");
+		}
 	}
 }

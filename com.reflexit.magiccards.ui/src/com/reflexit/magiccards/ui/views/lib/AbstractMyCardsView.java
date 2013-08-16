@@ -11,7 +11,6 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,7 +28,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
@@ -48,10 +46,8 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
@@ -149,19 +145,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			}
 		}
 	};
-
-	@Override
-	protected void runPaste() {
-		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-		MagicCardTransfer mt = MagicCardTransfer.getInstance();
-		Object contents = cb.getContents(mt);
-		if (contents instanceof IMagicCard[]) {
-			IMagicCard[] cards = (IMagicCard[]) contents;
-			DataManager.copyCards(Arrays.asList(cards), ((ILocatable) getFilteredStore().getCardStore()).getLocation());
-		} else {
-			super.runPaste();
-		}
-	}
 
 	protected void fillOwnerShipMenu(IMenuManager manager) {
 		manager.add(new Action("Own", SWT.CHECK) {
