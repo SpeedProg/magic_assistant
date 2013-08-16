@@ -265,7 +265,7 @@ public class MagicCardComparatorTest extends TestCase {
 		setField(card1, MagicCardFieldPhysical.COUNT, "2");
 		setField(card2, MagicCardFieldPhysical.COUNT, "2");
 		checkInvariantSame();
-		when(((IMagicCardPhysical) card2).getOwnTotalAll()).thenReturn(3);
+		when(((MagicCardPhysical) card2).getOwnTotal()).thenReturn(3);
 		checkInvariantLess(card1, card2);
 	}
 }

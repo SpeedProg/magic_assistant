@@ -265,13 +265,14 @@ public class CardGroupTest extends TestCase {
 	public void testOwnCount() {
 		MagicCardPhysical card = generatePhyCard();
 		card.setCount(2);
+		card.setOwn(true);
 		for (int j = 0; j < cards.length; j++) {
 			cards[j] = card.cloneCard();
 			group.add(cards[j]);
 		}
 		((MagicCardPhysical) cards[0]).setOwn(false);
 		populateGroup(group, cards);
-		assertEquals(false, group.isOwn());
+		assertEquals(true, group.isOwn());
 		assertEquals(4, group.getOwnCount());
 		assertEquals(1, group.getOwnUnique());
 		assertEquals(6, group.getCount());
