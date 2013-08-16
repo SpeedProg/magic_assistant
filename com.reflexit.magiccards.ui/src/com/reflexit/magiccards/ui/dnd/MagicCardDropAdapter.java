@@ -12,7 +12,6 @@ package com.reflexit.magiccards.ui.dnd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,9 +28,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -61,7 +57,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 			if (targetLocation == null)
 				throw new MagicException("Invalid drop target");
 			if (curEvent.detail == DND.DROP_MOVE)
-				return DataManager.moveCards(cards, null, targetLocation);
+				return DataManager.moveCards(cards, targetLocation);
 			else
 				return DataManager.copyCards(cards, targetLocation);
 		} catch (MagicException e) {
@@ -77,27 +73,8 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 	public static ArrayList<IMagicCard> repareLinks(List<IMagicCard> cards1) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
 		CardGroup.expandGroups(cards, cards1);
-		ArrayList<IMagicCard> cards2 = new ArrayList<IMagicCard>();
-		ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			// Need to repair references to MagicCard instances
-			if (card instanceof MagicCard) {
-				iterator.remove();
-				card = (IMagicCard) lookupStore.getCard(card.getCardId());
-				if (card != null)
-					cards2.add(card);
-			} else if (card instanceof MagicCardPhysical) {
-				IMagicCard base = (IMagicCard) lookupStore.getCard(card.getCardId());
-				if (base != null) {
-					((MagicCardPhysical) card).setMagicCard((MagicCard) base);
-				} else {
-					iterator.remove();
-				}
-			}
-		}
-		cards.addAll(cards2);
-		return cards;
+		ArrayList<IMagicCard> cards2 = DataManager.instanciate(cards);
+		return cards2;
 	}
 
 	private Location determineLocation() {

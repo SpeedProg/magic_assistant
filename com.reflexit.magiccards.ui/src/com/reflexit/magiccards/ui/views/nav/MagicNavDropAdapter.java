@@ -70,7 +70,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 				List<IMagicCard> asList = Arrays.asList(toDropArray);
 				asList = MagicCardDropAdapter.repareLinks(asList);
 				if (curEvent.detail == DND.DROP_MOVE)
-					return DataManager.moveCards(asList, null, targetLocation);
+					return DataManager.moveCards(asList, targetLocation);
 				else
 					return DataManager.copyCards(asList, targetLocation);
 			} catch (MagicException e) {

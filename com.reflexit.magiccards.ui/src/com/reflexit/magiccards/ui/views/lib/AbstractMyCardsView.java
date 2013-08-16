@@ -141,7 +141,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 								list.add((IMagicCard) o);
 						}
 						Location location = DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
-						DataManager.moveCards(list, null, location);
+						DataManager.moveCards(list, location);
 					}
 				}
 			} catch (MagicException e) {
@@ -254,28 +254,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						if (count == 1)
 							continue;
 						int left = type;
-						if (left >= count)
-							continue;
 						if (type == EVEN)
 							left = count / 2;
+						if (left >= count)
+							continue;
 						int right = count - left;
-						int trade = card.getForTrade();
-						int tradeLeft = 0;
-						if (trade <= right) {
-							tradeLeft = 0;
-						} else {
-							tradeLeft = trade - right;
-						}
-						MagicCardPhysical card2 = new MagicCardPhysical(card, card.getLocation());
-						card.setCount(left);
-						card.setForTrade(tradeLeft);
-						card2.setCount(right);
-						card2.setForTrade(trade - tradeLeft);
-						cardStore.update(card);
-						cardStore.setMergeOnAdd(false);
-						cardStore.add(card2);
-						cardStore.setMergeOnAdd(true);
-						DataManager.reconcile(cardStore.getCards(card.getCardId()));
+						DataManager.split(card, left, right);
 					}
 				}
 			}

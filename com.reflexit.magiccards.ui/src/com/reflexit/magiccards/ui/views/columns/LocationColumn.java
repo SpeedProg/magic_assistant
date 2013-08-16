@@ -12,14 +12,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.LocationPath;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
@@ -137,17 +135,14 @@ public class LocationColumn extends GenColumn {
 					if (element instanceof MagicCardPhysical) {
 						MagicCardPhysical card = (MagicCardPhysical) element;
 						// move
-						IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-						ICardStore<IMagicCard> cardStore = target.getCardStore();
-						cardStore.remove(card);
-						DataManager.reconcileRemove(card);
+						Location loc;
 						if (value instanceof Location)
-							card.setLocation((Location) value);
-						else if (value instanceof String) {
-							card.setLocation(Location.createLocation(new LocationPath((String) value)));
-						}
-						cardStore.add(card);
-						DataManager.reconcile(card);
+							loc = (Location) value;
+						else if (value instanceof String)
+							loc = Location.createLocation(new LocationPath((String) value));
+						else
+							return;
+						DataManager.move(card, loc);
 						// update
 						viewer.update(element, null);
 					}
