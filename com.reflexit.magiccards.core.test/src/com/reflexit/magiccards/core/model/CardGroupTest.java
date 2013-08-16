@@ -399,6 +399,7 @@ public class CardGroupTest extends TestCase {
 
 	public void testNameGroup() {
 		MagicCard m = (MagicCard) generateCard();
+		DataManager.getMagicDBStore().add(m);
 		group = new CardGroup(MagicCardField.NAME, m.getName());
 		Location loc = Location.createLocation("xxx");
 		for (int j = 0; j < cards.length; j++) {
@@ -406,12 +407,13 @@ public class CardGroupTest extends TestCase {
 			((MagicCardPhysical) cards[j]).setLocation(loc);
 			((MagicCardPhysical) cards[j]).setOwn(true);
 		}
-		((DbMultiFileCardStore) DataManager.getMagicDBStore()).setLoad(false);
-		DataManager.getMagicDBStore().add(m);
+		DbMultiFileCardStore db = (DbMultiFileCardStore) DataManager.getMagicDBStore();
+		db.setLoad(false);
 		DataManager.reconcile(Arrays.asList(cards));
 		group.add(m);
 		assertEquals(loc, group.getLocation());
 		assertEquals(true, group.isOwn());
+		db.setLoad(true);
 	}
 
 	public void testNameGroupPhy() {
