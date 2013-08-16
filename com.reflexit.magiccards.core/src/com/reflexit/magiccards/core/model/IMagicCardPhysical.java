@@ -19,6 +19,8 @@ public interface IMagicCardPhysical extends IMagicCard, ILocatable, ICardCountab
 
 	public int getOwnUnique();
 
+	public int getOwnTotalAll();
+
 	/**
 	 * Return true of card is physical (virtual or own) or group of cards has only physycal cards
 	 * 

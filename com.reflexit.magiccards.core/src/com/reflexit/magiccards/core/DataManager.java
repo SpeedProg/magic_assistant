@@ -14,8 +14,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -107,33 +105,41 @@ public class DataManager {
 	 * Using card representation create proper link to base or find actuall base card to replace
 	 * fake one
 	 * 
-	 * @param cards1
+	 * @param input
 	 * @return
 	 */
-	public static ArrayList<IMagicCard> instanciate(List<IMagicCard> cards1) {
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
-		ArrayList<IMagicCard> cards2 = new ArrayList<IMagicCard>();
-		ICardStore lookupStore = getMagicDBStore();
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+	public static Collection<IMagicCard> instantiate(Collection<IMagicCard> input) {
+		return instantiate(input, new ArrayList<IMagicCard>(input.size()), getMagicDBStore());
+	}
+
+	private static Collection<IMagicCard> instantiate(Collection<IMagicCard> input, Collection<IMagicCard> output, ICardStore db) {
+		for (Iterator iterator = input.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			// Need to repair references to MagicCard instances
-			if (card instanceof MagicCard) {
-				iterator.remove();
-				card = (IMagicCard) lookupStore.getCard(card.getCardId());
-				if (card != null)
-					cards2.add(card);
-			} else if (card instanceof MagicCardPhysical) {
-				IMagicCard base = (IMagicCard) lookupStore.getCard(card.getCardId());
-				if (base != null) {
-					((MagicCardPhysical) card).setMagicCard((MagicCard) base);
-				} else {
-					iterator.remove();
-				}
+			if (card instanceof CardGroup) {
+				instantiate((Collection<IMagicCard>) ((CardGroup) card).getChildrenList(), output, db);
+			} else {
+				// Need to repair references to MagicCard instances
+				IMagicCard cardRes = instantiate(card, db);
+				if (cardRes != null)
+					output.add(cardRes);
 			}
 		}
-		cards.addAll(cards2);
-		return cards;
+		return output;
+	}
+
+	public static IMagicCard instantiate(IMagicCard card, ICardStore db) {
+		if (card instanceof MagicCard) {
+			card = (IMagicCard) db.getCard(card.getCardId());
+			return card;
+		} else if (card instanceof MagicCardPhysical) {
+			IMagicCard base = (IMagicCard) db.getCard(card.getCardId());
+			if (base != null) {
+				((MagicCardPhysical) card).setMagicCard((MagicCard) base);
+			} else {
+				return null;
+			}
+		}
+		return card;
 	}
 
 	public static boolean moveCards(Collection cards1, Location to) {

@@ -255,6 +255,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return owncount;
 	}
 
+	@Override
+	public synchronized int getOwnTotalAll() {
+		return 0; // not supported
+	}
+
 	public synchronized int getOwnUnique() {
 		Integer iOwn = (Integer) getProperty(MagicCardFieldPhysical.OWN_UNIQUE.name());
 		if (iOwn != null) {
