@@ -600,7 +600,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	public boolean isOwn() {
 		if (size() == 0)
 			return false;
-		return getGroupBase().isOwn();
+		return getOwnCount() > 0;
 	}
 
 	public int getForTrade() {
