@@ -10,9 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.dnd;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -25,7 +24,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
@@ -51,7 +49,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
-		ArrayList<IMagicCard> cards = repareLinks(Arrays.asList(toDropArray));
+		Collection<IMagicCard> cards = DataManager.instantiate(Arrays.asList(toDropArray));
 		try {
 			Location targetLocation = determineLocation();
 			if (targetLocation == null)
@@ -68,13 +66,6 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 			MagicUIActivator.log(e);
 			return false;
 		}
-	}
-
-	public static ArrayList<IMagicCard> repareLinks(List<IMagicCard> cards1) {
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
-		ArrayList<IMagicCard> cards2 = DataManager.instanciate(cards);
-		return cards2;
 	}
 
 	private Location determineLocation() {

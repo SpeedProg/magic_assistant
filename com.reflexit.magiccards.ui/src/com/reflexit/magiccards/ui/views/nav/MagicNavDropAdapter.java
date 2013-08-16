@@ -11,8 +11,7 @@
 package com.reflexit.magiccards.ui.views.nav;
 
 import java.util.Arrays;
-import java.util.List;
-
+import java.util.Collection;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -32,7 +31,6 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 
 /**
@@ -67,12 +65,11 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 				return false;
 			try {
 				Location targetLocation = ((CardElement) dropTarget).getLocation();
-				List<IMagicCard> asList = Arrays.asList(toDropArray);
-				asList = MagicCardDropAdapter.repareLinks(asList);
+				Collection<IMagicCard> list = DataManager.instantiate(Arrays.asList(toDropArray));
 				if (curEvent.detail == DND.DROP_MOVE)
-					return DataManager.moveCards(asList, targetLocation);
+					return DataManager.moveCards(list, targetLocation);
 				else
-					return DataManager.copyCards(asList, targetLocation);
+					return DataManager.copyCards(list, targetLocation);
 			} catch (MagicException e) {
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation");
 				return false;
