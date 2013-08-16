@@ -8,11 +8,10 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
-import com.reflexit.magiccards.core.xml.DbMultiFileCardStore;
 
 public class CardGroupTest extends TestCase {
 	private CardGroup group;
@@ -398,22 +397,20 @@ public class CardGroupTest extends TestCase {
 	}
 
 	public void testNameGroup() {
-		MagicCard m = (MagicCard) generateCard();
-		DataManager.getMagicDBStore().add(m);
+		MagicCard m = Mockito.spy((MagicCard) generateCard());
 		group = new CardGroup(MagicCardField.NAME, m.getName());
+		CardGroup realcards = new CardGroup(MagicCardField.ID, m.getName());
+		Mockito.when(m.getRealCards()).thenReturn(realcards);
 		Location loc = Location.createLocation("xxx");
 		for (int j = 0; j < cards.length; j++) {
 			cards[j] = CardGenerator.generatePhysicalCardWithValues(m);
 			((MagicCardPhysical) cards[j]).setLocation(loc);
 			((MagicCardPhysical) cards[j]).setOwn(true);
+			realcards.add(cards[j]);
 		}
-		DbMultiFileCardStore db = (DbMultiFileCardStore) DataManager.getMagicDBStore();
-		db.setLoad(false);
-		DataManager.reconcile(Arrays.asList(cards));
 		group.add(m);
 		assertEquals(loc, group.getLocation());
 		assertEquals(true, group.isOwn());
-		db.setLoad(true);
 	}
 
 	public void testNameGroupPhy() {

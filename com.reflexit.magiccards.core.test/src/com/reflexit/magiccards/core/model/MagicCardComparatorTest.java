@@ -6,6 +6,8 @@ import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -24,6 +26,40 @@ public class MagicCardComparatorTest extends TestCase {
 		field = MagicCardField.NAME;
 		makeComparator(field);
 		genMc();
+	}
+
+	public static void main(String[] args) {
+		// check p/t
+		HashMap<String, Integer> pmap = new HashMap<String, Integer>();
+		IDbCardStore<IMagicCard> magicDBStore = DataManager.getMagicDBStore();
+		magicDBStore.initialize();
+		for (IMagicCard card : magicDBStore) {
+			String value = ((MagicCard) card).getCollNumber();
+			if (value != null) {
+				try {
+					Integer.parseInt(value);
+					value = "#";
+				} catch (NumberFormatException e) {
+					//
+					if (value.endsWith("a")) {
+						value = "#a";
+					} else if (value.endsWith("b")) {
+						value = "#b";
+					} else {
+						System.err.println(card);
+					}
+				}
+			}
+			Integer v = pmap.get(value);
+			if (v == null) {
+				v = 0;
+			}
+			v++;
+			pmap.put(value, v);
+		}
+		for (String power : pmap.keySet()) {
+			System.out.println(power + ": " + pmap.get(power));
+		}
 	}
 
 	protected void makeComparator(ICardField field) {
@@ -50,8 +86,8 @@ public class MagicCardComparatorTest extends TestCase {
 	}
 
 	protected void genMcp() {
-		card1 = generatePhyCard();
-		card2 = generatePhyCard();
+		card1 = Mockito.spy(generatePhyCard());
+		card2 = Mockito.spy(generatePhyCard());
 	}
 
 	public int sgn(int x) {
@@ -218,37 +254,18 @@ public class MagicCardComparatorTest extends TestCase {
 		checkInvariantLess(card1, card2);
 	}
 
-	public static void main(String[] args) {
-		// check p/t
-		HashMap<String, Integer> pmap = new HashMap<String, Integer>();
-		IDbCardStore<IMagicCard> magicDBStore = DataManager.getMagicDBStore();
-		magicDBStore.initialize();
-		for (IMagicCard card : magicDBStore) {
-			String value = ((MagicCard) card).getCollNumber();
-			if (value != null) {
-				try {
-					Integer.parseInt(value);
-					value = "#";
-				} catch (NumberFormatException e) {
-					//
-					if (value.endsWith("a")) {
-						value = "#a";
-					} else if (value.endsWith("b")) {
-						value = "#b";
-					} else {
-						System.err.println(card);
-					}
-				}
-			}
-			Integer v = pmap.get(value);
-			if (v == null) {
-				v = 0;
-			}
-			v++;
-			pmap.put(value, v);
-		}
-		for (String power : pmap.keySet()) {
-			System.out.println(power + ": " + pmap.get(power));
-		}
+	public void testOwnCount() {
+		makeComparator(MagicCardFieldPhysical.OWN_COUNT);
+		genMcp();
+		setField(card1, MagicCardFieldPhysical.COUNT, "1");
+		setField(card2, MagicCardFieldPhysical.COUNT, "2");
+		checkInvariantLess(card1, card2);
+		setField(card2, MagicCardFieldPhysical.COUNT, "10");
+		checkInvariantLess(card1, card2);
+		setField(card1, MagicCardFieldPhysical.COUNT, "2");
+		setField(card2, MagicCardFieldPhysical.COUNT, "2");
+		checkInvariantSame();
+		when(((IMagicCardPhysical) card2).getOwnTotalAll()).thenReturn(3);
+		checkInvariantLess(card1, card2);
 	}
 }
