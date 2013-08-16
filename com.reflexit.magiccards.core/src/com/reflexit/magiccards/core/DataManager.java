@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -69,7 +71,7 @@ public class DataManager {
 		return root;
 	}
 
-	public static ICardStore getCardStore(Location to) {
+	public static ICardStore<IMagicCard> getCardStore(Location to) {
 		return getCardHandler().getCardStore(to);
 	}
 
@@ -94,19 +96,47 @@ public class DataManager {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhysical phi = new MagicCardPhysical(card, to);
-			if (card instanceof MagicCard) // moving from db
-				phi.setOwn(!virtual);
-			else if (virtual) {
-				phi.setOwn(false); // copied cards will have collection
-									// ownership for virtual
-			}
+			// copied cards will have collection ownership for virtual
+			MagicCardPhysical phi = new MagicCardPhysical(card, to, virtual);
 			list.add(phi);
 		}
 		return add(store, list);
 	}
 
-	public static boolean moveCards(Collection cards1, Location from, Location to) {
+	/**
+	 * Using card representation create proper link to base or find actuall base card to replace
+	 * fake one
+	 * 
+	 * @param cards1
+	 * @return
+	 */
+	public static ArrayList<IMagicCard> instanciate(List<IMagicCard> cards1) {
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
+		CardGroup.expandGroups(cards, cards1);
+		ArrayList<IMagicCard> cards2 = new ArrayList<IMagicCard>();
+		ICardStore lookupStore = getMagicDBStore();
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			// Need to repair references to MagicCard instances
+			if (card instanceof MagicCard) {
+				iterator.remove();
+				card = (IMagicCard) lookupStore.getCard(card.getCardId());
+				if (card != null)
+					cards2.add(card);
+			} else if (card instanceof MagicCardPhysical) {
+				IMagicCard base = (IMagicCard) lookupStore.getCard(card.getCardId());
+				if (base != null) {
+					((MagicCardPhysical) card).setMagicCard((MagicCard) base);
+				} else {
+					iterator.remove();
+				}
+			}
+		}
+		cards.addAll(cards2);
+		return cards;
+	}
+
+	public static boolean moveCards(Collection cards1, Location to) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
 		CardGroup.expandGroups(cards, cards1);
 		ICardStore<IMagicCard> sto = getCardStore(to);
@@ -116,31 +146,31 @@ public class DataManager {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCardPhysical phi = new MagicCardPhysical(card, to);
-			if (card instanceof MagicCard) {
-				phi.setOwn(!virtual);
-			} else if (card instanceof MagicCardPhysical) {
-				if (((IMagicCardPhysical) card).isOwn() && virtual)
-					throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
+			MagicCardPhysical phi = new MagicCardPhysical(card, to, virtual);
+			if (card instanceof MagicCardPhysical) {
+				if (((IMagicCardPhysical) card).isOwn()) {
+					if (virtual)
+						throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
+					phi.setOwn(true);
+				}
 			}
 			list.add(phi);
 		}
 		boolean res = add(sto, list);
 		if (res) {
 			boolean allthesame = true;
-			if (from == null) {
-				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-					IMagicCard card = (IMagicCard) iterator.next();
-					if (!(card instanceof MagicCardPhysical))
+			Location from = null;
+			for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				if (!(card instanceof MagicCardPhysical))
+					break;
+				Location from2 = ((MagicCardPhysical) card).getLocation();
+				if (from2 != null) {
+					if (from == null)
+						from = from2;
+					else if (!from.equals(from2)) {
+						allthesame = false;
 						break;
-					Location from2 = ((MagicCardPhysical) card).getLocation();
-					if (from2 != null) {
-						if (from == null)
-							from = from2;
-						else if (!from.equals(from2)) {
-							allthesame = false;
-							break;
-						}
 					}
 				}
 			}
@@ -177,17 +207,61 @@ public class DataManager {
 	}
 
 	public static void remove(MagicCardPhysical mcp) {
-		reconcileRemove(mcp);
 		Location from = mcp.getLocation();
-		ICardStore<IMagicCard> sfrom = getCardStore(from);
-		sfrom.remove(mcp);
+		ICardStore<IMagicCard> store = getCardStore(from);
+		if (store == null)
+			throw new IllegalArgumentException("Cannot find store for " + from);
+		reconcileRemove(mcp);
+		store.remove(mcp);
 	}
 
-	public static void update(MagicCardPhysical mc) {
-		Location loc = mc.getLocation();
+	public static boolean add(MagicCardPhysical mcp) {
+		Location loc = mcp.getLocation();
 		ICardStore<IMagicCard> store = getCardStore(loc);
-		store.update(mc);
-		reconcile(mc);
+		if (store == null)
+			throw new IllegalArgumentException("Cannot find store for " + store);
+		boolean res = store.add(mcp);
+		reconcile(mcp);
+		return res;
+	}
+
+	public static void move(MagicCardPhysical card, Location toLoc) {
+		DataManager.remove(card);
+		card.setLocation(toLoc);
+		DataManager.add(card); // XXX if fails we need to undo the remove
+	}
+
+	public static void split(MagicCardPhysical card, int left, int right) {
+		int trade = card.getForTrade();
+		int tradeLeft = 0;
+		if (trade <= right) {
+			tradeLeft = 0;
+		} else {
+			tradeLeft = trade - right;
+		}
+		MagicCardPhysical card2 = new MagicCardPhysical(card, card.getLocation());
+		card.setCount(left);
+		card.setForTrade(tradeLeft);
+		card2.setCount(right);
+		card2.setForTrade(trade - tradeLeft);
+		Location loc = card.getLocation();
+		ICardStore<IMagicCard> cardStore = getCardStore(loc);
+		if (cardStore == null)
+			throw new IllegalArgumentException("Cannot find store for " + cardStore);
+		cardStore.update(card);
+		cardStore.setMergeOnAdd(false);
+		cardStore.add(card2);
+		cardStore.setMergeOnAdd(true);
+		DataManager.reconcile(cardStore.getCards(card.getCardId()));
+	}
+
+	public static void update(MagicCardPhysical mcp) {
+		Location loc = mcp.getLocation();
+		ICardStore<IMagicCard> store = getCardStore(loc);
+		if (store == null)
+			throw new IllegalArgumentException("Cannot find store for " + store);
+		store.update(mcp);
+		reconcile(mcp);
 	}
 
 	public static void update(MagicCard mc) {
@@ -209,6 +283,10 @@ public class DataManager {
 		}
 	}
 
+	/**
+	 * Repairs back link between base cards and physical cards, expensive since it reads whole
+	 * database
+	 */
 	public static void reconcile() {
 		links.clear();
 		ICardStore lib = handler.getLibraryCardStore();
@@ -229,11 +307,11 @@ public class DataManager {
 		}
 	}
 
-	public static void reconcile(MagicCardPhysical mcp) {
+	private static void reconcile(MagicCardPhysical mcp) {
 		reconcile(mcp, getMagicDBStore());
 	}
 
-	public static void reconcile(MagicCardPhysical mcp, ICardStore db) {
+	private static void reconcile(MagicCardPhysical mcp, ICardStore db) {
 		// System.err.println("reconcile " + mcp + " " + System.identityHashCode(mcp));
 		int id = mcp.getCardId();
 		MagicCard base = (MagicCard) db.getCard(id);
@@ -252,7 +330,7 @@ public class DataManager {
 		realcards.add(mcp);
 	}
 
-	public static void reconcileRemove(Iterable cards) {
+	private static void reconcileRemove(Iterable cards) {
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			Object card = iterator.next();
 			// Need to repair references to MagicCard instances
@@ -261,7 +339,7 @@ public class DataManager {
 		}
 	}
 
-	public static void reconcileRemove(MagicCardPhysical mcp) {
+	private static void reconcileRemove(MagicCardPhysical mcp) {
 		int id = mcp.getCardId();
 		CardGroup realcards = (CardGroup) links.get(id);
 		if (realcards != null) {

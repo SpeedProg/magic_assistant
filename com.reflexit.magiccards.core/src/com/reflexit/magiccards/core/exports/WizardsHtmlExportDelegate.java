@@ -14,7 +14,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.xml.MyXMLStreamWriter;
 import com.reflexit.magiccards.core.xml.XMLStreamException;
 
-public class WizardsHtmlExportDelegate<T> extends AbstractExportDelegate<T> {
+public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public static final String CARD_URI = "card://";
 	public static final String CARDID = "cardId=";
 
@@ -221,7 +221,7 @@ public class WizardsHtmlExportDelegate<T> extends AbstractExportDelegate<T> {
 		w.endEl(); // desktop
 	}
 
-	private ICardStore<T> getCardStore() {
+	private ICardStore<IMagicCard> getCardStore() {
 		return DataManager.getCardStore(location);
 	}
 

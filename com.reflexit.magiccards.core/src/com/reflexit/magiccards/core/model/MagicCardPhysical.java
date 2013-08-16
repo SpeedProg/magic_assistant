@@ -14,11 +14,12 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	private boolean ownership;
 	private HashMap<ICardField, Object> properties;
 
-	public MagicCardPhysical(IMagicCard card, Location location) {
-		this(card, location, true);
+	public MagicCardPhysical(IMagicCard card, Location location, boolean virtual) {
+		this(card, location);
+		this.ownership = !virtual;
 	}
 
-	public MagicCardPhysical(IMagicCard card, Location location, boolean add) {
+	public MagicCardPhysical(IMagicCard card, Location location) {
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;
