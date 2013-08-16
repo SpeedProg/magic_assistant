@@ -2,6 +2,7 @@ package com.reflexit.magicassistant.swtbot.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -36,6 +37,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 		SWTBotTableItem row = dbbot.table().getTableItem(0);
 		row.select();
 		String name = row.getText(0);
+		// add card using DND
 		new DndUtil(bot.getDisplay()).dragAndDrop(row, deckView);
 		bot.sleep(1000);
 		assertEquals(name, deckView.bot().table().getTableItem(0).getText(0));
@@ -43,6 +45,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 		deckView.bot().table().getTableItem(0).select();
 		bot.sleep(500);
 		assertEquals("Total 1 cards. Selected 1", bot.label().getText());
+		// add card using + shortcut (well = actually)
 		SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.DELETE);
 		bot.sleep(500);
@@ -54,5 +57,16 @@ public class CreateDeck extends AbstractSwtBotTest {
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(0, '='));
 		bot.sleep(500);
 		assertEquals(name, deckView.bot().table().getTableItem(0).getText(0));
+		deckView.bot().table().getTableItem(0).select();
+		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.DELETE);
+		bot.sleep(500);
+		// add card using cut & paste
+		dbbot.table().getTableItem(0).select();
+		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'c'));
+		deckView.setFocus();
+		bot.sleep(500);
+		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'v'));
+		assertEquals(name, deckView.bot().table().getTableItem(0).getText(0));
+		bot.sleep(500);
 	}
 }
