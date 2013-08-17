@@ -94,7 +94,11 @@ public class AbstractDeckPage implements IDeckPage {
 		return null;
 	}
 
+	/**
+	 * @param bars
+	 */
 	public void setGlobalControlHandlers(IActionBars bars) {
+		// override if needed
 	}
 
 	protected MenuManager hookContextMenu() {
@@ -108,14 +112,23 @@ public class AbstractDeckPage implements IDeckPage {
 		return menuMgr;
 	}
 
+	/**
+	 * @param viewMenuManager
+	 */
 	public void fillContextMenu(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
 
+	/**
+	 * @param viewMenuManager
+	 */
 	public void fillLocalPullDown(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
 
+	/**
+	 * @param toolBarManager
+	 */
 	public void fillLocalToolBar(IToolBarManager toolBarManager) {
 		// override if need toolbar
 	}

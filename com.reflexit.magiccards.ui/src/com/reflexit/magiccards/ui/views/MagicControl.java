@@ -87,21 +87,26 @@ public abstract class MagicControl implements IMagicControl {
 	public abstract void createMainControl(Composite parent);
 
 	protected void loadInitial() {
+		// override
 	}
 
 	/**
 	 * @param bars
 	 */
 	public void setGlobalControlHandlers(IActionBars bars) {
+		// override
 	}
 
 	public void fillLocalPullDown(IMenuManager manager) {
+		// override
 	}
 
 	public void fillContextMenu(IMenuManager manager) {
+		// override
 	}
 
 	public void fillLocalToolBar(IToolBarManager manager) {
+		// override
 	}
 
 	public void dispose() {
@@ -117,6 +122,7 @@ public abstract class MagicControl implements IMagicControl {
 	}
 
 	protected void runDoubleClick() {
+		// override
 	}
 
 	public Shell getShell() {
@@ -128,9 +134,11 @@ public abstract class MagicControl implements IMagicControl {
 	}
 
 	protected void propertyChange(PropertyChangeEvent event) {
+		// override
 	}
 
 	public void refresh() {
+		// override
 	}
 
 	public abstract ISelection getSelection();

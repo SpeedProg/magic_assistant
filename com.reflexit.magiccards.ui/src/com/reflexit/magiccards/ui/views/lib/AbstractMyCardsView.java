@@ -43,7 +43,6 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.EditCardsPropertiesDialog;
@@ -165,7 +164,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 * @param b
 	 */
 	protected void changeSelectedOwnerShip(boolean b) {
-		ICardEventManager cardStore = getFilteredStore().getCardStore();
 		ISelection selection = getSelectionProvider().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
@@ -199,7 +197,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		final int PICK = 0;
 		final int N_TO_1 = 1;
 		final int EVEN = -2;
-		ICardStore cardStore = getFilteredStore().getCardStore();
 		ISelection selection = getSelectionProvider().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;

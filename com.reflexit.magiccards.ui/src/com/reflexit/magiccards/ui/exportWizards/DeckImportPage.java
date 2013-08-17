@@ -559,7 +559,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText("Import Type:");
 		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
-		types = new ImportExportFactory<IMagicCard>().getImportTypes();
+		types = ImportExportFactory.getImportTypes();
 		for (ReportType reportType : types) {
 			addComboType(reportType);
 		}

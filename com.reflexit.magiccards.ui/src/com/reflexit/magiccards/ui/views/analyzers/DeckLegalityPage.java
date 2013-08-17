@@ -158,9 +158,11 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		legalityTableViewer.setLabelProvider(new DeckLegalityLabelProvider());
 		legalityTableViewer.setContentProvider(new IStructuredContentProvider() {
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				// ignore
 			}
 
 			public void dispose() {
+				// ignore
 			}
 
 			public Object[] getElements(Object inputElement) {

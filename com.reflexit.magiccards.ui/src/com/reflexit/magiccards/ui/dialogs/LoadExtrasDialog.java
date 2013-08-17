@@ -92,10 +92,10 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Printed Text", MagicCardField.TEXT, false);
 		createFieldCheck("Image", MagicCardField.ID, false);
 		createFieldCheck("Price", MagicCardField.DBPRICE, false);
-		new Label(buttons, SWT.NONE);
+		@SuppressWarnings("unused") Label spacer = new Label(buttons, SWT.NONE);
 		createFieldCheck("Localized version in", MagicCardField.LANG, false);
 		langCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
-		langCombo.setItems(Languages.getInstance().getLangValues());
+		langCombo.setItems(Languages.getLangValues());
 		langCombo.setText("English");
 		createSelectAllButtons(checkArea);
 	}

@@ -97,7 +97,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 			}
 		};
 		IPreferenceStore store = getPreferenceStore();
-		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
+		Collection<ReportType> types = ImportExportFactory.getExportTypes();
 		String ids[] = new String[types.size()];
 		int i = 0;
 		for (Iterator iterator = types.iterator(); iterator.hasNext(); i++) {

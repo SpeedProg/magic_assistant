@@ -48,7 +48,6 @@ public class CostColumn extends AbstractColumn implements Listener {
 			} else
 				return;
 			String text = getActualText(row);
-			Point tw = null;
 			Rectangle bounds;
 			if (item instanceof TableItem)
 				bounds = ((TableItem) item).getBounds(event.index);
@@ -57,9 +56,11 @@ public class CostColumn extends AbstractColumn implements Listener {
 			else
 				return;
 			int tx = 0;
+			int ty = 0;
 			if (text != null) {
-				tw = event.gc.textExtent(text);
+				Point tw = event.gc.textExtent(text);
 				tx = bounds.width - tw.x - 1;
+				ty = tw.y;
 				if (tx < 0)
 					tx = 0;
 				event.gc.setClipping(x, y, tx, bounds.height);
@@ -69,7 +70,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 			Image costImage = SymbolConverter.buildCostImage(cost);
 			event.gc.drawImage(costImage, x + 2, yi);
 			if (text != null) {
-				int yt = y + bounds.height - 2 - tw.y;
+				int yt = y + bounds.height - 2 - ty;
 				event.gc.setClipping(x, yt, bounds.width, bounds.height);
 				event.gc.drawText(text, x + tx - 5, yt, true);
 			}

@@ -90,6 +90,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		Control control = getLabelControl();
 		((GridData) control.getLayoutData()).horizontalSpan = numColumns;
@@ -134,6 +135,7 @@ public abstract class PickListEditor extends FieldEditor {
 	 */
 	public void createSelectionListener() {
 		selectionListener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				Widget widget = event.widget;
 				if (widget == saveButton) {
@@ -152,6 +154,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		Control control = getLabelControl(parent);
 		GridData gd = new GridData();
@@ -172,6 +175,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoad() {
 		if (list != null) {
 			list.removeAll();
@@ -193,6 +197,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoadDefault() {
 		if (list != null) {
 			list.removeAll();
@@ -214,6 +219,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doStore() {
 		int i = list.getSelectionIndex();
 		String s = null;
@@ -241,6 +247,7 @@ public abstract class PickListEditor extends FieldEditor {
 			buttonBox.setLayout(layout);
 			createButtons(buttonBox);
 			buttonBox.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					saveButton = null;
 					removeButton = null;
@@ -268,6 +275,7 @@ public abstract class PickListEditor extends FieldEditor {
 			list.setFont(parent.getFont());
 			list.addSelectionListener(getSelectionListener());
 			list.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					list = null;
 				}
@@ -291,6 +299,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
 	}
@@ -365,6 +374,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public void setFocus() {
 		if (list != null) {
 			list.setFocus();
@@ -379,6 +389,7 @@ public abstract class PickListEditor extends FieldEditor {
 	/*
 	 * @see FieldEditor.setEnabled(boolean,Composite).
 	 */
+	@Override
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getListControl(parent).setEnabled(enabled);

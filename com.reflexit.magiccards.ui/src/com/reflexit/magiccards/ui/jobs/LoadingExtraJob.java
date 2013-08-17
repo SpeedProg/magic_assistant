@@ -83,7 +83,7 @@ public class LoadingExtraJob extends Job {
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
 		} catch (MagicException e) {
-			return new Status(Status.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage());
+			return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage());
 		}
 		return Status.OK_STATUS;
 	}

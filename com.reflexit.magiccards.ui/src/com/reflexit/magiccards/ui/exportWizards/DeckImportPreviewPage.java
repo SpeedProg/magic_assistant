@@ -40,7 +40,6 @@ import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class DeckImportPreviewPage extends WizardPage {
-	private static final Object[] EMPTY_ARRAY = new Object[] {};
 	private TableViewerManager manager;
 	private Text text;
 	protected ImportResult previewResult;
@@ -86,7 +85,6 @@ public class DeckImportPreviewPage extends WizardPage {
 				}
 				manager.updateColumns(prefColumns);
 			}
-			int count = 0;
 			List list = result.getList();
 			if (list.size() > 0) {
 				manager.updateViewer(list);

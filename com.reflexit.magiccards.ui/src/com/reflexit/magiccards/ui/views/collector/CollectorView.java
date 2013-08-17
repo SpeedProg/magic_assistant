@@ -37,7 +37,6 @@ import com.reflexit.magiccards.ui.views.lib.AbstractMyCardsView;
  */
 public class CollectorView extends AbstractMyCardsView implements ISelectionListener {
 	public static final String ID = CollectorView.class.getName();
-	private Action delete;
 	private Action refresh;
 	private Action onlyOwn;
 	private boolean onlyOwnFiltred;
@@ -57,7 +56,6 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
-		activateActionHandler(delete, "org.eclipse.ui.edit.delete");
 		super.setGlobalHandlers(bars);
 	}
 
@@ -81,12 +79,6 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.delete = new Action("Delete") {
-			@Override
-			public void run() {
-				actionDelete();
-			}
-		};
 		this.refresh = new Action("Refresh", SWT.NONE) {
 			{
 				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
@@ -127,11 +119,9 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 		reloadData();
 	}
 
-	/**
-	 * 
-	 */
-	protected void actionDelete() {
-		// TODO
+	@Override
+	protected void removeSelected() {
+		// System.err.println("Remove attempt");
 	}
 
 	@Override

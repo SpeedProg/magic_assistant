@@ -13,9 +13,11 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class TableViewerContentProvider<T> implements IStructuredContentProvider {
 	public void dispose() {
+		// ignore
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// ignore
 	}
 
 	public Object[] getElements(Object element) {
@@ -38,7 +40,7 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 		return fstore.getFilter().getGroupField() == null;
 	}
 
-	public Object getParent(Object element) {
+	public Object getParent(@SuppressWarnings("unused") Object element) {
 		return null;
 	}
 }

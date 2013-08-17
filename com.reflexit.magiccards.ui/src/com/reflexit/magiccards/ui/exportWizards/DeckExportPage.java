@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.exportWizards;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -45,7 +44,6 @@ import com.reflexit.magiccards.core.exports.CustomExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -316,7 +314,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText("Export Type:");
 		typeCombo = new Combo(buttonComposite, SWT.READ_ONLY | SWT.DROP_DOWN);
-		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
+		Collection<ReportType> types = ImportExportFactory.getExportTypes();
 		for (ReportType rt : types) {
 			addComboType(rt);
 		}
@@ -599,7 +597,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 			final boolean header = getIncludeHeader();
 			final boolean sideboard = getIncludeSideBoard();
 			IRunnableWithProgress work = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException {
 					try {
 						exportDeck(outStream, monitor, reportType, header, sideboard);
 						outStream.close();
@@ -624,7 +622,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	}
 
 	public void exportDeck(final OutputStream outStream, IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
-			throws FileNotFoundException, IOException, InvocationTargetException, InterruptedException {
+			throws InvocationTargetException, InterruptedException {
 		// TODO: export selection only
 		final HashMap<String, String> map = storeToMap(sideboard);
 		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();

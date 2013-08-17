@@ -95,7 +95,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 					setReportType(ReportType.createReportType(control.getText()));
 				}
 			});
-			Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
+			Collection<ReportType> types = ImportExportFactory.getExportTypes();
 			for (final ReportType rt : types) {
 				control.add(rt.getLabel());
 			}
@@ -158,7 +158,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	protected void initReportTypes() {
-		Collection<ReportType> types = new ImportExportFactory<IMagicCard>().getExportTypes();
+		Collection<ReportType> types = ImportExportFactory.getExportTypes();
 		for (final ReportType rt : types) {
 			if (rt.getLabel().contains("HTML")) {
 				reportType = rt; // last

@@ -270,7 +270,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			col.open();
 		}
 		monitor.worked(1);
-		ICardStore<IMagicCard> store = col.getStore();
+		// ICardStore<IMagicCard> store = col.getStore();
 		HashMap<String, String> filterset = new HashMap<String, String>();
 		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
 		MagicCardFilter filter = dbcards.getFilter();

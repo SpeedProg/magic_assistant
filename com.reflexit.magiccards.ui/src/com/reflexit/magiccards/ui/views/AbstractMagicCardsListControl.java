@@ -464,11 +464,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		ICardField[] oldIndex = filter.getGroupFields();
 		if (Arrays.equals(oldIndex, fields))
 			return;
-		boolean hasGroups = fields != null;
-		if (hasGroups)
+		if (fields != null) {
 			filter.setSortField(fields[0], true);
-		filter.setGroupFields(fields);
-		manager.flip(hasGroups);
+			filter.setGroupFields(fields);
+			manager.flip(true);
+		} else {
+			filter.setGroupFields(null);
+			manager.flip(false);
+		}
 	}
 
 	protected MenuManager createGroupMenu() {
