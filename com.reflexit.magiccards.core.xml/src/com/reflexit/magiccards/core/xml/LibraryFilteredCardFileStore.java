@@ -40,7 +40,6 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 		MagicLogger.traceEnd("lfcs init");
 	}
 
-	@SuppressWarnings("unused")
 	public synchronized static LibraryFilteredCardFileStore getInstance() {
 		if (instance == null)
 			instance = new LibraryFilteredCardFileStore();

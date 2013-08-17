@@ -7,12 +7,11 @@ public class MagicDBFilteredCardFileStore extends BasicMagicDBFilteredCardFileSt
 
 	private MagicDBFilteredCardFileStore() {
 		super(new DbMultiFileCardStore(true));
-		instance = this;
 	}
 
 	public static IFilteredCardStore getInstance() {
 		if (instance == null)
-			new MagicDBFilteredCardFileStore();
+			instance = new MagicDBFilteredCardFileStore();
 		return instance;
 	}
 }

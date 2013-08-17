@@ -85,9 +85,9 @@ public class XmlCardHolder implements ICardHandler {
 		for (String set : editions) {
 			String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
 			try {
-				long time = System.currentTimeMillis();
+				// long time = System.currentTimeMillis();
 				loadFromFlatResource(abbr + ".txt");
-				long nowtime = System.currentTimeMillis() - time;
+				// long nowtime = System.currentTimeMillis() - time;
 				// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " +
 				// nowtime % 1000 + " ms");
 			} catch (IOException e) {
@@ -101,17 +101,9 @@ public class XmlCardHolder implements ICardHandler {
 		if (is != null) {
 			BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-			loadtFromFlatIntoXml(st, list, isSingleSet(set));
+			loadtFromFlatIntoXml(st, list);
 			is.close();
 		}
-	}
-
-	private boolean isSingleSet(String set) {
-		if (set.equalsIgnoreCase("Standard"))
-			return false;
-		if (set.equalsIgnoreCase("All"))
-			return false;
-		return true;
 	}
 
 	public static File getDbFolder() {
@@ -119,11 +111,10 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws MagicException,
-			IOException {
+	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list) throws MagicException, IOException {
 		ICardStore store = getMagicDBStore();
 		int init = store.size();
-		loadFromFlat(st, list, markCn);
+		loadFromFlat(st, list);
 		boolean hasAny = list.size() > 0;
 		store.addAll(list);
 		// ArrayList<IMagicCard> more = fixCards(list);
@@ -133,12 +124,10 @@ public class XmlCardHolder implements ICardHandler {
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 
-	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list, boolean markCn) throws IOException {
+	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list) throws IOException {
 		String line = st.readLine(); // header ignore for now
 		ICardField[] xfields = MagicCardFieldPhysical.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
-		int cnum = 0;
 		while ((line = st.readLine()) != null) {
-			cnum++;
 			if (line.length() == 0)
 				continue;
 			try {
@@ -307,7 +296,7 @@ public class XmlCardHolder implements ICardHandler {
 				throw new InterruptedException();
 			pm.subTask("Updating database for " + set);
 			BufferedReader st = new BufferedReader(new FileReader(file));
-			rec = loadtFromFlatIntoXml(st, list, isSingleSet(set));
+			rec = loadtFromFlatIntoXml(st, list);
 			st.close();
 			pm.worked(30);
 			return rec;
