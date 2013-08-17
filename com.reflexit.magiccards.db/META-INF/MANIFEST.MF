@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Preloaded Cards Database
 Bundle-SymbolicName: com.reflexit.magiccards.db
-Bundle-Version: 1.2.8.qualifier
+Bundle-Version: 1.2.9.qualifier
 Bundle-Activator: com.reflexit.magiccards.db.DbActivator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime
