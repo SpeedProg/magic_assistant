@@ -2,7 +2,6 @@ package com.reflexit.magicassistant.swtbot.tests;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
 import com.reflexit.magicassistant.ui.tests.AllUiTests;
 import com.reflexit.magiccards.core.test.AllCoreTests;
 
@@ -14,4 +13,5 @@ SwtBotMagicTests.class, //
 		AllCoreTests.class, //
 })
 public class AllMagicTests {
+	// see above
 }
