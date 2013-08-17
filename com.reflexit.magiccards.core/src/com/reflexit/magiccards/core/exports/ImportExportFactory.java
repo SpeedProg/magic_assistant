@@ -54,7 +54,7 @@ public class ImportExportFactory<T> {
 	}
 
 	private static void parseExtension(IConfigurationElement elp) {
-		String id = elp.getAttribute("id");
+		// String id = elp.getAttribute("id");
 		String label = elp.getAttribute("label");
 		String imp = elp.getAttribute("importDelegate");
 		String exp = elp.getAttribute("exportDelegate");

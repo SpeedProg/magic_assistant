@@ -79,7 +79,7 @@ public class MagicXmlStreamReader {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		public void startElement(String uri, String localName, String qName, Attributes attributes) {
 			last = qName;
 			Tag current = Tag.fake;
 			text.delete(0, text.length());
@@ -162,6 +162,8 @@ public class MagicXmlStreamReader {
 						else
 							value = ttStr;
 						break;
+					case property:
+						break;
 					case properties:
 						break;
 					case fake: {
@@ -186,6 +188,10 @@ public class MagicXmlStreamReader {
 						}
 						break;
 					}
+					case cards:
+						break;
+					case list:
+						break;
 				}
 			} catch (Exception e) {
 				// System.err.println("error at " + locator.getLineNumber());
@@ -246,7 +252,8 @@ public class MagicXmlStreamReader {
 
 	public static void main(String[] args) throws IOException {
 		String set = "C:\\Develop\\magic\\runtime-magic.product-init\\magiccards\\MagicDB\\Saviors_of_Kamigawa.xml";
-		String main = "C:\\Develop\\magic\\runtime-magic.product-init\\magiccards\\Collections\\xxx.xml";
+		// String main =
+		// "C:\\Develop\\magic\\runtime-magic.product-init\\magiccards\\Collections\\xxx.xml";
 		CardCollectionStoreObject o = new MagicXmlStreamReader().load(new File(set));
 		o.file = new File("c:/tmp/test1.xml");
 		new MagicXmlStreamWriter().write(o);

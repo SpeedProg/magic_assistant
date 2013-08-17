@@ -42,7 +42,7 @@ public class ImportError {
 
 	@Override
 	public String toString() {
-		return MessageFormat.format(type.msg, arg);
+		return MessageFormat.format(type.msg, (Object[]) arg);
 	}
 
 	public static ImportError createFieldNotSetError(ICardField f, Exception e) {

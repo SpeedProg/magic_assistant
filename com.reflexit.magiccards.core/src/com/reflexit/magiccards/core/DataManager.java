@@ -37,8 +37,7 @@ public class DataManager {
 			// String variant1 =
 			// "com.reflexit.magiccards.core.sql.handlers.CardHolder";
 			String variant2 = "com.reflexit.magiccards.core.xml.XmlCardHolder";
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName(variant2);
+			@SuppressWarnings("rawtypes") Class c = Class.forName(variant2);
 			Object x = c.newInstance();
 			handler = (ICardHandler) x;
 		} catch (InstantiationException e) {
@@ -74,7 +73,8 @@ public class DataManager {
 	}
 
 	public static void reset(File dir) {
-		root = ModelRoot.getInstance(new File(FileUtils.getWorkspaceFile(), "magiccards"));
+		// File locDir = new File(FileUtils.getWorkspaceFile(), "magiccards");
+		root = ModelRoot.getInstance(dir);
 	}
 
 	public static File getRootDir() {

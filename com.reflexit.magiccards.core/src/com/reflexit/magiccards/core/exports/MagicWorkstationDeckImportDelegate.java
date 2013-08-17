@@ -55,31 +55,34 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	 */
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
 		DeckParser parser = new DeckParser(getStream(), this);
-		parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
-				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
-		parser.addPattern(Pattern.compile("^\\s*(\\d+)\\s+([^(]*)"), //
-				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
-		parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
-				new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR,
-						MagicCardField.NAME });
-		parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+)\\s+([^(]*)"), //
-				new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET,
-				MagicCardFieldPhysical.SIDEBOARD });
-		do {
-			lineNum++;
-			try {
-				MagicCardPhysical card = createDefaultCard();
-				card = parser.readLine(card);
-				if (card == null)
-					break;
-				importCard(card);
-				monitor.worked(1);
-			} catch (IOException e) {
-				throw e;
-			}
-		} while (true);
-		parser.close();
+		try {
+			parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
+					new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
+			parser.addPattern(Pattern.compile("^\\s*(\\d+)\\s+([^(]*)"), //
+					new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+			parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
+					new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR,
+							MagicCardField.NAME });
+			parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+)\\s+([^(]*)"), //
+					new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+			importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET,
+					MagicCardFieldPhysical.SIDEBOARD });
+			do {
+				lineNum++;
+				try {
+					MagicCardPhysical card = createDefaultCard();
+					card = parser.readLine(card);
+					if (card == null)
+						break;
+					importCard(card);
+					monitor.worked(1);
+				} catch (IOException e) {
+					throw e;
+				}
+			} while (true);
+		} finally {
+			parser.close();
+		}
 	}
 
 	@Override

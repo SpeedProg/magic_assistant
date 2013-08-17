@@ -12,7 +12,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ILocatable, ICardEventListener, IStorageContainer<T> {
+public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ICardEventListener {
 	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
 	protected int size;
 	protected Location defaultLocation;
@@ -141,7 +141,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 	public synchronized int getDeepSize() {
 		int s = 0;
-		for (Object element : this) {
+		for (@SuppressWarnings("unused") Object element : this) {
 			s++;
 		}
 		if (size != s) {
@@ -290,7 +290,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				table.getStorage().autoSave();
 			}
-		};
+		}
 
 		public void save() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
@@ -366,5 +366,5 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		Location loc = getLocation(card);
 		AbstractCardStoreWithStorage<T> store = map.get(loc);
 		return store.contains(card);
-	};
+	}
 }

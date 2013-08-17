@@ -42,12 +42,12 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	public synchronized void reload() {
 		setLoaded(false);
 		load();
-	};
+	}
 
 	public synchronized void unload() {
 		setLoaded(false);
 		clearCache();
-	};
+	}
 
 	public abstract void clearCache();
 
@@ -129,7 +129,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 			}
 			return false;
 		}
-	};
+	}
 
 	protected abstract boolean doAddCard(T card);
 

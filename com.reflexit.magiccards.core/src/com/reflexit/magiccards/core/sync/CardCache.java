@@ -43,11 +43,11 @@ public class CardCache {
 
 	public static void setCahchingEnabled(boolean enabled) {
 		caching = enabled;
-	};
+	}
 
 	public static void setLoadingEnabled(boolean enabled) {
 		loading = enabled;
-	};
+	}
 
 	public static URL createSetImageURL(IMagicCard card, boolean upload) throws IOException {
 		String edition = card.getSet();

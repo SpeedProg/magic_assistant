@@ -219,14 +219,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return this.cmc;
 	}
 
-	private void setCmc(int cmc) {
-		this.cmc = cmc;
-	}
-
-	private void setCmc(String cmc) {
-		setCmc(Integer.parseInt(cmc));
-	}
-
 	@Override
 	public int hashCode() {
 		if (this.id != 0)

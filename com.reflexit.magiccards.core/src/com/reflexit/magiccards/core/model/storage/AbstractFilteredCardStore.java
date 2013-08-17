@@ -37,7 +37,6 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
-	private static final ICardGroup[] EMPTY_CARD_GROUP = new ICardGroup[0];
 	protected Collection filteredList = null;
 	protected final CardGroup rootGroup = new CardGroup(null, "Root");
 	protected boolean initialized = false;
@@ -79,6 +78,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected void doInitialize() throws MagicException {
+		// do nothing
 	}
 
 	protected T doGetCard(int index) {

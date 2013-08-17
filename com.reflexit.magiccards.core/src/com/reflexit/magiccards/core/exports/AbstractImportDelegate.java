@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.reflexit.magiccards.core.model.Editions;
@@ -63,7 +62,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		this.header = header;
 	}
 
-	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(ICoreProgressMonitor monitor) {
 		monitor.beginTask("Importing...", 100);
 		try {
 			doRun(monitor);

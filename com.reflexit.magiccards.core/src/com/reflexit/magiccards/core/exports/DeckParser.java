@@ -14,19 +14,15 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class DeckParser implements Closeable {
 	private BufferedReader reader;
-	private String lineSep;
 	private IImportDelegate delegate;
+	private LinkedHashMap<Pattern, Object> patternList = new LinkedHashMap<Pattern, Object>();
+	protected String state;
+	private ICardField[] reqFields;
 
 	public DeckParser(InputStream st, IImportDelegate delegate) {
 		reader = new BufferedReader(new InputStreamReader(st));
-		lineSep = System.getProperty("lineNum.separator");
 		this.delegate = delegate;
 	}
-
-	private LinkedHashMap<Pattern, Object> patternList = new LinkedHashMap<Pattern, Object>();
-	private ICardField[] currentFields;
-	protected String state;
-	private ICardField[] reqFields;
 
 	public void addPattern(Pattern p, ICardField fieldsMap[]) {
 		patternList.put(p, fieldsMap);
@@ -39,10 +35,6 @@ public class DeckParser implements Closeable {
 
 	public void addPattern(Pattern p, String state) {
 		patternList.put(p, state);
-	}
-
-	private ICardField[] getCurrentFields() {
-		return currentFields;
 	}
 
 	public ICardField[] getFields() {
@@ -89,7 +81,6 @@ public class DeckParser implements Closeable {
 							// nothing
 						}
 					}
-					currentFields = cardFields;
 					break;
 				} else if (what instanceof String) {
 					this.state = (String) what;

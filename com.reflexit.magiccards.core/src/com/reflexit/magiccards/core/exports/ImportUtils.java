@@ -192,7 +192,6 @@ public class ImportUtils {
 	}
 
 	public static Map<String, String> getSetCandidates(Iterable<IMagicCard> cards) {
-		Editions editions = Editions.getInstance();
 		HashMap<String, String> badSets = new HashMap<String, String>();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
@@ -291,13 +290,11 @@ public class ImportUtils {
 	}
 
 	public static class LookupHash {
-		private ICardStore store;
 		private static String ALL = "All";
 		private HashMap<String, HashMap<String, List<IMagicCard>>> mapSetNames = new HashMap<String, HashMap<String, List<IMagicCard>>>();
 		private Pattern brackers = Pattern.compile("(.*) \\((.*)\\)");
 
 		public LookupHash(ICardStore lookupStore) {
-			this.store = lookupStore;
 			mapSetNames.put(ALL, new HashMap<String, List<IMagicCard>>());
 			if (lookupStore != null)
 				for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
@@ -393,8 +390,7 @@ public class ImportUtils {
 	}
 
 	public static void validateDbRecords(ArrayList<IMagicCard> newdbrecords, ArrayList<String> lerrors) {
-		int row = 0;
-		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext(); row++) {
+		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			MagicCard newCard = (MagicCard) card.getBase();
 			String prefix = TextPrinter.toString(newCard) + ": Cannot import new card into db: ";
@@ -416,8 +412,7 @@ public class ImportUtils {
 
 	public static void importIntoDb(Collection<IMagicCard> newdbrecords) {
 		ICardStore magicDbHandler = DataManager.getMagicDBStore();
-		int row = 0;
-		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext(); row++) {
+		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			MagicCard newCard = (MagicCard) card.getBase();
 			magicDbHandler.add(newCard);

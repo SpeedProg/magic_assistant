@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -30,12 +29,12 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	MemoryCardStore hand;
 	MemoryCardStore library;
 
-	static class DrawDeck extends MemoryCardStore implements ICardCountable {
+	static class DrawDeck extends MemoryCardStore {
 		@Override
 		public int getCount() {
 			return size();
 		}
-	};
+	}
 
 	/**
 	 * 

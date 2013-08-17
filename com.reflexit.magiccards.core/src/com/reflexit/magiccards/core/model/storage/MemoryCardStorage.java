@@ -58,9 +58,9 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		return this.getList().add(card);
 	}
 
-	protected boolean doUpdate(T card) {
+	protected boolean doUpdate(@SuppressWarnings("unused") T card) {
 		return true;
-	};
+	}
 
 	/**
 	 * @return the list
@@ -84,6 +84,9 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		// nothing
 	}
 
+	/**
+	 * @throws IOException
+	 */
 	@Override
 	protected void doSave() throws IOException {
 		// nothing

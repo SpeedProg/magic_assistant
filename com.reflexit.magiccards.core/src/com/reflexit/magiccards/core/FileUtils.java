@@ -29,17 +29,27 @@ public class FileUtils {
 	}
 
 	public static void copyFile(File in, File out) throws IOException {
-		FileChannel inChannel = new FileInputStream(in).getChannel();
-		FileChannel outChannel = new FileOutputStream(out).getChannel();
+		FileInputStream ins = new FileInputStream(in);
 		try {
-			inChannel.transferTo(0, inChannel.size(), outChannel);
-		} catch (IOException e) {
-			throw e;
+			FileChannel inChannel = ins.getChannel();
+			FileOutputStream outs = new FileOutputStream(out);
+			try {
+				FileChannel outChannel = outs.getChannel();
+				try {
+					inChannel.transferTo(0, inChannel.size(), outChannel);
+				} catch (IOException e) {
+					throw e;
+				} finally {
+					if (inChannel != null)
+						inChannel.close();
+					if (outChannel != null)
+						outChannel.close();
+				}
+			} finally {
+				outs.close();
+			}
 		} finally {
-			if (inChannel != null)
-				inChannel.close();
-			if (outChannel != null)
-				outChannel.close();
+			ins.close();
 		}
 	}
 
@@ -127,7 +137,7 @@ public class FileUtils {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		MagicLogger.log("aaa");
 		ICardHandler cardHandler = DataManager.getCardHandler();
 		cardHandler.loadInitialIfNot(ICoreProgressMonitor.NONE);

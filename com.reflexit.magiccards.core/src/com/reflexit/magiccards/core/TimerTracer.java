@@ -126,7 +126,7 @@ public class TimerTracer {
 		return timerStats;
 	}
 
-	public void setTracing(boolean tracing) {
-		this.tracing = tracing;
+	public void setTracing(boolean tr) {
+		tracing = tr;
 	}
 }

@@ -17,7 +17,7 @@ public class ColorTypes implements ISearchableProperty {
 		add("Hybrid");
 		add("And");
 		add("Only");
-	};
+	}
 
 	private void add(String string) {
 		String id = getPrefConstant(string);

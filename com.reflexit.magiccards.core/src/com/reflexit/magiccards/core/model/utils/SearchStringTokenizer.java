@@ -26,7 +26,7 @@ public class SearchStringTokenizer {
 		}
 
 		private TokenType type;
-		private String value;;
+		private String value;
 
 		SearchToken(TokenType type, String value) {
 			this.type = type;

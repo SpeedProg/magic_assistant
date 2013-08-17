@@ -20,24 +20,12 @@ import com.reflexit.magiccards.core.model.ICardCountable;
  * @author Alena
  * 
  */
-public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardStore<T>, ICardCountable {
-	protected boolean mergeOnAdd = true;
-
+public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardCountable {
 	/**
 	 * creates empty card store
 	 */
 	public MemoryCardStore() {
 		super(new MemoryCardStorage<T>(), false);
-	}
-
-	@Override
-	public void setMergeOnAdd(final boolean v) {
-		this.mergeOnAdd = v;
-	}
-
-	@Override
-	public boolean getMergeOnAdd() {
-		return this.mergeOnAdd;
 	}
 
 	public T getCard(int id) {
