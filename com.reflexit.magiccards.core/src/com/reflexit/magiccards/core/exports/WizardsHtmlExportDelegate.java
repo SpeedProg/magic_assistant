@@ -210,7 +210,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		w.startEl("div", "class", "decktopmiddle");
 		w.startEl("div", "style", "float:left");
 		w.startEl("div", "class", "main");
-		w.el("heading", getCardStore().getName());
+		w.el("heading", getName());
 		w.endEl(); // main
 		w.startEl("div", "class", "sub");
 		w.data(getCardStore().getComment());
@@ -222,7 +222,10 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 	}
 
 	private ICardStore<IMagicCard> getCardStore() {
-		return DataManager.getCardStore(location);
+		ICardStore<IMagicCard> cardStore = DataManager.getCardStore(location);
+		if (cardStore != null)
+			return cardStore;
+		return store.getCardStore();
 	}
 
 	@Override

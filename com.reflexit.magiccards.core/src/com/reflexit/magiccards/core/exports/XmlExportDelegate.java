@@ -9,6 +9,7 @@ import java.util.Arrays;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
 import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
@@ -20,7 +21,7 @@ public class XmlExportDelegate extends AbstractExportDelegatePerLine<IMagicCard>
 			monitor = ICoreProgressMonitor.NONE;
 		monitor.beginTask("Exporting xml", 100);
 		try {
-			if (store.getLocation() == Location.NO_WHERE) {
+			if (store.getLocation() == Location.NO_WHERE || store instanceof MemoryFilteredCardStore) {
 				MagicXmlStreamHandler xmlHanlder = new MagicXmlStreamHandler();
 				CardCollectionStoreObject o = new CardCollectionStoreObject();
 				o.list = Arrays.asList(store.getElements());
