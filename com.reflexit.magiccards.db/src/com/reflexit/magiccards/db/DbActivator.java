@@ -50,11 +50,13 @@ public class DbActivator extends Plugin {
 		super.stop(context);
 	}
 
+	@SuppressWarnings("deprecation")
 	public IEclipsePreferences getEclipsePreferences() {
 		// Platform.getPreferencesService().getInt();
 		return new InstanceScope().getNode(PLUGIN_ID);
 	}
 
+	@SuppressWarnings("deprecation")
 	public IEclipsePreferences getEclipseDefaultPreferences() {
 		return new DefaultScope().getNode(PLUGIN_ID);
 	}
@@ -78,10 +80,10 @@ public class DbActivator extends Plugin {
 		if (pl == null) {
 			e.printStackTrace();
 		} else
-			pl.getLog().log(new Status(Status.ERROR, DbActivator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
+			pl.getLog().log(new Status(IStatus.ERROR, DbActivator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
 	}
 
 	public IStatus getStatus(Throwable e) {
-		return new Status(Status.ERROR, PLUGIN_ID, e.getMessage(), e);
+		return new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e);
 	}
 }
