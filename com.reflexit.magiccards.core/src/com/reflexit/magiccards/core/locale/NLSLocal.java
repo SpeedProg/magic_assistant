@@ -49,7 +49,6 @@ public abstract class NLSLocal {
 	private static final String EXTENSION = ".properties"; //$NON-NLS-1$
 	private static final String PROP_WARNINGS = "osgi.nls.warnings"; //$NON-NLS-1$
 	private static final String IGNORE = "ignore"; //$NON-NLS-1$
-	@SuppressWarnings("restriction")
 	private static final boolean ignoreWarnings = IGNORE.equals(FrameworkProperties.getProperty(PROP_WARNINGS));
 	/*
 	 * NOTE do not change the name of this field; it is set by the Framework using reflection

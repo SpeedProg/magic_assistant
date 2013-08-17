@@ -68,14 +68,13 @@ public class Activator extends Plugin {
 		if (getDefault() == null) {
 			System.err.println(message);
 		} else
-			getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
+			getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message));
 	}
 
 	static void log(Throwable e) {
 		if (getDefault() == null) {
 			e.printStackTrace();
 		} else
-			getDefault().getLog()
-					.log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
+			getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 1, e.getMessage(), e));
 	}
 }

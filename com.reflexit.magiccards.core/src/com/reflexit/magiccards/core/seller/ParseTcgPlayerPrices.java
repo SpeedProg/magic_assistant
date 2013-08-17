@@ -66,8 +66,7 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 	}
 
 	@Override
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
-			throws IOException {
+	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor) {
 		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
 		if (iterable == null) {
 			iterable = store;

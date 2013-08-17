@@ -124,13 +124,6 @@ public class ParseGathererDetails extends ParseGathererPage {
 	 *              alt="Hinterland Harbor" style="border:none;" />
 
 	 */
-	private static Pattern cardAltPattern = Pattern.compile("cardImage\"\\s*alt=\"(.*?)\"");
-	/*-
-	 *              <img src="../../Handlers/Image.ashx?multiverseid=241988&amp;type=card" 
-	 *              id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_cardImage" 
-	 *              alt="Hinterland Harbor" style="border:none;" />
-
-	 */
 	private static Pattern cardIdPattern = Pattern.compile("img src.*?\\?multiverseid=(.*?)&amp;type=card");
 	private static Pattern cardRotatePattern = Pattern.compile("img src.*?\\?multiverseid=.*?&amp;type=card&amp;(options=\\w+)");
 
