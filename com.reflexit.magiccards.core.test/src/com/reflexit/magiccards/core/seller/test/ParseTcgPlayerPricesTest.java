@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.seller.test;
 
-import java.io.IOException;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
@@ -34,7 +32,7 @@ public class ParseTcgPlayerPricesTest extends TestCase {
 	public void doit() {
 		try {
 			parser.updateStore(store, null, 0, monitor);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 	}
