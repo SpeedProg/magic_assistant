@@ -9,6 +9,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -175,13 +176,21 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.actionCopy = new Action("Copy") {
 			@Override
 			public void run() {
-				runCopy();
+				try {
+					runCopy();
+				} catch (Exception e) {
+					MessageDialog.openError(getShell(), "Error", e.getMessage());
+				}
 			}
 		};
 		this.actionPaste = new Action("Paste") {
 			@Override
 			public void run() {
-				runPaste();
+				try {
+					runPaste();
+				} catch (Exception e) {
+					MessageDialog.openError(getShell(), "Error", e.getMessage());
+				}
 			}
 		};
 		this.loadExtras = new Action("Load Extra Fields...") {
@@ -348,7 +357,11 @@ public abstract class AbstractCardsView extends ViewPart {
 				Action ac = new Action(name) {
 					@Override
 					public void run() {
-						deckAction.run(deckId);
+						try {
+							deckAction.run(deckId);
+						} catch (Exception e) {
+							MessageDialog.openError(getShell(), "Error", e.getMessage());
+						}
 					}
 				};
 				if (deckView == this)

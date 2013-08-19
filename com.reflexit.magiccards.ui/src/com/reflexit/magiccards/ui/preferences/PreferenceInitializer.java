@@ -34,6 +34,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.SHOW_GRID, false);
 		store.setDefault(PreferenceConstants.CHECK_FOR_UPDATES, true);
 		store.setDefault(PreferenceConstants.CHECK_FOR_CARDS, true);
+		store.setDefault(PreferenceConstants.OWNED_COPY, false);
 		// local settings
 		getMdbStore()
 				.setDefault(

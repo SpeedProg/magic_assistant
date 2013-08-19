@@ -11,13 +11,15 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magicassistant.p2.UpdateHandler;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -45,8 +47,32 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	 */
 	@Override
 	public void createFieldEditors() {
-		BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching",
+		// internet
+		createInternetOptionsGroup();
+		// selection
+		createCardSelectGroup();
+		// presentation
+		BooleanFieldEditor grid = new BooleanFieldEditor(PreferenceConstants.SHOW_GRID, "Show grid lines in card tables",
+				getFieldEditorParent());
+		addField(grid);
+		// protection
+		BooleanFieldEditor owncopy = new BooleanFieldEditor(PreferenceConstants.OWNED_COPY, "Allow to copy non-virtual cards",
 				getFieldEditorParent()) {
+			@Override
+			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
+				super.fireStateChanged(property, oldValue, newValue);
+				DataManager.setOwnCopyEnabled(newValue);
+			}
+		};
+		addField(owncopy);
+	}
+
+	protected void createInternetOptionsGroup() {
+		Group inetOptions = new Group(getFieldEditorParent(), SWT.NONE);
+		inetOptions.setText("When card is selected");
+		GridData ld = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		ld.horizontalSpan = 2;
+		BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching", inetOptions) {
 			@Override
 			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
 				super.fireStateChanged(property, oldValue, newValue);
@@ -54,13 +80,21 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			}
 		};
 		addField(caching);
-		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup",
-				getFieldEditorParent()));
-		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards of startup", getFieldEditorParent()));
-		Label space = new Label(getFieldEditorParent(), SWT.NONE);
-		space.setText("When card is selected:");
-		BooleanFieldEditor load = new BooleanFieldEditor(PreferenceConstants.LOAD_IMAGES, "Load card graphics from the web",
-				getFieldEditorParent()) {
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards of startup", inetOptions));
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup", inetOptions));
+		createButtons(getFieldEditorParent());
+		String[][] values = getPriceProviders();
+		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values, inetOptions);
+		addField(combo);
+	}
+
+	protected void createCardSelectGroup() {
+		Group onCardSelect = new Group(getFieldEditorParent(), SWT.NONE);
+		onCardSelect.setText("When card is selected");
+		GridData ld = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		ld.horizontalSpan = 2;
+		onCardSelect.setLayoutData(ld);
+		BooleanFieldEditor load = new BooleanFieldEditor(PreferenceConstants.LOAD_IMAGES, "Load card graphics from the web", onCardSelect) {
 			@Override
 			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
 				super.fireStateChanged(property, oldValue, newValue);
@@ -68,23 +102,14 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			}
 		};
 		addField(load);
-		BooleanFieldEditor rulings = new BooleanFieldEditor(PreferenceConstants.LOAD_RULINGS, "Load rulings from the web",
-				getFieldEditorParent());
+		BooleanFieldEditor rulings = new BooleanFieldEditor(PreferenceConstants.LOAD_RULINGS, "Load rulings from the web", onCardSelect);
 		addField(rulings);
 		BooleanFieldEditor other = new BooleanFieldEditor(PreferenceConstants.LOAD_EXTRAS,
-				"Load extra fields and update oracle text from the web", getFieldEditorParent());
+				"Load extra fields and update oracle text from the web", onCardSelect);
 		addField(other);
 		BooleanFieldEditor printings = new BooleanFieldEditor(PreferenceConstants.LOAD_PRINTINGS,
-				"Load all card's printings (all sets and artworks) from the web", getFieldEditorParent());
+				"Load all card's printings (all sets and artworks) from the web", onCardSelect);
 		addField(printings);
-		String[][] values = getPriceProviders();
-		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values,
-				getFieldEditorParent());
-		addField(combo);
-		BooleanFieldEditor grid = new BooleanFieldEditor(PreferenceConstants.SHOW_GRID, "Show grid lines in card tables",
-				getFieldEditorParent());
-		addField(grid);
-		createButtons(getFieldEditorParent());
 	}
 
 	private void createButtons(Composite fieldEditorParent) {
