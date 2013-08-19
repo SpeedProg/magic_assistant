@@ -32,6 +32,7 @@ public class DataManager {
 	private static ICardHandler handler;
 	private static ModelRoot root;
 	private static IntHashtable links = new IntHashtable();
+	private static boolean owncopy;
 	static {
 		try {
 			// String variant1 =
@@ -94,6 +95,10 @@ public class DataManager {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
+			if (owncopy == false && card instanceof MagicCardPhysical && virtual == false) {
+				throw new MagicException(
+						"Cannot copy real cards into non-virtual deck, use move instead - or override this protection in preferences");
+			}
 			// copied cards will have collection ownership for virtual
 			MagicCardPhysical phi = new MagicCardPhysical(card, to, virtual);
 			list.add(phi);
@@ -358,5 +363,9 @@ public class DataManager {
 
 	public static CardGroup getRealCards(MagicCard mc) {
 		return (CardGroup) links.get(mc.getCardId());
+	}
+
+	public static void setOwnCopyEnabled(boolean newValue) {
+		owncopy = newValue;
 	}
 }
