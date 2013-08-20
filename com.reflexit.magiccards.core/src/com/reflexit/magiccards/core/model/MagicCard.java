@@ -715,6 +715,13 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Integer) realCards.getObjectByField(MagicCardFieldPhysical.FORTRADECOUNT);
 	}
 
+	public float getPrice() {
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
+			return 0;
+		return realCards.getPrice();
+	}
+
 	public String getSpecial() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)

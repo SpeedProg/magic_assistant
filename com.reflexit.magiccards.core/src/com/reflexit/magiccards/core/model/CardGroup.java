@@ -693,6 +693,12 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return getGroupBase().getDbPrice();
 	}
 
+	public float getPrice() {
+		if (size() == 0)
+			return 0f;
+		return getGroupBase().getPrice();
+	}
+
 	public float getCommunityRating() {
 		if (size() == 0)
 			return 0f;
@@ -758,5 +764,18 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		if (size() == 0)
 			return 0;
 		return getGroupBase().getCollectorNumberId();
+	}
+
+	public void addAll(Iterable cards) {
+		if (cards == null)
+			return;
+		for (Object elem : cards) {
+			children.add((ICard) elem);
+			if (elem instanceof CardGroup) {
+				CardGroup cardGroup = (CardGroup) elem;
+				subs.put(cardGroup.getName(), (CardGroup) elem);
+			}
+		}
+		rehash();
 	}
 }
