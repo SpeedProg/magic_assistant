@@ -58,7 +58,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 				Object o = iterator.next();
 				if (o instanceof CardGroup) {
 					CardGroup g = (CardGroup) o;
-					if (g.size() > 0)
+					if (g.size() > 0 && g.getGroupBase() != null)
 						addBase(g.getGroupBase());
 				} else if (o instanceof IMagicCard) {
 					addBase((IMagicCard) o);
