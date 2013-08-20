@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.locale.CardText;
 import com.reflexit.magiccards.core.model.Abilities;
@@ -31,6 +32,7 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -89,10 +91,12 @@ public final class CardStoreUtils {
 
 	public static String buildColors(Iterable store) {
 		String res = "";
+		if (store == null)
+			return res;
 		HashSet<String> colors = new HashSet<String>();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Land))
+			if (elem.getCmc() == 0)
 				continue;
 			String name = Colors.getColorName(elem.getCost());
 			String[] split = name.split("-"); //$NON-NLS-1$
@@ -451,26 +455,39 @@ public final class CardStoreUtils {
 		}
 	}
 
-	public static float getAverageManaCost(ICardStore store) {
-		int total = 0;
+	public static int getManaCost(Iterable store) {
+		if (store == null)
+			return 0;
 		int sum = 0;
-		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
-			IMagicCard elem = (IMagicCard) iterator.next();
+		for (Object card : store) {
+			IMagicCard elem = (IMagicCard) card;
 			int cost = elem.getCmc();
-			if (elem.getCost().length() == 0)
-				continue; // land
 			int count;
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
 			} else {
 				count = 1;
 			}
-			sum += cost;
-			total += count;
+			sum += cost * count;
 		}
-		if (total == 0)
+		return sum;
+	}
+
+	public static int getCount(Iterable store) {
+		if (store == null)
 			return 0;
-		return sum / (float) total;
+		int sum = 0;
+		for (Object card : store) {
+			IMagicCard elem = (IMagicCard) card;
+			int count;
+			if (elem instanceof ICardCountable) {
+				count = ((ICardCountable) elem).getCount();
+			} else {
+				count = 1;
+			}
+			sum += count;
+		}
+		return sum;
 	}
 
 	public static Collection<IMagicCard> randomize(ICardStore store) {
@@ -569,5 +586,47 @@ public final class CardStoreUtils {
 			}
 		}
 		return abilityCount;
+	}
+
+	public static int getMaxRepeats(Iterable store) {
+		CountersMap buildRepeats = buildRepeats(store, null);
+		return buildRepeats.max();
+	}
+
+	public static CountersMap buildRepeats(Iterable store, CountersMap nameToCount) {
+		if (nameToCount == null)
+			nameToCount = new CountersMap();
+		if (store != null) {
+			for (Object card : store) {
+				if (card instanceof IMagicCard && card instanceof ICardCountable) {
+					IMagicCard mc = (IMagicCard) card;
+					if (MTYPES.hasType(mc, CardTypes.TYPES.Type_Land)) {
+						if (MTYPES.hasType(mc, CardTypes.TYPES.Type_Basic)) {
+							continue;
+						}
+					}
+					nameToCount.inc(mc.getName(), ((ICardCountable) mc).getCount());
+				}
+			}
+		}
+		return nameToCount;
+	}
+
+	public static CardGroup buildGroupWithSideboard(ICardStore store) {
+		Location location = store.getLocation();
+		Location sideboard = location.toSideboard();
+		ICardStore<IMagicCard> sideboardStore = DataManager.getCardStore(sideboard);
+		ICardStore<IMagicCard> mainStore = DataManager.getCardStore(location.toMainDeck());
+		if (mainStore == null)
+			mainStore = store;
+		CardGroup group = buildGroup(mainStore, sideboardStore);
+		return group;
+	}
+
+	public static CardGroup buildGroup(ICardStore<IMagicCard> mainStore, ICardStore<IMagicCard> sideboardStore) {
+		CardGroup group = new CardGroup(MagicCardField.ID, "...");
+		group.addAll(mainStore);
+		group.addAll(sideboardStore);
+		return group;
 	}
 }
