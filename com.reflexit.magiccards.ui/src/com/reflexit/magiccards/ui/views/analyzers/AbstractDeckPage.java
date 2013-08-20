@@ -153,6 +153,8 @@ public class AbstractDeckPage implements IDeckPage {
 	}
 
 	protected int getCount(Object element) {
+		if (element == null)
+			return 0;
 		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
 		return count;
 	}
