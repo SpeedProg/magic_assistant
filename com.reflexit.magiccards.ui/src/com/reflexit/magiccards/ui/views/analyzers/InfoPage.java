@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.text.DecimalFormat;
-import java.util.Iterator;
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -10,7 +8,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -21,8 +18,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -33,6 +33,7 @@ import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	private Text text;
 	private Label total;
+	private Label totalSideboard;
 	private Label dbprice;
 	String prefix = "Deck";
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -42,6 +43,10 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	private Label decktype;
 	private Label averagecost;
 	private Composite stats;
+	private Label maxRepeats;
+	private Label loclabel;
+	private Label colorsSideboard;
+	private Label rarity;
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -80,23 +85,36 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		stats = new Composite(getArea(), SWT.NONE);
 		stats.setLayout(new GridLayout(2, false));
 		decktype = createTextLabel("Type: ");
-		total = createTextLabel("Total Cards: ");
-		dbprice = createTextLabel("Money Cost: ");
-		dbprice.setToolTipText("Cost of a deck using Seller's Price column," + " in brackets cost of a deck using User's Price column");
-		colors = createTextLabel("Colors: ");
+		loclabel = createTextLabel("Location: ");
 		ownership = createTextLabel("Ownership: ");
+		total = createTextLabel("Cards: ");
+		totalSideboard = createTextLabel("Cards (Sideboard): ");
+		colors = createTextLabel("Colors: ");
+		colorsSideboard = createTextLabel("Colors (Sideboard): ");
 		averagecost = createTextLabel("Average Mana Cost: ");
+		maxRepeats = createTextLabel("Max Repeats: ", "How many time each card repeats, excluding basic land (for legality purposes)");
+		rarity = createTextLabel("Rarity: ");
 		// stats.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+		dbprice = createTextLabel("Price: ", "Cost of a deck using Seller's Price column,"
+				+ " in brackets cost of a deck using User's Price column");
 		return stats;
 	}
 
 	private Label createTextLabel(String string) {
+		return createTextLabel(string, null);
+	}
+
+	private Label createTextLabel(String string, String tip) {
 		Label label = new Label(stats, SWT.NONE);
 		label.setText(string);
 		label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
 		Label text = new Label(stats, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gd);
+		if (tip != null) {
+			label.setToolTipText(tip);
+			text.setToolTipText(tip);
+		}
 		return text;
 	}
 
@@ -144,27 +162,38 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 				text.setText(comment);
 			type = si.getType();
 		}
+		Location location = store.getLocation();
+		Location sideboard = location.toSideboard();
+		ICardStore<IMagicCard> sideboardStore = DataManager.getCardStore(sideboard);
+		ICardStore<IMagicCard> mainStore = DataManager.getCardStore(location.toMainDeck());
+		if (mainStore == null)
+			mainStore = store;
+		totalSideboard.setText(String.valueOf(getCount(sideboardStore)));
+		total.setText(String.valueOf(getCount(mainStore)));
 		prefix = (type != null && type.equals(IStorageInfo.DECK_TYPE)) ? "Deck" : "Collection";
-		if (store instanceof ICardCountable) {
-			total.setText(((ICardCountable) store).getCount() + "");
+		if (sideboardStore != null) {
+			prefix = "Sideboard";
 		}
-		float cost = 0;
-		float ucost = 0;
-		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
-			MagicCardPhysical elem = (MagicCardPhysical) iterator.next();
-			cost += elem.getDbPrice() * elem.getCount();
-			ucost += elem.getPrice() * elem.getCount();
-			if (elem.getDbPrice() == 0)
-				cost += elem.getPrice() * elem.getCount();
-		}
+		CardGroup group = CardStoreUtils.buildGroup(mainStore, sideboardStore);
+		float cost = group.getDbPrice();
+		float ucost = group.getPrice();
+		loclabel.setText(location.toString());
 		dbprice.setText("$" + decimalFormat.format(cost) + " ($" + decimalFormat.format(ucost) + ")");
-		String costs = CardStoreUtils.buildColors(store);
-		Image buildCostImage = SymbolConverter.buildCostImage(costs);
-		colors.setImage(buildCostImage);
+		colors.setImage(SymbolConverter.buildCostImage(CardStoreUtils.buildColors(mainStore)));
+		colorsSideboard.setImage(SymbolConverter.buildCostImage(CardStoreUtils.buildColors(sideboardStore)));
 		ownership.setText(store.isVirtual() ? "Virtual" : "Own");
 		decktype.setText(prefix);
-		float acost = CardStoreUtils.getAverageManaCost(store);
-		averagecost.setText(String.valueOf(acost));
+		maxRepeats.setText(String.valueOf(CardStoreUtils.getMaxRepeats(group.getChildrenList())));
+		CardGroup types = CardStoreUtils.buildTypeGroups(group.getChildrenList());
+		CardGroup top = (CardGroup) types.getChildAtIndex(0);
+		CardGroup land = (CardGroup) top.getChildAtIndex(0);
+		CardGroup spell = (CardGroup) top.getChildAtIndex(1);
+		int spellCount = spell.getCount();
+		if (spellCount > 0) {
+			rarity.setText(spell.getRarity());
+			averagecost.setText(String.valueOf(CardStoreUtils.getManaCost(spell.expand()) / (float) spellCount) + " (" + spellCount
+					+ " spells)");
+		}
 		getArea().layout(true);
 	}
 }
