@@ -23,7 +23,7 @@ public abstract class ParseGathererPage {
 		load(ICoreProgressMonitor.NONE);
 	}
 
-	public void load(ICoreProgressMonitor monitor) throws IOException {
+	public synchronized void load(ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask(getTitle(), 100);
 		try {
 			URL url = new URL(getUrl());
