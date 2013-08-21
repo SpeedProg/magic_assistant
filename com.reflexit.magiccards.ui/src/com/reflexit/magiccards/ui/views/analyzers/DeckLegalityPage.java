@@ -12,11 +12,7 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,8 +43,10 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
+import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
+import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
@@ -56,14 +54,13 @@ import com.reflexit.magiccards.ui.views.lib.IDeckPage;
  * Page for deck legality
  */
 public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
-	private static final String NOT_PRESENT = "Not Legal";
 	private TableViewer legalityTableViewer;
 	private Button updateButton;
 	private TableViewer cardList;
-	private Map<String, Legality> deckInput; // map format->legality
-	private Map<Integer, Map<String, Legality>> cardLegalities; // map card
-																// id->(map
-																// format->legaity)
+	private LegalityMap deckInput; // map format->legality
+	private Map<Integer, LegalityMap> cardLegalities; // map card
+														// id->(map
+														// format->legaity)
 	private ISelectionProvider selProvider = new StoredSelectionProvider();
 	private String selectedFormat = null;
 
@@ -142,7 +139,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 					case 1:
 						return card.getCount() + "";
 					case 2:
-						Map<String, Legality> map = cardLegalities.get(card.getCardId());
+						LegalityMap map = cardLegalities.get(card.getCardId());
 						if (map == null)
 							return Legality.NOT_LEGAL.getLabel();
 						Legality legality = map.get(selectedFormat);
@@ -190,7 +187,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (cardLegalities == null || selectedFormat == null)
 				return true;
-			Map<String, Legality> map = cardLegalities.get(((IMagicCard) element).getCardId());
+			LegalityMap map = cardLegalities.get(((IMagicCard) element).getCardId());
 			if (map == null)
 				return true;
 			Legality string = map.get(selectedFormat);
@@ -279,8 +276,8 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("Calculating Legality", 100);
-					cardLegalities = calculateDeckLegalities(new SubProgressMonitor(monitor, 50));
-					deckInput = calculateDeckLegality(cardLegalities, new SubProgressMonitor(monitor, 50));
+					cardLegalities = calculateDeckLegalities(new SubProgressMonitor(monitor, 90));
+					deckInput = LegalityMap.calculateDeckLegality(cardLegalities.values());
 					getControl().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							legalityTableViewer.setInput(deckInput);
@@ -298,66 +295,12 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		}
 	}
 
-	private Map<Integer, Map<String, Legality>> calculateDeckLegalities(IProgressMonitor monitor) {
+	private Map<Integer, LegalityMap> calculateDeckLegalities(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("", 100);
-			monitor.worked(10);
-			return ParseGathererLegality.cardSetLegality(store);
+			return ParseGathererLegality.cardSetLegality(store, new CoreMonitorAdapter(monitor));
 		} catch (IOException e) {
 			MessageDialog.openError(getControl().getShell(), "Error", e.getMessage());
 			return null;
 		}
-	}
-
-	private String formats[] = { "Standard", "Extended", "Modern", "Legacy", "Vintage", "Classic", "Freeform" };
-
-	private Map<String, Legality> calculateDeckLegality(Map<Integer, Map<String, Legality>> cardLegalities, IProgressMonitor monitor) {
-		monitor.beginTask("", cardLegalities.size() * 2 + 1);
-		Map<String, Legality> deckLegalityRestrictions = new LinkedHashMap<String, Legality>();
-		// constructred formats
-		for (String format : formats) {
-			deckLegalityRestrictions.put(format, null);
-		}
-		monitor.worked(1);
-		// all other formats that these cards mention
-		for (Entry<Integer, Map<String, Legality>> cardLegalityMapEntry : cardLegalities.entrySet()) {
-			Map<String, Legality> cardLegalityRestrictions = cardLegalityMapEntry.getValue();
-			for (Entry<String, Legality> cardLegalityEntry : cardLegalityRestrictions.entrySet()) {
-				String formatForCard = cardLegalityEntry.getKey();
-				deckLegalityRestrictions.put(formatForCard, null);
-			}
-			monitor.worked(1);
-		}
-		for (Entry<Integer, Map<String, Legality>> cardLegalityMapEntry : cardLegalities.entrySet()) {
-			updateDeckLegality(deckLegalityRestrictions, cardLegalityMapEntry.getValue());
-			monitor.worked(1);
-		}
-		monitor.done();
-		return deckLegalityRestrictions;
-	}
-
-	private void updateDeckLegality(Map<String, Legality> deckLegalityRestrictions, Map<String, Legality> map) {
-		for (Entry<String, Legality> deckLegalityEntry : deckLegalityRestrictions.entrySet()) {
-			String deckFormat = deckLegalityEntry.getKey();
-			Set<String> cardFormats = map.keySet();
-			if (!cardFormats.contains(deckFormat)) {
-				deckLegalityEntry.setValue(Legality.NOT_LEGAL);
-			}
-		}
-		for (Map.Entry<String, Legality> cardLegalityEntry : map.entrySet()) {
-			String formatForCard = cardLegalityEntry.getKey();
-			Legality formatLegality = cardLegalityEntry.getValue();
-			if (deckLegalityRestrictions.get(formatForCard) == null) {
-				deckLegalityRestrictions.put(formatForCard, formatLegality);
-			} else {
-				if (isNewRestrictionMoreRestrictive(formatLegality, deckLegalityRestrictions.get(formatForCard))) {
-					deckLegalityRestrictions.put(formatForCard, formatLegality);
-				}
-			}
-		}
-	}
-
-	private boolean isNewRestrictionMoreRestrictive(Legality leg1, Legality leg2) {
-		return leg1.ordinal() < leg2.ordinal();
 	}
 }
