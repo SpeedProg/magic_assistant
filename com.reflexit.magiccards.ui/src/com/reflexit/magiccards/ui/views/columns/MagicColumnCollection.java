@@ -47,9 +47,10 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new TextColumn());
 		columns.add(new OwnCountColumn());
 		columns.add(new OwnUniqueColumn());
+		columns.add(new GenColumn(MagicCardField.LEGALITY, "Legality"));
 		if (myCards) {
-			columns.add(new GenColumn(MagicCardFieldPhysical.ERROR, "Error"));
 			columns.add(new GenColumn(MagicCardFieldPhysical.SIDEBOARD, "Sideboard"));
+			columns.add(new GenColumn(MagicCardFieldPhysical.ERROR, "Error"));
 		}
 	}
 
