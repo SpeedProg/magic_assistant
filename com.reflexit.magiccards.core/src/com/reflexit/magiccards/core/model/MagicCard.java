@@ -347,6 +347,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 					return getUniqueCount();
 				case IMAGE_URL:
 					return getImageUrl();
+				case LEGALITY:
+					return getProperty(MagicCardField.LEGALITY);
 				default:
 					break;
 			}
@@ -492,6 +494,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				if (x != null && x.equals(value))
 					break;
 				setProperty(MagicCardField.IMAGE_URL, value);
+				break;
+			case LEGALITY:
+				setProperty(MagicCardField.LEGALITY, value);
 				break;
 			default:
 				return false;

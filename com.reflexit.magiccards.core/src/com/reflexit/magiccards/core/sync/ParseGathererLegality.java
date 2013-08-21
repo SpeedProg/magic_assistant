@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
+import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardSet;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -92,15 +94,19 @@ public class ParseGathererLegality extends ParseGathererPage {
 		}
 	}
 
-	public static Map<Integer, Map<String, String>> cardSetLegality(ICardSet<IMagicCard> cards) throws IOException {
+	public static Map<Integer, Map<String, Legality>> cardSetLegality(ICardSet<IMagicCard> cards) throws IOException {
 		ParseGathererLegality parser = new ParseGathererLegality();
-		Map<Integer, Map<String, String>> res = new LinkedHashMap<Integer, Map<String, String>>();
+		Map<Integer, Map<String, Legality>> res = new LinkedHashMap<Integer, Map<String, Legality>>();
 		IOException ex = null; // last exception
 		for (IMagicCard magicCard : cards) {
-			int id = magicCard.getCardId();
+			int id = magicCard.getGathererId();
+			if (id == 0)
+				continue;
 			try {
 				Map map = parser.getCardLegality(id);
 				res.put(id, map);
+				MagicCard base = ((MagicCard) magicCard.getBase());
+				base.setProperty(MagicCardField.LEGALITY, Legality.external(map));
 			} catch (IOException e) {
 				ex = e;
 			}
