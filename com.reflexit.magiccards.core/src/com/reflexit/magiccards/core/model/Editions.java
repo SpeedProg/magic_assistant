@@ -16,10 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Locale;
-import java.util.Set;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -36,7 +33,7 @@ public class Editions implements ISearchableProperty {
 		private String abbrs[];
 		private Date release;
 		private String type = "?";
-		private Set<String> format;
+		private LegalityMap legalityMap = new LegalityMap();
 		private String block;
 		private int id;
 		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
@@ -95,10 +92,10 @@ public class Editions implements ISearchableProperty {
 			}
 		}
 
-		public boolean isLegal(String leg) {
+		public boolean isLegal(String format) {
 			if (format == null)
 				return false;
-			return format.contains(leg);
+			return format.contains(format);
 		}
 
 		private boolean isAbbreviationFake() {
@@ -154,27 +151,27 @@ public class Editions implements ISearchableProperty {
 			return a;
 		}
 
-		public Set<String> getLegalities() {
-			return format;
+		public LegalityMap getLegalities() {
+			return legalityMap;
 		}
 
 		public String getFormatString() {
-			if (format == null)
-				return "";
-			String string = format.toString();
-			return string.substring(1, string.length() - 1);
+			String string = legalityMap.legalFormats();
+			return string;
 		}
 
-		public void addFormat(String leg) {
-			if (format == null)
-				format = new LinkedHashSet<String>();
-			format.add(leg);
+		public String getFormat() {
+			if (legalityMap.isEmpty())
+				return "";
+			return legalityMap.keySet().iterator().next();
+		}
+
+		public void addFormat(String forma) {
+			legalityMap.put(forma, Legality.LEGAL);
 		}
 
 		public void clearLegality() {
-			if (format == null)
-				return;
-			format.clear();
+			legalityMap.clear();
 		}
 
 		@Override
@@ -203,8 +200,10 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setFormats(String legality) {
-			String[] legs = legality.split(",");
 			clearLegality();
+			if (legality == null || legality.length() == 0)
+				return;
+			String[] legs = legality.split(",");
 			for (int i = 0; i < legs.length; i++) {
 				String string = legs[i];
 				addFormat(string.trim());

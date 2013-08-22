@@ -58,12 +58,15 @@ public class ParseSetLegality extends ParseGathererPage {
 		int ticks = 100 * formats.size();
 		monitor.beginTask("Updating set formats", ticks);
 		try {
+			Editions eds = Editions.getInstance();
+			for (Edition ed : eds.getEditions()) {
+				ed.setFormats("");
+			}
 			for (Iterator iterator = formats.iterator(); iterator.hasNext();) {
 				String format = (String) iterator.next();
 				ParseSetLegality parser = new ParseSetLegality(format);
 				parser.load(new SubCoreProgressMonitor(monitor, ticks / formats.size()));
 			}
-			Editions eds = Editions.getInstance();
 			eds.save();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -75,8 +78,10 @@ public class ParseSetLegality extends ParseGathererPage {
 	private static Collection<String> getFormats() {
 		ArrayList<String> res = new ArrayList<String>();
 		res.add("Standard");
-		res.add("Modern");
 		res.add("Extended");
+		res.add("Modern");
+		// res.add("Legacy");
+		// res.add("Vintage");
 		return res;
 	}
 
