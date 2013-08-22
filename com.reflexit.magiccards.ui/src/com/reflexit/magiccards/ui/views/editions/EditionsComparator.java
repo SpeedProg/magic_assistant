@@ -47,13 +47,9 @@ public class EditionsComparator implements Comparator<Edition> {
 				break;
 			}
 			case FORMAT: {
-				String t1 = a1.getFormatString();
-				String t2 = a2.getFormatString();
-				if (t1 != null && t2 != null) {
-					d = t1.compareTo(t2);
-					if (d == 0) {
-						return compare(a1, a2, EditionField.TYPE, 1);
-					}
+				d = a1.getLegalities().compareTo(a2.getLegalities());
+				if (d == 0) {
+					return compare(a1, a2, EditionField.DATE, -dir);
 				}
 			}
 				break;

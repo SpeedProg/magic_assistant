@@ -182,6 +182,10 @@
             commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog">
       </handler>
       <handler
+            class="com.reflexit.magiccards.ui.commands.CheckForUpdateDbHandler"
+            commandId="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb">
+      </handler>
+      <handler
             class="com.reflexit.magiccards.ui.commands.ShowFilterHandler"
             commandId="com.reflexit.magiccards.ui.commands.filterCommand">
       </handler>
@@ -275,6 +279,12 @@
       
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb"
+            name="Check for Updates to Magic Cards Database...">
+      </command>
+      
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.EditDeckProperties"
             name="Edit Properties...">
       </command>
@@ -305,6 +315,14 @@
    </extension>
   <extension
         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:help?after=additions">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb"
+                  mnemonic="M"
+                  id="com.reflexit.magiccards.ui.menus.checkForUpdateMagicDb">
+            </command>
+      </menuContribution>
       <menuContribution
             locationURI="menu:help?after=additions">
             <command

@@ -18,6 +18,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
@@ -26,6 +28,7 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 	private EditionsComposite comp;
 	private Button addSet;
 	private Button delSet;
+	private Button update;
 
 	public EditionsPreferencePage() {
 		setTitle("Magic Card Sets");
@@ -76,6 +79,16 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 			}
 		});
 		delSet.setFont(panel.getFont());
+		this.update = new Button(panel, SWT.PUSH);
+		update.setText("Update from Internet");
+		this.update.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
+				comp.performApply();
+				comp.initialize();
+			}
+		});
 	}
 
 	protected void addSet() {

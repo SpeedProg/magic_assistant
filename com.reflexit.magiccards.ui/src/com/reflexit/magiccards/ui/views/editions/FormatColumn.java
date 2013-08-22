@@ -21,7 +21,7 @@ final class FormatColumn extends AbstractEditionColumn {
 	@Override
 	public String getText(Object element) {
 		Editions.Edition ed = (Edition) element;
-		return ed.getFormatString();
+		return ed.getFormat();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ final class FormatColumn extends AbstractEditionColumn {
 			@Override
 			protected Object getValue(Object element) {
 				if (element instanceof Edition) {
-					String loc = getText(element);
+					String loc = ((Edition) element).getFormatString();
 					return loc;
 				}
 				return null;
