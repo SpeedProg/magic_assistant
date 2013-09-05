@@ -44,6 +44,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
 	 */
 	public String getCost() {
+		if (cost == null)
+			return "";
 		return this.cost;
 	}
 
