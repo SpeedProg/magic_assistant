@@ -387,6 +387,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private void editCard(MagicCardPhysical card, PreferenceStore store, boolean update) {
 		boolean modified = false;
 		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
+		modified = setField(card, store, MagicCardFieldPhysical.FORTRADECOUNT) || modified;
 		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
 		modified = setField(card, store, MagicCardFieldPhysical.COMMENT) || modified;
 		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP) || modified;
