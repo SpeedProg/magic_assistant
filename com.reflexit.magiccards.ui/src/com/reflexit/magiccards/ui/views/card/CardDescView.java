@@ -125,8 +125,11 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				Image remoteImage1 = null;
 				IOException e1 = null;
 				try {
-					if (card.getCardId() != 0)
-						remoteImage1 = ImageCreator.getInstance().getCardImage(card, CardCache.isLoadingEnabled(), forceUpdate);
+					if (card.getCardId() != 0) {
+						String path = ImageCreator.getInstance().createCardPath(card, CardCache.isLoadingEnabled(), forceUpdate);
+						boolean resize = card.getType() == null || !card.getType().contains("Scheme"); // XXX
+						remoteImage1 = ImageCreator.getInstance().createCardImage(path, resize);
+					}
 				} catch (CachedImageNotFoundException e) {
 					// skip
 				} catch (IOException e) {

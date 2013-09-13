@@ -204,8 +204,7 @@ public class ImageCreator {
 	 *         be downloaded remotely
 	 * @throws IOException
 	 */
-	public Image getCardImage(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation,
-			SWTException {
+	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
 		synchronized (card) {
 			if (forceUpdate)
 				remote = true;
@@ -213,24 +212,30 @@ public class ImageCreator {
 			try {
 				File file = new File(path);
 				if (file.exists() && remote == false) {
-					return createCardImage(path);
+					return path;
 				}
 				if (remote == false)
 					throw new CachedImageNotFoundException(path);
 				file = CardCache.downloadAndSaveImage(card, remote, forceUpdate);
-				return createCardImage(file.getAbsolutePath());
-			} catch (SWTException e) {
+				return file.getAbsolutePath();
+			} catch (IOException e) {
 				// failed to create image
 				MagicUIActivator.log("Failed to create an image for: " + card);
-				MagicUIActivator.log(e);
-				throw new IOException(e.getMessage());
+				throw e;
 			}
 		}
 	}
 
-	private Image createCardImage(String path) {
-		ImageData data = getResizedCardImage(new ImageData(path));
-		return new Image(Display.getCurrent(), data);
+	public Image createCardImage(String path, boolean resize) {
+		try {
+			ImageData data = resize ? getResizedCardImage(new ImageData(path)) : new ImageData(path);
+			return new Image(Display.getCurrent(), data);
+		} catch (SWTException e) {
+			// failed to create image
+			MagicUIActivator.log("Failed to create an image for: " + path);
+			MagicUIActivator.log(e);
+			return null;
+		}
 	}
 
 	public ImageData getResizedCardImage(ImageData data) {
