@@ -160,6 +160,8 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 		}
 		if (hashAndResolve(card) == false) {
 			storage.add(card);
+		} else {
+			storage.autoSave();
 		}
 	}
 }
