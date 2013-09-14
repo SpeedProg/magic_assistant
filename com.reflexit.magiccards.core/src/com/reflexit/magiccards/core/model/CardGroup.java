@@ -47,7 +47,10 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public IMagicCard getBase() {
-		throw new UnsupportedOperationException();
+		IMagicCardPhysical phi = getGroupBase();
+		if (phi == null)
+			return null;
+		return phi.getBase();
 	}
 
 	private synchronized IMagicCardPhysical getGroupBase() {

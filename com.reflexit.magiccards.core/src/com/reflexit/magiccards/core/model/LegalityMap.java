@@ -35,6 +35,15 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 		return res.trim();
 	}
 
+	public String fullText() {
+		String res = "";
+		for (String format : formats) {
+			Legality leg = get(format);
+			res += format + " " + leg.getLabel() + "\n";
+		}
+		return res.trim();
+	}
+
 	public static LegalityMap internal(String value) {
 		LegalityMap map = new LegalityMap();
 		String vs[] = value.split(" ");
@@ -49,7 +58,8 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 					Legality leg = Legality.fromExt(ext);
 					map.put(format, leg);
 				} else {
-					map.put(formats[i], Legality.NOT_LEGAL);
+					map.put(format, Legality.NOT_LEGAL);
+					continue;
 				}
 			}
 			i++;
