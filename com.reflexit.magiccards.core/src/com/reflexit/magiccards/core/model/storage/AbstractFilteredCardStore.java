@@ -38,7 +38,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	protected Collection filteredList = null;
-	protected final CardGroup rootGroup = new CardGroup(null, "Root");
+	protected final CardGroup rootGroup = new CardGroup(null, "All");
 	protected boolean initialized = false;
 	protected MagicCardFilter filter = new MagicCardFilter();
 
