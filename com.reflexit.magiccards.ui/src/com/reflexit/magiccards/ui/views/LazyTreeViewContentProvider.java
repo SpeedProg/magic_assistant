@@ -20,6 +20,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	private TreeViewer treeViewer;
 	private IFilteredCardStore root;
 	private ICardGroup rootGroup;
+	private boolean showRoot = true;
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (viewer instanceof TreeViewer) {
@@ -42,7 +43,10 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		synchronized (root) {
 			int count = 0;
 			if (element instanceof IFilteredCardStore) {
-				count = rootGroup.size();
+				if (showRoot)
+					count = 1;
+				else
+					count = rootGroup.size();
 			} else if (element instanceof ICardGroup) {
 				count = ((ICardGroup) element).size();
 			} else if (element instanceof MagicCard) {
@@ -62,6 +66,11 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 			ICardGroup group = null;
 			if (parent instanceof IFilteredCardStore) {
 				group = rootGroup;
+				if (showRoot) {
+					this.treeViewer.replace(parent, index, group);
+					updateChildCount(group, group.size());
+					return;
+				}
 			} else if (parent instanceof ICardGroup) {
 				group = (CardGroup) parent;
 			} else if (parent instanceof MagicCard) {
@@ -79,6 +88,8 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		if (!(input instanceof IFilteredCardStore)) {
 			return 0;
 		}
+		if (showRoot)
+			return 1;
 		synchronized (root) {
 			int size = rootGroup.size();
 			return size;

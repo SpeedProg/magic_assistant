@@ -44,6 +44,9 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 		int size = getContentProvider().getSize(input);
 		// System.err.println("size=" + size);
 		this.viewer.getTree().setItemCount(size);
+		if (size == 1) {
+			viewer.expandToLevel(2);
+		}
 		this.viewer.refresh(true);
 		// } else {
 		// this.viewer.setSelection(new StructuredSelection());
