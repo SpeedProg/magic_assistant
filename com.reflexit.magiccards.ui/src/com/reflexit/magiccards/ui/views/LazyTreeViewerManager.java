@@ -34,20 +34,26 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 	public void updateViewer(Object input) {
 		updateTableHeader();
 		updateGrid();
-		// long time = System.currentTimeMillis();
-		// if (this.viewer.getInput() != this.getDataHandler()) {
-		if (this.viewer.getInput() != input) {
-			this.viewer.setInput(input);
+		synchronized (input) {
+			// long time = System.currentTimeMillis();
+			// if (this.viewer.getInput() != this.getDataHandler()) {
+			if (this.viewer.getInput() != input) {
+				this.viewer.setInput(input);
+			}
+			// System.err.println("set input1 tree time: " +
+			// (System.currentTimeMillis() - time) + " ms");
+			int size = getContentProvider().getSize(input);
+			// System.err.println("size=" + size);
+			this.viewer.getTree().setItemCount(size);
+			try {
+				this.viewer.refresh(true);
+			} catch (Exception e) {
+				this.viewer.setInput(input);
+			}
+			if (size == 1) {
+				viewer.expandToLevel(2);
+			}
 		}
-		// System.err.println("set input1 tree time: " +
-		// (System.currentTimeMillis() - time) + " ms");
-		int size = getContentProvider().getSize(input);
-		// System.err.println("size=" + size);
-		this.viewer.getTree().setItemCount(size);
-		if (size == 1) {
-			viewer.expandToLevel(2);
-		}
-		this.viewer.refresh(true);
 		// } else {
 		// this.viewer.setSelection(new StructuredSelection());
 		// this.viewer.getTree().clearAll(true);
