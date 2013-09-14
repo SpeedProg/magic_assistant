@@ -46,7 +46,7 @@ public class GroupByCost extends AbstractSwtBotTest {
 		clickMenuItem(menuItem);
 		dbView.setFocus();
 		bot.sleep(1000);
-		bot.tree().expandNode("2 (29)");
+		bot.tree().expandNode("All (145)", "2 (29)");
 		bot.sleep(1000);
 	}
 }
