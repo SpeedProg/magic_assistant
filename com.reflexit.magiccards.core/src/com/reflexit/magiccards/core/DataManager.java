@@ -351,6 +351,8 @@ public class DataManager {
 	}
 
 	private static void reconcileRemove(MagicCardPhysical mcp) {
+		if (mcp.getBase() == null)
+			return;
 		int id = mcp.getCardId();
 		CardGroup realcards = (CardGroup) links.get(id);
 		if (realcards != null) {
