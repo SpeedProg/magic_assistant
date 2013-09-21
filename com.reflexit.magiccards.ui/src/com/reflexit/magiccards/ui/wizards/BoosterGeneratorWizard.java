@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -182,7 +181,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 					monitor.worked(1);
 					page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
 					monitor.worked(1);
-				} catch (PartInitException e) {
+				} catch (Exception e) {
 					// ignore
 				}
 			}
