@@ -572,7 +572,10 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			return getOwnUnique();
 		if (field == MagicCardField.UNIQUE_COUNT)
 			return getUniqueCount();
-		return getGroupBase().getObjectByField(field);
+		IMagicCardPhysical groupBase = getGroupBase();
+		if (groupBase == null)
+			return null; // empty group
+		return groupBase.getObjectByField(field);
 	}
 
 	@Override
