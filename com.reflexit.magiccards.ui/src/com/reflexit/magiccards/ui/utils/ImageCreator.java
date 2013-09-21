@@ -114,6 +114,10 @@ public class ImageCreator {
 		try {
 			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
 			Display display = Display.getDefault();
+			if (imageDesc.getImageData() == null) {
+				MagicUIActivator.log("Cannot load image: " + url + ": null imageData");
+				return null;
+			}
 			return new Image(display, scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false));
 		} catch (SWTException e) {
 			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
