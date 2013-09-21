@@ -6,7 +6,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -42,9 +41,12 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 		IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
-			DataManager.copyCards(list, activeDeckHandler.getLocation());
+			try {
+				DataManager.copyCards(list, activeDeckHandler.getLocation());
+			} catch (Exception e) {
+				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
+			}
 		} else {
-			Display display = window.getShell().getDisplay();
 			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");
 		}
 		return null;
