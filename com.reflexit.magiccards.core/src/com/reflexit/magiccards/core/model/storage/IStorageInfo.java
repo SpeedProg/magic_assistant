@@ -12,6 +12,8 @@ public interface IStorageInfo {
 
 	public void setComment(String text);
 
+	public void setProperty(String key, String value);
+
 	public void setType(String string);
 
 	public void setVirtual(boolean value);
