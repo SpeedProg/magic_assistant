@@ -547,6 +547,13 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 					return "English";
 				else
 					return elem.getLanguage();
+			} else if (field == MagicCardFieldPhysical.SIDEBOARD) {
+				if (elem instanceof MagicCardPhysical) {
+					if (((MagicCardPhysical) elem).isSideboard()) {
+						return "Sideboard";
+					}
+				}
+				return "Main Deck";
 			} else {
 				return String.valueOf(elem.getObjectByField(field));
 			}
@@ -783,5 +790,13 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			}
 		}
 		rehash();
+	}
+
+	@Override
+	public LegalityMap getLegalityMap() {
+		IMagicCardPhysical groupBase = getGroupBase();
+		if (groupBase == null)
+			return null; // empty group
+		return groupBase.getBase().getLegalityMap();
 	}
 }
