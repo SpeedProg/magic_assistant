@@ -58,4 +58,6 @@ public interface IMagicCard extends ICard {
 	public abstract int getSide();
 
 	public abstract int getCollectorNumberId();
+
+	public LegalityMap getLegalityMap();
 }

@@ -586,4 +586,9 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	public Map<ICardField, Object> getProperties() {
 		return properties;
 	}
+
+	@Override
+	public LegalityMap getLegalityMap() {
+		return getBase().getLegalityMap();
+	}
 }

@@ -113,7 +113,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 					LegalityMap map = parser.getCardLegality(id, new SubCoreProgressMonitor(monitor, 10));
 					res.put(id, map);
 					MagicCard base = ((MagicCard) magicCard.getBase());
-					base.setProperty(MagicCardField.LEGALITY, LegalityMap.external(map));
+					base.setProperty(MagicCardField.LEGALITY, map.toExternal());
 				} catch (IOException e) {
 					ex = e;
 				}
@@ -166,6 +166,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 				row += line;
 			}
 		}
+		legalityMap.complete();
 	}
 
 	public static void main(String[] args) throws IOException {

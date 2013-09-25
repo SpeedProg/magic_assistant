@@ -20,11 +20,11 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 		}
 	}
 
-	public static String external(LegalityMap map) {
+	public String toExternal() {
 		String res = "";
 		Legality prev = Legality.NOT_LEGAL;
 		for (String format : formats) {
-			Legality leg = map.get(format);
+			Legality leg = get(format);
 			if (leg == null)
 				leg = Legality.NOT_LEGAL;
 			if (leg != Legality.NOT_LEGAL && prev != Legality.LEGAL) {
@@ -44,7 +44,7 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 		return res.trim();
 	}
 
-	public static LegalityMap internal(String value) {
+	public static LegalityMap valueOf(String value) {
 		LegalityMap map = new LegalityMap();
 		String vs[] = value.split(" ");
 		int i = 0;
@@ -149,7 +149,7 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 		return -1;
 	}
 
-	private String getFirstLegal() {
+	public String getFirstLegal() {
 		if (isEmpty())
 			return null;
 		for (String format : keySet()) {
@@ -158,5 +158,18 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 			}
 		}
 		return null;
+	}
+
+	public Legality getLegality(String format) {
+		return get(format);
+	}
+
+	public void complete() {
+		for (String format : formats) {
+			if (get(format) == null)
+				put(format, Legality.NOT_LEGAL);
+			else
+				break;
+		}
 	}
 }

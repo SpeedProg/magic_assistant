@@ -810,7 +810,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		String value = getProperty(MagicCardField.LEGALITY);
 		if (value == null)
 			return null;
-		LegalityMap map = LegalityMap.internal(value);
+		LegalityMap map = LegalityMap.valueOf(value);
 		return map;
 	}
 }
