@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.reflexit.magiccards.core.legality.Format;
+
 public class LegalityMap extends LinkedHashMap<String, Legality> {
 	public final static String formats[] = { "Standard", "Extended", "Modern", "Legacy", "Vintage", "Classic", "Freeform" };
 	public final static String SEP = "|";
@@ -91,6 +93,28 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 		if (prev == null || value.ordinal() < prev.ordinal())
 			return super.put(format, value);
 		return prev;
+	}
+
+	public Legality put(Format f, Legality value) {
+		String format = f.name();
+		Legality prev = get(format);
+		if (prev == null || value.ordinal() < prev.ordinal())
+			return super.put(format, value);
+		return prev;
+	}
+
+	public Legality get(Format f) {
+		return super.get(f.name());
+	}
+
+	@Override
+	public Legality get(Object f) {
+		if (f instanceof Format)
+			return super.get(((Format) f).name());
+		else if (f instanceof String)
+			return super.get(f);
+		else
+			throw new IllegalArgumentException();
 	}
 
 	public static LegalityMap calculateDeckLegality(Collection<LegalityMap> cardLegalities) {
