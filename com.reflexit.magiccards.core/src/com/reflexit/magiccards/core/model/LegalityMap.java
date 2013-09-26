@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 public class LegalityMap extends LinkedHashMap<String, Legality> {
 	public final static String formats[] = { "Standard", "Extended", "Modern", "Legacy", "Vintage", "Classic", "Freeform" };
+	public final static String SEP = "|";
 
 	public LegalityMap() {
 		// empty one
@@ -21,48 +22,64 @@ public class LegalityMap extends LinkedHashMap<String, Legality> {
 	}
 
 	public String toExternal() {
-		String res = "";
+		StringBuilder res = new StringBuilder();
+		for (String format : keySet()) {
+			Legality leg = get(format);
+			if (leg == null)
+				leg = Legality.NOT_LEGAL;
+			res.append(format + leg.getExt() + SEP);
+		}
+		return res.toString();
+	}
+
+	public String getLabel() {
+		StringBuilder res = new StringBuilder();
 		Legality prev = Legality.NOT_LEGAL;
 		for (String format : formats) {
 			Legality leg = get(format);
 			if (leg == null)
 				leg = Legality.NOT_LEGAL;
-			if (leg != Legality.NOT_LEGAL && prev != Legality.LEGAL) {
-				res += format + leg.getExt() + " ";
+			if (leg != Legality.NOT_LEGAL && leg != Legality.BANNED && prev != Legality.LEGAL) {
+				res.append(format + leg.getExt() + " ");
 			}
 			prev = leg;
 		}
-		return res.trim();
+		return res.toString().trim();
 	}
 
 	public String fullText() {
 		String res = "";
 		for (String format : formats) {
 			Legality leg = get(format);
-			res += format + " " + leg.getLabel() + "\n";
+			res += format + leg.getExt() + " " + leg.getLabel() + "\n";
+		}
+		res += "\n";
+		all: for (String format : keySet()) {
+			Legality leg = get(format);
+			if (leg == null)
+				continue;
+			if (leg == Legality.NOT_LEGAL)
+				continue;
+			for (String f : formats) {
+				if (f.equals(format))
+					continue all;
+			}
+			res += format + leg.getExt() + " " + leg.getLabel() + "\n";
 		}
 		return res.trim();
 	}
 
 	public static LegalityMap valueOf(String value) {
 		LegalityMap map = new LegalityMap();
-		String vs[] = value.split(" ");
-		int i = 0;
-		for (String format : formats) {
-			if (i >= vs.length) {
-				map.put(format, Legality.LEGAL);
-			} else {
-				String string = vs[i];
-				if (string.startsWith(format)) {
-					String ext = string.substring(format.length());
-					Legality leg = Legality.fromExt(ext);
-					map.put(format, leg);
-				} else {
-					map.put(format, Legality.NOT_LEGAL);
-					continue;
-				}
-			}
-			i++;
+		String vs[] = value.split("\\Q" + SEP);
+		for (int i = 0; i < vs.length; i++) {
+			String string = vs[i];
+			if (string == null || string.length() == 0)
+				continue;
+			String ext = string.substring(string.length() - 1, string.length());
+			String f = string.substring(0, string.length() - 1);
+			Legality leg = Legality.fromExt(ext);
+			map.put(f, leg);
 		}
 		return map;
 	}
