@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.exports.PipedTableExportText;
 import com.reflexit.magiccards.core.exports.ShandalarImportTest;
 import com.reflexit.magiccards.core.exports.TablePipedImportTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
+import com.reflexit.magiccards.core.model.LegalityMapTest;
 import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
@@ -71,6 +72,7 @@ public class AllLocalTests {
 		suite.addTestSuite(SortOrderTest.class);
 		suite.addTestSuite(SearchStringTokenizerTest.class);
 		suite.addTestSuite(MagicCardComparatorTest.class);
+		suite.addTestSuite(LegalityMapTest.class);
 		// $JUnit-END$
 		return suite;
 	}
