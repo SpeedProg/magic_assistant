@@ -5,8 +5,10 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.legality.Format;
+
 public class LegalityMapTest extends TestCase {
-	private static final String STANDARD = "Standard";
+	private static final Format STANDARD = Format.STANDARD;
 	LegalityMap map;
 
 	@Override
@@ -73,6 +75,7 @@ public class LegalityMapTest extends TestCase {
 		map.put(STANDARD, Legality.LEGAL);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 	}
+
 	/*
 	 * @Test public void testFullText() { fail("Not yet implemented"); }
 	 * 
@@ -87,7 +90,12 @@ public class LegalityMapTest extends TestCase {
 	 * @Test public void testGetFirstLegal() { fail("Not yet implemented"); }
 	 * 
 	 * @Test public void testGetLegality() { fail("Not yet implemented"); }
-	 * 
-	 * @Test public void testComplete() { fail("Not yet implemented"); }
 	 */
+	@Test
+	public void testComplete() {
+		map.put(Format.MODERN, Legality.LEGAL);
+		map.complete();
+		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
+		// System.err.println(map.toExternal());
+	}
 }
