@@ -612,21 +612,37 @@ public final class CardStoreUtils {
 		return nameToCount;
 	}
 
-	public static CardGroup buildGroupWithSideboard(ICardStore store) {
-		Location location = store.getLocation();
-		Location sideboard = location.toSideboard();
-		ICardStore<IMagicCard> sideboardStore = DataManager.getCardStore(sideboard);
-		ICardStore<IMagicCard> mainStore = DataManager.getCardStore(location.toMainDeck());
-		if (mainStore == null)
-			mainStore = store;
-		CardGroup group = buildGroup(mainStore, sideboardStore);
-		return group;
-	}
-
 	public static CardGroup buildGroup(ICardStore<IMagicCard> mainStore, ICardStore<IMagicCard> sideboardStore) {
 		CardGroup group = new CardGroup(MagicCardField.ID, "...");
 		group.addAll(mainStore);
 		group.addAll(sideboardStore);
 		return group;
+	}
+
+	public static class CardStats {
+		public int mainCount;
+		public int sideboardCount;
+		public String mainColors;
+		public String sideboardColors;
+		public int maxRepeats;
+
+		public CardStats(ICardStore<IMagicCard> store) {
+			super();
+			calculate(store);
+		}
+
+		private void calculate(ICardStore<IMagicCard> store) {
+			Location location = store.getLocation();
+			Location sideboard = location.toSideboard();
+			ICardStore<IMagicCard> sideboardStore = DataManager.getCardStore(sideboard);
+			ICardStore<IMagicCard> mainStore = DataManager.getCardStore(location.toMainDeck());
+			if (mainStore == null)
+				mainStore = store;
+			sideboardCount = getCount(sideboardStore);
+			mainCount = getCount(mainStore);
+			mainColors = CardStoreUtils.buildColors(mainStore);
+			sideboardColors = CardStoreUtils.buildColors(sideboardStore);
+			maxRepeats = CardStoreUtils.getMaxRepeats(store);
+		}
 	}
 }
