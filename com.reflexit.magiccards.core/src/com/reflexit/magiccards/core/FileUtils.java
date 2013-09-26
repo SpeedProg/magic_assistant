@@ -146,7 +146,7 @@ public class FileUtils {
 		System.err.println("Loaded " + fstore.getSize() + " cards");
 	}
 
-	public static void deleteTree(File rootDir) {
+	public static boolean deleteTree(File rootDir) {
 		File[] listFiles = rootDir.listFiles();
 		if (listFiles != null) {
 			for (int i = 0; i < listFiles.length; i++) {
@@ -154,7 +154,7 @@ public class FileUtils {
 				deleteTree(file);
 			}
 		}
-		rootDir.delete();
+		return rootDir.delete();
 	}
 
 	public static void saveString(String textResult, File file) throws IOException {
