@@ -29,16 +29,21 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		this.deck = new MemCardHandler();
 	}
 
-	{
+	static {
 		File file = new File(FileUtils.getStateLocationFile(), Editions.EDITIONS_FILE);
 		file.delete();
 		try {
-			DataManager.getRootDir();
+			DataManager.reset();
 		} catch (NullPointerException e) {
-			File temp = new File("/tmp/magiccards");
-			DataManager.reset(temp);
-			DataManager.getModelRoot().clear();
+			setLocalDbDir();
 		}
+	}
+
+	protected static void setLocalDbDir() {
+		File temp = new File("/tmp/magiccards");
+		FileUtils.deleteTree(temp);
+		DataManager.reset(temp);
+		DataManager.getModelRoot().clear();
 	}
 
 	protected ArrayList<IMagicCard> extractStorageCards() {
