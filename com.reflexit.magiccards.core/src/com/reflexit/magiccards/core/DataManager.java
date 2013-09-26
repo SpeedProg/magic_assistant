@@ -78,6 +78,12 @@ public class DataManager {
 		root = ModelRoot.getInstance(dir);
 	}
 
+	public static void reset() {
+		FileUtils.deleteTree(getRootDir());
+		root = null;
+		getModelRoot();
+	}
+
 	public static File getRootDir() {
 		File rootDir = getModelRoot().getRootDir();
 		if (rootDir == null)
