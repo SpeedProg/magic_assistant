@@ -197,7 +197,8 @@ public class XmlCardHolder implements ICardHandler {
 		pm.beginTask("Init", 100);
 		try {
 			File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
-			if (dir.listFiles().length > 0)
+			File[] listFiles = dir.listFiles();
+			if (listFiles != null && listFiles.length > 0)
 				return;
 			else
 				loadInitial();
