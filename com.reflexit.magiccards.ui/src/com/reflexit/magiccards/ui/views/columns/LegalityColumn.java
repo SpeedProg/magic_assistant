@@ -1,9 +1,7 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.LegalityMap;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class LegalityColumn extends GenColumn {
@@ -13,18 +11,31 @@ public class LegalityColumn extends GenColumn {
 
 	@Override
 	public String getToolTipText(Object element) {
-		MagicCard base;
 		if (element instanceof IMagicCard) {
-			base = (MagicCard) ((IMagicCard) element).getBase();
-		} else if (element instanceof CardGroup) {
-			base = (MagicCard) ((CardGroup) element).getBase();
-		} else
-			return null;
-		LegalityMap map = base.getLegalityMap();
-		if (map == null || map.size() == 0) {
-			return "Unknown. Go to Legality tab and update latest legality of this card from internet.";
+			IMagicCard card = (IMagicCard) element;
+			LegalityMap map = card.getLegalityMap();
+			if (map == null || map.size() == 0) {
+				return "Unknown. Go to Legality tab and update latest legality of this card from internet.";
+			}
+			return "Legality column shows the newest\n" //
+					+ "legality formats where card is legal,\n" //
+					+ "with the following modifiers:\n" //
+					+ "+ Legal, 1 Restricted, ! Banned\n\n" //
+					+ "This card \"" + card.getName() + "\":\n" + map.fullText();
 		}
-		return "Shows the newest legality formats where card is legal, with the following modifiers:\n + Legal, 1 Restricted, ! Banned, - Illegal\nThis card:\n"
-				+ map.fullText();
+		return null;
+	}
+
+	@Override
+	public String getText(Object element) {
+		if (element instanceof IMagicCard) {
+			IMagicCard card = (IMagicCard) element;
+			LegalityMap map = card.getLegalityMap();
+			if (map == null || map.size() == 0) {
+				return "Unknown";
+			}
+			return map.getLabel();
+		}
+		return null;
 	}
 }
