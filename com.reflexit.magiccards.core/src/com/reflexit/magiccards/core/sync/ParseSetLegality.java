@@ -7,17 +7,19 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public class ParseSetLegality extends ParseGathererPage {
 	private Pattern setPattern = Pattern.compile("<li>\\s*<i>(.+?)</i>");
-	private String format;
+	private Format format;
 
-	public ParseSetLegality(String set) {
-		this.format = set;
+	public ParseSetLegality(String format) {
+		this.format = Format.valueOf(format);
 	}
 
 	/*-
@@ -42,15 +44,17 @@ public class ParseSetLegality extends ParseGathererPage {
 			string = string.replaceAll("  ", " ");
 			if (string.length() > 0) {
 				Edition ed = eds.getEditionByName(string);
-				if (ed != null)
-					ed.addFormat(format);
+				if (ed != null) {
+					ed.getLegalityMap().put(format, Legality.LEGAL);
+					ed.getLegalityMap().complete();
+				}
 			}
 		}
 	}
 
 	@Override
 	protected String getUrl() {
-		return "http://www.wizards.com/Magic/TCG/Resources.aspx?x=judge/resources/sfr" + format.toLowerCase(Locale.ENGLISH);
+		return "http://www.wizards.com/Magic/TCG/Resources.aspx?x=judge/resources/sfr" + format.name().toLowerCase(Locale.ENGLISH);
 	}
 
 	public static void loadAllFormats(ICoreProgressMonitor monitor) {

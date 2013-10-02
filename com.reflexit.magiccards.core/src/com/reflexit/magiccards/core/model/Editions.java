@@ -20,20 +20,23 @@ import java.util.Locale;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class Editions implements ISearchableProperty {
 	public static final String EDITIONS_FILE = "editions.txt";
 	private static Editions instance;
 	private LinkedHashMap<String, Edition> name2ed;
+	private LinkedHashMap<String, Edition> nameAliases;
 	private static int idcounter = 0;
 
 	public static class Edition {
 		private String name;
 		private String abbrs[];
+		private String aliases[];
 		private Date release;
 		private String type = "?";
-		private LegalityMap legalityMap = new LegalityMap();
+		private LegalityMap legalityMap = new LegalityMap(true);
 		private String block;
 		private int id;
 		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
@@ -42,6 +45,7 @@ public class Editions implements ISearchableProperty {
 			this.name = name;
 			this.abbrs = new String[] { abbr == null ? fakeAbbr(name) : abbr };
 			this.id = ++idcounter;
+			this.aliases = new String[0];
 		}
 
 		private String fakeAbbr(String xname) {
@@ -151,7 +155,7 @@ public class Editions implements ISearchableProperty {
 			return a;
 		}
 
-		public LegalityMap getLegalities() {
+		public LegalityMap getLegalityMap() {
 			return legalityMap;
 		}
 
@@ -160,18 +164,10 @@ public class Editions implements ISearchableProperty {
 			return string;
 		}
 
-		public String getFormat() {
+		public Format getFormat() {
 			if (legalityMap.isEmpty())
-				return "";
-			return legalityMap.keySet().iterator().next();
-		}
-
-		public void addFormat(String forma) {
-			legalityMap.put(forma, Legality.LEGAL);
-		}
-
-		public void clearLegality() {
-			legalityMap.clear();
+				return Format.LEGACY;
+			return legalityMap.getFirstLegal();
 		}
 
 		@Override
@@ -200,14 +196,15 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setFormats(String legality) {
-			clearLegality();
-			if (legality == null || legality.length() == 0)
+			legalityMap.clear();
+			if (legality == null || legality.trim().length() == 0)
 				return;
-			String[] legs = legality.split(",");
+			String[] legs = legality.trim().split(",");
 			for (int i = 0; i < legs.length; i++) {
 				String string = legs[i];
-				addFormat(string.trim());
+				legalityMap.put(Format.valueOf(string.trim()), Legality.LEGAL);
 			}
+			legalityMap.complete();
 		}
 
 		public void setBlock(String block) {
@@ -227,6 +224,11 @@ public class Editions implements ISearchableProperty {
 			}
 			return false;
 		}
+
+		public void setNameAliases(String aliases[]) {
+			this.aliases = new String[aliases.length];
+			System.arraycopy(aliases, 0, this.aliases, 0, aliases.length);
+		}
 	}
 
 	private Editions() {
@@ -238,6 +240,7 @@ public class Editions implements ISearchableProperty {
 	 */
 	public void init() {
 		this.name2ed = new LinkedHashMap<String, Edition>();
+		this.nameAliases = new LinkedHashMap<String, Edition>();
 		try {
 			load();
 		} catch (Exception e) {
@@ -314,7 +317,10 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public Edition getEditionByName(String name) {
-		return this.name2ed.get(name);
+		Edition ed = this.name2ed.get(name);
+		if (ed != null)
+			return ed;
+		return nameAliases.get(name);
 	}
 
 	private synchronized void load() throws IOException {
@@ -396,12 +402,20 @@ public class Editions implements ISearchableProperty {
 						continue;
 					// Legality
 					String legality = attrs[6].trim();
-					String[] legs = legality.split(",");
-					set.clearLegality();
-					for (int i = 0; i < legs.length; i++) {
-						String string = legs[i];
-						set.addFormat(string.trim());
+					set.setFormats(legality);
+					if (attrs.length <= 7)
+						continue;
+					// Name aliases
+					String[] aliases = attrs[7].trim().split(",");
+					for (int i = 0; i < aliases.length; i++) {
+						String alias = aliases[i].trim();
+						aliases[i] = alias;
+						if (nameAliases.containsKey(alias))
+							MagicLogger.log("Alias conflict " + alias + " for " + set.getName() + " was " + name2ed.get(alias).getName());
+						else
+							nameAliases.put(alias, set);
 					}
+					set.setNameAliases(aliases);
 				} catch (Exception e) {
 					MagicLogger.log("bad editions record: " + line);
 					MagicLogger.log(e);

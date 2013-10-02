@@ -17,6 +17,7 @@ Export-Package: com.reflexit.magiccards.core;
    com.thoughtworks.xstream,
    com.reflexit.magiccards.core.model",
  com.reflexit.magiccards.core.exports;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage,com.reflexit.magiccards.core.model",
+ com.reflexit.magiccards.core.legality,
  com.reflexit.magiccards.core.locale,
  com.reflexit.magiccards.core.model;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage",
  com.reflexit.magiccards.core.model.events,

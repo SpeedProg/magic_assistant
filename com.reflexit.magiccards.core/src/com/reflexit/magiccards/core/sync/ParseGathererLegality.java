@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
@@ -155,7 +156,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 					String format = matcher.group(1).trim();
 					if (matcher.find()) {
 						String legal = matcher.group(1).trim();
-						legalityMap.put(format, Legality.fromLabel(legal));
+						legalityMap.put(Format.valueOf(format), Legality.fromLabel(legal));
 					} else {
 						MagicLogger.log("Cannot parse legality " + row);
 					}
