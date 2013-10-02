@@ -29,7 +29,7 @@ public class ParseGathererLegalityTest extends TestCase {
 		assertEquals(Legality.BANNED, map.get("Commander"));
 		assertEquals(Legality.RESTRICTED, map.get("Vintage"));
 		assertEquals(Legality.LEGAL, map.get("Freeform"));
-		assertEquals(null, map.get("Standard"));
+		assertEquals(Legality.NOT_LEGAL, map.get("Standard"));
 	}
 
 	public void testAngelicWall() throws IOException {
