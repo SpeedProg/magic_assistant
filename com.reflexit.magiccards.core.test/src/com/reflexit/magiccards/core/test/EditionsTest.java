@@ -12,14 +12,17 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {
+	private static final int EDITIONS_SIZE = 124;
 	private static final String EDITIONS_FILE = "editions.txt";
 	protected Editions editions;
 
@@ -52,7 +55,7 @@ public class EditionsTest extends TestCase {
 	@Test
 	public void testGetEditions() {
 		Collection<Edition> editionsList = editions.getEditions();
-		assertEquals(105, editionsList.size());
+		assertEquals(EDITIONS_SIZE, editionsList.size());
 	}
 
 	@Test
@@ -118,7 +121,7 @@ public class EditionsTest extends TestCase {
 		getExFile().delete();
 		editions.init();
 		editions.save();
-		assertEquals(0, getExFile().length());
+		assertTrue(getExFile().length() > 0);
 	}
 
 	@Test
@@ -130,11 +133,9 @@ public class EditionsTest extends TestCase {
 	@Test
 	public void testLegalities() {
 		Edition ed = editions.getEditionByName("Innistrad");
-		ed.clearLegality();
-		ed.addFormat("Standard");
-		ed.addFormat("Extended");
-		String legalitiesString = ed.getFormatString();
-		assertEquals("Standard, Extended", legalitiesString);
+		ed.setFormats("Standard");
+		String legalitiesString = ed.getLegalityMap().getFirstLegal().name();
+		assertEquals("Standard", legalitiesString);
 	}
 
 	@Test
@@ -144,7 +145,7 @@ public class EditionsTest extends TestCase {
 		FileUtils.saveStream(resourceAsStream, getExFile());
 		editions.init();
 		Collection<Edition> editionsList = editions.getEditions();
-		assertEquals(105, editionsList.size());
+		assertEquals(EDITIONS_SIZE, editionsList.size());
 	}
 
 	public void testSetLoadingInet() throws IOException {
@@ -173,8 +174,7 @@ public class EditionsTest extends TestCase {
 	@Test
 	public void testLegalitiesInet() {
 		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
-		Edition ed = editions.getEditionByName("Innistrad");
-		String legalitiesString = ed.getFormatString();
-		assertEquals("Standard, Modern, Extended", legalitiesString);
+		Edition ed = editions.getEditionByName("Theros");
+		assertEquals(Legality.LEGAL, ed.getLegalityMap().get(Format.STANDARD));
 	}
 }

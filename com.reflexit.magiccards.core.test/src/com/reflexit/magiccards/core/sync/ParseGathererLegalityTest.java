@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
 
@@ -42,11 +43,11 @@ public class ParseGathererLegalityTest extends TestCase {
 
 	public void testDeck() {
 		LegalityMap map1 = new LegalityMap();
-		map1.put("Standard", Legality.LEGAL);
-		map1.put("Extended", Legality.LEGAL);
+		map1.put(Format.STANDARD, Legality.LEGAL);
+		map1.put(Format.EXTENDED, Legality.LEGAL);
 		LegalityMap map2 = new LegalityMap();
-		map2.put("Extended", Legality.RESTRICTED);
-		map2.put("Tribal Wars", Legality.LEGAL);
+		map2.put(Format.EXTENDED, Legality.RESTRICTED);
+		map2.put(Format.valueOf("Tribal Wars"), Legality.LEGAL);
 		Collection<LegalityMap> maps = new ArrayList<LegalityMap>();
 		maps.add(map1);
 		maps.add(map2);

@@ -9,11 +9,12 @@ import com.reflexit.magiccards.core.legality.Format;
 
 public class LegalityMapTest extends TestCase {
 	private static final Format STANDARD = Format.STANDARD;
+	private static final Format BLA_BLA = Format.valueOf("Bla Bla");
 	LegalityMap map;
 
 	@Override
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		map = new LegalityMap();
 	}
 
@@ -42,7 +43,7 @@ public class LegalityMapTest extends TestCase {
 	@Test
 	public void testToExternalTwo() {
 		map.put(STANDARD, Legality.LEGAL);
-		map.put("Bla Bla", Legality.RESTRICTED);
+		map.put(BLA_BLA, Legality.RESTRICTED);
 		String expected = "Standard+|Bla Bla1|";
 		assertEquals(expected, map.toExternal());
 		roundCheck();
@@ -51,7 +52,7 @@ public class LegalityMapTest extends TestCase {
 	@Test
 	public void testGetLabel() {
 		map.put(STANDARD, Legality.LEGAL);
-		map.put("Extended", Legality.LEGAL);
+		map.put(Format.EXTENDED, Legality.LEGAL);
 		assertEquals("Standard+", map.getLabel());
 	}
 
@@ -76,8 +77,18 @@ public class LegalityMapTest extends TestCase {
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 	}
 
+	@Test
+	public void testFullText() {
+		map.put(Format.EXTENDED, Legality.RESTRICTED);
+		map.put(Format.MODERN, Legality.LEGAL);
+		map.complete();
+		String fullText = map.fullText();
+		assertTrue(fullText.contains("Standard- Not Legal"));
+		assertTrue(fullText.contains("Legacy+ Legal"));
+		assertTrue("Cannot find Extended1 Restricted in " + fullText, fullText.contains("Extended1 Restricted"));
+	}
+
 	/*
-	 * @Test public void testFullText() { fail("Not yet implemented"); }
 	 * 
 	 * @Test public void testCalculateDeckLegality() { fail("Not yet implemented"); }
 	 * 
@@ -96,6 +107,7 @@ public class LegalityMapTest extends TestCase {
 		map.put(Format.MODERN, Legality.LEGAL);
 		map.complete();
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
+		assertEquals(Legality.LEGAL, map.get(Format.LEGACY));
 		// System.err.println(map.toExternal());
 	}
 }

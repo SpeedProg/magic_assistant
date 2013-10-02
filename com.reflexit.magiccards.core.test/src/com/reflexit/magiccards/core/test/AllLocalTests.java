@@ -66,6 +66,7 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
 		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
+		suite.addTestSuite(EditionsTest.class);
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);
