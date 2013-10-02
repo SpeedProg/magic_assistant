@@ -118,7 +118,7 @@ Duel Decks: Sorin vs. Tibalt|DDK||April 2013|Starter||
 Gatecrash|GTC||April 2013|Expansion||Standard,Extended,Modern
 Dragon's Maze|DGM||May 2013|Expansion||Standard,Extended,Modern
 Modern Masters|MMA||June 2013|Reprint||
-Magic 2014 Core Set|M14||July 2013|Core||Standard,Extended,Modern
+Magic 2014 Core Set|M14||July 2013|Core||Standard,Extended,Modern|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter||
 From the Vault: Twenty|V13||September 2013|Reprint||
 Theros|THS||September 2013|Expansion|Theros Block|Standard,Extended,Modern
