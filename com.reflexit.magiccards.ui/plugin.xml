@@ -505,6 +505,11 @@
         id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
         class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage"
         />
+                        <page
+        name="Legality2"
+        id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage2"
+        class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage2"
+        />
                 <page
                       class="com.reflexit.magiccards.ui.views.analyzers.ExportDeckPage"
                       id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
