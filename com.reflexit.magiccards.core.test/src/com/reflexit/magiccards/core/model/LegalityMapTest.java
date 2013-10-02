@@ -71,10 +71,25 @@ public class LegalityMapTest extends TestCase {
 	}
 
 	@Test
-	public void testPutStringLegality2() {
-		map.put(STANDARD, Legality.NOT_LEGAL);
-		map.put(STANDARD, Legality.LEGAL);
+	public void testMergeStringLegality() {
+		map.merge(STANDARD, Legality.NOT_LEGAL);
+		map.merge(STANDARD, Legality.LEGAL);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
+	}
+
+	@Test
+	public void testMergeStringLegality2() {
+		map.merge(STANDARD, Legality.LEGAL);
+		map.merge(STANDARD, Legality.NOT_LEGAL);
+		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
+	}
+
+	@Test
+	public void testMergeStringLegality3() {
+		assertFalse(map.keySet().contains(Format.STANDARD));
+		map.merge(STANDARD, Legality.UNKNOWN);
+		assertTrue(map.keySet().contains(Format.STANDARD));
+		assertEquals(Legality.UNKNOWN, map.get(STANDARD));
 	}
 
 	@Test
