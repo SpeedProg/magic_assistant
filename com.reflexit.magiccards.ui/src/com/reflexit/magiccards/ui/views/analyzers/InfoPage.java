@@ -23,7 +23,6 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
@@ -65,7 +64,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					if (new EditDeckPropertiesDialog(editButton.getShell(), getInfo()).open() == Window.OK) {
+					if (new EditDeckPropertiesDialog(editButton.getShell(), getStorageInfo()).open() == Window.OK) {
 						activate();
 					}
 				} catch (Exception x) {
@@ -94,7 +93,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		averagecost = createTextLabel("Average Mana Cost: ");
 		maxRepeats = createTextLabel("Max Repeats: ", "How many time each card repeats, excluding basic land (for legality purposes)");
 		rarity = createTextLabel("Rarity: ");
-		// stats.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+		// tree.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 		dbprice = createTextLabel("Price: ", "Cost of a deck using Seller's Price column,"
 				+ " in brackets cost of a deck using User's Price column");
 		return stats;
@@ -135,26 +134,16 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	}
 
 	protected void setComment(String text2) {
-		IStorageInfo si = getInfo();
+		IStorageInfo si = getStorageInfo();
 		if (si == null)
 			return;
 		si.setComment(text2);
 	}
 
-	private IStorageInfo getInfo() {
-		getCardStore();
-		IStorage storage = store.getStorage();
-		if (storage instanceof IStorageInfo) {
-			IStorageInfo si = ((IStorageInfo) storage);
-			return si;
-		}
-		return null;
-	}
-
 	@Override
 	public void activate() {
 		super.activate();
-		IStorageInfo si = getInfo();
+		IStorageInfo si = getStorageInfo();
 		String type = null;
 		if (si != null) {
 			String comment = si.getComment();
@@ -171,7 +160,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		totalSideboard.setText(String.valueOf(getCount(sideboardStore)));
 		total.setText(String.valueOf(getCount(mainStore)));
 		prefix = (type != null && type.equals(IStorageInfo.DECK_TYPE)) ? "Deck" : "Collection";
-		if (sideboardStore != null) {
+		if (location.isSideboard()) {
 			prefix = "Sideboard";
 		}
 		CardGroup group = CardStoreUtils.buildGroup(mainStore, sideboardStore);

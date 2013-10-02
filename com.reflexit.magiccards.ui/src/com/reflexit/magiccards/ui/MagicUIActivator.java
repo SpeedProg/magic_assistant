@@ -17,8 +17,10 @@ import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -41,6 +43,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public static boolean TRACE_EXPORT = false;
 	public static boolean TRACE_UI = false;
 	public static boolean TRACE_TESTING = false;
+	public static Color COLOR_GREENISH;
+	public static Color COLOR_PINKINSH;
 
 	/**
 	 * The constructor
@@ -61,6 +65,9 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
 		TRACE_TESTING = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing"));
+		Device device = Display.getDefault();
+		COLOR_GREENISH = new Color(device, 255 - 64, 255, 255 - 64);
+		COLOR_PINKINSH = new Color(device, 255, 255 - 64, 255 - 64);
 	}
 
 	private void activateCoreSettings() {

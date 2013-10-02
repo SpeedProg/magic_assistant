@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -21,7 +22,10 @@ final class FormatColumn extends AbstractEditionColumn {
 	@Override
 	public String getText(Object element) {
 		Editions.Edition ed = (Edition) element;
-		return ed.getFormat();
+		Format firstLegal = ed.getLegalityMap().getFirstLegal();
+		if (firstLegal == null)
+			return Format.LEGACY.name();
+		return firstLegal.name();
 	}
 
 	@Override

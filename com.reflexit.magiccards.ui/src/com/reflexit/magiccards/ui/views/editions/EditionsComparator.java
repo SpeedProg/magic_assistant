@@ -47,7 +47,7 @@ public class EditionsComparator implements Comparator<Edition> {
 				break;
 			}
 			case FORMAT: {
-				d = a1.getLegalities().compareTo(a2.getLegalities());
+				d = a1.getLegalityMap().compareTo(a2.getLegalityMap());
 				if (d == 0) {
 					return compare(a1, a2, EditionField.DATE, -dir);
 				}

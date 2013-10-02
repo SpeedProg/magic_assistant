@@ -27,6 +27,8 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
@@ -63,6 +65,15 @@ public class AbstractDeckPage implements IDeckPage {
 			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
 		}
 		return cardCountTotal;
+	}
+
+	protected IStorageInfo getStorageInfo() {
+		IStorage storage = getCardStore().getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si;
+		}
+		return null;
 	}
 
 	public void setDeckView(DeckView view) {
