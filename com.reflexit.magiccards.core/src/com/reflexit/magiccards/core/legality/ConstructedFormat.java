@@ -5,6 +5,10 @@ public class ConstructedFormat extends Format {
 		super(name);
 	}
 
+	protected ConstructedFormat(String name, int ord) {
+		super(name, ord);
+	}
+
 	@Override
 	public int getMainDeckCount() {
 		return 60;
