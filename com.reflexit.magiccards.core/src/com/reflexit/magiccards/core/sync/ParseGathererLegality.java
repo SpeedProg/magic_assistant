@@ -22,7 +22,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardSet;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
@@ -114,7 +113,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 					LegalityMap map = parser.getCardLegality(id, new SubCoreProgressMonitor(monitor, 10));
 					res.put(id, map);
 					MagicCard base = ((MagicCard) magicCard.getBase());
-					base.setProperty(MagicCardField.LEGALITY, map.toExternal());
+					base.setLegalityMap(map);
 				} catch (IOException e) {
 					ex = e;
 				}

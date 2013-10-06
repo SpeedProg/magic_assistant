@@ -8,10 +8,12 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 import com.reflexit.magiccards.core.sync.GatherHelper;
@@ -36,7 +38,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	private transient String colorType = "land";
 	private transient int cmc = 0;
 	private int enId;
-	private LinkedHashMap<String, String> properties;
+	private LinkedHashMap<String, Object> properties;
 
 	/*
 	 * (non-Javadoc)
@@ -511,7 +513,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		try {
 			MagicCard obj = (MagicCard) super.clone();
 			if (this.properties != null)
-				obj.properties = (LinkedHashMap<String, String>) this.properties.clone();
+				obj.properties = (LinkedHashMap<String, Object>) this.properties.clone();
 			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;
@@ -567,7 +569,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			this.num = null;
 	}
 
-	public Map<String, String> getProperties() {
+	public Map<String, Object> getProperties() {
 		return properties;
 	}
 
@@ -589,27 +591,27 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		}
 	}
 
-	public void setProperty(ICardField field, String value) {
+	public void setProperty(ICardField field, Object value) {
 		setProperty(field.name(), value);
 	}
 
-	public void setProperty(String key, String value) {
+	public void setProperty(String key, Object value) {
 		if (key == null)
 			throw new NullPointerException();
 		key = key.trim();
 		if (properties == null)
-			properties = new LinkedHashMap<String, String>(3);
+			properties = new LinkedHashMap<String, Object>(3);
 		if (value == null)
 			properties.remove(key);
 		else
 			properties.put(key, value);
 	}
 
-	public String getProperty(ICardField field) {
+	public Object getProperty(ICardField field) {
 		return getProperty(field.name());
 	}
 
-	public String getProperty(String key) {
+	public Object getProperty(String key) {
 		if (properties == null)
 			return null;
 		if (key == null)
@@ -618,21 +620,21 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public int getFlipId() {
-		String fid = getProperty(MagicCardField.FLIPID);
+		String fid = (String) getProperty(MagicCardField.FLIPID);
 		if (fid == null || fid.length() == 0)
 			return 0;
 		return Integer.valueOf(fid);
 	}
 
 	public String getPart() {
-		String part = getProperty(MagicCardField.PART);
+		String part = (String) getProperty(MagicCardField.PART);
 		return part;
 	}
 
 	public int getSide() {
-		String prop = getProperty(MagicCardField.SIDE);
+		String prop = (String) getProperty(MagicCardField.SIDE);
 		if (prop == null) {
-			String part = getProperty(MagicCardField.PART);
+			String part = (String) getProperty(MagicCardField.PART);
 			if (part == null) {
 				return 0;
 			} else if (part.startsWith("@")) {
@@ -790,7 +792,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public String getImageUrl() {
-		String x = getProperty(MagicCardField.IMAGE_URL);
+		String x = (String) getProperty(MagicCardField.IMAGE_URL);
 		if (x != null)
 			return x;
 		int gathererId = getGathererId();
@@ -807,10 +809,45 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public LegalityMap getLegalityMap() {
-		String value = getProperty(MagicCardField.LEGALITY);
-		if (value == null)
+		Object value = getProperty(MagicCardField.LEGALITY);
+		if (value == null) {
+			value = induceLegality();
+			if (value == null)
+				return null;
+			setLegalityMap((LegalityMap) value);
+		}
+		if (value instanceof String) {
+			LegalityMap map = LegalityMap.valueOf((String) value);
+			return map;
+		}
+		return (LegalityMap) value;
+	}
+
+	private LegalityMap induceLegality() {
+		Edition edition = Editions.getInstance().getEditionByName(getSet());
+		if (edition == null)
 			return null;
-		LegalityMap map = LegalityMap.valueOf(value);
-		return map;
+		LegalityMap legalityMap = edition.getLegalityMap();
+		if (legalityMap == null)
+			return null;
+		LegalityMap clone = (LegalityMap) legalityMap.clone();
+		if (clone.get(Format.STANDARD) == Legality.LEGAL)
+			return clone;
+		// check printings
+		IMagicCard magicCard = DataManager.getMagicDBStore().getPrime(name);
+		if (magicCard != this) {
+			LegalityMap candMap = magicCard.getLegalityMap();
+			Set<Format> formats = candMap.keySet();
+			for (Format format : formats) {
+				if (candMap.isLegal(format)) {
+					clone.put(format, Legality.LEGAL);
+				}
+			}
+		}
+		return clone;
+	}
+
+	public void setLegalityMap(LegalityMap map) {
+		setProperty(MagicCardField.LEGALITY, map);
 	}
 }
