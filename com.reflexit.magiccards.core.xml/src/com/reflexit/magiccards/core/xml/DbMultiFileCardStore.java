@@ -14,15 +14,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
@@ -37,8 +40,89 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * 
  */
 public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
-	private IntHashtable hash = new IntHashtable();
+	public class GlobalDbHandler {
+		private IntHashtable hash = new IntHashtable();
+		// map from name to latest card
+		private HashMap<String, MagicCard> primeMap = new HashMap<String, MagicCard>();
+
+		public boolean hashAndResolve(IMagicCard card) {
+			boolean conflict = false;
+			int id = card.getCardId();
+			IMagicCard prev = (IMagicCard) hash.get(id);
+			if (prev != null) {
+				boolean delcur = conflictMerge(prev, card);
+				hash.put(prev.getCardId(), prev); // rehash prev it could have changed
+				if (delcur) {
+					conflict = true;
+				} else {
+					hash.put(card.getCardId(), card); // id could have changed
+				}
+			} else
+				hash.put(id, card);
+			// map for name
+			MagicCard magicCard = primeMap.get(card.getName());
+			if (magicCard == null)
+				primeMap.put(card.getName(), (MagicCard) card);
+			else {
+				int id1 = magicCard.getCardId();
+				int id2 = card.getCardId();
+				boolean en1 = magicCard.getEnglishCardId() == 0;
+				boolean en2 = card.getEnglishCardId() == 0;
+				if (id2 > id1 && en1 == en2 || (en2 && !en1)) {
+					primeMap.put(card.getName(), (MagicCard) card);
+				}
+			}
+			return conflict;
+		}
+
+		public boolean conflictMerge(IMagicCard prev, IMagicCard card) {
+			if (prev.equals(card)) {
+				// merge
+				((MagicCard) prev).copyFrom(card);
+				return true;
+			}
+			int id = card.getCardId();
+			// redo
+			Integer old = (Integer) prev.getObjectByField(MagicCardField.SIDE);
+			Integer cur = (Integer) card.getObjectByField(MagicCardField.SIDE);
+			Object prevPart = prev.getObjectByField(MagicCardField.PART);
+			Object curPart = card.getObjectByField(MagicCardField.PART);
+			if (old == 0 && cur == 0) {
+				if (prevPart != null)
+					old = 1;
+				if (curPart != null)
+					cur = 1;
+			}
+			if (old == cur) {
+				System.err.println("STORE DOUBLE: " + prev + " " + old + "[" + prevPart + "] -> new " + card + "[" + curPart + "] " + cur);
+				return true;
+			} else {
+				if (old == 1) {
+					((ICardModifiable) prev).setObjectByField(MagicCardField.ID, String.valueOf(-id));
+					return false;
+				} else if (cur == 1) {
+					((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(-id));
+					return false;
+				}
+			}
+			return false;
+		}
+
+		public IMagicCard get(int id) {
+			return (IMagicCard) hash.get(id);
+		}
+
+		public void remove(IMagicCard card) {
+			hash.remove(card.getCardId());
+		}
+
+		public MagicCard getPrime(String name) {
+			return primeMap.get(name);
+		}
+	}
+
 	private boolean load;
+	private GlobalDbHandler handler = new GlobalDbHandler();
 
 	public DbMultiFileCardStore() {
 		super();
@@ -52,7 +136,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		if (location != null && map.containsKey(location)) {
 			return (DbFileCardStore) map.get(location);
 		}
-		DbFileCardStore store = new DbFileCardStore(file, location, hash, initialize);
+		DbFileCardStore store = new DbFileCardStore(file, location, handler, initialize);
 		if (initialize) {
 			store.initialize();
 		}
@@ -66,7 +150,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	@Override
 	protected AbstractCardStoreWithStorage<IMagicCard> newStorage(IMagicCard card) {
-		DbFileCardStore store = new DbFileCardStore(getFile(card), getLocation(card), hash, false);
+		DbFileCardStore store = new DbFileCardStore(getFile(card), getLocation(card), handler, false);
 		store.getStorage().setAutoCommit(getStorage().isAutoCommit());
 		return store;
 	}
@@ -81,7 +165,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	@Override
 	public IMagicCard getCard(int id) {
-		return (IMagicCard) hash.get(id);
+		return handler.get(id);
 	}
 
 	@Override
@@ -188,6 +272,10 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	public void setLoad(boolean load) {
 		this.load = load;
+	}
+
+	public MagicCard getPrime(String name) {
+		return handler.getPrime(name);
 	}
 
 	@Override
