@@ -420,8 +420,11 @@ public class CardGroupTest extends TestCase {
 		Location loc = Location.createLocation("xxx");
 		for (int j = 0; j < cards.length; j++) {
 			cards[j] = CardGenerator.generatePhysicalCardWithValues(m);
-			((MagicCardPhysical) cards[j]).setLocation(loc);
-			((MagicCardPhysical) cards[j]).setOwn(true);
+			MagicCardPhysical mcp = (MagicCardPhysical) cards[j];
+			mcp.setLocation(loc);
+			mcp.setOwn(true);
+			mcp.setCount(1);
+			assertTrue(mcp.isOwn());
 		}
 		group.add(cards[0]);
 		assertEquals(loc, group.getLocation());
