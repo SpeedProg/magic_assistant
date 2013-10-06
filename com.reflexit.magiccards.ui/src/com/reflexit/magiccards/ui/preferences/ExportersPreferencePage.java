@@ -193,9 +193,9 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		IFilteredCardStore store = new MemoryFilteredCardStore<IMagicCard>();
 		Location xxx = Location.createLocation("xxx");
 		store.setLocation(xxx);
-		IMagicCard card = (IMagicCard) DataManager.getMagicDBStore().getCard(151097);
-		IMagicCard card2 = (IMagicCard) DataManager.getMagicDBStore().getCard(83035);
-		IMagicCard card3 = (IMagicCard) DataManager.getMagicDBStore().getCard(83002);
+		IMagicCard card = DataManager.getMagicDBStore().getCard(151097);
+		IMagicCard card2 = DataManager.getMagicDBStore().getCard(83035);
+		IMagicCard card3 = DataManager.getMagicDBStore().getCard(83002);
 		store.getCardStore().add(new MagicCardPhysical(card, xxx));
 		MagicCardPhysical mcp = new MagicCardPhysical(card2, xxx);
 		mcp.setCount(4);
