@@ -29,9 +29,19 @@ import com.reflexit.magiccards.core.exports.TablePipedImportTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
 import com.reflexit.magiccards.core.model.LegalityMapTest;
 import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
+import com.reflexit.magiccards.core.model.MagicCardFilterTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
+import com.reflexit.magiccards.core.model.nav.CardOrganizerTest;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStoreTest;
+import com.reflexit.magiccards.core.model.storage.CardCollectionStoreObjectTest;
+import com.reflexit.magiccards.core.model.storage.CollectionStoreTest;
+import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
+import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
+import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
+import com.reflexit.magiccards.core.xml.MagicCardPhysicalConvertorTest;
+import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
 
 /**
  * @author Alena
@@ -66,7 +76,6 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
 		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
-		suite.addTestSuite(EditionsTest.class);
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);

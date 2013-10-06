@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.model;
 
 import java.util.HashMap;
 import junit.framework.TestCase;

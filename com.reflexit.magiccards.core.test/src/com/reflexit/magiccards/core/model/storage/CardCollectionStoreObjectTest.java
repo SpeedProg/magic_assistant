@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.model.storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,9 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.legality.Format;
+import com.reflexit.magiccards.core.model.Legality;
+import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -76,5 +79,18 @@ public class CardCollectionStoreObjectTest extends TestCase {
 		store.list.add(mcp);
 		store.list.add(CardGenerator.generatePhysicalCardWithValues(m1));
 		roundtrip();
+	}
+
+	@Test
+	public void testpropLegality() {
+		MagicCard a1 = m1.cloneCard();
+		LegalityMap map = new LegalityMap();
+		map.put(Format.STANDARD, Legality.LEGAL);
+		a1.setLegalityMap(map);
+		this.store.list.add(a1);
+		roundtrip();
+		MagicCard a2 = (MagicCard) store2.list.get(0);
+		LegalityMap map2 = a2.getLegalityMap();
+		assertEquals(map, map2);
 	}
 }

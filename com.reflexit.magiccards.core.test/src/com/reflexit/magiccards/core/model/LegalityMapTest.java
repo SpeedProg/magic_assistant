@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.ArrayList;
+
 import junit.framework.TestCase;
 
 import org.junit.Before;
@@ -103,9 +105,25 @@ public class LegalityMapTest extends TestCase {
 		assertTrue("Cannot find Extended1 Restricted in " + fullText, fullText.contains("Extended1 Restricted"));
 	}
 
+	@Test
+	public void testCalculateDeckLegality() {
+		LegalityMap card1 = new LegalityMap();
+		LegalityMap card2 = new LegalityMap();
+		card1.put(STANDARD, Legality.LEGAL);
+		card2.put(STANDARD, Legality.BANNED);
+		card1.put(BLA_BLA, Legality.LEGAL);
+		card1.put(Format.EXTENDED, Legality.RESTRICTED);
+		card2.put(Format.EXTENDED, Legality.UNKNOWN);
+		ArrayList<LegalityMap> list = new ArrayList<LegalityMap>();
+		list.add(card1);
+		list.add(card2);
+		map = LegalityMap.calculateDeckLegality(list);
+		assertEquals(Legality.BANNED, map.get(STANDARD));
+		assertEquals(Legality.RESTRICTED, map.get(Format.EXTENDED));
+		assertEquals(Legality.NOT_LEGAL, map.get(BLA_BLA));
+	}
+
 	/*
-	 * 
-	 * @Test public void testCalculateDeckLegality() { fail("Not yet implemented"); }
 	 * 
 	 * @Test public void testLegalFormats() { fail("Not yet implemented"); }
 	 * 

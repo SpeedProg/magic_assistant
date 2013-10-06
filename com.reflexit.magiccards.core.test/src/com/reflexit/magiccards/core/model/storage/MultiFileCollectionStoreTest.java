@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.model.storage;
 
 import java.io.File;
 import java.util.Iterator;

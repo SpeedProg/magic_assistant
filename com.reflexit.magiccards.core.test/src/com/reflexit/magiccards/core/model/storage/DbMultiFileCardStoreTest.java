@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.model.storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +56,27 @@ public class DbMultiFileCardStoreTest extends TestCase {
 			found = true;
 		}
 		assertTrue("Card not found", found);
+	}
+
+	public void testGetPrime() {
+		this.store.add(m1);
+		this.store.add(m2);
+		MagicCard m3;
+		m3 = (MagicCard) m1.clone();
+		m3.setId(String.valueOf(m1.getCardId() + 1));
+		m3.setSet(MORNINGTIDE);
+		assertEquals(m1, store.getPrime(m1.getName()));
+		this.store.add(m3);
+		assertEquals(m3, store.getPrime(m1.getName()));
+		this.store.add(m1);
+		assertEquals(m3, store.getPrime(m1.getName()));
+		MagicCard m4;
+		m4 = (MagicCard) m1.clone();
+		m4.setId(String.valueOf(m3.getCardId() + 1));
+		m4.setSet(MORNINGTIDE);
+		m4.setEnglishCardId(m3.getCardId());
+		this.store.add(m4);
+		assertEquals(m3, store.getPrime(m1.getName()));
 	}
 
 	public void testAddAll() {

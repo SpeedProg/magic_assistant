@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.core.model.EditionsTest;
 import com.reflexit.magiccards.core.seller.test.ParseTcgPlayerPricesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
@@ -39,6 +40,7 @@ public class AllCoreTests {
 		suite.addTestSuite(ParseGathererBasicInfoTest.class);
 		suite.addTestSuite(ParseGathererSearchStandardTest.class);
 		suite.addTestSuite(ParseGathererSearchChecklistTest.class);
+		suite.addTestSuite(EditionsTest.class);
 		// prive providers
 		suite.addTestSuite(ParseTcgPlayerPricesTest.class);
 		// $JUnit-END$

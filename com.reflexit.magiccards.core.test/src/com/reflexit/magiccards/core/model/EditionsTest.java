@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.test;
+package com.reflexit.magiccards.core.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -114,6 +114,13 @@ public class EditionsTest extends TestCase {
 		Edition ed = editions.getEditionByName("Conflux");
 		assertEquals(ed.getBaseFileName(), "CONFL");
 		assertEquals(ed.getMainAbbreviation(), "CON");
+	}
+
+	@Test
+	public void testGetEditionByNameM14() {
+		Edition ed = editions.getEditionByName("Magic 2014");
+		assertEquals(ed.getMainAbbreviation(), "M14");
+		assertEquals(ed.getName(), "Magic 2014 Core Set");
 	}
 
 	@Test
