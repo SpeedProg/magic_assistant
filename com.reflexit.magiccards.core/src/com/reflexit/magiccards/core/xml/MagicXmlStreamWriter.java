@@ -142,12 +142,13 @@ public class MagicXmlStreamWriter {
 		}
 	}
 
-	private void marshalMap(Map<String, String> properties) throws XMLStreamException {
+	private void marshalMap(Map<String, Object> properties) throws XMLStreamException {
 		for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			writer.startEl("entry");
 			writer.el("string", key);
-			writer.el("string", properties.get(key));
+			Object value = properties.get(key);
+			writer.el("string", value instanceof String ? (String) value : String.valueOf(value));
 			writer.endEl();
 		}
 	}

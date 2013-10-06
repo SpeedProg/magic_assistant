@@ -34,6 +34,11 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 		return res.toString();
 	}
 
+	@Override
+	public String toString() {
+		return toExternal();
+	}
+
 	public String getLabel() {
 		StringBuilder res = new StringBuilder();
 		Legality prev = Legality.NOT_LEGAL;
@@ -188,5 +193,9 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 				leg = cur;
 			}
 		}
+	}
+
+	public boolean isLegal(Format format) {
+		return get(format) == Legality.LEGAL;
 	}
 }
