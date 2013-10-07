@@ -19,8 +19,7 @@ public class LegalityColumn extends GenColumn {
 			}
 			return "Legality column shows the newest\n" //
 					+ "legality formats where card is legal,\n" //
-					+ "with the following modifiers:\n" //
-					+ "+ Legal, 1 Restricted, ! Banned\n\n" //
+					+ "(1) means restricted:\n" //
 					+ "This card \"" + card.getName() + "\":\n" + map.fullText();
 		}
 		return null;

@@ -69,7 +69,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private IFilteredCardStore fstore;
 	private Format format = DEFAULT_FORMAT;
 	private ImageAction load;
-	private LegalityMap deckLegalities = new LegalityMap(true); // map format->legality
+	private LegalityMap deckLegalities = new LegalityMap(); // map format->legality
 	private Combo comboLegality;
 	protected TreeViewer tree;
 	private ImageAction refresh;
