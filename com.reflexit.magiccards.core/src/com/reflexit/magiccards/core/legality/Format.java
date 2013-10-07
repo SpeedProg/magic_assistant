@@ -4,10 +4,14 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 import com.reflexit.magiccards.core.NotNull;
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
@@ -18,7 +22,7 @@ public class Format {
 	public static final Format LEGACY = new ConstructedFormat("Legacy", 4);
 	public static final Format VINTAGE = new ConstructedFormat("Vintage", 5);
 	public static final Format CLASSIC = new ConstructedFormat("Classic", 6);
-	public static final Format FREEFORM = new ConstructedFormat("Freeform", 7);
+	public static final Format FREEFORM = new Format("Freeform", 7);
 	public static final int SAN_ORDINAL = 10;
 	private final static LinkedHashMap<String, Format> formats = new LinkedHashMap<String, Format>();
 	static {
@@ -29,6 +33,7 @@ public class Format {
 		add(Format.VINTAGE);
 		add(Format.CLASSIC);
 		add(Format.FREEFORM);
+		add(new CommanderFormat());
 	}
 	@NotNull
 	private final String name;
@@ -71,7 +76,11 @@ public class Format {
 	}
 
 	public int getMainDeckCount() {
-		return -1;
+		return 40;
+	}
+
+	public int getSideboardCount() {
+		return 15;
 	}
 
 	public String name() {
@@ -96,61 +105,123 @@ public class Format {
 		return format;
 	}
 
-	public boolean checkLegality(ICardStore<IMagicCard> store, CardStoreUtils.CardStats stats) {
-		if (!checkCardLegality(store))
-			return false;
-		return true;
+	public String validateLegality(ICardStore<IMagicCard> store, CardStoreUtils.CardStats stats) {
+		String err = validateStoreLegality(store);
+		if (err != null)
+			return err;
+		if ((err = validateDeckCount(stats.mainCount)) != null)
+			return err;
+		if ((err = validateSideboardCount(stats.sideboardCount)) != null)
+			return err;
+		if ((err = validateCardCount(stats.maxRepeats)) != null)
+			return err;
+		return null;
 	}
 
-	protected boolean checkCardLegality(ICardStore<IMagicCard> store) {
-		boolean res = true;
+	protected String validateStoreLegality(ICardStore<IMagicCard> store) {
 		for (IMagicCard card : store) {
-			if (card instanceof MagicCardPhysical) {
-				MagicCardPhysical mcp = (MagicCardPhysical) card;
-				mcp.setError("");
-				Legality leg = null;
-				LegalityMap map = card.getLegalityMap();
-				if (map != null) {
-					leg = map.get(this);
-				}
-				if (leg == null) {
-					leg = Legality.UNKNOWN;
-				}
-				if (!checkCardLegality(mcp, leg))
-					res = false;
-			}
+			String err = validateCardLegality(card);
+			if (err != null)
+				return err;
 		}
-		return res;
+		for (IMagicCard card : store) {
+			String err = validateCardCount(card);
+			if (err != null)
+				return err;
+		}
+		return null;
 	}
 
-	public boolean isCountLegal(int count, Legality leg) {
-		if (leg == Legality.RESTRICTED && count > 1)
-			return false;
-		return true;
+	public Legality getLegality(IMagicCard card) {
+		LegalityMap map = card.getLegalityMap();
+		if (map != null) {
+			return map.get(this);
+		}
+		return Legality.UNKNOWN;
 	}
 
-	protected boolean checkCardLegality(MagicCardPhysical mcp, Legality leg) {
+	public String validateCardCount(IMagicCard card) {
+		if (card.isBasicLand())
+			return null;
+		if (card instanceof ICardCountable) {
+			int count = ((ICardCountable) card).getCount();
+			Legality leg = getLegality(card);
+			if (leg == Legality.RESTRICTED && count > 1)
+				return "Restricted for " + this + ". Only 1 " + card.getName() + " is allowed";
+			return validateCardCount(count);
+		}
+		return null;
+	}
+
+	/**
+	 * @param count
+	 *            - count of the cards to validate
+	 */
+	public String validateCardCount(int count) {
+		return null;
+	}
+
+	public String validateCardOrGroup(IMagicCard element) {
+		String err = validateCardLegality(element);
+		if (err != null)
+			return err;
+		if (element instanceof CardGroup) {
+			CardGroup group = (CardGroup) element;
+			int count = group.getCount();
+			ICardField field = group.getFieldIndex();
+			if (field == MagicCardFieldPhysical.SIDEBOARD) {
+				if (group.isSideboard()) {
+					err = validateSideboardCount(count);
+				} else {
+					err = validateDeckCount(count);
+				}
+			} else if (field == MagicCardField.NAME) {
+				err = validateCardCount(element);
+			}
+		} else {
+			err = validateCardCount(element);
+		}
+		return err;
+	}
+
+	public String validateCardLegality(IMagicCard card) {
+		Legality leg = getLegality(card);
 		switch (leg) {
 			case UNKNOWN:
-				mcp.setError("Uknown legality for " + this);
-				return false;
+				return ("Uknown legality for " + this);
 			case NOT_LEGAL:
-				mcp.setError("Not legal for " + this);
-				return false;
+				return ("Not legal for " + this);
 			case BANNED:
-				mcp.setError("Banned for " + this);
-				return false;
+				return ("Banned for " + this);
 			case LEGAL:
-				break;
 			case RESTRICTED:
-				if (isCountLegal(mcp.getCount(), leg)) {
-					mcp.setError("Restricted for " + this + ". Only 1 allowed");
-					return false;
-				}
-				break;
+				return null;
 			default:
-				break;
+				return null;
 		}
-		return true;
+	}
+
+	/**
+	 * @param count
+	 *            deck total cards
+	 * @return error string or null if legal
+	 */
+	public String validateDeckCount(int count) {
+		int min = getMainDeckCount();
+		if (min == -1 || count >= min)
+			return null;
+		return "Deck card count is " + count + " expected >= " + min;
+	}
+
+	/**
+	 * @param count
+	 *            sideboard total cards
+	 * @return error string or null if legal
+	 */
+	public String validateSideboardCount(int count) {
+		int max = getSideboardCount();
+		if (count <= max)
+			return null;
+		return "Sideboard card count is " + count + " expected <= " + max;
 	}
 }
