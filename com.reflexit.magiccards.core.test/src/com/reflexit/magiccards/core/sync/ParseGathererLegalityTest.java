@@ -45,15 +45,16 @@ public class ParseGathererLegalityTest extends TestCase {
 		LegalityMap map1 = new LegalityMap();
 		map1.put(Format.STANDARD, Legality.LEGAL);
 		map1.put(Format.EXTENDED, Legality.LEGAL);
+		map1.complete();
 		LegalityMap map2 = new LegalityMap();
 		map2.put(Format.EXTENDED, Legality.RESTRICTED);
 		map2.put(Format.valueOf("Tribal Wars"), Legality.LEGAL);
+		map2.complete();
 		Collection<LegalityMap> maps = new ArrayList<LegalityMap>();
 		maps.add(map1);
 		maps.add(map2);
 		LegalityMap deck = LegalityMap.calculateDeckLegality(maps);
 		assertEquals(Legality.RESTRICTED, deck.get("Extended"));
-		assertEquals(Legality.NOT_LEGAL, deck.get("Standard"));
 		assertEquals(Legality.NOT_LEGAL, deck.get("Tribal Wars"));
 	}
 }
