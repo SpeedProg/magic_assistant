@@ -17,20 +17,27 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 		// empty one
 	}
 
-	public LegalityMap(boolean init) {
-		if (init) {
-			for (Format format : formats) {
-				put(format, Legality.UNKNOWN);
-			}
+	protected void initFormats() {
+		for (Format format : formats) {
+			if (format.ordinal() < Format.SAN_ORDINAL)
+				super.put(format, Legality.UNKNOWN);
 		}
 	}
 
 	public String toExternal() {
 		StringBuilder res = new StringBuilder();
+		Legality prev = Legality.NOT_LEGAL;
 		for (Format format : keySet()) {
 			Legality leg = get(format);
-			if (leg == Legality.UNKNOWN)
-				leg = Legality.NOT_LEGAL;
+			if (format.ordinal() <= Format.SAN_ORDINAL) {
+				if (leg == prev) {
+					continue;
+				}
+				if (leg == Legality.UNKNOWN && prev == Legality.LEGAL) {
+					continue;
+				}
+				prev = leg;
+			}
 			res.append(format + leg.getExt() + SEP);
 		}
 		return res.toString();
@@ -42,17 +49,11 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 	}
 
 	public String getLabel() {
-		StringBuilder res = new StringBuilder();
-		Legality prev = Legality.NOT_LEGAL;
-		for (Format format : formats) {
-			Legality leg = get(format);
-			if (format.ordinal() >= Format.SAN_ORDINAL || prev != Legality.LEGAL) {
-				if (leg == Legality.LEGAL || leg == Legality.RESTRICTED)
-					res.append(format + leg.getExt() + " ");
-			}
-			prev = leg;
-		}
-		return res.toString().trim();
+		Format f = getFirstLegal();
+		if (get(f) == Legality.LEGAL)
+			return f.name();
+		// otherwise restricted
+		return f.name() + " (1)";
 	}
 
 	public String fullText() {
@@ -61,7 +62,7 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 			Legality leg = get(format);
 			if ((format.ordinal() >= Format.SAN_ORDINAL) && (leg == Legality.NOT_LEGAL || leg == Legality.UNKNOWN))
 				continue;
-			res += format + leg.getExt() + " " + leg.getLabel() + "\n";
+			res += format + " - " + leg.getLabel() + "\n";
 		}
 		return res.trim();
 	}
@@ -84,6 +85,8 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 
 	@Override
 	public Legality put(Format format, Legality value) {
+		if (isEmpty())
+			initFormats();
 		return super.put(format, value);
 	}
 
@@ -119,7 +122,7 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 	}
 
 	public static LegalityMap calculateDeckLegality(Collection<LegalityMap> cardLegalities) {
-		LegalityMap deckLegality = new LegalityMap(true);
+		LegalityMap deckLegality = new LegalityMap();
 		// all other formats that these cards mention
 		for (LegalityMap cardLegalityRestrictions : cardLegalities) {
 			for (Entry<Format, Legality> cardLegalityEntry : cardLegalityRestrictions.entrySet()) {
@@ -185,8 +188,11 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 		if (isEmpty())
 			return null;
 		for (Format format : keySet()) {
-			if (get(format) == Legality.LEGAL) {
-				return format;
+			if (format.ordinal() < Format.SAN_ORDINAL) {
+				Legality leg = get(format);
+				if (leg == Legality.LEGAL || leg == Legality.RESTRICTED) {
+					return format;
+				}
 			}
 		}
 		return null;
@@ -197,7 +203,7 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 		for (Format format : formats) {
 			Legality cur = get(format);
 			if (cur == Legality.UNKNOWN) {
-				if (format.ordinal() >= 10)
+				if (format.ordinal() >= Format.SAN_ORDINAL)
 					put(format, Legality.NOT_LEGAL);
 				else
 					put(format, leg);

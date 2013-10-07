@@ -36,7 +36,7 @@ public class Editions implements ISearchableProperty {
 		private String aliases[];
 		private Date release;
 		private String type = "?";
-		private LegalityMap legalityMap = new LegalityMap(true);
+		private LegalityMap legalityMap = new LegalityMap();
 		private String block;
 		private int id;
 		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
