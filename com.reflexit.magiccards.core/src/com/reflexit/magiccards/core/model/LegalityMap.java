@@ -1,11 +1,13 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import com.reflexit.magiccards.core.legality.Format;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class LegalityMap extends LinkedHashMap<Format, Legality> {
 	private final static Collection<Format> formats = Format.getFormats();
@@ -104,6 +106,16 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 		if (x == null)
 			return Legality.UNKNOWN;
 		return x;
+	}
+
+	public static LegalityMap calculateDeckLegality(ICardStore<IMagicCard> store) {
+		Collection<LegalityMap> cardLegalities = new ArrayList<LegalityMap>();
+		for (IMagicCard card : store) {
+			LegalityMap map = card.getLegalityMap();
+			if (map != null)
+				cardLegalities.add(map);
+		}
+		return calculateDeckLegality(cardLegalities);
 	}
 
 	public static LegalityMap calculateDeckLegality(Collection<LegalityMap> cardLegalities) {
