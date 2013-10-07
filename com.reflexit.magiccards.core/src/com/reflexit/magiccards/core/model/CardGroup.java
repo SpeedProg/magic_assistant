@@ -797,6 +797,14 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		IMagicCardPhysical groupBase = getGroupBase();
 		if (groupBase == null)
 			return null; // empty group
-		return groupBase.getBase().getLegalityMap();
+		return groupBase.getLegalityMap();
+	}
+
+	@Override
+	public boolean isBasicLand() {
+		IMagicCardPhysical groupBase = getGroupBase();
+		if (groupBase == null)
+			return false; // empty group
+		return groupBase.isBasicLand();
 	}
 }

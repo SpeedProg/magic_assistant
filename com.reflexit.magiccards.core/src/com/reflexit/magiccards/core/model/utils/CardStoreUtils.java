@@ -33,6 +33,7 @@ import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -600,10 +601,8 @@ public final class CardStoreUtils {
 			for (Object card : store) {
 				if (card instanceof IMagicCard && card instanceof ICardCountable) {
 					IMagicCard mc = (IMagicCard) card;
-					if (MTYPES.hasType(mc, CardTypes.TYPES.Type_Land)) {
-						if (MTYPES.hasType(mc, CardTypes.TYPES.Type_Basic)) {
-							continue;
-						}
+					if (((MagicCard) mc.getBase()).isBasicLand()) {
+						continue;
 					}
 					nameToCount.inc(mc.getName(), ((ICardCountable) mc).getCount());
 				}
