@@ -22,7 +22,7 @@ public class LegalityMapTest extends TestCase {
 
 	@Test
 	public void testLegalityMapBoolean() {
-		map = new LegalityMap(true);
+		map = new LegalityMap();
 		assertEquals(Legality.UNKNOWN, map.get(STANDARD));
 	}
 
@@ -55,7 +55,15 @@ public class LegalityMapTest extends TestCase {
 	public void testGetLabel() {
 		map.put(STANDARD, Legality.LEGAL);
 		map.put(Format.EXTENDED, Legality.LEGAL);
-		assertEquals("Standard+", map.getLabel());
+		assertEquals("Standard", map.getLabel());
+	}
+
+	@Test
+	public void testGetLabel2() {
+		map = new LegalityMap();
+		map.put(Format.MODERN, Legality.LEGAL);
+		map.put(Format.EXTENDED, Legality.RESTRICTED);
+		assertEquals("Extended (1)", map.getLabel());
 	}
 
 	@Test
@@ -100,9 +108,9 @@ public class LegalityMapTest extends TestCase {
 		map.put(Format.MODERN, Legality.LEGAL);
 		map.complete();
 		String fullText = map.fullText();
-		assertTrue(fullText.contains("Standard- Not Legal"));
-		assertTrue(fullText.contains("Legacy+ Legal"));
-		assertTrue("Cannot find Extended1 Restricted in " + fullText, fullText.contains("Extended1 Restricted"));
+		assertTrue(fullText.contains("Standard - Not Legal"));
+		assertTrue(fullText.contains("Legacy - Legal"));
+		assertTrue("Cannot find Extended - Restricted in " + fullText, fullText.contains("Extended - Restricted"));
 	}
 
 	@Test
