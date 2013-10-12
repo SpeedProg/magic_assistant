@@ -36,7 +36,7 @@ public class EditionsFilterPreferencePage extends AbstractFilterPreferencePage {
 
 	@Override
 	public void setPreferenceStore(IPreferenceStore store) {
-		store.setDefault(FilterField.FORMAT.getPrefConstant(), FORMAT_NONE);
+		store.setDefault(FilterField.FORMAT.getPrefConstant(), "");
 		super.setPreferenceStore(store);
 		if (comp != null)
 			comp.initialize();
