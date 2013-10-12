@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
@@ -33,14 +34,20 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 				if (leg == prev) {
 					continue;
 				}
-				if (leg == Legality.UNKNOWN && prev == Legality.LEGAL) {
-					continue;
-				}
 				prev = leg;
 			}
-			res.append(format + leg.getExt() + SEP);
+			if (leg == Legality.UNKNOWN) {
+				continue;
+			}
+			if (leg == Legality.LEGAL)
+				res.append(format + SEP);
+			else
+				res.append(format + leg.getExt() + SEP);
 		}
-		return res.toString();
+		String sres = res.toString();
+		if (sres.length() > 0)
+			return sres.substring(0, sres.length() - 1);
+		return "";
 	}
 
 	@Override
@@ -74,11 +81,20 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 			String string = vs[i];
 			if (string == null || string.length() == 0)
 				continue;
-			String ext = string.substring(string.length() - 1, string.length());
-			String f = string.substring(0, string.length() - 1);
-			Legality leg = Legality.fromExt(ext);
-			Format format = Format.valueOf(f);
-			map.put(format, leg);
+			try {
+				Format format = Format.get(string);
+				if (format == null) {
+					String ext = string.substring(string.length() - 1, string.length());
+					String f = string.substring(0, string.length() - 1);
+					Legality leg = Legality.fromExt(ext);
+					format = Format.valueOf(f);
+					map.put(format, leg);
+				} else {
+					map.put(format, Legality.LEGAL);
+				}
+			} catch (Exception e) {
+				MagicLogger.log(e); // move on
+			}
 		}
 		return map;
 	}

@@ -105,6 +105,11 @@ public class Format {
 		return format;
 	}
 
+	public static Format get(String f) {
+		Format real = formats.get(f);
+		return real;
+	}
+
 	public String validateLegality(ICardStore<IMagicCard> store, CardStoreUtils.CardStats stats) {
 		String err = validateStoreLegality(store);
 		if (err != null)

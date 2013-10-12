@@ -2,6 +2,8 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.Comparator;
 
+import com.reflexit.magiccards.core.legality.Format;
+
 class MagicCardComparator implements Comparator {
 	private ICardField field;
 	private boolean accending;
@@ -97,6 +99,18 @@ class MagicCardComparator implements Comparator {
 							if (d != 0)
 								break;
 							generic = true;
+							break;
+						case LEGALITY:
+							Format fo1 = ((LegalityMap) a1).getFirstLegal();
+							Format fo2 = ((LegalityMap) a2).getFirstLegal();
+							if (fo1 == null && fo2 != null)
+								d = 1;
+							else if (fo2 == null && fo1 != null)
+								d = -1;
+							else if (fo1 == null && fo2 == null)
+								d = 0;
+							else
+								d = fo1.ordinal() - fo2.ordinal();
 							break;
 						default:
 							generic = true;

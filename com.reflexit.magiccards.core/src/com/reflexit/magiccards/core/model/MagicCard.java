@@ -352,7 +352,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				case IMAGE_URL:
 					return getImageUrl();
 				case LEGALITY:
-					return getProperty(MagicCardField.LEGALITY);
+					return getLegalityMap();
 				default:
 					break;
 			}
@@ -831,7 +831,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		if (legalityMap == null)
 			return null;
 		LegalityMap clone = (LegalityMap) legalityMap.clone();
-		if (clone.get(Format.STANDARD) == Legality.LEGAL)
+		if (clone.isLegal(Format.STANDARD))
 			return clone;
 		// check printings
 		IMagicCard magicCard = DataManager.getMagicDBStore().getPrime(name);

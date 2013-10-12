@@ -60,7 +60,6 @@ public class CardGenerator {
 	static public MagicCardPhysical generatePhysicalCardWithValues() {
 		MagicCard card = generateCardWithValues();
 		MagicCardPhysical phi = new MagicCardPhysical(card, null);
-		phi.setCount(id % 10);
 		phi.setComment("comment " + id);
 		phi.setOwn(true);
 		return phi;
@@ -68,7 +67,7 @@ public class CardGenerator {
 
 	static public MagicCardPhysical generatePhysicalCardWithValues(IMagicCard card) {
 		MagicCardPhysical phi = new MagicCardPhysical(card, null);
-		phi.setCount(id % 10);
+		phi.setCount((id % 10) + 1);
 		phi.setComment("comment " + id);
 		phi.setOwn(id % 2 == 0 ? true : false);
 		phi.setSpecial("mint");

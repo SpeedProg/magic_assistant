@@ -410,10 +410,7 @@ public class Editions implements ISearchableProperty {
 					for (int i = 0; i < aliases.length; i++) {
 						String alias = aliases[i].trim();
 						aliases[i] = alias;
-						if (nameAliases.containsKey(alias))
-							MagicLogger.log("Alias conflict " + alias + " for " + set.getName() + " was " + name2ed.get(alias).getName());
-						else
-							nameAliases.put(alias, set);
+						nameAliases.put(alias, set);
 					}
 					set.setNameAliases(aliases);
 				} catch (Exception e) {

@@ -33,7 +33,8 @@ public enum FilterField {
 	TEXT_NOT_3(MagicCardField.ORACLE, TEXT_LINE + "_exclude_3", Postfix.TEXT_POSTFIX),
 	COLLNUM(MagicCardField.COLLNUM, Postfix.NUMERIC_POSTFIX),
 	SPECIAL(MagicCardFieldPhysical.SPECIAL, Postfix.TEXT_POSTFIX),
-	FORTRADECOUNT(MagicCardFieldPhysical.FORTRADECOUNT, Postfix.NUMERIC_POSTFIX);
+	FORTRADECOUNT(MagicCardFieldPhysical.FORTRADECOUNT, Postfix.NUMERIC_POSTFIX),
+	FORMAT(MagicCardField.LEGALITY, Postfix.TEXT_POSTFIX);
 	// fields
 	private ICardField field;
 	private String id;
@@ -109,6 +110,7 @@ public enum FilterField {
 		ids.add(FORTRADECOUNT.getPrefConstant());
 		ids.add(SPECIAL.getPrefConstant());
 		ids.add(LANG.getPrefConstant());
+		ids.add(FORMAT.getPrefConstant());
 		// TODO add the rest
 		return ids;
 	}

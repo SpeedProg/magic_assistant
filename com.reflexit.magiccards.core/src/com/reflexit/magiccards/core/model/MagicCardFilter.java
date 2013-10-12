@@ -69,6 +69,10 @@ public class MagicCardFilter implements Cloneable {
 						case CARD_TYPE:
 							res = MagicCardFilter.textSearch(ff.getField(), value);
 							break;
+						case FORMAT:
+							TextValue tvalue = new TextValue(value, true, true, false);
+							res = new BinaryExpr(new CardFieldExpr(ff.getField()), Operation.MATCHES, tvalue);
+							break;
 						case CCC:
 						case POWER:
 						case TOUGHNESS:
@@ -583,6 +587,7 @@ public class MagicCardFilter implements Cloneable {
 		expr = createAndGroup(createTextSearch(map, FilterField.TEXT_NOT_1), expr);
 		expr = createAndGroup(createTextSearch(map, FilterField.TEXT_NOT_2), expr);
 		expr = createAndGroup(createTextSearch(map, FilterField.TEXT_NOT_3), expr);
+		expr = createAndGroup(createTextSearch(map, FilterField.FORMAT), expr);
 		this.root = expr;
 	}
 
