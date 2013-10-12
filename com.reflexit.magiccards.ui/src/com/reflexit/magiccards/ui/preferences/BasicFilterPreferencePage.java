@@ -6,7 +6,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import java.util.ArrayList;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.preferences.feditors.ColorsPreferenceGroup;
 import com.reflexit.magiccards.ui.preferences.feditors.NumbericalPreferenceGroup;
@@ -19,7 +18,6 @@ public class BasicFilterPreferencePage extends AbstractFilterPreferencePage {
 
 	public BasicFilterPreferencePage(CardFilterDialog cardFilterDialog) {
 		super(cardFilterDialog);
-		this.subPages = new ArrayList();
 		setTitle("Basic Filter");
 		// setDescription("A demonstration of a preference page
 		// implementation");
