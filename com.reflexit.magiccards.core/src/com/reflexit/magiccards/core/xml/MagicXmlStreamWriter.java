@@ -66,6 +66,7 @@ public class MagicXmlStreamWriter {
 		} finally {
 			writer.close();
 			out.close();
+			writer = null;
 		}
 	}
 

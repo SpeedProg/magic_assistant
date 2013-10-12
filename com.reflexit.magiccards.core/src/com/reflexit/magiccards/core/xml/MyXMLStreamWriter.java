@@ -184,6 +184,8 @@ public class MyXMLStreamWriter {
 	public void close() {
 		try {
 			out.close();
+			out = null;
+			stack = null;
 		} catch (IOException e) {
 			// ignore
 			e.printStackTrace();
