@@ -244,6 +244,18 @@ public class MagicCardFilterTest extends TestCase {
 		genericFieldText(FilterField.COMMENT, "Boo");
 	}
 
+	public void testFORMAT() {
+		genericFieldText(FilterField.FORMAT, "Standard");
+	}
+
+	public void testFORMAT2() {
+		FilterField ff = FilterField.FORMAT;
+		setQuickFilter(ff, "Standard");
+		checkNotFound();
+		mcp.setObjectByField(ff.getField(), "Modern");
+		checkNotFound();
+	}
+
 	public void testOWNERSHIP() {
 		mcp.setOwn(true);
 		mcp.setCount(1);

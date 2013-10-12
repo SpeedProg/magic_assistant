@@ -34,7 +34,7 @@ public class LegalityMapTest extends TestCase {
 	@Test
 	public void testToExternalOne() {
 		map.put(STANDARD, Legality.LEGAL);
-		assertEquals("Standard+|", map.toExternal());
+		assertEquals("Standard", map.toExternal());
 		roundCheck();
 	}
 
@@ -46,7 +46,7 @@ public class LegalityMapTest extends TestCase {
 	public void testToExternalTwo() {
 		map.put(STANDARD, Legality.LEGAL);
 		map.put(BLA_BLA, Legality.RESTRICTED);
-		String expected = "Standard+|Bla Bla1|";
+		String expected = "Standard|Bla Bla1";
 		assertEquals(expected, map.toExternal());
 		roundCheck();
 	}
