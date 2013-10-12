@@ -52,7 +52,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		bot.tree().getTreeItem("My Cards").expand();
 		SWTBotTreeItem decks = bot.tree().getTreeItem("My Cards").getNode("Decks");
 		decks.expand();
-		bot.sleep(2000);
+		bot.sleep(3000);
 		decks.getNode("bbb (Active)").select();
 		bot.sleep(500);
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.F2);

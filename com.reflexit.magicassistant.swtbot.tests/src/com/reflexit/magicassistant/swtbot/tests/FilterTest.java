@@ -16,13 +16,24 @@ public class FilterTest extends AbstractSwtBotTest {
 	}
 
 	@Test
+	public void testFilter() throws Exception {
+		bot.viewByTitle("MTG Database").setFocus();
+		openFilterShell();
+		bot.tree().select("Set Filter");
+		bot.treeInGroup("Select visible sets").getTreeItem("Alara Reborn").check();
+		bot.button("OK").click();
+		bot.sleep(2000);
+		assertMatchesRegex("Anathemancer", bot.table().cell(0, 0));
+	}
+
+	@Test
 	public void testFilterType() throws Exception {
 		bot.viewByTitle("MTG Database").setFocus();
 		openFilterShell();
 		bot.tree().select("Basic Filter");
 		bot.textWithLabel("Type").setText("Artifact");
 		bot.button("OK").click();
-		bot.sleep(1000);
+		bot.sleep(2000);
 		assertHasType("Artifact.*", MagicDbView.ID);
 	}
 
@@ -34,18 +45,7 @@ public class FilterTest extends AbstractSwtBotTest {
 		bot.checkBox("Artifact").select();
 		bot.textWithLabel("Type").setText("Creature");
 		bot.button("OK").click();
-		bot.sleep(1000);
-		assertHasType("Artifact Creature.*", MagicDbView.ID);
-	}
-
-	@Test
-	public void testFilter() throws Exception {
-		bot.viewByTitle("MTG Database").setFocus();
-		openFilterShell();
-		bot.tree().select("Set Filter");
-		bot.treeInGroup("Select visible sets").getTreeItem("Alara Reborn").check();
-		bot.button("OK").click();
 		bot.sleep(2000);
-		assertMatchesRegex("Anathemancer", bot.table().cell(0, 0));
+		assertHasType("Artifact Creature.*", MagicDbView.ID);
 	}
 }
