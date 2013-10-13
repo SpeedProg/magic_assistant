@@ -111,6 +111,8 @@ public class Format {
 	}
 
 	public String validateLegality(ICardStore<IMagicCard> store, CardStoreUtils.CardStats stats) {
+		if (stats == null)
+			return null;
 		String err = validateStoreLegality(store);
 		if (err != null)
 			return err;
