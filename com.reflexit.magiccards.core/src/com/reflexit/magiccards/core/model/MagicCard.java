@@ -824,7 +824,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	private LegalityMap induceLegality() {
-		Edition edition = Editions.getInstance().getEditionByName(getSet());
+		String set = getSet();
+		Edition edition = Editions.getInstance().getEditionByName(set);
 		if (edition == null)
 			return null;
 		LegalityMap legalityMap = edition.getLegalityMap();
@@ -835,7 +836,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			return clone;
 		// check printings
 		IMagicCard magicCard = DataManager.getMagicDBStore().getPrime(name);
-		if (magicCard != this) {
+		if (magicCard != null && magicCard != this) {
 			LegalityMap candMap = magicCard.getLegalityMap();
 			Set<Format> formats = candMap.keySet();
 			for (Format format : formats) {
