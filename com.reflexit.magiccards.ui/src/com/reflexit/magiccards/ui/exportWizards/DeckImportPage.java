@@ -208,7 +208,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					}
 					if (yes2)
 						ImportUtils.importIntoDb(newdbrecords);
-				} else if (lerrors.size() > 0) {
+				} else if (lerrors.size() > 0 && dbImport) {
 					String message = newdbrecords.size() + " cards are not found in the database " + lerrors.size()
 							+ "\nThe following errors preventing import all of them into database:\n";
 					for (Iterator iterator = lerrors.iterator(); iterator.hasNext();) {
@@ -236,8 +236,10 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 						String str = (String) iterator.next();
 						message += str + "\n";
 					}
-					if (i < cerrors.size())
+					if (i < cerrors.size()) {
 						message += "... + " + (cerrors.size() - i) + " more\n";
+						message += "Full error log can be found at <workspace>/.metadata/.log\n";
+					}
 					if (cerrors.size() >= size) {
 						message += "No good cards to import :(";
 						yesres[0] = false;

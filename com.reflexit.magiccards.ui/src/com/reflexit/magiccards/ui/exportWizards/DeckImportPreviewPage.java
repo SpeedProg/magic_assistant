@@ -77,7 +77,8 @@ public class DeckImportPreviewPage extends WizardPage {
 			ICardField[] fields = result.getFields();
 			if (fields != null) {
 				ColumnCollection colls = manager.getColumnsCollection();
-				String prefColumns = colls.getColumn(MagicCardFieldPhysical.ERROR).getColumnFullName();
+				AbstractColumn errColumn = colls.getColumn(MagicCardFieldPhysical.ERROR);
+				String prefColumns = errColumn.getColumnFullName();
 				for (int i = 0; i < fields.length; i++) {
 					ICardField field = fields[i];
 					AbstractColumn column = colls.getColumn(field);
@@ -87,21 +88,27 @@ public class DeckImportPreviewPage extends WizardPage {
 				manager.updateColumns(prefColumns);
 			}
 			List list = result.getList();
+			int count = 0;
 			if (list.size() > 0) {
 				manager.updateViewer(list);
-				// for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				// IMagicCard card = (IMagicCard) iterator.next();
-				// if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() !=
-				// null) {
-				// count++;
-				// }
-				// }
+				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+					IMagicCard card = (IMagicCard) iterator.next();
+					if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
+						count++;
+					}
+				}
 			}
-			setDescription(desc);
 			if (result.getError() != null)
 				setErrorMessage("Cannot parse data file: " + result.getError().getMessage());
 			else if (list.size() == 0)
 				setErrorMessage("Cannot parse data file");
+			else if (count == 0)
+				setDescription(desc);
+			else {
+				setErrorMessage(count
+						+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
+				// manager.setSortColumn(0, 1);
+			}
 		}
 	}
 
@@ -124,8 +131,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
 		CardElement element = startingPage.getElement();
 		String deckName = element == null ? "newdeck" : element.getName();
-		String desc = "Importing into " + deckName + ". "
-				+ "Review the cards and fix errors by editing set or name of the card using cell editor";
+		String desc = "Importing into " + deckName + ".";
 		return desc;
 	}
 
