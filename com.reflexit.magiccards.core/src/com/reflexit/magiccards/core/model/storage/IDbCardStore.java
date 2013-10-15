@@ -1,9 +1,9 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface IDbCardStore<T> extends ICardStore<T> {
-	List<T> getCandidates(String name);
+	Collection<T> getCandidates(String name);
 
 	T getPrime(String name);
 }
