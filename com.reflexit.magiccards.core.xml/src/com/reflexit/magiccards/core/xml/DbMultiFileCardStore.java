@@ -14,9 +14,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.TreeSet;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -43,7 +43,22 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	public class GlobalDbHandler {
 		private IntHashtable hash = new IntHashtable();
 		// map from name to latest card
-		private HashMap<String, MagicCard> primeMap = new HashMap<String, MagicCard>();
+		private HashMap<String, Object> primeMap = new HashMap<String, Object>();
+		private Comparator comp = new Comparator<MagicCard>() {
+			@Override
+			public int compare(MagicCard arg0, MagicCard arg1) {
+				int id1 = arg0.getCardId();
+				int id2 = arg1.getCardId();
+				if (id1 == id2)
+					return 0;
+				boolean en1 = arg0.getEnglishCardId() == 0;
+				boolean en2 = arg1.getEnglishCardId() == 0;
+				if (id2 > id1 && en1 == en2 || (en2 && !en1)) {
+					return 1;
+				}
+				return -1;
+			}
+		};
 
 		public boolean hashAndResolve(IMagicCard card) {
 			boolean conflict = false;
@@ -60,16 +75,17 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			} else
 				hash.put(id, card);
 			// map for name
-			MagicCard magicCard = primeMap.get(card.getName());
-			if (magicCard == null)
-				primeMap.put(card.getName(), (MagicCard) card);
+			Object sibCard = primeMap.get(card.getName());
+			if (sibCard == null)
+				primeMap.put(card.getName(), card);
 			else {
-				int id1 = magicCard.getCardId();
-				int id2 = card.getCardId();
-				boolean en1 = magicCard.getEnglishCardId() == 0;
-				boolean en2 = card.getEnglishCardId() == 0;
-				if (id2 > id1 && en1 == en2 || (en2 && !en1)) {
-					primeMap.put(card.getName(), (MagicCard) card);
+				if (sibCard instanceof Collection) {
+					((Collection) sibCard).add(card);
+				} else {
+					TreeSet<MagicCard> list = new TreeSet<MagicCard>(comp);
+					list.add((MagicCard) sibCard);
+					list.add((MagicCard) card);
+					primeMap.put(card.getName(), list);
 				}
 			}
 			return conflict;
@@ -117,7 +133,23 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 
 		public MagicCard getPrime(String name) {
-			return primeMap.get(name);
+			Object object = primeMap.get(name);
+			if (object == null)
+				return null;
+			if (object instanceof MagicCard)
+				return (MagicCard) object;
+			return ((Collection<MagicCard>) object).iterator().next();
+		}
+
+		public Collection<IMagicCard> getCandidates(String name) {
+			Object object = primeMap.get(name);
+			if (object instanceof MagicCard) {
+				ArrayList<IMagicCard> arr = new ArrayList<IMagicCard>(1);
+				arr.add((IMagicCard) object);
+				return arr;
+			} else {
+				return (Collection<IMagicCard>) object;
+			}
 		}
 	}
 
@@ -279,20 +311,12 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	}
 
 	@Override
-	public List<IMagicCard> getCandidates(String name) {
-		List cards = Collections.EMPTY_LIST;
+	public Collection<IMagicCard> getCandidates(String name) {
 		if (name == null)
-			return cards;
-		for (Iterator iterator = iterator(); iterator.hasNext();) {
-			MagicCard a = (MagicCard) iterator.next();
-			String lname = a.getName();
-			if (name.equalsIgnoreCase(lname)) {
-				if (cards == Collections.EMPTY_LIST) {
-					cards = new ArrayList<IMagicCard>(2);
-				}
-				cards.add(a);
-			}
-		}
-		return cards;
+			return Collections.EMPTY_LIST;
+		Collection<IMagicCard> xcards = handler.getCandidates(name);
+		if (xcards == null)
+			return Collections.EMPTY_LIST;
+		return xcards;
 	}
 }
