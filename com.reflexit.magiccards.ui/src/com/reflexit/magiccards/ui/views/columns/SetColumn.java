@@ -1,8 +1,7 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
@@ -42,7 +41,7 @@ public class SetColumn extends GenColumn {
 		@Override
 		public String[] getItems(Object element) {
 			IMagicCardPhysical card = (IMagicCardPhysical) element;
-			List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+			Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 			int len = cards.size();
 			if (card.getCardId() == 0) {
 				len++;
@@ -73,7 +72,7 @@ public class SetColumn extends GenColumn {
 			if (element instanceof MagicCardPhysical) {
 				MagicCardPhysical card = (MagicCardPhysical) element;
 				// set
-				List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+				Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 				String set = (String) value;
 				String oldSet = card.getSet();
 				if (oldSet != null && oldSet.equals(set))

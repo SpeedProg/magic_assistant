@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -168,7 +169,7 @@ public class DeckImportPreviewPage extends WizardPage {
 											MagicCardPhysical card = (MagicCardPhysical) element;
 											String set = (String) value;
 											// set
-											List<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+											Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
 											boolean found = false;
 											for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 												IMagicCard base = (IMagicCard) iterator.next();
