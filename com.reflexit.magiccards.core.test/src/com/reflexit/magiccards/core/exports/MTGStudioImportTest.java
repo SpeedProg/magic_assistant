@@ -55,6 +55,32 @@ public class MTGStudioImportTest extends AbstarctImportTest {
 		assertEquals("Eighth Edition", card1.getSet());
 	}
 
+	public void testTSP() {
+		addLine("Name,Edition,Qty");
+		addLine("Pendelhaven,TSP,1");
+		parse();
+		assertEquals("Time Spiral \"Timeshifted\"", card1.getSet());
+		assertNull(((MagicCardPhysical) card1).getError());
+	}
+
+	public void testPR() {
+		addLine("Name,Qty,Edition");
+		addLine("Sewers of Estark [Harper Prism],2,PR");
+		addLine("\"Glissa, the Traitor [Pre 30 Jan 2011 Foil]\",1,PR");
+		parse();
+		assertEquals(2, resSize);
+		assertEquals("Promo set for Gatherer", card1.getSet());
+		assertEquals("Promo set for Gatherer", card2.getSet());
+		assertNull(((MagicCardPhysical) card1).getError());
+	}
+
+	public void testDouble() {
+		parseLine("Life/Death,2,DDJ");
+		assertEquals("Duel Decks: Izzet vs. Golgari", card1.getSet());
+		assertNull(((MagicCardPhysical) card1).getError());
+		assertEquals("Life // Death (Death)", card1.getName());
+	}
+
 	public void test_big() throws IOException {
 		line = TestFileUtils.saveResourceToString("mtgstudio.csv");
 		assertNotNull(line);
@@ -69,6 +95,6 @@ public class MTGStudioImportTest extends AbstarctImportTest {
 				err++;
 			}
 		}
-		assertEquals(23, err);
+		assertEquals(3, err);
 	}
 }
