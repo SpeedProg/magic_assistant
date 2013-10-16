@@ -91,6 +91,8 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 		if (field == MagicCardField.SET) {
 			if (value.equals("LE")) {
 				value = "LGN"; // special case LE uses for diffrent set in gatherer
+			} else if (value.equals("PR")) {
+				value = "PPR"; // PR is promo not Prophecy
 			}
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)
@@ -108,6 +110,9 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			if (name.contains("Aether")) {
 				name = name.replaceAll("Ae", "Æ");
 			}
+			// if (name.contains("/")) {
+			// name = name.replaceAll("/", " // ");
+			// }
 			card.setObjectByField(field, name);
 			return;
 		}
@@ -117,8 +122,10 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 	@Override
 	protected void importCard(MagicCardPhysical card) {
 		Edition ed = ImportUtils.resolveSet(card.getSet());
+		String abbr = null;
 		if (ed != null) {
 			card.getBase().setSet(ed.getName());
+			abbr = ed.getMainAbbreviation();
 		}
 		List<IMagicCard> candidates = lookup.getCandidates(card.getName(), card.getSet());
 		if (candidates.size() > 0) {
@@ -126,7 +133,26 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			card.setMagicCard((MagicCard) base);
 			importResult.add(card);
 		} else {
-			super.importCard(card);
+			candidates = lookup.getCandidates(card.getName());
+			boolean found = false;
+			if (candidates.size() > 0) {
+				for (Iterator iterator = candidates.iterator(); iterator.hasNext();) {
+					IMagicCard base = (IMagicCard) iterator.next();
+					Edition ed2 = Editions.getInstance().getEditionByName(base.getSet());
+					String abbr2 = ed2.getMainAbbreviation();
+					// String extra = ed2.getExtraAbbreviations();
+					// System.err.println("Looking for " + card.getName() + " from " + abbr +
+					// " found in " + abbr2 + " " + ed2 + " " + extra);
+					if ("TSP".equals(abbr) && "TSB".equals(abbr2) || "MED".equals(abbr) && "ME2".equals(abbr2)) {
+						card.setMagicCard((MagicCard) base);
+						importResult.add(card);
+						found = true;
+						break;
+					}
+				}
+			}
+			if (!found)
+				super.importCard(card);
 			// System.err.println(card);
 		}
 		Object err = card.getError();
@@ -134,15 +160,20 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 				&& (((ImportError) err).getType().equals(Type.NAME_NOT_FOUND_IN_DB) || ((ImportError) err).getType().equals(
 						Type.NAME_NOT_FOUND_IN_SET))) {
 			String name = card.getName();
-			String tryName = name;
-			if (tryName.contains("/")) {
-				tryName = tryName.substring(0, tryName.indexOf('/'));
+			if (tryToFindName(card, name)) {
+				return;
 			}
-			if (tryToFindName(card, tryName)) {
-				// System.err.println("^^^ resolved " + card + ": " + card.getError());
-			} else {
-				MagicLogger.log("NOT resolved " + card + ": " + err);
+			if (name.contains("/")) {
+				String tryName = name.substring(0, name.indexOf('/'));
+				if (tryToFindName(card, tryName)) {
+					return;
+				}
+				tryName = name.replaceAll("/", " // ");
+				if (tryToFindName(card, tryName)) {
+					return;
+				}
 			}
+			MagicLogger.log("NOT resolved " + card + ": " + err);
 		}
 	}
 
