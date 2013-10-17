@@ -346,6 +346,12 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 					if (edition.equals("*"))
 						return "*";
 					return Editions.getInstance().getEditionByName(edition).getBlock();
+				case EDITION_ABBR:
+					if (edition == null)
+						return null;
+					if (edition.equals("*"))
+						return "*";
+					return Editions.getInstance().getEditionByName(edition).getMainAbbreviation();
 				case UNIQUE_COUNT:
 					return getUniqueCount();
 				case IMAGE_URL:
