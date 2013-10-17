@@ -93,6 +93,8 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 				value = "LGN"; // special case LE uses for diffrent set in gatherer
 			} else if (value.equals("PR")) {
 				value = "PPR"; // PR is promo not Prophecy
+			} else if (value.equals("PY")) {
+				value = "PR"; // PY is Prophecy
 			}
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)
@@ -110,9 +112,6 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			if (name.contains("Aether")) {
 				name = name.replaceAll("Ae", "Æ");
 			}
-			// if (name.contains("/")) {
-			// name = name.replaceAll("/", " // ");
-			// }
 			card.setObjectByField(field, name);
 			return;
 		}
