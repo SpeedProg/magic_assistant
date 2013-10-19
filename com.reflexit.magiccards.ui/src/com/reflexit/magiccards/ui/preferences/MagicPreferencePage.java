@@ -69,9 +69,10 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 
 	protected void createInternetOptionsGroup() {
 		Group inetOptions = new Group(getFieldEditorParent(), SWT.NONE);
-		inetOptions.setText("When card is selected");
+		inetOptions.setText("Internet");
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		ld.horizontalSpan = 2;
+		inetOptions.setLayoutData(ld);
 		BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching", inetOptions) {
 			@Override
 			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
@@ -82,10 +83,10 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		addField(caching);
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards of startup", inetOptions));
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup", inetOptions));
-		createButtons(getFieldEditorParent());
 		String[][] values = getPriceProviders();
 		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values, inetOptions);
 		addField(combo);
+		createButtons(inetOptions);
 	}
 
 	protected void createCardSelectGroup() {
@@ -121,6 +122,9 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 				new UpdateHandler().openManipulateRepositories();
 			}
 		});
+		GridData ld = new GridData();
+		ld.horizontalSpan = 2;
+		pressMe.setLayoutData(ld);
 	}
 
 	@Override
