@@ -220,12 +220,14 @@ public class ParseGathererDetails extends ParseGathererPage {
 	}
 
 	@Override
-	protected void loadHtml(String html0, ICoreProgressMonitor monitor) {
+	protected void loadHtml(String htmlIn, ICoreProgressMonitor monitor) {
 		monitor.beginTask("Updating card", 10);
 		try {
 			if (card.getCardId() == 0 || card instanceof ICardGroup)
 				return;
-			html0 = html0.replaceAll("\r?\n", " ");
+			String html0 = htmlIn;
+			html0 = html0.replace('\r', ' ');
+			html0 = html0.replace('\n', ' ');
 			if (html0.contains("’")) {
 				html0 = html0.replace('’', '\'');
 			}
