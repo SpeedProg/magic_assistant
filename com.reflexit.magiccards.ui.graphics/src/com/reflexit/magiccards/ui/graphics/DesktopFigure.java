@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class DesktopFigure extends XFigure {
@@ -219,7 +220,8 @@ public class DesktopFigure extends XFigure {
 		if (children == null)
 			return;
 		HashMap<IMagicCard, Integer> map = new HashMap<IMagicCard, Integer>();
-		addFromGroup(fstore.getCardGroupRoot(), map, -1);
+		ICardGroup root = fstore.getCardGroupRoot();
+		addFromGroup(root, map, -1);
 		CardStackLayout layout = new CardStackLayout();
 		int j = 0;
 		for (Iterator<CardFigure> iterator = children.iterator(); iterator.hasNext(); j++) {
@@ -255,8 +257,10 @@ public class DesktopFigure extends XFigure {
 		for (Iterator iterator = childrenList.iterator(); iterator.hasNext();) {
 			Object el = iterator.next();
 			if (el instanceof ICardGroup) {
-				i++;
-				i = addFromGroup((CardGroup) el, map, i);
+				CardGroup gr = (CardGroup) el;
+				if (gr.getFieldIndex() != MagicCardField.NAME)
+					i++;
+				i = addFromGroup(gr, map, i);
 			} else if (el instanceof IMagicCard)
 				map.put((IMagicCard) el, gi);
 		}
