@@ -5,6 +5,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererDetailsTest extends TestCase {
@@ -67,5 +68,13 @@ public class ParseGathererDetailsTest extends TestCase {
 		MagicCard card = load(126419);
 		assertEquals(113, card.getCollectorNumberId());
 		assertEquals("Dead", card.getName());
+	}
+
+	public void testSlashR() throws IOException {
+		MagicCard card = load(366280);
+		Object rating = card.getObjectByField(MagicCardField.RATING);
+		assertNotNull(rating);
+		assertTrue("Cannot update rating", rating.toString().length() > 0);
+		assertEquals(164, Integer.parseInt(card.getCollNumber()));
 	}
 }
