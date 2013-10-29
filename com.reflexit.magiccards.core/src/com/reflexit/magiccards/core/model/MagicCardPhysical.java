@@ -201,8 +201,6 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public void setOwn(boolean ownership) {
-		if (count <= 0)
-			throw new IllegalArgumentException("Cannot have 0 count for own cards");
 		this.ownership = ownership;
 	}
 
