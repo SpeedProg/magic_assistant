@@ -60,9 +60,11 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 		}
 		setMap.put("Limited Edition Alpha", "Alpha Edition");
 		setMap.put("Limited Edition Beta", "Beta Edition");
-		setMap.put("Classic Sixth Edition", "Sixth Edition");
+		//setMap.put("Classic Sixth Edition", "Sixth Edition");
 		setMap.put("Time Spiral \"Timeshifted\"", "Timeshifted");
 		setMap.put("Magic: The Gathering-Commander", "Commander");
+		setMap.put("Seventh Edition", "7th Edition");
+		setMap.put("Eighth Edition", "8th Edition");
 	}
 
 	@Override
