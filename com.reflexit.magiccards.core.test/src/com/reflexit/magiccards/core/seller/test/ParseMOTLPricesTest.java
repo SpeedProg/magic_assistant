@@ -4,19 +4,18 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
-
+import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
 import junit.framework.TestCase;
 
-public class ParseTcgPlayerPricesTest extends TestCase {
+public class ParseMOTLPricesTest extends TestCase {
 	private MemoryCardStore<IMagicCard> store;
-	private ParseTcgPlayerPrices parser;
+	private ParseMOTLPrices parser;
 	private ICoreProgressMonitor monitor;
 
 	@Override
 	protected void setUp() {
 		store = new MemoryCardStore<IMagicCard>();
-		parser = new ParseTcgPlayerPrices();
+		parser = new ParseMOTLPrices();
 		monitor = ICoreProgressMonitor.NONE;
 	}
 
@@ -37,23 +36,6 @@ public class ParseTcgPlayerPricesTest extends TestCase {
 		}
 	}
 
-	public void testgetPriceMed() {
-		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
-		assertTrue(card.getDbPrice() + " should be more than 0.1", card.getDbPrice() > 0.1);
-	}
-
-	public void testgetPriceHigh() {
-		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.High);
-		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
-		assertTrue(card.getDbPrice() > 0);
-	}
-
-	public void testgetPriceLow() {
-		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low);
-		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
-		assertEquals(0.01f, card.getDbPrice());
-	}
-
 	public void testSwamp() {
 		MagicCard card = addcard("Swamp", "Magic 2013");
 		assertTrue(0 < card.getDbPrice());
@@ -67,11 +49,6 @@ public class ParseTcgPlayerPricesTest extends TestCase {
 	public void testAether() {
 		MagicCard card = addcard("Æther Shockwave", "Saviors of Kamigawa");
 		assertTrue(0 < card.getDbPrice());
-	}
-
-	public void testMagic2014() {
-		MagicCard card = addcard("Artificer's Hex", "Magic 2014 Core Set");
-		assertTrue(card.getDbPrice() > 0);
 	}
 
 	public void testSixthEdition() {
