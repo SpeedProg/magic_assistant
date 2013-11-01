@@ -14,7 +14,7 @@ Homelands|HM|HML,HL|October 1995|Expansion||
 Alliances|AL|ALL|June 1996|Expansion|Ice Age|
 Mirage|MI|MIR|October 1996|Expansion|Mirage|
 Visions|VI|VIS|February 1997|Expansion|Mirage|
-Fifth Edition|5E|5ED|March 1997|Core||
+Fifth Edition|5E|5ED|March 1997|Core|||5th Edition
 Weatherlight|WL|WTH|June 1997|Expansion|Mirage|
 Portal|PO|POR,PT|June 1997|Starter||
 Vanguard|VAN|VG|August 1997|Modifiers||
@@ -27,7 +27,7 @@ Unglued|UG|UGL|August 1998|Un_set||
 Urza's Saga|UZ|USG,US|October 1998|Expansion|Urza|
 Battle Royale Box Set|BR|BRB|November 1998|Reprint||
 Urza's Legacy|GU|ULG,UL|February 1999|Expansion|Urza|
-Classic Sixth Edition|6E|6ED|April 1999|Core||
+Classic Sixth Edition|6E|6ED|April 1999|Core|||6th Edition
 Portal Three Kingdoms|PK|PTK|May 1999|Starter||
 Urza's Destiny|CG|UDS,UD|June 1999|Expansion|Urza|
 Starter 1999|P3|S99,ST,S1|July 1999|Starter||
@@ -38,14 +38,14 @@ Starter 2000|P4|S00,S2|July 2000|Starter||
 Invasion|IN|INV|October 2000|Expansion|Invasion|
 Beatdown Box Set|BD|BTD|December 2000|Reprint||
 Planeshift|PS|PLS|February 2001|Expansion|Invasion|
-Seventh Edition|7E|7ED|April 2001|Core||
+Seventh Edition|7E|7ED|April 2001|Core|||7th Edition
 Apocalypse|AP|APC|June 2001|Expansion|Invasion|
 Odyssey|OD|ODY|October 2001|Expansion|Odyssey|
 Torment|TOR|TO|February 2002|Expansion|Odyssey|
 Judgment|JUD|JU|May 2002|Expansion|Odyssey|
 Onslaught|ONS|ON|October 2002|Expansion|Onslaught|
 Legions|LGN||February 2003|Expansion|Onslaught|
-Eighth Edition|8ED|8E|July 2003|Core||Modern
+Eighth Edition|8ED|8E|July 2003|Core||Modern|8th Edition
 Scourge|SCG|SC|May 2003|Expansion|Onslaught|
 Mirrodin|MRD|MR|October 2003|Expansion|Mirrodin|Modern
 Champions of Kamigawa|CHK|COK|October 2004|Expansion|Kamigawa|Modern
@@ -54,7 +54,7 @@ Fifth Dawn|5DN|FD|June 2004|Expansion|Mirrodin|Modern
 Unhinged|UNH||November 2004|Un_set||
 Betrayers of Kamigawa|BOK||February 2005|Expansion|Kamigawa|Modern
 Saviors of Kamigawa|SOK||June 2005|Expansion|Kamigawa|Modern
-Ninth Edition|9ED|9E|July 2005|Core||Modern
+Ninth Edition|9ED|9E|July 2005|Core||Modern|9th Edition
 Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern
 Guildpact|GPT||February 2006|Expansion|Ravnica|Modern
 Dissension|DIS||May 2006|Expansion|Ravnica|Modern
@@ -65,7 +65,7 @@ Promo set for Gatherer|PPR||October 2006|Online||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral|Modern
 Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern
 Future Sight|FUT||May 2007|Expansion|Time Spiral|Modern
-Tenth Edition|10E||July 2007|Core||Modern
+Tenth Edition|10E||July 2007|Core||Modern|10th Edition
 Masters Edition|MED|DM|September 2007|Online||
 Lorwyn|LRW|LWN|October 2007|Expansion|Lorwyn|Modern
 Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter||
