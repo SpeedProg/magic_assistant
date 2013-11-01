@@ -120,6 +120,8 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 			x = super.get(f);
 		else if (f instanceof String)
 			x = super.get(Format.valueOf((String) f));
+		else if (f == null)
+			return Legality.UNKNOWN;
 		else
 			throw new IllegalArgumentException();
 		if (x == null)
