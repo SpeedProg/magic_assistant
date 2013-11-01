@@ -30,7 +30,7 @@ public class LegalityColumn extends GenColumn {
 		if (element instanceof IMagicCard) {
 			IMagicCard card = (IMagicCard) element;
 			LegalityMap map = card.getLegalityMap();
-			if (map == null || map.size() == 0) {
+			if (map == null) {
 				return "Unknown";
 			}
 			return map.getLabel();
