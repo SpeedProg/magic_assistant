@@ -57,10 +57,14 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 
 	public String getLabel() {
 		Format f = getFirstLegal();
-		if (get(f) == Legality.LEGAL)
+		Legality leg = get(f);
+		if (leg == Legality.LEGAL)
 			return f.name();
 		// otherwise restricted
-		return f.name() + " (1)";
+		if (leg == Legality.RESTRICTED)
+			return f.name() + " (1)";
+		// constructed
+		return f.name();
 	}
 
 	public String fullText() {
@@ -204,7 +208,7 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 
 	public Format getFirstLegal() {
 		if (isEmpty())
-			return null;
+			return Format.LEGACY;
 		for (Format format : keySet()) {
 			if (format.ordinal() < Format.SAN_ORDINAL) {
 				Legality leg = get(format);
@@ -213,7 +217,9 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 				}
 			}
 		}
-		return null;
+		if (!containsKey(Format.LEGACY))
+			return Format.LEGACY;
+		return Format.FREEFORM;
 	}
 
 	public void complete() {
