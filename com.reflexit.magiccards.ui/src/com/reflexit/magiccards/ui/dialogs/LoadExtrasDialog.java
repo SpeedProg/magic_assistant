@@ -1,7 +1,9 @@
 package com.reflexit.magiccards.ui.dialogs;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -16,12 +18,17 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Languages;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 
 public class LoadExtrasDialog extends TitleAreaDialog {
 	private Set<ICardField> selectedSet = new HashSet<ICardField>();
@@ -36,6 +43,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	public static final int USE_ALL = 3;
 	private static final String ID = LoadExtrasDialog.class.getName();
 	private Combo langCombo;
+	private Combo priceProviderCombo;
 
 	public LoadExtrasDialog(Shell parentShell, int selSize, int filSize, int totalSize) {
 		super(parentShell);
@@ -73,6 +81,18 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		return area;
 	}
 
+	private String[] getPriceProviders() {
+		PriceProviderManager ppm = PriceProviderManager.getInstance();
+		Collection<IPriceProvider> providers = ppm.getProviders();
+		String[] res = new String[providers.size()];
+		int i = 0;
+		for (Iterator iterator = providers.iterator(); iterator.hasNext(); i++) {
+			IPriceProvider prov = (IPriceProvider) iterator.next();
+			res[i] = prov.getName();
+		}
+		return res;
+	}
+
 	protected void createFieldsGroup(Composite panel) {
 		Composite checkArea = new Composite(panel, SWT.BORDER);
 		checkArea.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -91,12 +111,49 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Printed Text", MagicCardField.TEXT, false);
 		createFieldCheck("Image", MagicCardField.ID, false);
 		createFieldCheck("Legality", MagicCardField.LEGALITY, false);
-		createFieldCheck("Price", MagicCardField.DBPRICE, false);
-		createFieldCheck("Localized version in", MagicCardField.LANG, false);
+		createPriceFields();
+		createLangFields();
+		createSelectAllButtons(checkArea);
+	}
+
+	protected void createLangFields() {
+		final Button p = createFieldCheck("Localized version in", MagicCardField.LANG, false);
 		langCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
 		langCombo.setItems(Languages.getLangValues());
 		langCombo.setText("English");
-		createSelectAllButtons(checkArea);
+		langCombo.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
+		new Label(buttons, SWT.NONE); // spacer
+		p.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				langCombo.setEnabled(p.getSelection());
+			}
+		});
+		setSelectionAndNotify(p, p.getSelection());
+	}
+
+	protected void createPriceFields() {
+		final Button p = createFieldCheck("Price", MagicCardField.DBPRICE, false);
+		priceProviderCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
+		priceProviderCombo.setItems(getPriceProviders());
+		priceProviderCombo.setText(PriceProviderManager.getInstance().getProviderName());
+		priceProviderCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String text = priceProviderCombo.getText();
+				if (text.length() > 0)
+					PriceProviderManager.getInstance().setProviderName(text);
+			}
+		});
+		priceProviderCombo.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
+		p.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				priceProviderCombo.setEnabled(p.getSelection());
+			}
+		});
+		setSelectionAndNotify(p, p.getSelection());
+		new Label(buttons, SWT.NONE); // spacer
 	}
 
 	protected void createListChoiceGroup(Composite panel) {
@@ -149,14 +206,14 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		buttonSelect.setText("Select All");
 		buttonSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent se) {
 				Control[] children = buttons.getChildren();
 				for (int i = 0; i < children.length; i++) {
 					Control control = children[i];
 					if (control instanceof Button) {
 						ICardField field = (ICardField) control.getData();
 						selectedSet.add(field);
-						((Button) control).setSelection(true);
+						setSelectionAndNotify((Button) control, true);
 					}
 				}
 			}
@@ -165,14 +222,14 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		buttondeselect.setText("Deselect All");
 		buttondeselect.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent ev) {
 				Control[] children = buttons.getChildren();
 				for (int i = 0; i < children.length; i++) {
 					Control control = children[i];
 					if (control instanceof Button) {
 						ICardField field = (ICardField) control.getData();
 						selectedSet.remove(field);
-						((Button) control).setSelection(false);
+						setSelectionAndNotify((Button) control, false);
 					}
 				}
 			}
@@ -183,7 +240,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck(name, field, true);
 	}
 
-	protected void createFieldCheck(String name, final ICardField field, boolean selection) {
+	protected Button createFieldCheck(String name, final ICardField field, boolean selection) {
 		final Button button = new Button(buttons, SWT.CHECK);
 		button.setText(name);
 		button.setData(field);
@@ -203,13 +260,13 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		// restore value
 		String value = getDialogBoundsSettings().get(field.name());
 		if (Boolean.valueOf(value)) {
-			button.setSelection(true);
+			setSelectionAndNotify(button, true);
 		} else if (value != null) {
-			button.setSelection(false);
+			setSelectionAndNotify(button, false);
 		} else { // value==null
-			button.setSelection(selection);
+			setSelectionAndNotify(button, selection);
 		}
-		listener.widgetSelected(null);
+		return button;
 	}
 
 	public Set<ICardField> getFields() {
@@ -255,5 +312,15 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		if (lang != null) {
 			langCombo.setText(lang);
 		}
+	}
+
+	protected void setSelectionAndNotify(Button control, boolean sel) {
+		control.setSelection(sel);
+		final Display d = control.getDisplay();
+		final Event e = new Event();
+		e.type = SWT.Selection;
+		e.widget = control;
+		e.display = d;
+		control.notifyListeners(SWT.Selection, e);
 	}
 }

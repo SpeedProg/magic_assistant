@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
-import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -129,12 +128,6 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getSource() instanceof FieldEditor) {
-			String preferenceName = ((FieldEditor) event.getSource()).getPreferenceName();
-			if (preferenceName == PreferenceConstants.PRICE_PROVIDER) {
-				PriceProviderManager.getInstance().setProviderName((String) event.getNewValue());
-			}
-		}
 		super.propertyChange(event);
 	}
 

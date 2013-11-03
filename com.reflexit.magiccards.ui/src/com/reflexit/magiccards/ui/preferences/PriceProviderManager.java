@@ -12,7 +12,6 @@ import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class PriceProviderManager {
-	static public final String PROVIDER_PROP = "priceProvider";
 	static private final PriceProviderManager instance = new PriceProviderManager();
 	private Collection<IPriceProvider> providers = new ArrayList<IPriceProvider>();
 
@@ -24,7 +23,6 @@ public class PriceProviderManager {
 		providers.add(findMagicCards);
 		providers.add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Medium));
 		providers.add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low));
-		MagicUIActivator.getDefault().getEclipseDefaultPreferences().put(PROVIDER_PROP, getDefaultProvider().getName());
 	}
 
 	public static final PriceProviderManager getInstance() {
@@ -59,13 +57,13 @@ public class PriceProviderManager {
 	}
 
 	public String getProviderName() {
-		String name = MagicUIActivator.getDefault().getEclipsePreferences().get(PROVIDER_PROP, null);
+		String name = MagicUIActivator.getDefault().getPreferenceStore().getString(PreferenceConstants.PRICE_PROVIDER);
 		return name;
 	}
 
 	public void setProviderName(String name) {
 		if (findProvider(name) == null)
 			throw new IllegalArgumentException("No such provider");
-		MagicUIActivator.getDefault().getEclipsePreferences().put(PROVIDER_PROP, name);
+		MagicUIActivator.getDefault().getPreferenceStore().setValue(PreferenceConstants.PRICE_PROVIDER, name);
 	}
 }
