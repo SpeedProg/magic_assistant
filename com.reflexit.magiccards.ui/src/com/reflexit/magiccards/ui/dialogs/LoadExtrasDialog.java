@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.model.ICardField;
@@ -91,8 +90,8 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		createFieldCheck("Oracle Text", MagicCardField.ORACLE, false);
 		createFieldCheck("Printed Text", MagicCardField.TEXT, false);
 		createFieldCheck("Image", MagicCardField.ID, false);
+		createFieldCheck("Legality", MagicCardField.LEGALITY, false);
 		createFieldCheck("Price", MagicCardField.DBPRICE, false);
-		@SuppressWarnings("unused") Label spacer = new Label(buttons, SWT.NONE);
 		createFieldCheck("Localized version in", MagicCardField.LANG, false);
 		langCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
 		langCombo.setItems(Languages.getLangValues());
