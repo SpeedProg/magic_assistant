@@ -32,6 +32,7 @@ import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 public class ParseGathererLegality extends ParseGathererPage {
 	private static final String LEGALITY_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Printings.aspx?multiverseid=";
 	private int cardId;
+	private IMagicCard card;
 
 	@Override
 	protected String getUrl() {
@@ -167,6 +168,10 @@ public class ParseGathererLegality extends ParseGathererPage {
 			}
 		}
 		legalityMap.complete();
+		if (card != null) {
+			((MagicCard) card).setLegalityMap(legalityMap);
+			card = null;
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -176,5 +181,10 @@ public class ParseGathererLegality extends ParseGathererPage {
 		parser.load(ICoreProgressMonitor.NONE);
 		LegalityMap cardLegality = parser.getLegalityMap();
 		System.err.println(cardLegality);
+	}
+
+	public void setCard(MagicCard card) {
+		this.card = card;
+		this.cardId = card.getCardId();
 	}
 }

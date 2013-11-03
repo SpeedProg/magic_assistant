@@ -49,18 +49,20 @@ public class UpdateCardsFromWeb {
 
 	public void updateStore(Iterator<IMagicCard> iter, int size, Set<ICardField> fieldMaps, String lang, ICardStore magicDb,
 			ICoreProgressMonitor monitor) throws IOException {
-		monitor.beginTask("Loading additional info...", size * 100 + 10);
+		monitor.beginTask("Loading additional info...", size * 150 + 10);
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
 		ParseGathererDetails oracleParser = new ParseGathererDetails();
 		oracleParser.setMagicDb(magicDb);
 		ParseGathererBasicInfo linfoParser = new ParseGathererBasicInfo();
 		ParseGathererBasicInfo printedParser = new ParseGathererBasicInfo();
 		ParseGathererCardLanguages langParser = new ParseGathererCardLanguages();
+		ParseGathererLegality legParser = new ParseGathererLegality();
 		langParser.setLanguage(lang);
 		monitor.worked(5);
 		boolean loadText = fieldMaps.contains(MagicCardField.TEXT);
 		boolean loadLang = fieldMaps.contains(MagicCardField.LANG);
 		boolean loadImage = fieldMaps.contains(MagicCardField.ID);
+		boolean loadLegality = fieldMaps.contains(MagicCardField.LEGALITY);
 		if (loadText) {
 			printedParser.addFilter(MagicCardField.TEXT);
 		}
@@ -93,6 +95,12 @@ public class UpdateCardsFromWeb {
 						printedParser.setCard(card);
 						printedParser.load(new SubCoreProgressMonitor(monitor, 10));
 					}
+					if (loadLegality && magicCard instanceof MagicCard) {
+						synchronized (legParser) {
+							legParser.setCard((MagicCard) magicCard);
+							legParser.load(new SubCoreProgressMonitor(monitor, 10));
+						}
+					}
 					if (loadLang) {
 						langParser.setCardId(cardId);
 						langParser.load(new SubCoreProgressMonitor(monitor, 40));
@@ -113,6 +121,7 @@ public class UpdateCardsFromWeb {
 								// newMagicCard.getName());
 							}
 						} else {
+							monitor.worked(40);
 							failedLangUpdate++;
 						}
 					}
