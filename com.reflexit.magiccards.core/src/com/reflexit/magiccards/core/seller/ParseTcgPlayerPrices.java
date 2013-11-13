@@ -69,6 +69,7 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 		setMap.put("Tenth Edition", "10th Edition");
 		setMap.put("Planechase 2012 Edition", "Planechase 2012");
 		setMap.put("Duel Decks: Knights vs. Dragons", "Duel Decks: Knights vs Dragons ");
+		setMap.put("Ravnica: City of Guilds", "Ravnica");
 	}
 
 	@Override
