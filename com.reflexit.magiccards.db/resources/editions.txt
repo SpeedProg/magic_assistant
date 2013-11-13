@@ -55,7 +55,7 @@ Unhinged|UNH||November 2004|Un_set||
 Betrayers of Kamigawa|BOK||February 2005|Expansion|Kamigawa|Modern
 Saviors of Kamigawa|SOK||June 2005|Expansion|Kamigawa|Modern
 Ninth Edition|9ED|9E|July 2005|Core||Modern|9th Edition
-Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern
+Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern|Ravnica
 Guildpact|GPT||February 2006|Expansion|Ravnica|Modern
 Dissension|DIS||May 2006|Expansion|Ravnica|Modern
 Coldsnap|CSP||July 2006|Expansion|Ice Age|Modern
