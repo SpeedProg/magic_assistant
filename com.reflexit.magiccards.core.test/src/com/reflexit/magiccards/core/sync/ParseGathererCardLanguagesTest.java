@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererCardLanguagesTest extends TestCase {
@@ -33,5 +34,15 @@ public class ParseGathererCardLanguagesTest extends TestCase {
 		parser.setLanguage("Russian");
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals(172550, parser.getLangCardId());
+	}
+
+	public void testOtherLangs() throws IOException {
+		parser.setCardId(366404);
+		parser.setLanguage(Language.CHINESE_SIMPLIFIED.getLang());
+		parser.load(ICoreProgressMonitor.NONE);
+		assertEquals(365755, parser.getLangCardId());
+		parser.setLanguage(Language.KOREAN.getLang());
+		parser.load(ICoreProgressMonitor.NONE);
+		assertEquals(367343, parser.getLangCardId());
 	}
 }
