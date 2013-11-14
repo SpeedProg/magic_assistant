@@ -224,4 +224,46 @@ public class DeckStoreTest extends TestCase {
 		}
 		assertTrue("Card not found", found);
 	}
+
+	public void testChangeSet() {
+		MagicCardPhysical a1 = createMCard(this.m1);
+		m1.setSet("Elena");
+		this.store.add(a1);
+		assertEquals(1, this.store.size());
+		int a1Id = a1.getCardId();
+		MagicCardPhysical a3 = (MagicCardPhysical) store.getCard(a1Id);
+		assertEquals(a1Id, a3.getCardId());
+		changeSet(a3);
+		assertEquals(a3, store.getCard(a3.getCardId()));
+		store.remove(a3);
+		assertNull(store.getCard(a1Id));
+		assertEquals(0, this.store.size());
+	}
+
+	public MagicCard changeSet(MagicCardPhysical a3) {
+		MagicCard base = a3.getBase();
+		MagicCard m2 = base.cloneCard();
+		m2.setCardId(base.getCardId() + 1);
+		m2.setSet("Shawn");
+		a3.setMagicCard(m2);
+		store.reindex();
+		store.update(a3);
+		return m2;
+	}
+
+	public void testChangeSetOnCopy() {
+		MagicCardPhysical a1 = createMCard(this.m1);
+		a1.setCount(1);
+		store.add(a1);
+		a1 = (MagicCardPhysical) store.getCard(a1.getCardId());
+		MagicCardPhysical a2 = (MagicCardPhysical) a1.cloneCard();
+		a2.setComment("mint");
+		store.add(a2);
+		changeSet(a1);
+		assertEquals(a1, store.getCard(a1.getCardId()));
+		assertEquals(a2, store.getCard(a2.getCardId()));
+		store.remove(a1);
+		assertNull(store.getCard(a1.getCardId()));
+		assertEquals(1, this.store.size());
+	}
 }
