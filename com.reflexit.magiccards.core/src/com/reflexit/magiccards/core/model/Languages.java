@@ -17,7 +17,9 @@ public class Languages implements ISearchableProperty {
 		ITALIAN(LocalizedText.ITALIAN),
 		PORTUGUESE(LocalizedText.PORTUGUESE),
 		JAPANESE(LocalizedText.JAPANESE),
-		CHINESE("Chinese Standard", LocalizedText.CHINESE);
+		CHINESE_SIMPLIFIED("Chinese Simplified", LocalizedText.CHINESE_SIMPLIFIED),
+		CHINESE_TRADITIONAL("Chinese Traditional", LocalizedText.CHINESE_TRADITIONAL),
+		KOREAN(LocalizedText.KOREAN);
 		private String lang;
 		private Locale locale;
 
@@ -33,6 +35,18 @@ public class Languages implements ISearchableProperty {
 
 		public String getLang() {
 			return lang;
+		}
+
+		public static Language fromName(String s) {
+			Language[] values = Language.values();
+			for (int i = 0; i < values.length; i++) {
+				Language language = values[i];
+				if (language.getLang().equals(s))
+					return language;
+			}
+			if (s.equals("Chinese Standard"))
+				return CHINESE_SIMPLIFIED;
+			return null;
 		}
 	}
 

@@ -12,8 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
@@ -406,8 +408,15 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	public void setLanguage(String lang) {
 		if (lang == null || lang.equals("English") || lang.length() == 0)
 			this.lang = null;
-		else
-			this.lang = lang.intern();
+		else {
+			Language l = Languages.Language.fromName(lang);
+			if (l != null) {
+				this.lang = l.getLang();
+			} else {
+				MagicLogger.log("Unknown language: " + lang);
+				this.lang = lang.intern();
+			}
+		}
 	}
 
 	public String getCollNumber() {

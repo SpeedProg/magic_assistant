@@ -10,11 +10,13 @@ public abstract class LocalizedText {
 	public static final Locale ENGLISH = Locale.ENGLISH;
 	public static final Locale FRENCH = Locale.FRENCH;
 	public static final Locale SPANISH = new Locale("es");
-	public static final Locale CHINESE = Locale.CHINESE;
+	public static final Locale CHINESE_SIMPLIFIED = Locale.SIMPLIFIED_CHINESE;
+	public static final Locale CHINESE_TRADITIONAL = Locale.TRADITIONAL_CHINESE;
 	public static final Locale PORTUGUESE = new Locale("pt");
 	public static final Locale GERMAN = new Locale("de");
 	public static final Locale ITALIAN = new Locale("it");
 	public static final Locale JAPANESE = Locale.JAPANESE;
+	public static final Locale KOREAN = Locale.KOREAN;
 
 	protected LocalizedText(Locale locale) {
 		NLSLocal.initializeMessages(getBundleName(), this, locale);
