@@ -92,6 +92,7 @@ public class XmlCardHolder implements ICardHandler {
 				// nowtime % 1000 + " ms");
 			} catch (IOException e) {
 				// ignore
+				MagicLogger.log("Cannot load "+abbr);
 			}
 		}
 	}
