@@ -36,6 +36,15 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	@Override
+	protected boolean doUpdate(IMagicCard card) {
+		if (hashpart.getCard(card.getCardId()) == null) {
+			// hash if wrong now, fixing
+			reindex();
+		}
+		return super.doUpdate(card);
+	}
+
+	@Override
 	public boolean doAddCard(IMagicCard card) {
 		Location loc = getLocation();
 		if (getMergeOnAdd()) {
@@ -103,7 +112,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		Collection cards = this.hashpart.getCards(card.getCardId());
 		MagicCardPhysical found = null;
 		MagicCardPhysical max = null;
-		if (cards != null)
+		if (cards != null) {
 			for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 				MagicCardPhysical candy = (MagicCardPhysical) iterator.next();
 				if (phi.matching(candy)) {
@@ -115,6 +124,10 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 						max = candy;
 				}
 			}
+		} else {
+			storageRemove(phi);
+			return true;
+		}
 		if (found != null) {
 			storageRemove(found);
 			this.hashpart.removeCard(found);
@@ -144,8 +157,13 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	 */
 	@Override
 	protected synchronized void doInitialize() {
-		this.hashpart = new HashCollectionPart();
 		this.storage.load();
+		reindex();
+	}
+
+	@Override
+	public void reindex() {
+		this.hashpart = new HashCollectionPart();
 		// load in hash
 		for (Object element : this) {
 			IMagicCard card = (IMagicCard) element;

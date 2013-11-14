@@ -24,6 +24,11 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		}
 	}
 
+	@Override
+	public void reindex() {
+		// not indexed
+	}
+
 	protected abstract void doInitialize() throws MagicException;
 
 	public boolean addAll(final Collection<? extends T> cards) {

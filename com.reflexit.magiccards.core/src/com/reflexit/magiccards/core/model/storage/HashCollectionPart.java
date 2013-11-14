@@ -132,7 +132,7 @@ public class HashCollectionPart {
 	 * @param id
 	 * @return
 	 */
-	public Collection getCards(int id) {
+	public Collection<IMagicCard> getCards(int id) {
 		Object obj = this.hash.get(id);
 		if (obj == null) {
 			return null;

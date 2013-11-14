@@ -222,6 +222,13 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		return arr;
 	}
 
+	@Override
+	public void reindex() {
+		for (AbstractCardStoreWithStorage<T> table : map.values()) {
+			table.reindex();
+		}
+	}
+
 	public Location getLocation() {
 		return defaultLocation;
 	}
