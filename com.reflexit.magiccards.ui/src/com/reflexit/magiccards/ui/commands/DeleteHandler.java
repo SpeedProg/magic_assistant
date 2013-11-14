@@ -84,8 +84,8 @@ public class DeleteHandler extends AbstractHandler {
 			if (sum > 0) {
 				MessageDialog dialog = new MessageDialog(getShell(), "Removal Confirmantion", null, "Deleting " + el.getName()
 						+ " will also PERMANENTY delete " + sum + " non virtual cards from this deck. "
-						+ "You can choose to disbandle this deck instead, which will move all its cards to the main collection",
-						MessageDialog.WARNING, new String[] { "Disbandle", "Delete", "Cancel" }, 0);
+						+ "You can choose to disband this deck instead, which will move all its cards to the main collection",
+						MessageDialog.WARNING, new String[] { "Disband", "Delete", "Cancel" }, 0);
 				int result = dialog.open();
 				if (result == 2) // cancel
 					return;
@@ -110,8 +110,8 @@ public class DeleteHandler extends AbstractHandler {
 				MessageDialog dialog = new MessageDialog(getShell(), "Removal Confirmantion", null, "You are abount to delete "
 						+ toBeRemoved.size() + " deck/collections. " + "Deleting a deck/collection" + " will also PERMANENTY delete " + sum
 						+ " non virtual cards from it. "
-						+ "You can choose to disbandle them instead, which will move all their cards to the main collection",
-						MessageDialog.WARNING, new String[] { "Disbandle", "Delete", "Cancel" }, 0);
+						+ "You can choose to disband them instead, which will move all their cards to the main collection",
+						MessageDialog.WARNING, new String[] { "Disband", "Delete", "Cancel" }, 0);
 				int result = dialog.open();
 				if (result == 2) // cancel
 					return;
