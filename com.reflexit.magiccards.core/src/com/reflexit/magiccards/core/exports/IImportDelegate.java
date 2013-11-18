@@ -38,4 +38,6 @@ public interface IImportDelegate<T> {
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value);
 
 	public void setReportType(ReportType reportType);
+
+	public void setResolveDb(boolean resolveDbCards);
 }

@@ -239,12 +239,9 @@ public class ImportUtils {
 				return null;
 			} else {
 				if (ed == null) {
-					MagicCard newCard = (MagicCard) ref.clone();
-					newCard.setSet(originalSet);
-					newCard.setCardId(0);
-					card.setMagicCard(newCard);
+					base.fillFrom(ref);
 					card.setError(ImportError.SET_NOT_FOUND_ERROR);
-					return newCard;
+					return card.getBase();
 				} else {
 					card.setError(ImportError.NAME_NOT_FOUND_IN_SET_ERROR);
 				}

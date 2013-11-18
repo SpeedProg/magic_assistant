@@ -23,8 +23,14 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected ImportResult importResult;
 	protected int lineNum = 0;
 	private ReportType type;
+	protected boolean resolve = true;
 
 	public AbstractImportDelegate() {
+	}
+
+	@Override
+	public void setResolveDb(boolean resolveDbCards) {
+		this.resolve = resolveDbCards;
 	}
 
 	public InputStream getStream() {
@@ -92,7 +98,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected void importCard(MagicCardPhysical card) {
 		if (card == null)
 			return;
-		ImportUtils.updateCardReference(card);
+		if (resolve)
+			ImportUtils.updateCardReference(card);
 		importResult.add(card);
 	}
 

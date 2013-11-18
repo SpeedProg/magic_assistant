@@ -878,4 +878,22 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		}
 		return false;
 	}
+
+	public void fillFrom(MagicCard ref) {
+		setCost(ref.getCost());
+		setType(ref.getType());
+		setPower(ref.getPower());
+		setToughness(ref.getToughness());
+		if (text == null)
+			setText(ref.getText());
+		if (oracleText == null || oracleText.length() == 0)
+			setOracleText(ref.getOracleText());
+		if (rarity == null || rarity.length() == 0)
+			setRarity(ref.getRarity());
+		if (artist == null)
+			setArtist(ref.getArtist());
+		String url = getImageUrl();
+		if (url == null)
+			setProperty(MagicCardField.IMAGE_URL, ref.getImageUrl());
+	}
 }
