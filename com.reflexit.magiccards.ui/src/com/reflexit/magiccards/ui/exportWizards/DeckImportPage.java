@@ -118,6 +118,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 						}
 						if (worker == null)
 							throw new IllegalArgumentException("Import is not defined for " + reportType.getLabel());
+						worker.setResolveDb(!dbImport);
 						if (preview) {
 							// if error occurs importResult.error would be set
 							// to exception
@@ -137,15 +138,17 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 										.performPreImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
 							} else {
 								result = (List<IMagicCard>) previewResult.getList();
-								Location sideboard = selectedLocation.toSideboard();
-								for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-									IMagicCard iMagicCard = (IMagicCard) iterator.next();
-									if (iMagicCard instanceof MagicCardPhysical) {
-										MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
-										if (!mcp.isSideboard())
-											mcp.setLocation(selectedLocation);
-										else
-											mcp.setLocation(sideboard);
+								if (!dbImport) {
+									Location sideboard = selectedLocation.toSideboard();
+									for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+										IMagicCard iMagicCard = (IMagicCard) iterator.next();
+										if (iMagicCard instanceof MagicCardPhysical) {
+											MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
+											if (!mcp.isSideboard())
+												mcp.setLocation(selectedLocation);
+											else
+												mcp.setLocation(sideboard);
+										}
 									}
 								}
 							}
