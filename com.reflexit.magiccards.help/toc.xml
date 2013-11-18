@@ -18,14 +18,17 @@
 	<topic label="Workbench"  href="html/reference/workbench.html"> 
 	    <topic label="Concepts" href="html/reference/workbench.html#concepts" />
 		<topic label="Main Menu" href="html/reference/workbench.html#menu" />
-		<topic label="New Menu" href="html/reference/workbench.html#new" />  
+		<topic label="New Menu" href="html/reference/workbench.html#new" />
+		<topic label="Commands" href="html/reference/commands.html" />    
 	</topic>
 	<topic label="Views"  href="html/reference/views.html">
 		<topic label="MTG Database" href="html/reference/views.html#viewmagicdb" />
 		<topic label="My Cards" href="html/reference/views.html#viewcol" />
+		<topic label="Collector" href="html/reference/views.html#viewcollector" />
 		<topic label="Deck" href="html/reference/views.html#viewdeck" /> 
 		<topic label="Card Info" href="html/reference/views.html#viewcard" /> 
-		<topic label="Cadr Navigator" href="html/reference/views.html#viewcardnav" /> 
+		<topic label="Card Navigator" href="html/reference/views.html#viewcardnav" /> 
+		<topic label="Printings" href="html/reference/views.html#viewprintings" /> 
 	</topic>
 	<topic label="Preferences"  href="html/reference/preferences.html"/>
    </topic>
