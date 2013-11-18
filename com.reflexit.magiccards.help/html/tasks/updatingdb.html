@@ -8,10 +8,39 @@
 
 <body>
 <h1>Updating Database</h1>
-By default card database contains only subset of all cards (one of each for the latest edition).
-If you want to load other cards you can run an update query which will load cards from Gatherer database.
+By default card database contains only subset of all cards. First of all cards which comes with default installation
+is snapshot of English cards in gatherer database at the moment of release, so it likely does not contain latest sets.
+Gatherer is official site for Wizards of the Cost that keeps magic cards database (gatherer.wizards.com).
+Magic Assistant software only be able to sync with this database online and if something is missing or invalid please check this
+site first and send them bugs. 
+These are limitations on pre-loaded database
+<ul>
+<li>No images - all images will be loaded on demand from internet</li>
+<li>Oracle text may be outdated since they keep changing oracle format</li>
+<li>Only english cards</li>
+<li>Only one graphics for basic land</li>
+<li>Some collector fields may be missing (like Artist, Collector number)</li>
+<li>No Rulings, Rating, Legality and Prices fields by default</li>
+<li>No promo cards and likely no latest sets</li>
+</ul>
+
+Upon first installation database is copied from software into local disk, and from then on you can only
+update it using card database update commands, new software update will not update your card database.
+It is actually stored in xml in very simple format, so if you really brave you can fix it manually by editing this xml
+in rare cases where there are errors in database itself (stored in MagicAssistantWorkspace/magiccards/MagicDB).
+
+<h2>Loading latest sets</h2>
+
+If you want to load more cards, 
+you can run an update query which will load cards from Gatherer database.
+
+
 <p/>
-In order to do this go to "Help->Update Magic Card Database...". 
+To load missing (new) sets do "Help->Check for Updates to Magic Card Database..." and follow instructions. 
+
+<h2>Loading localized cards or refreshing</h2>
+
+To sync in more advanced way go to "Help->Update Magic Card Database...". 
 <p/>
 <p/>
 To update from a particular set select it from the drop down list<br/>
@@ -24,13 +53,36 @@ then click "Update" button
 <li> Load all versions of art for basic land - Check this option if you want to load all 4 versions of each basic land in a set, otherwise only one would be loaded
 <li> Load all printed versions of the same card - For each card in selected set all other printed versions for previous sets would be loaded (same language). 
 For example if set has a card "Air Elemental" all of versions of this card would be loaded, so you will see few of them in your database after update.
+<li> Also load localized version in: [Language] - Select a different language to load cards in this language
 <p/>
 
 <img src="../screenshots/dialogs/updatedb.png" alt="update db dialog"/> 
 <p/>
-Note: Update database does not update extra fields such as Artist, Rating, etc. To load such field, you need to use Magic DB View.
+Note: Update database does not update extra fields such as Artist, Rating, Legality, etc. See below to update them.
+
+<h2>Loading extra fields</h2>
+
+To load such fields, you need to use Magic DB View.
 In the view use appropriate filter, then in view menu select "Load Extra Fields..." command,
 select the fields, and select "Update only cards in the filtered list" (or if no filter enabled - update all).
 
+<img src="../screenshots/dialogs/loadextrafields.png" alt="load extra fields"/> 
+
+<h2>Extending database</h2>
+ You can extended
+database (to add promo cards or some weird sets which gatherer does not support) by importing using table format (csv, pipe, etc).
+
+<p>
+First of all you need csv file with cards, usually missing cards are promo cards, which actually exists in another set but
+were reprinted in some specific set, in this case only fields you need are: NAME|SET|ARTIST|COLLNUM|IMAGE_URL.
+</p>
+<img src="../screenshots/dialogs/extenddb_csv.png" alt="csv example"/> 
+<p>
+In Card Navigator view select Import button, select Extend database options in the bottom and select csv file to import.
+</p>
+<img src="../screenshots/dialogs/extenddb.png" alt="extend db dialog"/>
+ 
+When you press Finish it will tell you that set does not exist and you should create a new set and enter abbreviation for this set.
+Then your cards should be in the database, and you can add them to your collection or decks (as separate step). 
 </body>
 </html>
