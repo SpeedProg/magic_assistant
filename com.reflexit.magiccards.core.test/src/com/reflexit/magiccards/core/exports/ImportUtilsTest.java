@@ -148,12 +148,50 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Foo|2");
 		addLine("Light|Foo|1");
+		tableImport.setResolveDb(false);
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
 		ImportUtils.performPreImportWithDb(preimport, mdb);
 		assertEquals(2, mdb.size());
 		Editions.getInstance().addEdition("Foo", null);
 		ImportUtils.importIntoDb(mdb);
+	}
+
+	public void testPerformPreImportWithDbOverride() {
+		addLine("NAME|SET|ARTIST|COLLNUM|IMAGE_URL");
+		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|http://magiccards.info/scans/en/mgdc/31.jpg");
+		tableImport.setResolveDb(false);
+		preimport();
+		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
+		ImportUtils.performPreImportWithDb(preimport, mdb);
+		Editions.getInstance().addEdition("Magic Game Day Cards", "MGDC");
+		// ImportUtils.importIntoDb(mdb);
+		assertEquals(1, mdb.size());
+		IMagicCard card = mdb.get(0);
+		assertEquals("Enchantment Creature - Horror", card.getType());
+		assertEquals("Seb McKinnon", card.getArtist());
+		assertEquals("Magic Game Day Cards", card.getSet());
+		assertEquals(31, card.getCollectorNumberId());
+		assertEquals("http://magiccards.info/scans/en/mgdc/31.jpg", ((MagicCard) card.getBase()).getImageUrl());
+	}
+
+	public void testPerformPreImportWithDbOvNoUrl() {
+		addLine("NAME|SET|ARTIST|COLLNUM|TEXT");
+		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|My Text");
+		tableImport.setResolveDb(false);
+		preimport();
+		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
+		ImportUtils.performPreImportWithDb(preimport, mdb);
+		Editions.getInstance().addEdition("Magic Game Day Cards", "MGDC");
+		// ImportUtils.importIntoDb(mdb);
+		assertEquals(1, mdb.size());
+		IMagicCard card = mdb.get(0);
+		assertEquals("Enchantment Creature - Horror", card.getType());
+		assertEquals("Seb McKinnon", card.getArtist());
+		assertEquals("Magic Game Day Cards", card.getSet());
+		assertEquals("My Text", card.getText());
+		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card",
+				((MagicCard) card.getBase()).getImageUrl());
 	}
 
 	@Test
