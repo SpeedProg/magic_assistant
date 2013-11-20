@@ -281,6 +281,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		MagicCardFilter filter = (MagicCardFilter) view.getFilter().clone();
 		if (includeSideboard) {
 			ICardStore mainStore = DataManager.getCardStore(loc.toMainDeck());
+			if (mainStore == null)
+				mainStore = getCardStore();
 			ICardStore sideStore = DataManager.getCardStore(loc.toSideboard());
 			mstore.addAll(mainStore);
 			if (sideStore != null)

@@ -548,7 +548,6 @@ public class DeckExportPage extends WizardDataTransferPage {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					System.err.println("gen preview for type " + type.getLabel());
 					exportDeck(outStream, monitor, type, header, sideboard);
 					if (!monitor.isCanceled())
 						updatePreview(outStream.toString());

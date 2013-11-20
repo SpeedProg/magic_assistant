@@ -24,6 +24,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
@@ -75,14 +76,28 @@ public class RenameHandler extends AbstractHandler {
 					+ "then go to your workspace and rename the directory in the file system, then restart the app.");
 			return null;
 		}
+		Location loc = f.getLocation();
+		if (loc.isSideboard()) {
+			MessageDialog.openInformation(window.getShell(), "Cannot Rename",
+					"Cannot rename sideboard. Rename the parent decl/collection of this sideboard instead.");
+			return null;
+		}
 		InputDialog inputDialog = new InputDialog(window.getShell(), "Rename", "New Name", f.getName(), null);
-		if (inputDialog.open() == Dialog.OK && !f.getName().equals(inputDialog.getValue())) {
-			CardElement el = f.rename(inputDialog.getValue());
-			if (wasOpen && el instanceof CardCollection) {
-				try {
-					window.getActivePage().showView(DeckView.ID, ((CardCollection) el).getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
-				} catch (PartInitException e) {
-					MagicUIActivator.log(e);
+		if (inputDialog.open() == Dialog.OK) {
+			String newName = inputDialog.getValue();
+			if (!f.getName().equals(newName)) {
+				Location sb = loc.toSideboard();
+				CardElement el = f.rename(newName);
+				if (wasOpen && el instanceof CardCollection) {
+					try {
+						window.getActivePage().showView(DeckView.ID, ((CardCollection) el).getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
+					} catch (PartInitException e) {
+						MagicUIActivator.log(e);
+					}
+				}
+				CardElement fsb = f.getParent().findChieldByName(sb.getBaseFileName());
+				if (fsb != null) {
+					fsb.rename(new Location(newName).toSideboard().toString());
 				}
 			}
 		}
