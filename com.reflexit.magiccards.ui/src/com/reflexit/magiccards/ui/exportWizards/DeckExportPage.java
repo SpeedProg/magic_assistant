@@ -41,6 +41,7 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.CustomExportDelegate;
+import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -358,11 +359,11 @@ public class DeckExportPage extends WizardDataTransferPage {
 
 	public void createFieldsControl(Composite area) {
 		final PreferenceStore store = new PreferenceStore();
-		Composite fparent = new Composite(area, SWT.NONE);
+		columnsChoiceParent = new Composite(area, SWT.NONE);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
-		fparent.setLayoutData(layoutData);
-		columnsChoice = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Columns:", fparent) {
+		columnsChoiceParent.setLayoutData(layoutData);
+		columnsChoice = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Columns:", columnsChoiceParent) {
 			@Override
 			protected String changePressed() {
 				new MagicFieldSelectorDialog(getShell(), store).open();
@@ -376,7 +377,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		columnsChoice.setTextLimit(60);
 		columnsChoice.setPreferenceStore(store);
 		if (columns != null) {
-			columnsChoice.getTextControl(fparent).setEditable(false);
+			columnsChoice.getTextControl(columnsChoiceParent).setEditable(false);
 			String value = "";
 			for (int i = 0; i < columns.length; i++) {
 				ICardField field = columns[i];
@@ -501,7 +502,9 @@ public class DeckExportPage extends WizardDataTransferPage {
 				}
 			}
 		}
-		includeSideBoard.setEnabled(reportType.getExportDelegate().isMultipleLocationSupported());
+		IExportDelegate delegate = reportType.getExportDelegate();
+		includeSideBoard.setEnabled(delegate.isMultipleLocationSupported());
+		columnsChoice.setEnabled(delegate.isColumnChoiceSupported(), columnsChoiceParent);
 	}
 
 	public ReportType getReportType() {
@@ -635,6 +638,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	}
 
 	private ICardField[] columns;
+	private Composite columnsChoiceParent;
 
 	public void setColumns(ICardField[] columns2) {
 		this.columns = columns2;
