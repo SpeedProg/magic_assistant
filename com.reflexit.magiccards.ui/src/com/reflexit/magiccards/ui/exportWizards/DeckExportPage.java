@@ -296,7 +296,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	 */
 	protected void setTextFromSelection() {
 		if (resourceSelection != null && !resourceSelection.isEmpty()) {
-			collection.setStringValue(((CardElement) resourceSelection.getFirstElement()).getLocation().getName());
+			collection.setStringValue(((CardElement) resourceSelection.getFirstElement()).getLocation().toString());
 		}
 	}
 
