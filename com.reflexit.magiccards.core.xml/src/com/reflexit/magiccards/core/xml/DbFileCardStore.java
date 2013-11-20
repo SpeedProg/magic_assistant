@@ -85,7 +85,7 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 
 	@Override
 	public Collection<IMagicCard> getCards(int id) {
-		System.err.println("getCards called");
+		// System.err.println("getCards called");
 		IMagicCard card = getCard(id);
 		if (card == null)
 			return Collections.EMPTY_LIST;
