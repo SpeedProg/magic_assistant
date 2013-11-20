@@ -30,4 +30,10 @@ public interface IExportDelegate<T> {
 	public void setColumns(ICardField[] columnsForExport);
 
 	public void setReportType(ReportType reportType);
+
+	public boolean isSideboardSupported();
+
+	public boolean isColumnChoiceSupported();
+
+	public boolean isMultipleLocationSupported();
 }

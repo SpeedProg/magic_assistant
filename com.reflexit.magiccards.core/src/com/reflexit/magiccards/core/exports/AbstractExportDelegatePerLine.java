@@ -25,6 +25,8 @@ public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDel
 				columns = deterimeColumns();
 			}
 			location = store.getLocation();
+			if (store.getSize() > 0)
+				location = ((ILocatable) store.iterator().next()).getLocation();
 			if (location == null)
 				location = Location.NO_WHERE;
 			printHeader();

@@ -24,8 +24,11 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		try {
 			if (store.getCardStore().size() > 0) {
 				IMagicCard card = (IMagicCard) store.getCardStore().iterator().next();
-				if (card instanceof ILocatable)
+				if (card instanceof ILocatable) {
 					location = ((ILocatable) card).getLocation();
+					if (location != null)
+						location = location.toMainDeck();
+				}
 			}
 			try {
 				MyXMLStreamWriter w = new MyXMLStreamWriter(stream);
