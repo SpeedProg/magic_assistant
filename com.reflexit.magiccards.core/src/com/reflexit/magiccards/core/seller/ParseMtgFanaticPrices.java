@@ -207,7 +207,7 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 				while (m.find()) {
 					String id = m.group(1);
 					String name = m.group(2);
-					System.err.println(name + " " + id);
+					// System.err.println(name + " " + id);
 					res.put(name, id);
 				}
 			}
