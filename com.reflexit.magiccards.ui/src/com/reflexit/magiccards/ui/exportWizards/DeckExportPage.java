@@ -501,6 +501,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 				}
 			}
 		}
+		includeSideBoard.setEnabled(reportType.getExportDelegate().isMultipleLocationSupported());
 	}
 
 	public ReportType getReportType() {
@@ -627,6 +628,8 @@ public class DeckExportPage extends WizardDataTransferPage {
 		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
 		MagicCardFilter locFilter = filteredLibrary.getFilter();
 		locFilter.update(map);
+		if (sideboard)
+			locFilter.getSortOrder().setSortField(MagicCardFieldPhysical.SIDEBOARD, true);
 		filteredLibrary.update();
 		new ExportDeckJob(outStream, reportType, header, filteredLibrary, columns).syncRun();
 	}
