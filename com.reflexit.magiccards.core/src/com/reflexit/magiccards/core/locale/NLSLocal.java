@@ -12,10 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import org.eclipse.osgi.framework.debug.Debug;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.eclipse.osgi.framework.log.FrameworkLog;
-import org.eclipse.osgi.framework.log.FrameworkLogEntry;
+import com.reflexit.magiccards.core.MagicLogger;
 
 /**
  * Common superclass for all message bundle classes. Provides convenience methods for manipulating
@@ -47,13 +44,7 @@ import org.eclipse.osgi.framework.log.FrameworkLogEntry;
  */
 public abstract class NLSLocal {
 	private static final String EXTENSION = ".properties"; //$NON-NLS-1$
-	private static final String PROP_WARNINGS = "osgi.nls.warnings"; //$NON-NLS-1$
-	private static final String IGNORE = "ignore"; //$NON-NLS-1$
-	private static final boolean ignoreWarnings = IGNORE.equals(FrameworkProperties.getProperty(PROP_WARNINGS));
-	/*
-	 * NOTE do not change the name of this field; it is set by the Framework using reflection
-	 */
-	private static FrameworkLog frameworkLog;
+	private static final boolean ignoreWarnings = true;
 	static final int SEVERITY_ERROR = 0x04;
 	static final int SEVERITY_WARNING = 0x02;
 	/*
@@ -127,7 +118,7 @@ public abstract class NLSLocal {
 	 * Load the given resource bundle using the specified class loader.
 	 */
 	static void load(final String bundleName, Object obj, Locale locale) {
-		final Class clazz = obj.getClass();
+		final Class clazz = (obj instanceof Class) ? ((Class) obj) : obj.getClass();
 		long start = System.currentTimeMillis();
 		final Field[] fieldArray = clazz.getDeclaredFields();
 		ClassLoader loader = clazz.getClassLoader();
@@ -160,8 +151,8 @@ public abstract class NLSLocal {
 				}
 			}
 		}
-		if (Debug.DEBUG_MESSAGE_BUNDLES)
-			System.out.println("Time to load message bundle: " + bundleName + " was " + (System.currentTimeMillis() - start) + "ms."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		// if (Debug.DEBUG_MESSAGE_BUNDLES)
+		System.out.println("Time to load message bundle: " + bundleName + " was " + (System.currentTimeMillis() - start) + "ms."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/*
@@ -181,10 +172,6 @@ public abstract class NLSLocal {
 	private static void log(int severity, String message, Exception e) {
 		if (severity == SEVERITY_WARNING && ignoreWarnings)
 			return; // ignoring warnings; bug 292980
-		if (frameworkLog != null) {
-			frameworkLog.log(new FrameworkLogEntry("org.eclipse.osgi", severity, 1, message, 0, e, null)); //$NON-NLS-1$
-			return;
-		}
 		String statusMsg;
 		switch (severity) {
 			case SEVERITY_ERROR:
@@ -238,8 +225,7 @@ public abstract class NLSLocal {
 				return null;
 			if (fieldObject == null) {
 				final String msg = "NLS unused message: " + key + " in: " + bundleName;//$NON-NLS-1$ //$NON-NLS-2$
-				if (Debug.DEBUG_MESSAGE_BUNDLES)
-					System.out.println(msg);
+				MagicLogger.log(msg);
 				log(SEVERITY_WARNING, msg, null);
 				return null;
 			}

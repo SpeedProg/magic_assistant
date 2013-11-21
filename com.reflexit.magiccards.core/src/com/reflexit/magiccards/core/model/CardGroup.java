@@ -30,7 +30,7 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
  * 
  */
 public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardPhysical, ICardGroup {
-	private String name;
+	private final String name;
 	private ICardField groupField;
 	private int count;
 	private List<ICard> children;
@@ -40,6 +40,8 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	private MagicCardPhysical base;
 
 	public CardGroup(ICardField fieldIndex, String name) {
+		if (name == null)
+			throw new NullPointerException();
 		this.groupField = fieldIndex;
 		this.name = name;
 		this.children = new ArrayList(2);
@@ -191,10 +193,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	@Override
 	public String getName() {
 		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public synchronized int getCount() {

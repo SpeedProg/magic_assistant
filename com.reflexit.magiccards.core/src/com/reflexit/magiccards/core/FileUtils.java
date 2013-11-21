@@ -122,7 +122,9 @@ public class FileUtils {
 	}
 
 	public static File getStateLocationFile() {
-		if (System.getProperty("eclipse.home.location") != null) {
+		String inEclipse = System.getProperty("eclipse.home.location");
+		if (inEclipse != null) {
+			//System.err.println("Eclipse home: " + inEclipse);
 			return Activator.getDefault().getStateLocation().toFile();
 		} else {
 			return new File(getWorkspaceFile() + "/.metadata/.plugins/" + DataManager.ID);

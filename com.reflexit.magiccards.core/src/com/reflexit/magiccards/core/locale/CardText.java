@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.locale;
 
-import org.eclipse.osgi.util.NLS;
+import java.util.Locale;
 
-public final class CardText extends NLS {
+public final class CardText extends NLSLocal {
 	private static final String BUNDLE_NAME = CardText.class.getName();
 	// Types
 	public static String Type_Artifact;
@@ -126,7 +126,13 @@ public final class CardText extends NLS {
 	public static String Ability_Wither;
 	static {
 		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, CardText.class);
+		try {
+			// NLS.initializeMessages(BUNDLE_NAME, CardText.class);
+			Locale curLoc = Locale.getDefault();
+			initializeMessages(BUNDLE_NAME, CardText.class, curLoc);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	private CardText() {
