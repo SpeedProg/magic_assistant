@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {
-	private static final int EDITIONS_SIZE = 124;
+	private static final int EDITIONS_SIZE = 125;
 	private static final String EDITIONS_FILE = "editions.txt";
 	protected Editions editions;
 

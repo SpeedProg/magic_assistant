@@ -53,13 +53,13 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 	}
 
 	private void add3cards() {
-		card1 = CardGenerator.generateRandomCard();
+		card1 = CardGenerator.generateCardWithValues();
 		card1.setCost(BLACK_COST);
 		card1.setType("Creature - Elf");
-		card2 = CardGenerator.generateRandomCard();
+		card2 = CardGenerator.generateCardWithValues();
 		card2.setCost(RED_COST);
 		card2.setType("Creature - Goblin");
-		card3 = CardGenerator.generateRandomCard();
+		card3 = CardGenerator.generateCardWithValues();
 		card3.setCost(WHITE_COST);
 		card3.setType(INSTANT);
 		this.deck.getCardStore().add(card1);
