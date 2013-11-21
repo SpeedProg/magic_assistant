@@ -121,6 +121,17 @@ public class Editions implements ISearchableProperty {
 			return "";
 		}
 
+		public String getExtraAliases() {
+			if (aliases.length > 1) {
+				String line = aliases[0];
+				for (int i = 1; i < abbrs.length; i++) {
+					line += "," + aliases[i];
+				}
+				return line;
+			}
+			return "";
+		}
+
 		public void setType(String type) {
 			if (type == null || type.length() == 0)
 				this.type = "?";
@@ -442,7 +453,7 @@ public class Editions implements ISearchableProperty {
 					type = ed.getType();
 				}
 				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "|"
-						+ (ed.block == null ? "" : ed.block) + "|" + ed.getFormatString());
+						+ (ed.block == null ? "" : ed.block) + "|" + ed.getFormat().name() + "|" + ed.getExtraAliases());
 			}
 		} finally {
 			st.close();
