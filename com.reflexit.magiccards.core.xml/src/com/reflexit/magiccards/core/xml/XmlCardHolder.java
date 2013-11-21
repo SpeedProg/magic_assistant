@@ -80,19 +80,27 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public void loadInitial() throws MagicException {
-		// loadFromFlatResource("all.txt");
-		Collection<String> editions = Editions.getInstance().getNames();
-		for (String set : editions) {
-			String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
+		if (System.getProperty("set10e") != null) {
 			try {
-				// long time = System.currentTimeMillis();
-				loadFromFlatResource(abbr + ".txt");
-				// long nowtime = System.currentTimeMillis() - time;
-				// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " +
-				// nowtime % 1000 + " ms");
+				loadFromFlatResource("10E.txt");
 			} catch (IOException e) {
 				// ignore
-				MagicLogger.log("Cannot load "+abbr);
+				MagicLogger.log("Cannot load 10E");
+			}
+		} else {
+			Collection<String> editions = Editions.getInstance().getNames();
+			for (String set : editions) {
+				String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
+				try {
+					// long time = System.currentTimeMillis();
+					loadFromFlatResource(abbr + ".txt");
+					// long nowtime = System.currentTimeMillis() - time;
+					// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " +
+					// nowtime % 1000 + " ms");
+				} catch (IOException e) {
+					// ignore
+					MagicLogger.log("Cannot load " + abbr);
+				}
 			}
 		}
 	}
