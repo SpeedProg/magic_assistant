@@ -444,6 +444,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	@Override
 	public String getStatusMessage() {
+		if (fstore == null || format == null || stats == null)
+			return "";
 		String err = format.validateLegality(fstore.getCardStore(), stats);
 		if (err == null)
 			return "Format: " + format.name() + " is legal";
