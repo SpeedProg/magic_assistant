@@ -138,6 +138,10 @@ public class DeckView extends AbstractMyCardsView {
 			}
 		};
 		this.sideboard = new Action("Open Sideboard") {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/sideboard16.png"));
+			}
+
 			@Override
 			public void run() {
 				runCreateSideboard();
@@ -305,6 +309,12 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
+	}
+
+	@Override
+	protected void fillLocalToolBar(IToolBarManager manager) {
+		super.fillLocalToolBar(manager);
+		manager.add(this.sideboard);
 	}
 
 	/*
