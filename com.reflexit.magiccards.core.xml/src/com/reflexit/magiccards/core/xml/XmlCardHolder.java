@@ -93,7 +93,9 @@ public class XmlCardHolder implements ICardHandler {
 				String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
 				try {
 					// long time = System.currentTimeMillis();
-					loadFromFlatResource(abbr + ".txt");
+					File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(set).getBaseFileName());
+					if (!setFile.exists() || setFile.length() == 0)
+						loadFromFlatResource(abbr + ".txt");
 					// long nowtime = System.currentTimeMillis() - time;
 					// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " +
 					// nowtime % 1000 + " ms");
@@ -205,12 +207,7 @@ public class XmlCardHolder implements ICardHandler {
 	public synchronized void loadInitialIfNot(ICoreProgressMonitor pm) throws MagicException {
 		pm.beginTask("Init", 100);
 		try {
-			File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
-			File[] listFiles = dir.listFiles();
-			if (listFiles != null && listFiles.length > 0)
-				return;
-			else
-				loadInitial();
+			loadInitial();
 		} catch (Exception e) {
 			throw new MagicException(e);
 		} finally {
