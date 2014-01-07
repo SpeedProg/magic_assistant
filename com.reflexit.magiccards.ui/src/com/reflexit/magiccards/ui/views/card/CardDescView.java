@@ -6,10 +6,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -61,6 +63,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private Label message;
 	private LoadCardJob loadCardJob;
 	private Action sync;
+	private Action actionAsScanned;
+	private boolean asScanned;
 
 	public class LoadCardJob extends Job {
 		private IMagicCard card;
@@ -108,78 +112,12 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 			if (card != IMagicCard.DEFAULT) {
-				loadCardImage(new SubProgressMonitor(monitor, 45), card);
+				loadCardImage(new SubProgressMonitor(monitor, 45), card, forceUpdate);
 				loadCardExtraInfo(new SubProgressMonitor(monitor, 45), card);
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 			}
 			monitor.done();
-			return Status.OK_STATUS;
-		}
-
-		protected IStatus loadCardImage(IProgressMonitor monitor, final IMagicCard card) {
-			monitor.beginTask("Loading image for " + card.getName(), 100);
-			try {
-				if (!isStillNeeded(card))
-					return Status.CANCEL_STATUS;
-				Image remoteImage1 = null;
-				IOException e1 = null;
-				try {
-					if (card.getCardId() != 0) {
-						String path = ImageCreator.getInstance().createCardPath(card, CardCache.isLoadingEnabled(), forceUpdate);
-						boolean resize = card.getType() == null || !card.getType().contains("Scheme"); // XXX
-						remoteImage1 = ImageCreator.getInstance().createCardImage(path, resize);
-					}
-				} catch (CachedImageNotFoundException e) {
-					// skip
-				} catch (IOException e) {
-					e1 = e;
-				}
-				if (monitor.isCanceled())
-					return Status.CANCEL_STATUS;
-				if (!isStillNeeded(card))
-					return Status.CANCEL_STATUS;
-				monitor.worked(90);
-				final Image remoteImage = remoteImage1;
-				final IOException e = e1;
-				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						setMessage("");
-						if (e != null)
-							setMessage(e.getMessage());
-						else if (!CardCache.isLoadingEnabled())
-							setMessage("Image loading is disabled");
-						else if (card.getGathererId() == 0)
-							setMessage("Card does not exist in dababase");
-						if (!isStillNeeded(card))
-							return;
-						Image image = remoteImage;
-						if (image == null || image.getBounds().width < 20) {
-							image = ImageCreator.getInstance().createCardNotFoundImage(card);
-						}
-						// rotate image if needed
-						String options = (String) card.getObjectByField(MagicCardField.PART);
-						if (options != null && options.length() > 0) {
-							int rotate = 0;
-							if (options.contains("rotate180")) {
-								rotate = 180;
-							} else if (options.contains("rotate90")) {
-								rotate = 90;
-							}
-							if (rotate != 0) {
-								Image rimage = ImageCreator.getInstance().getRotated(image, rotate);
-								image.dispose();
-								image = rimage;
-							}
-						}
-						if (!isStillNeeded(card))
-							return;
-						CardDescView.this.panel.setImage(card, image);
-					}
-				});
-			} finally {
-				monitor.done();
-			}
 			return Status.OK_STATUS;
 		}
 
@@ -221,10 +159,6 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			return res;
 		}
 
-		boolean isStillNeeded(final IMagicCard card) {
-			return panel.getCard() == card;
-		}
-
 		IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card, HashSet<ICardField> fieldMap) throws IOException {
 			monitor.beginTask("Loading info for " + card.getName(), 100);
 			try {
@@ -249,6 +183,76 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			}
 			return Status.OK_STATUS;
 		}
+	}
+
+	boolean isStillNeeded(final IMagicCard card) {
+		return panel.getCard() == card;
+	}
+
+	protected IStatus loadCardImage(IProgressMonitor monitor, final IMagicCard card, boolean forceUpdate) {
+		monitor.beginTask("Loading image for " + card.getName(), 100);
+		try {
+			if (!isStillNeeded(card))
+				return Status.CANCEL_STATUS;
+			Image remoteImage1 = null;
+			IOException e1 = null;
+			try {
+				if (card.getCardId() != 0) {
+					String path = ImageCreator.getInstance().createCardPath(card, CardCache.isLoadingEnabled(), forceUpdate);
+					boolean resize = asScanned == false;
+					remoteImage1 = ImageCreator.getInstance().createCardImage(path, resize);
+				}
+			} catch (CachedImageNotFoundException e) {
+				// skip
+			} catch (IOException e) {
+				e1 = e;
+			}
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			if (!isStillNeeded(card))
+				return Status.CANCEL_STATUS;
+			monitor.worked(90);
+			final Image remoteImage = remoteImage1;
+			final IOException e = e1;
+			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					setMessage("");
+					if (e != null)
+						setMessage(e.getMessage());
+					else if (!CardCache.isLoadingEnabled())
+						setMessage("Image loading is disabled");
+					else if (card.getGathererId() == 0)
+						setMessage("Card does not exist in dababase");
+					if (!isStillNeeded(card))
+						return;
+					Image image = remoteImage;
+					if (image == null || image.getBounds().width < 20) {
+						image = ImageCreator.getInstance().createCardNotFoundImage(card);
+					}
+					// rotate image if needed
+					String options = (String) card.getObjectByField(MagicCardField.PART);
+					if (options != null && options.length() > 0) {
+						int rotate = 0;
+						if (options.contains("rotate180")) {
+							rotate = 180;
+						} else if (options.contains("rotate90")) {
+							rotate = 90;
+						}
+						if (rotate != 0) {
+							Image rimage = ImageCreator.getInstance().getRotated(image, rotate);
+							image.dispose();
+							image = rimage;
+						}
+					}
+					if (!isStillNeeded(card))
+						return;
+					CardDescView.this.panel.setImage(card, image);
+				}
+			});
+		} finally {
+			monitor.done();
+		}
+		return Status.OK_STATUS;
 	}
 
 	public void setMessage(String text) {
@@ -308,6 +312,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(actionAsScanned);
 		manager.add(sync);
 	}
 
@@ -327,6 +332,17 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				LoadCardJob job = new LoadCardJob();
 				job.setUser(true);
 				job.schedule();
+			}
+		};
+		this.actionAsScanned = new Action("When depressed - scanned image is not scaled", IAction.AS_CHECK_BOX) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/zoom_original.png"));
+			}
+
+			@Override
+			public void run() {
+				asScanned = actionAsScanned.isChecked();
+				loadCardImage(new NullProgressMonitor(), panel.getCard(), false);
 			}
 		};
 	}
