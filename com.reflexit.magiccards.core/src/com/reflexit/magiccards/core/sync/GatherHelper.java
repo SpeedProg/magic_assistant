@@ -46,7 +46,11 @@ public class GatherHelper extends ParserHtmlHelper {
 	}
 
 	public static String htmlToString(String str) {
-		str = ParserHtmlHelper.htmlToString(str);
+		str = str.replaceAll("\\Q " + LONG_MINUS, "-");
+		str = str.replaceAll("&nbsp;", " ");
+		str = str.replaceAll("&amp;", "&");
+		str = str.replaceAll("&apos;", "'");
+		str = str.replaceAll("&quot;", "\"");
 		if (str.contains("img")) {
 			str = str.replaceAll("<img [^<]*name=([^&]*)&[^>]*/>", "{$1}");
 			for (Iterator iterator = manaMap.keySet().iterator(); iterator.hasNext();) {

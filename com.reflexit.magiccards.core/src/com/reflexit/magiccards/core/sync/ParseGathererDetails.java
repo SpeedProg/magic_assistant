@@ -185,6 +185,8 @@ public class ParseGathererDetails extends ParseGathererPage {
 				if (field == MagicCardField.TEXT || field == MagicCardField.ORACLE) {
 					value = value.replaceAll("\\n", "<br>");
 					value = GatherHelper.htmlToString(value);
+				} else if (field == MagicCardField.COST) {
+					value = GatherHelper.htmlToString(value);
 				} else if (field == MagicCardField.TYPE) {
 					value = value.replaceAll("—", "-");
 					// value = value.replaceAll("—", "-");

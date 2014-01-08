@@ -167,15 +167,6 @@ public class ParserHtmlHelper {
 
 	protected static String LONG_MINUS;
 
-	public static String htmlToString(String str) {
-		str = str.replaceAll("\\Q " + LONG_MINUS, "-");
-		str = str.replaceAll("&nbsp;", " ");
-		str = str.replaceAll("&amp;", "&");
-		str = str.replaceAll("&apos;", "'");
-		str = str.replaceAll("&quot;", "\"");
-		return str;
-	}
-
 	/**
 	 * If pattern does not match return null, otherwise return group number, or empty string if
 	 * group is set to -1
@@ -220,7 +211,7 @@ public class ParserHtmlHelper {
 			if (text == null)
 				text = "";
 		}
-		String res = htmlToString(text).trim();
+		String res = GatherHelper.htmlToString(text).trim();
 		if (res.length() == 0)
 			res = " ";
 		return res;
