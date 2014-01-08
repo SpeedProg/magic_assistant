@@ -167,7 +167,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			loadFields(obj);
 			updateLocations();
 			// DataManager.reconcileAdd(this);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
 	}
