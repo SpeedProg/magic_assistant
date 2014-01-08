@@ -95,6 +95,6 @@ public class MTGStudioImportTest extends AbstarctImportTest {
 				err++;
 			}
 		}
-		assertEquals(3, err);
+		assertEquals(2, err);
 	}
 }
