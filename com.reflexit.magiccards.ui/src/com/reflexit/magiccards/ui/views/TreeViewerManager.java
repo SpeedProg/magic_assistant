@@ -169,4 +169,14 @@ public class TreeViewerManager extends ViewerManager {
 		}
 		this.viewer.refresh(true);
 	}
+
+	protected void hideColumn(int i, boolean hide, TreeColumn[] acolumns) {
+		TreeColumn column = acolumns[i];
+		if (hide)
+			column.setWidth(0);
+		else if (column.getWidth() <= 0) {
+			int def = getColumn(i).getColumnWidth();
+			column.setWidth(def);
+		}
+	}
 }
