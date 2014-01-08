@@ -5,15 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.MenuManager;
-
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -36,16 +30,6 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By");
-		groupMenu.add(createGroupActionNone());
-		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction(MagicCardFieldPhysical.LOCATION));
-		groupMenu.add(createGroupAction(MagicCardFieldPhysical.OWNERSHIP));
-		return groupMenu;
-	}
-
-	@Override
 	public String getStatusMessage() {
 		if (card == MagicCard.DEFAULT || card == null) {
 			return "No card";
@@ -65,37 +49,9 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 			return "";
 		ICardStore cardStore = filteredStore.getCardStore();
 		int totalSize = cardStore.size();
-		int count = totalSize;
-		if (cardStore instanceof ICardCountable) {
-			count = ((ICardCountable) cardStore).getCount();
-		}
-		if (isDbMode()) {
-			if (totalSize == 1)
-				return "Only one version found";
-			return "Total " + totalSize + " diffrent versions";
-		} else {
-			String s = "";
-			if (count != 1)
-				s = "s";
-			return "Total " + count + " card" + s + " in your collections";
-		}
-	}
-
-	boolean isDbMode() {
-		return ((PrintingsManager) manager).isDbMode();
-	}
-
-	@Override
-	public void updateGroupBy(ICardField[] field) {
-		if (((PrintingsManager) manager).isDbMode())
-			return;
-		super.updateGroupBy(field);
-	}
-
-	public void updateDbMode(boolean mode) {
-		((PrintingsManager) manager).updateDbMode(mode);
-		if (mode)
-			updateGroupBy(null);
+		if (totalSize == 1)
+			return "Only one version found";
+		return "Total " + totalSize + " diffrent versions";
 	}
 
 	public void setCard(IMagicCard card) {
@@ -112,11 +68,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 		}
 		MemoryFilteredCardStore mstore = (MemoryFilteredCardStore) fstore;
 		mstore.clear();
-		if (isDbMode()) {
-			mstore.addAll(searchInStore(DataManager.getCardHandler().getMagicDBStore()));
-		} else {
-			mstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
-		}
+		mstore.addAll(searchInStore(DataManager.getCardHandler().getMagicDBStore()));
 		monitor.done();
 	}
 

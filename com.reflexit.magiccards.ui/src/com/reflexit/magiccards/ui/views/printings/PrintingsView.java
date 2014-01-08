@@ -84,9 +84,9 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
-		manager.add(refresh);
-		manager.add(sync);
-		manager.add(((IMagicCardListControl) control).getGroupMenu());
+		// manager.add(refresh);
+		// manager.add(sync);
+		// manager.add(((IMagicCardListControl) control).getGroupMenu());
 	}
 
 	@Override
@@ -103,6 +103,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		manager.add(sync);
 		// manager.add(this.groupMenuButton);
 		manager.add(showInstances);
+		manager.add(refresh);
 	}
 
 	@Override
@@ -251,10 +252,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected String getPreferencePageId() {
 		return null;
-	}
-
-	protected boolean isDbMode() {
-		return ((PrintingListControl) control).isDbMode();
 	}
 
 	@Override
