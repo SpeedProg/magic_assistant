@@ -219,7 +219,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		if (part instanceof AbstractCardsView && part != this)
+		if (part instanceof AbstractCardsView && part != this && !sel.isEmpty())
 			runLoadJob(sel);
 	}
 

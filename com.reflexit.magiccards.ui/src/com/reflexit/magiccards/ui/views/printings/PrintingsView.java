@@ -49,6 +49,7 @@ import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.views.instances.InstancesView;
 
 /**
  * Shows different prints of the same card in different sets and per collection
@@ -208,7 +209,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		if (part instanceof AbstractCardsView && part != this)
+		if (part instanceof AbstractCardsView && part != this && !sel.isEmpty())
 			runLoadJob(sel);
 	}
 
@@ -257,5 +258,16 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	@Override
+	protected void runShowInstances(IWorkbenchPage page) {
+		try {
+			StructuredSelection sel = new StructuredSelection(card);
+			InstancesView view = (InstancesView) page.showView(InstancesView.ID);
+			view.selectionChanged(this, sel);
+		} catch (PartInitException e) {
+			MagicUIActivator.log(e);
+		}
 	}
 }

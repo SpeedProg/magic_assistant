@@ -218,11 +218,7 @@ public abstract class AbstractCardsView extends ViewPart {
 				if (window != null) {
 					IWorkbenchPage page = window.getActivePage();
 					if (page != null) {
-						try {
-							page.showView(InstancesView.ID);
-						} catch (PartInitException e) {
-							MagicUIActivator.log(e);
-						}
+						runShowInstances(page);
 					}
 				}
 			}
@@ -395,5 +391,14 @@ public abstract class AbstractCardsView extends ViewPart {
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
 		saveColumnLayout();
+	}
+
+	protected void runShowInstances(IWorkbenchPage page) {
+		try {
+			InstancesView view = (InstancesView) page.showView(InstancesView.ID);
+			view.selectionChanged(AbstractCardsView.this, getSelection());
+		} catch (PartInitException e) {
+			MagicUIActivator.log(e);
+		}
 	}
 }
