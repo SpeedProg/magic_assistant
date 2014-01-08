@@ -40,6 +40,7 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
+	private boolean flatDbLoaded = false;
 
 	public IFilteredCardStore getMagicDBFilteredStore() {
 		return MagicDBFilteredCardFileStore.getInstance();
@@ -80,30 +81,37 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public void loadInitial() throws MagicException {
-		if (System.getProperty("set10e") != null) {
-			try {
-				loadFromFlatResource("10E.txt");
-			} catch (IOException e) {
-				// ignore
-				MagicLogger.log("Cannot load 10E");
-			}
-		} else {
-			Collection<String> editions = Editions.getInstance().getNames();
-			for (String set : editions) {
-				String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
+		if (flatDbLoaded)
+			return;
+		try {
+			if (System.getProperty("set10e") != null) {
 				try {
-					// long time = System.currentTimeMillis();
-					File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(set).getBaseFileName());
-					if (!setFile.exists() || setFile.length() == 0)
-						loadFromFlatResource(abbr + ".txt");
-					// long nowtime = System.currentTimeMillis() - time;
-					// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s " +
-					// nowtime % 1000 + " ms");
+					loadFromFlatResource("10E.txt");
 				} catch (IOException e) {
 					// ignore
-					MagicLogger.log("Cannot load " + abbr);
+					MagicLogger.log("Cannot load 10E");
+				}
+			} else {
+				Collection<String> editions = Editions.getInstance().getNames();
+				for (String set : editions) {
+					String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
+					try {
+						// long time = System.currentTimeMillis();
+						File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(set).getBaseFileName());
+						if (!setFile.exists() || setFile.length() == 0)
+							loadFromFlatResource(abbr + ".txt");
+						// long nowtime = System.currentTimeMillis() - time;
+						// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s "
+						// +
+						// nowtime % 1000 + " ms");
+					} catch (IOException e) {
+						// ignore
+						MagicLogger.log("Cannot load " + abbr);
+					}
 				}
 			}
+		} finally {
+			flatDbLoaded = true;
 		}
 	}
 
