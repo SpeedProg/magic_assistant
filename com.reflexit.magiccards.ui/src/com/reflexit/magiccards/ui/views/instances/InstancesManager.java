@@ -79,6 +79,8 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 	@Override
 	public void flip(boolean hasGroups) {
 		groupped = hasGroups;
+		if (viewer == null)
+			return;
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		hideColumn(0, !hasGroups, acolumns);
 	}
