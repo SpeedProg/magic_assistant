@@ -87,8 +87,8 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
-		manager.add(refresh);
-		manager.add(((IMagicCardListControl) control).getGroupMenu());
+		// manager.add(refresh);
+		// manager.add(((IMagicCardListControl) control).getGroupMenu());
 	}
 
 	@Override
@@ -103,6 +103,8 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		// drillDownAdapter.addNavigationActions(manager);
 		// manager.add(this.groupMenuButton);
+		manager.add(((InstancesListControl) control).getGroupAction());
+		manager.add(refresh);
 		manager.add(showPrintings);
 	}
 
@@ -261,10 +263,6 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected String getPreferencePageId() {
 		return null;
-	}
-
-	protected boolean isDbMode() {
-		return ((InstancesListControl) control).isDbMode();
 	}
 
 	@Override

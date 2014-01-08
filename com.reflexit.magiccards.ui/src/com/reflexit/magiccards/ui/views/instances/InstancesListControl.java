@@ -37,7 +37,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By");
+		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
 		groupMenu.add(createGroupActionNone());
 		groupMenu.add(createGroupAction(MagicCardField.SET));
 		groupMenu.add(createGroupAction(MagicCardFieldPhysical.LOCATION));
@@ -69,33 +69,15 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 		if (cardStore instanceof ICardCountable) {
 			count = ((ICardCountable) cardStore).getCount();
 		}
-		if (isDbMode()) {
-			if (totalSize == 1)
-				return "Only one version found";
-			return "Total " + totalSize + " diffrent versions";
-		} else {
-			String s = "";
-			if (count != 1)
-				s = "s";
-			return "Total " + count + " card" + s + " in your collections";
-		}
-	}
-
-	boolean isDbMode() {
-		return ((InstancesManager) manager).isDbMode();
+		String s = "";
+		if (count != 1)
+			s = "s";
+		return "Total " + count + " card" + s + " in your collections";
 	}
 
 	@Override
 	public void updateGroupBy(ICardField[] field) {
-		if (((InstancesManager) manager).isDbMode())
-			return;
 		super.updateGroupBy(field);
-	}
-
-	public void updateDbMode(boolean mode) {
-		((InstancesManager) manager).updateDbMode(mode);
-		if (mode)
-			updateGroupBy(null);
 	}
 
 	public void setCard(IMagicCard card) {
@@ -112,11 +94,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 		}
 		MemoryFilteredCardStore mstore = (MemoryFilteredCardStore) fstore;
 		mstore.clear();
-		if (isDbMode()) {
-			mstore.addAll(searchInStore(DataManager.getCardHandler().getMagicDBStore()));
-		} else {
-			mstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
-		}
+		mstore.addAll(searchInStore(DataManager.getCardHandler().getLibraryCardStore()));
 		monitor.done();
 	}
 
