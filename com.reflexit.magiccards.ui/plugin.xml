@@ -131,6 +131,15 @@
             name="Collector"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.instances.InstancesView"
+            icon="icons/hand32.png"
+            id="com.reflexit.magiccards.ui.views.instances.InstancesView"
+            name="Instances"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

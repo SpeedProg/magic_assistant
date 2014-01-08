@@ -42,8 +42,8 @@ import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
+import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public abstract class AbstractCardsView extends ViewPart {
 	protected Action loadExtras;
@@ -52,7 +52,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	private Action actionRefresh;
 	protected Action actionCopy;
 	protected Action actionPaste;
-	protected Action showPrintings;
+	protected Action showInstances;
 
 	/**
 	 * The constructor.
@@ -206,7 +206,11 @@ public abstract class AbstractCardsView extends ViewPart {
 			}
 		};
 		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
-		showPrintings = new Action("Show All Instances") {
+		showInstances = new Action("Show All Instances") {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/hand16.png"));
+			}
+
 			@Override
 			public void run() {
 				IWorkbench workbench = PlatformUI.getWorkbench();
@@ -215,8 +219,7 @@ public abstract class AbstractCardsView extends ViewPart {
 					IWorkbenchPage page = window.getActivePage();
 					if (page != null) {
 						try {
-							PrintingsView view = (PrintingsView) page.showView(PrintingsView.ID);
-							view.setDbMode(false);
+							page.showView(InstancesView.ID);
 						} catch (PartInitException e) {
 							MagicUIActivator.log(e);
 						}

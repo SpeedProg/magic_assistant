@@ -203,7 +203,7 @@ public class QuickFilterControl extends Composite {
 		typeCombo.setToolTipText("Type filter");
 		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
 		item.setControl(this.typeCombo);
-		item.setWidth(200);
+		item.setWidth(150);
 	}
 
 	private void createEditionField(ToolBar toolbar) {

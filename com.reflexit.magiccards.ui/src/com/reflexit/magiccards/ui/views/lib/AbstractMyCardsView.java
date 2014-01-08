@@ -273,7 +273,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		manager.add(this.addToDeck);
 		manager.add(this.split);
 		manager.add(this.edit);
-		manager.add(this.showPrintings);
+		manager.add(this.showInstances);
 	}
 
 	@Override

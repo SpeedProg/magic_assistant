@@ -42,7 +42,7 @@ import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 public class MagicDbView extends AbstractCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.MagicDbView";
 	protected MenuManager addToDeck;
-	protected Action showOtherSets;
+	protected Action showPrintings;
 	protected IDeckAction copyToDeck;
 	protected Action exportDatabase;
 
@@ -141,7 +141,7 @@ public class MagicDbView extends AbstractCardsView {
 				}
 			}
 		};
-		showOtherSets = new Action("Show Other Sets") {
+		showPrintings = new Action("Show Other Sets") {
 			@Override
 			public void run() {
 				IWorkbench workbench = PlatformUI.getWorkbench();
@@ -150,8 +150,7 @@ public class MagicDbView extends AbstractCardsView {
 					IWorkbenchPage page = window.getActivePage();
 					if (page != null) {
 						try {
-							PrintingsView view = (PrintingsView) page.showView(PrintingsView.ID);
-							view.setDbMode(true);
+							page.showView(PrintingsView.ID);
 						} catch (PartInitException e) {
 							MagicUIActivator.log(e);
 						}
@@ -222,8 +221,8 @@ public class MagicDbView extends AbstractCardsView {
 		super.fillContextMenu(manager);
 		manager.add(this.addToDeck);
 		manager.add(this.actionCopy);
-		manager.add(this.showOtherSets);
 		manager.add(this.showPrintings);
+		manager.add(this.showInstances);
 	}
 
 	@Override

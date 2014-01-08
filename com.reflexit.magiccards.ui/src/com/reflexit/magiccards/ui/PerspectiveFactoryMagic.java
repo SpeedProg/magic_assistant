@@ -14,6 +14,7 @@ import org.eclipse.ui.actions.BaseNewWizardMenu;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 import com.reflexit.magiccards.ui.views.collector.CollectorView;
+import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -30,16 +31,18 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
-		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.25, editorArea);
-		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea);
-		IPlaceholderFolderLayout pf = layout.createPlaceholderFolder("up", IPageLayout.TOP, 0.5f, "right");
-		IFolderLayout leftTop = layout.createFolder("leftTop", IPageLayout.TOP, 0.75f, "left");
-		leftTop.addView(CardDescView.ID);
-		left.addView(CardsNavigatorView.ID);
-		left.addView(PrintingsView.ID);
-		right.addView(MagicDbView.ID);
-		right.addView(MyCardsView.ID);
-		right.addView(CollectorView.ID);
+		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.18, editorArea);
+		IFolderLayout main = layout.createFolder("main", IPageLayout.RIGHT, (float) 0.82, editorArea);
+		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.73, "main");
+		IPlaceholderFolderLayout pf = layout.createPlaceholderFolder("up", IPageLayout.TOP, 0.5f, "main");
+		IFolderLayout rightTop = layout.createFolder("rightTop", IPageLayout.TOP, 0.5f, "right");
+		left.addView(CardDescView.ID);
+		rightTop.addView(CardsNavigatorView.ID);
+		right.addView(PrintingsView.ID);
+		right.addView(InstancesView.ID);
+		main.addView(MagicDbView.ID);
+		main.addView(MyCardsView.ID);
+		main.addView(CollectorView.ID);
 		pf.addPlaceholder(DeckView.ID + ":*");
 		// layout.addStandaloneView(MagicDbView.ID, false, IPageLayout.LEFT,
 		// 1.0f, editorArea);

@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.ui.views.printings;
+package com.reflexit.magiccards.ui.views.instances;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -31,9 +31,11 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -49,22 +51,23 @@ import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 /**
  * Shows different prints of the same card in different sets and per collection
  * 
  */
-public class PrintingsView extends AbstractCardsView implements ISelectionListener {
-	public static final String ID = PrintingsView.class.getName();
+public class InstancesView extends AbstractCardsView implements ISelectionListener {
+	public static final String ID = InstancesView.class.getName();
 	private Action delete;
 	private Action refresh;
-	private Action sync;
 	private IMagicCard card;
+	private Action showPrintings;
 
 	/**
 	 * The constructor.
 	 */
-	public PrintingsView() {
+	public InstancesView() {
 	}
 
 	@Override
@@ -72,7 +75,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		super.createPartControl(parent);
 		((IMagicCardListControl) control).setStatus("Click on a card to populate the view");
 		loadInitial();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewinstances"));
 	}
 
 	@Override
@@ -85,7 +88,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.add(refresh);
-		manager.add(sync);
 		manager.add(((IMagicCardListControl) control).getGroupMenu());
 	}
 
@@ -100,9 +102,8 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		// drillDownAdapter.addNavigationActions(manager);
-		manager.add(sync);
 		// manager.add(this.groupMenuButton);
-		manager.add(showInstances);
+		manager.add(showPrintings);
 	}
 
 	@Override
@@ -124,16 +125,25 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 				updateViewer();
 			}
 		};
-		this.sync = new Action("Update printings from web", SWT.NONE) {
+		showPrintings = new Action("Show Printings") {
 			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/web_sync.gif"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/m16.png"));
 			}
 
 			@Override
 			public void run() {
-				LoadCardJob job = new LoadCardJob();
-				job.setUser(true);
-				job.schedule();
+				IWorkbench workbench = PlatformUI.getWorkbench();
+				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					if (page != null) {
+						try {
+							page.showView(PrintingsView.ID);
+						} catch (PartInitException e) {
+							MagicUIActivator.log(e);
+						}
+					}
+				}
 			}
 		};
 	}
@@ -232,13 +242,13 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			return;
 		this.card = cardSel;
 		// System.err.println("Printings for " + card);
-		((PrintingListControl) control).setCard(card);
+		((InstancesListControl) control).setCard(card);
 		reloadData();
 	}
 
 	@Override
-	protected PrintingListControl doGetViewControl() {
-		return new PrintingListControl(this);
+	protected InstancesListControl doGetViewControl() {
+		return new InstancesListControl(this);
 	}
 
 	@Override
@@ -254,7 +264,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	}
 
 	protected boolean isDbMode() {
-		return ((PrintingListControl) control).isDbMode();
+		return ((InstancesListControl) control).isDbMode();
 	}
 
 	@Override
