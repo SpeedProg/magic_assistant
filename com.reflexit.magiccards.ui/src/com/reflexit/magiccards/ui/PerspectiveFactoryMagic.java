@@ -39,6 +39,7 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		left.addView(CardDescView.ID);
 		rightTop.addView(CardsNavigatorView.ID);
 		right.addView(PrintingsView.ID);
+		right.addPlaceholder(InstancesView.ID);
 		right.addView(InstancesView.ID);
 		main.addView(MagicDbView.ID);
 		main.addView(MyCardsView.ID);
