@@ -19,11 +19,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
@@ -380,42 +377,48 @@ public class ImageCreator {
 	}
 
 	private void renderHtml(GC parentGc, int x, int y, int w, int h, String html) {
-		Shell shell = new Shell(Display.getCurrent());
-		shell.setSize(w + 18, h + 100);
-		shell.setFont(parentGc.getFont());
-		shell.setBackground(parentGc.getBackground());
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		shell.setLayout(layout);
-		Image im = new Image(Display.getCurrent(), w, h);
-		GC gc = new GC(im);
-		Label br = new Label(shell, SWT.WRAP | SWT.INHERIT_DEFAULT);
 		String text = html;
 		text = text.replaceAll("<br>", "\n");
 		text = text.replaceAll("<i>", "");
 		text = text.replaceAll("</i>", "");
-		br.setText(text);
-		// Browser br = new Browser(shell, SWT.WRAP | SWT.INHERIT_DEFAULT);
-		br.setFont(shell.getFont());
-		GridData layoutData = new GridData(GridData.FILL_BOTH);
-		layoutData.widthHint = w - 2;
-		br.setLayoutData(layoutData);
-		// String wrapHtml = SymbolConverter.wrapHtml(html, shell);
-		// System.err.println(wrapHtml);
-		// br.setText(wrapHtml, true);
-		// shell.pack();
-		shell.layout();
-		while (true) {
-			if (!shell.getDisplay().readAndDispatch()) {
-				br.print(gc);
-				break;
-			}
-		}
-		shell.dispose();
-		parentGc.drawImage(im, x + 2, y);
-		im.dispose();
-		gc.dispose();
+		final TextLayout layout = new TextLayout(parentGc.getDevice());
+		layout.setText(text);
+		layout.setWidth(w - 10);
+		layout.setFont(parentGc.getFont());
+		layout.draw(parentGc, x + 2, y);
+		// Shell shell = new Shell(Display.getCurrent());
+		// shell.setSize(w + 18, h + 100);
+		// shell.setFont(parentGc.getFont());
+		// shell.setBackground(parentGc.getBackground());
+		// GridLayout layout = new GridLayout(1, false);
+		// layout.marginHeight = 0;
+		// layout.marginWidth = 0;
+		// shell.setLayout(layout);
+		// Image im = new Image(Display.getCurrent(), w, h);
+		// GC gc = new GC(im);
+		// Label br = new Label(shell, SWT.WRAP | SWT.INHERIT_DEFAULT);
+		//
+		// br.setText(text);
+		// // Browser br = new Browser(shell, SWT.WRAP | SWT.INHERIT_DEFAULT);
+		// br.setFont(shell.getFont());
+		// GridData layoutData = new GridData(GridData.FILL_BOTH);
+		// layoutData.widthHint = w - 2;
+		// br.setLayoutData(layoutData);
+		// // String wrapHtml = SymbolConverter.wrapHtml(html, shell);
+		// // System.err.println(wrapHtml);
+		// // br.setText(wrapHtml, true);
+		// // shell.pack();
+		// shell.layout();
+		// while (true) {
+		// if (!shell.getDisplay().readAndDispatch()) {
+		// br.print(gc);
+		// break;
+		// }
+		// }
+		// shell.close();
+		// parentGc.drawImage(im, x + 2, y);
+		// im.dispose();
+		// gc.dispose();
 	}
 
 	private static final int FULL_OPAQUE = 255;
