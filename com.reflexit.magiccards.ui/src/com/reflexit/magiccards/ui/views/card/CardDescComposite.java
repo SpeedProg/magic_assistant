@@ -181,6 +181,8 @@ class CardDescComposite extends Composite {
 			this.image.dispose();
 			this.image = null;
 		}
+		if (remoteImage == null)
+			return;
 		this.image = remoteImage;
 		this.imageControl.setImage(this.image);
 		GridData ld = (GridData) this.imageControl.getLayoutData();

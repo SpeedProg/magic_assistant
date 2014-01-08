@@ -55,7 +55,6 @@ import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
-import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public class CardDescView extends ViewPart implements ISelectionListener {
 	public static final String ID = CardDescView.class.getName();
@@ -231,7 +230,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					}
 					// rotate image if needed
 					String options = (String) card.getObjectByField(MagicCardField.PART);
-					if (options != null && options.length() > 0) {
+					if (options != null && options.length() > 0 && image != null) {
 						int rotate = 0;
 						if (options.contains("rotate180")) {
 							rotate = 180;
@@ -380,7 +379,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		if (part instanceof AbstractCardsView || part instanceof PrintingsView)
+		if (part instanceof AbstractCardsView)
 			runLoadJob(sel);
 	}
 
