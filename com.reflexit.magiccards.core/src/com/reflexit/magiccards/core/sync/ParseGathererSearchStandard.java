@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
@@ -148,6 +149,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 	static Pattern setPattern = Pattern.compile("title=\"(.*) \\((.*)\\)\" src=.*set=(\\w+)");
 	static Pattern namePattern = Pattern.compile(".*>(.*)</a></span>");
 	static Pattern powPattern = Pattern.compile("\\(([+*\\d]+/)?([+*\\d]+)\\)");
+	private static Pattern costSymPattern = Pattern.compile("name=([^&]*)");
 
 	private void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
 		MagicCard card = new MagicCard();
@@ -160,7 +162,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		card.setId(id);
 		card.setName(getMatch(namePattern, fields[3]));
 		String cost = getMatch(spanPattern, fields[4]);
-		card.setCost(cost);
+		card.setCost(extractCost(cost));
 		String type = getMatch(spanPattern, fields[6]);
 		String powerCombo = type;
 		String pow = getMatch(powPattern, powerCombo, 1).replaceFirst("/", "");
@@ -198,6 +200,25 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		}
 		// print
 		handler.handleCard(card);
+	}
+
+	/*-
+	 * <img src="/Handlers/Image.ashx?size=small&name=3&type=symbol" alt="3" align="absbottom" />
+	 * <img src="/Handlers/Image.ashx?size=small&name=G&type=symbol" alt="Green" align="absbottom" />
+	 * <img src="/Handlers/Image.ashx?size=small&name=G&type=symbol" alt="Green" align="absbottom" />
+	 * @param cost
+	 * @return
+	 */
+	private String extractCost(String cost) {
+		Matcher m = costSymPattern.matcher(cost);
+		String res = "";
+		while (m.find()) {
+			res += "{" + m.group(1) + "}";
+		}
+		if (res.length() == 0)
+			return cost;
+		else
+			return res;
 	}
 
 	private static void fixGathererBugs(MagicCard card) {
