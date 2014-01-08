@@ -362,7 +362,7 @@ public class ImageCreator {
 		gc.setFont(getFont(TEXT_FONT_KEY));
 		gc.drawText("Image not found", 30, 46, true);
 		String oracleText = card.getOracleText();
-		renderHtml(gc, 18, 195, 180, 80, oracleText);
+		renderHtml(gc, 18, 195, 180, 80, oracleText == null ? "" : oracleText);
 		// oracleText = oracleText.replaceAll("<br>", "\n");
 		// gc.drawText(oracleText, 20, 200, true);
 		gc.setFont(getFont(TITLE_FONT_KEY));
@@ -373,7 +373,8 @@ public class ImageCreator {
 		}
 		gc.drawText(pt, 204 - 20, 283, true);
 		Image set = getSetImage(card);
-		gc.drawImage(set, 204 - set.getBounds().width, 177);
+		if (set != null)
+			gc.drawImage(set, 204 - set.getBounds().width, 177);
 		gc.dispose();
 		return im;
 	}
