@@ -36,7 +36,7 @@ public class LocationColumn extends GenColumn {
 
 	@Override
 	public int getColumnWidth() {
-		return 150;
+		return 100;
 	}
 
 	@Override
