@@ -407,7 +407,7 @@ public class Editions implements ISearchableProperty {
 					String block = attrs[5].trim();
 					if (block != null && block.length() > 0)
 						set.setBlock(block);
-					else if (!"Core".equals(type))
+					else if ("Expantion".equals(type))
 						MagicLogger.log("Missing block " + line);
 					if (attrs.length <= 6)
 						continue;
