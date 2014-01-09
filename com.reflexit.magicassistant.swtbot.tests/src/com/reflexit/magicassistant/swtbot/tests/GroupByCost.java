@@ -6,6 +6,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +45,11 @@ public class GroupByCost extends AbstractSwtBotTest {
 		bot.sleep(10);
 		final SWTBotMenu menuItem = groupBy.menuItem("Cost");
 		clickMenuItem(menuItem);
-		dbView.setFocus();
+		dbView.show();
 		bot.sleep(1000);
-		bot.tree().expandNode("All (145)", "2 (29)");
+		SWTBotTree tree = bot.tree(2);
+		// System.err.println(tree.getAllItems()[0].getText());
+		tree.expandNode("All (145)", "2 (29)");
 		bot.sleep(1000);
 	}
 }
