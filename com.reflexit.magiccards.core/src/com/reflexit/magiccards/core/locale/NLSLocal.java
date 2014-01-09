@@ -152,7 +152,7 @@ public abstract class NLSLocal {
 			}
 		}
 		// if (Debug.DEBUG_MESSAGE_BUNDLES)
-		System.out.println("Time to load message bundle: " + bundleName + " was " + (System.currentTimeMillis() - start) + "ms."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		//System.out.println("Time to load message bundle: " + bundleName + " was " + (System.currentTimeMillis() - start) + "ms."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/*
