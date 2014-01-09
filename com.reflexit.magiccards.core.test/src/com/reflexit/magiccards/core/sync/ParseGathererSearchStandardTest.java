@@ -63,9 +63,15 @@ public class ParseGathererSearchStandardTest extends TestCase {
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadSingleUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
 		assertEquals(234, handler.getCardCount());
+		assertEquals(25, handler.getRealCount());
 		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(25, stash.size());
-		assertEquals("Acidic Slime", stash.iterator().next().getName());
+		MagicCard[] cards = stash.toArray(new MagicCard[stash.size()]);
+		assertEquals("Acidic Slime", cards[0].getName());
+		MagicCard elf = cards[6];
+		assertEquals("Arbor Elf", elf.getName());
+		assertEquals(elf.getCost(), "{G}");
+		assertEquals(elf.getOracleText(), "{T}: Untap target Forest.");
 	}
 
 	public void testDownloadUpdatesWeb() throws FileNotFoundException, MalformedURLException, IOException {
