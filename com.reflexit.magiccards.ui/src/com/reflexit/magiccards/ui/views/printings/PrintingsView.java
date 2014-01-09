@@ -263,7 +263,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void runShowInstances(IWorkbenchPage page) {
 		try {
-			StructuredSelection sel = new StructuredSelection(card);
+			StructuredSelection sel = card == null ? new StructuredSelection() : new StructuredSelection(card);
 			InstancesView view = (InstancesView) page.showView(InstancesView.ID);
 			view.selectionChanged(this, sel);
 		} catch (PartInitException e) {
