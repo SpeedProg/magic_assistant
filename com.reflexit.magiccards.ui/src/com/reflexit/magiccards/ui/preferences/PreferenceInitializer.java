@@ -40,7 +40,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		getMdbStore()
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
 		getLibStore()
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
