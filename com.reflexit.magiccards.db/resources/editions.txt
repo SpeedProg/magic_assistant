@@ -60,7 +60,6 @@ Guildpact|GPT||February 2006|Expansion|Ravnica|Modern
 Dissension|DIS||May 2006|Expansion|Ravnica|Modern
 Coldsnap|CSP||July 2006|Expansion|Ice Age|Modern
 Time Spiral "Timeshifted"|TSB||October 2006|Expansion||
-Magic Online Promo Cards|PRM||October 2006|Online||
 Promo set for Gatherer|PPR||October 2006|Online||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral|Modern
 Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern
