@@ -34,7 +34,7 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 		}
 		this.table = d.getStore();
 		if (table == null) {
-			throw new NullPointerException();
+			throw new NullPointerException(filename);
 		}
 	}
 
