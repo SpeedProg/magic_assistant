@@ -33,7 +33,7 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.18, editorArea);
 		IFolderLayout main = layout.createFolder("main", IPageLayout.RIGHT, (float) 0.82, editorArea);
-		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.73, "main");
+		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.7, "main");
 		IPlaceholderFolderLayout pf = layout.createPlaceholderFolder("up", IPageLayout.TOP, 0.5f, "main");
 		IFolderLayout rightTop = layout.createFolder("rightTop", IPageLayout.TOP, 0.5f, "right");
 		left.addView(CardDescView.ID);
