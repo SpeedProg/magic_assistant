@@ -11,9 +11,8 @@
 To browse Magic cards you would need <a href="../reference/views.html#viewcard">Card Info</a> and 
 <a href="../reference/views.html#viewmagicdb">MTG Database</a> views.
 <p/>
-MTG Database View shows all available cards. By default it will only
-show one instance of a card with the same name for the latest edition.
-Cards for older editions can be downloaded from the internet, see <a href="updatingdb.html">updating database</a> section.
+MTG Database View shows all available cards store in local database. By default database will be created
+from the software but then it is up to you to keep it up to date, by performing cards update.
 <p/>
 Card details and scanned card picture are shown in the <a href="../reference/views.html#viewcard">Card Info</a> view.
 It shows card image if available (downloads it from internet), and also shows card name, description and type below the image. 
@@ -41,12 +40,18 @@ you will get all creatures and all enchantments that are Blue or White (includin
 See details in 
 <a href="../reference/filter_dialog.html">Filter Dialog</a> reference.
 
+You can also filter cards by name, type and colour using quick filter - the bar on top of card tables (since 1.2).
+
+<h2>Grouping</h2>
+Grouping is also available from the action bar of view menu, there is few fields and field combination you can group by.
+For example one of the grouping for Magic DB view is "Core/Block/Set/Rarity".
+
 <h2>Search</h2>
 You can bring up search control using Ctrl-F key or using view menu "Find...".
 It allows you to find a card in the view by name (or part of name). 
 Found card will be automatically selected. 
 <br/>
-You can also type first letter of each word in a card name as uppercase,
+You can also type first letter of each word in a card name as uppercase, which is called camel case completion,
 for example if you type "ESMB" it should match with "Endrek Sahr, Master Breeder". 
 <p/>
 See details in 

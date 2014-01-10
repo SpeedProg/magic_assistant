@@ -59,6 +59,13 @@ If you want to enter number of cards (card count) you can either press "+" sever
 or double click on card in the deck and edit count of cards directly. You also can edit count in the Count cell itself.
 </li>
 
+<h3>Sideboard</h3>
+If you have sideboard it is stored in the separate list. To bring it up use Open Sideboard action from toolbar or view menu of Deck view.
+Drag and drop cards to sideboard from other sources same as for main deck. If you want to see sideboard and main deck at 
+the same time drag sideboard view to the bottom (and have main on the top). Sideboard is linked the the main deck, tabs like Legality and Export
+are also looking at sideboard cards (while tabs like Mana Curve don't). Operations like deck Rename or Delete will also affect its sideboard.
+
+
 <h2><a name="#populate_manual">Populate a deck from the cards in the collection</a></h2>
 First you need to decide which method you will be using. Virtual deck or Real deck. If you will be copying cards
 from your collection - it will be virtual deck. If you will be moving cards to the new deck it will be real.
@@ -98,17 +105,17 @@ Example 2 (Deck Classic, Count first):
 </pre>
 <h3>Importing from csv format or excel</h3>
 If you have you cards in excel you can import them in the Magic Assistant deck or collection.
-To do that, first re-arrange the columns to match the following order:
+To do that, first rename the columns to match these name exactly:
 <pre>
 ID,NAME,COST,TYPE,POWER,TOUGHNESS,ORACLE,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT,LOCATION,CUSTOM,OWNERSHIP
 </pre>
 This is actually Magic Assistant CSV export format.  
 The only columns which are used are NAME, SET and user data such as COUNT, PRICE and COMMENT.
-All columns except NAME can be empty, but they still must present to keep the order.
-Export data from excel into .csv file with "," separator and import it into Magic Assistant.
-When importing select "CSV" format. 
-If data file has header row check "Data has a header row" checkbox, otherwise uncheck it.
-Preview would show if format is matching.
+All columns except NAME does not have to be present.
+Export data from excel into .csv file with "," or "|" separator and import it into Magic Assistant.
+When importing select "CSV" format (or Table Piped for "|"). 
+Check "Data has a header row" checkbox. Without header row columns has to be exact in the order as above.
+Preview would show if format is matching. There is way to edit some import problems right in the import wizard.
 
 <p/>
 Example 3 (CSV format, no header row):
@@ -133,5 +140,13 @@ Example 5 (Table Piped format, no header row):
 |Diabolic Tutor||||||Tenth Edition||||4
 |Quagmire Druid||||||Apocalypse||||2
 </pre>
+Example 6 (Table Piped format, header row):
+<pre>
+NAME|SET|COUNT
+Diabolic Tutor|Tenth Edition|4
+Quagmire Druid|Apocalypse|2
+</pre>
+
+
 </body>
 </html>

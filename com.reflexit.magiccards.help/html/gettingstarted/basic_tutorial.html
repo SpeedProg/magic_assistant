@@ -21,17 +21,18 @@ and organising cards into decks and library collections. Also contains tournamen
 For more information on Magic Assistant check <a href="http://mtgbrowser.sourceforge.net">Magic Assistant website</a>.
 <p/>
 
-App contains two distinct window sets, called perspective. Default is "Card Organizer", you can also switch to
+App contains two distinct window sets, called perspectives. Default is "Card Organizer", you can also switch to
 "Tournament Organizer" from Windows menu.
 
-Car Organizer perspective contains several views: <br/>
+Car Organizer perspective contains several views (subwindows): <br/>
 <a href="../reference/views.html#viewmagicdb">MTG Database</a> - To browse existing mtg cards, <br/> 
 <a href="../reference/views.html#viewcard">Card Info</a> - To view detailed card information and picture,<br/> 
 <a href="../reference/views.html#viewcardnav">Card Navigator</a> - To browse your own decks and collections, <br/> 
 <a href="../reference/views.html#viewcol">My Cards</a> - To browse all your personal cards, <br/> 
 <a href="../reference/views.html#viewdeck">Deck</a>s - To look at the cards in each deck or collection individually, and run deck analysis tools, <br>
 <a href="../reference/views.html#viewprintings">Printings</a> - To show sets in which selected card is available. <br/>
-<a href="../reference/views.html#viewdraw">Draw</a> - Show subset of cards in deck to emulate draw (hand of seven random cards from a deck) <br/>  
+<a href="../reference/views.html#viewinstances">Instances</a> - To show all instances of card with given name in your collection (real or virtual) <br/>
+<a href="../reference/views.html#viewcollector">Collector</a> - View of your personal cards with fields and grouping relevant to card collector, rather than player <br/>  
 <p/>
 
 You can changes layout of your views but dragging them around by the header. If you get lost you can reset to original layout using 
@@ -44,15 +45,18 @@ is invoked by "mouse right click".
 <h2>Updating Magic Card Database Online</h2>
 
 MTG Database View shows all available cards. By default it will only
-show cards witch pre-loaded with application. It can quickly be out of data, 
+show cards witch pre-loaded with application. It can quickly be out of date, 
 to keep database in sync you have to perform cards updates. In version 1.2 and above
 it will check for update automatically.
 
 To update cards manually, see <a href="../tasks/updatingdb.html">updating database</a> section.
+Cards are updated from the official magic maker website called Gatherer <a href="http://gatherer.wizards.com">http://gatherer.wizards.com</a>.
+If you see something wrong with database info please check this website first and report issues to them.
+For sets they don't have there is a complicated procedure of how you can extend database manually, ask on forum if you need to know that.
 
 
-<h2> Browsing and Searching </h2>
-To browse cards you can use sorting and filtering: 
+<h2>Browsing and Searching </h2>
+To browse cards you can use grouping,  sorting and filtering: 
 <p/>
 You can sort by any column by clicking on the column header in the views that display card tables.
 If you click again sorting order is reversed. You can also see more columns, control is available from "Preferences..."
@@ -63,6 +67,7 @@ You can select one of more criteria from the filters.
 See details in 
 <a href="../reference/filter_dialog.html">Filter Dialog</a> reference.
 You can also filter cards by name, type and colour using quick filter - the bar on top of card tables (since 1.2).
+Grouping is also available from the action bar of view menu, there is few fields and field combination you can group by.
 
 <p>
 You can bring up search control using Ctrl-F key or using view menu "Find...".
@@ -85,13 +90,37 @@ You can edit cards in your decks and collections. To edit card properties you ca
 table and choose "Edit..." from context menu (or double click on a card). Editable card properties currently are:
  count, comment, ownership and price.
 <p/>
-You can analyse you deck using some tools: Mana Curve, Colors, Card Types, Legality - these are tabs at the bottom of the
+You can analyse you deck using some tools: Mana Curve, Colors, Card Types, Draw, Legality - these are tabs at the bottom of the
 deck view. Also you can group cards to achieve same statistics in the main table tab using Group By menu (from the view menu).
-<br>
-Draw analyzer is available from the view context menu.
+
 <br>
 Mana Curve - shows chart of your deck mana curve (number of cards vs cost) for spells (land is not there).
 Average bars - is normal distribution of cards in average deck adjusted to number of cards in your deck (hardcoded in program, it is not based on your decks) . 
+<br>
+If you have sideboard it is stored in the separate list. To bring it up use Open Sideboard action from toolbar or view menu of Deck view.
+Drag and drop cards to sideboard from other sources same as for main deck. If you want to see sideboard and main deck at 
+the same time drag sideboard view to the bottom (and have main on the top). Sideboard is linked the the main deck, tabs like Legality and Export
+are also looking at sideboard cards (while tabs like Mana Curve don't). Operations like deck Rename or Delete will also affect its sideboard.
+
+<h2> Storage and Internet </h2>
+
+All data is stored in directory called "workspace" (conceptually, the real name is whatever you named it). When app first
+starts it will ask where your workspace is. You only need one workspace. 
+Don't put it inside installation dir - that can create problems with software update and upgrade. Decks and Collection as well as database itself
+are store in xml format, means you can edit it in editor if you really wish. All card images and set images are loaded
+from internet and cached in workspace as well. If you choose to do so you can work offline, controlled by settings. If you behind firewall there
+are settings to allow a redirect. 
+<br><br>
+If you want to host your decks on the cloud you can do so by enabling syncronization of your workspace or its subfolders
+into the cloud storage such as box, dropbox, google drive, etc. Whole workspace is probably a not a good idea since it 
+contains cached images which would take majority of the space. Next option is to sync workspace/magiccards folder which
+is all your cards and database.
+<br><br>
+It is recommended to backup your data once in a while by zipping contents of magiccards folder
+<br><br>
+If you have issues with software you can send a bug Help->Send Bug or Feature Request and attach the log file
+found at workspace/.metadata/.log if this is a bug.
+
 
 <h2> Other stuff </h2>
 Some other actions available from main menu, context menu (right click) or from view menu (triangle button in the view header  <img src="../screenshots/icons/view_menu.gif" alt="triangle button"/>).
