@@ -40,7 +40,10 @@ public class SendBugReportHandler extends AbstractHandler {
 		try {
 			IWebBrowser browser = browserSupport.createBrowser(MagicUIActivator.PLUGIN_ID);
 			browser.openURL(new URL("http://sourceforge.net/tracker/?func=add&group_id=231732&atid=1084662"));
-			MessageDialog.openInformation(window.getShell(), "Send Bug", "Web Browser is open, please use form to submit a bug");
+			MessageDialog.openInformation(window.getShell(), "Send Bug", "Web Browser is open (or will be soon)."
+					+ " Click on Create Ticket to submit bug or feature. "
+					+ "You need to login first, I don't want accept anonymous submissions"
+					+ " because it is like talking to the wall if I need any feedback.");
 		} catch (Exception e) {
 			MessageDialog
 					.openInformation(

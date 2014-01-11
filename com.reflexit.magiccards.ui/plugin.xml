@@ -325,7 +325,7 @@
   <extension
         point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:help?after=additions">
+            locationURI="menu:file?after=additions">
             <command
                   commandId="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb"
                   mnemonic="M"
@@ -333,7 +333,7 @@
             </command>
       </menuContribution>
       <menuContribution
-            locationURI="menu:help?after=additions">
+            locationURI="menu:file?after=additions">
             <command
                   commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
                   mnemonic="U"
