@@ -35,7 +35,9 @@ public class DrawPage extends AbstractDeckListPage {
 		@Override
 		public String getStatusMessage() {
 			int cards = deckstore.getSize();
-			return "Drawn " + cards + " of " + ((ICardCountable) store).getCount() + ". Hand " + (cards - 6);
+			int total = ((ICardCountable) store).getCount();
+			int hand = total < 7 ? total : 7;
+			return "Drawn " + cards + " of " + total + ". Hand " + (cards - hand + 1);
 		}
 
 		@Override
