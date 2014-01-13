@@ -41,7 +41,6 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 				monitor.beginTask("Checking for cards updates...", 110);
 				try {
 					ICardHandler handler = DataManager.getCardHandler();
-					handler.loadInitialIfNot(new SubCoreProgressMonitor(monitor, 30));
 					ParseGathererSets setsLoader = new ParseGathererSets();
 					setsLoader.load(new SubCoreProgressMonitor(monitor, 10));
 					ParseSetLegality.loadAllFormats(new SubCoreProgressMonitor(monitor, 10));

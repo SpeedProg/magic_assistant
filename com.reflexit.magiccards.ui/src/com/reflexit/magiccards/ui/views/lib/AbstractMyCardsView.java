@@ -299,8 +299,10 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		DataManager.getLibraryCardStore().addListener(AbstractMyCardsView.this);
-		DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
+		if (DataManager.waitForInit()) {
+			DataManager.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+			DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
+		}
 	}
 
 	/*
