@@ -98,7 +98,7 @@ From the Vault: Dragons|DRB||August 2011|Reprint||
 From the Vault: Legends|V11||August 2011|Reprint||
 Magic 2012|M12||July 2011|Core||Extended,Modern
 Duel Decks: Ajani vs. Nicol Bolas|DDH|AVN|August 2011|Starter||
-Planechase|HOP|PCH|July 2011|Starter||
+Planechase|HOP|PCH|July 2011|Expansion|Planechase|
 From the Vault: Relics|V10|FVR|August 2011|Reprint||
 From the Vault: Exiled|V09|FVE|August 2011|Reprint||
 Magic: The Gathering-Commander|CMD||June 2011|Starter||
