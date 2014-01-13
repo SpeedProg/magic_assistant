@@ -376,4 +376,16 @@ public class DataManager {
 	public static void setOwnCopyEnabled(boolean newValue) {
 		owncopy = newValue;
 	}
+
+	public static boolean waitForInit() {
+		int i = 10;
+		while (!getMagicDBStore().isInitialized() && i-- > 0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		return getMagicDBStore().isInitialized();
+	}
 }

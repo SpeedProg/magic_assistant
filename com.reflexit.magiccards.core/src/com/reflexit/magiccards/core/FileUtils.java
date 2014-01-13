@@ -15,7 +15,6 @@ import java.nio.charset.Charset;
 
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class FileUtils {
@@ -124,7 +123,7 @@ public class FileUtils {
 	public static File getStateLocationFile() {
 		String inEclipse = System.getProperty("eclipse.home.location");
 		if (inEclipse != null) {
-			//System.err.println("Eclipse home: " + inEclipse);
+			// System.err.println("Eclipse home: " + inEclipse);
 			return Activator.getDefault().getStateLocation().toFile();
 		} else {
 			return new File(getWorkspaceFile() + "/.metadata/.plugins/" + DataManager.ID);
@@ -142,7 +141,6 @@ public class FileUtils {
 	public static void main(String[] args) {
 		MagicLogger.log("aaa");
 		ICardHandler cardHandler = DataManager.getCardHandler();
-		cardHandler.loadInitialIfNot(ICoreProgressMonitor.NONE);
 		IFilteredCardStore fstore = cardHandler.getMagicDBFilteredStore();
 		fstore.update();
 		System.err.println("Loaded " + fstore.getSize() + " cards");

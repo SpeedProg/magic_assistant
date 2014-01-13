@@ -6,4 +6,6 @@ public interface IDbCardStore<T> extends ICardStore<T> {
 	Collection<T> getCandidates(String name);
 
 	T getPrime(String name);
+
+	boolean isInitialized();
 }

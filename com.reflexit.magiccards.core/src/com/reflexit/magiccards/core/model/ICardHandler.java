@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.MagicException;
@@ -31,7 +32,7 @@ public interface ICardHandler {
 
 	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException;
 
-	public void loadInitialIfNot(ICoreProgressMonitor monitor) throws MagicException;
-
 	public ICardStore getCardStore(Location to);
+
+	public void loadFromFlatResource(String string) throws IOException;
 }
