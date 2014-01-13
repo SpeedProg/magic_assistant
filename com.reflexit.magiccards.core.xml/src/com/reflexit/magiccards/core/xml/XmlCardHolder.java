@@ -40,7 +40,6 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
-	private boolean flatDbLoaded = false;
 
 	public IFilteredCardStore getMagicDBFilteredStore() {
 		return MagicDBFilteredCardFileStore.getInstance();
@@ -80,47 +79,12 @@ public class XmlCardHolder implements ICardHandler {
 		return store;
 	}
 
-	public void loadInitial() throws MagicException {
-		if (flatDbLoaded)
-			return;
-		try {
-			if (System.getProperty("set10e") != null) {
-				try {
-					loadFromFlatResource("10E.txt");
-				} catch (IOException e) {
-					// ignore
-					MagicLogger.log("Cannot load 10E");
-				}
-			} else {
-				Collection<String> editions = Editions.getInstance().getNames();
-				for (String set : editions) {
-					String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
-					try {
-						// long time = System.currentTimeMillis();
-						File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(set).getBaseFileName());
-						if (!setFile.exists() || setFile.length() == 0)
-							loadFromFlatResource(abbr + ".txt");
-						// long nowtime = System.currentTimeMillis() - time;
-						// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s "
-						// +
-						// nowtime % 1000 + " ms");
-					} catch (IOException e) {
-						// ignore
-						MagicLogger.log("Cannot load " + abbr);
-					}
-				}
-			}
-		} finally {
-			flatDbLoaded = true;
-		}
-	}
-
-	protected void loadFromFlatResource(String set) throws IOException {
+	public void loadFromFlatResource(String set) throws IOException {
 		InputStream is = FileUtils.loadDbResource(set);
 		if (is != null) {
 			BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-			loadtFromFlatIntoXml(st, list);
+			loadtFromFlatIntoDB(st, list);
 			is.close();
 		}
 	}
@@ -130,7 +94,7 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoXml(BufferedReader st, ArrayList<IMagicCard> list) throws MagicException, IOException {
+	private synchronized int loadtFromFlatIntoDB(BufferedReader st, ArrayList<IMagicCard> list) throws MagicException, IOException {
 		ICardStore store = getMagicDBStore();
 		int init = store.size();
 		loadFromFlat(st, list);
@@ -212,17 +176,6 @@ public class XmlCardHolder implements ICardHandler {
 		return res;
 	}
 
-	public synchronized void loadInitialIfNot(ICoreProgressMonitor pm) throws MagicException {
-		pm.beginTask("Init", 100);
-		try {
-			loadInitial();
-		} catch (Exception e) {
-			throw new MagicException(e);
-		} finally {
-			pm.done();
-		}
-	}
-
 	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
 			IOException {
 		String file = new File(FileUtils.getStateLocationFile(), "downloaded.txt").getPath();
@@ -239,7 +192,6 @@ public class XmlCardHolder implements ICardHandler {
 			}
 			pm.beginTask("Downloading", 110 + (lang == null ? 0 : 100));
 			pm.subTask("Initializing");
-			loadInitialIfNot(new SubCoreProgressMonitor(pm, 10));
 			if (pm.isCanceled())
 				throw new InterruptedException();
 			pm.subTask("Updating set list...");
@@ -311,7 +263,7 @@ public class XmlCardHolder implements ICardHandler {
 				throw new InterruptedException();
 			pm.subTask("Updating database for " + set);
 			BufferedReader st = new BufferedReader(new FileReader(file));
-			rec = loadtFromFlatIntoXml(st, list);
+			rec = loadtFromFlatIntoDB(st, list);
 			st.close();
 			pm.worked(30);
 			return rec;

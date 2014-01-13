@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.core.xml;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import java.util.TreeSet;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -33,7 +35,6 @@ import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.utils.IntHashtable;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Card Store for Magic DB
@@ -153,15 +154,11 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 	}
 
-	private boolean load;
+	private boolean loadDefault;
 	private GlobalDbHandler handler = new GlobalDbHandler();
 
-	public DbMultiFileCardStore() {
-		super();
-	}
-
 	public DbMultiFileCardStore(boolean load) {
-		this.load = load;
+		this.loadDefault = load;
 	}
 
 	public synchronized DbFileCardStore addFile(final File file, final Location location, boolean initialize) {
@@ -251,59 +248,85 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			throw new MagicException("Unknown card type");
 	}
 
+	private boolean flatDbLoaded = false;
+
+	public void loadFromSoftware() throws MagicException {
+		if (flatDbLoaded)
+			return;
+		flatDbLoaded = true;
+		if (System.getProperty("set10e") != null) {
+			try {
+				DataManager.getCardHandler().loadFromFlatResource("10E.txt");
+			} catch (IOException e) {
+				// ignore
+				MagicLogger.log("Cannot loadDefault 10E");
+			}
+		} else {
+			setInitialized(true);
+			try {
+				Collection<String> editions = Editions.getInstance().getNames();
+				for (String set : editions) {
+					String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
+					try {
+						// long time = System.currentTimeMillis();
+						File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(set).getBaseFileName());
+						if (!setFile.exists() || setFile.length() == 0)
+							DataManager.getCardHandler().loadFromFlatResource(abbr + ".txt");
+						// long nowtime = System.currentTimeMillis() - time;
+						// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s "
+						// +
+						// nowtime % 1000 + " ms");
+					} catch (IOException e) {
+						// ignore
+						MagicLogger.log("Cannot loadDefault " + abbr);
+					}
+				}
+			} finally {
+				setInitialized(false);
+			}
+		}
+	}
+
 	@Override
 	public synchronized void doInitialize() throws MagicException {
+		if (isInitialized())
+			return;
 		MagicLogger.traceStart("db init");
 		try {
-			if (!load) {
+			if (!loadDefault) {
 				super.doInitialize();
 				return;
 			}
-			this.load = false;
-			ArrayList<File> files;
+			this.loadDefault = false;
 			// create initial database from flat file if not there
-			new XmlCardHolder().loadInitialIfNot(ICoreProgressMonitor.NONE);
-			// load card from xml in memory
-			DbMultiFileCardStore table = this;
-			if (!table.isInitialized()) {
-				synchronized (table) {
-					// System.err.println("Initializing DB");
-					files = new ArrayList<File>();
-					File[] members;
-					try {
-						MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
-						members = con.getFile().listFiles();
-						for (File file : members) {
-							if (file.getName().endsWith(".xml"))
-								files.add(file);
-						}
-					} catch (MagicException e) {
-						MagicLogger.log(e);
-						return;
-					}
-					// super.doInitialize();
-					table.setInitialized(false);
-					try {
-						for (File file : files) {
-							Location setLocation = Location.createLocation(file, Location.NO_WHERE);
-							table.addFile(file, setLocation, true);
-						}
-					} finally {
-						table.setInitialized(true);
-					}
+			loadFromSoftware();
+			// loadDefault card from xml in memory
+			// System.err.println("Initializing DB");
+			ArrayList<File> files = new ArrayList<File>();
+			File[] members;
+			try {
+				MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
+				members = con.getFile().listFiles();
+				for (File file : members) {
+					if (file.getName().endsWith(".xml"))
+						files.add(file);
 				}
+			} catch (MagicException e) {
+				MagicLogger.log(e);
+				return;
+			}
+			setInitialized(false);
+			try {
+				for (File file : files) {
+					Location setLocation = Location.createLocation(file, Location.NO_WHERE);
+					addFile(file, setLocation, true);
+				}
+			} finally {
+				setInitialized(true);
 			}
 		} finally {
 			MagicLogger.traceEnd("db init");
 		}
-	}
-
-	public boolean isLoad() {
-		return load;
-	}
-
-	public void setLoad(boolean load) {
-		this.load = load;
 	}
 
 	public MagicCard getPrime(String name) {
@@ -318,5 +341,10 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		if (xcards == null)
 			return Collections.EMPTY_LIST;
 		return xcards;
+	}
+
+	@Override
+	public synchronized boolean isInitialized() {
+		return super.isInitialized();
 	}
 }
