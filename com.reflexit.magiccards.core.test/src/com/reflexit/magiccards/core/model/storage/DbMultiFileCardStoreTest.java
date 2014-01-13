@@ -26,7 +26,7 @@ public class DbMultiFileCardStoreTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		this.store = new DbMultiFileCardStore();
+		this.store = new DbMultiFileCardStore(false);
 		addStore(LORWYN);
 		addStore(MORNINGTIDE);
 		this.m1 = CardGenerator.generateRandomCard();
@@ -98,7 +98,7 @@ public class DbMultiFileCardStoreTest extends TestCase {
 			}
 		}
 		assertEquals("Card not found", 2, found);
-		this.store.doInitialize();
+		this.store.initialize();
 		found = 0;
 		for (Object element : this.store) {
 			IMagicCard card = (IMagicCard) element;
