@@ -253,41 +253,35 @@
 		<a name="viewprintings" />Printings View
 	</h2>
 
-	Printings view has two modes.
-	<p />
-	In "Magic Database" mode it shows all sets in which selected card was
+	Printings view shows all sets in which selected card was
 	printed (which is known to local database), for example land such as
 	Island would be listed at least four times for each core set in this
-	view.
+	view. Card in other languages won't be listed by default, until you extend database with
+	printings in a specific language.
 	<p />
 	<p>
 		<img src="../screenshots/views/printings.png"
 			alt="Printings view image" />
 	</p>
-	In "My Cards" mode it shows instances of selected card available in
-	your collections (columns are "Set", "Ownership", "Count" and
-	"Location"). You can drag cards from this view to deck/collection.
-	Regular rules apply - for db mode - it will add a card, for actual card
-	it will move a card pile, unless you "copy" drag (which is usually
-	ctrl+drag).
-	<p>
-		<img src="../screenshots/views/printings_mycards.png"
-			alt="Printings view image" />
-	</p>
-	To switch between these two modes press "M" looking button.
-	<p>The globe looking button is "Update printings from the web", it
+		<p>The globe looking button is "Update printings from the web", it
 		will synchronize local database copy with gatherer database for
 		selected card.</p>
 
 	<h2>
-		<a name="viewdraw" />Draw View
+		<a name="viewinstances" />Instances View
 	</h2>
-	Show subset of cards in deck to emulate draw (hand of seven random
-	cards from a deck). To open the view, select "Emulate Draw" action from
-	the view menu.
-
+	Shows instances of selected card available in
+	your collections real or virtual (columns are "Set", "Ownership", "Count", 
+	"Location", "Special", "Comment" and "For Trade Count"). Columns can be dragged around and resized. 
+	You can drag cards from this view to deck/collection.
+	It will move a card pile to another collection, unless you "copy" drag (which is usually
+	ctrl+drag). Note that copying real cards is protected operation and not permitted unless you override it in setting.
 	<p>
-		<img src="../screenshots/views/draw.png" alt="Draw view" />
+		<img src="../screenshots/views/instances.png"
+			alt="Printings view image" />
 	</p>
+	To open Printings view for the same card press "M" looking button.
+
+
 </body>
 </html>
