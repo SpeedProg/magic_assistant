@@ -42,6 +42,7 @@ public class Activator extends Plugin {
 		super.start(context);
 		TRACE_CORE = isDebugging();
 		MagicLogger.setTracing(TRACE_CORE);
+		MagicLogger.log("Magic Assistant started. Version " + plugin.getBundle().getVersion());
 	}
 
 	/*
