@@ -5,7 +5,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class ColorColumn extends AbstractColumn {
 	public ColorColumn() {
-		super(MagicCardField.COST);
+		super(MagicCardField.COLOR);
 	}
 
 	@Override
