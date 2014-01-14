@@ -360,6 +360,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 					return getImageUrl();
 				case LEGALITY:
 					return getLegalityMap();
+				case COLOR:
+					return getCost();
 				default:
 					break;
 			}
@@ -516,6 +518,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			case LEGALITY:
 				setProperty(MagicCardField.LEGALITY, value);
 				break;
+			case COLOR:
+				throw new IllegalArgumentException("Not settable");
 			default:
 				return false;
 		}

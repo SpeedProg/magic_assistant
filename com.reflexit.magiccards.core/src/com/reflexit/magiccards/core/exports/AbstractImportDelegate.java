@@ -109,7 +109,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			if (nameByAbbr == null)
 				nameByAbbr = "Unknown";
 			card.setObjectByField(MagicCardField.SET, nameByAbbr);
-		} else if (field == MagicCardFieldPhysical.LOCATION) {
+		} else if (field == MagicCardFieldPhysical.LOCATION || field == MagicCardField.CTYPE || field == MagicCardField.CMC
+				|| field == MagicCardField.COLOR) {
 			// ignore this field
 		} else if (field == MagicCardFieldPhysical.SIDEBOARD) {
 			if (Boolean.valueOf(value).booleanValue()) {
