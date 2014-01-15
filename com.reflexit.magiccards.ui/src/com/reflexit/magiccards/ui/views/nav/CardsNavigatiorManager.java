@@ -33,6 +33,7 @@ public class CardsNavigatiorManager implements IDisposable {
 				return 1;
 			}
 		});
+		this.viewer.setAutoExpandLevel(3);
 		this.viewer.setInput(DataManager.getModelRoot());
 		this.refresh();
 		return this.viewer.getControl();
