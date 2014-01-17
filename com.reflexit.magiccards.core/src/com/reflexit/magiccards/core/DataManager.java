@@ -377,9 +377,8 @@ public class DataManager {
 		owncopy = newValue;
 	}
 
-	public static boolean waitForInit() {
-		int i = 10;
-		while (!getMagicDBStore().isInitialized() && i-- > 0) {
+	public static boolean waitForInit(int sec) {
+		while (!getMagicDBStore().isInitialized() && sec-- > 0) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
