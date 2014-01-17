@@ -361,9 +361,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void addStoreChangeListener() {
-		if (DataManager.waitForInit()) {
-			DataManager.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
-		}
+		new Thread("Offline listeners") {
+			@Override
+			public void run() {
+				if (DataManager.waitForInit(60)) {
+					DataManager.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
+				} else {
+					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
+				}
+			}
+		}.start();
 	}
 
 	/*
@@ -1068,7 +1075,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	private void checkInit() {
 		try {
-			DataManager.waitForInit();
+			DataManager.waitForInit(20);
 		} catch (MagicException e) {
 			MagicUIActivator.log(e);
 		}

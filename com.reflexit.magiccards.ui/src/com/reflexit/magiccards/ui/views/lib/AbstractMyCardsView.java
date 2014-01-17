@@ -36,6 +36,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -299,10 +300,17 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		if (DataManager.waitForInit()) {
-			DataManager.getLibraryCardStore().addListener(AbstractMyCardsView.this);
-			DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
-		}
+		new Thread("Offline listeners") {
+			@Override
+			public void run() {
+				if (DataManager.waitForInit(60)) {
+					DataManager.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+					DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
+				} else {
+					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
+				}
+			}
+		}.start();
 	}
 
 	/*
@@ -312,7 +320,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 */
 	@Override
 	public void dispose() {
-		DataManager.getCardHandler().getLibraryFilteredStore().getCardStore().removeListener(this);
+		DataManager.getLibraryCardStore().removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}
