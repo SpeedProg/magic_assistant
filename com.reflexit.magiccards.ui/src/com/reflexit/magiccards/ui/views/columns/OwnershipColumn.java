@@ -5,12 +5,8 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
@@ -21,14 +17,6 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
  * 
  */
 public class OwnershipColumn extends GenColumn {
-	private final static Color oColor;
-	private final static Color vColor;
-	static {
-		Device device = Display.getDefault();
-		oColor = new Color(device, 255 - 64, 255, 255 - 64);
-		vColor = new Color(device, 255, 255 - 64, 255 - 64);
-	}
-
 	/**
 	 * @param columnName
 	 */
@@ -63,14 +51,13 @@ public class OwnershipColumn extends GenColumn {
 			return "virtual";
 	}
 
-	@Override
-	public Color getBackground(Object element) {
-		if (isOwn(element))
-			return oColor;
-		else
-			return vColor;
-	}
-
+	// @Override
+	// public Color getBackground(Object element) {
+	// if (isOwn(element))
+	// return oColor;
+	// else
+	// return vColor;
+	// }
 	@Override
 	public String getColumnFullName() {
 		return "Ownership";

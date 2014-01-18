@@ -3,12 +3,14 @@ package com.reflexit.magiccards.ui.views.columns;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
-
+import org.eclipse.swt.graphics.Color;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class AbstractColumn extends ColumnLabelProvider {
 	protected final ICardField dataIndex;
@@ -105,5 +107,14 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 			// update
 			viewer.refresh(true);
 		}
+	}
+
+	@Override
+	public Color getBackground(Object element) {
+		boolean own = false;
+		if (element instanceof IMagicCardPhysical) {
+			own = ((IMagicCardPhysical) element).isOwn();
+		}
+		return MagicUIActivator.getDefault().getBgColor(own);
 	}
 }

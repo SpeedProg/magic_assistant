@@ -536,16 +536,34 @@
 
 	<colorDefinition
 		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
-		id="com.reflexit.magiccards.ui.preferences.color" label="Magic Assistant Lists Text Color"
+		id="com.reflexit.magiccards.ui.preferences.color" label="Cards List Text Color"
 		value="COLOR_BLACK">
 		<description>
 			Color of text shown in Magic Assistant tables and trees
         </description>
 	</colorDefinition>
+	
+	<colorDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.vcard.bgcolor" label="Virtual Card Background Color"
+		value="COLOR_WIDGET_LIGHT_SHADOW">
+		<description>
+			Background color for rows of virtual cards in Magic Assistant tables and trees
+        </description>
+	</colorDefinition>
+	
+   <colorDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.ocard.bgcolor" label="Own Card Background Color"
+		value="COLOR_LIST_BACKGROUND">
+		<description>
+			Background color for rows of own cards in Magic Assistant tables and trees
+        </description>
+	</colorDefinition>
 
 	<fontDefinition
 		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
-		id="com.reflexit.magiccards.ui.preferences.font" label="Magic Assistant Lists Font"
+		id="com.reflexit.magiccards.ui.preferences.font" label="Cards List Font"
 		value="Arial-12">
 		<description>
 			Font of text shown in Magic Assistant tables and trees

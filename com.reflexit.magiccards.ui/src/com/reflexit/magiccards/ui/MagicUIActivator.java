@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -245,6 +246,15 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		ITheme currentTheme = themeManager.getCurrentTheme();
 		ColorRegistry registry = currentTheme.getColorRegistry();
 		Color color = registry.get("com.reflexit.magiccards.ui.preferences.color");
+		return color;
+	}
+
+	public Color getBgColor(boolean own) {
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		ITheme currentTheme = themeManager.getCurrentTheme();
+		ColorRegistry registry = currentTheme.getColorRegistry();
+		Color color = own ? registry.get("com.reflexit.magiccards.ui.preferences.ocard.bgcolor") : registry
+				.get("com.reflexit.magiccards.ui.preferences.vcard.bgcolor");
 		return color;
 	}
 }
