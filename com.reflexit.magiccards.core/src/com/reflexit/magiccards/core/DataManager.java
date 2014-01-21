@@ -378,13 +378,27 @@ public class DataManager {
 	}
 
 	public static boolean waitForInit(int sec) {
-		while (!getMagicDBStore().isInitialized() && sec-- > 0) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				break;
+		IDbCardStore<IMagicCard> magicDBStore = getMagicDBStore();
+		synchronized (magicDBStore) {
+			if (!magicDBStore.isInitialized())
+				asyncInitDb();
+			while (!magicDBStore.isInitialized() && sec-- > 0) {
+				try {
+					magicDBStore.wait(1000);
+				} catch (InterruptedException e) {
+					break;
+				}
 			}
+			return magicDBStore.isInitialized();
 		}
-		return getMagicDBStore().isInitialized();
+	}
+
+	public static void asyncInitDb() {
+		new Thread("Init DB") {
+			@Override
+			public void run() {
+				getMagicDBStore().initialize();
+			}
+		}.start();
 	}
 }
