@@ -16,8 +16,18 @@ public enum MagicCardFieldPhysical implements ICardField {
 	FORTRADECOUNT("forTrade"),
 	SPECIAL, // like foil, premium, mint, played, online etc
 	SIDEBOARD(null),
-	OWN_COUNT(null), // count of own card (normal count counts own and virtual)
-	OWN_UNIQUE(null), // count of own unique cards (only applies to groups usually)
+	OWN_COUNT(null) {
+		@Override
+		public Object valueOf(ICard card) {
+			return card.accept(FieldOwnCountAggregator.getInstance(), null);
+		}
+	}, // count of own card (normal count counts own and virtual)
+	OWN_UNIQUE(null) {
+		@Override
+		public Object valueOf(ICard card) {
+			return card.accept(FieldOwnUniqueAggregator.getInstance(), null);
+		}
+	}, // count of own unique cards (only applies to groups usually)
 	ERROR(null), // error field for import
 	// end of fields
 	;
@@ -45,6 +55,10 @@ public enum MagicCardFieldPhysical implements ICardField {
 		System.arraycopy(values, 0, res, 0, values.length);
 		System.arraycopy(values2, 0, res, values.length, values2.length);
 		return res;
+	}
+
+	public Object valueOf(ICard card) {
+		return card.getObjectByField(this);
 	}
 
 	public static ICardField[] allNonTransientFields() {

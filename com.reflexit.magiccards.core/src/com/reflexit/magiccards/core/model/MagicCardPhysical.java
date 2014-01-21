@@ -596,4 +596,8 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	public boolean isBasicLand() {
 		return getBase().isBasicLand();
 	}
+
+	public int accept(ICardVisitor visitor, Object data) {
+		return visitor.visit(this, data);
+	}
 }

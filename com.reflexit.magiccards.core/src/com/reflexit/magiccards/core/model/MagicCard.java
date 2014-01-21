@@ -900,4 +900,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		if (url == null)
 			setProperty(MagicCardField.IMAGE_URL, ref.getImageUrl());
 	}
+
+	public int accept(ICardVisitor visitor, Object data) {
+		return visitor.visit(this, data);
+	}
 }

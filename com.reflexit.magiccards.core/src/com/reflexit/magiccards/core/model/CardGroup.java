@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,7 +33,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	private ICardField groupField;
 	private int count;
 	private List<ICard> children;
-	private static final String CREATURECOUNT_KEY = "creaturecount";
 	private HashMap<String, Object> props;
 	private Map<String, CardGroup> subs;
 	private MagicCardPhysical base;
@@ -46,6 +44,10 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		this.name = name;
 		this.children = new ArrayList(2);
 		this.subs = new LinkedHashMap<String, CardGroup>(4);
+	}
+
+	public int accept(ICardVisitor visitor, Object data) {
+		return visitor.visit(this, data);
 	}
 
 	public IMagicCard getBase() {
@@ -217,43 +219,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public synchronized int getCreatureCount() {
-		Integer cc = (Integer) getProperty(CREATURECOUNT_KEY);
-		if (cc != null) {
-			return cc.intValue();
-		}
-		int cci = 0;
-		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
-			ICard object = iterator.next();
-			if (object instanceof CardGroup) {
-				cci += ((CardGroup) object).getCreatureCount();
-			} else if (object instanceof IMagicCard) {
-				if (((IMagicCard) object).getPower() != null) {
-					if (object instanceof MagicCard) {
-						cci++;
-					} else if (object instanceof ICardCountable) {
-						cci += ((ICardCountable) object).getCount();
-					}
-				}
-			}
-		}
-		setProperty(CREATURECOUNT_KEY, cci);
-		return cci;
+		return accept(FieldCreatureCountAggregator.getInstance(), null);
 	}
 
 	public synchronized int getOwnCount() {
-		Integer iOwn = (Integer) getProperty(MagicCardFieldPhysical.OWN_COUNT.name());
-		if (iOwn != null) {
-			return iOwn.intValue();
-		}
-		int owncount = 0;
-		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
-			ICard object = iterator.next();
-			if (object instanceof IMagicCardPhysical) {
-				owncount += ((IMagicCardPhysical) object).getOwnCount();
-			}
-		}
-		setProperty(MagicCardFieldPhysical.OWN_COUNT.name(), owncount);
-		return owncount;
+		return accept(FieldOwnCountAggregator.getInstance(), null);
 	}
 
 	@Override
@@ -262,55 +232,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public synchronized int getOwnUnique() {
-		Integer iOwn = (Integer) getProperty(MagicCardFieldPhysical.OWN_UNIQUE.name());
-		if (iOwn != null) {
-			return iOwn.intValue();
-		}
-		int ownusize = 0;
-		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
-		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
-			ICard object = iterator.next();
-			if (object instanceof MagicCardPhysical) {
-				if (((IMagicCardPhysical) object).isOwn()) {
-					uniq.add(((MagicCardPhysical) object).getBase());
-				}
-			} else if (object instanceof MagicCard) {
-				Collection<MagicCardPhysical> physicalCards = ((MagicCard) object).getPhysicalCards();
-				for (IMagicCardPhysical p : physicalCards) {
-					if (p.isOwn()) {
-						uniq.add((IMagicCard) object);
-						break;
-					}
-				}
-			} else if (object instanceof CardGroup) {
-				ownusize += ((CardGroup) object).getOwnUnique();
-			}
-		}
-		ownusize += uniq.size();
-		setProperty(MagicCardFieldPhysical.OWN_UNIQUE.name(), ownusize);
-		return ownusize;
+		return (Integer) MagicCardFieldPhysical.OWN_UNIQUE.valueOf(this);
 	}
 
 	public synchronized int getUniqueCount() {
-		Integer ucount = (Integer) getProperty(MagicCardField.UNIQUE_COUNT.name());
-		if (ucount != null) {
-			return ucount.intValue();
-		}
-		int usize = 0;
-		HashSet<IMagicCard> uniq = new HashSet<IMagicCard>();
-		for (Iterator<ICard> iterator = children.iterator(); iterator.hasNext();) {
-			ICard object = iterator.next();
-			if (object instanceof MagicCardPhysical) {
-				uniq.add(((MagicCardPhysical) object).getBase());
-			} else if (object instanceof MagicCard) {
-				uniq.add((IMagicCard) object);
-			} else if (object instanceof CardGroup) {
-				usize += ((CardGroup) object).getUniqueCount();
-			}
-		}
-		usize += uniq.size();
-		setProperty(MagicCardField.UNIQUE_COUNT.name(), usize);
-		return usize;
+		return accept(FieldUniqueAggregator.getInstance(), null);
 	}
 
 	public ICardField getFieldIndex() {

@@ -6,4 +6,6 @@ public interface ICard extends Cloneable {
 	String getName();
 
 	ICard cloneCard();
+
+	int accept(ICardVisitor visitor, Object data);
 }
