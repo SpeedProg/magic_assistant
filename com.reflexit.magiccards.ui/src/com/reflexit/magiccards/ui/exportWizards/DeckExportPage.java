@@ -51,6 +51,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
 import com.reflexit.magiccards.ui.dialogs.MagicFieldSelectorDialog;
@@ -297,7 +298,10 @@ public class DeckExportPage extends WizardDataTransferPage {
 	 */
 	protected void setTextFromSelection() {
 		if (resourceSelection != null && !resourceSelection.isEmpty()) {
-			collection.setStringValue(((CardElement) resourceSelection.getFirstElement()).getLocation().toString());
+			Object firstElement = resourceSelection.getFirstElement();
+			if (firstElement instanceof ILocatable) {
+				collection.setStringValue(((ILocatable) firstElement).getLocation().toString());
+			}
 		}
 	}
 
