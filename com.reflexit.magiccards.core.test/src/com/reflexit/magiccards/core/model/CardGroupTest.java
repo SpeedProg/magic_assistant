@@ -117,6 +117,27 @@ public class CardGroupTest extends TestCase {
 	}
 
 	@Test
+	public void testGetOwnUSizePhy() {
+		populateGroup(group, 3, true);
+		assertEquals(3, group.getOwnUnique());
+	}
+
+	@Test
+	public void testGetOwnUSizePhy2() {
+		cards = populateGroup(group, 3, true);
+		((MagicCardPhysical) cards[0]).setOwn(false);
+		((MagicCardPhysical) cards[2]).setCount(4);
+		((MagicCardPhysical) cards[2]).setForTrade(2);
+		assertEquals(2, group.getOwnUnique());
+		int c = (Integer) MagicCardFieldPhysical.OWN_UNIQUE.valueOf(group);
+		assertEquals(2, c);
+		c = (Integer) MagicCardFieldPhysical.OWN_COUNT.valueOf(group);
+		assertEquals(5, c);
+		c = (Integer) MagicCardFieldPhysical.FORTRADECOUNT.valueOf(group);
+		assertEquals(2, c);
+	}
+
+	@Test
 	public void testSize() {
 		assertEquals(cards.length, group.size());
 	}
