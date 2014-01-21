@@ -36,4 +36,12 @@ public class PowerColumn extends GenColumn {
 		}
 		return super.getText(element);
 	}
+
+	@Override
+	public String getToolTipText(Object element) {
+		if (element instanceof ICardGroup) {
+			return "X (Y) means X is total " + fullname + " of all creatures, Y is average in the group";
+		}
+		return super.getToolTipText(element);
+	}
 }

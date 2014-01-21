@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -25,6 +26,11 @@ import com.reflexit.magiccards.ui.views.columns.GenColumn;
 public class ProgressColumn extends GenColumn implements Listener {
 	private static final String PERCENT_KEY = "percent";
 	private static final String SETSIZE_KEY = "setsize";
+
+	protected String getPercentKey() {
+		return PERCENT_KEY;
+	}
+
 	final Color barColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_GREEN);
 	final Color missColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_RED);
 	final Color partColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
@@ -41,13 +47,13 @@ public class ProgressColumn extends GenColumn implements Listener {
 	public String getText(Object element) {
 		if (element instanceof ICardGroup) {
 			CardGroup cardGroup = (CardGroup) element;
-			int size = getSetSize(cardGroup);
-			int count = cardGroup.getOwnUnique();
+			int size = getTotal(cardGroup);
+			int count = getProgressSize(cardGroup);
 			float per = 0;
 			if (size > 0) {
 				per = count * 100 / (float) size;
 			}
-			cardGroup.setProperty(PERCENT_KEY, per);
+			cardGroup.setProperty(getPercentKey(), per);
 			cardGroup.setProperty(SETSIZE_KEY, size);
 			if (per < 5 && per > 0)
 				return String.format("%3d / %3d (%2.1f%%)", count, size, per);
@@ -59,6 +65,24 @@ public class ProgressColumn extends GenColumn implements Listener {
 			return getSizeCountText(element);
 		}
 		return super.getText(element);
+	}
+
+	public int getTotal(ICard element) {
+		if (element instanceof ICardGroup) {
+			CardGroup cardGroup = (CardGroup) element;
+			int size = getSetSize(cardGroup);
+			return size;
+		}
+		return 1;
+	}
+
+	public int getProgressSize(ICard element) {
+		if (element instanceof ICardGroup) {
+			CardGroup cardGroup = (CardGroup) element;
+			int count = cardGroup.getOwnUnique();
+			return count;
+		}
+		return 0;
 	}
 
 	@Override
@@ -116,7 +140,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 						return;
 					float per = 100;
 					if (row instanceof ICardGroup) {
-						Float per1 = (Float) ((CardGroup) row).getProperty(PERCENT_KEY);
+						Float per1 = (Float) ((CardGroup) row).getProperty(getPercentKey());
 						if (per1 == null)
 							per = Float.valueOf(0);
 						else

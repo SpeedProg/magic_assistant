@@ -13,6 +13,7 @@ public class CollectorColumnCollection extends MagicColumnCollection {
 	protected void createColumns() {
 		super.createColumns();
 		columns.add(new ProgressColumn());
+		columns.add(new Progress4Column());
 	}
 
 	@Override

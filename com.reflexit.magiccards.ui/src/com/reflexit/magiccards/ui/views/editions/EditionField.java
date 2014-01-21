@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.Locale;
 
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 
 public enum EditionField implements ICardField {
@@ -34,6 +35,11 @@ public enum EditionField implements ICardField {
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}
+	}
+
+	@Override
+	public Object valueOf(ICard card) {
+		return null;
 	}
 
 	public Class getType() {
