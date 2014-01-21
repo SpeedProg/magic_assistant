@@ -835,8 +835,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			setLegalityMap((LegalityMap) value);
 		}
 		if (value instanceof String) {
-			LegalityMap map = LegalityMap.valueOf((String) value);
-			return map;
+			try {
+				LegalityMap map = LegalityMap.valueOf((String) value);
+				return map;
+			} catch (IllegalArgumentException e) {
+				MagicLogger.log("Invalid legality value " + value);
+				setLegalityMap(null);
+				return null;
+			}
 		}
 		return (LegalityMap) value;
 	}
