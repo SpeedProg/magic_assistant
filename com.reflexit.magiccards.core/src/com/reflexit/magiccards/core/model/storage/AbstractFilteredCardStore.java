@@ -66,14 +66,18 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected synchronized final void initialize() {
-		if (this.initialized == false) {
-			try {
-				doInitialize();
-			} catch (MagicException e) {
-				MagicLogger.log(e);
-			} finally {
-				this.initialized = true;
+		try {
+			if (this.initialized == false) {
+				try {
+					doInitialize();
+				} catch (MagicException e) {
+					MagicLogger.log(e);
+				} finally {
+					this.initialized = true;
+				}
 			}
+		} finally {
+			this.notifyAll();
 		}
 	}
 

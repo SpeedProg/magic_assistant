@@ -12,15 +12,19 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	protected transient boolean initialized = false;
 	protected boolean mergeOnAdd = true;
 
-	public final void initialize() {
-		if (isInitialized() == false) {
-			try {
-				doInitialize();
-			} catch (final MagicException e) {
-				MagicLogger.log(e);
-			} finally {
-				setInitialized(true);
+	public final synchronized void initialize() {
+		try {
+			if (isInitialized() == false) {
+				try {
+					doInitialize();
+				} catch (final MagicException e) {
+					MagicLogger.log(e);
+				} finally {
+					setInitialized(true);
+				}
 			}
+		} finally {
+			this.notifyAll();
 		}
 	}
 
