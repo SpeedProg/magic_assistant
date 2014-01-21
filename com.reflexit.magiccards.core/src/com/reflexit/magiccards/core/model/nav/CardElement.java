@@ -9,6 +9,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.EventManager;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
  * This is base class that describe card containers. It basically either Deck or Deck Folder.
@@ -16,7 +17,7 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
  * @author Alena
  * 
  */
-public abstract class CardElement extends EventManager {
+public abstract class CardElement extends EventManager implements ILocatable {
 	private String name; // name
 	private LocationPath path; // project relative path
 	private CardOrganizer parent;
@@ -203,5 +204,10 @@ public abstract class CardElement extends EventManager {
 
 	public boolean isRoot() {
 		return false;
+	}
+
+	@Override
+	public void setLocation(Location location) {
+		throw new UnsupportedOperationException("setLocation is not supporterd");
 	}
 }
