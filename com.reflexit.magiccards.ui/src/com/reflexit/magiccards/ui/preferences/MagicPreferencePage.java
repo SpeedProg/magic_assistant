@@ -72,14 +72,16 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		ld.horizontalSpan = 2;
 		inetOptions.setLayoutData(ld);
-		BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching", inetOptions) {
-			@Override
-			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
-				super.fireStateChanged(property, oldValue, newValue);
-				CardCache.setCahchingEnabled(newValue);
-			}
-		};
-		addField(caching);
+		if (false) {
+			BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching", inetOptions) {
+				@Override
+				protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
+					super.fireStateChanged(property, oldValue, newValue);
+					CardCache.setCahchingEnabled(newValue);
+				}
+			};
+			addField(caching);
+		}
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards of startup", inetOptions));
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup", inetOptions));
 		String[][] values = getPriceProviders();
