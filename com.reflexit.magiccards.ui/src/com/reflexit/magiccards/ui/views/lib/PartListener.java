@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class PartListener implements IPartListener2 {
 	private static PartListener instance;
@@ -35,7 +36,10 @@ public class PartListener implements IPartListener2 {
 			DataManager.getCardHandler().setActiveDeckHandler(store);
 			String id = store.getLocation().getBaseFileName();
 			CardCollection coll = DataManager.getModelRoot().findCardCollectionById(id);
-			coll.update();
+			if (coll != null)
+				coll.update();
+			else
+				MagicUIActivator.log("Cannot find collection by id " + id);
 		}
 	}
 
