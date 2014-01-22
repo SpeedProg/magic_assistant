@@ -36,10 +36,12 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 				}
 			}
 		}
-		// Report any missing repositories.
-		job.reportAccumulatedStatus();
-		if (getProvisioningUI().getPolicy().continueWorkingWithOperation(operation, getShell())) {
-			getProvisioningUI().openUpdateWizard(false, operation, job);
+		if (job != null) {
+			// Report any missing repositories.
+			job.reportAccumulatedStatus();
+			if (getProvisioningUI().getPolicy().continueWorkingWithOperation(operation, getShell())) {
+				getProvisioningUI().openUpdateWizard(false, operation, job);
+			}
 		}
 	}
 
