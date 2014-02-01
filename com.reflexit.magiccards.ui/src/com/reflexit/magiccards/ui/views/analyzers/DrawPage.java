@@ -34,6 +34,8 @@ public class DrawPage extends AbstractDeckListPage {
 
 		@Override
 		public String getStatusMessage() {
+			if (store == null)
+				return "";
 			int cards = deckstore.getSize();
 			int total = ((ICardCountable) store).getCount();
 			int hand = total < 7 ? total : 7;

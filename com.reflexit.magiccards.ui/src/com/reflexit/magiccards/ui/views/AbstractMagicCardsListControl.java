@@ -907,22 +907,28 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	public void updateViewer() {
 		MagicLogger.traceStart("updateViewer");
-		if (manager.getControl() == null || manager.getControl().isDisposed())
-			return;
-		ISelection selection = getSelection();
-		IFilteredCardStore filteredStore = getFilteredStore();
-		manager.updateViewer(filteredStore);
-		MagicLogger.trace("updateViewer", "setSelection");
-		if (revealSelection != null) {
-			// set desired selection
-			getSelectionProvider().setSelection(revealSelection);
-			revealSelection = null;
-		} else {
-			// restore selection
-			getSelectionProvider().setSelection(selection);
+		try {
+			if (manager.getControl() == null || manager.getControl().isDisposed())
+				return;
+			ISelection selection = getSelection();
+			IFilteredCardStore filteredStore = getFilteredStore();
+			manager.updateViewer(filteredStore);
+			MagicLogger.trace("updateViewer", "setSelection");
+			if (revealSelection != null) {
+				// set desired selection
+				getSelectionProvider().setSelection(revealSelection);
+				revealSelection = null;
+			} else {
+				// restore selection
+				getSelectionProvider().setSelection(selection);
+			}
+			updateStatus();
+		} catch (Exception e) {
+			MagicLogger.log("Exception during update operation");
+			MagicLogger.log(e);
+		} finally {
+			MagicLogger.traceEnd("updateViewer");
 		}
-		updateStatus();
-		MagicLogger.traceEnd("updateViewer");
 	}
 
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {

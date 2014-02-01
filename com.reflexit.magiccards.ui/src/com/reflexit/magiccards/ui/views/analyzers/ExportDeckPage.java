@@ -36,6 +36,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.AbstractExportDelegate;
 import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
@@ -123,34 +124,41 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		Composite area = getArea();
 		stackLayout = new StackLayout();
 		area.setLayout(stackLayout);
-		this.textBrowser = new Browser(area, SWT.WRAP | SWT.INHERIT_DEFAULT);
-		this.textBrowser.setFont(area.getFont());
-		textBrowser.addLocationListener(new LocationAdapter() {
-			@Override
-			public void changing(LocationEvent event) {
-				String location = event.location;
-				if (location.startsWith(WizardsHtmlExportDelegate.CARD_URI)) {
-					location = location.substring(WizardsHtmlExportDelegate.CARD_URI.length());
-					if (location.endsWith("/")) {
-						location = location.substring(0, location.length() - 1);
-					}
-					String params[] = location.split("&");
-					for (int i = 0; i < params.length; i++) {
-						String string = params[i];
-						if (string.startsWith(WizardsHtmlExportDelegate.CARDID)) {
-							event.doit = false;
-							String value = string.substring(WizardsHtmlExportDelegate.CARDID.length());
-							int cardId = Integer.valueOf(value).intValue();
-							IDbCardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
-							IMagicCard card = (IMagicCard) magicDBStore.getCard(cardId);
-							if (card != null)
-								selProvider.setSelection(new StructuredSelection(card));
+		try {
+			// if (true)
+			// throw new NullPointerException("Browser");
+			this.textBrowser = new Browser(area, SWT.WRAP | SWT.INHERIT_DEFAULT);
+			this.textBrowser.setFont(area.getFont());
+			textBrowser.addLocationListener(new LocationAdapter() {
+				@Override
+				public void changing(LocationEvent event) {
+					String location = event.location;
+					if (location.startsWith(WizardsHtmlExportDelegate.CARD_URI)) {
+						location = location.substring(WizardsHtmlExportDelegate.CARD_URI.length());
+						if (location.endsWith("/")) {
+							location = location.substring(0, location.length() - 1);
 						}
+						String params[] = location.split("&");
+						for (int i = 0; i < params.length; i++) {
+							String string = params[i];
+							if (string.startsWith(WizardsHtmlExportDelegate.CARDID)) {
+								event.doit = false;
+								String value = string.substring(WizardsHtmlExportDelegate.CARDID.length());
+								int cardId = Integer.valueOf(value).intValue();
+								IDbCardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
+								IMagicCard card = (IMagicCard) magicDBStore.getCard(cardId);
+								if (card != null)
+									selProvider.setSelection(new StructuredSelection(card));
+							}
+						}
+						event.doit = false;
 					}
-					event.doit = false;
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			MagicLogger.log(e);
+			textBrowser = null;
+		}
 		textArea = new Text(area, SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		initReportTypes();
 		setTopControl();
@@ -168,7 +176,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	protected void setTopControl() {
-		if (reportType.getLabel().contains("HTML")) {
+		if (reportType.getLabel().contains("HTML") && textBrowser != null) {
 			stackLayout.topControl = textBrowser;
 		} else {
 			stackLayout.topControl = textArea;
@@ -256,15 +264,19 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		super.activate();
 		try {
 			textResult = getText();
-			this.textArea.setText(textResult);
-			// System.err.println(textResult);
-			this.textBrowser.setText(textResult);
+			setText(textResult);
 		} catch (InvocationTargetException e) {
-			this.textBrowser.setText("Error: " + e.getCause());
+			setText("Error: " + e.getCause());
 		} catch (InterruptedException e) {
-			this.textBrowser.setText("Cancelled");
+			setText("Cancelled");
 		}
 		getArea().layout();
+	}
+
+	protected void setText(String textResult) {
+		this.textArea.setText(textResult);
+		if (textBrowser != null)
+			this.textBrowser.setText(textResult);
 	}
 
 	@Override
