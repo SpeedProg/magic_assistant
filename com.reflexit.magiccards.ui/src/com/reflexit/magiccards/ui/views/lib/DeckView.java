@@ -25,8 +25,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -52,6 +54,7 @@ import com.reflexit.magiccards.ui.views.analyzers.DrawPage;
 import com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage;
 import com.reflexit.magiccards.ui.views.analyzers.SpellColourPage;
 import com.reflexit.magiccards.ui.views.analyzers.TypePage;
+import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 public class DeckView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
@@ -161,12 +164,32 @@ public class DeckView extends AbstractMyCardsView {
 		} else {
 			s = (CardCollection) parent.findChield(sideboard);
 		}
-		IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
-		try {
-			page.showView(DeckView.ID, s.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
-		} catch (PartInitException e) {
-			MessageDialog.openError(new Shell(), "Error", e.getMessage());
-		}
+		openCollection(s);
+	}
+
+	public static void openCollection(final CardCollection col) {
+		if (col == null)
+			return;
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (win == null)
+					return;
+				IWorkbenchPage page = win.getActivePage();
+				if (page == null)
+					return;
+				try {
+					IViewPart view = page.showView(CardsNavigatorView.ID);
+					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
+					IViewPart deckView = page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
+					if (deckView instanceof DeckView) {
+						((DeckView) deckView).refresh();
+					}
+				} catch (PartInitException e) {
+					MessageDialog.openError(new Shell(), "Error", e.getMessage());
+				}
+			}
+		});
 	}
 
 	/**
