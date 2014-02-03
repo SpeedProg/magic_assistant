@@ -15,23 +15,20 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -49,7 +46,6 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard implements INewWizard {
 	public static final String ID = "com.reflexit.magiccards.ui.wizards.BoosterGeneratorCollectionWizard";
@@ -59,6 +55,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	private int countRare;
 	private int countCommon;
 	private int countUncommon;
+	private boolean separateCollections;
 
 	static class BoosterGeneratorCollectionWizardPage extends WizardPage implements ICheckStateListener {
 		Spinner sp;
@@ -68,6 +65,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		private Spinner rc;
 		private Spinner ru;
 		private Spinner rr;
+		private Button sep;
 
 		/**
 		 * @param pageName
@@ -108,6 +106,14 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			rc = labelAndSpinner(a, 11, "Common: ");
 			ru = labelAndSpinner(a, 3, "Uncommon: ");
 			rr = labelAndSpinner(a, 1, "Rare+: ");
+			sep = new Button(a, SWT.CHECK);
+			sep.setText("Generate each booster pack as separate collection");
+			sep.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					pageChanged();
+				}
+			});
 			return a;
 		}
 
@@ -203,6 +209,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		countRare = page2.rr.getSelection();
 		countCommon = page2.rc.getSelection();
 		countUncommon = page2.ru.getSelection();
+		separateCollections = page2.sep.getSelection();
 	}
 
 	/*
@@ -223,38 +230,11 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		}
 		monitor.worked(1);
 		CardOrganizer parent = (CardOrganizer) resource;
-		final CardCollection col = new CardCollection(name + ".xml", parent, false);
-		col.setVirtual(virtual);
-		boolean succ = false;
-		try {
-			populateLibrary(BoosterGeneratorCollectionWizard.this.sets, BoosterGeneratorCollectionWizard.this.packs, col,
-					new SubProgressMonitor(monitor, 7));
-			succ = true;
-		} finally {
-			if (!succ) {
-				col.remove();
-			}
-		}
+		CardCollection col = populateLibrary(BoosterGeneratorCollectionWizard.this.sets, BoosterGeneratorCollectionWizard.this.packs, name,
+				parent, virtual, new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// ignore
-		}
-		getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IViewPart view = page.showView(CardsNavigatorView.ID);
-					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					monitor.worked(1);
-					page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
-					monitor.worked(1);
-				} catch (PartInitException e) {
-					// ignore
-				}
-			}
-		});
+		if (col != null)
+			DeckView.openCollection(col);
 		monitor.done();
 	}
 
@@ -263,35 +243,69 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	 * @param selection
 	 * @param col
 	 * @param subProgressMonitor
+	 * @return
 	 */
-	private void populateLibrary(List collections, int packs, CardCollection col, IProgressMonitor monitor) {
+	private CardCollection populateLibrary(List collections, int packs, String name, CardOrganizer parent, boolean virtual,
+			IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 9 * packs + 1);
-		if (col.isOpen() == false) {
-			col.open();
-		}
+		CardCollection col = null;
 		monitor.worked(1);
 		// ICardStore<IMagicCard> store = col.getStore();
 		HashMap<String, String> filterset = new HashMap<String, String>();
 		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
 		MagicCardFilter filter = dbcards.getFilter();
-		try {
-			for (Object o : collections) {
-				if (o instanceof String) {
-					filterset.put((String) o, "true");
+		boolean succ = false;
+		for (Object o : collections) {
+			if (o instanceof String) {
+				filterset.put((String) o, "true");
+			}
+		}
+		if (!separateCollections) {
+			col = new CardCollection(name + ".xml", parent, false);
+			col.setVirtual(virtual);
+			col.open();
+			try {
+				// 1*packs rare cards
+				generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
+				monitor.worked(3 * packs);
+				// 3*packs uncommon
+				generateRarity(countUncommon * packs, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
+				monitor.worked(3 * packs);
+				// 11*packs common
+				generateRarity(countCommon * packs, filterset, filter, dbcards, col, Rarity.COMMON);
+				monitor.worked(3 * packs);
+				succ = true;
+			} finally {
+				if (!succ) {
+					col.remove();
+					col = null;
 				}
 			}
-			// 1*packs rare cards
-			generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
-			monitor.worked(3 * packs);
-			// 3*packs uncommon
-			generateRarity(countUncommon * packs, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
-			monitor.worked(3 * packs);
-			// 11*packs common
-			generateRarity(countCommon * packs, filterset, filter, dbcards, col, Rarity.COMMON);
-			monitor.worked(3 * packs);
-		} finally {
-			monitor.done();
+		} else {
+			for (int pack = 0; pack < packs; pack++) {
+				col = new CardCollection(name + "_" + (pack + 1) + ".xml", parent, false);
+				col.setVirtual(virtual);
+				col.open();
+				try {
+					// 1*packs rare cards
+					generateRarity(countRare, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
+					monitor.worked(3);
+					// 3*packs uncommon
+					generateRarity(countUncommon, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
+					monitor.worked(3);
+					// 11*packs common
+					generateRarity(countCommon, filterset, filter, dbcards, col, Rarity.COMMON);
+					monitor.worked(3);
+					succ = true;
+				} finally {
+					if (!succ) {
+						col.remove();
+					}
+				}
+			}
 		}
+		monitor.done();
+		return col;
 	}
 
 	public void generateRarity(int cards, HashMap<String, String> filterset, MagicCardFilter filter,
