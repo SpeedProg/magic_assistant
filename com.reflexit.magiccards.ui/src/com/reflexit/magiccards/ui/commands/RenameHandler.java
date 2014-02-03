@@ -18,9 +18,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import com.reflexit.magiccards.core.DataManager;
@@ -29,7 +27,6 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 /**
@@ -89,11 +86,7 @@ public class RenameHandler extends AbstractHandler {
 				Location sb = loc.toSideboard();
 				CardElement el = f.rename(newName);
 				if (wasOpen && el instanceof CardCollection) {
-					try {
-						window.getActivePage().showView(DeckView.ID, ((CardCollection) el).getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
-					} catch (PartInitException e) {
-						MagicUIActivator.log(e);
-					}
+					DeckView.openCollection((CardCollection) el);
 				}
 				CardElement fsb = f.getParent().findChieldByName(sb.getBaseFileName());
 				if (fsb != null) {
