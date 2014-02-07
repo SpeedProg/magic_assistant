@@ -32,6 +32,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
@@ -98,9 +99,10 @@ public class DeckImportPreviewPage extends WizardPage {
 					}
 				}
 			}
-			if (result.getError() != null)
+			if (result.getError() != null) {
+				MagicUIActivator.log(result.getError());
 				setErrorMessage("Cannot parse data file: " + result.getError().getMessage());
-			else if (list.size() == 0)
+			} else if (list.size() == 0)
 				setErrorMessage("Cannot parse data file");
 			else if (count == 0)
 				setDescription(desc);
