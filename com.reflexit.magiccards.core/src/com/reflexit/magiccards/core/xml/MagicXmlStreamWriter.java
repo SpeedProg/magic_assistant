@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class MagicXmlStreamWriter {
-	private MyXMLStreamWriter writer;
+	protected MyXMLStreamWriter writer;
 
 	MagicXmlStreamWriter() {
 	}
