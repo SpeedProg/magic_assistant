@@ -11,7 +11,9 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.xml.PricesXmlStreamWriter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
@@ -55,7 +57,9 @@ public class LoadingPricesJob extends Job {
 		}
 		IPriceProvider parser = PriceProviderManager.getInstance().getProvider();
 		try {
-			parser.updateStore(DataManager.getCardHandler().getMagicDBStore(), list, size, new CoreMonitorAdapter(monitor));
+			IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
+			parser.updateStore(db, list, size, new CoreMonitorAdapter(monitor));
+			new PricesXmlStreamWriter().save(db, parser);
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					view.refresh();
