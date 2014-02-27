@@ -171,7 +171,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public void setPower(String power) {
-		this.power = power.intern();
+		this.power = power == null ? "" : power.intern();
 	}
 
 	/*
@@ -184,7 +184,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public void setToughness(String toughness) {
-		this.toughness = toughness.intern();
+		this.toughness = toughness == null ? "" : toughness.intern();
 	}
 
 	public static float convertFloat(String str) {
