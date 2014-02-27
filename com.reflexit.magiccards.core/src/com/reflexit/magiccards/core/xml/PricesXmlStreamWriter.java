@@ -28,12 +28,7 @@ public class PricesXmlStreamWriter extends MagicXmlStreamWriter {
 	public void save(Iterable<IMagicCard> store, IPriceProvider provider) throws IOException {
 		CardCollectionStoreObject o = new CardCollectionStoreObject();
 		o.name = provider.getName();
-		Location loc = Location.createLocationFromSet(provider.getName());
-		o.key = loc.getName();
-		File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
-		File pricesDir = new File(dir, "prices");
-		pricesDir.mkdirs();
-		File file = new File(pricesDir, loc.getBaseFileName());
+		File file = getPricesFile(provider);
 		o.type = "dbprice";
 		o.list = new ArrayList();
 		for (IMagicCard card : store) {
@@ -43,5 +38,20 @@ public class PricesXmlStreamWriter extends MagicXmlStreamWriter {
 		FileOutputStream stream = new FileOutputStream(file);
 		write(o, stream);
 		stream.close();
+	}
+
+	public static File getPricesFile(IPriceProvider provider) {
+		Location loc = Location.createLocationFromSet(provider.getName());
+		File pricesDir = getPricesDir();
+		File file = new File(pricesDir, loc.getBaseFileName());
+		return file;
+	}
+
+	public static File getPricesDir() {
+		File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
+		File pricesDir = new File(dir, "prices");
+		if (!pricesDir.exists())
+			pricesDir.mkdirs();
+		return pricesDir;
 	}
 }
