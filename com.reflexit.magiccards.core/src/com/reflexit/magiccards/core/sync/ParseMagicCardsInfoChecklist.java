@@ -177,6 +177,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		} else {
 			String out = "&v=list&s=issue";
 			String abbr = Editions.getInstance().getAbbrByName(set);
+			if (abbr == null)
+				abbr = set;
 			String base = baseSearch + "e%3A" + abbr + "%2Fen" + out;
 			url = base;
 		}
@@ -185,7 +187,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		OutputHandler handler = new OutputHandler(System.out, true, true);
-		new ParseMagicCardsInfoChecklist().loadSingleUrl(getSearchQuery("Anthologies"), handler);
+		Editions.getInstance().addEdition("Duels of the Planeswalkers", "dpa");
+		new ParseMagicCardsInfoChecklist().loadSingleUrl(getSearchQuery("Duels of the Planeswalkers"), handler);
 		System.err.println("Total " + handler.getCardCount());
 	}
 }

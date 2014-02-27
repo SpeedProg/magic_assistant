@@ -175,7 +175,8 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 		OutputHandler handler = new OutputHandler(System.out, true, true);
 		System.out
 				.println("ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES");
-		new ParseMagicCardsInfoSpoiler().loadSingleUrl(getSearchQuery("Anthologies"), handler);
+		Editions.getInstance().addEdition("Duels of the Planeswalkers", "dpa");
+		new ParseMagicCardsInfoSpoiler().loadSingleUrl(getSearchQuery("Duels of the Planeswalkers"), handler);
 		System.err.println("Total " + handler.getCardCount());
 	}
 }
