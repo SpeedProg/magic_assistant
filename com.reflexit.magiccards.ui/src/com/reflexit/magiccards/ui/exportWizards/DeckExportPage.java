@@ -507,8 +507,13 @@ public class DeckExportPage extends WizardDataTransferPage {
 			}
 		}
 		IExportDelegate delegate = reportType.getExportDelegate();
-		includeSideBoard.setEnabled(delegate.isMultipleLocationSupported());
-		columnsChoice.setEnabled(delegate.isColumnChoiceSupported(), columnsChoiceParent);
+		if (delegate != null) {
+			includeSideBoard.setEnabled(delegate.isMultipleLocationSupported());
+			columnsChoice.setEnabled(delegate.isColumnChoiceSupported(), columnsChoiceParent);
+		} else {
+			includeSideBoard.setEnabled(false);
+			columnsChoice.setEnabled(false, columnsChoiceParent);
+		}
 	}
 
 	public ReportType getReportType() {

@@ -44,6 +44,8 @@ public class ExportDeckJob extends Job {
 		final IExportDelegate<IMagicCard> worker;
 		try {
 			worker = reportType.getExportDelegate();
+			if (worker == null)
+				return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, "No exporter defined for " + reportType.getLabel());
 			worker.setColumns(columns == null ? MagicCardFieldPhysical.allNonTransientFields() : columns);
 		} catch (Exception e) {
 			return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage(), e);
