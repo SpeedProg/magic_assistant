@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
+import com.reflexit.magiccards.core.seller.CustomPriceProvider;
 import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
@@ -34,6 +35,48 @@ public class PriceProviderManager implements IPropertyChangeListener {
 		providers.add(findMagicCards);
 		providers.add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Medium));
 		providers.add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low));
+		loadCustomProviders();
+	}
+
+	private void loadCustomProviders() {
+		File pricesDir = PricesXmlStreamWriter.getPricesDir();
+		File[] listFiles = pricesDir.listFiles();
+		if (listFiles == null)
+			return;
+		for (int i = 0; i < listFiles.length; i++) {
+			File file = listFiles[i];
+			if (!isCustom(file.getAbsoluteFile()))
+				continue;
+			loadCustom(file);
+		}
+	}
+
+	private void loadCustom(File pricesFile) {
+		MagicLogger.log("Loading custom provider " + pricesFile);
+		try {
+			CardCollectionStoreObject store = CardCollectionStoreObject.initFromFile(pricesFile);
+			String name = store.name;
+			if (name == null)
+				name = pricesFile.getName().replace(".xml", "");
+			CustomPriceProvider customPriceProvider = new CustomPriceProvider(name);
+			providers.add(customPriceProvider);
+			File shouldBeName = PricesXmlStreamWriter.getPricesFile(customPriceProvider);
+			if (!shouldBeName.equals(pricesFile))
+				pricesFile.renameTo(shouldBeName);
+			MagicLogger.log("Custom provider loaded: " + name);
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		}
+	}
+
+	private boolean isCustom(File file) {
+		for (Iterator iterator = providers.iterator(); iterator.hasNext();) {
+			IPriceProvider pp = (IPriceProvider) iterator.next();
+			File pricesFile = PricesXmlStreamWriter.getPricesFile(pp);
+			if (file.equals(pricesFile))
+				return false;
+		}
+		return true;
 	}
 
 	public static final PriceProviderManager getInstance() {
@@ -92,10 +135,12 @@ public class PriceProviderManager implements IPropertyChangeListener {
 	}
 
 	private void reloadPrices(IPriceProvider provider) {
+		MagicLogger.traceStart("reloadPrices");
 		File pricesFile = PricesXmlStreamWriter.getPricesFile(provider);
+		IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
+		db.getStorage().setAutoCommit(false);
 		try {
 			CardCollectionStoreObject store = CardCollectionStoreObject.initFromFile(pricesFile);
-			IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
 			for (IMagicCard base : db) {
 				float dbPrice = base.getDbPrice();
 				if (dbPrice != 0) {
@@ -115,6 +160,9 @@ public class PriceProviderManager implements IPropertyChangeListener {
 				}
 		} catch (IOException e) {
 			MagicLogger.log(e);
+		} finally {
+			db.getStorage().setAutoCommit(true);
+			MagicLogger.traceEnd("reloadPrices");
 		}
 	}
 }
