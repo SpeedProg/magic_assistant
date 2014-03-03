@@ -207,10 +207,11 @@ public class DeckExportPage extends WizardDataTransferPage {
 			loadFromMemento(ids);
 		}
 		// restore options
-		String type = dialogSettings.get(REPORT_TYPE_SETTING);
-		if (type != null)
-			selectReportType(ReportType.getByLabel(type));
-		else
+		String stype = dialogSettings.get(REPORT_TYPE_SETTING);
+		ReportType type = ReportType.getByLabel(stype);
+		if (type != null && type.getExportDelegate() != null) {
+			selectReportType(type);
+		} else
 			selectReportType(ReportType.CSV);
 		// restore file
 		String file = dialogSettings.get(OUTPUT_FILE_SETTING);

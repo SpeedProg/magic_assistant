@@ -430,10 +430,11 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		fileRadio.setSelection(!clipboard);
 		clipboardRadio.setSelection(clipboard);
 		// restore options
-		String type = dialogSettings.get(REPORT_TYPE_SETTING);
-		if (type != null)
-			selectReportType(ReportType.getByLabel(type));
-		else
+		String stype = dialogSettings.get(REPORT_TYPE_SETTING);
+		ReportType type = ReportType.getByLabel(stype);
+		if (type != null && type.getImportDelegate() != null) {
+			selectReportType(type);
+		} else
 			selectReportType(ReportType.TEXT_DECK_CLASSIC);
 		if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {
 			includeHeader.setSelection(dialogSettings.getBoolean(IMPORT_HEADER_SETTING));
