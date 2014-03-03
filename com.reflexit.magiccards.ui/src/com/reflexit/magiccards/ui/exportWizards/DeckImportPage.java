@@ -134,8 +134,9 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 							}
 							Collection<IMagicCard> result;
 							if (previewResult == null) {
-								result = ImportUtils
-										.performPreImport(st, worker, header, selectedLocation, new CoreMonitorAdapter(monitor));
+								ImportResult result1 = ImportUtils.performPreImport(st, worker, header, selectedLocation,
+										new CoreMonitorAdapter(monitor));
+								result = (Collection<IMagicCard>) result1.getList();
 							} else {
 								result = (List<IMagicCard>) previewResult.getList();
 								if (!dbImport) {
@@ -200,7 +201,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					}
 				}
 				ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
-				ImportUtils.performPreImportWithDb(result, newdbrecords);
+				ImportUtils.performPreImportWithDb(result, newdbrecords, reportType.getImportDelegate().getPreview().getFields());
 				ArrayList<String> lerrors = new ArrayList<String>();
 				ImportUtils.validateDbRecords(newdbrecords, lerrors);
 				if (newdbrecords.size() > 0 && lerrors.size() == 0) {
