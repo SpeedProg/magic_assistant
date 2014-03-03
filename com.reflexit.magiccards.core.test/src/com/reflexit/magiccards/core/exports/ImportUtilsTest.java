@@ -32,6 +32,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
 	private ICoreProgressMonitor monitor = ICoreProgressMonitor.NONE;
 	private Collection<IMagicCard> preimport;
+	private ImportResult result;
 
 	private void parse() {
 		parse(true, tableImport);
@@ -59,8 +60,9 @@ public class ImportUtilsTest extends AbstarctImportTest {
 
 	public void preimport() {
 		try {
-			preimport = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, deck.getLocation(),
-					monitor);
+			result = ImportUtils
+					.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, deck.getLocation(), monitor);
+			preimport = (Collection<IMagicCard>) result.getList();
 			setout(preimport);
 		} catch (Exception e) {
 			fail(e.getMessage());
@@ -151,7 +153,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		tableImport.setResolveDb(false);
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
-		ImportUtils.performPreImportWithDb(preimport, mdb);
+		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		assertEquals(2, mdb.size());
 		Editions.getInstance().addEdition("Foo", null);
 		ImportUtils.importIntoDb(mdb);
@@ -163,7 +165,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		tableImport.setResolveDb(false);
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
-		ImportUtils.performPreImportWithDb(preimport, mdb);
+		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		Editions.getInstance().addEdition("Magic Game Day Cards", "MGDC");
 		// ImportUtils.importIntoDb(mdb);
 		assertEquals(1, mdb.size());
@@ -181,7 +183,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		tableImport.setResolveDb(false);
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
-		ImportUtils.performPreImportWithDb(preimport, mdb);
+		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		Editions.getInstance().addEdition("Magic Game Day Cards", "MGDC");
 		// ImportUtils.importIntoDb(mdb);
 		assertEquals(1, mdb.size());
