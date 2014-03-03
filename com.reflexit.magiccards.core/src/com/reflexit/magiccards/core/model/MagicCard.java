@@ -910,4 +910,13 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	public int accept(ICardVisitor visitor, Object data) {
 		return visitor.visit(this, data);
 	}
+
+	public void setFrom(MagicCard importCard, ICardField[] columns) {
+		for (int i = 0; i < columns.length; i++) {
+			ICardField field = columns[i];
+			Object value = importCard.getObjectByField(field);
+			if (value != null)
+				setObjectByField(field, value.toString());
+		}
+	}
 }

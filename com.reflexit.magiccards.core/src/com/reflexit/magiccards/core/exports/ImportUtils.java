@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICard;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -47,23 +48,22 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static Collection<IMagicCard> performPreImport(InputStream st, IImportDelegate worker, boolean header, Location location,
+	public static ImportResult performPreImport(InputStream st, IImportDelegate worker, boolean header, Location location,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st != null) {
 			DataManager.getMagicDBStore().initialize();
 			worker.init(st, false, location);
 			worker.setHeader(header);
 			worker.run(monitor);
-			Collection<IMagicCard> importedCards = worker.getImportedCards();
-			return importedCards;
+			return worker.getPreview();
 		} else
 			return null;
 	}
 
 	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICardStore cardStore,
 			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		Collection importedCards = performPreImport(st, worker, header, location, monitor);
-		performImport(importedCards, cardStore);
+		ImportResult result = performPreImport(st, worker, header, location, monitor);
+		performImport(result.getList(), cardStore);
 	}
 
 	public static void performImport(Collection importedCards, ICardStore cardStore) {
@@ -372,15 +372,18 @@ public class ImportUtils {
 	 * Finds and associates imported cards with magic db cards. If card not found in db creates new
 	 * db cards and adds to newdbrecords
 	 */
-	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords) {
+	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords, ICardField[] columns) {
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof MagicCardPhysical) {
-				MagicCard newCard = (MagicCard) card.getBase();
-				newCard = ImportUtils.updateCardReference((MagicCardPhysical) card);
+				MagicCard oldCard = (MagicCard) card.getBase();
+				MagicCard newCard = ImportUtils.updateCardReference((MagicCardPhysical) card);
 				if (newCard != null) {
 					// import int DB
 					newdbrecords.add(newCard);
+				} else if (oldCard != card.getBase()) {
+					// card is updated - merge
+					((MagicCard) card.getBase()).setFrom(oldCard, columns);
 				}
 			}
 		}
