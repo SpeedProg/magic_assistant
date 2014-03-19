@@ -288,9 +288,10 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		InputStream st = null;
 		if (clipboard) {
 			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-			final Object clipboardText = cb.getContents(TextTransfer.getInstance());
-			if (clipboardText != null)
-				st = new ByteArrayInputStream(clipboardText.toString().getBytes());
+			Object clipboardText = cb.getContents(TextTransfer.getInstance());
+			if (clipboardText == null)
+				clipboardText = "";
+			st = new ByteArrayInputStream(clipboardText.toString().getBytes());
 		} else
 			st = new FileInputStream(fileName);
 		return st;
