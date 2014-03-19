@@ -9,36 +9,76 @@
 <body>
 <h1>Loading sellers prices</h1>
 
-Seller's Price is a price of cards of a card for sale by a given provider.
-Currently supported providers are "MTG Fanatic" and "Find Magic Cards".
-If you have preference between these you can go to Window-Preferences->Magic Preferences
+Seller's Price is a price of cards of a card for sale by a given provider. Magic Assistant supports
+two prices columns - seller price - on the magic database cards, and user price on owned instances of these cards.
+First one is for how much you can buy, and second one for how much your actually bought it. 
+
+<h2>Selecting default price provider</h2>
+
+Currently there are few supported providers (in US dollars).
+If you have preference between these you can go to Window->Preferences->Magic Preferences
 and select one in the "Card Prices Provider".
-<p>
-Here is how to laod and view the prices:
-</p>
+
+<h2>Loading sellers prices from the web</h2>
 <li>Step 1:  Click on the preferences button which is the spreadsheet looking button
 that is second from the left in the line of buttons in the upper right hand
 corner.</li>
 
 <li>
-Step 2:  Once that is open, scroll down and add a check to the seller price
-box.  After that click apply and then OK.</li>
+Step 2:  Once that is open, scroll down and add a check to the "Seller Price"
+item (which represents a column in a view).  After that click apply and then OK.</li>
 
 <li>
-Step 3: In the same upper right hand corner of links, you'll see an upside down
+Step 3: In the same upper right hand corner of the view, you'll see an upside down
 pyramid (icon is third from the right next to the minimize and maximize button.),
 click it.
 </li>
 
 <li>
-Step 4:  In the list that will appear, click "Load Extra Fields" which is the
-5th link from the top.
+Step 4:  In the menu that will appear, click "Load Extra Fields".
 </li>
 
 <li>
 Step 5:  Add a check to the "Price" field and click OK.  This will update the
 cards and adding the price to the "Seller Price" field.
 </li>
+
+
+<h2>Custom price provider</h2>
+
+You can define you own price provider and MA can load prices from it, as long as these prices in the
+format this software understands. Well technically you can write a code to extend MA do anything you want including
+parsing the providers' web site but we talking about non-programmatic extension.
+
+To do that you create a file, i.e My_Provider.xml which looks like this below and put it in WORKSPACE/magiccards/MagicDB/prices
+folder
+<pre>
+&lt;cards&gt;
+  &lt;name&gt;My Provider&lt;/name&gt;
+  &lt;comment&gt;&lt;/comment&gt;
+  &lt;type&gt;dbprice&lt;/type&gt;
+  &lt;list&gt;
+    &lt;mc&gt;
+      &lt;id&gt;243482&lt;/id&gt;
+      &lt;dbprice&gt;0.09&lt;/dbprice&gt;
+    &lt;/mc&gt;
+  &lt;/list&gt;
+&lt;cards&gt;
+</pre>
+
+That defines new provider called "My Provider" and sets the price of a card with gatherer id 243482 to 9 cents.
+You can have multiple mc records there.
+
+The second option is to import prices via db extension import. You can define prices in any import format with flexible columns that MA supports,
+and DBPRICE is the column name for the sellers price. I.e. in CSV format it will be
+
+<pre>
+NAME,SET,DBPRICE
+Breath of Darigaaz,Duel Decks: Knights vs. Dragons,0.09
+Captive Flame,Duel Decks: Knights vs. Dragons,0.04
+Dragonspeaker Shaman,Duel Decks: Knights vs. Dragons,3.08
+</pre>
+
 
 </body>
 </html>
