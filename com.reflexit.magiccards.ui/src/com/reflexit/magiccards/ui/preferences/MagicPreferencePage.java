@@ -82,7 +82,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 			};
 			addField(caching);
 		}
-		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards of startup", inetOptions));
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards on startup", inetOptions));
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup", inetOptions));
 		String[][] values = getPriceProviders();
 		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values, inetOptions);
