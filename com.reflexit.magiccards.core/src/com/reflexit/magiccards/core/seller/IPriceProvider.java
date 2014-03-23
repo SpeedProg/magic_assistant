@@ -10,5 +10,5 @@ public interface IPriceProvider extends IStoreUpdator {
 
 	URL getURL();
 
-	void buy(IFilteredCardStore<IMagicCard> cards);
+	URL buy(IFilteredCardStore<IMagicCard> cards);
 }

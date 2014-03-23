@@ -183,7 +183,8 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider implements IPric
 	}
 
 	@Override
-	public void buy(IFilteredCardStore<IMagicCard> cards) {
+	public URL buy(IFilteredCardStore<IMagicCard> cards) {
+		ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
 		ClassicExportDelegate exporter = new ClassicExportDelegate() {
 			@Override
 			public void printLine(Object[] values) {
@@ -194,23 +195,24 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider implements IPric
 			}
 		};
 		exporter.setReportType(ReportType.TEXT_DECK_CLASSIC);
-		ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
 		exporter.init(byteSt, false, cards);
 		try {
 			exporter.run(null);
 			byteSt.flush();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MagicLogger.log(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// nothing
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MagicLogger.log(e);
 		}
 		String url = "http://store.tcgplayer.com/list/selectproductmagic.aspx?partner=" + PARTNER_KEY + "&c=" + byteSt.toString();
-		System.err.println(url);
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			MagicLogger.log(e);
+			return null;
+		}
 	}
 
 	public static void main(String[] args) {

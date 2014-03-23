@@ -28,8 +28,8 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public void buy(IFilteredCardStore<IMagicCard> cards) {
-		// TODO Auto-generated method stub
+	public URL buy(IFilteredCardStore<IMagicCard> cards) {
+		return null;
 	}
 
 	@Override
