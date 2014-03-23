@@ -20,16 +20,18 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
+public class ParseMtgFanaticPrices extends AbstractPriceProvider implements IStoreUpdator {
 	String baseURL;
 	String setURL;
 
 	public ParseMtgFanaticPrices() {
+		super("MTG Fanatic");
 		// http://www.mtgfanatic.com/store/viewproducts.aspx?CatID=217&AffiliateID=44349&PageSize=500
 		baseURL = "http://www.mtgfanatic.com/store/magic/viewcards.aspx?CatID=SET&ForumReferrerID=44349&PageSize=500";
 		setURL = "http://www.mtgfanatic.com/Store/Magic/BasicSearch.aspx?CatID=3";
 	}
 
+	@Override
 	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
 			throws IOException {
 		monitor.beginTask("Loading prices...", size + 10);
@@ -221,10 +223,12 @@ public class ParseMtgFanaticPrices implements IStoreUpdator, IPriceProvider {
 		System.err.println(res);
 	}
 
+	@Override
 	public String getName() {
 		return "MTG Fanatic";
 	}
 
+	@Override
 	public URL getURL() {
 		try {
 			return new URL("http://www.mtgfanatic.com");

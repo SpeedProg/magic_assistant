@@ -26,13 +26,14 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
+public class FindMagicCardsPrices extends AbstractPriceProvider implements IStoreUpdator, IPriceProvider {
 	String baseURL;
 	String cardURL;
 	HashMap<String, String> setIdMap = new HashMap<String, String>();
 	private String setURL;
 
 	public FindMagicCardsPrices() {
+		super("Find Magic Cards");
 		// http://www.mtgfanatic.com/store/viewproducts.aspx?CatID=217&AffiliateID=44349&PageSize=500
 		baseURL = "http://findmagiccards.com/Find/BySet/${SetAbbr}/Matches.html";
 		cardURL = "http://findmagiccards.com/Cards/${SetAbbr}/${CardName}.html";
@@ -45,10 +46,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 		setIdMap.put("Time Spiral \"Timeshifted\"", "TSS");
 	}
 
-	public String getName() {
-		return "Find Magic Cards";
-	}
-
+	@Override
 	public URL getURL() {
 		try {
 			return new URL("http://findmagiccards.com");
@@ -57,6 +55,7 @@ public class FindMagicCardsPrices implements IStoreUpdator, IPriceProvider {
 		}
 	}
 
+	@Override
 	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
 			throws IOException {
 		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);

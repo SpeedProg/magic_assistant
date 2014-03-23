@@ -22,11 +22,12 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
+public class ParseMOTLPrices extends AbstractPriceProvider implements IStoreUpdator, IPriceProvider {
 	private String baseURL;
 	private HashMap<String, String> setIdMap = new HashMap<String, String>();
 
 	public ParseMOTLPrices() {
+		super("MOTL (Magic Traders)");
 		baseURL = "http://classic.magictraders.com/pricelists/current-magic-excel.txt";
 		// hardcoded setIdMap
 		setIdMap.put("Limited Edition Alpha", "A");
@@ -54,10 +55,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 		setIdMap.put("Urza's Legacy", "UY"); // web
 	}
 
-	public String getName() {
-		return "MOTL (Magic Traders)";
-	}
-
+	@Override
 	public URL getURL() {
 		try {
 			return new URL("http://magictraders.com");
@@ -66,6 +64,7 @@ public class ParseMOTLPrices implements IStoreUpdator, IPriceProvider {
 		}
 	}
 
+	@Override
 	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
 			throws IOException {
 		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);

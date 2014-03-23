@@ -1,16 +1,21 @@
 package com.reflexit.magiccards.core.seller;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.exports.ClassicExportDelegate;
+import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardModifiable;
@@ -18,11 +23,15 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class ParseTcgPlayerPrices implements IPriceProvider {
+public class ParseTcgPlayerPrices extends AbstractPriceProvider implements IPriceProvider {
+	public final String PARTNER_KEY = "MGCASSTNT";
+
 	public static enum Type {
 		Low("lowprice"),
 		Medium("avgprice"),
@@ -37,11 +46,13 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 	private Type type;
 
 	public ParseTcgPlayerPrices() {
-		this.type = Type.Medium;
+		this(Type.Medium);
 	}
 
 	public ParseTcgPlayerPrices(Type type) {
+		super(null);
 		this.type = type;
+		name = "TCG Player (" + type.name() + ")";
 	}
 
 	private static HashMap<String, String> setMap;
@@ -157,14 +168,9 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 		String name = magicCard.getName();
 		name = name.replaceAll("Æ", "AE");
 		name = name.replaceAll(" \\(.*$", "");
-		String url = "http://partner.tcgplayer.com/x/phl.asmx/p?pk=MGCASSTNT&s=" + set + "&p=" + name;
+		String url = "http://partner.tcgplayer.com/x/phl.asmx/p?pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
 		url = url.replaceAll(" ", "%20");
 		return new URL(url);
-	}
-
-	@Override
-	public String getName() {
-		return "TCG Player (" + type.name() + ")";
 	}
 
 	@Override
@@ -176,16 +182,55 @@ public class ParseTcgPlayerPrices implements IPriceProvider {
 		}
 	}
 
+	@Override
+	public void buy(IFilteredCardStore<IMagicCard> cards) {
+		ClassicExportDelegate exporter = new ClassicExportDelegate() {
+			@Override
+			public void printLine(Object[] values) {
+				if (values[0] == null)
+					values[0] = Integer.valueOf(1);
+				String line = String.format("%d %s||", values);
+				stream.print(line);
+			}
+		};
+		exporter.setReportType(ReportType.TEXT_DECK_CLASSIC);
+		ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
+		exporter.init(byteSt, false, cards);
+		try {
+			exporter.run(null);
+			byteSt.flush();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String url = "http://store.tcgplayer.com/list/selectproductmagic.aspx?partner=" + PARTNER_KEY + "&c=" + byteSt.toString();
+		System.err.println(url);
+	}
+
 	public static void main(String[] args) {
 		MagicCard card = new MagicCard();
 		card.setName("Flameborn Viron");
 		card.setSet("New Phyrexia");
-		float price = new ParseTcgPlayerPrices().getPrice(card);
+		ParseTcgPlayerPrices pp = new ParseTcgPlayerPrices();
+		float price = pp.getPrice(card);
 		System.err.println("Price for " + card + " " + price);
 		MagicCard card1 = new MagicCard();
 		card1.setName("Coat of Arms");
 		card1.setSet("Magic 2010");
-		float price1 = new ParseTcgPlayerPrices().getPrice(card1);
+		float price1 = pp.getPrice(card1);
 		System.err.println("Price for " + card1 + " " + price1);
+		MemoryFilteredCardStore<IMagicCard> store = new MemoryFilteredCardStore<IMagicCard>();
+		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+		list.add(card);
+		list.add(card1);
+		store.addAll(list);
+		store.update();
+		pp.buy(store);
 	}
 }
