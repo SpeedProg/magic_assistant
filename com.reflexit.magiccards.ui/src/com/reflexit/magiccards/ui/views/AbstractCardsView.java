@@ -38,10 +38,12 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dialogs.BrowserOpenAcknoledgementDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
+import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -53,6 +55,7 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected Action actionCopy;
 	protected Action actionPaste;
 	protected Action showInstances;
+	protected Action buyCards;
 
 	/**
 	 * The constructor.
@@ -199,6 +202,12 @@ public abstract class AbstractCardsView extends ViewPart {
 				runLoadExtras();
 			}
 		};
+		this.buyCards = new Action("Buy cards...") {
+			@Override
+			public void run() {
+				runBuyCards();
+			}
+		};
 		this.actionRefresh = new Action("Refresh") {
 			@Override
 			public void run() {
@@ -223,6 +232,11 @@ public abstract class AbstractCardsView extends ViewPart {
 				}
 			}
 		};
+	}
+
+	protected void runBuyCards() {
+		new BrowserOpenAcknoledgementDialog(getShell(), "Browser is being open, continue with the browser to complete your order",
+				PriceProviderManager.getInstance().getProvider().buy(getFilteredStore())).open();
 	}
 
 	protected void saveColumnLayout() {

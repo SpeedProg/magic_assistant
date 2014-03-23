@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
+import com.reflexit.magiccards.core.seller.AbstractPriceProvider;
 import com.reflexit.magiccards.core.seller.CustomPriceProvider;
 import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
@@ -58,7 +59,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 			String name = store.name;
 			if (name == null)
 				name = pricesFile.getName().replace(".xml", "");
-			CustomPriceProvider customPriceProvider = new CustomPriceProvider(name);
+			AbstractPriceProvider customPriceProvider = new CustomPriceProvider(name);
 			providers.add(customPriceProvider);
 			File shouldBeName = PricesXmlStreamWriter.getPricesFile(customPriceProvider);
 			if (!shouldBeName.equals(pricesFile))
