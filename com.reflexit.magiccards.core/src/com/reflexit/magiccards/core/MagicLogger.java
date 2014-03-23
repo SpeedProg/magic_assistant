@@ -21,7 +21,7 @@ public class MagicLogger {
 
 	public static void log(Throwable e) {
 		if (rcp == false) {
-			System.err.println("Exception: " + e.getStackTrace());
+			e.printStackTrace(System.err);
 		} else {
 			Activator.log(e);
 		}
