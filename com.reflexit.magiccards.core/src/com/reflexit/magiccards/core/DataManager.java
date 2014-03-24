@@ -25,6 +25,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
+import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.model.utils.IntHashtable;
 
 public class DataManager {
@@ -60,6 +61,10 @@ public class DataManager {
 
 	public static IDbCardStore<IMagicCard> getMagicDBStore() {
 		return handler.getMagicDBStore();
+	}
+
+	public static IDbPriceStore getDBPriceStore() {
+		return handler.getDBPriceStore();
 	}
 
 	public static synchronized ModelRoot getModelRoot() {
@@ -398,6 +403,7 @@ public class DataManager {
 			@Override
 			public void run() {
 				getMagicDBStore().initialize();
+				getDBPriceStore().initialize();
 			}
 		}.start();
 	}

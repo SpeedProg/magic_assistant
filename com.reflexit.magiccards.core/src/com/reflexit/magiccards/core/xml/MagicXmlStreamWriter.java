@@ -124,6 +124,8 @@ public class MagicXmlStreamWriter {
 				writer.startEl("properties");
 				marshalMap((Map) o);
 				writer.endEl();
+			} else if (field == MagicCardField.DBPRICE) {
+				// skip this field, prices will be stored separately
 			} else {
 				if (o instanceof Float && ((Float) o).floatValue() == 0)
 					continue;
