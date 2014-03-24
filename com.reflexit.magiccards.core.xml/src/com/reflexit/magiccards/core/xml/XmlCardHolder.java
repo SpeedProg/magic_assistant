@@ -31,6 +31,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
+import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
@@ -278,5 +279,10 @@ public class XmlCardHolder implements ICardHandler {
 
 	public void setActiveDeckHandler(IFilteredCardStore store) {
 		this.activeDeck = store;
+	}
+
+	@Override
+	public IDbPriceStore getDBPriceStore() {
+		return PricesMultiFileStore.getInstance();
 	}
 }
