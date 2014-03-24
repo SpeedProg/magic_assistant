@@ -39,6 +39,7 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.BrowserOpenAcknoledgementDialog;
+import com.reflexit.magiccards.ui.dialogs.BuyCardsConfirmationDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
@@ -235,8 +236,12 @@ public abstract class AbstractCardsView extends ViewPart {
 	}
 
 	protected void runBuyCards() {
-		new BrowserOpenAcknoledgementDialog(getShell(), "Browser is being open, continue with the browser to complete your order",
-				PriceProviderManager.getInstance().getProvider().buy(getFilteredStore())).open();
+		final IStructuredSelection selection = getSelection();
+		final BuyCardsConfirmationDialog dialog = new BuyCardsConfirmationDialog(getShell(), selection, getFilteredStore());
+		if (dialog.open() == Window.OK) {
+			new BrowserOpenAcknoledgementDialog(getShell(), "Browser is being open, continue with the browser to complete your order",
+					PriceProviderManager.getInstance().getProvider().buy(getFilteredStore())).open();
+		}
 	}
 
 	protected void saveColumnLayout() {

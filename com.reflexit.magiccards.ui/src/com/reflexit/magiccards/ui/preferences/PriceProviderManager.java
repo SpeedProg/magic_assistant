@@ -135,7 +135,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 		}
 	}
 
-	private void reloadPrices(IPriceProvider provider) {
+	public void reloadPrices(IPriceProvider provider) {
 		MagicLogger.traceStart("reloadPrices");
 		File pricesFile = PricesXmlStreamWriter.getPricesFile(provider);
 		IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
@@ -163,6 +163,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 			MagicLogger.log(e);
 		} finally {
 			db.getStorage().setAutoCommit(true);
+			db.getStorage().save();
 			MagicLogger.traceEnd("reloadPrices");
 		}
 	}

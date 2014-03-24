@@ -60,11 +60,12 @@ public class LoadingPricesJob extends Job {
 			IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
 			parser.updateStore(db, list, size, new CoreMonitorAdapter(monitor));
 			new PricesXmlStreamWriter().save(db, parser);
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					view.refresh();
-				}
-			});
+			if (view != null)
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						view.refresh();
+					}
+				});
 		} catch (IOException e) {
 			return MagicUIActivator.getStatus(e);
 		}
