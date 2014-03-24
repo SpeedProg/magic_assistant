@@ -78,7 +78,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		CardCache.setCahchingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.CACHE_IMAGES));
 		CardCache.setLoadingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.LOAD_IMAGES));
 		DataManager.setOwnCopyEnabled(getPluginPreferences().getBoolean(PreferenceConstants.OWNED_COPY));
-		getPreferenceStore().addPropertyChangeListener(PriceProviderManager.getInstance());
+		PriceProviderManager.getInstance().sync(getPreferenceStore());
 	}
 
 	/*

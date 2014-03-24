@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.net.URL;
 import java.util.HashMap;
 
 import org.eclipse.jface.action.Action;
@@ -44,7 +45,6 @@ import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
-import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -239,8 +239,13 @@ public abstract class AbstractCardsView extends ViewPart {
 		final IStructuredSelection selection = getSelection();
 		final BuyCardsConfirmationDialog dialog = new BuyCardsConfirmationDialog(getShell(), selection, getFilteredStore());
 		if (dialog.open() == Window.OK) {
-			new BrowserOpenAcknoledgementDialog(getShell(), "Browser is being open, continue with the browser to complete your order",
-					PriceProviderManager.getInstance().getProvider().buy(getFilteredStore())).open();
+			URL url = DataManager.getDBPriceStore().getProvider().buy(getFilteredStore());
+			if (url != null)
+				new BrowserOpenAcknoledgementDialog(getShell(), "Browser is being open, continue with the browser to complete your order",
+						url).open();
+			else
+				MessageDialog.open(MessageDialog.ERROR, getShell(), "Error", "This provider does not support direct cart population",
+						SWT.NONE);
 		}
 	}
 

@@ -16,7 +16,6 @@ import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.xml.PricesXmlStreamWriter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
-import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
@@ -55,7 +54,7 @@ public class LoadingPricesJob extends Job {
 			default:
 				return Status.CANCEL_STATUS;
 		}
-		IPriceProvider parser = PriceProviderManager.getInstance().getProvider();
+		IPriceProvider parser = DataManager.getDBPriceStore().getProvider();
 		try {
 			IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
 			parser.updateStore(db, list, size, new CoreMonitorAdapter(monitor));
