@@ -36,6 +36,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -251,16 +252,25 @@ public abstract class AbstractCardsView extends ViewPart {
 					String text = System.getProperty("clipboard");
 					if (text != null && !text.isEmpty()) {
 						CopySupport.runCopy(text);
-						MessageDialog
-								.openInformation(
+						boolean ok = MessageDialog
+								.openConfirm(
 										getShell(),
 										"Note",
-										"Cards are copied to clipboard, use Paste action to add cards into mass entry input form to add to a cart when Browser is open. Press OK to continue.");
+										"Cards are copied to clipboard, use Paste command to add cards into mass entry input form when Browser comes up.\nPress OK to open a Browser.");
+						if (!ok)
+							return;
 					}
+					MagicLogger.log("Redirecting to " + url);
 					new BrowserOpenAcknoledgementDialog(getShell(),
 							"Browser is being open, continue with the browser to complete your order", url).open();
-				} else
-					MessageDialog.openError(getShell(), "Error", "This provider does not support direct cart population");
+				} else {
+					if (!MessageDialog
+							.openConfirm(getShell(), "Error",
+									"This provider does not support direct cart population.\nPress OK to open a Browser on the main page and enter cards manually"))
+						return;
+					new BrowserOpenAcknoledgementDialog(getShell(),
+							"Browser is being open, continue with the browser to complete your order", provider.getURL()).open();
+				}
 			} catch (Exception e) {
 				MessageDialog.openError(getShell(), "Error", e.getLocalizedMessage());
 			}
