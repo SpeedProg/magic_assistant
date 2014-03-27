@@ -1,40 +1,88 @@
 package com.reflexit.magiccards.core.xml;
 
+import gnu.trove.procedure.TIntFloatProcedure;
+
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.OutputStream;
+import java.util.Iterator;
+import java.util.Properties;
+
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 
-public class PricesXmlStreamWriter extends MagicXmlStreamWriter {
-	@Override
-	public void marshal(MagicCard card) throws XMLStreamException {
-		writer.ela(MagicCardField.ID.getJavaField().getName(), String.valueOf(card.getCardId()));
-		MagicCardField field = MagicCardField.DBPRICE;
-		Float o = card.getDbPrice();
-		if (o == null)
-			return; // skip this
-		if (o.floatValue() == 0)
-			return;
-		String text = String.valueOf(o);
-		writer.ela(field.getJavaField().getName(), text);
+public class PricesXmlStreamWriter {
+	protected MyXMLStreamWriter writer;
+
+	public synchronized void write(PriceProviderStoreObject object) throws IOException {
+		write(object, new FileOutputStream(object.file));
 	}
 
-	public void save(Iterable<IMagicCard> store, IPriceProvider provider) throws IOException {
-		CardCollectionStoreObject o = new CardCollectionStoreObject();
+	public synchronized void write(PriceProviderStoreObject object, OutputStream st) throws IOException {
+		OutputStream out = new BufferedOutputStream(st, 256 * 1024);
+		try {
+			writer = new MyXMLStreamWriter(st);
+			try {
+				writer.startEl("cards");
+				writer.el("name", object.name);
+				Properties properties = object.properties;
+				marshal(properties);
+				// list
+				if (object.map != null) {
+					writer.startEl("list");
+					object.map.forEachEntry(new TIntFloatProcedure() {
+						@Override
+						public boolean execute(int key, float value) {
+							try {
+								if (value != 0) {
+									writer.startEl("mc");
+									writer.el("id", String.valueOf(key));
+									writer.el("dbprice", String.valueOf(value));
+									writer.endEl();
+								}
+							} catch (XMLStreamException e) {
+								MagicLogger.log(e);
+								return false;
+							}
+							return true;
+						}
+					});
+					writer.endEl();
+				}
+				writer.endEl();
+			} catch (XMLStreamException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} finally {
+			writer.close();
+			out.close();
+			writer = null;
+		}
+	}
+
+	public void marshal(Properties properties) throws XMLStreamException {
+		if (properties != null && properties.size() > 0) {
+			writer.startEl("properties");
+			for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
+				String key = (String) iterator.next();
+				writer.lineEl("property", "name", key, "value", properties.getProperty(key));
+				// writer.writeDirect("<property name=\"" + key + "\" value=\"" +
+				// properties.getProperty(key) + "\"/>");
+			}
+			writer.endEl();
+		}
+	}
+
+	public void save(IPriceProvider provider) throws IOException {
+		PriceProviderStoreObject o = new PriceProviderStoreObject();
 		o.name = provider.getName();
 		File file = getPricesFile(provider);
-		o.type = "dbprice";
-		o.list = new ArrayList();
-		for (IMagicCard card : store) {
-			if (card.getDbPrice() > 0)
-				o.list.add(card);
-		}
+		o.map = DataManager.getDBPriceStore().getPriceMap(provider);
 		FileOutputStream stream = new FileOutputStream(file);
 		write(o, stream);
 		stream.close();

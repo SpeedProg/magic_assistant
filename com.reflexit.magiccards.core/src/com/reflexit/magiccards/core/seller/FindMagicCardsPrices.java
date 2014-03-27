@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.seller;
 
+import gnu.trove.map.TIntFloatMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,22 +13,20 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class FindMagicCardsPrices extends AbstractPriceProvider implements IStoreUpdator, IPriceProvider {
+public class FindMagicCardsPrices extends AbstractPriceProvider {
 	String baseURL;
 	String cardURL;
 	HashMap<String, String> setIdMap = new HashMap<String, String>();
@@ -56,22 +56,17 @@ public class FindMagicCardsPrices extends AbstractPriceProvider implements IStor
 	}
 
 	@Override
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
-			throws IOException {
-		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
-		if (iterable == null) {
-			iterable = store;
-			size = store.size();
-		}
+	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		HashSet<String> sets = new HashSet();
+		int size = 0;
 		for (IMagicCard magicCard : iterable) {
 			String set = magicCard.getSet();
 			sets.add(set);
+			size++;
 		}
+		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
 		monitor.worked(5);
-		IStorage storage = null;
-		storage = store.getStorage();
-		storage.setAutoCommit(false);
 		processSetList(sets);
 		try {
 			for (String set : sets) {
@@ -106,8 +101,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider implements IStor
 							if (price > 0) {
 								if (!setIdMap.containsKey(set))
 									setIdMap.put(set, id);
-								((ICardModifiable) magicCard).setObjectByField(MagicCardField.DBPRICE, String.valueOf(price));
-								store.update(magicCard);
+								priceMap.put(magicCard.getCardId(), price);
 							}
 							monitor.worked(1);
 						}
@@ -115,14 +109,12 @@ public class FindMagicCardsPrices extends AbstractPriceProvider implements IStor
 				}
 			}
 		} finally {
-			storage.save();
-			storage.setAutoCommit(true);
 			monitor.done();
 		}
 	}
 
 	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
-		updateStore(fstore.getCardStore(), fstore, fstore.getSize(), monitor);
+		updatePrices(fstore, monitor);
 	}
 
 	private String findSetId(String set) {

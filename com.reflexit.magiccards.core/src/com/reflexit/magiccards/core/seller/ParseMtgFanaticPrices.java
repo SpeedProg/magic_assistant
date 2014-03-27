@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.seller;
 
+import gnu.trove.map.TIntFloatMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,16 +13,14 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.ICardModifiable;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class ParseMtgFanaticPrices extends AbstractPriceProvider implements IStoreUpdator {
+public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	String baseURL;
 	String setURL;
 
@@ -32,13 +32,32 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider implements ISto
 	}
 
 	@Override
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
-			throws IOException {
-		monitor.beginTask("Loading prices...", size + 10);
-		if (iterable == null) {
-			iterable = store;
-			size = store.size();
+	public URL buy(Iterable<IMagicCard> cards) {
+		String res = "";
+		for (IMagicCard card : cards) {
+			int count = (card instanceof ICardCountable) ? ((ICardCountable) card).getCount() : 1;
+			String name = card.getName();
+			String line = String.format("%d %s %s\n", count, card.getSet(), name);
+			res += line;
 		}
+		System.setProperty("clipboard", res);
+		String url = "http://www.mtgfanatic.com/store/magic/cardimporter.aspx?AffiliateID=44349";
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			MagicLogger.log(e);
+			return null;
+		}
+	}
+
+	@Override
+	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+		int size = 0;
+		for (IMagicCard magicCard : iterable) {
+			size++;
+		}
+		monitor.beginTask("Loading prices...", size + 10);
+		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		HashSet<String> sets = new HashSet();
 		for (IMagicCard magicCard : iterable) {
 			String set = magicCard.getSet();
@@ -51,12 +70,10 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider implements ISto
 			if (monitor.isCanceled())
 				return;
 			if (id != null) {
-				// System.err.println("found " + set + " " + id);
-				HashMap<String, Float> prices = parse(id);
-				if (prices.size() > 0) {
-					IStorage storage = store.getStorage();
-					storage.setAutoCommit(false);
-					try {
+				try {
+					// System.err.println("found " + set + " " + id);
+					HashMap<String, Float> prices = parse(id);
+					if (prices.size() > 0) {
 						for (IMagicCard magicCard : iterable) {
 							if (monitor.isCanceled())
 								return;
@@ -64,17 +81,14 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider implements ISto
 							if (set2.equals(set)) {
 								if (prices.containsKey(magicCard.getName())) {
 									Float price = prices.get(magicCard.getName());
-									((ICardModifiable) magicCard).setObjectByField(MagicCardField.DBPRICE, String.valueOf(price));
-									store.update(magicCard);
+									priceMap.put(magicCard.getCardId(), price);
 									monitor.worked(1);
 								}
 							}
 						}
-					} finally {
-						storage.setAutoCommit(true);
-						storage.save();
-						monitor.done();
 					}
+				} catch (Exception e) {
+					MagicLogger.log(e);
 				}
 			}
 		}

@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.seller;
 
+import gnu.trove.map.TIntFloatMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,21 +10,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
-public class ParseMOTLPrices extends AbstractPriceProvider implements IStoreUpdator, IPriceProvider {
+public class ParseMOTLPrices extends AbstractPriceProvider {
 	private String baseURL;
 	private HashMap<String, String> setIdMap = new HashMap<String, String>();
 
@@ -65,19 +66,17 @@ public class ParseMOTLPrices extends AbstractPriceProvider implements IStoreUpda
 	}
 
 	@Override
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
-			throws IOException {
-		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
-		if (iterable == null) {
-			iterable = store;
-			size = store.size();
+	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+		int size = 0;
+		for (IMagicCard magicCard : iterable) {
+			size++;
 		}
+		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
+		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		HashMap<String, Float> prices = parse();
 		monitor.worked(5);
-		IStorage storage = null;
-		storage = store.getStorage();
-		storage.setAutoCommit(false);
 		Editions editions = Editions.getInstance();
+		IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
 		try {
 			for (IMagicCard magicCard : iterable) {
 				if (monitor.isCanceled())
@@ -85,20 +84,18 @@ public class ParseMOTLPrices extends AbstractPriceProvider implements IStoreUpda
 				float price = getPrice(prices, editions, magicCard);
 				if (price < 0) {
 					int id = magicCard.getFlipId();
-					IMagicCard flipCard = store.getCard(id);
+					IMagicCard flipCard = (IMagicCard) db.getCard(id);
 					if (flipCard != null)
 						price = getPrice(prices, editions, flipCard);
 				}
 				if (price > 0) {
 					// if (!setIdMap.containsKey(set))
 					// setIdMap.put(set, id);
-					((ICardModifiable) magicCard).setObjectByField(MagicCardField.DBPRICE, String.valueOf(price));
-					store.update(magicCard);
+					priceMap.put(magicCard.getCardId(), price);
 				}
 				monitor.worked(1);
 			}
 		} finally {
-			storage.setAutoCommit(true);
 			monitor.done();
 		}
 	}
@@ -128,7 +125,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider implements IStoreUpda
 	}
 
 	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
-		updateStore(fstore.getCardStore(), fstore, fstore.getSize(), monitor);
+		updatePrices(fstore, monitor);
 	}
 
 	public HashMap<String, Float> parse() throws IOException {

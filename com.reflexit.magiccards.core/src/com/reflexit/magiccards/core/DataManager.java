@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,13 +28,12 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
-import com.reflexit.magiccards.core.model.utils.IntHashtable;
 
 public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";
 	private static ICardHandler handler;
 	private static ModelRoot root;
-	private static IntHashtable links = new IntHashtable();
+	private static TIntObjectHashMap<IMagicCard> links = new TIntObjectHashMap<IMagicCard>();
 	private static boolean owncopy;
 	static {
 		try {
@@ -404,6 +405,7 @@ public class DataManager {
 			public void run() {
 				getMagicDBStore().initialize();
 				getDBPriceStore().initialize();
+				getDBPriceStore().reloadPrices(); // XXX
 			}
 		}.start();
 	}

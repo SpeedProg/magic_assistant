@@ -5,8 +5,6 @@ import java.net.URL;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class AbstractPriceProvider implements IPriceProvider {
@@ -17,8 +15,7 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public void updateStore(ICardStore<IMagicCard> store, Iterable<IMagicCard> iterable, int size, ICoreProgressMonitor monitor)
-			throws IOException {
+	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		throw new MagicException("This price provider " + name + " does not support interactive update");
 	}
 
@@ -28,12 +25,42 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public URL buy(IFilteredCardStore<IMagicCard> cards) {
+	public String toString() {
+		return name;
+	}
+
+	@Override
+	public URL buy(Iterable<IMagicCard> cards) {
 		return null;
 	}
 
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractPriceProvider other = (AbstractPriceProvider) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 }

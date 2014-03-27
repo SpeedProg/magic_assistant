@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xpp3_min-1.1.4c.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xstream-1.4.2.jar"/>
 	<classpathentry kind="lib" path="/com.reflexit.magiccards.db/bin"/>
+	<classpathentry kind="lib" path="lib/trove-3.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

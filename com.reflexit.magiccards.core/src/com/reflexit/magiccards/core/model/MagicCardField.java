@@ -17,7 +17,7 @@ public enum MagicCardField implements ICardField {
 	RARITY,
 	CTYPE("colorType"),
 	CMC,
-	DBPRICE,
+	DBPRICE(),
 	LANG,
 	EDITION_ABBR(null),
 	RATING,
@@ -90,6 +90,7 @@ public enum MagicCardField implements ICardField {
 			if (!f.isTransient())
 				res.add(f);
 		}
+		// res.add(DBPRICE);
 		return res.toArray(new ICardField[res.size()]);
 	}
 

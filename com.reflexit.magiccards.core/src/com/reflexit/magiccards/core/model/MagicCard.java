@@ -30,8 +30,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	private String rarity;
 	private String oracleText;
 	private String artist;
-	private float dbprice;
 	private float rating;
+	private float dbprice;
 	private String lang;
 	private String num;
 	private String rulings;
@@ -311,7 +311,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				case CMC:
 					return (Integer.valueOf(getCmc()));
 				case DBPRICE:
-					return (this.dbprice);
+					return getDbPrice();
 				case RATING:
 					return (this.rating);
 				case ARTIST:
@@ -377,6 +377,8 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public void setDbPrice(float dbprice) {
 		this.dbprice = dbprice;
+		if (id != 0 && dbprice != 0)
+			DataManager.getDBPriceStore().setDbPrice(this, dbprice);
 	}
 
 	public float getCommunityRating() {
