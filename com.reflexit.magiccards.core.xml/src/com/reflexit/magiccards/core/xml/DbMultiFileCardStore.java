@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +36,6 @@ import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
-import com.reflexit.magiccards.core.model.utils.IntHashtable;
 
 /**
  * Card Store for Magic DB
@@ -42,7 +43,7 @@ import com.reflexit.magiccards.core.model.utils.IntHashtable;
  */
 public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
 	public class GlobalDbHandler {
-		private IntHashtable hash = new IntHashtable();
+		private TIntObjectHashMap<IMagicCard> hash = new TIntObjectHashMap<IMagicCard>();
 		// map from name to latest card
 		private HashMap<String, Object> primeMap = new HashMap<String, Object>();
 		private Comparator comp = new Comparator<MagicCard>() {
@@ -64,7 +65,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		public boolean hashAndResolve(IMagicCard card) {
 			boolean conflict = false;
 			int id = card.getCardId();
-			IMagicCard prev = (IMagicCard) hash.get(id);
+			IMagicCard prev = hash.get(id);
 			if (prev != null) {
 				boolean delcur = conflictMerge(prev, card);
 				hash.put(prev.getCardId(), prev); // rehash prev it could have changed
@@ -126,7 +127,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 
 		public IMagicCard get(int id) {
-			return (IMagicCard) hash.get(id);
+			return hash.get(id);
 		}
 
 		public void remove(IMagicCard card) {

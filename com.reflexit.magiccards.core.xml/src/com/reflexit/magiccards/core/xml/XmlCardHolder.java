@@ -283,6 +283,6 @@ public class XmlCardHolder implements ICardHandler {
 
 	@Override
 	public IDbPriceStore getDBPriceStore() {
-		return PricesMultiFileStore.getInstance();
+		return DbPricesMultiFileStore.getInstance();
 	}
 }
