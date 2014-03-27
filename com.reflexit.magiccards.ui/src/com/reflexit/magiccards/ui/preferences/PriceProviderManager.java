@@ -31,9 +31,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 		Object newValue = event.getNewValue();
 		if (property.equals(PreferenceConstants.PRICE_PROVIDER)) {
 			if (newValue != null && !newValue.equals(event.getOldValue())) {
-				IPriceProvider provider = DataManager.getDBPriceStore().setProviderName((String) newValue);
-				if (provider != null)
-					DataManager.getDBPriceStore().loadPrices(provider);
+				DataManager.getDBPriceStore().setProviderName((String) newValue);
 			}
 		}
 	}

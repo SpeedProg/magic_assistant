@@ -23,6 +23,12 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
 
 public class CopySupport {
+	public static void runCopy(String text) {
+		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+		TextTransfer textTransfer = TextTransfer.getInstance();
+		cb.setContents(new Object[] { text }, new Transfer[] { textTransfer });
+	}
+
 	public static void runCopy(Control focusControl) {
 		if (focusControl instanceof Text)
 			((Text) focusControl).copy();

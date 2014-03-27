@@ -3,6 +3,8 @@ package com.reflexit.magiccards.ui.views;
 import java.net.URL;
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -38,10 +40,12 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.BrowserOpenAcknoledgementDialog;
 import com.reflexit.magiccards.ui.dialogs.BuyCardsConfirmationDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
+import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
@@ -239,13 +243,27 @@ public abstract class AbstractCardsView extends ViewPart {
 		final IStructuredSelection selection = getSelection();
 		final BuyCardsConfirmationDialog dialog = new BuyCardsConfirmationDialog(getShell(), selection, getFilteredStore());
 		if (dialog.open() == Window.OK) {
-			URL url = DataManager.getDBPriceStore().getProvider().buy(getFilteredStore());
-			if (url != null)
-				new BrowserOpenAcknoledgementDialog(getShell(), "Browser is being open, continue with the browser to complete your order",
-						url).open();
-			else
-				MessageDialog.open(MessageDialog.ERROR, getShell(), "Error", "This provider does not support direct cart population",
-						SWT.NONE);
+			try {
+				IPriceProvider provider = DataManager.getDBPriceStore().getProvider();
+				System.setProperty("clipboard", "");
+				URL url = provider.buy(dialog.getListAsIterable());
+				if (url != null) {
+					String text = System.getProperty("clipboard");
+					if (text != null && !text.isEmpty()) {
+						CopySupport.runCopy(text);
+						MessageDialog
+								.openInformation(
+										getShell(),
+										"Note",
+										"Cards are copied to clipboard, use Paste action to add cards into mass entry input form to add to a cart when Browser is open. Press OK to continue.");
+					}
+					new BrowserOpenAcknoledgementDialog(getShell(),
+							"Browser is being open, continue with the browser to complete your order", url).open();
+				} else
+					MessageDialog.openError(getShell(), "Error", "This provider does not support direct cart population");
+			} catch (Exception e) {
+				MessageDialog.openError(getShell(), "Error", e.getLocalizedMessage());
+			}
 		}
 	}
 
@@ -262,17 +280,39 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void runLoadExtras() {
 		final IStructuredSelection selection = getSelection();
-		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), getFilteredStore().getSize(), getFilteredStore()
+		IFilteredCardStore filteredStore = getFilteredStore();
+		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), filteredStore.getSize(), filteredStore
 				.getCardStore().size());
 		if (dialog.open() != Window.OK || dialog.getFields().isEmpty()) {
 			return;
 		}
+		Iterable list = null;
+		switch (dialog.getListChoice()) {
+			case LoadExtrasDialog.USE_SELECTION:
+				list = selection.toList();
+				break;
+			case LoadExtrasDialog.USE_FILTER:
+				list = filteredStore;
+				break;
+			case LoadExtrasDialog.USE_ALL:
+				list = filteredStore.getCardStore();
+				break;
+		}
 		if (dialog.getFields().contains(MagicCardField.DBPRICE)) {
 			dialog.getFields().remove(MagicCardField.DBPRICE);
-			LoadingPricesJob loadingPrices = new LoadingPricesJob(this);
-			loadingPrices.setSelection(selection);
-			loadingPrices.setListChoice(dialog.getListChoice());
+			LoadingPricesJob loadingPrices = new LoadingPricesJob(list);
 			loadingPrices.schedule();
+			loadingPrices.addJobChangeListener(new JobChangeAdapter() {
+				@Override
+				public void done(IJobChangeEvent event) {
+					control.getControl().getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							refresh();
+						}
+					});
+				}
+			});
 		}
 		if (dialog.getFields().size() > 0) {
 			LoadingExtraJob loadingExtras = new LoadingExtraJob(this);

@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.dialogs;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -11,9 +10,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -113,11 +110,10 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 		b.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				LoadingPricesJob job = new LoadingPricesJob("Loading prices from " + priceProviderCombo.getText(), null);
-				job.setListChoice(USE_SELECTION);
-				job.setSelection((IStructuredSelection) getListAsSelection());
-				job.schedule();
+				LoadingPricesJob job = new LoadingPricesJob("Loading prices from " + priceProviderCombo.getText(), getListAsIterable());
 				job.setUser(true);
+				job.setSystem(false);
+				job.schedule();
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
@@ -141,7 +137,7 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 	private Button b3;
 
 	protected void updateEstimatedPrice() {
-		double cost = 0;
+		float cost = 0;
 		int unknw = 0;
 		Iterator listIterator = getListIterator();
 		for (Iterator iterator = listIterator; iterator.hasNext();) {
@@ -149,11 +145,19 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 			int count = 1;
 			if (card instanceof ICardCountable)
 				count = ((ICardCountable) card).getCount();
-			cost += card.getDbPrice() * count;
-			if (cost == 0)
+			float price = card.getDbPrice();
+			cost += price * count;
+			if (price == 0)
 				unknw++;
 		}
-		epri.setText("Estimated price: $" + decimalFormat.format(cost) + ". Not found cards: " + unknw + ".");
+		final float fcost = cost;
+		final int funknown = unknw;
+		epri.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				epri.setText("Estimated price: $" + decimalFormat.format(fcost) + ". Not found cards: " + funknown + ".");
+			}
+		});
 	}
 
 	private Iterator getListIterator() {
@@ -169,19 +173,14 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 		}
 	}
 
-	private ISelection getListAsSelection() {
+	public Iterable getListAsIterable() {
 		switch (listChoice) {
 			case USE_SELECTION:
-				return selection;
+				return selection.toList();
 			case USE_FILTER:
+				return filteredStore;
 			case USE_ALL:
-				Iterator iter = getListIterator();
-				ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-				for (Iterator iterator = iter; iterator.hasNext();) {
-					IMagicCard card = (IMagicCard) iterator.next();
-					list.add(card);
-				}
-				return new StructuredSelection(list);
+				return filteredStore.getCardStore();
 			default:
 				return null;
 		}
@@ -197,12 +196,7 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 				String text = priceProviderCombo.getText();
 				if (text.length() > 0)
 					PriceProviderManager.getInstance().setProviderName(text);
-				priceProviderCombo.getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						updateEstimatedPrice();
-					}
-				});
+				updateEstimatedPrice();
 			}
 		});
 		priceProviderCombo.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -243,12 +237,7 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e) {
 				if (button.getSelection()) {
 					listChoice = (Integer) button.getData();
-					priceProviderCombo.getDisplay().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							updateEstimatedPrice();
-						}
-					});
+					updateEstimatedPrice();
 				}
 			}
 		});
