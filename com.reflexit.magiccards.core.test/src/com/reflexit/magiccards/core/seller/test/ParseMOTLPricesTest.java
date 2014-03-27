@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.seller.test;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
@@ -16,6 +17,7 @@ public class ParseMOTLPricesTest extends TestCase {
 	protected void setUp() {
 		store = new MemoryCardStore<IMagicCard>();
 		parser = new ParseMOTLPrices();
+		DataManager.getDBPriceStore().setProviderName(parser.getName());
 		monitor = ICoreProgressMonitor.NONE;
 	}
 
@@ -30,7 +32,8 @@ public class ParseMOTLPricesTest extends TestCase {
 
 	public void doit() {
 		try {
-			parser.updateStore(store, null, 0, monitor);
+			parser.updatePrices(store, monitor);
+			DataManager.getDBPriceStore().reloadPrices();
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

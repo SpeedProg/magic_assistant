@@ -322,6 +322,7 @@ public class CardGroupTest extends TestCase {
 			}
 			count += ((IMagicCardPhysical) cards[j]).getCount();
 		}
+		group.rehash();
 		checkConsistency(MagicCardFieldPhysical.OWNERSHIP, group.isOwn());
 		checkConsistency(MagicCardFieldPhysical.OWN_COUNT, group.getOwnCount(), count);
 		checkConsistency(MagicCardFieldPhysical.OWN_UNIQUE, group.getOwnUnique(), same ? 1 : count);
@@ -383,8 +384,8 @@ public class CardGroupTest extends TestCase {
 	}
 
 	public void checkConsistency(ICardField field, Object value, Object compare) {
-		assertEquals(compare, value);
-		assertEquals(value, group.getObjectByField(field));
+		assertEquals("Failed compare(1) for " + field, compare, value);
+		assertEquals("Failed compare(2) for " + field, value, group.getObjectByField(field));
 	}
 
 	public void printTree(CardGroup g, int level) {
