@@ -35,6 +35,10 @@ public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 		cards.addAll(list);
 	}
 
+	public void add(T c) {
+		cards.add(c);
+	}
+
 	public ICardStore getCardStore() {
 		return this.cards;
 	}

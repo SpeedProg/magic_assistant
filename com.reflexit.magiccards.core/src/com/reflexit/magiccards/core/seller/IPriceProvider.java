@@ -13,6 +13,8 @@ public interface IPriceProvider {
 
 	URL buy(Iterable<IMagicCard> cards);
 
+	public String export(Iterable<IMagicCard> cards);
+
 	/**
 	 * Update prices for given card list in price storage for actve provider
 	 * 

@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -179,17 +178,12 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	@Override
 	public URL buy(Iterable<IMagicCard> cards) {
 		String url = "http://store.tcgplayer.com/list/selectproductmagic.aspx?partner=" + PARTNER_KEY;
-		String res = "";
-		for (IMagicCard card : cards) {
-			int count = (card instanceof ICardCountable) ? ((ICardCountable) card).getCount() : 1;
-			String name = card.getName();
-			String line = String.format("%d %s||", count, name);
-			res += line;
-		}
+		String res = export(cards);
 		if (res.length() < 1600) {
-			url += "&c=" + res;
+			res = res.replaceAll("\r", "");
+			url += "&c=" + res.replaceAll("\n", "||");
 		} else {
-			System.setProperty("clipboard", res.replaceAll("\\Q||", "\n"));
+			System.setProperty("clipboard", res);
 		}
 		try {
 			return new URL(url);

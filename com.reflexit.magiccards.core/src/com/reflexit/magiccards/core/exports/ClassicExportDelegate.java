@@ -41,7 +41,7 @@ public class ClassicExportDelegate extends AbstractExportDelegatePerLine<IMagicC
 
 	@Override
 	public void printLocationHeader() {
-		if (header) {
+		if (header && printLocation) {
 			stream.println("# " + location.getName());
 		}
 	}

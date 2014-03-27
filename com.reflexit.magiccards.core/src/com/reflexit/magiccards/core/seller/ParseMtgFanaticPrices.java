@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.exports.ClassicExportDelegate;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -33,14 +34,7 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 
 	@Override
 	public URL buy(Iterable<IMagicCard> cards) {
-		String res = "";
-		for (IMagicCard card : cards) {
-			int count = (card instanceof ICardCountable) ? ((ICardCountable) card).getCount() : 1;
-			String name = card.getName();
-			String line = String.format("%d %s %s\n", count, card.getSet(), name);
-			res += line;
-		}
-		System.setProperty("clipboard", res);
+		System.setProperty("clipboard", export(cards));
 		String url = "http://www.mtgfanatic.com/store/magic/cardimporter.aspx?AffiliateID=44349";
 		try {
 			return new URL(url);
@@ -48,6 +42,20 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 			MagicLogger.log(e);
 			return null;
 		}
+	}
+
+	@Override
+	public String export(Iterable<IMagicCard> cards) {
+		String res = new ClassicExportDelegate() {
+			@Override
+			public void printCard(IMagicCard card) {
+				int count = (card instanceof ICardCountable) ? ((ICardCountable) card).getCount() : 1;
+				String name = card.getName();
+				String line = String.format("%d %s %s\n", count, card.getSet(), name);
+				stream.print(line);
+			}
+		}.export(cards);
+		return res;
 	}
 
 	@Override

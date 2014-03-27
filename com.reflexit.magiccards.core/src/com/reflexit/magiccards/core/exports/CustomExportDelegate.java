@@ -12,6 +12,8 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.OutputStream;
 import java.text.MessageFormat;
+
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -60,6 +62,8 @@ public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCa
 	public void init(OutputStream st, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
 		super.init(st, header, filteredLibrary);
 		ReportType rtype = getType();
+		if (rtype == null)
+			throw new MagicException("Exporter is not initialized");
 		format = rtype.getProperty(ROW_FORMAT);
 		String fields = rtype.getProperty(ROW_FIELDS);
 		if (fields != null && fields.length() > 0)

@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -158,6 +159,19 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 			} catch (NumberFormatException e) {
 				continue;
 			}
+		}
+	}
+
+	@Override
+	public URL buy(Iterable<IMagicCard> cards) {
+		String url = "http://magictraders.crystalcommerce.com/products/multi_search";
+		String res = export(cards);
+		System.setProperty("clipboard", res);
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			MagicLogger.log(e);
+			return null;
 		}
 	}
 

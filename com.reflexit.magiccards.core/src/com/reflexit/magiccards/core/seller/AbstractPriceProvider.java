@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.exports.ClassicNoXExportDelegate;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -32,6 +33,11 @@ public class AbstractPriceProvider implements IPriceProvider {
 	@Override
 	public URL buy(Iterable<IMagicCard> cards) {
 		return null;
+	}
+
+	public String export(Iterable<IMagicCard> cards) {
+		String res = new ClassicNoXExportDelegate().export(cards);
+		return res;
 	}
 
 	@Override

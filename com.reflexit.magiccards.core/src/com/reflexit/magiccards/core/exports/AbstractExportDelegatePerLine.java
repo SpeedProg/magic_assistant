@@ -16,11 +16,9 @@ public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDel
 	@Override
 	public void export(ICoreProgressMonitor monitor) {
 		try {
-			if (getType() == null)
-				throw new IllegalArgumentException("Delegate is not initialized");
 			if (monitor == null)
 				monitor = ICoreProgressMonitor.NONE;
-			monitor.beginTask("Exporting to " + getType().getLabel() + "...", store.getSize());
+			monitor.beginTask("Exporting to " + getLabel() + "...", store.getSize());
 			if (columns == null) {
 				columns = deterimeColumns();
 			}
@@ -93,12 +91,20 @@ public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDel
 		return element.toString();
 	}
 
+	protected boolean printLocation = true;
+
 	public void printLocationHeader() {
 		// nothing
 	}
 
 	public void printLocationFooter() {
 		// nothing
+	}
+
+	@Override
+	public String export(Iterable<T> cards) {
+		printLocation = false;
+		return super.export(cards);
 	}
 
 	public void printHeader() {

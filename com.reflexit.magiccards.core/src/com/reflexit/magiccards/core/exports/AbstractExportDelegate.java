@@ -1,15 +1,18 @@
 package com.reflexit.magiccards.core.exports;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
@@ -29,6 +32,32 @@ public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 		this.header = header;
 		this.store = filteredLibrary;
 		this.location = store.getLocation();
+	}
+
+	protected String getLabel() {
+		ReportType type = getType();
+		if (type == null)
+			return getClass().getName();
+		return type.getLabel();
+	}
+
+	public String export(Iterable<T> cards) {
+		ByteArrayOutputStream st = new ByteArrayOutputStream();
+		MemoryFilteredCardStore<T> mem = new MemoryFilteredCardStore<T>();
+		for (T mc : cards) {
+			mem.add(mc);
+		}
+		mem.update();
+		init(st, true, mem);
+		try {
+			run(null);
+		} catch (InvocationTargetException e) {
+			MagicLogger.log(e);
+			return null;
+		} catch (InterruptedException e) {
+			// ignore
+		}
+		return st.toString();
 	}
 
 	@Override
