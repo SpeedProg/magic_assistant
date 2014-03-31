@@ -14,8 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import com.reflexit.magiccards.core.model.EditionsTest;
-import com.reflexit.magiccards.core.seller.test.ParseMOTLPricesTest;
-import com.reflexit.magiccards.core.seller.test.ParseTcgPlayerPricesTest;
+import com.reflexit.magiccards.core.seller.test.AllSellerTests;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSearchChecklistTest;
@@ -43,8 +42,7 @@ public class AllCoreTests {
 		suite.addTestSuite(ParseGathererSearchChecklistTest.class);
 		suite.addTestSuite(EditionsTest.class);
 		// prive providers
-		suite.addTestSuite(ParseTcgPlayerPricesTest.class);
-		suite.addTestSuite(ParseMOTLPricesTest.class);
+		suite.addTest(AllSellerTests.suite());
 		// $JUnit-END$
 		return suite;
 	}
