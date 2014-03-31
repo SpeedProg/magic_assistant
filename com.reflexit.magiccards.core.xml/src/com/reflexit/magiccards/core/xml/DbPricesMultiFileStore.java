@@ -68,6 +68,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		MagicLogger.traceStart("reloadPrices");
 		final IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
 		try {
+			db.getStorage().setAutoCommit(false);
 			for (IMagicCard card : db) {
 				((MagicCard) card).setDbPrice(0);
 			}
@@ -90,6 +91,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 				});
 			}
 		} finally {
+			db.getStorage().setAutoCommit(true);
 			MagicLogger.traceEnd("reloadPrices");
 		}
 	}
