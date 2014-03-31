@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.seller;
 
-import gnu.trove.map.TIntFloatMap;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,22 +74,19 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		setMap.put("Planechase 2012 Edition", "Planechase 2012");
 		setMap.put("Duel Decks: Knights vs. Dragons", "Duel Decks: Knights vs Dragons ");
 		setMap.put("Ravnica: City of Guilds", "Ravnica");
+		setMap.put("Commander 2013 Edition", "Commander 2013");
 	}
 
 	@Override
-	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
-		int size = 0;
-		for (IMagicCard magicCard : iterable) {
-			size++;
-		}
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+		int size = getSize(iterable);
 		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
-		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
 		monitor.worked(5);
 		try {
 			for (IMagicCard magicCard : iterable) {
 				if (monitor.isCanceled())
-					return;
+					return null;
 				float price = getPrice(magicCard);
 				if (price < 0) {
 					int id = magicCard.getFlipId();
@@ -100,16 +95,14 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 						price = getPrice(flipCard);
 				}
 				if (price > 0) {
-					// if (!setAlias.containsKey(set))
-					// setAlias.put(set, id);
-					priceMap.put(magicCard.getCardId(), price);
-					((MagicCard) magicCard.getBase()).setDbPrice(price);
+					setDbPrice(magicCard, price);
 				}
 				monitor.worked(1);
 			}
 		} finally {
 			monitor.done();
 		}
+		return iterable;
 	}
 
 	public float getPrice(IMagicCard magicCard) {
@@ -160,9 +153,11 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			set = setm;
 		String name = magicCard.getName();
 		name = name.replaceAll("Æ", "AE");
+		name = name.replaceAll("ö", "o");
 		name = name.replaceAll(" \\(.*$", "");
 		String url = "http://partner.tcgplayer.com/x/phl.asmx/p?pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
-		url = url.replaceAll(" ", "%20");
+		url = url.replaceAll(" ", "+");
+		url = url.replaceAll("'", "%27");
 		return new URL(url);
 	}
 

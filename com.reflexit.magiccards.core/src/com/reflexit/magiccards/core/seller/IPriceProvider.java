@@ -16,7 +16,7 @@ public interface IPriceProvider {
 	public String export(Iterable<IMagicCard> cards);
 
 	/**
-	 * Update prices for given card list in price storage for actve provider
+	 * Update prices for given card list in price storage for actve provider and dbprice on the list
 	 * 
 	 * @param iterable
 	 *            - if not null - used to get exact card list to update prices for
@@ -24,5 +24,5 @@ public interface IPriceProvider {
 	 *            - progress monitor
 	 * @throws IOException
 	 */
-	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException;
+	public void updatePricesAndSync(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException;
 }

@@ -1,14 +1,14 @@
 package com.reflexit.magiccards.core.seller;
 
-import gnu.trove.map.TIntFloatMap;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -18,9 +18,9 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
+import com.reflexit.magiccards.core.model.utils.CountersMap;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
@@ -35,7 +35,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 		setIdMap.put("Limited Edition Alpha", "A");
 		setIdMap.put("Limited Edition Beta", "B");
 		setIdMap.put("Unlimited Edition", "U");
-		setIdMap.put("Alliances", "AI"); // web
+		// setIdMap.put("Alliances", "AI"); // web
 		setIdMap.put("Archenemy", "ARC");
 		setIdMap.put("Battle Royale Box Set", "BR");
 		setIdMap.put("Beatdown Box Set", "BD");
@@ -46,7 +46,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 		setIdMap.put("Fifth Edition", "5th");
 		setIdMap.put("Fourth Edition", "4th");
 		setIdMap.put("Homelands", "HL"); // web
-		setIdMap.put("Nemesis", "NM"); // web
+		setIdMap.put("Nemesis", "NE");
 		setIdMap.put("Ninth Edition", "9th");
 		setIdMap.put("Planechase", "HOP");
 		setIdMap.put("Revised Edition", "RV"); // web
@@ -54,7 +54,13 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 		setIdMap.put("Shadowmoor", "SHM");
 		setIdMap.put("Tenth Edition", "10th");
 		setIdMap.put("Urza's Destiny", "UD"); // web
-		setIdMap.put("Urza's Legacy", "UY"); // web
+		setIdMap.put("Urza's Legacy", "UL");
+		setIdMap.put("Starter 2000", "ST2");
+		setIdMap.put("Starter 1999", "ST1");
+		setIdMap.put("Portal", "PT");
+		setIdMap.put("Portal Three Kingdoms", "P3");
+		setIdMap.put("Promo set for Gatherer", "PRE");
+		setIdMap.put("Magic 2014 Core Set", "M14");
 	}
 
 	@Override
@@ -67,76 +73,37 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
-		int size = 0;
-		for (IMagicCard magicCard : iterable) {
-			size++;
-		}
-		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
-		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
-		HashMap<String, Float> prices = parse();
-		monitor.worked(5);
-		Editions editions = Editions.getInstance();
-		IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+		monitor.beginTask("Loading prices from " + getURL() + " ...", 100);
 		try {
-			for (IMagicCard magicCard : iterable) {
-				if (monitor.isCanceled())
-					return;
-				float price = getPrice(prices, editions, magicCard);
-				if (price < 0) {
-					int id = magicCard.getFlipId();
-					IMagicCard flipCard = (IMagicCard) db.getCard(id);
-					if (flipCard != null)
-						price = getPrice(prices, editions, flipCard);
-				}
-				if (price > 0) {
-					// if (!setIdMap.containsKey(set))
-					// setIdMap.put(set, id);
-					priceMap.put(magicCard.getCardId(), price);
-				}
-				monitor.worked(1);
-			}
+			updateFromWeb();
+			return iterable;
 		} finally {
 			monitor.done();
 		}
 	}
 
-	public float getPrice(HashMap<String, Float> prices, Editions editions, IMagicCard magicCard) {
+	public float getPrice(IMagicCard magicCard) {
 		if (magicCard == null)
 			return -1;
-		String set = magicCard.getSet();
-		String abbr = setIdMap.get(set);
-		if (abbr == null)
-			abbr = editions.getAbbrByName(set);
-		String nameset = magicCard.getName() + " (" + abbr + ")";
-		float price = -1;
-		Float price1 = prices.get(nameset);
-		if (price1 != null) {
-			price = (price1.floatValue());
-		} else {
-			price1 = prices.get(magicCard.getName());
-			if (price1 != null)
-				price = (price1.floatValue());
-		}
-		// if (price1 == null) {
-		// System.err.println("Cannot find price for " + magicCard + " abbr " + abbr + " " +
-		// magicCard.getSet());
-		// }
-		return price;
+		return priceMap.get(magicCard.getCardId());
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
-		updatePrices(fstore, monitor);
-	}
+	private long lastUpdate;
 
-	public HashMap<String, Float> parse() throws IOException {
-		HashMap<String, Float> res = new HashMap<String, Float>();
+	public void updateFromWeb() throws IOException {
+		if (lastUpdate != 0 && System.currentTimeMillis() - lastUpdate < 60 * 1000)
+			return;
+		HashMap<String, Float> res;
+		res = new HashMap<String, Float>();
 		URL url = new URL(baseURL);
 		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processFile(st, res);
 		st.close();
-		return res;
+		lastUpdate = System.currentTimeMillis();
+		updatePrices(res);
+		return;
 	}
 
 	/*-
@@ -150,9 +117,6 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 				continue;
 			String name = fields[0].trim();
 			String price = fields[1].trim();
-			if (name.contains("AE")) {
-				name = name.replaceAll("AE", "Æ");
-			}
 			try {
 				float f = Float.parseFloat(price);
 				res.put(name, f);
@@ -160,6 +124,94 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 				continue;
 			}
 		}
+	}
+
+	private void updatePrices(HashMap<String, Float> res) {
+		priceMap = DataManager.getDBPriceStore().getPriceMap(this);
+		IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
+		// System.err.println(db.isInitialized());
+		HashMap<String, CountersMap> scandmap = new HashMap();
+		Editions editions = Editions.getInstance();
+		CountersMap allsetmap = new CountersMap();
+		for (String xname : res.keySet()) {
+			String cname = xname;
+			String set = null;
+			if (xname.contains("(")) {
+				int lset = xname.lastIndexOf("(");
+				cname = xname.substring(0, lset).trim();
+				set = xname.substring(lset + 1, xname.length() - 1);
+			}
+			Collection<IMagicCard> candidates = getCandidates(db, cname);
+			if (candidates.size() == 0) {
+				MagicLogger.log("MOTL: Not found card in ma db " + cname);
+				continue;
+			}
+			if (set == null) {
+				for (IMagicCard mc : candidates) {
+					setDbPrice(mc, res.get(xname));
+				}
+				continue;
+			} else {
+				boolean found = false;
+				for (IMagicCard mc : candidates) {
+					String cset = mc.getSet();
+					String abbr = setIdMap.get(cset);
+					if (abbr == null)
+						abbr = editions.getAbbrByName(cset);
+					if (abbr.equals(set)) {
+						setDbPrice(mc, res.get(xname));
+						found = true;
+						break;
+					}
+				}
+				if (found)
+					continue;
+				CountersMap xsetmap = scandmap.get(set);
+				if (xsetmap == null) {
+					scandmap.put(set, xsetmap = new CountersMap());
+				}
+				MagicLogger.log("MOTL: Not found set " + set + " for " + cname);
+				allsetmap.inc(set);
+				if (candidates.size() < 15)
+					for (IMagicCard mc : candidates) {
+						String cset = mc.getSet();
+						xsetmap.inc(cset);
+					}
+			}
+		}
+		if (false) {
+			for (String missingSet : scandmap.keySet()) {
+				CountersMap countersMap = scandmap.get(missingSet);
+				String poss = countersMap.maxKey();
+				System.err.println("* Not found set " + missingSet + " possible " + poss + " " + countersMap.get(poss) + " of "
+						+ allsetmap.get(missingSet));
+				for (Iterator iterator = countersMap.keySet().iterator(); iterator.hasNext();) {
+					String cset = (String) iterator.next();
+					System.err.println("  possible sets " + cset + " " + editions.getAbbrByName(cset) + " " + countersMap.get(cset));
+				}
+			}
+		}
+	}
+
+	protected Collection<IMagicCard> getCandidates(IDbCardStore<IMagicCard> db, String cname) {
+		Collection<IMagicCard> candidates = db.getCandidates(cname);
+		if (candidates.size() == 0) {
+			String ccname = correctName(cname);
+			candidates = db.getCandidates(ccname);
+		}
+		return candidates;
+	}
+
+	private String correctName(String cname) {
+		if (cname.contains("AE")) {
+			cname = cname.replaceAll("AE", "Æ");
+		}
+		int sl = cname.indexOf('/');
+		if (sl >= 0) {
+			cname = cname.replaceFirst("/", " // ");
+			cname += " (" + cname.substring(0, sl) + ")";
+		}
+		return cname;
 	}
 
 	@Override
@@ -193,7 +245,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 		fstore.getCardStore().add(card);
 		fstore.getCardStore().add(card2);
 		fstore.update();
-		prices.updateStore(fstore, ICoreProgressMonitor.NONE);
+		prices.updatePrices(fstore, ICoreProgressMonitor.NONE);
 		System.err.println(card2.getName() + " " + card2.getDbPrice());
 	}
 }

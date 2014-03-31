@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,15 +56,10 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
-		HashSet<String> sets = new HashSet();
-		int size = 0;
-		for (IMagicCard magicCard : iterable) {
-			String set = magicCard.getSet();
-			sets.add(set);
-			size++;
-		}
+		Set<String> sets = getSets(iterable);
+		int size = getSize(iterable);
 		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
 		monitor.worked(5);
 		processSetList(sets);
@@ -72,7 +67,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 			for (String set : sets) {
 				String id = findSetId(set);
 				if (monitor.isCanceled())
-					return;
+					return null;
 				if (id != null) {
 					// System.err.println("found " + set + " " + id);
 					HashMap<String, Float> prices = null;
@@ -83,7 +78,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 					}
 					for (IMagicCard magicCard : iterable) {
 						if (monitor.isCanceled())
-							return;
+							return null;
 						String set2 = magicCard.getSet();
 						if (set2.equals(set)) {
 							float price = -1;
@@ -111,6 +106,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 		} finally {
 			monitor.done();
 		}
+		return iterable;
 	}
 
 	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
@@ -252,7 +248,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	 * </TR>
 	 * <TR class=defRowOdd><TD>WW&nbsp;</TD><TD><a href='CardSets/WW.html'>Worldwake</a>&nbsp;</TD></TR>
 	 */
-	private void processSetList(HashSet sets) throws IOException {
+	private void processSetList(Set<String> sets) throws IOException {
 		URL url = new URL(setURL);
 		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));

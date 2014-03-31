@@ -32,4 +32,17 @@ public class CountersMap extends HashMap<String, Integer> {
 		}
 		return max;
 	}
+
+	public String maxKey() {
+		String rkey = null;
+		int max = 0;
+		for (String key : keySet()) {
+			int v = get(key);
+			if (v > max) {
+				max = v;
+				rkey = key;
+			}
+		}
+		return rkey;
+	}
 }

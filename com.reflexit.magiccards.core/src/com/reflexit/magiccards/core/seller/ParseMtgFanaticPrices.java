@@ -59,11 +59,8 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public void updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
-		int size = 0;
-		for (IMagicCard magicCard : iterable) {
-			size++;
-		}
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+		int size = getSize(iterable);
 		monitor.beginTask("Loading prices...", size + 10);
 		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		HashSet<String> sets = new HashSet();
@@ -76,7 +73,7 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 		for (String set : sets) {
 			String id = findSetId(set, parseSets);
 			if (monitor.isCanceled())
-				return;
+				return null;
 			if (id != null) {
 				try {
 					// System.err.println("found " + set + " " + id);
@@ -84,12 +81,12 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 					if (prices.size() > 0) {
 						for (IMagicCard magicCard : iterable) {
 							if (monitor.isCanceled())
-								return;
+								return null;
 							String set2 = magicCard.getSet();
 							if (set2.equals(set)) {
 								if (prices.containsKey(magicCard.getName())) {
 									Float price = prices.get(magicCard.getName());
-									priceMap.put(magicCard.getCardId(), price);
+									setDbPrice(magicCard, price);
 									monitor.worked(1);
 								}
 							}
@@ -100,6 +97,7 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 				}
 			}
 		}
+		return iterable;
 	}
 
 	private String findSetId(String set, HashMap<String, String> parseSets) {
