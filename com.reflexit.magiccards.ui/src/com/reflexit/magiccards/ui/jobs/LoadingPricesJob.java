@@ -28,9 +28,7 @@ public class LoadingPricesJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		IPriceProvider parser = DataManager.getDBPriceStore().getProvider();
 		try {
-			parser.updatePrices(list, new CoreMonitorAdapter(monitor));
-			DataManager.getDBPriceStore().save();
-			DataManager.getDBPriceStore().reloadPrices();
+			parser.updatePricesAndSync(list, new CoreMonitorAdapter(monitor));
 		} catch (IOException e) {
 			return MagicUIActivator.getStatus(e);
 		}
