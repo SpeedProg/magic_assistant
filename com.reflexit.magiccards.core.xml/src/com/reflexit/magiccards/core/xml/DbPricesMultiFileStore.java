@@ -1,14 +1,14 @@
 package com.reflexit.magiccards.core.xml;
 
 import gnu.trove.map.TIntFloatMap;
-import gnu.trove.map.hash.TIntFloatHashMap;
 import gnu.trove.procedure.TIntFloatProcedure;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -19,6 +19,7 @@ import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.seller.CustomPriceProvider;
 import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
@@ -26,8 +27,7 @@ import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 public class DbPricesMultiFileStore implements IDbPriceStore {
 	static private DbPricesMultiFileStore instance;
 	private IPriceProvider current = null;
-	private HashMap<IPriceProvider, TIntFloatHashMap> providers = new HashMap<IPriceProvider, TIntFloatHashMap>();
-	private TIntFloatHashMap currentMap;
+	private Set<IPriceProvider> providers = new LinkedHashSet<IPriceProvider>();
 	private boolean initialized;
 
 	private void loadPrices(File pricesFile) {
@@ -42,20 +42,9 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 				provider = new CustomPriceProvider(name);
 				add(provider);
 			}
-			TIntFloatHashMap map = providers.get(provider);
-			if (map == null) {
-				map = new TIntFloatHashMap();
-				providers.put(provider, map);
-			}
+			final TIntFloatMap map = provider.getPriceMap();
 			if (store.map != null) {
-				final TIntFloatHashMap map1 = map;
-				store.map.forEachEntry(new TIntFloatProcedure() {
-					@Override
-					public boolean execute(int id, float price) {
-						map1.put(id, price);
-						return true;
-					}
-				});
+				map.putAll(store.map);
 			}
 		} catch (IOException e) {
 			MagicLogger.log(e);
@@ -72,24 +61,23 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 			for (IMagicCard card : db) {
 				((MagicCard) card).setDbPrice(0);
 			}
-			if (currentMap != null) {
-				currentMap.forEachEntry(new TIntFloatProcedure() {
-					@Override
-					public boolean execute(int id, float price) {
-						// System.err.println(id + " -> " + price);
-						IMagicCard base = db.getCard(id);
-						if (base != null) {
-							MagicCard mc = (MagicCard) base;
-							// System.err.println(id + " -> " + mc);
-							if (mc.getDbPrice() != price) {
-								mc.setDbPrice(price);
-								db.update(base); // XXX too many events
-							}
+			TIntFloatMap currentMap = current.getPriceMap();
+			currentMap.forEachEntry(new TIntFloatProcedure() {
+				@Override
+				public boolean execute(int id, float price) {
+					// System.err.println(id + " -> " + price);
+					IMagicCard base = db.getCard(id);
+					if (base != null) {
+						MagicCard mc = (MagicCard) base;
+						// System.err.println(id + " -> " + mc);
+						if (mc.getDbPrice() != price) {
+							mc.setDbPrice(price);
+							db.update(base); // XXX too many events
 						}
-						return true;
 					}
-				});
-			}
+					return true;
+				}
+			});
 		} finally {
 			db.getStorage().setAutoCommit(true);
 			MagicLogger.traceEnd("reloadPrices");
@@ -106,7 +94,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	private DbPricesMultiFileStore() {
 		ParseMtgFanaticPrices mtgFanatic = new ParseMtgFanaticPrices();
 		FindMagicCardsPrices findMagicCards = new FindMagicCardsPrices();
-		add(new ParseMOTLPrices());
+		add(ParseMOTLPrices.getInstance());
 		add(mtgFanatic);
 		add(findMagicCards);
 		add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Medium));
@@ -114,7 +102,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	private void add(IPriceProvider provider) {
-		providers.put(provider, null);
+		providers.add(provider);
 	}
 
 	private void loadFromXml() {
@@ -134,22 +122,23 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	public Collection<IPriceProvider> getProviders() {
-		return providers.keySet();
+		return providers;
 	}
 
 	public IPriceProvider getDefaultProvider() {
 		return getProviders().iterator().next();
 	}
 
-	public synchronized IPriceProvider setProviderName(String name) {
-		initialize();
+	public synchronized IPriceProviderStore setProviderByName(String name) {
 		IPriceProvider prov = findProvider(name);
-		if (prov == null)
-			throw new IllegalArgumentException("No such provider");
+		if (prov == null) {
+			prov = new CustomPriceProvider(name);
+			add(prov);
+		}
 		if (current != prov) {
 			current = prov;
-			currentMap = providers.get(prov);
-			reloadPrices();
+			if (isInitialized())
+				reloadPrices();
 		}
 		// System.err.println("Provider is set to " + name);
 		return current;
@@ -171,15 +160,11 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	public synchronized void setDbPrice(IMagicCard card, float price) {
-		if (!initialized)
-			initialize();
-		if (price == 0)
-			currentMap.remove(card.getCardId());
-		else
-			currentMap.put(card.getCardId(), price);
+		current.setDbPrice(card, price);
 	}
 
 	public float getDbPrice(IMagicCard card) {
+		TIntFloatMap currentMap = current.getPriceMap();
 		return currentMap.get(card.getCardId());
 	}
 
@@ -188,15 +173,8 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		if (!initialized) {
 			try {
 				loadFromXml();
-				for (Iterator iterator = getProviders().iterator(); iterator.hasNext();) {
-					IPriceProvider provider = (IPriceProvider) iterator.next();
-					if (providers.get(provider) == null) {
-						providers.put(provider, new TIntFloatHashMap());
-					}
-				}
 				if (current == null)
 					current = getDefaultProvider();
-				currentMap = providers.get(current);
 				reloadPrices();
 			} finally {
 				initialized = true;
@@ -205,17 +183,9 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	@Override
-	public TIntFloatMap getPriceMap(IPriceProvider provider) {
+	public TIntFloatMap getPriceMap(IPriceProviderStore provider) {
 		initialize();
-		return providers.get(provider);
-	}
-
-	public void save() {
-		try {
-			new PricesXmlStreamWriter().save(current);
-		} catch (IOException e) {
-			MagicLogger.log(e);
-		}
+		return provider.getPriceMap();
 	}
 
 	@Override
