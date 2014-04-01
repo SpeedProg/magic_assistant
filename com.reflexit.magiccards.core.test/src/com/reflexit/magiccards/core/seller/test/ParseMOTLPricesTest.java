@@ -6,6 +6,6 @@ import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
 public class ParseMOTLPricesTest extends AbstractPriceProviderTest {
 	@Override
 	protected IPriceProvider getPriceProvider() {
-		return new ParseMOTLPrices();
+		return ParseMOTLPrices.getInstance();
 	}
 }

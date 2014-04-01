@@ -27,7 +27,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 		parser = getPriceProvider();
 		monitor = ICoreProgressMonitor.NONE;
 		DataManager.getMagicDBStore().initialize();
-		DataManager.getDBPriceStore().setProviderName(parser.getName());
+		DataManager.getDBPriceStore().setProviderByName(parser.getName());
 	}
 
 	protected abstract IPriceProvider getPriceProvider();
