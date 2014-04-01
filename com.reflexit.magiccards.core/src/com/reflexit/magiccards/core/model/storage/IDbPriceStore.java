@@ -5,9 +5,10 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 
 public interface IDbPriceStore {
-	IPriceProvider setProviderName(String name);
+	IPriceProviderStore setProviderByName(String name);
 
 	Collection<IPriceProvider> getProviders();
 
@@ -15,13 +16,11 @@ public interface IDbPriceStore {
 
 	void initialize();
 
-	TIntFloatMap getPriceMap(IPriceProvider provider);
+	TIntFloatMap getPriceMap(IPriceProviderStore provider);
 
 	float getDbPrice(IMagicCard card);
 
 	void setDbPrice(IMagicCard card, float price);
-
-	void save();
 
 	boolean isInitialized();
 

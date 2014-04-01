@@ -14,4 +14,9 @@ public class CustomPriceProvider extends AbstractPriceProvider {
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		throw new MagicException("This custom price provider " + name + " does not support interactive update");
 	}
+
+	@Override
+	public void save() throws IOException {
+		// no save
+	}
 }

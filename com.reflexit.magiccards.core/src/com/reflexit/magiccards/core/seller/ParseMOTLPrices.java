@@ -27,8 +27,13 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 public class ParseMOTLPrices extends AbstractPriceProvider {
 	private String baseURL;
 	private HashMap<String, String> setIdMap = new HashMap<String, String>();
+	private static ParseMOTLPrices instance = new ParseMOTLPrices();
 
-	public ParseMOTLPrices() {
+	public static ParseMOTLPrices getInstance() {
+		return instance;
+	}
+
+	private ParseMOTLPrices() {
 		super("MOTL (Magic Traders)");
 		baseURL = "http://classic.magictraders.com/pricelists/current-magic-excel.txt";
 		// hardcoded setIdMap
@@ -76,8 +81,10 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading prices from " + getURL() + " ...", 100);
 		try {
-			updateFromWeb();
-			return iterable;
+			if (updateFromWeb())
+				return iterable;
+			else
+				return null;
 		} finally {
 			monitor.done();
 		}
@@ -91,9 +98,9 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 
 	private long lastUpdate;
 
-	public void updateFromWeb() throws IOException {
+	public boolean updateFromWeb() throws IOException {
 		if (lastUpdate != 0 && System.currentTimeMillis() - lastUpdate < 60 * 1000)
-			return;
+			return false;
 		HashMap<String, Float> res;
 		res = new HashMap<String, Float>();
 		URL url = new URL(baseURL);
@@ -103,7 +110,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 		st.close();
 		lastUpdate = System.currentTimeMillis();
 		updatePrices(res);
-		return;
+		return true;
 	}
 
 	/*-
@@ -127,7 +134,6 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 	}
 
 	private void updatePrices(HashMap<String, Float> res) {
-		priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
 		// System.err.println(db.isInitialized());
 		HashMap<String, CountersMap> scandmap = new HashMap();

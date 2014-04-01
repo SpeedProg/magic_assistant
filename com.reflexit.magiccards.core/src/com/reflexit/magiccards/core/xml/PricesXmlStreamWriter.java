@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.xml;
 
+import gnu.trove.map.TIntFloatMap;
 import gnu.trove.procedure.TIntFloatProcedure;
 
 import java.io.BufferedOutputStream;
@@ -13,28 +14,25 @@ import java.util.Properties;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 
 public class PricesXmlStreamWriter {
 	protected MyXMLStreamWriter writer;
 
-	public synchronized void write(PriceProviderStoreObject object) throws IOException {
-		write(object, new FileOutputStream(object.file));
-	}
-
-	public synchronized void write(PriceProviderStoreObject object, OutputStream st) throws IOException {
+	public synchronized void write(IPriceProviderStore object, OutputStream st) throws IOException {
 		OutputStream out = new BufferedOutputStream(st, 256 * 1024);
 		try {
 			writer = new MyXMLStreamWriter(st);
 			try {
 				writer.startEl("cards");
-				writer.el("name", object.name);
-				Properties properties = object.properties;
+				writer.el("name", object.getName());
+				Properties properties = object.getProperties();
 				marshal(properties);
 				// list
-				if (object.map != null) {
+				TIntFloatMap map = object.getPriceMap();
+				if (map != null) {
 					writer.startEl("list");
-					object.map.forEachEntry(new TIntFloatProcedure() {
+					map.forEachEntry(new TIntFloatProcedure() {
 						@Override
 						public boolean execute(int key, float value) {
 							try {
@@ -78,17 +76,11 @@ public class PricesXmlStreamWriter {
 		}
 	}
 
-	public void save(IPriceProvider provider) throws IOException {
-		PriceProviderStoreObject o = new PriceProviderStoreObject();
-		o.name = provider.getName();
-		File file = getPricesFile(provider);
-		o.map = DataManager.getDBPriceStore().getPriceMap(provider);
-		FileOutputStream stream = new FileOutputStream(file);
-		write(o, stream);
-		stream.close();
+	public synchronized void write(IPriceProviderStore object) throws IOException {
+		write(object, new FileOutputStream(getPricesFile(object)));
 	}
 
-	public static File getPricesFile(IPriceProvider provider) {
+	public static File getPricesFile(IPriceProviderStore provider) {
 		Location loc = Location.createLocationFromSet(provider.getName());
 		File pricesDir = getPricesDir();
 		File file = new File(pricesDir, loc.getBaseFileName());

@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.seller;
 
-import gnu.trove.map.TIntFloatMap;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +11,6 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.ClassicExportDelegate;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -62,7 +59,6 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		int size = getSize(iterable);
 		monitor.beginTask("Loading prices...", size + 10);
-		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		HashSet<String> sets = new HashSet();
 		for (IMagicCard magicCard : iterable) {
 			String set = magicCard.getSet();

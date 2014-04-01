@@ -16,14 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 
 /**
  * Object that holds xml for prices.
  * 
  */
-public class PriceProviderStoreObject {
+public class PriceProviderStoreObject implements IPriceProviderStore {
 	public String name; // provider name
 	public Properties properties = new Properties();
 	public TIntFloatMap map;
@@ -36,9 +35,10 @@ public class PriceProviderStoreObject {
 		// empty
 	}
 
-	public PriceProviderStoreObject(IPriceProvider provider) {
+	public PriceProviderStoreObject(IPriceProviderStore provider) {
 		this.name = provider.getName();
-		this.map = DataManager.getDBPriceStore().getPriceMap(provider);
+		this.map = provider.getPriceMap();
+		this.properties = provider.getProperties();
 	}
 
 	public static PriceProviderStoreObject initFromFile(File file) throws IOException {
@@ -60,12 +60,21 @@ public class PriceProviderStoreObject {
 	}
 
 	public void save() throws IOException {
-		// long time = System.currentTimeMillis();
-		try {
-			new PricesXmlStreamWriter().write(this);
-		} finally {
-			// System.err.println("save " + file.getName() + "  took " + (System.currentTimeMillis()
-			// - time) + "  ms");
-		}
+		writer.write(this);
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public TIntFloatMap getPriceMap() {
+		return map;
+	}
+
+	@Override
+	public Properties getProperties() {
+		return properties;
 	}
 }

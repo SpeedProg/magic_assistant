@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.seller;
 
-import gnu.trove.map.TIntFloatMap;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +11,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -57,7 +54,6 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 
 	@Override
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
-		TIntFloatMap priceMap = DataManager.getDBPriceStore().getPriceMap(this);
 		Set<String> sets = getSets(iterable);
 		int size = getSize(iterable);
 		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
