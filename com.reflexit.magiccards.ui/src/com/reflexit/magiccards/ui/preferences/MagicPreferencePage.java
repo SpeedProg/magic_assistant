@@ -20,6 +20,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.reflexit.magicassistant.p2.UpdateHandler;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -139,7 +140,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		String[][] res = new String[providers.size()][2];
 		int i = 0;
 		for (Iterator iterator = providers.iterator(); iterator.hasNext(); i++) {
-			IPriceProvider prov = (IPriceProvider) iterator.next();
+			IPriceProviderStore prov = (IPriceProviderStore) iterator.next();
 			res[i][0] = res[i][1] = prov.getName();
 		}
 		return res;

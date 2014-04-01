@@ -7,6 +7,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class PriceProviderManager implements IPropertyChangeListener {
@@ -31,7 +32,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 		Object newValue = event.getNewValue();
 		if (property.equals(PreferenceConstants.PRICE_PROVIDER)) {
 			if (newValue != null && !newValue.equals(event.getOldValue())) {
-				DataManager.getDBPriceStore().setProviderName((String) newValue);
+				DataManager.getDBPriceStore().setProviderByName((String) newValue);
 			}
 		}
 	}
@@ -39,7 +40,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 	public void sync(IPreferenceStore preferenceStore) {
 		String providerName = getProviderName();
 		if (providerName != null)
-			DataManager.getDBPriceStore().setProviderName(providerName);
+			DataManager.getDBPriceStore().setProviderByName(providerName);
 		preferenceStore.addPropertyChangeListener(this);
 	}
 
@@ -47,7 +48,7 @@ public class PriceProviderManager implements IPropertyChangeListener {
 		return DataManager.getDBPriceStore().getProviders();
 	}
 
-	public IPriceProvider getDefaultProvider() {
+	public IPriceProviderStore getDefaultProvider() {
 		return getProviders().iterator().next();
 	}
 }

@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Languages;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 
@@ -87,7 +88,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		String[] res = new String[providers.size()];
 		int i = 0;
 		for (Iterator iterator = providers.iterator(); iterator.hasNext(); i++) {
-			IPriceProvider prov = (IPriceProvider) iterator.next();
+			IPriceProviderStore prov = (IPriceProviderStore) iterator.next();
 			res[i] = prov.getName();
 		}
 		return res;
