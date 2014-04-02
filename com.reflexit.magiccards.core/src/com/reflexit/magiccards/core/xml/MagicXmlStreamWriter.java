@@ -137,7 +137,7 @@ public class MagicXmlStreamWriter {
 					continue;
 				else if (field == MagicCardField.LANG && o.equals("English"))
 					continue;
-				writer.startEl(((MagicCardField) field).getJavaField().getName());
+				writer.startEl(((MagicCardField) field).getTag());
 				String text = String.valueOf(o);
 				writer.data(text);
 				writer.endEl();

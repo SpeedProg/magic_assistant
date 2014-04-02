@@ -36,13 +36,19 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		}
 	}
 
+	private static ParseTcgPlayerPrices[] providers = new ParseTcgPlayerPrices[Type.values().length];
+	static {
+		for (Type type : Type.values()) {
+			providers[type.ordinal()] = new ParseTcgPlayerPrices(type);
+		}
+	}
 	private Type type;
 
-	public ParseTcgPlayerPrices() {
+	private ParseTcgPlayerPrices() {
 		this(Type.Medium);
 	}
 
-	public ParseTcgPlayerPrices(Type type) {
+	private ParseTcgPlayerPrices(Type type) {
 		super(null);
 		this.type = type;
 		name = "TCG Player (" + type.name() + ")";
@@ -207,5 +213,9 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		store.addAll(list);
 		store.update();
 		pp.buy(store);
+	}
+
+	public static IPriceProvider create(Type type) {
+		return providers[type.ordinal()];
 	}
 }

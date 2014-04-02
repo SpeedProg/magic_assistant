@@ -149,7 +149,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 			}
 			Collection<IMagicCard> candidates = getCandidates(db, cname);
 			if (candidates.size() == 0) {
-				MagicLogger.log("MOTL: Not found card in ma db " + cname);
+				// MagicLogger.log("MOTL: Not found card in ma db " + cname);
 				continue;
 			}
 			if (set == null) {
@@ -176,7 +176,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 				if (xsetmap == null) {
 					scandmap.put(set, xsetmap = new CountersMap());
 				}
-				MagicLogger.log("MOTL: Not found set " + set + " for " + cname);
+				// MagicLogger.log("MOTL: Not found set " + set + " for " + cname);
 				allsetmap.inc(set);
 				if (candidates.size() < 15)
 					for (IMagicCard mc : candidates) {

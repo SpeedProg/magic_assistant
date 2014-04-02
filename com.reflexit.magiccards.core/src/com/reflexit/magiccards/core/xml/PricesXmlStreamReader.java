@@ -63,7 +63,7 @@ public class PricesXmlStreamReader {
 			}
 			for (MagicCardField f : MagicCardField.values()) {
 				if (!f.isTransient())
-					mcFields.put(f.getJavaField().getName(), f);
+					mcFields.put(f.getTag(), f);
 			}
 		}
 

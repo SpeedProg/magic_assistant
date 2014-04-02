@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -15,8 +13,8 @@ public enum MagicCardField implements ICardField {
 	ORACLE("oracleText"),
 	SET("edition"),
 	RARITY,
-	CTYPE("colorType"),
-	CMC,
+	CTYPE(null),
+	CMC(null),
 	DBPRICE(),
 	LANG,
 	EDITION_ABBR(null),
@@ -44,17 +42,10 @@ public enum MagicCardField implements ICardField {
 	COLOR(null),
 	// end
 	;
-	private final Field field;
+	private final String tag;
 
 	MagicCardField(String javaField) {
-		if (javaField != null)
-			try {
-				field = MagicCard.class.getDeclaredField(javaField);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e);
-			}
-		else
-			field = null;
+		tag = javaField;
 	}
 
 	public Object valueOf(ICard card) {
@@ -62,20 +53,11 @@ public enum MagicCardField implements ICardField {
 	}
 
 	MagicCardField() {
-		String javaField = name().toLowerCase(Locale.ENGLISH);
-		try {
-			field = MagicCard.class.getDeclaredField(javaField);
-		} catch (Exception e) {
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	public Class getType() {
-		return field == null ? String.class : field.getType();
+		tag = name().toLowerCase(Locale.ENGLISH);
 	}
 
 	public boolean isTransient() {
-		return field == null ? true : Modifier.isTransient(field.getModifiers());
+		return tag == null;
 	}
 
 	public static ICardField[] allFields() {
@@ -94,12 +76,12 @@ public enum MagicCardField implements ICardField {
 		return res.toArray(new ICardField[res.size()]);
 	}
 
-	public Field getJavaField() {
-		return field;
-	}
-
 	public String getGroupLabel() {
 		String name = name();
 		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+	}
+
+	public String getTag() {
+		return tag;
 	}
 }
