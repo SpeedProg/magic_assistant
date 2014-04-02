@@ -101,10 +101,10 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			}
 			int id = card.getCardId();
 			// redo
-			Integer old = (Integer) prev.getObjectByField(MagicCardField.SIDE);
-			Integer cur = (Integer) card.getObjectByField(MagicCardField.SIDE);
-			Object prevPart = prev.getObjectByField(MagicCardField.PART);
-			Object curPart = card.getObjectByField(MagicCardField.PART);
+			Integer old = (Integer) prev.get(MagicCardField.SIDE);
+			Integer cur = (Integer) card.get(MagicCardField.SIDE);
+			Object prevPart = prev.get(MagicCardField.PART);
+			Object curPart = card.get(MagicCardField.PART);
 			if (old == 0 && cur == 0) {
 				if (prevPart != null)
 					old = 1;
@@ -116,10 +116,10 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 				return true;
 			} else {
 				if (old == 1) {
-					((ICardModifiable) prev).setObjectByField(MagicCardField.ID, String.valueOf(-id));
+					((ICardModifiable) prev).set(MagicCardField.ID, String.valueOf(-id));
 					return false;
 				} else if (cur == 1) {
-					((ICardModifiable) card).setObjectByField(MagicCardField.ID, String.valueOf(-id));
+					((ICardModifiable) card).set(MagicCardField.ID, String.valueOf(-id));
 					return false;
 				}
 			}

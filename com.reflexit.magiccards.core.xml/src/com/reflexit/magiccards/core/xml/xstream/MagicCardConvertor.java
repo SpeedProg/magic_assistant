@@ -40,7 +40,7 @@ public class MagicCardConvertor implements Converter {
 		MagicCard card = (MagicCard) value;
 		ICardField[] values = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : values) {
-			Object o = card.getObjectByField(field);
+			Object o = card.get(field);
 			if (o == null)
 				continue; // skip this
 			if (o instanceof Float && ((Float) o).floatValue() == 0)

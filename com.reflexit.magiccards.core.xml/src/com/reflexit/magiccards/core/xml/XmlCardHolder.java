@@ -122,7 +122,7 @@ public class XmlCardHolder implements ICardHandler {
 				int i = 0;
 				for (ICardField field : xfields) {
 					if (i < fields.length) {
-						card.setObjectByField(field, fields[i]);
+						card.set(field, fields[i]);
 					}
 					i++;
 				}
