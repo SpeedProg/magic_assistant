@@ -74,7 +74,7 @@ public class ImportUtils {
 			for (Iterator iterator = importedCards.iterator(); iterator.hasNext();) {
 				IMagicCard card = (IMagicCard) iterator.next();
 				if (card instanceof MagicCardPhysical)
-					((MagicCardPhysical) card).setMagicCard((MagicCard) card.getBase());
+					((MagicCardPhysical) card).setMagicCard(card.getBase());
 			}
 			// import into card store
 			DataManager.add(cardStore, importedCards);
@@ -376,14 +376,14 @@ public class ImportUtils {
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof MagicCardPhysical) {
-				MagicCard oldCard = (MagicCard) card.getBase();
+				MagicCard oldCard = card.getBase();
 				MagicCard newCard = ImportUtils.updateCardReference((MagicCardPhysical) card);
 				if (newCard != null) {
 					// import int DB
 					newdbrecords.add(newCard);
 				} else if (oldCard != card.getBase()) {
 					// card is updated - merge
-					((MagicCard) card.getBase()).setFrom(oldCard, columns);
+					card.getBase().setFrom(oldCard, columns);
 				}
 			}
 		}
@@ -392,7 +392,7 @@ public class ImportUtils {
 	public static void validateDbRecords(ArrayList<IMagicCard> newdbrecords, ArrayList<String> lerrors) {
 		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCard newCard = (MagicCard) card.getBase();
+			MagicCard newCard = card.getBase();
 			String prefix = TextPrinter.toString(newCard) + ": Cannot import new card into db: ";
 			if (newCard.getName() == null) {
 				lerrors.add(prefix + " name is missing");
@@ -414,7 +414,7 @@ public class ImportUtils {
 		ICardStore magicDbHandler = DataManager.getMagicDBStore();
 		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			MagicCard newCard = (MagicCard) card.getBase();
+			MagicCard newCard = card.getBase();
 			magicDbHandler.add(newCard);
 		}
 		magicDbHandler.getStorage().save();
@@ -429,7 +429,7 @@ public class ImportUtils {
 				if (corr.equals("Skip Import")) { // XXX!
 					iterator.remove();
 				}
-				MagicCard newCard = (MagicCard) card.getBase();
+				MagicCard newCard = card.getBase();
 				newCard.setSet(corr);
 			}
 		}

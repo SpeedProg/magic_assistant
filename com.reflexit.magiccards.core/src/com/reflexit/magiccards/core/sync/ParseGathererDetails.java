@@ -156,7 +156,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 				String set = matcher.group(2).trim();
 				String rarity = matcher.group(3).trim();
 				// other printings
-				MagicCard mcard = (MagicCard) card.getBase();
+				MagicCard mcard = card.getBase();
 				MagicCard card2 = mcard.cloneCard();
 				card2.setId(id);
 				card2.setSet(set.trim());

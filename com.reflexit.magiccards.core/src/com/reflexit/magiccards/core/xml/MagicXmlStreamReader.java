@@ -55,8 +55,7 @@ public class MagicXmlStreamReader {
 		StringBuffer text = new StringBuffer();
 		String key;
 		String value;
-		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(
-				MagicCardField.values().length);
+		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
 		HashMap<String, MagicCardField> mcFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
 		private Locator locator;
 
@@ -172,13 +171,9 @@ public class MagicXmlStreamReader {
 								cardm.setObjectByField(field, ttStr);
 								break;
 							}
-							case card: {
-								MagicCardField field = mcFields.get(last);
-								cardp.getBase().setObjectByField(field, ttStr);
-								break;
-							}
+							case card:
 							case mcp: {
-								MagicCardField field = mcpFields.get(last);
+								MagicCardField field = mcFields.get(last);
 								cardp.setObjectByField(field, ttStr);
 								break;
 							}

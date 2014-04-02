@@ -50,11 +50,12 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return visitor.visit(this, data);
 	}
 
-	public IMagicCard getBase() {
-		IMagicCardPhysical phi = getGroupBase();
-		if (phi == null)
-			return null;
-		return phi.getBase();
+	public MagicCard getBase() {
+		return null;
+		// IMagicCardPhysical phi = getGroupBase();
+		// if (phi == null)
+		// return null;
+		// return phi.getBase();
 	}
 
 	private synchronized IMagicCardPhysical getGroupBase() {
@@ -79,7 +80,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		MagicCardPhysical base;
 		if (card instanceof MagicCardPhysical) {
 			base = (MagicCardPhysical) card.cloneCard();
-			MagicCard refCard = (MagicCard) card.getBase().cloneCard();
+			MagicCard refCard = card.getBase().cloneCard();
 			base.setMagicCard(refCard);
 		} else if (card instanceof MagicCard) {
 			MagicCard mc = (MagicCard) card;

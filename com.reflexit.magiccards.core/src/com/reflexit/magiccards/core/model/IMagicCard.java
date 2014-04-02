@@ -41,7 +41,7 @@ public interface IMagicCard extends ICard {
 
 	public IMagicCard cloneCard();
 
-	public abstract IMagicCard getBase();
+	public abstract MagicCard getBase();
 
 	public abstract String getText();
 

@@ -113,7 +113,7 @@ public class ParseGathererLegality extends ParseGathererPage {
 				try {
 					LegalityMap map = parser.getCardLegality(id, new SubCoreProgressMonitor(monitor, 10));
 					res.put(id, map);
-					MagicCard base = ((MagicCard) magicCard.getBase());
+					MagicCard base = (magicCard.getBase());
 					base.setLegalityMap(map);
 				} catch (IOException e) {
 					ex = e;
