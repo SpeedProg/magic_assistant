@@ -51,7 +51,7 @@ public class MagicCardConvertor implements Converter {
 				continue;
 			else if (o instanceof Boolean && ((Boolean) o).booleanValue() == false)
 				continue;
-			writer.startNode(((MagicCardField) field).getJavaField().getName());
+			writer.startNode(((MagicCardField) field).getTag());
 			context.convertAnother(o);
 			writer.endNode();
 		}

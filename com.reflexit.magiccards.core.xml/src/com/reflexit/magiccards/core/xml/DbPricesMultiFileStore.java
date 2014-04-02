@@ -92,13 +92,14 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	private DbPricesMultiFileStore() {
+		add(ParseTcgPlayerPrices.create(ParseTcgPlayerPrices.Type.Medium));
+		add(ParseTcgPlayerPrices.create(ParseTcgPlayerPrices.Type.Low));
 		ParseMtgFanaticPrices mtgFanatic = new ParseMtgFanaticPrices();
 		FindMagicCardsPrices findMagicCards = new FindMagicCardsPrices();
 		add(ParseMOTLPrices.getInstance());
 		add(mtgFanatic);
 		add(findMagicCards);
-		add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Medium));
-		add(new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low));
+		current = getDefaultProvider();
 	}
 
 	private void add(IPriceProvider provider) {
