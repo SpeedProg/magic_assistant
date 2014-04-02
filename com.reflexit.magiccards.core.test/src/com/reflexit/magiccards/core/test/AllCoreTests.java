@@ -17,11 +17,11 @@ import com.reflexit.magiccards.core.model.EditionsTest;
 import com.reflexit.magiccards.core.seller.test.AllSellerTests;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
-import com.reflexit.magiccards.core.sync.ParseGathererSearchChecklistTest;
-import com.reflexit.magiccards.core.sync.ParseGathererLegalityTest;
 import com.reflexit.magiccards.core.sync.ParseGathererDetailsTest;
-import com.reflexit.magiccards.core.sync.ParseGathererSetsTest;
+import com.reflexit.magiccards.core.sync.ParseGathererLegalityTest;
+import com.reflexit.magiccards.core.sync.ParseGathererSearchChecklistTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSearchStandardTest;
+import com.reflexit.magiccards.core.sync.ParseGathererSetsTest;
 
 /**
  * @author Alena
@@ -40,9 +40,10 @@ public class AllCoreTests {
 		suite.addTestSuite(ParseGathererBasicInfoTest.class);
 		suite.addTestSuite(ParseGathererSearchStandardTest.class);
 		suite.addTestSuite(ParseGathererSearchChecklistTest.class);
-		suite.addTestSuite(EditionsTest.class);
 		// prive providers
 		suite.addTest(AllSellerTests.suite());
+		// editions
+		suite.addTestSuite(EditionsTest.class);
 		// $JUnit-END$
 		return suite;
 	}

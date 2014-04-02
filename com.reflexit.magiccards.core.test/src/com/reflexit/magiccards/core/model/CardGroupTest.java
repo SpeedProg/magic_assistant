@@ -129,11 +129,11 @@ public class CardGroupTest extends TestCase {
 		((MagicCardPhysical) cards[2]).setCount(4);
 		((MagicCardPhysical) cards[2]).setForTrade(2);
 		assertEquals(2, group.getOwnUnique());
-		int c = (Integer) MagicCardFieldPhysical.OWN_UNIQUE.valueOf(group);
+		int c = (Integer) MagicCardField.OWN_UNIQUE.valueOf(group);
 		assertEquals(2, c);
-		c = (Integer) MagicCardFieldPhysical.OWN_COUNT.valueOf(group);
+		c = (Integer) MagicCardField.OWN_COUNT.valueOf(group);
 		assertEquals(5, c);
-		c = (Integer) MagicCardFieldPhysical.FORTRADECOUNT.valueOf(group);
+		c = (Integer) MagicCardField.FORTRADECOUNT.valueOf(group);
 		assertEquals(2, c);
 	}
 
@@ -231,7 +231,7 @@ public class CardGroupTest extends TestCase {
 	@Test
 	public void testOwnership() {
 		populateGroup(group, 3, true);
-		subtestGetBase(MagicCardFieldPhysical.OWNERSHIP, true);
+		subtestGetBase(MagicCardField.OWNERSHIP, true);
 		assertEquals(true, group.isOwn());
 	}
 
@@ -239,30 +239,30 @@ public class CardGroupTest extends TestCase {
 	public void testLocation() {
 		populateGroup(group, 3, true);
 		Location loc = Location.valueOf("xxx");
-		subtestGetBase(MagicCardFieldPhysical.LOCATION, loc);
+		subtestGetBase(MagicCardField.LOCATION, loc);
 		assertEquals(loc, group.getLocation());
-		subtestGetBase(MagicCardFieldPhysical.SIDEBOARD, false);
+		subtestGetBase(MagicCardField.SIDEBOARD, false);
 	}
 
 	@Test
 	public void testPhyCount() {
 		populateGroup(group, 3, true);
-		subtestGetBase(MagicCardFieldPhysical.COUNT, 1, 3);
+		subtestGetBase(MagicCardField.COUNT, 1, 3);
 		assertEquals(3, group.getCount());
 	}
 
 	@Test
 	public void testPrice() {
 		populateGroup(group, 3, true);
-		subtestGetBase(MagicCardFieldPhysical.COUNT, 1, 3);
-		subtestGetBase(MagicCardFieldPhysical.PRICE, 1.0f, 3.0f);
+		subtestGetBase(MagicCardField.COUNT, 1, 3);
+		subtestGetBase(MagicCardField.PRICE, 1.0f, 3.0f);
 	}
 
 	@Test
 	public void testComment() {
 		populateGroup(group, 3, true);
 		String comment = "tapochki";
-		subtestGetBase(MagicCardFieldPhysical.COMMENT, comment);
+		subtestGetBase(MagicCardField.COMMENT, comment);
 		assertEquals(comment, group.getComment());
 	}
 
@@ -270,15 +270,15 @@ public class CardGroupTest extends TestCase {
 	public void testCustom() {
 		populateGroup(group, 3, true);
 		String comment = "a,b";
-		subtestGetBase(MagicCardFieldPhysical.CUSTOM, comment);
+		subtestGetBase(MagicCardField.CUSTOM, comment);
 	}
 
 	@Test
 	public void testSideboard() {
 		populateGroup(group, 3, true);
 		Location loc = Location.valueOf("xxx").toSideboard();
-		subtestGetBase(MagicCardFieldPhysical.LOCATION, loc);
-		subtestGetBase(MagicCardFieldPhysical.SIDEBOARD, true);
+		subtestGetBase(MagicCardField.LOCATION, loc);
+		subtestGetBase(MagicCardField.SIDEBOARD, true);
 		assertEquals(true, group.isSideboard());
 	}
 
@@ -323,16 +323,16 @@ public class CardGroupTest extends TestCase {
 			count += ((IMagicCardPhysical) cards[j]).getCount();
 		}
 		group.rehash();
-		checkConsistency(MagicCardFieldPhysical.OWNERSHIP, group.isOwn());
-		checkConsistency(MagicCardFieldPhysical.OWN_COUNT, group.getOwnCount(), count);
-		checkConsistency(MagicCardFieldPhysical.OWN_UNIQUE, group.getOwnUnique(), same ? 1 : count);
-		checkConsistency(MagicCardFieldPhysical.COUNT, group.getCount(), count);
-		checkConsistency(MagicCardFieldPhysical.FORTRADECOUNT, group.getForTrade(), 0);
-		checkConsistency(MagicCardFieldPhysical.SPECIAL, group.getSpecial());
+		checkConsistency(MagicCardField.OWNERSHIP, group.isOwn());
+		checkConsistency(MagicCardField.OWN_COUNT, group.getOwnCount(), count);
+		checkConsistency(MagicCardField.OWN_UNIQUE, group.getOwnUnique(), same ? 1 : count);
+		checkConsistency(MagicCardField.COUNT, group.getCount(), count);
+		checkConsistency(MagicCardField.FORTRADECOUNT, group.getForTrade(), 0);
+		checkConsistency(MagicCardField.SPECIAL, group.getSpecial());
 		int uniqueCount = group.getUniqueCount();
 		checkConsistency(MagicCardField.UNIQUE_COUNT, uniqueCount, same ? 1 : count);
 		if (same) {
-			checkConsistency(MagicCardFieldPhysical.COMMENT, group.getComment());
+			checkConsistency(MagicCardField.COMMENT, group.getComment());
 			checkConsistency(MagicCardField.COST, group.getCost());
 			checkConsistency(MagicCardField.TYPE, group.getType());
 			checkConsistency(MagicCardField.ORACLE, group.getOracleText());
@@ -406,7 +406,7 @@ public class CardGroupTest extends TestCase {
 		for (int j = 0; j < cards.length; j++) {
 			cards[j] = generatePhyCard();
 			preset1((MagicCardPhysical) cards[j]);
-			((ICardModifiable) cards[j]).setObjectByField(MagicCardFieldPhysical.COUNT, "1");
+			((ICardModifiable) cards[j]).setObjectByField(MagicCardField.COUNT, "1");
 		}
 		((ICardModifiable) cards[0]).setObjectByField(MagicCardField.TYPE, "Creature - Elf");
 		((ICardModifiable) cards[1]).setObjectByField(MagicCardField.TYPE, "Instant");

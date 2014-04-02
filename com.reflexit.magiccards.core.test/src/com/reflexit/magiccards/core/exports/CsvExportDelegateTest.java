@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.exports;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
 public class CsvExportDelegateTest extends AbstarctExportTest {
@@ -21,7 +20,7 @@ public class CsvExportDelegateTest extends AbstarctExportTest {
 	}
 
 	public void test2() {
-		exporter.setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		exporter.setColumns(new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 		run(exporter);
 		assertEquals(4, lines.length);
 		assertTrue("Not good " + lines[0], lines[0].equals("COUNT,NAME"));
@@ -29,7 +28,7 @@ public class CsvExportDelegateTest extends AbstarctExportTest {
 	}
 
 	public void testEscape() {
-		exporter.setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		exporter.setColumns(new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 		card1.setObjectByField(MagicCardField.NAME, "My,Name");
 		run(exporter);
 		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "," + "\"My,Name\""));

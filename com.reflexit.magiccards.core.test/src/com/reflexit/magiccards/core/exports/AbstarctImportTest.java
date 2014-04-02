@@ -61,6 +61,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(), deck.getCardStore(),
 					ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 		result = extractStorageCards();

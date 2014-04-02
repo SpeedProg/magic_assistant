@@ -1,12 +1,15 @@
 package com.reflexit.magiccards.core.seller.test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
+import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -15,7 +18,6 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
-import junit.framework.TestCase;
 
 public abstract class AbstractPriceProviderTest extends TestCase {
 	private MemoryCardStore<IMagicCard> store;

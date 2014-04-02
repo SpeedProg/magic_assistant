@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -7,7 +9,6 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -245,7 +246,7 @@ public class MagicCardComparatorTest extends TestCase {
 
 	@Test
 	public void testCount() {
-		makeComparator(MagicCardFieldPhysical.COUNT);
+		makeComparator(MagicCardField.COUNT);
 		genMcp();
 		setField(card1, field, "1");
 		setField(card2, field, "2");
@@ -255,15 +256,15 @@ public class MagicCardComparatorTest extends TestCase {
 	}
 
 	public void testOwnCount() {
-		makeComparator(MagicCardFieldPhysical.OWN_COUNT);
+		makeComparator(MagicCardField.OWN_COUNT);
 		genMcp();
-		setField(card1, MagicCardFieldPhysical.COUNT, "1");
-		setField(card2, MagicCardFieldPhysical.COUNT, "2");
+		setField(card1, MagicCardField.COUNT, "1");
+		setField(card2, MagicCardField.COUNT, "2");
 		checkInvariantLess(card1, card2);
-		setField(card2, MagicCardFieldPhysical.COUNT, "10");
+		setField(card2, MagicCardField.COUNT, "10");
 		checkInvariantLess(card1, card2);
-		setField(card1, MagicCardFieldPhysical.COUNT, "2");
-		setField(card2, MagicCardFieldPhysical.COUNT, "2");
+		setField(card1, MagicCardField.COUNT, "2");
+		setField(card2, MagicCardField.COUNT, "2");
 		checkInvariantSame();
 		when(((MagicCardPhysical) card2).getOwnTotal()).thenReturn(3);
 		checkInvariantLess(card1, card2);

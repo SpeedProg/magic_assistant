@@ -19,10 +19,6 @@ import org.junit.Test;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
-import com.reflexit.magiccards.core.model.nav.LocationPath;
-import com.reflexit.magiccards.core.model.nav.ModelRoot;
 
 /**
  * @author Alena

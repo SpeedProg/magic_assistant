@@ -2,11 +2,11 @@ package com.reflexit.magiccards.core.model.utils;
 
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
+
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
-
-import junit.framework.TestCase;
 
 public class SearchStringTokenizerTest extends TestCase {
 	private SearchStringTokenizer tokenizer;

@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.exports;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 
 public class PipedTableExportText extends AbstarctExportTest {
 	private TableExportDelegate exporter = new TableExportDelegate();
@@ -20,7 +19,7 @@ public class PipedTableExportText extends AbstarctExportTest {
 	}
 
 	public void test2() {
-		exporter.setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		exporter.setColumns(new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 		run(exporter);
 		assertEquals(4, lines.length);
 		assertTrue(lines[0], lines[0].equals("COUNT|NAME"));
@@ -28,7 +27,7 @@ public class PipedTableExportText extends AbstarctExportTest {
 	}
 
 	public void testEscape() {
-		exporter.setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		exporter.setColumns(new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 		card1.setObjectByField(MagicCardField.NAME, "My|Name");
 		run(exporter);
 		assertEquals(4, lines.length);

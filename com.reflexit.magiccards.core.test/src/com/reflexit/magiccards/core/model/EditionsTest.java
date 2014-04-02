@@ -13,9 +13,7 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.legality.Format;
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;

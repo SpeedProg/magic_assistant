@@ -14,8 +14,6 @@ import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
-import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
-import com.reflexit.magiccards.core.xml.MagicXmlStreamHandler;
 
 /**
  * Test xml reader and writer

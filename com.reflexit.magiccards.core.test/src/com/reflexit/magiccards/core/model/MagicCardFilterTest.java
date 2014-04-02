@@ -1,21 +1,13 @@
 package com.reflexit.magiccards.core.model;
 
 import java.util.HashMap;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import com.reflexit.magiccards.core.model.ColorTypes;
-import com.reflexit.magiccards.core.model.Colors;
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.FilterField;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class MagicCardFilterTest extends TestCase {
 	MagicCardFilter filter;
