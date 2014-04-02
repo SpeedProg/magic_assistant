@@ -27,7 +27,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 	}
 
 	public void testDefaultsSep() {
-		card1.setObjectByField(MagicCardField.NAME, "My Name");
+		card1.set(MagicCardField.NAME, "My Name");
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP_QUOT);
 		run(exporter);
 		assertEquals(4, lines.length);
@@ -36,7 +36,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 	}
 
 	public void testSepPipe() {
-		card1.setObjectByField(MagicCardField.NAME, "My|Name");
+		card1.set(MagicCardField.NAME, "My|Name");
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP);
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT, "|");
 		run(exporter);
@@ -46,7 +46,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 	}
 
 	public void testSepPipeQuot() {
-		card1.setObjectByField(MagicCardField.NAME, "My|Name");
+		card1.set(MagicCardField.NAME, "My|Name");
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP_QUOT);
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT, "|");
 		run(exporter);

@@ -15,10 +15,10 @@ public class SortOrderTest extends TestCase {
 		card.setCount(1);
 		card.setSpecial("foil");
 		card.setDbPrice(1.0f);
-		card.setObjectByField(MagicCardField.RATING, "1");
-		card.setObjectByField(MagicCardField.TOUGHNESS, "1.0");
-		card.setObjectByField(MagicCardField.POWER, "1.0");
-		card.setObjectByField(MagicCardField.SET, "Lorwyn");
+		card.set(MagicCardField.RATING, "1");
+		card.set(MagicCardField.TOUGHNESS, "1.0");
+		card.set(MagicCardField.POWER, "1.0");
+		card.set(MagicCardField.SET, "Lorwyn");
 		return card;
 	}
 
@@ -31,11 +31,11 @@ public class SortOrderTest extends TestCase {
 	}
 
 	private void setField(IMagicCard y, ICardField field, String value) {
-		((MagicCardPhysical) y).setObjectByField(field, value);
+		((MagicCardPhysical) y).set(field, value);
 	}
 
 	private void setField(IMagicCard y, ICardField field, Object value) {
-		((MagicCardPhysical) y).setObjectByField(field, String.valueOf(value));
+		((MagicCardPhysical) y).set(field, String.valueOf(value));
 	}
 
 	public IMagicCard cloneOne(IMagicCard x, ICardField field, Object value) {

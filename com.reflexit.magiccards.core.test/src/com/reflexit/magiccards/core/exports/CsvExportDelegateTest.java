@@ -29,7 +29,7 @@ public class CsvExportDelegateTest extends AbstarctExportTest {
 
 	public void testEscape() {
 		exporter.setColumns(new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
-		card1.setObjectByField(MagicCardField.NAME, "My,Name");
+		card1.set(MagicCardField.NAME, "My,Name");
 		run(exporter);
 		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "," + "\"My,Name\""));
 	}

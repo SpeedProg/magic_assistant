@@ -116,14 +116,14 @@ public class MagicCardFilterTest extends TestCase {
 	public void genericFieldText(FilterField ff, String value) {
 		setQuickFilter(ff, value);
 		checkNotFound();
-		mcp.setObjectByField(ff.getField(), value);
+		mcp.set(ff.getField(), value);
 		checkFound();
 	}
 
 	public void genericFieldTextNot(FilterField ff, String value) {
 		setQuickFilter(ff, value);
 		checkFound();
-		mcp.setObjectByField(ff.getField(), value);
+		mcp.set(ff.getField(), value);
 		checkNotFound();
 	}
 
@@ -177,13 +177,13 @@ public class MagicCardFilterTest extends TestCase {
 		propMap.put(Editions.getInstance().getPrefConstantByName("Alara Reborn"), "true");
 		filter.update(propMap);
 		checkNotFound();
-		mcp.setObjectByField(ff.getField(), "Alara Reborn");
+		mcp.set(ff.getField(), "Alara Reborn");
 		checkFound();
 	}
 
 	public void testCCC() {
 		FilterField ff = FilterField.CCC;
-		mcp.setObjectByField(MagicCardField.COST, "{3}");
+		mcp.set(MagicCardField.COST, "{3}");
 		// Object a = mcp.getObjectByField(ff.getField());
 		setQuickFilter(ff, "3");
 		checkFound();
@@ -197,10 +197,10 @@ public class MagicCardFilterTest extends TestCase {
 	public void testCOUNTLess() {
 		FilterField ff = FilterField.COUNT;
 		setQuickFilter(ff, "<=3");
-		mcp.setObjectByField(ff.getField(), "3");
+		mcp.set(ff.getField(), "3");
 		checkFound();
 		setQuickFilter(ff, "<=2");
-		mcp.setObjectByField(ff.getField(), "3");
+		mcp.set(ff.getField(), "3");
 		checkNotFound();
 	}
 
@@ -244,7 +244,7 @@ public class MagicCardFilterTest extends TestCase {
 		FilterField ff = FilterField.FORMAT;
 		setQuickFilter(ff, "Standard");
 		checkNotFound();
-		mcp.setObjectByField(ff.getField(), "Modern");
+		mcp.set(ff.getField(), "Modern");
 		checkNotFound();
 	}
 

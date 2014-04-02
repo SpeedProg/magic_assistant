@@ -72,7 +72,7 @@ public class ParseGathererDetailsTest extends TestCase {
 
 	public void testSlashR() throws IOException {
 		MagicCard card = load(366280);
-		Object rating = card.getObjectByField(MagicCardField.RATING);
+		Object rating = card.get(MagicCardField.RATING);
 		assertNotNull(rating);
 		assertTrue("Cannot update rating", rating.toString().length() > 0);
 		assertEquals(164, Integer.parseInt(card.getCollNumber()));

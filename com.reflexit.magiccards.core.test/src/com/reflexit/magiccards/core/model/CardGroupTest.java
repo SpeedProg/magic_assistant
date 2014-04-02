@@ -63,10 +63,10 @@ public class CardGroupTest extends TestCase {
 	public void subtestGetBase(ICardField field, Object value, Object expected) {
 		for (Iterator iterator = group.iterator(); iterator.hasNext();) {
 			IMagicCardPhysical card = (IMagicCardPhysical) iterator.next();
-			((ICardModifiable) card).setObjectByField(field, String.valueOf(value));
+			((ICardModifiable) card).set(field, String.valueOf(value));
 		}
 		group.rehash();
-		assertEquals(expected, group.getObjectByField(field));
+		assertEquals(expected, group.get(field));
 	}
 
 	@Test
@@ -365,27 +365,27 @@ public class CardGroupTest extends TestCase {
 		card.setCount(1);
 		card.setSpecial("foil");
 		card.setDbPrice(1.0f);
-		card.setObjectByField(MagicCardField.RATING, "1");
-		card.setObjectByField(MagicCardField.TOUGHNESS, "1.0");
-		card.setObjectByField(MagicCardField.POWER, "1.0");
-		card.setObjectByField(MagicCardField.SET, "Lorwyn");
+		card.set(MagicCardField.RATING, "1");
+		card.set(MagicCardField.TOUGHNESS, "1.0");
+		card.set(MagicCardField.POWER, "1.0");
+		card.set(MagicCardField.SET, "Lorwyn");
 	}
 
 	public void checkConsistency(ICardField field) {
 		MagicCardPhysical card = (MagicCardPhysical) group.getFirstCard();
-		assertEquals(card.getObjectByField(field), group.getObjectByField(field));
+		assertEquals(card.get(field), group.get(field));
 	}
 
 	public void checkConsistency(ICardField field, Object value) {
 		MagicCardPhysical card = (MagicCardPhysical) group.getFirstCard();
 		assertNotNull(card);
-		assertEquals(card.getObjectByField(field), value);
-		assertEquals(value, group.getObjectByField(field));
+		assertEquals(card.get(field), value);
+		assertEquals(value, group.get(field));
 	}
 
 	public void checkConsistency(ICardField field, Object value, Object compare) {
 		assertEquals("Failed compare(1) for " + field, compare, value);
-		assertEquals("Failed compare(2) for " + field, value, group.getObjectByField(field));
+		assertEquals("Failed compare(2) for " + field, value, group.get(field));
 	}
 
 	public void printTree(CardGroup g, int level) {
@@ -406,11 +406,11 @@ public class CardGroupTest extends TestCase {
 		for (int j = 0; j < cards.length; j++) {
 			cards[j] = generatePhyCard();
 			preset1((MagicCardPhysical) cards[j]);
-			((ICardModifiable) cards[j]).setObjectByField(MagicCardField.COUNT, "1");
+			((ICardModifiable) cards[j]).set(MagicCardField.COUNT, "1");
 		}
-		((ICardModifiable) cards[0]).setObjectByField(MagicCardField.TYPE, "Creature - Elf");
-		((ICardModifiable) cards[1]).setObjectByField(MagicCardField.TYPE, "Instant");
-		((ICardModifiable) cards[2]).setObjectByField(MagicCardField.TYPE, "Sorcery");
+		((ICardModifiable) cards[0]).set(MagicCardField.TYPE, "Creature - Elf");
+		((ICardModifiable) cards[1]).set(MagicCardField.TYPE, "Instant");
+		((ICardModifiable) cards[2]).set(MagicCardField.TYPE, "Sorcery");
 		ArrayList<IMagicCard> acards = new ArrayList<IMagicCard>(Arrays.asList(cards));
 		group = CardStoreUtils.buildTypeGroups(acards);
 		group.removeEmptyChildren();

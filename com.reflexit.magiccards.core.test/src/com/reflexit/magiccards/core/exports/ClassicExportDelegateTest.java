@@ -24,7 +24,7 @@ public class ClassicExportDelegateTest extends AbstarctExportTest {
 	}
 
 	public void testEscape() {
-		card1.setObjectByField(MagicCardField.NAME, "My|Name");
+		card1.set(MagicCardField.NAME, "My|Name");
 		run(exporter);
 		assertEquals(4, lines.length);
 		assertTrue(lines[0].startsWith("#"));

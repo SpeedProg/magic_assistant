@@ -78,7 +78,7 @@ public class MagicCardComparatorTest extends TestCase {
 	}
 
 	private void setField(IMagicCard y, ICardField field, Object value) {
-		((ICardModifiable) y).setObjectByField(field, value == null ? null : String.valueOf(value));
+		((ICardModifiable) y).set(field, value == null ? null : String.valueOf(value));
 	}
 
 	protected void genMc() {
