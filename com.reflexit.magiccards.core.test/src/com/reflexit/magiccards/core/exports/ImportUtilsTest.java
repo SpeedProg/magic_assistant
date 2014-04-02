@@ -174,7 +174,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Seb McKinnon", card.getArtist());
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals(31, card.getCollectorNumberId());
-		assertEquals("http://magiccards.info/scans/en/mgdc/31.jpg", ((MagicCard) card.getBase()).getImageUrl());
+		assertEquals("http://magiccards.info/scans/en/mgdc/31.jpg", card.getBase().getImageUrl());
 	}
 
 	public void testPerformPreImportWithDbOvNoUrl() {
@@ -193,7 +193,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals("My Text", card.getText());
 		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card",
-				((MagicCard) card.getBase()).getImageUrl());
+				card.getBase().getImageUrl());
 	}
 
 	@Test

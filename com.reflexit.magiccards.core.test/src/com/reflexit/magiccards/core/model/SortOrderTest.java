@@ -46,7 +46,7 @@ public class SortOrderTest extends TestCase {
 
 	public IMagicCard cloneFull(IMagicCard x) {
 		IMagicCard y = x.cloneCard();
-		((MagicCardPhysical) y).setMagicCard((MagicCard) x.getBase().cloneCard());
+		((MagicCardPhysical) y).setMagicCard(x.getBase().cloneCard());
 		return y;
 	}
 
