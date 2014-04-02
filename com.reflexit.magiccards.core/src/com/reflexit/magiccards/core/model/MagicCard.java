@@ -279,12 +279,12 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		ArrayList list = new ArrayList();
 		ICardField[] xfields = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : xfields) {
-			list.add(getObjectByField(field));
+			list.add(get(field));
 		}
 		return list;
 	}
 
-	public Object getObjectByField(ICardField field) {
+	public Object get(ICardField field) {
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
 			case ID:
@@ -363,7 +363,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				return getCost();
 			default:
 				if (getRealCards() != null) {
-					return getRealCards().getObjectByField(field);
+					return getRealCards().get(field);
 				}
 				break;
 		}
@@ -435,7 +435,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			this.num = collNumber.intern();
 	}
 
-	public boolean setObjectByField(ICardField field, String value) {
+	public boolean set(ICardField field, String value) {
 		if (!(field instanceof MagicCardField))
 			return false;
 		MagicCardField mf = (MagicCardField) field;
@@ -547,14 +547,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		ICardField[] fields = MagicCardField.allNonTransientFields(false);
 		for (int i = 0; i < fields.length; i++) {
 			ICardField field = fields[i];
-			Object value = card.getObjectByField(field);
+			Object value = card.get(field);
 			if (value != null) {
 				String string = value.toString();
 				if (value instanceof Number) {
 					if ((Float.valueOf(string) != 0))
-						this.setObjectByField(field, string);
+						this.set(field, string);
 				} else if (string.length() > 0)
-					this.setObjectByField(field, string);
+					this.set(field, string);
 			}
 		}
 	}
@@ -574,7 +574,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public boolean matches(ICardField left, TextValue right) {
-		String value = String.valueOf(getObjectByField(left));
+		String value = String.valueOf(get(left));
 		if (left == MagicCardField.TYPE && !right.regex) {
 			return CardTypes.getInstance().hasType(this, right.getText());
 		}
@@ -719,28 +719,28 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return null;
-		return (String) realCards.getObjectByField(MagicCardField.COMMENT);
+		return (String) realCards.get(MagicCardField.COMMENT);
 	}
 
 	public Location getLocation() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return Location.NO_WHERE;
-		return (Location) realCards.getObjectByField(MagicCardField.LOCATION);
+		return (Location) realCards.get(MagicCardField.LOCATION);
 	}
 
 	public boolean isOwn() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return false;
-		return (Boolean) realCards.getObjectByField(MagicCardField.OWNERSHIP);
+		return (Boolean) realCards.get(MagicCardField.OWNERSHIP);
 	}
 
 	public int getForTrade() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return 0;
-		return (Integer) realCards.getObjectByField(MagicCardField.FORTRADECOUNT);
+		return (Integer) realCards.get(MagicCardField.FORTRADECOUNT);
 	}
 
 	public float getPrice() {
@@ -754,14 +754,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return null;
-		return (String) realCards.getObjectByField(MagicCardField.SPECIAL);
+		return (String) realCards.get(MagicCardField.SPECIAL);
 	}
 
 	public boolean isSideboard() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return false;
-		return (Boolean) realCards.getObjectByField(MagicCardField.SIDEBOARD);
+		return (Boolean) realCards.get(MagicCardField.SIDEBOARD);
 	}
 
 	public int getUniqueCount() {
@@ -915,9 +915,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	public void setFrom(MagicCard importCard, ICardField[] columns) {
 		for (int i = 0; i < columns.length; i++) {
 			ICardField field = columns[i];
-			Object value = importCard.getObjectByField(field);
+			Object value = importCard.get(field);
 			if (value != null)
-				setObjectByField(field, value.toString());
+				set(field, value.toString());
 		}
 	}
 }

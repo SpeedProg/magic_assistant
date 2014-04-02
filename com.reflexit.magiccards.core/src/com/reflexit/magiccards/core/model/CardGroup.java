@@ -125,8 +125,8 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		list.add(MagicCardField.ORACLE); // move to end, because want to set text first
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			ICardField field = (ICardField) iterator.next();
-			Object value = o.getObjectByField(field);
-			Object mine = getGroupBase().getObjectByField(field);
+			Object value = o.get(field);
+			Object mine = getGroupBase().get(field);
 			Object newmine = null;
 			if (mine == null) {
 				newmine = value;
@@ -188,7 +188,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 				}
 			}
 			if (newmine != null) {
-				((ICardModifiable) getGroupBase()).setObjectByField(field, String.valueOf(newmine));
+				((ICardModifiable) getGroupBase()).set(field, String.valueOf(newmine));
 			}
 		}
 	}
@@ -345,7 +345,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			return this.name;
 		if (children.size() == 0)
 			return "";
-		Object value = getObjectByField(f);
+		Object value = get(f);
 		if (value == null)
 			return "";
 		return String.valueOf(value);
@@ -480,7 +480,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 				}
 				return "Main Deck";
 			} else {
-				return String.valueOf(elem.getObjectByField(field));
+				return String.valueOf(elem.get(field));
 			}
 		} catch (Exception e) {
 			return "Unknown";
@@ -493,7 +493,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return res;
 	}
 
-	public Object getObjectByField(ICardField field) {
+	public Object get(ICardField field) {
 		if (field == MagicCardField.NAME || field == groupField)
 			return getName();
 		if (size() == 0)
@@ -507,7 +507,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		IMagicCardPhysical groupBase = getGroupBase();
 		if (groupBase == null)
 			return null; // empty group
-		return groupBase.getObjectByField(field);
+		return groupBase.get(field);
 	}
 
 	@Override
@@ -687,7 +687,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		ArrayList list = new ArrayList();
 		ICardField[] xfields = MagicCardField.allNonTransientFields(true);
 		for (ICardField field : xfields) {
-			list.add(getObjectByField(field));
+			list.add(get(field));
 		}
 		return list;
 	}

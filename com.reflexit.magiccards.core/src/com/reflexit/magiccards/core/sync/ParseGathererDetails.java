@@ -209,7 +209,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 					return; // do not change
 				}
 			}
-			((ICardModifiable) card).setObjectByField(field, value);
+			((ICardModifiable) card).set(field, value);
 		}
 	}
 
@@ -238,7 +238,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 			// name update
 			if (nameOrig == null) {
 				nameOrig = nameTitle;
-				((ICardModifiable) card).setObjectByField(MagicCardField.NAME, nameTitle);
+				((ICardModifiable) card).set(MagicCardField.NAME, nameTitle);
 			}
 			if (nameOrig.indexOf('(') > 0) {
 				nameOrig = nameOrig.substring(0, nameOrig.indexOf('(') - 1);
@@ -254,7 +254,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 			if (sides == 1) {
 				html = cardSides.get(0);
 				if (!nameOrig.equals(nameTitle)) { // Localized title
-					((ICardModifiable) card).setObjectByField(MagicCardField.NAME, nameTitle);
+					((ICardModifiable) card).set(MagicCardField.NAME, nameTitle);
 				}
 			} else if (sides == 2) {
 				String htmlB = null;
@@ -293,17 +293,17 @@ public class ParseGathererDetails extends ParseGathererPage {
 						if (magicDb != null && !magicDb.contains(cardB)) {
 							extractField(cardB, null, htmlB, MagicCardField.ARTIST, artistPattern, false);
 							extractField(cardB, null, htmlB, MagicCardField.COLLNUM, cardnumPattern, false);
-							((ICardModifiable) cardB).setObjectByField(MagicCardField.FLIPID, String.valueOf(card.getCardId()));
+							((ICardModifiable) cardB).set(MagicCardField.FLIPID, String.valueOf(card.getCardId()));
 							magicDb.add(cardB);
 						}
-						String part1 = (String) card.getBase().getObjectByField(MagicCardField.PART);
-						String part = (String) cardB.getBase().getObjectByField(MagicCardField.PART);
+						String part1 = (String) card.getBase().get(MagicCardField.PART);
+						String part = (String) cardB.getBase().get(MagicCardField.PART);
 						if (part != null && part.length() > 0) {
 							if (part.equals(part1))
 								return; // second part updated - no support
-							((ICardModifiable) card).setObjectByField(MagicCardField.OTHER_PART, part);
+							((ICardModifiable) card).set(MagicCardField.OTHER_PART, part);
 						}
-						((ICardModifiable) card).setObjectByField(MagicCardField.FLIPID, String.valueOf(pairId));
+						((ICardModifiable) card).set(MagicCardField.FLIPID, String.valueOf(pairId));
 					}
 				}
 				if (!nameOrig.equals(nameTitle)) {
@@ -343,7 +343,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 	@Override
 	protected String getUrl() {
 		String base = DETAILS_QUERY_URL_BASE + card.getCardId();
-		String part = (String) card.getObjectByField(MagicCardField.PART);
+		String part = (String) card.get(MagicCardField.PART);
 		if (part == null) {
 			return base;
 		}

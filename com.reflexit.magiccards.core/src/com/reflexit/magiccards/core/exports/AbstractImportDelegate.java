@@ -107,7 +107,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)
 				nameByAbbr = "Unknown";
-			card.setObjectByField(MagicCardField.SET, nameByAbbr);
+			card.set(MagicCardField.SET, nameByAbbr);
 		} else if (field == MagicCardField.LOCATION || field == MagicCardField.CTYPE || field == MagicCardField.CMC
 				|| field == MagicCardField.COLOR) {
 			// ignore this field
@@ -116,7 +116,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 				card.setLocation(getSideboardLocation());
 			}
 		} else {
-			card.setObjectByField(field, value);
+			card.set(field, value);
 		}
 	}
 

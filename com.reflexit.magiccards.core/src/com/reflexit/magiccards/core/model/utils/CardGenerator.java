@@ -47,7 +47,7 @@ public class CardGenerator {
 			card.setPower(String.valueOf(id % 5));
 			card.setToughness("*");
 			card.setCollNumber(id + "a");
-			card.setObjectByField(MagicCardField.RATING, "2." + id);
+			card.set(MagicCardField.RATING, "2." + id);
 			card.setDbPrice(1.2f + 1 / (float) id);
 			card.setArtist("Elena " + id);
 			card.setLanguage("Russian");

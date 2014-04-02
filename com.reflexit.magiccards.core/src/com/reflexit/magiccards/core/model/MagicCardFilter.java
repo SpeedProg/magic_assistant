@@ -219,7 +219,7 @@ public class MagicCardFilter implements Cloneable {
 		@Override
 		public Object getFieldValue(Object o) {
 			if (o instanceof IMagicCard) {
-				return ((IMagicCard) o).getObjectByField(field);
+				return ((IMagicCard) o).get(field);
 			}
 			return null;
 		}
@@ -240,7 +240,7 @@ public class MagicCardFilter implements Cloneable {
 		@Override
 		public Object getFieldValue(Object o) {
 			if (o instanceof IMagicCard) {
-				return ((IMagicCard) o).getObjectByField(field.getField());
+				return ((IMagicCard) o).get(field.getField());
 			}
 			return null;
 		}

@@ -112,7 +112,7 @@ public enum MagicCardField implements ICardField {
 	}
 
 	public Object valueOf(ICard card) {
-		return card.getObjectByField(this);
+		return card.get(this);
 	}
 
 	public static ICardField fieldByName(String field) {

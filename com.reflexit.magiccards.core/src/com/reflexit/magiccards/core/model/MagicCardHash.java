@@ -6,7 +6,7 @@ public class MagicCardHash implements ICard, ICardModifiable {
 	private LinkedHashMap<ICardField, Object> fields = new LinkedHashMap<ICardField, Object>();
 
 	@Override
-	public Object getObjectByField(ICardField field) {
+	public Object get(ICardField field) {
 		return fields.get(field);
 	}
 
@@ -38,7 +38,7 @@ public class MagicCardHash implements ICard, ICardModifiable {
 	}
 
 	@Override
-	public boolean setObjectByField(ICardField field, String value) {
+	public boolean set(ICardField field, String value) {
 		fields.put(field, value);
 		return true;
 	}

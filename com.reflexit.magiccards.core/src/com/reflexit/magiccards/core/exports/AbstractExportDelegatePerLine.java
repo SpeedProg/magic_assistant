@@ -64,7 +64,7 @@ public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDel
 	}
 
 	public Object getObjectByField(T card, ICardField field) {
-		return ((ICard) card).getObjectByField(field);
+		return ((ICard) card).get(field);
 	}
 
 	public void printLine(Object[] values) {

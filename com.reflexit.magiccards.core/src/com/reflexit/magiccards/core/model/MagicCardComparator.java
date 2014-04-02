@@ -67,8 +67,8 @@ class MagicCardComparator implements Comparator {
 		if (c1.getClass() != c2.getClass())
 			return dir * c1.getClass().getName().compareTo(c2.getClass().getName());
 		ICardField sort = field;
-		Object a1 = c1.getObjectByField(sort);
-		Object a2 = c2.getObjectByField(sort);
+		Object a1 = c1.get(sort);
+		Object a2 = c2.get(sort);
 		int d = 0;
 		if (a1 != a2) {
 			if (a1 == null) {
@@ -126,8 +126,8 @@ class MagicCardComparator implements Comparator {
 		}
 		if (d == 0) { // secondary key
 			if (sort == MagicCardField.CMC) {
-				int d1 = Colors.getColorSort((String) c1.getObjectByField(MagicCardField.COST));
-				int d2 = Colors.getColorSort((String) c2.getObjectByField(MagicCardField.COST));
+				int d1 = Colors.getColorSort((String) c1.get(MagicCardField.COST));
+				int d2 = Colors.getColorSort((String) c2.get(MagicCardField.COST));
 				d = d1 - d2;
 			} else if (sort == MagicCardField.OWN_COUNT) {
 				if (c1 instanceof MagicCardPhysical && c2 instanceof MagicCardPhysical) {

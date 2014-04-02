@@ -168,13 +168,13 @@ public class MagicXmlStreamReader {
 						switch (states.peek()) {
 							case mc: {
 								MagicCardField field = mcFields.get(last);
-								cardm.setObjectByField(field, ttStr);
+								cardm.set(field, ttStr);
 								break;
 							}
 							case card:
 							case mcp: {
 								MagicCardField field = mcFields.get(last);
-								cardp.setObjectByField(field, ttStr);
+								cardp.set(field, ttStr);
 								break;
 							}
 							default:

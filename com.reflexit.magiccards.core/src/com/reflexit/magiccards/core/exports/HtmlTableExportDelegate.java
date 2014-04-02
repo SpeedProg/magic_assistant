@@ -26,7 +26,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagi
 		String line = "<tr>";
 		for (int i = 0; i < columns.length; i++) {
 			ICardField field = columns[i];
-			Object value = card.getObjectByField(field);
+			Object value = card.get(field);
 			if (value == null)
 				value = "";
 			if (field == MagicCardField.COST) {

@@ -74,7 +74,7 @@ public class DeckParser implements Closeable {
 								if (delegate != null) {
 									delegate.setFieldValue(res, cardField, i, group.trim());
 								} else {
-									res.setObjectByField(cardField, group.trim());
+									res.set(cardField, group.trim());
 								}
 							}
 						} catch (Exception e) {

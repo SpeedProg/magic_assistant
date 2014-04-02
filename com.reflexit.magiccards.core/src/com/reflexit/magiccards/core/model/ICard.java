@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
 public interface ICard extends Cloneable {
-	Object getObjectByField(ICardField field);
+	Object get(ICardField field);
 
 	String getName();
 

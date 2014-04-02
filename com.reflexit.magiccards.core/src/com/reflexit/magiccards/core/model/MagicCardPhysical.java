@@ -264,7 +264,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return this.card.toString() + " x " + this.count;
 	}
 
-	public boolean setObjectByField(ICardField field, String value) {
+	public boolean set(ICardField field, String value) {
 		switch ((MagicCardField) field) {
 			case COUNT:
 				setCount(Integer.parseInt(value));
@@ -300,12 +300,12 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 				setError(value);
 				break;
 			default:
-				return card.setObjectByField(field, value);
+				return card.set(field, value);
 		}
 		return false;
 	}
 
-	public Object getObjectByField(ICardField field) {
+	public Object get(ICardField field) {
 		switch ((MagicCardField) field) {
 			case COUNT:
 				return getCount();
@@ -332,7 +332,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			case ERROR:
 				return getError();
 			default:
-				return card.getObjectByField(field);
+				return card.get(field);
 		}
 	}
 
@@ -473,7 +473,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public boolean matches(ICardField left, TextValue right) {
-		String value = String.valueOf(getObjectByField(left));
+		String value = String.valueOf(get(left));
 		if (left == MagicCardField.TYPE && !right.regex) {
 			return CardTypes.getInstance().hasType(this, right.getText());
 		}
@@ -535,7 +535,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		ArrayList list = new ArrayList();
 		ICardField[] xfields = MagicCardField.allNonTransientFields(true);
 		for (ICardField field : xfields) {
-			list.add(getObjectByField(field));
+			list.add(get(field));
 		}
 		return list;
 	}

@@ -81,7 +81,7 @@ public class CardCache {
 	}
 
 	public static URL createRemoteImageURL(IMagicCard card) throws MalformedURLException {
-		String strUrl = (String) card.getObjectByField(MagicCardField.IMAGE_URL);
+		String strUrl = (String) card.get(MagicCardField.IMAGE_URL);
 		if (strUrl == null)
 			return null;
 		return new URL(strUrl);

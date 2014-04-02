@@ -90,7 +90,7 @@ public class MagicXmlStreamWriter {
 		for (MagicCardField field : values) {
 			if (field.isTransient())
 				continue;
-			Object o = card.getObjectByField(field);
+			Object o = card.get(field);
 			if (o == null)
 				continue; // skip this
 			if (field != MagicCardField.COUNT) {
@@ -116,7 +116,7 @@ public class MagicXmlStreamWriter {
 	public void marshal(MagicCard card) throws XMLStreamException {
 		ICardField[] values = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : values) {
-			Object o = card.getObjectByField(field);
+			Object o = card.get(field);
 			if (o == null)
 				continue; // skip this
 			if (field == MagicCardField.PROPERTIES) {

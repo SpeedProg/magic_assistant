@@ -98,7 +98,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
 			if (nameByAbbr == null)
 				nameByAbbr = value;
-			card.setObjectByField(MagicCardField.SET, nameByAbbr);
+			card.set(MagicCardField.SET, nameByAbbr);
 			return;
 		} else if (field == MagicCardField.NAME) {
 			String name = value;
@@ -111,10 +111,10 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			if (name.contains("Aether")) {
 				name = name.replaceAll("Ae", "Æ");
 			}
-			card.setObjectByField(field, name);
+			card.set(field, name);
 			return;
 		}
-		card.setObjectByField(field, value);
+		card.set(field, value);
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 		if (candidates.size() > 0) {
 			IMagicCard base = candidates.get(0);
 			card.setError(null);
-			card.setObjectByField(MagicCardField.NAME, base.getName());
+			card.set(MagicCardField.NAME, base.getName());
 			// card.setObjectByField(MagicCardField.ID, base.getCardId());
 			ImportUtils.updateCardReference(card);
 			if (card.getError() == null)
