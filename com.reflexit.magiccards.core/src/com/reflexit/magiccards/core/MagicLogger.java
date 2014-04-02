@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core;
 
-import com.reflexit.magiccards.core.Activator;
 
 public class MagicLogger {
 	private static TimerTracer tracer = new TimerTracer();

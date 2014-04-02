@@ -129,7 +129,7 @@ class MagicCardComparator implements Comparator {
 				int d1 = Colors.getColorSort((String) c1.getObjectByField(MagicCardField.COST));
 				int d2 = Colors.getColorSort((String) c2.getObjectByField(MagicCardField.COST));
 				d = d1 - d2;
-			} else if (sort == MagicCardFieldPhysical.OWN_COUNT) {
+			} else if (sort == MagicCardField.OWN_COUNT) {
 				if (c1 instanceof MagicCardPhysical && c2 instanceof MagicCardPhysical) {
 					d = ((MagicCardPhysical) c1).getOwnTotal() - ((MagicCardPhysical) c2).getOwnTotal();
 				}

@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -57,16 +56,16 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 		DeckParser parser = new DeckParser(getStream(), this);
 		try {
 			parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
-					new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
+					new ICardField[] { MagicCardField.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
 			parser.addPattern(Pattern.compile("^\\s*(\\d+)\\s+([^(]*)"), //
-					new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+					new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 			parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
-					new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.EDITION_ABBR,
+					new ICardField[] { MagicCardField.SIDEBOARD, MagicCardField.COUNT, MagicCardField.EDITION_ABBR,
 							MagicCardField.NAME });
 			parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+)\\s+([^(]*)"), //
-					new ICardField[] { MagicCardFieldPhysical.SIDEBOARD, MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
-			importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET,
-					MagicCardFieldPhysical.SIDEBOARD });
+					new ICardField[] { MagicCardField.SIDEBOARD, MagicCardField.COUNT, MagicCardField.NAME });
+			importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET,
+					MagicCardField.SIDEBOARD });
 			do {
 				lineNum++;
 				try {
@@ -87,7 +86,7 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 
 	@Override
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
-		if (field == MagicCardFieldPhysical.SIDEBOARD) {
+		if (field == MagicCardField.SIDEBOARD) {
 			if (value.equals("SB")) {
 				card.setLocation(getSideboardLocation());
 			}

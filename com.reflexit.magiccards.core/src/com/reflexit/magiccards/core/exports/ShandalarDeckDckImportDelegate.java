@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -48,8 +47,8 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 	protected void doRun(ICoreProgressMonitor monitor) throws IOException {
 		parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("^\\.\\d+\\s*(\\d+)\\s+(.*)"), //
-				new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET });
+				new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET });
 		lineNum = 0;
 		String set = "";
 		// read header

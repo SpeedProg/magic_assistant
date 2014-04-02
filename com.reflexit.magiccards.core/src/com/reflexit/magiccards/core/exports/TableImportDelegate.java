@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -95,7 +95,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		ICardField fields[] = new ICardField[split.length];
 		for (int i = 0; i < split.length; i++) {
 			String hd = split[i];
-			ICardField field = MagicCardFieldPhysical.fieldByName(hd);
+			ICardField field = MagicCardField.fieldByName(hd);
 			fields[i] = field;
 		}
 		setFields(fields);
@@ -105,7 +105,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		ICardField fields[] = new ICardField[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			String hd = list.get(i);
-			ICardField field = MagicCardFieldPhysical.fieldByName(hd);
+			ICardField field = MagicCardField.fieldByName(hd);
 			fields[i] = field;
 		}
 		setFields(fields);

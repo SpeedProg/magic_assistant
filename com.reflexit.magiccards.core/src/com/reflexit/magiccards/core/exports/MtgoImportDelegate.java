@@ -17,7 +17,6 @@ import java.util.List;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -104,9 +103,9 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	protected void setUpFields() {
 		ICardField fields[] = new ICardField[10];
 		fields[cardNameIndex] = MagicCardField.NAME;
-		fields[countIndex] = MagicCardFieldPhysical.COUNT;
+		fields[countIndex] = MagicCardField.COUNT;
 		fields[setIndex] = MagicCardField.EDITION_ABBR;
-		fields[forTradeIndex] = MagicCardFieldPhysical.FORTRADECOUNT;
+		fields[forTradeIndex] = MagicCardField.FORTRADECOUNT;
 		fields[numIndex] = MagicCardField.COLLNUM;
 		setFields(fields);
 	}

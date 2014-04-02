@@ -12,7 +12,7 @@ package com.reflexit.magiccards.core.exports;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 /**
  * Export of magic assistant csv
@@ -20,7 +20,7 @@ import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 public class CsvExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	@Override
 	protected boolean isForExport(ICardField field) {
-		return super.isForExport(field) || field == MagicCardFieldPhysical.SIDEBOARD;
+		return super.isForExport(field) || field == MagicCardField.SIDEBOARD;
 	}
 
 	@Override

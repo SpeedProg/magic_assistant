@@ -22,7 +22,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 
 public class PricesXmlStreamReader {
 	private static SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -50,14 +49,14 @@ public class PricesXmlStreamReader {
 		StringBuffer text = new StringBuffer();
 		String key;
 		String value;
-		HashMap<String, MagicCardFieldPhysical> mcpFields = new HashMap<String, MagicCardFieldPhysical>(
-				MagicCardFieldPhysical.values().length);
+		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(
+				MagicCardField.values().length);
 		HashMap<String, MagicCardField> mcFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
 		private Locator locator;
 
 		public MagicHandler(PriceProviderStoreObject object) {
 			store = object;
-			for (MagicCardFieldPhysical f : MagicCardFieldPhysical.values()) {
+			for (MagicCardField f : MagicCardField.values()) {
 				if (!f.isTransient())
 					mcpFields.put(f.getTag(), f);
 			}

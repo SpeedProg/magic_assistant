@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
 import gnu.trove.map.TIntFloatMap;
+
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.IMagicCard;

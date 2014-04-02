@@ -16,7 +16,6 @@ import java.util.List;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -40,7 +39,7 @@ public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
 		ICardField fields[] = new ICardField[7];
 		fields[0] = MagicCardField.NAME;
-		fields[1] = MagicCardFieldPhysical.COUNT;
+		fields[1] = MagicCardField.COUNT;
 		fields[3] = MagicCardField.EDITION_ABBR;
 		setFields(fields);
 		super.doRun(monitor);

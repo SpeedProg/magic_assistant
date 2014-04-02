@@ -3,7 +3,7 @@ package com.reflexit.magiccards.core.model;
 import java.util.HashSet;
 
 public class FieldOwnUniqueAggregator extends AbstractIntPropAggregator {
-	private static final MagicCardFieldPhysical FI = MagicCardFieldPhysical.OWN_UNIQUE;
+	private static final MagicCardField FI = MagicCardField.OWN_UNIQUE;
 
 	private FieldOwnUniqueAggregator() {
 		super(FI.name());

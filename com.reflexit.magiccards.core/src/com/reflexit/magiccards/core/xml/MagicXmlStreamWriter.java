@@ -15,7 +15,6 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class MagicXmlStreamWriter {
@@ -87,14 +86,14 @@ public class MagicXmlStreamWriter {
 		writer.startEl("card");
 		marshalReference(card.getCard());
 		writer.endEl();
-		MagicCardFieldPhysical[] values = MagicCardFieldPhysical.values();
-		for (MagicCardFieldPhysical field : values) {
+		MagicCardField[] values = MagicCardField.values();
+		for (MagicCardField field : values) {
 			if (field.isTransient())
 				continue;
 			Object o = card.getObjectByField(field);
 			if (o == null)
 				continue; // skip this
-			if (field != MagicCardFieldPhysical.COUNT) {
+			if (field != MagicCardField.COUNT) {
 				if (o instanceof Float && ((Float) o).floatValue() == 0)
 					continue;
 				else if (o instanceof Integer && ((Integer) o).intValue() == 0)
@@ -115,7 +114,7 @@ public class MagicXmlStreamWriter {
 	}
 
 	public void marshal(MagicCard card) throws XMLStreamException {
-		ICardField[] values = MagicCardField.allNonTransientFields();
+		ICardField[] values = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : values) {
 			Object o = card.getObjectByField(field);
 			if (o == null)

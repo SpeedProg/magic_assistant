@@ -7,7 +7,7 @@ import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -128,7 +128,7 @@ public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDel
 			} else
 				continue;
 			for (String name : names) {
-				ICardField field = MagicCardFieldPhysical.fieldByName(name);
+				ICardField field = MagicCardField.fieldByName(name);
 				if (isForExport(field))
 					fields.add(field);
 			}

@@ -21,7 +21,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
@@ -335,7 +334,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	private Location findLocationFilter(Expr root) {
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
-			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals(MagicCardFieldPhysical.LOCATION.name())) {
+			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals(MagicCardField.LOCATION.name())) {
 				return Location.createLocation(bin.getRight().toString());
 			}
 			Location loc = findLocationFilter(bin.getLeft());

@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -24,7 +23,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public class ClassicExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {
 	@Override
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		setColumns(new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME });
+		setColumns(new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 		super.run(monitor);
 	}
 

@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.exports;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;

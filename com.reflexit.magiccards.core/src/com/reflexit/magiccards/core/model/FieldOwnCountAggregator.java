@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
 public class FieldOwnCountAggregator extends AbstractIntPropAggregator {
-	private static final MagicCardFieldPhysical FI = MagicCardFieldPhysical.OWN_COUNT;
+	private static final MagicCardField FI = MagicCardField.OWN_COUNT;
 
 	private FieldOwnCountAggregator() {
 		super(FI.name());

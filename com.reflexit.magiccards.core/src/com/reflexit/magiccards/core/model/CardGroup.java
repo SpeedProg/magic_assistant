@@ -116,11 +116,11 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 				return;
 			}
 		}
-		ICardField[] allNonTransientFields = MagicCardFieldPhysical.allNonTransientFields();
+		ICardField[] allNonTransientFields = MagicCardField.allNonTransientFields(true);
 		List<ICardField> list = new ArrayList<ICardField>(Arrays.asList(allNonTransientFields));
 		list.remove(MagicCardField.ORACLE);
 		list.remove(MagicCardField.NAME); // no need, processes separately
-		list.add(MagicCardFieldPhysical.LOCATION); // need to add loctation because it is transient
+		list.add(MagicCardField.LOCATION); // need to add loctation because it is transient
 		list.add(MagicCardField.ORACLE); // move to end, because want to set text first
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			ICardField field = (ICardField) iterator.next();
@@ -131,7 +131,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 				newmine = value;
 			} else {
 				// Aggregate fields
-				if (field == MagicCardField.DBPRICE || field == MagicCardFieldPhysical.PRICE || field == MagicCardField.RATING) {
+				if (field == MagicCardField.DBPRICE || field == MagicCardField.PRICE || field == MagicCardField.RATING) {
 					Float fvalue = (Float) value;
 					Float fmain = (Float) mine;
 					if (fvalue == null || fvalue.isNaN())
@@ -159,7 +159,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 					} else {
 						newmine = fmain + fvalue;
 					}
-				} else if (field == MagicCardFieldPhysical.COUNT || field == MagicCardFieldPhysical.FORTRADECOUNT) {
+				} else if (field == MagicCardField.COUNT || field == MagicCardField.FORTRADECOUNT) {
 					Integer fvalue = (Integer) value;
 					Integer fmain = (Integer) mine;
 					newmine = fmain + ((fvalue == null) ? 0 : fvalue);
@@ -168,9 +168,9 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 					if (mine.equals(value)) {
 						// good
 					} else {
-						if (field == MagicCardFieldPhysical.LOCATION) {
+						if (field == MagicCardField.LOCATION) {
 							newmine = Location.NO_WHERE;
-						} else if (field == MagicCardFieldPhysical.OWNERSHIP) {
+						} else if (field == MagicCardField.OWNERSHIP) {
 							newmine = "false";
 						} else if (field == MagicCardField.ID) {
 							newmine = 0;
@@ -232,7 +232,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	public synchronized int getOwnUnique() {
-		return (Integer) MagicCardFieldPhysical.OWN_UNIQUE.valueOf(this);
+		return (Integer) MagicCardField.OWN_UNIQUE.valueOf(this);
 	}
 
 	public synchronized int getUniqueCount() {
@@ -471,7 +471,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 					return "English";
 				else
 					return elem.getLanguage();
-			} else if (field == MagicCardFieldPhysical.SIDEBOARD) {
+			} else if (field == MagicCardField.SIDEBOARD) {
 				if (elem instanceof MagicCardPhysical) {
 					if (((MagicCardPhysical) elem).isSideboard()) {
 						return "Sideboard";
@@ -497,9 +497,9 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			return getName();
 		if (size() == 0)
 			return null;
-		if (field == MagicCardFieldPhysical.OWN_COUNT)
+		if (field == MagicCardField.OWN_COUNT)
 			return getOwnCount();
-		if (field == MagicCardFieldPhysical.OWN_UNIQUE)
+		if (field == MagicCardField.OWN_UNIQUE)
 			return getOwnUnique();
 		if (field == MagicCardField.UNIQUE_COUNT)
 			return getUniqueCount();
@@ -684,7 +684,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 
 	public Collection getValues() {
 		ArrayList list = new ArrayList();
-		ICardField[] xfields = MagicCardFieldPhysical.allNonTransientFields();
+		ICardField[] xfields = MagicCardField.allNonTransientFields(true);
 		for (ICardField field : xfields) {
 			list.add(getObjectByField(field));
 		}

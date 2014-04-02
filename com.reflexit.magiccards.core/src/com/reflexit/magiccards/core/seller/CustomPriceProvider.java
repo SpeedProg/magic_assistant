@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.seller;
 
 import java.io.IOException;
+
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;

@@ -73,8 +73,8 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	public Collection getHeaderNames() {
 		ArrayList list = new ArrayList();
 		list.addAll(this.card.getHeaderNames());
-		MagicCardFieldPhysical[] values = MagicCardFieldPhysical.values();
-		for (MagicCardFieldPhysical magicCardField : values) {
+		MagicCardField[] values = MagicCardField.values();
+		for (MagicCardField magicCardField : values) {
 			list.add(magicCardField.toString());
 		}
 		return list;
@@ -97,14 +97,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public float getPrice() {
-		Float p = (Float) getProperty(MagicCardFieldPhysical.PRICE);
+		Float p = (Float) getProperty(MagicCardField.PRICE);
 		if (p == null)
 			return 0;
 		return p;
 	}
 
 	public void setPrice(float price) {
-		setProperty(MagicCardFieldPhysical.PRICE, price);
+		setProperty(MagicCardField.PRICE, price);
 	}
 
 	/*
@@ -113,14 +113,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getComment()
 	 */
 	public String getComment() {
-		return (String) getProperty(MagicCardFieldPhysical.COMMENT);
+		return (String) getProperty(MagicCardField.COMMENT);
 	}
 
 	public void setComment(String comment) {
 		if (comment == null || comment.trim().length() == 0)
-			setProperty(MagicCardFieldPhysical.COMMENT, null);
+			setProperty(MagicCardField.COMMENT, null);
 		else
-			setProperty(MagicCardFieldPhysical.COMMENT, comment.trim());
+			setProperty(MagicCardField.COMMENT, comment.trim());
 	}
 
 	/*
@@ -137,14 +137,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public String getCustom() {
-		return (String) getProperty(MagicCardFieldPhysical.CUSTOM);
+		return (String) getProperty(MagicCardField.CUSTOM);
 	}
 
 	public void setCustom(String custom) {
 		if (custom == null || custom.trim().length() == 0)
-			setProperty(MagicCardFieldPhysical.CUSTOM, null);
+			setProperty(MagicCardField.CUSTOM, null);
 		else
-			setProperty(MagicCardFieldPhysical.CUSTOM, custom);
+			setProperty(MagicCardField.CUSTOM, custom);
 	}
 
 	public int getCardId() {
@@ -265,93 +265,83 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	}
 
 	public boolean setObjectByField(ICardField field, String value) {
-		if (field instanceof MagicCardFieldPhysical) {
-			switch ((MagicCardFieldPhysical) field) {
-				case COUNT:
-					setCount(Integer.parseInt(value));
-					break;
-				case PRICE:
-					setPrice(Float.parseFloat(value));
-					break;
-				case COMMENT:
-					setComment(value);
-					break;
-				case LOCATION:
-					setLocation(Location.valueOf(value));
-					break;
-				case CUSTOM:
-					setCustom(value);
-					break;
-				case OWNERSHIP:
-					setOwn(Boolean.parseBoolean(value));
-					break;
-				case SPECIAL:
-					setSpecial(value);
-					break;
-				case FORTRADECOUNT:
-					setForTrade(Integer.parseInt(value));
-					break;
-				case SIDEBOARD:
-					return false; // not settable
-				case OWN_COUNT:
-					break; // calculated
-				case OWN_UNIQUE:
-					break; // calculated
-				case ERROR:
-					setError(value);
-					break;
-				default:
-					throw new IllegalArgumentException("Not supported field?");
-			}
-			return true;
-		} else if (field instanceof MagicCardField) {
-			return card.setObjectByField(field, value);
+		switch ((MagicCardField) field) {
+			case COUNT:
+				setCount(Integer.parseInt(value));
+				break;
+			case PRICE:
+				setPrice(Float.parseFloat(value));
+				break;
+			case COMMENT:
+				setComment(value);
+				break;
+			case LOCATION:
+				setLocation(Location.valueOf(value));
+				break;
+			case CUSTOM:
+				setCustom(value);
+				break;
+			case OWNERSHIP:
+				setOwn(Boolean.parseBoolean(value));
+				break;
+			case SPECIAL:
+				setSpecial(value);
+				break;
+			case FORTRADECOUNT:
+				setForTrade(Integer.parseInt(value));
+				break;
+			case SIDEBOARD:
+				return false; // not settable
+			case OWN_COUNT:
+				break; // calculated
+			case OWN_UNIQUE:
+				break; // calculated
+			case ERROR:
+				setError(value);
+				break;
+			default:
+				return card.setObjectByField(field, value);
 		}
 		return false;
 	}
 
 	public Object getObjectByField(ICardField field) {
-		if (field instanceof MagicCardField) {
-			return card.getObjectByField(field);
-		} else if (field instanceof MagicCardFieldPhysical) {
-			switch ((MagicCardFieldPhysical) field) {
-				case COUNT:
-					return getCount();
-				case PRICE:
-					return getPrice();
-				case COMMENT:
-					return getComment();
-				case LOCATION:
-					return getLocation();
-				case CUSTOM:
-					return getCustom();
-				case OWNERSHIP:
-					return isOwn();
-				case FORTRADECOUNT:
-					return getForTrade();
-				case SPECIAL:
-					return getSpecial();
-				case SIDEBOARD:
-					return isSideboard();
-				case OWN_COUNT:
-					return getOwnCount();
-				case OWN_UNIQUE:
-					return getOwnUnique();
-				case ERROR:
-					return getError();
-				default:
-					throw new IllegalArgumentException("Not supported field?");
-			}
+		switch ((MagicCardField) field) {
+			case COUNT:
+				return getCount();
+			case PRICE:
+				return getPrice();
+			case COMMENT:
+				return getComment();
+			case LOCATION:
+				return getLocation();
+			case CUSTOM:
+				return getCustom();
+			case OWNERSHIP:
+				return isOwn();
+			case FORTRADECOUNT:
+				return getForTrade();
+			case SPECIAL:
+				return getSpecial();
+			case SIDEBOARD:
+				return isSideboard();
+			case OWN_COUNT:
+				return getOwnCount();
+			case OWN_UNIQUE:
+				return getOwnUnique();
+			case ERROR:
+				return getError();
+			default:
+				return card.getObjectByField(field);
 		}
-		return null;
 	}
 
 	public Object getError() {
-		return getProperty(MagicCardFieldPhysical.ERROR);
+		return getProperty(MagicCardField.ERROR);
 	}
 
 	public void setError(Object value) {
-		setProperty(MagicCardFieldPhysical.ERROR, value);
+		setProperty(MagicCardField.ERROR, value);
 	}
 
 	public void setCommunityRating(float parseFloat) {
@@ -372,14 +362,14 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getForTrade()
 	 */
 	public int getForTrade() {
-		Integer f = (Integer) getProperty(MagicCardFieldPhysical.FORTRADECOUNT);
+		Integer f = (Integer) getProperty(MagicCardField.FORTRADECOUNT);
 		if (f == null)
 			return 0;
 		return f;
 	}
 
 	public void setForTrade(int forTrade) {
-		setProperty(MagicCardFieldPhysical.FORTRADECOUNT, forTrade);
+		setProperty(MagicCardField.FORTRADECOUNT, forTrade);
 	}
 
 	/*
@@ -388,7 +378,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getSpecial()
 	 */
 	public String getSpecial() {
-		String f = (String) getProperty(MagicCardFieldPhysical.SPECIAL);
+		String f = (String) getProperty(MagicCardField.SPECIAL);
 		if (f == null)
 			return "";
 		return f;
@@ -396,7 +386,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 
 	public void setSpecial(String special) {
 		if (special == null || special.trim().length() == 0) {
-			setProperty(MagicCardFieldPhysical.SPECIAL, null);
+			setProperty(MagicCardField.SPECIAL, null);
 			return;
 		} else {
 			String value = getSpecial();
@@ -425,7 +415,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			}
 			if (value.endsWith(","))
 				value = value.substring(0, value.length() - 1);
-			setProperty(MagicCardFieldPhysical.SPECIAL, value);
+			setProperty(MagicCardField.SPECIAL, value);
 		}
 	}
 
@@ -543,7 +533,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 
 	public Collection getValues() {
 		ArrayList list = new ArrayList();
-		ICardField[] xfields = MagicCardFieldPhysical.allNonTransientFields();
+		ICardField[] xfields = MagicCardField.allNonTransientFields(true);
 		for (ICardField field : xfields) {
 			list.add(getObjectByField(field));
 		}

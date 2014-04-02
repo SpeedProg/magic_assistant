@@ -267,7 +267,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public Collection getHeaderNames() {
-		ICardField[] values = MagicCardField.allNonTransientFields();
+		ICardField[] values = MagicCardField.allNonTransientFields(false);
 		ArrayList list = new ArrayList();
 		for (ICardField magicCardField : values) {
 			list.add(magicCardField.toString());
@@ -277,7 +277,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public Collection getValues() {
 		ArrayList list = new ArrayList();
-		ICardField[] xfields = MagicCardField.allNonTransientFields();
+		ICardField[] xfields = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : xfields) {
 			list.add(getObjectByField(field));
 		}
@@ -285,88 +285,87 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public Object getObjectByField(ICardField field) {
-		if (field instanceof MagicCardField) {
-			MagicCardField mf = (MagicCardField) field;
-			switch (mf) {
-				case ID:
-					return Integer.valueOf(getCardId());
-				case NAME:
-					return (this.name);
-				case COST:
-					return (this.cost);
-				case TYPE:
-					return (this.type);
-				case POWER:
-					return (this.power);
-				case TOUGHNESS:
-					return (this.toughness);
-				case ORACLE:
-					return (this.oracleText);
-				case SET:
-					return (this.edition);
-				case RARITY:
-					return (this.rarity);
-				case CTYPE:
-					return (getColorType());
-				case CMC:
-					return (Integer.valueOf(getCmc()));
-				case DBPRICE:
-					return getDbPrice();
-				case RATING:
-					return (this.rating);
-				case ARTIST:
-					return (this.artist);
-				case RULINGS:
-					return (this.rulings);
-				case LANG:
-					return getLanguage();
-				case COLLNUM:
-					return (this.num);
-				case TEXT:
-					return getText();
-				case ENID:
-					return (this.enId);
-				case PROPERTIES:
-					return (this.properties);
-				case FLIPID:
-					return getFlipId();
-				case OTHER_PART:
-					return getProperty(MagicCardField.OTHER_PART);
-				case PART:
-					return getPart();
-				case SIDE:
-					return getSide();
-				case SET_CORE:
-					if (edition == null)
-						return null;
-					if (edition.equals("*"))
-						return "*";
-					return Editions.getInstance().getEditionByName(edition).getType();
-				case SET_BLOCK:
-					if (edition == null)
-						return null;
-					if (edition.equals("*"))
-						return "*";
-					return Editions.getInstance().getEditionByName(edition).getBlock();
-				case EDITION_ABBR:
-					if (edition == null)
-						return null;
-					if (edition.equals("*"))
-						return "*";
-					return Editions.getInstance().getEditionByName(edition).getMainAbbreviation();
-				case UNIQUE_COUNT:
-					return getUniqueCount();
-				case IMAGE_URL:
-					return getImageUrl();
-				case LEGALITY:
-					return getLegalityMap();
-				case COLOR:
-					return getCost();
-				default:
-					break;
-			}
-		} else if (field instanceof MagicCardFieldPhysical && getRealCards() != null) {
-			return getRealCards().getObjectByField(field);
+		MagicCardField mf = (MagicCardField) field;
+		switch (mf) {
+			case ID:
+				return Integer.valueOf(getCardId());
+			case NAME:
+				return (this.name);
+			case COST:
+				return (this.cost);
+			case TYPE:
+				return (this.type);
+			case POWER:
+				return (this.power);
+			case TOUGHNESS:
+				return (this.toughness);
+			case ORACLE:
+				return (this.oracleText);
+			case SET:
+				return (this.edition);
+			case RARITY:
+				return (this.rarity);
+			case CTYPE:
+				return (getColorType());
+			case CMC:
+				return (Integer.valueOf(getCmc()));
+			case DBPRICE:
+				return getDbPrice();
+			case RATING:
+				return (this.rating);
+			case ARTIST:
+				return (this.artist);
+			case RULINGS:
+				return (this.rulings);
+			case LANG:
+				return getLanguage();
+			case COLLNUM:
+				return (this.num);
+			case TEXT:
+				return getText();
+			case ENID:
+				return (this.enId);
+			case PROPERTIES:
+				return (this.properties);
+			case FLIPID:
+				return getFlipId();
+			case OTHER_PART:
+				return getProperty(MagicCardField.OTHER_PART);
+			case PART:
+				return getPart();
+			case SIDE:
+				return getSide();
+			case SET_CORE:
+				if (edition == null)
+					return null;
+				if (edition.equals("*"))
+					return "*";
+				return Editions.getInstance().getEditionByName(edition).getType();
+			case SET_BLOCK:
+				if (edition == null)
+					return null;
+				if (edition.equals("*"))
+					return "*";
+				return Editions.getInstance().getEditionByName(edition).getBlock();
+			case EDITION_ABBR:
+				if (edition == null)
+					return null;
+				if (edition.equals("*"))
+					return "*";
+				return Editions.getInstance().getEditionByName(edition).getMainAbbreviation();
+			case UNIQUE_COUNT:
+				return getUniqueCount();
+			case IMAGE_URL:
+				return getImageUrl();
+			case LEGALITY:
+				return getLegalityMap();
+			case COLOR:
+				return getCost();
+			default:
+				if (getRealCards() != null) {
+					return getRealCards().getObjectByField(field);
+				}
+				break;
 		}
 		return null;
 	}
@@ -545,7 +544,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	}
 
 	public void copyFrom(IMagicCard card) {
-		ICardField[] fields = MagicCardField.allNonTransientFields();
+		ICardField[] fields = MagicCardField.allNonTransientFields(false);
 		for (int i = 0; i < fields.length; i++) {
 			ICardField field = fields[i];
 			Object value = card.getObjectByField(field);
@@ -720,28 +719,28 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return null;
-		return (String) realCards.getObjectByField(MagicCardFieldPhysical.COMMENT);
+		return (String) realCards.getObjectByField(MagicCardField.COMMENT);
 	}
 
 	public Location getLocation() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return Location.NO_WHERE;
-		return (Location) realCards.getObjectByField(MagicCardFieldPhysical.LOCATION);
+		return (Location) realCards.getObjectByField(MagicCardField.LOCATION);
 	}
 
 	public boolean isOwn() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return false;
-		return (Boolean) realCards.getObjectByField(MagicCardFieldPhysical.OWNERSHIP);
+		return (Boolean) realCards.getObjectByField(MagicCardField.OWNERSHIP);
 	}
 
 	public int getForTrade() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return 0;
-		return (Integer) realCards.getObjectByField(MagicCardFieldPhysical.FORTRADECOUNT);
+		return (Integer) realCards.getObjectByField(MagicCardField.FORTRADECOUNT);
 	}
 
 	public float getPrice() {
@@ -755,14 +754,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return null;
-		return (String) realCards.getObjectByField(MagicCardFieldPhysical.SPECIAL);
+		return (String) realCards.getObjectByField(MagicCardField.SPECIAL);
 	}
 
 	public boolean isSideboard() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return false;
-		return (Boolean) realCards.getObjectByField(MagicCardFieldPhysical.SIDEBOARD);
+		return (Boolean) realCards.getObjectByField(MagicCardField.SIDEBOARD);
 	}
 
 	public int getUniqueCount() {

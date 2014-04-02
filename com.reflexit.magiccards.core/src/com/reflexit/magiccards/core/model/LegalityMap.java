@@ -3,8 +3,8 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.legality.Format;

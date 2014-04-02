@@ -4,8 +4,6 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class LocationFilteredCardStore extends AbstractFilteredCardStore<IMagicCard> {
 	private ICardStore<IMagicCard> table;

@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -67,11 +66,11 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 			}
 		};
 		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]?\\s*(\\d+)\\s*$"), new ICardField[] {
-				MagicCardField.NAME, MagicCardField.SET, MagicCardFieldPhysical.COUNT });
+				MagicCardField.NAME, MagicCardField.SET, MagicCardField.COUNT });
 		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]?\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"), new ICardField[] {
-				MagicCardFieldPhysical.COUNT, MagicCardField.NAME, MagicCardField.SET, });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardFieldPhysical.COUNT, MagicCardField.SET,
-				MagicCardFieldPhysical.SIDEBOARD });
+				MagicCardField.COUNT, MagicCardField.NAME, MagicCardField.SET, });
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET,
+				MagicCardField.SIDEBOARD });
 		do {
 			lineNum++;
 			try {

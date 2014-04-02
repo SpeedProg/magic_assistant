@@ -11,7 +11,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
@@ -176,7 +175,7 @@ public class Format {
 			CardGroup group = (CardGroup) element;
 			int count = group.getCount();
 			ICardField field = group.getFieldIndex();
-			if (field == MagicCardFieldPhysical.SIDEBOARD) {
+			if (field == MagicCardField.SIDEBOARD) {
 				if (group.isSideboard()) {
 					err = validateSideboardCount(count);
 				} else {

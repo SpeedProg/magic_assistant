@@ -103,23 +103,23 @@ public class MagicCardFilter implements Cloneable {
 						}
 						case DBPRICE: {
 							BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
-							res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
+							res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.PRICE, value));
 							res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
 							break;
 						}
 						case PRICE: {
-							BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardFieldPhysical.PRICE), Operation.EQ, new Value("0"));
+							BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardField.PRICE), Operation.EQ, new Value("0"));
 							res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
-							res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardFieldPhysical.PRICE, value));
+							res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.PRICE, value));
 							break;
 						}
 						case OWNERSHIP: {
-							BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardFieldPhysical.OWNERSHIP, value);
+							BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.OWNERSHIP, value);
 							Expr b2;
 							if ("true".equals(value))
-								b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, ">=1");
+								b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, ">=1");
 							else
-								b2 = BinaryExpr.fieldInt(MagicCardFieldPhysical.OWN_COUNT, "==0");
+								b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, "==0");
 							res = new BinaryExpr(b1, Operation.OR, b2);
 							break;
 						}

@@ -23,7 +23,6 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class MagicXmlStreamReader {
@@ -56,14 +55,14 @@ public class MagicXmlStreamReader {
 		StringBuffer text = new StringBuffer();
 		String key;
 		String value;
-		HashMap<String, MagicCardFieldPhysical> mcpFields = new HashMap<String, MagicCardFieldPhysical>(
-				MagicCardFieldPhysical.values().length);
+		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(
+				MagicCardField.values().length);
 		HashMap<String, MagicCardField> mcFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
 		private Locator locator;
 
 		public MagicHandler(CardCollectionStoreObject object) {
 			store = object;
-			for (MagicCardFieldPhysical f : MagicCardFieldPhysical.values()) {
+			for (MagicCardField f : MagicCardField.values()) {
 				if (!f.isTransient())
 					mcpFields.put(f.getTag(), f);
 			}
@@ -179,7 +178,7 @@ public class MagicXmlStreamReader {
 								break;
 							}
 							case mcp: {
-								MagicCardFieldPhysical field = mcpFields.get(last);
+								MagicCardField field = mcpFields.get(last);
 								cardp.setObjectByField(field, ttStr);
 								break;
 							}

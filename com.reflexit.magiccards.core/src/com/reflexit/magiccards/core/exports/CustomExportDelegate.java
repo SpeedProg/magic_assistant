@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
@@ -67,9 +66,9 @@ public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCa
 		format = rtype.getProperty(ROW_FORMAT);
 		String fields = rtype.getProperty(ROW_FIELDS);
 		if (fields != null && fields.length() > 0)
-			columns = MagicCardFieldPhysical.toFields(fields, ",");
+			columns = MagicCardField.toFields(fields, ",");
 		else if (columns == null) {
-			columns = new ICardField[] { MagicCardFieldPhysical.COUNT, MagicCardField.NAME };
+			columns = new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME };
 		}
 		headerStr = rtype.getProperty(HEADER);
 		footerStr = rtype.getProperty(FOOTER);
@@ -143,7 +142,7 @@ public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCa
 	@Override
 	public Object getObjectByField(IMagicCard card, ICardField field) {
 		Object value = super.getObjectByField(card, field);
-		if (field == MagicCardFieldPhysical.SIDEBOARD && sbFieldStr != null && sbFieldStr.length() > 0) {
+		if (field == MagicCardField.SIDEBOARD && sbFieldStr != null && sbFieldStr.length() > 0) {
 			String choice[] = sbFieldStr.split("/");
 			if (Boolean.valueOf(value.toString())) {
 				return choice[0];

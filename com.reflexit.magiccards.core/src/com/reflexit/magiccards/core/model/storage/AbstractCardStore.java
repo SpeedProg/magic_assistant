@@ -2,8 +2,8 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
 
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.EventManager;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
