@@ -40,7 +40,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 			ICard card = (ICard) element;
 			try {
 				ICardField field = getDataField();
-				Object value = card.getObjectByField(field);
+				Object value = card.get(field);
 				if (value == null)
 					return "";
 				return value.toString();

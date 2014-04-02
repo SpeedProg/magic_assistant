@@ -29,7 +29,7 @@ public class PowerColumn extends GenColumn {
 			CardGroup node = (CardGroup) element;
 			int cc = node.getCreatureCount();
 			if (cc > 0) {
-				String pow = (String) node.getObjectByField(dataIndex);
+				String pow = (String) node.get(dataIndex);
 				Float fpow = MagicCard.convertFloat(pow);
 				return String.valueOf(pow) + " (" + String.format("%.1f", 0.009 + fpow / cc) + ")";
 			}

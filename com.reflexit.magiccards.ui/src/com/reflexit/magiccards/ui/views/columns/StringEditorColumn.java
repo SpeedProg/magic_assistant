@@ -57,7 +57,7 @@ public class StringEditorColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					// move
-					card.setObjectByField(getDataField(), (String) value);
+					card.set(getDataField(), (String) value);
 					DataManager.update(card);
 				}
 			}

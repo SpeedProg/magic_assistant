@@ -229,7 +229,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						image = ImageCreator.getInstance().createCardNotFoundImage(card);
 					}
 					// rotate image if needed
-					String options = (String) card.getObjectByField(MagicCardField.PART);
+					String options = (String) card.get(MagicCardField.PART);
 					if (options != null && options.length() > 0 && image != null) {
 						int rotate = 0;
 						if (options.contains("rotate180")) {

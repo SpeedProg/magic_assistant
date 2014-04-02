@@ -108,7 +108,7 @@ class CardDescComposite extends Composite {
 						}
 						if (cardId == 0)
 							cardId = card.getCardId();
-						String opart = (String) card.getObjectByField(MagicCardField.PART);
+						String opart = (String) card.get(MagicCardField.PART);
 						ICardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
 						Collection<IMagicCard> cards = magicDBStore.getCards(cardId);
 						IMagicCard card2 = null;
@@ -123,10 +123,10 @@ class CardDescComposite extends Composite {
 							if (card2 == null) {
 								// card is not in DB
 								card2 = card.cloneCard();
-								((ICardModifiable) card2).setObjectByField(MagicCardField.PART, part);
-								((ICardModifiable) card2).setObjectByField(MagicCardField.OTHER_PART, opart);
+								((ICardModifiable) card2).set(MagicCardField.PART, part);
+								((ICardModifiable) card2).set(MagicCardField.OTHER_PART, opart);
 								if (!part.contains("@")) {
-									((ICardModifiable) card2).setObjectByField(MagicCardField.NAME,
+									((ICardModifiable) card2).set(MagicCardField.NAME,
 											card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
 								}
 							}
@@ -266,7 +266,7 @@ class CardDescComposite extends Composite {
 	protected String getLinks(IMagicCard card) {
 		String links = "";
 		int flipId = card.getFlipId();
-		String part = (String) card.getObjectByField(MagicCardField.OTHER_PART);
+		String part = (String) card.get(MagicCardField.OTHER_PART);
 		if (part != null && !part.contains("@")) {
 			links += "<a href=\"" + CARD_URI + OTHER_PART + part + ((flipId != 0) ? "&" + MULTIVERSEID + flipId : "")
 					+ "\">Other split part</a><br><br>";
@@ -316,7 +316,7 @@ class CardDescComposite extends Composite {
 	}
 
 	public String getCollectorNumber(IMagicCard card) {
-		String num = (String) card.getObjectByField(MagicCardField.COLLNUM);
+		String num = (String) card.get(MagicCardField.COLLNUM);
 		if (num != null)
 			num = "[" + num + "]";
 		return num;

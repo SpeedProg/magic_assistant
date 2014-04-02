@@ -355,7 +355,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (first) {
 					ICardField[] allFields = MagicCardField.allFields();
 					for (ICardField f : allFields) {
-						Object value = card.getObjectByField(f);
+						Object value = card.get(f);
 						String svalue = String.valueOf(value == null ? "" : value);
 						store.setDefault(f.name(), svalue);
 					}
@@ -363,7 +363,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				} else {
 					ICardField[] allFields = MagicCardField.allFields();
 					for (ICardField f : allFields) {
-						Object value = card.getObjectByField(f);
+						Object value = card.get(f);
 						String svalue = String.valueOf(value == null ? "" : value);
 						if (!svalue.equals(store.getDefaultString(f.name()))) {
 							store.setDefault(f.name(), UNCHANGED);
@@ -416,11 +416,11 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 
 	protected boolean setField(MagicCardPhysical card, PreferenceStore store, ICardField field) {
 		Boolean modified = false;
-		String orig = String.valueOf(card.getObjectByField(field));
+		String orig = String.valueOf(card.get(field));
 		String edited = store.getString(field.name());
 		if (!UNCHANGED.equals(edited) && !edited.equals(orig)) {
 			try {
-				card.setObjectByField(field, edited);
+				card.set(field, edited);
 				modified = true;
 			} catch (Exception e) {
 				// was bad value
