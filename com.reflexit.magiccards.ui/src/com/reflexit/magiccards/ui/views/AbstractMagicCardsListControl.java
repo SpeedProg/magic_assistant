@@ -164,7 +164,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	public GroupAction createGroupAction(ICardField field) {
-		return createGroupAction(field.getGroupLabel(), field);
+		return createGroupAction(field.getLabel(), field);
 	}
 
 	public GroupAction createGroupAction(String name, ICardField[] fields) {

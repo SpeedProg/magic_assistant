@@ -50,7 +50,7 @@ public enum EditionField implements ICardField {
 		return field == null ? true : Modifier.isTransient(field.getModifiers());
 	}
 
-	public String getGroupLabel() {
+	public String getLabel() {
 		String name = name();
 		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
 	}

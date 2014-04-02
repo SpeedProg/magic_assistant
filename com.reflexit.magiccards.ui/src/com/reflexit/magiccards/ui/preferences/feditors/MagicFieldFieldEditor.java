@@ -50,7 +50,7 @@ public class MagicFieldFieldEditor extends CheckedListEditor {
 	public TableItem createTreeItem(ICardField field, boolean checked) {
 		TableItem item = new TableItem(this.list, SWT.NONE);
 		item.setData(field);
-		item.setText(field.getGroupLabel());
+		item.setText(field.getLabel());
 		item.setChecked(checked);
 		return item;
 	}
