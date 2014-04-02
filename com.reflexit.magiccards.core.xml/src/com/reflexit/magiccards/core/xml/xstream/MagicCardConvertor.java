@@ -38,7 +38,7 @@ public class MagicCardConvertor implements Converter {
 
 	public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 		MagicCard card = (MagicCard) value;
-		ICardField[] values = MagicCardField.allNonTransientFields();
+		ICardField[] values = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : values) {
 			Object o = card.getObjectByField(field);
 			if (o == null)

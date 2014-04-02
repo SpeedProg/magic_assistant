@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml.xstream;
 
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -41,12 +41,12 @@ public class MagicCardPhysicalConvertor implements Converter {
 		context.convertAnother(card.getCard(), new ReferenceCardConverter());
 		writer.endNode();
 		// count
-		writer.startNode(MagicCardFieldPhysical.COUNT.getTag());
+		writer.startNode(MagicCardField.COUNT.getTag());
 		context.convertAnother(card.getCount());
 		writer.endNode();
 		// ownership
 		if (card.isOwn()) {
-			writer.startNode(MagicCardFieldPhysical.OWNERSHIP.getTag());
+			writer.startNode(MagicCardField.OWNERSHIP.getTag());
 			context.convertAnother(Boolean.TRUE);
 			writer.endNode();
 		}

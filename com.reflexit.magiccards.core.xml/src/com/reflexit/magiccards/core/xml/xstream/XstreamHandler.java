@@ -11,7 +11,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
 import com.reflexit.magiccards.core.xml.IStoreHandler;
@@ -33,7 +33,7 @@ public class XstreamHandler implements IStoreHandler {
 		XStream xstream = new XStream();
 		xstream.alias("mc", MagicCard.class);
 		xstream.alias("mcp", MagicCardPhysical.class);
-		xstream.alias("pfield", MagicCardFieldPhysical.class);
+		xstream.alias("pfield", MagicCardField.class);
 		return xstream;
 	}
 
