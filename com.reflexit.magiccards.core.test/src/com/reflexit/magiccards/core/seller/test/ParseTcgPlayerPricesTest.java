@@ -11,18 +11,22 @@ import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 public class ParseTcgPlayerPricesTest extends AbstractPriceProviderTest {
 	@Override
 	protected IPriceProvider getPriceProvider() {
-		return new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Medium);
-	}
-
-	public void xtestgetPriceHigh() {
-		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.High);
-		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
-		assertThat(0, is(not(centPrice(card))));
+		return ParseTcgPlayerPrices.create(ParseTcgPlayerPrices.Type.Medium);
 	}
 
 	public void testgetPriceLow() {
-		parser = new ParseTcgPlayerPrices(ParseTcgPlayerPrices.Type.Low);
-		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
+		setParser(ParseTcgPlayerPrices.create(ParseTcgPlayerPrices.Type.Low));
+		MagicCard card = checkcard("Flameborn Viron", "New Phyrexia");
+		assertThat(0, is(not(centPrice(card))));
+	}
+
+	public void testgetPriceMed() {
+		MagicCard card = checkcard("Flameborn Viron", "New Phyrexia");
+		assertThat(0, is(not(centPrice(card))));
+	}
+
+	public void testMagic2014() {
+		MagicCard card = checkcard("Artificer's Hex", "Magic 2014 Core Set");
 		assertThat(0, is(not(centPrice(card))));
 	}
 }

@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -24,22 +25,39 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 	@Override
 	protected void setUp() {
 		store = new MemoryCardStore<IMagicCard>();
-		parser = getPriceProvider();
 		monitor = ICoreProgressMonitor.NONE;
 		DataManager.getMagicDBStore().initialize();
+		setParser(getPriceProvider());
+	}
+
+	protected void setParser(IPriceProvider priceProvider) {
+		parser = priceProvider;
 		DataManager.getDBPriceStore().setProviderByName(parser.getName());
 	}
 
 	protected abstract IPriceProvider getPriceProvider();
 
-	public MagicCard addcard(String name, String set) {
-		MagicCard card1 = new MagicCard();
-		card1.setName(name);
-		card1.setSet(set);
-		card1.setCardId(1);
-		store.add(card1);
+	public MagicCard checkcard(String name, String set) {
+		MagicCard card2 = findCard(name, set);
+		assertNotNull(card2);
+		store.add(card2);
 		doit();
-		return card1;
+		store.removeAll();
+		return card2;
+	}
+
+	protected MagicCard findCard(String name, String set) {
+		Collection<IMagicCard> candidates = DataManager.getMagicDBStore().getCandidates(name);
+		MagicCard card2 = null;
+		if (candidates != null) {
+			for (IMagicCard mc : candidates) {
+				if (mc.getSet().equals(set)) {
+					card2 = (MagicCard) mc;
+					break;
+				}
+			}
+		}
+		return card2;
 	}
 
 	public void doit() {
@@ -51,43 +69,28 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 		}
 	}
 
-	public void testgetPriceMed() {
-		MagicCard card = addcard("Flameborn Viron", "New Phyrexia");
-		assertThat(0, is(not(centPrice(card))));
-	}
-
-	public void xtestSwamp() {
-		MagicCard card = addcard("Swamp", "Magic 2013");
-		assertThat(0, is(not(centPrice(card))));
-	}
-
 	public void testMagic2010() {
-		MagicCard card = addcard("Coat of Arms", "Magic 2010");
+		MagicCard card = checkcard("Coat of Arms", "Magic 2010");
 		assertThat(0, is(not(centPrice(card))));
 	}
 
 	public void testAether() {
-		MagicCard card = addcard("Æther Shockwave", "Saviors of Kamigawa");
-		assertThat(0, is(not(centPrice(card))));
-	}
-
-	public void testMagic2014() {
-		MagicCard card = addcard("Artificer's Hex", "Magic 2014 Core Set");
+		MagicCard card = checkcard("Æther Shockwave", "Saviors of Kamigawa");
 		assertThat(0, is(not(centPrice(card))));
 	}
 
 	public void testSixthEdition() {
-		MagicCard card = addcard("Armageddon", "Classic Sixth Edition");
+		MagicCard card = checkcard("Armageddon", "Classic Sixth Edition");
 		assertThat(0, is(not(centPrice(card))));
 	}
 
 	public void testFifthEdition() {
-		MagicCard card = addcard("Armageddon", "Fifth Edition");
+		MagicCard card = checkcard("Armageddon", "Fifth Edition");
 		assertThat(0, is(not(centPrice(card))));
 	}
 
 	public void testTenthEdition() {
-		MagicCard card = addcard("Arcane Teachings", "Tenth Edition");
+		MagicCard card = checkcard("Arcane Teachings", "Tenth Edition");
 		assertThat(0, is(not(centPrice(card))));
 	}
 
