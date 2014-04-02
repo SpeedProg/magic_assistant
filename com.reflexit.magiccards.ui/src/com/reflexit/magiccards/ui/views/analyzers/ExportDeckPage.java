@@ -45,7 +45,7 @@ import com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -300,7 +300,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			if (sideStore != null)
 				mstore.addAll(sideStore);
 			mstore.setLocation(loc.toMainDeck());
-			filter.getSortOrder().setSortField(MagicCardFieldPhysical.SIDEBOARD, true);
+			filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
 		} else {
 			ICardStore mainStore = DataManager.getCardStore(loc);
 			mstore.addAll(mainStore);
@@ -321,7 +321,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		magicColumnCollection.createColumnLabelProviders();
 		magicColumnCollection.updateColumnsFromPropery(selcolumns);
 		if (includeSideboard) {
-			magicColumnCollection.getColumn(MagicCardFieldPhysical.SIDEBOARD).setVisible(true);
+			magicColumnCollection.getColumn(MagicCardField.SIDEBOARD).setVisible(true);
 		}
 		ICardField[] columns = magicColumnCollection.getColumnFields();
 		ex.setColumns(columns);

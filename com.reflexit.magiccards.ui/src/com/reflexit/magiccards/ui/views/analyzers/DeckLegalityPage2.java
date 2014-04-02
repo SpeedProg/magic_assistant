@@ -44,7 +44,6 @@ import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -287,8 +286,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 			mstore.addAll(sideStore);
 		mstore.setLocation(loc.toMainDeck());
 		filter.getSortOrder().setSortField(MagicCardField.LEGALITY, true);
-		filter.getSortOrder().setSortField(MagicCardFieldPhysical.SIDEBOARD, false);
-		filter.setGroupField(MagicCardFieldPhysical.SIDEBOARD);
+		filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, false);
+		filter.setGroupField(MagicCardField.SIDEBOARD);
 		mstore.update(filter);
 		this.fstore = mstore;
 	}
@@ -379,7 +378,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 				return super.getBackground(element);
 			}
 		});
-		columns.add(new GenColumn(MagicCardFieldPhysical.ERROR, "Error") {
+		columns.add(new GenColumn(MagicCardField.ERROR, "Error") {
 			@Override
 			public int getColumnWidth() {
 				return 250;

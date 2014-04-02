@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 /**
  * @author Alena
@@ -11,7 +11,7 @@ public class OwnUniqueColumn extends GenColumn {
 	/**
 	 */
 	public OwnUniqueColumn() {
-		super(MagicCardFieldPhysical.OWN_UNIQUE, "Unique");
+		super(MagicCardField.OWN_UNIQUE, "Unique");
 	}
 
 	@Override

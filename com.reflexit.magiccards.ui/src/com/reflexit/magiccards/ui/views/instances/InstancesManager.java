@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.services.IDisposable;
 
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.TreeViewerManager;
@@ -62,10 +62,10 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 				columns.add(new OwnershipColumn());
 				columns.add(new LocationColumn());
 				columns.add(new LanguageColumn());
-				this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
+				this.columns.add(new StringEditorColumn(MagicCardField.SPECIAL, "Special"));
 				this.columns.add(new CommentColumn());
 				this.columns.add(new PriceColumn());
-				this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
+				this.columns.add(new StringEditorColumn(MagicCardField.FORTRADECOUNT, "For Trade"));
 			}
 		};
 	}

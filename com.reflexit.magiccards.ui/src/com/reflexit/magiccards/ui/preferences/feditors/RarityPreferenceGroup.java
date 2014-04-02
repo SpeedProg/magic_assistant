@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.preferences.feditors;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.SWT;
@@ -7,9 +10,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.ISearchableProperty;
 import com.reflexit.magiccards.core.model.Rarity;

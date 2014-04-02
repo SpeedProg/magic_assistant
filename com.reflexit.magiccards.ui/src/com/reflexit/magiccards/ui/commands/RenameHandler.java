@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.CardCollection;

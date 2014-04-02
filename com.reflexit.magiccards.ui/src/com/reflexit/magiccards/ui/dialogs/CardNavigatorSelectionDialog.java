@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.dialogs;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,8 +26,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
-
-import java.util.List;
 
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatiorManager;
 

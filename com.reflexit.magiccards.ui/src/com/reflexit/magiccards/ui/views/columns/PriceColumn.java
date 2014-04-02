@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.text.DecimalFormat;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -10,10 +12,8 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import java.text.DecimalFormat;
-
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
@@ -27,7 +27,7 @@ public class PriceColumn extends GenColumn {
 	 * @param columnName
 	 */
 	public PriceColumn() {
-		super(MagicCardFieldPhysical.PRICE, "Price");
+		super(MagicCardField.PRICE, "Price");
 	}
 
 	@Override

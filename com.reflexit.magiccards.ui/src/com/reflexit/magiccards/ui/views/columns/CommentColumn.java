@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
@@ -21,7 +21,7 @@ public class CommentColumn extends GenColumn {
 	 * @param columnName
 	 */
 	public CommentColumn() {
-		super(MagicCardFieldPhysical.COMMENT, "Comment");
+		super(MagicCardField.COMMENT, "Comment");
 	}
 
 	@Override

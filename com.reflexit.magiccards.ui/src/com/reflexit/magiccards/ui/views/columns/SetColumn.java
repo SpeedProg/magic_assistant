@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;

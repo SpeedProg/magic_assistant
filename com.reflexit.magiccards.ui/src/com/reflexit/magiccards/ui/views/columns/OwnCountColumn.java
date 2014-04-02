@@ -2,7 +2,7 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
@@ -11,7 +11,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
  */
 public class OwnCountColumn extends CountColumn {
 	public OwnCountColumn() {
-		super(MagicCardFieldPhysical.OWN_COUNT, "Own Count");
+		super(MagicCardField.OWN_COUNT, "Own Count");
 	}
 
 	@Override

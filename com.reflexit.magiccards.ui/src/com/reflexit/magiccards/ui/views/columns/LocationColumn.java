@@ -13,7 +13,7 @@ import org.eclipse.ui.dialogs.ISelectionValidator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -31,7 +31,7 @@ public class LocationColumn extends GenColumn {
 	 * @param columnName
 	 */
 	public LocationColumn() {
-		super(MagicCardFieldPhysical.LOCATION, "Location");
+		super(MagicCardField.LOCATION, "Location");
 	}
 
 	@Override

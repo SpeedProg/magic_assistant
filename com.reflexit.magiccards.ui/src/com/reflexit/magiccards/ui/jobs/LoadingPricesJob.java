@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.ui.MagicUIActivator;

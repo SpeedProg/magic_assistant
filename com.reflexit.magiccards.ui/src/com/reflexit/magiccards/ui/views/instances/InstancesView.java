@@ -12,6 +12,7 @@ package com.reflexit.magiccards.ui.views.instances;
 
 import java.io.IOException;
 import java.util.HashSet;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

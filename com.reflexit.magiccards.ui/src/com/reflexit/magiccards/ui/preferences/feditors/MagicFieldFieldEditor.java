@@ -11,12 +11,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class MagicFieldFieldEditor extends CheckedListEditor {
 	private Map<String, ICardField> allFields = new LinkedHashMap<String, ICardField>();
 	{
-		ICardField[] allFieldsArr = MagicCardFieldPhysical.allFields();
+		ICardField[] allFieldsArr = MagicCardField.allFields();
 		for (int i = 0; i < allFieldsArr.length; i++) {
 			ICardField f = allFieldsArr[i];
 			allFields.put(f.name(), f);
@@ -33,7 +33,7 @@ public class MagicFieldFieldEditor extends CheckedListEditor {
 			String ids[] = stringList.split(",");
 			for (int j = 0; j < ids.length; j++) {
 				String name = ids[j];
-				ICardField field = MagicCardFieldPhysical.fieldByName(name);
+				ICardField field = MagicCardField.fieldByName(name);
 				createTreeItem(field, true);
 				curFields.put(field.name(), field);
 			}

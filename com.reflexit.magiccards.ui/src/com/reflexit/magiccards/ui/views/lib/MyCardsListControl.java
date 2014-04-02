@@ -3,7 +3,7 @@ package com.reflexit.magiccards.ui.views.lib;
 import org.eclipse.jface.action.MenuManager;
 
 import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -24,7 +24,7 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected MenuManager createGroupMenu() {
 		MenuManager x = super.createGroupMenu();
-		x.add(createGroupAction(MagicCardFieldPhysical.LOCATION));
+		x.add(createGroupAction(MagicCardField.LOCATION));
 		return x;
 	}
 

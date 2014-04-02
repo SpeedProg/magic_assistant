@@ -10,6 +10,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class BrowserOpenAcknoledgementDialog extends MessageDialog {

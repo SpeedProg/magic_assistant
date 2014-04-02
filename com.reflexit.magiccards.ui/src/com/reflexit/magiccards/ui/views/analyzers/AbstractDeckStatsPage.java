@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -68,7 +68,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	}
 
 	protected void createCustomColumns(List<AbstractColumn> columns) {
-		columns.add(new GenColumn(MagicCardFieldPhysical.COUNT, "Percent") {
+		columns.add(new GenColumn(MagicCardField.COUNT, "Percent") {
 			@Override
 			public String getText(Object element) {
 				int count = getCount(element);

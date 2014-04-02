@@ -46,7 +46,7 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Locations;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
@@ -374,7 +374,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 				new MagicFieldSelectorDialog(getShell(), store).open();
 				// validate();
 				String fields = store.getString(CustomExportDelegate.ROW_FIELDS);
-				columns = MagicCardFieldPhysical.toFields(fields, ",");
+				columns = MagicCardField.toFields(fields, ",");
 				generatePreview();
 				return fields;
 			}
@@ -642,7 +642,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		MagicCardFilter locFilter = filteredLibrary.getFilter();
 		locFilter.update(map);
 		if (sideboard)
-			locFilter.getSortOrder().setSortField(MagicCardFieldPhysical.SIDEBOARD, true);
+			locFilter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
 		filteredLibrary.update();
 		new ExportDeckJob(outStream, reportType, header, filteredLibrary, columns).syncRun();
 	}

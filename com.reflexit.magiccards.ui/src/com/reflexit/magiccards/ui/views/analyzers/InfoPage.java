@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.text.DecimalFormat;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;

@@ -13,7 +13,7 @@ import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
@@ -46,7 +46,7 @@ public class ExportDeckJob extends Job {
 			worker = reportType.getExportDelegate();
 			if (worker == null)
 				return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, "No exporter defined for " + reportType.getLabel());
-			worker.setColumns(columns == null ? MagicCardFieldPhysical.allNonTransientFields() : columns);
+			worker.setColumns(columns == null ? MagicCardField.allNonTransientFields(true) : columns);
 		} catch (Exception e) {
 			return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage(), e);
 		}

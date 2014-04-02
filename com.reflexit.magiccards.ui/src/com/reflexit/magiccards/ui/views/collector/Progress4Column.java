@@ -3,7 +3,7 @@ package com.reflexit.magiccards.ui.views.collector;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardGroup;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class Progress4Column extends ProgressColumn {
 	private static final String PERCENT4_KEY = "percent4";
@@ -14,7 +14,7 @@ public class Progress4Column extends ProgressColumn {
 	}
 
 	public Progress4Column() {
-		super(MagicCardFieldPhysical.OWN_UNIQUE, "Progress4");
+		super(MagicCardField.OWN_UNIQUE, "Progress4");
 	}
 
 	@Override

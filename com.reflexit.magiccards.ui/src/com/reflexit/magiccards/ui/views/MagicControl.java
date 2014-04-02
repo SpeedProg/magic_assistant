@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
+
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class MagicControl implements IMagicControl {

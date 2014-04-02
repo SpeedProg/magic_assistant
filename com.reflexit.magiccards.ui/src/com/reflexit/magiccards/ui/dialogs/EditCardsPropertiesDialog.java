@@ -12,20 +12,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.SpecialTags;
 import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
 public class EditCardsPropertiesDialog extends MagicDialog {
 	private static final String VIRTUAL_VALUE = "Virtual";
 	private static final String OWN_VALUE = "Own";
-	public static final String COMMENT_FIELD = MagicCardFieldPhysical.COMMENT.name();
-	public static final String SPECIAL_FIELD = MagicCardFieldPhysical.SPECIAL.name();
-	public static final String OWNERSHIP_FIELD = MagicCardFieldPhysical.OWNERSHIP.name();
-	public static final String COUNT_FIELD = MagicCardFieldPhysical.COUNT.name();
-	public static final String COUNT_FOR_TRADE = MagicCardFieldPhysical.FORTRADECOUNT.name();
+	public static final String COMMENT_FIELD = MagicCardField.COMMENT.name();
+	public static final String SPECIAL_FIELD = MagicCardField.SPECIAL.name();
+	public static final String OWNERSHIP_FIELD = MagicCardField.OWNERSHIP.name();
+	public static final String COUNT_FIELD = MagicCardField.COUNT.name();
+	public static final String COUNT_FOR_TRADE = MagicCardField.FORTRADECOUNT.name();
 	public static final String NAME_FIELD = MagicCardField.NAME.name();
-	public static final String PRICE_FIELD = MagicCardFieldPhysical.PRICE.name();
+	public static final String PRICE_FIELD = MagicCardField.PRICE.name();
 	public static final String UNCHANGED = "<unchanged>";
 
 	public EditCardsPropertiesDialog(Shell parentShell, PreferenceStore store) {

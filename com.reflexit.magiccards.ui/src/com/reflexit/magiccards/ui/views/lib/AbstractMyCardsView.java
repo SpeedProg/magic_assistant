@@ -34,13 +34,14 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -352,7 +353,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				any = true;
 				MagicCardPhysical card = (MagicCardPhysical) object;
 				if (first) {
-					ICardField[] allFields = MagicCardFieldPhysical.allFields();
+					ICardField[] allFields = MagicCardField.allFields();
 					for (ICardField f : allFields) {
 						Object value = card.getObjectByField(f);
 						String svalue = String.valueOf(value == null ? "" : value);
@@ -360,7 +361,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					}
 					first = false;
 				} else {
-					ICardField[] allFields = MagicCardFieldPhysical.allFields();
+					ICardField[] allFields = MagicCardField.allFields();
 					for (ICardField f : allFields) {
 						Object value = card.getObjectByField(f);
 						String svalue = String.valueOf(value == null ? "" : value);
@@ -397,11 +398,11 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 
 	private void editCard(MagicCardPhysical card, PreferenceStore store, boolean update) {
 		boolean modified = false;
-		modified = setField(card, store, MagicCardFieldPhysical.COUNT) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.FORTRADECOUNT) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.PRICE) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.COMMENT) || modified;
-		modified = setField(card, store, MagicCardFieldPhysical.OWNERSHIP) || modified;
+		modified = setField(card, store, MagicCardField.COUNT) || modified;
+		modified = setField(card, store, MagicCardField.FORTRADECOUNT) || modified;
+		modified = setField(card, store, MagicCardField.PRICE) || modified;
+		modified = setField(card, store, MagicCardField.COMMENT) || modified;
+		modified = setField(card, store, MagicCardField.OWNERSHIP) || modified;
 		String special = card.getSpecial();
 		String especial = store.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
 		if (!UNCHANGED.equals(especial) && !especial.equals(special)) {

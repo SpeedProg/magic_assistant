@@ -69,7 +69,6 @@ import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.SortOrder;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -202,7 +201,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		String sfields[] = name.split("/");
 		ICardField[] res = new ICardField[sfields.length];
 		for (int i = 0; i < res.length; i++) {
-			res[i] = MagicCardFieldPhysical.fieldByName(sfields[i]);
+			res[i] = MagicCardField.fieldByName(sfields[i]);
 		}
 		return res;
 	}

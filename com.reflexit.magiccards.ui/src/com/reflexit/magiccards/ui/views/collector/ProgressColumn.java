@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.collector;
 
 import java.util.HashSet;
 import java.util.Iterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
@@ -19,7 +20,7 @@ import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
@@ -40,7 +41,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 	}
 
 	public ProgressColumn() {
-		super(MagicCardFieldPhysical.OWN_UNIQUE, "Progress");
+		super(MagicCardField.OWN_UNIQUE, "Progress");
 	}
 
 	@Override

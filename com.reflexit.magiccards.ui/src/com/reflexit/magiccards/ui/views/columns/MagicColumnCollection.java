@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 
 public class MagicColumnCollection extends ColumnCollection {
@@ -40,8 +39,8 @@ public class MagicColumnCollection extends ColumnCollection {
 		this.columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));
 		this.columns.add(new CollectorsNumberColumn());
 		if (myCards) {
-			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.SPECIAL, "Special"));
-			this.columns.add(new StringEditorColumn(MagicCardFieldPhysical.FORTRADECOUNT, "For Trade"));
+			this.columns.add(new StringEditorColumn(MagicCardField.SPECIAL, "Special"));
+			this.columns.add(new StringEditorColumn(MagicCardField.FORTRADECOUNT, "For Trade"));
 		}
 		this.columns.add(new LanguageColumn());
 		this.columns.add(new TextColumn());
@@ -49,8 +48,8 @@ public class MagicColumnCollection extends ColumnCollection {
 		columns.add(new OwnUniqueColumn());
 		columns.add(new LegalityColumn());
 		if (myCards) {
-			columns.add(new GenColumn(MagicCardFieldPhysical.SIDEBOARD, "Sideboard"));
-			columns.add(new GenColumn(MagicCardFieldPhysical.ERROR, "Error"));
+			columns.add(new GenColumn(MagicCardField.SIDEBOARD, "Sideboard"));
+			columns.add(new GenColumn(MagicCardField.ERROR, "Error"));
 		}
 	}
 

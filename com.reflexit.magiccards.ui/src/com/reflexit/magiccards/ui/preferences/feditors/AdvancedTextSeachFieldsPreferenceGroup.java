@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+
 import com.reflexit.magiccards.core.model.FilterField;
 
 public class AdvancedTextSeachFieldsPreferenceGroup extends MFieldEditorPreferencePage {

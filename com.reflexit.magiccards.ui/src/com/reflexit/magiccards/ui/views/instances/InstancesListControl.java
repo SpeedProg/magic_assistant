@@ -11,10 +11,9 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
-import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
@@ -40,8 +39,8 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
 		groupMenu.add(createGroupActionNone());
 		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction(MagicCardFieldPhysical.LOCATION));
-		groupMenu.add(createGroupAction(MagicCardFieldPhysical.OWNERSHIP));
+		groupMenu.add(createGroupAction(MagicCardField.LOCATION));
+		groupMenu.add(createGroupAction(MagicCardField.OWNERSHIP));
 		return groupMenu;
 	}
 

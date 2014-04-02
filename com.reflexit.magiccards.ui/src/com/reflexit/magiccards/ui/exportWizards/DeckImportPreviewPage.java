@@ -29,7 +29,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.MagicCardFieldPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -78,7 +78,7 @@ public class DeckImportPreviewPage extends WizardPage {
 			ICardField[] fields = result.getFields();
 			if (fields != null) {
 				ColumnCollection colls = manager.getColumnsCollection();
-				AbstractColumn errColumn = colls.getColumn(MagicCardFieldPhysical.ERROR);
+				AbstractColumn errColumn = colls.getColumn(MagicCardField.ERROR);
 				String prefColumns = errColumn.getColumnFullName();
 				for (int i = 0; i < fields.length; i++) {
 					ICardField field = fields[i];

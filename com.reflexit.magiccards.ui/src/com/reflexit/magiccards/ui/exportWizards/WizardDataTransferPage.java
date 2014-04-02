@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -19,9 +22,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The common superclass for wizard import and export pages.

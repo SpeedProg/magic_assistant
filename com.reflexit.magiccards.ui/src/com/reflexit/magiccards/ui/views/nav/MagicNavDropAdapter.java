@@ -12,6 +12,7 @@ package com.reflexit.magiccards.ui.views.nav;
 
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;

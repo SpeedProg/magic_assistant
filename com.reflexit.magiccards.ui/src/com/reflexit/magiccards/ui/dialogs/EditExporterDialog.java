@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.dialogs;
 
 import java.io.IOException;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
