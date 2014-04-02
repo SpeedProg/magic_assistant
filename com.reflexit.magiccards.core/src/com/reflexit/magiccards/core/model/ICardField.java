@@ -5,7 +5,7 @@ public interface ICardField {
 
 	public String name();
 
-	public String getGroupLabel();
+	public String getLabel();
 
 	public Object valueOf(ICard card);
 }

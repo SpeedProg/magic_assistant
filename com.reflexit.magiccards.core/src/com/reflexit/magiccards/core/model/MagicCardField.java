@@ -144,7 +144,7 @@ public enum MagicCardField implements ICardField {
 		return res;
 	}
 
-	public String getGroupLabel() {
+	public String getLabel() {
 		String name = name();
 		name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
 		name = name.replace('_', ' ');
