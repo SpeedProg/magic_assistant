@@ -129,11 +129,11 @@ public class CardGroupTest extends TestCase {
 		((MagicCardPhysical) cards[2]).setCount(4);
 		((MagicCardPhysical) cards[2]).setForTrade(2);
 		assertEquals(2, group.getOwnUnique());
-		int c = (Integer) MagicCardField.OWN_UNIQUE.valueOf(group);
+		int c = (Integer) MagicCardField.OWN_UNIQUE.aggregateValueOf(group);
 		assertEquals(2, c);
-		c = (Integer) MagicCardField.OWN_COUNT.valueOf(group);
+		c = (Integer) MagicCardField.OWN_COUNT.aggregateValueOf(group);
 		assertEquals(5, c);
-		c = (Integer) MagicCardField.FORTRADECOUNT.valueOf(group);
+		c = (Integer) MagicCardField.FORTRADECOUNT.aggregateValueOf(group);
 		assertEquals(2, c);
 	}
 
@@ -337,7 +337,7 @@ public class CardGroupTest extends TestCase {
 			checkConsistency(MagicCardField.TYPE, group.getType());
 			checkConsistency(MagicCardField.ORACLE, group.getOracleText());
 			checkConsistency(MagicCardField.TEXT, group.getText());
-			checkConsistency(MagicCardField.CMC, group.getCmc());
+			checkConsistency(MagicCardField.CMC, group.getCmc(), count * cards[0].getCmc());
 			checkConsistency(MagicCardField.ARTIST, group.getArtist());
 			checkConsistency(MagicCardField.COLLNUM);
 			checkConsistency(MagicCardField.ID, group.getCardId());
@@ -351,7 +351,7 @@ public class CardGroupTest extends TestCase {
 		checkConsistency(MagicCardField.RATING, 1.0f * count, 1.0f * count);
 		checkConsistency(MagicCardField.RULINGS, group.getRulings());
 		checkConsistency(MagicCardField.ENID, group.getEnglishCardId());
-		checkConsistency(MagicCardField.PROPERTIES);
+		checkConsistency(MagicCardField.LEGALITY);
 		checkConsistency(MagicCardField.FLIPID, group.getFlipId());
 		checkConsistency(MagicCardField.PART);
 		checkConsistency(MagicCardField.OTHER_PART);
@@ -373,7 +373,9 @@ public class CardGroupTest extends TestCase {
 
 	public void checkConsistency(ICardField field) {
 		MagicCardPhysical card = (MagicCardPhysical) group.getFirstCard();
-		assertEquals(card.get(field), group.get(field));
+		Object c1 = card.get(field);
+		Object g1 = group.get(field);
+		assertEquals(c1, g1);
 	}
 
 	public void checkConsistency(ICardField field, Object value) {
