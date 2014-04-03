@@ -323,11 +323,12 @@ class CardDescComposite extends Composite {
 	}
 
 	private String getCardRulingsHtml(IMagicCard card) {
-		if (card.getRulings() == null || card.getRulings().length() == 0) {
+		String srulings = card.getRulings();
+		if (srulings == null || srulings.length() == 0) {
 			return "";
 		}
 		String data = "<p>Rulings:<ul>";
-		String rulings[] = card.getRulings().split("\\n");
+		String rulings[] = srulings.split("\\n");
 		for (String ruling : rulings) {
 			data += "<li>" + ruling + "</li>";
 		}

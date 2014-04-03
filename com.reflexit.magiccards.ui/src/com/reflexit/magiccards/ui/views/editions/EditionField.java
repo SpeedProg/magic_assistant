@@ -38,7 +38,7 @@ public enum EditionField implements ICardField {
 	}
 
 	@Override
-	public Object valueOf(ICard card) {
+	public Object aggregateValueOf(ICard card) {
 		return null;
 	}
 

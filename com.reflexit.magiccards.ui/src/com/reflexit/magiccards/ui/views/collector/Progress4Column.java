@@ -4,6 +4,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.aggr.FieldCount4Aggregator;
 
 public class Progress4Column extends ProgressColumn {
 	private static final String PERCENT4_KEY = "percent4";
@@ -29,7 +30,7 @@ public class Progress4Column extends ProgressColumn {
 
 	@Override
 	public int getProgressSize(ICard element) {
-		return element.accept(FieldCount4Aggregator.getInstance(), null);
+		return (Integer) element.accept(FieldCount4Aggregator.getInstance(), null);
 	}
 
 	@Override
