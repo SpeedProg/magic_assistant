@@ -16,10 +16,9 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.Languages.Language;
-import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
-public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysical {
+public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysical {
 	private int id;
 	private String name;
 	private String cost;
@@ -46,6 +45,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
 	 */
+	@Override
 	public String getCost() {
 		if (cost == null)
 			return "";
@@ -64,6 +64,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCardId()
 	 */
+	@Override
 	public int getCardId() {
 		return this.id;
 	}
@@ -72,6 +73,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		this.id = id;
 	}
 
+	@Override
 	public int getEnglishCardId() {
 		return this.enId;
 	}
@@ -109,6 +111,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getOracleText()
 	 */
+	@Override
 	public String getOracleText() {
 		return this.oracleText;
 	}
@@ -122,6 +125,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getRarity()
 	 */
+	@Override
 	public String getRarity() {
 		return this.rarity;
 	}
@@ -135,6 +139,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
 	 */
+	@Override
 	public String getSet() {
 		return this.edition;
 	}
@@ -148,6 +153,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getType()
 	 */
+	@Override
 	public String getType() {
 		return this.type;
 	}
@@ -166,6 +172,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getPower()
 	 */
+	@Override
 	public String getPower() {
 		return this.power;
 	}
@@ -179,6 +186,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getToughness()
 	 */
+	@Override
 	public String getToughness() {
 		return this.toughness;
 	}
@@ -187,26 +195,12 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		this.toughness = toughness == null ? "" : toughness.intern();
 	}
 
-	public static float convertFloat(String str) {
-		float t;
-		if (str == null || str.length() == 0)
-			t = NOT_APPLICABLE_POWER;
-		else {
-			try {
-				t = Float.parseFloat(str);
-			} catch (NumberFormatException e) {
-				// if (str.contains("*"))
-				t = STAR_POWER;
-			}
-		}
-		return t;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
 	 */
+	@Override
 	public String getColorType() {
 		return this.colorType;
 	}
@@ -220,6 +214,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
 	 */
+	@Override
 	public int getCmc() {
 		return this.cmc;
 	}
@@ -286,6 +281,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public Object get(ICardField field) {
 		MagicCardField mf = (MagicCardField) field;
+		Edition ed = Editions.getInstance().getEditionByName(edition);
 		switch (mf) {
 			case ID:
 				return Integer.valueOf(getCardId());
@@ -340,19 +336,25 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 					return null;
 				if (edition.equals("*"))
 					return "*";
-				return Editions.getInstance().getEditionByName(edition).getType();
+				if (ed == null)
+					return "?";
+				return ed.getType();
 			case SET_BLOCK:
 				if (edition == null)
 					return null;
 				if (edition.equals("*"))
 					return "*";
-				return Editions.getInstance().getEditionByName(edition).getBlock();
+				if (ed == null)
+					return "?";
+				return ed.getBlock();
 			case EDITION_ABBR:
 				if (edition == null)
 					return null;
 				if (edition.equals("*"))
 					return "*";
-				return Editions.getInstance().getEditionByName(edition).getMainAbbreviation();
+				if (ed == null)
+					return "?";
+				return ed.getMainAbbreviation();
 			case UNIQUE_COUNT:
 				return getUniqueCount();
 			case IMAGE_URL:
@@ -370,6 +372,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return null;
 	}
 
+	@Override
 	public float getDbPrice() {
 		return dbprice;
 	}
@@ -380,6 +383,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 			DataManager.getDBPriceStore().setDbPrice(this, dbprice);
 	}
 
+	@Override
 	public float getCommunityRating() {
 		return rating;
 	}
@@ -388,6 +392,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		this.rating = rating;
 	}
 
+	@Override
 	public String getArtist() {
 		return this.artist;
 	}
@@ -396,6 +401,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		this.artist = artist;
 	}
 
+	@Override
 	public String getRulings() {
 		return this.rulings;
 	}
@@ -404,6 +410,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		this.rulings = rulings;
 	}
 
+	@Override
 	public String getLanguage() {
 		return lang;
 	}
@@ -468,9 +475,9 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 				setRarity(value);
 				break;
 			case CTYPE:
-				throw new IllegalArgumentException("Not settable");
+				throw new IllegalArgumentException("Not settable " + mf);
 			case CMC:
-				throw new IllegalArgumentException("Not settable");
+				throw new IllegalArgumentException("Not settable " + mf);
 			case DBPRICE:
 				setDbPrice(Float.parseFloat(value));
 				break;
@@ -539,6 +546,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		}
 	}
 
+	@Override
 	public MagicCard cloneCard() {
 		return (MagicCard) clone();
 	}
@@ -559,10 +567,12 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		}
 	}
 
+	@Override
 	public MagicCard getBase() {
 		return this;
 	}
 
+	@Override
 	public String getText() {
 		if (text == null)
 			text = oracleText;
@@ -571,14 +581,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public boolean matches(ICardField left, TextValue right) {
-		String value = String.valueOf(get(left));
-		if (left == MagicCardField.TYPE && !right.regex) {
-			return CardTypes.getInstance().hasType(this, right.getText());
-		}
-		return right.getPattern().matcher(value).find();
 	}
 
 	public void setCollNumber(int cnum) {
@@ -638,6 +640,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return properties.get(key);
 	}
 
+	@Override
 	public int getFlipId() {
 		String fid = (String) getProperty(MagicCardField.FLIPID);
 		if (fid == null || fid.length() == 0)
@@ -650,6 +653,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return part;
 	}
 
+	@Override
 	public int getSide() {
 		String prop = (String) getProperty(MagicCardField.SIDE);
 		if (prop == null) {
@@ -680,6 +684,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Collection<MagicCardPhysical>) rc.getChildrenList();
 	}
 
+	@Override
 	public int getOwnCount() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -687,16 +692,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return realCards.getOwnCount();
 	}
 
-	public int getOwnTotalAll() {
-		Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(getName());
-		int sum = 0;
-		for (IMagicCard card : cards) {
-			if (card instanceof MagicCard)
-				sum += ((MagicCard) card).getOwnCount();
-		}
-		return sum;
-	}
-
+	@Override
 	public int getOwnUnique() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -708,6 +704,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int getCount() {
 		return 1;
 		// if (realcards == null)
@@ -715,6 +712,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		// return realcards.getCount();
 	}
 
+	@Override
 	public String getComment() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -722,6 +720,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (String) realCards.get(MagicCardField.COMMENT);
 	}
 
+	@Override
 	public Location getLocation() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -729,6 +728,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Location) realCards.get(MagicCardField.LOCATION);
 	}
 
+	@Override
 	public boolean isOwn() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -736,6 +736,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Boolean) realCards.get(MagicCardField.OWNERSHIP);
 	}
 
+	@Override
 	public int getForTrade() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -743,6 +744,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Integer) realCards.get(MagicCardField.FORTRADECOUNT);
 	}
 
+	@Override
 	public float getPrice() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -750,6 +752,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return realCards.getPrice();
 	}
 
+	@Override
 	public String getSpecial() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -757,6 +760,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (String) realCards.get(MagicCardField.SPECIAL);
 	}
 
+	@Override
 	public boolean isSideboard() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
@@ -764,36 +768,14 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return (Boolean) realCards.get(MagicCardField.SIDEBOARD);
 	}
 
+	@Override
 	public int getUniqueCount() {
 		return 1;
 	}
 
+	@Override
 	public boolean isPhysical() {
 		return false;
-	}
-
-	@Override
-	public int getGathererId() {
-		if (id > 0)
-			return id;
-		if (id < 0 && (id & (1 << 30)) != 0)
-			return -id;
-		return 0;
-	}
-
-	@Override
-	public int getCollectorNumberId() {
-		if (num == null)
-			return 0;
-		try {
-			return Integer.parseInt(num);
-		} catch (NumberFormatException e) {
-			try {
-				return Integer.parseInt(num.substring(0, num.length() - 1));
-			} catch (Exception e1) {
-				return 0;
-			}
-		}
 	}
 
 	public int syntesizeId() {
@@ -827,6 +809,7 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		return null;
 	}
 
+	@Override
 	public LegalityMap getLegalityMap() {
 		Object value = getProperty(MagicCardField.LEGALITY);
 		if (value == null) {
@@ -877,19 +860,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		setProperty(MagicCardField.LEGALITY, map);
 	}
 
-	private static CardTypes MTYPES = CardTypes.getInstance();
-
-	public boolean isBasicLand() {
-		if (getCost().length() > 0)
-			return false;
-		if (MTYPES.hasType(this, CardTypes.TYPES.Type_Land)) {
-			if (MTYPES.hasType(this, CardTypes.TYPES.Type_Basic)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void fillFrom(MagicCard ref) {
 		setCost(ref.getCost());
 		setType(ref.getType());
@@ -906,10 +876,6 @@ public class MagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysica
 		String url = getImageUrl();
 		if (url == null)
 			setProperty(MagicCardField.IMAGE_URL, ref.getImageUrl());
-	}
-
-	public int accept(ICardVisitor visitor, Object data) {
-		return visitor.visit(this, data);
 	}
 
 	public void setFrom(MagicCard importCard, ICardField[] columns) {

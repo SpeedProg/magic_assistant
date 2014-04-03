@@ -27,6 +27,8 @@ public enum Legality {
 			if (leg.ext.equals(x))
 				return leg;
 		}
+		if (x.equals("*"))
+			return UNKNOWN;
 		throw new IllegalArgumentException();
 	}
 

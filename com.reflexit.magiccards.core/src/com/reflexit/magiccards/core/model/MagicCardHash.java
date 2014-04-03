@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.LinkedHashMap;
 
-public class MagicCardHash implements ICard, ICardModifiable {
+public class MagicCardHash extends AbstractMagicCard {
 	private LinkedHashMap<ICardField, Object> fields = new LinkedHashMap<ICardField, Object>();
 
 	@Override
@@ -16,30 +16,30 @@ public class MagicCardHash implements ICard, ICardModifiable {
 	}
 
 	@Override
-	public ICard cloneCard() {
-		return (MagicCardHash) clone();
-	}
-
-	@Override
-	public Object clone() {
-		try {
-			MagicCardHash obj = (MagicCardHash) super.clone();
-			if (this.fields != null)
-				obj.fields = (LinkedHashMap<ICardField, Object>) this.fields.clone();
-			return obj;
-		} catch (CloneNotSupportedException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public int accept(ICardVisitor visitor, Object data) {
-		return visitor.visit(this, data);
+	public Object clone() throws CloneNotSupportedException {
+		MagicCardHash obj = (MagicCardHash) super.clone();
+		if (this.fields != null)
+			obj.fields = (LinkedHashMap<ICardField, Object>) this.fields.clone();
+		return obj;
 	}
 
 	@Override
 	public boolean set(ICardField field, String value) {
 		fields.put(field, value);
 		return true;
+	}
+
+	public boolean set(ICardField field, Object value) {
+		fields.put(field, value);
+		return true;
+	}
+
+	@Override
+	public void setLocation(Location location) {
+		fields.put(MagicCardField.LOCATION, location);
+	}
+
+	protected void clear() {
+		fields.clear();
 	}
 }

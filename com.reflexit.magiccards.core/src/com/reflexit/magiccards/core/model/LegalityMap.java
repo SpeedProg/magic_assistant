@@ -88,11 +88,15 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 			try {
 				Format format = Format.get(string);
 				if (format == null) {
-					String ext = string.substring(string.length() - 1, string.length());
-					String f = string.substring(0, string.length() - 1);
-					Legality leg = Legality.fromExt(ext);
-					format = Format.valueOf(f);
-					map.put(format, leg);
+					if (string.equals("*")) {
+						map.put(Format.LEGACY, Legality.LEGAL);
+					} else {
+						String ext = string.substring(string.length() - 1, string.length());
+						String f = string.substring(0, string.length() - 1);
+						Legality leg = Legality.fromExt(ext);
+						format = Format.valueOf(f);
+						map.put(format, leg);
+					}
 				} else {
 					map.put(format, Legality.LEGAL);
 				}
@@ -239,5 +243,23 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 
 	public boolean isLegal(Format format) {
 		return get(format) == Legality.LEGAL;
+	}
+
+	@Override
+	public int hashCode() {
+		return toExternal().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		LegalityMap other = (LegalityMap) obj;
+		String x = toExternal();
+		if (!x.equals(other.toExternal()))
+			return false;
+		return true;
 	}
 }

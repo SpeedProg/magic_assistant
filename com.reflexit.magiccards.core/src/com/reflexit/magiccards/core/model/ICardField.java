@@ -7,5 +7,5 @@ public interface ICardField {
 
 	public String getLabel();
 
-	public Object valueOf(ICard card);
+	public Object aggregateValueOf(ICard card);
 }

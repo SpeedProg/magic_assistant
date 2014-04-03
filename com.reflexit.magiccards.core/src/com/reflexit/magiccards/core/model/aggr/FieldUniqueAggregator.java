@@ -1,12 +1,17 @@
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.aggr;
 
 import java.util.HashSet;
 
-public class FieldUniqueAggregator extends AbstractIntPropAggregator {
+import com.reflexit.magiccards.core.model.AbstractMagicCard;
+import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
+
+public class FieldUniqueAggregator extends AbstractIntAggregator {
 	private static final MagicCardField FI = MagicCardField.UNIQUE_COUNT;
 
 	private FieldUniqueAggregator() {
-		super(FI.name());
+		super(FI);
 	}
 
 	static FieldUniqueAggregator instance = new FieldUniqueAggregator();
@@ -16,16 +21,7 @@ public class FieldUniqueAggregator extends AbstractIntPropAggregator {
 	}
 
 	@Override
-	public int visit(MagicCard card, Object data) {
-		if (data == null)
-			return 0;
-		HashSet<IMagicCard> uniq = (HashSet<IMagicCard>) data;
-		uniq.add(card);
-		return 0;
-	}
-
-	@Override
-	public int visit(MagicCardPhysical card, Object data) {
+	protected Object visitAbstractMagicCard(AbstractMagicCard card, Object data) {
 		if (data == null)
 			return 0;
 		HashSet<IMagicCard> uniq = (HashSet<IMagicCard>) data;
@@ -39,7 +35,7 @@ public class FieldUniqueAggregator extends AbstractIntPropAggregator {
 	}
 
 	@Override
-	protected int post(Object data) {
+	protected Object post(Object data) {
 		if (data == null)
 			return 0;
 		HashSet<IMagicCard> uniq = (HashSet<IMagicCard>) data;

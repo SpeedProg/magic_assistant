@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
-public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, ICard {
+public class MagicCardPhysical extends AbstractMagicCard implements ICardModifiable, IMagicCardPhysical, ICard {
 	private MagicCard card;
 	private int count;
 	private transient Location location;
@@ -50,22 +50,27 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		}
 	}
 
+	@Override
 	public IMagicCard cloneCard() {
 		return (IMagicCard) clone();
 	}
 
+	@Override
 	public float getDbPrice() {
 		return card.getDbPrice();
 	}
 
+	@Override
 	public float getCommunityRating() {
 		return card.getCommunityRating();
 	}
 
+	@Override
 	public String getArtist() {
 		return card.getArtist();
 	}
 
+	@Override
 	public String getRulings() {
 		return card.getRulings();
 	}
@@ -88,6 +93,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		this.card = card;
 	}
 
+	@Override
 	public int getCount() {
 		return this.count;
 	}
@@ -96,6 +102,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		this.count = count;
 	}
 
+	@Override
 	public float getPrice() {
 		Float p = (Float) getProperty(MagicCardField.PRICE);
 		if (p == null)
@@ -112,6 +119,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getComment()
 	 */
+	@Override
 	public String getComment() {
 		return (String) getProperty(MagicCardField.COMMENT);
 	}
@@ -128,6 +136,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getLocation()
 	 */
+	@Override
 	public Location getLocation() {
 		return this.location;
 	}
@@ -147,22 +156,27 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 			setProperty(MagicCardField.CUSTOM, custom);
 	}
 
+	@Override
 	public int getCardId() {
 		return this.card.getCardId();
 	}
 
+	@Override
 	public int getCmc() {
 		return this.card.getCmc();
 	}
 
+	@Override
 	public String getColorType() {
 		return this.card.getColorType();
 	}
 
+	@Override
 	public String getCost() {
 		return this.card.getCost();
 	}
 
+	@Override
 	public String getSet() {
 		return this.card.getSet();
 	}
@@ -171,22 +185,27 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return this.card.getName();
 	}
 
+	@Override
 	public String getOracleText() {
 		return this.card.getOracleText();
 	}
 
+	@Override
 	public String getPower() {
 		return this.card.getPower();
 	}
 
+	@Override
 	public String getRarity() {
 		return this.card.getRarity();
 	}
 
+	@Override
 	public String getToughness() {
 		return this.card.getToughness();
 	}
 
+	@Override
 	public String getType() {
 		return this.card.getType();
 	}
@@ -196,6 +215,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isOwn()
 	 */
+	@Override
 	public boolean isOwn() {
 		return this.ownership;
 	}
@@ -361,6 +381,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getForTrade()
 	 */
+	@Override
 	public int getForTrade() {
 		Integer f = (Integer) getProperty(MagicCardField.FORTRADECOUNT);
 		if (f == null)
@@ -377,6 +398,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getSpecial()
 	 */
+	@Override
 	public String getSpecial() {
 		String f = (String) getProperty(MagicCardField.SPECIAL);
 		if (f == null)
@@ -450,6 +472,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isSideboard()
 	 */
+	@Override
 	public boolean isSideboard() {
 		if (location == null)
 			return false;
@@ -460,18 +483,22 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		getCard().setDbPrice(dbprice);
 	}
 
+	@Override
 	public MagicCard getBase() {
 		return card;
 	}
 
+	@Override
 	public String getText() {
 		return card.getText();
 	}
 
+	@Override
 	public String getLanguage() {
 		return card.getLanguage();
 	}
 
+	@Override
 	public boolean matches(ICardField left, TextValue right) {
 		String value = String.valueOf(get(left));
 		if (left == MagicCardField.TYPE && !right.regex) {
@@ -480,10 +507,12 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return right.getPattern().matcher(value).find();
 	}
 
+	@Override
 	public int getEnglishCardId() {
 		return card.getEnglishCardId();
 	}
 
+	@Override
 	public int getFlipId() {
 		return card.getFlipId();
 	}
@@ -493,6 +522,7 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return card.getGathererId();
 	}
 
+	@Override
 	public int getOwnCount() {
 		if (isOwn())
 			return getCount();
@@ -513,20 +543,24 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 	 * 
 	 * @return
 	 */
+	@Override
 	public int getOwnTotalAll() {
 		return getBase().getOwnTotalAll();
 	}
 
+	@Override
 	public int getOwnUnique() {
 		if (isOwn())
 			return 1;
 		return 0;
 	}
 
+	@Override
 	public int getUniqueCount() {
 		return 1;
 	}
 
+	@Override
 	public boolean isPhysical() {
 		return true;
 	}
@@ -540,10 +574,12 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return list;
 	}
 
+	@Override
 	public int getSide() {
 		return card.getSide();
 	}
 
+	@Override
 	public int getCollectorNumberId() {
 		return card.getCollectorNumberId();
 	}
@@ -587,7 +623,8 @@ public class MagicCardPhysical implements ICardModifiable, IMagicCardPhysical, I
 		return getBase().isBasicLand();
 	}
 
-	public int accept(ICardVisitor visitor, Object data) {
+	@Override
+	public Object accept(ICardVisitor visitor, Object data) {
 		return visitor.visit(this, data);
 	}
 }

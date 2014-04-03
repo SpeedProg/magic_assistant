@@ -21,21 +21,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
  * @author Alena
  * 
  */
-public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardPhysical, ICardGroup {
+public class CardGroup extends MagicCardHash implements ICardCountable, ICard, ILocatable, IMagicCardPhysical, ICardGroup {
 	private final String name;
 	private ICardField groupField;
 	private int count;
 	private List<ICard> children;
 	private HashMap<String, Object> props;
 	private Map<String, CardGroup> subs;
-	private MagicCardPhysical base;
+	private boolean aggreagated = false;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		if (name == null)
@@ -46,10 +45,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		this.subs = new LinkedHashMap<String, CardGroup>(4);
 	}
 
-	public int accept(ICardVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
-
+	@Override
 	public MagicCard getBase() {
 		return null;
 		// IMagicCardPhysical phi = getGroupBase();
@@ -58,47 +54,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		// return phi.getBase();
 	}
 
-	private synchronized IMagicCardPhysical getGroupBase() {
-		if (base == null) {
-			if (size() == 0)
-				return null;
-			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-				Object o = iterator.next();
-				if (o instanceof CardGroup) {
-					CardGroup g = (CardGroup) o;
-					if (g.size() > 0 && g.getGroupBase() != null)
-						addBase(g.getGroupBase());
-				} else if (o instanceof IMagicCard) {
-					addBase((IMagicCard) o);
-				}
-			}
-		}
-		return base;
-	}
-
-	private void createBase(IMagicCard card) {
-		MagicCardPhysical base;
-		if (card instanceof MagicCardPhysical) {
-			base = (MagicCardPhysical) card.cloneCard();
-			MagicCard refCard = card.getBase().cloneCard();
-			base.setMagicCard(refCard);
-		} else if (card instanceof MagicCard) {
-			MagicCard mc = (MagicCard) card;
-			CardGroup realCards = mc.getRealCards();
-			if (realCards == null)
-				base = new MagicCardPhysical(card.cloneCard(), null);
-			else {
-				base = (MagicCardPhysical) realCards.getGroupBase().cloneCard();
-				MagicCard refCard = mc.cloneCard();
-				base.setMagicCard(refCard);
-			}
-		} else {
-			throw new IllegalArgumentException();
-		}
-		base.getBase().setName(name);
-		this.base = base;
-	}
-
+	@Override
 	public boolean isPhysical() {
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
@@ -111,12 +67,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	}
 
 	private void addBase(IMagicCard o) {
-		synchronized (this) {
-			if (base == null) {
-				createBase(o);
-				return;
-			}
-		}
 		ICardField[] allNonTransientFields = MagicCardField.allNonTransientFields(true);
 		List<ICardField> list = new ArrayList<ICardField>(Arrays.asList(allNonTransientFields));
 		list.remove(MagicCardField.ORACLE);
@@ -126,7 +76,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			ICardField field = (ICardField) iterator.next();
 			Object value = o.get(field);
-			Object mine = getGroupBase().get(field);
+			Object mine = get(field);
 			Object newmine = null;
 			if (mine == null) {
 				newmine = value;
@@ -188,7 +138,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 				}
 			}
 			if (newmine != null) {
-				((ICardModifiable) getGroupBase()).set(field, String.valueOf(newmine));
+				set(field, String.valueOf(newmine));
 			}
 		}
 	}
@@ -198,6 +148,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return this.name;
 	}
 
+	@Override
 	public synchronized int getCount() {
 		if (count == 0)
 			calculateCount();
@@ -219,25 +170,9 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return count;
 	}
 
-	public synchronized int getCreatureCount() {
-		return accept(FieldCreatureCountAggregator.getInstance(), null);
-	}
-
-	public synchronized int getOwnCount() {
-		return accept(FieldOwnCountAggregator.getInstance(), null);
-	}
-
 	@Override
 	public synchronized int getOwnTotalAll() {
 		return 0; // not supported
-	}
-
-	public synchronized int getOwnUnique() {
-		return (Integer) MagicCardField.OWN_UNIQUE.valueOf(this);
-	}
-
-	public synchronized int getUniqueCount() {
-		return accept(FieldUniqueAggregator.getInstance(), null);
 	}
 
 	public ICardField getFieldIndex() {
@@ -407,6 +342,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return subs.get(key);
 	}
 
+	@Override
 	public synchronized void clear() {
 		children.clear();
 		subs.clear();
@@ -416,7 +352,8 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 	public synchronized void rehash() {
 		count = 0;
 		props = null;
-		base = null;
+		super.clear();
+		aggreagated = false;
 	}
 
 	public synchronized IMagicCardPhysical getFirstCard() {
@@ -493,194 +430,52 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		return res;
 	}
 
+	@Override
 	public Object get(ICardField field) {
 		if (field == MagicCardField.NAME || field == groupField)
 			return getName();
 		if (size() == 0)
 			return null;
-		if (field == MagicCardField.OWN_COUNT)
-			return getOwnCount();
-		if (field == MagicCardField.OWN_UNIQUE)
-			return getOwnUnique();
-		if (field == MagicCardField.UNIQUE_COUNT)
-			return getUniqueCount();
-		IMagicCardPhysical groupBase = getGroupBase();
-		if (groupBase == null)
-			return null; // empty group
-		return groupBase.get(field);
+		if (!aggreagated) {
+			aggregate();
+		}
+		// if (field == MagicCardField.OWN_COUNT)
+		// return getOwnCount();
+		// if (field == MagicCardField.OWN_UNIQUE)
+		// return getOwnUnique();
+		// if (field == MagicCardField.UNIQUE_COUNT)
+		// return getUniqueCount();
+		// IMagicCardPhysical groupBase = getGroupBase();
+		// if (groupBase == null)
+		// return null; // empty group
+		return super.get(field);
+	}
+
+	private void aggregate() {
+		rehash();
+		aggreagated = true;
+		ICardField[] allFields = MagicCardField.allFields();
+		for (int i = 0; i < allFields.length; i++) {
+			ICardField field = allFields[i];
+			Object value = field.aggregateValueOf(this);
+			if (value != null)
+				super.set(field, value);
+		}
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
 
+	@Override
 	public IMagicCard cloneCard() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		throw new UnsupportedOperationException();
-	}
-
-	public Location getLocation() {
-		if (size() == 0)
-			return Location.NO_WHERE;
-		return getGroupBase().getLocation();
-	}
-
-	public String getComment() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getComment();
-	}
-
-	public boolean isOwn() {
-		if (size() == 0)
-			return false;
-		return getOwnCount() > 0;
-	}
-
-	public int getForTrade() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getForTrade();
-	}
-
-	public String getSpecial() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getSpecial();
-	}
-
-	public String getCost() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getCost();
-	}
-
-	public boolean isSideboard() {
-		if (size() == 0)
-			return false;
-		return getGroupBase().isSideboard();
-	}
-
-	public int getCardId() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getCardId();
-	}
-
-	public int getGathererId() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getGathererId();
-	}
-
-	public String getOracleText() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getOracleText();
-	}
-
-	public String getRarity() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getRarity();
-	}
-
-	public String getSet() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getSet();
-	}
-
-	public String getType() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getType();
-	}
-
-	public String getPower() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getPower();
-	}
-
-	public String getToughness() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getToughness();
-	}
-
-	public String getColorType() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getColorType();
-	}
-
-	public int getCmc() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getCmc();
-	}
-
-	public float getDbPrice() {
-		if (size() == 0)
-			return 0f;
-		return getGroupBase().getDbPrice();
-	}
-
-	public float getPrice() {
-		if (size() == 0)
-			return 0f;
-		return getGroupBase().getPrice();
-	}
-
-	public float getCommunityRating() {
-		if (size() == 0)
-			return 0f;
-		return getGroupBase().getCommunityRating();
-	}
-
-	public String getArtist() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getArtist();
-	}
-
-	public String getRulings() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getRulings();
-	}
-
-	public String getText() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getText();
-	}
-
-	public String getLanguage() {
-		if (size() == 0)
-			return null;
-		return getGroupBase().getLanguage();
-	}
-
-	public boolean matches(ICardField left, TextValue right) {
-		return getGroupBase().matches(left, right);
-	}
-
-	public int getEnglishCardId() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getEnglishCardId();
-	}
-
-	public int getFlipId() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getFlipId();
 	}
 
 	public Collection getValues() {
@@ -690,18 +485,6 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 			list.add(get(field));
 		}
 		return list;
-	}
-
-	public int getSide() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getSide();
-	}
-
-	public int getCollectorNumberId() {
-		if (size() == 0)
-			return 0;
-		return getGroupBase().getCollectorNumberId();
 	}
 
 	public void addAll(Iterable cards) {
@@ -717,19 +500,7 @@ public class CardGroup implements ICardCountable, ICard, ILocatable, IMagicCardP
 		rehash();
 	}
 
-	@Override
-	public LegalityMap getLegalityMap() {
-		IMagicCardPhysical groupBase = getGroupBase();
-		if (groupBase == null)
-			return null; // empty group
-		return groupBase.getLegalityMap();
-	}
-
-	@Override
-	public boolean isBasicLand() {
-		IMagicCardPhysical groupBase = getGroupBase();
-		if (groupBase == null)
-			return false; // empty group
-		return groupBase.isBasicLand();
+	public int getCreatureCount() {
+		return getInt(MagicCardField.CREATURE_COUNT);
 	}
 }

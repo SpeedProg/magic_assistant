@@ -3,9 +3,15 @@ package com.reflexit.magiccards.core.model;
 public interface ICard extends Cloneable {
 	Object get(ICardField field);
 
+	String getString(ICardField field);
+
+	int getInt(ICardField field);
+
+	float getFloat(ICardField field);
+
 	String getName();
 
 	ICard cloneCard();
 
-	int accept(ICardVisitor visitor, Object data);
+	Object accept(ICardVisitor visitor, Object data);
 }
