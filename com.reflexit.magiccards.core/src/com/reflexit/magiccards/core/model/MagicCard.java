@@ -30,7 +30,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	private String oracleText;
 	private String artist;
 	private float rating;
-	private float dbprice;
 	private String lang;
 	private String num;
 	private String rulings;
@@ -283,7 +282,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
 			case ID:
-				return Integer.valueOf(getCardId());
+				return getCardId();
 			case NAME:
 				return (this.name);
 			case COST:
@@ -303,7 +302,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			case CTYPE:
 				return (getColorType());
 			case CMC:
-				return (Integer.valueOf(getCmc()));
+				return getCmc();
 			case DBPRICE:
 				return getDbPrice();
 			case RATING:
@@ -352,28 +351,26 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return getCost();
 			case COUNT:
 				return getCount();
-			case OWN_COUNT:
-				return getOwnCount();
-			case OWN_UNIQUE:
-				return getOwnUnique();
+			case SIDEBOARD:
+				return isSideboard();
+			case LOCATION:
+				return getLocation();
 			default:
 				if (getRealCards() != null) {
 					return getRealCards().get(field);
+				} else {
+					return null;
 				}
-				break;
 		}
-		return null;
 	}
 
 	@Override
 	public float getDbPrice() {
-		return dbprice;
+		return DataManager.getDBPriceStore().getDbPrice(this);
 	}
 
 	public void setDbPrice(float dbprice) {
-		this.dbprice = dbprice;
-		if (id != 0 && dbprice != 0)
-			DataManager.getDBPriceStore().setDbPrice(this, dbprice);
+		DataManager.getDBPriceStore().setDbPrice(this, dbprice);
 	}
 
 	@Override
@@ -435,68 +432,81 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			this.num = collNumber.intern();
 	}
 
-	public boolean set(ICardField field, String value) {
-		if (!(field instanceof MagicCardField))
-			return false;
+	public boolean set(ICardField field, Object value) {
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
 			case ID:
-				setCardId(Integer.parseInt(value));
+				if (value instanceof Integer)
+					setCardId((Integer) value);
+				else
+					setCardId(Integer.parseInt((String) value));
 				break;
 			case NAME:
-				setName(value);
+				setName((String) value);
 				break;
 			case COST:
-				setCost(value);
+				setCost((String) value);
 				break;
 			case TYPE:
-				setType(value);
+				setType((String) value);
 				break;
 			case POWER:
-				setPower(value);
+				setPower((String) value);
 				break;
 			case TOUGHNESS:
-				setToughness(value);
+				setToughness((String) value);
 				break;
 			case ORACLE:
-				setOracleText(value);
+				setOracleText((String) value);
 				break;
 			case SET:
-				setSet(value);
+				setSet((String) value);
 				break;
 			case RARITY:
-				setRarity(value);
+				setRarity((String) value);
 				break;
 			case CTYPE:
 				throw new IllegalArgumentException("Not settable " + mf);
 			case CMC:
 				throw new IllegalArgumentException("Not settable " + mf);
 			case DBPRICE:
-				setDbPrice(Float.parseFloat(value));
+				if (value instanceof Float)
+					setDbPrice((Float) value);
+				else
+					setDbPrice(Float.parseFloat((String) value));
 				break;
 			case RATING:
-				setCommunityRating(Float.parseFloat(value));
+				if (value instanceof Float)
+					setCommunityRating((Float) value);
+				else
+					setCommunityRating(Float.parseFloat((String) value));
 				break;
 			case ARTIST:
-				setArtist(value);
+				setArtist((String) value);
 				break;
 			case RULINGS:
-				setRulings(value);
+				setRulings((String) value);
 				break;
 			case LANG:
-				setLanguage(value);
+				setLanguage((String) value);
 				break;
 			case COLLNUM:
-				setCollNumber(value);
+				setCollNumber((String) value);
 				break;
 			case TEXT:
-				setText(value);
+				setText((String) value);
 				break;
 			case ENID:
-				setEnglishCardId(Integer.parseInt(value));
+				if (value instanceof Integer)
+					setEnglishCardId((Integer) value);
+				else
+					setEnglishCardId(Integer.parseInt((String) value));
 				break;
 			case PROPERTIES:
-				setProperties(value);
+				if (value instanceof LinkedHashMap)
+					properties = (LinkedHashMap<String, Object>) value;
+				else
+					setProperties((String) value);
 				break;
 			case FLIPID:
 				setProperty(MagicCardField.FLIPID, value);
@@ -677,22 +687,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		return (Collection<MagicCardPhysical>) rc.getChildrenList();
 	}
 
-	@Override
-	public int getOwnCount() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return 0;
-		return realCards.getOwnCount();
-	}
-
-	@Override
-	public int getOwnUnique() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return 0;
-		return realCards.getOwnCount();
-	}
-
 	public void setLocation(Location location) {
 		throw new UnsupportedOperationException();
 	}
@@ -700,17 +694,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	@Override
 	public int getCount() {
 		return 1;
-		// if (realcards == null)
-		// return 1;
-		// return realcards.getCount();
-	}
-
-	@Override
-	public String getComment() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return null;
-		return (String) realCards.get(MagicCardField.COMMENT);
 	}
 
 	@Override
@@ -719,38 +702,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		if (realCards == null)
 			return Location.NO_WHERE;
 		return (Location) realCards.get(MagicCardField.LOCATION);
-	}
-
-	@Override
-	public boolean isOwn() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return false;
-		return (Boolean) realCards.get(MagicCardField.OWNERSHIP);
-	}
-
-	@Override
-	public int getForTrade() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return 0;
-		return (Integer) realCards.get(MagicCardField.FORTRADECOUNT);
-	}
-
-	@Override
-	public float getPrice() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return 0;
-		return realCards.getPrice();
-	}
-
-	@Override
-	public String getSpecial() {
-		CardGroup realCards = getRealCards();
-		if (realCards == null)
-			return null;
-		return (String) realCards.get(MagicCardField.SPECIAL);
 	}
 
 	@Override
@@ -876,7 +827,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			ICardField field = columns[i];
 			Object value = importCard.get(field);
 			if (value != null)
-				set(field, value.toString());
+				set(field, value);
 		}
 	}
 }

@@ -13,8 +13,6 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.exports.ClassicNoXExportDelegate;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
-import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
@@ -65,18 +63,6 @@ public class AbstractPriceProvider implements IPriceProvider {
 		IDbPriceStore dbPriceStore = DataManager.getDBPriceStore();
 		if (dbPriceStore.getProvider().equals(this))
 			dbPriceStore.reloadPrices();
-		if (res != null) {
-			IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
-			for (IMagicCard mc : res) {
-				IMagicCard base = mc.getBase();
-				int id = base.getCardId();
-				if (db.getCard(id) != base) {
-					float dbprice = priceMap.get(id);
-					if (dbprice > 0)
-						((MagicCard) base).setDbPrice(dbprice);
-				}
-			}
-		}
 	}
 
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {

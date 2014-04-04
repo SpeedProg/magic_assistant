@@ -23,12 +23,6 @@ public class MagicCardHash extends AbstractMagicCard {
 		return obj;
 	}
 
-	@Override
-	public boolean set(ICardField field, String value) {
-		fields.put(field, value);
-		return true;
-	}
-
 	public boolean set(ICardField field, Object value) {
 		fields.put(field, value);
 		return true;

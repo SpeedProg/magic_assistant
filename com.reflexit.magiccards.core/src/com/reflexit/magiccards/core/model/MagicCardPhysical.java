@@ -284,31 +284,46 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return this.card.toString() + " x " + this.count;
 	}
 
-	public boolean set(ICardField field, String value) {
+	public boolean set(ICardField field, Object value) {
 		switch ((MagicCardField) field) {
 			case COUNT:
-				setCount(Integer.parseInt(value));
+				if (value instanceof Integer)
+					setCount((Integer) value);
+				else
+					setCount(Integer.parseInt((String) value));
 				break;
 			case PRICE:
-				setPrice(Float.parseFloat(value));
+				if (value instanceof Float)
+					setPrice((Float) value);
+				else
+					setPrice(Float.parseFloat((String) value));
 				break;
 			case COMMENT:
-				setComment(value);
+				setComment((String) value);
 				break;
 			case LOCATION:
-				setLocation(Location.valueOf(value));
+				if (value instanceof Location)
+					setLocation((Location) value);
+				else
+					setLocation(Location.valueOf((String) value));
 				break;
 			case CUSTOM:
-				setCustom(value);
+				setCustom((String) value);
 				break;
 			case OWNERSHIP:
-				setOwn(Boolean.parseBoolean(value));
+				if (value instanceof Boolean)
+					setOwn((Boolean) value);
+				else
+					setOwn(Boolean.parseBoolean((String) value));
 				break;
 			case SPECIAL:
-				setSpecial(value);
+				setSpecial((String) value);
 				break;
 			case FORTRADECOUNT:
-				setForTrade(Integer.parseInt(value));
+				if (value instanceof Integer)
+					setForTrade((Integer) value);
+				else
+					setForTrade(Integer.parseInt((String) value));
 				break;
 			case SIDEBOARD:
 				return false; // not settable
