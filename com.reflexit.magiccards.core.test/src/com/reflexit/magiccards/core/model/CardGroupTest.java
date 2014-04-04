@@ -181,12 +181,6 @@ public class CardGroupTest extends TestCase {
 	}
 
 	@Test
-	public void testSetProperty() {
-		group.setProperty("aaa", cards);
-		assertEquals(cards, group.getProperty("aaa"));
-	}
-
-	@Test
 	public void testGetSubGroup() {
 		group.add(set);
 		assertSame(set, group.getSubGroup(set.getName()));
