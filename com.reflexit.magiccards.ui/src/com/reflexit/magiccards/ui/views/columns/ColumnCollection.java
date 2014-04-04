@@ -197,10 +197,13 @@ public abstract class ColumnCollection {
 
 	protected void setColulmnsIndex() {
 		int j = 0;
+		order.clear();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			AbstractColumn col = iterator.next();
 			col.setColumnIndex(j++);
 			order.put(col.getColumnFullName(), col);
+			if (order.size() != j)
+				throw new IllegalArgumentException("Two diffrent columns have same name");
 		}
 	}
 

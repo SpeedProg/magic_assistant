@@ -83,7 +83,8 @@ public class TreeViewerManager extends ViewerManager {
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.updateColumnsFromPropery(value);
 		columnsCollection.moveColumnOnTop(columnsCollection.getColumn(GroupColumn.COL_NAME));
-		this.viewer.getTree().setColumnOrder(getColumnsCollection().getColumnsOrder());
+		int[] columnsOrder = getColumnsCollection().getColumnsOrder();
+		this.viewer.getTree().setColumnOrder(columnsOrder);
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		for (int i = 0; i < acolumns.length; i++) {
 			TreeColumn acol = acolumns[i];
