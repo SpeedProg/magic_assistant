@@ -107,7 +107,7 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 			// Local db bitset
 			// [t2][s15][l4][v1][i10]
 			id = ((MagicCard) card).syntesizeId();
-			((ICardModifiable) card).set(MagicCardField.ID, String.valueOf(id));
+			((ICardModifiable) card).set(MagicCardField.ID, id);
 		}
 		if (handler.hashAndResolve(card) == false) {
 			storage.add(card);

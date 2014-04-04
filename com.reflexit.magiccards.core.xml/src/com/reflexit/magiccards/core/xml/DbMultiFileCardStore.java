@@ -116,10 +116,10 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 				return true;
 			} else {
 				if (old == 1) {
-					((ICardModifiable) prev).set(MagicCardField.ID, String.valueOf(-id));
+					((ICardModifiable) prev).set(MagicCardField.ID, -id);
 					return false;
 				} else if (cur == 1) {
-					((ICardModifiable) card).set(MagicCardField.ID, String.valueOf(-id));
+					((ICardModifiable) card).set(MagicCardField.ID, -id);
 					return false;
 				}
 			}

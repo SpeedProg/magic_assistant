@@ -57,10 +57,6 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		MagicLogger.traceStart("reloadPrices");
 		final IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
 		try {
-			db.getStorage().setAutoCommit(false);
-			for (IMagicCard card : db) {
-				((MagicCard) card).setDbPrice(0);
-			}
 			TIntFloatMap currentMap = current.getPriceMap();
 			currentMap.forEachEntry(new TIntFloatProcedure() {
 				@Override
@@ -71,7 +67,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 						MagicCard mc = (MagicCard) base;
 						// System.err.println(id + " -> " + mc);
 						if (mc.getDbPrice() != price) {
-							mc.setDbPrice(price);
+							// mc.setDbPrice(price);
 							db.update(base); // XXX too many events
 						}
 					}
@@ -79,7 +75,6 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 				}
 			});
 		} finally {
-			db.getStorage().setAutoCommit(true);
 			MagicLogger.traceEnd("reloadPrices");
 		}
 	}
