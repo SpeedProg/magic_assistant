@@ -11,11 +11,9 @@
 package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,9 +28,7 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
 public class CardGroup extends MagicCardHash implements ICardCountable, ICard, ILocatable, IMagicCardPhysical, ICardGroup {
 	private final String name;
 	private ICardField groupField;
-	private int count;
 	private List<ICard> children;
-	private HashMap<String, Object> props;
 	private Map<String, CardGroup> subs;
 	private boolean aggreagated = false;
 
@@ -48,10 +44,6 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	@Override
 	public MagicCard getBase() {
 		return null;
-		// IMagicCardPhysical phi = getGroupBase();
-		// if (phi == null)
-		// return null;
-		// return phi.getBase();
 	}
 
 	@Override
@@ -66,108 +58,9 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		return true;
 	}
 
-	private void addBase(IMagicCard o) {
-		ICardField[] allNonTransientFields = MagicCardField.allNonTransientFields(true);
-		List<ICardField> list = new ArrayList<ICardField>(Arrays.asList(allNonTransientFields));
-		list.remove(MagicCardField.ORACLE);
-		list.remove(MagicCardField.NAME); // no need, processes separately
-		list.add(MagicCardField.LOCATION); // need to add loctation because it is transient
-		list.add(MagicCardField.ORACLE); // move to end, because want to set text first
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			ICardField field = (ICardField) iterator.next();
-			Object value = o.get(field);
-			Object mine = get(field);
-			Object newmine = null;
-			if (mine == null) {
-				newmine = value;
-			} else {
-				// Aggregate fields
-				if (field == MagicCardField.DBPRICE || field == MagicCardField.PRICE || field == MagicCardField.RATING) {
-					Float fvalue = (Float) value;
-					Float fmain = (Float) mine;
-					if (fvalue == null || fvalue.isNaN())
-						fvalue = 0f;
-					if (fmain.isNaN())
-						fmain = 0f;
-					if (o instanceof MagicCardPhysical && o.getCardId() != 0) {
-						// && ((MagicCardPhysical) o).isOwn()
-						int count = ((ICardCountable) o).getCount();
-						newmine = fmain + fvalue * count;
-					} else {
-						newmine = fmain + fvalue;
-					}
-				} else if (field == MagicCardField.POWER || field == MagicCardField.TOUGHNESS) {
-					Float fvalue = MagicCard.convertFloat((String) value);
-					Float fmain = MagicCard.convertFloat((String) mine);
-					if (fvalue.isNaN())
-						fvalue = 0f;
-					if (fmain.isNaN())
-						fmain = 0f;
-					if (o instanceof MagicCardPhysical && o.getCardId() != 0) {
-						// && ((MagicCardPhysical) o).isOwn()
-						int count = ((ICardCountable) o).getCount();
-						newmine = fmain + fvalue * count;
-					} else {
-						newmine = fmain + fvalue;
-					}
-				} else if (field == MagicCardField.COUNT || field == MagicCardField.FORTRADECOUNT) {
-					Integer fvalue = (Integer) value;
-					Integer fmain = (Integer) mine;
-					newmine = fmain + ((fvalue == null) ? 0 : fvalue);
-				} else {
-					// Join Fiels
-					if (mine.equals(value)) {
-						// good
-					} else {
-						if (field == MagicCardField.LOCATION) {
-							newmine = Location.NO_WHERE;
-						} else if (field == MagicCardField.OWNERSHIP) {
-							newmine = "false";
-						} else if (field == MagicCardField.ID) {
-							newmine = 0;
-						} else if (value != null && value.getClass() == String.class) {
-							// string?
-							if (mine.toString().length() == 0) {
-								newmine = value;
-							} else {
-								// System.err.println("join " + mine + "<>" + value);
-								newmine = "*";
-							}
-						}
-					}
-				}
-			}
-			if (newmine != null) {
-				set(field, String.valueOf(newmine));
-			}
-		}
-	}
-
 	@Override
 	public String getName() {
 		return this.name;
-	}
-
-	@Override
-	public synchronized int getCount() {
-		if (count == 0)
-			calculateCount();
-		return this.count;
-	}
-
-	public synchronized int calculateCount() {
-		count = 0;
-		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			if (o instanceof CardGroup) {
-				count += ((CardGroup) o).calculateCount();
-			} else if (o instanceof ICardCountable) {
-				count += ((ICardCountable) o).getCount();
-			} else {
-				count++;
-			}
-		}
-		return count;
 	}
 
 	@Override
@@ -319,25 +212,6 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		return name;
 	}
 
-	/**
-	 * Get extra data object associated with the group, can be used for caching of card group
-	 * properties
-	 * 
-	 * @return
-	 */
-	public Object getProperty(String key) {
-		if (props == null)
-			return null;
-		return props.get(key);
-	}
-
-	public synchronized void setProperty(String key, Object value) {
-		if (props == null) {
-			props = new HashMap<String, Object>();
-		}
-		props.put(key, value);
-	}
-
 	public synchronized CardGroup getSubGroup(String key) {
 		return subs.get(key);
 	}
@@ -350,8 +224,6 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	}
 
 	public synchronized void rehash() {
-		count = 0;
-		props = null;
 		super.clear();
 		aggreagated = false;
 	}

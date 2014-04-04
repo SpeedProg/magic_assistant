@@ -281,7 +281,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 
 	public Object get(ICardField field) {
 		MagicCardField mf = (MagicCardField) field;
-		Edition ed = Editions.getInstance().getEditionByName(edition);
 		switch (mf) {
 			case ID:
 				return Integer.valueOf(getCardId());
@@ -331,30 +330,18 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return getPart();
 			case SIDE:
 				return getSide();
-			case SET_CORE:
-				if (edition == null)
-					return null;
-				if (edition.equals("*"))
-					return "*";
-				if (ed == null)
-					return "?";
+			case SET_CORE: {
+				Edition ed = Editions.getInstance().getEditionByName(edition);
 				return ed.getType();
-			case SET_BLOCK:
-				if (edition == null)
-					return null;
-				if (edition.equals("*"))
-					return "*";
-				if (ed == null)
-					return "?";
+			}
+			case SET_BLOCK: {
+				Edition ed = Editions.getInstance().getEditionByName(edition);
 				return ed.getBlock();
-			case EDITION_ABBR:
-				if (edition == null)
-					return null;
-				if (edition.equals("*"))
-					return "*";
-				if (ed == null)
-					return "?";
+			}
+			case EDITION_ABBR: {
+				Edition ed = Editions.getInstance().getEditionByName(edition);
 				return ed.getMainAbbreviation();
+			}
 			case UNIQUE_COUNT:
 				return getUniqueCount();
 			case IMAGE_URL:
@@ -363,6 +350,12 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return getLegalityMap();
 			case COLOR:
 				return getCost();
+			case COUNT:
+				return getCount();
+			case OWN_COUNT:
+				return getOwnCount();
+			case OWN_UNIQUE:
+				return getOwnUnique();
 			default:
 				if (getRealCards() != null) {
 					return getRealCards().get(field);

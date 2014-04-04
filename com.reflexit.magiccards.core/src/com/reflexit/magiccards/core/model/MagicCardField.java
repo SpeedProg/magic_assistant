@@ -13,6 +13,8 @@ import com.reflexit.magiccards.core.model.aggr.FieldCreatureCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldLegalityMapAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldOwnCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldOwnUniqueAggregator;
+import com.reflexit.magiccards.core.model.aggr.FieldProggress4Aggregator;
+import com.reflexit.magiccards.core.model.aggr.FieldProggressAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldUniqueAggregator;
 
 public enum MagicCardField implements ICardField {
@@ -182,6 +184,18 @@ public enum MagicCardField implements ICardField {
 		@Override
 		protected ICardVisitor getAggregator() {
 			return FieldCount4Aggregator.getInstance();
+		}
+	},
+	PERCENT_COMPLETE(null, true) {
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new FieldProggressAggregator(this);
+		}
+	},
+	PERCENT4_COMPLETE(null, true) {
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new FieldProggress4Aggregator(this);
 		}
 	},
 	ERROR(null, true), // error field for import

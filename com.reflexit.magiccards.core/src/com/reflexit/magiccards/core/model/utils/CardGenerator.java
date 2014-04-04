@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.utils;
 
+import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -42,7 +44,12 @@ public class CardGenerator {
 			card.setType("type " + id % 100);
 			card.setCost("{" + (id % 7) + "}");
 			card.setOracleText("bla " + id);
-			card.setSet("set " + (id % 20));
+			String setName = "set " + (id % 20);
+			Edition ed = Editions.getInstance().getEditionByName(setName);
+			if (ed == null) {
+				Editions.getInstance().addEdition(setName, setName);
+			}
+			card.setSet(setName);
 			card.setText("bla <br> bla " + id);
 			card.setPower(String.valueOf(id % 5));
 			card.setToughness("*");
