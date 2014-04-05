@@ -10,6 +10,14 @@ public class MagicCardHash extends AbstractMagicCard {
 		return fields.get(field);
 	}
 
+	protected Object doGet(ICardField field) {
+		return fields.get(field);
+	}
+
+	protected boolean containsKey(ICardField field) {
+		return fields.containsKey(field);
+	}
+
 	@Override
 	public String getName() {
 		return (String) fields.get(MagicCardField.NAME);

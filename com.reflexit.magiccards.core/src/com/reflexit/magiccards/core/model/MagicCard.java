@@ -451,10 +451,10 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				setType((String) value);
 				break;
 			case POWER:
-				setPower((String) value);
+				setPower(value.toString());
 				break;
 			case TOUGHNESS:
-				setToughness((String) value);
+				setToughness(value.toString());
 				break;
 			case ORACLE:
 				setOracleText((String) value);

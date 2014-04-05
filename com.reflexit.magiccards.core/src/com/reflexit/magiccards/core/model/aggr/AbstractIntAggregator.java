@@ -3,7 +3,7 @@ package com.reflexit.magiccards.core.model.aggr;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardVisitor;
 
-public class AbstractIntAggregator extends AbstractGroupAggregator implements ICardVisitor {
+public class AbstractIntAggregator extends AbstractGroupTransAggregator implements ICardVisitor {
 	static class ResultHolder {
 		public ResultHolder(int value) {
 			this.value = value;

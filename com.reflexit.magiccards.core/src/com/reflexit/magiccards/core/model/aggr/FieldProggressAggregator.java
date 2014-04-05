@@ -6,7 +6,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
-public class FieldProggressAggregator extends AbstractGroupAggregator {
+public class FieldProggressAggregator extends AbstractGroupTransAggregator {
 	public FieldProggressAggregator(ICardField field) {
 		super(field);
 	}

@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.reflexit.magiccards.core.model.aggr.AbstractFloatCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractIntAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractIntCountAggregator;
+import com.reflexit.magiccards.core.model.aggr.AbstractPowerAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractStringAggregator;
 import com.reflexit.magiccards.core.model.aggr.CollisionAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldCount4Aggregator;
@@ -30,31 +31,13 @@ public enum MagicCardField implements ICardField {
 	POWER {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return new AbstractFloatCountAggregator(this) {
-				@Override
-				public Object cast(Object value) {
-					value = super.cast(value);
-					if (value instanceof Float) {
-						value = String.valueOf(value);
-					}
-					return value;
-				}
-			};
+			return new AbstractPowerAggregator(this);
 		}
 	},
 	TOUGHNESS {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return new AbstractFloatCountAggregator(this) {
-				@Override
-				public Object cast(Object value) {
-					value = super.cast(value);
-					if (value instanceof Float) {
-						value = String.valueOf(value);
-					}
-					return value;
-				}
-			};
+			return new AbstractPowerAggregator(this);
 		}
 	},
 	ORACLE("oracleText"),

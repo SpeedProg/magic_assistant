@@ -30,7 +30,6 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	private ICardField groupField;
 	private List<ICard> children;
 	private Map<String, CardGroup> subs;
-	private boolean aggreagated = false;
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		if (name == null)
@@ -225,7 +224,6 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 
 	public synchronized void rehash() {
 		super.clear();
-		aggreagated = false;
 	}
 
 	public synchronized IMagicCardPhysical getFirstCard() {
@@ -308,30 +306,12 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 			return getName();
 		if (size() == 0)
 			return null;
-		if (!aggreagated) {
-			aggregate();
-		}
-		// if (field == MagicCardField.OWN_COUNT)
-		// return getOwnCount();
-		// if (field == MagicCardField.OWN_UNIQUE)
-		// return getOwnUnique();
-		// if (field == MagicCardField.UNIQUE_COUNT)
-		// return getUniqueCount();
-		// IMagicCardPhysical groupBase = getGroupBase();
-		// if (groupBase == null)
-		// return null; // empty group
-		return super.get(field);
-	}
-
-	private void aggregate() {
-		rehash();
-		aggreagated = true;
-		ICardField[] allFields = MagicCardField.allFields();
-		for (int i = 0; i < allFields.length; i++) {
-			ICardField field = allFields[i];
-			Object value = field.aggregateValueOf(this);
-			if (value != null)
-				super.set(field, value);
+		if (containsKey(field)) {
+			return super.get(field);
+		} else {
+			Object v = field.aggregateValueOf(this);
+			super.set(field, v);
+			return v;
 		}
 	}
 

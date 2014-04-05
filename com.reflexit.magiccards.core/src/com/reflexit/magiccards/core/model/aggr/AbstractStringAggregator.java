@@ -23,23 +23,14 @@ public class AbstractStringAggregator extends AbstractGroupAggregator implements
 
 	@Override
 	protected String doVisit(CardGroup group) {
-		String data = pre(group);
+		String data = null;
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
 			Object value = object.get(field);
 			String s = value == null ? null : String.valueOf(value);
 			data = aggr(data, s);
 		}
-		return post(data);
-	}
-
-	protected String post(String data) {
 		return data;
-	}
-
-	@Override
-	protected String pre(CardGroup group) {
-		return null;
 	}
 
 	protected String aggr(String res, String value) {

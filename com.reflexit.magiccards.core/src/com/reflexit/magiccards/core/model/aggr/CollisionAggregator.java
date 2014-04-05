@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.model.aggr;
 
 import com.reflexit.magiccards.core.model.ICardField;
 
-public class CollisionAggregator extends AbstractGroupAggregator {
+public class CollisionAggregator extends AbstractGroupTransAggregator {
 	private Object cvalue;
 
 	public CollisionAggregator(ICardField field, Object collisionValue) {
