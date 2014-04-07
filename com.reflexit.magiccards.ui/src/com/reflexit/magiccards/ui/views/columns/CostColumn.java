@@ -84,7 +84,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 
 	private String getActualText(Object element) {
 		if (element instanceof IMagicCard) { // cost
-			return ((IMagicCard) element).getCmc() + "";
+			return ((IMagicCard) element).get(MagicCardField.CMC) + "";
 		}
 		return null;
 	}
