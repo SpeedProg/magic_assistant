@@ -2,7 +2,7 @@
 <feature
       id="com.reflexit.mtgtournament.feature"
       label="Tournament Organizer"
-      version="1.2.10.qualifier"
+      version="1.2.11.qualifier"
       provider-name="Alena Laskavaia"
       plugin="com.reflexit.mtgtournament.ui">
 
