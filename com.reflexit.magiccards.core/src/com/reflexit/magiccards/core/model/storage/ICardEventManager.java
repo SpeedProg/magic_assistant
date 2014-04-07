@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
+import java.util.Collection;
+
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public interface ICardEventManager<T> {
@@ -13,4 +15,6 @@ public interface ICardEventManager<T> {
 	 * @param card
 	 */
 	public void update(T card);
+
+	public void updateList(Collection<T> cards);
 }

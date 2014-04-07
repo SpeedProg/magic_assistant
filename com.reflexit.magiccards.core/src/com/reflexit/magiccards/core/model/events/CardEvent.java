@@ -8,6 +8,7 @@ public class CardEvent {
 	public static final int UPDATE = 5;
 	public static final int RENAME_CONTAINER = 6;
 	public static final int UPDATE_CONTAINER = 7;
+	public static final int UPDATE_LIST = 8;
 	private Object source;
 	private int type;
 	private Object data;
@@ -51,6 +52,8 @@ public class CardEvent {
 				return "RENAME_CONTAINER";
 			case UPDATE_CONTAINER:
 				return "UPDATE_CONTAINER";
+			case UPDATE_LIST:
+				return "UPDATE_LIST";
 			default:
 				break;
 		}

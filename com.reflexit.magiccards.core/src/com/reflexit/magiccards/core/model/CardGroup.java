@@ -309,6 +309,7 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		if (containsKey(field)) {
 			return super.get(field);
 		} else {
+			super.set(field, null);
 			Object v = field.aggregateValueOf(this);
 			super.set(field, v);
 			return v;

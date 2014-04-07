@@ -200,4 +200,11 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	public int getUniqueCount() {
 		return size();
 	}
+
+	public void updateList(Collection<T> cards) {
+		initialize();
+		if (isListenerAttached())
+			fireEvent(new CardEvent(this, CardEvent.UPDATE_LIST, cards));
+		return;
+	}
 }
