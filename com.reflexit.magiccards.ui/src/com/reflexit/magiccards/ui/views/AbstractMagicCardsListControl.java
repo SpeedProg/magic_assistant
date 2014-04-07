@@ -365,6 +365,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			public void run() {
 				if (DataManager.waitForInit(60)) {
 					DataManager.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
+					DataManager.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
 				} else {
 					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
 				}
@@ -987,7 +988,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
 			reloadData();
-		} else if (type == CardEvent.REMOVE) {
+		} else if (type == CardEvent.REMOVE || type == CardEvent.UPDATE_LIST) {
 			// todo set selection to next element
 			reloadData();
 		}

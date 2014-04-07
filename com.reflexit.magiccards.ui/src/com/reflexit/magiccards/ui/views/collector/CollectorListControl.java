@@ -90,7 +90,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD) {
+		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD || type == CardEvent.UPDATE_LIST) {
 			reloadData();
 		}
 	}
