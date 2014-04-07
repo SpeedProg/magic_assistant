@@ -103,6 +103,18 @@ public class LegalityMapTest extends TestCase {
 	}
 
 	@Test
+	public void testMergeMap() {
+		map.merge(STANDARD, Legality.LEGAL);
+		LegalityMap map2 = new LegalityMap();
+		map2.initFormats();
+		map2.put(Format.EXTENDED, Legality.LEGAL);
+		map2.put(STANDARD, Legality.NOT_LEGAL);
+		map.merge(map2);
+		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
+		assertEquals(Legality.LEGAL, map.get(Format.EXTENDED));
+	}
+
+	@Test
 	public void testFullText() {
 		map.put(Format.EXTENDED, Legality.RESTRICTED);
 		map.put(Format.MODERN, Legality.LEGAL);

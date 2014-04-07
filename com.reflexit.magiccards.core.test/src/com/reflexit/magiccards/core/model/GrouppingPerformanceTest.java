@@ -11,11 +11,8 @@ public class GrouppingPerformanceTest extends TestCase {
 		DataManager.getMagicDBStore().initialize();
 	}
 
-	public void testA() {
-		// do nothing
-	}
-
 	public void testGroupDb() {
+		long start = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			IFilteredCardStore store = DataManager.getCardHandler().getMagicDBFilteredStore();
 			store.getFilter().setGroupField(null);
@@ -27,5 +24,9 @@ public class GrouppingPerformanceTest extends TestCase {
 			int count = children[0].getInt(MagicCardField.COUNT);
 			// System.err.println(count);
 		}
+		long end = System.currentTimeMillis();
+		long millis = end - start;
+		System.err.println("Time " + millis);
+		assertTrue("Time was " + millis, millis < 1400);
 	}
 }

@@ -331,7 +331,7 @@ public class CardGroupTest extends TestCase {
 			checkConsistency(MagicCardField.TYPE, group.getType());
 			checkConsistency(MagicCardField.ORACLE, group.getOracleText());
 			checkConsistency(MagicCardField.TEXT, group.getText());
-			checkConsistency(MagicCardField.CMC, group.getCmc(), count * cards[0].getCmc());
+			checkConsistency(MagicCardField.CMC, group.getCmc());
 			checkConsistency(MagicCardField.ARTIST, group.getArtist());
 			checkConsistency(MagicCardField.COLLNUM);
 			checkConsistency(MagicCardField.ID, group.getCardId());
