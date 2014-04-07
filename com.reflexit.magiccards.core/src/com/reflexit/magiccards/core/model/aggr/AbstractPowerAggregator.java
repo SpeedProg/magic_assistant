@@ -13,7 +13,7 @@ public class AbstractPowerAggregator extends AbstractFloatAggregator {
 	}
 
 	@Override
-	protected Object doVisit(CardGroup group) {
+	protected Object visitGroup(CardGroup group, Object data) {
 		float sum = 0;
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
 			ICard card = iterator.next();

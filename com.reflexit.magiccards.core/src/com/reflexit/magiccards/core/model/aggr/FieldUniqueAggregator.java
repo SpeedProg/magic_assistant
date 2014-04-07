@@ -7,7 +7,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
-public class FieldUniqueAggregator extends AbstractIntAggregator {
+public class FieldUniqueAggregator extends AbstractIntTransAggregator {
 	private static final MagicCardField FI = MagicCardField.UNIQUE_COUNT;
 
 	private FieldUniqueAggregator() {

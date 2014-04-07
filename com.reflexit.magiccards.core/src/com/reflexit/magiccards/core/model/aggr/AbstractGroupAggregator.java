@@ -22,15 +22,9 @@ public abstract class AbstractGroupAggregator implements ICardVisitor {
 		return null;
 	}
 
-	protected Object visitGroup(CardGroup g, Object data) {
-		Object value = doVisit(g);
-		g.set(field, value);
-		return value;
-	}
+	abstract protected Object visitGroup(CardGroup g, Object data);
 
 	protected Object visitAbstractMagicCard(AbstractMagicCard card, Object data) {
 		return card.get(field);
 	}
-
-	protected abstract Object doVisit(CardGroup group);
 }

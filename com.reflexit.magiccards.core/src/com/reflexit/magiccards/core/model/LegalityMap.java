@@ -121,6 +121,14 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 		return prev;
 	}
 
+	public void merge(LegalityMap source) {
+		for (java.util.Map.Entry<Format, Legality> cardLegalityEntry : source.entrySet()) {
+			Format formatForCard = cardLegalityEntry.getKey();
+			Legality formatLegality = cardLegalityEntry.getValue();
+			merge(formatForCard, formatLegality);
+		}
+	}
+
 	@Override
 	public Legality get(Object f) {
 		Legality x = null;
@@ -172,11 +180,7 @@ public class LegalityMap extends LinkedHashMap<Format, Legality> {
 			}
 		}
 		// update legality
-		for (java.util.Map.Entry<Format, Legality> cardLegalityEntry : cardLegality.entrySet()) {
-			Format formatForCard = cardLegalityEntry.getKey();
-			Legality formatLegality = cardLegalityEntry.getValue();
-			deckLegality.merge(formatForCard, formatLegality);
-		}
+		deckLegality.merge(cardLegality);
 	}
 
 	public String legalFormats() {

@@ -1,9 +1,8 @@
 package com.reflexit.magiccards.core.model.aggr;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardGroup;
+import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class FieldProggress4Aggregator extends FieldProggressAggregator {
 	public FieldProggress4Aggregator(ICardField field) {
@@ -11,17 +10,12 @@ public class FieldProggress4Aggregator extends FieldProggressAggregator {
 	}
 
 	@Override
-	public int getTotal(ICard element) {
-		if (element instanceof ICardGroup) {
-			CardGroup cardGroup = (CardGroup) element;
-			int size = getSetSize(cardGroup);
-			return size * 4;
-		}
-		return 1;
+	public int getProgressSize(CardGroup cardGroup) {
+		return cardGroup.getInt(MagicCardField.COUNT4);
 	}
 
 	@Override
-	public int getProgressSize(ICard element) {
-		return (Integer) element.accept(FieldCount4Aggregator.getInstance(), null);
+	public int getTotal(CardGroup element) {
+		return getSetSize(element) * 4;
 	}
 }

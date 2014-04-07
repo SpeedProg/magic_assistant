@@ -285,7 +285,8 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 	private static CardTypes MTYPES = CardTypes.getInstance();
 
 	public boolean isBasicLand() {
-		if (getCost().length() > 0)
+		String cost = getCost();
+		if (cost != null && cost.length() > 0)
 			return false;
 		if (MTYPES.hasType(this, CardTypes.TYPES.Type_Land)) {
 			if (MTYPES.hasType(this, CardTypes.TYPES.Type_Basic)) {

@@ -4,14 +4,8 @@ import com.reflexit.magiccards.core.model.AbstractMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class FieldOwnCountAggregator extends AbstractIntAggregator {
-	private FieldOwnCountAggregator() {
-		super(MagicCardField.OWN_COUNT);
-	}
-
-	static FieldOwnCountAggregator instance = new FieldOwnCountAggregator();
-
-	public static FieldOwnCountAggregator getInstance() {
-		return instance;
+	public FieldOwnCountAggregator(MagicCardField field) {
+		super(field);
 	}
 
 	@Override

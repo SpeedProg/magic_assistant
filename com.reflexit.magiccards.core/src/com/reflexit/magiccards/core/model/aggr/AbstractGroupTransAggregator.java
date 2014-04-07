@@ -14,6 +14,8 @@ public class AbstractGroupTransAggregator implements ICardVisitor {
 	protected final ICardField field;
 
 	public AbstractGroupTransAggregator(ICardField field) {
+		if (field == null)
+			throw new NullPointerException();
 		this.field = field;
 	}
 
@@ -26,10 +28,17 @@ public class AbstractGroupTransAggregator implements ICardVisitor {
 		return null;
 	}
 
-	protected Object visitGroup(CardGroup g, Object data) {
-		Object value = doVisit(g);
-		g.set(field, value);
-		return value;
+	protected Object visitGroup(CardGroup group, Object data1) {
+		Object sum = null;
+		Object data = pre(group);
+		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
+			ICard object = iterator.next();
+			Object value = object.accept(this, data);
+			sum = aggr(sum, value);
+		}
+		Object value = post(data);
+		sum = aggr(sum, value);
+		return cast(sum);
 	}
 
 	public Object cast(Object res) {
@@ -52,19 +61,6 @@ public class AbstractGroupTransAggregator implements ICardVisitor {
 
 	protected Object visitMagicCard(MagicCard card, Object data) {
 		return card.get(field);
-	}
-
-	protected Object doVisit(CardGroup group) {
-		Object sum = null;
-		Object data = pre(group);
-		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
-			ICard object = iterator.next();
-			Object value = object.accept(this, data);
-			sum = aggr(sum, value);
-		}
-		Object value = post(data);
-		sum = aggr(sum, value);
-		return cast(sum);
 	}
 
 	protected Object post(Object data) {

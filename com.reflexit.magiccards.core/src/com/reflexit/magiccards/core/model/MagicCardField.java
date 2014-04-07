@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.reflexit.magiccards.core.model.aggr.AbstractFloatCountAggregator;
-import com.reflexit.magiccards.core.model.aggr.AbstractIntAggregator;
-import com.reflexit.magiccards.core.model.aggr.AbstractIntCountAggregator;
+import com.reflexit.magiccards.core.model.aggr.AbstractIntTransAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractPowerAggregator;
-import com.reflexit.magiccards.core.model.aggr.AbstractStringAggregator;
+import com.reflexit.magiccards.core.model.aggr.StringAggregator;
 import com.reflexit.magiccards.core.model.aggr.CollisionAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldCount4Aggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldCreatureCountAggregator;
@@ -43,11 +42,18 @@ public enum MagicCardField implements ICardField {
 	ORACLE("oracleText"),
 	SET("edition"),
 	RARITY,
-	CTYPE(null),
+	CTYPE(null) {
+		@Override
+		public Object aggregateValueOf(ICard card) {
+			Colors cl = Colors.getInstance();
+			return cl.getColorType(card.getString(MagicCardField.COST));
+		}
+	},
 	CMC(null) {
 		@Override
-		protected ICardVisitor getAggregator() {
-			return new AbstractIntCountAggregator(this);
+		public Object aggregateValueOf(ICard card) {
+			Colors cl = Colors.getInstance();
+			return cl.getConvertedManaCost(card.getString(MagicCardField.COST));
 		}
 	},
 	DBPRICE() {
@@ -109,7 +115,7 @@ public enum MagicCardField implements ICardField {
 	COUNT(true) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return new AbstractIntAggregator(this);
+			return new AbstractIntTransAggregator(this);
 		}
 	},
 	PRICE(true) {
@@ -135,7 +141,7 @@ public enum MagicCardField implements ICardField {
 	FORTRADECOUNT("forTrade", true) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return new AbstractIntAggregator(this);
+			return new AbstractIntTransAggregator(this);
 		}
 	},
 	SPECIAL(true), // like foil, premium, mint, played, online etc
@@ -148,25 +154,25 @@ public enum MagicCardField implements ICardField {
 	OWN_COUNT(null, true) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return FieldOwnCountAggregator.getInstance();
+			return new FieldOwnCountAggregator(this);
 		}
 	}, // count of own card (normal count counts own and virtual)
 	OWN_UNIQUE(null, true) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return FieldOwnUniqueAggregator.getInstance();
+			return new FieldOwnUniqueAggregator(this);
 		}
 	}, // count of own unique cards (only applies to groups usually)
 	CREATURE_COUNT(null, true) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return FieldCreatureCountAggregator.getInstance();
+			return new FieldCreatureCountAggregator(this);
 		}
 	},
 	COUNT4(null, true) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return FieldCount4Aggregator.getInstance();
+			return new FieldCount4Aggregator(this);
 		}
 	},
 	PERCENT_COMPLETE(null, true) {
@@ -209,7 +215,7 @@ public enum MagicCardField implements ICardField {
 	}
 
 	protected ICardVisitor getAggregator() {
-		return new AbstractStringAggregator(this);
+		return new StringAggregator(this);
 	}
 
 	public boolean isTransient() {
