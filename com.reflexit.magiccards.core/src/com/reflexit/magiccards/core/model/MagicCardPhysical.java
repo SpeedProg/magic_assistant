@@ -364,11 +364,20 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 				return getOwnCount();
 			case OWN_UNIQUE:
 				return getOwnUnique();
+			case COUNT4:
+				return getCount4();
 			case ERROR:
 				return getError();
 			default:
 				return card.get(field);
 		}
+	}
+
+	public int getCount4() {
+		int c = card.getOwnCount();
+		if (c > 4)
+			return 4;
+		return c;
 	}
 
 	public Object getError() {

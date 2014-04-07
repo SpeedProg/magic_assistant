@@ -355,6 +355,8 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return isSideboard();
 			case LOCATION:
 				return getLocation();
+			case COUNT4:
+				return getCount4();
 			default:
 				if (getRealCards() != null) {
 					return getRealCards().get(field);
@@ -694,6 +696,16 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	@Override
 	public int getCount() {
 		return 1;
+	}
+
+	public int getCount4() {
+		CardGroup realCards = getRealCards();
+		if (realCards == null)
+			return 1;
+		int c = realCards.getOwnCount();
+		if (c > 4)
+			return 4;
+		return c;
 	}
 
 	@Override
