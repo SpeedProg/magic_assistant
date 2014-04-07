@@ -307,6 +307,21 @@ public class CardGroupTest extends TestCase {
 		checkAllConsistency();
 	}
 
+	@Test
+	public void testContractOne() {
+		group = new CardGroup(MagicCardField.NAME, "My Name");
+		MagicCardPhysical card = generatePhyCard();
+		preset1(card);
+		group.add(card);
+		ICardField[] allFields = MagicCardField.allFields();
+		checkConsistency(MagicCardField.NAME, group.getName(), "My Name");
+		for (ICardField field : allFields) {
+			if (field == MagicCardField.NAME)
+				continue;
+			assertEquals("Failed for " + field, card.get(field), group.get(field));
+		}
+	}
+
 	public void checkAllConsistency() {
 		boolean same = true;
 		int count = 0;
