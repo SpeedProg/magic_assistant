@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.core.xml;
 
 import gnu.trove.map.TIntFloatMap;
-import gnu.trove.procedure.TIntFloatProcedure;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -13,7 +11,6 @@ import java.util.Set;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.seller.CustomPriceProvider;
@@ -57,23 +54,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		MagicLogger.traceStart("reloadPrices");
 		final IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
 		try {
-			TIntFloatMap currentMap = current.getPriceMap();
-			currentMap.forEachEntry(new TIntFloatProcedure() {
-				@Override
-				public boolean execute(int id, float price) {
-					// System.err.println(id + " -> " + price);
-					IMagicCard base = db.getCard(id);
-					if (base != null) {
-						MagicCard mc = (MagicCard) base;
-						// System.err.println(id + " -> " + mc);
-						if (mc.getDbPrice() != price) {
-							// mc.setDbPrice(price);
-							db.update(base); // XXX too many events
-						}
-					}
-					return true;
-				}
-			});
+			db.updateList(null);
 		} finally {
 			MagicLogger.traceEnd("reloadPrices");
 		}
