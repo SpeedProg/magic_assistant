@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant Card Organizer
 Bundle-SymbolicName: com.reflexit.magiccards.ui;singleton:=true
-Bundle-Version: 1.2.11.qualifier
+Bundle-Version: 1.2.12.qualifier
 Bundle-Activator: com.reflexit.magiccards.ui.MagicUIActivator
 Bundle-Vendor: Alena Laskavaia
 Bundle-Localization: plugin
@@ -13,7 +13,7 @@ Require-Bundle: com.reflexit.magiccards.core,
  org.eclipse.ui.net;bundle-version="1.0.0",
  org.eclipse.core.expressions,
  com.reflexit.magiccards.ui.chart;bundle-version="1.0.0";resolution:=optional,
- com.reflexit.magicassistant.p2;bundle-version="1.2.11",
+ com.reflexit.magicassistant.p2;bundle-version="1.2.12",
  org.eclipse.core.filesystem;bundle-version="1.3.100"
 Eclipse-LazyStart: true
 Export-Package: com.reflexit.magiccards.ui,
