@@ -378,14 +378,16 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			new Job("Updating edited cards") {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					int i = 0;
 					int len = selection.size();
-					for (Iterator iterator = selection.iterator(); iterator.hasNext(); i++) {
+					for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 						MagicCardPhysical card = (MagicCardPhysical) iterator.next();
 						editCard(card, store, false);
-						if (i % 1000 == 0 || i == len - 1) {
-							DataManager.update(card); // XXX
+						if (len <= 3) {
+							DataManager.update(card);
 						}
+					}
+					if (len > 3) {
+						DataManager.updateList(selection.toList());
 					}
 					DataManager.reconcile();
 					return Status.OK_STATUS;
