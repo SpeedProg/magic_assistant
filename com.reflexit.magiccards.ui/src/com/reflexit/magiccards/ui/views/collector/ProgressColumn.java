@@ -130,7 +130,7 @@ public class ProgressColumn extends GenColumn implements Listener {
 						per = 0;
 					}
 					if (per > 0) {
-						int width = (int) (bounds.width * per / 100);
+						int width = (int) (bounds.width * (per > 60 ? 60 : per) / 100);
 						event.gc.setBackground(barColor);
 						event.gc.setForeground(partColor);
 						event.gc.setAlpha(64);
