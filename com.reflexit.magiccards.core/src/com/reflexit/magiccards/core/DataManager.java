@@ -29,6 +29,7 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";
@@ -304,6 +305,25 @@ public class DataManager {
 			update((MagicCardPhysical) card);
 		} else {
 			throw new IllegalArgumentException();
+		}
+	}
+
+	public static void updateList(Collection<IMagicCard> list) {
+		if (list == null || list.isEmpty()) {
+			getMagicDBStore().updateList(null);
+			reconcile();
+		} else {
+			IMagicCard card = list.iterator().next();
+			if (card instanceof ILocatable) {
+				Location loc = ((ILocatable) card).getLocation();
+				ICardStore<IMagicCard> store = getCardStore(loc);
+				if (store == null)
+					throw new IllegalArgumentException("Cannot find store for " + store);
+				store.updateList(list);
+			} else {
+				getMagicDBStore().updateList(list);
+			}
+			reconcile(list);
 		}
 	}
 
