@@ -121,7 +121,10 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	public float getDbPrice(IMagicCard card) {
-		return priceMap.get(card.getCardId());
+		int id = card.getCardId();
+		if (priceMap.containsKey(id))
+			return priceMap.get(id);
+		return 0f;
 	}
 
 	@Override

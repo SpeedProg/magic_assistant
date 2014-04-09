@@ -377,7 +377,10 @@ public class DataManager {
 	}
 
 	public static CardGroup getRealCards(MagicCard mc) {
-		return (CardGroup) links.get(mc.getCardId());
+		int id = mc.getCardId();
+		if (links.containsKey(id))
+			return (CardGroup) links.get(id);
+		return null;
 	}
 
 	public static void setOwnCopyEnabled(boolean newValue) {
