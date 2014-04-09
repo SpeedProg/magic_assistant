@@ -24,7 +24,10 @@ public class FieldLegalityMapAggregator extends AbstractGroupAggregator {
 
 	protected LegalityMap aggr(LegalityMap res, LegalityMap value) {
 		if (res == null)
-			return (LegalityMap) value.clone();
+			if (value == null)
+				return null;
+			else
+				return (LegalityMap) value.clone();
 		if (value == null)
 			return res;
 		if (value.equals(res))
