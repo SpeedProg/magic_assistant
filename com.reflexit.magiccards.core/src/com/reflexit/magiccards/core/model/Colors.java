@@ -118,7 +118,7 @@ public class Colors implements ISearchableProperty {
 		return this.codes.get(getPrefConstant(r));
 	}
 
-	public String getColorType(String cost) {
+	public static String getColorType(String cost) {
 		if (cost == null || cost.length() == 0)
 			return "land";
 		String[] manas = manasplit(cost);
@@ -168,7 +168,7 @@ public class Colors implements ISearchableProperty {
 		return res;
 	}
 
-	public String[] manasplit(String cost) {
+	public static String[] manasplit(String cost) {
 		if (cost.contains(","))
 			return new String[] { "1000000" };
 		int k = 0;

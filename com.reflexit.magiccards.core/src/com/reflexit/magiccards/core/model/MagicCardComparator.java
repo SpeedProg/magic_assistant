@@ -80,15 +80,27 @@ class MagicCardComparator implements Comparator {
 				if (sort instanceof MagicCardField) {
 					generic = false;
 					switch ((MagicCardField) sort) {
-						case COST:
+						case COST: {
 							int i1 = Colors.getColorSort((String) a1);
 							int i2 = Colors.getColorSort((String) a2);
 							d = i1 - i2;
 							break;
+						}
+						case COLOR: {
+							String co1 = (String) c1.get(MagicCardField.COST);
+							String co2 = (String) c2.get(MagicCardField.COST);
+							d = Colors.getColorType(co1).compareTo(Colors.getColorType(co2));
+							if (d == 0) {
+								int i1 = Colors.getColorSort(co1);
+								int i2 = Colors.getColorSort(co2);
+								d = i1 - i2;
+							}
+							break;
+						}
 						case POWER:
 						case TOUGHNESS:
-							float f1 = MagicCard.convertFloat((String) a1);
-							float f2 = MagicCard.convertFloat((String) a2);
+							float f1 = AbstractMagicCard.convertFloat((String) a1);
+							float f2 = AbstractMagicCard.convertFloat((String) a2);
 							d = Float.compare(f1, f2);
 							break;
 						case RARITY:
