@@ -80,6 +80,8 @@ class CardDescComposite extends Composite {
 		this.textBackup = new Text(details, SWT.WRAP);
 		this.textBackup.setFont(panel.getFont());
 		try {
+			// if (true)
+			// throw new SWTError();
 			this.textBrowser = new Browser(details, SWT.WRAP | SWT.INHERIT_DEFAULT);
 			this.textBrowser.setFont(panel.getFont());
 			textBrowser.addLocationListener(new LocationAdapter() {

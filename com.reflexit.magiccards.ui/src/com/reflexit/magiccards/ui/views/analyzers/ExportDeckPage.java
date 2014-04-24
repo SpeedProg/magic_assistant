@@ -126,7 +126,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		area.setLayout(stackLayout);
 		try {
 			// if (true)
-			// throw new NullPointerException("Browser");
+			// throw new SWTError();
 			this.textBrowser = new Browser(area, SWT.WRAP | SWT.INHERIT_DEFAULT);
 			this.textBrowser.setFont(area.getFont());
 			textBrowser.addLocationListener(new LocationAdapter() {
@@ -155,7 +155,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 					}
 				}
 			});
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			MagicLogger.log(e);
 			textBrowser = null;
 		}
