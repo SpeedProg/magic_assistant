@@ -31,7 +31,7 @@
             extension="csv"
             id="csv"
             importDelegate="com.reflexit.magiccards.core.exports.CsvImportDelegate"
-            label="Magic Assistant CSV &apos;,&apos; Separated">
+            label="Magic Assistant CSV">
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.TableExportDelegate"
@@ -114,7 +114,7 @@
              extension="csv"
              id="scsv"
              importDelegate="com.reflexit.magiccards.core.exports.ScsvImportDelegate"
-             label="Magic Assistant CSV &apos;;&apos; Separated">
+             label="Magic Assistant CSV Semicolon">
        </deckFormat>
    </extension>
 </plugin>
