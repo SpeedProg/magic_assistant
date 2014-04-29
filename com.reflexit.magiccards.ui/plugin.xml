@@ -74,7 +74,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.MagicDbView"
-            icon="icons/m.gif"
+            icon="icons/m24.gif"
             id="com.reflexit.magiccards.ui.views.MagicDbView"
             name="MTG Database"
             restorable="true">
@@ -117,7 +117,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.printings.PrintingsView"
-            icon="icons/card_coll24.png"
+            icon="icons/m24.gif"
             id="com.reflexit.magiccards.ui.views.printings.PrintingsView"
             name="Printings"
             restorable="true">
@@ -126,7 +126,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.collector.CollectorView"
-            icon="icons/card_coll24.png"
+            icon="icons/collector24.png"
             id="com.reflexit.magiccards.ui.views.collector.CollectorView"
             name="Collector"
             restorable="true">
