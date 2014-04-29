@@ -515,6 +515,11 @@ public class Editions implements ISearchableProperty {
 			if (name.equalsIgnoreCase(ed))
 				return name2ed.get(name);
 		}
+		for (Iterator<String> iterator = this.nameAliases.keySet().iterator(); iterator.hasNext();) {
+			String name = iterator.next();
+			if (name.equalsIgnoreCase(ed))
+				return nameAliases.get(name);
+		}
 		return null;
 	}
 }
