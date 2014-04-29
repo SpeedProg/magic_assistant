@@ -346,7 +346,8 @@ public class DataManager {
 			// Need to repair references to MagicCard instances
 			if (card instanceof MagicCardPhysical) {
 				MagicCardPhysical mcp = (MagicCardPhysical) card;
-				reconcile(mcp, db);
+				if (mcp.getName() != null)
+					reconcile(mcp, db);
 			}
 		}
 	}
