@@ -75,7 +75,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 
 	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
 		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
-		if (card == null || card == MagicCard.DEFAULT)
+		if (card == null || card == MagicCard.DEFAULT || card.getName() == null)
 			return res;
 		String englishName = card.getName();
 		String language = card.getLanguage();
