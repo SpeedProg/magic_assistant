@@ -124,6 +124,12 @@ public class CardTextLocal extends LocalizedText {
 	public String Ability_Vanishing;
 	public String Ability_Vigilance;
 	public String Ability_Wither;
+	public String Ability_Extort;
+	public String Ability_Cipher;
+	public String Ability_Gates;
+	public String Ability_Bloodrush;
+	public String Ability_Evolve;
+	public String Ability_Battalion;
 	protected static HashMap<Locale, CardTextLocal> map = new HashMap<Locale, CardTextLocal>();
 
 	public static CardTextLocal getCardText(Locale locale) {

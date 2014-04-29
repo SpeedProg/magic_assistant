@@ -171,6 +171,12 @@ public class Abilities {
 			createKeywordAbility(AB.Ability_Vanishing),// "Vanishing"
 			createKeywordAbility(AB.Ability_Vigilance),// "Vigilance"
 			createKeywordAbility(AB.Ability_Wither),// "Wither"
+			createKeywordAbility(AB.Ability_Extort),// "Extort"
+			createKeywordAbility(AB.Ability_Cipher),// "Cipher"
+			createKeywordAbility(AB.Ability_Bloodrush),// "Bloodrush"
+			createKeywordAbility(AB.Ability_Battalion),// "Battalion"
+			createKeywordAbility(AB.Ability_Evolve),// "Evolve"
+			createKeywordAbility(AB.Ability_Gates),// "Gates"
 			/*
 			 * Hand mined abilities from A to Ardent Militia name initialized cards
 			 */
@@ -183,7 +189,7 @@ public class Abilities {
 			createMinedAbility("Target", "(\\btarget\\b)"), //
 			createMinedAbility("Creature", "((\\bcreatures?\\b|[0-9]*/[0-9]*))"), //
 			createMinedAbility("Player", "(\\bplayers?\\b)"), //
-			createMinedAbility("Power/Toughness", "([\\+\\-][0-9]/[\\+\\-][0-9])|(\\\\b(power|toughness)\\\\b)"), //
+			createMinedAbility("Power/Toughness", "([\\+\\-][0-9]/[\\+\\-][0-9])|(\\b(power|toughness)\\b)"), //
 			createMinedAbility("Upkeep", "(\\bupkeep\\b)"),
 			createMinedAbility("Name", "(\\bnamed?\\b)"), //
 			createMinedAbility("Remove", "(\\bremove\\b)"),
