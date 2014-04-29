@@ -5,17 +5,11 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Name: Tests
 Import-Package: com.reflexit.magiccards.ui.widgets
 Require-Bundle: org.eclipse.ui,
- com.windowtester.runtime,
- com.windowtester.swt.runtime,
- com.instantiations.eclipse.debug,
  org.eclipse.jface,
- com.instantiations.common.core,
- com.instantiations.eclipse.util,
  org.eclipse.swt,
  org.eclipse.core.runtime,
  com.reflexit.magiccards.ui,
  org.junit,
- com.windowtester.swing.runtime,
  com.reflexit.magiccards.core
 Bundle-ActivationPolicy: lazy
 Manifest-Version: 1.0
