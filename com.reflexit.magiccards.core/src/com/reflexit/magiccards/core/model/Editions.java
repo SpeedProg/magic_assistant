@@ -123,9 +123,9 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public String getExtraAliases() {
-			if (aliases.length > 1) {
+			if (aliases.length > 0) {
 				String line = aliases[0];
-				for (int i = 1; i < abbrs.length; i++) {
+				for (int i = 1; i < aliases.length; i++) {
 					line += "," + aliases[i];
 				}
 				return line;
@@ -453,8 +453,10 @@ public class Editions implements ISearchableProperty {
 				if (ed.getType() != null) {
 					type = ed.getType();
 				}
+				Format format = ed.getFormat();
+				String sformat = format == Format.LEGACY ? "" : format.name();
 				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "|"
-						+ (ed.block == null ? "" : ed.block) + "|" + ed.getFormat().name() + "|" + ed.getExtraAliases());
+						+ (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
 			}
 		} finally {
 			st.close();
@@ -505,5 +507,14 @@ public class Editions implements ISearchableProperty {
 
 	public synchronized void remove(Edition ed) {
 		name2ed.remove(ed.getName());
+	}
+
+	public Edition getEditionByNameIgnoreCase(String ed) {
+		for (Iterator<String> iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
+			String name = iterator.next();
+			if (name.equalsIgnoreCase(ed))
+				return name2ed.get(name);
+		}
+		return null;
 	}
 }

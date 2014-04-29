@@ -42,11 +42,16 @@ public class ParseSetLegality extends ParseGathererPage {
 		for (int k = 0; k < sets.length; k++) {
 			String string = sets[k].trim();
 			string = string.replaceAll("  ", " ");
+			// System.err.println("Looking for " + string);
 			if (string.length() > 0) {
 				Edition ed = eds.getEditionByName(string);
+				if (ed == null) {
+					ed = eds.getEditionByNameIgnoreCase(string);
+				}
 				if (ed != null) {
 					ed.getLegalityMap().put(format, Legality.LEGAL);
 					ed.getLegalityMap().complete();
+					// System.err.println("Set " + string + " is set to " + format);
 				}
 			}
 		}
