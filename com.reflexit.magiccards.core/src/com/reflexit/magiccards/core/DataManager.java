@@ -434,4 +434,20 @@ public class DataManager {
 			}
 		}.start();
 	}
+
+	public static File getPricesDir() {
+		File dir = getModelRoot().getMagicDBContainer().getFile();
+		File pricesDir = new File(dir, "prices");
+		if (!pricesDir.exists())
+			pricesDir.mkdirs();
+		return pricesDir;
+	}
+
+	public static File getTablesDir() {
+		File dir = getModelRoot().getMagicDBContainer().getFile();
+		File pricesDir = new File(dir, "tables");
+		if (!pricesDir.exists())
+			pricesDir.mkdirs();
+		return pricesDir;
+	}
 }
