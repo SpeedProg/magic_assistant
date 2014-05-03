@@ -302,7 +302,7 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 
 	@Override
 	public Object get(ICardField field) {
-		if (field == MagicCardField.NAME || field == groupField)
+		if (field == MagicCardField.NAME)
 			return getName();
 		if (size() == 0)
 			return null;
