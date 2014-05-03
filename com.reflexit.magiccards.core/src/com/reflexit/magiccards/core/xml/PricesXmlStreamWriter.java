@@ -82,16 +82,8 @@ public class PricesXmlStreamWriter {
 
 	public static File getPricesFile(IPriceProviderStore provider) {
 		Location loc = Location.createLocationFromSet(provider.getName());
-		File pricesDir = getPricesDir();
+		File pricesDir = DataManager.getPricesDir();
 		File file = new File(pricesDir, loc.getBaseFileName());
 		return file;
-	}
-
-	public static File getPricesDir() {
-		File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
-		File pricesDir = new File(dir, "prices");
-		if (!pricesDir.exists())
-			pricesDir.mkdirs();
-		return pricesDir;
 	}
 }
