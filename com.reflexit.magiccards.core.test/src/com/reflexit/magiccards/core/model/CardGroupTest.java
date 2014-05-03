@@ -48,6 +48,25 @@ public class CardGroupTest extends TestCase {
 		return res;
 	}
 
+	public IMagicCard[] populateGroup(ICardField field, Object value, Object expected, int len, boolean phy) {
+		group = new CardGroup(field, String.valueOf(expected));
+		IMagicCard[] res = new IMagicCard[len];
+		for (int i = 0; i < len; i++) {
+			IMagicCard card = phy ? generatePhyCard() : generateCard();
+			((ICardModifiable) card).set(field, value);
+			group.add(card);
+			res[i] = card;
+		}
+		return res;
+	}
+
+	public void setCardsInGroup(ICardField field, Object value) {
+		for (Iterator iterator = group.iterator(); iterator.hasNext();) {
+			IMagicCardPhysical card = (IMagicCardPhysical) iterator.next();
+			((ICardModifiable) card).set(field, value);
+		}
+	}
+
 	public IMagicCard generateCard() {
 		return CardGenerator.generateCardWithValues();
 	}
@@ -56,49 +75,46 @@ public class CardGroupTest extends TestCase {
 		return CardGenerator.generatePhysicalCardWithValues();
 	}
 
-	public void subtestGetBase(ICardField field, Object expected) {
-		subtestGetBase(field, String.valueOf(expected), expected);
+	public void groupAndTest(ICardField field, Object expected) {
+		populateGroup(field, String.valueOf(expected), expected, 3, true);
+		assertEquals(expected, group.get(field));
 	}
 
-	public void subtestGetBase(ICardField field, Object value, Object expected) {
-		for (Iterator iterator = group.iterator(); iterator.hasNext();) {
-			IMagicCardPhysical card = (IMagicCardPhysical) iterator.next();
-			((ICardModifiable) card).set(field, String.valueOf(value));
-		}
-		group.rehash();
+	public void groupAndTest(ICardField field, Object value, Object expected) {
+		populateGroup(field, value, expected, 3, true);
 		assertEquals(expected, group.get(field));
 	}
 
 	@Test
 	public void testGetBaseRarity() {
-		subtestGetBase(MagicCardField.RARITY, Rarity.COMMON);
+		groupAndTest(MagicCardField.RARITY, Rarity.COMMON);
 	}
 
 	@Test
 	public void testGetBaseArtist() {
-		subtestGetBase(MagicCardField.ARTIST, "Name");
+		groupAndTest(MagicCardField.ARTIST, "Name");
 	}
 
 	public void testGetBaseCost() {
-		subtestGetBase(MagicCardField.COST, "{B}");
+		groupAndTest(MagicCardField.COST, "{B}");
 	}
 
 	public void testGetBaseNumber() {
-		subtestGetBase(MagicCardField.COLLNUM, "123");
+		groupAndTest(MagicCardField.COLLNUM, "123");
 	}
 
 	public void testGetBaseNumber2() {
-		subtestGetBase(MagicCardField.COST, "{B}");
-		subtestGetBase(MagicCardField.COLLNUM, "123");
+		groupAndTest(MagicCardField.COST, "{B}");
+		groupAndTest(MagicCardField.COLLNUM, "123");
 	}
 
 	public void testGetBaseSPrice() {
-		subtestGetBase(MagicCardField.DBPRICE, "1.2", 3 * 1.2f);
+		groupAndTest(MagicCardField.DBPRICE, "1.2", 3 * 1.2f);
 	}
 
 	public void testGetBaseLang() {
-		subtestGetBase(MagicCardField.LANG, "English", null);
-		subtestGetBase(MagicCardField.LANG, "German");
+		groupAndTest(MagicCardField.LANG, "English", null);
+		groupAndTest(MagicCardField.LANG, "German");
 	}
 
 	@Test
@@ -157,7 +173,7 @@ public class CardGroupTest extends TestCase {
 
 	@Test
 	public void testGetLabelByField() {
-		subtestGetBase(MagicCardField.RARITY, Rarity.COMMON);
+		groupAndTest(MagicCardField.RARITY, Rarity.COMMON);
 		assertEquals(Rarity.COMMON, group.getLabelByField(MagicCardField.RARITY));
 	}
 
@@ -224,56 +240,55 @@ public class CardGroupTest extends TestCase {
 
 	@Test
 	public void testOwnership() {
-		populateGroup(group, 3, true);
-		subtestGetBase(MagicCardField.OWNERSHIP, true);
+		groupAndTest(MagicCardField.OWNERSHIP, true);
 		assertEquals(true, group.isOwn());
 	}
 
 	@Test
 	public void testLocation() {
-		populateGroup(group, 3, true);
 		Location loc = Location.valueOf("xxx");
-		subtestGetBase(MagicCardField.LOCATION, loc);
+		groupAndTest(MagicCardField.LOCATION, loc);
 		assertEquals(loc, group.getLocation());
-		subtestGetBase(MagicCardField.SIDEBOARD, false);
+		group = new CardGroup(MagicCardField.SIDEBOARD, "false");
+		populateGroup(group, 3, true);
+		setCardsInGroup(MagicCardField.LOCATION, loc);
+		assertEquals(false, group.get(MagicCardField.SIDEBOARD));
+	}
+
+	@Test
+	public void testSideboard() {
+		Location loc = Location.valueOf("xxx").toSideboard();
+		groupAndTest(MagicCardField.LOCATION, loc);
+		group = new CardGroup(MagicCardField.SIDEBOARD, "true");
+		populateGroup(group, 3, true);
+		setCardsInGroup(MagicCardField.LOCATION, loc);
+		assertEquals(true, group.get(MagicCardField.SIDEBOARD));
+		assertEquals(true, group.isSideboard());
 	}
 
 	@Test
 	public void testPhyCount() {
-		populateGroup(group, 3, true);
-		subtestGetBase(MagicCardField.COUNT, 1, 3);
+		groupAndTest(MagicCardField.COUNT, 1, 3);
 		assertEquals(3, group.getCount());
 	}
 
 	@Test
 	public void testPrice() {
-		populateGroup(group, 3, true);
-		subtestGetBase(MagicCardField.COUNT, 1, 3);
-		subtestGetBase(MagicCardField.PRICE, 1.0f, 3.0f);
+		groupAndTest(MagicCardField.COUNT, 1, 3);
+		groupAndTest(MagicCardField.PRICE, 1.0f, 3.0f);
 	}
 
 	@Test
 	public void testComment() {
-		populateGroup(group, 3, true);
 		String comment = "tapochki";
-		subtestGetBase(MagicCardField.COMMENT, comment);
+		groupAndTest(MagicCardField.COMMENT, comment);
 		assertEquals(comment, group.getComment());
 	}
 
 	@Test
 	public void testCustom() {
-		populateGroup(group, 3, true);
 		String comment = "a,b";
-		subtestGetBase(MagicCardField.CUSTOM, comment);
-	}
-
-	@Test
-	public void testSideboard() {
-		populateGroup(group, 3, true);
-		Location loc = Location.valueOf("xxx").toSideboard();
-		subtestGetBase(MagicCardField.LOCATION, loc);
-		subtestGetBase(MagicCardField.SIDEBOARD, true);
-		assertEquals(true, group.isSideboard());
+		groupAndTest(MagicCardField.CUSTOM, comment);
 	}
 
 	@Test
