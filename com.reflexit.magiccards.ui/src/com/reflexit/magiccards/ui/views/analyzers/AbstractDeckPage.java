@@ -95,6 +95,7 @@ public class AbstractDeckPage implements IDeckPage {
 		viewMenuManager.updateAll(true);
 		// global handlers
 		setGlobalControlHandlers(bars);
+		bars.updateActionBars();
 		// selection provider
 		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
 		getCardStore();
