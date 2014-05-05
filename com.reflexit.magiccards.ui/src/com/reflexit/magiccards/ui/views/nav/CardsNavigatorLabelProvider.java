@@ -1,6 +1,8 @@
 package com.reflexit.magiccards.ui.views.nav;
 
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -14,7 +16,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
-public class CardsNavigatorLabelProvider extends LabelProvider {
+public class CardsNavigatorLabelProvider extends LabelProvider implements IColorProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardElement) {
@@ -51,5 +53,17 @@ public class CardsNavigatorLabelProvider extends LabelProvider {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-lib.png");
 		}
 		return null;
+	}
+
+	public Color getForeground(Object element) {
+		return null;
+	}
+
+	public Color getBackground(Object element) {
+		boolean own = true;
+		if (element instanceof CardCollection) {
+			own = !((CardCollection) element).isVirtual();
+		}
+		return MagicUIActivator.getDefault().getBgColor(own);
 	}
 }
