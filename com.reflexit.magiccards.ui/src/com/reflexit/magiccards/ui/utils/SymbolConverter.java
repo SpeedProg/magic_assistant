@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.ui.utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,8 +19,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
+import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class SymbolConverter {
@@ -203,29 +200,11 @@ public class SymbolConverter {
 			sym = sym.replaceAll("\\W", "");
 			System.err.println(sym);
 			String name = sym;
-			saveManaSymbol(dir, name);
+			GatherHelper.saveManaSymbol(dir, name);
 		}
-		saveManaSymbol(dir, "snow");
-		saveManaSymbol(dir, "12");
-		saveManaSymbol(dir, "14");
-		saveManaSymbol(dir, "15");
-	}
-
-	public static void saveManaSymbol(File dir, String name) throws MalformedURLException {
-		URL url = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&type=symbol&name=" + name);
-		try {
-			InputStream st = UpdateCardsFromWeb.openUrl(url);
-			File f = new File(dir, "Symbol_" + name + "_mana.gif");
-			FileUtils.saveStream(st, f);
-			st.close();
-			if (f.length() == 0) {
-				System.err.println("Error " + f);
-				f.delete();
-			} else
-				System.err.println("Saved " + f);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		GatherHelper.saveManaSymbol(dir, "snow");
+		GatherHelper.saveManaSymbol(dir, "12");
+		GatherHelper.saveManaSymbol(dir, "14");
+		GatherHelper.saveManaSymbol(dir, "15");
 	}
 }
