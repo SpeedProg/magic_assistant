@@ -29,4 +29,5 @@ public class PreferenceConstants {
 	public static final String CHECK_FOR_UPDATES = "updates";
 	public static final String CHECK_FOR_CARDS = "cardUpdates";
 	public static final String OWNED_COPY = PREFIX + ".nomycopy";
+	public static final String CURRENCY = PREFIX + ".currency";
 }

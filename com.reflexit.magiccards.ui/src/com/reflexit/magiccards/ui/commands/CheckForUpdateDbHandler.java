@@ -18,6 +18,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.Currency;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -56,6 +57,7 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 							}
 						}
 					}
+					Currency.update();
 				} catch (Exception e) {
 					MagicUIActivator.log(e); // move on if exception via set loading
 				}

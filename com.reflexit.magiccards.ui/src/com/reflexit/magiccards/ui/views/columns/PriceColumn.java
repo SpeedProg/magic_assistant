@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import java.text.DecimalFormat;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -20,9 +18,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
  * @author Alena
  * 
  */
-public class PriceColumn extends GenColumn {
-	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-
+public class PriceColumn extends SellerPriceColumn {
 	/**
 	 * @param columnName
 	 */
@@ -31,13 +27,8 @@ public class PriceColumn extends GenColumn {
 	}
 
 	@Override
-	public String getText(Object element) {
-		String text = super.getText(element);
-		if (text.length() == 0)
-			return text;
-		if (text.equals("0.0"))
-			return "";
-		return "$" + decimalFormat.format(Float.parseFloat(text));
+	public String getColumnFullName() {
+		return "Price";
 	}
 
 	/*
@@ -97,10 +88,5 @@ public class PriceColumn extends GenColumn {
 				}
 			}
 		};
-	}
-
-	@Override
-	public int getColumnWidth() {
-		return 50;
 	}
 }
