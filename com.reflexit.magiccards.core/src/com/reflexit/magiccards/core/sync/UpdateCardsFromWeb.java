@@ -1,16 +1,11 @@
 package com.reflexit.magiccards.core.sync;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -146,36 +141,6 @@ public class UpdateCardsFromWeb {
 			monitor.worked(5);
 			monitor.done();
 		}
-	}
-
-	public static BufferedReader openUrlReader(URL url) throws IOException {
-		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
-		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, FileUtils.CHARSET_UTF_8));
-		return st;
-	}
-
-	public static InputStream openUrl(URL url) throws IOException {
-		IOException rt = null;
-		for (int i = 0; i < 3; i++) {
-			// 3 attempts
-			try {
-				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-				huc.setConnectTimeout(60 * 1000);
-				huc.setReadTimeout(60 * 1000);
-				huc.connect();
-				InputStream openStream = huc.getInputStream();
-				return openStream;
-			} catch (IOException e) {
-				MagicLogger.log("Connection error on url " + url + ": " + e.getMessage() + ". Attempt " + i);
-				rt = e;
-				continue;
-			}
-		}
-		if (rt != null) {
-			MagicLogger.log("Connection error on url " + url + ": " + rt.getMessage() + ". Giving up");
-			throw rt;
-		}
-		throw new RuntimeException("Not possible");
 	}
 
 	public static void downloadUpdates(String set, String toFile, Properties options, ICoreProgressMonitor pm)

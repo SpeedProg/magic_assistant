@@ -20,7 +20,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
+import com.reflexit.magiccards.core.sync.WebUtils;
 
 public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	public final String PARTNER_KEY = "MGCASSTNT";
@@ -115,7 +115,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		BufferedReader st = null;
 		try {
 			URL url = createCardUrl(magicCard);
-			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+			InputStream openStream = WebUtils.openUrl(url);
 			st = new BufferedReader(new InputStreamReader(openStream));
 			String xml = FileUtils.readFileAsString(st);
 			float price = parsePrice(xml);

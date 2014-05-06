@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
+import com.reflexit.magiccards.core.sync.WebUtils;
 
 public class FindMagicCardsPrices extends AbstractPriceProvider {
 	String baseURL;
@@ -130,7 +130,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	private boolean testSetUrl(String abbr) {
 		try {
 			URL url = new URL(baseURL.toString().replace("${SetAbbr}", abbr));
-			InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+			InputStream openStream = WebUtils.openUrl(url);
 			BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 			st.readLine();
 			st.readLine();
@@ -149,7 +149,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	public HashMap<String, Float> parse(String setId) throws IOException {
 		HashMap<String, Float> res = new HashMap<String, Float>();
 		URL url = new URL(baseURL.toString().replace("${SetAbbr}", setId));
-		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+		InputStream openStream = WebUtils.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processFile(st, res);
 		st.close();
@@ -159,7 +159,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	private float parseSingleCard(String setAbbr, IMagicCard magicCard) throws IOException {
 		String name = magicCard.getName().replaceAll("\\W", "_");
 		URL url = new URL(cardURL.toString().replace("${SetAbbr}", setAbbr).replace("${CardName}", name));
-		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+		InputStream openStream = WebUtils.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		try {
 			return processCard(st);
@@ -246,7 +246,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	 */
 	private void processSetList(Set<String> sets) throws IOException {
 		URL url = new URL(setURL);
-		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+		InputStream openStream = WebUtils.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		try {
 			String line = "";

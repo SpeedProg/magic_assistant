@@ -12,7 +12,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public abstract class AbstractParseGathererSearch extends GatherHelper {
 	public boolean loadSingleUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
 		try {
-			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
+			BufferedReader st = WebUtils.openUrlReader(url);
 			String html = FileUtils.readFileAsString(st);
 			st.close();
 			boolean res = processFromReader(FileUtils.openStringReader(html), handler);

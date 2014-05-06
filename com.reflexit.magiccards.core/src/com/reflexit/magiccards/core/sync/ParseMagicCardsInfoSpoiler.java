@@ -141,7 +141,7 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 
 	public boolean loadSingleUrl(URL url, ILoadCardHander handler) throws IOException {
 		try {
-			BufferedReader st = UpdateCardsFromWeb.openUrlReader(url);
+			BufferedReader st = WebUtils.openUrlReader(url);
 			String html = FileUtils.readFileAsString(st);
 			st.close();
 			boolean res = processFromReader(FileUtils.openStringReader(html), handler);

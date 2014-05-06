@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.exports.ClassicExportDelegate;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
+import com.reflexit.magiccards.core.sync.WebUtils;
 
 public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	String baseURL;
@@ -144,7 +144,7 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	public HashMap<String, Float> parse(String setId) throws IOException {
 		HashMap<String, Float> res = new HashMap<String, Float>();
 		URL url = new URL(baseURL.toString().replace("SET", setId));
-		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+		InputStream openStream = WebUtils.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processFile(st, res);
 		st.close();
@@ -210,7 +210,7 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	public HashMap<String, String> parseSets() throws IOException {
 		HashMap<String, String> res = new HashMap<String, String>();
 		URL url = new URL(setURL);
-		InputStream openStream = UpdateCardsFromWeb.openUrl(url);
+		InputStream openStream = WebUtils.openUrl(url);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
 		processSetFile(st, res);
 		st.close();

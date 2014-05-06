@@ -1,11 +1,16 @@
 package com.reflexit.magiccards.core.sync;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.reflexit.magiccards.core.FileUtils;
 
 public class GatherHelper extends ParserHtmlHelper {
 	protected static Pattern countPattern = Pattern
@@ -60,5 +65,23 @@ public class GatherHelper extends ParserHtmlHelper {
 			}
 		}
 		return str;
+	}
+
+	public static void saveManaSymbol(File dir, String name) throws MalformedURLException {
+		URL url = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&type=symbol&name=" + name);
+		try {
+			InputStream st = WebUtils.openUrl(url);
+			File f = new File(dir, "Symbol_" + name + "_mana.gif");
+			FileUtils.saveStream(st, f);
+			st.close();
+			if (f.length() == 0) {
+				System.err.println("Error " + f);
+				f.delete();
+			} else
+				System.err.println("Saved " + f);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
