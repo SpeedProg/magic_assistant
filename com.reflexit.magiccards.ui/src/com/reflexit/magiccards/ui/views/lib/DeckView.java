@@ -505,6 +505,7 @@ public class DeckView extends AbstractMyCardsView {
 		viewMenuManager.updateAll(true);
 		// global
 		setGlobalControlHandlers(bars);
+		bars.updateActionBars();
 		getSelectionProvider().setSelectionProviderDelegate(control.getSelectionProvider());
 	}
 
