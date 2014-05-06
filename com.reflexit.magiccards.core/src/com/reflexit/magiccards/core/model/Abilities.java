@@ -78,7 +78,6 @@ public class Abilities {
 	}
 
 	private static final CardTextLocal AB = CardTextLocal.getCardText(Locale.ENGLISH);
-	private static final String notBetweenBracketsRegex = "(?![^\\(]*\\))";
 	private static IAbilityMatcher[] abilities = new IAbilityMatcher[] {
 	/*
 	 * List from: http://wizards.custhelp.com/app/answers/detail/a_id/17/related/1
@@ -428,7 +427,7 @@ public class Abilities {
 					if (isKeyword)
 						a = createKeywordAbility(name);
 					else
-						a = createMinedAbility(name, pattern);
+						a = createMinedAbilityRegex(name, pattern);
 					abs.add(a);
 				} catch (Exception e) {
 					MagicLogger.log("bad abilities record: " + line);
