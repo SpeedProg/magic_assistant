@@ -701,7 +701,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	public int getCount4() {
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
-			return 1;
+			return 0;
 		int c = realCards.getOwnCount();
 		if (c > 4)
 			return 4;
