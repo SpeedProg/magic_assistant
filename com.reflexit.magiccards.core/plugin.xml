@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="deckFormat" name="Deck Format" schema="schema/deckFormat.exsd"/>
+   <extension
+         point="com.reflexit.magiccards.core.deckFormat">
+      <deckFormat
+            extension="xml"
+            id="xml"
+            importDelegate="com.reflexit.magiccards.core.exports.XmlImportDelegate"
+            exportDelegate="com.reflexit.magiccards.core.exports.XmlExportDelegate"
+            label="Magic Assistant XML"
+            xmlFormat="true">
+      </deckFormat>
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.ClassicExportDelegate"
+            extension="txt"
+            id="classic"
+            importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
+            label="Deck Classic Text (1 x Name)">
+      </deckFormat>
+            <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.ClassicNoXExportDelegate"
+            extension="txt"
+            id="classic2"
+            importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
+            label="Deck Classic Text (2 Name)">
+      </deckFormat>
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
+            extension="csv"
+            id="csv"
+            importDelegate="com.reflexit.magiccards.core.exports.CsvImportDelegate"
+            label="Magic Assistant CSV">
+      </deckFormat>
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.TableExportDelegate"
+            id="table"
+            importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
+            label="Magic Assistant Piped Table">
+      </deckFormat>
+      <deckFormat
+            id="mtgo"
+            importDelegate="com.reflexit.magiccards.core.exports.MtgoImportDelegate"
+            label="Magic the Gathering Online CSV"
+            xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            extension="mwCsv"
+            id="mwcsv"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationCsvImportDelegate"
+            label="Magic Workstation CSV"
+            xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.WagicExportDelegate"
+            extension="wth"
+            id="wth"
+            label="Wagic: The Homebrew"
+            xmlFormat="false">
+      </deckFormat>
+     
+     <deckFormat
+           exportDelegate="com.reflexit.magiccards.core.exports.HtmlTableExportDelegate"
+           extension="html"
+           id="htmlWithSymbols"
+           label="Magic Assistant HTML Table "
+           xmlFormat="false">
+     </deckFormat>  
+      <deckFormat
+            extension="mwDeck"
+            id="mwdeck"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationDeckImportDelegate"
+            label="Magic Workstation .mwDeck"
+            xmlFormat="false">      
+      </deckFormat>
+      <deckFormat
+            extension="dec"
+            id="apprentice"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicWorkstationDeckImportDelegate"
+            label="Apprentice .dec"
+            xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            extension="dck"
+            id="sha"
+            importDelegate="com.reflexit.magiccards.core.exports.ShandalarDeckDckImportDelegate"
+            label="Shandalar .dck"
+            xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            extension="dck"
+            id="manadeck"
+            importDelegate="com.reflexit.magiccards.core.exports.ManaDeckDckImportDelegate"
+            label="Mana Deck .dck"
+            xmlFormat="false">
+      </deckFormat>
+       <deckFormat
+            extension="csv"
+            id="mtgstudiocsv"
+            importDelegate="com.reflexit.magiccards.core.exports.MTGStudioCsvImportDelegate"
+            label="MTG Studio CSV"
+            xmlFormat="false">
+      </deckFormat>
+       <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate"
+             extension="html"
+             id="htmlWizards"
+             label="Wizards deck HTML"
+             xmlFormat="true">
+       </deckFormat>
+       <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.ScsvExportDelegate"
+             extension="csv"
+             id="scsv"
+             importDelegate="com.reflexit.magiccards.core.exports.ScsvImportDelegate"
+             label="Magic Assistant CSV Semicolon">
+       </deckFormat>
+   </extension>
+</plugin>
