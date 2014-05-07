@@ -1,0 +1,40 @@
+<cards>
+  <name>Sample Deck</name>
+  <properties/>
+  <list>
+    <mcp>
+      <card>
+        <id>1192</id>
+        <name>Braingeyser</name>
+        <cost>{X}{U}{U}</cost>
+        <type>Sorcery</type>
+        <power></power>
+        <toughness></toughness>
+        <edition>Revised Edition</edition>
+        <rarity>Rare</rarity>
+        <oracleText>Target player draws X cards.</oracleText>
+      </card>
+      <count>1</count>
+      <price>0.0</price>
+      <location>Collections/main.xml</location>
+      <ownership>false</ownership>
+    </mcp>
+    <mcp>
+      <card>
+        <id>107535</id>
+        <name>Helium Squirter</name>
+        <cost>{4}{U}</cost>
+        <type>Creature - Beast Mutant</type>
+        <power>0</power>
+        <toughness>0</toughness>
+        <edition>Dissension</edition>
+        <rarity>Common</rarity>
+        <oracleText>Graft 3 &lt;i&gt;(This creature comes into play with three +1/+1 counters on it. Whenever another creature comes into play, you may move a +1/+1 counter from this creature onto it.)&lt;/i&gt; &lt;br&gt;{1}: Target creature with a +1/+1 counter on it gains flying until end of turn.</oracleText>
+      </card>
+      <count>4</count>
+      <price>0.0</price>
+      <location>Decks/booster pack.xml</location>
+      <ownership>true</ownership>
+    </mcp>
+  </list>
+</cards>

@@ -1,0 +1,104 @@
+Limited Edition Alpha|1E|LEA|August 1993|Core
+Limited Edition Beta|2E|LEB|October 1993|Core
+Unlimited Edition|2U|2ED|December 1993|Core
+Arabian Nights|AN|ARN|December 1993|Expansion
+Antiquities|AQ|ATQ|March 1994|Expansion
+Revised Edition|3E|3ED|April 1994|Core
+Legends|LE|LEG|June 1994|Expansion
+The Dark|DK|DRK|August 1994|Expansion
+Fallen Empires|FE|FEM|November 1994|Expansion
+Fourth Edition|4E|4ED|April 1995|Core
+Homelands|HM|HML|October 1995|Expansion
+Fifth Edition|5E|5ED|March 1997|Core
+Classic Sixth Edition|6E|6ED|April 1999|Core
+Seventh Edition|7E|7ED|April 2001|Core
+Eighth Edition|8ED|8E|July 2003|Core
+Ninth Edition|9ED||July 2005|Core
+Tenth Edition|10E||July 2007|Core
+Chronicles|CH|CHR|July 1995|Reprint
+Beatdown Box Set|BD|BTD|December 2000|Reprint
+Masters Edition|MED||September 2007|Online
+Unhinged|UNH||November 2004|Un_set
+Unglued|UG|UGL|August 1998|Un_set
+Promo set for Gatherer|PPR||October 2006|Online
+Battle Royale Box Set|BR|BRB|November 1998|Reprint
+Portal|PO|POR|June 1997|Starter
+Portal Second Age|P2|P02|June 1998|Starter
+Portal Three Kingdoms|PK|PTK|May 1999|Starter
+Starter 1999|P3|S99|July 1999|Starter
+Starter 2000|P4|S00|July 2000|Starter
+Ice Age|IA|ICE|June 1995|Expansion|Ice Age
+Alliances|AL|ALL|June 1996|Expansion|Ice Age
+Coldsnap|CSP||July 2006|Expansion|Ice Age
+Mirage|MI|MIR|October 1996|Expansion|Mirage
+Visions|VI|VIS|February 1997|Expansion|Mirage
+Weatherlight|WL|WTH|June 1997|Expansion|Mirage
+Tempest|TE|TMP|October 1997|Expansion|Tempest
+Stronghold|ST|STH|March 1998|Expansion|Tempest
+Exodus|EX|EXO|June 1998|Expansion|Tempest
+Urza's Saga|UZ|USG|October 1998|Expansion|Urza
+Urza's Legacy|GU|ULG|February 1999|Expansion|Urza
+Urza's Destiny|CG|UDS|June 1999|Expansion|Urza
+Mercadian Masques|MM|MMQ|October 1999|Expansion|Masques
+Nemesis|NE|NMS|February 2000|Expansion|Masques
+Prophecy|PR|PCY|June 2000|Expansion|Masques
+Invasion|IN|INV|October 2000|Expansion|Invasion
+Planeshift|PS|PLS|February 2001|Expansion|Invasion
+Apocalypse|AP|APC|June 2001|Expansion|Invasion
+Odyssey|OD|ODY|October 2001|Expansion|Odyssey
+Torment|TOR||February 2002|Expansion|Odyssey
+Judgment|JUD||May 2002|Expansion|Odyssey
+Onslaught|ONS||October 2002|Expansion|Onslaught
+Legions|LGN||February 2003|Expansion|Onslaught
+Scourge|SCG||May 2003|Expansion|Onslaught
+Mirrodin|MRD||October 2003|Expansion|Mirrodin 
+Darksteel|DST||February 2004|Expansion|Mirrodin 
+Fifth Dawn|5DN||June 2004|Expansion|Mirrodin 
+Champions of Kamigawa|CHK||October 2004|Expansion|Kamigawa  
+Betrayers of Kamigawa|BOK||February 2005|Expansion|Kamigawa 
+Saviors of Kamigawa|SOK||June 2005|Expansion|Kamigawa 
+Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica 
+Guildpact|GPT||February 2006|Expansion|Ravnica 
+Dissension|DIS||May 2006|Expansion|Ravnica
+Time Spiral|TSP||October 2006|Expansion|Time Spiral
+Time Spiral "Timeshifted"|TSB||October 2006|Expansion|Time Spiral
+Planar Chaos|PLC||February 2007|Expansion|Time Spiral
+Future Sight|FUT||May 2007|Expansion|Time Spiral
+Lorwyn|LRW||October 2007|Expansion|Lorwyn
+Morningtide|MOR||February 2008|Expansion|Lorwyn
+Shadowmoor|SHM||May 2008|Expansion|Shadowmoor
+Eventide|EVE||July 2008|Expansion|Shadowmoor
+Shards of Alara|ALA||October 2008|Expansion|Shards of Alara
+Conflux|CON||February 2009|Expansion|Shards of Alara
+Alara Reborn|ARB||April 2009|Expansion|Shards of Alara
+Magic 2010|M10||July 2009|Core
+Masters Edition II|ME2||September 2008|Online
+Masters Edition III|ME3||September 2009|Online
+Zendikar|ZEN||October 2009|Expansion|Zendikar
+Worldwake|WWK||February 2010|Expansion|Zendikar
+Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar
+Magic 2011|M11||July 2010|Core
+Scars of Mirrodin|SOM||October 2010|Expansion|Scars of Mirrodin
+Mirrodin Besieged|MBS||February 2011|Expansion|Mirrodin Besieged
+New Phyrexia|NPH||May 2011|Expansion|New Phyrexia
+Magic 2012|M12||July 2011|Core|
+Premium Deck Series: Fire and Lightning|PD2||November 2010|Starter|
+Duel Decks: Knights vs. Dragons|DDG||April 2011|Starter|
+Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter|
+Duel Decks: Phyrexia vs. the Coalition|DDE||March 2010|Starter|
+Duel Decks: Divine vs. Demonic|DDC||April 2009|Starter|
+Masters Edition IV|ME4||January 2011|Starter|
+Archenemy|ARC||June 2010|Starter|
+Duel Decks: Garruk vs. Liliana|DDD||October 2009|Starter|
+Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter|
+Planechase|HOP||July 2011|Starter|
+Premium Deck Series: Slivers|H09||November 2009|Starter|
+Duel Decks: Jace vs. Chandra|DD2||November 2008|Starter|
+Magic: The Gathering-Commander|CMD||June 2011|Starter|
+From the Vault: Dragons|DRB||Aug 2011|Starter
+Vanguard|VAN||Aug 1997|Modifiers
+Duel Decks: Ajani vs. Nicol Bolas|DDH||Aug 2011|Starter
+From the Vault: Relics|V10||Aug 2011|Starter|
+From the Vault: Exiled|V09||Aug 2011|Starter|
+Innistrad|ISD||September 2011|Expansion
+From the Vault: Legends|V11||Aug 2011|Starter
