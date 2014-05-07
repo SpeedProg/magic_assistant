@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests Plug-in
+Bundle-SymbolicName: com.reflexit.mtgtournament.core.tests
+Bundle-Version: 1.3.0.qualifier
+Bundle-Activator: com.reflexit.mtgtournament.core.tests.Activator
+Bundle-Vendor: Alena Laskavaia
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit,
+ com.reflexit.mtgtournament.core
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
