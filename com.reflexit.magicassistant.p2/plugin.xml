@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="Check for Software Updates"
+            id="com.reflexit.magicassistant.command.update">
+      </command>
+      <command
+            name="Install new software..."
+            id="com.reflexit.magicassistant.command.install">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.reflexit.magicassistant.command.update"
+            class="com.reflexit.magicassistant.p2.UpdateHandler">
+      </handler>
+      <handler
+            commandId="com.reflexit.magicassistant.command.install"
+            class="com.reflexit.magicassistant.p2.InstallNewSoftwareHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=additions">
+            <command
+                  commandId="com.reflexit.magicassistant.command.update"
+            	  mnemonic="U"
+                  id="com.reflexit.magicassistant.menu.update">
+            </command>
+                        
+      </menuContribution>
+      <!--
+      <menuContribution
+            locationURI="menu:help?after=com.reflexit.magicassistant.menu.update">
+            <command
+                  commandId="com.reflexit.magicassistant.command.install"
+            	  mnemonic="I"
+                  id="com.reflexit.magicassistant.menu.install">
+            </command>
+      </menuContribution>
+      -->
+   </extension>
+      <extension
+         point="org.eclipse.ui.installationPages">
+          <page
+            name="Installed Software"
+            class="org.eclipse.equinox.p2.ui.InstalledSoftwarePage"
+            id="com.reflexit.magicassistant.InstalledSoftwarePage">
+          </page>
+          <page
+            name="Installation History"
+            class="org.eclipse.equinox.p2.ui.RevertProfilePage"
+            id="com.reflexit.magicassistant.RevertProfilePage">
+          </page>
+    </extension>
+</plugin>
