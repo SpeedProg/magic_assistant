@@ -34,7 +34,7 @@ public abstract class AbstractSwtBotTest {
 		bot.resetWorkbench();
 	}
 
-	public void сlickViewToolbarItemByToolTip(String viewName, String tooltip) {
+	public void clickViewToolBarItemByTooltip(String viewName, String tooltip) {
 		SWTBotView viewByTitle = bot.viewByTitle(viewName);
 		viewByTitle.show();
 		viewByTitle.setFocus();
