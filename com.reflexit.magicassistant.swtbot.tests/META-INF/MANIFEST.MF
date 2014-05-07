@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Swt Bot Tests
+Bundle-SymbolicName: com.reflexit.magicassistant.swtbot.tests;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Reflex IT
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.swtbot.go,
+ com.reflexit.magiccards.ui,
+ com.reflexit.magicassistant.ui.tests,
+ com.reflexit.mtgtournament.core.tests,
+ com.reflexit.magiccards.core
