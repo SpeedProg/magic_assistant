@@ -1,0 +1,5 @@
+com.reflexit.magiccards.ui/debug=false
+com.reflexit.magiccards.ui/debug/export=false
+com.reflexit.magiccards.ui/debug/testing=false
+org.eclipse.ui/debug=false
+org.eclipse.ui/trace/graphics=false

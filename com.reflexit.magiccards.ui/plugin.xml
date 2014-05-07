@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="deckPage" name="Deck Page" schema="schema/deckPage.exsd"/>
+
+   <extension
+            point="org.eclipse.ui.editors">
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Magic Preferences"
+            class="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+            id="com.reflexit.magiccards.ui.preferences.MagicPreferencePage">
+      </page>
+      	<page id="com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage"
+  	      	name="Update Magic Database"
+	      	class="com.reflexit.magiccards.ui.preferences.MagicGathererPreferencePage"
+		category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage">
+   	</page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
+             name="View: Magic Database">
+       </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
+             name="View: Library">
+       </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
+             name="View: Deck">
+       </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage"
+             name="View: Collector">
+       </page>
+       
+       <page
+            name="Card Export"
+            class="com.reflexit.magiccards.ui.preferences.ExportersPreferencePage"
+            id="com.reflexit.magiccards.ui.preferences.ExportersPreferencePage"
+            category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+            >
+      </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.EditionsPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.EditionsPreferencePage"
+             name="Card Sets">
+       </page>
+      
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.reflexit.magiccards.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Magic Assistant"
+            id="com.reflexit.magiccards">
+      </category>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.MagicDbView"
+            icon="icons/m24.gif"
+            id="com.reflexit.magiccards.ui.views.MagicDbView"
+            name="MTG Database"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.card.CardDescView"
+            icon="icons/one_card24.png"
+            id="com.reflexit.magiccards.ui.views.card.CardDescView"
+            name="Card Info">
+      </view>
+      <view
+            allowMultiple="true"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.lib.MyCardsView"
+            icon="icons/card_coll24.png"
+            id="com.reflexit.magiccards.ui.views.lib.LibView"
+            name="My Cards"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
+            icon="icons/card_nav24.png"
+            id="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView"
+            name="Card Navigator">
+      </view>
+      <view
+            allowMultiple="true"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.lib.DeckView"
+            icon="icons/hand32.png"
+            id="com.reflexit.magiccards.ui.views.lib.DeckView"
+            name="Deck"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.printings.PrintingsView"
+            icon="icons/m24.gif"
+            id="com.reflexit.magiccards.ui.views.printings.PrintingsView"
+            name="Printings"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.collector.CollectorView"
+            icon="icons/collector24.png"
+            id="com.reflexit.magiccards.ui.views.collector.CollectorView"
+            name="Collector"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.views.instances.InstancesView"
+            icon="icons/hand32.png"
+            id="com.reflexit.magiccards.ui.views.instances.InstancesView"
+            name="Instances"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.reflexit.magiccards.ui.PerspectiveFactoryMagic"
+            fixed="false"
+            icon="icons/m.gif"
+            id="com.reflexit.magiccards.ui.perspective.magic"
+            name="Magic Cards">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.reflexit.magiccards.ui.commands.AddToLibraryHandler"
+            commandId="com.reflexit.magiccards.ui.commands.addToLib">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.AddToActiveDeckHandler"
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.DecreaseCardCountHandler"
+            commandId="com.reflexit.magiccards.ui.commands.decreaseCount">
+      </handler>
+            <handler
+            class="com.reflexit.magiccards.ui.commands.IncreaseCardCountHandler"
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.SendBugReportHandler"
+            commandId="com.reflexit.magiccards.ui.commands.sendBug">
+
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.UpdateDbHandler"
+            commandId="com.reflexit.magiccards.ui.commands.updateMagicDb">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.EditDeckPropertiesHandler"
+            commandId="com.reflexit.magiccards.ui.commands.EditDeckProperties">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.RenameHandler"
+            commandId="org.eclipse.ui.edit.rename">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.UpdateDbDialogHandler"
+            commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.CheckForUpdateDbHandler"
+            commandId="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb">
+      </handler>
+      <handler
+            class="com.reflexit.magiccards.ui.commands.ShowFilterHandler"
+            commandId="com.reflexit.magiccards.ui.commands.filterCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.addToLib"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="INSERT">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.addToDeck"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+D">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="-">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="NUMPAD_SUBTRACT">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="=">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="NUMPAD_ADD">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.filterCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.reflexit.magiccards.ui.commands.category"
+            name="Magic Assistant">
+      </category>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.addToLib"
+            name="Add to Default Collection">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.addToDeck"
+            name="Copy to Active Collection">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.decreaseCount"
+            name="Decrease">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.increaseCount"
+            name="Increase">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.sendBug"
+            name="Send Bug or Feature Request">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.updateMagicDb"
+            name="Update Magic Cards Database to Standard">
+      </command>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
+            name="Update Magic Cards Database...">
+      </command>
+      
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb"
+            name="Check for Updates to Magic Cards Database...">
+      </command>
+      
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.EditDeckProperties"
+            name="Edit Properties...">
+      </command>
+      <category
+            id="com.reflexit.magiccards.ui.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.filterCommand"
+            name="Show Filter">
+         <commandParameter
+               id="com.reflexit.magiccards.ui.viewId"
+               name="viewId"
+               optional="true"
+               typeId="string"
+               values="org.eclipse.ui.internal.registry.ViewParameterValues">
+         </commandParameter>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="com.reflexit.magiccards.ui.context"
+            name="Magic Assistant windows"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=additions">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb"
+                  mnemonic="M"
+                  id="com.reflexit.magiccards.ui.menus.checkForUpdateMagicDb">
+            </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:file?after=additions">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
+                  mnemonic="U"
+                  id="com.reflexit.magiccards.ui.menus.updateMagicDbDialog">
+            </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:help?after=additions">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.sendBug"
+                  mnemonic="S"
+                  id="com.reflexit.magiccards.ui.menus.sendBug">
+            </command>
+      </menuContribution>
+
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
+        <command
+              commandId="org.eclipse.ui.edit.delete"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+     </menuContribution>     
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.DeckView">
+        <command
+              commandId="org.eclipse.ui.edit.delete"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.increaseCount"
+              label="Increase"
+              >
+        </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+              label="Decrease"
+              >
+        </command>
+     </menuContribution>
+     <menuContribution
+            locationURI="menu:com.reflexit.magiccards.ui.views.MagicDbView">
+            <command
+                  commandId="com.reflexit.magiccards.ui.commands.updateMagicDbDialog"
+                  mnemonic="U"
+                  id="com.reflexit.magiccards.ui.menus.updateMagicDbDialog">
+            </command>
+      </menuContribution>
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.MagicDbView">
+        <command  commandId="com.reflexit.magiccards.ui.commands.addToLib" /> 
+        <command  commandId="com.reflexit.magiccards.ui.commands.increaseCount" label="Add to Active Collection"/>
+       
+     </menuContribution>
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
+        <command  commandId="com.reflexit.magiccards.ui.commands.addToDeck" label="Copy to Active Collection"/>    
+     </menuContribution>
+     
+     <menuContribution
+           locationURI="popup:com.reflexit.magiccards.ui.views.nav.CardsNavigatorView">
+                   <command
+              commandId="org.eclipse.ui.edit.cut"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+                <command
+              commandId="org.eclipse.ui.edit.paste"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+        <command
+              commandId="org.eclipse.ui.edit.delete"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+        <command
+              commandId="org.eclipse.ui.edit.rename"
+              mode="FORCE_TEXT"
+              style="push">
+        </command>
+        <command
+              commandId="com.reflexit.magiccards.ui.commands.EditDeckProperties"
+              style="push">
+        </command>
+     </menuContribution>
+     <!--
+     <menuContribution
+           locationURI="menu:window?after=additions">
+
+           <command
+                 commandId="com.reflexit.magiccards.ui.commands.filterCommand"
+                 id="com.reflexit.magiccards.ui.menus.filterCommand"
+                 mnemonic="S">
+           </command>
+       
+     </menuContribution>
+     -->
+  </extension>
+  <extension
+        point="org.eclipse.ui.newWizards">
+     <category
+           id="com.reflexit.magiccards.ui"
+           name="Magic">
+     </category>
+     <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           hasPages="true"
+           icon="icons/obj16/ideck16.png"
+           id="com.reflexit.magiccards.ui.wizards.NewDeckWizard"
+           name="Deck">
+     </wizard>
+          <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           icon="icons/obj16/ilib16.png"
+           id="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
+           name="Card Collection">
+     </wizard>
+               <wizard
+           category="com.reflexit.magiccards.ui"
+           class="com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard"
+           finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+           icon="icons/obj16/folder-lib.png"
+           id="com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard"
+           name="Container">
+     </wizard>
+               <wizard
+                     canFinishEarly="true"
+                     category="com.reflexit.magiccards.ui"
+                     class="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
+                     finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+                     hasPages="true"
+                     icon="icons/obj16/m16.png"
+                     id="com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard"
+                     name="Booster Pack from Set">
+               </wizard>
+               <wizard
+                     canFinishEarly="true"
+                     category="com.reflexit.magiccards.ui"
+                     class="com.reflexit.magiccards.ui.wizards.BoosterGeneratorCollectionWizard"
+                     finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
+                     hasPages="true"
+                     icon="icons/obj16/m16.png"
+                     id="com.reflexit.magiccards.ui.wizards.BoosterGeneratorCollectionWizard"
+                     name="Booster Pack from Collection">
+               </wizard>
+  </extension>
+  <extension
+        point="org.eclipse.ui.exportWizards">
+     <wizard
+           class="com.reflexit.magiccards.ui.exportWizards.DeckExportWizard"
+           id="com.reflexit.magiccards.ui.exportWizards.DeckExportWizard"
+           name="Export Collection">
+     </wizard>
+  </extension>
+  <extension
+        point="org.eclipse.ui.importWizards">
+     <wizard
+           class="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
+           id="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
+           name="Import Collection">
+     </wizard>
+  </extension>
+  <extension
+        point="com.reflexit.magiccards.ui.deckPage">
+        <page
+        name="Info"
+        id="info"
+        class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"
+        />
+         <!--       <page
+        name="Legality"
+        id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
+        class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage"
+        /> -->
+                        <page
+        name="Legality"
+        id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage2"
+        class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage2"
+        />
+                <page
+                      class="com.reflexit.magiccards.ui.views.analyzers.ExportDeckPage"
+                      id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
+                      name="Export">
+                </page>
+  </extension>
+
+<extension point="org.eclipse.ui.themes">
+	<themeElementCategory
+		id="com.reflexit.magiccards.ui.preferences.themeElementCategory" label="Magic Assistant">
+		<description>
+			Magic Assistant fonts and colors
+		</description>
+	</themeElementCategory>
+
+	<colorDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.color" label="Cards List Text Color"
+		value="COLOR_BLACK">
+		<description>
+			Color of text shown in Magic Assistant tables and trees
+        </description>
+	</colorDefinition>
+	
+	<colorDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.vcard.bgcolor" label="Virtual Card Background Color"
+		value="COLOR_WIDGET_LIGHT_SHADOW">
+		<description>
+			Background color for rows of virtual cards in Magic Assistant tables and trees
+        </description>
+	</colorDefinition>
+	
+   <colorDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.ocard.bgcolor" label="Own Card Background Color"
+		value="COLOR_LIST_BACKGROUND">
+		<description>
+			Background color for rows of own cards in Magic Assistant tables and trees
+        </description>
+	</colorDefinition>
+
+	<fontDefinition
+		categoryId="com.reflexit.magiccards.ui.preferences.themeElementCategory"
+		id="com.reflexit.magiccards.ui.preferences.font" label="Cards List Font"
+		value="Arial-12">
+		<description>
+			Font of text shown in Magic Assistant tables and trees
+        </description>
+	</fontDefinition>
+
+</extension>
+
+</plugin>
