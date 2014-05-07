@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="Eclipse RCP Indigo" sequenceNumber="13">
+<locations>
+<location path="${eclipse_home}" type="Profile"/>
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.pde.source.feature.group" version="3.7.0.v20110504-0800-7b7qFVpFEx2XnmYtj_9RfO7"/>
+<unit id="org.eclipse.birt.feature.group" version="3.7.0.v20110603-BDF9E7AGTzuHfngz-8A08WvWDv8v"/>
+<unit id="org.eclipse.rcp.source.feature.group" version="3.7.0.v20110216-9DB5Fm1FpBGy_AaVz-mFamgY"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110606-0949"/>
+<repository location="http://download.eclipse.org/releases/indigo"/>
+</location>
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.platform.feature.group" version="3.7.0.v20110530-9gF7UHNFFt4cwE-pkZDJ7oz-mj4OSEIlu9SEv0f"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.5.0.v20110530-7P7NFUFFLWUl76mart"/>
+<unit id="org.eclipse.rcp.sdk.id" version="3.7.0.I20110613-1736"/>
+<unit id="org.eclipse.pde.junit.runtime.addon.feature.group" version="1.0.100.v20110331-7C7GDHAkHgHr9v0L4DF585202816"/>
+<unit id="org.eclipse.pde.junit.runtime.standalone.feature.group" version="1.0.100.v20110331-7a7xFBXFBBqyiGSmRx5FM9E52028"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
+</location>
+<location path="${eclipse_home}/dropins/delta/eclipse" type="Directory"/>
+</locations>
+</target>

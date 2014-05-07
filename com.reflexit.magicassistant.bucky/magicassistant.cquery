@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="magicassistant.rmap">
+    <cq:rootRequest name="com.reflexit.magiccards.feature.rcp" componentType="eclipse.feature"/>
+    <cq:advisorNode namePattern="com\.reflexit\.*" useTargetPlatform="false"/>
+    <cq:advisorNode namePattern=".*solaris.*" skipComponent="true"/>
+    <cq:advisorNode namePattern=".*hpux.*" skipComponent="true"/>
+    <cq:advisorNode namePattern=".*qnx.*" skipComponent="true"/>
+</cq:componentQuery>
