@@ -1,0 +1,23 @@
+<contexts>
+   <context id="viewcard">
+      <description>Card Info is a view that shows information about a card. There is a link to the help content below.</description>
+      <topic href="html/reference/views.html#viewcard" label="Card Info view Reference" />
+   </context>
+   <context id="viewcardnav">
+      <description>Card Navigator is a view that shows list of your deck and collections and allow to create new decks/collections/folders. There is a link to the help content below.</description>
+      <topic href="html/reference/views.html#viewcardnav" label="Card Navigator view Reference" />
+   </context>
+      <context id="viewprintings">
+      <description>Printings is a view that shows selected card available in diffrent sets (in own collection or in magic database). There is a link to the help content below.</description>
+      <topic href="html/reference/views.html#viewprintings" label="Printings view Reference" />
+   </context>
+   <context id="viewmagicdb">
+   		<topic label="MTG Database" href="html/reference/views.html#viewmagicdb" />
+   </context>
+      <context id="viewcol">
+   	<topic label="My Cards" href="html/reference/views.html#viewcol" />
+   	</context>
+   	<context id="viewdeck">
+	<topic label="Deck" href="html/reference/views.html#viewdeck" />
+    </context> 
+</contexts>

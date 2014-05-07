@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Browsing Cards</title>
+</head>
+
+<body>
+<h1>Browsing Cards</h1>
+To browse Magic cards you would need <a href="../reference/views.html#viewcard">Card Info</a> and 
+<a href="../reference/views.html#viewmagicdb">MTG Database</a> views.
+<p/>
+MTG Database View shows all available cards store in local database. By default database will be created
+from the software but then it is up to you to keep it up to date, by performing cards update.
+<p/>
+Card details and scanned card picture are shown in the <a href="../reference/views.html#viewcard">Card Info</a> view.
+It shows card image if available (downloads it from internet), and also shows card name, description and type below the image. 
+Click on the card in any of the tables to see card info in this view. See more details in <a href="../reference/views.html#viewcard">Card Info View</a> 
+reference.
+
+<h2>Sorting</h2>
+You can sort by any column by clicking on the column header in the views that display card tables.
+If you click again sorting order is reversed. You can also see more columns, control is available from "Preferences..."
+menu of the view menu <img src="../screenshots/icons/view_menu.gif" alt="triangle button"/>.
+
+<h2>Filtering</h2>
+You can filter cards in the view by opening filter. Filter action is on view toolbar and also available from the view menu.
+You can select one of more criteria from the filters.
+<p/>
+Currently filter dialog has the following pages: Basic Filter, Sets Filter and Location filter (only for My Cards view).
+ 
+<p/>
+Items that belong to the same group (such as Color) would be selected using logical OR. 
+Items that belong to different groups would be selected using logical AND.
+<p/>
+For example and you select colour Blue and White and Type Creature and Enchantment, 
+you will get all creatures and all enchantments that are Blue or White (including multicolors).
+<p/>
+See details in 
+<a href="../reference/filter_dialog.html">Filter Dialog</a> reference.
+
+You can also filter cards by name, type and colour using quick filter - the bar on top of card tables (since 1.2).
+
+<h2>Grouping</h2>
+Grouping is also available from the action bar of view menu, there is few fields and field combination you can group by.
+For example one of the grouping for Magic DB view is "Core/Block/Set/Rarity".
+
+<h2>Search</h2>
+You can bring up search control using Ctrl-F key or using view menu "Find...".
+It allows you to find a card in the view by name (or part of name). 
+Found card will be automatically selected. 
+<br/>
+You can also type first letter of each word in a card name as uppercase, which is called camel case completion,
+for example if you type "ESMB" it should match with "Endrek Sahr, Master Breeder". 
+<p/>
+See details in 
+<a href="../reference/search_bar.html">Search Bar</a> reference.
+
+<h2>Other Actions</h2>
+Some other actions available from main menu, context menu (right click) or from view menu (triangle button in the view header  <img src="../screenshots/icons/view_menu.gif" alt="triangle button"/>).
+See also <a href="../reference/views.html#viewmagicdb">MTG Database View</a> reference.
+<p/>
+You can changes layout of your views but dragging them around by the header. If you get lost you can reset to original layout using 
+menu "Window-&gt;Reset Perspective..."
+<p/>
+<img src="../screenshots/views/mtg_database.png" alt="MTG Database"/>.
+</body>
+</html>

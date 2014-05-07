@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Preferences</title>
+</head>
+
+<body>
+<h1><a name="pref"/>Preferences</h1>
+Application preferences available from main menu-&gt;Window-&gt;Preferences.
+It contains the following pages:
+<ul>
+<li>General
+  <ul>
+  <li>Appearance - allow to change colors and font for some part</li>
+  <li>Network Connections - allow to set proxy configuration</li>
+  <li><a href="http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.platform.doc.user/concepts/accessibility/keyboardshortcuts.htm">Keys</a> - define key shortcuts for commands</li>
+  </ul>
+</li>
+<li>Help - allow to specify which tool to use to display help</li>
+<li>Magic Preferences - Common Preferences
+  <ul>
+  <li>MTG Database View Preferences - Preference page for <a href="views.html#viewmagicdb">Magic Database</a> view, see <a href="#columnpref">Column Layout Preference Page</a>.</li>
+  <li>My Cards View Preferences - Preference page for <a href="views.html#viewcol">Collection</a> view, see <a href="#columnpref">Column Layout Preference Page</a>.</li>
+  <li>Deck View Preferences - Preference page for a <a href="views.html#viewdeck">Deck</a> view, see <a href="#columnpref">Column Layout Preference Page</a>.</li>
+  <li><a href="#update">Update Magic Database</a></li>
+  </ul>
+</li>
+</ul>
+
+<h2><a name="commonpref"/>Common Preference Page</h2>
+<p>
+<img src="../screenshots/preferences/magic_prefs.png" alt="common preferences"/>
+</p>
+This pages control some general aspects of card organiser.
+<li> Enable image caching - this checkbox controls either or not to cache images from the net on the local harddrive (they will be stored in workspace).
+<li> Enable loading graphics from the net - this controls if card images and set symbols will be loaded from the net. To work offline 
+or to preserve traffic you may want to disable this. 
+You won't see art of the cards in this case (unless they were cached previously), 
+but you will still see card text, type and other parameters in the cards view.
+
+<h2><a name="columnpref"/>Column Layout Preference Page</h2>
+This preference allow to change order and visibility of columns in views.
+<p/>
+To change order select a column and use Up or Down buttons. <br/>
+To change visible
+check or uncheck the column (it is visible when checked).
+<p/>
+You also also do the same from the view itself: <br/> 
+To change order drag and drop columns by their header. <br/>
+To hide column grab right border of the header and move it until 
+it meets right border. <br>
+To unhide the column do opposite (if column is hiding between two other columns cursor would become double line instead of single line).
+<p/>
+See also <a href="views.html#columns">list of columns</a>.
+<h2><a name="update"/>Update Magic Database</h2>
+This pages allows to update your local database from gatherer web site.
+See <a href="../tasks/updatingdb.html">Updating Database</a>. 
+</body>
+</html>

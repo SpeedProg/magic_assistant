@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>Views</title>
+</head>
+
+<body>
+	<h1>Views</h1>
+	<h2>
+		<a name="viewmagicdb">MTG Database View</a>
+	</h2>
+	"MTG Database" view show all available cards. By default local database
+	of cards contains only latest print of a card with the same name.
+	Default database contains sets only up to the last public set that was
+	released prior to the software release. You can update local database
+	with specific set or with "Standard" format sets. See
+	<a href="preferences.html#update">Update Magic Database</a>.
+	<p />
+	MTG Database View specific context menu actions:
+	<ul>
+		<li>Filter... - opens a <a href="filter_dialog.html">Filter
+				Dialog</a></li>
+		<li>Copy - copy card to clipboard</li>
+		<li>Add to Active Deck/Collection (hotkey + or =) - menu to move
+			card to active collection (or deck). Active collection is the
+			collection that was active last time</li>
+		<li>Add to - add card to selected deck/collection. Collection
+			must be open to show up in the menu.</li>
+		<li>Show Other Sets - for selected card show if this is printed
+			in other sets, opens the <a href="#viewprintings">Printings</a> view
+		</li>
+	</ul>
+	<p />
+	<p>
+		<img src="../screenshots/views/mtg_database.png"
+			alt="mtg database view image" />
+	</p>
+
+	<h3>
+		<a name="viewcomp">Cards view Components</a>
+	</h3>
+	<ul>
+		<li>Cards Table - see <a href="#cardstable">Cards Table</a>
+			reference.
+		</li>
+		<li>Status Bar - shows information about current card table.</li>
+		<li>Search Bar (Optional) - see <a href="search_bar.html#search">Search</a>.
+		</li>
+		<li>Tool Bar
+			<ul>
+				<li><img
+					src="../../../com.reflexit.magiccards.ui/icons/clcl16/filter.gif" />
+					(Open Filter) - opens a <a href="filter_dialog.html">Filter
+						dialog</a>.</li>
+				<li><a name="viewmenu"></a><img
+					src="../screenshots/icons/view_menu.gif" /> (View Menu)
+					<ul>
+						<li>Filter... - opens a <a href="filter_dialog.html">Filter
+								Dialog</a></li>
+						<li>"Group By" menu
+							<ul>
+								<li>None - no grouping</li>
+								<li>Cost - to group cards by converted mana cost</li>
+								<li>Color - to group cards by color name</li>
+								<li>Type - to group cards by type</li>
+							</ul>
+						</li>
+						<li>"Preferences..." - opens this view <a
+							href="preferences.html#columnpref">preferences</a>.
+						</li>
+						<li>"Find..." - opens a <a href="search_bar.html#search">search</a>
+							bar.
+						</li>
+						<li>"Sort By" - sorts by specific column</li>
+						<li>"Load Seller's prices" - loads prices of selected cards
+							from internet, to see them you need to enable Seller Price column
+							from preferences.</li>
+					</ul></li>
+			</ul>
+		</li>
+	</ul>
+
+
+	<h3>
+		<a name="cardstable">Cards Table</a>
+	</h3>
+	Cards table is a table (or table tree) that show cards for current
+	view. It provides the following actions:
+	<br />
+	<li>Select a row - show card description in <a href="#viewcard">Card
+			Info</a> view.
+	</li>
+	<li>Hover over a cell - show a tooltip - full text of the cell if
+		cell is to small to show it (ex. Description column).</li>
+	<li>Click on column header - sort by column, click again on the
+		same column header to change direction of a sort</li>
+	<li>Click inside a cell - bring up cell editor (if applicable, ex.
+		Count column)</li>
+	<p />
+	This is a list of all possible columns:
+	<br />
+	<a name="columns" />
+	<ul>
+		<li>Name - name of the card</li>
+		<li>Id - id of the card (gatherer id)</li>
+		<li>Cost - cost images and converted cast cost (sorts by CCC)</li>
+		<li>Type - type of card</li>
+		<li>P - power for creatures</li>
+		<li>T - toughness for creatures and for planeswalkers</li>
+		<li>Rarity - card rarity</li>
+		<li>Set - card set</li>
+		<li>Oracle text - text of card (oracle variant)</li>
+		<li>Color - card color determined by casting cost</li>
+		<li>Color type - mono, multi or hybrid</li>
+		<li>Seller Price - price of single card from selected MTG seller</li>
+	</ul>
+	<p />
+	These only available in Deck and My Cards view:
+	<ul>
+		<li>Count - Card count</li>
+		<li>Location - Card location: Deck or Collection path</li>
+		<li>Comment - card comment</li>
+		<li>Price - personal price per card</li>
+	</ul>
+
+
+	<h2>
+		<a name="viewcol" />My Cards View
+	</h2>
+	My Cards View shows cards from all your decks or collections (or from
+	selected ones). To control which collections are shown you can use
+	<a href="filter_dialog.html#filterloc">Location</a> page of the view's
+	Filter. For the list of view components (menus, card table, status bar)
+	see
+	<a href="#viewcomp">MTG Database view</a>.
+	<p />
+	You can open "My Cards" view by double-clicking on one of the
+	collections or containers from
+	<a href="#viewcardnav">Card Navigator</a> view.
+	<p />
+	Context menu actions:
+	<ul>
+		<li>Filter... - opens a <a href="filter_dialog.html">Filter
+				Dialog</a></li>
+		<li>Delete - delete a cards pile (one row which usually groups
+			cards with the same name)</li>
+		<li>Copy - copy card to clipboard</li>
+		<li>Paste - paste card from clipboard</li>
+		<li>Move to - menu to move card to selected collection/deck.
+			Collection must be opened to show up in this menu.</li>
+		<li>Split pile... - split cards in pile (cards with the same
+			name) into 2 piles (opens a dialog that allow to select number of
+			cards in each)</li>
+		<li>Edit Card... - edit card properties, note: card count can be
+			edited right in the cell</li>
+	</ul>
+	<h2>
+		<a name="viewcollector" />Collector
+	</h2>
+	Collector view is oriented to people who collecting magic cards and
+	shows overall completion of collection for each set and what cards are
+	missing. Collector view has same context menu actions as My Cards view.
+	It has different grouping options oriented on set and languages.
+
+	<h2>
+		<a name="viewdeck" />Deck View
+	</h2>
+	Deck view shows cards from a specific deck. To open a Deck view
+	double-click on a deck from
+	<a href="#viewcardnav">Card Navigator</a> view. To close a Deck view
+	click on "X" icon near the view header.
+	<p />
+	For the list of view components (menus, card table, status bar) see
+	<a href="#viewcomp">MTG Database view</a>.
+	<p />
+	Context menu actions:
+	<ul>
+		<li>Filter... - opens a <a href="filter_dialog.html">Filter
+				Dialog</a></li>
+		<li>Delete - delete a card pile</li>
+		<li>Increase (hotkey + or =) - increase count of the cards for
+			selected card piles</li>
+		<li>Decrease (hotkey -) - decrease count of the cards for
+			selected card piles</li>
+		<li>Copy - copy card to clipboard</li>
+		<li>Paste - paste card from clipboard</li>
+		<li>Move to - menu to move card to selected collection/deck.
+			Collection must be opened to show up in this menu.</li>
+		<li>Split pile... - split cards in pile (cards with the same
+			name) into 2 piles</li>
+		<li>Edit Card... - edit card properties, note: card count can be
+			edited right in the cell</li>
+	</ul>
+	<p />
+	You can drag cards from and to Deck view. Dragging a card from a Deck
+	view to another deck or collection will move the card. Dragging a card
+	from MTG Database view to a Deck view will add 1 card to the deck.
+	<p />
+	You can change number of cards of the same name by editing Count cell
+	or edit multiple cards by selecting them and using "Edit..." from
+	context menu.
+	<p />
+	Deck view also has Mana Curve tab - to show mana curve, Card Types type
+	- to show chart of type distribution and types info, Colors - to show
+	chart of colors distribution for spells, and Info tab where you can
+	edit deck description.
+
+	<p />
+	To try what hands you can get with this deck you can run command
+	"Emulate Draw" from the view menu (triangle icon).
+
+	<h2>
+		<a name="viewcard" />Card Info View
+	</h2>
+	Card Info view shows details of the card selected in one of the cards
+	views (MTG Database, My Cards or Deck). It loads a card image from
+	"gatherer" site, and caches it in the workspace.
+	<p />
+	You can turn off card caching from
+	<a href="preferences.html">Preferences</a> in the Magic Preferences
+	page. If you need to use proxy you can set it up proxy settings from
+	Preferences-&gt;General-&gt;Network Connections.
+	<p />
+	If image is not loaded or image quality is not acceptable card
+	information is duplicated as a text below the image.
+	<p />
+	To load card information into Card Info view select a card (single
+	click) from any other views that shows cards list.
+
+	<h2>
+		<a name="viewcardnav" />Card Navigator View
+	</h2>
+	Card navigator allows you to create a structure to organise your cards.
+	You can create arbitrary structures to organise you collections and
+	decks.
+	<p />
+	To add new elements in the structure you can use view context menu
+	(right click) or main File menu, see details in
+	<a href="workbench.html#new">New Menu</a>.
+	<p />
+	To delete an element use context menu "Delete". Select an element,
+	right-click on it and select menu item "Delete".
+	<p />
+	To rename an element use context menu "Rename". Select an element,
+	right-click on it and select menu item "Rename".
+	<p />
+	You can also Export and Import deck/collections from this view.
+
+	<h2>
+		<a name="viewprintings" />Printings View
+	</h2>
+
+	Printings view shows all sets in which selected card was
+	printed (which is known to local database), for example land such as
+	Island would be listed at least four times for each core set in this
+	view. Card in other languages won't be listed by default, until you extend database with
+	printings in a specific language.
+	<p />
+	<p>
+		<img src="../screenshots/views/printings.png"
+			alt="Printings view image" />
+	</p>
+		<p>The globe looking button is "Update printings from the web", it
+		will synchronize local database copy with gatherer database for
+		selected card.</p>
+
+	<h2>
+		<a name="viewinstances" />Instances View
+	</h2>
+	Shows instances of selected card available in
+	your collections real or virtual (columns are "Set", "Ownership", "Count", 
+	"Location", "Special", "Comment" and "For Trade Count"). Columns can be dragged around and resized. 
+	You can drag cards from this view to deck/collection.
+	It will move a card pile to another collection, unless you "copy" drag (which is usually
+	ctrl+drag). Note that copying real cards is protected operation and not permitted unless you override it in setting.
+	<p>
+		<img src="../screenshots/views/instances.png"
+			alt="Printings view image" />
+	</p>
+	To open Printings view for the same card press "M" looking button.
+
+
+</body>
+</html>
