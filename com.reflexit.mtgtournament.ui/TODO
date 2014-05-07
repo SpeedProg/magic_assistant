@@ -1,0 +1,13 @@
+* Tournament Management
+** Rename
+** Delete on DEL
+** New Wizard
+* Print
+** Tournament Standings
+** Players Standings
+* Undo
+* Round flow
+** Context menu
+** Action column - icon?
+** Multi-edit for rounds
+** Prompt to close round with unfinished score

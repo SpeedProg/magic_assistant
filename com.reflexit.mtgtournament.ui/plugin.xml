@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Magic Assistant"
+            id="com.reflexit.magiccards">
+      </category>
+      <view
+            name="Tournament Navigator"
+            icon="icons/tour_nav_16.png"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView"
+            id="com.reflexit.mtgtournament.ui.tour.views.TNavigatorView">
+      </view>
+      <view
+            allowMultiple="true"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
+            icon="icons/tour.png"
+            id="com.reflexit.mtgtournament.ui.tour.views.TournamentView"
+            name="Tournament"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.tour.views.PlayersView"
+            icon="icons/People.png"
+            id="com.reflexit.mtgtournament.ui.tour.views.PlayersView"
+            name="Players"
+            restorable="true">
+      </view>
+      <view
+            category="com.reflexit.magiccards"
+            class="com.reflexit.mtgtournament.ui.views.TimerView"
+            icon="icons/launch_profile.gif"
+            id="com.reflexit.mtgtournament.ui.views.TimerView"
+            name="Timer"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.reflexit.mtgtournament.ui.tour.PerspectiveFactoryTournament"
+            fixed="false"
+            icon="icons/tour_icon_16.png"
+            id="com.reflexit.mtgtournament.ui.perspective.tournament"
+            name="MTG Tournament">
+      </perspective>
+   </extension>
+   <extension
+         id="tour"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            icon="icons/tour.png"
+            thread="main"
+            visible="true">
+         <run
+               class="com.reflexit.mtgtournament.ui.app.TournamentOrganizerApplication">
+         </run>
+      </application>
+   </extension>
+</plugin>
