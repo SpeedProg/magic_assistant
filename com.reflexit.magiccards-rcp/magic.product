@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Magic Assistant" uid="com.reflexit.magiccards_rcp.product" id="com.reflexit.magiccards_rcp.product" application="com.reflexit.magiccards_rcp.application" version="1.3.0.qualifier" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/com.reflexit.magiccards-rcp/splash.png"/>
+      <text>
+         Magic Assistant
+Version: 1.3.0
+Build id: xxxxxxxx
+
+(c) Copyright 2008-2014 Alena Laskavaia.  All rights reserved.
+Visit http://magicassistant.ca
+
+This product includes software developed by the
+Eclipse Foundation http://www.eclipse.org/
+
+This product includes software developed by the
+Apache Software Foundation http://www.apache.org/
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Dfile.encoding=utf-8
+-Dorg.eclipse.ecf.provider.filetransfer.httpclient.retrieve.connectTimeout=120000
+-Dorg.eclipse.ecf.provider.filetransfer.httpclient.retrieve.readTimeout=120000
+-Dsun.net.client.defaultReadTimeout=60000
+-Dorg.eclipse.ecf.provider.filetransfer.retrieve.readTimeout=30000
+-Dorg.eclipse.ecf.provider.filetransfer.retrieve.retryAttempts=3
+-Dorg.eclipse.ecf.provider.filetransfer.retrieve.closeTimeout=15000</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/com.reflexit.magiccards-rcp/icons/m16.gif" i32="/com.reflexit.magiccards-rcp/icons/m.gif"/>
+
+   <splash
+      location="com.reflexit.magiccards_rcp"
+      startupProgressRect="100,10,420,15"
+      startupMessageRect="100,25,420,20"
+      startupForegroundColor="000000" />
+   <launcher name="magicassistant">
+      <solaris/>
+      <win useIco="false">
+         <bmp
+            winSmallHigh="/com.reflexit.magiccards-rcp/icons/m16.bmp"
+            winSmallLow="/com.reflexit.magiccards-rcp/icons/m16-8.bmp"
+            winMediumHigh="/com.reflexit.magiccards-rcp/icons/m32.bmp"
+            winMediumLow="/com.reflexit.magiccards-rcp/icons/m32-8.bmp"
+            winLargeHigh="/com.reflexit.magiccards-rcp/icons/m48.bmp"
+            winLargeLow="/com.reflexit.magiccards-rcp/icons/m48-8.bmp"/>
+      </win>
+   </launcher>
+
+
+   <vm>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
+   </vm>
+
+   <license>
+        <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        <text>
+   /*******************************************************************************
+ * Copyright (c) 2008-2013 Alena Laskavaia and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html   
+ *******************************************************************************/
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="com.reflexit.magiccards.feature.rcp" version="1.3.0.qualifier"/>
+   </features>
+
+
+</product>

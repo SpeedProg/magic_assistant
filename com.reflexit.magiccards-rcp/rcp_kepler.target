@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+
+<target name="Eclipse RCP Kepler" sequenceNumber="16">
+<locations>
+<location path="C:/Develop/Eclipse/Kepler4.3.2/eclipse" type="Profile"/>
+<location path="C:/Develop/Eclipse/Kepler4.3.2/eclipse/dropins/delta/eclipse" type="Directory"/>
+</locations>
+
+
+</target>
