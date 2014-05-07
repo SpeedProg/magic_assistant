@@ -1,0 +1,174 @@
+ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
+20180|Thunder Dragon|{5}{R}{R}|Creature - Dragon|5|5|Flying<br>When Thunder Dragon enters the battlefield, it deals 3 damage to each creature without flying.|Starter 1999|Rare|0.0||4.065|Dana Knutson|119||Flying<br>When Thunder Dragon enters the battlefield, it deals 3 damage to each creature without flying.|0|
+20183|Dakmor Sorceress|{5}{B}|Creature - Human Wizard|*|4|Dakmor Sorceress's power is equal to the number of Swamps you control.|Starter 1999|Rare|0.0||3.0|Matthew Wilson|74||Dakmor Sorceress's power is equal to the number of Swamps you control.|0|
+20184|Champion Lancer|{4}{W}{W}|Creature - Human Knight|3|3|Prevent all damage that would be dealt to Champion Lancer by creatures.|Starter 1999|Rare|0.0||3.269|Chippy|11||Prevent all damage that would be dealt to Champion Lancer by creatures.|0|
+20191|Devastation|{5}{R}{R}|Sorcery|||Destroy all creatures and lands.|Starter 1999|Rare|0.0||3.844|Steve Luke|94||Destroy all creatures and lands.|0|
+20192|Fire Tempest|{5}{R}{R}|Sorcery|||Fire Tempest deals 6 damage to each creature and each player.|Starter 1999|Rare|0.0||2.9|Mike Dringenberg|97||Fire Tempest deals 6 damage to each creature and each player.|0|
+20194|Last Chance|{R}{R}|Sorcery|||Take an extra turn after this one. At the beginning of that turn's end step, you lose the game.|Starter 1999|Rare|0.0||3.806|Hannibal King|110||Take an extra turn after this one. At the beginning of that turn's end step, you lose the game.|0|
+20196|Goblin Commando|{4}{R}|Creature - Goblin|2|2|When Goblin Commando enters the battlefield, it deals 2 damage to target creature.|Starter 1999|Uncommon|0.0||2.1|Todd Lockwood|100||When Goblin Commando enters the battlefield, it deals 2 damage to target creature.|0|
+20201|Cinder Storm|{6}{R}|Sorcery|||Cinder Storm deals 7 damage to target creature or player.|Starter 1999|Uncommon|0.0||2.667|Mark Tedin|93||Cinder Storm deals 7 damage to target creature or player.|0|
+20203|Jagged Lightning|{3}{R}{R}|Sorcery|||Jagged Lightning deals 3 damage to each of two target creatures.|Starter 1999|Uncommon|0.0||2.75|Michael Weaver|109||Jagged Lightning deals 3 damage to each of two target creatures.|0|
+20209|Scorching Spear|{R}|Sorcery|||Scorching Spear deals 1 damage to target creature or player.|Starter 1999|Common|0.0||0.761|Mike Raabe|116||Scorching Spear deals 1 damage to target creature or player.|0|
+20212|Hulking Goblin|{1}{R}|Creature - Goblin|2|2|Hulking Goblin can't block.|Starter 1999|Common|0.0||2.115|Pete Venters|107||Hulking Goblin can't block.|0|
+20214|Goblin Cavaliers|{2}{R}|Creature - Goblin|3|2||Starter 1999|Common|0.0||2.656|DiTerlizzi|98|||0|
+20216|Goblin Settler|{3}{R}|Creature - Goblin|1|1|When Goblin Settler enters the battlefield, destroy target land.|Starter 1999|Uncommon|0.0||3.35|Carl Critchlow|106||When Goblin Settler enters the battlefield, destroy target land.|0|
+20219|Whirlwind|{2}{G}{G}|Sorcery|||Destroy all creatures with flying.|Starter 1999|Rare|0.0||4.075|John Matson|150||Destroy all creatures with flying.|0|
+20222|Nature's Cloak|{2}{G}|Sorcery|||Green creatures you control gain forestwalk until end of turn.|Starter 1999|Rare|0.0||1.375|Rebecca Guay|135||Green creatures you control gain forestwalk until end of turn.|0|
+20230|Whiptail Wurm|{6}{G}|Creature - Wurm|8|5||Starter 1999|Uncommon|0.0||2.375|Una Fricker|149|||0|
+20359|Grim Tutor|{1}{B}{B}|Sorcery|||Search your library for a card and put that card into your hand, then shuffle your library. You lose 3 life.|Starter 1999|Rare|0.0||3.984|Mark Tedin|79||Search your library for a card and put that card into your hand, then shuffle your library. You lose 3 life.|0|
+20361|Wicked Pact|{1}{B}{B}|Sorcery|||Destroy two target nonblack creatures. You lose 5 life.|Starter 1999|Rare|0.0||3.75|Adam Rex|92||Destroy two target nonblack creatures. You lose 5 life.|0|
+20362|Dread Reaper|{3}{B}{B}{B}|Creature - Horror|6|5|Flying<br>When Dread Reaper enters the battlefield, you lose 5 life.|Starter 1999|Rare|0.0||1.848|Christopher Rush|76||Flying<br>When Dread Reaper enters the battlefield, you lose 5 life.|0|
+20363|Shrieking Specter|{5}{B}|Creature - Specter|2|2|Flying<br>Whenever Shrieking Specter attacks, defending player discards a card.|Starter 1999|Uncommon|0.0||1.091|rk post|89||Flying<br>Whenever Shrieking Specter attacks, defending player discards a card.|0|
+20364|Stream of Acid|{2}{B}{B}|Sorcery|||Destroy target land or nonblack creature.|Starter 1999|Uncommon|0.0||3.176|DiTerlizzi|91||Destroy target land or nonblack creature.|0|
+20367|Dakmor Plague|{3}{B}{B}|Sorcery|||Dakmor Plague deals 3 damage to each creature and each player.|Starter 1999|Uncommon|0.0||3.167|Jeff Miracola|72||Dakmor Plague deals 3 damage to each creature and each player.|0|
+20369|Howling Fury|{2}{B}|Sorcery|||Target creature gets +4/+0 until end of turn.|Starter 1999|Uncommon|0.0||1.125|Mike Dringenberg|82||Target creature gets +4/+0 until end of turn.|0|
+20379|Hand of Death|{2}{B}|Sorcery|||Destroy target nonblack creature.|Starter 1999|Common|0.0||1.75|Heather Hudson|80||Destroy target nonblack creature.|0|
+20380|Dakmor Ghoul|{2}{B}{B}|Creature - Zombie|2|2|When Dakmor Ghoul enters the battlefield, target opponent loses 2 life and you gain 2 life.|Starter 1999|Uncommon|0.0||3.094|Dana Knutson|70||When Dakmor Ghoul enters the battlefield, target opponent loses 2 life and you gain 2 life.|0|
+20384|Bog Raiders|{2}{B}|Creature - Zombie|2|2|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Starter 1999|Common|0.0||2.795|Carl Critchlow|66||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
+20391|Angel of Light|{4}{W}|Creature - Angel|3|3|Flying, vigilance|Starter 1999|Uncommon|0.0||2.227|Todd Lockwood|1||Flying, vigilance|0|
+20394|Royal Trooper|{2}{W}|Creature - Human Soldier|2|2|Whenever Royal Trooper blocks, it gets +2/+2 until end of turn.|Starter 1999|Uncommon|0.0||2.636|Scott M. Fischer|25||Whenever Royal Trooper blocks, it gets +2/+2 until end of turn.|0|
+20395|Devout Monk|{W}|Creature - Human Monk Cleric|1|1|When Devout Monk enters the battlefield, you gain 1 life.|Starter 1999|Common|0.0||1.917|Daniel Gelon|14||When Devout Monk enters the battlefield, you gain 1 life.|0|
+20396|Border Guard|{2}{W}|Creature - Human Soldier|1|4||Starter 1999|Common|0.0||1.788|Kev Walker|9|||0|
+20399|Steadfastness|{1}{W}|Sorcery|||Creatures you control get +0/+3 until end of turn.|Starter 1999|Common|0.0||1.05|Kev Walker|27||Creatures you control get +0/+3 until end of turn.|0|
+21049|Piracy|{U}{U}|Sorcery|||Until end of turn, you may tap lands you don't control for mana. Spend this mana only to cast spells.|Starter 1999|Rare|0.0||3.794|Bradley Williams|45||Until end of turn, you may tap lands you don't control for mana. Spend this mana only to cast spells.|0|
+21051|Willow Elf|{G}|Creature - Elf|1|1||Starter 1999|Common|0.0||1.095|DiTerlizzi|152|||0|
+21056|Royal Falcon|{1}{W}|Creature - Bird|1|1|Flying|Starter 1999|Common|0.0||0.906|Carl Critchlow|24||Flying|0|
+21057|Devoted Hero|{W}|Creature - Elf Soldier|1|2||Starter 1999|Common|0.0||3.06|DiTerlizzi|13|||0|
+21063|False Peace|{W}|Sorcery|||Target player skips all combat phases of his or her next turn.|Starter 1999|Uncommon|0.0||3.222|Zina Saunders|16||Target player skips all combat phases of his or her next turn.|0|
+21064|Righteous Fury|{4}{W}{W}|Sorcery|||Destroy all tapped creatures. You gain 2 life for each creature destroyed this way.|Starter 1999|Rare|0.0||3.333|Edward P. Beard, Jr.|23||Destroy all tapped creatures. You gain 2 life for each creature destroyed this way.|0|
+21076|Wind Sail|{1}{U}|Sorcery|||One or two target creatures gain flying until end of turn.|Starter 1999|Uncommon|0.0||1.654|Matt Stawicki|62||One or two target creatures gain flying until end of turn.|0|
+21019|Abyssal Horror|{4}{B}{B}|Creature - Horror|2|2|Flying<br>When Abyssal Horror enters the battlefield, target player discards two cards.|Starter 1999|Rare|0.0||1.848|rk post|63||Flying<br>When Abyssal Horror enters the battlefield, target player discards two cards.|0|
+21041|Air Elemental|{3}{U}{U}|Creature - Elemental|4|4|Flying|Starter 1999|Uncommon|0.0||3.0|Doug Chaffee|32||Flying|0|
+20221|Alluring Scent|{1}{G}{G}|Sorcery|||All creatures able to block target creature this turn do so.|Starter 1999|Rare|0.0||1.6|Melissa A. Benson|124||All creatures able to block target creature this turn do so.|0|
+20360|Ancient Craving|{3}{B}|Sorcery|||You draw three cards and you lose 3 life.|Starter 1999|Rare|0.0||3.526|Rob Alexander|64||You draw three cards and you lose 3 life.|0|
+20392|Angel of Mercy|{4}{W}|Creature - Angel|3|3|Flying<br>When Angel of Mercy enters the battlefield, you gain 3 life.|Starter 1999|Uncommon|0.0||2.842|Melissa A. Benson|2||Flying<br>When Angel of Mercy enters the battlefield, you gain 3 life.|0|
+20400|Angelic Blessing|{2}{W}|Sorcery|||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|Starter 1999|Common|0.0||1.833|Mark Zug|3||Target creature gets +3/+3 and gains flying until end of turn. <i>(It can't be blocked except by creatures with flying or reach.)</i>|0|
+12825|Archangel|{5}{W}{W}|Creature - Angel|5|5|Flying, vigilance|Starter 1999|Rare|0.0||2.607|Quinton Hoover|4||Flying, vigilance|0|
+21062|Ardent Militia|{4}{W}|Creature - Human Soldier|2|5|Vigilance|Starter 1999|Uncommon|0.0||2.364|Zina Saunders|5||Vigilance|0|
+20387|Armageddon|{3}{W}|Sorcery|||Destroy all lands.|Starter 1999|Rare|0.0||4.556|Rob Alexander|6||Destroy all lands.|0|
+21077|Barbtooth Wurm|{5}{G}|Creature - Wurm|6|4||Starter 1999|Common|0.0||2.426|Rebecca Guay|125|||0|
+21024|Bargain|{2}{W}|Sorcery|||Target opponent draws a card.<br>You gain 7 life.|Starter 1999|Uncommon|0.0||1.543|Phil Foglio|7||Target opponent draws a card.<br>You gain 7 life.|0|
+20388|Blinding Light|{2}{W}|Sorcery|||Tap all nonwhite creatures.|Starter 1999|Rare|0.0||3.3|John Coulthart|8||Tap all nonwhite creatures.|0|
+20376|Bog Imp|{1}{B}|Creature - Imp|1|1|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Starter 1999|Common|0.0||1.5|Christopher Rush|65||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0|
+20374|Bog Wraith|{3}{B}|Creature - Wraith|3|3|Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|Starter 1999|Uncommon|0.0||2.595|Jeff A. Menges|67||Swampwalk <i>(This creature is unblockable as long as defending player controls a Swamp.)</i>|0|
+21022|Breath of Life|{3}{W}|Sorcery|||Return target creature card from your graveyard to the battlefield.|Starter 1999|Uncommon|0.0||4.175|DiTerlizzi|10||Return target creature card from your graveyard to the battlefield.|0|
+20226|Bull Hippo|{3}{G}|Creature - Hippo|3|3|Islandwalk|Starter 1999|Uncommon|0.0||3.0|Daren Bader|126||Islandwalk|0|
+20402|Charging Paladin|{2}{W}|Creature - Human Knight|2|2|Whenever Charging Paladin attacks, it gets +0/+3 until end of turn.|Starter 1999|Uncommon|0.0||2.3|Kev Walker|12||Whenever Charging Paladin attacks, it gets +0/+3 until end of turn.|0|
+20381|Chorus of Woe|{B}|Sorcery|||Creatures you control get +1/+0 until end of turn.|Starter 1999|Common|0.0||2.769|Randy Gallegos|68||Creatures you control get +1/+0 until end of turn.|0|
+20366|Coercion|{2}{B}|Sorcery|||Target opponent reveals his or her hand. You choose a card from it. That player discards that card.|Starter 1999|Uncommon|0.0||2.719|Jeffrey R. Busch|69||Target opponent reveals his or her hand. You choose a card from it. That player discards that card.|0|
+21025|Coral Eel|{1}{U}|Creature - Fish|2|1||Starter 1999|Common|0.0||2.059|Una Fricker|33|||0|
+20382|Counterspell|{U}{U}|Instant|||Counter target spell.|Starter 1999|Uncommon|0.0||4.77|Hannibal King|34||Counter target spell.|0|
+20187|Dakmor Lancer|{4}{B}{B}|Creature - Human Knight|3|3|When Dakmor Lancer enters the battlefield, destroy target nonblack creature.|Starter 1999|Rare|0.0||2.179|Chippy|71||When Dakmor Lancer enters the battlefield, destroy target nonblack creature.|0|
+20383|Dakmor Scorpion|{1}{B}|Creature - Scorpion|2|1||Starter 1999|Common|0.0||2.147|Randy Gallegos|73|||0|
+20368|Dark Offering|{4}{B}{B}|Sorcery|||Destroy target nonblack creature. You gain 3 life.|Starter 1999|Uncommon|0.0||1.167|Edward P. Beard, Jr.|75||Destroy target nonblack creature. You gain 3 life.|0|
+20182|Denizen of the Deep|{6}{U}{U}|Creature - Serpent|11|11|When Denizen of the Deep enters the battlefield, return each other creature you control to its owner's hand.|Starter 1999|Rare|0.0||3.16|Anson Maddocks|35||When Denizen of the Deep enters the battlefield, return each other creature you control to its owner's hand.|0|
+21055|Durkwood Boars|{4}{G}|Creature - Boar|4|4||Starter 1999|Common|0.0||1.684|Mike Kimble|127|||0|
+21021|Eager Cadet|{W}|Creature - Human Soldier|1|1||Starter 1999|Common|0.0||2.115|Scott M. Fischer|15|||0|
+20199|Earth Elemental|{3}{R}{R}|Creature - Elemental|4|5||Starter 1999|Uncommon|0.0||2.524|Dan Frazier|95|||0|
+21044|Exhaustion|{2}{U}|Sorcery|||Creatures and lands target opponent controls don't untap during his or her next untap step.|Starter 1999|Uncommon|0.0||3.6|Paolo Parente|36||Creatures and lands target opponent controls don't untap during his or her next untap step.|0|
+21036|Extinguish|{1}{U}|Instant|||Counter target sorcery spell.|Starter 1999|Common|0.0||1.058|Douglas Shuler|37||Counter target sorcery spell.|0|
+21035|Eye Spy|{U}|Sorcery|||Look at the top card of target player's library. You may put that card into his or her graveyard.|Starter 1999|Uncommon|0.0||2.5|DiTerlizzi|38||Look at the top card of target player's library. You may put that card into his or her graveyard.|0|
+20373|Feral Shadow|{2}{B}|Creature - Nightstalker|2|1|Flying|Starter 1999|Common|0.0||2.033|Colin MacNeil|77||Flying|0|
+20198|Fire Elemental|{3}{R}{R}|Creature - Elemental|5|4||Starter 1999|Uncommon|0.0||2.619|Melissa A. Benson|96|||0|
+20398|Foot Soldiers|{3}{W}|Creature - Human Soldier|2|4||Starter 1999|Common|0.0||1.143|Kev Walker|17|||0|
+21807|Forest||Basic Land - Forest|||G|Starter 1999|Land|0.0||4.5|John Avon|154||G|0|
+21808|Forest||Basic Land - Forest|||G|Starter 1999|Land|0.0||4.667|John Avon|155||G|0|
+21805|Forest||Basic Land - Forest|||G|Starter 1999|Land|0.0||4.633|Quinton Hoover|156||G|0|
+21806|Forest||Basic Land - Forest|||G|Starter 1999|Land|0.0||4.433|Quinton Hoover|157||G|0|
+20386|Gerrard's Wisdom|{2}{W}{W}|Sorcery|||You gain 2 life for each card in your hand.|Starter 1999|Rare|0.0||1.808|Heather Hudson|18||You gain 2 life for each card in your hand.|0|
+21027|Giant Octopus|{3}{U}|Creature - Octopus|3|3||Starter 1999|Common|0.0||1.676|John Matson|39|||0|
+20213|Goblin Chariot|{2}{R}|Creature - Goblin Warrior|2|2|Haste <i>(This creature can attack the turn it comes under your control.)</i>|Starter 1999|Common|0.0||2.857|Pete Venters|99||Haste <i>(This creature can attack the turn it comes under your control.)</i>|0|
+20185|Goblin General|{1}{R}{R}|Creature - Goblin Warrior|1|1|Whenever Goblin General attacks, Goblin creatures you control get +1/+1 until end of turn.|Starter 1999|Uncommon|0.0||2.571|Keith Parkinson|101||Whenever Goblin General attacks, Goblin creatures you control get +1/+1 until end of turn.|0|
+20195|Goblin Glider|{1}{R}|Creature - Goblin|1|1|Flying<br>Goblin Glider can't block.|Starter 1999|Uncommon|0.0||1.808|Pete Venters|102||Flying<br>Goblin Glider can't block.|0|
+21066|Goblin Hero|{2}{R}|Creature - Goblin|2|2||Starter 1999|Rare|0.0||1.435|Pete Venters|103|||0|
+20202|Goblin Lore|{1}{R}|Sorcery|||Draw four cards, then discard three cards at random.|Starter 1999|Uncommon|0.0||2.8|D. Alexander Gregory|104||Draw four cards, then discard three cards at random.|0|
+20211|Goblin Mountaineer|{R}|Creature - Goblin Scout|1|1|Mountainwalk|Starter 1999|Common|0.0||2.364|DiTerlizzi|105||Mountainwalk|0|
+21073|Gorilla Warrior|{2}{G}|Creature - Ape Warrior|3|2||Starter 1999|Common|0.0||2.233|John Matson|128|||0|
+20372|Gravedigger|{3}{B}|Creature - Zombie|2|2|When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|Starter 1999|Uncommon|0.0||3.367|Dermot Power|78||When Gravedigger enters the battlefield, you may return target creature card from your graveyard to your hand.|0|
+20233|Grizzly Bears|{1}{G}|Creature - Bear|2|2||Starter 1999|Common|0.0||3.74|Una Fricker|129|||0|
+20385|Hollow Dogs|{4}{B}|Creature - Zombie Hound|3|3|Whenever Hollow Dogs attacks, it gets +2/+0 until end of turn.|Starter 1999|Common|0.0||2.107|Jeff Miracola|81||Whenever Hollow Dogs attacks, it gets +2/+0 until end of turn.|0|
+20197|Hulking Ogre|{2}{R}|Creature - Ogre|3|3|Hulking Ogre can't block.|Starter 1999|Uncommon|0.0||1.971|Greg & Tim Hildebrandt|108||Hulking Ogre can't block.|0|
+21043|Ingenious Thief|{1}{U}|Creature - Human Rogue|1|1|Flying<br>When Ingenious Thief enters the battlefield, look at target player's hand.|Starter 1999|Common|0.0||2.357|Dan Frazier|40||Flying<br>When Ingenious Thief enters the battlefield, look at target player's hand.|0|
+21793|Island||Basic Land - Island|||U|Starter 1999|Land|0.0||3.5|Douglas Shuler|158||U|0|
+21794|Island||Basic Land - Island|||U|Starter 1999|Land|0.0||4.65|J. W. Frost|159||U|0|
+21800|Island||Basic Land - Island|||U|Starter 1999|Land|0.0||4.735|John Avon|160||U|0|
+21795|Island||Basic Land - Island|||U|Starter 1999|Land|0.0||4.292|Eric Peterson|161||U|0|
+20397|Knight Errant|{1}{W}|Creature - Human Knight|2|2||Starter 1999|Common|0.0||2.357|Dan Frazier|19|||0|
+20205|Lava Axe|{4}{R}|Sorcery|||Lava Axe deals 5 damage to target player.|Starter 1999|Common|0.0||3.219|Brian Snoddy|111||Lava Axe deals 5 damage to target player.|0|
+20225|Lone Wolf|{2}{G}|Creature - Wolf|2|2|You may have Lone Wolf assign its combat damage as though it weren't blocked.|Starter 1999|Common|0.0||3.417|Una Fricker|130||You may have Lone Wolf assign its combat damage as though it weren't blocked.|0|
+20390|Loyal Sentry|{W}|Creature - Human Soldier|1|1|When Loyal Sentry blocks a creature, destroy that creature and Loyal Sentry.|Starter 1999|Rare|0.0||4.143|Ron Spears|20||When Loyal Sentry blocks a creature, destroy that creature and Loyal Sentry.|0|
+21053|Lynx|{1}{G}|Creature - Cat|2|1|Forestwalk|Starter 1999|Uncommon|0.0||2.875|Rebecca Guay|131||Forestwalk|0|
+21038|Man-o'-War|{2}{U}|Creature - Jellyfish|2|2|When Man-o'-War enters the battlefield, return target creature to its owner's hand.|Starter 1999|Uncommon|0.0||4.333|Una Fricker|41||When Man-o'-War enters the battlefield, return target creature to its owner's hand.|0|
+21080|Merfolk of the Pearl Trident|{U}|Creature - Merfolk|1|1||Starter 1999|Common|0.0||1.812|DiTerlizzi|42|||0|
+20378|Mind Rot|{2}{B}|Sorcery|||Target player discards two cards.|Starter 1999|Common|0.0||3.0|Steve Luke|83||Target player discards two cards.|0|
+21065|Mons's Goblin Raiders|{R}|Creature - Goblin|1|1||Starter 1999|Rare|0.0||2.176|Pete Venters|112|||0|
+20234|Monstrous Growth|{1}{G}|Sorcery|||Target creature gets +4/+4 until end of turn.|Starter 1999|Common|0.0||2.444|Una Fricker|132||Target creature gets +4/+4 until end of turn.|0|
+20229|Moon Sprite|{1}{G}|Creature - Faerie|1|1|Flying|Starter 1999|Uncommon|0.0||1.292|Terese Nielsen|133||Flying|0|
+21801|Mountain||Basic Land - Mountain|||R|Starter 1999|Land|0.0||4.625|John Avon|162||R|0|
+21804|Mountain||Basic Land - Mountain|||R|Starter 1999|Land|0.0||4.667|Brian Durfee|163||R|0|
+21803|Mountain||Basic Land - Mountain|||R|Starter 1999|Land|0.0||4.346|John Avon|164||R|0|
+21802|Mountain||Basic Land - Mountain|||R|Starter 1999|Land|0.0||4.533|John Avon|165||R|0|
+20375|Muck Rats|{B}|Creature - Rat|1|1||Starter 1999|Common|0.0||1.528|Una Fricker|84|||0|
+20231|Natural Spring|{3}{G}{G}|Sorcery|||Target player gains 8 life.|Starter 1999|Uncommon|0.0||2.042|Jeffrey R. Busch|134||Target player gains 8 life.|0|
+20356|Nature's Lore|{1}{G}|Sorcery|||Search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|Starter 1999|Common|0.0||3.895|Alan Rabinowitz|136||Search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|0|
+21054|Norwood Archers|{3}{G}|Creature - Elf Archer|3|3|Reach <i>(This creature can block creatures with flying.)</i>|Starter 1999|Common|0.0||2.708|Rebecca Guay|137||Reach <i>(This creature can block creatures with flying.)</i>|0|
+21052|Norwood Ranger|{G}|Creature - Elf Scout|1|2||Starter 1999|Common|0.0||2.595|Ron Spencer|138|||0|
+21070|Ogre Warrior|{3}{R}|Creature - Ogre Warrior|3|3||Starter 1999|Common|0.0||1.324|Jeff Miracola|113|||0|
+21042|Owl Familiar|{1}{U}|Creature - Bird|1|1|Flying<br>When Owl Familiar enters the battlefield, draw a card, then discard a card.|Starter 1999|Uncommon|0.0||2.824|Janine Johnston|43||Flying<br>When Owl Familiar enters the battlefield, draw a card, then discard a card.|0|
+21060|Path of Peace|{3}{W}|Sorcery|||Destroy target creature. Its owner gains 4 life.|Starter 1999|Common|0.0||2.158|Val Mayerik|21||Destroy target creature. Its owner gains 4 life.|0|
+21039|Phantom Warrior|{1}{U}{U}|Creature - Illusion Warrior|2|2|Phantom Warrior is unblockable.|Starter 1999|Rare|0.0||3.447|John Matson|44||Phantom Warrior is unblockable.|0|
+21789|Plains||Basic Land - Plains|||W|Starter 1999|Land|0.0||4.607|Tom Wänerstrand|166||W|0|
+21792|Plains||Basic Land - Plains|||W|Starter 1999|Land|0.0||4.423|Fred Fields|167||W|0|
+21791|Plains||Basic Land - Plains|||W|Starter 1999|Land|0.0||4.536|Douglas Shuler|168||W|0|
+21790|Plains||Basic Land - Plains|||W|Starter 1999|Land|0.0||4.8|Tom Wänerstrand|169||W|0|
+20223|Pride of Lions|{3}{G}{G}|Creature - Cat|4|4|You may have Pride of Lions assign its combat damage as though it weren't blocked.|Starter 1999|Uncommon|0.0||4.091|Carl Critchlow|139||You may have Pride of Lions assign its combat damage as though it weren't blocked.|0|
+21050|Psychic Transfer|{4}{U}|Sorcery|||If the difference between your life total and target player's life total is 5 or less, exchange life totals with that player.|Starter 1999|Rare|0.0||2.0|Dom|46||If the difference between your life total and target player's life total is 5 or less, exchange life totals with that player.|0|
+20210|Raging Goblin|{R}|Creature - Goblin Berserker|1|1|Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Starter 1999|Common|0.0||3.75|Jeff Miracola|114||Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
+20377|Raise Dead|{B}|Sorcery|||Return target creature card from your graveyard to your hand.|Starter 1999|Common|0.0||3.75|Charles Gillespie|85||Return target creature card from your graveyard to your hand.|0|
+21069|Ransack|{3}{U}|Sorcery|||Look at the top five cards of target player's library. Put any number of them on the bottom of that library in any order and the rest on top of the library in any order.|Starter 1999|Rare|0.0||2.955|Ron Spencer|47||Look at the top five cards of target player's library. Put any number of them on the bottom of that library in any order and the rest on top of the library in any order.|0|
+20370|Ravenous Rats|{1}{B}|Creature - Rat|1|1|When Ravenous Rats enters the battlefield, target opponent discards a card.|Starter 1999|Uncommon|0.0||3.844|Carl Critchlow|86||When Ravenous Rats enters the battlefield, target opponent discards a card.|0|
+21046|Relearn|{1}{U}{U}|Sorcery|||Return target instant or sorcery card from your graveyard to your hand.|Starter 1999|Uncommon|0.0||3.294|Zina Saunders|48||Return target instant or sorcery card from your graveyard to your hand.|0|
+20193|Relentless Assault|{2}{R}{R}|Sorcery|||Untap all creatures that attacked this turn. After this main phase, there is an additional combat phase followed by an additional main phase.|Starter 1999|Rare|0.0||3.833|G. Darrow and I. Rabarot|115||Untap all creatures that attacked this turn. After this main phase, there is an additional combat phase followed by an additional main phase.|0|
+21037|Remove Soul|{1}{U}|Instant|||Counter target creature spell.|Starter 1999|Common|0.0||4.059|Mike Dringenberg|49||Counter target creature spell.|0|
+20357|Renewing Touch|{G}|Sorcery|||Shuffle any number of target creature cards from your graveyard into your library.|Starter 1999|Uncommon|0.0||4.0|Rebecca Guay|140||Shuffle any number of target creature cards from your graveyard into your library.|0|
+21023|Righteous Charge|{1}{W}{W}|Sorcery|||Creatures you control get +2/+2 until end of turn.|Starter 1999|Uncommon|0.0||2.962|Jeffrey R. Busch|22||Creatures you control get +2/+2 until end of turn.|0|
+21061|Sacred Nectar|{1}{W}|Sorcery|||You gain 4 life.|Starter 1999|Common|0.0||1.147|Janine Johnston|26||You gain 4 life.|0|
+21093|Scathe Zombies|{2}{B}|Creature - Zombie|2|2||Starter 1999|Common|0.0||1.194|Tom Kyffin|87|||0|
+21031|Sea Eagle|{1}{U}|Creature - Bird|1|1|Flying|Starter 1999|Common|0.0||1.969|Anthony S. Waters|50||Flying|0|
+20371|Serpent Warrior|{2}{B}|Creature - Snake Warrior|3|3|When Serpent Warrior enters the battlefield, you lose 3 life.|Starter 1999|Common|0.0||1.235|Ron Spencer|88||When Serpent Warrior enters the battlefield, you lose 3 life.|0|
+21072|Silverback Ape|{3}{G}{G}|Creature - Ape|5|5||Starter 1999|Uncommon|0.0||2.222|Ron Spears|141|||0|
+21068|Sleight of Hand|{U}|Sorcery|||Look at the top two cards of your library. Put one of them into your hand and the other on the bottom of your library.|Starter 1999|Common|0.0||3.55|Phil Foglio|51||Look at the top two cards of your library. Put one of them into your hand and the other on the bottom of your library.|0|
+21030|Snapping Drake|{3}{U}|Creature - Drake|3|2|Flying|Starter 1999|Common|0.0||2.923|Christopher Rush|52||Flying|0|
+20365|Soul Feast|{3}{B}{B}|Sorcery|||Target player loses 4 life and you gain 4 life.|Starter 1999|Uncommon|0.0||2.38|Ray Lago|90||Target player loses 4 life and you gain 4 life.|0|
+21071|Southern Elephant|{3}{G}|Creature - Elephant|3|4||Starter 1999|Common|0.0||1.5|Wang Yuqun|142|||0|
+20200|Spitting Earth|{1}{R}|Sorcery|||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|Starter 1999|Uncommon|0.0||2.964|Brian Snoddy|117||Spitting Earth deals damage to target creature equal to the number of Mountains you control.|0|
+20220|Squall|{2}{G}|Sorcery|||Squall deals 2 damage to each creature with flying.|Starter 1999|Common|0.0||2.425|Carl Critchlow|143||Squall deals 2 damage to each creature with flying.|0|
+20208|Stone Rain|{2}{R}|Sorcery|||Destroy target land.|Starter 1999|Common|0.0||3.842|John Matson|118||Destroy target land.|0|
+21028|Storm Crow|{1}{U}|Creature - Bird|1|2|Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|Starter 1999|Common|0.0||4.045|Una Fricker|53||Flying <i>(This creature can't be blocked except by creatures with flying or reach.)</i>|0|
+21078|Summer Bloom|{1}{G}|Sorcery|||You may play up to three additional lands this turn.|Starter 1999|Rare|0.0||3.625|Kaja Foglio|144||You may play up to three additional lands this turn.|0|
+21797|Swamp||Basic Land - Swamp|||B|Starter 1999|Land|0.0||4.607|Dan Frazier|170||B|0|
+21799|Swamp||Basic Land - Swamp|||B|Starter 1999|Land|0.0||4.781|Romas|171||B|0|
+21796|Swamp||Basic Land - Swamp|||B|Starter 1999|Land|0.0||4.824|Romas|172||B|0|
+21798|Swamp||Basic Land - Swamp|||B|Starter 1999|Land|0.0||4.357|Douglas Shuler|173||B|0|
+20218|Sylvan Basilisk|{3}{G}{G}|Creature - Basilisk|2|4|Whenever Sylvan Basilisk becomes blocked by a creature, destroy that creature.|Starter 1999|Rare|0.0||3.286|Ron Spencer|145||Whenever Sylvan Basilisk becomes blocked by a creature, destroy that creature.|0|
+20217|Sylvan Yeti|{2}{G}{G}|Creature - Yeti|||Sylvan Yeti's power is equal to the number of cards in your hand.|Starter 1999|Rare|0.0||3.136|Brom|146||Sylvan Yeti's power is equal to the number of cards in your hand.|0|
+20181|Thorn Elemental|{5}{G}{G}|Creature - Elemental|7|7|You may have Thorn Elemental assign its combat damage as though it weren't blocked.|Starter 1999|Rare|0.0||4.756|rk post|147||You may have Thorn Elemental assign its combat damage as though it weren't blocked.|0|
+21047|Tidings|{3}{U}{U}|Sorcery|||Draw four cards.|Starter 1999|Uncommon|0.0||3.765|Pete Venters|54||Draw four cards.|0|
+21034|Time Ebb|{2}{U}|Sorcery|||Put target creature on top of its owner's library.|Starter 1999|Common|0.0||2.65|Alan Rabinowitz|55||Put target creature on top of its owner's library.|0|
+21048|Time Warp|{3}{U}{U}|Sorcery|||Target player takes an extra turn after this one.|Starter 1999|Rare|0.0||4.48|Pete Venters|56||Target player takes an extra turn after this one.|0|
+21033|Touch of Brilliance|{3}{U}|Sorcery|||Draw two cards.|Starter 1999|Common|0.0||1.161|Kaja Foglio|57||Draw two cards.|0|
+21785|Trained Orgg|{6}{R}|Creature - Orgg|6|6||Starter 1999|Rare|0.0||1.875|Eric Peterson|120|||0|
+20207|Tremor|{R}|Sorcery|||Tremor deals 1 damage to each creature without flying.|Starter 1999|Common|0.0||2.977|Pete Venters|121||Tremor deals 1 damage to each creature without flying.|0|
+21045|Undo|{1}{U}{U}|Sorcery|||Return two target creatures to their owners' hands.|Starter 1999|Uncommon|0.0||3.321|Terese Nielsen|58||Return two target creatures to their owners' hands.|0|
+20228|Untamed Wilds|{2}{G}|Sorcery|||Search your library for a basic land card and put that card onto the battlefield. Then shuffle your library.|Starter 1999|Uncommon|0.0||2.158|NéNé Thomas|148||Search your library for a basic land card and put that card onto the battlefield. Then shuffle your library.|0|
+21059|Venerable Monk|{2}{W}|Creature - Human Monk Cleric|2|2|When Venerable Monk enters the battlefield, you gain 2 life.|Starter 1999|Common|0.0||2.643|D. Alexander Gregory|28||When Venerable Monk enters the battlefield, you gain 2 life.|0|
+20393|Vengeance|{3}{W}|Sorcery|||Destroy target tapped creature.|Starter 1999|Uncommon|0.0||2.464|Andrew Robinson|29||Destroy target tapped creature.|0|
+20403|Veteran Cavalier|{W}{W}|Creature - Human Knight|2|2|Vigilance <i>(Attacking doesn't cause this creature to tap.)</i>|Starter 1999|Uncommon|0.0||3.625|rk post|30||Vigilance <i>(Attacking doesn't cause this creature to tap.)</i>|0|
+20188|Vizzerdrix|{6}{U}|Creature - Rabbit Beast|6|6||Starter 1999|Rare|0.0||1.676|Eric Peterson|59|||0|
+21020|Volcanic Dragon|{4}{R}{R}|Creature - Dragon|4|4|Flying<br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|Starter 1999|Rare|0.0||3.404|Janine Johnston|122||Flying<br>Haste <i>(This creature can attack and {T} as soon as it comes under your control.)</i>|0|
+20206|Volcanic Hammer|{1}{R}|Sorcery|||Volcanic Hammer deals 3 damage to target creature or player.|Starter 1999|Common|0.0||2.375|Edward P. Beard, Jr.|123||Volcanic Hammer deals 3 damage to target creature or player.|0|
+21040|Water Elemental|{3}{U}{U}|Creature - Elemental|5|4||Starter 1999|Uncommon|0.0||2.225|Jeff A. Menges|60|||0|
+21058|Wild Griffin|{2}{W}|Creature - Griffin|2|2|Flying|Starter 1999|Common|0.0||2.333|Jeff Miracola|31||Flying|0|
+20227|Wild Ox|{3}{G}|Creature - Ox|3|3|Swampwalk|Starter 1999|Uncommon|0.0||2.769|Jeffrey R. Busch|151||Swampwalk|0|
+21029|Wind Drake|{2}{U}|Creature - Drake|2|2|Flying|Starter 1999|Common|0.0||2.692|Zina Saunders|61||Flying|0|
+20224|Wood Elves|{2}{G}|Creature - Elf Scout|1|1|When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|Starter 1999|Uncommon|0.0||3.088|Rebecca Guay|153||When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.|0|
