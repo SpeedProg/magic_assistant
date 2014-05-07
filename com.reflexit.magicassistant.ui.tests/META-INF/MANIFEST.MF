@@ -1,0 +1,20 @@
+Bundle-Vendor: Alena Laskavaia
+Bundle-ManifestVersion: 2
+Bundle-Activator: com.reflexit.magicassistant.ui.tests.Activator
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Name: Tests
+Import-Package: com.reflexit.magiccards.ui.widgets
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.jface,
+ org.eclipse.swt,
+ org.eclipse.core.runtime,
+ com.reflexit.magiccards.ui,
+ org.junit,
+ com.reflexit.magiccards.core
+Bundle-ActivationPolicy: lazy
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.reflexit.magicassistant.ui.tests
+Bundle-Version: 1.3.0.qualifier
+Export-Package: com.reflexit.magicassistant.ui.tests,
+ com.reflexit.magiccards.ui.dnd,
+ com.reflexit.magiccards.ui.views.nav
