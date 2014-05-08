@@ -117,19 +117,19 @@
 		<echo message="Fixing build qualifiers in ${buildDirectory}/plugins" />
 
 		<!-- Replace the build qualifier token in about.properties . -->
-		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards-rcp/plugin.xml" token="xxxxxxxx" value="${ma.version}" />
+		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards_rcp/plugin.xml" token="xxxxxxxx" value="${ma.version}" />
 		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards.ui/about.properties" token="xxxxxxxx" value="${ma.version}" />
 		<replace file="${buildDirectory}/plugins/com.reflexit.mtgtournament.ui/about.properties" token="xxxxxxxx" value="${ma.version}" />
 
 		<!-- Add change log into update description -->
-		<loadfile property="changeLog"   srcFile="${buildDirectory}/plugins/com.reflexit.magiccards-rcp/build/changelog.txt">
+		<loadfile property="changeLog"   srcFile="${buildDirectory}/plugins/com.reflexit.magiccards_rcp/build/changelog.txt">
 			<filterchain>
 				<suffixlines suffix="\n"/>
 				<striplinebreaks />
 			</filterchain>
 		</loadfile>
-		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards-rcp/p2.inf" token="$version$" value="${ma.version}" />
-		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards-rcp/p2.inf" token="$ChangeLog$" value="${changeLog}" />
+		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards_rcp/p2.inf" token="$version$" value="${ma.version}" />
+		<replace file="${buildDirectory}/plugins/com.reflexit.magiccards_rcp/p2.inf" token="$ChangeLog$" value="${changeLog}" />
 	</target>
 	<target name="fix.qual">
 		<propertyfile file="${basedir}/build.properties">
@@ -146,7 +146,7 @@
 			<arg value="-consoleLog" />
 			<arg value="-buildfile" />
 			<arg value="${eclipse.pdebuild.scripts}/productBuild/productBuild.xml" />
-			<arg value="-Dbuilder=${buildDirectory}/plugins/com.reflexit.magiccards-rcp/build" />
+			<arg value="-Dbuilder=${buildDirectory}/plugins/com.reflexit.magiccards_rcp/build" />
 			<arg value="-Dqual=${qual}" />
 			<arg value="-Dconfigs=${configs}" />
 			<!-- jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/ -->

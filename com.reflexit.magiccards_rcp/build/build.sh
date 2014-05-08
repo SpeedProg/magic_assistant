@@ -32,7 +32,7 @@ UPDATE_SITE_FULL=${UPDATE_SITE_FULL:-0}
 UPDATE_DOCS=${UPDATE_DOCS:-0}
 BUILD=${BUILD:-0}
 RUN=${RUN:-0}
-VERSION=`grep Bundle-Version $MA_WORKSPACE/com.reflexit.magiccards-rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'`
+VERSION=`grep Bundle-Version $MA_WORKSPACE/com.reflexit.magiccards_rcp/META-INF/MANIFEST.MF | sed -e 's?Bundle-Version: ??' -e 's?\.qualifier??'`
 QUAL=${QUAL:-`grep qual= build.properties | sed -e 's/qual=//'`} 
 RELEASE=$VERSION
 if [ "$QUAL" != "" ]; then

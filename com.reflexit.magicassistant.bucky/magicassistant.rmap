@@ -14,12 +14,6 @@
                 <bc:propertyRef key="buckminster.component" />
             </uri>
         </provider>
-        <provider readerType="local" componentTypes="osgi.bundle,eclipse.feature"
-                  mutable="true" source="true">
-            <uri format="file:///{0}/com.reflexit.magiccards-rcp/">
-                <bc:propertyRef key="source.root" />
-            </uri>
-        </provider>
     </searchPath>
 
     <locator searchPathRef="resources"/>
