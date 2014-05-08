@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.eclipse.ui.externaltools.ProgramLaunchConfigurationType">
-<mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="QUAL" value="26"/>
-</mapAttribute>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LAUNCH_CONFIGURATION_BUILD_SCOPE" value="${none}"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="C:\MinGW\bin\sh.exe"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="${workspace_loc:/com.reflexit.magicassistant.bucky/build_bucky.sh}"/>
-</launchConfiguration>
