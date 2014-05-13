@@ -1,6 +1,8 @@
 changes in 1.3.0.3
 * Bug 336 Progress4 shows 25% for non-own cards 
 * Added support for currency conversion for prices
+* Bug 340 put only minimal information about each card into the collection's xml file
+* Fixed bug with power aggregation and creature count
 changes in 1.3.0.1
 * Updated platform to eclipse Kepler 4.3.2
 * Update database with latest released sets (up to Apr 2014)
