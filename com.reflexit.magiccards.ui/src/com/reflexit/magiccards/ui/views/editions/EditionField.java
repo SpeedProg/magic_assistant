@@ -1,10 +1,7 @@
 package com.reflexit.magiccards.ui.views.editions;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Locale;
 
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 
@@ -15,26 +12,14 @@ public enum EditionField implements ICardField {
 	FORMAT("legalityMap")
 	// end
 	;
-	private final Field field;
+	private final String tag;
 
 	EditionField(String javaField) {
-		if (javaField != null)
-			try {
-				field = Edition.class.getDeclaredField(javaField);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e);
-			}
-		else
-			field = null;
+		tag = null;
 	}
 
 	EditionField() {
-		String javaField = name().toLowerCase();
-		try {
-			field = Edition.class.getDeclaredField(javaField);
-		} catch (Exception e) {
-			throw new IllegalArgumentException(e);
-		}
+		tag = name().toLowerCase(Locale.ENGLISH);
 	}
 
 	@Override
@@ -42,16 +27,19 @@ public enum EditionField implements ICardField {
 		return null;
 	}
 
-	public Class getType() {
-		return field == null ? String.class : field.getClass();
-	}
+
 
 	public boolean isTransient() {
-		return field == null ? true : Modifier.isTransient(field.getModifiers());
+		return false;
 	}
 
 	public String getLabel() {
 		String name = name();
 		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+	}
+
+	@Override
+	public String getTag() {
+		return tag;
 	}
 }
