@@ -57,4 +57,11 @@ public class MagicXmlHandlerTest extends TestCase {
 		MagicCardPhysical p = (MagicCardPhysical) o;
 		assert (p.getBase().getPhysicalCards().contains(p));
 	}
+	
+	public void testNoMcFields() {
+		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
+		phi.setOwn(false);
+		String xml = handler.toXML(phi);
+		assertTrue("text is found in "+xml,!xml.contains("text"));
+	}
 }

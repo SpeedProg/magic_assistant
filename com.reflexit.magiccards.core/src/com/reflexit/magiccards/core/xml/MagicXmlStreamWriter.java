@@ -88,7 +88,7 @@ public class MagicXmlStreamWriter {
 		writer.endEl();
 		MagicCardField[] values = MagicCardField.values();
 		for (MagicCardField field : values) {
-			if (field.isTransient())
+			if (field.isTransient() || !field.isPhysical())
 				continue;
 			Object o = card.get(field);
 			if (o == null)
