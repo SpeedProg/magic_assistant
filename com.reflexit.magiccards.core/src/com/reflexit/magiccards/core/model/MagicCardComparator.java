@@ -121,7 +121,7 @@ class MagicCardComparator implements Comparator {
 								d = -1;
 							else if (fo1 == null && fo2 == null)
 								d = 0;
-							else
+							else if (fo2 != null && fo1 != null)
 								d = fo1.ordinal() - fo2.ordinal();
 							break;
 						default:
