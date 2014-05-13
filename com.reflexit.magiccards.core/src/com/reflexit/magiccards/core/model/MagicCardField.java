@@ -282,4 +282,8 @@ public enum MagicCardField implements ICardField {
 		name = name.replace('_', ' ');
 		return name;
 	}
+
+	public boolean isPhysical() {
+		return phys;
+	}
 }
