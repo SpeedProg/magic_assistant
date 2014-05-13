@@ -3,6 +3,7 @@ changes in 1.3.0.4
 * Added support for currency conversion for prices
 * Bug 340 put only minimal information about each card into the collection's xml file
 * Fixed bug with power aggregation and creature count
+Bug 339 move card set related information from \.metadata to \magiccards 
 changes in 1.3.0.1
 * Updated platform to eclipse Kepler 4.3.2
 * Update database with latest released sets (up to Apr 2014)
