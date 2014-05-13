@@ -35,30 +35,37 @@ public class Currency {
 		try {
 			URL url = getURL(cu);
 			CsvImporter importer = new CsvImporter(WebUtils.openUrl(url), ',');
-			List<String> list = importer.readLine();
-			String srate = list.get(1);
-			double rate = Double.valueOf(srate);
-			rates.put(cu, rate);
-			String d = list.get(2);
-			String t = list.get(3);
-			// System.err.println(d + " " + t); // 5/6/2014 8:42pm
-			Date date = Calendar.getInstance().getTime();
-			SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy hh:mmaa");
 			try {
-				date = parser.parse(d + " " + t);
-			} catch (ParseException e) {
-				// ignore
+				List<String> list = importer.readLine();
+				String srate = list.get(1);
+				double rate = Double.valueOf(srate);
+				rates.put(cu, rate);
+				String d = list.get(2);
+				String t = list.get(3);
+				// System.err.println(d + " " + t); // 5/6/2014 8:42pm
+				Date date = Calendar.getInstance().getTime();
+				SimpleDateFormat parser = new SimpleDateFormat(
+						"MM/dd/yyyy hh:mmaa");
+				try {
+					date = parser.parse(d + " " + t);
+				} catch (ParseException e) {
+					// ignore
+				}
+				dates.put(cu, date);
+				// System.err.println(cu + "=" + rate + " on " + date);
+				return rate;
+			} finally {
+				importer.close();
 			}
-			dates.put(cu, date);
-			System.err.println(cu + "=" + rate + " on " + date);
-			return rate;
 		} catch (IOException e) {
 			return 0;
 		}
 	}
 
 	public static URL getURL(String cu) throws MalformedURLException {
-		URL url = new URL("http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=" + cu + "=X");
+		URL url = new URL(
+				"http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s="
+						+ cu + "=X");
 		return url;
 	}
 
@@ -87,7 +94,8 @@ public class Currency {
 		save(file);
 	}
 
-	public synchronized static void save(File file) throws FileNotFoundException {
+	public synchronized static void save(File file)
+			throws FileNotFoundException {
 		PrintStream st = new PrintStream(file);
 		try {
 			Date date = Calendar.getInstance().getTime();

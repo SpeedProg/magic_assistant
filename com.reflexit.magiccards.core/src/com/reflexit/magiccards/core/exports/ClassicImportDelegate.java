@@ -71,19 +71,22 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 				MagicCardField.COUNT, MagicCardField.NAME, MagicCardField.SET, });
 		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET,
 				MagicCardField.SIDEBOARD });
-		do {
-			lineNum++;
-			try {
-				MagicCardPhysical card = createDefaultCard();
-				card = parser.readLine(card);
-				if (card == null)
-					break;
-				importCard(card);
-				monitor.worked(1);
-			} catch (IOException e) {
-				throw e;
-			}
-		} while (true);
-		parser.close();
+		try {
+			do {
+				lineNum++;
+				try {
+					MagicCardPhysical card = createDefaultCard();
+					card = parser.readLine(card);
+					if (card == null)
+						break;
+					importCard(card);
+					monitor.worked(1);
+				} catch (IOException e) {
+					throw e;
+				}
+			} while (true);
+		} finally {
+			parser.close();
+		}
 	}
 }
