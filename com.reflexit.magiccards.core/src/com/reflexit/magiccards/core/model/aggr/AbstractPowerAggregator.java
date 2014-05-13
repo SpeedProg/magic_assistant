@@ -21,7 +21,7 @@ public class AbstractPowerAggregator extends AbstractFloatAggregator {
 			if (card instanceof CardGroup)
 				x = card.getFloat(field);
 			else
-				x = card.getFloat(field) * ((AbstractMagicCard) card).getCount();
+				x = getPower((AbstractMagicCard) card);
 			sum += x;
 		}
 		return String.valueOf(sum);
@@ -32,9 +32,19 @@ public class AbstractPowerAggregator extends AbstractFloatAggregator {
 		if (card instanceof CardGroup)
 			return visitGroup((CardGroup) card, data);
 		if (card instanceof AbstractMagicCard) {
-			float x = card.getFloat(field) * ((AbstractMagicCard) card).getCount();
+			float x = getPower((AbstractMagicCard) card);
 			return String.valueOf(x);
 		}
 		return null;
+	}
+
+	private float getPower(AbstractMagicCard card) {
+		int count = card.getCount();
+		float res = card.getFloat(field);
+		if (!Float.isNaN(res)) {
+			float x = res * count;
+			return x;
+		}
+		return 0;
 	}
 }

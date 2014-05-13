@@ -141,6 +141,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return this.location;
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		this.location = location;
 	}
@@ -181,6 +182,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return this.card.getSet();
 	}
 
+	@Override
 	public String getName() {
 		return this.card.getName();
 	}
@@ -284,6 +286,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return this.card.toString() + " x " + this.count;
 	}
 
+	@Override
 	public boolean set(ICardField field, Object value) {
 		switch ((MagicCardField) field) {
 			case COUNT:
@@ -340,6 +343,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return false;
 	}
 
+	@Override
 	public Object get(ICardField field) {
 		switch ((MagicCardField) field) {
 			case COUNT:
@@ -387,7 +391,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	}
 
 	public int getCreatureCount() {
-		if (card.getPower() != null) {
+		if (!card.getPower().isEmpty()) {
 			return card.getCount();
 		}
 		return 0;

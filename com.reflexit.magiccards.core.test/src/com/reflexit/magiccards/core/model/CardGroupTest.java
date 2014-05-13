@@ -395,6 +395,17 @@ public class CardGroupTest extends TestCase {
 		card.set(MagicCardField.SET, "Lorwyn");
 	}
 
+	public void preset2(MagicCardPhysical card) {
+		card.setCount(1);
+		card.setSpecial("foil");
+		card.setDbPrice(1.0f);
+		card.set(MagicCardField.RATING, "1");
+		card.set(MagicCardField.TOUGHNESS, "");
+		card.set(MagicCardField.POWER, "");
+		card.set(MagicCardField.SET, "Lorwyn");
+		card.set(MagicCardField.TYPE, "Instant");
+	}
+
 	public void checkConsistency(ICardField field) {
 		MagicCardPhysical card = (MagicCardPhysical) group.getFirstCard();
 		Object c1 = card.get(field);
@@ -482,5 +493,20 @@ public class CardGroupTest extends TestCase {
 		group.add(cards[1]);
 		assertEquals(loc, group.getLocation());
 		assertEquals(true, group.isOwn());
+	}
+
+	public void testPowerAggr() {
+		group = new CardGroup(MagicCardField.POWER, "power");
+		for (int j = 0; j < cards.length; j++) {
+			cards[j] = CardGenerator.generatePhysicalCardWithValues();
+		}
+		preset2((MagicCardPhysical) cards[0]);
+		preset1((MagicCardPhysical) cards[1]);
+		preset1((MagicCardPhysical) cards[2]);
+		group.add(cards[0]);
+		group.add(cards[1]);
+		group.add(cards[2]);
+		assertEquals("2.0", group.getPower());
+		assertEquals(2, group.getInt(MagicCardField.CREATURE_COUNT));
 	}
 }
