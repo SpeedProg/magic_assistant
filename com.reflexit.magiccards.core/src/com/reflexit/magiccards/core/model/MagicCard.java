@@ -86,6 +86,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCard#getName()
 	 */
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -278,6 +279,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		return list;
 	}
 
+	@Override
 	public Object get(ICardField field) {
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
@@ -434,6 +436,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			this.num = collNumber.intern();
 	}
 
+	@Override
 	public boolean set(ICardField field, Object value) {
 		MagicCardField mf = (MagicCardField) field;
 		switch (mf) {
@@ -689,6 +692,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		return (Collection<MagicCardPhysical>) rc.getChildrenList();
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		throw new UnsupportedOperationException();
 	}
