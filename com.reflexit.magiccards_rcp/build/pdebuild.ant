@@ -24,13 +24,14 @@
 
 	<target name="copy.jre">
 		<sync todir="${repack.dir}/${archivePrefix}/jre" includeEmptyDirs="true" overwrite="true">
-			<fileset dir="C:/Program Files (x86)/Java/jre7_x32">
+			<!--fileset dir="C:/Program Files (x86)/Java/jre7_x32"-->
+			<fileset dir="C:/Program Files/Java/jre7">
 			</fileset>
 		</sync>
 	</target>
 
 	<target name="install">
-		<unzip src="${buildDirectory}/${buildLabel}/magicassistant-${buildId}-win32.win32.x86.zip" dest="${repack.dir}" />
+		<unzip src="${buildDirectory}/${buildLabel}/magicassistant-${buildId}-win32.win32.x86_64.zip" dest="${repack.dir}" />
 	</target>
 
 	<target name="install.copy" depends="install, copy.jre">
