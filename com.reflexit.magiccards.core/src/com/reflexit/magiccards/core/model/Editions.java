@@ -336,16 +336,20 @@ public class Editions implements ISearchableProperty {
 	}
 
 	private synchronized void load() throws IOException {
-		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
-		if (!file.exists()) {
+		File oldFile = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
+		File newFile = new File(DataManager.getTablesDir(), EDITIONS_FILE);
+		if (oldFile.exists() && !newFile.exists()) {
+			oldFile.renameTo(newFile);
+		}
+		File file = newFile;
+		try {
 			initializeEditions();
+		} catch (Exception e) {
+			// ignore
+		}
+		if (!file.exists()) {
 			save();
 		} else {
-			try {
-				initializeEditions();
-			} catch (Exception e) {
-				// ignore
-			}
 			InputStream st = new FileInputStream(file);
 			loadEditions(st);
 		}
@@ -436,7 +440,7 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public synchronized void save() throws FileNotFoundException {
-		File file = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
+		File file = new File(DataManager.getTablesDir(), EDITIONS_FILE);
 		save(file);
 	}
 
@@ -455,14 +459,15 @@ public class Editions implements ISearchableProperty {
 				}
 				Format format = ed.getFormat();
 				String sformat = format == Format.LEGACY ? "" : format.name();
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "|"
-						+ (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
+				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|"
+						+ type + "|" + (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
 			}
 		} finally {
 			st.close();
 		}
 	}
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -472,6 +477,7 @@ public class Editions implements ISearchableProperty {
 		return FilterField.EDITION;
 	}
 
+	@Override
 	public Collection<String> getIds() {
 		ArrayList<String> list = new ArrayList<String>();
 		for (Iterator<Edition> iterator = this.name2ed.values().iterator(); iterator.hasNext();) {
@@ -491,6 +497,7 @@ public class Editions implements ISearchableProperty {
 		return FilterField.getPrefConstant(getIdPrefix(), abbr);
 	}
 
+	@Override
 	public String getNameById(String id) {
 		HashMap<String, String> idToName = new HashMap<String, String>();
 		for (Iterator<String> iterator = this.name2ed.keySet().iterator(); iterator.hasNext();) {
@@ -501,6 +508,7 @@ public class Editions implements ISearchableProperty {
 		return idToName.get(id);
 	}
 
+	@Override
 	public Collection<String> getNames() {
 		return new ArrayList<String>(this.name2ed.keySet());
 	}

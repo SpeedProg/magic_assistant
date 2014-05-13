@@ -5,8 +5,6 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
@@ -62,8 +60,6 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 	}
 
 	static {
-		File file = new File(FileUtils.getStateLocationFile(), Editions.EDITIONS_FILE);
-		file.delete();
 		try {
 			DataManager.getRootDir();
 		} catch (NullPointerException e) {

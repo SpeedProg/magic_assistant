@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
@@ -30,8 +29,6 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	}
 
 	static {
-		File file = new File(FileUtils.getStateLocationFile(), Editions.EDITIONS_FILE);
-		file.delete();
 		try {
 			DataManager.reset();
 		} catch (NullPointerException e) {
@@ -58,8 +55,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(), deck.getCardStore(),
-					ICoreProgressMonitor.NONE);
+			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(),
+					deck.getCardStore(), ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
