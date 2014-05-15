@@ -61,6 +61,10 @@
 			<arg line="/edit ${msiout}/../magicassistant.aip /SetVersion ${ma.version}" />
 		</exec>
 		<exec executable="${ainstaller}">
+			<env key="EXPORT_DIR" file="${buildDirectory}/install"/>
+			<arg line="/execute ${msiout}/../magicassistant.aip ${msiout}/../reimport.aic" />
+		</exec>
+		<exec executable="${ainstaller}">
 			<arg line="/build ${msiout}/../magicassistant.aip" />
 		</exec>
 		<copy todir="${buildDirectory}/${buildLabel}"  includeEmptyDirs="true" overwrite="true">
