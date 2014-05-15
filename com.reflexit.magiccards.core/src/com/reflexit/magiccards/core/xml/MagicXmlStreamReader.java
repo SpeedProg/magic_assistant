@@ -29,20 +29,7 @@ public class MagicXmlStreamReader {
 	private static SAXParserFactory factory = SAXParserFactory.newInstance();
 
 	static enum Tag {
-		cards,
-		list,
-		properties,
-		property,
-		mc,
-		mcp,
-		card,
-		name,
-		key,
-		comment,
-		type,
-		entry,
-		string,
-		fake
+		cards, list, properties, property, mc, mcp, card, name, key, comment, type, entry, string, fake
 	}
 
 	static class MagicHandler extends DefaultHandler {
@@ -56,7 +43,6 @@ public class MagicXmlStreamReader {
 		String key;
 		String value;
 		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
-		HashMap<String, MagicCardField> mcFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
 		private Locator locator;
 
 		public MagicHandler(CardCollectionStoreObject object) {
@@ -64,10 +50,6 @@ public class MagicXmlStreamReader {
 			for (MagicCardField f : MagicCardField.values()) {
 				if (!f.isTransient())
 					mcpFields.put(f.getTag(), f);
-			}
-			for (MagicCardField f : MagicCardField.values()) {
-				if (!f.isTransient())
-					mcFields.put(f.getTag(), f);
 			}
 		}
 
@@ -167,13 +149,13 @@ public class MagicXmlStreamReader {
 					case fake: {
 						switch (states.peek()) {
 							case mc: {
-								MagicCardField field = mcFields.get(last);
+								MagicCardField field = mcpFields.get(last);
 								cardm.set(field, ttStr);
 								break;
 							}
 							case card:
 							case mcp: {
-								MagicCardField field = mcFields.get(last);
+								MagicCardField field = mcpFields.get(last);
 								cardp.set(field, ttStr);
 								break;
 							}

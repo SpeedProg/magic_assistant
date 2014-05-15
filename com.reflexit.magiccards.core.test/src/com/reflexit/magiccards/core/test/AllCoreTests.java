@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import com.reflexit.magiccards.core.model.EditionsTest;
 import com.reflexit.magiccards.core.seller.test.AllSellerTests;
+import com.reflexit.magiccards.core.sync.CurrencyConvertorTest;
 import com.reflexit.magiccards.core.sync.ParseGathererBasicInfoTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
 import com.reflexit.magiccards.core.sync.ParseGathererDetailsTest;
@@ -40,6 +41,7 @@ public class AllCoreTests {
 		suite.addTestSuite(ParseGathererBasicInfoTest.class);
 		suite.addTestSuite(ParseGathererSearchStandardTest.class);
 		suite.addTestSuite(ParseGathererSearchChecklistTest.class);
+		suite.addTestSuite(CurrencyConvertorTest.class);
 		// prive providers
 		suite.addTest(AllSellerTests.suite());
 		// editions

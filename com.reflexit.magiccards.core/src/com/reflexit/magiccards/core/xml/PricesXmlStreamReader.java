@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Stack;
 
 import javax.xml.parsers.SAXParser;
@@ -21,22 +20,12 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class PricesXmlStreamReader {
 	private static SAXParserFactory factory = SAXParserFactory.newInstance();
 
 	static enum Tag {
-		cards,
-		list,
-		properties,
-		property,
-		mc,
-		name,
-		comment,
-		entry,
-		string,
-		fake,
+		cards, list, properties, property, mc, name, comment, fake,
 	}
 
 	static class MagicHandler extends DefaultHandler {
@@ -49,21 +38,10 @@ public class PricesXmlStreamReader {
 		StringBuffer text = new StringBuffer();
 		String key;
 		String value;
-		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(
-				MagicCardField.values().length);
-		HashMap<String, MagicCardField> mcFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
 		private Locator locator;
 
 		public MagicHandler(PriceProviderStoreObject object) {
 			store = object;
-			for (MagicCardField f : MagicCardField.values()) {
-				if (!f.isTransient())
-					mcpFields.put(f.getTag(), f);
-			}
-			for (MagicCardField f : MagicCardField.values()) {
-				if (!f.isTransient())
-					mcFields.put(f.getTag(), f);
-			}
 		}
 
 		@Override
@@ -76,19 +54,10 @@ public class PricesXmlStreamReader {
 			last = qName;
 			Tag current = Tag.fake;
 			text.delete(0, text.length());
-			switch (state) {
-				case mc:
-					if (qName.equals(Tag.properties.toString())) {
-						current = Tag.properties;
-					}
-					break;
-				default:
-					try {
-						current = Tag.valueOf(qName);
-					} catch (IllegalArgumentException e) {
-						current = Tag.fake;
-					}
-					break;
+			try {
+				current = Tag.valueOf(qName);
+			} catch (IllegalArgumentException e) {
+				current = Tag.fake;
 			}
 			switch (current) {
 				case list:
@@ -97,12 +66,6 @@ public class PricesXmlStreamReader {
 				case mc:
 					id = 0;
 					price = 0;
-					break;
-				case entry:
-					if (state == Tag.properties) {
-						key = null;
-						value = null;
-					}
 					break;
 				case property:
 					String name = attributes.getValue("name");
@@ -129,14 +92,6 @@ public class PricesXmlStreamReader {
 						break;
 					case comment:
 						store.comment = ttStr;
-						break;
-					case entry:
-						break;
-					case string:
-						if (key == null)
-							key = ttStr;
-						else
-							value = ttStr;
 						break;
 					case property:
 						break;
@@ -176,7 +131,6 @@ public class PricesXmlStreamReader {
 			switch (state) {
 				case name:
 				case comment:
-				case string:
 				case fake:
 					text.append(ch, start, length);
 					break;

@@ -31,7 +31,7 @@ import org.osgi.framework.BundleContext;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.sync.CardCache;
-import com.reflexit.magiccards.core.sync.Currency;
+import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 
@@ -79,7 +79,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		CardCache.setCahchingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.CACHE_IMAGES));
 		CardCache.setLoadingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.LOAD_IMAGES));
 		DataManager.setOwnCopyEnabled(getPluginPreferences().getBoolean(PreferenceConstants.OWNED_COPY));
-		Currency.setCurrency(getPluginPreferences().getString(PreferenceConstants.CURRENCY));
+		CurrencyConvertor.setCurrency(getPluginPreferences().getString(PreferenceConstants.CURRENCY));
 		PriceProviderManager.getInstance().sync(getPreferenceStore());
 	}
 

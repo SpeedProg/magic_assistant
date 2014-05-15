@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.xml;
 
 import gnu.trove.map.TIntFloatMap;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -36,7 +37,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 				name = pricesFile.getName().replace(".xml", "");
 			IPriceProvider provider = findProvider(name);
 			if (provider == null) {
-				provider = new CustomPriceProvider(name);
+				provider = new CustomPriceProvider(name, store.getProperties().getProperty("currency"));
 				add(provider);
 			}
 			final TIntFloatMap map = provider.getPriceMap();
@@ -50,6 +51,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		}
 	}
 
+	@Override
 	public void reloadPrices() {
 		MagicLogger.traceStart("reloadPrices");
 		final IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
@@ -98,6 +100,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		}
 	}
 
+	@Override
 	public Collection<IPriceProvider> getProviders() {
 		return providers;
 	}
@@ -106,6 +109,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		return getProviders().iterator().next();
 	}
 
+	@Override
 	public synchronized IPriceProviderStore setProviderByName(String name) {
 		IPriceProvider prov = findProvider(name);
 		if (prov == null) {
@@ -121,6 +125,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		return current;
 	}
 
+	@Override
 	public synchronized IPriceProvider getProvider() {
 		return current;
 	}
@@ -136,13 +141,14 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		return null;
 	}
 
+	@Override
 	public synchronized void setDbPrice(IMagicCard card, float price) {
 		current.setDbPrice(card, price);
 	}
 
+	@Override
 	public float getDbPrice(IMagicCard card) {
-		TIntFloatMap currentMap = current.getPriceMap();
-		return currentMap.get(card.getCardId());
+		return current.getDbPrice(card);
 	}
 
 	@Override

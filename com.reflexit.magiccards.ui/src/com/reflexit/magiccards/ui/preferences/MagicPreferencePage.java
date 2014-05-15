@@ -23,7 +23,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.sync.CardCache;
-import com.reflexit.magiccards.core.sync.Currency;
+import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -74,8 +74,8 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 				super.fireValueChanged(property, oldValue, newValue);
 				String val = (String) newValue;
 				if (val.length() == 3) {
-					Currency.setCurrency(val);
-					Currency.loadRate("USD", val);
+					CurrencyConvertor.setCurrency(val);
+					CurrencyConvertor.loadRate("USD", val);
 				}
 			}
 		};

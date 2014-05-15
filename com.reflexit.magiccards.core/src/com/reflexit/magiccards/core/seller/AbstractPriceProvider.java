@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.core.xml.PricesXmlStreamWriter;
 
 public class AbstractPriceProvider implements IPriceProvider {
@@ -29,6 +30,12 @@ public class AbstractPriceProvider implements IPriceProvider {
 		this.priceMap = new TIntFloatHashMap();
 	}
 
+	@Override
+	public java.util.Currency getCurrency() {
+		return CurrencyConvertor.USD;
+	}
+
+	@Override
 	public void updatePricesAndSync(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading prices from " + getURL() + " ...", 200);
 		try {
@@ -65,7 +72,8 @@ public class AbstractPriceProvider implements IPriceProvider {
 			dbPriceStore.reloadPrices();
 	}
 
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		throw new MagicException("This price provider " + name + " does not support interactive update");
 	}
 
@@ -84,6 +92,7 @@ public class AbstractPriceProvider implements IPriceProvider {
 		return null;
 	}
 
+	@Override
 	public String export(Iterable<IMagicCard> cards) {
 		String res = new ClassicNoXExportDelegate().export(cards);
 		return res;
@@ -102,6 +111,7 @@ public class AbstractPriceProvider implements IPriceProvider {
 		return result;
 	}
 
+	@Override
 	public synchronized void setDbPrice(IMagicCard magicCard, float price) {
 		int id = magicCard.getCardId();
 		int fid = magicCard.getFlipId();
@@ -117,13 +127,16 @@ public class AbstractPriceProvider implements IPriceProvider {
 		if (price == 0)
 			priceMap.remove(id);
 		else
-			priceMap.put(id, price);
+			priceMap.put(id, CurrencyConvertor.convertInto(price, getCurrency()));
 	}
 
+	@Override
 	public float getDbPrice(IMagicCard card) {
 		int id = card.getCardId();
-		if (priceMap.containsKey(id))
-			return priceMap.get(id);
+		if (priceMap.containsKey(id)) {
+			float price = priceMap.get(id);
+			return CurrencyConvertor.convertFrom(price, getCurrency());
+		}
 		return 0f;
 	}
 
@@ -146,6 +159,7 @@ public class AbstractPriceProvider implements IPriceProvider {
 
 	public static transient PricesXmlStreamWriter writer = new PricesXmlStreamWriter();
 
+	@Override
 	public void save() throws IOException {
 		writer.write(this);
 	}
