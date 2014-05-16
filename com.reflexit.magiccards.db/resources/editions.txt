@@ -80,12 +80,12 @@ Alara Reborn|ARB||April 2009|Expansion|Shards of Alara|Modern|
 Magic 2010|M10||July 2009|Core||Modern|
 Masters Edition III|ME3||September 2009|Online|||
 Duel Decks: Garruk vs. Liliana|DDD|GVL|October 2009|Starter|||
-Zendikar|ZEN||October 2009|Expansion|Zendikar|Extended|
+Zendikar|ZEN||October 2009|Expansion|Zendikar|Modern|
 Premium Deck Series: Slivers|H09|PDS|November 2009|Starter|||
-Worldwake|WWK||February 2010|Expansion|Zendikar|Extended|
-Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar|Extended|
+Worldwake|WWK||February 2010|Expansion|Zendikar|Modern|
+Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar|Modern|
 Archenemy|ARC||June 2010|Starter|||
-Magic 2011|M11||July 2010|Core||Extended|
+Magic 2011|M11||July 2010|Core||Modern|
 Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter|||
 Duel Decks: Phyrexia vs. the Coalition|DDE|PVC|March 2010|Starter|||
 Scars of Mirrodin|SOM||October 2010|Expansion|Scars of Mirrodin|Extended|
@@ -125,3 +125,4 @@ Commander 2013 Edition|C13||November 2013|Expansion|Commander|Modern|
 Born of the Gods|BNG||February 2014|Expansion|Theros Block|Standard|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|||
 Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
+Modern Event Deck 2014|MD1||May 2014|Starter|||
