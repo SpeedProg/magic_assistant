@@ -12,7 +12,8 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 /**
- * This is base class that describe card containers. It basically either Deck or Deck Folder.
+ * This is base class that describe card containers. It basically either Deck or
+ * Deck Folder.
  * 
  * @author Alena
  * 
@@ -52,6 +53,7 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		return this.path;
 	}
 
+	@Override
 	public Location getLocation() {
 		return Location.createLocation(getPath());
 	}
@@ -209,5 +211,12 @@ public abstract class CardElement extends EventManager implements ILocatable {
 	@Override
 	public void setLocation(Location location) {
 		throw new UnsupportedOperationException("setLocation is not supporterd");
+	}
+
+	public CardElement getRelated() {
+		Location loc = getLocation();
+		if (loc.isSideboard())
+			return getParent().findChieldByName(loc.toMainDeck().getBaseFileName());
+		return getParent().findChieldByName(loc.toSideboard().getBaseFileName());
 	}
 }

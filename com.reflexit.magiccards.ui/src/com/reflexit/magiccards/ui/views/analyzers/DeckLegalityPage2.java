@@ -68,7 +68,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private IFilteredCardStore fstore;
 	private Format format = DEFAULT_FORMAT;
 	private ImageAction load;
-	private LegalityMap deckLegalities = new LegalityMap(); // map format->legality
+	private LegalityMap deckLegalities = new LegalityMap(); // map
+															// format->legality
 	private Combo comboLegality;
 	protected TreeViewer tree;
 	private ImageAction refresh;
@@ -142,7 +143,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		comboLegality.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
 		total = createTextLabel("Cards: ");
 		totalSideboard = createTextLabel("Cards (Sideboard): ");
-		maxRepeats = createTextLabel("Max Repeats: ", "How many time each card repeats, excluding basic land (for legality purposes)");
+		maxRepeats = createTextLabel("Max Repeats: ",
+				"How many time each card repeats, excluding basic land (for legality purposes)");
 		colors = createTextLabel("Colors: ");
 		colorsSideboard = createTextLabel("Colors (Sideboard): ");
 		rarity = createTextLabel("Rarity: ");
@@ -281,7 +283,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		MagicCardFilter filter = (MagicCardFilter) view.getFilter().clone();
 		ICardStore mainStore = DataManager.getCardStore(loc.toMainDeck());
 		ICardStore sideStore = DataManager.getCardStore(loc.toSideboard());
-		mstore.addAll(mainStore);
+		if (mainStore != null)
+			mstore.addAll(mainStore);
 		if (sideStore != null)
 			mstore.addAll(sideStore);
 		mstore.setLocation(loc.toMainDeck());
@@ -403,6 +406,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 					monitor.beginTask("Calculating Legality", 100);
 					calculateCardLegalities(new SubProgressMonitor(monitor, 90));
 					getControl().getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							activate();
 						}

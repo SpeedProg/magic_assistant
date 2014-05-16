@@ -19,8 +19,8 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
 
 /**
- * Model Root contains access to all deck, collections and magic db container (displayed in the
- * navigator)
+ * Model Root contains access to all deck, collections and magic db container
+ * (displayed in the navigator)
  * 
  * @author Alena
  * 
@@ -149,16 +149,23 @@ public class ModelRoot extends CardOrganizer {
 	public void move(CardElement[] elements, CardOrganizer newParent) {
 		if (newParent instanceof MagicDbContainter)
 			throw new MagicException("Cannot move to db");
+		if (newParent == getMyCardsContainer())
+			throw new MagicException("Cannot move into My Cards folder");
 		ArrayList<CardElement> norm = new ArrayList<CardElement>();
-		list: for (CardElement el : elements) {
-			for (CardElement no : norm) {
-				if (el.getParent() == no)
-					continue list;
-			}
+		for (CardElement el : elements) {
+			if (el == null)
+				continue;
+			if (norm.contains(el.getParent()))
+				continue;
+			if (norm.contains(el.getRelated()))
+				continue;
 			norm.add(el);
 		}
 		for (CardElement no : norm) {
+			CardElement related = no.getRelated();
 			no.newParent(newParent);
+			if (related != null)
+				related.newParent(newParent);
 		}
 		// System.err.println("drop to " + newParent);
 	}
