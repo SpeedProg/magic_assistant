@@ -2,6 +2,7 @@ changes in 1.3.0.5
 * Currency type is now read from provider xml (only for custom providers)
 * Bug 342 Sideboard issue when moving decks 
 * Added Modern Event Deck set
+* Feature 341 Add Set's date column as option for main view 
 changes in 1.3.0.4
 * Bug 336 Progress4 shows 25% for non-own cards 
 * Added support for currency conversion for prices
