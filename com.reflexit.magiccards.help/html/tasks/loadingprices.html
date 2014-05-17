@@ -54,9 +54,8 @@ To do that you create a file, i.e My_Provider.xml which looks like this below an
 folder
 <pre>
 &lt;cards&gt;
-  &lt;name&gt;My Provider&lt;/name&gt;
-  &lt;comment&gt;&lt;/comment&gt;
-  &lt;type&gt;dbprice&lt;/type&gt;
+  &lt;property name="currency" value="USD"/&gt
+  &lt;property name="url" value="http://mysite.com/mypricelist.xml"/&gt
   &lt;list&gt;
     &lt;mc&gt;
       &lt;id&gt;243482&lt;/id&gt;
@@ -66,9 +65,11 @@ folder
 &lt;cards&gt;
 </pre>
 
-That defines new provider called "My Provider" and sets the price of a card with gatherer id 243482 to 9 cents.
-You can have multiple mc records there.
-
+That defines new provider called "My_Provider" and sets the price of a card with gatherer id 243482 to 9 cents
+in USD (US Dollars) currency. You can have multiple mc records there. URL can be specified if
+prices are published online in exact same format as this file, in this case when user selects
+update prices, it will re-load the file from this url, and store back to this xml file locally.
+<p/>
 The second option is to import prices via db extension import. You can define prices in any import format with flexible columns that MA supports,
 and DBPRICE is the column name for the sellers price. I.e. in CSV format it will be
 
