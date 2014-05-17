@@ -172,8 +172,8 @@
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.2" 
 			keyfile="C:/Develop/magic/.ssh/id_rsa" trust="true">
 			<fileset dir="${export.dir}/update/1.2">
-				<!-- <include name="**/com.reflexit**"/>
-				<include name="*.xml"/>-->
+				<include name="**/com.reflexit**"/>
+				<include name="*.xml"/>
 			</fileset>
 		</scp>
 	</target>
