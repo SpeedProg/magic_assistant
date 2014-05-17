@@ -49,6 +49,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
@@ -86,6 +87,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			monitor.beginTask("Loading info for " + card.getName(), 100);
 			if (forceUpdate) {
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+					@Override
 					public void run() {
 						setMessage("Loading...");
 						CardDescView.this.panel.reload(card);
@@ -94,6 +96,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			} else {
 				CardDescView.this.panel.setCard(card);
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+					@Override
 					public void run() {
 						boolean nocard = (card == IMagicCard.DEFAULT);
 						CardDescView.this.panel.setVisible(!nocard);
@@ -122,6 +125,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 		protected IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card) {
 			try {
+				if (WebUtils.isWorkOffline())
+					return Status.CANCEL_STATUS;
 				boolean updateRulings = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_RULINGS);
 				boolean updateExtras = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_EXTRAS);
 				boolean updateSets = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_PRINTINGS);
@@ -171,6 +176,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(
 						new SubProgressMonitor(monitor, 99)));
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+					@Override
 					public void run() {
 						if (!isStillNeeded(card))
 							return;
@@ -214,6 +220,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			final Image remoteImage = remoteImage1;
 			final IOException e = e1;
 			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					setMessage("");
 					if (e != null)
@@ -290,6 +297,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager);
 			}
@@ -378,6 +386,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		super.dispose();
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		if (part instanceof AbstractCardsView)
 			runLoadJob(sel);

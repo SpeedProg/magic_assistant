@@ -37,18 +37,18 @@ public class CurrencyConvertorTest extends TestCase {
 
 	@Test
 	public void testConvertFrom() {
-		float res = CurrencyConvertor.convertFrom(1, CAD);
+		float res = CurrencyConvertor.convertFromInto(1, CAD, USD);
 		assertTrue(res + "", res < 0.92);
 	}
 
 	@Test
 	public void testConvertInto() {
-		assertTrue(CurrencyConvertor.convertInto(1, CAD) > 1.03);
+		assertTrue(CurrencyConvertor.convertFromInto(1, USD, CAD) > 1.03);
 	}
 
 	@Test
 	public void testConvertFromR() {
-		float res = CurrencyConvertor.convertFrom(100, RUB);
+		float res = CurrencyConvertor.convertFromInto(100, RUB, USD);
 		assertTrue(res + "", res < 3);
 	}
 }

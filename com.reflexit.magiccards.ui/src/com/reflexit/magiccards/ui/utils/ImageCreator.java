@@ -26,6 +26,7 @@ import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -194,21 +195,25 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Get card image from local cache. This image is not managed - to be disposed by called.
+	 * Get card image from local cache. This image is not managed - to be
+	 * disposed by called.
 	 * 
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot
-	 *         be downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot
+	 *         found locally or cannot be downloaded remotely
 	 * @throws IOException
 	 */
-	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
+	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException,
+			CannotDetermineSetAbbriviation {
 		synchronized (card) {
 			if (forceUpdate)
 				remote = true;
+			if (WebUtils.isWorkOffline())
+				remote = false;
 			String path = CardCache.createLocalImageFilePath(card);
 			try {
 				File file = new File(path);
@@ -320,7 +325,8 @@ public class ImageCreator {
 				System.arraycopy(srcData.data, srcIndex, newData, destIndex, bytesPerPixel);
 			}
 		}
-		// destBytesPerLine is used as scanlinePad to ensure that no padding is required
+		// destBytesPerLine is used as scanlinePad to ensure that no padding is
+		// required
 		return new ImageData(width, height, srcData.depth, srcData.palette, srcData.scanlinePad, newData);
 	}
 
@@ -440,9 +446,12 @@ public class ImageCreator {
 				int x1 = width / 2 - Math.abs(x - width / 2) - radius;
 				int y1 = height / 2 - Math.abs(y - height / 2) - radius;
 				// int pixelValue = lineData[x];
-				// int r = (pixelValue & redMask) >>> -fullImageData.palette.redShift;
-				// int g = (pixelValue & greenMask) >>> -fullImageData.palette.greenShift;
-				// int b = (pixelValue & blueMask) >>> -fullImageData.palette.blueShift;
+				// int r = (pixelValue & redMask) >>>
+				// -fullImageData.palette.redShift;
+				// int g = (pixelValue & greenMask) >>>
+				// -fullImageData.palette.greenShift;
+				// int b = (pixelValue & blueMask) >>>
+				// -fullImageData.palette.blueShift;
 				// int al2 = al - (r + g + b) / 3;
 				if (y1 < 0 && x1 < 0) {
 					double dist = Math.sqrt(x1 * x1 + y1 * y1);

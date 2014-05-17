@@ -5,6 +5,7 @@ import gnu.trove.map.hash.TIntFloatHashMap;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Currency;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -31,8 +32,11 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public java.util.Currency getCurrency() {
-		return CurrencyConvertor.USD;
+	public Currency getCurrency() {
+		String cur = getProperties().getProperty("currency");
+		if (cur == null)
+			return CurrencyConvertor.USD;
+		return Currency.getInstance(cur);
 	}
 
 	@Override
@@ -72,8 +76,7 @@ public class AbstractPriceProvider implements IPriceProvider {
 			dbPriceStore.reloadPrices();
 	}
 
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
-			throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		throw new MagicException("This price provider " + name + " does not support interactive update");
 	}
 
@@ -112,30 +115,30 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public synchronized void setDbPrice(IMagicCard magicCard, float price) {
+	public synchronized void setDbPrice(IMagicCard magicCard, float price, Currency cur) {
 		int id = magicCard.getCardId();
 		int fid = magicCard.getFlipId();
 		if (fid != 0) {
-			setDbPrice(fid, price);
+			setDbPrice(fid, price, cur);
 		}
-		setDbPrice(id, price);
+		setDbPrice(id, price, cur);
 	}
 
-	public synchronized void setDbPrice(int id, float price) {
+	public synchronized void setDbPrice(int id, float price, Currency cur) {
 		if (id == 0)
 			return;
 		if (price == 0)
 			priceMap.remove(id);
 		else
-			priceMap.put(id, CurrencyConvertor.convertInto(price, getCurrency()));
+			priceMap.put(id, CurrencyConvertor.convertFromInto(price, cur, getCurrency()));
 	}
 
 	@Override
-	public float getDbPrice(IMagicCard card) {
+	public float getDbPrice(IMagicCard card, Currency cur) {
 		int id = card.getCardId();
 		if (priceMap.containsKey(id)) {
 			float price = priceMap.get(id);
-			return CurrencyConvertor.convertFrom(price, getCurrency());
+			return CurrencyConvertor.convertFromInto(price, getCurrency(), cur);
 		}
 		return 0f;
 	}

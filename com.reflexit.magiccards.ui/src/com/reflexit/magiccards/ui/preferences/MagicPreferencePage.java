@@ -24,16 +24,18 @@ import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
- * This class represents a preference page that is contributed to the Preferences dialog. By
- * subclassing <samp>FieldEditorPreferencePage</samp>, we can use the field support built into JFace
- * that allows us to create a page that is small and knows how to save, restore and apply itself.
+ * This class represents a preference page that is contributed to the
+ * Preferences dialog. By subclassing <samp>FieldEditorPreferencePage</samp>, we
+ * can use the field support built into JFace that allows us to create a page
+ * that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the preference store that
- * belongs to the main plug-in class. That way, preferences can be accessed directly via the
- * preference store.
+ * This page is used to modify preferences only. They are stored in the
+ * preference store that belongs to the main plug-in class. That way,
+ * preferences can be accessed directly via the preference store.
  */
 public class MagicPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public MagicPreferencePage() {
@@ -43,16 +45,14 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	}
 
 	/**
-	 * Creates the field editors. CardFieldExpr editors are abstractions of the common GUI blocks
-	 * needed to manipulate various types of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. CardFieldExpr editors are abstractions of the
+	 * common GUI blocks needed to manipulate various types of preferences. Each
+	 * field editor knows how to save and restore itself.
 	 */
 	@Override
 	public void createFieldEditors() {
 		// internet
 		createInternetOptionsGroup();
-		// selection
-		createCardSelectGroup();
 		// presentation
 		BooleanFieldEditor grid = new BooleanFieldEditor(PreferenceConstants.SHOW_GRID, "Show grid lines in card tables",
 				getFieldEditorParent());
@@ -88,26 +88,25 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		ld.horizontalSpan = 2;
 		inetOptions.setLayoutData(ld);
-		if (false) {
-			BooleanFieldEditor caching = new BooleanFieldEditor(PreferenceConstants.CACHE_IMAGES, "Enable image caching", inetOptions) {
-				@Override
-				protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
-					super.fireStateChanged(property, oldValue, newValue);
-					CardCache.setCahchingEnabled(newValue);
-				}
-			};
-			addField(caching);
-		}
+		addField(new BooleanFieldEditor(PreferenceConstants.WORK_OFFLINE, "Work Offline", inetOptions) {
+			@Override
+			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
+				super.fireStateChanged(property, oldValue, newValue);
+				WebUtils.setWorkOffline(newValue);
+			}
+		});
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards on startup", inetOptions));
 		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup", inetOptions));
 		String[][] values = getPriceProviders();
 		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider", values, inetOptions);
 		addField(combo);
 		createButtons(inetOptions);
+		// selection
+		createCardSelectGroup(inetOptions);
 	}
 
-	protected void createCardSelectGroup() {
-		Group onCardSelect = new Group(getFieldEditorParent(), SWT.NONE);
+	protected void createCardSelectGroup(Composite parent) {
+		Group onCardSelect = new Group(parent, SWT.NONE);
 		onCardSelect.setText("When card is selected");
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		ld.horizontalSpan = 2;
@@ -164,8 +163,10 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 }

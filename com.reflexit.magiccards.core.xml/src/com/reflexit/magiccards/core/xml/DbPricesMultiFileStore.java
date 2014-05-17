@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
+import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 
 public class DbPricesMultiFileStore implements IDbPriceStore {
 	static private DbPricesMultiFileStore instance;
@@ -37,9 +38,11 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 				name = pricesFile.getName().replace(".xml", "");
 			IPriceProvider provider = findProvider(name);
 			if (provider == null) {
-				provider = new CustomPriceProvider(name, store.getProperties().getProperty("currency"));
+				provider = new CustomPriceProvider(name);
 				add(provider);
 			}
+			if (store.properties != null)
+				provider.getProperties().putAll(store.properties);
 			final TIntFloatMap map = provider.getPriceMap();
 			if (store.map != null) {
 				map.putAll(store.map);
@@ -143,12 +146,12 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 
 	@Override
 	public synchronized void setDbPrice(IMagicCard card, float price) {
-		current.setDbPrice(card, price);
+		current.setDbPrice(card, price, CurrencyConvertor.getCurrency());
 	}
 
 	@Override
 	public float getDbPrice(IMagicCard card) {
-		return current.getDbPrice(card);
+		return current.getDbPrice(card, CurrencyConvertor.getCurrency());
 	}
 
 	@Override

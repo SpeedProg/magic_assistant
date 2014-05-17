@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 
 public class WebUtils {
@@ -23,14 +25,23 @@ public class WebUtils {
 
 	public static InputStream openUrl(URL url) throws IOException {
 		IOException rt = null;
-		for (int i = 0; i < 3; i++) {
+		int maxAttempts = 3;
+		for (int i = 0; i < maxAttempts; i++) {
 			// 3 attempts
 			try {
-				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-				huc.setConnectTimeout(60 * 1000);
-				huc.setReadTimeout(60 * 1000);
-				huc.connect();
-				InputStream openStream = huc.getInputStream();
+				URLConnection openConnection = url.openConnection();
+				if (openConnection instanceof HttpURLConnection) {
+					if (WebUtils.isWorkOffline())
+						throw new MagicException("Online updates are disabled");
+					HttpURLConnection huc = (HttpURLConnection) openConnection;
+					huc.setConnectTimeout(60 * 1000);
+					huc.setReadTimeout(60 * 1000);
+					huc.connect();
+				} else {
+					// not http connection
+					i = maxAttempts;
+				}
+				InputStream openStream = openConnection.getInputStream();
 				return openStream;
 			} catch (IOException e) {
 				MagicLogger.log("Connection error on url " + url + ": " + e.getMessage() + ". Attempt " + i);

@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
@@ -21,6 +23,7 @@ import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 
@@ -28,15 +31,29 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 * @see
+	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+	 * ExecutionEvent)
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		if (WebUtils.isWorkOffline()) {
+			Display.getCurrent().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					MessageDialog.openInformation(new Shell(), "Disabled", "Online updates are disabled");
+				}
+			});
+			return null;
+		}
 		doCheckForCardUpdates();
 		return null;
 	}
 
 	public static void doCheckForCardUpdates() {
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor imonitor) throws InvocationTargetException, InterruptedException {
 				CoreMonitorAdapter monitor = new CoreMonitorAdapter(imonitor);
 				monitor.beginTask("Checking for cards updates...", 110);
@@ -53,13 +70,15 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 							int k = newSets.size();
 							for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
 								Edition edition = (Edition) iterator.next();
-								handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(monitor, 60 / k));
+								handler.downloadUpdates(edition.getName(), new Properties(),
+										new SubCoreProgressMonitor(monitor, 60 / k));
 							}
 						}
 					}
 					CurrencyConvertor.update();
 				} catch (Exception e) {
-					MagicUIActivator.log(e); // move on if exception via set loading
+					MagicUIActivator.log(e); // move on if exception via set
+												// loading
 				}
 				monitor.done();
 			}

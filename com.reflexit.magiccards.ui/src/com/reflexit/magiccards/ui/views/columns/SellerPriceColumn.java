@@ -33,11 +33,7 @@ public class SellerPriceColumn extends GenColumn {
 		double price = Double.valueOf(text);
 		if (price == 0)
 			return "";
-		double rate = CurrencyConvertor.getRate("USD" + CurrencyConvertor.getCurrency());
-		if (rate == 0)
-			return CurrencyConvertor.USD.getSymbol() + " " + decimalFormat.format(price);
-		else
-			return cur.getSymbol() + " " + decimalFormat.format(price * rate);
+		return cur.getSymbol() + " " + decimalFormat.format(price);
 	}
 
 	@Override

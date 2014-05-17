@@ -154,7 +154,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 			}
 			if (set == null) {
 				for (IMagicCard mc : candidates) {
-					setDbPrice(mc, res.get(xname));
+					setDbPrice(mc, res.get(xname), getCurrency());
 				}
 				continue;
 			} else {
@@ -165,7 +165,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 					if (abbr == null)
 						abbr = editions.getAbbrByName(cset);
 					if (abbr.equals(set)) {
-						setDbPrice(mc, res.get(xname));
+						setDbPrice(mc, res.get(xname), getCurrency());
 						found = true;
 						break;
 					}
@@ -176,7 +176,8 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 				if (xsetmap == null) {
 					scandmap.put(set, xsetmap = new CountersMap());
 				}
-				// MagicLogger.log("MOTL: Not found set " + set + " for " + cname);
+				// MagicLogger.log("MOTL: Not found set " + set + " for " +
+				// cname);
 				allsetmap.inc(set);
 				if (candidates.size() < 15)
 					for (IMagicCard mc : candidates) {
@@ -238,6 +239,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 		AbstractFilteredCardStore<IMagicCard> fstore = new AbstractFilteredCardStore<IMagicCard>() {
 			MemoryCardStore<MemoryCardStorage<IMagicCard>> store = new MemoryCardStore<MemoryCardStorage<IMagicCard>>();
 
+			@Override
 			public ICardStore getCardStore() {
 				return store;
 			}

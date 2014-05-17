@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -84,7 +85,10 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
+		if (WebUtils.isWorkOffline())
+			throw new MagicException("Online updates are disabled");
 		int size = getSize(iterable);
 		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
 		IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
@@ -101,7 +105,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 						price = getPrice(flipCard);
 				}
 				if (price > 0) {
-					setDbPrice(magicCard, price);
+					setDbPrice(magicCard, price, getCurrency());
 				}
 				monitor.worked(1);
 			}

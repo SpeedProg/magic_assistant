@@ -32,6 +32,7 @@ import org.osgi.framework.BundleContext;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PriceProviderManager;
 
@@ -59,7 +60,9 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -80,13 +83,16 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		CardCache.setLoadingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.LOAD_IMAGES));
 		DataManager.setOwnCopyEnabled(getPluginPreferences().getBoolean(PreferenceConstants.OWNED_COPY));
 		CurrencyConvertor.setCurrency(getPluginPreferences().getString(PreferenceConstants.CURRENCY));
+		WebUtils.setWorkOffline(getPluginPreferences().getBoolean(PreferenceConstants.WORK_OFFLINE));
 		PriceProviderManager.getInstance().sync(getPreferenceStore());
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -105,7 +111,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in relative path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path
 	 * 
 	 * @param path
 	 *            the path

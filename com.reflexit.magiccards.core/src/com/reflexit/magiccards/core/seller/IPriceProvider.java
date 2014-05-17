@@ -29,9 +29,9 @@ public interface IPriceProvider extends IPriceProviderStore {
 
 	void save() throws IOException;
 
-	void setDbPrice(IMagicCard card, float price);
+	void setDbPrice(IMagicCard card, float price, Currency cur);
 
-	float getDbPrice(IMagicCard card);
+	float getDbPrice(IMagicCard card, Currency cur);
 
 	Currency getCurrency();
 }

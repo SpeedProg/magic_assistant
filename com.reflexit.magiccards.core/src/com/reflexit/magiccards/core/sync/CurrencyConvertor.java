@@ -188,16 +188,10 @@ public class CurrencyConvertor {
 		return rate.doubleValue();
 	}
 
-	public static float convertFrom(float price, Currency cur) {
-		if (currency == cur)
+	public static float convertFromInto(float price, Currency from, Currency cur) {
+		if (from == cur)
 			return price;
-		return (float) (price / getRate(currency.getCurrencyCode() + cur.getCurrencyCode()));
-	}
-
-	public static float convertInto(float price, Currency cur) {
-		if (currency == cur)
-			return price;
-		return (float) (price * getRate(currency.getCurrencyCode() + cur.getCurrencyCode()));
+		return (float) (price * getRate(from.getCurrencyCode() + cur.getCurrencyCode()));
 	}
 
 	public static double getRate(Currency c1, Currency c2) {

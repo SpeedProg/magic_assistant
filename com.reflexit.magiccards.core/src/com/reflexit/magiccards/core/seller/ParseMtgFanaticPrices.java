@@ -82,7 +82,7 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 							if (set2.equals(set)) {
 								if (prices.containsKey(magicCard.getName())) {
 									Float price = prices.get(magicCard.getName());
-									setDbPrice(magicCard, price);
+									setDbPrice(magicCard, price, getCurrency());
 									monitor.worked(1);
 								}
 							}
@@ -200,9 +200,10 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	}
 
 	/*
-	 * <li> <a href="/store/magic/viewcards.aspx?CatID=390"><div class="setIcon"><img
-	 * src="/images/magic/symbols/Magic2010_Common.gif" alt="Magic 2010 icon"
-	 * title="Magic 2010 icon" /></div>Magic 2010</a> </li>
+	 * <li> <a href="/store/magic/viewcards.aspx?CatID=390"><div
+	 * class="setIcon"><img src="/images/magic/symbols/Magic2010_Common.gif"
+	 * alt="Magic 2010 icon" title="Magic 2010 icon" /></div>Magic 2010</a>
+	 * </li>
 	 */
 	private static final Pattern setLinePattern = Pattern.compile("class=\"setIcon\"");
 	private static Pattern setItemPattern = Pattern.compile("<a href=\"/store/magic/viewcards.aspx\\?CatID=(\\d+)\">.*?</div>(.*?)</a>");

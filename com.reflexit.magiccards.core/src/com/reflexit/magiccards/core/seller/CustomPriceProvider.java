@@ -1,40 +1,88 @@
 package com.reflexit.magiccards.core.seller;
 
+import gnu.trove.map.TIntFloatMap;
+
 import java.io.IOException;
-import java.util.Currency;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.CurrencyConvertor;
+import com.reflexit.magiccards.core.sync.WebUtils;
+import com.reflexit.magiccards.core.xml.PriceProviderStoreObject;
+import com.reflexit.magiccards.core.xml.PricesXmlStreamReader;
 
 public class CustomPriceProvider extends AbstractPriceProvider {
-	private Currency cur = CurrencyConvertor.USD;
-
 	public CustomPriceProvider(String name) {
-		this(name, null);
-	}
-
-	public CustomPriceProvider(String name, String scur) {
 		super(name);
-		if (scur != null) {
-			this.cur = Currency.getInstance(scur);
-		}
 	}
 
 	@Override
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
 			throws IOException {
-		throw new MagicException("This custom price provider " + name + " does not support interactive update");
+		URL url = getURL();
+		if (url == null)
+			throw new MagicException("This price provider " + name + " does not support interactive update");
+		monitor.beginTask("Loading prices from " + url + " ...", 100);
+		try {
+			if (updateFromWeb(url))
+				return iterable;
+			else
+				return null;
+		} finally {
+			monitor.done();
+		}
+	}
+
+	private long lastUpdate;
+
+	public boolean updateFromWeb(URL url) throws IOException {
+		// if (lastUpdate != 0 && System.currentTimeMillis() - lastUpdate < 60 *
+		// 1000)
+		// return false;
+		InputStream openStream = WebUtils.openUrl(url);
+		loadPrices(openStream);
+		openStream.close();
+		lastUpdate = System.currentTimeMillis();
+		return true;
+	}
+
+	private void loadPrices(InputStream st) {
+		MagicLogger.traceStart("loadPrices");
+		try {
+			PriceProviderStoreObject store = new PricesXmlStreamReader().load(st);
+			if (store.properties != null)
+				getProperties().putAll(store.properties);
+			final TIntFloatMap map = getPriceMap();
+			if (store.map != null) {
+				map.clear();
+				map.putAll(store.map);
+			}
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		} finally {
+			MagicLogger.traceEnd("loadPrices");
+		}
+	}
+
+	@Override
+	public URL getURL() {
+		String url = getProperties().getProperty("url");
+		try {
+			if (url != null)
+				return new URL(url);
+		} catch (MalformedURLException e) {
+			MagicLogger.log(url);
+		}
+		return null;
 	}
 
 	@Override
 	public void save() throws IOException {
-		// no save
-	}
-
-	@Override
-	public java.util.Currency getCurrency() {
-		return cur;
+		if (getURL() != null)
+			super.save();
 	}
 }

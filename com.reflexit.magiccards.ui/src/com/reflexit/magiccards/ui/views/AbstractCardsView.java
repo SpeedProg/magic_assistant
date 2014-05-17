@@ -73,7 +73,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected abstract AbstractMagicCardsListControl doGetViewControl();
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -103,6 +104,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				AbstractCardsView.this.fillContextMenu(manager);
 			}
@@ -242,7 +244,8 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void runBuyCards() {
 		final IStructuredSelection selection = getSelection();
-		final BuyCardsConfirmationDialog dialog = new BuyCardsConfirmationDialog(getShell(), selection, getFilteredStore());
+		final BuyCardsConfirmationDialog dialog = new BuyCardsConfirmationDialog(getShell(), selection,
+				getFilteredStore());
 		if (dialog.open() == Window.OK) {
 			try {
 				IPriceProvider provider = DataManager.getDBPriceStore().getProvider();
@@ -265,11 +268,14 @@ public abstract class AbstractCardsView extends ViewPart {
 							"Browser is being open, continue with the browser to complete your order", url).open();
 				} else {
 					if (!MessageDialog
-							.openConfirm(getShell(), "Error",
+							.openConfirm(
+									getShell(),
+									"Error",
 									"This provider does not support direct cart population.\nPress OK to open a Browser on the main page and enter cards manually"))
 						return;
 					new BrowserOpenAcknoledgementDialog(getShell(),
-							"Browser is being open, continue with the browser to complete your order", provider.getURL()).open();
+							"Browser is being open, continue with the browser to complete your order",
+							provider.getURL()).open();
 				}
 			} catch (Exception e) {
 				MessageDialog.openError(getShell(), "Error", e.getLocalizedMessage());
@@ -291,8 +297,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void runLoadExtras() {
 		final IStructuredSelection selection = getSelection();
 		IFilteredCardStore filteredStore = getFilteredStore();
-		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), filteredStore.getSize(), filteredStore
-				.getCardStore().size());
+		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), filteredStore.getSize(),
+				filteredStore.getCardStore().size());
 		if (dialog.open() != Window.OK || dialog.getFields().isEmpty()) {
 			return;
 		}
@@ -311,7 +317,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		if (dialog.getFields().contains(MagicCardField.DBPRICE)) {
 			dialog.getFields().remove(MagicCardField.DBPRICE);
 			LoadingPricesJob loadingPrices = new LoadingPricesJob(list);
-			loadingPrices.schedule();
 			loadingPrices.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
@@ -323,6 +328,7 @@ public abstract class AbstractCardsView extends ViewPart {
 					});
 				}
 			});
+			loadingPrices.schedule();
 		}
 		if (dialog.getFields().size() > 0) {
 			LoadingExtraJob loadingExtras = new LoadingExtraJob(this);
@@ -426,7 +432,8 @@ public abstract class AbstractCardsView extends ViewPart {
 				if (activeHandler != null && activeHandler.getCardStore() == cardCollection.getStore()) {
 					active = " (Active)";
 				}
-				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName() + active;
+				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName()
+						+ active;
 				Action ac = new Action(name) {
 					@Override
 					public void run() {
