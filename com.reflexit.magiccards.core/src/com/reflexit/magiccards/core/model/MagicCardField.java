@@ -6,8 +6,8 @@ import java.util.Locale;
 import com.reflexit.magiccards.core.model.aggr.AbstractFloatCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractIntTransAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractPowerAggregator;
-import com.reflexit.magiccards.core.model.aggr.StringAggregator;
 import com.reflexit.magiccards.core.model.aggr.CollisionAggregator;
+import com.reflexit.magiccards.core.model.aggr.DateAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldCount4Aggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldCreatureCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldLegalityMapAggregator;
@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.aggr.FieldOwnUniqueAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldProggress4Aggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldProggressAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldUniqueAggregator;
+import com.reflexit.magiccards.core.model.aggr.StringAggregator;
 
 public enum MagicCardField implements ICardField {
 	ID {
@@ -91,6 +92,12 @@ public enum MagicCardField implements ICardField {
 	OTHER_PART(null),
 	SET_BLOCK(null), // block of the set
 	SET_CORE(null), // type of the set (Core, Expantions, etc)
+	SET_RELEASE(null) { // release date of the set
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new DateAggregator(this);
+		}
+	},
 	UNIQUE_COUNT(null) {
 		@Override
 		public Object aggregateValueOf(ICard card) {
@@ -218,6 +225,7 @@ public enum MagicCardField implements ICardField {
 		return new StringAggregator(this);
 	}
 
+	@Override
 	public boolean isTransient() {
 		return tag == null;
 	}
@@ -239,10 +247,12 @@ public enum MagicCardField implements ICardField {
 		return res.toArray(new ICardField[res.size()]);
 	}
 
+	@Override
 	public String getTag() {
 		return tag;
 	}
 
+	@Override
 	public Object aggregateValueOf(ICard card) {
 		return card.accept(aggregator, null);
 	}
@@ -276,6 +286,7 @@ public enum MagicCardField implements ICardField {
 		return res;
 	}
 
+	@Override
 	public String getLabel() {
 		String name = name();
 		name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);

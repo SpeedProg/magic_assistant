@@ -51,6 +51,7 @@ public class MagicColumnCollection extends ColumnCollection {
 			columns.add(new GenColumn(MagicCardField.SIDEBOARD, "Sideboard"));
 			columns.add(new GenColumn(MagicCardField.ERROR, "Error"));
 		}
+		columns.add(new ReleaseDateColumn());
 	}
 
 	protected SetColumn createSetColumn() {

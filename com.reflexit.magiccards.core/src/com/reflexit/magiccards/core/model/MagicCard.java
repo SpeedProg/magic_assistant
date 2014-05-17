@@ -239,7 +239,8 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			if (this.properties == null && ma.properties == null) {
 				return true;
 			}
-			// part is the other distinguisher of a card, used in split cards and flip cards
+			// part is the other distinguisher of a card, used in split cards
+			// and flip cards
 			String part = this.getPart();
 			String part2 = ma.getPart();
 			if (part != null)
@@ -338,6 +339,10 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			case SET_BLOCK: {
 				Edition ed = Editions.getInstance().getEditionByName(edition);
 				return ed.getBlock();
+			}
+			case SET_RELEASE: {
+				Edition ed = Editions.getInstance().getEditionByName(edition);
+				return ed.getReleaseDate();
 			}
 			case EDITION_ABBR: {
 				Edition ed = Editions.getInstance().getEditionByName(edition);
