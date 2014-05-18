@@ -391,6 +391,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	}
 
 	public int getCreatureCount() {
+		if (card.getPower() == null)
+			return 0;
 		if (!card.getPower().isEmpty()) {
 			return card.getCount();
 		}
