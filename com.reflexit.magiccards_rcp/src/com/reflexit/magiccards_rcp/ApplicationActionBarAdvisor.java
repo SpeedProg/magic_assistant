@@ -1,5 +1,6 @@
 package com.reflexit.magiccards_rcp;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -23,8 +24,9 @@ import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.mtgtournament.ui.tour.PerspectiveFactoryTournament;
 
 /**
- * An action bar advisor is responsible for creating, adding, and disposing of the actions added to
- * a workbench window. Each window will be populated with new actions.
+ * An action bar advisor is responsible for creating, adding, and disposing of
+ * the actions added to a workbench window. Each window will be populated with
+ * new actions.
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	// Actions - important to allocate these only in makeActions, and then use
@@ -97,7 +99,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		public void run() {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			try {
-				workbench.showPerspective(perspectiveId, window);
+				workbench.showPerspective(perspectiveId, window, ResourcesPlugin.getWorkspace());
 			} catch (WorkbenchException e) {
 				ErrorDialog.openError(new Shell(), WorkbenchMessages.ChangeToPerspectiveMenu_errorTitle, e.getMessage(), e.getStatus());
 			}
