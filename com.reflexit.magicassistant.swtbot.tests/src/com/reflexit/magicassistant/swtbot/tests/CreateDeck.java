@@ -61,11 +61,13 @@ public class CreateDeck extends AbstractSwtBotTest {
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.DELETE);
 		bot.sleep(500);
 		// add card using cut & paste
+		dbView.setFocus();
 		dbbot.table().getTableItem(0).select();
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'c'));
 		deckView.setFocus();
 		bot.sleep(500);
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'v'));
+		bot.sleep(500);
 		assertEquals(name, deckView.bot().table().getTableItem(0).getText(0));
 		bot.sleep(500);
 	}
