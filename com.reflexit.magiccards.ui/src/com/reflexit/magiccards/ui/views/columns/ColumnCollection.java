@@ -28,6 +28,10 @@ public abstract class ColumnCollection {
 		setColulmnsIndex();
 	}
 
+	public void add(AbstractColumn col) {
+		columns.add(col);
+	}
+
 	protected abstract void createColumns();
 
 	public String[] getColumnNames() {
