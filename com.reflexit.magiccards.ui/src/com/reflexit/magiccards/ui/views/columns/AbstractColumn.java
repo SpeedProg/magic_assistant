@@ -118,4 +118,9 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		}
 		return MagicUIActivator.getDefault().getBgColor(own);
 	}
+
+	@Override
+	public String toString() {
+		return getColumnName();
+	}
 }
