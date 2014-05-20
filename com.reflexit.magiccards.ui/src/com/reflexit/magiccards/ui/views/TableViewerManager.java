@@ -40,6 +40,7 @@ public class TableViewerManager extends ViewerManager {
 		// this.viewer.setLabelProvider(new MagicCardLabelProvider());
 		this.viewer.setUseHashlookup(true);
 		IColumnSortAction sortAction = new IColumnSortAction() {
+			@Override
 			public void sort(int i) {
 				TableViewerManager.this.updateSortColumn(i);
 				viewer.refresh(true);
@@ -56,6 +57,11 @@ public class TableViewerManager extends ViewerManager {
 	public void dispose() {
 		this.viewer.getControl().dispose();
 		this.viewer = null;
+	}
+
+	@Override
+	protected ColumnCollection doGetColumnCollection(String prefPageId) {
+		return getColumnsCollection();
 	}
 
 	protected void createDefaultColumns() {
@@ -94,8 +100,9 @@ public class TableViewerManager extends ViewerManager {
 	public void updateColumns(String value) {
 		if (this.viewer.getTable().isDisposed())
 			return;
-		getColumnsCollection().updateColumnsFromPropery(value);
-		this.viewer.getTable().setColumnOrder(getColumnsCollection().getColumnsOrder());
+		ColumnCollection columnsCollection = getColumnsCollection();
+		columnsCollection.updateColumnsFromPropery(value);
+		this.viewer.getTable().setColumnOrder(columnsCollection.getColumnsOrder());
 		TableColumn[] acolumns = this.viewer.getTable().getColumns();
 		for (int i = 0; i < acolumns.length; i++) {
 			TableColumn acol = acolumns[i];
@@ -110,6 +117,7 @@ public class TableViewerManager extends ViewerManager {
 		}
 	}
 
+	@Override
 	public String getColumnLayoutProperty() {
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.setColumnProperties(viewer.getTable().getColumns());
@@ -117,6 +125,7 @@ public class TableViewerManager extends ViewerManager {
 		return columnsCollection.getColumnLayoutProperty();
 	}
 
+	@Override
 	public void setLinesVisible(boolean grid) {
 		this.viewer.getTable().setLinesVisible(grid);
 	}
@@ -169,6 +178,7 @@ public class TableViewerManager extends ViewerManager {
 		return getViewer().getContentProvider();
 	}
 
+	@Override
 	public void updateViewer(Object input) {
 		if (viewer == null || this.viewer.getControl().isDisposed())
 			return;
