@@ -12,7 +12,6 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +36,7 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		this.list = Collections.synchronizedList(new ArrayList<T>());
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 		synchronized (list) {
 			ArrayList x = new ArrayList(list);
@@ -44,6 +44,7 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		}
 	}
 
+	@Override
 	public int size() {
 		return this.getList().size();
 	}
@@ -65,7 +66,7 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	/**
 	 * @return the list
 	 */
-	public Collection<T> getList() {
+	public List<T> getList() {
 		return this.list;
 	}
 
@@ -92,22 +93,27 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 		// nothing
 	}
 
+	@Override
 	public Location getLocation() {
 		return location;
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		this.location = location;
 	}
 
+	@Override
 	public String getComment() {
 		return null;
 	}
 
+	@Override
 	public String getName() {
 		return location.getName();
 	}
 
+	@Override
 	public boolean isVirtual() {
 		return true;
 	}

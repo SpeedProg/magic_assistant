@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
 
@@ -28,14 +29,25 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 		super(new MemoryCardStorage<T>(), false);
 	}
 
+	@Override
 	public T getCard(int id) {
 		return null;
 	}
 
+	public T get(int index) {
+		return ((MemoryCardStorage<T>) getStorage()).getList().get(index);
+	}
+
+	public List<T> getList() {
+		return ((MemoryCardStorage<T>) getStorage()).getList();
+	}
+
+	@Override
 	public Collection<T> getCards(int id) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int getCount() {
 		int count = 0;
 		boolean countable = false;
