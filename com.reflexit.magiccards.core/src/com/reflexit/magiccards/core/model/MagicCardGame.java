@@ -34,7 +34,7 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 		}
 	};
 
-	enum Zones {
+	public enum Zone {
 		LIBRARY,
 		SCRY,
 		HAND,
@@ -46,20 +46,35 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 	private MagicCard card;
 	private HashMap<ICardField, Object> properties;
 
-	public MagicCardGame() {
+	public MagicCardGame(IMagicCard elem) {
+		card = elem.getBase();
 		properties = new HashMap<ICardField, Object>(3);
-		set(MagicCardGameField.ZONE, Zones.LIBRARY);
+		set(MagicCardGameField.ZONE, Zone.LIBRARY);
 		set(MagicCardGameField.FACEDOWN, false);
 	}
 
 	@Override
+	public MagicCard getBase() {
+		return card;
+	}
+
+	@Override
 	public Object get(ICardField field) {
+		if (field instanceof MagicCardGameField)
+			return properties.get(field);
 		return card.get(field);
 	}
 
 	@Override
 	public boolean set(ICardField field, Object value) {
-		return card.set(field, value);
+		if (field instanceof MagicCardGameField) {
+			if (value == null)
+				properties.remove(field);
+			else
+				properties.put(field, value);
+			return true;
+		} else
+			return card.set(field, value);
 	}
 
 	@Override
@@ -70,5 +85,27 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 	@Override
 	public String getName() {
 		return card.getName();
+	}
+
+	public Zone getZone() {
+		return (Zone) get(MagicCardGameField.ZONE);
+	}
+
+	public void setZone(Zone zone) {
+		if (getZone() != zone) {
+			set(MagicCardGameField.ZONE, zone);
+			setTapped(false);
+		}
+	}
+
+	public void setTapped(boolean value) {
+		if (value)
+			set(MagicCardGameField.TAPPED, value);
+		else
+			set(MagicCardGameField.TAPPED, null);
+	}
+
+	public boolean isTapped() {
+		return getBoolean(MagicCardGameField.TAPPED);
 	}
 }

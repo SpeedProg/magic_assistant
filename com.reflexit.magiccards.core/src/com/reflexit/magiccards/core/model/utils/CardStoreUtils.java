@@ -11,7 +11,6 @@
 package com.reflexit.magiccards.core.model.utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,7 +19,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -34,7 +32,6 @@ import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
@@ -126,7 +123,8 @@ public final class CardStoreUtils {
 					continue;
 				}
 				if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
-					String subAnsSuperTypes[] = type.split("[:-]+", 2); // : in french
+					String subAnsSuperTypes[] = type.split("[:-]+", 2); // : in
+																		// french
 					String creatureSuperType = subAnsSuperTypes[0].trim();
 					String creatureSubType = subAnsSuperTypes.length > 1 ? subAnsSuperTypes[1].trim() : "";
 					if (!creatureSuperType.isEmpty()) {
@@ -184,6 +182,7 @@ public final class CardStoreUtils {
 			}
 		}
 		Collections.sort(list, new Comparator<Pair>() {
+			@Override
 			public int compare(Pair o1, Pair o2) {
 				return o2.value - o1.value;
 			}
@@ -218,7 +217,8 @@ public final class CardStoreUtils {
 					count = ((ICardCountable) elem).getCount();
 				}
 				if (MTYPES.hasType(elem, CardTypes.TYPES.Type_Creature)) {
-					String subAnsSuperTypes[] = type.split("[:-]+", 2); // : in french
+					String subAnsSuperTypes[] = type.split("[:-]+", 2); // : in
+																		// french
 					// String creatureSuperType = subAnsSuperTypes[0].trim();
 					String creatureSubType = subAnsSuperTypes.length > 1 ? subAnsSuperTypes[1].trim() : "";
 					if (!creatureSubType.isEmpty()) {
@@ -247,8 +247,8 @@ public final class CardStoreUtils {
 	}
 
 	/**
-	 * mana curve is array 0 .. 8 of card counts, where non-land is counted, arr[8] - is cards with
-	 * X cost in it, arr[7] - is 7+
+	 * mana curve is array 0 .. 8 of card counts, where non-land is counted,
+	 * arr[8] - is cards with X cost in it, arr[7] - is 7+
 	 * 
 	 * @param store
 	 * @return mana curve for given store
@@ -488,33 +488,6 @@ public final class CardStoreUtils {
 			sum += count;
 		}
 		return sum;
-	}
-
-	public static Collection<IMagicCard> randomize(ICardStore store) {
-		ArrayList<IMagicCard> filteredList = new ArrayList<IMagicCard>();
-		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
-			IMagicCard elem = iterator.next();
-			int count = 1;
-			if (elem instanceof ICardCountable) {
-				ICardCountable card = (ICardCountable) elem;
-				count = card.getCount();
-				for (int i = 0; i < count; i++) {
-					MagicCardPhysical nc = new MagicCardPhysical(elem, store.getLocation());
-					nc.setCount(1);
-					filteredList.add(nc);
-				}
-			} else {
-				filteredList.add(elem);
-			}
-		}
-		ArrayList<IMagicCard> newList = new ArrayList<IMagicCard>(filteredList.size());
-		Random r = new Random(System.currentTimeMillis() * filteredList.hashCode());
-		while (filteredList.size() > 0) {
-			int index = r.nextInt(filteredList.size());
-			newList.add(filteredList.get(index));
-			filteredList.remove(index);
-		}
-		return newList;
 	}
 
 	public static ICardGroup buildAbilityGroups(Iterable iterable) {

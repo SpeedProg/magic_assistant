@@ -10,79 +10,166 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
-import com.reflexit.magiccards.core.model.ICard;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
+import com.reflexit.magiccards.core.model.MagicCardGame;
+import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
 
 /**
  * @author Alena
  * 
  */
 public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
-	ICardStore deck;
-	MemoryCardStore hand;
-	MemoryCardStore library;
+	ICardStore<IMagicCard> original;
+	final MemoryCardStore<MagicCardGame> store;
+	private int turn;
 
-	static class DrawDeck extends MemoryCardStore {
+	class ZonedFilter extends MagicCardFilter {
+		HashSet<Zone> hideZones = new HashSet<MagicCardGame.Zone>();
+
+		@Override
+		public boolean isFiltered(Object o) {
+			boolean f = super.isFiltered(o);
+			if (f)
+				return f;
+			if (o instanceof MagicCardGame) {
+				MagicCardGame mg = (MagicCardGame) o;
+				if (hideZones.contains(mg.getZone()))
+					return true;
+			}
+			return false;
+		}
+
+		void show(Zone zone, boolean show) {
+			if (show)
+				hideZones.remove(zone);
+			else
+				hideZones.add(zone);
+		}
+	}
+
+	static class SingletonDeck<T> extends MemoryCardStore<T> {
 		@Override
 		public int getCount() {
 			return size();
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Override
+	public ZonedFilter getFilter() {
+		return (ZonedFilter) super.getFilter();
+	}
+
 	public PlayingDeck(ICardStore store) {
+		this.store = new SingletonDeck<MagicCardGame>();
+		this.filter = new ZonedFilter();
+		getFilter().show(Zone.LIBRARY, false);
+		getFilter().show(Zone.GRAVEYARD, false);
+		getFilter().show(Zone.EXILE, false);
 		setStore(store);
 	}
 
-	@Override
-	protected Comparator<ICard> getSortComparator(MagicCardFilter filter) {
-		Comparator<ICard> comp = filter.getSortOrder().getComparator();
-		return comp;
-	}
-
 	public void setStore(ICardStore store) {
-		if (this.deck != store) {
-			this.deck = store;
-			shuffle();
-			draw(7);
+		if (this.original != store) {
+			this.original = store;
+			restart();
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.core.model.storage.IFilteredCardStore#getCardStore ()
+	 * @see
+	 * com.reflexit.magiccards.core.model.storage.IFilteredCardStore#getCardStore
+	 * ()
 	 */
+	@Override
 	public ICardStore getCardStore() {
-		return this.hand;
+		return this.store;
 	}
 
 	public void draw(int cards) {
 		int i = 0;
-		for (Iterator iterator = this.library.iterator(); iterator.hasNext() && i < cards; i++) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			this.hand.add(card);
-			this.library.remove(card);
+		for (Iterator<MagicCardGame> iterator = this.store.iterator(); iterator.hasNext() && i < cards;) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == Zone.LIBRARY) {
+				card.setZone(MagicCardGame.Zone.HAND);
+				i++;
+			}
+		}
+	}
+
+	public void scry(int cards) {
+		int i = 0;
+		for (Iterator<MagicCardGame> iterator = this.store.iterator(); iterator.hasNext() && i < cards;) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == Zone.LIBRARY) {
+				card.setZone(MagicCardGame.Zone.SCRY);
+				i++;
+			}
 		}
 	}
 
 	/**
 	 * 
 	 */
+	public void restart() {
+		store.clear();
+		Collection<MagicCardGame> randomize = randomize(pullIn(original));
+		this.store.addAll(randomize);
+		draw(7);
+	}
+
 	public void shuffle() {
-		Collection<IMagicCard> randomize = CardStoreUtils.randomize(this.deck);
-		this.hand = new DrawDeck();
-		this.library = new DrawDeck();
-		this.library.addAll(randomize);
+		ArrayList<MagicCardGame> mg = new ArrayList<MagicCardGame>();
+		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == Zone.LIBRARY) {
+				mg.add(card);
+				iterator.remove();
+			}
+		}
+		Collection<MagicCardGame> randomize = randomize(mg);
+		this.store.addAll(randomize); // XXX at the begging
+	}
+
+	public static Collection<MagicCardGame> randomize(List<MagicCardGame> list) {
+		ArrayList<MagicCardGame> newList = new ArrayList<MagicCardGame>(list.size());
+		Random r = new Random(System.currentTimeMillis() * list.hashCode());
+		while (list.size() > 0) {
+			int index = r.nextInt(list.size());
+			newList.add(list.get(index));
+			list.remove(index);
+		}
+		return newList;
+	}
+
+	private static ArrayList<MagicCardGame> pullIn(ICardStore<IMagicCard> store) {
+		ArrayList<MagicCardGame> list = new ArrayList<MagicCardGame>();
+		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
+			IMagicCard elem = iterator.next();
+			int count = 1;
+			if (elem instanceof ICardCountable) {
+				ICardCountable card = (ICardCountable) elem;
+				count = card.getCount();
+				for (int i = 0; i < count; i++) {
+					MagicCardGame nc = new MagicCardGame(elem);
+					list.add(nc);
+				}
+			} else {
+				list.add(new MagicCardGame(elem));
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -92,16 +179,80 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 
 	@Override
 	public Location getLocation() {
-		return deck.getLocation();
+		return original.getLocation();
 	}
 
 	@Override
 	public void clear() {
-		this.deck = null;
+		this.original = null;
 	}
 
 	@Override
 	public void addAll(ICardStore store) {
 		setStore(store);
+	}
+
+	public void play(List<IMagicCard> cardSelection) {
+		toZone(cardSelection, Zone.BATTLEFIELD);
+	}
+
+	public void returnToHand(List<IMagicCard> cardSelection) {
+		toZone(cardSelection, Zone.HAND);
+	}
+
+	public void toZone(List<IMagicCard> cardSelection, Zone zone) {
+		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
+			MagicCardGame card = (MagicCardGame) iterator.next();
+			card.setZone(zone);
+		}
+	}
+
+	public void showZone(Zone zone, boolean show) {
+		getFilter().show(zone, show);
+	}
+
+	public boolean canZone(List<IMagicCard> cardSelection, Zone zone) {
+		if (cardSelection.size() == 0)
+			return false;
+		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
+			MagicCardGame card = (MagicCardGame) iterator.next();
+			if (card.getZone() == zone)
+				return false;
+		}
+		return true;
+	}
+
+	public void pushback(List<IMagicCard> cardSelection) {
+		ArrayList<MagicCardGame> mg = new ArrayList<MagicCardGame>();
+		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
+			MagicCardGame card = (MagicCardGame) iterator.next();
+			store.remove(card);
+			mg.add(card);
+		}
+		store.addAll(mg);
+	}
+
+	public void newturn() {
+		turn++;
+		tap(false);
+		draw(1);
+	}
+
+	public void tap(List<IMagicCard> cardSelection, boolean value) {
+		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
+			MagicCardGame card = (MagicCardGame) iterator.next();
+			if (card.getZone() == Zone.BATTLEFIELD) {
+				card.setTapped(!card.isTapped());
+			}
+		}
+	}
+
+	public void tap(boolean value) {
+		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == Zone.BATTLEFIELD) {
+				card.setTapped(value);
+			}
+		}
 	}
 }

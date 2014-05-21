@@ -95,8 +95,8 @@ import com.reflexit.magiccards.ui.views.search.TableSearch;
 import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
 
 /**
- * Magic card list control - MagicControl that represents list of cards (tree or table), and comes
- * with actions and preferences to manipulate this list
+ * Magic card list control - MagicControl that represents list of cards (tree or
+ * table), and comes with actions and preferences to manipulate this list
  * 
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl, ICardEventListener {
@@ -136,6 +136,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected ISelection revealSelection;
 	protected IFilteredCardStore<ICard> fstore;
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			// selection changes on own view
 			setStatus(getStatusMessage());
@@ -209,7 +210,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#createPartControl
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#createPartControl
 	 * (org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -225,6 +227,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilter()
 	 */
+	@Override
 	public MagicCardFilter getFilter() {
 		if (getFilteredStore() == null)
 			return null;
@@ -234,8 +237,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
+	@Override
 	public IFilteredCardStore getFilteredStore() {
 		if (fstore == null)
 			fstore = doGetFilteredStore();
@@ -246,6 +251,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		return actionGroupMenu;
 	}
 
+	@Override
 	public MenuManager getGroupMenu() {
 		return menuGroup;
 	}
@@ -253,10 +259,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/**
 	 * @return
 	 */
+	@Override
 	public PrefixedPreferenceStore getLocalPreferenceStore() {
 		return this.prefStore;
 	}
 
+	@Override
 	public PrefixedPreferenceStore getFilterPreferenceStore() {
 		return this.prefStore;
 	}
@@ -268,7 +276,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
 	 */
 	@Override
 	public ISelection getSelection() {
@@ -278,7 +287,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		} catch (Exception e) {
 			selection = new StructuredSelection();
 		}
-		// System.err.println("current selection 2 " + manager.getSelectionProvider() + " " +
+		// System.err.println("current selection 2 " +
+		// manager.getSelectionProvider() + " " +
 		// selection);
 		return selection;
 	}
@@ -341,9 +351,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
 	 * (org.eclipse.jface.action.MenuManager)
 	 */
+	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		manager.hookContextMenu(menuMgr);
 	}
@@ -351,7 +363,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#init(org.eclipse .ui.IViewSite)
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#init(org.eclipse
+	 * .ui.IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) {
@@ -390,6 +404,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		DataManager.getLibraryCardStore().removeListener(this);
 	}
 
+	@Override
 	public void reloadData() {
 		setNextSelection(getSelection());
 		update();
@@ -412,21 +427,28 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		manager.getControl().setFocus();
 	}
 
+	@Override
 	public void setNextSelection(ISelection structuredSelection) {
 		revealSelection = structuredSelection;
 	}
 
+	@Override
 	public void setStatus(String text) {
+		if (statusLine.isDisposed())
+			return;
 		this.statusLine.setText(text);
 		this.statusLine.setToolTipText(text);
 	}
 
 	public void setWarning(boolean war) {
+		if (warning.isDisposed())
+			return;
 		warning.setVisible(war);
 		warning.setToolTipText("There are " + getFiltered() + " hidden cards!\nChange filter to see more");
 		warning.getParent().layout(true, true);
 	}
 
+	@Override
 	public void updateSingle(ICard source) {
 		getViewer().update(source, null);
 		updateStatus();
@@ -504,6 +526,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	protected QuickFilterControl createQuickFilterControl(Composite composite) {
 		QuickFilterControl quickFilter = new QuickFilterControl(composite, new Runnable() {
+			@Override
 			public void run() {
 				reloadData();
 			}
@@ -516,6 +539,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	protected void createSearchControl(Composite composite) {
 		this.searchControl = new SearchControl(new ISearchRunnable() {
+			@Override
 			public void run(SearchContext context) {
 				runSearch(context);
 			}
@@ -581,6 +605,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		manager.add(this.getGroupMenu());
 		manager.add(new Separator());
 		manager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				viewMenuIsAboutToShow(manager);
 			}
@@ -626,6 +651,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	protected void hookDoubleClickAction() {
 		this.manager.hookDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				AbstractMagicCardsListControl.this.doubleClickAction.run();
 			}
@@ -639,6 +665,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
 		updateGroupBy(getGroupFieldsByName(field));
 		IColumnSortAction sortAction = new IColumnSortAction() {
+			@Override
 			public void sort(int i) {
 				AbstractMagicCardsListControl.this.sort(i);
 			}
@@ -726,11 +753,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			setMenuCreator(new IMenuCreator() {
 				private Menu listMenu;
 
+				@Override
 				public void dispose() {
 					if (listMenu != null)
 						listMenu.dispose();
 				}
 
+				@Override
 				public Menu getMenu(Control parent) {
 					if (listMenu != null)
 						listMenu.dispose();
@@ -738,6 +767,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 					return listMenu;
 				}
 
+				@Override
 				public Menu getMenu(Menu parent) {
 					return null;
 				}
@@ -769,7 +799,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
 			refresh();
 		} else if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
-			boolean qf = Boolean.valueOf(property);
+			boolean qf = Boolean.valueOf(newValue.toString());
 			setQuickFilterVisible(qf);
 		} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
 			refresh();
@@ -784,6 +814,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/**
 	 *
 	 */
+	@Override
 	public void runCopy() {
 		Control fc = partControl.getDisplay().getFocusControl();
 		if (fc instanceof Text)
@@ -822,6 +853,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (context.isFound()) {
 			final Object last = context.getLast();
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					highlightCard(last);
 				}
@@ -835,7 +867,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			quickFilter.refresh();
 		}
 		// CardFilter.open(getViewSite().getShell());
-		// Dialog cardFilterDialog = new CardFilterDialog(getShell(), getFilterPreferenceStore());
+		// Dialog cardFilterDialog = new CardFilterDialog(getShell(),
+		// getFilterPreferenceStore());
 		// if (cardFilterDialog.open() == IStatus.OK) {
 		// reloadData();
 		// quickFilter.refresh();
@@ -886,7 +919,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
 	}
 
-	protected final void updateStatus() {
+	protected void updateStatus() {
 		setStatus(getStatusMessage());
 		setWarning(getFiltered() != 0);
 	}
@@ -905,6 +938,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	/**
 	 * Update view in UI thread after data load is finished
 	 */
+	@Override
 	public void updateViewer() {
 		MagicLogger.traceStart("updateViewer");
 		try {
@@ -957,6 +991,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		}
 	}
 
+	@Override
 	public void runPaste() {
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
 		Object contents = mt.fromClipboard();
@@ -968,10 +1003,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		}
 	}
 
+	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (event.getSource() instanceof ICard)
 						updateSingle((ICard) event.getSource());
@@ -1047,6 +1084,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 						getFilteredStore().update();
 					} catch (final Exception e) {
 						display.syncExec(new Runnable() {
+							@Override
 							public void run() {
 								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage());
 							}
@@ -1069,6 +1107,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 					display.syncExec(postLoad);
 				else
 					display.syncExec(new Runnable() {
+						@Override
 						public void run() {
 							updateViewer();
 						}

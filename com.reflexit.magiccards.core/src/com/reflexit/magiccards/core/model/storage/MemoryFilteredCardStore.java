@@ -39,6 +39,7 @@ public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 		cards.add(c);
 	}
 
+	@Override
 	public ICardStore getCardStore() {
 		return this.cards;
 	}
@@ -68,6 +69,10 @@ public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
 		for (Object object : store) {
 			cards.add(object);
 		}
+	}
+
+	public void setFilter(MagicCardFilter filter) {
+		this.filter = filter;
 	}
 
 	public void update(MagicCardFilter filter) {

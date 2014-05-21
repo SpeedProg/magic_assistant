@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
 import java.util.Collection;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
@@ -37,6 +38,16 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 		if (x == null)
 			return 0;
 		return x;
+	}
+
+	public boolean getBoolean(ICardField field) {
+		Object v = get(field);
+		if (v == null)
+			return false;
+		if (v instanceof String) {
+			return Boolean.valueOf((String) v);
+		}
+		return (Boolean) v;
 	}
 
 	public static float convertFloat(String str) {
@@ -114,6 +125,7 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 		return getInt(MagicCardField.OWN_UNIQUE);
 	}
 
+	@Override
 	public int getOwnTotalAll() {
 		Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(getName());
 		int sum = 0;
@@ -229,6 +241,7 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 		return getString(MagicCardField.LANG);
 	}
 
+	@Override
 	public boolean matches(ICardField left, TextValue right) {
 		return matches(this, left, right);
 	}
@@ -284,6 +297,7 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 
 	private static CardTypes MTYPES = CardTypes.getInstance();
 
+	@Override
 	public boolean isBasicLand() {
 		String cost = getCost();
 		if (cost != null && cost.length() > 0)

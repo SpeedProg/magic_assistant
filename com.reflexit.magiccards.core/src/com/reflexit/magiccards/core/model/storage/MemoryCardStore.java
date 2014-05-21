@@ -61,4 +61,8 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 			return count;
 		return size();
 	}
+
+	public void clear() {
+		getList().clear();
+	}
 }
