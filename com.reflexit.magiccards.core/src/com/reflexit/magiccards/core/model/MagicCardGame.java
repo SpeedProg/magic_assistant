@@ -35,12 +35,13 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 	};
 
 	public enum Zone {
-		LIBRARY,
-		SCRY,
-		HAND,
-		GRAVEYARD,
 		BATTLEFIELD,
-		EXILE
+		HAND,
+		SCRY,
+		GRAVEYARD,
+		EXILE,
+		LIBRARY,
+		SIDEBOARD
 	}
 
 	private MagicCard card;

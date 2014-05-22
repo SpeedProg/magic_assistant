@@ -127,6 +127,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		Collection<MagicCardGame> randomize = randomize(pullIn(original));
 		this.store.addAll(randomize);
 		draw(7);
+		turn = 1;
 	}
 
 	public void shuffle() {
@@ -236,6 +237,10 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		turn++;
 		tap(false);
 		draw(1);
+	}
+
+	public int getTurn() {
+		return turn;
 	}
 
 	public void tap(List<IMagicCard> cardSelection, boolean value) {

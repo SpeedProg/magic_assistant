@@ -104,7 +104,7 @@ public class DrawPage extends AbstractDeckListPage {
 			int cards = playdeck.getSize();
 			int total = ((ICardCountable) store).getCount();
 			int hand = total < 7 ? total : 7;
-			return "Drawn " + cards + " of " + total + ". Turn " + (cards - hand + 1);
+			return "Drawn " + cards + " of " + total + ". Turn " + playdeck.getTurn();
 		}
 
 		@Override
@@ -244,7 +244,7 @@ public class DrawPage extends AbstractDeckListPage {
 				getListControl().reloadData();
 			}
 		};
-		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "End turn and Draw One") {
+		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One") {
 			@Override
 			public void run() {
 				playdeck.draw(1);
@@ -265,7 +265,7 @@ public class DrawPage extends AbstractDeckListPage {
 				getListControl().reloadData();
 			}
 		};
-		this.showlib = new ImageAction("Show Library", "icons/obj16/ilib16.png", null, IAction.AS_CHECK_BOX) {
+		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.LIBRARY, isChecked());
@@ -279,14 +279,14 @@ public class DrawPage extends AbstractDeckListPage {
 				getListControl().reloadData();
 			}
 		};
-		this.showexile = new ImageAction("Show Exile", "icons/clcl16/delete_obj.gif", null, IAction.AS_CHECK_BOX) {
+		this.showexile = new ImageAction("Show Exile", "icons/clcl16/palm16.png", null, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.EXILE, isChecked());
 				getListControl().reloadData();
 			}
 		};
-		this.shuffle = new ImageAction("Suffle Library", "icons/obj16/hand16.png", null) {
+		this.shuffle = new ImageAction("Suffle Library", "icons/obj16/shuffle16.png", null) {
 			@Override
 			public void run() {
 				playdeck.shuffle();
@@ -304,7 +304,7 @@ public class DrawPage extends AbstractDeckListPage {
 				getListControl().reloadData();
 			}
 		};
-		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/delete_obj.gif", "Remove from the game (Exile)");
+		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png", "Remove from the game (Exile)");
 		this.kill = new ZoneAction(Zone.GRAVEYARD, "Kill", "icons/clcl16/graveyard.png", "Put to graveyard");
 		this.tap = new ImageAction("Tap", "icons/tap.gif", null) {
 			@Override
