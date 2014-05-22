@@ -22,6 +22,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardGame;
+import com.reflexit.magiccards.core.model.MagicCardGame.MagicCardGameField;
 import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
 
 /**
@@ -54,6 +55,12 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 				hideZones.remove(zone);
 			else
 				hideZones.add(zone);
+		}
+
+		@Override
+		public void setNoSort() {
+			super.setNoSort();
+			setSortField(MagicCardGameField.DRAWID, true);
 		}
 	}
 
@@ -125,9 +132,18 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	public void restart() {
 		store.clear();
 		Collection<MagicCardGame> randomize = randomize(pullIn(original));
-		this.store.addAll(randomize);
+		addAndNumber(randomize);
 		draw(7);
 		turn = 1;
+	}
+
+	private void addAndNumber(Collection<MagicCardGame> list) {
+		int count = store.size();
+		for (MagicCardGame mg : list) {
+			mg.setDrawId(count);
+			count++;
+			store.add(mg);
+		}
 	}
 
 	public void shuffle() {
@@ -140,7 +156,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 			}
 		}
 		Collection<MagicCardGame> randomize = randomize(mg);
-		this.store.addAll(randomize); // XXX at the begging
+		addAndNumber(randomize);
 	}
 
 	public static Collection<MagicCardGame> randomize(List<MagicCardGame> list) {
@@ -230,7 +246,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 			store.remove(card);
 			mg.add(card);
 		}
-		store.addAll(mg);
+		addAndNumber(mg);
 	}
 
 	public void newturn() {

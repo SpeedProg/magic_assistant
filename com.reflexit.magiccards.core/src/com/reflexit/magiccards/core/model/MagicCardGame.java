@@ -7,7 +7,8 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 	public enum MagicCardGameField implements ICardField {
 		ZONE,
 		TAPPED,
-		FACEDOWN;
+		FACEDOWN,
+		DRAWID;
 		@Override
 		public boolean isTransient() {
 			return true;
@@ -108,5 +109,13 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 
 	public boolean isTapped() {
 		return getBoolean(MagicCardGameField.TAPPED);
+	}
+
+	public int getDrawId() {
+		return getInt(MagicCardGameField.DRAWID);
+	}
+
+	public void setDrawId(int i) {
+		set(MagicCardGameField.DRAWID, i);
 	}
 }

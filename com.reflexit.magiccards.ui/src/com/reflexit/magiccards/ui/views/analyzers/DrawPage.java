@@ -60,7 +60,7 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			protected void createColumns() {
 				this.columns.add(new GroupColumn(true, true, false));
-				// this.columns.add(new IdColumn());
+				this.columns.add(new GenColumn(MagicCardGameField.DRAWID, "DrawId"));
 				this.columns.add(new CostColumn());
 				this.columns.add(new TypeColumn());
 				this.columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
@@ -286,7 +286,7 @@ public class DrawPage extends AbstractDeckListPage {
 				getListControl().reloadData();
 			}
 		};
-		this.shuffle = new ImageAction("Suffle Library", "icons/obj16/shuffle16.png", null) {
+		this.shuffle = new ImageAction("Suffle Library", "icons/clcl16/shuffle16.png", null) {
 			@Override
 			public void run() {
 				playdeck.shuffle();
