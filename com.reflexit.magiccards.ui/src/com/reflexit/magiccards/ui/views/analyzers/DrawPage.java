@@ -103,8 +103,19 @@ public class DrawPage extends AbstractDeckListPage {
 				return "";
 			int cards = playdeck.getSize();
 			int total = ((ICardCountable) store).getCount();
-			int hand = total < 7 ? total : 7;
-			return "Drawn " + cards + " of " + total + ". Turn " + playdeck.getTurn();
+			String res = "Drawn " + cards + " of " + total + ". Turn " + playdeck.getTurn() + ".";
+			for (Zone zone : Zone.values()) {
+				res += zoneStatus(zone);
+			}
+			return res;
+		}
+
+		private String zoneStatus(Zone zone) {
+			int g = playdeck.countInZone(zone);
+			String zoneStr = "";
+			if (g != 0)
+				zoneStr = " " + zone.getLabel() + " " + g + ".";
+			return zoneStr;
 		}
 
 		@Override
@@ -142,6 +153,7 @@ public class DrawPage extends AbstractDeckListPage {
 	public void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.unsort);
 		manager.add(this.shuffle);
+		manager.add(reset);
 		manager.add(new Separator());
 		manager.add(newturn);
 		manager.add(draw);
@@ -151,19 +163,16 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(showgrave);
 		manager.add(showexile);
 		manager.add(new Separator());
-		manager.add(reset);
 		super.fillLocalPullDown(manager);
 	}
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
-		// manager.add(play);
-		manager.add(newturn);
-		manager.add(new Separator());
 		manager.add(showlib);
 		manager.add(showgrave);
 		manager.add(showexile);
 		manager.add(new Separator());
+		manager.add(newturn);
 		manager.add(reset);
 		super.fillLocalToolBar(manager);
 	}

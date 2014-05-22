@@ -42,7 +42,13 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 		GRAVEYARD,
 		EXILE,
 		LIBRARY,
-		SIDEBOARD
+		SIDEBOARD;
+		public String getLabel() {
+			String name = name();
+			name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+			name = name.replace('_', ' ');
+			return name;
+		}
 	}
 
 	private MagicCard card;

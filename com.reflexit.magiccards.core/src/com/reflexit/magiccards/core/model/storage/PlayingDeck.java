@@ -276,4 +276,15 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 			}
 		}
 	}
+
+	public int countInZone(Zone zone) {
+		int count = 0;
+		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == zone) {
+				count++;
+			}
+		}
+		return count;
+	}
 }
