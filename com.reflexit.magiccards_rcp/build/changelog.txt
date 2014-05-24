@@ -1,3 +1,7 @@
+changes in 1.3.1.5
+* More fixes in test play deck, added Notes columns for other stuff (like counters, face down, etc)
+changes in 1.3.1.4
+* Feature 179 Added feature to Play Test a Deck (via Draw page)
 changes in 1.3.1.3
 * Bug 343 Tournament perspective no longer works
 * Bug 344 java.lang.NullPointerException on click 

@@ -7,8 +7,8 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 	public enum MagicCardGameField implements ICardField {
 		ZONE,
 		TAPPED,
-		FACEDOWN,
-		DRAWID;
+		DRAWID,
+		NOTE;
 		@Override
 		public boolean isTransient() {
 			return true;
@@ -58,7 +58,6 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 		card = elem.getBase();
 		properties = new HashMap<ICardField, Object>(3);
 		set(MagicCardGameField.ZONE, Zone.LIBRARY);
-		set(MagicCardGameField.FACEDOWN, false);
 	}
 
 	@Override
@@ -123,5 +122,10 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 
 	public void setDrawId(int i) {
 		set(MagicCardGameField.DRAWID, i);
+	}
+
+	@Override
+	public String toString() {
+		return card.getName() + " " + properties;
 	}
 }

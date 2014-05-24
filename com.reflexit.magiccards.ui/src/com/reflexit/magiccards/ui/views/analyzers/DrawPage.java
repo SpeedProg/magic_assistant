@@ -8,6 +8,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,6 +34,7 @@ import com.reflexit.magiccards.ui.views.columns.CostColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
+import com.reflexit.magiccards.ui.views.columns.StringEditingSupport;
 import com.reflexit.magiccards.ui.views.columns.TypeColumn;
 
 public class DrawPage extends AbstractDeckListPage {
@@ -53,6 +56,7 @@ public class DrawPage extends AbstractDeckListPage {
 	private ImageAction showexile;
 	private ImageAction newturn;
 	private ImageAction tap;
+	private ImageAction mulligan;
 	public static final String ID = DrawPage.class.getName();
 
 	public DrawPage() {
@@ -60,13 +64,24 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			protected void createColumns() {
 				this.columns.add(new GroupColumn(true, true, false));
-				this.columns.add(new GenColumn(MagicCardGameField.DRAWID, "DrawId"));
+				this.columns.add(new GenColumn(MagicCardGameField.DRAWID, "DrawId") {
+					@Override
+					public int getColumnWidth() {
+						return 20;
+					}
+				});
 				this.columns.add(new CostColumn());
 				this.columns.add(new TypeColumn());
 				this.columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
 				this.columns.add(new PowerColumn(MagicCardField.TOUGHNESS, "T", "Toughness"));
 				this.columns.add(new GenColumn(MagicCardGameField.ZONE, "Zone"));
 				this.columns.add(new GenColumn(MagicCardGameField.TAPPED, "Tapped"));
+				this.columns.add(new GenColumn(MagicCardGameField.NOTE, "Notes") {
+					@Override
+					public EditingSupport getEditingSupport(final ColumnViewer viewer) {
+						return new StringEditingSupport(viewer, this);
+					}
+				});
 			}
 		};
 	}
@@ -101,7 +116,7 @@ public class DrawPage extends AbstractDeckListPage {
 		public String getStatusMessage() {
 			if (store == null)
 				return "";
-			int cards = playdeck.getSize();
+			int cards = playdeck.countDrawn();
 			int total = ((ICardCountable) store).getCount();
 			String res = "Drawn " + cards + " of " + total + ". Turn " + playdeck.getTurn() + ".";
 			for (Zone zone : Zone.values()) {
@@ -153,6 +168,7 @@ public class DrawPage extends AbstractDeckListPage {
 	public void fillLocalPullDown(IMenuManager manager) {
 		manager.add(this.unsort);
 		manager.add(this.shuffle);
+		manager.add(this.mulligan);
 		manager.add(reset);
 		manager.add(new Separator());
 		manager.add(newturn);
@@ -242,6 +258,7 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			public void run() {
 				playdeck.restart();
+				playdeck.draw(7);
 				getListControl().unsort();
 				getListControl().reloadData();
 			}
@@ -299,6 +316,15 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			public void run() {
 				playdeck.shuffle();
+				getListControl().reloadData();
+			}
+		};
+		this.mulligan = new ImageAction("Mulligan", null, null) {
+			@Override
+			public void run() {
+				int i = playdeck.countInZone(Zone.HAND) - 1;
+				playdeck.restart();
+				playdeck.draw(i);
 				getListControl().reloadData();
 			}
 		};

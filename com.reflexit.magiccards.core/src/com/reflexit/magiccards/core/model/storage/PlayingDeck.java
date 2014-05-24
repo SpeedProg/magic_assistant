@@ -76,7 +76,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		return (ZonedFilter) super.getFilter();
 	}
 
-	public PlayingDeck(ICardStore store) {
+	public PlayingDeck(ICardStore<IMagicCard> store) {
 		this.store = new SingletonDeck<MagicCardGame>();
 		this.filter = new ZonedFilter();
 		getFilter().show(Zone.LIBRARY, false);
@@ -85,10 +85,11 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		setStore(store);
 	}
 
-	public void setStore(ICardStore store) {
+	public void setStore(ICardStore<IMagicCard> store) {
 		if (this.original != store) {
 			this.original = store;
 			restart();
+			draw(7);
 		}
 	}
 
@@ -100,7 +101,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	 * ()
 	 */
 	@Override
-	public ICardStore getCardStore() {
+	public ICardStore<MagicCardGame> getCardStore() {
 		return this.store;
 	}
 
@@ -133,7 +134,6 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 		store.clear();
 		Collection<MagicCardGame> randomize = randomize(pullIn(original));
 		addAndNumber(randomize);
-		draw(7);
 		turn = 1;
 	}
 
@@ -205,23 +205,19 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	}
 
 	@Override
-	public void addAll(ICardStore store) {
+	public void addAll(ICardStore<IMagicCard> store) {
 		setStore(store);
-	}
-
-	public void play(List<IMagicCard> cardSelection) {
-		toZone(cardSelection, Zone.BATTLEFIELD);
-	}
-
-	public void returnToHand(List<IMagicCard> cardSelection) {
-		toZone(cardSelection, Zone.HAND);
 	}
 
 	public void toZone(List<IMagicCard> cardSelection, Zone zone) {
 		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
 			MagicCardGame card = (MagicCardGame) iterator.next();
-			card.setZone(zone);
+			toZone(card, zone);
 		}
+	}
+
+	public void toZone(MagicCardGame mg, Zone zone) {
+		mg.setZone(zone);
 	}
 
 	public void showZone(Zone zone, boolean show) {
@@ -286,5 +282,21 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 			}
 		}
 		return count;
+	}
+
+	public int countDrawn() {
+		int count = 0;
+		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == Zone.LIBRARY || card.getZone() == Zone.SIDEBOARD) {
+				continue;
+			}
+			count++;
+		}
+		return count;
+	}
+
+	public List<MagicCardGame> getList() {
+		return store.getList();
 	}
 }
