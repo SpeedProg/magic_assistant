@@ -67,6 +67,7 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		return 0; // not supported
 	}
 
+	@Override
 	public ICardField getFieldIndex() {
 		return this.groupField;
 	}
@@ -120,7 +121,8 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.reflexit.magiccards.core.model.ICardGroup#add(com.reflexit.magiccards.core.model.ICard)
+	 * com.reflexit.magiccards.core.model.ICardGroup#add(com.reflexit.magiccards
+	 * .core.model.ICard)
 	 */
 	@Override
 	public synchronized void add(ICard elem) {
@@ -132,10 +134,20 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		rehash();
 	}
 
+	public void addToSubGroup(String subGroupName, ICard elem) {
+		CardGroup g = getSubGroup(subGroupName);
+		if (g == null) {
+			g = new CardGroup(getFieldIndex(), subGroupName);
+			add(g);
+		}
+		g.add(elem);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.core.model.ICardGroup#remove(java.lang.Object)
+	 * @see
+	 * com.reflexit.magiccards.core.model.ICardGroup#remove(java.lang.Object)
 	 */
 	@Override
 	public synchronized void remove(ICard elem) {
@@ -157,6 +169,7 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	/**
 	 * @param index
 	 */
+	@Override
 	public synchronized ICard getChildAtIndex(int index) {
 		ICard object = getChildrenList().get(index);
 		return object;

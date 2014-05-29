@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.model.Abilities;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -277,47 +278,38 @@ public final class CardStoreUtils {
 	}
 
 	public static ICardGroup buildSpellColorGroups(Iterable store) {
-		HashMap<String, CardGroup> groupsList = new HashMap<String, CardGroup>();
+		CardGroup colorNode = new CardGroup(MagicCardField.COST, "Colour");
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType() == null || MTYPES.hasType(elem, CardTypes.TYPES.Type_Land))
+			if (isLand(elem))
 				continue;
-			String name = Colors.getColorName(elem.getCost());
-			if (!groupsList.containsKey(name)) {
-				CardGroup g = new CardGroup(MagicCardField.COST, name);
-				groupsList.put(name, g);
-			}
-			ICardGroup real = groupsList.get(name);
-			real.add(elem);
+			String scost = elem.getCost();
+			String name = Colors.getColorName(scost);
+			colorNode.addToSubGroup(name, elem);
 		}
 		ICardGroup root = new CardGroup(MagicCardField.COST, ""); //$NON-NLS-1$
-		CardGroup colorNode = new CardGroup(MagicCardField.COST, "Colour");
 		root.add(colorNode);
-		for (CardGroup cardGroup : groupsList.values()) {
-			colorNode.add(cardGroup);
-		}
 		return root;
 	}
 
-	public static HashMap<String, Integer> buildSpellColorStats(Iterable store) {
+	public static boolean isLand(IMagicCard elem) {
+		return elem.getType() == null || MTYPES.hasType(elem, CardTypes.TYPES.Type_Land);
+	}
+
+	public static HashMap<String, Integer> countStats(ICardGroup group) {
 		HashMap<String, Integer> groupsList = new HashMap<String, Integer>();
-		for (Object element : store) {
+		for (ICard elem : group.getChildrenList()) {
 			int count = 1;
-			IMagicCard elem = (IMagicCard) element;
-			if (elem.getType() == null || MTYPES.hasType(elem, CardTypes.TYPES.Type_Land)) {
-				continue;
-			}
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
 			}
-			String name = Colors.getColorName(elem.getCost());
-			if (!groupsList.containsKey(name)) {
-				groupsList.put(name, count);
-			} else {
-				groupsList.put(name, groupsList.get(name) + count);
-			}
+			groupsList.put(elem.getName(), count);
 		}
 		return groupsList;
+	}
+
+	public static HashMap<String, Integer> buildSpellColorStats(Iterable store) {
+		return countStats((ICardGroup) buildSpellColorGroups(store).getChildAtIndex(0));
 	}
 
 	public static CardGroup buildTypeGroups(Iterable iterable) {
