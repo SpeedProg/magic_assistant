@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -64,6 +66,17 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 					}
 				};
 			}
+
+			@Override
+			public void fillLocalToolBar(IToolBarManager mm) {
+				// mm.add(actionShowPrefs);
+				// mm.add(actionShowFind);
+			}
+
+			@Override
+			public void fillLocalPullDown(IMenuManager mm) {
+				// mm.add(actionShowFind);
+			}
 		};
 	}
 
@@ -73,7 +86,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 			public String getText(Object element) {
 				int count = getCount(element);
 				final int total = ((CardGroup) stats.getInput()).getCount();
-				float per = count / (float) total;
+				float per = total == 0 ? 0 : (count / (float) total);
 				return new DecimalFormat("00.0%").format(per);
 			}
 
