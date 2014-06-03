@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	private int count;
 	private transient Location location;
 	private boolean ownership;
+	private Date date;
 	private HashMap<ICardField, Object> properties;
 
 	public MagicCardPhysical(IMagicCard card, Location location, boolean virtual) {
@@ -24,6 +26,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 			this.card = (MagicCard) card;
 			this.count = 1;
 			this.ownership = false;
+			setDate(new Date(System.currentTimeMillis()));
 		} else if (card instanceof MagicCardPhysical) {
 			MagicCardPhysical phi = (MagicCardPhysical) card;
 			this.card = phi.getCard();
@@ -34,6 +37,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 			setPrice(phi.getPrice());
 			setForTrade(phi.getForTrade());
 			setSpecial(phi.getSpecial());
+			setDate(phi.getDate());
 		}
 		this.location = location;
 	}
@@ -334,6 +338,15 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 				break; // calculated
 			case OWN_UNIQUE:
 				break; // calculated
+			case DATE: {
+				if (value instanceof String) {
+					Date dd = new Date((String) value);
+					setDate(dd);
+				} else {
+					setDate((Date) value);
+				}
+				break;
+			}
 			case ERROR:
 				setError(value);
 				break;
@@ -385,6 +398,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 				int c = getCount4();
 				return (float) c * 100 / 4;
 			}
+			case DATE:
+				return getDate();
 			default:
 				return card.get(field);
 		}
@@ -676,5 +691,13 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	@Override
 	public Object accept(ICardVisitor visitor, Object data) {
 		return visitor.visit(this, data);
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

@@ -55,7 +55,8 @@ public class CompositeViewerManager extends ViewerManager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse
+	 * @see
+	 * com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	@Override
@@ -70,6 +71,11 @@ public class CompositeViewerManager extends ViewerManager {
 		setActivePage(this.activeIndex);
 		this.comp.layout();
 		return this.comp;
+	}
+
+	@Override
+	public ColumnCollection getColumnsCollection() {
+		return this.managers[this.activeIndex].getColumnsCollection();
 	}
 
 	@Override
@@ -106,12 +112,14 @@ public class CompositeViewerManager extends ViewerManager {
 		return this.managers[this.activeIndex].getViewer();
 	}
 
+	@Override
 	public void setSortColumn(int index, int direction) {
 		for (IMagicColumnViewer m : this.managers) {
 			m.setSortColumn(index, direction);
 		}
 	}
 
+	@Override
 	public void updateColumns(String newValue) {
 		for (IMagicColumnViewer m : this.managers) {
 			m.updateColumns(newValue);
@@ -131,6 +139,7 @@ public class CompositeViewerManager extends ViewerManager {
 			setActivePage(this.activeIndex);
 	}
 
+	@Override
 	public void updateViewer(Object input) {
 		if (this.comp.isDisposed())
 			return;
@@ -146,6 +155,7 @@ public class CompositeViewerManager extends ViewerManager {
 		this.comp.layout();
 	}
 
+	@Override
 	public void setLinesVisible(boolean grid) {
 		for (IMagicColumnViewer m : this.managers) {
 			m.setLinesVisible(grid);
@@ -189,6 +199,7 @@ public class CompositeViewerManager extends ViewerManager {
 		return this.managers[this.activeIndex].getSortDirection();
 	}
 
+	@Override
 	public String getColumnLayoutProperty() {
 		for (IMagicColumnViewer m : this.managers) {
 			m.getColumnLayoutProperty();

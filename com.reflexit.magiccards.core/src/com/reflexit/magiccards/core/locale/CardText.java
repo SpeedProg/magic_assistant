@@ -124,6 +124,12 @@ public final class CardText extends NLSLocal {
 	public static String Ability_Vanishing;
 	public static String Ability_Vigilance;
 	public static String Ability_Wither;
+	public static String Ability_Extort;
+	public static String Ability_Cipher;
+	public static String Ability_Gates;
+	public static String Ability_Bloodrush;
+	public static String Ability_Evolve;
+	public static String Ability_Battalion;
 	static {
 		// initialize resource bundle
 		try {

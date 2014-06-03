@@ -131,6 +131,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected Action actionResetFilter;
 	protected Action actionShowFind;
 	protected Action actionShowPrefs;
+	protected Action actionUnsort;
 	protected IMagicColumnViewer manager;
 	private MenuManager menuSort;
 	protected ISelection revealSelection;
@@ -706,7 +707,20 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.actionResetFilter.setText("Reset Filter");
 		this.actionResetFilter.setToolTipText("Resets the filter to default values");
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
+		this.actionUnsort = new Action("Unsort") {
+			@Override
+			public void run() {
+				unsort();
+				reloadData();
+			}
+
+			@Override
+			public String getToolTipText() {
+				return "Remove current sorting order";
+			}
+		};
 		this.menuSort = new MenuManager("Sort By");
+		this.menuSort.add(actionUnsort);
 		Collection columns = getManager().getColumnsCollection().getColumns();
 		int i = 0;
 		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {

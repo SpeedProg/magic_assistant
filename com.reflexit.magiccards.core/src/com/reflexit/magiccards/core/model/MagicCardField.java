@@ -194,6 +194,12 @@ public enum MagicCardField implements ICardField {
 			return new FieldProggress4Aggregator(this);
 		}
 	},
+	DATE(true) { // release date of the set
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new DateAggregator(this);
+		}
+	},
 	ERROR(null, true), // error field for import
 	// end of fields
 	;

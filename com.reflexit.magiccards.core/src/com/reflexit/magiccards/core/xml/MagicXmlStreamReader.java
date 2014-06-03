@@ -20,6 +20,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -29,7 +30,20 @@ public class MagicXmlStreamReader {
 	private static SAXParserFactory factory = SAXParserFactory.newInstance();
 
 	static enum Tag {
-		cards, list, properties, property, mc, mcp, card, name, key, comment, type, entry, string, fake
+		cards,
+		list,
+		properties,
+		property,
+		mc,
+		mcp,
+		card,
+		name,
+		key,
+		comment,
+		type,
+		entry,
+		string,
+		fake
 	}
 
 	static class MagicHandler extends DefaultHandler {
@@ -156,7 +170,10 @@ public class MagicXmlStreamReader {
 							case card:
 							case mcp: {
 								MagicCardField field = mcpFields.get(last);
-								cardp.set(field, ttStr);
+								if (field == null)
+									MagicLogger.log("Uknown element " + last);
+								else
+									cardp.set(field, ttStr);
 								break;
 							}
 							default:
