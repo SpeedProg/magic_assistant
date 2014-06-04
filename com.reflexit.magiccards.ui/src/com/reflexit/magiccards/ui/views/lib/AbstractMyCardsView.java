@@ -93,6 +93,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		this.moveToDeckMenu = new MenuManager("Move to");
 		this.moveToDeckMenu.setRemoveAllWhenShown(true);
 		this.moveToDeckMenu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillDeckMenu(manager, moveToDeck);
 			}
@@ -100,12 +101,14 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		this.addToDeck = new MenuManager("Copy to");
 		this.addToDeck.setRemoveAllWhenShown(true);
 		this.addToDeck.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillDeckMenu(manager, copyToDeck);
 			}
 		});
 		this.export = createExportAction();
 		copyToDeck = new IDeckAction() {
+			@Override
 			public void run(String id) {
 				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
 				Location loc = fstore.getLocation();
@@ -125,6 +128,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	protected IDeckAction moveToDeck = new IDeckAction() {
+		@Override
 		public void run(String id) {
 			try {
 				ISelection selection = getSelectionProvider().getSelection();
@@ -241,7 +245,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						if (left >= count)
 							continue;
 						int right = count - left;
-						DataManager.split(card, left, right);
+						DataManager.split(card, right);
 					}
 				}
 			}
@@ -263,7 +267,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org
 	 * .eclipse.jface.action.IMenuManager)
 	 */
 	@Override
@@ -297,7 +302,9 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
+	 * .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -327,6 +334,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		super.dispose();
 	}
 
+	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE) {

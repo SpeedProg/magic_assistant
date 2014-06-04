@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardHandler;
@@ -42,7 +43,8 @@ public class DataManager {
 			// String variant1 =
 			// "com.reflexit.magiccards.core.sql.handlers.CardHolder";
 			String variant2 = "com.reflexit.magiccards.core.xml.XmlCardHolder";
-			@SuppressWarnings("rawtypes") Class c = Class.forName(variant2);
+			@SuppressWarnings("rawtypes")
+			Class c = Class.forName(variant2);
 			Object x = c.newInstance();
 			handler = (ICardHandler) x;
 		} catch (InstantiationException e) {
@@ -121,8 +123,8 @@ public class DataManager {
 	}
 
 	/**
-	 * Using card representation create proper link to base or find actuall base card to replace
-	 * fake one
+	 * Using card representation create proper link to base or find actuall base
+	 * card to replace fake one
 	 * 
 	 * @param input
 	 * @return
@@ -220,6 +222,26 @@ public class DataManager {
 		return res;
 	}
 
+	public static List<IMagicCard> splitCards(Collection cards1, int count) {
+		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
+		CardGroup.expandGroups(cards, cards1);
+		List x = new ArrayList();
+		for (IMagicCard o : cards) {
+			if (o instanceof MagicCardPhysical) {
+				MagicCardPhysical mcp = (MagicCardPhysical) o;
+				int rcount = mcp.getCount();
+				MagicCardPhysical toMove = DataManager.split(mcp, count);
+				if (toMove != null)
+					x.add(toMove);
+			} else if (o instanceof MagicCard) {
+				for (int i = 0; i < count; i++) {
+					x.add(o);
+				}
+			}
+		}
+		return x;
+	}
+
 	public static boolean add(ICardStore store, Collection list) {
 		boolean res = store.addAll(list);
 		reconcile(list);
@@ -256,7 +278,12 @@ public class DataManager {
 		DataManager.add(card); // XXX if fails we need to undo the remove
 	}
 
-	public static void split(MagicCardPhysical card, int left, int right) {
+	public static MagicCardPhysical split(MagicCardPhysical card, int right) {
+		if (right <= 0)
+			return null;
+		if (right >= card.getCount())
+			return card;
+		int left = card.getCount() - right;
 		int trade = card.getForTrade();
 		int tradeLeft = 0;
 		if (trade <= right) {
@@ -278,6 +305,7 @@ public class DataManager {
 		cardStore.add(card2);
 		cardStore.setMergeOnAdd(true);
 		DataManager.reconcile(cardStore.getCards(card.getCardId()));
+		return card2;
 	}
 
 	public static void update(MagicCardPhysical mcp) {
@@ -328,8 +356,8 @@ public class DataManager {
 	}
 
 	/**
-	 * Repairs back link between base cards and physical cards, expensive since it reads whole
-	 * database
+	 * Repairs back link between base cards and physical cards, expensive since
+	 * it reads whole database
 	 */
 	public static void reconcile() {
 		links.clear();
@@ -357,7 +385,8 @@ public class DataManager {
 	}
 
 	private static void reconcile(MagicCardPhysical mcp, ICardStore db) {
-		// System.err.println("reconcile " + mcp + " " + System.identityHashCode(mcp));
+		// System.err.println("reconcile " + mcp + " " +
+		// System.identityHashCode(mcp));
 		int id = mcp.getCardId();
 		MagicCard base = (MagicCard) db.getCard(id);
 		if (base != null) {
