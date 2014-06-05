@@ -24,7 +24,7 @@ public class GroupColumn extends GenColumn {
 	public static final String COL_NAME = "Name";
 	private ICardField groupField;
 	protected final boolean showCount;
-	protected final boolean showImage;
+	protected boolean showImage;
 	protected final boolean canEdit;
 
 	public GroupColumn() {
@@ -36,6 +36,10 @@ public class GroupColumn extends GenColumn {
 		this.showCount = showCount;
 		this.showImage = showSetImage;
 		this.canEdit = canEdit;
+	}
+
+	public void setShowImage(boolean show) {
+		showImage = show;
 	}
 
 	@Override

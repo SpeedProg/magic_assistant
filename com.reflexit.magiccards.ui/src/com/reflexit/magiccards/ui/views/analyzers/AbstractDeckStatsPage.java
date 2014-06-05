@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -60,7 +59,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 			public IMagicColumnViewer createViewerManager() {
 				return new GroupTreeManager(getPreferencePageId()) {
 					@Override
-					protected void createCustomColumns(ArrayList<AbstractColumn> columns) {
+					protected void createCustomColumns(List<AbstractColumn> columns) {
 						super.createCustomColumns(columns);
 						AbstractDeckStatsPage.this.createCustomColumns(columns);
 					}

@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -143,8 +142,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		comboLegality.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
 		total = createTextLabel("Cards: ");
 		totalSideboard = createTextLabel("Cards (Sideboard): ");
-		maxRepeats = createTextLabel("Max Repeats: ",
-				"How many time each card repeats, excluding basic land (for legality purposes)");
+		maxRepeats = createTextLabel("Max Repeats: ", "How many time each card repeats, excluding basic land (for legality purposes)");
 		colors = createTextLabel("Colors: ");
 		colorsSideboard = createTextLabel("Colors (Sideboard): ");
 		rarity = createTextLabel("Rarity: ");
@@ -322,7 +320,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 			public IMagicColumnViewer createViewerManager() {
 				return new GroupTreeManager(getPreferencePageId()) {
 					@Override
-					protected void createCustomColumns(ArrayList<AbstractColumn> columns) {
+					protected void createCustomColumns(List<AbstractColumn> columns) {
 						createPageCustomColumns(columns);
 					}
 				};

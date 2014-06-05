@@ -318,7 +318,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		IExportDelegate ex = reportType.getExportDelegate();
 		String selcolumns = view.getLocalPreferenceStore().getString(PreferenceConstants.LOCAL_COLUMNS);
 		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
-		magicColumnCollection.createColumnLabelProviders();
 		magicColumnCollection.updateColumnsFromPropery(selcolumns);
 		if (includeSideboard) {
 			magicColumnCollection.getColumn(MagicCardField.SIDEBOARD).setVisible(true);
@@ -335,8 +334,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	 */
 	public static final String CANCEL = "CANCEL"; //$NON-NLS-1$
 	/**
-	 * Return code indicating the entity should not be overwritten, but operation should not be
-	 * canceled.
+	 * Return code indicating the entity should not be overwritten, but
+	 * operation should not be canceled.
 	 */
 	public static final String NO = "NO"; //$NON-NLS-1$
 	/**
@@ -362,6 +361,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		// run in syncExec because callback is from an operation,
 		// which is probably not running in the UI thread.
 		getControl().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				dialog.open();
 			}

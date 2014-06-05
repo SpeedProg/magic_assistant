@@ -48,7 +48,6 @@ public class TreeViewerManager extends ViewerManager {
 	}
 
 	protected void createDefaultColumns() {
-		getColumnsCollection().createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
 			AbstractColumn man = getColumn(i);
 			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
@@ -79,6 +78,7 @@ public class TreeViewerManager extends ViewerManager {
 		return this.viewer;
 	}
 
+	@Override
 	public void updateColumns(String value) {
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.updateColumnsFromPropery(value);
@@ -99,6 +99,7 @@ public class TreeViewerManager extends ViewerManager {
 		}
 	}
 
+	@Override
 	public String getColumnLayoutProperty() {
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.setColumnProperties(viewer.getTree().getColumns());
@@ -106,6 +107,7 @@ public class TreeViewerManager extends ViewerManager {
 		return columnsCollection.getColumnLayoutProperty();
 	}
 
+	@Override
 	public void setLinesVisible(boolean grid) {
 		this.viewer.getTree().setLinesVisible(grid);
 	}
@@ -157,6 +159,7 @@ public class TreeViewerManager extends ViewerManager {
 		return getViewer().getContentProvider();
 	}
 
+	@Override
 	public void updateViewer(Object input) {
 		if (viewer == null || this.viewer.getControl().isDisposed())
 			return;

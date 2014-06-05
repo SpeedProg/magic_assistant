@@ -1,6 +1,6 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
@@ -38,13 +38,13 @@ public class GroupListControl extends AbstractMagicCardsListControl {
 		protected ColumnCollection doGetColumnCollection(String prefPageId) {
 			return new MagicColumnCollection(prefPageId) {
 				@Override
-				protected void createColumns() {
+				protected void createColumns(List<AbstractColumn> columns) {
 					createCustomColumns(columns);
 				}
 			};
 		}
 
-		protected void createCustomColumns(ArrayList<AbstractColumn> columns) {
+		protected void createCustomColumns(List<AbstractColumn> columns) {
 			columns.add(new GroupColumn(false, false, false));
 			columns.add(new CountColumn());
 		}

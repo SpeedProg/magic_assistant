@@ -65,7 +65,6 @@ public class TableViewerManager extends ViewerManager {
 	}
 
 	protected void createDefaultColumns() {
-		getColumnsCollection().createColumnLabelProviders();
 		for (int i = 0; i < getColumnsNumber(); i++) {
 			AbstractColumn man = getColumn(i);
 			TableViewerColumn colv = new TableViewerColumn(this.viewer, i);

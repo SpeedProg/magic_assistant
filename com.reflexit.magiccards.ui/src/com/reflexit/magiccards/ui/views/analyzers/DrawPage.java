@@ -29,6 +29,7 @@ import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CostColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
@@ -62,21 +63,21 @@ public class DrawPage extends AbstractDeckListPage {
 	public DrawPage() {
 		this.columns = new ColumnCollection() {
 			@Override
-			protected void createColumns() {
-				this.columns.add(new GroupColumn(true, true, false));
-				this.columns.add(new GenColumn(MagicCardGameField.DRAWID, "DrawId") {
+			protected void createColumns(List<AbstractColumn> columns) {
+				columns.add(new GroupColumn(true, true, false));
+				columns.add(new GenColumn(MagicCardGameField.DRAWID, "DrawId") {
 					@Override
 					public int getColumnWidth() {
 						return 20;
 					}
 				});
-				this.columns.add(new CostColumn());
-				this.columns.add(new TypeColumn());
-				this.columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
-				this.columns.add(new PowerColumn(MagicCardField.TOUGHNESS, "T", "Toughness"));
-				this.columns.add(new GenColumn(MagicCardGameField.ZONE, "Zone"));
-				this.columns.add(new GenColumn(MagicCardGameField.TAPPED, "Tapped"));
-				this.columns.add(new GenColumn(MagicCardGameField.NOTE, "Notes") {
+				columns.add(new CostColumn());
+				columns.add(new TypeColumn());
+				columns.add(new PowerColumn(MagicCardField.POWER, "P", "Power"));
+				columns.add(new PowerColumn(MagicCardField.TOUGHNESS, "T", "Toughness"));
+				columns.add(new GenColumn(MagicCardGameField.ZONE, "Zone"));
+				columns.add(new GenColumn(MagicCardGameField.TAPPED, "Tapped"));
+				columns.add(new GenColumn(MagicCardGameField.NOTE, "Notes") {
 					@Override
 					public EditingSupport getEditingSupport(final ColumnViewer viewer) {
 						return new StringEditingSupport(viewer, this);

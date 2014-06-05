@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.instances;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -13,6 +14,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.TreeViewerManager;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CommentColumn;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
@@ -55,17 +57,17 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 	protected ColumnCollection doGetColumnCollection(String viewId) {
 		return new ColumnCollection() {
 			@Override
-			protected void createColumns() {
-				columns.add(new GroupColumn());
+			protected void createColumns(List<AbstractColumn> columns) {
+				columns.add(new GroupColumn(true, false, false));
 				columns.add(new SetColumn(true));
 				columns.add(new CountColumn());
 				columns.add(new OwnershipColumn());
 				columns.add(new LocationColumn());
 				columns.add(new LanguageColumn());
-				this.columns.add(new StringEditorColumn(MagicCardField.SPECIAL, "Special"));
-				this.columns.add(new CommentColumn());
-				this.columns.add(new PriceColumn());
-				this.columns.add(new StringEditorColumn(MagicCardField.FORTRADECOUNT, "For Trade"));
+				columns.add(new StringEditorColumn(MagicCardField.SPECIAL, "Special"));
+				columns.add(new CommentColumn());
+				columns.add(new PriceColumn());
+				columns.add(new StringEditorColumn(MagicCardField.FORTRADECOUNT, "For Trade"));
 			}
 		};
 	}

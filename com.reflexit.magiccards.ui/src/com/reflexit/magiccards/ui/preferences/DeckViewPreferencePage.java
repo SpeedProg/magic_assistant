@@ -19,12 +19,12 @@ public class DeckViewPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors() {
 		ColumnCollection columnCollection = new MagicColumnCollection(getClass().getName());
-		columnCollection.createColumnLabelProviders();
 		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
 		addField(new ColumnFieldEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),
 				columnCollection));
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// nothing
 	}

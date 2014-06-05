@@ -2,8 +2,10 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -11,8 +13,16 @@ import org.eclipse.swt.widgets.TreeColumn;
 import com.reflexit.magiccards.core.model.ICardField;
 
 public abstract class ColumnCollection {
-	protected ArrayList<AbstractColumn> columns = new ArrayList<AbstractColumn>();
+	private final List<AbstractColumn> columns;
 	protected LinkedHashMap<String, AbstractColumn> order = new LinkedHashMap<String, AbstractColumn>();
+
+	public ColumnCollection() {
+		List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
+		createColumns(columns);
+		this.columns = Collections.unmodifiableList(columns);
+		order = new LinkedHashMap<String, AbstractColumn>(columns.size());
+		setColulmnsIndex();
+	}
 
 	public Collection<AbstractColumn> getColumns() {
 		return this.columns;
@@ -22,17 +32,7 @@ public abstract class ColumnCollection {
 		return this.columns.size();
 	}
 
-	public void createColumnLabelProviders() {
-		createColumns();
-		order = new LinkedHashMap<String, AbstractColumn>(columns.size());
-		setColulmnsIndex();
-	}
-
-	public void add(AbstractColumn col) {
-		columns.add(col);
-	}
-
-	protected abstract void createColumns();
+	protected abstract void createColumns(List<AbstractColumn> columns);
 
 	public String[] getColumnNames() {
 		int i = 0;
@@ -55,16 +55,14 @@ public abstract class ColumnCollection {
 	}
 
 	public ICardField[] getSelectedColumnFields(String propertyValue) {
-		if (columns.size() == 0)
-			createColumnLabelProviders();
 		updateColumnsFromPropery(propertyValue);
 		return getColumnFields();
 	}
 
 	public ICardField[] getColumnFields() {
 		ArrayList<ICardField> cf = new ArrayList<ICardField>();
-		for (Iterator iterator = order.values().iterator(); iterator.hasNext();) {
-			AbstractColumn col = (AbstractColumn) iterator.next();
+		for (Iterator<AbstractColumn> iterator = order.values().iterator(); iterator.hasNext();) {
+			AbstractColumn col = iterator.next();
 			if (col.isVisible())
 				cf.add(col.getDataField());
 		}
@@ -199,7 +197,7 @@ public abstract class ColumnCollection {
 		return ordera;
 	}
 
-	protected void setColulmnsIndex() {
+	private void setColulmnsIndex() {
 		int j = 0;
 		order.clear();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {

@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.printings;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -12,6 +13,7 @@ import org.eclipse.ui.services.IDisposable;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.TreeViewerManager;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LanguageColumn;
@@ -48,7 +50,7 @@ public class PrintingsManager extends TreeViewerManager implements IDisposable {
 	protected ColumnCollection doGetColumnCollection(String viewId) {
 		return new ColumnCollection() {
 			@Override
-			protected void createColumns() {
+			protected void createColumns(List<AbstractColumn> columns) {
 				columns.add(new GroupColumn());
 				columns.add(new SetColumn(true));
 				columns.add(new LanguageColumn());
