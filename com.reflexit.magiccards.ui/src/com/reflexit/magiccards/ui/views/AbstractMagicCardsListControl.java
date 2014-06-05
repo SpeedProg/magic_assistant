@@ -516,6 +516,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		groupMenu.add(createGroupAction(MagicCardField.SET));
 		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
 		groupMenu.add(createGroupAction(MagicCardField.RARITY));
+		groupMenu.add(createGroupAction(MagicCardField.NAME));
 		groupMenu.setRemoveAllWhenShown(false);
 		// groupMenu.add(new GroupAction("Name", MagicCardField.NAME));
 		return groupMenu;
