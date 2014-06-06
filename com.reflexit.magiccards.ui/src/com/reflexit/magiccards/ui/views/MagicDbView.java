@@ -20,9 +20,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -69,19 +67,8 @@ public class MagicDbView extends AbstractCardsView {
 							protected GroupColumn createGroupColumn() {
 								return new GroupColumn() {
 									@Override
-									public String getText(Object element) {
-										if (element instanceof ICardGroup) {
-											if (!showCount) {
-												return ((CardGroup) element).getName();
-											} else {
-												return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getUniqueCount()
-														+ ")";
-											}
-										}
-										if (element instanceof IMagicCard) {
-											return ((IMagicCard) element).getName();
-										}
-										return null;
+									protected int getCount(Object element) {
+										return ((IMagicCard) element).getUniqueCount();
 									}
 								};
 							}
@@ -122,11 +109,13 @@ public class MagicDbView extends AbstractCardsView {
 		this.addToDeck = new MenuManager("Add to");
 		this.addToDeck.setRemoveAllWhenShown(true);
 		this.addToDeck.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillDeckMenu(manager, copyToDeck);
 			}
 		});
 		copyToDeck = new IDeckAction() {
+			@Override
 			public void run(String id) {
 				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
 				Location loc = fstore.getLocation();

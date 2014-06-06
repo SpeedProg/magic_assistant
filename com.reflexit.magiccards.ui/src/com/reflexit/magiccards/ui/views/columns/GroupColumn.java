@@ -6,11 +6,19 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -20,7 +28,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
-public class GroupColumn extends GenColumn {
+public class GroupColumn extends GenColumn implements Listener {
 	public static final String COL_NAME = "Name";
 	private ICardField groupField;
 	protected final boolean showCount;
@@ -43,18 +51,20 @@ public class GroupColumn extends GenColumn {
 	}
 
 	@Override
-	public Image getImage(Object element) {
-		if (showImage) {
-			if (element instanceof ICardGroup) {
-				CardGroup cardGroup = (CardGroup) element;
-				String set = cardGroup.getSet();
-				if (set != null && set.length() > 0 && !set.equals("*")) {
-					return ImageCreator.getInstance().getSetImage(cardGroup.getFirstCard());
-				}
-			} else if (element instanceof IMagicCard) {
-				IMagicCard card = (IMagicCard) element;
-				return ImageCreator.getInstance().getSetImage(card);
+	public final Image getImage(Object element) {
+		return null;
+	}
+
+	protected Image getActualImage(Object element) {
+		if (element instanceof ICardGroup) {
+			CardGroup cardGroup = (CardGroup) element;
+			String set = cardGroup.getSet();
+			if (set != null && set.length() > 0 && !set.equals("*")) {
+				return ImageCreator.getInstance().getSetImage(cardGroup.getFirstCard());
 			}
+		} else if (element instanceof IMagicCard) {
+			IMagicCard card = (IMagicCard) element;
+			return ImageCreator.getInstance().getSetImage(card);
 		}
 		return null;
 	}
@@ -65,17 +75,27 @@ public class GroupColumn extends GenColumn {
 	}
 
 	@Override
-	public String getText(Object element) {
+	public final String getText(Object element) {
+		if (showImage)
+			return null;
+		return getActualText(element);
+	}
+
+	protected String getActualText(Object element) {
 		if (element instanceof ICardGroup) {
 			if (!showCount) {
 				return ((CardGroup) element).getName();
 			} else {
-				return ((CardGroup) element).getName() + " (" + ((CardGroup) element).getCount() + ")";
+				return ((CardGroup) element).getName() + " (" + getCount(element) + ")";
 			}
 		} else if (element instanceof IMagicCard) {
 			return ((IMagicCard) element).getName();
 		}
 		return null;
+	}
+
+	protected int getCount(Object element) {
+		return ((ICardCountable) element).getCount();
 	}
 
 	public void setGroupField(ICardField field) {
@@ -157,5 +177,44 @@ public class GroupColumn extends GenColumn {
 				}
 			}
 		};
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		if (event.index == this.columnIndex) { // our column
+			Item item = (Item) event.item;
+			Object row = item.getData();
+			int x = event.x;
+			int y = event.y;
+			Rectangle bounds;
+			if (item instanceof TableItem)
+				bounds = ((TableItem) item).getBounds(event.index);
+			else if (item instanceof TreeItem)
+				bounds = ((TreeItem) item).getBounds(event.index);
+			else
+				return;
+			// int tx = 0;
+			// int ty = 0;
+			// if (text != null) {
+			// Point tw = event.gc.textExtent(text);
+			// tx = tw.x;
+			// ty = tw.y;
+			// // event.gc.setClipping(x, y, bounds.width - 32, bounds.height);
+			// }
+			int imageHeight = 12;
+			int yi = y + (Math.max(bounds.height - imageHeight, 2)) / 2;
+			// event.gc.fillRectangle(x + bounds.width - 32, y, 32,
+			// bounds.height);
+			Image image = getActualImage(row);
+			if (image != null)
+				event.gc.drawImage(image, x, yi);
+			String text = getActualText(row);
+			if (text != null) {
+				Point tw = event.gc.textExtent(text);
+				int yt = y + bounds.height - 2 - tw.y;
+				event.gc.setClipping(x, y, bounds.width - 2, bounds.height);
+				event.gc.drawText(text, x + 32 + 2, yt, true);
+			}
+		}
 	}
 }
