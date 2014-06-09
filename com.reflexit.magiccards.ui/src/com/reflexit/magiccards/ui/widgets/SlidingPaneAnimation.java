@@ -7,6 +7,7 @@ import org.eclipse.nebula.animation.movement.ExpoOut;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -90,36 +91,46 @@ public class SlidingPaneAnimation {
 		}
 	}
 
-	public void pushControl(final Composite comp, int horDir, int verDir) {
+	public void pushControl(final Composite comp, float startWK, float startHK, float endWK, float endHK) {
 		runner.cancel();
-		int startX = comp.getSize().x * horDir;
-		int startY = comp.getSize().y * verDir;
+		Point size = comp.getSize();
+		int startX = (int) (size.x * startWK);
+		int startY = (int) (size.y * startHK);
+		final int endX = (int) (size.x * endWK);
+		final int endY = (int) (size.y * endHK);
 		comp.setLocation(startX, startY);
 		comp.moveAbove(null); // show control
 		Runnable onStop = new Runnable() {
 			@Override
 			public void run() {
-				comp.setLocation(0, 0);
+				if (comp.isDisposed())
+					return;
+				runner.endEffect();
 				comp.moveAbove(null); // show control
-				comp.getParent().layout(true, true);
+				// comp.getParent().layout(true, true);
 			}
 		};
-		IEffect effect1 = new MoveControlEffect(comp, startX, 0, startY, 0, effectTime, movement, onStop, onStop);
+		IEffect effect1 = new MoveControlEffect(comp, startX, endX, startY, endY, effectTime, movement, onStop, onStop);
 		runner.runEffect(effect1);
 	}
 
-	public void popControl(final Composite comp, int horDir, int verDir) {
+	public void pushControl(final Composite comp, int horDir, int verDir) {
+		pushControl(comp, horDir, verDir, 0, 0);
+	}
+
+	public void popControl(final Composite comp, float horDir, float verDir) {
 		runner.cancel();
-		final int endX = comp.getSize().x * horDir;
-		final int endY = comp.getSize().y * verDir;
+		final int endX = (int) (comp.getSize().x * horDir);
+		final int endY = (int) (comp.getSize().y * verDir);
 		comp.moveAbove(null); // show control
 		Runnable onStop = new Runnable() {
 			@Override
 			public void run() {
-				// System.err.println("on stop");
-				comp.setLocation(endX, endY);
+				if (comp.isDisposed())
+					return;
+				runner.endEffect();
 				comp.moveBelow(null); // hide control
-				comp.getParent().layout(true, true);
+				// comp.getParent().layout(true, true);
 			}
 		};
 		// comp.setLocation(width / 2, 0);
@@ -129,5 +140,22 @@ public class SlidingPaneAnimation {
 
 	public static void main(String[] args) throws InterruptedException {
 		new SlidingPaneAnimation().runExample();
+	}
+
+	public void waitForAnimation() {
+		Display display = Display.getCurrent();
+		if (display != null)
+			while (runner.isRunning()) {
+				if (!display.readAndDispatch())
+					display.sleep();
+			}
+		else
+			while (runner.isRunning()) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					break;
+				}
+			}
 	}
 }

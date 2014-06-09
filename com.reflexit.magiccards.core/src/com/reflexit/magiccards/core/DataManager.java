@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardHandler;
@@ -222,14 +223,31 @@ public class DataManager {
 		return res;
 	}
 
-	public static List<IMagicCard> splitCards(Collection cards1, int count) {
+	public static List<IMagicCard> splitCards(Collection<IMagicCard> cards1, int count) {
 		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
 		CardGroup.expandGroups(cards, cards1);
-		List x = new ArrayList();
+		List<IMagicCard> x = new ArrayList<IMagicCard>();
 		for (IMagicCard o : cards) {
 			if (o instanceof MagicCardPhysical) {
 				MagicCardPhysical mcp = (MagicCardPhysical) o;
-				int rcount = mcp.getCount();
+				MagicCardPhysical toMove = DataManager.split(mcp, count);
+				if (toMove != null)
+					x.add(toMove);
+			} else if (o instanceof MagicCard) {
+				for (int i = 0; i < count; i++) {
+					x.add(o);
+				}
+			}
+		}
+		return x;
+	}
+
+	public static List<IMagicCard> splitCards(Map<IMagicCard, Integer> countMap) {
+		List<IMagicCard> x = new ArrayList<IMagicCard>();
+		for (IMagicCard o : countMap.keySet()) {
+			int count = countMap.get(o);
+			if (o instanceof MagicCardPhysical) {
+				MagicCardPhysical mcp = (MagicCardPhysical) o;
 				MagicCardPhysical toMove = DataManager.split(mcp, count);
 				if (toMove != null)
 					x.add(toMove);

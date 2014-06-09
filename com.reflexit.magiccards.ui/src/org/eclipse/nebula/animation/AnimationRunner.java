@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation;
 
 import org.eclipse.nebula.animation.effects.IEffect;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Display;
  * @author Nicolas Richeton
  */
 public class AnimationRunner {
-
 	/**
 	 * Default is 50 fps.
 	 */
@@ -99,19 +97,17 @@ public class AnimationRunner {
 	 */
 	private long getCurrentTime() {
 		long time = System.currentTimeMillis();
-
 		if (startTime == -1)
 			startTime = time;
-
 		return time - startTime;
 	}
 
 	private void startEffect() {
 		if (running)
 			return;
-
 		running = true;
 		Display.getCurrent().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (effect != null && !effect.isDone()) {
 					Display.getCurrent().timerExec(delay, this);
@@ -120,7 +116,19 @@ public class AnimationRunner {
 					running = false;
 				}
 			}
-
 		});
+	}
+
+	public void endEffect() {
+		Display.getCurrent().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				effect.doEffect(effect.getLength());
+			}
+		});
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 }

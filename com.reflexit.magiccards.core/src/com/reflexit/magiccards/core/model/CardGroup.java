@@ -266,7 +266,7 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		return false;
 	}
 
-	public static void expandGroups(Collection result, Collection cards) {
+	public static Collection expandGroups(Collection result, Collection cards) {
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			if (o instanceof CardGroup)
@@ -274,6 +274,7 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 			else
 				result.add(o);
 		}
+		return result;
 	}
 
 	public static String getGroupName(IMagicCard elem, ICardField field) {
