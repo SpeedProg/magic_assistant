@@ -1,6 +1,8 @@
+changes in 1.3.1.9
+* Bug 350: Fixed possible data loss due to parsing error in collection and decks
 changes in 1.3.1.8 
-* Feature 349: Have group by card name, so can see total regardless of set
-* Do not show set icon when groupping - takes too much real estate (Set column will have icon in this mode)
+* Feature 349: Added "group by" card name, so can see total regardless of set
+* Icon for Name column now should not take lots of space in tree mode, making groupping more useful
 changes in 1.3.1.7 beta
 * Feature 346 added commands to move & split and just split which can be triggered from keyboard with a counter
 changes in 1.3.1.6 beta

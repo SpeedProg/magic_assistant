@@ -17,6 +17,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -28,6 +29,7 @@ public class CurrencyConvertor {
 	private static HashMap<String, Double> rates = new HashMap<String, Double>();
 	private static HashMap<String, Date> dates = new HashMap<String, Date>();
 	private static Currency currency = USD;
+	private static SimpleDateFormat DATE_PARSER = new SimpleDateFormat("MM/dd/yyyy hh:mmaa", Locale.ENGLISH);
 
 	public static double loadRate(String from, String to) {
 		return loadRate(from + to);
@@ -46,9 +48,8 @@ public class CurrencyConvertor {
 				String t = list.get(3);
 				// System.err.println(d + " " + t); // 5/6/2014 8:42pm
 				Date date = Calendar.getInstance().getTime();
-				SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy hh:mmaa");
 				try {
-					date = parser.parse(d + " " + t);
+					date = DATE_PARSER.parse(d + " " + t);
 				} catch (ParseException e) {
 					// ignore
 				}
@@ -99,7 +100,7 @@ public class CurrencyConvertor {
 			Date date = Calendar.getInstance().getTime();
 			for (String cu : rates.keySet()) {
 				double rate = rates.get(cu);
-				st.println(cu + "|" + rate + "|" + date);
+				st.println(cu + "|" + rate + "|" + DATE_PARSER.format(date));
 			}
 		} finally {
 			st.close();
@@ -123,7 +124,12 @@ public class CurrencyConvertor {
 	}
 
 	private static void initialize() throws IOException, FileNotFoundException {
-		Date date = new Date(Date.parse("Tue May 06 20:48:00 EDT 2014"));
+		Date date;
+		try {
+			date = DATE_PARSER.parse("5/6/2014 8:42pm");
+		} catch (ParseException e) {
+			date = new Date();
+		}
 		rates.put("USDEUR", 0.72);
 		rates.put("USDCAD", 1.09598);
 		rates.put("USDUSD", 1.0);
@@ -142,8 +148,12 @@ public class CurrencyConvertor {
 					String srate = attrs.length >= 2 ? attrs[1].trim() : "0";
 					String sdate = attrs.length >= 3 ? attrs[2].trim() : "";
 					double rate = Double.valueOf(srate);
-					long time = Date.parse(sdate);
-					Date date = new Date(time);
+					Date date;
+					try {
+						date = DATE_PARSER.parse(sdate);
+					} catch (ParseException e) {
+						date = new Date();
+					}
 					if (!cu.isEmpty()) {
 						if (rate != 0) {
 							rates.put(cu, rate);

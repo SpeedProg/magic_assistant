@@ -161,23 +161,31 @@ public class MagicXmlStreamReader {
 					case properties:
 						break;
 					case fake: {
-						switch (states.peek()) {
-							case mc: {
-								MagicCardField field = mcpFields.get(last);
-								cardm.set(field, ttStr);
-								break;
+						try {
+							switch (states.peek()) {
+								case mc: {
+									MagicCardField field = mcpFields.get(last);
+									if (field == null)
+										MagicLogger.log("Uknown element " + last);
+									else
+										cardm.set(field, ttStr);
+									break;
+								}
+								case card:
+								case mcp: {
+									MagicCardField field = mcpFields.get(last);
+									if (field == null)
+										MagicLogger.log("Uknown element " + last);
+									else
+										cardp.set(field, ttStr);
+									break;
+								}
+								default:
+									break;
 							}
-							case card:
-							case mcp: {
-								MagicCardField field = mcpFields.get(last);
-								if (field == null)
-									MagicLogger.log("Uknown element " + last);
-								else
-									cardp.set(field, ttStr);
-								break;
-							}
-							default:
-								break;
+						} catch (Exception e) {
+							// recover what we can, do not abort
+							MagicLogger.log(e);
 						}
 						break;
 					}
@@ -187,7 +195,7 @@ public class MagicXmlStreamReader {
 						break;
 				}
 			} catch (Exception e) {
-				// System.err.println("error at " + locator.getLineNumber());
+				MagicLogger.log(e);
 				throw new SAXParseException(e.getMessage(), locator);
 			}
 			text.delete(0, text.length());

@@ -1,11 +1,15 @@
 package com.reflexit.magiccards.core.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
 
 public class MagicCardPhysical extends AbstractMagicCard implements ICardModifiable, IMagicCardPhysical, ICard {
@@ -15,6 +19,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	private boolean ownership;
 	private Date date;
 	private HashMap<ICardField, Object> properties;
+	private SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
 	public MagicCardPhysical(IMagicCard card, Location location, boolean virtual) {
 		this(card, location);
@@ -340,7 +345,13 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 				break; // calculated
 			case DATE: {
 				if (value instanceof String) {
-					Date dd = new Date((String) value);
+					Date dd;
+					try {
+						dd = DATE_PARSER.parse((String) value);
+					} catch (ParseException e) {
+						dd = null;
+						MagicLogger.log("Cannot parse date " + value);
+					}
 					setDate(dd);
 				} else {
 					setDate((Date) value);
