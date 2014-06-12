@@ -38,7 +38,7 @@ public class CurrencyConvertorTest extends TestCase {
 	@Test
 	public void testConvertFrom() {
 		float res = CurrencyConvertor.convertFromInto(1, CAD, USD);
-		assertTrue(res + "", res < 0.92);
+		assertTrue(res + "", res < 0.93);
 	}
 
 	@Test

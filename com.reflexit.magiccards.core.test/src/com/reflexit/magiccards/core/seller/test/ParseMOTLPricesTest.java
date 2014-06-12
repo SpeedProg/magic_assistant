@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.core.seller.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
@@ -16,6 +14,6 @@ public class ParseMOTLPricesTest extends AbstractPriceProviderTest {
 
 	public void testSwamp() {
 		MagicCard card = checkcard("Swamp", "Magic 2013");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 }

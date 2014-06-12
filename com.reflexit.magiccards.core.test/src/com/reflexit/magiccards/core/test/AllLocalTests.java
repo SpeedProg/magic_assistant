@@ -28,6 +28,7 @@ import com.reflexit.magiccards.core.exports.ShandalarImportTest;
 import com.reflexit.magiccards.core.exports.TablePipedImportTest;
 import com.reflexit.magiccards.core.model.AbilitiesTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
+import com.reflexit.magiccards.core.model.EditionsTest;
 import com.reflexit.magiccards.core.model.GrouppingPerformanceTest;
 import com.reflexit.magiccards.core.model.LegalityMapTest;
 import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
@@ -86,6 +87,8 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardComparatorTest.class);
 		suite.addTestSuite(LegalityMapTest.class);
 		suite.addTestSuite(AbilitiesTest.class);
+		// editions
+		suite.addTestSuite(EditionsTest.class);
 		// Perf
 		suite.addTestSuite(GrouppingPerformanceTest.class);
 		// $JUnit-END$

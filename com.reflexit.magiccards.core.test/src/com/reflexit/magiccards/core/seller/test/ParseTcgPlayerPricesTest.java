@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.core.seller.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
@@ -17,16 +15,16 @@ public class ParseTcgPlayerPricesTest extends AbstractPriceProviderTest {
 	public void testgetPriceLow() {
 		setParser(ParseTcgPlayerPrices.create(ParseTcgPlayerPrices.Type.Low));
 		MagicCard card = checkcard("Flameborn Viron", "New Phyrexia");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	public void testgetPriceMed() {
 		MagicCard card = checkcard("Flameborn Viron", "New Phyrexia");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	public void testMagic2014() {
 		MagicCard card = checkcard("Artificer's Hex", "Magic 2014 Core Set");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 }

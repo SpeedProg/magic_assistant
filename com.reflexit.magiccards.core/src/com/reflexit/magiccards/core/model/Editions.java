@@ -337,7 +337,7 @@ public class Editions implements ISearchableProperty {
 
 	private synchronized void load() throws IOException {
 		File oldFile = new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
-		File newFile = new File(DataManager.getTablesDir(), EDITIONS_FILE);
+		File newFile = getStoreFile();
 		if (oldFile.exists() && !newFile.exists()) {
 			oldFile.renameTo(newFile);
 		}
@@ -353,6 +353,10 @@ public class Editions implements ISearchableProperty {
 			InputStream st = new FileInputStream(file);
 			loadEditions(st);
 		}
+	}
+
+	public static File getStoreFile() {
+		return new File(DataManager.getTablesDir(), EDITIONS_FILE);
 	}
 
 	private void initializeEditions() throws IOException, FileNotFoundException {
@@ -440,8 +444,7 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public synchronized void save() throws FileNotFoundException {
-		File file = new File(DataManager.getTablesDir(), EDITIONS_FILE);
-		save(file);
+		save(getStoreFile());
 	}
 
 	public synchronized void save(File file) throws FileNotFoundException {
@@ -459,8 +462,8 @@ public class Editions implements ISearchableProperty {
 				}
 				Format format = ed.getFormat();
 				String sformat = format == Format.LEGACY ? "" : format.name();
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|"
-						+ type + "|" + (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
+				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|" + type + "|"
+						+ (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
 			}
 		} finally {
 			st.close();

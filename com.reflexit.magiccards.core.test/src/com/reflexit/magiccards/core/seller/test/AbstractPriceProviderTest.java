@@ -1,8 +1,6 @@
 package com.reflexit.magiccards.core.seller.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,27 +71,27 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 
 	public void testMagic2010() {
 		MagicCard card = checkcard("Coat of Arms", "Magic 2010");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	public void testAether() {
 		MagicCard card = checkcard("Æther Shockwave", "Saviors of Kamigawa");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	public void testSixthEdition() {
 		MagicCard card = checkcard("Armageddon", "Classic Sixth Edition");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	public void testFifthEdition() {
 		MagicCard card = checkcard("Armageddon", "Fifth Edition");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	public void testTenthEdition() {
 		MagicCard card = checkcard("Arcane Teachings", "Tenth Edition");
-		assertThat(0, is(not(centPrice(card))));
+		assertNotEquals(0, centPrice(card));
 	}
 
 	protected int centPrice(IMagicCard mc) {

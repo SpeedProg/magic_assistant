@@ -5,8 +5,8 @@ Bundle-SymbolicName: com.reflexit.magiccards.core.test
 Bundle-Version: 1.0.0
 Bundle-Vendor: Alena Laskavaia
 Fragment-Host: com.reflexit.magiccards.core;bundle-version="1.0.2"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.junit;bundle-version="4.11.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit
 Export-Package: com.reflexit.magiccards.core.exports,
  com.reflexit.magiccards.core.model,
  com.reflexit.magiccards.core.model.nav,
@@ -14,5 +14,5 @@ Export-Package: com.reflexit.magiccards.core.exports,
  com.reflexit.magiccards.core.sync,
  com.reflexit.magiccards.core.test,
  com.reflexit.magiccards.core.test.assist
-Bundle-ClassPath: lib/mockito-all-1.9.5.jar,
- .
+Bundle-ClassPath: .,
+ lib/mockito-all-1.9.5.jar

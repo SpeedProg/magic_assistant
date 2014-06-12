@@ -20,8 +20,8 @@ import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {
-	private static final int EDITIONS_SIZE = 127;
-	private static final String EDITIONS_FILE = "editions.txt";
+	private static final int EDITIONS_SIZE = 128;
+	private static final String EDITIONS_FILE = Editions.EDITIONS_FILE;
 	protected Editions editions;
 
 	public void reinit() {
@@ -40,7 +40,7 @@ public class EditionsTest extends TestCase {
 	}
 
 	public File getExFile() {
-		return new File(FileUtils.getStateLocationFile(), EDITIONS_FILE);
+		return Editions.getStoreFile();
 	}
 
 	@Override
