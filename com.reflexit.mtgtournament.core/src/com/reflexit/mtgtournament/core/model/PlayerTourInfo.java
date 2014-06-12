@@ -217,7 +217,8 @@ public class PlayerTourInfo {
 	 * 
 	 */
 	private void updatePoints() {
-		points = roundsWon * 2 + roundsDrawn * 1 + roundsLost * 0;
+		points = roundsWon * getTournament().getPointsPerWin() + roundsDrawn * getTournament().getPointsPerDraw() + roundsLost
+				* getTournament().getPointsPerLoss();
 	}
 
 	/**

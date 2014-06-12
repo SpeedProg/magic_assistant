@@ -1,3 +1,5 @@
+changes in 1.3.1.10
+* Bug 352 Win points on the tournament organizer 
 changes in 1.3.1.9
 * Bug 350: Fixed possible data loss due to parsing error in collection and decks
 changes in 1.3.1.8 

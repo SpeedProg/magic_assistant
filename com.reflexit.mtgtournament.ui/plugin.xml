@@ -65,4 +65,12 @@
          </run>
       </application>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.reflexit.mtgtournament.ui.preferences.TournamentPreferencePage"
+            id="com.reflexit.mtgtournament.ui.preferences.TournamentPreferencePage"
+            name="Tournament">
+      </page>
+   </extension>
 </plugin>

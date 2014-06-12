@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.reflexit.mtgtournament.core.PreferenceConstants;
+
 public class Tournament {
 	private transient Cube cube;
 	private String name;
@@ -323,5 +325,17 @@ public class Tournament {
 	 */
 	public void doSetNumberOfRounds(int i) {
 		this.numberOfRounds = i;
+	}
+
+	public int getPointsPerWin() {
+		return PreferenceConstants.getStore().getInt(PreferenceConstants.P_WIN, 3);
+	}
+
+	public int getPointsPerDraw() {
+		return PreferenceConstants.getStore().getInt(PreferenceConstants.P_DRAW, 1);
+	}
+
+	public int getPointsPerLoss() {
+		return PreferenceConstants.getStore().getInt(PreferenceConstants.P_LOOSE, 0);
 	}
 }
