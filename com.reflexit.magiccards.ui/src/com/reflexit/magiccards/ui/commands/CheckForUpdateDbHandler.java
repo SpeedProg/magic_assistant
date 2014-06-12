@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.commands;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -9,13 +8,15 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICardHandler;
@@ -52,47 +53,57 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 	}
 
 	public static void doCheckForCardUpdates() {
-		final IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		new Job("Checking for cards updates...") {
 			@Override
-			public void run(IProgressMonitor imonitor) throws InvocationTargetException, InterruptedException {
-				CoreMonitorAdapter monitor = new CoreMonitorAdapter(imonitor);
+			public IStatus run(IProgressMonitor imonitor) {
+				final CoreMonitorAdapter monitor = new CoreMonitorAdapter(imonitor);
 				monitor.beginTask("Checking for cards updates...", 110);
 				try {
-					ICardHandler handler = DataManager.getCardHandler();
+					final ICardHandler handler = DataManager.getCardHandler();
 					ParseGathererSets setsLoader = new ParseGathererSets();
 					setsLoader.load(new SubCoreProgressMonitor(monitor, 10));
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
 					ParseSetLegality.loadAllFormats(new SubCoreProgressMonitor(monitor, 10));
-					Collection<Edition> newSets = setsLoader.getNew();
+					final Collection<Edition> newSets = setsLoader.getNew();
 					if (newSets.size() > 0) {
 						Editions.getInstance().save();
-						if (MessageDialog.openQuestion(null, "New Cards", "New sets are available: " + newSets
-								+ ". Would you like to download them now?")) {
-							int k = newSets.size();
-							for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
-								Edition edition = (Edition) iterator.next();
-								handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(monitor, 60 / k));
+						Display.getDefault().syncExec(new Runnable() {
+							@Override
+							public void run() {
+								if (MessageDialog.openQuestion(null, "New Cards", "New sets are available: " + newSets
+										+ ". Would you like to download them now?")) {
+									int k = newSets.size();
+									for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
+										Edition edition = (Edition) iterator.next();
+										try {
+											handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(
+													monitor, 60 / k));
+										} catch (MagicException e) {
+											MagicUIActivator.log(e);
+										} catch (InterruptedException e) {
+											monitor.setCanceled(true);
+										}
+										if (monitor.isCanceled())
+											break;
+									}
+								}
 							}
-						}
+						});
 					}
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
 					CurrencyConvertor.update();
 				} catch (Exception e) {
 					MagicUIActivator.log(e); // move on if exception via set
 												// loading
 				}
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
 				monitor.done();
+				return Status.OK_STATUS;
 			}
-		};
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					new ProgressMonitorDialog(null).run(false, true, runnable);
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-				}
-			};
-		});
+		}.schedule();
 	}
 
 	@Override
