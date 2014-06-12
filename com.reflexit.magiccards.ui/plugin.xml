@@ -409,6 +409,12 @@
             </values>
          </commandParameter>
       </command>
+      
+      <command
+            defaultHandler="com.reflexit.magiccards.ui.commands.BackupHandler"
+            id="com.reflexit.magicassistant.command.backup"
+            name="Backup">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -529,6 +535,15 @@
        
      </menuContribution>
      -->
+       <menuContribution
+            locationURI="menu:file?after=additions">
+            <command
+                  commandId="com.reflexit.magicassistant.command.backup"
+            	  mnemonic="B"
+                  id="com.reflexit.magicassistant.menu.backup">
+            </command>
+                        
+      </menuContribution>
   </extension>
   <extension
         point="org.eclipse.ui.newWizards">
@@ -667,5 +682,32 @@
 	</fontDefinition>
 
 </extension>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="com.reflexit.magicassistant.command.update"
+            name="Check for Software Updates">
+      </command>
+
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.reflexit.magicassistant.command.update"
+            class="com.reflexit.magiccards.ui.commands.UpdateHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=additions">
+            <command
+                  commandId="com.reflexit.magicassistant.command.update"
+            	  mnemonic="U"
+                  id="com.reflexit.magicassistant.menu.update">
+            </command>
+      </menuContribution>
+   </extension>
 
 </plugin>

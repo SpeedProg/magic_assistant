@@ -1,10 +1,12 @@
 package com.reflexit.magiccards_rcp;
 
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
@@ -19,9 +21,9 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.reflexit.magicassistant.p2.P2Util;
-import com.reflexit.magicassistant.p2.UpdateHandler;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.commands.CheckForUpdateDbHandler;
+import com.reflexit.magiccards.ui.commands.UpdateHandler;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
@@ -59,7 +61,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		boolean updates = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.CHECK_FOR_CARDS);
 		if (updates == false || MagicUIActivator.TRACE_TESTING)
 			return;
-		CheckForUpdateDbHandler.doCheckForCardUpdates();
+		new Job("Checking for Card Update") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				CheckForUpdateDbHandler.doCheckForCardUpdates();
+				return Status.OK_STATUS;
+			}
+		}.schedule(10000);
 	}
 
 	protected void installSoftwareUpdate() {

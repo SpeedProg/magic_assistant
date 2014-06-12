@@ -52,6 +52,28 @@ public class FileUtils {
 		}
 	}
 
+	public static void copyTree(File src, File dest) throws IOException {
+		// if directory not exists, create it
+		if (src.isDirectory()) {
+			if (!dest.exists()) {
+				dest.mkdirs();
+			}
+			// list all the directory contents
+			String files[] = src.list();
+			for (String file : files) {
+				// construct the src and dest file structure
+				File srcFile = new File(src, file);
+				File destFile = new File(dest, file);
+				// recursive copy
+				copyTree(srcFile, destFile);
+			}
+		} else {
+			// if file, then copy it
+			// Use bytes stream to support all file types
+			copyFile(src, dest);
+		}
+	}
+
 	public static BufferedReader openFileReader(File file) throws FileNotFoundException {
 		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file), FileUtils.CHARSET_UTF_8));
 		return st;

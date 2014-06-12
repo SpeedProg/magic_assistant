@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.reflexit.magicassistant.p2.UpdateHandler;
+import com.reflexit.magicassistant.p2.UpdateHandlerP2;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.IPriceProviderStore;
@@ -135,7 +135,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		pressMe.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new UpdateHandler().openManipulateRepositories();
+				new UpdateHandlerP2().openManipulateRepositories();
 			}
 		});
 		GridData ld = new GridData();

@@ -52,7 +52,7 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 	}
 
 	public static void doCheckForCardUpdates() {
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			@Override
 			public void run(IProgressMonitor imonitor) throws InvocationTargetException, InterruptedException {
 				CoreMonitorAdapter monitor = new CoreMonitorAdapter(imonitor);
@@ -70,8 +70,7 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 							int k = newSets.size();
 							for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
 								Edition edition = (Edition) iterator.next();
-								handler.downloadUpdates(edition.getName(), new Properties(),
-										new SubCoreProgressMonitor(monitor, 60 / k));
+								handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(monitor, 60 / k));
 							}
 						}
 					}
@@ -83,12 +82,17 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 				monitor.done();
 			}
 		};
-		try {
-			new ProgressMonitorDialog(null).run(false, true, runnable);
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-		}
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					new ProgressMonitorDialog(null).run(false, true, runnable);
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+				}
+			};
+		});
 	}
 
 	@Override
