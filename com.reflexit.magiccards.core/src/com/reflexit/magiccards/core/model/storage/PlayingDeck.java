@@ -152,7 +152,8 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 			MagicCardGame card = iterator.next();
 			if (card.getZone() == Zone.LIBRARY) {
 				mg.add(card);
-				iterator.remove();
+				store.remove(card);
+				// iterator.remove();
 			}
 		}
 		Collection<MagicCardGame> randomize = randomize(mg);
