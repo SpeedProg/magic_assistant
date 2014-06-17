@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.commands;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -14,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.dialogs.CountConfirmationDialog;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -46,13 +48,24 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 		} catch (NumberFormatException e) {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+		final IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
 			try {
 				if (count == -1)
 					DataManager.moveCards(list, activeDeckHandler.getLocation());
-				else {
+				else if (count == 0) {
+					new CountConfirmationDialog(window.getShell(), iss) {
+						@Override
+						protected void runOperation() {
+							Map<IMagicCard, Integer> map = getCountMap();
+							List<IMagicCard> list = DataManager.splitCards(map);
+							DataManager.moveCards(list, activeDeckHandler.getLocation());
+						};
+					}.open();
+					// DataManager.moveCards(list,
+					// activeDeckHandler.getLocation());
+				} else {
 					List<IMagicCard> x = DataManager.splitCards(list, count);
 					DataManager.moveCards(x, activeDeckHandler.getLocation());
 				}

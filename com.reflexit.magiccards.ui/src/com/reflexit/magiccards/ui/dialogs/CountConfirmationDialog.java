@@ -191,7 +191,8 @@ public class CountConfirmationDialog extends Dialog {
 		if (activeIndex == 0)
 			return;
 		getButton(0).setText("Next");
-		animation.popControl(panels[activeIndex], 1, 0);
+		if (activeIndex < cards.length)
+			animation.popControl(panels[activeIndex], 1, 0);
 		activeIndex--;
 		enableAdvanceButtons(true);
 	}
@@ -200,6 +201,7 @@ public class CountConfirmationDialog extends Dialog {
 	protected void okPressed() {
 		if (activeIndex >= cards.length) {
 			super.okPressed();
+			runOperation();
 			return;
 		}
 		enableAdvanceButtons(false);
@@ -224,6 +226,10 @@ public class CountConfirmationDialog extends Dialog {
 		}
 	}
 
+	protected void runOperation() {
+		// now run something that actually does stuff
+	}
+
 	private String getCount(IMagicCard card) {
 		if (card instanceof MagicCardPhysical)
 			return ((MagicCardPhysical) card).getCount() + "";
@@ -231,6 +237,13 @@ public class CountConfirmationDialog extends Dialog {
 	}
 
 	private void enableAdvanceButtons(boolean a) {
+		if (activeIndex >= cards.length) {
+			getButton(3).setEnabled(false);
+			for (int i = 10; i <= 14; i++) {
+				getButton(i).setEnabled(false);
+			}
+			return;
+		}
 		boolean b = a;
 		IMagicCard card = cards[activeIndex];
 		int count = Integer.MAX_VALUE;

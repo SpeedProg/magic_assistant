@@ -219,6 +219,13 @@
       	    commandId="com.reflexit.magiccards.ui.commands.moveToDeck"
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="? M">
+            <parameter id="com.reflexit.magiccards.ui.count" value="0" />
+      </key>
+      <key
+      	    commandId="com.reflexit.magiccards.ui.commands.moveToDeck"
+            contextId="com.reflexit.magiccards.ui.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="1 M">
             <parameter id="com.reflexit.magiccards.ui.count" value="1" />
       </key>
