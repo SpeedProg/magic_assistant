@@ -1,6 +1,8 @@
 changes in 1.3.1.11
 * Bug 345 Shuffle library issue in Draw tab
 * Added log file path to bug report submission window
+* Bug 354 Text of card disappears on select -  Gatherer updated their web-site again.
+* Bug 353 Fixed - No localized English cards message
 changes in 1.3.1.10
 * Bug 352 Win points on the tournament organizer 
 * Added simple Backup support
