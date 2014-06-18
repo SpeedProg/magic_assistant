@@ -61,6 +61,10 @@ public class UpdateCardsFromWeb {
 		if (loadText) {
 			printedParser.addFilter(MagicCardField.TEXT);
 		}
+		if (loadLang) {
+			if (lang == null || lang.isEmpty() || lang.equals("English"))
+				loadLang = false;
+		}
 		boolean localized = false;
 		// load
 		storage.setAutoCommit(false);
