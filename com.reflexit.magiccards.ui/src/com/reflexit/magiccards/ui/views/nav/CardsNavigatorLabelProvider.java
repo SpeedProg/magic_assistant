@@ -41,7 +41,7 @@ public class CardsNavigatorLabelProvider extends LabelProvider implements IColor
 			if (((CardCollection) element).isDeck())
 				return MagicUIActivator.getDefault().getImage("icons/obj16/ideck16.png");
 			else
-				return MagicUIActivator.getDefault().getImage("icons/obj16/ilib16.png");
+				return MagicUIActivator.getDefault().getImage("icons/obj16/lib16.png");
 		}
 		if (element instanceof CollectionsContainer) {
 			return MagicUIActivator.getDefault().getImage("icons/obj16/folder-lib.png");
@@ -55,10 +55,12 @@ public class CardsNavigatorLabelProvider extends LabelProvider implements IColor
 		return null;
 	}
 
+	@Override
 	public Color getForeground(Object element) {
 		return null;
 	}
 
+	@Override
 	public Color getBackground(Object element) {
 		boolean own = true;
 		if (element instanceof CardCollection) {

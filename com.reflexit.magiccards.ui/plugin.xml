@@ -571,7 +571,7 @@
            category="com.reflexit.magiccards.ui"
            class="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
            finalPerspective="com.reflexit.magiccards.ui.perspective.magic"
-           icon="icons/obj16/ilib16.png"
+           icon="icons/obj16/lib16.png"
            id="com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard"
            name="Card Collection">
      </wizard>
