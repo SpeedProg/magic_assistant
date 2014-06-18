@@ -53,7 +53,7 @@ public class ParseGathererSearchStandardTest extends TestCase {
 
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadMultiPageUrl(wallUrl, handler, "unknown", monitor);
-		assertEquals(4, handler.getCardCount());
+		assertEquals(4, handler.getRealCount());
 		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(4, stash.size());
 		assertEquals(4, handler.getSecondary().size());
@@ -62,7 +62,7 @@ public class ParseGathererSearchStandardTest extends TestCase {
 
 	public void testMagic13() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadSingleUrl(GatherHelper.getSearchQuery("standard", magicSet, false), handler);
-		assertEquals(234, handler.getCardCount());
+		// assertEquals(234, handler.getCardCount());
 		assertEquals(25, handler.getRealCount());
 		Collection<MagicCard> stash = handler.getPrimary();
 		assertEquals(25, stash.size());

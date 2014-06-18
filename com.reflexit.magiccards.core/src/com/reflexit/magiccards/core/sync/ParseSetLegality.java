@@ -31,8 +31,8 @@ public class ParseSetLegality extends ParseGathererPage {
 	 */
 	@Override
 	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
-		int i = html.indexOf("<div class=\"article-content\">");
-		int j = html.indexOf("<div class=\"article-bottom\">");
+		int i = html.indexOf("<div class=\"article-content\"");
+		int j = html.indexOf("<div class=\"article-bottom\"");
 		String setsHtml = html.substring(i, j);
 		setsHtml = setsHtml.replaceAll("\r?\n", " ");
 		setsHtml = setsHtml.replaceAll("</?b>", "");
@@ -51,7 +51,8 @@ public class ParseSetLegality extends ParseGathererPage {
 				if (ed != null) {
 					ed.getLegalityMap().put(format, Legality.LEGAL);
 					ed.getLegalityMap().complete();
-					// System.err.println("Set " + string + " is set to " + format);
+					// System.err.println("Set " + string + " is set to " +
+					// format);
 				}
 			}
 		}
@@ -77,7 +78,7 @@ public class ParseSetLegality extends ParseGathererPage {
 				parser.load(new SubCoreProgressMonitor(monitor, ticks / formats.size()));
 			}
 			eds.save();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

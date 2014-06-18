@@ -80,7 +80,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 
 	 */
 	private static Pattern textPattern = Pattern.compile("Card Text:</div>(.*?)class=\"label\"");
-	private static Pattern textPatternEach = Pattern.compile("<div class=\"cardtextbox\">(.*?)</div>");
+	private static Pattern textPatternEach = Pattern.compile("<div class=\"cardtextbox\"[^>]*>(.*?)</div>");
 	/*-
 	 * <div class="label"> 
 	 Other Sets:</div> 
@@ -165,7 +165,8 @@ public class ParseGathererDetails extends ParseGathererPage {
 				card2.setText(card.getOracleText());
 				if (magicDb != null && magicDb.getCard(card2.getCardId()) == null) {
 					magicDb.add(card2);
-					// MagicLogger.log("Added " + card2.getName() + " " + id + " " + set + " " +
+					// MagicLogger.log("Added " + card2.getName() + " " + id +
+					// " " + set + " " +
 					// rarity);
 				}
 			}
@@ -313,7 +314,8 @@ public class ParseGathererDetails extends ParseGathererPage {
 				MagicLogger.log("Problems parsing card " + card.getGathererId());
 				return;
 			}
-			// extractField(card, fieldMapFilter, html, MagicCardField.NAME, cardAltPattern, true);
+			// extractField(card, fieldMapFilter, html, MagicCardField.NAME,
+			// cardAltPattern, true);
 			// monitor.worked(1);
 			extractField(card, fieldMapFilter, html, MagicCardField.RULINGS, rulingPattern, true);
 			extractField(card, fieldMapFilter, html, MagicCardField.RATING, ratingPattern, false);

@@ -77,4 +77,12 @@ public class ParseGathererDetailsTest extends TestCase {
 		assertTrue("Cannot update rating", rating.toString().length() > 0);
 		assertEquals(164, Integer.parseInt(card.getCollNumber()));
 	}
+
+	public void testText() throws IOException {
+		MagicCard card = load(230074);
+		assertEquals("86", card.getCollNumber());
+		assertEquals("Gut Shot", card.getName());
+		assertEquals("<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gut Shot deals 1 damage to target creature or player.",
+				card.getText());
+	}
 }

@@ -164,7 +164,9 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 					String abbr = setIdMap.get(cset);
 					if (abbr == null)
 						abbr = editions.getAbbrByName(cset);
-					if (abbr.equals(set)) {
+					if (abbr == null) {
+						System.err.println("No abbreviation for !! " + cset);
+					} else if (abbr.equals(set)) {
 						setDbPrice(mc, res.get(xname), getCurrency());
 						found = true;
 						break;
