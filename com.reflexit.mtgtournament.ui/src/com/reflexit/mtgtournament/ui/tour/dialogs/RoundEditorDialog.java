@@ -11,6 +11,7 @@
 package com.reflexit.mtgtournament.ui.tour.dialogs;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -33,7 +34,7 @@ import com.reflexit.mtgtournament.ui.tour.Activator;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class RoundEditorDialog extends TitleAreaDialog {
 	private Round round;
@@ -149,20 +150,11 @@ public class RoundEditorDialog extends TitleAreaDialog {
 		sched.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				switch (roundNew.getState()) {
-				case NOT_READY:
-					break;
-				case READY:
+				try {
+					roundNew.reset();
 					roundNew.schedule();
-					break;
-				case NOT_SCHEDULED:
-					roundNew.schedule();
-					break;
-				case IN_PROGRESS:
-					roundNew.schedule();
-					break;
-				case CLOSED:
-					break;
+				} catch (Exception e1) {
+					MessageDialog.openError(getParentShell(), "Error", e1.getMessage());
 				}
 				updateButtons();
 			}
@@ -179,28 +171,28 @@ public class RoundEditorDialog extends TitleAreaDialog {
 		restart.setEnabled(true);
 		reopen.setEnabled(true);
 		switch (roundNew.getState()) {
-		case NOT_READY:
-			sched.setEnabled(false);
-			restart.setEnabled(false);
-			reopen.setEnabled(false);
-			break;
-		case READY:
-			restart.setEnabled(false);
-			reopen.setEnabled(false);
-			break;
-		case NOT_SCHEDULED:
-			restart.setEnabled(false);
-			reopen.setEnabled(false);
-			break;
-		case IN_PROGRESS:
-			sched.setEnabled(false);
-			reopen.setEnabled(false);
-			scheduleCombo.setEnabled(false);
-			break;
-		case CLOSED:
-			sched.setEnabled(false);
-			scheduleCombo.setEnabled(false);
-			break;
+			case NOT_READY:
+				sched.setEnabled(false);
+				restart.setEnabled(false);
+				reopen.setEnabled(false);
+				break;
+			case READY:
+				restart.setEnabled(false);
+				reopen.setEnabled(false);
+				break;
+			case NOT_SCHEDULED:
+				restart.setEnabled(false);
+				reopen.setEnabled(false);
+				break;
+			case IN_PROGRESS:
+				sched.setEnabled(false);
+				reopen.setEnabled(false);
+				scheduleCombo.setEnabled(false);
+				break;
+			case CLOSED:
+				sched.setEnabled(false);
+				scheduleCombo.setEnabled(false);
+				break;
 		}
 	}
 

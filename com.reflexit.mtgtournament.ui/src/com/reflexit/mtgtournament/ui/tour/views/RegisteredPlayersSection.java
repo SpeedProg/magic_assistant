@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -28,13 +32,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.ui.tour.dialogs.ByesDialog;
 import com.reflexit.mtgtournament.ui.tour.dialogs.SelectPlayerDialog;
 
 public class RegisteredPlayersSection extends TSectionPart {
@@ -43,6 +44,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 	private Button add;
 	private Button gen;
 	private Button del;
+	private Button byes;
 
 	public RegisteredPlayersSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -52,7 +54,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 	private void createBody() {
 		Section section = this.getSection();
 		section.setText("Registered Players and Tournament Standings");
-		//section.setDescription("Tournament settings");
+		// section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 		GridLayout layout = new GridLayout(2, false);
@@ -96,18 +98,18 @@ public class RegisteredPlayersSection extends TSectionPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(plComp.getViewer().getControl().getShell(), "Enter Players",
-				        "Enter number of players to generate", "4", new IInputValidator() {
-					        public String isValid(String newText) {
-						        try {
-							        int x = Integer.parseInt(newText);
-							        if (x <= 0)
-								        return "No players?";
-						        } catch (NumberFormatException e) {
-							        return "Invalid number";
-						        }
-						        return null;
-					        }
-				        });
+						"Enter number of players to generate", "4", new IInputValidator() {
+							public String isValid(String newText) {
+								try {
+									int x = Integer.parseInt(newText);
+									if (x <= 0)
+										return "No players?";
+								} catch (NumberFormatException e) {
+									return "Invalid number";
+								}
+								return null;
+							}
+						});
 				if (inputDialog.open() == Dialog.OK) {
 					String value = inputDialog.getValue();
 					int num = Integer.parseInt(value);
@@ -123,6 +125,17 @@ public class RegisteredPlayersSection extends TSectionPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) plComp.getViewer().getSelection();
 				deletePlayers(sel.toList());
+			}
+		});
+		byes = toolkit.createButton(buttons, "Byes...", SWT.PUSH);
+		byes.setLayoutData(hor.create());
+		byes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection sel = (IStructuredSelection) plComp.getViewer().getSelection();
+				if (sel.isEmpty())
+					return;
+				new ByesDialog(byes.getShell(), sel).open();
 			}
 		});
 		updateButtonsEnablement();

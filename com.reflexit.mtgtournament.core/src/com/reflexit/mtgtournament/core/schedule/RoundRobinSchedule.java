@@ -22,51 +22,58 @@ import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
-  A round-robin tournament or all-play-all tournament is a type of group tournament 
-  "in which each contestant meets every other contestant in turn".
-  In a single round-robin schedule, each participant plays every other participant once.
-    
-If n is the number of competitors, a pure round robin tournament requires (n/2)*(n - 1) games.
-If n is even, then in each of (n-1) rounds, n/2 games can be run in parallel,
-provided there exist sufficient resources (e.g. courts for a tennis tournament). 
-If n is odd, there will be n rounds with (n - 1)/2 games, and one competitor having no game in that round.
-
-The standard algorithm for round-robins is to assign each competitor a number, and pair them off in the first round
-
-Round 1. (1 plays 14, 2 plays 13, ... )
- 1  2  3  4  5  6  7  
- 14 13 12 11 10 9  8
-
-... then fix one competitor (number one in this example) and rotate the others clockwise …
-
-Round 2. (1 plays 13, 14 plays 12, ... )
- 1  14 2  3  4  5  6
- 13 12 11 10 9  8  7
-
-Round 3. (1 plays 12, 13 plays 11, ... )
- 1  13 14 2  3  4  5
- 12 11 10 9  8  7  6
-
-... until you end up almost back at the initial position
-
-Round 13. (1 plays 2, 3 plays 14, ... )
- 1  3  4  5  6  7  8
- 2 14  13 12 11 10 9
-
-If there are an odd number of competitors, a dummy competitor can be added, 
-whose scheduled opponent in a given round does not play and has a bye. 
-The upper and lower rows can indicate home/away in sports, white/black in chess, etc 
-(this must alternate between rounds since competitor 1 is always on the first row). 
-If, say, competitors 3 and 8 were unable to fulfill their fixture in the third round, 
-it would need to be rescheduled outside the other rounds, since both competitors would already be facing 
-other opponents in those rounds. 
-
-
+ * A round-robin tournament or all-play-all tournament is a type of group
+ * tournament "in which each contestant meets every other contestant in turn".
+ * In a single round-robin schedule, each participant plays every other
+ * participant once.
+ * 
+ * If n is the number of competitors, a pure round robin tournament requires
+ * (n/2)*(n - 1) games. If n is even, then in each of (n-1) rounds, n/2 games
+ * can be run in parallel, provided there exist sufficient resources (e.g.
+ * courts for a tennis tournament). If n is odd, there will be n rounds with (n
+ * - 1)/2 games, and one competitor having no game in that round.
+ * 
+ * The standard algorithm for round-robins is to assign each competitor a
+ * number, and pair them off in the first round
+ * 
+ * Round 1. (1 plays 14, 2 plays 13, ... ) 1 2 3 4 5 6 7 14 13 12 11 10 9 8
+ * 
+ * ... then fix one competitor (number one in this example) and rotate the
+ * others clockwise ï¿½
+ * 
+ * Round 2. (1 plays 13, 14 plays 12, ... ) 1 14 2 3 4 5 6 13 12 11 10 9 8 7
+ * 
+ * Round 3. (1 plays 12, 13 plays 11, ... ) 1 13 14 2 3 4 5 12 11 10 9 8 7 6
+ * 
+ * ... until you end up almost back at the initial position
+ * 
+ * Round 13. (1 plays 2, 3 plays 14, ... ) 1 3 4 5 6 7 8 2 14 13 12 11 10 9
+ * 
+ * If there are an odd number of competitors, a dummy competitor can be added,
+ * whose scheduled opponent in a given round does not play and has a bye. The
+ * upper and lower rows can indicate home/away in sports, white/black in chess,
+ * etc (this must alternate between rounds since competitor 1 is always on the
+ * first row). If, say, competitors 3 and 8 were unable to fulfill their fixture
+ * in the third round, it would need to be rescheduled outside the other rounds,
+ * since both competitors would already be facing other opponents in those
+ * rounds.
+ * 
+ * 
  * @author Alena
- *
+ * 
  */
 public class RoundRobinSchedule implements IScheduler {
 	public void schedule(Tournament t) {
+		// draft
+		Round draftRound = new Round(0);
+		t.addRound(draftRound);
+		draftRound.setType(TournamentType.RANDOM);
+		draftRound.schedule();
+		scheduleFromRound(t, 1);
+	}
+
+	private void scheduleFromRound(Tournament t, int from) {
+		// rr
 		int pn = t.getNumberOfPlayers();
 		int tables = pn / 2 + pn % 2;
 		int pna = tables * 2; // with odd number add dummy
@@ -75,25 +82,26 @@ public class RoundRobinSchedule implements IScheduler {
 			positions[i] = i;
 			positions[i + tables] = pna - 1 - i;
 		}
-		if (t.getNumberOfRounds() == 0) {
-			t.setNumberOfRounds(pna - 1); // plus draft
+		int max = pna - 1;
+		if (t.getNumberOfRounds() < max + from - 1) {
+			t.setNumberOfRounds(max + from - 1); // 0th is draft
 		}
-		List<Player> array = init(t.getPlayersInfo());
-		Collections.shuffle(array);
-		for (int i = 0; i <= t.getNumberOfRounds(); i++) {
-			Round r = new Round(i);
-			t.addRound(r);
-			r.setType(t.getType());
-			if (i == 0) {
-				r.setType(TournamentType.RANDOM);
-				r.schedule();
-				continue;
+		List<Player> players = init(t.getPlayersInfo());
+		Collections.shuffle(players);
+		for (int roundNumber = from; roundNumber <= max + from - 1; roundNumber++) {
+			Round round;
+			try {
+				round = t.getRound(roundNumber);
+			} catch (Exception e) {
+				round = new Round(roundNumber);
+				t.addRound(round);
 			}
+			round.setType(TournamentType.ROUND_ROBIN);
 			for (int j = 0; j < tables; j++) {
-				int n = (j + i) % tables;
+				int n = (j + roundNumber) % tables;
 				int pos1 = positions[n];
 				int pos2 = positions[n + tables];
-				CmdAddTable comAddTable = new CmdAddTable(r, j, array.get(pos1), array.get(pos2));
+				CmdAddTable comAddTable = new CmdAddTable(round, j, players.get(pos1), players.get(pos2));
 				comAddTable.execute();
 			}
 			rotateRR(positions);
@@ -114,11 +122,16 @@ public class RoundRobinSchedule implements IScheduler {
 	}
 
 	/**
-	 * Cyclic shift right. For example 1 2 3 4 becomes 4 1 2 3 (for shift 1). 
-	 * @param positions - array
-	 * @param start - from index
-	 * @param end - to index exclusive
-	 * @param shift - number of shifts
+	 * Cyclic shift right. For example 1 2 3 4 becomes 4 1 2 3 (for shift 1).
+	 * 
+	 * @param positions
+	 *            - array
+	 * @param start
+	 *            - from index
+	 * @param end
+	 *            - to index exclusive
+	 * @param shift
+	 *            - number of shifts
 	 */
 	private void rotate(int[] positions, int start, int end, int shift) {
 		if (positions == null)
@@ -148,10 +161,10 @@ public class RoundRobinSchedule implements IScheduler {
 	}
 
 	private void rotateRR(int[] positions) {
-		// 0 . 1 2 
+		// 0 . 1 2
 		// . 5 4 3
 		// becomes
-		// 0 . 5 1 
+		// 0 . 5 1
 		// . 4 3 2
 		int h = positions.length / 2;
 		rotate(positions, 1, h, 1);
@@ -161,10 +174,14 @@ public class RoundRobinSchedule implements IScheduler {
 		positions[positions.length - 1] = x;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.reflexit.mtgtournament.core.schedule.IScheduler#schedule(com.reflexit.mtgtournament.core.model.Round)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.mtgtournament.core.schedule.IScheduler#schedule(com.reflexit
+	 * .mtgtournament.core.model.Round)
 	 */
 	public void schedule(Round r) {
-		throw new IllegalStateException("Cannot schedule a single round for Round Robin");
+		scheduleFromRound(r.getTournament(), r.getNumber());
 	}
 }

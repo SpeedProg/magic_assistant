@@ -104,7 +104,7 @@ public class RoundScheduleSection extends TSectionPart {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
 				List<Round> rounds = t.getRounds();
-				if (t.isDraftRound() || rounds.size() == 0)
+				if (t.hasDraftRound() || rounds.size() == 0)
 					return rounds.toArray();
 				else
 					return rounds.subList(1, rounds.size()).toArray();

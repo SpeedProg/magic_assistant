@@ -1,5 +1,10 @@
 package com.reflexit.mtgtournament.ui.views;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -26,23 +31,20 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import com.reflexit.mtgtournament.ui.tour.Activator;
 
 /**
- * This sample class demonstrates how to plug-in a new workbench view. The view shows data obtained
- * from the model. The sample creates a dummy model on the fly, but a real implementation would
- * connect to the model available either in this or another plug-in (e.g. the workspace). The view
- * is connected to the model using a content provider.
+ * This sample class demonstrates how to plug-in a new workbench view. The view
+ * shows data obtained from the model. The sample creates a dummy model on the
+ * fly, but a real implementation would connect to the model available either in
+ * this or another plug-in (e.g. the workspace). The view is connected to the
+ * model using a content provider.
  * <p>
- * The view uses a label provider to define how model objects should be presented in the view. Each
- * view can present the same model objects using different labels and icons, if needed.
- * Alternatively, a single label provider can be shared between views in order to ensure that
- * objects of the same type are presented in the same way everywhere.
+ * The view uses a label provider to define how model objects should be
+ * presented in the view. Each view can present the same model objects using
+ * different labels and icons, if needed. Alternatively, a single label provider
+ * can be shared between views in order to ensure that objects of the same type
+ * are presented in the same way everywhere.
  * <p>
  */
 public class TimerView extends ViewPart {
@@ -61,7 +63,7 @@ public class TimerView extends ViewPart {
 	private long timeLeft;
 	private long timeZero;
 	private long lastTime;
-	private boolean paused = false;
+	private boolean paused = true;
 	private String lastTimerValue = "00:30:00";
 	private Thread thread = new Thread("Tournament Timer") {
 		@Override
@@ -103,7 +105,8 @@ public class TimerView extends ViewPart {
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -147,6 +150,7 @@ public class TimerView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+		timerLabel.setText(timerFormat.format(new Date(timeLeft)));
 		updateTime();
 		updateActionsEnablement();
 		thread.start();

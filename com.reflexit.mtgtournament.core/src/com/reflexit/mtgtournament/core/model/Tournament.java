@@ -73,8 +73,6 @@ public class Tournament {
 	 *            - number of round, 0 if optimal (max for RR)
 	 */
 	public void setNumberOfRounds(int rounds) {
-		if (isScheduled() && this.numberOfRounds != rounds)
-			throw new IllegalStateException("Cannot modify rounds when tournament is already scheduled");
 		doSetNumberOfRounds(rounds);
 	}
 
@@ -120,7 +118,7 @@ public class Tournament {
 		for (Round round : rounds) {
 			if (round != null) {
 				if (round.getNumber() == 0) {
-					if (isDraftRound())
+					if (hasDraftRound())
 						st.println("Draft" + ": ");
 				} else
 					st.println("Round " + round.getNumber() + ": ");
@@ -159,7 +157,7 @@ public class Tournament {
 		return false;
 	}
 
-	public boolean isDraftRound() {
+	public boolean hasDraftRound() {
 		return draftRound;
 	}
 

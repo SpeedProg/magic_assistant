@@ -231,7 +231,7 @@ public class OverviewSection extends TSectionPart {
 			this.tournament = (Tournament) input;
 			initializing = true;
 			try {
-				hasDraftButton.setSelection(tournament.isDraftRound());
+				hasDraftButton.setSelection(tournament.hasDraftRound());
 				tournamentTypeCombo.setText(tournament.getType().name());
 				int rounds = tournament.getNumberOfRounds();
 				roundsCombo.setText(String.valueOf(rounds));

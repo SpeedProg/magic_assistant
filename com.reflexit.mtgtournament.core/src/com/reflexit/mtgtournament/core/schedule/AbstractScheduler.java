@@ -30,17 +30,22 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 public abstract class AbstractScheduler implements IScheduler {
 	public void schedule(Tournament t) {
 		updateRoundNumber(t);
-		for (int i = 0; i <= t.getNumberOfRounds(); i++) {
+		createDraft(t);
+		for (int i = 1; i <= t.getNumberOfRounds(); i++) {
 			Round r = new Round(i);
 			t.addRound(r);
-			if (i == 0) {
-				r.setType(TournamentType.RANDOM);
-				if (!t.isDraftRound()) {
-					r.schedule();
-					r.close();
-				}
-			} else
-				r.setType(t.getType());
+			r.setType(t.getType());
+		}
+	}
+
+	protected void createDraft(Tournament t) {
+		Round r = new Round(0);
+		t.addRound(r);
+		r.setType(TournamentType.RANDOM);
+		if (!t.hasDraftRound()) {
+			// draft always there, but not visible sometimes
+			r.schedule();
+			r.close();
 		}
 	}
 
@@ -72,14 +77,24 @@ public abstract class AbstractScheduler implements IScheduler {
 				iterator.remove();
 		}
 		if (players.size() <= 1) // not enough players
-			throw new IllegalStateException("Not enough players");
+			throw new IllegalStateException("Not enought players");
 		sortForScheduling(players);
 		// add dummy
-		if (players.size() % 2 == 1) {
-			players.add(new PlayerTourInfo(Player.DUMMY));
-		}
+		addEvenDummy(players);
 		scheduleRound(r, players);
 		dummyLooses(r);
+	}
+
+	protected void addEvenDummy(ArrayList<PlayerTourInfo> players) {
+		if (players.size() % 2 == 1) {
+			addDummy(players);
+		}
+	}
+
+	protected PlayerTourInfo addDummy(ArrayList<PlayerTourInfo> players) {
+		PlayerTourInfo playerTourInfo = new PlayerTourInfo(Player.DUMMY);
+		players.add(playerTourInfo);
+		return playerTourInfo;
 	}
 
 	/**

@@ -17,11 +17,11 @@ import com.reflexit.mtgtournament.core.model.Round;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CompositeScheduler extends AbstractScheduler {
 	@Override
 	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
-		throw new IllegalStateException("This abstract scheduler, pick concrete");
+		throw new IllegalStateException("Composite is not a real scheduler, select a specific scheduler buy editing round info");
 	}
 }

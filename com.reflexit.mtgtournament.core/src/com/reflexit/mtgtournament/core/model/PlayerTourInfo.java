@@ -10,8 +10,10 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
@@ -33,6 +35,7 @@ public class PlayerTourInfo {
 	private float omw;
 	private float ogw;
 	private float pgw;
+	private Map<Integer, Boolean> byes;
 
 	public PlayerTourInfo(Player player) {
 		setPlayer(player);
@@ -285,5 +288,18 @@ public class PlayerTourInfo {
 
 	public float getPGW() {
 		return pgw;
+	}
+
+	public Map<Integer, Boolean> getByes() {
+		if (byes == null)
+			byes = new HashMap<Integer, Boolean>();
+		return byes;
+	}
+
+	public boolean getBye(int round) {
+		Boolean b = getByes().get(round);
+		if (b == null)
+			return false;
+		return b;
 	}
 }

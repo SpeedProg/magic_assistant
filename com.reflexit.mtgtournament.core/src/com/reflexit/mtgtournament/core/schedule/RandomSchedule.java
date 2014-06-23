@@ -16,35 +16,43 @@ import java.util.Collections;
 import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
-import com.reflexit.mtgtournament.core.model.Tournament;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class RandomSchedule extends AbstractScheduler implements IScheduler {
 	@Override
-	public void schedule(Tournament t) {
-		super.schedule(t);
-		for (int i = 0; i <= t.getNumberOfRounds(); i++) {
-			Round r = t.getRound(i);
-			schedule(r);
-		}
+	protected void addEvenDummy(ArrayList<PlayerTourInfo> players) {
+		// no
 	}
 
 	@Override
 	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
 		int table = 1;
-		// this method has even number of players always
-		while (players.size() > 1) {
+		while (players.size() > 0) {
 			PlayerTourInfo pti1 = players.get(0);
-			PlayerTourInfo pti2 = players.get(1);
+			players.remove(pti1);
+			PlayerTourInfo pti2 = null;
+			int roundNumber = r.getNumber();
+			if (pti1.getBye(roundNumber) || players.size() < 2) {
+				pti2 = addDummy(players);
+			} else {
+				for (PlayerTourInfo info : players) {
+					if (!info.getBye(roundNumber)) {
+						pti2 = info;
+						break;
+					}
+				}
+				if (pti2 == null) {
+					pti2 = addDummy(players);
+				}
+			}
 			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
 			com.execute();
-			table++;
-			players.remove(pti1);
 			players.remove(pti2);
+			table++;
 		}
 	}
 
