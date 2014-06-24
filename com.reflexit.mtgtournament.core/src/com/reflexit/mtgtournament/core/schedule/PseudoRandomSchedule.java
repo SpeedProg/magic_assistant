@@ -10,29 +10,26 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.schedule;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
-import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
- * Similar to Swiss to players are not actually matched based on skill, but randomly.
- * Each tour it will try to to not schedule same pair twice but there is no guarantee
- * if number of players close to number of rounds.
- *
+ * Similar to Swiss to players are not actually matched based on skill, but
+ * randomly. Each tour it will try to to not schedule same pair twice but there
+ * is no guarantee if number of players close to number of rounds.
+ * 
  */
 public class PseudoRandomSchedule extends SwissSchedule {
 	@Override
-	protected void checkType(Round r) {
-		if (r.getType() != TournamentType.PSEUDO_RANDOM) {
-			throw new IllegalStateException("Bad scheduler");
-		}
+	public TournamentType getType() {
+		return TournamentType.PSEUDO_RANDOM;
 	}
 
 	@Override
-	protected void sortForScheduling(ArrayList<PlayerTourInfo> players) {
+	protected void sortForScheduling(List<PlayerTourInfo> players) {
 		Collections.shuffle(players);
 	}
 }

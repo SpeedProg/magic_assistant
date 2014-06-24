@@ -13,7 +13,7 @@ package com.reflexit.mtgtournament.core.schedule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import com.reflexit.mtgtournament.core.edit.CmdAddTable;
@@ -25,22 +25,28 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class SwissSchedule extends AbstractScheduler {
 	class StateInfo {
-		ArrayList<PlayerTourInfo> players;
-		int table;
+		List<PlayerTourInfo> players;
 		int cand;
 		public CmdAddTable command;
+
+		public StateInfo(List<PlayerTourInfo> players, int cand, CmdAddTable command) {
+			super();
+			this.players = new ArrayList<PlayerTourInfo>(players);
+			this.cand = cand;
+			this.command = command;
+		}
 	}
 
 	@Override
-	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
+	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
+		addEvenDummy(players);
 		// prepare undo stack
 		Tournament t = r.getTournament();
 		Stack<StateInfo> stack = new Stack<StateInfo>();
-		int table = 1;
 		ArrayList<PlayerTourInfo> unmatched = new ArrayList<PlayerTourInfo>();
 		int cand = 1;
 		while (players.size() > 1) {
@@ -52,34 +58,26 @@ public class SwissSchedule extends AbstractScheduler {
 				Player p2 = pti2.getPlayer();
 				if (!t.hasPlayed(p1, p2, r.getNumber() - 1)) {
 					// command to schedule a table
-					CmdAddTable com = new CmdAddTable(r, table, p1, p2);
+					CmdAddTable com = addTable(r, pti1, pti2);
 					// save backtracking info
-					StateInfo info = new StateInfo();
-					info.players = (ArrayList<PlayerTourInfo>) players.clone();
-					info.table = table;
-					info.cand = cand;
-					info.command = com;
+					StateInfo info = new StateInfo(players, cand, com);
 					stack.add(info);
-					// execute command and advance
-					com.execute();
-					table++;
 					paired = true;
 					players.remove(pti1);
 					players.remove(pti2);
 					cand = 1; // next pick starts with 1
-					//	System.err.println("Scheduled: " + p1 + " vs " + p2);
+					// System.err.println("Scheduled: " + p1 + " vs " + p2);
 					break;
 				} else {
-					//	System.err.println("Played: " + p1 + " vs " + p2);
+					// System.err.println("Played: " + p1 + " vs " + p2);
 				}
 			}
 			if (paired == false) {
 				if (!stack.isEmpty()) {
-					//	System.err.println("Backtracking");
+					// System.err.println("Backtracking");
 					// restore backtracking values
 					StateInfo info = stack.pop();
 					players = info.players;
-					table = info.table;
 					info.command.undo();
 					cand = info.cand + 1; // backtracking - next pick +1
 				} else {
@@ -93,26 +91,19 @@ public class SwissSchedule extends AbstractScheduler {
 		if (players.size() > 0) {
 			unmatched.addAll(players);
 		}
-		// when number of players are close to number of tours swiss cannot guarantee no conflicts 
+		// when number of players are close to number of tours swiss cannot
+		// guarantee no conflicts
 		// going to resolve conflicts randomly
-		for (Iterator iterator = unmatched.iterator(); iterator.hasNext();) {
-			PlayerTourInfo pti1 = (PlayerTourInfo) iterator.next();
-			PlayerTourInfo pti2 = (PlayerTourInfo) iterator.next();
-			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
-			com.execute();
-			//System.err.println("Scheduled (conf): " + pti1.getPlayer() + " vs " + pti2.getPlayer());
-		}
+		new RandomSchedule().scheduleRound(r, unmatched);
 	}
 
 	@Override
-	protected void checkType(Round r) {
-		if (r.getType() != TournamentType.SWISS) {
-			throw new IllegalStateException("Bad scheduler");
-		}
+	public TournamentType getType() {
+		return TournamentType.SWISS;
 	}
 
 	@Override
-	protected void sortForScheduling(ArrayList<PlayerTourInfo> players) {
+	protected void sortForScheduling(List<PlayerTourInfo> players) {
 		Collections.sort(players, new Comparator<PlayerTourInfo>() {
 			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
 				return Tournament.comparePlayers(a, b);

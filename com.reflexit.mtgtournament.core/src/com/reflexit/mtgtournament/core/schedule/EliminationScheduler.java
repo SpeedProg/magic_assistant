@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.schedule;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
-import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -23,18 +22,16 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class EliminationScheduler extends AbstractScheduler {
 	@Override
-	protected void checkType(Round r) {
-		if (r.getType() != TournamentType.ELIMINATION) {
-			throw new IllegalStateException("Bad scheduler: " + r.getType());
-		}
+	public TournamentType getType() {
+		return TournamentType.ELIMINATION;
 	}
 
 	@Override
-	protected void sortForScheduling(ArrayList<PlayerTourInfo> players) {
+	protected void sortForScheduling(List<PlayerTourInfo> players) {
 		Collections.sort(players, new Comparator<PlayerTourInfo>() {
 			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
 				return Tournament.comparePlayers(a, b);
@@ -53,7 +50,7 @@ public class EliminationScheduler extends AbstractScheduler {
 					x++;
 				} else {
 					p = p + 1;
-					//x++;
+					// x++;
 				}
 			}
 			t.setNumberOfRounds(x);
@@ -61,7 +58,7 @@ public class EliminationScheduler extends AbstractScheduler {
 	}
 
 	@Override
-	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
+	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
 		int pow = r.getTournament().getNumberOfRounds() - r.getNumber() + 1;
 		int val = 1;
 		for (int i = 1; i < pow; i++) {
@@ -77,13 +74,10 @@ public class EliminationScheduler extends AbstractScheduler {
 		while (players.size() < val) {
 			players.add(new PlayerTourInfo(Player.DUMMY));
 		}
-		int table = 1;
 		while (players.size() > 0) {
 			PlayerTourInfo pti1 = players.get(0);
 			PlayerTourInfo pti2 = players.get(players.size() - 1);
-			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
-			com.execute();
-			table++;
+			addTable(r, pti1, pti2);
 			players.remove(pti1);
 			players.remove(pti2);
 		}

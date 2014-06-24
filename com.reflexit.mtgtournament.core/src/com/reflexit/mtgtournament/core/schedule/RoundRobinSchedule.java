@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -62,14 +61,17 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
  * @author Alena
  * 
  */
-public class RoundRobinSchedule implements IScheduler {
+public class RoundRobinSchedule extends AbstractScheduler {
+	@Override
 	public void schedule(Tournament t) {
 		// draft
-		Round draftRound = new Round(0);
-		t.addRound(draftRound);
-		draftRound.setType(TournamentType.RANDOM);
-		draftRound.schedule();
+		createDraft(t);
 		scheduleFromRound(t, 1);
+	}
+
+	@Override
+	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
+		// not used
 	}
 
 	private void scheduleFromRound(Tournament t, int from) {
@@ -86,26 +88,37 @@ public class RoundRobinSchedule implements IScheduler {
 		if (t.getNumberOfRounds() < max + from - 1) {
 			t.setNumberOfRounds(max + from - 1); // 0th is draft
 		}
-		List<Player> players = init(t.getPlayersInfo());
-		Collections.shuffle(players);
+		ArrayList<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>(t.getPlayersInfo());
+		removeDropOff(players);
+		if (players.size() == 0) // not enough players
+			throw new IllegalStateException("No players");
+		sortForScheduling(players);
+		// add dummy
+		addEvenDummy(players);
+		sortForScheduling(players);
 		for (int roundNumber = from; roundNumber <= max + from - 1; roundNumber++) {
-			Round round;
+			Round r;
 			try {
-				round = t.getRound(roundNumber);
+				r = t.getRound(roundNumber);
 			} catch (Exception e) {
-				round = new Round(roundNumber);
-				t.addRound(round);
+				r = new Round(roundNumber);
+				t.addRound(r);
 			}
-			round.setType(TournamentType.ROUND_ROBIN);
+			r.setType(TournamentType.ROUND_ROBIN);
 			for (int j = 0; j < tables; j++) {
 				int n = (j + roundNumber) % tables;
 				int pos1 = positions[n];
 				int pos2 = positions[n + tables];
-				CmdAddTable comAddTable = new CmdAddTable(round, j, players.get(pos1), players.get(pos2));
-				comAddTable.execute();
+				addTable(r, players.get(pos1), players.get(pos2));
 			}
+			dummyLooses(r);
 			rotateRR(positions);
 		}
+	}
+
+	@Override
+	protected void sortForScheduling(List<PlayerTourInfo> players) {
+		Collections.shuffle(players);
 	}
 
 	public List<Player> init(List<PlayerTourInfo> list) {
@@ -174,14 +187,13 @@ public class RoundRobinSchedule implements IScheduler {
 		positions[positions.length - 1] = x;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.mtgtournament.core.schedule.IScheduler#schedule(com.reflexit
-	 * .mtgtournament.core.model.Round)
-	 */
+	@Override
 	public void schedule(Round r) {
 		scheduleFromRound(r.getTournament(), r.getNumber());
+	}
+
+	@Override
+	public TournamentType getType() {
+		return TournamentType.ROUND_ROBIN;
 	}
 }

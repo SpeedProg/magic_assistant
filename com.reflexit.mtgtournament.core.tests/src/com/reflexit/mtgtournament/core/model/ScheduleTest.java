@@ -25,7 +25,7 @@ public class ScheduleTest extends TestCase {
 				Player p2 = tableInfo.getPlayerInfo(2).getPlayer();
 				boolean has = tour.hasPlayed(p1, p2, i - 1);
 				if (has) {
-					if (i != tP)
+					if (i != tP && p2 != Player.DUMMY && p1 != Player.DUMMY)
 						assertFalse("Players " + p1 + " and " + p2 + " has played in round before " + i, has);
 					else
 						return;
@@ -76,7 +76,7 @@ public class ScheduleTest extends TestCase {
 		tour.setType(TournamentType.SWISS);
 		tour.setNumberOfRounds(5);
 		tour.generatePlayers(6);
-		scheduleAll(tour);
+		scheduleAndCheck(tour);
 	}
 
 	interface IWhoWinsRunnable {
@@ -118,7 +118,7 @@ public class ScheduleTest extends TestCase {
 		tour.setType(TournamentType.SWISS);
 		tour.setNumberOfRounds(6);
 		tour.generatePlayers(7);
-		scheduleAll(tour);
+		scheduleAndCheck(tour);
 	}
 
 	public void testSwiss_More() {
@@ -126,7 +126,7 @@ public class ScheduleTest extends TestCase {
 		tour.setType(TournamentType.SWISS);
 		tour.setNumberOfRounds(6);
 		tour.generatePlayers(30);
-		scheduleAll(tour);
+		scheduleAndCheck(tour);
 	}
 
 	public void testSwiss_OMW() {
@@ -134,7 +134,7 @@ public class ScheduleTest extends TestCase {
 		tour.setType(TournamentType.SWISS);
 		tour.setNumberOfRounds(1);
 		tour.generatePlayers(16);
-		scheduleAll(tour);
+		scheduleAndCheck(tour);
 		List<PlayerTourInfo> playersInfo = tour.getPlayersInfo();
 		for (Iterator iterator = playersInfo.iterator(); iterator.hasNext();) {
 			PlayerTourInfo pti = (PlayerTourInfo) iterator.next();
@@ -148,10 +148,16 @@ public class ScheduleTest extends TestCase {
 		tour.setType(TournamentType.ELIMINATION);
 		tour.setNumberOfRounds(3);
 		tour.generatePlayers(8);
-		scheduleAll(tour);
+		scheduleAndCheck(tour);
 	}
 
-	private void scheduleAll(Tournament tour) {
+	private void scheduleAndCheck(Tournament tour) {
+		playTest(tour);
+		// tour.printSchedule(System.out);
+		checkPlayedBefore(tour, -1);
+	}
+
+	private void playTest(Tournament tour) {
 		tour.schedule();
 		for (int i = 0; i <= tour.getNumberOfRounds(); i++) {
 			Round r = tour.getRound(i);
@@ -162,8 +168,6 @@ public class ScheduleTest extends TestCase {
 			}
 			r.close();
 		}
-		// tour.printSchedule(System.out);
-		checkPlayedBefore(tour, -1);
 	}
 
 	public void testElimination_Opt8() {
@@ -195,6 +199,32 @@ public class ScheduleTest extends TestCase {
 		tour.setType(TournamentType.ELIMINATION);
 		tour.setNumberOfRounds(3);
 		tour.generatePlayers(10);
-		scheduleAll(tour);
+		scheduleAndCheck(tour);
+	}
+
+	public void testRandomBye() {
+		Tournament tour = new Tournament();
+		tour.setType(TournamentType.RANDOM);
+		tour.generatePlayers(4);
+		List<PlayerTourInfo> playersInfo = tour.getPlayersInfo();
+		playersInfo.get(0).getByes().put(1, true);
+		playTest(tour);
+		assertEquals(3, tour.getRound(1).getTables().size());
+		assertEquals(3, tour.getNumberOfRounds());
+		// tour.printSchedule(System.out);
+		// checkPlayedBefore(tour, -1);
+	}
+
+	public void testSwissBye() {
+		Tournament tour = new Tournament();
+		tour.setType(TournamentType.SWISS);
+		tour.generatePlayers(4);
+		List<PlayerTourInfo> playersInfo = tour.getPlayersInfo();
+		playersInfo.get(0).getByes().put(1, true);
+		playTest(tour);
+		assertEquals(3, tour.getRound(1).getTables().size());
+		assertEquals(3, tour.getNumberOfRounds());
+		// tour.printSchedule(System.out);
+		// checkPlayedBefore(tour, -1);
 	}
 }

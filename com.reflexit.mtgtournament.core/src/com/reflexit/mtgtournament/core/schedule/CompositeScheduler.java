@@ -10,10 +10,11 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.schedule;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
+import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
@@ -21,7 +22,12 @@ import com.reflexit.mtgtournament.core.model.Round;
  */
 public class CompositeScheduler extends AbstractScheduler {
 	@Override
-	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
+	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
 		throw new IllegalStateException("Composite is not a real scheduler, select a specific scheduler buy editing round info");
+	}
+
+	@Override
+	public TournamentType getType() {
+		return TournamentType.COMPOSITE;
 	}
 }

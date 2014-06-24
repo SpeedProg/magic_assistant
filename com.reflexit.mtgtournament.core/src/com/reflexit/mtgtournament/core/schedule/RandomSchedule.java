@@ -10,61 +10,39 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.schedule;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
+ * Schedule players randomly. It does not take into account history. See
+ * pseudo-random for history consideration
+ * 
  * @author Alena
  * 
  */
-public class RandomSchedule extends AbstractScheduler implements IScheduler {
+public class RandomSchedule extends AbstractScheduler {
 	@Override
-	protected void addEvenDummy(ArrayList<PlayerTourInfo> players) {
-		// no
-	}
-
-	@Override
-	protected void scheduleRound(Round r, ArrayList<PlayerTourInfo> players) {
-		int table = 1;
-		while (players.size() > 0) {
-			PlayerTourInfo pti1 = players.get(0);
-			players.remove(pti1);
-			PlayerTourInfo pti2 = null;
-			int roundNumber = r.getNumber();
-			if (pti1.getBye(roundNumber) || players.size() < 2) {
-				pti2 = addDummy(players);
-			} else {
-				for (PlayerTourInfo info : players) {
-					if (!info.getBye(roundNumber)) {
-						pti2 = info;
-						break;
-					}
-				}
-				if (pti2 == null) {
-					pti2 = addDummy(players);
-				}
-			}
-			CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
-			com.execute();
-			players.remove(pti2);
-			table++;
+	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
+		addEvenDummy(players);
+		for (Iterator iterator = players.iterator(); iterator.hasNext();) {
+			PlayerTourInfo pti1 = (PlayerTourInfo) iterator.next();
+			PlayerTourInfo pti2 = (PlayerTourInfo) iterator.next();
+			addTable(r, pti1, pti2);
 		}
 	}
 
 	@Override
-	protected void sortForScheduling(ArrayList<PlayerTourInfo> players) {
+	protected void sortForScheduling(List<PlayerTourInfo> players) {
 		Collections.shuffle(players);
 	}
 
 	@Override
-	protected void checkType(Round r) {
-		if (r.getType() != TournamentType.RANDOM) {
-			throw new IllegalStateException("Bad scheduler");
-		}
+	public TournamentType getType() {
+		return TournamentType.RANDOM;
 	}
 }

@@ -11,9 +11,11 @@
 package com.reflexit.mtgtournament.core.schedule;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.reflexit.mtgtournament.core.edit.CmdAddTable;
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
@@ -68,16 +70,14 @@ public abstract class AbstractScheduler implements IScheduler {
 		if (r.getState() != RoundState.NOT_SCHEDULED) {
 			throw new IllegalStateException("Round is already scheduled");
 		}
+		r.reset();
 		// System.err.println("Round ======" + r.getNumber());
 		// get active players and sort them by place
 		ArrayList<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>(r.getTournament().getPlayersInfo());
-		for (Iterator iterator = players.iterator(); iterator.hasNext();) {
-			PlayerTourInfo pti = (PlayerTourInfo) iterator.next();
-			if (!pti.isActive())
-				iterator.remove();
-		}
-		if (players.size() <= 1) // not enough players
-			throw new IllegalStateException("Not enought players");
+		removeDropOff(players);
+		if (players.size() == 0) // not enough players
+			throw new IllegalStateException("No players");
+		scheduleByes(r, players);
 		sortForScheduling(players);
 		// add dummy
 		addEvenDummy(players);
@@ -85,13 +85,31 @@ public abstract class AbstractScheduler implements IScheduler {
 		dummyLooses(r);
 	}
 
-	protected void addEvenDummy(ArrayList<PlayerTourInfo> players) {
+	protected void removeDropOff(Collection<PlayerTourInfo> players) {
+		for (Iterator iterator = players.iterator(); iterator.hasNext();) {
+			PlayerTourInfo pti = (PlayerTourInfo) iterator.next();
+			if (!pti.isActive())
+				iterator.remove();
+		}
+	}
+
+	protected void scheduleByes(Round r, Collection<PlayerTourInfo> players) {
+		for (Iterator<PlayerTourInfo> iterator = players.iterator(); iterator.hasNext();) {
+			PlayerTourInfo pti = iterator.next();
+			if (pti.getBye(r.getNumber())) {
+				addTable(r, pti, new PlayerTourInfo(Player.DUMMY));
+				iterator.remove();
+			}
+		}
+	}
+
+	protected void addEvenDummy(List<PlayerTourInfo> players) {
 		if (players.size() % 2 == 1) {
 			addDummy(players);
 		}
 	}
 
-	protected PlayerTourInfo addDummy(ArrayList<PlayerTourInfo> players) {
+	protected PlayerTourInfo addDummy(Collection<PlayerTourInfo> players) {
 		PlayerTourInfo playerTourInfo = new PlayerTourInfo(Player.DUMMY);
 		players.add(playerTourInfo);
 		return playerTourInfo;
@@ -127,14 +145,40 @@ public abstract class AbstractScheduler implements IScheduler {
 		}
 	}
 
-	protected abstract void scheduleRound(Round r, ArrayList<PlayerTourInfo> players);
+	protected CmdAddTable addTable(Round r, PlayerTourInfo pti1, PlayerTourInfo pti2) {
+		int table = r.getTables().size() + 1;
+		CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
+		com.execute();
+		return com;
+	}
+
+	protected abstract void scheduleRound(Round r, List<PlayerTourInfo> players);
 
 	protected void checkType(Round r) {
-		if (r.getType() != r.getTournament().getType()) {
+		if (r.getType() != getType()) {
 			throw new IllegalStateException("Bad scheduler");
 		}
 	}
 
-	protected void sortForScheduling(ArrayList<PlayerTourInfo> players) {
+	abstract public TournamentType getType();
+
+	protected void sortForScheduling(List<PlayerTourInfo> players) {
+		// override for sched
+	}
+
+	protected PlayerTourInfo getPartner(Collection<PlayerTourInfo> players, Round r) {
+		int roundNumber = r.getNumber();
+		PlayerTourInfo pti2 = null;
+		for (PlayerTourInfo info : players) {
+			if (!info.getBye(roundNumber)) {
+				pti2 = info;
+				break;
+			}
+		}
+		if (pti2 == null) {
+			pti2 = addDummy(players);
+		}
+		players.remove(pti2);
+		return pti2;
 	}
 }
