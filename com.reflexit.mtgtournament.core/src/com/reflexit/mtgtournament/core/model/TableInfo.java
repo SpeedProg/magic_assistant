@@ -15,9 +15,9 @@ public class TableInfo {
 	private int table;
 	private PlayerRoundInfo[] pi;
 
-	public TableInfo(int table, PlayerRoundInfo p1, PlayerRoundInfo p2) {
+	public TableInfo(PlayerRoundInfo p1, PlayerRoundInfo p2) {
 		super();
-		this.table = table;
+		this.table = -1;
 		pi = new PlayerRoundInfo[2];
 		this.setPlayerInfo(1, p1);
 		this.setPlayerInfo(2, p2);
@@ -66,13 +66,16 @@ public class TableInfo {
 	 */
 	public void updateLinks() {
 		for (PlayerRoundInfo pp : pi) {
-			Player np = round.getTournament().getCube().getPlayerList().findPlayer(pp.getPlayer());
-			if (np != null)
-				pp.setPlayer(np);
+			Player np = round.getTournament().findPlayer(pp.getPlayer());
+			pp.setPlayer(np);
 		}
 	}
 
 	public PlayerRoundInfo[] getPlayerRoundInfo() {
 		return pi;
+	}
+
+	public void setNumber(int num) {
+		this.table = num;
 	}
 }

@@ -25,7 +25,7 @@ public class ScheduleTest extends TestCase {
 				Player p2 = tableInfo.getPlayerInfo(2).getPlayer();
 				boolean has = tour.hasPlayed(p1, p2, i - 1);
 				if (has) {
-					if (i != tP && p2 != Player.DUMMY && p1 != Player.DUMMY)
+					if (i != tP)
 						assertFalse("Players " + p1 + " and " + p2 + " has played in round before " + i, has);
 					else
 						return;
@@ -75,7 +75,7 @@ public class ScheduleTest extends TestCase {
 		Tournament tour = new Tournament();
 		tour.setType(TournamentType.SWISS);
 		tour.setNumberOfRounds(5);
-		tour.generatePlayers(6);
+		tour.generatePlayers(7);
 		scheduleAndCheck(tour);
 	}
 
@@ -105,9 +105,9 @@ public class ScheduleTest extends TestCase {
 		PlayerRoundInfo p1 = ti.getPlayerInfo(1);
 		PlayerRoundInfo p2 = ti.getPlayerInfo(2);
 		int pw = random.nextInt(2);
-		if (p1.getPlayer() == Player.DUMMY) {
+		if (p1.getPlayer().isDummy()) {
 			pw = 1;
-		} else if (p2.getPlayer() == Player.DUMMY) {
+		} else if (p2.getPlayer().isDummy()) {
 			pw = 0;
 		}
 		return pw;

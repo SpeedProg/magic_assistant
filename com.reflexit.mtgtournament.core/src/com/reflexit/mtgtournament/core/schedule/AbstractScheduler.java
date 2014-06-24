@@ -129,7 +129,7 @@ public abstract class AbstractScheduler implements IScheduler {
 				continue;
 			boolean hasDummy = false;
 			for (PlayerRoundInfo pi : playerRoundInfo) {
-				if (pi.getPlayer() == Player.DUMMY) {
+				if (pi.getPlayer().isDummy()) {
 					hasDummy = true;
 					pi.setWinGames(0, 1, 0);
 					break;
@@ -137,7 +137,7 @@ public abstract class AbstractScheduler implements IScheduler {
 			}
 			if (hasDummy)
 				for (PlayerRoundInfo pi : playerRoundInfo) {
-					if (pi.getPlayer() != Player.DUMMY) {
+					if (!pi.getPlayer().isDummy()) {
 						pi.setWinGames(1, 0, 0);
 						break;
 					}
@@ -146,8 +146,7 @@ public abstract class AbstractScheduler implements IScheduler {
 	}
 
 	protected CmdAddTable addTable(Round r, PlayerTourInfo pti1, PlayerTourInfo pti2) {
-		int table = r.getTables().size() + 1;
-		CmdAddTable com = new CmdAddTable(r, table, pti1.getPlayer(), pti2.getPlayer());
+		CmdAddTable com = new CmdAddTable(r, pti1.getPlayer(), pti2.getPlayer());
 		com.execute();
 		return com;
 	}

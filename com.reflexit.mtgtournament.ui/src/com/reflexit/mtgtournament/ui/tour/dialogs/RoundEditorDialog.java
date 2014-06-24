@@ -60,7 +60,7 @@ public class RoundEditorDialog extends TitleAreaDialog {
 
 	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
-		return Activator.getDefault().getDialogSettings();
+		return Activator.getDefault().getDialogSettings(getClass().getSimpleName());
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.reflexit.mtgtournament.ui.tour.dialogs;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -14,10 +15,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import com.reflexit.mtgtournament.core.Activator;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.xml.TournamentManager;
+import com.reflexit.mtgtournament.ui.tour.Activator;
 
 public class ByesDialog extends TitleAreaDialog {
 	PlayerTourInfo info;
@@ -25,6 +26,12 @@ public class ByesDialog extends TitleAreaDialog {
 	public ByesDialog(Shell parentShell, IStructuredSelection sel) {
 		super(parentShell);
 		info = (PlayerTourInfo) sel.getFirstElement();
+		setShellStyle(getShellStyle() | SWT.RESIZE);
+	}
+
+	@Override
+	protected IDialogSettings getDialogBoundsSettings() {
+		return Activator.getDefault().getDialogSettings(getClass().getSimpleName());
 	}
 
 	@Override

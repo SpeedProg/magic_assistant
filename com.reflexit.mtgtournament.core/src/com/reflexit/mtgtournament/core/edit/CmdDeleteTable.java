@@ -10,29 +10,20 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.edit;
 
-import com.reflexit.mtgtournament.core.model.Player;
-import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
-import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 
 /**
  * Command to add Round Table Scheduling into the round
  */
-public class CmdAddTable implements ITCommand {
+public class CmdDeleteTable implements ITCommand {
 	private TableInfo tableInfo;
-	private Round round;
 
-	public CmdAddTable(Round round, Player p1, Player p2) {
-		super();
-		PlayerRoundInfo pr1 = round.makePlayer(p1);
-		PlayerRoundInfo pr2 = round.makePlayer(p2);
-		this.round = round;
-		tableInfo = new TableInfo(pr1, pr2);
+	public CmdDeleteTable(TableInfo tableInfo) {
+		this.tableInfo = tableInfo;
 	}
 
 	public boolean execute() {
-		round.addTable(tableInfo);
-		return true;
+		return tableInfo.getRound().getTables().remove(tableInfo);
 	}
 
 	public TableInfo getTableInfo() {
@@ -40,6 +31,8 @@ public class CmdAddTable implements ITCommand {
 	}
 
 	public boolean undo() {
-		return tableInfo.getRound().getTables().remove(tableInfo);
+		// int tab = tableInfo.getRound().getTables().size()+1;
+		tableInfo.getRound().addTable(tableInfo);
+		return true;
 	}
 }

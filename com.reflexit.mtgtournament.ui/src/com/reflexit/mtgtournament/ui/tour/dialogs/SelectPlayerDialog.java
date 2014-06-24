@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.dialogs;
 
+import java.io.FileNotFoundException;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,9 +38,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.FileNotFoundException;
-import java.util.Collection;
-
 import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerList;
 import com.reflexit.mtgtournament.core.xml.TournamentManager;
@@ -51,6 +51,7 @@ public class SelectPlayerDialog extends TrayDialog {
 	private PlayerViewerFilter filter;
 	private IStructuredSelection sel;
 	private Object input;
+
 	class PlayerViewerFilter extends ViewerFilter {
 		String name;
 		String pin;
@@ -78,7 +79,7 @@ public class SelectPlayerDialog extends TrayDialog {
 
 	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
-		return Activator.getDefault().getDialogSettings();
+		return Activator.getDefault().getDialogSettings(getClass().getSimpleName());
 	}
 
 	@Override
@@ -114,8 +115,7 @@ public class SelectPlayerDialog extends TrayDialog {
 				updateButtonsEnablement();
 			}
 		});
-		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).hint(SWT.DEFAULT,
-		        300).create());
+		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).hint(SWT.DEFAULT, 300).create());
 		playersListComposite.getViewer().setInput(input);
 		Button add = new Button(comp, SWT.PUSH);
 		add.setText("New Player...");

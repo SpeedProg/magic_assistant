@@ -15,13 +15,13 @@ import com.reflexit.mtgtournament.core.model.Round;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CubeExecutor {
 	CommandStack stack = new CommandStack();
 
-	public CmdAddTable addTableToRound(Round round, int table, Player p1, Player p2) {
-		CmdAddTable command = new CmdAddTable(round, table, p1, p2);
+	public CmdAddTable addTableToRound(Round round, Player p1, Player p2) {
+		CmdAddTable command = new CmdAddTable(round, p1, p2);
 		stack.add(command);
 		stack.executeAll();
 		return command;

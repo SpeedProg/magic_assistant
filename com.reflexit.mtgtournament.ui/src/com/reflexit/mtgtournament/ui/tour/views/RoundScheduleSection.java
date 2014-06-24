@@ -14,15 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -39,16 +44,19 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.reflexit.mtgtournament.core.edit.CmdChangePairing;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
+import com.reflexit.mtgtournament.ui.tour.dialogs.ChangePartnerDialog;
 import com.reflexit.mtgtournament.ui.tour.dialogs.CubePrintDialog;
 import com.reflexit.mtgtournament.ui.tour.dialogs.GameResultDialog;
 
 public class RoundScheduleSection extends TSectionPart {
 	private TreeViewer viewer;
+	private Button overrideButton;
 
 	public RoundScheduleSection(ManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -75,6 +83,13 @@ public class RoundScheduleSection extends TSectionPart {
 			TableInfo tinfo = (TableInfo) element;
 			if (tinfo.getRound().getNumber() == 0)
 				return; // cannot edit draft
+			// if (tinfo.getRound().getDateStart() == null) { // not started
+			// ChangePartnerDialog d = new
+			// ChangePartnerDialog(viewer.getControl().getShell());
+			// d.setInput(tinfo);
+			// d.open();
+			// modelUpdated();
+			// }
 			GameResultDialog d = new GameResultDialog(viewer.getControl().getShell());
 			d.setInput(tinfo);
 			if (d.open() == Dialog.OK) {
@@ -151,32 +166,32 @@ public class RoundScheduleSection extends TSectionPart {
 			if (element instanceof TableInfo) {
 				TableInfo pinfo = (TableInfo) element;
 				switch (columnIndex) {
-				case 1:
-					return String.valueOf(pinfo.getTableNumber());
-				case 2:
-					return pinfo.getPlayerInfo(1).getPlayer().getName();
-				case 3:
-					return pinfo.getPlayerInfo(2).getPlayer().getName();
-				case 4:
-					return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(1).getResult());
-				case 5:
-					return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(2).getResult());
-				case 0:
-					int number = pinfo.getRound().getNumber();
-					if (number == 0)
-						return "Draft";
-					return String.valueOf(number);
+					case 1:
+						return String.valueOf(pinfo.getTableNumber());
+					case 2:
+						return pinfo.getPlayerInfo(1).getPlayer().getName();
+					case 3:
+						return pinfo.getPlayerInfo(2).getPlayer().getName();
+					case 4:
+						return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(1).getResult());
+					case 5:
+						return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(2).getResult());
+					case 0:
+						int number = pinfo.getRound().getNumber();
+						if (number == 0)
+							return "Draft";
+						return String.valueOf(number);
 				}
 			} else if (element instanceof Round) {
 				Round round = (Round) element;
 				switch (columnIndex) {
-				case 0:
-					int number = round.getNumber();
-					if (number == 0)
-						return "Draft";
-					return "Round " + String.valueOf(number);
-				default:
-					return "";
+					case 0:
+						int number = round.getNumber();
+						if (number == 0)
+							return "Draft";
+						return "Round " + String.valueOf(number);
+					default:
+						return "";
 				}
 			}
 			return "";
@@ -204,10 +219,10 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 			RoundState state = round.getState();
 			switch (state) {
-			case IN_PROGRESS:
-				if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
-					return systemColorYellow;
-				break;
+				case IN_PROGRESS:
+					if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
+						return systemColorYellow;
+					break;
 			}
 			return null;
 		}
@@ -225,10 +240,10 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 			RoundState state = round.getState();
 			switch (state) {
-			case CLOSED:
-				return systemColorGray;
-			default:
-				return null;
+				case CLOSED:
+					return systemColorGray;
+				default:
+					return null;
 			}
 		}
 	}
@@ -247,6 +262,11 @@ public class RoundScheduleSection extends TSectionPart {
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTree().setHeaderVisible(true);
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateWidgetEnablement();
+			}
+		});
 		createColumn(0, "Round", 80);
 		createColumn(1, "Table", 60);
 		createColumn(2, "Player 1", 120);
@@ -255,6 +275,12 @@ public class RoundScheduleSection extends TSectionPart {
 		createColumn(5, "Result 2", 60);
 		// buttons
 		createButtonsComposite(sectionClient);
+	}
+
+	protected void updateWidgetEnablement() {
+		ISelection selection = viewer.getSelection();
+		Object el = ((IStructuredSelection) selection).getFirstElement();
+		overrideButton.setEnabled(el instanceof TableInfo);
 	}
 
 	private void createButtonsComposite(Composite parent) {
@@ -271,6 +297,29 @@ public class RoundScheduleSection extends TSectionPart {
 			};
 		});
 		printButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
+		overrideButton = new Button(buttons, SWT.NONE);
+		overrideButton.setText("Edit...");
+		overrideButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				editPairings();
+			};
+		});
+		overrideButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
+		Button resultButton = new Button(buttons, SWT.NONE);
+		resultButton.setText("Score...");
+		resultButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ISelection selection = viewer.getSelection();
+				Object el = ((IStructuredSelection) selection).getFirstElement();
+				if (el instanceof TableInfo) {
+					TableInfo tinfo = (TableInfo) el;
+					editResult(tinfo);
+				}
+			};
+		});
+		resultButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
 	}
 
 	private void createColumn(int i, String name, int width) {
@@ -300,6 +349,7 @@ public class RoundScheduleSection extends TSectionPart {
 
 	@Override
 	public boolean setFormInput(Object input) {
+		viewer.setSelection(new StructuredSelection());
 		if (viewer.getInput() != input) {
 			viewer.setInput(input);
 			viewer.expandAll();
@@ -308,5 +358,24 @@ public class RoundScheduleSection extends TSectionPart {
 		}
 		markStale();
 		return true;
+	}
+
+	private void editPairings() {
+		ISelection selection = viewer.getSelection();
+		Object el = ((IStructuredSelection) selection).getFirstElement();
+		if (el instanceof TableInfo) {
+			TableInfo tinfo = (TableInfo) el;
+			if (tinfo.getRound().getDateStart() == null) {
+				ChangePartnerDialog d = new ChangePartnerDialog(viewer.getControl().getShell(), tinfo);
+				d.open();
+				if (d.getNewPlayer() != null) {
+					// update table
+					if (new CmdChangePairing(tinfo, d.getNewPlayer().getPlayer()).execute())
+						modelUpdated();
+				}
+			} else {
+				MessageDialog.openError(overrideButton.getShell(), "Cannot Edit", "Round is started, cannot edit pairings");
+			}
+		}
 	}
 }

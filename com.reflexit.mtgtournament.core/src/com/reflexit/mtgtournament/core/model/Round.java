@@ -47,6 +47,7 @@ public class Round implements Cloneable {
 	public void addTable(TableInfo t) {
 		tables.add(t);
 		t.setRound(this);
+		t.setNumber(tables.size());
 	}
 
 	@Override
@@ -204,9 +205,11 @@ public class Round implements Cloneable {
 		this.tournament = roundNew.tournament;
 		this.number = roundNew.number;
 		this.type = roundNew.type;
-		this.tables = (List<TableInfo>) ((ArrayList<TableInfo>) roundNew.tables).clone();
+		this.tables.clear();
+		this.tables.addAll(roundNew.tables);
 		this.dateStart = roundNew.dateStart;
 		this.dateEnd = roundNew.dateEnd;
+		updateLinks();
 	}
 
 	/**

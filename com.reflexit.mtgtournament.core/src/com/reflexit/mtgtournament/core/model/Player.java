@@ -11,12 +11,21 @@
 package com.reflexit.mtgtournament.core.model;
 
 public class Player {
-	public static final Player DUMMY = new Player("---", "(dummy)");
+	public static final Player DUMMY = new Player("---", "(dummy)") {
+		@Override
+		public boolean isDummy() {
+			return true;
+		};
+	};
 	private String id;
 	private String name;
 	private String note;
 	private int points = 0;
 	private int games = 0;
+
+	public boolean isDummy() {
+		return false;
+	}
 
 	public String getNote() {
 		return note;
@@ -29,6 +38,12 @@ public class Player {
 	public Player(String id, String name) {
 		this.id = id;
 		this.name = name;
+		if (!isDummy()) {
+			if (name.equals(DUMMY.name))
+				throw new IllegalArgumentException();
+			if (id.equals(DUMMY.id))
+				throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
@@ -89,6 +104,8 @@ public class Player {
 	 * @param text
 	 */
 	public void setName(String text) {
+		if (text.equals(DUMMY.name))
+			throw new IllegalArgumentException();
 		name = text;
 	}
 
@@ -96,6 +113,8 @@ public class Player {
 	 * @param text
 	 */
 	public void setId(String text) {
+		if (text.equals(DUMMY.id))
+			throw new IllegalArgumentException();
 		this.id = text;
 	}
 

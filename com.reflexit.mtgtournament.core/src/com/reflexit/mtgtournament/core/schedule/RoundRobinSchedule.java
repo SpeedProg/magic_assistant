@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -119,19 +118,6 @@ public class RoundRobinSchedule extends AbstractScheduler {
 	@Override
 	protected void sortForScheduling(List<PlayerTourInfo> players) {
 		Collections.shuffle(players);
-	}
-
-	public List<Player> init(List<PlayerTourInfo> list) {
-		ArrayList<Player> res = new ArrayList<Player>();
-		for (PlayerTourInfo player : list) {
-			if (player.isActive()) {
-				res.add(player.getPlayer());
-			}
-		}
-		if (res.size() % 2 != 0) {
-			res.add(Player.DUMMY);
-		}
-		return res;
 	}
 
 	/**

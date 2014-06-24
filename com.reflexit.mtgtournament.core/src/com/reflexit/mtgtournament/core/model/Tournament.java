@@ -51,9 +51,7 @@ public class Tournament {
 		}
 		for (PlayerTourInfo pt : players) {
 			pt.setTournament(this);
-			Player np = cube.getPlayerList().findPlayer(pt.getPlayer());
-			if (np != null)
-				pt.setPlayer(np);
+			pt.setPlayer(findPlayer(pt.getPlayer()));
 		}
 	}
 
@@ -248,6 +246,17 @@ public class Tournament {
 		PlayerTourInfo info = findPlayerTourInfo(player);
 		if (info != null)
 			info.setActive(false);
+	}
+
+	public Player findPlayer(Player player) {
+		Player np = cube.getPlayerList().findPlayer(player);
+		if (np != null)
+			return np;
+		for (PlayerTourInfo pi : players) {
+			if (pi.getPlayer().equals(player))
+				return pi.getPlayer();
+		}
+		return player;
 	}
 
 	/**

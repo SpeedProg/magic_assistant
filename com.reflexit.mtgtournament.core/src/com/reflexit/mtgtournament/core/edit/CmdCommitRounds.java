@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import com.reflexit.mtgtournament.core.model.Player;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -67,7 +66,7 @@ public class CmdCommitRounds implements ITCommand {
 	}
 
 	private void updateInfo(PlayerRoundInfo pi) {
-		if (pi.getPlayer().equals(Player.DUMMY))
+		if (pi.getPlayer().isDummy())
 			return;
 		PlayerTourInfo pt = t.findPlayerTourInfo(pi.getPlayer());
 		if (pi.getResult() != null)

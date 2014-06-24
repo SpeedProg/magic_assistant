@@ -15,7 +15,7 @@ import java.util.Collection;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class PlayerList {
 	transient int maxId = 0;
@@ -89,6 +89,8 @@ public class PlayerList {
 	 * @param player
 	 */
 	public Player findPlayer(Player player) {
+		if (player.getId().equals(Player.DUMMY.getId()))
+			return Player.DUMMY;
 		for (Player p : players) {
 			if (p.equals(player))
 				return p;

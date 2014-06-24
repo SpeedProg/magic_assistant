@@ -1,5 +1,8 @@
 package com.reflexit.mtgtournament.ui.tour;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -37,7 +40,7 @@ public class Activator extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
@@ -45,14 +48,28 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	public IDialogSettings getDialogSettings(String id) {
+		IDialogSettings settings = getDialogSettings();
+		IDialogSettings section = settings.getSection(id);
+		if (section == null)
+			section = settings.addNewSection(id);
+		return section;
+	}
+
+	@Override
+	public IDialogSettings getDialogSettings() {
+		return super.getDialogSettings();
 	}
 
 	public Image getImage(String key) {
@@ -68,5 +85,25 @@ public class Activator extends AbstractUIPlugin {
 			image = registry.get(key);
 		}
 		return image;
+	}
+
+	public static void log(Throwable e) {
+		log(getStatus(e));
+	}
+
+	public static void log(String s) {
+		log(new Status(Status.ERROR, PLUGIN_ID, s));
+	}
+
+	public static void log(IStatus s) {
+		if (plugin == null) {
+			System.err.println("error: " + s.getMessage());
+		} else {
+			plugin.getLog().log(s);
+		}
+	}
+
+	public static IStatus getStatus(Throwable e) {
+		return new Status(Status.ERROR, PLUGIN_ID, 1, e.getMessage(), e);
 	}
 }

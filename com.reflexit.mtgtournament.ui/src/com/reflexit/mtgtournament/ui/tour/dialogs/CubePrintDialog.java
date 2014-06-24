@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.dialogs;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -32,11 +37,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
@@ -46,16 +46,18 @@ import com.reflexit.mtgtournament.ui.tour.Activator;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class CubePrintDialog extends Dialog {
 	private Object input;
+
 	enum WhatToPrint {
 		ROUND_SCHEDULE,
 		ROUND_RESULTS,
 		TOURNAMENT_RESULTS,
 		PLAYER_LIST
 	}
+
 	private WhatToPrint toPrint;
 	private Round selectedRound;
 	private Text text;
@@ -194,16 +196,16 @@ public class CubePrintDialog extends Dialog {
 	 */
 	protected String getHeader() {
 		switch (toPrint) {
-		case ROUND_RESULTS:
-			return "Round Results for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
-		case ROUND_SCHEDULE:
-			return "Round Schedule for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
-		case TOURNAMENT_RESULTS:
-			return "Turnament Results";
-		case PLAYER_LIST:
-			return "Players";
-		default:
-			break;
+			case ROUND_RESULTS:
+				return "Round Results for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
+			case ROUND_SCHEDULE:
+				return "Round Schedule for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
+			case TOURNAMENT_RESULTS:
+				return "Turnament Results";
+			case PLAYER_LIST:
+				return "Players";
+			default:
+				break;
 		}
 		return "";
 	}
@@ -213,20 +215,20 @@ public class CubePrintDialog extends Dialog {
 	 */
 	protected void generatePreview() {
 		switch (toPrint) {
-		case ROUND_RESULTS:
-			textToPrint = roundSchedule(true);
-			break;
-		case ROUND_SCHEDULE:
-			textToPrint = roundSchedule(false);
-			break;
-		case TOURNAMENT_RESULTS:
-			textToPrint = tournamentResults();
-			break;
-		case PLAYER_LIST:
-			textToPrint = playersList();
-			break;
-		default:
-			break;
+			case ROUND_RESULTS:
+				textToPrint = roundSchedule(true);
+				break;
+			case ROUND_SCHEDULE:
+				textToPrint = roundSchedule(false);
+				break;
+			case TOURNAMENT_RESULTS:
+				textToPrint = tournamentResults();
+				break;
+			case PLAYER_LIST:
+				textToPrint = playersList();
+				break;
+			default:
+				break;
 		}
 		text.setText(textToPrint);
 	}
@@ -252,14 +254,14 @@ public class CubePrintDialog extends Dialog {
 		StringBuffer buf = new StringBuffer();
 		buf.append(String.format("%2s %-20s %s\n", "Place", "Name", "Stats (Points)"));
 		for (PlayerTourInfo pi : playersInfo) {
-			buf.append(String.format("%5d %-20s %d-%d-%d (%2d)\n", pi.getPlace(), pi.getPlayer().getName(),
-			        pi.getWin(), pi.getDraw(), pi.getLost(), pi.getPoints()));
+			buf.append(String.format("%5d %-20s %d-%d-%d (%2d)\n", pi.getPlace(), pi.getPlayer().getName(), pi.getWin(), pi.getDraw(),
+					pi.getLost(), pi.getPoints()));
 		}
 		return buf.toString();
 	}
 
 	/**
-	 * @param b 
+	 * @param b
 	 * @return
 	 */
 	private String roundSchedule(boolean results) {
@@ -278,6 +280,7 @@ public class CubePrintDialog extends Dialog {
 		}
 		return buf.toString();
 	}
+
 	class TableInfoComparator implements Comparator<TableInfo> {
 		private int p;
 
@@ -302,7 +305,8 @@ public class CubePrintDialog extends Dialog {
 		if (sorted.size() >= 5) {
 			// replicate by switching players
 			for (TableInfo ti : tables) {
-				TableInfo nti = new TableInfo(ti.getTableNumber(), ti.getPlayerInfo(2), ti.getPlayerInfo(1));
+				TableInfo nti = new TableInfo(ti.getPlayerInfo(2), ti.getPlayerInfo(1));
+				nti.setNumber(ti.getTableNumber());
 				sorted.add(nti);
 			}
 		}
@@ -315,9 +319,9 @@ public class CubePrintDialog extends Dialog {
 	}
 
 	/**
-	 * @param ti 
+	 * @param ti
 	 * @param results
-	 * @param results 
+	 * @param results
 	 * @return
 	 */
 	private String printTableInfo(TableInfo ti, boolean p1first, boolean results) {
@@ -329,14 +333,14 @@ public class CubePrintDialog extends Dialog {
 		if (results == false)
 			return String.format("[%3d] %-20s - %-20s", ti.getTableNumber(), name1, name2);
 		else {
-			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1, PlayerRoundInfo.getWinStr(pi1
-			        .getResult()), name2, PlayerRoundInfo.getWinStr(pi2.getResult()));
+			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1, PlayerRoundInfo.getWinStr(pi1.getResult()),
+					name2, PlayerRoundInfo.getWinStr(pi2.getResult()));
 		}
 	}
 
 	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
-		return Activator.getDefault().getDialogSettings();
+		return Activator.getDefault().getDialogSettings(getClass().getSimpleName());
 	}
 
 	private void print() {
