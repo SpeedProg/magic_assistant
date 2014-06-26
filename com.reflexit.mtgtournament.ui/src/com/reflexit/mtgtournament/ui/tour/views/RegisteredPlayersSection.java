@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -74,10 +75,10 @@ public class RegisteredPlayersSection extends TSectionPart {
 	protected void createButtons(Composite sectionClient) {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
-		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
+		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(70, -1);
 		add = toolkit.createButton(buttons, "Add...", SWT.PUSH);
-		add.setLayoutData(hor.create());
+		add.setLayoutData(buttonLD.create());
 		add.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -93,7 +94,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 			}
 		});
 		gen = toolkit.createButton(buttons, "Generate...", SWT.PUSH);
-		gen.setLayoutData(hor.create());
+		gen.setLayoutData(buttonLD.create());
 		gen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -119,7 +120,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 			}
 		});
 		del = toolkit.createButton(buttons, "Remove", SWT.PUSH);
-		del.setLayoutData(hor.create());
+		del.setLayoutData(buttonLD.create());
 		del.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -128,13 +129,15 @@ public class RegisteredPlayersSection extends TSectionPart {
 			}
 		});
 		byes = toolkit.createButton(buttons, "Byes...", SWT.PUSH);
-		byes.setLayoutData(hor.create());
+		byes.setLayoutData(buttonLD.create());
 		byes.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) plComp.getViewer().getSelection();
-				if (sel.isEmpty())
+				if (sel.isEmpty()) {
+					MessageDialog.openError(byes.getShell(), "Error", "Player is not selected");
 					return;
+				}
 				new ByesDialog(byes.getShell(), sel).open();
 			}
 		});

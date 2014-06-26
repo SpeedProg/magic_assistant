@@ -10,6 +10,12 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
@@ -44,12 +50,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.Tournament;
@@ -70,6 +70,7 @@ public class RoundListSection extends TSectionPart {
 		super(managedForm, Section.EXPANDED);
 		createBody();
 	}
+
 	class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -91,6 +92,7 @@ public class RoundListSection extends TSectionPart {
 			return new Object[0];
 		}
 	}
+
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 		private Color systemColorYellow;
 		private Color systemColorGray;
@@ -109,23 +111,23 @@ public class RoundListSection extends TSectionPart {
 			if (element instanceof Round) {
 				Round round = (Round) element;
 				switch (columnIndex) {
-				case 0:
-					int number = round.getNumber();
-					if (number == 0)
-						return "Draft";
-					return "Round " + String.valueOf(number);
-				case SCHEDULE_COL:
-					return round.getType().name();
-				case ACTION_COL:
-					return getAction(round);
-				case 2:
-					return toDate(round.getDateStart());
-				case 3:
-					return toDate(round.getDateEnd());
-				case 4:
-					return round.getState().name();
-				default:
-					return "";
+					case 0:
+						int number = round.getNumber();
+						if (number == 0)
+							return "Draft";
+						return "Round " + String.valueOf(number);
+					case SCHEDULE_COL:
+						return round.getType().name();
+					case ACTION_COL:
+						return getAction(round);
+					case 2:
+						return toDate(round.getDateStart());
+					case 3:
+						return toDate(round.getDateEnd());
+					case 4:
+						return round.getState().name();
+					default:
+						return "";
 				}
 			}
 			return "";
@@ -143,10 +145,10 @@ public class RoundListSection extends TSectionPart {
 				Round round = (Round) element;
 				RoundState action = round.getState();
 				switch (action) {
-				case IN_PROGRESS:
-					return systemColorYellow;
-				default:
-					return null;
+					case IN_PROGRESS:
+						return systemColorYellow;
+					default:
+						return null;
 				}
 			}
 			return null;
@@ -160,10 +162,10 @@ public class RoundListSection extends TSectionPart {
 					return systemColorBlue;
 				}
 				switch (action) {
-				case CLOSED:
-					return systemColorGray;
-				default:
-					return null;
+					case CLOSED:
+						return systemColorGray;
+					default:
+						return null;
 				}
 			}
 			return null;
@@ -173,32 +175,32 @@ public class RoundListSection extends TSectionPart {
 	protected String getAction(Round round) {
 		RoundState action = round.getState();
 		switch (action) {
-		case NOT_SCHEDULED:
-			return "Schedule";
-		case READY:
-			return "Start";
-		case IN_PROGRESS:
-			return "End";
-		case CLOSED:
-			return "";
-		default:
-			return null;
+			case NOT_SCHEDULED:
+				return "Schedule";
+			case READY:
+				return "Start";
+			case IN_PROGRESS:
+				return "End";
+			case CLOSED:
+				return "";
+			default:
+				return null;
 		}
 	}
 
 	private void createBody() {
 		Section section = this.getSection();
 		section.setText("Rounds");
-		//section.setDescription("Tournament settings");
+		// section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
+		sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		Table table = toolkit.createTable(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
-		        | SWT.BORDER);
+		Table table = toolkit.createTable(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer = new TableViewer(table);
-		viewer.getControl().setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTable().setHeaderVisible(true);
 		createColumn(0, "Round", 80);
 		createColumn(SCHEDULE_COL, "Schedule", 100);
@@ -255,11 +257,11 @@ public class RoundListSection extends TSectionPart {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
 		buttons.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
+		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(70, -1);
 		//
 		action = toolkit.createButton(buttons, "Action", SWT.PUSH);
-		action.setLayoutData(hor.create());
+		action.setLayoutData(buttonLD.create());
 		action.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {
@@ -277,7 +279,7 @@ public class RoundListSection extends TSectionPart {
 			}
 		});
 		edit = toolkit.createButton(buttons, "Edit...", SWT.PUSH);
-		edit.setLayoutData(hor.create());
+		edit.setLayoutData(buttonLD.create());
 		edit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {
@@ -291,7 +293,7 @@ public class RoundListSection extends TSectionPart {
 			}
 		});
 		add = toolkit.createButton(buttons, "Add", SWT.PUSH);
-		add.setLayoutData(hor.create());
+		add.setLayoutData(buttonLD.create());
 		add.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {
@@ -304,7 +306,7 @@ public class RoundListSection extends TSectionPart {
 			}
 		});
 		del = toolkit.createButton(buttons, "Remove", SWT.PUSH);
-		del.setLayoutData(hor.create());
+		del.setLayoutData(buttonLD.create());
 		del.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {
@@ -362,6 +364,7 @@ public class RoundListSection extends TSectionPart {
 		r.setType(tournament.getType());
 		tournament.setNumberOfRounds(n + 1);
 	}
+
 	class RoundActionEditingSupport extends EditingSupport {
 		private CellEditor editor;
 		private int column;
@@ -371,19 +374,19 @@ public class RoundListSection extends TSectionPart {
 			this.column = column;
 			// Create the correct editor based on the column index
 			switch (column) {
-			case ACTION_COL:
-				editor = new CheckboxCellEditor(((TableViewer) viewer).getTable(), SWT.CHECK | SWT.READ_ONLY) {
-					@Override
-					protected Control createControl(Composite parent) {
-						return null;
-					}
-				};
-				break;
-			case SCHEDULE_COL:
-				editor = new ComboBoxCellEditor(((TableViewer) viewer).getTable(), TournamentType.stringValues());
-				break;
-			default:
-				editor = null;
+				case ACTION_COL:
+					editor = new CheckboxCellEditor(((TableViewer) viewer).getTable(), SWT.CHECK | SWT.READ_ONLY) {
+						@Override
+						protected Control createControl(Composite parent) {
+							return null;
+						}
+					};
+					break;
+				case SCHEDULE_COL:
+					editor = new ComboBoxCellEditor(((TableViewer) viewer).getTable(), TournamentType.stringValues());
+					break;
+				default:
+					editor = null;
 			}
 		}
 
@@ -392,16 +395,17 @@ public class RoundListSection extends TSectionPart {
 			if (element instanceof Round) {
 				Round round = (Round) element;
 				switch (column) {
-				case ACTION_COL:
-					return true;
-				case SCHEDULE_COL:
-					//if (round.getTournament().getType() != TournamentType.ROUND_ROBIN) 
-				{
-					return true;
-				}
-					//return false;
-				default:
-					break;
+					case ACTION_COL:
+						return true;
+					case SCHEDULE_COL:
+					// if (round.getTournament().getType() !=
+					// TournamentType.ROUND_ROBIN)
+					{
+						return true;
+					}
+					// return false;
+					default:
+						break;
 				}
 				return false;
 			}
@@ -417,12 +421,12 @@ public class RoundListSection extends TSectionPart {
 		protected Object getValue(Object element) {
 			Round round = (Round) element;
 			switch (this.column) {
-			case ACTION_COL:
-				return round.getState() != RoundState.CLOSED;
-			case SCHEDULE_COL:
-				return round.getType().ordinal();
-			default:
-				break;
+				case ACTION_COL:
+					return round.getState() != RoundState.CLOSED;
+				case SCHEDULE_COL:
+					return round.getType().ordinal();
+				default:
+					break;
 			}
 			return null;
 		}
@@ -431,15 +435,15 @@ public class RoundListSection extends TSectionPart {
 		protected void setValue(Object element, Object value) {
 			Round round = (Round) element;
 			switch (this.column) {
-			case ACTION_COL:
-				runRoundAction(round);
-				break;
-			case SCHEDULE_COL:
-				round.setType(TournamentType.valueOf(((Integer) value).intValue()));
-				modelUpdated();
-				break;
-			default:
-				break;
+				case ACTION_COL:
+					runRoundAction(round);
+					break;
+				case SCHEDULE_COL:
+					round.setType(TournamentType.valueOf(((Integer) value).intValue()));
+					modelUpdated();
+					break;
+				default:
+					break;
 			}
 			getViewer().update(element, null);
 		}

@@ -73,45 +73,45 @@ public class PlayersListComposite extends Composite {
 			if (element instanceof Player) {
 				Player p = (Player) element;
 				switch (columnIndex) {
-				case 0:
-					return getText(element);
-				case 1:
-					return p.getId();
-				case 2:
-					return "";
-				case 3:
-					return String.valueOf(p.getPoints());
-				case 4:
-					return "";
-				case 5:
-					return String.valueOf(p.getGames());
-				default:
-					break;
+					case 0:
+						return getText(element);
+					case 1:
+						return p.getId();
+					case 2:
+						return "";
+					case 3:
+						return String.valueOf(p.getPoints());
+					case 4:
+						return "";
+					case 5:
+						return String.valueOf(p.getGames());
+					default:
+						break;
 				}
 			} else if (element instanceof PlayerTourInfo) {
 				PlayerTourInfo pi = (PlayerTourInfo) element;
 				Player p = pi.getPlayer();
 				switch (columnIndex) {
-				case 0:
-					return p.getName();
-				case 1:
-					return p.getId();
-				case 2:
-					return String.valueOf(pi.getPlace());
-				case 3:
-					return String.valueOf(pi.getPoints());
-				case 4:
-					return getStats(pi);
-				case 5:
-					return String.valueOf(pi.getRoundsPlayed());
-				case 6:
-					return String.valueOf(pi.getOMW());
-				case 7:
-					return String.valueOf(pi.getPGW());
-				case 8:
-					return String.valueOf(pi.getOGW());
-				default:
-					break;
+					case 0:
+						return p.getName();
+					case 1:
+						return p.getId();
+					case 2:
+						return String.valueOf(pi.getPlace());
+					case 3:
+						return String.valueOf(pi.getPoints());
+					case 4:
+						return getStats(pi);
+					case 5:
+						return String.valueOf(pi.getRoundsPlayed());
+					case 6:
+						return String.valueOf(pi.getOMW());
+					case 7:
+						return String.valueOf(pi.getPGW());
+					case 8:
+						return String.valueOf(pi.getOGW());
+					default:
+						break;
 				}
 			}
 			return null;
@@ -122,7 +122,10 @@ public class PlayersListComposite extends Composite {
 		super(parent, SWT.NONE);
 		this.treeStyle = style;
 		this.forTournamentStanding = hasColumns;
-		setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		setLayout(layout);
 		createBody(this);
 		getViewer().getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
@@ -182,45 +185,45 @@ public class PlayersListComposite extends Composite {
 				Player p1 = (Player) e1;
 				Player p2 = (Player) e2;
 				switch (propertyIndex) {
-				case 0:
-					rc = p1.getName().compareTo(p2.getName());
-					break;
-				case 1:
-					rc = p1.getId().compareTo(p2.getId());
-					break;
-				case 3:
-					rc = p1.getPoints() - p2.getPoints();
-					break;
-				case 5:
-					rc = p1.getGames() - p2.getGames();
-					break;
-				default:
-					rc = 0;
+					case 0:
+						rc = p1.getName().compareTo(p2.getName());
+						break;
+					case 1:
+						rc = p1.getId().compareTo(p2.getId());
+						break;
+					case 3:
+						rc = p1.getPoints() - p2.getPoints();
+						break;
+					case 5:
+						rc = p1.getGames() - p2.getGames();
+						break;
+					default:
+						rc = 0;
 				}
 			} else if (e1 instanceof PlayerTourInfo && e2 instanceof PlayerTourInfo) {
 				PlayerTourInfo p1 = (PlayerTourInfo) e1;
 				PlayerTourInfo p2 = (PlayerTourInfo) e2;
 				switch (propertyIndex) {
-				case 0:
-					rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
-					break;
-				case 1:
-					rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
-					break;
-				case 2:
-					rc = p1.getPlace() - p2.getPlace();
-					break;
-				case 3:
-					rc = p1.getPoints() - p2.getPoints();
-					break;
-				case 4:
-					rc = p1.getWin() - p2.getWin();
-					break;
-				case 5:
-					rc = p1.getRoundsPlayed() - p2.getRoundsPlayed();
-					break;
-				default:
-					rc = 0;
+					case 0:
+						rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
+						break;
+					case 1:
+						rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
+						break;
+					case 2:
+						rc = p1.getPlace() - p2.getPlace();
+						break;
+					case 3:
+						rc = p1.getPoints() - p2.getPoints();
+						break;
+					case 4:
+						rc = p1.getWin() - p2.getWin();
+						break;
+					case 5:
+						rc = p1.getRoundsPlayed() - p2.getRoundsPlayed();
+						break;
+					default:
+						rc = 0;
 				}
 			}
 			// If descending order, flip the direction

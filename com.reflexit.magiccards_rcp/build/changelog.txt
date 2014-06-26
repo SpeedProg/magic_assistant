@@ -1,3 +1,5 @@
+changes in 1.3.1.12 beta
+* Tournament - Added ability to edit pairing in the round and specify byes
 changes in 1.3.1.11
 * Bug 345 Shuffle library issue in Draw tab
 * Added log file path to bug report submission window

@@ -254,13 +254,15 @@ public class RoundScheduleSection extends TSectionPart {
 		// section.setDescription("Tournament settings");
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
+		sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// sectionClient.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
 		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTree().setHeaderVisible(true);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -284,11 +286,11 @@ public class RoundScheduleSection extends TSectionPart {
 	}
 
 	private void createButtonsComposite(Composite parent) {
-		Composite buttons = new Composite(parent, SWT.NONE);
+		Composite buttons = toolkit.createComposite(parent);
 		buttons.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).create());
 		buttons.setLayout(new GridLayout());
-		Button printButton = new Button(buttons, SWT.NONE);
-		printButton.setText("Print...");
+		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(70, -1);
+		Button printButton = toolkit.createButton(buttons, "Print...", SWT.PUSH);
 		printButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -296,8 +298,8 @@ public class RoundScheduleSection extends TSectionPart {
 				dialog.open();
 			};
 		});
-		printButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
-		overrideButton = new Button(buttons, SWT.NONE);
+		printButton.setLayoutData(buttonLD.create());
+		overrideButton = toolkit.createButton(buttons, "Edit...", SWT.PUSH);
 		overrideButton.setText("Edit...");
 		overrideButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -305,9 +307,8 @@ public class RoundScheduleSection extends TSectionPart {
 				editPairings();
 			};
 		});
-		overrideButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
-		Button resultButton = new Button(buttons, SWT.NONE);
-		resultButton.setText("Score...");
+		overrideButton.setLayoutData(buttonLD.create());
+		Button resultButton = toolkit.createButton(buttons, "Score...", SWT.NONE);
 		resultButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -319,7 +320,7 @@ public class RoundScheduleSection extends TSectionPart {
 				}
 			};
 		});
-		resultButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).create());
+		resultButton.setLayoutData(buttonLD.create());
 	}
 
 	private void createColumn(int i, String name, int width) {
