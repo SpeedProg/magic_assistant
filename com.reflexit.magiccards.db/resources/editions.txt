@@ -126,3 +126,5 @@ Born of the Gods|BNG||February 2014|Expansion|Theros Block|Standard|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|||
 Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
 Modern Event Deck 2014|MD1||May 2014|Starter|||
+Magic: The Gathering—Conspiracy|CNS|||June 2014|||Conspiracy
+Vintage Masters|VMA|||?|||
