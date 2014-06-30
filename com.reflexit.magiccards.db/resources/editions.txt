@@ -116,7 +116,7 @@ Return to Ravnica|RTR||September 2012|Expansion|Return to Ravnica|Standard|
 Duel Decks: Sorin vs. Tibalt|DDK||April 2013|Starter|||
 Gatecrash|GTC||April 2013|Expansion|Return to Ravnica|Standard|
 Dragon's Maze|DGM||May 2013|Expansion|Return to Ravnica|Standard|
-Modern Masters|MMA||June 2013|Reprint|||
+Modern Masters|MMA||June 2013|Online|||
 Magic 2014 Core Set|M14||July 2013|Core||Standard|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter|||
 From the Vault: Twenty|V13||September 2013|Reprint|||
@@ -126,5 +126,5 @@ Born of the Gods|BNG||February 2014|Expansion|Theros Block|Standard|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|||
 Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
 Modern Event Deck 2014|MD1||May 2014|Starter|||
-Magic: The Gathering—Conspiracy|CNS|||June 2014|||Conspiracy
-Vintage Masters|VMA|||?|||
+Magic: The Gathering—Conspiracy|CNS|||June 2014|Expansion||Conspiracy
+Vintage Masters|VMA|||June 2014|Online||
