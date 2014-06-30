@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -85,8 +86,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
-			throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		if (WebUtils.isWorkOffline())
 			throw new MagicException("Online updates are disabled");
 		int size = getSize(iterable);
@@ -118,13 +118,24 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	public float getPrice(IMagicCard magicCard) {
 		BufferedReader st = null;
 		try {
-			URL url = createCardUrl(magicCard);
-			InputStream openStream = WebUtils.openUrl(url);
-			st = new BufferedReader(new InputStreamReader(openStream));
-			String xml = FileUtils.readFileAsString(st);
-			float price = parsePrice(xml);
-			if (price == -1) {
-				MagicLogger.log("Failed to load price for " + url);
+			float price = -1;
+			String origset = magicCard.getSet();
+			Collection<String> trysets = getSetOptions(origset);
+			for (Iterator iterator = trysets.iterator(); iterator.hasNext();) {
+				String altset = (String) iterator.next();
+				URL url = createCardUrl(magicCard, altset);
+				InputStream openStream = WebUtils.openUrl(url);
+				st = new BufferedReader(new InputStreamReader(openStream));
+				String xml = FileUtils.readFileAsString(st);
+				price = parsePrice(xml);
+				if (price == -1) {
+					MagicLogger.log("Failed to load price for " + url);
+				} else {
+					if (!origset.equals(altset)) {
+						setMap.put(origset, altset);
+					}
+					return price;
+				}
 			}
 			return price;
 		} catch (Exception e) {
@@ -138,6 +149,22 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 				// screw it
 			}
 		}
+	}
+
+	private Collection<String> getSetOptions(String setm) {
+		ArrayList<String> res = new ArrayList<String>();
+		String set = setMap.get(setm);
+		if (set != null) {
+			res.add(set);
+		}
+		res.add(setm);
+		Edition edition = Editions.getInstance().getEditionByName(setm);
+		String[] aliases = edition.getAliases();
+		for (int i = 0; i < aliases.length; i++) {
+			String altset = aliases[i];
+			res.add(altset);
+		}
+		return res;
 	}
 
 	private float parsePrice(String xml) {
@@ -156,11 +183,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		}
 	}
 
-	private URL createCardUrl(IMagicCard magicCard) throws MalformedURLException {
-		String setm = magicCard.getSet();
-		String set = setMap.get(setm);
-		if (set == null)
-			set = setm;
+	private URL createCardUrl(IMagicCard magicCard, String set) throws MalformedURLException {
 		String name = magicCard.getName();
 		name = name.replaceAll("Æ", "AE");
 		name = name.replaceAll("ö", "o");

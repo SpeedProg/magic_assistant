@@ -133,6 +133,10 @@ public class Editions implements ISearchableProperty {
 			return "";
 		}
 
+		public String[] getAliases() {
+			return aliases;
+		}
+
 		public void setType(String type) {
 			if (type == null || type.length() == 0)
 				this.type = "?";
