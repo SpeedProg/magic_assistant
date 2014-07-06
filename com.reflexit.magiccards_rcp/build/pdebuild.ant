@@ -14,8 +14,9 @@
 		</first>
 	</pathconvert>
 	<property name="repack.dir" value="${buildDirectory}/${buildLabel}-install" />
-    <property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.1/bin/x86/AdvancedInstaller.com"/>
+    <property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.3/bin/x86/AdvancedInstaller.com"/>
 	<property name="msiout" value="${buildDirectory}/../installer/magicassistant-SetupFiles"/>
+	<property name="rsa.key" value="C:/Develop/magic/.ssh/id_rsa"/>
 	<!-- 
 	Create a self extracting archive using 7zip
 	c:\Develop\magic\export\1.2.6.7>"c:\Program Files\7-Zip\7z.exe" a -t7z -mx5 -sfx7z.sfx archive.exe MagicAssistant
@@ -170,28 +171,27 @@
 	<target name="publish.update.site">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.2" 
-			keyfile="C:/Develop/magic/.ssh/id_rsa" trust="true">
+			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.dir}/update/1.2">
 				<include name="**/com.reflexit**"/>
-				<include name="*.xml"/>
+				<include name="*.xml"/> 
 			</fileset>
 		</scp>
 	</target>
 	<target name="publish.update.site.beta">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.2-beta" 
-			keyfile="C:/Develop/magic/.ssh/id_rsa" trust="true">
+			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.dir}/update/1.2">
 			    <include name="**/com.reflexit**"/>
 				<include name="*.xml"/> 
-
 			</fileset>
 		</scp>
 	</target>
 	<target name="publish.docs">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins" 
-			keyfile="C:/Develop/magic/.ssh/id_rsa" trust="true">
+			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${orig.workspace.root}">
 				<include name="com.reflexit.magiccards.help/**"/>
 			</fileset>
@@ -200,7 +200,7 @@
 	<target name="publish.release">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Magic_Assistant/" 
-			keyfile="C:/Develop/magic/.ssh/id_rsa" trust="true">
+			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.dir}">
 				<include name="${ma.version}/**"/>
 			</fileset>
