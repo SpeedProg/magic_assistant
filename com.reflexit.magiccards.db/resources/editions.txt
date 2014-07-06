@@ -1,6 +1,6 @@
-Limited Edition Alpha|1E|LEA,A|August 1993|Core|||
-Limited Edition Beta|2E|LEB,B|October 1993|Core|||
-Unlimited Edition|2U|2ED,U|December 1993|Core|||
+Limited Edition Alpha|1E|LEA,A|August 1993|Core|||Alpha Edition,Alpha
+Limited Edition Beta|2E|LEB,B|October 1993|Core|||Beta Edition,Beta
+Unlimited Edition|2U|2ED,U|December 1993|Core|||Unlimited
 Arabian Nights|AN|ARN|December 1993|Expansion|None||
 Revised Edition|3E|3ED,R|April 1994|Core|||
 Antiquities|AQ|ATQ|March 1994|Expansion|None||
@@ -27,7 +27,7 @@ Unglued|UG|UGL|August 1998|Un_set|||
 Urza's Saga|UZ|USG,US|October 1998|Expansion|Urza||
 Battle Royale Box Set|BR|BRB|November 1998|Reprint|||
 Urza's Legacy|GU|ULG,UL|February 1999|Expansion|Urza||
-Classic Sixth Edition|6E|6ED|April 1999|Core|||6th Edition
+Classic Sixth Edition|6E|6ED|April 1999|Core|||6th Edition,Sixth Edition
 Portal Three Kingdoms|PK|PTK|May 1999|Starter|||
 Urza's Destiny|CG|UDS,UD|June 1999|Expansion|Urza||
 Starter 1999|P3|S99,ST,S1|July 1999|Starter|||
@@ -59,7 +59,7 @@ Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern|Ravnica
 Guildpact|GPT||February 2006|Expansion|Ravnica|Modern|
 Dissension|DIS||May 2006|Expansion|Ravnica|Modern|
 Coldsnap|CSP||July 2006|Expansion|Ice Age|Modern|
-Time Spiral "Timeshifted"|TSB||October 2006|Reprint|||
+Time Spiral "Timeshifted"|TSB||October 2006|Reprint|||Timeshifted
 Promo set for Gatherer|PPR||October 2006|Online|||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral|Modern|
 Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern|
@@ -101,13 +101,13 @@ Duel Decks: Ajani vs. Nicol Bolas|DDH|AVN|August 2011|Starter|||
 Planechase|HOP|PCH|July 2011|Expansion|Planechase||
 From the Vault: Relics|V10|FVR|August 2011|Reprint|||
 From the Vault: Exiled|V09|FVE|August 2011|Reprint|||
-Magic: The Gathering-Commander|CMD||June 2011|Starter|||
+Magic: The Gathering-Commander|CMD||June 2011|Starter|||Commander
 Innistrad|ISD||September 2011|Expansion|Innistrad|Extended|
 Dark Ascension|DKA||April 2012|Expansion|Innistrad|Extended|
 Duel Decks: Venser vs. Koth|DDI||May 2012|Starter|||
 Premium Deck Series: Graveborn|PD3||May 2012|Starter|||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad|Extended|
-Planechase 2012 Edition|PC2||June 2012|Expansion|Planechase||
+Planechase 2012 Edition|PC2||June 2012|Expansion|Planechase||Planechase 2012
 Magic 2013|M13||July 2012|Core||Extended|
 Commander's Arsenal|CM1||November 2012|Expansion|Commander||
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter|||
@@ -121,10 +121,10 @@ Magic 2014 Core Set|M14||July 2013|Core||Standard|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter|||
 From the Vault: Twenty|V13||September 2013|Reprint|||
 Theros|THS||September 2013|Expansion|Theros Block|Standard|
-Commander 2013 Edition|C13||November 2013|Expansion|Commander|Modern|
+Commander 2013 Edition|C13||November 2013|Expansion|Commander|Modern|Commander 2013
 Born of the Gods|BNG||February 2014|Expansion|Theros Block|Standard|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|||
 Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
 Modern Event Deck 2014|MD1||May 2014|Starter|||
-Magic: The Gathering—Conspiracy|CNS|||June 2014|Expansion||Conspiracy
-Vintage Masters|VMA|||June 2014|Online||
+Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Conspiracy|Legacy|Conspiracy,Magic: The Gathering - Conspiracy
+Vintage Masters|VMA||June 2014|Online|||
