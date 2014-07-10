@@ -1,13 +1,10 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererSetsTest extends TestCase {
@@ -20,7 +17,7 @@ public class ParseGathererSetsTest extends TestCase {
 
 	public void testLoadHtml() {
 		String html = "	                <b>\r\n"
-				+ "	                    Filter Card Set:\r\n"
+				+ "	                    Card Set:\r\n"
 				+ "	                </b>\r\n"
 				+ "	                <p>\r\n"
 				+ "	                    <select name=\"ctl00$ctl00$MainContent$Content$SearchControls$setAddText\" id=\"ctl00_ctl00_MainContent_Content_SearchControls_setAddText\">\r\n"
@@ -32,19 +29,11 @@ public class ParseGathererSetsTest extends TestCase {
 	}
 
 	public boolean hasEdition(String set) {
-		Collection<Edition> editions = Editions.getInstance().getEditions();
-		for (Iterator iterator = editions.iterator(); iterator.hasNext();) {
-			Edition edition = (Edition) iterator.next();
-			if (edition.getName().equals(set))
-				return true;
-			// System.err.println(edition.getName() + " " +
-			// edition.getMainAbbreviation());
-		}
-		return false;
+		return Editions.getInstance().getEditionByName(set) != null;
 	}
 
 	public void testLoad() throws IOException {
 		parser.load(ICoreProgressMonitor.NONE);
-		assertTrue(hasEdition("Alara Reborn"));
+		assertTrue(parser.getAll().contains("Magic 2015 Core Set"));
 	}
 }

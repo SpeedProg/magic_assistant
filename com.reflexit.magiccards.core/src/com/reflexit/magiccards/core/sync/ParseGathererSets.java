@@ -44,6 +44,7 @@ public class ParseGathererSets extends ParseGathererPage {
 	private static Pattern setStartPattern = Pattern.compile("Card Set:.*?<option value=\"\"></option>(.*?)</select>");
 	private static Pattern oneSetPattern = Pattern.compile("<option.*?>(.*?)</option>");
 	private Collection<Edition> newSets = new ArrayList<Editions.Edition>();
+	private Collection<String> allParsed = new ArrayList<String>();
 
 	public ParseGathererSets() {
 		setTitle("Updating sets...");
@@ -62,6 +63,7 @@ public class ParseGathererSets extends ParseGathererPage {
 				if (name.length() == 0)
 					continue;
 				name = name.replaceAll("&quot;", "\"");
+				allParsed.add(name);
 				if (!editions.containsName(name)) {
 					Edition ed = editions.addEdition(name, null);
 					newSets.add(ed);
@@ -73,6 +75,10 @@ public class ParseGathererSets extends ParseGathererPage {
 
 	public Collection<Edition> getNew() {
 		return newSets;
+	}
+
+	public Collection<String> getAll() {
+		return allParsed;
 	}
 
 	@Override

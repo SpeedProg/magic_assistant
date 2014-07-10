@@ -1,3 +1,7 @@
+changes in 1.3.1.14
+* Bug 365 Corrupt text in tree view of collections and decks
+* Bug 367 M15 isn't auto-downloading from gatherer.
+* Bug 366 New sideboards do not inherit "virtual" ownership from main deck
 changes in 1.3.1.13
 * Bug 357 - Conspiracy aliases
 * Added Conspiracy and  Vintage Masters to default db
@@ -35,42 +39,5 @@ changes in 1.3.1.1
 * Bug 342 Sideboard issue when moving decks 
 * Added Modern Event Deck set
 * Feature 341 Add Set's date column as option for main view 
-changes in 1.3.0.4
-* Bug 336 Progress4 shows 25% for non-own cards 
-* Added support for currency conversion for prices
-* Bug 340 put only minimal information about each card into the collection's xml file
-* Fixed bug with power aggregation and creature count
-Bug 339 move card set related information from \.metadata to \magiccards 
-changes in 1.3.0.1
-* Updated platform to eclipse Kepler 4.3.2
-* Update database with latest released sets (up to Apr 2014)
-* Fixed split export format name in Card Export preferences
-* Fixed ClassCastException when grouping by Location or Ownership
-* Added more abilities and externalized abilities file so user can extend the list of abilities
-changes in 1.2.12.2
-* Bug #331 Can't activate deck or collection
-* Bug #332 Sort by Color not working 
-changes in 1.2.12.0
-* added cvs ';' separated import/export format
-* Bug #328 Could not create the view: An unexpected exception was thrown.
-changes in 1.2.11.11
-* should be able to sort now by Progress column in Collector view
-* fixed refresh issues when changing price provider
-changes in 1.2.10.10
-* added context menu to buy cards from selected provider - auto-populating cart if can
-changes in 1.2.10.9
-* price provider values saved per provider
-* can auto-load custom prices from xml
-* bug 319 prevent NPE when exporter is not defined for the format
-changes in 1.2.10.7
-* Bug #299 NullPointerException on Ubuntu 13.1
-* Bug #312 list refresh/update issue
-* Feature #313 Generate Booster Packs in separate collection 
-changes in 1.2.10.6
-* background of table lines based on ownership, customisable. Ownership color will loose its own colouring
-* Feature #306 added Progress4 column to track progress of x4 sets in the collector view (off by default)
-* removed preferences for Cache Images - it is really not needed and confusing
-* Bug #310 NPE when opening deck (possibly fixed)
-* Bug #305 IAE during loading extra fields (possibly fixed)
 changes before that
 * See full log at http://sourceforge.net/apps/mediawiki/mtgbrowser/index.php?title=Change_Log
