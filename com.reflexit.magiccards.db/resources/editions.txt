@@ -121,10 +121,11 @@ Magic 2014 Core Set|M14||July 2013|Core||Standard|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter|||
 From the Vault: Twenty|V13||September 2013|Reprint|||
 Theros|THS||September 2013|Expansion|Theros Block|Standard|
-Commander 2013 Edition|C13||November 2013|Expansion|Commander|Modern|Commander 2013
+Commander 2013 Edition|C13||November 2013|Expansion|Commander||Commander 2013
 Born of the Gods|BNG||February 2014|Expansion|Theros Block|Standard|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|||
 Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
 Modern Event Deck 2014|MD1||May 2014|Starter|||
-Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Conspiracy|Legacy|Conspiracy,Magic: The Gathering - Conspiracy
+Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Conspiracy||Conspiracy,Magic: The Gathering - Conspiracy
 Vintage Masters|VMA||June 2014|Online|||
+Magic 2015 Core Set|M15||July 2015|Core||Standard|Magic 2015
