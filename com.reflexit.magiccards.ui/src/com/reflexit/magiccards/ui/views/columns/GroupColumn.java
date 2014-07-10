@@ -181,6 +181,8 @@ public class GroupColumn extends GenColumn implements Listener {
 
 	@Override
 	public void handleEvent(Event event) {
+		if (!showImage)
+			return; // handled by gettext
 		if (event.index == this.columnIndex) { // our column
 			Item item = (Item) event.item;
 			Object row = item.getData();
@@ -202,6 +204,7 @@ public class GroupColumn extends GenColumn implements Listener {
 			// // event.gc.setClipping(x, y, bounds.width - 32, bounds.height);
 			// }
 			int imageHeight = 12;
+			int imageWidth = 32;
 			int yi = y + (Math.max(bounds.height - imageHeight, 2)) / 2;
 			// event.gc.fillRectangle(x + bounds.width - 32, y, 32,
 			// bounds.height);
@@ -213,7 +216,7 @@ public class GroupColumn extends GenColumn implements Listener {
 				Point tw = event.gc.textExtent(text);
 				int yt = y + bounds.height - 2 - tw.y;
 				event.gc.setClipping(x, y, bounds.width - 2, bounds.height);
-				event.gc.drawText(text, x + 32 + 2, yt, true);
+				event.gc.drawText(text, x + imageWidth + 2, yt, true);
 			}
 		}
 	}
