@@ -110,7 +110,9 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
+	 * .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -161,6 +163,7 @@ public class DeckView extends AbstractMyCardsView {
 		CardCollection s;
 		if (!deck.getParent().contains(sideboard)) {
 			s = parent.addDeck(sideboard.getBaseFileName());
+			s.setVirtual(deck.getStorageInfo().isVirtual());
 		} else {
 			s = (CardCollection) parent.findChield(sideboard);
 		}
@@ -171,6 +174,7 @@ public class DeckView extends AbstractMyCardsView {
 		if (col == null)
 			return;
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (win == null)
@@ -225,7 +229,8 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
+	 * @see
+	 * com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	@Override
@@ -343,7 +348,8 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
 	 * org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
@@ -359,6 +365,7 @@ public class DeckView extends AbstractMyCardsView {
 		if (folder == null || folder.isDisposed())
 			return;
 		folder.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (deck == null)
 					return;
@@ -366,7 +373,8 @@ public class DeckView extends AbstractMyCardsView {
 				if (event.getData() instanceof CardElement) {
 					dataLocation = ((CardElement) event.getData()).getLocation();
 				}
-				// System.err.println("DeckView " + getPartName() + " got " + event);
+				// System.err.println("DeckView " + getPartName() + " got " +
+				// event);
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
 					if (deck != null && deck.getLocation().equals(dataLocation)) {
 						deck.close();
@@ -386,7 +394,8 @@ public class DeckView extends AbstractMyCardsView {
 					Location srcLocation = ((CardElement) event.getSource()).getLocation();
 					if (deck.getLocation().equals(srcLocation)) {
 						reloadData();
-						// TODO does not work properly when moving to another container
+						// TODO does not work properly when moving to another
+						// container
 					}
 				} else {
 					// System.err.println(event);
