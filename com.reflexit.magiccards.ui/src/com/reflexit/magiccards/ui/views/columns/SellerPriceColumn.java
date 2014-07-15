@@ -33,6 +33,12 @@ public class SellerPriceColumn extends GenColumn {
 		double price = Double.valueOf(text);
 		if (price == 0)
 			return "";
+		if (price > -1 && price < 0)
+			return "No data";
+		if (price == -1)
+			return "Server Error";
+		if (price < 0)
+			return "Parse Error " + (-price);
 		return cur.getSymbol() + " " + decimalFormat.format(price);
 	}
 

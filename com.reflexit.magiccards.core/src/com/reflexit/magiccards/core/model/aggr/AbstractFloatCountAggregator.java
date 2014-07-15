@@ -19,9 +19,9 @@ public class AbstractFloatCountAggregator extends AbstractFloatAggregator {
 			ICard card = iterator.next();
 			float x;
 			if (card instanceof CardGroup)
-				x = card.getFloat(field);
+				x = getFloat(card);
 			else
-				x = card.getFloat(field) * ((AbstractMagicCard) card).getCount();
+				x = getFloat(card) * ((AbstractMagicCard) card).getCount();
 			sum += x;
 		}
 		return sum;
@@ -32,7 +32,7 @@ public class AbstractFloatCountAggregator extends AbstractFloatAggregator {
 		if (card instanceof CardGroup)
 			return visitGroup((CardGroup) card, data);
 		if (card instanceof AbstractMagicCard)
-			return card.getFloat(field) * ((AbstractMagicCard) card).getCount();
+			return getFloat(card) * ((AbstractMagicCard) card).getCount();
 		return null;
 	}
 }

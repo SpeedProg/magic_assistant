@@ -94,7 +94,10 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 					if (flipCard != null)
 						price = getPrice(flipCard);
 				}
-				if (price > 0) {
+				// if (price > 0)
+				{
+					if (price == 0)
+						price = -0.0001f;
 					setDbPrice(magicCard, price, getCurrency());
 				}
 				monitor.worked(1);
@@ -114,11 +117,17 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			for (Iterator iterator = trysets.iterator(); iterator.hasNext();) {
 				String altset = (String) iterator.next();
 				URL url = createCardUrl(magicCard, altset);
-				InputStream openStream = WebUtils.openUrl(url);
+				InputStream openStream = null;
+				try {
+					openStream = WebUtils.openUrl(url);
+				} catch (Exception e) {
+					MagicLogger.log("Failed to load price for " + url + ": " + e.getLocalizedMessage());
+					continue;
+				}
 				st = new BufferedReader(new InputStreamReader(openStream));
 				String xml = FileUtils.readFileAsString(st);
 				price = parsePrice(xml);
-				if (price == -1) {
+				if (price < 0) {
 					MagicLogger.log("Failed to load price for " + url);
 				} else {
 					if (!origset.equals(altset)) {
@@ -130,7 +139,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			return price;
 		} catch (Exception e) {
 			MagicLogger.log(e);
-			return -1;
+			return -4;
 		} finally {
 			try {
 				if (st != null)
@@ -163,13 +172,13 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		try {
 			int i = xml.indexOf(pricetag);
 			if (i == -1) {
-				return -1; // hmm not found
+				return -3; // hmm not found
 			}
-			int j = xml.indexOf(pricetag, i + 1);
-			String pr = xml.substring(i + 12, j - 5);
+			int j = xml.indexOf("<", i + 1);
+			String pr = xml.substring(i + pricetag.length() + 1, j);
 			return Float.parseFloat(pr);
 		} catch (Exception e) {
-			return -1;
+			return -2;
 		}
 	}
 
@@ -178,7 +187,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		name = name.replaceAll("Æ", "AE");
 		name = name.replaceAll("ö", "o");
 		name = name.replaceAll(" \\(.*$", "");
-		String url = "http://partner.tcgplayer.com/x/phl.asmx/p?pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
+		String url = "http://partner.tcgplayer.com/x3/phl.asmx/p?v=3&pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
 		url = url.replaceAll(" ", "+");
 		url = url.replaceAll("'", "%27");
 		return new URL(url);

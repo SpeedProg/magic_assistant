@@ -18,10 +18,17 @@ public class AbstractFloatAggregator extends AbstractGroupAggregator implements 
 		float sum = 0;
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
-			float x = object.getFloat(field);
+			float x = getFloat(object);
 			sum += x;
 		}
 		return sum;
+	}
+
+	protected float getFloat(ICard card) {
+		float x = card.getFloat(field);
+		if (x < 0)
+			return 0;
+		return x;
 	}
 
 	@Override
@@ -29,7 +36,7 @@ public class AbstractFloatAggregator extends AbstractGroupAggregator implements 
 		if (card instanceof CardGroup)
 			return visitGroup((CardGroup) card, data);
 		if (card instanceof AbstractMagicCard)
-			return card.getFloat(field);
+			return getFloat(card);
 		return null;
 	}
 }
