@@ -1,3 +1,5 @@
+changes in 1.3.1.15
+* Fixed TCGPlayer API's
 changes in 1.3.1.14
 * Bug 365 Corrupt text in tree view of collections and decks
 * Bug 367 M15 isn't auto-downloading from gatherer.
