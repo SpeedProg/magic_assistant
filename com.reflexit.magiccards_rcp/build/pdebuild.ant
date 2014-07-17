@@ -17,6 +17,7 @@
     <property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.3/bin/x86/AdvancedInstaller.com"/>
 	<property name="msiout" value="${buildDirectory}/../installer/magicassistant-SetupFiles"/>
 	<property name="rsa.key" value="C:/Develop/magic/.ssh/id_rsa"/>
+	<property name="jre.home" value="C:/Program Files/Java/jre8"/>
 	<!-- 
 	Create a self extracting archive using 7zip
 	c:\Develop\magic\export\1.2.6.7>"c:\Program Files\7-Zip\7z.exe" a -t7z -mx5 -sfx7z.sfx archive.exe MagicAssistant
@@ -25,8 +26,7 @@
 
 	<target name="copy.jre">
 		<sync todir="${repack.dir}/${archivePrefix}/jre" includeEmptyDirs="true" overwrite="true">
-			<!--fileset dir="C:/Program Files (x86)/Java/jre7_x32"-->
-			<fileset dir="C:/Program Files/Java/jre7">
+			<fileset dir="${jre.home}">
 			</fileset>
 		</sync>
 	</target>
