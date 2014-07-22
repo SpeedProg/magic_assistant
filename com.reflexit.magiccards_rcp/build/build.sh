@@ -42,7 +42,7 @@ OUTPUT=$BUILD_DIR/output
 INSTALL_DIR=$MAGIC_DIR/install
 EXPORT_DIR=$BUILD_DIR/export
 UPDATE_ROOT="$EXPORT_DIR/update"
-UPDATE_SITE_DIR="$UPDATE_ROOT/1.2"
+UPDATE_SITE_DIR="$UPDATE_ROOT/1.4"
 
 echo Release $RELEASE
 echo Build Dir $BUILD_DIR
@@ -84,7 +84,7 @@ if [ "$UPDATE_SITE" -gt 0 ]; then
 	echo "Uploading update sute for $RELEASE..."
 	(
 	cd $UPDATE_SITE_DIR || die "No update site ready"
-	REMOTE_PATH="htdocs/update/1.2"
+	REMOTE_PATH="htdocs/update/1.4"
 	if [ "$UPDATE_SITE" -eq 1 ]; then
 		#partial update
 		$SCP -v -i "$SF_PRIVATE_KEY" binary/com.reflexit*  "$SF_USER,mtgbrowser@web.sourceforge.net:$REMOTE_PATH/binary/"

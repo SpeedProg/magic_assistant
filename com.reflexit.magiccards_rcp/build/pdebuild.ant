@@ -2,6 +2,7 @@
 	<property file="${basedir}/build.properties" />
 	<property name="ma.version" value="${buildId}" />
 	<property name="export.dir" value="${buildDirectory}/../export" />
+	<property name="export.update.dir" value="${export.dir}/update/1.4" />
 	<property name="orig.workspace.root" value="${basedir}/../.." />
 	<pathconvert property="equinox.launcher.jar">
 		<first count="1">
@@ -163,16 +164,16 @@
 		<echoproperties />
 	</target>
 	<target name="export.update.site">
-		<sync todir="${export.dir}/update/1.2" includeEmptyDirs="true" overwrite="true">
+		<sync todir="${export.update.dir}" includeEmptyDirs="true" overwrite="true">
 			<fileset dir="${buildDirectory}/p2repo">
 			</fileset>
 		</sync>
 	</target>
 	<target name="publish.update.site">
 		<scp verbose="true"
-			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.2" 
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
 			keyfile="${rsa.key}" trust="true">
-			<fileset dir="${export.dir}/update/1.2">
+			<fileset dir="${export.update.dir}">
 				<include name="**/com.reflexit**"/>
 				<include name="*.xml"/> 
 			</fileset>
@@ -180,9 +181,9 @@
 	</target>
 	<target name="publish.update.site.beta">
 		<scp verbose="true"
-			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.2-beta" 
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4-beta" 
 			keyfile="${rsa.key}" trust="true">
-			<fileset dir="${export.dir}/update/1.2">
+			<fileset dir="${export.update.dir}">
 			    <include name="**/com.reflexit**"/>
 				<include name="*.xml"/> 
 			</fileset>
