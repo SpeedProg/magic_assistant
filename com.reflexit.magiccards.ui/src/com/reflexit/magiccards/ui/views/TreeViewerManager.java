@@ -66,6 +66,8 @@ public class TreeViewerManager extends ViewerManager {
 			colv.setLabelProvider(man);
 			if (man instanceof Listener) {
 				this.viewer.getTree().addListener(SWT.PaintItem, (Listener) man);
+				this.viewer.getTree().addListener(SWT.EraseItem, (Listener) man);
+				this.viewer.getTree().addListener(SWT.MeasureItem, (Listener) man);
 			}
 			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}

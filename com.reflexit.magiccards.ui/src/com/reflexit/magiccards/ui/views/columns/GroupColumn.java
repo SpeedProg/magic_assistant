@@ -51,20 +51,22 @@ public class GroupColumn extends GenColumn implements Listener {
 	}
 
 	@Override
-	public final Image getImage(Object element) {
+	public Image getImage(Object element) {
 		return null;
 	}
 
-	protected Image getActualImage(Object element) {
-		if (element instanceof ICardGroup) {
-			CardGroup cardGroup = (CardGroup) element;
-			String set = cardGroup.getSet();
-			if (set != null && set.length() > 0 && !set.equals("*")) {
-				return ImageCreator.getInstance().getSetImage(cardGroup.getFirstCard());
+	public Image getActualImage(Object element) {
+		if (showImage) {
+			if (element instanceof ICardGroup) {
+				CardGroup cardGroup = (CardGroup) element;
+				String set = cardGroup.getSet();
+				if (set != null && set.length() > 0 && !set.equals("*")) {
+					return ImageCreator.getInstance().getSetImage(cardGroup.getFirstCard());
+				}
+			} else if (element instanceof IMagicCard) {
+				IMagicCard card = (IMagicCard) element;
+				return ImageCreator.getInstance().getSetImage(card);
 			}
-		} else if (element instanceof IMagicCard) {
-			IMagicCard card = (IMagicCard) element;
-			return ImageCreator.getInstance().getSetImage(card);
 		}
 		return null;
 	}
@@ -75,13 +77,7 @@ public class GroupColumn extends GenColumn implements Listener {
 	}
 
 	@Override
-	public final String getText(Object element) {
-		if (showImage)
-			return null;
-		return getActualText(element);
-	}
-
-	protected String getActualText(Object element) {
+	public String getText(Object element) {
 		if (element instanceof ICardGroup) {
 			if (!showCount) {
 				return ((CardGroup) element).getName();
@@ -180,9 +176,7 @@ public class GroupColumn extends GenColumn implements Listener {
 	}
 
 	@Override
-	public void handleEvent(Event event) {
-		if (!showImage)
-			return; // handled by gettext
+	public void handlePaintEvent(Event event) {
 		if (event.index == this.columnIndex) { // our column
 			Item item = (Item) event.item;
 			Object row = item.getData();
@@ -195,28 +189,20 @@ public class GroupColumn extends GenColumn implements Listener {
 				bounds = ((TreeItem) item).getBounds(event.index);
 			else
 				return;
-			// int tx = 0;
-			// int ty = 0;
-			// if (text != null) {
-			// Point tw = event.gc.textExtent(text);
-			// tx = tw.x;
-			// ty = tw.y;
-			// // event.gc.setClipping(x, y, bounds.width - 32, bounds.height);
-			// }
-			int imageHeight = 12;
-			int imageWidth = 32;
-			int yi = y + (Math.max(bounds.height - imageHeight, 2)) / 2;
-			// event.gc.fillRectangle(x + bounds.width - 32, y, 32,
-			// bounds.height);
+			int imageWidth = 0;
 			Image image = getActualImage(row);
-			if (image != null)
+			if (image != null) {
+				int imageHeight = 12;
+				imageWidth = 32;
+				int yi = y + (Math.max(bounds.height - imageHeight, 0)) / 2 - 1;
 				event.gc.drawImage(image, x, yi);
-			String text = getActualText(row);
+			}
+			String text = getText(row);
 			if (text != null) {
 				Point tw = event.gc.textExtent(text);
 				int yt = y + bounds.height - 2 - tw.y;
 				event.gc.setClipping(x, y, bounds.width - 2, bounds.height);
-				event.gc.drawText(text, x + imageWidth + 2, yt, true);
+				event.gc.drawText(text, x + imageWidth + 3, yt, true);
 			}
 		}
 	}

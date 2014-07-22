@@ -36,7 +36,8 @@ public class CostColumn extends AbstractColumn implements Listener {
 		return null;
 	}
 
-	public void handleEvent(Event event) {
+	@Override
+	public void handlePaintEvent(Event event) {
 		if (event.index == this.columnIndex) { // cost
 			Item item = (Item) event.item;
 			Object row = item.getData();

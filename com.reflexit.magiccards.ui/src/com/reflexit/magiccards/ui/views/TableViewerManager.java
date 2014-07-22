@@ -82,7 +82,9 @@ public class TableViewerManager extends ViewerManager {
 			col.setMoveable(true);
 			colv.setLabelProvider(man);
 			if (man instanceof Listener) {
+				this.viewer.getTable().addListener(SWT.EraseItem, (Listener) man);
 				this.viewer.getTable().addListener(SWT.PaintItem, (Listener) man);
+				this.viewer.getTable().addListener(SWT.MeasureItem, (Listener) man);
 			}
 			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}

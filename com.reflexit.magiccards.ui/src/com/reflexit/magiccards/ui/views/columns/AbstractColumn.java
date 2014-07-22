@@ -3,7 +3,9 @@ package com.reflexit.magiccards.ui.views.columns;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Event;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICard;
@@ -122,5 +124,21 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	@Override
 	public String toString() {
 		return getColumnName();
+	}
+
+	public void handleEvent(Event event) {
+		if (event.index == this.columnIndex) {
+			if (event.type == SWT.EraseItem) {
+				event.detail &= ~SWT.FOREGROUND;
+			} else if (event.type == SWT.MeasureItem) {
+				// measure
+			} else if (event.type == SWT.PaintItem) {
+				handlePaintEvent(event);
+			}
+		}
+	}
+
+	protected void handlePaintEvent(Event event) {
+		// do nothing
 	}
 }

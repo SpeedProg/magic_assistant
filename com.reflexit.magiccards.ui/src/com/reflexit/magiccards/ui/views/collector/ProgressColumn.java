@@ -103,47 +103,43 @@ public class ProgressColumn extends GenColumn implements Listener {
 		return cardGroup.getUniqueCount();
 	}
 
-	public void handleEvent(Event event) {
-		switch (event.type) {
-			case SWT.PaintItem: {
-				if (event.index == this.columnIndex) {
-					Item item = (Item) event.item;
-					Object row = item.getData();
-					Rectangle bounds;
-					if (item instanceof TableItem)
-						bounds = ((TableItem) item).getBounds(event.index);
-					else if (item instanceof TreeItem)
-						bounds = ((TreeItem) item).getBounds(event.index);
-					else
-						return;
-					float per = 100;
-					if (row instanceof ICardGroup) {
-						Float per1 = (Float) ((CardGroup) row).get(getPercentKey());
-						if (per1 == null)
-							per = Float.valueOf(0);
-						else
-							per = per1;
-					} else if (row instanceof MagicCard && ((MagicCard) row).getOwnCount() == 0) {
-						per = 0;
-					} else if (row instanceof MagicCardPhysical
-							&& (((MagicCardPhysical) row).getCount() == 0 || ((IMagicCardPhysical) row).isOwn() == false)) {
-						per = 0;
-					}
-					if (per > 0) {
-						int width = (int) (bounds.width * (per > 60 ? 60 : per) / 100);
-						event.gc.setBackground(barColor);
-						event.gc.setForeground(partColor);
-						event.gc.setAlpha(64);
-						event.gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width - width, bounds.height, false);
-						event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
-					} else {
-						event.gc.setBackground(missColor);
-						event.gc.setForeground(partColor);
-						event.gc.setAlpha(64);
-						event.gc.fillRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
-					}
-				}
-				break;
+	@Override
+	public void handlePaintEvent(Event event) {
+		if (event.index == this.columnIndex) {
+			Item item = (Item) event.item;
+			Object row = item.getData();
+			Rectangle bounds;
+			if (item instanceof TableItem)
+				bounds = ((TableItem) item).getBounds(event.index);
+			else if (item instanceof TreeItem)
+				bounds = ((TreeItem) item).getBounds(event.index);
+			else
+				return;
+			float per = 100;
+			if (row instanceof ICardGroup) {
+				Float per1 = (Float) ((CardGroup) row).get(getPercentKey());
+				if (per1 == null)
+					per = Float.valueOf(0);
+				else
+					per = per1;
+			} else if (row instanceof MagicCard && ((MagicCard) row).getOwnCount() == 0) {
+				per = 0;
+			} else if (row instanceof MagicCardPhysical
+					&& (((MagicCardPhysical) row).getCount() == 0 || ((IMagicCardPhysical) row).isOwn() == false)) {
+				per = 0;
+			}
+			if (per > 0) {
+				int width = (int) (bounds.width * (per > 60 ? 60 : per) / 100);
+				event.gc.setBackground(barColor);
+				event.gc.setForeground(partColor);
+				event.gc.setAlpha(64);
+				event.gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width - width, bounds.height, false);
+				event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
+			} else {
+				event.gc.setBackground(missColor);
+				event.gc.setForeground(partColor);
+				event.gc.setAlpha(64);
+				event.gc.fillRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 			}
 		}
 	}
