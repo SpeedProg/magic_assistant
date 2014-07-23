@@ -51,6 +51,10 @@
                name="aboutImage"
                value="splash.png">
          </property>
+         <property
+               name="cssTheme"
+               value="org.eclipse.e4.ui.css.theme.e4_classic">
+         </property>
       </product>
    </extension>
  <extension
@@ -107,4 +111,19 @@
     </initializer>
  </extension>
 
+<!--
+<extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <theme
+            basestylesheeturi="css/light.css"
+            id="com.reflexit.magiccards.light"
+            label="Magic Light">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark.css"
+            id="com.reflexit.magiccards.dark"
+            label="Magic Dark">
+      </theme>
+</extension>
+--> 
 </plugin>
