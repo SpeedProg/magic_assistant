@@ -1,13 +1,11 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.TreeItem;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -17,11 +15,6 @@ import com.reflexit.magiccards.ui.utils.SymbolConverter;
 public class CostColumn extends AbstractColumn implements Listener {
 	public CostColumn() {
 		super(MagicCardField.COST);
-	}
-
-	@Override
-	public String getText(Object element) {
-		return "     ";
 	}
 
 	@Override
@@ -37,45 +30,8 @@ public class CostColumn extends AbstractColumn implements Listener {
 	}
 
 	@Override
-	public void handlePaintEvent(Event event) {
-		if (event.index == this.columnIndex) { // cost
-			Item item = (Item) event.item;
-			Object row = item.getData();
-			int x = event.x;
-			int y = event.y;
-			String cost;
-			if (row instanceof IMagicCard) {
-				cost = ((IMagicCard) row).getCost();
-			} else
-				return;
-			String text = getActualText(row);
-			Rectangle bounds;
-			if (item instanceof TableItem)
-				bounds = ((TableItem) item).getBounds(event.index);
-			else if (item instanceof TreeItem)
-				bounds = ((TreeItem) item).getBounds(event.index);
-			else
-				return;
-			int tx = 0;
-			int ty = 0;
-			if (text != null) {
-				Point tw = event.gc.textExtent(text);
-				tx = bounds.width - tw.x - 1;
-				ty = tw.y;
-				if (tx < 0)
-					tx = 0;
-				event.gc.setClipping(x, y, tx, bounds.height);
-			}
-			int imageHeight = 12;
-			int yi = y + (Math.max(bounds.height - imageHeight, 2)) / 2;
-			Image costImage = SymbolConverter.buildCostImage(cost);
-			event.gc.drawImage(costImage, x + 2, yi);
-			if (text != null) {
-				int yt = y + bounds.height - 2 - ty;
-				event.gc.setClipping(x, yt, bounds.width, bounds.height);
-				event.gc.drawText(text, x + tx - 5, yt, true);
-			}
-		}
+	protected void handleEraseEvent(Event event) {
+		event.detail &= ~SWT.FOREGROUND;
 	}
 
 	@Override
@@ -83,9 +39,10 @@ public class CostColumn extends AbstractColumn implements Listener {
 		return MagicCardField.CMC;
 	}
 
-	private String getActualText(Object element) {
+	@Override
+	public String getText(Object element) {
 		if (element instanceof IMagicCard) { // cost
-			return ((IMagicCard) element).get(MagicCardField.CMC) + "";
+			return String.valueOf(((IMagicCard) element).get(MagicCardField.CMC));
 		}
 		return null;
 	}
@@ -93,5 +50,24 @@ public class CostColumn extends AbstractColumn implements Listener {
 	@Override
 	public int getColumnWidth() {
 		return 100;
+	}
+
+	@Override
+	public void handlePaintEvent(Event event) {
+		if (event.index == this.columnIndex) { // cost
+			Item item = (Item) event.item;
+			Object row = item.getData();
+			if (!(row instanceof IMagicCard))
+				return;
+			int x = event.x;
+			int y = event.y;
+			GC gc = event.gc;
+			String text = getText(row);
+			if (text != null)
+				gc.drawText(text, x + getBounds(event).width - gc.textExtent(text).x - 2, y + 1, true);
+			Image costImage = getActualImage(row);
+			if (costImage != null)
+				gc.drawImage(costImage, x, y + 1);
+		}
 	}
 }

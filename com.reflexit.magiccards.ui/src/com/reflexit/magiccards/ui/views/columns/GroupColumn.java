@@ -6,14 +6,11 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.TreeItem;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportUtils;
@@ -176,33 +173,30 @@ public class GroupColumn extends GenColumn implements Listener {
 	}
 
 	@Override
+	protected void handleEraseEvent(Event event) {
+		event.detail &= ~SWT.FOREGROUND;
+	}
+
+	@Override
 	public void handlePaintEvent(Event event) {
 		if (event.index == this.columnIndex) { // our column
 			Item item = (Item) event.item;
 			Object row = item.getData();
 			int x = event.x;
 			int y = event.y;
-			Rectangle bounds;
-			if (item instanceof TableItem)
-				bounds = ((TableItem) item).getBounds(event.index);
-			else if (item instanceof TreeItem)
-				bounds = ((TreeItem) item).getBounds(event.index);
-			else
-				return;
-			int imageWidth = 0;
+			Rectangle bounds = getBounds(event);
+			int w = bounds.width;
+			int h = bounds.height;
+			int leftMargin = 0;
 			Image image = getActualImage(row);
 			if (image != null) {
-				int imageHeight = 12;
-				imageWidth = 32;
-				int yi = y + (Math.max(bounds.height - imageHeight, 0)) / 2 - 1;
-				event.gc.drawImage(image, x, yi);
+				leftMargin = 32;
+				event.gc.drawImage(image, x, y + 1);
 			}
 			String text = getText(row);
 			if (text != null) {
-				Point tw = event.gc.textExtent(text);
-				int yt = y + bounds.height - 2 - tw.y;
-				event.gc.setClipping(x, y, bounds.width - 2, bounds.height);
-				event.gc.drawText(text, x + imageWidth + 3, yt, true);
+				event.gc.setClipping(x, y, w - 3, h);
+				event.gc.drawText(text, x + 3 + leftMargin, y + 1, true);
 			}
 		}
 	}

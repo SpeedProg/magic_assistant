@@ -5,7 +5,11 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICard;
@@ -129,16 +133,34 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	public void handleEvent(Event event) {
 		if (event.index == this.columnIndex) {
 			if (event.type == SWT.EraseItem) {
-				event.detail &= ~SWT.FOREGROUND;
+				handleEraseEvent(event);
 			} else if (event.type == SWT.MeasureItem) {
-				// measure
+				handleMeasureEvent(event);
 			} else if (event.type == SWT.PaintItem) {
 				handlePaintEvent(event);
 			}
 		}
 	}
 
+	protected void handleMeasureEvent(Event event) {
+		// do nothing
+	}
+
+	protected void handleEraseEvent(Event event) {
+		// do nothing
+	}
+
 	protected void handlePaintEvent(Event event) {
 		// do nothing
+	}
+
+	protected Rectangle getBounds(Event event) {
+		Item item = (Item) event.item;
+		Rectangle bounds = null;
+		if (item instanceof TableItem)
+			bounds = ((TableItem) item).getBounds(event.index);
+		else if (item instanceof TreeItem)
+			bounds = ((TreeItem) item).getBounds(event.index);
+		return bounds;
 	}
 }

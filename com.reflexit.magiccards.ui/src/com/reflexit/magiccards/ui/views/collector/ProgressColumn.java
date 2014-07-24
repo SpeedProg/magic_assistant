@@ -2,12 +2,11 @@ package com.reflexit.magiccards.ui.views.collector;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -108,13 +107,11 @@ public class ProgressColumn extends GenColumn implements Listener {
 		if (event.index == this.columnIndex) {
 			Item item = (Item) event.item;
 			Object row = item.getData();
-			Rectangle bounds;
-			if (item instanceof TableItem)
-				bounds = ((TableItem) item).getBounds(event.index);
-			else if (item instanceof TreeItem)
-				bounds = ((TreeItem) item).getBounds(event.index);
-			else
-				return;
+			int x = event.x;
+			int y = event.y;
+			Rectangle bounds = getBounds(event);
+			int w = bounds.width;
+			int h = bounds.height;
 			float per = 100;
 			if (row instanceof ICardGroup) {
 				Float per1 = (Float) ((CardGroup) row).get(getPercentKey());
@@ -128,18 +125,19 @@ public class ProgressColumn extends GenColumn implements Listener {
 					&& (((MagicCardPhysical) row).getCount() == 0 || ((IMagicCardPhysical) row).isOwn() == false)) {
 				per = 0;
 			}
+			GC gc = event.gc;
 			if (per > 0) {
-				int width = (int) (bounds.width * (per > 60 ? 60 : per) / 100);
-				event.gc.setBackground(barColor);
-				event.gc.setForeground(partColor);
-				event.gc.setAlpha(64);
-				event.gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width - width, bounds.height, false);
-				event.gc.fillRectangle(bounds.x + bounds.width - width, bounds.y, width, bounds.height);
+				int width = (int) (w * (per > 60 ? 60 : per) / 100);
+				gc.setBackground(barColor);
+				gc.setForeground(partColor);
+				gc.setAlpha(64);
+				gc.fillGradientRectangle(x, y, w - width, h, false);
+				gc.fillRectangle(x + w - width, y, width, h);
 			} else {
-				event.gc.setBackground(missColor);
-				event.gc.setForeground(partColor);
-				event.gc.setAlpha(64);
-				event.gc.fillRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
+				gc.setBackground(missColor);
+				gc.setForeground(partColor);
+				gc.setAlpha(64);
+				gc.fillRectangle(x, y, w, h);
 			}
 		}
 	}
