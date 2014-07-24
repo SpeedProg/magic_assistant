@@ -23,6 +23,7 @@ public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 	protected IFilteredCardStore<T> store;
 	protected Location location;
 
+	@Override
 	public void init(OutputStream st, boolean header, IFilteredCardStore<T> filteredLibrary) {
 		try {
 			this.stream = new PrintStream(st, true, FileUtils.UTF8);
@@ -100,14 +101,17 @@ public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 		return "deck";
 	}
 
+	@Override
 	public boolean isColumnChoiceSupported() {
 		return true;
 	}
 
+	@Override
 	public boolean isMultipleLocationSupported() {
 		return true;
 	}
 
+	@Override
 	public boolean isSideboardSupported() {
 		return true;
 	}

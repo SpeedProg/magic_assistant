@@ -116,5 +116,12 @@
              importDelegate="com.reflexit.magiccards.core.exports.ScsvImportDelegate"
              label="Magic Assistant CSV Semicolon">
        </deckFormat>
+       <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.PrintProxyHtmlExportDelegate"
+             extension="html"
+             id="htmlProxy"
+             label="Print Proxy HTML"
+             xmlFormat="true">
+       </deckFormat>
    </extension>
 </plugin>

@@ -28,8 +28,8 @@ import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
- * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no
- * physical media
+ * Class that implements IFilteredCardStore, it is only contains filtered
+ * filteredList and no physical media
  * 
  * @author Alena
  * 
@@ -41,6 +41,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	protected boolean initialized = false;
 	protected MagicCardFilter filter = new MagicCardFilter();
 
+	@Override
 	public MagicCardFilter getFilter() {
 		return filter;
 	}
@@ -50,11 +51,13 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	 * 
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getSize()
 	 */
+	@Override
 	public int getSize() {
 		initialize();
 		return getFilteredList().size();
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 		return getFilteredList().iterator();
 	}
@@ -96,6 +99,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	/**
 	 * Count of the cards in the filtered list
 	 */
+	@Override
 	public int getCount() {
 		int count = 0;
 		synchronized (this) {
@@ -110,6 +114,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 	}
 
+	@Override
 	public boolean contains(T card) {
 		synchronized (this) {
 			for (T element : this) {
@@ -128,11 +133,13 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		getFilteredList().remove(card);
 	}
 
+	@Override
 	public Object[] getElements() {
 		initialize();
 		return getFilteredList().toArray();
 	}
 
+	@Override
 	public Object getElement(int index) {
 		return getCard(index);
 	}
@@ -147,6 +154,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return this.filteredList;
 	}
 
+	@Override
 	public synchronized void update() {
 		String key = "udpate " + getClass().getSimpleName();
 		MagicLogger.traceStart(key);
@@ -160,9 +168,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		MagicLogger.traceEnd(key);
 	}
 
-	private Collection<IMagicCard> filterCards() throws MagicException {
-		Collection<IMagicCard> filteredList = sortCards(filter);
-		groupCards(filter, filteredList);
+	private Collection<T> filterCards() throws MagicException {
+		Collection<T> filteredList = sortCards(filter);
+		groupCards(filter, (Collection<IMagicCard>) filteredList);
 		return filteredList;
 	}
 
@@ -221,14 +229,14 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		rootGroup.removeEmptyChildren();
 	}
 
-	protected Collection<IMagicCard> sortCards(MagicCardFilter filter) {
+	protected Collection<T> sortCards(MagicCardFilter filter) {
 		String key = "sort" + hashCode();
 		MagicLogger.traceStart(key);
-		Collection<IMagicCard> filteredList;
+		Collection<T> filteredList;
 		if (filter.getSortOrder().isEmpty()) {
-			filteredList = new ArrayList<IMagicCard>();
-			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
-				IMagicCard elem = iterator.next();
+			filteredList = new ArrayList<T>();
+			for (Iterator<T> iterator = getCardStore().iterator(); iterator.hasNext();) {
+				T elem = iterator.next();
 				if (!filter.isFiltered(elem)) {
 					filteredList.add(elem);
 				}
@@ -238,9 +246,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			}
 		} else {
 			Comparator<ICard> comp = getSortComparator(filter);
-			filteredList = new TreeSet<IMagicCard>(comp);
-			for (Iterator<IMagicCard> iterator = getCardStore().iterator(); iterator.hasNext();) {
-				IMagicCard elem = iterator.next();
+			filteredList = new TreeSet(comp);
+			for (Iterator<T> iterator = getCardStore().iterator(); iterator.hasNext();) {
+				T elem = iterator.next();
 				if (!filter.isFiltered(elem)) {
 					filteredList.add(elem);
 				}
@@ -256,9 +264,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return filteredList;
 	}
 
-	protected Collection<IMagicCard> removeSetDuplicates(Collection<IMagicCard> filteredList) {
+	protected Collection<T> removeSetDuplicates(Collection<T> filteredList) {
 		LinkedHashMap<String, IMagicCard> unique = new LinkedHashMap<String, IMagicCard>();
-		for (Iterator<IMagicCard> iterator = filteredList.iterator(); iterator.hasNext();) {
+		for (Iterator<IMagicCard> iterator = (Iterator<IMagicCard>) filteredList.iterator(); iterator.hasNext();) {
 			IMagicCard elem = iterator.next();
 			if (elem instanceof MagicCard) {
 				MagicCard card = (MagicCard) elem;
@@ -281,7 +289,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			}
 		}
 		if (unique.size() > 0)
-			return unique.values();
+			return (Collection<T>) unique.values();
 		return filteredList;
 	}
 
@@ -319,10 +327,12 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return new ArrayList<T>();
 	}
 
+	@Override
 	public synchronized ICardGroup getCardGroupRoot() {
 		return rootGroup;
 	}
 
+	@Override
 	public Location getLocation() {
 		Expr root = getFilter().getRoot();
 		Location loc = findLocationFilter(root);
@@ -347,6 +357,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return null;
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		throw new UnsupportedOperationException();
 	}
@@ -361,16 +372,19 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return filteredList.toString();
 	}
 
+	@Override
 	public void clear() {
 		filteredList.clear();
 	}
 
+	@Override
 	public void addAll(ICardStore<T> store) {
 		for (T object : store) {
 			addFilteredCard(object);
 		}
 	}
 
+	@Override
 	public int getUniqueCount() {
 		return filteredList.size();
 	}

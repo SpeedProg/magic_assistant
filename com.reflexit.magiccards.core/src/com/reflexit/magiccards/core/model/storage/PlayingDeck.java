@@ -29,7 +29,7 @@ import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
  * @author Alena
  * 
  */
-public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
+public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	ICardStore<IMagicCard> original;
 	final MemoryCardStore<MagicCardGame> store;
 	private int turn;
@@ -206,8 +206,8 @@ public class PlayingDeck extends AbstractFilteredCardStore<IMagicCard> {
 	}
 
 	@Override
-	public void addAll(ICardStore<IMagicCard> store) {
-		setStore(store);
+	public void addAll(ICardStore<MagicCardGame> store) {
+		throw new UnsupportedOperationException();
 	}
 
 	public void toZone(List<IMagicCard> cardSelection, Zone zone) {

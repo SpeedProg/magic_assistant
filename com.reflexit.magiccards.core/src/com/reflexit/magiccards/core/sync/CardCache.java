@@ -207,13 +207,24 @@ public class CardCache {
 		}
 	}
 
+	public static URL getImageURL(IMagicCard card) throws MalformedURLException {
+		String path = CardCache.createLocalImageFilePath(card);
+		File file = new File(path);
+		if (file.exists()) {
+			return file.toURI().toURL();
+		}
+		URL url = createRemoteImageURL(card);
+		return url;
+	}
+
 	/**
-	 * Get card image or schedule a loading job if image not found. This image is not managed - to
-	 * be disposed by called. To get notified when job is done loading, can wait on card object
+	 * Get card image or schedule a loading job if image not found. This image
+	 * is not managed - to be disposed by called. To get notified when job is
+	 * done loading, can wait on card object
 	 * 
 	 * @param card
-	 * @return true if card image exists, schedule update otherwise. If loading is disabled and
-	 *         there is no cached image through an exception
+	 * @return true if card image exists, schedule update otherwise. If loading
+	 *         is disabled and there is no cached image through an exception
 	 * @throws IOException
 	 */
 	public static boolean loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {

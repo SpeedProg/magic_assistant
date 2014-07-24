@@ -12,7 +12,7 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 
 	public MagicCardFilter getFilter();
 
-	public ICardStore getCardStore();
+	public ICardStore<T> getCardStore();
 
 	/**
 	 * Size of filtered list
@@ -28,6 +28,7 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	 */
 	public Object[] getElements();
 
+	@Override
 	public Iterator<T> iterator();
 
 	/**
@@ -39,7 +40,8 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	public Object getElement(int index);
 
 	/**
-	 * return top level cards group if grouping is enabled or null if not enabled
+	 * return top level cards group if grouping is enabled or null if not
+	 * enabled
 	 * 
 	 * @return
 	 */
