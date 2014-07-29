@@ -76,11 +76,10 @@ public class PrintProxyHtmlExportDelegate extends AbstractExportDelegate<IMagicC
 
 	public void body(MyXMLStreamWriter w) throws XMLStreamException {
 		// list
-		list(w, getCardStore());
+		list(w, store);
 	}
 
 	private void list(MyXMLStreamWriter w, Iterable<IMagicCard> flat) throws XMLStreamException {
-
 		w.startEl("div", "style", "font-size:0px;");
 		for (IMagicCard card : flat) {
 			w.nl();

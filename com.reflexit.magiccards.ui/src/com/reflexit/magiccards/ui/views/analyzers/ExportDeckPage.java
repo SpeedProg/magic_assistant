@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineContributionItem;
@@ -57,6 +59,7 @@ import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.IMagicControl;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
@@ -74,6 +77,9 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private boolean includeSideboard = true;
 	private boolean includeHeader = true;
 	private Action actionShowPrefs;
+	private MenuManager menuSort;
+	private Action actionUnsort;
+	private MagicCardFilter filter;
 
 	class ComboContributionItem extends ControlContribution {
 		private Combo control;
@@ -184,6 +190,12 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	@Override
+	public void fillLocalPullDown(IMenuManager manager) {
+		super.fillLocalPullDown(manager);
+		manager.add(menuSort);
+	}
+
+	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(this.sideboard);
 		// manager.add(this.header);
@@ -222,10 +234,38 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 				if (id != null) {
 					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getArea().getShell(), id, new String[] { id }, null);
 					dialog.open();
-					activate();
+					reloadData();
 				}
 			}
 		};
+		this.actionUnsort = new Action("Unsort") {
+			@Override
+			public void run() {
+				filter.setNoSort();
+				reloadData();
+			}
+
+			@Override
+			public String getToolTipText() {
+				return "Remove current sorting order";
+			}
+		};
+		this.menuSort = new MenuManager("Sort By");
+		this.menuSort.add(actionUnsort);
+		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
+		Collection<AbstractColumn> columns = magicColumnCollection.getColumns();
+		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
+			final AbstractColumn man = iterator.next();
+			String name = man.getColumnFullName();
+			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
+				@Override
+				public void run() {
+					filter.setSortField(man.getSortField(), isChecked());
+					reloadData();
+				}
+			};
+			this.menuSort.add(ac);
+		}
 	}
 
 	protected boolean isInludeSideboard() {
@@ -239,7 +279,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			sideboard.setToolTipText("Include sideboard");
 		else
 			sideboard.setToolTipText("Do not include sideboard");
-		activate();
+		reloadData();
 	}
 
 	protected boolean isInludeHeader() {
@@ -249,7 +289,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	public void triggerHeader(boolean mode) {
 		includeHeader = mode;
 		header.setChecked(mode);
-		activate();
+		reloadData();
 	}
 
 	@Override
@@ -259,6 +299,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 
 	@Override
 	public void activate() {
+		setFStore();
 		textResult = null;
 		setTopControl();
 		super.activate();
@@ -280,38 +321,43 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	@Override
-	public void setFilteredStore(IFilteredCardStore fstore) {
-		super.setFilteredStore(fstore);
-		setFStore();
+	public void setFilteredStore(IFilteredCardStore parentfstore) {
+		super.setFilteredStore(parentfstore);
+		if (fstore == null) {
+			fstore = new MemoryFilteredCardStore<IMagicCard>();
+			filter = this.fstore.getFilter();
+		}
+		if (parentfstore != null)
+			filter.setSortOrder(parentfstore.getFilter().getSortOrder());
 	}
 
 	public void setFStore() {
-		if (getCardStore() == null)
+		if (getCardStore() == null || fstore == null)
 			return;
-		MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
 		Location loc = store.getLocation();
-		MagicCardFilter filter = (MagicCardFilter) view.getFilter().clone();
+		fstore.clear();
+		// filter = (MagicCardFilter) view.getFilter().clone();
 		if (includeSideboard) {
 			ICardStore mainStore = DataManager.getCardStore(loc.toMainDeck());
-			if (mainStore == null)
-				mainStore = getCardStore();
+			// if (mainStore == null)
+			// mainStore = getCardStore();
 			ICardStore sideStore = DataManager.getCardStore(loc.toSideboard());
-			mstore.addAll(mainStore);
+			if (mainStore != null)
+				fstore.addAll(mainStore);
 			if (sideStore != null)
-				mstore.addAll(sideStore);
-			mstore.setLocation(loc.toMainDeck());
+				fstore.addAll(sideStore);
+			fstore.setLocation(loc.toMainDeck());
 			filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
 		} else {
 			ICardStore mainStore = DataManager.getCardStore(loc);
-			mstore.addAll(mainStore);
-			mstore.setLocation(loc);
+			fstore.addAll(mainStore);
+			fstore.setLocation(loc);
 		}
-		mstore.update(filter);
-		this.fstore = mstore;
+		fstore.update();
 	}
 
 	private String getText() throws InvocationTargetException, InterruptedException {
-		setFStore();
+		// setFStore();
 		if (fstore == null)
 			return "";
 		ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
@@ -404,7 +450,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			actionShowPrefs.setEnabled(delegate.isColumnChoiceSupported());
 			sideboard.setEnabled(delegate.isMultipleLocationSupported());
 		}
-		activate();
+		reloadData();
 	}
 
 	@Override
@@ -439,7 +485,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 
 	@Override
 	public void reloadData() {
-		// TODO Auto-generated method stub
+		activate();
 	}
 
 	@Override

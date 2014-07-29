@@ -41,6 +41,7 @@ public class AbstractDeckPage implements IDeckPage {
 	protected ICardStore store;
 	private Composite area;
 
+	@Override
 	public Composite createContents(Composite parent) {
 		area = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -50,6 +51,7 @@ public class AbstractDeckPage implements IDeckPage {
 		return area;
 	}
 
+	@Override
 	public Control getControl() {
 		return getArea();
 	}
@@ -77,10 +79,12 @@ public class AbstractDeckPage implements IDeckPage {
 		return null;
 	}
 
+	@Override
 	public void setDeckView(DeckView view) {
 		this.view = view;
 	}
 
+	@Override
 	public void activate() {
 		// toolbar
 		IActionBars bars = view.getViewSite().getActionBars();
@@ -99,8 +103,6 @@ public class AbstractDeckPage implements IDeckPage {
 		// selection provider
 		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
 		getCardStore();
-		if (store == null)
-			return;
 	}
 
 	public ISelectionProvider getSelectionProvider() {
@@ -118,6 +120,7 @@ public class AbstractDeckPage implements IDeckPage {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager);
 			}
@@ -146,6 +149,7 @@ public class AbstractDeckPage implements IDeckPage {
 		// override if need toolbar
 	}
 
+	@Override
 	public void setFilteredStore(IFilteredCardStore store) {
 		this.store = store.getCardStore();
 	}

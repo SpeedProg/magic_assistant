@@ -770,4 +770,10 @@ public class MagicCardFilter implements Cloneable {
 		else
 			groupFields = Arrays.copyOf(fields, fields.length);
 	}
+
+	public void setSortOrder(SortOrder sortOrder) {
+		if (sortOrder == null)
+			throw new NullPointerException();
+		this.sortOrder = sortOrder;
+	}
 }
