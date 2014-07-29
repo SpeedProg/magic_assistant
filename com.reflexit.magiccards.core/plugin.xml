@@ -34,6 +34,13 @@
             label="Magic Assistant CSV">
       </deckFormat>
       <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.ScsvExportDelegate"
+             extension="csv"
+             id="scsv"
+             importDelegate="com.reflexit.magiccards.core.exports.ScsvImportDelegate"
+             label="Magic Assistant CSV Semicolon">
+       </deckFormat>
+      <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.TableExportDelegate"
             id="table"
             importDelegate="com.reflexit.magiccards.core.exports.TableImportDelegate"
@@ -102,6 +109,13 @@
             label="MTG Studio CSV"
             xmlFormat="false">
       </deckFormat>
+      <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.PrintProxyHtmlExportDelegate"
+             extension="html"
+             id="htmlProxy"
+             label="Print Proxies HTML"
+             xmlFormat="true">
+       </deckFormat>
        <deckFormat
              exportDelegate="com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate"
              extension="html"
@@ -109,19 +123,7 @@
              label="Wizards deck HTML"
              xmlFormat="true">
        </deckFormat>
-       <deckFormat
-             exportDelegate="com.reflexit.magiccards.core.exports.ScsvExportDelegate"
-             extension="csv"
-             id="scsv"
-             importDelegate="com.reflexit.magiccards.core.exports.ScsvImportDelegate"
-             label="Magic Assistant CSV Semicolon">
-       </deckFormat>
-       <deckFormat
-             exportDelegate="com.reflexit.magiccards.core.exports.PrintProxyHtmlExportDelegate"
-             extension="html"
-             id="htmlProxy"
-             label="Print Proxy HTML"
-             xmlFormat="true">
-       </deckFormat>
+
+
    </extension>
 </plugin>
