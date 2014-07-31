@@ -213,7 +213,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
-		this.load = new ImageAction("Load Legality", "icons/clcl16/web_sync.gif", IAction.AS_PUSH_BUTTON) {
+		this.load = new ImageAction("Load Legality", "icons/clcl16/software_update.png", IAction.AS_PUSH_BUTTON) {
 			@Override
 			public void run() {
 				performUpdate();

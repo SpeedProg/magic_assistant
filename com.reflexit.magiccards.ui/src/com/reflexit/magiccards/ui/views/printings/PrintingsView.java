@@ -129,7 +129,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		};
 		this.sync = new Action("Update printings from web", SWT.NONE) {
 			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/web_sync.gif"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/software_update.png"));
 			}
 
 			@Override
@@ -209,6 +209,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		}
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		if (part instanceof AbstractCardsView && part != this && !sel.isEmpty())
 			runLoadJob(sel);

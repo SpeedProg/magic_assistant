@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.card;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -37,6 +39,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
@@ -48,6 +52,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
+import com.reflexit.magiccards.core.sync.ParseGathererDetails;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -65,6 +70,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private Action sync;
 	private Action actionAsScanned;
 	private boolean asScanned;
+	private Action open;
 
 	public class LoadCardJob extends Job {
 		private IMagicCard card;
@@ -319,6 +325,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(open);
 		manager.add(actionAsScanned);
 		manager.add(sync);
 	}
@@ -331,7 +338,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	void makeActions() {
 		this.sync = new Action("Update card info from web", SWT.NONE) {
 			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/web_sync.gif"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/software_update.png"));
 			}
 
 			@Override
@@ -352,6 +359,28 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				loadCardImage(new NullProgressMonitor(), panel.getCard(), false);
 			}
 		};
+		this.open = new Action("Open card in browser", SWT.NONE) {
+			{
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/forward_2.png"));
+			}
+
+			@Override
+			public void run() {
+				try {
+					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+					IWebBrowser browser = browserSupport.createBrowser(MagicUIActivator.PLUGIN_ID);
+					browser.openURL(new URL(getUrl()));
+				} catch (Exception e) {
+					MessageDialog.openError(getControl().getShell(), "Error", "Well that kind of failed... " + e.getMessage());
+					MagicUIActivator.log(e);
+				}
+			}
+		};
+	}
+
+	protected String getUrl() {
+		int gathererId = panel.getCard().getGathererId();
+		return ParseGathererDetails.DETAILS_QUERY_URL_BASE + gathererId;
 	}
 
 	private void revealCurrentSelection() {

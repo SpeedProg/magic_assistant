@@ -36,7 +36,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  * Retrieve legality info
  */
 public class ParseGathererDetails extends ParseGathererPage {
-	private static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Details.aspx?multiverseid=";
+	public static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Details.aspx?multiverseid=";
 	private IMagicCard card;
 	private Set<ICardField> fieldMapFilter;
 	private ICardStore magicDb;

@@ -1,3 +1,7 @@
+changes in 1.4.0.1
+* Added Print Proxies exporter
+* Added ability to sort on export page
+* Added action to open card info in browser from card navigator view
 changes in 1.3.1.15
 * Fixed TCGPlayer API's
 changes in 1.3.1.14
