@@ -7,12 +7,25 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererBasicInfoTest extends TestCase {
 	private ParseGathererBasicInfo parser;
+	private ICardStore magicDb;
+
+	protected MagicCard load(int id) throws IOException {
+		MagicCard card = new MagicCard();
+		card.setCardId(id);
+		parser.setCard(card);
+		parser.setMagicDb(magicDb);
+		parser.load(ICoreProgressMonitor.NONE);
+		return card;
+	}
 
 	@Override
 	protected void setUp() {
@@ -52,5 +65,14 @@ public class ParseGathererBasicInfoTest extends TestCase {
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("149b", card.getCollNumber());
 		assertEquals("Wildblood Pack", card.getName());
+	}
+
+	public void testDoubleCards() throws IOException {
+		magicDb = new MemoryCardStore<IMagicCard>();
+		MagicCard card = load(247159);
+		assertEquals("198a", card.getCollNumber());
+		assertEquals(198, card.getCollectorNumberId());
+		assertEquals("Fire", card.getName());
+		System.err.println(magicDb);
 	}
 }

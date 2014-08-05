@@ -34,6 +34,10 @@ public class WebUtils {
 					if (WebUtils.isWorkOffline())
 						throw new MagicException("Online updates are disabled");
 					HttpURLConnection huc = (HttpURLConnection) openConnection;
+					huc.setRequestProperty("Accept-Charset", FileUtils.UTF8);
+					huc.setRequestProperty("Accept-Language", "en_US");
+					// huc.setRequestProperty("User-Agent",
+					// "Mozilla/5.0 (Windows NT 5.1; rv:19.0; en_US) Gecko/20100101 Firefox/19.0");
 					huc.setConnectTimeout(60 * 1000);
 					huc.setReadTimeout(60 * 1000);
 					huc.connect();

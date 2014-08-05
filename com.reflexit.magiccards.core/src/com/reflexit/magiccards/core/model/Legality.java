@@ -27,9 +27,9 @@ public enum Legality {
 			if (leg.ext.equals(x))
 				return leg;
 		}
-		if (x.equals("*"))
+		if (x.equals("*") || x.isEmpty())
 			return UNKNOWN;
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("Unknown legality extension: " + x);
 	}
 
 	public String getLabel() {

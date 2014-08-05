@@ -1,15 +1,21 @@
 package com.reflexit.magiccards.core.sync;
 
+import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererDetailsTest extends TestCase {
 	private ParseGathererDetails parser;
+	private ICardStore magicDb;
 
 	@Override
 	protected void setUp() {
@@ -17,25 +23,24 @@ public class ParseGathererDetailsTest extends TestCase {
 	}
 
 	protected MagicCard load(int id) throws IOException {
+		MagicCard card = prep(id);
+		parser.load(ICoreProgressMonitor.NONE);
+		return card;
+	}
+
+	private MagicCard prep(int id) {
 		MagicCard card = new MagicCard();
 		card.setCardId(id);
 		parser.setCard(card);
-		parser.load(ICoreProgressMonitor.NONE);
+		parser.setMagicDb(magicDb);
 		return card;
 	}
 
 	protected MagicCard load(int id, String name) throws IOException {
-		MagicCard card = new MagicCard();
-		card.setCardId(id);
+		MagicCard card = prep(id);
 		card.setName(name);
-		parser.setCard(card);
 		parser.load(ICoreProgressMonitor.NONE);
 		return card;
-	}
-
-	public void testCollNumber() throws IOException {
-		MagicCard card = load(191338);
-		assertEquals(220, Integer.parseInt(card.getCollNumber()));
 	}
 
 	public void testInnistradSide2() throws IOException {
@@ -70,6 +75,18 @@ public class ParseGathererDetailsTest extends TestCase {
 		assertEquals("Dead", card.getName());
 	}
 
+	public void testDoubleCards() throws IOException {
+		magicDb = new MemoryCardStore<IMagicCard>();
+		MagicCard card = prep(247159);
+		card.setSet("Magic: The Gathering-Commander");
+		parser.load(ICoreProgressMonitor.NONE);
+		assertEquals("Fire", card.getName());
+		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
+		assertEquals("198a", card.getCollNumber());
+		assertEquals(198, card.getCollectorNumberId());
+		System.err.println(magicDb);
+	}
+
 	public void testSlashR() throws IOException {
 		MagicCard card = load(366280);
 		Object rating = card.get(MagicCardField.RATING);
@@ -84,5 +101,10 @@ public class ParseGathererDetailsTest extends TestCase {
 		assertEquals("Gut Shot", card.getName());
 		assertEquals("<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gut Shot deals 1 damage to target creature or player.",
 				card.getText());
+	}
+
+	public void testCollNumber() throws IOException {
+		MagicCard card = load(191338);
+		assertEquals(220, Integer.parseInt(card.getCollNumber()));
 	}
 }

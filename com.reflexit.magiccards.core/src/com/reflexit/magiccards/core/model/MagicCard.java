@@ -607,20 +607,22 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		return properties;
 	}
 
-	public void setProperties(String list) {
+	public void setProperties(String list1) {
+		String list = list1;
 		if (list == null || list.length() == 0)
 			properties = null;
 		else {
 			if (!list.startsWith("{"))
 				throw new IllegalArgumentException();
 			list = list.substring(1, list.length() - 1);
-			String[] split = list.split(",");
+			String[] split = list.split(" *, *");
 			for (int i = 0; i < split.length; i++) {
 				String pair = split[i];
 				String[] split2 = pair.split("=");
-				if (split2.length < 2)
-					continue;
-				setProperty(split2[0], split2[1]);
+				if (split2.length == 1)
+					setProperty(split2[0], "");
+				else if (split2.length == 2)
+					setProperty(split2[0], split2[1]);
 			}
 		}
 	}
