@@ -14,8 +14,8 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererBasicInfoTest extends TestCase {
-	private ParseGathererBasicInfo parser;
+public class ParseGathererPrintedTest extends TestCase {
+	private ParseGathererPrinted parser;
 	private ICardStore magicDb;
 
 	protected MagicCard load(int id) throws IOException {
@@ -29,7 +29,7 @@ public class ParseGathererBasicInfoTest extends TestCase {
 
 	@Override
 	protected void setUp() {
-		parser = new ParseGathererBasicInfo();
+		parser = new ParseGathererPrinted();
 		Set<ICardField> filter = new HashSet<ICardField>();
 		filter.add(MagicCardField.NAME);
 		filter.add(MagicCardField.TYPE);

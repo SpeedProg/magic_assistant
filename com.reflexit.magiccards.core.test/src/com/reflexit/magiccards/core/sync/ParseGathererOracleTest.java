@@ -13,13 +13,13 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public class ParseGathererDetailsTest extends TestCase {
-	private ParseGathererDetails parser;
+public class ParseGathererOracleTest extends TestCase {
+	private ParseGathererOracle parser;
 	private ICardStore magicDb;
 
 	@Override
 	protected void setUp() {
-		parser = new ParseGathererDetails();
+		parser = new ParseGathererOracle();
 	}
 
 	protected MagicCard load(int id) throws IOException {
@@ -82,8 +82,20 @@ public class ParseGathererDetailsTest extends TestCase {
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("Fire", card.getName());
 		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
-		assertEquals("198a", card.getCollNumber());
+		// assertEquals("198a", card.getCollNumber());
 		assertEquals(198, card.getCollectorNumberId());
+		System.err.println(magicDb);
+	}
+
+	public void testFlipCards() throws IOException {
+		magicDb = new MemoryCardStore<IMagicCard>();
+		MagicCard card = prep(74671);
+		// card.setSet("Magic: The Gathering-Commander");
+		parser.load(ICoreProgressMonitor.NONE);
+		assertEquals("Cunning Bandit", card.getName());
+		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
+		assertEquals(99, card.getCollectorNumberId());
+		assertEquals("99a", card.getCollNumber());
 		System.err.println(magicDb);
 	}
 
