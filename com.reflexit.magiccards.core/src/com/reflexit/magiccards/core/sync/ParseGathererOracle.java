@@ -35,7 +35,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * Retrieve legality info
  */
-public class ParseGathererDetails extends ParseGathererPage {
+public class ParseGathererOracle extends AbstractParseGathererPage {
 	public static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Details.aspx?multiverseid=";
 	private IMagicCard card;
 	private Set<ICardField> fieldMapFilter;
@@ -371,7 +371,7 @@ public class ParseGathererDetails extends ParseGathererPage {
 		MagicCard card = new MagicCard();
 		card.setCardId(227415);
 		// card.setCardId(191338);
-		ParseGathererDetails parser = new ParseGathererDetails();
+		ParseGathererOracle parser = new ParseGathererOracle();
 		parser.setCard(card);
 		parser.load(ICoreProgressMonitor.NONE);
 		System.err.println(card.getArtist() + " " + card.getCommunityRating() + " " + card.getCollNumber());

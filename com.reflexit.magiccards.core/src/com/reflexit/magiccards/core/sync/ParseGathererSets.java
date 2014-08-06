@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * Retrieve legality info
  */
-public class ParseGathererSets extends ParseGathererPage {
+public class ParseGathererSets extends AbstractParseGathererPage {
 	private static final String SET_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Default.aspx";
 	/*-
 	                <b>

@@ -13,7 +13,8 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
-public abstract class ParseGathererPage {
+
+public abstract class AbstractParseGathererPage {
 	public static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
 	public static Charset UTF_8 = Charset.forName("utf-8");
 	private String title = "Loading gatherer info...";
@@ -66,7 +67,7 @@ public abstract class ParseGathererPage {
 
 	protected abstract String getUrl();
 
-	public ParseGathererPage() {
+	public AbstractParseGathererPage() {
 		super();
 	}
 

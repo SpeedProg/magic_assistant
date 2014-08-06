@@ -46,10 +46,10 @@ public class UpdateCardsFromWeb {
 			ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading additional info...", size * 150 + 10);
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
-		ParseGathererDetails oracleParser = new ParseGathererDetails();
+		ParseGathererOracle oracleParser = new ParseGathererOracle();
 		oracleParser.setMagicDb(magicDb);
-		ParseGathererBasicInfo linfoParser = new ParseGathererBasicInfo();
-		ParseGathererBasicInfo printedParser = new ParseGathererBasicInfo();
+		ParseGathererPrinted linfoParser = new ParseGathererPrinted();
+		ParseGathererPrinted printedParser = new ParseGathererPrinted();
 		ParseGathererCardLanguages langParser = new ParseGathererCardLanguages();
 		ParseGathererLegality legParser = new ParseGathererLegality();
 		langParser.setLanguage(lang);
@@ -216,7 +216,7 @@ public class UpdateCardsFromWeb {
 				MagicCard c = iterator.next();
 				if (c.getCollNumber().equals("x")) {
 					pm2.subTask(c.toString() + " (" + i + " of " + n + ")");
-					new ParseGathererDetails().updateCard(c, fieldMap, ICoreProgressMonitor.NONE);
+					new ParseGathererOracle().updateCard(c, fieldMap, ICoreProgressMonitor.NONE);
 				}
 				handler2.handleCard(c);
 				pm2.worked(1);

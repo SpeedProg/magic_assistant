@@ -151,7 +151,7 @@ public class ParserHtmlHelper {
 	}
 
 	public static URL createImageDetailURL(int cardId) throws MalformedURLException {
-		return new URL(ParseGathererDetails.DETAILS_QUERY_URL_BASE + cardId);
+		return new URL(ParseGathererOracle.DETAILS_QUERY_URL_BASE + cardId);
 	}
 
 	public static URL createSetImageURL(String editionAbbr, String rarity) {

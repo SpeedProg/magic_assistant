@@ -52,7 +52,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
-import com.reflexit.magiccards.core.sync.ParseGathererDetails;
+import com.reflexit.magiccards.core.sync.ParseGathererOracle;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -380,7 +380,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	protected String getUrl() {
 		int gathererId = panel.getCard().getGathererId();
-		return ParseGathererDetails.DETAILS_QUERY_URL_BASE + gathererId;
+		return ParseGathererOracle.DETAILS_QUERY_URL_BASE + gathererId;
 	}
 
 	private void revealCurrentSelection() {

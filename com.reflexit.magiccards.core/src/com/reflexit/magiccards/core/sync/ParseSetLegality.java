@@ -14,7 +14,7 @@ import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
-public class ParseSetLegality extends ParseGathererPage {
+public class ParseSetLegality extends AbstractParseGathererPage {
 	private Pattern setPattern = Pattern.compile("<li>\\s*<i>(.+?)</i>");
 	private Format format;
 

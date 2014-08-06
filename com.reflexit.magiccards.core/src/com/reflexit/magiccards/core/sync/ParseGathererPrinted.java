@@ -20,8 +20,8 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * Retrieve legality info
  */
-public class ParseGathererBasicInfo extends ParseGathererDetails {
-	public ParseGathererBasicInfo() {
+public class ParseGathererPrinted extends ParseGathererOracle {
+	public ParseGathererPrinted() {
 		// Set<ICardField> filter = new HashSet<ICardField>();
 		// filter.add(MagicCardField.NAME);
 		// filter.add(MagicCardField.TYPE);
@@ -43,7 +43,7 @@ public class ParseGathererBasicInfo extends ParseGathererDetails {
 		MagicCard card = new MagicCard();
 		card.setCardId(172550);
 		// card.setCardId(191338);
-		ParseGathererBasicInfo parser = new ParseGathererBasicInfo();
+		ParseGathererPrinted parser = new ParseGathererPrinted();
 		parser.setCard(card);
 		parser.load(ICoreProgressMonitor.NONE);
 		System.out.println(card.getName());
