@@ -65,4 +65,9 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 	public void clear() {
 		getList().clear();
 	}
+
+	@Override
+	public String toString() {
+		return getStorage().toString();
+	}
 }

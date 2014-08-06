@@ -117,4 +117,9 @@ public class MemoryCardStorage<T> extends AbstractStorage<T> {
 	public boolean isVirtual() {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return list.toString();
+	}
 }

@@ -1,29 +1,36 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
 import com.reflexit.magiccards.core.xml.MyXMLStreamWriter;
 import com.reflexit.magiccards.core.xml.XMLStreamException;
 
 public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
-	public static final String CARD_URI = "card://";
-	public static final String CARDID = "cardId=";
+	public static final String CARD_URI = "http://";
+	public static final String CARDID = "multiverseid=";
 
 	@Override
 	public void export(ICoreProgressMonitor monitor) throws InvocationTargetException {
 		monitor.beginTask("Exporting " + getName(), 100);
 		try {
 			if (store.getCardStore().size() > 0) {
-				IMagicCard card = (IMagicCard) store.getCardStore().iterator().next();
+				IMagicCard card = store.getCardStore().iterator().next();
 				if (card instanceof ILocatable) {
 					location = ((ILocatable) card).getLocation();
 					if (location != null)
@@ -42,6 +49,11 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		}
 	}
 
+	@Override
+	public String getName() {
+		return getMainCardStore().getName();
+	}
+
 	private void writeHtml(MyXMLStreamWriter w) throws XMLStreamException {
 		/*-
 		 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -56,7 +68,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		w.writeDirect("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
 		w.startEl("html", "xmlns", "http://www.w3.org/1999/xhtml");
 		w.startEl("head");
-		w.lineEl("link", "href", "http://www.wizards.com/magic/legacy.css", "type", "text/css", "rel", "stylesheet");
+		w.lineEl("link", "href", "magicexport.css", "type", "text/css", "rel", "stylesheet");
 		w.lineEl("meta", "http-equiv", "Content-Type", "content", "text/html; charset=utf-8");
 		w.endEl();
 		w.startEl("body", "style", "overflow:auto;");
@@ -95,7 +107,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		w.startEl("tr");
 		w.startEl("td", "align", "center", "colspan", "2");
 		w.ela("p", "Main Deck", "class", "decktitle");
-		w.ela("p", ((ICardCountable) getCardStore()).getCount() + " cards", "class", "cardcount");
+		w.ela("p", ((ICardCountable) getMainStore()).getCount() + " cards", "class", "cardcount");
 		w.endEl(); // td
 		w.startEl("td", "align", "center", "valign", "top", "style", "width:230px");
 		w.endEl(); // td
@@ -115,7 +127,9 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 	}
 
 	public void maindeckCards(MyXMLStreamWriter w) throws XMLStreamException {
-		CardGroup group = CardStoreUtils.buildTypeGroups(getCardStore());
+		ICardStore<IMagicCard> mainStore = filterByLocation(store, true);
+		System.err.println(mainStore);
+		CardGroup group = CardStoreUtils.buildTypeGroups(mainStore);
 		CardGroup top = (CardGroup) group.getChildAtIndex(0);
 		CardGroup land = (CardGroup) top.getChildAtIndex(0);
 		w.startEl("td", "valign", "top", "width", "185");
@@ -129,9 +143,10 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		CardGroup other = (CardGroup) spell.getChildAtIndex(0);
 		listWithTotals(w, other, "other spells");
 		// sideboard
-		ICardStore<IMagicCard> sbStore = getSideboardStore(location);
-		if (sbStore != null) {
-			// <div class="decktitle" style="padding-bottom:8px;"><b><i>Sideboard</i></b></div>
+		ICardStore<IMagicCard> sbStore = getSideboardStore();
+		if (sbStore != null && sbStore.size() > 0) {
+			// <div class="decktitle"
+			// style="padding-bottom:8px;"><b><i>Sideboard</i></b></div>
 			w.startEl("div", "class", "decktitle", "style", "padding-bottom:8px;");
 			w.startEl("b");
 			w.el("i", "Sideboard");
@@ -142,15 +157,40 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		}
 		w.endEl(); // td
 		w.startEl("td", "valign", "top", "width", "185");
+		w.lineEl("img", "src", "", "id", "card_pic", "style",
+				"max-height: 223px; max-width: 310px; text-align: center; vertical-align: middle;", "alt", "");
 		w.endEl(); // td
 	}
 
-	private ICardStore<IMagicCard> getMainStore(Location loc) {
-		return DataManager.getCardStore(loc.toMainDeck());
+	private ICardStore<IMagicCard> filterByLocation(IFilteredCardStore<IMagicCard> store, boolean mainDeck) {
+		MemoryCardStore<IMagicCard> store2 = new MemoryCardStore<IMagicCard>();
+		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card instanceof MagicCardPhysical) {
+				Location loc = ((MagicCardPhysical) card).getLocation();
+				if (mainDeck == !loc.isSideboard()) {
+					store2.add(card);
+				} else if (mainDeck) {
+					store2.add(card);
+				}
+			}
+		}
+		return store2;
 	}
 
-	private ICardStore<IMagicCard> getSideboardStore(Location loc) {
-		return DataManager.getCardStore(loc.toSideboard());
+	private ICardStore<IMagicCard> getMainCardStore() {
+		ICardStore<IMagicCard> cardStore = DataManager.getCardStore(location.toMainDeck());
+		if (cardStore != null)
+			return cardStore;
+		return store.getCardStore();
+	}
+
+	private ICardStore<IMagicCard> getMainStore() {
+		return filterByLocation(store, true);
+	}
+
+	private ICardStore<IMagicCard> getSideboardStore() {
+		return filterByLocation(store, false);
 	}
 
 	public void listWithTotals(MyXMLStreamWriter w, CardGroup group, String type) throws XMLStreamException {
@@ -184,7 +224,19 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 			w.nl();
 			if (card instanceof ICardCountable) {
 				w.data(((ICardCountable) card).getCount() + " ");
-				w.ela("a", card.getName(), "href", CARD_URI + CARDID + card.getCardId());
+				String cardDetailUrl;
+				try {
+					cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
+				} catch (MalformedURLException e) {
+					cardDetailUrl = "";
+				}
+				try {
+					URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId(), "");
+					w.ela("a", card.getName(), "href", cardDetailUrl, "onmouseover",
+							"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
+				} catch (MalformedURLException e) {
+					w.ela("a", card.getName(), "href", cardDetailUrl);
+				}
 			}
 			w.lineEl("br");
 		}
@@ -196,12 +248,12 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		<div class="deck">
 		<div class="decktop">
 		<div class="decktopmiddle">
-		<div style="float:left">
+		//		<div style="float:left">
 		  <div class="main">
 		    <heading>Divine</heading>
 		  </div>
 		  <div class="sub">Duel Decks: Divine vs. Demonic</div>
-		</div>
+		//		</div>
 		<br class="clear">
 		</div>
 		</div>
@@ -211,24 +263,21 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		// top
 		w.startEl("div", "class", "decktop");
 		w.startEl("div", "class", "decktopmiddle");
-		w.startEl("div", "style", "float:left");
+		// w.startEl("div", "style", "float:left");
 		w.startEl("div", "class", "main");
 		w.el("heading", getName());
 		w.endEl(); // main
 		w.startEl("div", "class", "sub");
-		w.data(getCardStore().getComment());
+		w.data(getComment());
 		w.endEli(); // sub
-		w.endEl(); // style
+		// w.endEl(); // style
 		w.lineEl("br", "class", "clear");
 		w.endEl(); // desktopmiddle
 		w.endEl(); // desktop
 	}
 
-	private ICardStore<IMagicCard> getCardStore() {
-		ICardStore<IMagicCard> cardStore = DataManager.getCardStore(location);
-		if (cardStore != null)
-			return cardStore;
-		return store.getCardStore();
+	private String getComment() {
+		return getMainCardStore().getComment();
 	}
 
 	@Override
@@ -238,6 +287,11 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 
 	@Override
 	public boolean isMultipleLocationSupported() {
-		return false;
+		return true;
+	}
+
+	@Override
+	public boolean isSideboardSupported() {
+		return true;
 	}
 }

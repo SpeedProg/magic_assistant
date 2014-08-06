@@ -144,6 +144,9 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 						if (location.endsWith("/")) {
 							location = location.substring(0, location.length() - 1);
 						}
+						if (location.indexOf('?') > 0) {
+							location = location.substring(location.indexOf('?') + 1);
+						}
 						String params[] = location.split("&");
 						for (int i = 0; i < params.length; i++) {
 							String string = params[i];

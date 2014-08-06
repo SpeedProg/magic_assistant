@@ -53,17 +53,20 @@ public class ParserHtmlHelper {
 			this.loadOtherPrintings = loadOtherPrintings;
 		}
 
+		@Override
 		public void handleCard(MagicCard card) {
 			count++;
 			TextPrinter.print(card, this.out);
 		}
 
+		@Override
 		public void handleEdition(Edition ed) {
 			Edition res = Editions.getInstance().addEdition(ed.getName(), ed.getMainAbbreviation());
 			if (res.getReleaseDate() == null)
 				res.setReleaseDate(Calendar.getInstance().getTime());
 		}
 
+		@Override
 		public void handleSecondary(MagicCard primary, MagicCard secondary) {
 			if (loadLandPrintings && primary.getSet() != null && primary.getSet().equals(secondary.getSet())) {
 				handleCard(secondary);
@@ -77,6 +80,7 @@ public class ParserHtmlHelper {
 			this.cardCount = count;
 		}
 
+		@Override
 		public int getCardCount() {
 			return cardCount;
 		}
@@ -146,6 +150,10 @@ public class ParserHtmlHelper {
 		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
 	}
 
+	public static URL createImageDetailURL(int cardId) throws MalformedURLException {
+		return new URL(ParseGathererDetails.DETAILS_QUERY_URL_BASE + cardId);
+	}
+
 	public static URL createSetImageURL(String editionAbbr, String rarity) {
 		try {
 			String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
@@ -168,8 +176,8 @@ public class ParserHtmlHelper {
 	protected static String LONG_MINUS;
 
 	/**
-	 * If pattern does not match return null, otherwise return group number, or empty string if
-	 * group is set to -1
+	 * If pattern does not match return null, otherwise return group number, or
+	 * empty string if group is set to -1
 	 * 
 	 * @param textPattern
 	 * @param line
