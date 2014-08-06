@@ -81,10 +81,11 @@ public class ParseGathererOracleTest extends TestCase {
 		card.setSet("Magic: The Gathering-Commander");
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("Fire", card.getName());
-		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
+		// FileUtils.saveString(parser.getHtml(), new File("c:/tmp/",
+		// card.getCollNumber() + ".html"));
 		// assertEquals("198a", card.getCollNumber());
 		assertEquals(198, card.getCollectorNumberId());
-		System.err.println(magicDb);
+		// System.err.println(magicDb);
 	}
 
 	public void testFlipCards() throws IOException {
@@ -96,7 +97,7 @@ public class ParseGathererOracleTest extends TestCase {
 		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
 		assertEquals(99, card.getCollectorNumberId());
 		assertEquals("99a", card.getCollNumber());
-		System.err.println(magicDb);
+		// System.err.println(magicDb);
 	}
 
 	public void testSlashR() throws IOException {
