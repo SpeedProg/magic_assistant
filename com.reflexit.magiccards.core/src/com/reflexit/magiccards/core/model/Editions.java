@@ -29,6 +29,7 @@ public class Editions implements ISearchableProperty {
 	private static Editions instance;
 	private LinkedHashMap<String, Edition> name2ed;
 	private LinkedHashMap<String, Edition> nameAliases;
+	private Edition unknown;
 	private static int idcounter = 0;
 
 	public static class Edition {
@@ -262,6 +263,9 @@ public class Editions implements ISearchableProperty {
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
+		unknown = new Edition("Unknown", "???");
+		unknown.setBlock("Unknown");
+		unknown.setReleaseDate(new Date());
 	}
 
 	public synchronized static Editions getInstance() {
@@ -337,6 +341,13 @@ public class Editions implements ISearchableProperty {
 		if (ed != null)
 			return ed;
 		return nameAliases.get(name);
+	}
+
+	public Edition getEditionByNameAlways(String name) {
+		Edition ed = getEditionByName(name);
+		if (ed != null)
+			return ed;
+		return unknown;
 	}
 
 	private synchronized void load() throws IOException {

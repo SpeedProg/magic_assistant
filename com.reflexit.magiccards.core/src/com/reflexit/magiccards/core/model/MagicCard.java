@@ -335,19 +335,19 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			case SIDE:
 				return getSide();
 			case SET_CORE: {
-				Edition ed = Editions.getInstance().getEditionByName(edition);
+				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
 				return ed.getType();
 			}
 			case SET_BLOCK: {
-				Edition ed = Editions.getInstance().getEditionByName(edition);
+				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
 				return ed.getBlock();
 			}
 			case SET_RELEASE: {
-				Edition ed = Editions.getInstance().getEditionByName(edition);
+				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
 				return ed.getReleaseDate();
 			}
 			case EDITION_ABBR: {
-				Edition ed = Editions.getInstance().getEditionByName(edition);
+				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
 				return ed.getMainAbbreviation();
 			}
 			case UNIQUE_COUNT:
