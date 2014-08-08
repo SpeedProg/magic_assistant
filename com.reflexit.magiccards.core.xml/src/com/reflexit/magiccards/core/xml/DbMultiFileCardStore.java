@@ -68,7 +68,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			IMagicCard prev = hash.get(id);
 			if (prev != null) {
 				boolean delcur = conflictMerge(prev, card);
-				hash.put(prev.getCardId(), prev); // rehash prev it could have changed
+				hash.put(prev.getCardId(), prev); // rehash prev it could have
+													// changed
 				if (delcur) {
 					conflict = true;
 				} else {
@@ -96,7 +97,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		public boolean conflictMerge(IMagicCard prev, IMagicCard card) {
 			if (prev.equals(card)) {
 				// merge
-				((MagicCard) prev).copyFrom(card);
+				((MagicCard) prev).setNonEmptyFromCard(card.getBase());
 				return true;
 			}
 			int id = card.getCardId();
@@ -174,6 +175,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		return store;
 	}
 
+	@Override
 	public int getCount() {
 		return getStorage().size();
 	}
@@ -230,14 +232,17 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		return null;
 	}
 
+	@Override
 	public String getComment() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isVirtual() {
 		throw new UnsupportedOperationException();
 	}
@@ -274,7 +279,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 						if (!setFile.exists() || setFile.length() == 0)
 							DataManager.getCardHandler().loadFromFlatResource(abbr + ".txt");
 						// long nowtime = System.currentTimeMillis() - time;
-						// System.err.println("Loading " + abbr + " took " + nowtime / 1000 + " s "
+						// System.err.println("Loading " + abbr + " took " +
+						// nowtime / 1000 + " s "
 						// +
 						// nowtime % 1000 + " ms");
 					} catch (IOException e) {
@@ -330,6 +336,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 	}
 
+	@Override
 	public MagicCard getPrime(String name) {
 		return handler.getPrime(name);
 	}

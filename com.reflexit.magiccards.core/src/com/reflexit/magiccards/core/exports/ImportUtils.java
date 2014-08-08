@@ -239,7 +239,7 @@ public class ImportUtils {
 				return null;
 			} else {
 				if (ed == null) {
-					base.fillFrom(ref);
+					base.setEmptyFromCard(ref);
 					card.setError(ImportError.SET_NOT_FOUND_ERROR);
 					return card.getBase();
 				} else {
@@ -369,8 +369,8 @@ public class ImportUtils {
 	}
 
 	/**
-	 * Finds and associates imported cards with magic db cards. If card not found in db creates new
-	 * db cards and adds to newdbrecords
+	 * Finds and associates imported cards with magic db cards. If card not
+	 * found in db creates new db cards and adds to newdbrecords
 	 */
 	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords, ICardField[] columns) {
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
@@ -383,7 +383,7 @@ public class ImportUtils {
 					newdbrecords.add(newCard);
 				} else if (oldCard != card.getBase()) {
 					// card is updated - merge
-					card.getBase().setFrom(oldCard, columns);
+					card.getBase().setNonEmptyFromCard(columns, oldCard);
 				}
 			}
 		}

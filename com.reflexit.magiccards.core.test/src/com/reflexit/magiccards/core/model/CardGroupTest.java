@@ -416,7 +416,7 @@ public class CardGroupTest extends TestCase {
 	public void checkConsistency(ICardField field, Object value) {
 		MagicCardPhysical card = (MagicCardPhysical) group.getFirstCard();
 		assertNotNull(card);
-		assertEquals(card.get(field), value);
+		assertEquals("For field " + field, card.get(field), value);
 		assertEquals(value, group.get(field));
 	}
 

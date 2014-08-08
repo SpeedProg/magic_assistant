@@ -20,6 +20,7 @@ public class ParseGathererOracleTest extends TestCase {
 	@Override
 	protected void setUp() {
 		parser = new ParseGathererOracle();
+		magicDb = new MemoryCardStore<IMagicCard>();
 	}
 
 	protected MagicCard load(int id) throws IOException {
@@ -69,27 +70,45 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals("Budoka Gardener", card.getName());
 	}
 
+	public void testFlip2() throws IOException {
+		MagicCard card = load(-78687);
+		assertEquals("202b", card.getCollNumber());
+		assertEquals("Dokai, Weaver of Life", card.getName());
+	}
+
 	public void testDouble() throws IOException {
 		MagicCard card = load(126419);
+		card.setName("Dead");
 		assertEquals(113, card.getCollectorNumberId());
 		assertEquals("Dead", card.getName());
 	}
 
+	public void testDouble2() throws IOException {
+		MagicCard card = load(126419);
+		String origName = "Dead // Gone (Dead)";
+		card.setName(origName);
+		assertEquals(113, card.getCollectorNumberId());
+		assertEquals("113a", card.getCollNumber());
+		// oracle should not change name
+		assertEquals(origName, card.getName());
+	}
+
 	public void testDoubleCards() throws IOException {
-		magicDb = new MemoryCardStore<IMagicCard>();
 		MagicCard card = prep(247159);
-		card.setSet("Magic: The Gathering-Commander");
+		String origName = "Fire // Ice (Fire)";
+		card.setName(origName);
 		parser.load(ICoreProgressMonitor.NONE);
-		assertEquals("Fire", card.getName());
+		assertEquals(origName, card.getName());
+		assertEquals("Magic: The Gathering-Commander", card.getSet());
 		// FileUtils.saveString(parser.getHtml(), new File("c:/tmp/",
 		// card.getCollNumber() + ".html"));
-		// assertEquals("198a", card.getCollNumber());
+		assertEquals("198a", card.getCollNumber());
 		assertEquals(198, card.getCollectorNumberId());
+		assertTrue(card.getOracleText().startsWith("Fire deals"));
 		// System.err.println(magicDb);
 	}
 
 	public void testFlipCards() throws IOException {
-		magicDb = new MemoryCardStore<IMagicCard>();
 		MagicCard card = prep(74671);
 		// card.setSet("Magic: The Gathering-Commander");
 		parser.load(ICoreProgressMonitor.NONE);
@@ -119,5 +138,10 @@ public class ParseGathererOracleTest extends TestCase {
 	public void testCollNumber() throws IOException {
 		MagicCard card = load(191338);
 		assertEquals(220, Integer.parseInt(card.getCollNumber()));
+	}
+
+	public void testSets() throws IOException {
+		MagicCard card = load(193767); // Serra Angel
+		assertTrue(magicDb.size() > 8);
 	}
 }

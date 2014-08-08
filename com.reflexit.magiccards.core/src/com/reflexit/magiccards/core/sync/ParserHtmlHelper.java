@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -146,12 +147,30 @@ public class ParserHtmlHelper {
 	}
 
 	@NotNull
-	public static URL createImageURL(int cardId, String editionAbbr) throws MalformedURLException {
-		return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
+	public static URL createImageURL(int cardId) {
+		try {
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
+		} catch (MalformedURLException e) {
+			throw new MagicException(e);
+		}
 	}
 
-	public static URL createImageDetailURL(int cardId) throws MalformedURLException {
-		return new URL(ParseGathererOracle.DETAILS_QUERY_URL_BASE + cardId);
+	public static URL createImageDetailURL(int cardId) {
+		try {
+			return new URL(ParseGathererOracle.DETAILS_QUERY_URL_BASE + cardId);
+		} catch (MalformedURLException e) {
+			throw new MagicException(e);
+		}
+	}
+
+	public static int extractCardIdFromURL(URL url) {
+		String query = url.getQuery();
+		Pattern pattern = Pattern.compile("multiverseid=(-*\\d+)");
+		Matcher matcher = pattern.matcher(query);
+		if (matcher.find()) {
+			return Integer.parseInt(matcher.group(1));
+		}
+		return 0;
 	}
 
 	public static URL createSetImageURL(String editionAbbr, String rarity) {
@@ -160,7 +179,7 @@ public class ParserHtmlHelper {
 			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr + "&size=small&rarity="
 					+ rarLetter);
 		} catch (MalformedURLException e) {
-			return null;
+			throw new MagicException(e);
 		}
 	}
 

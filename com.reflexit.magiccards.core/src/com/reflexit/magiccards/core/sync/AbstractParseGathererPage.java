@@ -10,9 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
-
 
 public abstract class AbstractParseGathererPage {
 	public static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
@@ -37,6 +38,8 @@ public abstract class AbstractParseGathererPage {
 				return;
 			setHtml(html);
 			loadHtml(html, new SubCoreProgressMonitor(monitor, 50));
+		} catch (MagicException e) {
+			MagicLogger.log(e);
 		} finally {
 			monitor.done();
 		}

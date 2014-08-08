@@ -39,6 +39,27 @@ public class ParseGathererPrinted extends ParseGathererOracle {
 		return false;
 	}
 
+	@Override
+	protected void correctSides() {
+		super.correctSides();
+		if (cardB != null) {
+			String text = cardA.getText();
+			if (text.equals(cardB.getText())) {
+				if (text.contains("-----")) {
+					String[] split = text.split("-----");
+					cardA.setText(split[0]);
+					String second = split[1];
+					String parts[] = second.split("<br>", 5);
+					if (parts.length == 5) {
+						cardB.setText(parts[4]);
+						cardB.setType(parts[2]);
+						cardB.setName(parts[1]);
+					}
+				}
+			}
+		}
+	}
+
 	public static void main(String[] args) throws IOException {
 		MagicCard card = new MagicCard();
 		card.setCardId(172550);

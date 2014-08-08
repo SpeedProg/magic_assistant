@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +7,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -95,15 +93,15 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 
 	public void setName(String name) {
 		this.name = name;
-		Matcher matcher = mpartnamePattern.matcher(name);
-		if (matcher.matches()) {
-			String p1 = matcher.group(1).trim();
-			String p2 = matcher.group(2).trim();
-			String pCur = matcher.group(3);
-			setProperty(MagicCardField.PART, pCur);
-			String other = pCur.equals(p1) ? p2 : p1;
-			setProperty(MagicCardField.OTHER_PART, other);
-		}
+		// Matcher matcher = mpartnamePattern.matcher(name);
+		// if (matcher.matches()) {
+		// String p1 = matcher.group(1).trim();
+		// String p2 = matcher.group(2).trim();
+		// String pCur = matcher.group(3);
+		// setProperty(MagicCardField.PART, pCur);
+		// String other = pCur.equals(p1) ? p2 : p1;
+		// setProperty(MagicCardField.OTHER_PART, other);
+		// }
 	}
 
 	/*
@@ -324,12 +322,16 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return (this.enId);
 			case PROPERTIES:
 				return (this.properties);
-			case FLIPID:
-				return getFlipId();
+			case FLIPID: {
+				Object flipId = getProperty(MagicCardField.FLIPID);
+				if (flipId == null)
+					return 0;
+				return flipId;
+			}
 			case OTHER_PART:
 				return getProperty(MagicCardField.OTHER_PART);
 			case PART:
-				return getPart();
+				return getProperty(MagicCardField.PART);
 			case SIDE:
 				return getSide();
 			case SET_CORE: {
@@ -514,18 +516,18 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				break;
 			case PROPERTIES:
 				if (value instanceof LinkedHashMap)
-					properties = (LinkedHashMap<String, Object>) value;
+					properties = (LinkedHashMap) ((LinkedHashMap) value).clone();
 				else
 					setProperties((String) value);
 				break;
 			case FLIPID:
-				setProperty(MagicCardField.FLIPID, value);
+				setPropertyInteger(MagicCardField.FLIPID, value);
 				break;
 			case PART:
-				setProperty(MagicCardField.PART, value);
+				setPropertyString(MagicCardField.PART, value);
 				break;
 			case OTHER_PART:
-				setProperty(MagicCardField.OTHER_PART, value);
+				setPropertyString(MagicCardField.OTHER_PART, value);
 				break;
 			case SIDE:
 				setProperty(MagicCardField.SIDE, value);
@@ -534,7 +536,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				String x = getImageUrl();
 				if (x != null && x.equals(value))
 					break;
-				setProperty(MagicCardField.IMAGE_URL, value);
+				setPropertyString(MagicCardField.IMAGE_URL, value);
 				break;
 			case LEGALITY:
 				setProperty(MagicCardField.LEGALITY, value);
@@ -545,6 +547,32 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return false;
 		}
 		return true;
+	}
+
+	private void setPropertyInteger(MagicCardField field, Object value) {
+		if (value instanceof Integer) {
+			Integer v = (Integer) value;
+			if (v.intValue() == 0) {
+				setProperty(field, null);
+			} else {
+				setProperty(field, v);
+			}
+		} else if (value != null) {
+			setProperty(field, Integer.parseInt(value.toString()));
+		} else {
+			setProperty(field, null);
+		}
+	}
+
+	private void setPropertyString(MagicCardField field, Object value) {
+		if (value != null) {
+			String str = value.toString();
+			if (!str.isEmpty()) {
+				setProperty(field, str);
+				return;
+			}
+		}
+		setProperty(field, null);
 	}
 
 	@Override
@@ -564,20 +592,64 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		return (MagicCard) clone();
 	}
 
-	public void copyFrom(IMagicCard card) {
-		ICardField[] fields = MagicCardField.allNonTransientFields(false);
-		for (int i = 0; i < fields.length; i++) {
-			ICardField field = fields[i];
-			Object value = card.get(field);
-			if (value != null) {
-				String string = value.toString();
-				if (value instanceof Number) {
-					if ((Float.valueOf(string) != 0))
-						this.set(field, string);
-				} else if (string.length() > 0)
-					this.set(field, string);
-			}
+	/**
+	 * Copy all fields which have default values in this card from given card
+	 * 
+	 * @param card
+	 */
+	public void setEmptyFromCard(IMagicCard card) {
+		for (ICardField field : MagicCardField.allNonTransientFields(false)) {
+			Object value = get(field);
+			if (isEmptyValue(value))
+				setNonEmptyFromCard(field, card);
 		}
+	}
+
+	public void setNonEmptyFromCard(MagicCard card) {
+		setNonEmptyFromCard((Set<ICardField>) null, card);
+	}
+
+	public void setNonEmptyFromCard(Set<ICardField> fieldSet, MagicCard card) {
+		if (fieldSet == null || fieldSet.isEmpty()) {
+			setNonEmptyFromCard(MagicCardField.allNonTransientFields(false), card);
+		} else
+			for (ICardField field : fieldSet)
+				setNonEmptyFromCard(field, card);
+	}
+
+	public void setNonEmptyFromCard(ICardField[] fieldSet, MagicCard card) {
+		for (ICardField field : fieldSet)
+			setNonEmptyFromCard(field, card);
+	}
+
+	public boolean setNonEmptyFromCard(ICardField field, IMagicCard card) {
+		return setNonEmpty(field, card.get(field));
+	}
+
+	public boolean setNonEmpty(ICardField field, Object value) {
+		if (!isEmptyValue(value))
+			return set(field, value);
+		return false;
+	}
+
+	public boolean setIfEmpty(ICardField field, Object value) {
+		if (isEmptyValue(get(field)))
+			return set(field, value);
+		return false;
+	}
+
+	public boolean isEmptyValue(Object value) {
+		if (value == null)
+			return true;
+		if (value instanceof Number) {
+			if (((Number) value).intValue() == 0)
+				return true;
+		} else {
+			String string = value.toString();
+			if (string.length() == 0)
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -657,10 +729,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 
 	@Override
 	public int getFlipId() {
-		String fid = (String) getProperty(MagicCardField.FLIPID);
-		if (fid == null || fid.length() == 0)
-			return 0;
-		return Integer.valueOf(fid);
+		return getInt(MagicCardField.FLIPID);
 	}
 
 	public String getPart() {
@@ -672,14 +741,15 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	public int getSide() {
 		String prop = (String) getProperty(MagicCardField.SIDE);
 		if (prop == null) {
+			String colNum = getCollNumber();
+			if (colNum.endsWith("a"))
+				return 0;
+			else if (colNum.endsWith("b"))
+				return 1;
 			String part = (String) getProperty(MagicCardField.PART);
 			if (part == null) {
 				return 0;
 			} else if (part.startsWith("@")) {
-				return 1;
-			} else if (name.startsWith(part)) {
-				return 0;
-			} else {
 				return 1;
 			}
 		} else {
@@ -765,12 +835,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			return x;
 		int gathererId = getGathererId();
 		if (gathererId != 0) {
-			URL url;
-			try {
-				url = GatherHelper.createImageURL(gathererId, null);
-			} catch (MalformedURLException e) {
-				return null;
-			}
+			URL url = GatherHelper.createImageURL(gathererId);
 			return url.toExternalForm();
 		}
 		return null;
@@ -825,32 +890,5 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 
 	public void setLegalityMap(LegalityMap map) {
 		setProperty(MagicCardField.LEGALITY, map);
-	}
-
-	public void fillFrom(MagicCard ref) {
-		setCost(ref.getCost());
-		setType(ref.getType());
-		setPower(ref.getPower());
-		setToughness(ref.getToughness());
-		if (text == null)
-			setText(ref.getText());
-		if (oracleText == null || oracleText.length() == 0)
-			setOracleText(ref.getOracleText());
-		if (rarity == null || rarity.length() == 0)
-			setRarity(ref.getRarity());
-		if (artist == null)
-			setArtist(ref.getArtist());
-		String url = getImageUrl();
-		if (url == null)
-			setProperty(MagicCardField.IMAGE_URL, ref.getImageUrl());
-	}
-
-	public void setFrom(MagicCard importCard, ICardField[] columns) {
-		for (int i = 0; i < columns.length; i++) {
-			ICardField field = columns[i];
-			Object value = importCard.get(field);
-			if (value != null)
-				set(field, value);
-		}
 	}
 }

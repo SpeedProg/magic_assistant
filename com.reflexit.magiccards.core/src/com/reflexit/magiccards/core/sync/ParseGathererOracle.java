@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
@@ -30,16 +31,22 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 /**
  * Retrieve legality info
  */
 public class ParseGathererOracle extends AbstractParseGathererPage {
 	public static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Details.aspx?multiverseid=";
-	private IMagicCard card;
+	private MagicCard fromCard;
 	private Set<ICardField> fieldMapFilter;
-	private ICardStore magicDb;
+	private ICardStore<IMagicCard> magicDb;
+	protected ICardStore<MagicCard> sets;
+	protected MagicCard cardA;
+	protected MagicCard cardB;
+	private String resultTitle;
 	/*-
 	 * single card rules
 	 * 
@@ -79,7 +86,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	      <div class="cardtextbox">Unearth <img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" /> <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" />: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)</i></div></div>
 
 	 */
-	private static Pattern textPattern = Pattern.compile("Card Text:</div>(.*?)class=\"label\"");
+	private static Pattern textPattern = Pattern.compile("Card Text:</div>(.*?)<div class=\"label\"");
 	private static Pattern textPatternEach = Pattern.compile("<div class=\"cardtextbox\"[^>]*>(.*?)</div>");
 	/*-
 	 * <div class="label"> 
@@ -91,7 +98,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	 </div> 
 	 </div> 
 	 */
-	private static Pattern otherSetPattern = Pattern.compile("Other Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern otherSetPattern = Pattern.compile("Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern expansionPattern = Pattern.compile("Expansion:</div>.*?<img title=\"(.*?) \\((.*?)\\)");
 	private static Pattern otherSetPatternEach = Pattern.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 	/*-
 	
@@ -140,7 +148,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 		parseSingleCard(magicCard, fieldMap, monitor);
 	}
 
-	protected void extractOtherSets(IMagicCard card, Set<ICardField> fieldMap, String html) {
+	protected void extractOtherSets(MagicCard card, Set<ICardField> fieldMap, String html) {
 		if (fieldMap == null || fieldMap.contains(MagicCardField.SET)) {
 			Matcher matcher1 = otherSetPattern.matcher(html);
 			String setsHtml = "";
@@ -156,24 +164,20 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 				String set = matcher.group(2).trim();
 				String rarity = matcher.group(3).trim();
 				// other printings
-				MagicCard mcard = card.getBase();
-				MagicCard card2 = mcard.cloneCard();
+				MagicCard card2 = card.cloneCard();
+				if (resultTitle != null)
+					card2.setName(resultTitle);
 				card2.setId(id);
 				card2.setSet(set.trim());
 				card2.setRarity(rarity.trim());
 				card2.setLanguage(null);
 				card2.setText(card.getOracleText());
-				if (magicDb != null && magicDb.getCard(card2.getCardId()) == null) {
-					magicDb.add(card2);
-					// MagicLogger.log("Added " + card2.getName() + " " + id +
-					// " " + set + " " +
-					// rarity);
-				}
+				sets.add(card2);
 			}
 		}
 	}
 
-	protected void extractField(IMagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field, Pattern pattern,
+	protected void extractField(MagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field, Pattern pattern,
 			boolean multiple) {
 		if (fieldMap == null || fieldMap.contains(field)) {
 			String value = extractPatternValue(html, pattern, multiple);
@@ -215,136 +219,209 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	}
 
 	public void setCard(IMagicCard card) {
-		this.card = card;
+		this.fromCard = card.getBase();
+		this.sets = new MemoryCardStore<MagicCard>();
+		this.resultTitle = null;
 	}
 
-	public void setFilter(Set<ICardField> fieldMapFilter) {
-		this.fieldMapFilter = fieldMapFilter;
+	public void setFilter(Set<ICardField> fieldFilter) {
+		fieldMapFilter = fieldFilter;
+		if (fieldMapFilter == null) {
+			fieldMapFilter = new HashSet<ICardField>();
+			for (ICardField field : MagicCardField.allNonTransientFields(false)) {
+				fieldMapFilter.add(field);
+			}
+		}
 	}
 
 	@Override
 	protected void loadHtml(String htmlIn, ICoreProgressMonitor monitor) {
-		monitor.beginTask("Updating card", 10);
+		monitor.beginTask("Updating card", 100);
 		try {
-			if (card.getCardId() == 0 || card instanceof ICardGroup)
+			if (fromCard.getGathererId() == 0 || fromCard instanceof ICardGroup)
 				return;
-			boolean noupdate = (card.getBase().getProperty("NOUPDATE") != null);
-			boolean basicUpdate = !noupdate;
-			String html0 = htmlIn;
-			html0 = html0.replace('\r', ' ');
-			html0 = html0.replace('\n', ' ');
-			if (html0.contains("’")) {
-				html0 = html0.replace('’', '\'');
-			}
-			String nameOrig = card.getName(); // original name
-			String nameTitle = extractPatternValue(html0, titleNamePattern, false);
-			// name update
-			if (nameOrig == null) {
-				nameOrig = nameTitle;
-				((ICardModifiable) card).set(MagicCardField.NAME, nameTitle);
-			}
-			if (nameOrig.indexOf('(') > 0) {
-				nameOrig = nameOrig.substring(0, nameOrig.indexOf('(') - 1);
-			}
-			Matcher matcher0 = singleCardPattern.matcher(html0);
-			ArrayList<String> cardSides = new ArrayList<String>(2);
-			while (matcher0.find()) {
-				String html = matcher0.group(1).trim();
-				cardSides.add(html);
-			}
-			String html = null;
-			int sides = cardSides.size();
-			if (sides == 1) {
-				html = cardSides.get(0);
-				if (!nameOrig.equals(nameTitle) && basicUpdate) { // Localized
-																	// title
-					((ICardModifiable) card).set(MagicCardField.NAME, nameTitle);
-				}
-			} else if (sides == 2) {
-				String htmlB = null;
-				Iterator<String> iterator = cardSides.iterator();
-				String htmlS[] = { iterator.next(), iterator.next() };
-				int titleIndex = -1, nameIndex = -1;
-				String namesOrig[] = nameOrig.split(" // ");
-				for (int i = 0; i < htmlS.length; i++) {
-					String nameCur = extractPatternValue(htmlS[i], cardNamePattern, false);
-					if (nameTitle != null && nameTitle.equals(nameCur) && titleIndex == -1) {
-						titleIndex = i;
-					}
-					if (namesOrig[0].equals(nameCur) && nameIndex == -1) {
-						nameIndex = i;
-						nameTitle = nameCur;
-					}
-				}
-				if (nameIndex >= 0) {
-					html = htmlS[nameIndex];
-					htmlB = htmlS[1 - nameIndex];
-				} else if (titleIndex >= 0) {
-					html = htmlS[titleIndex];
-					htmlB = htmlS[1 - titleIndex];
-				}
-				if (html == null) {
-					MagicLogger.log("Problems parsing card - cannot find matching name " + nameOrig + " " + card.getCardId());
-					return;
-				}
-				if (htmlB != null && basicUpdate) {
-					IMagicCard cardB = card.getBase().cloneCard();
-					extractField(cardB, null, htmlB, MagicCardField.NAME, cardNamePattern, false);
-					extractField(cardB, null, htmlB, MagicCardField.ID, cardIdPattern, false);
-					extractField(cardB, null, htmlB, MagicCardField.PART, cardRotatePattern, false);
-					int pairId = cardB.getGathererId();
-					if (pairId != 0) {
-						if (magicDb != null && !magicDb.contains(cardB)) {
-							extractField(cardB, null, htmlB, MagicCardField.ARTIST, artistPattern, false);
-							extractField(cardB, null, htmlB, MagicCardField.COLLNUM, cardnumPattern, false);
-							((ICardModifiable) cardB).set(MagicCardField.FLIPID, String.valueOf(card.getCardId()));
-							magicDb.add(cardB);
-						}
-						String part1 = (String) card.getBase().get(MagicCardField.PART);
-						String part = (String) cardB.getBase().get(MagicCardField.PART);
-						if (part != null && part.length() > 0) {
-							if (part.equals(part1))
-								return; // second part updated - no support
-							((ICardModifiable) card).set(MagicCardField.OTHER_PART, part);
-						}
-						((ICardModifiable) card).set(MagicCardField.FLIPID, String.valueOf(pairId));
-					}
-				}
-				if (basicUpdate)
-					if (!nameOrig.equals(nameTitle)) {
-						extractField(card, null, html, MagicCardField.NAME, cardNamePattern, false);
-					}
-			} else if (sides == 0) {
-				MagicLogger.log("Problems parsing card " + card.getGathererId());
-				return;
-			}
-			// extractField(card, fieldMapFilter, html, MagicCardField.NAME,
-			// cardAltPattern, true);
-			// monitor.worked(1);
-			extractField(card, fieldMapFilter, html, MagicCardField.RULINGS, rulingPattern, true);
-			extractField(card, fieldMapFilter, html, MagicCardField.RATING, ratingPattern, false);
-			extractField(card, fieldMapFilter, html, MagicCardField.ARTIST, artistPattern, false);
-			if (basicUpdate) {
-				extractField(card, fieldMapFilter, html, MagicCardField.COLLNUM, cardnumPattern, false);
-				extractField(card, fieldMapFilter, html, MagicCardField.TYPE, typesPattern, false);
-			}
-			monitor.worked(5);
-			if (basicUpdate) {
-				Matcher matcher = textPattern.matcher(html);
-				if (matcher.find()) {
-					String text = matcher.group(1);
-					extractField(card, fieldMapFilter, text, isOracle() ? MagicCardField.ORACLE : MagicCardField.TEXT, textPatternEach,
-							true);
-				}
-			}
-			monitor.worked(1);
-			extractOtherSets(card, fieldMapFilter, html);
-			monitor.worked(1);
-			if (magicDb != null)
-				magicDb.update(card.getBase());
+			loadAll(htmlIn, new SubCoreProgressMonitor(monitor, 50));
+			applyToDb(new SubCoreProgressMonitor(monitor, 50));
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private void applyToDb(ICoreProgressMonitor monitor) {
+		setFilter(fieldMapFilter);
+		adjustUpdateFields();
+		if (someWhatMatches(fromCard, cardA, cardB)) {
+			applyFromCard(cardA, fromCard);
+			addNew(cardB);
+		} else if (someWhatMatches(fromCard, cardB, cardA)) {
+			applyFromCard(cardB, fromCard);
+			addNew(cardA);
+		} else {
+			MagicLogger.log("Problems parsing card - id mismatch " + fromCard.getCardId() + " " + cardA.getCardId());
+			return;
+		}
+		if (magicDb != null) {
+			for (Iterator<MagicCard> iterator2 = sets.iterator(); iterator2.hasNext();) {
+				IMagicCard card2 = iterator2.next();
+				addNew(card2);
+			}
+		}
+	}
+
+	private boolean addNew(IMagicCard card2) {
+		if (magicDb != null && card2 != null)
+			if (magicDb.getCard(card2.getCardId()) == null) {
+				magicDb.add(card2);
+				MagicLogger.log("Added " + card2);
+				return true;
+			}
+		return false;
+	}
+
+	private boolean someWhatMatches(MagicCard from, MagicCard inet, MagicCard inet2) {
+		if (inet == null)
+			return false;
+		int id = from.getCardId();
+		if (id != inet.getCardId())
+			return false;
+		if (inet2 == null) // no second card
+			return true;
+		if (inet.getGathererId() != inet2.getGathererId())
+			return true; // ids are diffrent for pairs, so it is equals to first
+							// - good enought
+		// collector number
+		if (from.getSide() == inet.getSide())
+			return true;
+		// ids are the same
+		String nameOrig = from.getName();
+		if (nameOrig != null) {
+			if (nameOrig.equals(inet.getName()))
+				return true;
+		} else {
+			return true; // if no name - nothing to work with
+		}
+		return false;
+	}
+
+	private boolean adjustUpdateFields() {
+		boolean noUpdateBasic = (fromCard.getBase().getProperty("NOUPDATE") != null);
+		fieldMapFilter.remove(MagicCardField.ID);
+		if (noUpdateBasic) {
+			fieldMapFilter.remove(MagicCardField.NAME);
+			fieldMapFilter.remove(MagicCardField.TYPE);
+			fieldMapFilter.remove(MagicCardField.TEXT);
+			fieldMapFilter.remove(MagicCardField.ORACLE);
+			fieldMapFilter.remove(MagicCardField.FLIPID);
+			fieldMapFilter.remove(MagicCardField.PART);
+		}
+		boolean noEnglish = fromCard.getBase().getEnglishCardId() != 0;
+		if (isOracle()) {
+			if (noEnglish) {
+				fieldMapFilter.remove(MagicCardField.NAME);
+				fieldMapFilter.remove(MagicCardField.TYPE);
+			}
+			fieldMapFilter.remove(MagicCardField.TEXT);
+		} else {
+			fieldMapFilter.remove(MagicCardField.ORACLE);
+		}
+		if (resultTitle != null && resultTitle.contains("//")) {
+			fieldMapFilter.remove(MagicCardField.NAME);
+		}
+		return noUpdateBasic;
+	}
+
+	private void applyFromCard(MagicCard card, MagicCard toCard) {
+		toCard.setEmptyFromCard(card);
+		toCard.setNonEmptyFromCard(fieldMapFilter, card);
+		if (magicDb != null) {
+			if (!addNew(toCard))
+				magicDb.update(toCard);
+		}
+	}
+
+	private void loadAll(String htmlIn, ICoreProgressMonitor monitor) {
+		monitor.beginTask("Parsing card", 100);
+		String html0 = htmlIn;
+		html0 = html0.replace('\r', ' ');
+		html0 = html0.replace('\n', ' ');
+		if (html0.contains("’")) {
+			html0 = html0.replace('’', '\'');
+		}
+		monitor.worked(30);
+		resultTitle = extractPatternValue(html0, titleNamePattern, false);
+		Matcher matcher0 = singleCardPattern.matcher(html0);
+		ArrayList<MagicCard> sides = new ArrayList<MagicCard>();
+		while (matcher0.find()) {
+			String html = matcher0.group(1).trim();
+			sides.add(loadSide(html));
+		}
+		if (sides.size() == 0) {
+			throw new MagicException("Problems parsing card " + fromCard.getGathererId());
+		}
+		Iterator<MagicCard> iterator = sides.iterator();
+		cardA = iterator.next();
+		cardB = iterator.hasNext() ? iterator.next() : null;
+		correctSides();
+		monitor.worked(40);
+		extractOtherSets(cardA, fieldMapFilter, html0);
+		monitor.done();
+	}
+
+	protected void correctSides() {
+		if (resultTitle == null)
+			resultTitle = cardA.getName();
+		if (resultTitle == null || cardA.getName() == null || cardA.getCardId() == 0)
+			throw new MagicException("Major problems parsing card " + fromCard.getCardId());
+		if (cardB == null)
+			return;
+		if (cardB.getName() == null || cardB.getCardId() == 0)
+			throw new MagicException("Major problems parsing card " + fromCard.getCardId());
+		if (resultTitle.indexOf('(') > 0) {
+			resultTitle = resultTitle.substring(0, resultTitle.indexOf('(') - 1);
+		}
+		if (resultTitle.contains("//")) {
+			// split cards, lets make cannonic name for it
+			String parts[] = resultTitle.split(" // ");
+			if (isOracle() && cardA.getName().equals(parts[1].trim())) {
+				// parts are reversed - bug in gatherer
+				MagicCard tmp = cardA;
+				cardA = cardB;
+				cardB = tmp;
+				int num = cardA.getCollectorNumberId();
+				cardA.setCollNumber(num + "a");
+				cardB.setCollNumber(num + "b");
+			}
+			cardA.setName(resultTitle + " (" + parts[0].trim() + ")");
+			cardB.setName(resultTitle + " (" + parts[1].trim() + ")");
+		}
+		if (cardA.getCardId() == cardB.getCardId()) {
+			cardB.setCardId(-cardB.getCardId());
+		}
+		cardB.setNonEmpty(MagicCardField.FLIPID, cardA.getCardId());
+		cardA.setNonEmpty(MagicCardField.FLIPID, cardB.getCardId());
+	}
+
+	protected MagicCard loadSide(String html) {
+		MagicCard card = new MagicCard();
+		card.setNonEmptyFromCard(fromCard);
+		card.set(MagicCardField.PART, null);
+		card.set(MagicCardField.FLIPID, null);
+		Set<ICardField> fieldMap = null;
+		extractField(card, fieldMap, html, MagicCardField.ID, cardIdPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.NAME, cardNamePattern, true);
+		extractField(card, fieldMap, html, MagicCardField.RULINGS, rulingPattern, true);
+		extractField(card, fieldMap, html, MagicCardField.SET, expansionPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.RATING, ratingPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.TYPE, typesPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.PART, cardRotatePattern, false);
+		Matcher matcher = textPattern.matcher(html);
+		if (matcher.find()) {
+			String text = matcher.group(1);
+			extractField(card, fieldMap, text, isOracle() ? MagicCardField.ORACLE : MagicCardField.TEXT, textPatternEach, true);
+		}
+		return card;
 	}
 
 	protected boolean isOracle() {
@@ -353,8 +430,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 
 	@Override
 	protected String getUrl() {
-		String base = DETAILS_QUERY_URL_BASE + card.getCardId();
-		String part = (String) card.get(MagicCardField.PART);
+		String base = DETAILS_QUERY_URL_BASE + fromCard.getGathererId();
+		String part = (String) fromCard.get(MagicCardField.PART);
 		if (part == null) {
 			return base;
 		}

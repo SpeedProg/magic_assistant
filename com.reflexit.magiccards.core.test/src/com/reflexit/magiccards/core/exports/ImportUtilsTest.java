@@ -105,7 +105,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Test
 	public void testGetSetCandidates() {
 		addLine("NAME|SET|COUNT");
-		addLine("Counterspell|Bla|2");
+		addLine("Counterspell2|Bla|2");
 		addLine("Light|Foot|1");
 		addLine("Light|Duel decks : Ajani vs. Nicol Bolas|1");
 		preimport();
@@ -192,8 +192,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Seb McKinnon", card.getArtist());
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals("My Text", card.getText());
-		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card",
-				card.getBase().getImageUrl());
+		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card", card.getBase().getImageUrl());
 	}
 
 	@Test

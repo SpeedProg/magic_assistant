@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -224,19 +223,10 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 			w.nl();
 			if (card instanceof ICardCountable) {
 				w.data(((ICardCountable) card).getCount() + " ");
-				String cardDetailUrl;
-				try {
-					cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
-				} catch (MalformedURLException e) {
-					cardDetailUrl = "";
-				}
-				try {
-					URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId(), "");
-					w.ela("a", card.getName(), "href", cardDetailUrl, "onmouseover",
-							"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
-				} catch (MalformedURLException e) {
-					w.ela("a", card.getName(), "href", cardDetailUrl);
-				}
+				String cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
+				URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId());
+				w.ela("a", card.getName(), "href", cardDetailUrl, "onmouseover",
+						"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
 			}
 			w.lineEl("br");
 		}

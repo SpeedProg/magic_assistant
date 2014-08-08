@@ -3,8 +3,8 @@
  */
 package com.reflexit.magiccards.ui.views.card;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,23 +24,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardModifiable;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
 class CardDescComposite extends Composite {
-	private static final String CARD_URI = "card://";
-	private static final String MULTIVERSEID = "multiverseid=";
-	private static final String OTHER_PART = "opart=";
-	/**
-	 * 
-	 */
 	private Image image;
 	private Label imageControl;
 	private final CardDescView cardDescView;
@@ -88,55 +82,20 @@ class CardDescComposite extends Composite {
 				@Override
 				public void changing(LocationEvent event) {
 					String location = event.location;
-					if (location.startsWith(CARD_URI)) {
-						location = location.substring(CARD_URI.length());
-						if (location.endsWith("/")) {
-							location = location.substring(0, location.length() - 1);
-						}
-						String params[] = location.split("&");
-						String part = null;
-						int cardId = 0;
-						for (int i = 0; i < params.length; i++) {
-							String string = params[i];
-							if (string.startsWith(MULTIVERSEID)) {
-								event.doit = false;
-								String value = string.substring(MULTIVERSEID.length());
-								cardId = Integer.valueOf(value).intValue();
-							}
-							if (string.startsWith(OTHER_PART)) {
-								event.doit = false;
-								part = string.substring(OTHER_PART.length());
+					if (location.equals("about:blank"))
+						return;
+					try {
+						int cardId = ParserHtmlHelper.extractCardIdFromURL(new URL(location));
+						if (cardId != 0) {
+							event.doit = false;
+							ICardStore<IMagicCard> magicDBStore = DataManager.getCardHandler().getMagicDBStore();
+							IMagicCard card2 = magicDBStore.getCard(cardId);
+							if (card2 != null) {
+								cardDescView.setSelection(new StructuredSelection(card2));
 							}
 						}
-						if (cardId == 0)
-							cardId = card.getCardId();
-						String opart = (String) card.get(MagicCardField.PART);
-						ICardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
-						Collection<IMagicCard> cards = magicDBStore.getCards(cardId);
-						IMagicCard card2 = null;
-						if (part != null) {
-							for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-								IMagicCard card3 = (IMagicCard) iterator.next();
-								if (part.equals(((MagicCard) card3).getPart())) {
-									card2 = card3;
-									break;
-								}
-							}
-							if (card2 == null) {
-								// card is not in DB
-								card2 = card.cloneCard();
-								((ICardModifiable) card2).set(MagicCardField.PART, part);
-								((ICardModifiable) card2).set(MagicCardField.OTHER_PART, opart);
-								if (!part.contains("@")) {
-									((ICardModifiable) card2).set(MagicCardField.NAME,
-											card2.getName().replaceAll("\\Q(" + opart + ")", "(" + part + ")"));
-								}
-							}
-						} else {
-							if (cards.size() > 0)
-								card2 = cards.iterator().next();
-						}
-						cardDescView.setSelection(new StructuredSelection(card2));
+					} catch (MalformedURLException e) {
+						MagicLogger.log(e);
 					}
 				}
 			});
@@ -268,15 +227,12 @@ class CardDescComposite extends Composite {
 	protected String getLinks(IMagicCard card) {
 		String links = "";
 		int flipId = card.getFlipId();
-		String part = (String) card.get(MagicCardField.OTHER_PART);
-		if (part != null && !part.contains("@")) {
-			links += "<a href=\"" + CARD_URI + OTHER_PART + part + ((flipId != 0) ? "&" + MULTIVERSEID + flipId : "")
-					+ "\">Other split part</a><br><br>";
-		} else if (flipId != 0) {
-			if (flipId == card.getCardId() && part != null && part.contains("@")) {
-				links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "&" + OTHER_PART + part + "\">Flip</a><br><br>";
-			} else
-				links = "<a href=\"" + CARD_URI + MULTIVERSEID + flipId + "\">Flip</a><br><br>";
+		if (flipId != 0) {
+			if (flipId == card.getCardId()) {
+				MagicLogger.log("Same flip id for " + card.getCardId());
+				flipId = -flipId;
+			}
+			links = "<a href=\"" + ParserHtmlHelper.createImageDetailURL(flipId) + "\">Flip</a><br><br>";
 		}
 		return links;
 	}
