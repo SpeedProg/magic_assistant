@@ -644,6 +644,12 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		if (value instanceof Number) {
 			if (((Number) value).intValue() == 0)
 				return true;
+		} else if (value instanceof String) {
+			if (((String) value).length() == 0)
+				return true;
+		} else if (value instanceof LegalityMap) {
+			if (((LegalityMap) value).isEmpty())
+				return true;
 		} else {
 			String string = value.toString();
 			if (string.length() == 0)
@@ -700,19 +706,27 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	}
 
 	public void setProperty(ICardField field, Object value) {
-		setProperty(field.name(), value);
+		setProperty1(field.name(), value);
 	}
 
 	public void setProperty(String key, Object value) {
 		if (key == null)
 			throw new NullPointerException();
-		key = key.trim();
-		if (properties == null)
-			properties = new LinkedHashMap<String, Object>(3);
-		if (value == null)
-			properties.remove(key);
-		else
+		if (key.trim().isEmpty())
+			throw new IllegalArgumentException();
+		setProperty1(key.trim(), value);
+	}
+
+	private void setProperty1(String key, Object value) {
+		if (value != null && !isEmptyValue(value)) {
+			if (properties == null)
+				properties = new LinkedHashMap<String, Object>(3);
 			properties.put(key, value);
+		} else if (properties != null) {
+			properties.remove(key);
+			if (properties.size() == 0)
+				properties = null;
+		}
 	}
 
 	public Object getProperty(ICardField field) {
@@ -844,48 +858,35 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	@Override
 	public LegalityMap getLegalityMap() {
 		Object value = getProperty(MagicCardField.LEGALITY);
-		if (value == null) {
-			value = induceLegality();
-			if (value == null)
-				return null;
-			setLegalityMap((LegalityMap) value);
-		}
-		if (value instanceof String) {
+		if (value != null) {
 			try {
-				LegalityMap map = LegalityMap.valueOf((String) value);
-				return map;
+				return LegalityMap.valueOf(value);
 			} catch (IllegalArgumentException e) {
 				MagicLogger.log("Invalid legality value " + value);
-				setLegalityMap(null);
-				return null;
 			}
 		}
-		return (LegalityMap) value;
+		LegalityMap map = induceLegality();
+		setLegalityMap(map);
+		return map;
 	}
 
 	private LegalityMap induceLegality() {
 		String set = getSet();
 		Edition edition = Editions.getInstance().getEditionByName(set);
 		if (edition == null)
-			return null;
+			return LegalityMap.EMPTY;
 		LegalityMap legalityMap = edition.getLegalityMap();
 		if (legalityMap == null)
-			return null;
-		LegalityMap clone = (LegalityMap) legalityMap.clone();
-		if (clone.isLegal(Format.STANDARD))
-			return clone;
+			return LegalityMap.EMPTY;
+		if (legalityMap.isLegal(Format.STANDARD))
+			return legalityMap;
 		// check printings
 		IMagicCard magicCard = DataManager.getMagicDBStore().getPrime(name);
 		if (magicCard != null && magicCard != this) {
 			LegalityMap candMap = magicCard.getLegalityMap();
-			Set<Format> formats = candMap.keySet();
-			for (Format format : formats) {
-				if (candMap.isLegal(format)) {
-					clone.put(format, Legality.LEGAL);
-				}
-			}
+			return legalityMap.merge(candMap);
 		}
-		return clone;
+		return LegalityMap.EMPTY;
 	}
 
 	public void setLegalityMap(LegalityMap map) {

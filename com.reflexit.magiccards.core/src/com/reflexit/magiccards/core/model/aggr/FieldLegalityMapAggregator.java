@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.model.aggr;
 
 import java.util.Iterator;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.LegalityMap;
@@ -27,12 +28,11 @@ public class FieldLegalityMapAggregator extends AbstractGroupAggregator {
 			if (value == null)
 				return null;
 			else
-				return (LegalityMap) value.clone();
+				return value;
 		if (value == null)
 			return res;
 		if (value.equals(res))
 			return res;
-		res.merge(value);
-		return res;
+		return res.merge(value);
 	}
 }

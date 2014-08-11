@@ -33,6 +33,7 @@ import com.reflexit.magiccards.core.model.GrouppingPerformanceTest;
 import com.reflexit.magiccards.core.model.LegalityMapTest;
 import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
 import com.reflexit.magiccards.core.model.MagicCardFilterTest;
+import com.reflexit.magiccards.core.model.MagicCardTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
 import com.reflexit.magiccards.core.model.nav.CardOrganizerTest;
@@ -69,6 +70,7 @@ public class AllLocalTests {
 		suite.addTestSuite(ClassicImportDelegateTest.class);
 		suite.addTestSuite(CustomExportDelegateTest.class);
 		// core
+		suite.addTestSuite(MagicCardTest.class);
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
 		suite.addTestSuite(CardOrganizerTest.class);

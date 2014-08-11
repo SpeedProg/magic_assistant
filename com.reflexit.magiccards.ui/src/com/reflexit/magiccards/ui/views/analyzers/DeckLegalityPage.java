@@ -101,10 +101,12 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			return getColumnText(element, 0);
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof String) {
 				String format = (String) element;
@@ -127,10 +129,12 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 			return getColumnText(element, 0);
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof MagicCardPhysical) {
 				MagicCardPhysical card = (MagicCardPhysical) element;
@@ -166,14 +170,17 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		legalityColumn.setWidth(80);
 		legalityTableViewer.setLabelProvider(new DeckLegalityLabelProvider());
 		legalityTableViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// ignore
 			}
 
+			@Override
 			public void dispose() {
 				// ignore
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (inputElement instanceof Map) {
 					return ((Map) inputElement).keySet().toArray();
@@ -216,6 +223,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		legalityColumn.setText("Legality");
 		legalityColumn.setWidth(100);
 		legalityTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				if (!sel.isEmpty()) {
@@ -228,14 +236,17 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		});
 		cardList.setLabelProvider(new CardTableLabelProvider());
 		cardList.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// TODO Auto-generated method stub
 			}
 
+			@Override
 			public void dispose() {
 				// TODO Auto-generated method stub
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				Object[] cards = new Object[store.size()];
 				int i = 0;
@@ -247,6 +258,7 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 		});
 		cardList.setFilters(new ViewerFilter[] { formatFilter });
 		cardList.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				selProvider.setSelection(sel);
@@ -280,10 +292,11 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 					cardLegalities = calculateDeckLegalities(new SubProgressMonitor(monitor, 90));
 					deckInput = LegalityMap.calculateDeckLegality(cardLegalities.values());
 					getControl().getDisplay().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							legalityTableViewer.setInput(deckInput);
-							if (deckInput.size() > 0) {
-								legalityTableViewer.setSelection(new StructuredSelection(deckInput.keySet().iterator().next()));
+							if (!deckInput.isEmpty()) {
+								legalityTableViewer.setSelection(new StructuredSelection(deckInput.getFirstLegal()));
 							}
 						}
 					});

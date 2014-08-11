@@ -49,8 +49,7 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 					ed = eds.getEditionByNameIgnoreCase(string);
 				}
 				if (ed != null) {
-					ed.getLegalityMap().put(format, Legality.LEGAL);
-					ed.getLegalityMap().complete();
+					ed.setLegalityMap(ed.getLegalityMap().put(format, Legality.LEGAL).complete());
 					// System.err.println("Set " + string + " is set to " +
 					// format);
 				}

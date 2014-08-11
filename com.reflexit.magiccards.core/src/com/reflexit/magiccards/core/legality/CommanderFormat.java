@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.legality;
 
 public class CommanderFormat extends Format {
 	public CommanderFormat() {
-		super("Commander");
+		super("Commander", 9);
 	}
 
 	@Override

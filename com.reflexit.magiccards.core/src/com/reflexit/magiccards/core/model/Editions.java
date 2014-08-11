@@ -38,7 +38,7 @@ public class Editions implements ISearchableProperty {
 		private String aliases[];
 		private Date release;
 		private String type = "?";
-		private LegalityMap legalityMap = new LegalityMap();
+		private LegalityMap legalityMap = LegalityMap.EMPTY;
 		private String block;
 		private int id;
 		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
@@ -213,15 +213,7 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setFormats(String legality) {
-			legalityMap.clear();
-			if (legality == null || legality.trim().length() == 0)
-				return;
-			String[] legs = legality.trim().split(",");
-			for (int i = 0; i < legs.length; i++) {
-				String string = legs[i];
-				legalityMap.put(Format.valueOf(string.trim()), Legality.LEGAL);
-			}
-			legalityMap.complete();
+			legalityMap = LegalityMap.createFromLegal(legality);
 		}
 
 		public void setBlock(String block) {
@@ -245,6 +237,10 @@ public class Editions implements ISearchableProperty {
 		public void setNameAliases(String aliases[]) {
 			this.aliases = new String[aliases.length];
 			System.arraycopy(aliases, 0, this.aliases, 0, aliases.length);
+		}
+
+		public void setLegalityMap(LegalityMap lm) {
+			legalityMap = lm;
 		}
 	}
 

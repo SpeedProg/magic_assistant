@@ -23,6 +23,7 @@ public class Format {
 	public static final Format CLASSIC = new ConstructedFormat("Classic", 6);
 	public static final Format FREEFORM = new Format("Freeform", 7);
 	public static final int SAN_ORDINAL = 10;
+	public static int ordcount = SAN_ORDINAL + 1;
 	private final static LinkedHashMap<String, Format> formats = new LinkedHashMap<String, Format>();
 	static {
 		add(Format.STANDARD);
@@ -40,6 +41,7 @@ public class Format {
 
 	public Format(String name) {
 		this.name = name.intern();
+		this.ordinal = ordcount++;
 	}
 
 	private static void add(Format f) {

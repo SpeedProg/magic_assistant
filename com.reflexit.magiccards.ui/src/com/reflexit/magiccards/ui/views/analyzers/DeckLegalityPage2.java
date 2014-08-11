@@ -67,8 +67,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private IFilteredCardStore fstore;
 	private Format format = DEFAULT_FORMAT;
 	private ImageAction load;
-	private LegalityMap deckLegalities = new LegalityMap(); // map
-															// format->legality
+	private LegalityMap deckLegalities = LegalityMap.EMPTY; // format->legality
 	private Combo comboLegality;
 	protected TreeViewer tree;
 	private ImageAction refresh;
@@ -429,12 +428,13 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	protected void reloadLegalityCombo(Combo comboLegality) {
 		comboLegality.removeAll();
-		for (final Format f : deckLegalities.keySet()) {
-			String label = getFormatLabel(f, deckLegalities.get(f));
+		Map<Format, Legality> deckMap = this.deckLegalities.mapOfLegality();
+		for (final Format f : deckMap.keySet()) {
+			String label = getFormatLabel(f, deckMap.get(f));
 			comboLegality.add(label);
 			comboLegality.setData(label, f.name());
 		}
-		comboLegality.setText(getFormatLabel(format, deckLegalities.get(format)));
+		comboLegality.setText(getFormatLabel(format, deckMap.get(format)));
 	}
 
 	private String getFormatLabel(Format f, Legality legality) {

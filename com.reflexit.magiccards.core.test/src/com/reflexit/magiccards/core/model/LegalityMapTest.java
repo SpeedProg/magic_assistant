@@ -17,12 +17,12 @@ public class LegalityMapTest extends TestCase {
 	@Override
 	@Before
 	public void setUp() {
-		map = new LegalityMap();
+		map = LegalityMap.EMPTY;
 	}
 
 	@Test
 	public void testLegalityMapBoolean() {
-		map = new LegalityMap();
+		map = LegalityMap.EMPTY;
 		assertEquals(Legality.UNKNOWN, map.get(STANDARD));
 	}
 
@@ -33,7 +33,7 @@ public class LegalityMapTest extends TestCase {
 
 	@Test
 	public void testToExternalOne() {
-		map.put(STANDARD, Legality.LEGAL);
+		map = map.put(STANDARD, Legality.LEGAL);
 		assertEquals("Standard", map.toExternal());
 		roundCheck();
 	}
@@ -44,8 +44,8 @@ public class LegalityMapTest extends TestCase {
 
 	@Test
 	public void testToExternalTwo() {
-		map.put(STANDARD, Legality.LEGAL);
-		map.put(BLA_BLA, Legality.RESTRICTED);
+		map = map.put(STANDARD, Legality.LEGAL);
+		map = map.put(BLA_BLA, Legality.RESTRICTED);
 		String expected = "Standard|Bla Bla1";
 		assertEquals(expected, map.toExternal());
 		roundCheck();
@@ -53,16 +53,16 @@ public class LegalityMapTest extends TestCase {
 
 	@Test
 	public void testGetLabel() {
-		map.put(STANDARD, Legality.LEGAL);
-		map.put(Format.EXTENDED, Legality.LEGAL);
+		map = map.put(STANDARD, Legality.LEGAL);
+		map = map.put(Format.EXTENDED, Legality.LEGAL);
 		assertEquals("Standard", map.getLabel());
 	}
 
 	@Test
 	public void testGetLabel2() {
-		map = new LegalityMap();
-		map.put(Format.MODERN, Legality.LEGAL);
-		map.put(Format.EXTENDED, Legality.RESTRICTED);
+		map = LegalityMap.EMPTY;
+		map = map.put(Format.MODERN, Legality.LEGAL);
+		map = map.put(Format.EXTENDED, Legality.RESTRICTED);
 		assertEquals("Extended (1)", map.getLabel());
 	}
 
@@ -75,50 +75,46 @@ public class LegalityMapTest extends TestCase {
 
 	@Test
 	public void testPutStringLegality() {
-		map.put(STANDARD, Legality.LEGAL);
-		map.put(STANDARD, Legality.NOT_LEGAL);
+		map = map.put(STANDARD, Legality.LEGAL);
+		map = map.put(STANDARD, Legality.NOT_LEGAL);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 	}
 
 	@Test
 	public void testMergeStringLegality() {
-		map.merge(STANDARD, Legality.NOT_LEGAL);
-		map.merge(STANDARD, Legality.LEGAL);
+		map = map.merge(STANDARD, Legality.NOT_LEGAL);
+		map = map.merge(STANDARD, Legality.LEGAL);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 	}
 
 	@Test
 	public void testMergeStringLegality2() {
-		map.merge(STANDARD, Legality.LEGAL);
-		map.merge(STANDARD, Legality.NOT_LEGAL);
+		map = map.merge(STANDARD, Legality.LEGAL);
+		map = map.merge(STANDARD, Legality.NOT_LEGAL);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 	}
 
 	@Test
 	public void testMergeStringLegality3() {
-		assertFalse(map.keySet().contains(Format.STANDARD));
-		map.merge(STANDARD, Legality.UNKNOWN);
-		assertTrue(map.keySet().contains(Format.STANDARD));
+		map = map.put(STANDARD, Legality.UNKNOWN);
 		assertEquals(Legality.UNKNOWN, map.get(STANDARD));
 	}
 
 	@Test
 	public void testMergeMap() {
-		map.merge(STANDARD, Legality.LEGAL);
-		LegalityMap map2 = new LegalityMap();
-		map2.initFormats();
-		map2.put(Format.EXTENDED, Legality.LEGAL);
-		map2.put(STANDARD, Legality.NOT_LEGAL);
-		map.merge(map2);
+		map = map.put(STANDARD, Legality.LEGAL);
+		LegalityMap map2 = LegalityMap.EMPTY;
+		map2 = map2.merge(Format.EXTENDED, Legality.LEGAL);
+		map2 = map2.merge(Format.STANDARD, Legality.NOT_LEGAL);
+		map = map.merge(map2);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 		assertEquals(Legality.LEGAL, map.get(Format.EXTENDED));
 	}
 
 	@Test
 	public void testFullText() {
-		map.put(Format.EXTENDED, Legality.RESTRICTED);
-		map.put(Format.MODERN, Legality.LEGAL);
-		map.complete();
+		map = map.put(Format.EXTENDED, Legality.RESTRICTED);
+		map = map.put(Format.MODERN, Legality.LEGAL).complete();
 		String fullText = map.fullText();
 		assertTrue(fullText.contains("Standard - Not Legal"));
 		assertTrue(fullText.contains("Legacy - Legal"));
@@ -127,13 +123,13 @@ public class LegalityMapTest extends TestCase {
 
 	@Test
 	public void testCalculateDeckLegality() {
-		LegalityMap card1 = new LegalityMap();
-		LegalityMap card2 = new LegalityMap();
-		card1.put(STANDARD, Legality.LEGAL);
-		card2.put(STANDARD, Legality.BANNED);
-		card1.put(BLA_BLA, Legality.LEGAL);
-		card1.put(Format.EXTENDED, Legality.RESTRICTED);
-		card2.put(Format.EXTENDED, Legality.UNKNOWN);
+		LegalityMap card1 = LegalityMap.EMPTY;
+		LegalityMap card2 = LegalityMap.EMPTY;
+		card1 = card1.put(STANDARD, Legality.LEGAL);
+		card2 = card2.put(STANDARD, Legality.BANNED);
+		card1 = card1.put(Format.EXTENDED, Legality.RESTRICTED);
+		card2 = card2.put(Format.EXTENDED, Legality.LEGAL);
+		card1 = card1.put(BLA_BLA, Legality.LEGAL);
 		ArrayList<LegalityMap> list = new ArrayList<LegalityMap>();
 		list.add(card1);
 		list.add(card2);
@@ -157,8 +153,7 @@ public class LegalityMapTest extends TestCase {
 	 */
 	@Test
 	public void testComplete() {
-		map.put(Format.MODERN, Legality.LEGAL);
-		map.complete();
+		map = map.put(Format.MODERN, Legality.LEGAL).complete();
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
 		assertEquals(Legality.LEGAL, map.get(Format.LEGACY));
 		// System.err.println(map.toExternal());

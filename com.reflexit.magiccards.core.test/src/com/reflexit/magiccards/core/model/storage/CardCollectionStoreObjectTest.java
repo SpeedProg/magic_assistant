@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.legality.Format;
-import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -84,8 +83,7 @@ public class CardCollectionStoreObjectTest extends TestCase {
 	@Test
 	public void testpropLegality() {
 		MagicCard a1 = m1.cloneCard();
-		LegalityMap map = new LegalityMap();
-		map.put(Format.STANDARD, Legality.LEGAL);
+		LegalityMap map = LegalityMap.valueOf(Format.STANDARD);
 		a1.setLegalityMap(map);
 		this.store.list.add(a1);
 		roundtrip();

@@ -129,7 +129,7 @@ public class ParseGathererLegality extends AbstractParseGathererPage {
 
 	@Override
 	protected synchronized void loadHtml(String html, ICoreProgressMonitor monitor) {
-		legalityMap = new LegalityMap();
+		HashMap<Format, Legality> map = new HashMap();
 		String lines[] = html.split("\n");
 		int state = 0;
 		String row = "";
@@ -156,7 +156,7 @@ public class ParseGathererLegality extends AbstractParseGathererPage {
 					String format = matcher.group(1).trim();
 					if (matcher.find()) {
 						String legal = matcher.group(1).trim();
-						legalityMap.put(Format.valueOf(format), Legality.fromLabel(legal));
+						map.put(Format.valueOf(format), Legality.fromLabel(legal));
 					} else {
 						MagicLogger.log("Cannot parse legality " + row);
 					}
@@ -167,7 +167,7 @@ public class ParseGathererLegality extends AbstractParseGathererPage {
 				row += line;
 			}
 		}
-		legalityMap.complete();
+		legalityMap = LegalityMap.valueOf(map);
 		if (card != null) {
 			((MagicCard) card).setLegalityMap(legalityMap);
 			card = null;
