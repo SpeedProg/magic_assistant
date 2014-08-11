@@ -140,6 +140,23 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals(220, Integer.parseInt(card.getCollNumber()));
 	}
 
+	public void testExpansionParser() throws IOException {
+		// Card "Terminate" in Alara Reborn expansion
+		// Language English
+		MagicCard card = load(176449);
+		assertEquals("Alara Reborn", card.getSet());
+		// Language Chinese Simplified
+		card = load(196433);
+		assertEquals("Alara Reborn", card.getSet());
+		// Language German
+		card = load(196868);
+		assertEquals("Alara Reborn", card.getSet());
+		// Language Russian
+		card = load(195998);
+		assertEquals("Alara Reborn", card.getSet());
+	}
+	
+	
 	public void testSets() throws IOException {
 		MagicCard card = load(193767); // Serra Angel
 		assertTrue(magicDb.size() > 8);
