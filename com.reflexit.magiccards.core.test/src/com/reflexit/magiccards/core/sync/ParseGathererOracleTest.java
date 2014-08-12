@@ -1,11 +1,9 @@
 package com.reflexit.magiccards.core.sync;
 
-import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -113,7 +111,7 @@ public class ParseGathererOracleTest extends TestCase {
 		// card.setSet("Magic: The Gathering-Commander");
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("Cunning Bandit", card.getName());
-		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
+		// FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
 		assertEquals(99, card.getCollectorNumberId());
 		assertEquals("99a", card.getCollNumber());
 		// System.err.println(magicDb);
@@ -155,8 +153,7 @@ public class ParseGathererOracleTest extends TestCase {
 		card = load(195998);
 		assertEquals("Alara Reborn", card.getSet());
 	}
-	
-	
+
 	public void testSets() throws IOException {
 		MagicCard card = load(193767); // Serra Angel
 		assertTrue(magicDb.size() > 8);
