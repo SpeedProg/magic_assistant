@@ -361,8 +361,6 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 			public Color getBackground(Object element) {
 				if (element instanceof IMagicCard) {
 					LegalityMap legalityMap = ((IMagicCard) element).getLegalityMap();
-					if (legalityMap == null)
-						return null;
 					Legality legality = legalityMap.get(format);
 					switch (legality) {
 						case UNKNOWN:
@@ -373,6 +371,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 							return MagicUIActivator.COLOR_GREENISH;
 						case RESTRICTED:
 							return Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW);
+						default:
+							break;
 					}
 				}
 				return super.getBackground(element);

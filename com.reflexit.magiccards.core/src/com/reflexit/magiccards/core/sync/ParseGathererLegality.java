@@ -167,7 +167,7 @@ public class ParseGathererLegality extends AbstractParseGathererPage {
 				row += line;
 			}
 		}
-		legalityMap = LegalityMap.valueOf(map);
+		legalityMap = LegalityMap.valueOf(map).complete();
 		if (card != null) {
 			((MagicCard) card).setLegalityMap(legalityMap);
 			card = null;

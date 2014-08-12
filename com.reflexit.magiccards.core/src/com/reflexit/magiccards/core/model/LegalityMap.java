@@ -250,7 +250,7 @@ public class LegalityMap {
 	}
 
 	public Map<Format, Legality> mapOfLegality() {
-		return LegalityHashMap.valueOf(external);
+		return LegalityHashMap.valueOf(external).complete();
 	}
 
 	LegalityHashMap map() {
@@ -264,9 +264,7 @@ public class LegalityMap {
 	public static LegalityMap calculateDeckLegality(ICardStore<IMagicCard> store) {
 		Collection<LegalityMap> cardLegalities = new ArrayList<LegalityMap>();
 		for (IMagicCard card : store) {
-			LegalityMap map = card.getLegalityMap();
-			if (map != null)
-				cardLegalities.add(map);
+			cardLegalities.add(card.getLegalityMap());
 		}
 		return calculateDeckLegality(cardLegalities);
 	}
@@ -275,12 +273,12 @@ public class LegalityMap {
 		LegalityHashMap deckLegality = new LegalityHashMap();
 		// all other formats that these cards mention
 		for (LegalityMap cardLegalityRestrictions : cardLegalities) {
-			for (Format formatForCard : cardLegalityRestrictions.map().keySet()) {
-				deckLegality.put(formatForCard, Legality.UNKNOWN);
-			}
+			LegalityHashMap sourceMap = cardLegalityRestrictions.map().completeL();
+			deckLegality.putAll(sourceMap);
 		}
 		for (LegalityMap cardLegalityRestrictions : cardLegalities) {
-			updateDeckLegality(deckLegality, cardLegalityRestrictions.map());
+			LegalityHashMap sourceMap = cardLegalityRestrictions.map().completeL();
+			updateDeckLegality(deckLegality, sourceMap);
 		}
 		return deckLegality.toLegalityMap();
 	}

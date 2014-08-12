@@ -9,7 +9,6 @@ import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Legality;
-import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -141,11 +140,7 @@ public class Format {
 	}
 
 	public Legality getLegality(IMagicCard card) {
-		LegalityMap map = card.getLegalityMap();
-		if (map != null) {
-			return map.get(this);
-		}
-		return Legality.UNKNOWN;
+		return card.getLegalityMap().mapOfLegality().get(this);
 	}
 
 	public String validateCardCount(IMagicCard card) {
