@@ -1,0 +1,569 @@
+__NOTOC__
+== 1.3.1 ==
+changes in 1.3.1.13
+* Bug 357 - Conspiracy aliases
+* Added Conspiracy and  Vintage Masters to default db
+changes in 1.3.1.12 beta
+* Tournament - Added ability to edit pairing in the round and specify byes
+changes in 1.3.1.11
+* Bug 345 Shuffle library issue in Draw tab
+* Added log file path to bug report submission window
+* Bug 354 Text of card disappears on select -  Gatherer updated their web-site again.
+* Bug 353 Fixed - No localized English cards message
+changes in 1.3.1.10
+* Bug 352 Win points on the tournament organizer 
+* Added simple Backup support
+changes in 1.3.1.9
+* Bug 350: Fixed possible data loss due to parsing error in collection and decks
+changes in 1.3.1.8 
+* Feature 349: Added "group by" card name, so can see total regardless of set
+* Icon for Name column now should not take lots of space in tree mode, making groupping more useful
+changes in 1.3.1.7 beta
+* Feature 346 added commands to move & split and just split which can be triggered from keyboard with a counter
+changes in 1.3.1.6 beta
+* Feature 326 Sort by Date Added 
+changes in 1.3.1.5
+* More fixes in test play deck, added Notes columns for other stuff (like counters, face down, etc)
+changes in 1.3.1.4
+* Feature 179 Added feature to Play Test a Deck (via Draw page)
+changes in 1.3.1.3
+* Bug 343 Tournament perspective no longer works
+* Bug 344 java.lang.NullPointerException on click 
+changes in 1.3.1.2
+* added preferences "work offline"
+* supporting url in the custom price provider xml
+changes in 1.3.1.1
+* Currency type is now read from provider xml (only for custom providers)
+* Bug 342 Sideboard issue when moving decks 
+* Added Modern Event Deck set
+* Feature 341 Add Set's date column as option for main view 
+== 1.3.0 ==
+changes in 1.3.0.4
+* Bug 336 Progress4 shows 25% for non-own cards 
+* Added support for currency conversion for prices
+* Bug 340 put only minimal information about each card into the collection's xml file
+* Fixed bug with power aggregation and creature count
+* Bug 339 move card set related information from \.metadata to \magiccards 
+changes in 1.3.0.1
+* Updated platform to eclipse Kepler 4.3.2
+* Update database with latest released sets (up to Apr 2014)
+* Fixed split export format name in Card Export preferences
+* Fixed ClassCastException when grouping by Location or Ownership
+* Added more abilities and externalized abilities file so user can extend the list of abilities
+
+== 1.2.12 ==
+changes in 1.2.12.2
+* Bug #331 Can't activate deck or collection
+* Bug #332 Sort by Color not working 
+changes in 1.2.12.0
+* added cvs ';' separated import/export format
+* Bug #328 Could not create the view: An unexpected exception was thrown.
+changes in 1.2.11.11
+* should be able to sort now by Progress column in Collector view
+* fixed refresh issues when changing price provider
+== 1.2.10 ==
+changes in 1.2.10.10
+* added context menu to buy cards from selected provider - auto-populating cart if can
+changes in 1.2.10.9
+* price provider values saved per provider
+* can auto-load custom prices from xml
+* bug 319 prevent NPE when exporter is not defined for the format
+changes in 1.2.10.7
+* Bug #299 NullPointerException on Ubuntu 13.1
+* Bug #312 list refresh/update issue
+* Feature #313 Generate Booster Packs in separate collection 
+changes in 1.2.10.6
+* background of table lines based on ownership, customisable. Ownership color will loose its own colouring
+* Feature #306 added Progress4 column to track progress of x4 sets in the collector view (off by default)
+* removed preferences for Cache Images - it is really not needed and confusing
+* Bug #310 NPE when opening deck (possibly fixed)
+* Bug #305 IAE during loading extra fields (possibly fixed)
+changes in 1.2.10.5
+* Fixed import of MA fields CTYPE, CMC and COLOR - ignore on import instead of error
+* Color field exported as cost, but called COLOR instead of duplicate COST column
+* Autoexpand in navigator view
+* Trying to fix some refresh issues in collection
+changes in 1.2.10.4
+* Move update commands for File menu, since Help menu was not the right choice I think
+* Fixed db initialization issues introduced in 1.2.10.3 
+changes in 1.2.10.3 (Update Site - 8 Jan 2014) 
+* Added button to not resize scanned card image (for oversized cards)
+* Added Anthologies set with images from magiccards.info 
+* New default views layout - Navigator and Printings on the right now
+* Split Printings view into two - Printings and Instances
+* Instances view has extra columns now Special, Comment, Price and ForTrade count
+* Reduced text in Location column to abbreviate "Collections" and "Decks" prefixes
+* Bug #301 stolen focus - fixed
+* Remove Rarity as default column in Magic DB view, since it can be deducted from the expansion symbol color
+changes in  1.2.10.2 
+* Added open sideboard button
+* Fixed NPE when loading Legality tab
+changes in  1.2.10.1 (19 Nov 2013) 
+* Bug #293 Issues with renaming a deck with sideboard
+* Bug #295 Inactive "Finish" button in export while exporting from Card Navigator tab
+* Bug #296 Wizards Deck HTML export option not working properly
+* Added Commander 2013 set
+== 1.2.9.9 ==
+* Fixed bugs in extend database dialogs 
+* Updated help about updating magic database
+== 1.2.9.8 ==
+* Fixed grammar in delete deck dialog
+* Bug #288 Unable to delete cards from a collection after the set is changed
+* Bug #290 Load Chinese localisation bug 
+== 1.2.9.7 ==
+* Added Legality as updatable field in Load Extra fields
+* Can select now price provider in load extra fields dialog
+* Added more confirmation on deck deletion and options to disband a deck 
+* Fixed Ravnica set for TCGplayer
+== 1.2.9.6 ==
+* Bug #284 IllegalArgumentException for legality column
+== 1.2.9.5 ==
+* fixed issues with updating rating and some other fields on new cards
+* fixed import/load deck problems with card count == 0
+* fixed some set aliases for tcg player price provider 
+== 1.2.9.4 ==
+* update db with new sets for September 2013
+* fixed alias for Magic 2014 set
+* fix wrong type of deck on Info page for decks with sideboard
+* Updated legality page - now shows all cards and legality related info
+* Feature #280 - Added support for legality filter (in Sets filter page)
+* Added legality column
+* Bug #281 - fixed some usability issues with errors discoverability during import
+== 1.2.9.3 ==
+* Grouping in card views now shows the root (All) so you can see aggregate results for all cards
+* Added tooltip for legacy column
+* Bug #277 issues with tree redrawing when grouping
+== 1.2.9.2 ==
+* Bug #278 Unable to change Count for Trade
+* Bug #276 Scheme cards resize issues
+== 1.2.9.1 (Update Site - 4 Sep 2013) ==
+* Fixed Bug 273 Mana Curve Graphic Missing
+* Added protection from copying non-virtual cards (un-protect using preference)
+* Added more info fields into deck Info page for legality purposes
+* Added Legality column
+* Added button to update set legality in Set preference page 
+* Added check for magic db updates in help menu
+== 1.2.8.48 (Update Site - 15 Aug 2013) ==
+* Own count now shows count of cards in all collections in addition to count in this collection
+* Fixes status bar message in Printings columns
+* Use color instead of icon in ownership column
+* Fix issues with own cards number getting out of sync when opening and closing decks, and editing cards
+* Fixed cut and paste operations for cards
+
+== 1.2.8.47 ==
+* Set icons are bigger now in cards tables
+* Mana icons are bigger now
+* Added delay to update when typing in quick filter
+* Added warning if cards are filtered
+
+== 1.2.8.46 (Update Site - 6 Aug 2013) ==
+* Added exports page for deck view, to show html of the deck like on wizards webside (and other export formats)
+* Fixed issues with sideboard import
+* Added Wizards deck HTML exporter (a la https://www.wizards.com/magic/magazine/Article.aspx?x=mtg/daily/deck/1286)
+* Added set icon in the filter set page
+
+== 1.2.8.45 (Update Site - 29 July 2013) ==
+* fixed tournament scheduler - calculation of omw, ogw and pgw
+
+== 1.2.8.44 (Update Site - 27 July 2013) ==
+* update price provider treating Magic 2014 name on their own
+* added support for searching for mined abilities (i.e. type [draw] in text search field in filter)
+== 1.2.8.43 (Update Site - 23 July 2013) ==
+* included change log in update description
+* support for IMAGE_URL import column for external (to gatherer) cards
+* properly re-sizing card images which are non-default size
+* added preference page for viewing/editing sets, added ability to add/delete set from preference page
+* fixed workflow for importing new cards into database
+* renaming preference pages so order looks better (when sorted)
+* export: allow to change columns for some exporters
+* fixed some performance issues when adding cards into decks
+
+== 1.2.8.42 (Update Site - 10 July 2013) ==
+* After export is done open system editor to show the result
+* Fixed error when update to Magic 2014
+* Magic 2014 Core Set is included in the default database
+
+== 1.2.8.40 (Update Site - 3 July 2013) ==
+* Bug 260 Color Filters - fixed filtering of multiple colors when using Only modify
+
+== 1.2.8.39 (Update Site - 2 July 2013) ==
+* Bug 259 Fixed Card Update not working - Gatherer site is broken - found workaround for some queries
+== 1.2.8.37 (Update Site - 17 June 2013) ==
+* Bug 257 Fixed: Cannot type dash in filter and search
+* Fixed: Cannot copy text from search and filter
+* Fixed: Cannot export class deck format
+* Bug 254: Added export for another deck classic (1 Name) and import from same format
+
+== 1.2.8.35 (16 June 2013) ==
+* Bug 245 Filter unusual application to both collection and deck
+* Ability to create customized card export format (Window->Preferences->Magic Assistant->Manage Deck Exporters)
+* Bug 256 Fixed issues on Linux that was preventing program startup
+
+== 1.2.7.22 (Update Site - 21 Feb 2013) ==
+* Fixed bug when creating Booster pack from Collection it won't generate right number of cards
+
+== 1.2.6.14 (Update Site - 13 Jan 2013) ==
+* Added Shandalar/Mana Link/Duels of Planeswalkers deck format import
+* Added MTG Studio CSV deck format import support
+* Fixed validation rules on import page, otherwise it was trowing InvocationTargetException without an explanation
+* Allow to sort fields on Import preview page
+* Shows Errors column on import preview page
+* Allow edit name and set on import preview page (inside the table itself)
+* Fixed bug with title of Collector's view (always showed 0 unique cards)
+* Fixed horrible performance of editing multiple cards at once
+
+== 1.2.6.10 (Update Site - 4 Dec 2012) ==
+* Fixed search (Ctrl-F) on tables
+* Fixed behavior with "forTrade" counter when splitting or merging cards
+* Fixed a problem with DB where records were duplicated
+
+== 1.2.6.9 (27 Nov 2012) ==
+* Added support for importing magic database from external source 
+* Added installer for windows for people who don't know how to unzip and install java
+
+== 1.2.6.5 (Update Site - 17 Nov 2012) ==
+* optimized hell out of it. Should be very fast filtering and grouping
+
+== 1.2.6.3 (5 Nov 2012) ==
+* fixed tornament closure in Tournament organizer which would not save the results to a file
+* fixed link to magiccardtraders site which they changed and broke price update
+* fixed search in tree views, now it will find and expand it
+* fixed card collector numbers in default database (have no effect if updating to this from existing install)
+
+== 1.2.6.0 (3 Nov 2012) ==
+Posted as downloadable
+
+== 1.2.5.17 (Update Site) ==
+* Bug 208 Colorless filter only returns cards with a cost equal to 1 or greater-than or equal to 10
+* Fixed selection issues on Deck analyzers tabs
+
+== 1.2.5.16 (Update Site) ==
+* Fixed bug when cards were added as virtual when "add to deck" shortcut was used
+* Fixed progress sort in Collector view (now sorting by unique card count)
+* Fixed bug when export of deck/collection was broken (not be able to finish export due to exception)
+* Name grouping in Collector view now group cards of same English name together (even name is translated in different language)
+* When editing card comment does not come up as "null" string
+
+== 1.2.5.10 (Update Site) ==
+* Added support for selecting a font and color for lists
+* Fixed propagation of font value for "Dialog font"
+* Fixed sorter which I broke after 1.2.5.4
+* Fixed auto-complete for set in quick filter which was overriding part of word you type
+
+== 1.2.5.4 (Update Site) ==
+* Added German translation for types
+* Added sort & dnd support for cards list that shown on deck pages besides main
+* Added Core/Block groupping to MagicDB view
+* Change Collector view population (optimized) and added Core/Block groupping
+* Moved Draw/Hand view to be a deck analyzer (appears on the tabs now)
+
+== 1.2.5.3 (Update site) ==
+* Added auto-complete for special tags (i.e. mint, foil, etc)
+* Fixed not working search for special tags 
+* Fixed broken html export
+* For Trade count field was missing from edit card dialog
+* Added deck pages for Creatures and Abilities (contribution)
+* Added Spanish translation for types
+
+== 1.2.5.2 (07-07-2012) ==
+Features:
+* Feature 2917313 - Added "Copy to Active Collection" command (Ctrl-D) into My Cards view
+* Added show instances command to Magic DB view. It shows all instances of owned cards (if any)
+* Added label decorator (Active) to the active deck in the nav view
+* Collector view feature from [https://sourceforge.net/tracker/?func=detail&aid=3505448&group_id=231732&atid=1084662  3505448]
+** Shows cards you own and don't own. Calculates a progress of collection (at least one card of each)
+* Added Set quick filter
+* Added Magic 2013 set
+* If you resize columns it will remember now sizes in preferences (per view)
+* Added import support for Magic Workstation mwDeck format
+Bugs:
+* Bug 3531624 - fix xml export which was broken
+* Fixed changing card location using cell editor
+* Can now copy/move cards selected by selecting group
+* Changes the way "All" cards are updated - now it is done by Set
+* Updated magic db to latest oracle texts
+* Manually modified Kamigawa sets to add flip cards support
+* Fixed more issues with flip cards
+* Fixed bug that copy cards and paste into text editor not working
+
+== 1.2.4.0 (29-May-2012) ==
+* Fixed few bugs with Split cards, Flip cards and Reverse side cards
+* Fixed few bugs in card import to allow more relax import (i.e. case intensive, etc)
+* Now you can create new card set on import
+
+== 1.2.3.6 (15-Apr-2012) ==
+* Fixed bug with timeout when updating cards
+== 1.2.3.4 (15-Feb-2012) ==
+* Bug 3487232 Price is not saved
+* Fixed Export button not working from Navigator view
+* Fixed unnecessary card updates with only Price update is selected in Loading Extra Fields...
+* Added MOTL price provider as default
+
+== 1.2.3 (13-Dec-2011) ==
+* Bug 3440750 Cards not getting set to "Own" when added to deck
+* Bug 3440761 Sort direction is unpredictable, arrow is backwards
+* Bug 3440753 Show more complete counts
+* Bug 3437581 Group by type doesn't respect Instant type
+* Bug 3436553 Camel Case search not working with apostrophie
+* Fixed Reset to Default in filter. New button added to reset all filter values in toolbar.
+
+== 1.2.2 (14-11-2011) ==
+* Finally added ability to select user workspace
+* Fix issues with selection when using filter
+* Added "text filter" to Set selection in filter dialog
+* Added basic support for legality tag in the sets dialog
+* Updated to new xstream version, which had a bug causing MA not working with java 1.7
+
+== 1.2.1 (27-09-2011) ==
+* Fixed issues with Innistrad set loading and added links to flip side cards
+
+== 1.2.0.5 (20-09-2011) ==
+* Added quick filter support on top of the DB and MyCards view
+* Added support for finding all versions of the same card for localized versions
+* Added language column in Printings view
+* Added filter for Collector's Number field
+* Added check for software and cards updates on startup
+* There is unfinished version of Graphics view for deck/collection
+
+== 1.1.0.32 (00-08-2011) ==
+* Added support for localized versions of the cards
+
+== 1.1.0.31 (21-05-2011) ==
+* Added drag & drop of decks inside the Navigator view
+* [2913029] added average deck mana cost in the mana curve page
+* [ mtgbrowser-Bugs-3293663 ] Feature - Multi Columns sorting
+* [ mtgbrowser-Bugs-3132210 ] Feature Request: Drag and Drop of Decks in Card Navigator
+* [ mtgbrowser-Bugs-3293705 ] Feature - Sort color column with Natural ordering
+* Added new sets up to New Phyrexia
+* Added special "mana" costs from New Phyrexia
+
+== 1.1.0.29 (2010-11-16) ==
+* Removed separate menu for loading seller's prices, moved to Load Extra fields menu
+* Added back [http://www.mtgfanatic.com/?ForumReferrerID=44349 MTG Fanatic] price provider
+* User now have a choice to which price provider to choose (from Window->Preferences)
+* User have a choice now when loading extra fields to do it from selected cards, filtered cards or all cards in the current view
+* Added group by Location, Set and Rarity options for all views
+* Added "Printings" view - it shows all printings of the cards in all sets and art-works (for land). 
+** It works in two modes - db - shows card in database, and collection - show all instances of a selected card in all collections and decks
+** It supports drag & drop - so you can add card into deck/collection from specific set (in db mode)
+* Changed prefs to separate loading certain fields when clicking on card
+* Added action to manually sync from web in Card Info and Printings views
+
+== 1.1.0.28 (2010-10-13) ==
+* Fixed persistence of loaded extra fields
+* Added Image checkbox for loading extra fields (for loading images in advance)
+* Minor ui updates in select extra fields dialog
+* Added support for Update for "All" cards
+* Added Update action in the Magic DB view menu
+* Fixed locale bug (startup problem with non english locales)
+
+== 1.1.0.27 (2010-10-02) ==
+* Fixed carbon builds for mac os
+* Updated icons
+* Added support for sideboard
+* Bug 3080074 - magic-db update issues
+
+== 1.1.0.25 (2010-09-20) ==
+* Added fields Artist,Rating,Collector's Number,For Trade. 
+* Added fields called "Special". It is for arbitrary set of tags, which can be used for foil, online, premium, mint, etc.
+* Added auto-upload of Rulings for the card (and preference to turn it off)
+* Created custom xml converter, it will write more compact xml which should significantly improve performance on big collections
+* Added "Export" to deck view menu
+* Bug 3001140 - fixed double click to expand/collapse group
+* Bug 3027988 - fixed sorting by Location in 'My Cards' view does not work 						
+* Bug 2956805 - added export to Wagic format
+
+== 1.1.0.24 (2010-09-05) ==
+* Added Software Update feature
+* Upgrade to a new eclipse platform 3.6 (this may fix some platform bugs)
+== 1.0.7.23 (2010-08-18) ==
+* Updated icon for deck info view
+* Added redundancy presentation for deck info when browser is not available for eclipse(some linux distos)
+* Added export to "deck classic" format
+
+== 1.0.7.22 (2010-06-26) ==
+* Refresh issues after cards are deleted
+* Added ownership filter in User filter
+* Added ownership flag for deck/collection creation
+* Fixed location mismatch when copying cards to other deck
+
+== 1.0.7.20 (2010-06-17) ==
+* Fixed import deck problems 
+* Added buttons to create new deck/collection into import deck wizard page
+* Added import from Magic Workstation CSV
+* Added import from Magic Online CSV
+
+== 1.0.7.19 (2010-04-28) ==
+* [2954248] - Fixed mana cost for Tower Above (Workaround: update Shadowmoor set)
+* [2953965] - Fixed: Cancelling split pile dialog still splits the pile
+* Fixed Loading Seller Prices - website of mtgfanatic changed. Now taking prices from findmagiccards.com
+* Update db to include "Rise of the Eldrazi"
+
+== 1.0.7.18 (2010-02-07) ==
+* Added support for "Planes" - special wide cards from Planechase set
+* Added "Worldwake" to default database
+
+== 1.0.7.17 (2009-12-23) ==
+* [2917073] - Cannot change order of columns in preferences 
+* [2915202] - Type filter is broken 
+* added filter for user fields in deck/collection view
+* added seller's price filter field to basic filter
+* [2919642] - Added deck's cost in Info tab
+
+== 1.0.7.16 (2009-11-15) ==
+
+* [2894748] - fixed bug that deck is not saved after editing card properties
+* Fixed Save/Load filters
+* Fixed grouping in magic db view
+* Fixed card view now updating when grouping is applied
+* Added preference to suppress loading graphics from the net (if slow connection or to work offline)
+
+== 1.0.7.15 (2009-11-06) ==
+
+Card Organizer:
+* Added new checkbox for color filter - allow to search for colors exclusively
+* Added "abilities" filter page (advanced text search)
+* Added filter page for user fields (comment, price and count)
+* Added ability to save/load filters
+* [2885349] - fixed updating cards total when editing card count
+* Update with Zendikar set
+Tournament Organizer
+* fixed auto-expand of rounds schedule
+* fixed draft round button
+
+== 1.0.6.14 (2009-10-14) ==
+* [2877008] fixed mana cost for Darksteel Colossus
+* added selection for cards in deck legality page
+* [2879122] - added extra filter options for colors - Mono, Hybrid and "And"
+
+==1.0.6.13 (2009-10-08) ==
+* [2872467] - Fixed Deck view refresh problems
+
+==1.0.6.12 (2009-09-29) ==
+* Fixed booster pack not picking up Mythic Rare cards
+* Adjusted average mana curve coefficients
+* Fixed Loading Sellers prices, which stopped working because web site was changed
+* Added Deck Legality page, based on contribution of "Tym The Enchanter"
+* Added buttons for most used view actions on the top of the view
+
+==1.0.6.10 (2009-22-07) ==
+* [2821958] Fixed image Conflux set image caching on windows
+* Implemented xml import
+* Fixed loading extension symbol problem for recently updated sets
+* Fixed problems while moving xml data files (deck and collection) around and between workspaces
+* Default DB updated with Magic 2010 set
+* [2823901] fixed Mythic Rare filter
+* Added "Land" rarity for basic land
+* [2824589] added ability to load different art versions for basic land
+* Improved update card database dialog and workflow (can run in background now)
+==1.0.6.9 (2009-07-07)==
+* Added tournament organizer and scheduler
+* Optimized import and mass operations
+* [2814939] Fixed exception when adding cards too fast
+* [2814939] Fixed exception dialog for some missing set images
+==1.0.5.4 (2009-06-20)==
+* [2392848] Items in card navigator now sorted alphabetically
+* Collections now can be open in a Deck View, as well as My Cards view (using context menu)
+* Removed concept of Deck and Collection Containers, only Container now - can have either decks or collections in it
+* Fixed booster pack generator - added validation, it will make a collection now instead of deck, it allows to select many sets now too
+* Fixed price format, $0.10 instead of $0.1
+* Added set/rarity symbol to be displayed in table in name column
+* Cleaned up context menus: fixed order, removed less used items, added "Move to" menu a Deck view
+* [2028078] Added Decrease command to reduce number of cards
+* [2809646] Fixed filtering words with letter "m"
+==1.0.5.3 (2009-06-14)==
+* [2798973] Fixed: Restore Defaults does not work for set filter
+* Added "Select All" and "Deselect All" for set filter page
+* Updated user doc for editing deck, import, filter and search
+* [2798925] Fixed: Search Box in Mac OS X is squashed (too shallow)
+* [2537773] Fixed: All card description fields should be selectable
+* Added more action buttons in Navigator view toolbar (Export,Import and Add Deck - before available only from context menu)
+* Re-ordered fields in new wizards to make it more user friendly
+* Fixed status bar and updates for "Draw" view
+* Added regexp search in Filter text fields
+* [2392880] Can Copy chart images now to clipboard
+* Fixed deck import bugs
+==1.0.5.2 (2009-05-18)==
+* [2392864] Added chart for card type distribution and card types statistics
+* Added group by card types
+* [2791997] Fixed restore defaults in filter
+* Updated user doc
+==1.0.5.1 (2009-04-29)==
+* added Camel case text search feature - allow to search by just typing first letters of the words in the card name such as SOTAg (Shield of the Ages)
+* added shortcut to add card to current active deck (+), same to increase card count in the current deck
+* fixed some drag & drop bugs (such as card won't stack properly)
+* added support for new gatherer website
+* updated to Alara Reborn and Conflux set
+==1.0.4.5 (2009-01-18)==
+* fixed editions that were not loading images properly
+* fixed text search to respect word boundaries (otherwise search for Rat returns Pirate)
+* added support for negative text search (-pirate)
+* added column Comment
+* added export to csv and xml support
+* collection view now can show all cards including ones in decks
+* added search as you type feature
+* added Price column for user defined cards prices, and Seller's Price for automatically downloaded prices from internet for selected seller.
+* added Edit command which bring edit dialog that allow to edit card fields without using cell editor
+* added Info page for deck to Edit deck description
+* added import from cvs, xml and classic text deck format
+* added paste command
+==1.0.4.4 (2008-12-15)==
+* [2420643] added drag and drop in card navigator
+* [2420704] fixed exception when dragging to magic database
+* [2420730] fixed missing newline in copied data
+* [2420646] fixed "split pile" for 1 cards
+* [2420670] renamed Add to Library into Add to Default Collection. Added Insert key shortcut.
+* fixed drag &amp; drop for multiple collections
+==1.0.4.3 (build ID 20081211000)==
+* [2392885] fixed exception while adding cards from db into library using drag and drop
+* [2392714] fixed refresh problems when adding new elements in the navigator
+* [2392702] fixed adding cards to collection if more than one collection (using drag &amp; drop)
+==1.0.4.2 (build ID 200811292123)==
+* added draw emulation view
+* fixed counters for cards while editing library/deck
+* added attribute/column for "ownership"
+* added ability to split card pile for later drag &amp; drop
+* dragging files from collection to deck would move cards now instead of copying
+==1.0.4.1 (build ID 200811022313)==
+* added Copy command that copies card text fields into clipboard
+* added Mana Curve tab for Deck viewer
+* added Find command into views toolbar
+==1.0.3.3 (build ID 200810142120)==
+* fixed search by color, includes hybrid now
+* added untap symbol, database updated for description text containing untap
+* fixed Group by-&gt;None
+* added Reference guide in help
+==1.0.3.2 (build ID 200810022144)==
+* added grouping for cards in deck and collection view
+* fixed bugs in magic db updates and added action in Help
+* fixed bug with default filter filtering out */* creatures
+* fixed bug with set filter not remembering previous value
+* renamed Edition column to Set
+* added Rarity column and filter, and MythicRare value
+==1.0.3.1 (build ID 20080927175)==
+* update database with "Shards of Alara" mtg set
+* added feature to generate "Booster pack" - collection of random cards to practise deck construction for sealed deck tournaments
+* added feature to move cards from one deck to another
+* added support for card collections and filtering them in library view
+==1.0.2.14==
+* added option to disable local caching
+* added command to send bug report from UI
+* added feature to create subfolders for decks and collections
+* added rename deck feature
+==1.0.2.13==
+* fixed proxy configuration that was not activated automatically on start
+* added image caching
+* fixed icons
+==1.0.2.12==
+* new database for latest MTG set: "Eventide"
+==1.0.2.10==
+* added search panel
+==1.0.2.8==
+* fixed sorting by count
+* added filter by name
+* fixed graphics for cost column
+* added proxy configuration page
+* added appearance preference pages
+* fixed info updates on card description view
+* delete key can be used for deleting cards now
+* status line would show actual card count in deck/library
