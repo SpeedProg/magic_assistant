@@ -1,11 +1,9 @@
 package com.reflexit.magiccards.core.sync;
 
-import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -113,7 +111,7 @@ public class ParseGathererOracleTest extends TestCase {
 		// card.setSet("Magic: The Gathering-Commander");
 		parser.load(ICoreProgressMonitor.NONE);
 		assertEquals("Cunning Bandit", card.getName());
-		FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
+		// FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
 		assertEquals(99, card.getCollectorNumberId());
 		assertEquals("99a", card.getCollNumber());
 		// System.err.println(magicDb);
@@ -138,6 +136,22 @@ public class ParseGathererOracleTest extends TestCase {
 	public void testCollNumber() throws IOException {
 		MagicCard card = load(191338);
 		assertEquals(220, Integer.parseInt(card.getCollNumber()));
+	}
+
+	public void testExpansionParser() throws IOException {
+		// Card "Terminate" in Alara Reborn expansion
+		// Language English
+		MagicCard card = load(176449);
+		assertEquals("Alara Reborn", card.getSet());
+		// Language Chinese Simplified
+		card = load(196433);
+		assertEquals("Alara Reborn", card.getSet());
+		// Language German
+		card = load(196868);
+		assertEquals("Alara Reborn", card.getSet());
+		// Language Russian
+		card = load(195998);
+		assertEquals("Alara Reborn", card.getSet());
 	}
 
 	public void testSets() throws IOException {

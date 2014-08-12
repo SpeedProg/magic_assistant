@@ -63,6 +63,7 @@ public class ParseGathererCardLanguages extends AbstractParseGathererPage {
 	protected void loadHtml(String html1, ICoreProgressMonitor monitor) {
 		String html = html1.replaceAll("\r?\n", " ");
 		Matcher matcher = rowPattern.matcher(html);
+		langId = 0;
 		int count = 0;
 		while (matcher.find()) {
 			count++;
