@@ -148,7 +148,8 @@ public class MagicXmlStreamReader {
 						store.type = ttStr;
 						break;
 					case entry:
-						cardm.setProperty(key, value);
+						if (key != null && !key.isEmpty())
+							cardm.setProperty(key, value);
 						break;
 					case string:
 						if (key == null)
