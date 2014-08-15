@@ -13,6 +13,7 @@
 	<topic label="Importing a deck or collection"  href="html/tasks/creatingdeck.html#import_deck"/> 
 	<topic label="Updating magic card Database"  href="html/tasks/updatingdb.html"/>
 	<topic label="Loading Seller's Price"  href="html/tasks/loadingprices.html"/>
+	<topic label="Cloud sync and version control"  href="html/tasks/sync.html"/>
    </topic>
     <topic label="Reference">
 	<topic label="Workbench"  href="html/reference/workbench.html"> 

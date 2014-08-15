@@ -1,0 +1,9 @@
+<project>
+	<!-- ================================= 
+          target: name              
+         ================================= -->
+    <target name="toc" description="transform toc into html">
+    	<xslt in="toc.xml" out="toc.html" style="transform_toc.xsl"/>
+    </target>
+
+</project>

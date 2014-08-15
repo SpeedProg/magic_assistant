@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Syncing with cloud</title>
+</head>
+
+<body>
+<h1>Setting up cloud sync or version control</h1>
+
+Easiest way to sync the data would be create a workspace in the directory which is automatically
+synced with cloud, however this may sync a bit more than you want. In general you
+only want to sync you own data and not cached images or other program information
+<p/>
+Here is workspace layout in order of importance
+
+<li>magiccards - your decks, collections and copy of magicdb (always sync)</li>
+<li>tournaments - data for tournament organizer  (always sync if using)</li>
+<li>.backup - data backups (can sync)</li>
+<li>.metadata - cached images and app settings (can totally live without it)</li>
+
+
+<h2>Google Drive</h2>
+<li>If you already using MagicAssistant
+    <ul>
+    <li>Exit the program</li>
+    <li>Backup $home/MagicAssistantWorkspace directory</li>
+    <li>Move this directory into Google Drive</li>
+    </ul>
+</li>
+<li>Start Magic Assistant, when prompted for workspace select new location at "Google Drive/MagicAssistantWorkspace"</li>
+
+<h2>Version control</h2>
+You want to version control all files with "magiccards" or "tournaments" folders, .backup and .metadata directories
+you should put in "ignore" list
+</body>
+</html>
