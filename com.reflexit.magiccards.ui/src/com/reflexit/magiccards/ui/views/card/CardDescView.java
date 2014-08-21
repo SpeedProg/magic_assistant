@@ -369,8 +369,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			@Override
 			public void run() {
 				try {
+					if (panel.getCard()==null) return;
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-					IWebBrowser browser = browserSupport.createBrowser(MagicUIActivator.PLUGIN_ID);
+					IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, MagicUIActivator.PLUGIN_ID, "Browser", null);
 					browser.openURL(new URL(getUrl()));
 				} catch (Exception e) {
 					MessageDialog.openError(getControl().getShell(), "Error", "Well that kind of failed... " + e.getMessage());

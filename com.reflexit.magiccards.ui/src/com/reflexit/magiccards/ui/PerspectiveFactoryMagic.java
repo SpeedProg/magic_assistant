@@ -44,6 +44,8 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 		main.addView(MagicDbView.ID);
 		main.addView(MyCardsView.ID);
 		main.addView(CollectorView.ID);
+		main.addPlaceholder("org.eclipse.ui.browser.view");
+		main.addPlaceholder("org.eclipse.ui.browser.view:*");
 		pf.addPlaceholder(DeckView.ID + ":*");
 		// layout.addStandaloneView(MagicDbView.ID, false, IPageLayout.LEFT,
 		// 1.0f, editorArea);
