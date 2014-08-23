@@ -38,6 +38,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.CURRENCY, "USD");
 		store.setDefault(PreferenceConstants.WORK_OFFLINE, false);
 		store.setDefault(PreferenceConstants.PRICE_PROVIDER, PriceProviderManager.getInstance().getDefaultProvider().getName());
+		store.setDefault(PreferenceConstants.LAST_SELECTION, 205961);
 		// local settings
 		getMdbStore()
 				.setDefault(

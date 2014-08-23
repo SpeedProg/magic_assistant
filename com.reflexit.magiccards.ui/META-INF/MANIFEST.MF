@@ -14,7 +14,8 @@ Require-Bundle: com.reflexit.magiccards.core,
  org.eclipse.core.expressions,
  com.reflexit.magiccards.ui.chart;resolution:=optional,
  com.reflexit.magicassistant.p2,
- org.eclipse.core.filesystem;bundle-version="1.3.100"
+ org.eclipse.core.filesystem;bundle-version="1.3.100",
+ org.eclipse.ui.browser;bundle-version="3.4.200"
 Eclipse-LazyStart: true
 Export-Package: com.reflexit.magiccards.ui,
  com.reflexit.magiccards.ui.commands,

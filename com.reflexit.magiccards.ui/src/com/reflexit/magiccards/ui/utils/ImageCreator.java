@@ -59,8 +59,14 @@ public class ImageCreator {
 	}
 
 	static synchronized public ImageCreator getInstance() {
-		if (instance == null)
-			instance = new ImageCreator();
+		if (instance == null) {
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					instance = new ImageCreator();
+				}
+			});
+		}
 		return instance;
 	}
 

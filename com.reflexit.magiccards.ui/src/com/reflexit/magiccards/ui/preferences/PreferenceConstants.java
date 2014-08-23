@@ -31,4 +31,5 @@ public class PreferenceConstants {
 	public static final String OWNED_COPY = PREFIX + ".nomycopy";
 	public static final String CURRENCY = PREFIX + ".currency";
 	public static final String WORK_OFFLINE = PREFIX + ".offline";
+	public static final String LAST_SELECTION = PREFIX + ".cardselection";
 }
