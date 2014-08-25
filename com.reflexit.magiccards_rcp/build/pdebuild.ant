@@ -190,6 +190,7 @@
 		</scp>
 	</target>
 	<target name="publish.docs">
+		<echo message="Syncying ${orig.workspace.root}/com.reflexit.magiccards.help/" />
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins" 
 			keyfile="${rsa.key}" trust="true">
