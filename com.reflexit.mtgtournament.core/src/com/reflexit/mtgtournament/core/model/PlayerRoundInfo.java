@@ -49,8 +49,12 @@ public class PlayerRoundInfo {
 
 	@Override
 	public String toString() {
+		return getPlayer() + " " + getWinStrDetails();
+	}
+
+	public String getWinStrDetails() {
 		String s = getWinStr(getResult());
-		return getPlayer() + " " + s + "(" + (getWin() == -1 ? "_" : getWin()) + ")";
+		return s + "(" + (getWin() == -1 ? "_" : getWin()) + ")";
 	}
 
 	public static String getWinStr(PlayerGameResult result) {

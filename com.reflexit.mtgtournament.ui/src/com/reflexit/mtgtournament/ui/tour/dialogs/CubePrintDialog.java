@@ -55,7 +55,7 @@ public class CubePrintDialog extends Dialog {
 		ROUND_SCHEDULE,
 		ROUND_RESULTS,
 		TOURNAMENT_RESULTS,
-		PLAYER_LIST
+		// PLAYER_LIST
 	}
 
 	private WhatToPrint toPrint;
@@ -202,8 +202,8 @@ public class CubePrintDialog extends Dialog {
 				return "Round Schedule for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
 			case TOURNAMENT_RESULTS:
 				return "Turnament Results";
-			case PLAYER_LIST:
-				return "Players";
+				// case PLAYER_LIST:
+				// return "Players";
 			default:
 				break;
 		}
@@ -224,9 +224,9 @@ public class CubePrintDialog extends Dialog {
 			case TOURNAMENT_RESULTS:
 				textToPrint = tournamentResults();
 				break;
-			case PLAYER_LIST:
-				textToPrint = playersList();
-				break;
+			// case PLAYER_LIST:
+			// textToPrint = playersList();
+			// break;
 			default:
 				break;
 		}
@@ -333,8 +333,8 @@ public class CubePrintDialog extends Dialog {
 		if (results == false)
 			return String.format("[%3d] %-20s - %-20s", ti.getTableNumber(), name1, name2);
 		else {
-			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1, PlayerRoundInfo.getWinStr(pi1.getResult()),
-					name2, PlayerRoundInfo.getWinStr(pi2.getResult()));
+			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1, pi1.getWinStrDetails(),
+					name2, pi2.getWinStrDetails());
 		}
 	}
 
