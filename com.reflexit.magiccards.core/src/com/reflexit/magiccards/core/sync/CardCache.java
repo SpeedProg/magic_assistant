@@ -11,7 +11,6 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -67,10 +66,10 @@ public class CardCache {
 		if (file.exists()) {
 			return localUrl;
 		}
+		if (WebUtils.isWorkOffline())
+			return null;
 		try {
 			URL url = createSetImageRemoteURL(editionAbbr, rarity);
-			if (url == null)
-				return null;
 			InputStream st = WebUtils.openUrl(url);
 			FileUtils.saveStream(st, file);
 			st.close();
@@ -88,31 +87,32 @@ public class CardCache {
 	}
 
 	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) {
-		if (!CardCache.isLoadingEnabled())
-			return null;
 		return GatherHelper.createSetImageURL(editionAbbr, rarity);
 	}
 
 	@NotNull
 	public static String createLocalImageFilePath(IMagicCard card) {
-		File loc = FileUtils.getStateLocationFile();
+		int cardId = card.getCardId();
+		Edition set = Editions.getInstance().getEditionByName(card.getSet());
+		if (set == null)
+			MagicLogger.log("Cannot determine set for " + card.getSet());
+		return createLocalImageFilePath(cardId, set == null ? null : set.getMainAbbreviation());
+	}
+
+	@NotNull
+	public static String createLocalImageFilePath(int cardId, String abbr) {
+		String editionAbbr = abbr;
+		if (abbr == null)
+			editionAbbr = "unknown";
+		else if (abbr.equals("CON")) // special hack for windows, which cannot create CON directory
+			editionAbbr = "CONFL";
 		String part;
-		if (card.getCardId() == 0) {
+		if (cardId == 0) {
 			part = "Cards/0.jpg";
 		} else {
-			String editionName = card.getSet();
-			Editions editions = Editions.getInstance();
-			Edition set = editions.getEditionByName(editionName);
-			if (set == null)
-				MagicLogger.log("Cannot determine set for " + editionName);
-			String editionAbbr = set == null ? "unknown" : set.getBaseFileName();
-			int cardId = card.getCardId();
-			String locale = "EN";
-			// if card getPart != null add partPostfix or CardNum XXX
-			part = "Cards/" + editionAbbr + "/" + locale + "/Card" + cardId + ".jpg";
+			part = "Cards/" + editionAbbr + "/" + "EN" + "/Card" + cardId + ".jpg"; // XXX remove EN
 		}
-		String file = new File(loc, part).getPath();
-		return file;
+		return new File(FileUtils.getStateLocationFile(), part).getPath();
 	}
 
 	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) {
@@ -182,28 +182,44 @@ public class CardCache {
 			if (!remote)
 				throw new CachedImageNotFoundException("Cannot find cached image for " + card.getName());
 			URL url = createRemoteImageURL(card);
-			InputStream st = null;
-			try {
-				st = WebUtils.openUrl(url);
+			return saveCachedFile(file, url);
+		}
+	}
+
+	/**
+	 * Save url content into a local file
+	 * 
+	 * @param file
+	 *            - local file
+	 * @param url
+	 *            - remote url (or any url actually)
+	 * @return
+	 * @throws IOException
+	 */
+	public static File saveCachedFile(File file, URL url) throws IOException {
+		File dir = file.getParentFile();
+		dir.mkdirs();
+		File file2 = File.createTempFile(file.getName(), ".part", dir);
+		try {
+			try (InputStream st = WebUtils.openUrl(url)) {
+				FileUtils.saveStream(st, file2);
 			} catch (IOException e) {
 				throw new IOException("Cannot connect: " + e.getMessage());
 			}
-			File file2 = new File(path + ".part");
-			FileUtils.saveStream(st, file2);
-			st.close();
 			if (file2.exists() && file2.length() > 0) {
 				if (file.exists()) {
-					boolean rem = file.delete();
-					if (rem == false)
+					if (!file.delete())
 						throw new IOException("failed to delete " + file.toString());
 				}
-				boolean did = file2.renameTo(file);
-				if (!file.exists() || did == false) {
+				if (!file2.renameTo(file)) {
 					throw new IOException("failed to rename into " + file.toString());
 				}
 				return file;
+			} else {
+				throw new IOException("Cannot save file: " + file.toString());
 			}
-			throw new FileNotFoundException(file.toString());
+		} finally {
+			file2.delete();
 		}
 	}
 

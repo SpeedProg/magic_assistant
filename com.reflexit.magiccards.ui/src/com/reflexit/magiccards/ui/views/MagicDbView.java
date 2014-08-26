@@ -28,6 +28,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dialogs.EditMagicCardDialog;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -41,6 +42,7 @@ public class MagicDbView extends AbstractCardsView {
 	protected Action showPrintings;
 	protected IDeckAction copyToDeck;
 	protected Action exportDatabase;
+	protected Action edit;
 
 	/**
 	 * The constructor.
@@ -151,6 +153,21 @@ public class MagicDbView extends AbstractCardsView {
 				exportDatabase();
 			}
 		};
+		edit = new Action("Edit...") {
+			@Override
+			public void run() {
+				editCard();
+			}
+		};
+	}
+
+	protected void editCard() {
+		IStructuredSelection selection = (IStructuredSelection) getSelectionProvider().getSelection();
+		Object el = selection.getFirstElement();
+		if (el instanceof MagicCard) {
+			MagicCard card = (MagicCard) el;
+			new EditMagicCardDialog(getShell(), card).open();
+		}
 	}
 
 	protected void exportDatabase() {
@@ -209,6 +226,7 @@ public class MagicDbView extends AbstractCardsView {
 		manager.add(this.actionCopy);
 		manager.add(this.showPrintings);
 		manager.add(this.showInstances);
+		manager.add(this.edit);
 	}
 
 	@Override

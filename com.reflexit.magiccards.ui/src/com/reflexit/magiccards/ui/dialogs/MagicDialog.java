@@ -11,6 +11,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -77,6 +78,7 @@ public abstract class MagicDialog extends TitleAreaDialog {
 			gd.heightHint = convertHeightInCharsToPixels(4);
 		}
 		text.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				store.setValue(property, text.getText());
 			}
@@ -116,6 +118,15 @@ public abstract class MagicDialog extends TitleAreaDialog {
 
 	public Label createTextLabel(Composite area, String string) {
 		Label label = new Label(area, SWT.NONE);
+		label.setText(string);
+		GridData ld = new GridData();
+		ld.verticalAlignment = SWT.TOP;
+		label.setLayoutData(ld);
+		return label;
+	}
+
+	public Button createPushButton(Composite area, String string) {
+		Button label = new Button(area, SWT.PUSH);
 		label.setText(string);
 		GridData ld = new GridData();
 		ld.verticalAlignment = SWT.TOP;
