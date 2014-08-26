@@ -31,7 +31,7 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 
 	@Override
 	public T getCard(int id) {
-		return null;
+		return (T) null;
 	}
 
 	public T get(int index) {

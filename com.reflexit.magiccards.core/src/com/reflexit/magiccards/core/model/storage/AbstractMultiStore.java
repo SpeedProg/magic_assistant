@@ -34,6 +34,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		table.addListener(this);
 	}
 
+	@Override
 	public IStorage<T> getStorage() {
 		return storageWrapper;
 	}
@@ -92,6 +93,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		}
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 		final Iterator<AbstractCardStoreWithStorage<T>> iter = this.map.values().iterator();
 		return new Iterator<T>() {
@@ -103,6 +105,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 					this.cur = null;
 			}
 
+			@Override
 			public boolean hasNext() {
 				checkNext();
 				return this.cur != null && this.cur.hasNext();
@@ -121,6 +124,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				}
 			}
 
+			@Override
 			public T next() {
 				checkNext();
 				if (this.cur == null)
@@ -128,12 +132,14 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				return this.cur.next();
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
 	}
 
+	@Override
 	public int size() {
 		// System.err.println(getDeepSize() + " " + size);
 		return this.size;
@@ -141,7 +147,8 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 	public synchronized int getDeepSize() {
 		int s = 0;
-		for (@SuppressWarnings("unused") Object element : this) {
+		for (@SuppressWarnings("unused")
+		Object element : this) {
 			s++;
 		}
 		if (size != s) {
@@ -193,6 +200,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	/**
 	 * @param location
 	 */
+	@Override
 	public void setLocation(final Location location) {
 		if (map.size() > 0) {
 			if (map.get(location) == null)
@@ -201,6 +209,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		this.defaultLocation = location;
 	}
 
+	@Override
 	public T getCard(int id) {
 		for (AbstractCardStoreWithStorage<T> table : map.values()) {
 			T card = table.getCard(id);
@@ -208,9 +217,10 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				return card;
 			}
 		}
-		return null;
+		return (T) null;
 	}
 
+	@Override
 	public Collection<T> getCards(int id) {
 		ArrayList<T> arr = new ArrayList<T>();
 		for (AbstractCardStoreWithStorage<T> table : map.values()) {
@@ -229,6 +239,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		}
 	}
 
+	@Override
 	public Location getLocation() {
 		return defaultLocation;
 	}
@@ -259,6 +270,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		return modified;
 	}
 
+	@Override
 	public void handleEvent(CardEvent event) {
 		// Propagate event from sub storages
 		initialize();
@@ -269,10 +281,12 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	IStorage<T> storageWrapper = new IStorage<T>() {
 		boolean commit = true;
 
+		@Override
 		public boolean isAutoCommit() {
 			return commit;
 		}
 
+		@Override
 		public boolean isLoaded() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				if (!table.getStorage().isLoaded())
@@ -281,6 +295,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			return true;
 		}
 
+		@Override
 		public boolean isNeedToBeSaved() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				if (table.getStorage().isNeedToBeSaved())
@@ -289,16 +304,19 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			return false;
 		}
 
+		@Override
 		public void load() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public void autoSave() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				table.getStorage().autoSave();
 			}
 		}
 
+		@Override
 		public void save() {
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				if (table.getStorage().isNeedToBeSaved())
@@ -306,6 +324,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			}
 		}
 
+		@Override
 		public void setAutoCommit(boolean value) {
 			commit = value;
 			for (AbstractCardStoreWithStorage table : map.values()) {
@@ -316,59 +335,73 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			}
 		}
 
+		@Override
 		public boolean add(T card) {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean addAll(Collection<? extends T> list) {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public Iterator<T> iterator() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean remove(T o) {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean removeAll(Collection<? extends T> list) {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean removeAll() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public int size() {
 			return size;
 		}
 
+		@Override
 		public Location getLocation() {
 			return defaultLocation;
 		}
 
+		@Override
 		public String getComment() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public String getName() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean isVirtual() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public void setLocation(Location location) {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		public boolean contains(T card) {
 			throw new UnsupportedOperationException();
 		}
 	};
 
+	@Override
 	public boolean contains(T card) {
 		Location loc = getLocation(card);
 		AbstractCardStoreWithStorage<T> store = map.get(loc);
