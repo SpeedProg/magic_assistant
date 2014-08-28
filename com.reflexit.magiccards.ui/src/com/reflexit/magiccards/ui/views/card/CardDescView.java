@@ -50,13 +50,16 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParseGathererOracle;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dialogs.EditMagicCardDialog;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
@@ -73,6 +76,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private Action actionAsScanned;
 	private boolean asScanned;
 	private Action open;
+	private Action edit;
 
 	public class LoadCardJob extends Job {
 		private IMagicCard card;
@@ -352,6 +356,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		manager.add(open);
 		manager.add(actionAsScanned);
 		manager.add(sync);
+		manager.add(edit);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -403,7 +408,6 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						return;
 					IWebBrowser browser = getBrowser();
 					browser.openURL(new URL(url));
-
 				} catch (Exception e) {
 					MessageDialog.openError(getControl().getShell(), "Error",
 							"Well that kind of failed... " + e.getMessage());
@@ -411,6 +415,26 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				}
 			}
 		};
+		edit = new Action("Edit...") {
+			{
+				setImageDescriptor(MagicUIActivator
+						.getImageDescriptor("icons/clcl16/edit.png"));
+			}
+
+			@Override
+			public void run() {
+				editCard();
+			}
+		};
+	}
+
+	protected void editCard() {
+		IMagicCard card = panel.getCard();
+		if (card instanceof MagicCard) {
+			new EditMagicCardDialog(panel.getShell(), (MagicCard) card).open();
+		} else if (card instanceof MagicCardPhysical) {
+			// new EditCardsPropertiesDialog(null, null);
+		}
 	}
 
 	protected String getUrl() {
@@ -456,14 +480,12 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				DataManager.waitForInit(10);
-
 				IMagicCard card = DataManager.getMagicDBStore().getCard(id);
 				if (card == null)
 					return Status.OK_STATUS;
 				final ISelection sel = new StructuredSelection(card);
 				runLoadJob(sel);
 				Display.getDefault().asyncExec(new Runnable() {
-					
 					@Override
 					public void run() {
 						IWorkbenchPage page = getViewSite().getWorkbenchWindow()
@@ -477,11 +499,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						}
 					}
 				});
-	
 				return Status.OK_STATUS;
 			}
 		}.schedule();
-
 	}
 
 	@Override

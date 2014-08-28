@@ -35,42 +35,82 @@ public class EditMagicCardDialog extends MagicDialog {
 	private Button imageButton;
 	private Text urlText;
 	private String localPath;
+	private Composite area;
+	private Text priceText;
 
 	public EditMagicCardDialog(Shell parentShell, MagicCard card) {
 		super(parentShell, new PreferenceStore());
 		this.card = card;
-		store.setDefault(MagicCardField.DBPRICE.name(), card.getDbPrice());
-		store.setDefault(MagicCardField.NAME.name(), card.getName());
-		store.setDefault(MagicCardField.IMAGE_URL.name(), card.getImageUrl());
-		store.setDefault(MagicCardField.SET.name(), card.getSet());
+		ICardField[] allFields = MagicCardField.allFields();
+		for (ICardField field : allFields) {
+			String value = card.getString(field);
+			if (value != null)
+				store.setDefault(field.name(), value);
+			else
+				store.setDefault(field.name(), "");
+		}
 	}
 
 	@Override
 	protected void createBodyArea(Composite parent) {
 		getShell().setText("Edit Magic Card Properties");
 		setTitle("Edit " + card.getName());
-		Composite area = new Composite(parent, SWT.NONE);
-		area.setLayout(new GridLayout(2, false));
-		GridData gda = new GridData();
-		gda.widthHint = convertWidthInCharsToPixels(100);
-		area.setLayoutData(gda);
-		// Header
-		createTextLabel(area, "Name");
-		createTextLabel(area, store.getString(MagicCardField.NAME.name()));
-		// price
-		createTextFieldEditor(area, "Seller's Price", MagicCardField.DBPRICE.name());
-		urlText = createTextFieldEditor(area, "Image URL", MagicCardField.IMAGE_URL.name());
-		createTextLabel(area, "Image");
-		imageButton = createPushButton(area, "");
+		Composite back = new Composite(parent, SWT.NONE);
+		back.setLayout(new GridLayout(2, false));
+		imageButton = createPushButton(back, "");
 		imageButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				browseImage();
 			}
 		});
+		GridData gda1 = new GridData(GridData.GRAB_VERTICAL);
+		gda1.widthHint = 223;
+		gda1.heightHint = 310;
+		imageButton.setLayoutData(gda1);
+		area = new Composite(back, SWT.NONE);
+		area.setLayout(new GridLayout(2, false));
+		GridData gda = new GridData(GridData.FILL_BOTH);
+		area.setLayoutData(gda);
+		createReadOnlyField("Name", MagicCardField.NAME);
+		priceText = createEditableField("Seller's Price", MagicCardField.DBPRICE);
+		urlText = createEditableField("Image URL", MagicCardField.IMAGE_URL);
+		// set defaults
 		localPath = CardCache.createLocalImageFilePath(card);
 		if (new File(localPath).exists())
 			reloadImage(localPath);
+	}
+
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, 2, "Reload Image", false);
+		createButton(parent, 3, "Restore Defaults", false);
+		super.createButtonsForButtonBar(parent);
+	}
+
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if (buttonId == 2) {// reload
+			reloadImageFromUrl();
+		} else if (buttonId == 3) { // restore default
+			store.setValue(MagicCardField.DBPRICE.name(), 0);
+			store.setValue(MagicCardField.IMAGE_URL.name(), card.getDefaultImageUrl());
+			priceText.setText(store.getString(MagicCardField.DBPRICE.name()));
+			urlText.setText(store.getString(MagicCardField.IMAGE_URL.name()));
+			reloadImageFromUrl();
+		} else
+			super.buttonPressed(buttonId);
+	}
+
+	private Text createEditableField(String label, MagicCardField field) {
+		return createTextFieldEditor(area, label, field.name());
+	}
+
+	private Text createReadOnlyField(String label, MagicCardField field) {
+		Text text = createTextFieldEditor(area, label, field.name());
+		text.setEditable(false);
+		text.setToolTipText("Not editable");
+		return text;
 	}
 
 	private void reloadImage(String path) {
@@ -99,14 +139,18 @@ public class EditMagicCardDialog extends MagicDialog {
 			}
 		} else {
 			// cancelled, lets reload url
-			if (WebUtils.isWorkOffline())
-				return;
-			try {
-				CardCache.saveCachedFile(new File(localPath), new URL(store.getString(MagicCardField.IMAGE_URL.name())));
-				reloadImage(localPath);
-			} catch (IOException e) {
-				MagicUIActivator.log(e);
-			}
+			reloadImageFromUrl();
+		}
+	}
+
+	private void reloadImageFromUrl() {
+		if (WebUtils.isWorkOffline())
+			return;
+		try {
+			CardCache.saveCachedFile(new File(localPath), new URL(store.getString(MagicCardField.IMAGE_URL.name())));
+			reloadImage(localPath);
+		} catch (IOException e) {
+			MagicUIActivator.log(e);
 		}
 	}
 

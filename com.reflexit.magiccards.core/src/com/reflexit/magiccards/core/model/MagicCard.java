@@ -847,6 +847,10 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		String x = (String) getProperty(MagicCardField.IMAGE_URL);
 		if (x != null)
 			return x;
+		return getDefaultImageUrl();
+	}
+
+	public String getDefaultImageUrl() {
 		int gathererId = getGathererId();
 		if (gathererId != 0) {
 			URL url = GatherHelper.createImageURL(gathererId);
