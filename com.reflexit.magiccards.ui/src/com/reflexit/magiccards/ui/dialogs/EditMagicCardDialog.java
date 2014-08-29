@@ -54,31 +54,49 @@ public class EditMagicCardDialog extends MagicDialog {
 	@Override
 	protected void createBodyArea(Composite parent) {
 		getShell().setText("Edit Magic Card Properties");
-		setTitle("Edit " + card.getName());
+		setTitle("Edit Magic Card Printing '" + card.getName() + "'");
+		setMessage("Click on image to replace it with local file or type remote URL");
 		Composite back = new Composite(parent, SWT.NONE);
 		back.setLayout(new GridLayout(2, false));
-		imageButton = createPushButton(back, "");
+		createImageControl(back);
+		area = new Composite(back, SWT.NONE);
+		area.setLayout(new GridLayout(2, false));
+		GridData gda = new GridData(GridData.FILL_BOTH);
+		gda.widthHint = convertWidthInCharsToPixels(80);
+		area.setLayoutData(gda);
+		createReadOnlyField("Name", MagicCardField.NAME);
+		createReadOnlyField("Language", MagicCardField.LANG);
+		priceText = createEditableField("Seller's Price", MagicCardField.DBPRICE);
+		urlText = createEditableField("Image URL", MagicCardField.IMAGE_URL);
+	}
+
+	private void createImageControl(Composite parent) {
+		GridData gda1 = new GridData(GridData.GRAB_VERTICAL);
+		gda1.widthHint = 223;
+		gda1.heightHint = 310;
+		imageButton = createPushButton(parent, "");
 		imageButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				browseImage();
 			}
 		});
-		GridData gda1 = new GridData(GridData.GRAB_VERTICAL);
-		gda1.widthHint = 223;
-		gda1.heightHint = 310;
 		imageButton.setLayoutData(gda1);
-		area = new Composite(back, SWT.NONE);
-		area.setLayout(new GridLayout(2, false));
-		GridData gda = new GridData(GridData.FILL_BOTH);
-		area.setLayoutData(gda);
-		createReadOnlyField("Name", MagicCardField.NAME);
-		priceText = createEditableField("Seller's Price", MagicCardField.DBPRICE);
-		urlText = createEditableField("Image URL", MagicCardField.IMAGE_URL);
 		// set defaults
-		localPath = CardCache.createLocalImageFilePath(card);
+		localPath = CardCache.createLocalImageFilePath(store.getInt(MagicCardField.ID.name()),
+				store.getString(MagicCardField.EDITION_ABBR.name()));
 		if (new File(localPath).exists())
 			reloadImage(localPath);
+		return;
+	}
+
+	private void reloadImage(String path) {
+		if (img != null)
+			img.dispose();
+		img = ImageCreator.getInstance().createCardImage(
+				path, false);
+		imageButton.setImage(img);
+		imageButton.getParent().layout(true);
 	}
 
 	@Override
@@ -111,15 +129,6 @@ public class EditMagicCardDialog extends MagicDialog {
 		text.setEditable(false);
 		text.setToolTipText("Not editable");
 		return text;
-	}
-
-	private void reloadImage(String path) {
-		if (img != null)
-			img.dispose();
-		img = ImageCreator.getInstance().createCardImage(
-				path, false);
-		imageButton.setImage(img);
-		imageButton.getParent().layout(true);
 	}
 
 	protected void browseImage() {

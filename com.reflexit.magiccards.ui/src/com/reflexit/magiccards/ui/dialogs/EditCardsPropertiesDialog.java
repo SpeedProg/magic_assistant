@@ -1,18 +1,24 @@
 package com.reflexit.magiccards.ui.dialogs;
 
+import java.io.File;
+
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.SpecialTags;
+import com.reflexit.magiccards.core.sync.CardCache;
+import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
 public class EditCardsPropertiesDialog extends MagicDialog {
@@ -26,6 +32,7 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 	public static final String NAME_FIELD = MagicCardField.NAME.name();
 	public static final String PRICE_FIELD = MagicCardField.PRICE.name();
 	public static final String UNCHANGED = "<unchanged>";
+	private Composite area;
 
 	public EditCardsPropertiesDialog(Shell parentShell, PreferenceStore store) {
 		super(parentShell, store);
@@ -34,11 +41,15 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 	@Override
 	protected void createBodyArea(Composite parent) {
 		getShell().setText("Edit Card Properties");
-		setTitle("Edit Card Properties");
-		Composite area = new Composite(parent, SWT.NONE);
+		setTitle("Edit Magic Card Instance '" + store.getString(NAME_FIELD) + "'");
+		Composite back = new Composite(parent, SWT.NONE);
+		back.setLayout(new GridLayout(2, false));
+		back.setLayoutData(new GridData(GridData.FILL_BOTH));
+		createImageControl(back);
+		area = new Composite(back, SWT.NONE);
 		area.setLayout(new GridLayout(2, false));
-		GridData gda = new GridData();
-		gda.widthHint = convertWidthInCharsToPixels(60);
+		GridData gda = new GridData(GridData.FILL_BOTH);
+		gda.widthHint = convertWidthInCharsToPixels(80);
 		area.setLayoutData(gda);
 		// Header
 		createTextLabel(area, "Name");
@@ -59,6 +70,21 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 		ContextAssist.addContextAssist(special, SpecialTags.getTags(), true);
 		// end
 		count.setFocus();
+	}
+
+	private void createImageControl(Composite parent) {
+		Label imageControl = new Label(parent, SWT.NONE);
+		GridData gda1 = new GridData(GridData.FILL_VERTICAL);
+		gda1.widthHint = 223;
+		gda1.heightHint = 310;
+		imageControl.setLayoutData(gda1);
+		String localPath = CardCache.createLocalImageFilePath(store.getInt(MagicCardField.ID.name()),
+				store.getString(MagicCardField.EDITION_ABBR.name()));
+		if (new File(localPath).exists()) {
+			Image img = ImageCreator.getInstance().createCardImage(
+					localPath, false);
+			imageControl.setImage(img);
+		}
 	}
 
 	public void createOwnershipFieldEditor(Composite area) {

@@ -60,6 +60,7 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardDialog;
+import com.reflexit.magiccards.ui.dialogs.EditMagicCardPhysicalDialog;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
@@ -433,7 +434,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		if (card instanceof MagicCard) {
 			new EditMagicCardDialog(panel.getShell(), (MagicCard) card).open();
 		} else if (card instanceof MagicCardPhysical) {
-			// new EditCardsPropertiesDialog(null, null);
+			new EditMagicCardPhysicalDialog(panel.getShell(), (MagicCardPhysical) card).open();
 		}
 	}
 
