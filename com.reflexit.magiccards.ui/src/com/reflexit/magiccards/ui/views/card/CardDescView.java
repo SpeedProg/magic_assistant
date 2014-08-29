@@ -436,6 +436,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		} else if (card instanceof MagicCardPhysical) {
 			new EditMagicCardPhysicalDialog(panel.getShell(), (MagicCardPhysical) card).open();
 		}
+		this.loadCardJob = new LoadCardJob(card);
+		this.loadCardJob.schedule();
 	}
 
 	protected String getUrl() {
