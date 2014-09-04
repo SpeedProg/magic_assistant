@@ -366,6 +366,8 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				return getLocation();
 			case COUNT4:
 				return getCount4();
+			case HASHCODE:
+				return System.identityHashCode(this);
 			default:
 				if (getRealCards() != null) {
 					return getRealCards().get(field);

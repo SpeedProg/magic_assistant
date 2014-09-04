@@ -15,7 +15,7 @@ public class PipedTableExportText extends AbstarctExportTest {
 	public void test1() {
 		run(exporter);
 		assertEquals(4, lines.length);
-		assertTrue(lines[0].startsWith("ID|NAME"));
+		assertTrue(lines[0], lines[0].startsWith("ID|NAME"));
 	}
 
 	public void test2() {

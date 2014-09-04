@@ -59,18 +59,12 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 		new Job("Updating edited cards") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				int len = cards.size();
 				for (Iterator<MagicCardPhysical> iterator = cards.iterator(); iterator.hasNext();) {
 					MagicCardPhysical card = iterator.next();
 					editCard(card, store, false);
-					if (len <= 3) {
-						DataManager.update(card);
-					}
 				}
-				if (len > 3) {
-					DataManager.updateList((Collection) cards);
-				}
-				DataManager.reconcile();
+				DataManager.updateList((Collection) cards);
+				// DataManager.reconcile();
 				return Status.OK_STATUS;
 			}
 		}.schedule();

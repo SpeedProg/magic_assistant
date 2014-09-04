@@ -118,6 +118,12 @@ public enum MagicCardField implements ICardField {
 		}
 	},
 	COLOR(null),
+	HASHCODE(null) {
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new CollisionAggregator(this, 0);
+		}
+	},
 	// end of magic base fields
 	COUNT(true) {
 		@Override

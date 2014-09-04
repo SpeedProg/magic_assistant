@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.core.DataManagerTest;
 import com.reflexit.magiccards.core.exports.ClassicExportDelegateTest;
 import com.reflexit.magiccards.core.exports.ClassicImportDelegateTest;
 import com.reflexit.magiccards.core.exports.CsvExportDelegateTest;
@@ -81,6 +82,7 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
 		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
+		suite.addTestSuite(DataManagerTest.class);
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);

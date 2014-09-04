@@ -237,7 +237,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	@Override
 	public int hashCode() {
-		return this.card.hashCode();
+		int hash = System.identityHashCode(this);
+		return hash;
 	}
 
 	@Override
@@ -411,6 +412,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 			}
 			case DATE:
 				return getDate();
+			case HASHCODE:
+				return System.identityHashCode(this);
 			default:
 				return card.get(field);
 		}

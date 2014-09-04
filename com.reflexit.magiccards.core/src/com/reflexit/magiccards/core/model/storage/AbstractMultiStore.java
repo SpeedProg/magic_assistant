@@ -14,7 +14,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ICardEventListener {
 	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
-	protected int size;
 	protected Location defaultLocation;
 
 	public AbstractMultiStore() {
@@ -26,11 +25,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	}
 
 	protected void addCardStore(AbstractCardStoreWithStorage<T> table) {
-		if (this.map.containsKey(table.getLocation())) {
-			this.size -= table.size();
-		}
 		this.map.put(table.getLocation(), table);
-		this.size += table.size();
 		table.addListener(this);
 	}
 
@@ -72,7 +67,6 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 	@Override
 	public synchronized void doInitialize() {
-		this.size = 0;
 		ArrayList<AbstractCardStoreWithStorage> all = new ArrayList<AbstractCardStoreWithStorage>();
 		all.addAll(this.map.values());
 		for (AbstractCardStoreWithStorage table : all) {
@@ -142,18 +136,13 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	@Override
 	public int size() {
 		// System.err.println(getDeepSize() + " " + size);
-		return this.size;
+		return getDeepSize();
 	}
 
 	public synchronized int getDeepSize() {
 		int s = 0;
-		for (@SuppressWarnings("unused")
-		Object element : this) {
-			s++;
-		}
-		if (size != s) {
-			MagicLogger.log("Size mismatch: " + s + " " + size);
-			size = s;
+		for (AbstractCardStoreWithStorage<T> table : map.values()) {
+			s += table.size();
 		}
 		return s;
 	}
@@ -163,10 +152,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 		Location key = getLocation(card);
 		AbstractCardStoreWithStorage res = this.map.get(key);
 		if (res != null) {
-			int oldSize = res.size();
-			boolean modified = res.doRemoveCard(card);
-			this.size -= oldSize - res.size();
-			return modified;
+			return res.doRemoveCard(card);
 		}
 		return false;
 	}
@@ -179,10 +165,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			res = newStorage(card);
 			addCardStore(res);
 		}
-		this.size -= res.size();
-		boolean modified = res.doAddCard(card);
-		this.size += res.size();
-		return modified;
+		return res.doAddCard(card);
 	}
 
 	@Override
@@ -266,7 +249,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 				modified = true;
 			}
 		}
-		size = 0;
+		;
 		return modified;
 	}
 
@@ -367,7 +350,7 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 
 		@Override
 		public int size() {
-			return size;
+			return AbstractMultiStore.this.size();
 		}
 
 		@Override

@@ -50,6 +50,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 		super(new CollectionMultiFileCardStore());
 	}
 
+	@Override
 	public void handleEvent(CardEvent event) {
 		if (event.getData() instanceof CardElement) {
 			CardElement elem = (CardElement) event.getData();
@@ -83,7 +84,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					update();
 				}
 			}
-		} else if (event.getType() == CardEvent.UPDATE) {
+		} else if (event.getType() == CardEvent.UPDATE) { // XXX: UPDATE_LIST
 			// need to save xml
 			if (event.getData() instanceof MagicCardPhysical) {
 				MagicCardPhysical c = (MagicCardPhysical) event.getData();

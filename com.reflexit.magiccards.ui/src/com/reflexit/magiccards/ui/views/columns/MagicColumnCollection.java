@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.columns;
 import java.util.List;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 
 public class MagicColumnCollection extends ColumnCollection {
@@ -59,6 +60,9 @@ public class MagicColumnCollection extends ColumnCollection {
 			columns.add(new CreationDateColumn());
 		}
 		columns.add(new ReleaseDateColumn());
+		if (MagicUIActivator.TRACE_EXPORT) {
+			columns.add(new GenColumn(MagicCardField.HASHCODE, "HashCode"));
+		}
 	}
 
 	protected SetColumn createSetColumn() {

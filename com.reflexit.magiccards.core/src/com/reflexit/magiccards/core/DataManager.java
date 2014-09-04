@@ -300,7 +300,7 @@ public class DataManager {
 		if (right <= 0)
 			return null;
 		if (right >= card.getCount())
-			return card;
+			return null;
 		int left = card.getCount() - right;
 		int trade = card.getForTrade();
 		int tradeLeft = 0;
@@ -322,7 +322,7 @@ public class DataManager {
 		cardStore.setMergeOnAdd(false);
 		cardStore.add(card2);
 		cardStore.setMergeOnAdd(true);
-		DataManager.reconcile(cardStore.getCards(card.getCardId()));
+		DataManager.updateList(cardStore.getCards(card.getCardId()));
 		return card2;
 	}
 
