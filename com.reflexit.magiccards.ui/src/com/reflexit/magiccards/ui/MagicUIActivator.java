@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -76,15 +77,17 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		COLOR_PINKINSH = new Color(device, 255, 255 - 64, 255 - 64);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void activateCoreSettings() {
-		// start the Netwotk plugin to set proxy
+		// start the Network plugin to set proxy
 		org.eclipse.ui.internal.net.Activator.getDefault();
-		CardCache.setCahchingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.CACHE_IMAGES));
-		CardCache.setLoadingEnabled(getPluginPreferences().getBoolean(PreferenceConstants.LOAD_IMAGES));
-		DataManager.setOwnCopyEnabled(getPluginPreferences().getBoolean(PreferenceConstants.OWNED_COPY));
-		CurrencyConvertor.setCurrency(getPluginPreferences().getString(PreferenceConstants.CURRENCY));
-		WebUtils.setWorkOffline(getPluginPreferences().getBoolean(PreferenceConstants.WORK_OFFLINE));
-		PriceProviderManager.getInstance().sync(getPreferenceStore());
+		IPreferenceStore globalStore = getPreferenceStore();
+		CardCache.setCahchingEnabled(globalStore.getBoolean(PreferenceConstants.CACHE_IMAGES));
+		CardCache.setLoadingEnabled(globalStore.getBoolean(PreferenceConstants.LOAD_IMAGES));
+		DataManager.getInstance().setOwnCopyEnabled(globalStore.getBoolean(PreferenceConstants.OWNED_COPY));
+		CurrencyConvertor.setCurrency(globalStore.getString(PreferenceConstants.CURRENCY));
+		WebUtils.setWorkOffline(globalStore.getBoolean(PreferenceConstants.WORK_OFFLINE));
+		PriceProviderManager.getInstance().sync(globalStore);
 	}
 
 	/*
@@ -267,5 +270,10 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		Color color = own ? registry.get("com.reflexit.magiccards.ui.preferences.ocard.bgcolor") : registry
 				.get("com.reflexit.magiccards.ui.preferences.vcard.bgcolor");
 		return color;
+	}
+
+	@Override
+	public IPreferenceStore getPreferenceStore() {
+		return super.getPreferenceStore();
 	}
 }

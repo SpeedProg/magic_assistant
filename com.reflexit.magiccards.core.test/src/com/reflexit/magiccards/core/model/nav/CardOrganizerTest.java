@@ -35,15 +35,13 @@ public class CardOrganizerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		File temp = new File("/tmp/magiccards");
-		DataManager.reset(temp);
+		DataManager.getInstance().reset(temp);
 		this.root = DataManager.getModelRoot();
 		this.root.clear();
 	}
 
 	/**
-	 * Test method for
-	 * {@link com.reflexit.magiccards.core.model.nav.CardOrganizer#findElement(org.eclipse.core.runtime.IPath)}
-	 * .
+	 * Test method for {@link com.reflexit.magiccards.core.model.nav.CardOrganizer#findElement(org.eclipse.core.runtime.IPath)} .
 	 */
 	@Test
 	public void testFindElement() {
@@ -60,14 +58,14 @@ public class CardOrganizerTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link com.reflexit.magiccards.core.model.nav.CardElement#fireEvent(com.reflexit.magiccards.core.model.events.CardEvent)}
-	 * .
+	 * {@link com.reflexit.magiccards.core.model.nav.CardElement#fireEvent(com.reflexit.magiccards.core.model.events.CardEvent)} .
 	 */
 	@Test
 	public void testFireEvent() {
 		final boolean res[] = new boolean[1];
 		CollectionsContainer deckContainer = this.root.getDeckContainer();
 		deckContainer.addListener(new ICardEventListener() {
+			@Override
 			public void handleEvent(CardEvent event) {
 				res[0] = true;
 			}

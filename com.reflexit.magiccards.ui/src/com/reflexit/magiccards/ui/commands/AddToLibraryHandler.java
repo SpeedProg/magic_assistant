@@ -28,6 +28,7 @@ public class AddToLibraryHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information from the application
 	 * context.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelection selection = window.getSelectionService().getSelection();
@@ -36,7 +37,7 @@ public class AddToLibraryHandler extends AbstractHandler {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		Location location = DataManager.getModelRoot().getDefaultLib().getLocation();
-		DataManager.copyCards(iss.toList(), location);
+		DataManager.getInstance().copyCards(iss.toList(), location);
 		return null;
 	}
 }

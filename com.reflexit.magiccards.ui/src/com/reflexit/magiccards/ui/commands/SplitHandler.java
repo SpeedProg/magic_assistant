@@ -30,7 +30,7 @@ public class SplitHandler extends AbstractHandler {
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		List list = iss.toList();
 		try {
-			DataManager.splitCards(list, count);
+			DataManager.getInstance().splitCards(list, count);
 		} catch (Exception e) {
 			MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
 		}

@@ -90,6 +90,7 @@ public class LocationColumn extends GenColumn {
 								DataManager.getModelRoot(), false, "Select location to move card into");
 						// d.setInitialLocation(iniLoc);
 						d.setValidator(new ISelectionValidator() {
+							@Override
 							public String isValid(Object selection) {
 								if (selection instanceof IStructuredSelection) {
 									IStructuredSelection iss = (IStructuredSelection) selection;
@@ -144,7 +145,7 @@ public class LocationColumn extends GenColumn {
 							loc = Location.createLocation(new LocationPath((String) value));
 						else
 							return;
-						DataManager.move(card, loc);
+						DataManager.getInstance().move(card, loc);
 						// update
 						viewer.update(element, null);
 					}

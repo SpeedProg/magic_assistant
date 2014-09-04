@@ -126,6 +126,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		group.setLayout(new GridLayout());
 		text = new Text(group, SWT.WRAP | SWT.READ_ONLY);
 		text.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				setComment(text.getText());
 			}
@@ -154,8 +155,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		}
 		Location location = store.getLocation();
 		Location sideboard = location.toSideboard();
-		ICardStore<IMagicCard> sideboardStore = DataManager.getCardStore(sideboard);
-		ICardStore<IMagicCard> mainStore = DataManager.getCardStore(location.toMainDeck());
+		ICardStore<IMagicCard> sideboardStore = DataManager.getInstance().getCardStore(sideboard);
+		ICardStore<IMagicCard> mainStore = DataManager.getInstance().getCardStore(location.toMainDeck());
 		if (mainStore == null)
 			mainStore = store;
 		totalSideboard.setText(String.valueOf(getCount(sideboardStore)));

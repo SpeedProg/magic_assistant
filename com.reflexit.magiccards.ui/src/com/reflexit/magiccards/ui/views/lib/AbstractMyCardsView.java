@@ -110,7 +110,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						DataManager.copyCards(sel.toList(), loc);
+						DataManager.getInstance().copyCards(sel.toList(), loc);
 					}
 				}
 			}
@@ -136,7 +136,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 								list.add((IMagicCard) o);
 						}
 						Location location = DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
-						DataManager.moveCards(list, location);
+						DataManager.getInstance().moveCards(list, location);
 					}
 				}
 			} catch (MagicException e) {
@@ -172,7 +172,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					Object o = iterator.next();
 					if (o instanceof MagicCardPhysical) {
 						((MagicCardPhysical) o).setOwn(b);
-						DataManager.update((MagicCardPhysical) o);
+						DataManager.getInstance().update((MagicCardPhysical) o);
 					}
 				}
 			}
@@ -185,7 +185,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
-				DataManager.remove(cardStore, sel.toList());
+				DataManager.getInstance().remove(cardStore, sel.toList());
 			}
 		}
 	}
@@ -239,7 +239,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						if (left >= count)
 							continue;
 						int right = count - left;
-						DataManager.split(card, right);
+						DataManager.getInstance().split(card, right);
 					}
 				}
 			}

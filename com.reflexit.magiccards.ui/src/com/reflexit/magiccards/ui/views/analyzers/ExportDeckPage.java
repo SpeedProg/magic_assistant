@@ -341,10 +341,10 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		fstore.clear();
 		// filter = (MagicCardFilter) view.getFilter().clone();
 		if (includeSideboard) {
-			ICardStore mainStore = DataManager.getCardStore(loc.toMainDeck());
+			ICardStore mainStore = getCardStore(loc.toMainDeck());
 			// if (mainStore == null)
 			// mainStore = getCardStore();
-			ICardStore sideStore = DataManager.getCardStore(loc.toSideboard());
+			ICardStore sideStore = getCardStore(loc.toSideboard());
 			if (mainStore != null)
 				fstore.addAll(mainStore);
 			if (sideStore != null)
@@ -352,11 +352,15 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			fstore.setLocation(loc.toMainDeck());
 			filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
 		} else {
-			ICardStore mainStore = DataManager.getCardStore(loc);
+			ICardStore mainStore = getCardStore(loc);
 			fstore.addAll(mainStore);
 			fstore.setLocation(loc);
 		}
 		fstore.update();
+	}
+
+	private ICardStore<IMagicCard> getCardStore(Location loc) {
+		return DataManager.getInstance().getCardStore(loc);
 	}
 
 	private String getText() throws InvocationTargetException, InterruptedException {

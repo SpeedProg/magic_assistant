@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
@@ -268,7 +267,12 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	}
 
 	public static Collection expandGroups(Collection result, Collection cards) {
-		return expandGroups(result, cards, (o) -> !(o instanceof CardGroup));
+		return expandGroups(result, cards, new Predicate<Object>() {
+			@Override
+			public boolean test(Object o) {
+				return !(o instanceof CardGroup);
+			}
+		});
 	}
 
 	public static Collection expandGroups(Collection result, Collection cards, Predicate<Object> filter) {

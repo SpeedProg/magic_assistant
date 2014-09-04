@@ -54,6 +54,7 @@ public class PriceColumn extends SellerPriceColumn {
 				TextCellEditor editor = new TextCellEditor((Composite) viewer.getControl(), SWT.NONE);
 				((Text) editor.getControl()).setTextLimit(5);
 				((Text) editor.getControl()).addVerifyListener(new VerifyListener() {
+					@Override
 					public void verifyText(VerifyEvent e) {
 						// validation - mine was for an Integer (also allow 'enter'):
 						e.doit = "0123456789.".indexOf(e.text) >= 0 || e.character == '\0';
@@ -84,7 +85,7 @@ public class PriceColumn extends SellerPriceColumn {
 					}
 					// save
 					card.setPrice(price);
-					DataManager.update(card);
+					DataManager.getInstance().update(card);
 				}
 			}
 		};

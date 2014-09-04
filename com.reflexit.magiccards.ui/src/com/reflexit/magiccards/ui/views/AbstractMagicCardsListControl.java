@@ -100,6 +100,8 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  * 
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl, ICardEventListener {
+	private static final DataManager DM = DataManager.getInstance();
+
 	public class GroupAction extends Action {
 		ICardField field[];
 
@@ -378,9 +380,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		new Thread("Offline listeners") {
 			@Override
 			public void run() {
-				if (DataManager.waitForInit(60)) {
-					DataManager.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
-					DataManager.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
+				if (DM.waitForInit(60)) {
+					DM.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
+					DM.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
 				} else {
 					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
 				}
@@ -1011,7 +1013,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
 		Object contents = mt.fromClipboard();
 		if (contents instanceof Collection) {
-			DataManager.copyCards((Collection) contents, ((ILocatable) getFilteredStore().getCardStore()).getLocation());
+			DM.copyCards((Collection) contents, ((ILocatable) getFilteredStore().getCardStore()).getLocation());
 		} else {
 			Control fc = partControl.getDisplay().getFocusControl();
 			CopySupport.runPaste(fc);
@@ -1135,7 +1137,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	private void checkInit() {
 		try {
-			DataManager.waitForInit(20);
+			DM.waitForInit(20);
 		} catch (MagicException e) {
 			MagicUIActivator.log(e);
 		}

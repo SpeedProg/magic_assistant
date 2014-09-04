@@ -597,8 +597,8 @@ public final class CardStoreUtils {
 		private void calculate(ICardStore<IMagicCard> store) {
 			Location location = store.getLocation();
 			Location sideboard = location.toSideboard();
-			ICardStore<IMagicCard> sideboardStore = DataManager.getCardStore(sideboard);
-			ICardStore<IMagicCard> mainStore = DataManager.getCardStore(location.toMainDeck());
+			ICardStore<IMagicCard> sideboardStore = DataManager.getInstance().getCardStore(sideboard);
+			ICardStore<IMagicCard> mainStore = DataManager.getInstance().getCardStore(location.toMainDeck());
 			if (mainStore == null)
 				mainStore = store;
 			sideboardCount = getCount(sideboardStore);

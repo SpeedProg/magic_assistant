@@ -201,10 +201,18 @@ public class CardCache {
 		dir.mkdirs();
 		File file2 = File.createTempFile(file.getName(), ".part", dir);
 		try {
-			try (InputStream st = WebUtils.openUrl(url)) {
-				FileUtils.saveStream(st, file2);
+			InputStream st = null;
+			try {
+				st = WebUtils.openUrl(url);
 			} catch (IOException e) {
 				throw new IOException("Cannot connect: " + e.getMessage());
+			}
+			try {
+				FileUtils.saveStream(st, file2);
+			} catch (IOException e) {
+				throw new IOException("Cannot save tmp file: " + file2 + ": " + e.getMessage());
+			} finally {
+				st.close();
 			}
 			if (file2.exists() && file2.length() > 0) {
 				if (file.exists()) {

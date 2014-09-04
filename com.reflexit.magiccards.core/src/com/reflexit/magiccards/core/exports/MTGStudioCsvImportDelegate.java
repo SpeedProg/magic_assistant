@@ -52,7 +52,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 
 	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
-		lookup = new ImportUtils.LookupHash(DataManager.getCardHandler().getMagicDBStore());
+		lookup = new ImportUtils.LookupHash(DataManager.getInstance().getMagicDBStore());
 		setUpFields();
 		super.doRun(monitor);
 		lookup = null;

@@ -86,7 +86,7 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 
 			@Override
 			public void run() {
-				DataManager.reconcile();
+				DataManager.getInstance().reconcile();
 				reloadData();
 			}
 		};
@@ -140,6 +140,7 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 		// TOTO remove?
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		// TODO remove?
 	}

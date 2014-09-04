@@ -11,6 +11,7 @@ import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 
 public class AbstarctExportTest extends junit.framework.TestCase {
+	private static final DataManager DM = DataManager.getInstance();
 	protected MemCardHandler deck;
 	protected MagicCardPhysical card1;
 	protected MagicCardPhysical card2;
@@ -64,8 +65,8 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 			DataManager.getRootDir();
 		} catch (NullPointerException e) {
 			File temp = new File("/tmp/magiccards");
-			DataManager.reset(temp);
-			DataManager.getModelRoot().clear();
+			DM.reset(temp);
+			DM.getModelRoot().clear();
 		}
 	}
 }

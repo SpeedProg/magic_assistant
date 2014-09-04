@@ -428,7 +428,7 @@ public abstract class AbstractCardsView extends ViewPart {
 					continue;
 				CardCollection cardCollection = deckView.getCardCollection();
 				String active = "";
-				IFilteredCardStore activeHandler = DataManager.getCardHandler().getActiveDeckHandler();
+				IFilteredCardStore activeHandler = DataManager.getInstance().getCardHandler().getActiveDeckHandler();
 				if (activeHandler != null && activeHandler.getCardStore() == cardCollection.getStore()) {
 					active = " (Active)";
 				}

@@ -78,7 +78,7 @@ public class CommentColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					card.setComment((String) value);
-					DataManager.update(card);
+					DataManager.getInstance().update(card);
 				}
 			}
 		};

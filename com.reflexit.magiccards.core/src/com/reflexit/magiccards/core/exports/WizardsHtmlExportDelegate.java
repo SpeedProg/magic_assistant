@@ -178,7 +178,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 	}
 
 	private ICardStore<IMagicCard> getMainCardStore() {
-		ICardStore<IMagicCard> cardStore = DataManager.getCardStore(location.toMainDeck());
+		ICardStore<IMagicCard> cardStore = DataManager.getInstance().getCardStore(location.toMainDeck());
 		if (cardStore != null)
 			return cardStore;
 		return store.getCardStore();

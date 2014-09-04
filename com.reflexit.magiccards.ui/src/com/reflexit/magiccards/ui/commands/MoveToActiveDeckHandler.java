@@ -24,6 +24,8 @@ import com.reflexit.magiccards.ui.dialogs.CountConfirmationDialog;
  * @see org.eclipse.core.commands.AbstractHandler
  */
 public class MoveToActiveDeckHandler extends AbstractHandler {
+	private static final DataManager DM = DataManager.getInstance();
+
 	/**
 	 * The constructor.
 	 */
@@ -53,21 +55,21 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 			List list = iss.toList();
 			try {
 				if (count == -1)
-					DataManager.moveCards(list, activeDeckHandler.getLocation());
+					moveCards(list, activeDeckHandler);
 				else if (count == 0) {
 					new CountConfirmationDialog(window.getShell(), iss) {
 						@Override
 						protected void runOperation() {
 							Map<IMagicCard, Integer> map = getCountMap();
-							List<IMagicCard> list = DataManager.splitCards(map);
-							DataManager.moveCards(list, activeDeckHandler.getLocation());
+							List<IMagicCard> list = DM.splitCards(map);
+							moveCards(list, activeDeckHandler);
 						};
 					}.open();
 					// DataManager.moveCards(list,
 					// activeDeckHandler.getLocation());
 				} else {
-					List<IMagicCard> x = DataManager.splitCards(list, count);
-					DataManager.moveCards(x, activeDeckHandler.getLocation());
+					List<IMagicCard> x = DM.splitCards(list, count);
+					moveCards(x, activeDeckHandler);
 				}
 			} catch (Exception e) {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
@@ -76,5 +78,9 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");
 		}
 		return null;
+	}
+
+	private void moveCards(List<IMagicCard> x, final IFilteredCardStore activeDeckHandler) {
+		DM.moveCards(x, activeDeckHandler.getLocation());
 	}
 }

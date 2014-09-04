@@ -181,7 +181,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		modified = setField(card, store, MagicCardField.DBPRICE) || modified;
 		modified = setField(card, store, MagicCardField.IMAGE_URL) || modified;
 		if (modified && update) {
-			DataManager.update(card);
+			DataManager.getInstance().update(card);
 		}
 	}
 

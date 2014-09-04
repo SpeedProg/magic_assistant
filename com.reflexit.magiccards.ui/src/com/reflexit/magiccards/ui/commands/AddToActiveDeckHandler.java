@@ -31,6 +31,7 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information from the application
 	 * context.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelection selection = window.getSelectionService().getSelection();
@@ -38,11 +39,11 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 			return null;
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+		IFilteredCardStore activeDeckHandler = DataManager.getInstance().getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
 			try {
-				DataManager.copyCards(list, activeDeckHandler.getLocation());
+				DataManager.getInstance().copyCards(list, activeDeckHandler.getLocation());
 			} catch (Exception e) {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
 			}

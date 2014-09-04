@@ -69,6 +69,7 @@ public class CountColumn extends GenColumn {
 				TextCellEditor editor = new TextCellEditor((Composite) viewer.getControl(), SWT.NONE);
 				((Text) editor.getControl()).setTextLimit(5);
 				((Text) editor.getControl()).addVerifyListener(new VerifyListener() {
+					@Override
 					public void verifyText(VerifyEvent e) {
 						// validation - mine was for an Integer (also allow
 						// 'enter'):
@@ -102,7 +103,7 @@ public class CountColumn extends GenColumn {
 						card.setCount(count);
 						// viewer.update(element, null);
 						// save
-						DataManager.update(card);
+						DataManager.getInstance().update(card);
 						// IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 						// ICardStore<IMagicCard> cardStore = target.getCardStore();
 						// cardStore.remove(card);

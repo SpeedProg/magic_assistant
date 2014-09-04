@@ -22,6 +22,8 @@ import com.reflexit.magiccards.core.model.ICardCountable;
  * 
  */
 public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardCountable {
+	private boolean virtutal = true;
+
 	/**
 	 * creates empty card store
 	 */
@@ -69,5 +71,15 @@ public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implemen
 	@Override
 	public String toString() {
 		return getStorage().toString();
+	}
+
+	@Override
+	public boolean isVirtual() {
+		return virtutal;
+	}
+
+	@Override
+	public void setVirtual(boolean value) {
+		this.virtutal = value;
 	}
 }

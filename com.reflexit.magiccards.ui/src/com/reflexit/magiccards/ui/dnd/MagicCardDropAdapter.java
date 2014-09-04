@@ -34,6 +34,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * 
  */
 public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTargetListener {
+	private static final DataManager DM = DataManager.getInstance();
 	protected DropTargetEvent curEvent;
 
 	/**
@@ -49,15 +50,15 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
-		Collection<IMagicCard> cards = DataManager.instantiate(Arrays.asList(toDropArray));
+		Collection<IMagicCard> cards = DM.instantiate(Arrays.asList(toDropArray));
 		try {
 			Location targetLocation = determineLocation();
 			if (targetLocation == null)
 				throw new MagicException("Invalid drop target");
 			if (curEvent.detail == DND.DROP_MOVE)
-				return DataManager.moveCards(cards, targetLocation);
+				return DM.moveCards(cards, targetLocation);
 			else
-				return DataManager.copyCards(cards, targetLocation);
+				return DM.copyCards(cards, targetLocation);
 		} catch (MagicException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
 					"Cannot perform this operation: " + e.getMessage());

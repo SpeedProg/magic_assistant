@@ -39,6 +39,7 @@ import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
  * 
  */
 public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTargetListener {
+	private static final DataManager DM = DataManager.getInstance();
 	private DropTargetEvent curEvent;
 	private Transfer transfer;
 	private Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(), MagicDeckTransfer.getInstance() };
@@ -66,11 +67,11 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 				return false;
 			try {
 				Location targetLocation = ((CardElement) dropTarget).getLocation();
-				Collection<IMagicCard> list = DataManager.instantiate(Arrays.asList(toDropArray));
+				Collection<IMagicCard> list = DM.instantiate(Arrays.asList(toDropArray));
 				if (curEvent.detail == DND.DROP_MOVE)
-					return DataManager.moveCards(list, targetLocation);
+					return DM.moveCards(list, targetLocation);
 				else
-					return DataManager.copyCards(list, targetLocation);
+					return DM.copyCards(list, targetLocation);
 			} catch (MagicException e) {
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation");
 				return false;
@@ -91,7 +92,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 			if (toDropArray.length == 0)
 				return false;
 			try {
-				DataManager.getModelRoot().move(toDropArray, dropParent);
+				DM.getModelRoot().move(toDropArray, dropParent);
 			} catch (MagicException e) {
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation: "
 						+ e.getMessage());

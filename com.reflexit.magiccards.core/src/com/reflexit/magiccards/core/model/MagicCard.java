@@ -842,7 +842,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 	}
 
 	public CardGroup getRealCards() {
-		return DataManager.getRealCards(this);
+		return DataManager.getInstance().getRealCards(this);
 	}
 
 	public String getImageUrl() {

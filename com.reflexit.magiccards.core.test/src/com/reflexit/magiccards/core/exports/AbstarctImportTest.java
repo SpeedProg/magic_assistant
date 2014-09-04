@@ -30,7 +30,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	static {
 		try {
-			DataManager.reset();
+			DataManager.getInstance().reset();
 		} catch (NullPointerException e) {
 			setLocalDbDir();
 		}
@@ -39,7 +39,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected static void setLocalDbDir() {
 		File temp = new File("/tmp/magiccards");
 		FileUtils.deleteTree(temp);
-		DataManager.reset(temp);
+		DataManager.getInstance().reset(temp);
 		DataManager.getModelRoot().clear();
 	}
 

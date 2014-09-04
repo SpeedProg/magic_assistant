@@ -278,8 +278,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
 		Location loc = store.getLocation();
 		MagicCardFilter filter = (MagicCardFilter) view.getFilter().clone();
-		ICardStore mainStore = DataManager.getCardStore(loc.toMainDeck());
-		ICardStore sideStore = DataManager.getCardStore(loc.toSideboard());
+		ICardStore mainStore = DataManager.getInstance().getCardStore(loc.toMainDeck());
+		ICardStore sideStore = DataManager.getInstance().getCardStore(loc.toSideboard());
 		if (mainStore != null)
 			mstore.addAll(mainStore);
 		if (sideStore != null)

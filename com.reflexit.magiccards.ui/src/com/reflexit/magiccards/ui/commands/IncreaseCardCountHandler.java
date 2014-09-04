@@ -25,6 +25,8 @@ import com.reflexit.magiccards.ui.views.lib.MyCardsView;
  * Increase card number
  */
 public class IncreaseCardCountHandler extends AbstractHandler {
+	private static final DataManager DM = DataManager.getInstance();
+
 	/**
 	 * The constructor.
 	 */
@@ -35,6 +37,7 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information from the application
 	 * context.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelection selection = window.getSelectionService().getSelection();
@@ -48,13 +51,13 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 			activeDeckHandler = ((DeckView) activePart).getFilteredStore();
 			increase(window, iss, activeDeckHandler);
 		} else if (activePart instanceof MagicDbView) {
-			activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = DM.getCardHandler().getActiveDeckHandler();
 			if (activeDeckHandler != null)
-				DataManager.copyCards(iss.toList(), activeDeckHandler.getLocation());
+				DM.copyCards(iss.toList(), activeDeckHandler.getLocation());
 			else
 				throw new ExecutionException("No active deck");
 		} else if (activePart instanceof MyCardsView) {
-			activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = DM.getCardHandler().getActiveDeckHandler();
 			increase(window, iss, activeDeckHandler);
 		}
 		return null;
@@ -69,12 +72,12 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
 					int count = mc.getCount();
 					mc.setCount(count + 1);
-					DataManager.update(activeDeckHandler.getCardStore(), mc);
+					DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc);
 				} else {
 					toAdd.add(magicCard);
 				}
 			}
-			DataManager.add(activeDeckHandler.getCardStore(), toAdd);
+			DataManager.getInstance().add(activeDeckHandler.getCardStore(), toAdd);
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck/collection");
 		}

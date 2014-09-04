@@ -77,7 +77,7 @@ public class ImportUtils {
 					((MagicCardPhysical) card).setMagicCard(card.getBase());
 			}
 			// import into card store
-			DataManager.add(cardStore, importedCards);
+			DataManager.getInstance().add(cardStore, importedCards);
 		}
 	}
 
@@ -227,7 +227,7 @@ public class ImportUtils {
 			originalSet = ed.getName();
 		}
 		MagicCard base = card.getCard();
-		ICardStore lookupStore = DataManager.getCardHandler().getMagicDBStore();
+		ICardStore lookupStore = DataManager.getInstance().getMagicDBStore();
 		if (lookupStore == null) {
 			card.setError(ImportError.NO_DB_ERROR);
 			return base;

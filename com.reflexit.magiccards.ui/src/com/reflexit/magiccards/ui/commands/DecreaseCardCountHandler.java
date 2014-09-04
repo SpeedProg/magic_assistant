@@ -36,6 +36,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information from the application
 	 * context.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelection selection = window.getSelectionService().getSelection();
@@ -68,7 +69,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 						toRemove.add(new MagicCardPhysical(mc, mc.getLocation()));
 					} else {
 						mc.setCount(count - 1);
-						DataManager.update(activeDeckHandler.getCardStore(), mc);
+						DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc);
 					}
 				} else {
 					MagicCardPhysical magicCardCopy = new MagicCardPhysical(magicCard, null);
@@ -76,7 +77,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 					toRemove.add(magicCardCopy);
 				}
 			}
-			DataManager.remove(activeDeckHandler.getCardStore(), toRemove);
+			DataManager.getInstance().remove(activeDeckHandler.getCardStore(), toRemove);
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck");
 		}

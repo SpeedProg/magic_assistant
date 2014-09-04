@@ -125,7 +125,7 @@ public class MagicDbView extends AbstractCardsView {
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						DataManager.copyCards(sel.toList(), loc);
+						DataManager.getInstance().copyCards(sel.toList(), loc);
 					}
 				}
 			}

@@ -36,7 +36,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 		container.addListener(this);
 		table.addListener(this);
 		initialized = true;
-		DataManager.reconcile();
+		reconcile();
 		MagicLogger.traceEnd("lfcs init");
 	}
 
@@ -62,12 +62,12 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 						((IStorageInfo) storage).setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
 								: IStorageInfo.COLLECTION_TYPE);
 					}
-					DataManager.reconcile();
+					reconcile();
 					update();
 				}
 			} else if (event.getType() == CardEvent.REMOVE_CONTAINER) {
 				this.table.removeLocation(elem.getLocation());
-				DataManager.reconcile();
+				reconcile();
 				update();
 			}
 		} else if (event.getSource() instanceof CardElement) {
@@ -80,7 +80,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					// path and name changes
 				} else {
 					this.table.renameLocation((Location) event.getData(), elem.getLocation());
-					DataManager.reconcile();
+					reconcile();
 					update();
 				}
 			}
@@ -95,5 +95,9 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 				}
 			}
 		}
+	}
+
+	private void reconcile() {
+		DataManager.getInstance().reconcile();
 	}
 }

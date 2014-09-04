@@ -13,8 +13,6 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
-import com.reflexit.magiccards.core.model.ICardHandler;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class FileUtils {
@@ -162,10 +160,8 @@ public class FileUtils {
 
 	public static void main(String[] args) {
 		MagicLogger.log("aaa");
-		ICardHandler cardHandler = DataManager.getCardHandler();
-		IFilteredCardStore fstore = cardHandler.getMagicDBFilteredStore();
-		fstore.update();
-		System.err.println("Loaded " + fstore.getSize() + " cards");
+		DataManager.getInstance().waitForInit(10);
+		System.err.println("Loaded " + DataManager.getInstance().getMagicDBStore().size() + " cards");
 	}
 
 	public static boolean deleteTree(File rootDir) {
