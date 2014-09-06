@@ -34,7 +34,8 @@ public class CardOrganizerTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		File temp = new File("/tmp/magiccards");
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		File temp = new File(tmpDir,"magiccards");
 		DataManager.getInstance().reset(temp);
 		this.root = DataManager.getModelRoot();
 		this.root.clear();
