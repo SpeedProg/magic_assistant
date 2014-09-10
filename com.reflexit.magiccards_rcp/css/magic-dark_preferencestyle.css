@@ -1,0 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Lars Vogel and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Lars Vogel <Lars.Vogel@gmail.com> - initial API and implementation
+ *     Andrea Guarinoni - intial color schema definition
+ *******************************************************************************/
+
+/* ############################## Eclipse UI properties ############################## */
+
+
+IEclipsePreferences#org-eclipse-ui-workbench {
+	preferences:
+		'com.reflexit.magiccards.ui.preferences.ocard.bgcolor=0,0,0'
+		'com.reflexit.magiccards.ui.preferences.vcard.bgcolor=32,32,32'
+		'com.reflexit.magiccards.ui.preferences.color=217,232,247'
+}
+

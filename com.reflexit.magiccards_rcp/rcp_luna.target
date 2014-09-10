@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Eclipse RCP Luna" sequenceNumber="23">
+<?pde version="3.8"?><target name="Eclipse RCP Luna" sequenceNumber="59">
 <locations>
-<location path="C:\Develop\Eclipse\EclipseLuna4.4\eclipse" type="Profile"/>
-<location path="C:\Develop\Eclipse\EclipseLuna4.4\eclipse\dropins\delta\eclipse" type="Directory"/>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.generator.feature.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.eclipse.gef.source.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.eclipse.source.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.ide.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.apache.log4j.source" version="1.2.15.v201012070815"/>
+<unit id="org.eclipse.swtbot.forms.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.hamcrest.library" version="1.3.0.v201305281000"/>
+<unit id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
+<unit id="org.hamcrest.library.source" version="1.3.0.v201305281000"/>
+<unit id="org.eclipse.swtbot.generator.feature.source.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.ide.source.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.source.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.hamcrest.core" version="1.3.0.v201303031735"/>
+<unit id="org.eclipse.swtbot.forms.source.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
+<repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rcp.feature.group" version="4.4.0.v20140606-1445"/>
+<unit id="org.eclipse.pde.source.feature.group" version="3.10.0.v20140606-1215"/>
+<unit id="org.eclipse.rcp.sdk.id" version="4.4.0.I20140606-1215"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.10.0.v20140606-1602"/>
+<unit id="org.eclipse.platform.feature.group" version="4.4.0.v20140606-1558"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.100.v20140603-1326"/>
+<unit id="org.eclipse.platform.ide" version="4.4.0.I20140606-1215"/>
+<unit id="org.eclipse.sdk.ide" version="4.4.0.I20140606-1215"/>
+<unit id="org.eclipse.rcp.source.feature.group" version="4.4.0.v20140606-1445"/>
+<unit id="org.eclipse.platform.source.feature.group" version="4.4.0.v20140606-1558"/>
+<unit id="org.eclipse.pde.feature.group" version="3.10.0.v20140606-1215"/>
+<unit id="org.eclipse.rcp.configuration.feature.group" version="1.0.1.v20140603-1608"/>
+<unit id="org.eclipse.platform.sdk" version="4.4.0.I20140606-1215"/>
+<unit id="org.eclipse.equinox.p2.user.ui.source.feature.group" version="2.2.0.v20140523-0116"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.4"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.feature.group" version="4.4.0.v201405191524-DPEp7FGixAot6DLz0hXcUqaHoLSX"/>
+<repository location="http://download.eclipse.org/releases/luna"/>
+</location>
 </locations>
 </target>

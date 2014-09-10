@@ -1,1 +1,5 @@
+/**
+* Dark MA Style 
+*/
 @import url("platform:/plugin/org.eclipse.ui.themes/css/e4-dark.css");
+@import url("platform:/plugin/com.reflexit.magiccards_rcp/css/magic.css");
