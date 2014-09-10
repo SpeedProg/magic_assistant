@@ -561,7 +561,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	private void runLoadJob(ISelection sel) {
 		final IMagicCard card = getCard(sel);
-		if (CardDescView.this.panel.getCard() == card || sel.isEmpty())
+		if (panel==null || panel.getCard() == card || sel.isEmpty())
 			return;
 		this.loadCardJob.cancel();
 		this.loadCardJob = new LoadCardJob(card);
