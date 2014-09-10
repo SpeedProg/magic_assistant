@@ -17,15 +17,18 @@
 	<property name="repack.dir" value="${buildDirectory}/${buildLabel}-install" />
     <property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.3/bin/x86/AdvancedInstaller.com"/>
 	<property name="msiout" value="${buildDirectory}/../installer/magicassistant-SetupFiles"/>
-	<property name="rsa.key" value="C:/Develop/magic/.ssh/id_rsa"/>
+	<property name="rsa.key" value="${home}/.ssh/id_rsa"/>
 	<property name="jre.home" value="C:/Program Files/Java/jre8"/>
+	<condition property="is_windows">
+	    <os family="windows"/>
+	</condition>
 	<!-- 
 	Create a self extracting archive using 7zip
 	c:\Develop\magic\export\1.2.6.7>"c:\Program Files\7-Zip\7z.exe" a -t7z -mx5 -sfx7z.sfx archive.exe MagicAssistant
 	-->
 
 
-	<target name="copy.jre">
+	<target name="copy.jre"  if="is_windows">
 		<sync todir="${repack.dir}/${archivePrefix}/jre" includeEmptyDirs="true" overwrite="true">
 			<fileset dir="${jre.home}">
 			</fileset>
@@ -33,10 +36,10 @@
 	</target>
 
 	<target name="install">
-		<unzip src="${buildDirectory}/${buildLabel}/magicassistant-${buildId}-win32.win32.x86_64.zip" dest="${repack.dir}" />
+		<unzip src="${buildDirectory}/${buildLabel}/magicassistant-${buildId}-${baseos}.${basews}.${basearch}.zip" dest="${repack.dir}" />
 	</target>
 
-	<target name="install.copy" depends="install, copy.jre">
+	<target name="install.copy" depends="install, copy.jre" if="is_windows">
 
 		<!-- <delete dir="${buildDirectory}/install"/> -->
 		<sync todir="${buildDirectory}/install"  includeEmptyDirs="true" overwrite="true">
@@ -87,11 +90,27 @@
 		</exec>
 	</target>
 
-	<target name="run" depends="install,copy.jre">
-		<exec executable="${repack.dir}/${archivePrefix}/magicassistant.exe" dir="${repack.dir}/${archivePrefix}">
-			<arg value="-data" />
-			<arg value="data" />
-		</exec>
+	<target name="run.win" depends="install, copy.jre" if="is_windows">
+			<exec executable="${repack.dir}/${archivePrefix}/magicassistant.exe" dir="${repack.dir}/${archivePrefix}">
+				<arg value="-data" />
+				<arg value="data" />
+			</exec>
+	</target>
+	
+	<target name="run.notwin" depends="install" unless="is_windows">
+		   <echo message="This is not windows" />
+			<chmod file="${repack.dir}/${archivePrefix}/magicassistant" perm="+x"/>
+			<exec executable="${repack.dir}/${archivePrefix}/magicassistant" dir="${repack.dir}/${archivePrefix}">
+				<arg value="-data" />
+				<arg value="data" />
+			</exec>
+	</target>
+	
+	<target name="run" depends="run.notwin,run.win">
+	
+
+
+
 	</target>
 
 	<target name="clean">
