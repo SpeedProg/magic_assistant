@@ -38,8 +38,9 @@ public class SymbolConverter {
 		manaMap.put("{X}", "icons/mana/Symbol_X_mana.gif");
 		manaMap.put("{Y}", "icons/mana/Symbol_Y_mana.gif");
 		manaMap.put("{Z}", "icons/mana/Symbol_Z_mana.gif");
-		manaMap.put("{0.5}", "icons/mana/Symbol_half_mana.gif");
-		manaMap.put("{1/2}", "icons/mana/Symbol_half_mana.gif");
+		manaMap.put("{0.5}", "icons/mana/Symbol_500_mana.gif");
+		manaMap.put("{05}", "icons/mana/Symbol_500_mana.gif");
+		manaMap.put("{500}", "icons/mana/Symbol_500_mana.gif");
 		manaMap.put("{R/W}", "icons/mana/Symbol_RW_mana.gif");
 		manaMap.put("{R/G}", "icons/mana/Symbol_RG_mana.gif");
 		manaMap.put("{B/R}", "icons/mana/Symbol_BR_mana.gif");
@@ -62,6 +63,11 @@ public class SymbolConverter {
 		manaMap.put("{9}", "icons/mana/Symbol_9_mana.gif");
 		manaMap.put("{10}", "icons/mana/Symbol_10_mana.gif");
 		manaMap.put("{11}", "icons/mana/Symbol_11_mana.gif");
+		manaMap.put("{12}", "icons/mana/Symbol_12_mana.gif");
+		manaMap.put("{14}", "icons/mana/Symbol_14_mana.gif");
+		manaMap.put("{15}", "icons/mana/Symbol_15_mana.gif");
+		manaMap.put("{16}", "icons/mana/Symbol_16_mana.gif");
+		manaMap.put("{1000000}", "icons/mana/Symbol_1000000_mana.gif");
 		manaMap.put("{2/W}", "icons/mana/Symbol_2W_mana.gif");
 		manaMap.put("{2/U}", "icons/mana/Symbol_2U_mana.gif");
 		manaMap.put("{2/B}", "icons/mana/Symbol_2B_mana.gif");
@@ -89,8 +95,11 @@ public class SymbolConverter {
 		int height = fontData.getHeight();
 		String fontName = fontData.getName();
 		RGB rgb = con.getBackground().getRGB();
-		String color = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
-		String style = "font-size:" + height + "pt;background-color: " + color + ";font-family:" + fontName + ";";
+		String bgColor = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+		rgb = con.getForeground().getRGB();
+		String fgColor = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+		String style = "font-size:" + height + "pt;" + "background-color: " + bgColor + ";" + "color: " + fgColor + ";" + "font-family:"
+				+ fontName + ";";
 		return style;
 	}
 
@@ -102,7 +111,8 @@ public class SymbolConverter {
 			return cachedImage;
 		Display display = Display.getCurrent();
 		int height = SYMBOL_SIZE;
-		Image image = new Image(display, SYMBOL_SIZE * 7, height);
+		int max_width = SYMBOL_SIZE * 10;
+		Image image = new Image(display, max_width, height);
 		// painting on green to add transparency later
 		Color backColor = display.getSystemColor(SWT.COLOR_GREEN);
 		GC gc = new GC(image);
@@ -111,7 +121,7 @@ public class SymbolConverter {
 		int width = drawManaImage(gc, cost, 0, 0);
 		if (width == 0)
 			width = 1;
-		final Image clippedImage = new Image(display, width, height);
+		final Image clippedImage = new Image(display, Math.min(width, max_width), height);
 		gc.copyArea(clippedImage, 0, 0);
 		gc.dispose();
 		// transparency
@@ -191,20 +201,19 @@ public class SymbolConverter {
 		// get mana symbols
 		// http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=X&type=symbol
 		// ImageCreator creator = ImageCreator.getInstance();
-		File dir = new File("c:/tmp/symbols");
-		dir.mkdir();
+		File dir = new File("/tmp/symbols");
+		dir.mkdirs();
 		for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext();) {
 			String sym = iterator.next();
 			sym = sym.substring(1);
 			sym = sym.substring(0, sym.length() - 1);
 			sym = sym.replaceAll("\\W", "");
-			System.err.println(sym);
+			if (sym.equals("T") || sym.equals("Q"))
+				continue; // no tap and untap
 			String name = sym;
 			GatherHelper.saveManaSymbol(dir, name);
 		}
 		GatherHelper.saveManaSymbol(dir, "snow");
-		GatherHelper.saveManaSymbol(dir, "12");
-		GatherHelper.saveManaSymbol(dir, "14");
-		GatherHelper.saveManaSymbol(dir, "15");
+		GatherHelper.saveManaSymbol(dir, "500");
 	}
 }

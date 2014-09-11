@@ -208,7 +208,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					public void run() {
 						if (!isStillNeeded(card))
 							return;
-						CardDescView.this.panel.setText(card);
+						CardDescView.this.panel.reload(card);
 					}
 				});
 			} finally {
@@ -310,11 +310,13 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.verticalSpacing=0;
+		parent.setLayout(layout);
 		this.message = new Label(parent, SWT.WRAP);
 		this.message.setText("Click on a card to populate the view");
 		this.message.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		this.panel = new CardDescComposite(this, parent, SWT.BORDER);
+		this.panel = new CardDescComposite(this, parent, SWT.INHERIT_DEFAULT);
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.loadCardJob = new LoadCardJob(IMagicCard.DEFAULT);

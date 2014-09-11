@@ -46,38 +46,34 @@ class CardDescComposite extends Composite {
 	private Image cardNotFound;
 	private PowerColumn powerProvider;
 	private PowerColumn toughProvider;
-	int width = 223, hight = 310;
+	int width = 223+2, hight = 310+2;
 
 	public CardDescComposite(CardDescView cardDescView1, Composite parent, int style) {
-		super(parent, style);
+		super(parent, style | SWT.INHERIT_DEFAULT);
 		// UI
 		this.cardDescView = cardDescView1;
 		Composite panel = this;
-		panel.setFont(parent.getFont());
 		panel.setLayout(new GridLayout());
-		panel.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		this.imageControl = new Label(panel, SWT.NONE);
+		this.imageControl = new Label(panel, SWT.INHERIT_DEFAULT);
 		GridDataFactory.fillDefaults() //
 				.grab(true, false) //
-				.align(SWT.BEGINNING, SWT.BEGINNING)//
+				.align(SWT.CENTER, SWT.BEGINNING)//
 				.hint(width, hight).applyTo(this.imageControl);
 		createImages();
 		this.powerProvider = new PowerColumn(MagicCardField.POWER, null, null);
 		this.toughProvider = new PowerColumn(MagicCardField.TOUGHNESS, null, null);
-		details = new Composite(panel, SWT.INHERIT_DEFAULT);
-		details.setBackground(panel.getBackground());
+		details = new Composite(panel,SWT.INHERIT_DEFAULT);
 		GridDataFactory.fillDefaults()//
 				.align(SWT.FILL, SWT.FILL)//
 				.grab(true, true)//
 				.applyTo(details);
 		details.setLayout(new StackLayout());
-		this.textBackup = new Text(details, SWT.WRAP);
-		this.textBackup.setFont(panel.getFont());
+		this.textBackup = new Text(details, SWT.WRAP | SWT.INHERIT_DEFAULT);
+		//textBackup.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
 		try {
 			// if (true)
 			// throw new SWTError();
-			this.textBrowser = new Browser(details, SWT.WRAP | SWT.INHERIT_DEFAULT);
-			this.textBrowser.setFont(panel.getFont());
+			this.textBrowser = new Browser(details, SWT.WRAP | SWT.INHERIT_FORCE);
 			textBrowser.addLocationListener(new LocationAdapter() {
 				@Override
 				public void changing(LocationEvent event) {
@@ -101,6 +97,7 @@ class CardDescComposite extends Composite {
 			});
 			swapVisibility(textBrowser, textBackup);
 		} catch (Throwable e) {
+			textBrowser = null;
 			MagicUIActivator.log(e);
 			swapVisibility(textBackup, textBrowser);
 		}
@@ -188,7 +185,7 @@ class CardDescComposite extends Composite {
 				String links = getLinks(card);
 				String oracle = getOracle(card, text);
 				String rulings = getCardRulingsHtml(card);
-				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, this));
+				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, textBrowser));
 				swapVisibility(textBrowser, textBackup);
 				return;
 			}
