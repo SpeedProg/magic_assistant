@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.utils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -471,5 +472,52 @@ public class ImageCreator {
 			System.arraycopy(alphaRow, 0, alphaData, y * width, width);
 		}
 		fullImageData.alphaData = alphaData;
+	}
+
+	public static void setAlphaForManaCircles(ImageData fullImageData) {
+		int width = fullImageData.width;
+		if (width > 16)
+			return;
+		int height = fullImageData.height;
+		double cx = (width+0.5) / 2, cy = (height) / 2;
+		byte[] alphaData = new byte[height * width];
+		int[] lineData = new int[width];
+		for (int y = 0; y < height; y++) {
+			fullImageData.getPixels(0, y, width, lineData, 0);
+			byte[] alphaRow = new byte[width];
+			for (int x = 0; x < width; x++) {
+				int radius = 7;
+				int al = FULL_OPAQUE;
+				double x1 = Math.abs(x - cx);
+				double y1 = Math.abs(y - cy);
+				double dist = Math.sqrt(x1 * x1 + y1 * y1);
+				if (dist >= radius)
+					al = 0;
+				else if (dist >= radius - 1)
+					al = (int) (FULL_OPAQUE * (radius - dist));
+				alphaRow[x] = (byte) al;
+			}
+			System.arraycopy(alphaRow, 0, alphaData, y * width, width);
+		}
+		fullImageData.alphaData = alphaData;
+		fullImageData.transparentPixel = -1;
+	}
+
+	public static void copyAlphaChannel(ImageData from, ImageData to) {
+		int height = to.height;
+		int width = to.width;
+		int from_width = from.width;
+		if (from.alphaData != null) {
+			byte[] alphaData = to.alphaData = new byte[height * width];
+			Arrays.fill(alphaData, (byte) FULL_OPAQUE);
+			int copy_width = width;
+			if (width > from_width)
+				copy_width = from_width;
+			for (int y = 0; y < height; y++) {
+				System.arraycopy(from.alphaData, y * from_width, alphaData, y * width, copy_width);
+			}
+			to.alphaData = alphaData;
+		}
+		to.transparentPixel = from.transparentPixel;
 	}
 }

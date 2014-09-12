@@ -3,22 +3,28 @@ package com.reflexit.magiccards.ui.utils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -106,73 +112,95 @@ public class SymbolConverter {
 	public static Image buildCostImage(String cost) {
 		if (cost == null)
 			cost = "";
-		Image cachedImage = MagicUIActivator.getDefault().getImageRegistry().get(cost);
-		if (cachedImage != null)
-			return cachedImage;
-		Display display = Display.getCurrent();
-		int height = SYMBOL_SIZE;
-		int max_width = SYMBOL_SIZE * 10;
-		Image image = new Image(display, max_width, height);
-		// painting on green to add transparency later
-		Color backColor = display.getSystemColor(SWT.COLOR_GREEN);
-		GC gc = new GC(image);
-		gc.setBackground(backColor);
-		gc.fillRectangle(image.getBounds());
-		int width = drawManaImage(gc, cost, 0, 0);
-		if (width == 0)
-			width = 1;
-		final Image clippedImage = new Image(display, Math.min(width, max_width), height);
-		gc.copyArea(clippedImage, 0, 0);
-		gc.dispose();
-		// transparency
-		ImageData imageData = clippedImage.getImageData();
-		int backPixel = imageData.palette.getPixel(backColor.getRGB());
-		imageData.transparentPixel = backPixel;
-		Image imageWithTransparentBg = new Image(display, imageData);
-		MagicUIActivator.getDefault().getImageRegistry().put(cost, imageWithTransparentBg);
-		image.dispose();
-		clippedImage.dispose();
-		return imageWithTransparentBg;
+		ImageRegistry imageRegistry = MagicUIActivator.getDefault().getImageRegistry();
+		String key = "[" + cost;
+		Image costImage = imageRegistry.get(key);
+		if (costImage != null)
+			return costImage;
+		try {
+			Collection<Image> manaImages = getManaImages(cost);
+			costImage = joinImages(manaImages);
+			return costImage;
+		} catch (Exception e) {
+			MagicUIActivator.log(e);
+			costImage = new Image(Display.getDefault(), SYMBOL_SIZE * cost.length() / 2, SYMBOL_SIZE);
+			GC gc = new GC(costImage);
+			gc.drawText(cost, 0, 0, true);
+			gc.dispose();
+			return costImage;
+		} finally {
+			imageRegistry.put(key, costImage);
+		}
 	}
 
-	private static int drawManaImage(GC gc, String text1, int x, int y) {
-		// gc.setAlpha(50);
-		String text = text1;
-		int x_offset = x;
-		int y_offset = y;
+	private static Image joinImages(Collection<Image> images) {
+		Display display = Display.getCurrent();
+		int height = SYMBOL_SIZE;
+		int width = getWidth(images);
+		int max_width = SYMBOL_SIZE * 10;
+		if (width <= 0)
+			width = 1;
+		else if (width > max_width)
+			width = max_width;
+		Image tmpImage = new Image(display, width, height);
+		ImageData id2 = tmpImage.getImageData();
+		id2.alphaData = new byte[width * height];
+		tmpImage.dispose();
+		Image image = new Image(display, id2);
+		GC gc = new GC(image);
+		int x = 0;
+		int y = 0;
+		for (Image small : images) {
+			gc.drawImage(small, x, y);
+			x += small.getBounds().width;
+		}
+		gc.dispose();
+		return image;
+	}
+
+	private static int getWidth(Collection<Image> images) {
+		int width = 0;
+		for (Image image : images) {
+			width += image.getBounds().width;
+		}
+		return width;
+	}
+
+	private static Collection<Image> getManaImages(String cost) {
+		if (cost.length() == 0)
+			return Collections.emptyList();
+		Collection<Image> res = new ArrayList<>();
+		String text = cost;
 		while (text.length() > 0) {
-			boolean cut = false;
 			for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
 				String sym = iterator.next();
-				if (text.startsWith(sym)) {
-					try {
-						String im = manaMap.get(sym);
+				if (sym.length() == 0)
+					throw new MagicException();
+				while (text.startsWith(sym)) {
+					String im = manaMap.get(sym);
+					Image symImage = MagicUIActivator.getDefault().getImage(sym);
+					if (symImage == null) {
 						ImageDescriptor imageDescriptor = MagicUIActivator.getImageDescriptor(im);
 						if (imageDescriptor == null) {
-							MagicUIActivator.log("Cannot find images for " + im + " " + text1);
-							continue;
+							throw new MagicException("Cannot find images for " + im + " " + text);
 						}
-						Image manaImage = imageDescriptor.createImage();
-						gc.drawImage(manaImage, x_offset, y_offset);
-						text = text.substring(sym.length());
-						x_offset += manaImage.getBounds().width;
-						cut = true;
-						manaImage.dispose();
-					} catch (Exception e) {
-						e.printStackTrace();
+						ImageData imageData = imageDescriptor.getImageData();
+						ImageCreator.setAlphaForManaCircles(imageData);
+						//
+						Image manaImage = new Image(Display.getDefault(), imageData);
+						symImage = MagicUIActivator.getDefault().getImage(sym, manaImage);
 					}
-				}
-			}
-			if (!cut) {
-				String letter = text.substring(0, 1);
-				text = text.substring(1);
-				if (letter.matches("\\d+")) {
-					gc.drawText(letter, x_offset, y_offset);
-					x_offset += gc.textExtent(letter).x;
+					if (symImage != null) {
+						res.add(symImage);
+					}
+					text = text.substring(sym.length());
 				}
 			}
 		}
-		return x_offset - x;
+		if (text.length() > 0) {
+			throw new MagicException("Cannot build mana images for " + text);
+		}
+		return res;
 	}
 
 	public static String wrapHtml(String text, Control con) {

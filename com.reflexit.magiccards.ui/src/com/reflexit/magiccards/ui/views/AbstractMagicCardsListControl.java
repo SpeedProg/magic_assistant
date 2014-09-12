@@ -560,7 +560,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected Composite createTopBar(Composite composite) {
-		topBar = new Composite(composite, SWT.BORDER);
+		topBar = new Composite(composite, SWT.NONE);
 		topBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;
