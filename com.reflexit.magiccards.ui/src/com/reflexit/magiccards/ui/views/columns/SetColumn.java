@@ -48,7 +48,7 @@ public class SetColumn extends GenColumn implements Listener {
 		IMagicCard card = (IMagicCard) element;
 		if (card.getCardId() == 0 && element instanceof MagicCardPhysical)
 			return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-		return super.getForeground(element);
+		return super.getBackground(element);
 	}
 
 	@Override
