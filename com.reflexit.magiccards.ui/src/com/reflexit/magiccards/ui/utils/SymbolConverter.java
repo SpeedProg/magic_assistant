@@ -119,11 +119,11 @@ public class SymbolConverter {
 			return costImage;
 		try {
 			Collection<Image> manaImages = getManaImages(cost);
-			costImage = joinImages(manaImages);
+			costImage = ImageCreator.joinImages(manaImages, SYMBOL_SIZE, SYMBOL_SIZE * 10);
 			return costImage;
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
-			costImage = new Image(Display.getDefault(), SYMBOL_SIZE * cost.length() / 2, SYMBOL_SIZE);
+			costImage = ImageCreator.createTransparentImage(SYMBOL_SIZE * cost.length() / 2, SYMBOL_SIZE);
 			GC gc = new GC(costImage);
 			gc.drawText(cost, 0, 0, true);
 			gc.dispose();
@@ -131,39 +131,6 @@ public class SymbolConverter {
 		} finally {
 			imageRegistry.put(key, costImage);
 		}
-	}
-
-	private static Image joinImages(Collection<Image> images) {
-		Display display = Display.getCurrent();
-		int height = SYMBOL_SIZE;
-		int width = getWidth(images);
-		int max_width = SYMBOL_SIZE * 10;
-		if (width <= 0)
-			width = 1;
-		else if (width > max_width)
-			width = max_width;
-		Image tmpImage = new Image(display, width, height);
-		ImageData id2 = tmpImage.getImageData();
-		id2.alphaData = new byte[width * height];
-		tmpImage.dispose();
-		Image image = new Image(display, id2);
-		GC gc = new GC(image);
-		int x = 0;
-		int y = 0;
-		for (Image small : images) {
-			gc.drawImage(small, x, y);
-			x += small.getBounds().width;
-		}
-		gc.dispose();
-		return image;
-	}
-
-	private static int getWidth(Collection<Image> images) {
-		int width = 0;
-		for (Image image : images) {
-			width += image.getBounds().width;
-		}
-		return width;
 	}
 
 	private static Collection<Image> getManaImages(String cost) {

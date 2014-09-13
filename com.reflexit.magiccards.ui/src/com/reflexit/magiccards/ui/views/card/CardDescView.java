@@ -80,56 +80,46 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private Action edit;
 
 	public class LoadCardJob extends Job {
-		private IMagicCard card;
+		private IMagicCard jCard;
 		private boolean forceUpdate;
 
 		public LoadCardJob(IMagicCard card) {
-			super("Loading card image");
-			this.card = card;
+			super("Loading card");
+			this.jCard = card;
 		}
 
 		public LoadCardJob() {
 			super("Sync with web");
-			this.card = panel.getCard();
+			this.jCard = panel.getCard();
 			this.forceUpdate = true;
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			setName("Loading card info: " + card.getName());
-			monitor.beginTask("Loading info for " + card.getName(), 100);
-			if (forceUpdate) {
-				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
-					@Override
-					public void run() {
-						setMessage("Loading...");
-						CardDescView.this.panel.reload(card);
+			setName("Loading card info: " + jCard.getName());
+			monitor.beginTask("Loading info for " + jCard.getName(), 100);
+			panel.setCard(jCard);
+			final boolean nocard = (jCard == IMagicCard.DEFAULT);
+			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					CardDescView.this.panel.setVisible(!nocard);
+					if (nocard) {
+						setMessage("Click on a card to populate the view");
+						return;
 					}
-				});
-			} else {
-				CardDescView.this.panel.setCard(card);
-				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
-					@Override
-					public void run() {
-						boolean nocard = (card == IMagicCard.DEFAULT);
-						CardDescView.this.panel.setVisible(!nocard);
-						if (nocard)
-							setMessage("Click on a card to populate the view");
-						else
-							setMessage("");
-						if (!isStillNeeded(card))
-							return;
-						CardDescView.this.panel.reload(card);
-					}
-				});
-			}
+					if (!isStillNeeded(jCard))
+						return;
+					panel.setLoadingImage(jCard);
+					panel.setText(jCard);
+				}
+			});
 			monitor.worked(10);
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
-			if (card != IMagicCard.DEFAULT) {
-				loadCardImage(new SubProgressMonitor(monitor, 45), card,
-						forceUpdate);
-				loadCardExtraInfo(new SubProgressMonitor(monitor, 45), card);
+			if (!nocard) {
+				loadCardImage(new SubProgressMonitor(monitor, 45), jCard, forceUpdate);
+				loadCardExtraInfo(new SubProgressMonitor(monitor, 45), jCard);
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 			}
@@ -137,26 +127,18 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			return Status.OK_STATUS;
 		}
 
-		protected IStatus loadCardExtraInfo(IProgressMonitor monitor,
-				final IMagicCard card) {
+		protected IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card) {
 			try {
 				if (WebUtils.isWorkOffline())
 					return Status.CANCEL_STATUS;
-				boolean updateRulings = MagicUIActivator.getDefault()
-						.getPreferenceStore()
-						.getBoolean(PreferenceConstants.LOAD_RULINGS);
-				boolean updateExtras = MagicUIActivator.getDefault()
-						.getPreferenceStore()
-						.getBoolean(PreferenceConstants.LOAD_EXTRAS);
-				boolean updateSets = MagicUIActivator.getDefault()
-						.getPreferenceStore()
-						.getBoolean(PreferenceConstants.LOAD_PRINTINGS);
+				boolean updateRulings = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_RULINGS);
+				boolean updateExtras = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_EXTRAS);
+				boolean updateSets = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LOAD_PRINTINGS);
 				if (forceUpdate) {
 					updateRulings = true;
 					updateExtras = true;
 				}
-				if (updateExtras == false && updateRulings == false
-						&& updateSets == false)
+				if (updateExtras == false && updateRulings == false && updateSets == false)
 					return Status.OK_STATUS;
 				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
 				if (updateRulings)
@@ -187,9 +169,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			return res;
 		}
 
-		IStatus loadCardExtraInfo(IProgressMonitor monitor,
-				final IMagicCard card, HashSet<ICardField> fieldMap)
-				throws IOException {
+		IStatus loadCardExtraInfo(IProgressMonitor monitor, final IMagicCard card, HashSet<ICardField> fieldMap) throws IOException {
 			monitor.beginTask("Loading info for " + card.getName(), 100);
 			try {
 				if (!isStillNeeded(card))
@@ -198,17 +178,15 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					return Status.OK_STATUS;
 				if (card.getCardId() == 0)
 					return Status.OK_STATUS;
-				ICardStore store = DataManager.getCardHandler()
-						.getMagicDBStore();
-				new UpdateCardsFromWeb().updateStore(card, fieldMap, null,
-						store, new CoreMonitorAdapter(new SubProgressMonitor(
-								monitor, 99)));
+				ICardStore store = DataManager.getCardHandler().getMagicDBStore();
+				new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(
+						new SubProgressMonitor(monitor, 99)));
 				getViewSite().getShell().getDisplay().syncExec(new Runnable() {
 					@Override
 					public void run() {
 						if (!isStillNeeded(card))
 							return;
-						CardDescView.this.panel.reload(card);
+						CardDescView.this.panel.setText(card);
 					}
 				});
 			} finally {
@@ -222,8 +200,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		return panel.getCard() == card;
 	}
 
-	protected IStatus loadCardImage(IProgressMonitor monitor,
-			final IMagicCard card, boolean forceUpdate) {
+	protected IStatus loadCardImage(IProgressMonitor monitor, final IMagicCard card, boolean forceUpdate) {
 		monitor.beginTask("Loading image for " + card.getName(), 100);
 		try {
 			if (!isStillNeeded(card))
@@ -232,11 +209,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			IOException e1 = null;
 			try {
 				if (card.getCardId() != 0) {
-					String path = ImageCreator.getInstance().createCardPath(
-							card, CardCache.isLoadingEnabled(), forceUpdate);
+					String path = ImageCreator.getInstance().createCardPath(card, CardCache.isLoadingEnabled(), forceUpdate);
 					boolean resize = asScanned == false;
-					remoteImage1 = ImageCreator.getInstance().createCardImage(
-							path, resize);
+					remoteImage1 = ImageCreator.getInstance().createCardImage(path, resize);
 				}
 			} catch (CachedImageNotFoundException e) {
 				// skip
@@ -264,13 +239,11 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 						return;
 					Image image = remoteImage;
 					if (image == null || image.getBounds().width < 20) {
-						image = ImageCreator.getInstance()
-								.createCardNotFoundImage(card);
+						image = ImageCreator.getInstance().createCardNotFoundImage(card);
 					}
 					// rotate image if needed
 					String options = (String) card.get(MagicCardField.PART);
-					if (options != null && options.length() > 0
-							&& image != null) {
+					if (options != null && options.length() > 0 && image != null) {
 						int rotate = 0;
 						if (options.contains("rotate180")) {
 							rotate = 180;
@@ -278,8 +251,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 							rotate = 90;
 						}
 						if (rotate != 0) {
-							Image rimage = ImageCreator.getInstance()
-									.getRotated(image, rotate);
+							Image rimage = ImageCreator.getInstance().getRotated(image, rotate);
 							image.dispose();
 							image = rimage;
 						}
@@ -311,7 +283,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		GridLayout layout = new GridLayout();
-		layout.verticalSpacing=0;
+		layout.verticalSpacing = 0;
 		parent.setLayout(layout);
 		this.message = new Label(parent, SWT.WRAP);
 		this.message.setText("Click on a card to populate the view");
@@ -320,8 +292,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		this.panel.setVisible(false);
 		this.panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.loadCardJob = new LoadCardJob(IMagicCard.DEFAULT);
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(parent, MagicUIActivator.helpId("viewcard"));
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewcard"));
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(panel,
 		// MagicUIActivator.helpId("viewcard"));
 		makeActions();
@@ -370,8 +341,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	void makeActions() {
 		this.sync = new Action("Update card info from web", SWT.NONE) {
 			{
-				setImageDescriptor(MagicUIActivator
-						.getImageDescriptor("icons/clcl16/software_update.png"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/software_update.png"));
 			}
 
 			@Override
@@ -381,12 +351,9 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				job.schedule();
 			}
 		};
-		this.actionAsScanned = new Action(
-				"When depressed - scanned image is not scaled",
-				IAction.AS_CHECK_BOX) {
+		this.actionAsScanned = new Action("When depressed - scanned image is not scaled", IAction.AS_CHECK_BOX) {
 			{
-				setImageDescriptor(MagicUIActivator
-						.getImageDescriptor("icons/clcl16/zoom_original.png"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/zoom_original.png"));
 			}
 
 			@Override
@@ -397,8 +364,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		};
 		this.open = new Action("Open card in browser", SWT.NONE) {
 			{
-				setImageDescriptor(MagicUIActivator
-						.getImageDescriptor("icons/clcl16/forward_2.png"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/forward_2.png"));
 			}
 
 			@Override
@@ -412,16 +378,14 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					IWebBrowser browser = getBrowser();
 					browser.openURL(new URL(url));
 				} catch (Exception e) {
-					MessageDialog.openError(getControl().getShell(), "Error",
-							"Well that kind of failed... " + e.getMessage());
+					MessageDialog.openError(getControl().getShell(), "Error", "Well that kind of failed... " + e.getMessage());
 					MagicUIActivator.log(e);
 				}
 			}
 		};
 		edit = new Action("Edit...") {
 			{
-				setImageDescriptor(MagicUIActivator
-						.getImageDescriptor("icons/clcl16/edit.png"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/edit.png"));
 			}
 
 			@Override
@@ -449,14 +413,12 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	private void revealCurrentSelection() {
 		try {
-			IWorkbenchPage page = getViewSite().getWorkbenchWindow()
-					.getActivePage();
+			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
 			if (page == null)
 				return;
 			IViewPart dbview = page.findView(MagicDbView.ID);
 			if (dbview != null) {
-				ISelection sel = dbview.getSite().getSelectionProvider()
-						.getSelection();
+				ISelection sel = dbview.getSite().getSelectionProvider().getSelection();
 				runLoadJob(sel);
 			}
 		} catch (NullPointerException e) {
@@ -477,8 +439,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setInitialSelection() {
-		final int id = PreferenceInitializer.getGlobalStore().getInt(
-				PreferenceConstants.LAST_SELECTION);
+		final int id = PreferenceInitializer.getGlobalStore().getInt(PreferenceConstants.LAST_SELECTION);
 		if (id == 0)
 			return;
 		new Job("Setting saved card id") {
@@ -493,13 +454,11 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						IWorkbenchPage page = getViewSite().getWorkbenchWindow()
-								.getActivePage();
+						IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
 						if (page != null) {
 							IViewPart dbview = page.findView(MagicDbView.ID);
 							if (dbview != null) {
-								dbview.getSite().getSelectionProvider()
-										.setSelection(sel);
+								dbview.getSite().getSelectionProvider().setSelection(sel);
 							}
 						}
 					}
@@ -526,8 +485,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			if (panel != null && panel.getCard() != null) {
 				IMagicCard firstElement = panel.getCard();
 				int id = firstElement.getBase().getCardId();
-				PreferenceInitializer.getGlobalStore().setValue(
-						PreferenceConstants.LAST_SELECTION, id);
+				PreferenceInitializer.getGlobalStore().setValue(PreferenceConstants.LAST_SELECTION, id);
 			}
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
@@ -563,7 +521,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	private void runLoadJob(ISelection sel) {
 		final IMagicCard card = getCard(sel);
-		if (panel==null || panel.getCard() == card || sel.isEmpty())
+		if (panel == null || panel.getCard() == card || sel.isEmpty())
 			return;
 		this.loadCardJob.cancel();
 		this.loadCardJob = new LoadCardJob(card);
@@ -579,11 +537,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	protected IWebBrowser getBrowser() throws PartInitException {
-		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench()
-				.getBrowserSupport();
-		IWebBrowser browser = browserSupport.createBrowser(
-				IWorkbenchBrowserSupport.AS_VIEW
-						| IWorkbenchBrowserSupport.STATUS,
+		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+		IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW | IWorkbenchBrowserSupport.STATUS,
 				MagicUIActivator.PLUGIN_ID, "Browser", null);
 		return browser;
 	}

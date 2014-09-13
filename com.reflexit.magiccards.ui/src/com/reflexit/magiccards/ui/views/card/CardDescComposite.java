@@ -15,7 +15,6 @@ import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -46,7 +45,7 @@ class CardDescComposite extends Composite {
 	private Image cardNotFound;
 	private PowerColumn powerProvider;
 	private PowerColumn toughProvider;
-	int width = 223+2, hight = 310+2;
+	int width = 223, hight = 310;
 
 	public CardDescComposite(CardDescView cardDescView1, Composite parent, int style) {
 		super(parent, style | SWT.INHERIT_DEFAULT);
@@ -58,18 +57,18 @@ class CardDescComposite extends Composite {
 		GridDataFactory.fillDefaults() //
 				.grab(true, false) //
 				.align(SWT.CENTER, SWT.BEGINNING)//
-				.hint(width, hight).applyTo(this.imageControl);
+				.hint(width+2, hight+2).applyTo(this.imageControl);
 		createImages();
 		this.powerProvider = new PowerColumn(MagicCardField.POWER, null, null);
 		this.toughProvider = new PowerColumn(MagicCardField.TOUGHNESS, null, null);
-		details = new Composite(panel,SWT.INHERIT_DEFAULT);
+		details = new Composite(panel, SWT.INHERIT_DEFAULT);
 		GridDataFactory.fillDefaults()//
 				.align(SWT.FILL, SWT.FILL)//
 				.grab(true, true)//
 				.applyTo(details);
 		details.setLayout(new StackLayout());
 		this.textBackup = new Text(details, SWT.WRAP | SWT.INHERIT_DEFAULT);
-		//textBackup.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
+		// textBackup.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
 		try {
 			// if (true)
 			// throw new SWTError();
@@ -106,18 +105,20 @@ class CardDescComposite extends Composite {
 	private void createImages() {
 		int border = 10;
 		{
-			Image im = new Image(getDisplay(), width - 2 * border, hight - 2 * border);
+			Image im = ImageCreator.createTransparentImage(width - 2 * border, hight - 2 * border);
 			GC gc = new GC(im);
-			gc.drawText("Loading...", 10, 10);
+			gc.setForeground(getForeground());
+			gc.drawText("Loading...", 10, 10, true);
 			gc.dispose();
-			this.loadingImage = drawBorder(im, border);
+			this.loadingImage = ImageCreator.drawBorder(im, border);
 		}
 		{
-			Image im = new Image(getDisplay(), width - 2 * border, hight - 2 * border);
+			Image im = ImageCreator.createTransparentImage(width - 2 * border, hight - 2 * border);
 			GC gc = new GC(im);
-			gc.drawText("Can't find image", 10, 10);
+			gc.setForeground(getForeground());
+			gc.drawText("Can't find image", 10, 10, true);
 			gc.dispose();
-			this.cardNotFound = drawBorder(im, border);
+			this.cardNotFound = ImageCreator.drawBorder(im, border);
 		}
 	}
 
@@ -152,12 +153,6 @@ class CardDescComposite extends Composite {
 	}
 
 	private boolean logOnce = false;
-
-	void reload(IMagicCard card) {
-		setCard(card);
-		setLoadingImage(card);
-		setText(card);
-	}
 
 	public void setCard(IMagicCard card) {
 		this.card = card;
@@ -289,20 +284,6 @@ class CardDescComposite extends Composite {
 		}
 		data += "</ul><p/>";
 		return data;
-	}
-
-	private Image drawBorder(Image remoteImage, int border) {
-		Rectangle bounds = remoteImage.getBounds();
-		Image full = new Image(getDisplay(), bounds.width + border * 2, bounds.height + border * 2);
-		GC gc = new GC(full);
-		gc.setBackground(getBackground());
-		gc.fillRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2);
-		gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2, border * 2);
-		gc.drawImage(remoteImage, border, border);
-		gc.dispose();
-		return full;
 	}
 
 	@Override

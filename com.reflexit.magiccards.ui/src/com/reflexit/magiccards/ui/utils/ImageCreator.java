@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,6 +21,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.widgets.Display;
 
@@ -243,6 +245,7 @@ public class ImageCreator {
 	public Image createCardImage(String path, boolean resize) {
 		try {
 			ImageData data = resize ? getResizedCardImage(new ImageData(path)) : new ImageData(path);
+			setAlphaBlendingForCorners(data);
 			return new Image(Display.getCurrent(), data);
 		} catch (SWTException e) {
 			// failed to create image
@@ -473,6 +476,57 @@ public class ImageCreator {
 			System.arraycopy(alphaRow, 0, alphaData, y * width, width);
 		}
 		fullImageData.alphaData = alphaData;
+	}
+
+	public static Image drawBorder(Image remoteImage, int border) {
+		Rectangle bounds = remoteImage.getBounds();
+		Display display = Display.getDefault();
+		Image full = createTransparentImage(bounds.width + border * 2, bounds.height + border * 2);
+		GC gc = new GC(full);
+		//gc.setBackground(getBackground());
+		//gc.fillRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2);
+		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+		gc.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2, border * 2);
+		gc.drawImage(remoteImage, border, border);
+		gc.dispose();
+		return full;
+	}
+
+	public static Image joinImages(Collection<Image> images, int height, int max_width) {
+		int width = getWidth(images);
+		if (width <= 0)
+			width = 1;
+		else if (width > max_width)
+			width = max_width;
+		Image image = createTransparentImage(height, width);
+		GC gc = new GC(image);
+		int x = 0;
+		int y = 0;
+		for (Image small : images) {
+			gc.drawImage(small, x, y);
+			x += small.getBounds().width;
+		}
+		gc.dispose();
+		return image;
+	}
+
+	public static int getWidth(Collection<Image> images) {
+		int width = 0;
+		for (Image image : images) {
+			width += image.getBounds().width;
+		}
+		return width;
+	}
+
+	public static Image createTransparentImage(int width, int height) {
+		Display display = Display.getDefault();
+		Image tmpImage = new Image(display, width, height);
+		ImageData id2 = tmpImage.getImageData();
+		id2.alphaData = new byte[width * height];
+		tmpImage.dispose();
+		Image image = new Image(display, id2);
+		return image;
 	}
 
 	public static void setAlphaForManaCircles(ImageData fullImageData) {
