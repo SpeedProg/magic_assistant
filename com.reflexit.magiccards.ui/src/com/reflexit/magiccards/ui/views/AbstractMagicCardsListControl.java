@@ -700,7 +700,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		};
 		this.actionShowFilter.setText("Filter...");
 		this.actionShowFilter.setToolTipText("Opens a Card Filter Dialog");
-		this.actionShowFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter.gif"));
+		this.actionShowFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter_ps.png"));
 		this.actionResetFilter = new Action() {
 			@Override
 			public void run() {
@@ -760,7 +760,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 				runFind();
 			}
 		};
-		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.gif"));
+		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.png"));
 	}
 
 	public class GroupByToolBarAction extends Action {
