@@ -63,11 +63,16 @@ public class CostColumn extends AbstractColumn implements Listener {
 			int y = event.y;
 			GC gc = event.gc;
 			String text = getText(row);
-			if (text != null)
-				gc.drawText(text, x + getBounds(event).width - gc.textExtent(text).x - 2, y + 1, true);
+			int tx = x + event.width;
+			if (text != null) {
+				tx = x + getBounds(event).width - gc.textExtent(text).x - 2;
+				gc.drawText(text, tx, y + 1, true);
+			}
 			Image costImage = getActualImage(row);
-			if (costImage != null)
+			if (costImage != null) {
+				gc.setClipping(x, y, tx-x, event.height);
 				gc.drawImage(costImage, x, y + 1);
+			}
 		}
 	}
 }

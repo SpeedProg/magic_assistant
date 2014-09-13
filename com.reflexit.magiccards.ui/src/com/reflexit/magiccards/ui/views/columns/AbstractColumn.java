@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
@@ -154,7 +155,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		// do nothing
 	}
 
-	protected Rectangle getBounds(Event event) {
+	protected static Rectangle getBounds(Event event) {
 		Item item = (Item) event.item;
 		Rectangle bounds = null;
 		if (item instanceof TableItem)
@@ -163,4 +164,28 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 			bounds = ((TreeItem) item).getBounds(event.index);
 		return bounds;
 	}
+	
+	public void paintCellWithImage(Event event, int imageWidth) {
+		Item item = (Item) event.item;
+		Object row = item.getData();
+		int x = event.x;
+		int y = event.y;
+		Rectangle bounds = getBounds(event);
+		int w = bounds.width;
+		int h = bounds.height;
+		int leftMargin = 0;
+		Image image = getActualImage(row);
+		if (image != null) {
+			leftMargin = imageWidth;
+			Rectangle imageBounds = image.getBounds();
+			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height) / 2);
+		}
+		String text = getText(row);
+		if (text != null) {
+			event.gc.setClipping(x, y, w - 3, h);
+			event.gc.drawText(text, x + 3 + leftMargin, y + 1, true);
+		}
+	}
+
+	protected abstract Image getActualImage(Object row);
 }

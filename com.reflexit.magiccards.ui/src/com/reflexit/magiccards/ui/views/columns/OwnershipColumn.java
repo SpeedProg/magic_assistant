@@ -25,11 +25,6 @@ public class OwnershipColumn extends GenColumn {
 		super(MagicCardField.OWNERSHIP, "O");
 	}
 
-	@Override
-	public Image getImage(Object element) {
-		return null;
-	}
-
 	protected boolean isOwn(Object element) {
 		boolean own = false;
 		if (element instanceof IMagicCardPhysical) {
@@ -68,8 +63,8 @@ public class OwnershipColumn extends GenColumn {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface
-	 * .viewers.ColumnViewer)
+	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
+	 * (org.eclipse.jface .viewers.ColumnViewer)
 	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {

@@ -3,9 +3,9 @@ package com.reflexit.magiccards.ui.views.columns;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
-public class ColorColumn extends AbstractColumn {
+public class ColorColumn extends GenColumn {
 	public ColorColumn() {
-		super(MagicCardField.COLOR);
+		super(MagicCardField.COLOR, "Color");
 	}
 
 	@Override
@@ -14,11 +14,6 @@ public class ColorColumn extends AbstractColumn {
 		if (text.length() == 0)
 			return text;
 		return Colors.getColorName(text.toString());
-	}
-
-	@Override
-	public String getColumnName() {
-		return "Color";
 	}
 
 	@Override

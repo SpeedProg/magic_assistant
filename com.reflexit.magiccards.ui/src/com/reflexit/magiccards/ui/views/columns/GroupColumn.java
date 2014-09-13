@@ -47,11 +47,6 @@ public class GroupColumn extends GenColumn implements Listener {
 		showImage = show;
 	}
 
-	@Override
-	public Image getImage(Object element) {
-		return null;
-	}
-
 	public Image getActualImage(Object element) {
 		if (showImage) {
 			if (element instanceof ICardGroup) {
@@ -180,24 +175,7 @@ public class GroupColumn extends GenColumn implements Listener {
 	@Override
 	public void handlePaintEvent(Event event) {
 		if (event.index == this.columnIndex) { // our column
-			Item item = (Item) event.item;
-			Object row = item.getData();
-			int x = event.x;
-			int y = event.y;
-			Rectangle bounds = getBounds(event);
-			int w = bounds.width;
-			int h = bounds.height;
-			int leftMargin = 0;
-			Image image = getActualImage(row);
-			if (image != null) {
-				leftMargin = 32;
-				event.gc.drawImage(image, x, y + 1);
-			}
-			String text = getText(row);
-			if (text != null) {
-				event.gc.setClipping(x, y, w - 3, h);
-				event.gc.drawText(text, x + 3 + leftMargin, y + 1, true);
-			}
+			paintCellWithImage(event, SetColumn.SET_IMAGE_WIDTH);
 		}
 	}
 }

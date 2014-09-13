@@ -9,6 +9,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -20,7 +22,68 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.widgets.ComboStringEditingSupport;
 
-public class SetColumn extends GenColumn {
+public class SetColumn extends GenColumn implements Listener {
+	public final static int SET_IMAGE_WIDTH = 32;
+	private boolean showImage = false;
+
+	public boolean isShowImage() {
+		return showImage;
+	}
+
+	public void setShowImage(boolean showImage) {
+		this.showImage = showImage;
+	}
+
+	public SetColumn() {
+		super(MagicCardField.SET, "Set");
+	}
+
+	public SetColumn(boolean showImage) {
+		this();
+		this.showImage = showImage;
+	}
+
+	@Override
+	public Color getBackground(Object element) {
+		IMagicCard card = (IMagicCard) element;
+		if (card.getCardId() == 0 && element instanceof MagicCardPhysical)
+			return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+		return super.getForeground(element);
+	}
+
+	@Override
+	public int getColumnWidth() {
+		return 150;
+	}
+
+	@Override
+	public Image getActualImage(Object element) {
+		if (isShowImage()) {
+			if (element instanceof IMagicCard) {
+				IMagicCard card = (IMagicCard) element;
+				return ImageCreator.getInstance().getSetImage(card);
+			}
+		}
+		return super.getImage(element);
+	}
+
+	@Override
+	protected void handleEraseEvent(Event event) {
+		event.detail &= ~SWT.FOREGROUND;
+	}
+
+	@Override
+	public void handlePaintEvent(Event event) {
+		if (event.index == this.columnIndex) { // our column
+			paintCellWithImage(event, SET_IMAGE_WIDTH);
+		}
+	}
+
+	@Override
+	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
+		return new SetEditingSupport(viewer);
+	}
+
 	public class SetEditingSupport extends ComboStringEditingSupport {
 		public SetEditingSupport(ColumnViewer viewer) {
 			super(viewer);
@@ -89,53 +152,5 @@ public class SetColumn extends GenColumn {
 				MagicUIActivator.log("Cannot set new set for " + card + " of value " + set);
 			}
 		}
-	}
-
-	private boolean showImage = false;
-
-	public boolean isShowImage() {
-		return showImage;
-	}
-
-	public void setShowImage(boolean showImage) {
-		this.showImage = showImage;
-	}
-
-	public SetColumn() {
-		super(MagicCardField.SET, "Set");
-	}
-
-	public SetColumn(boolean showImage) {
-		this();
-		this.showImage = showImage;
-	}
-
-	@Override
-	public Color getForeground(Object element) {
-		IMagicCard card = (IMagicCard) element;
-		if (card.getCardId() == 0 && element instanceof MagicCardPhysical)
-			return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-		return super.getForeground(element);
-	}
-
-	@Override
-	public int getColumnWidth() {
-		return 150;
-	}
-
-	@Override
-	public Image getImage(Object element) {
-		if (isShowImage()) {
-			if (element instanceof IMagicCard) {
-				IMagicCard card = (IMagicCard) element;
-				return ImageCreator.getInstance().getSetImage(card);
-			}
-		}
-		return super.getImage(element);
-	}
-
-	@Override
-	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
-		return new SetEditingSupport(viewer);
 	}
 }

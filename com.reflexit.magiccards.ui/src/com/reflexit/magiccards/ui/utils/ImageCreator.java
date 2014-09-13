@@ -123,7 +123,8 @@ public class ImageCreator {
 				MagicUIActivator.log("Cannot load image: " + url + ": null imageData");
 				return null;
 			}
-			return new Image(display, scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false));
+			//ImageData scaleAndCenter = scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false);
+			return new Image(display, imageDesc.getImageData());
 		} catch (SWTException e) {
 			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
 			return null;
