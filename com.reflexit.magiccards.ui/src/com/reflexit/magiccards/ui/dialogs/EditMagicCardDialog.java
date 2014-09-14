@@ -37,6 +37,7 @@ public class EditMagicCardDialog extends MagicDialog {
 	private String localPath;
 	private Composite area;
 	private Text priceText;
+	private Text collnumText;
 
 	public EditMagicCardDialog(Shell parentShell, MagicCard card) {
 		super(parentShell, new PreferenceStore());
@@ -66,6 +67,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		area.setLayoutData(gda);
 		createReadOnlyField("Name", MagicCardField.NAME);
 		createReadOnlyField("Language", MagicCardField.LANG);
+		collnumText = createEditableField("Collector's Number", MagicCardField.COLLNUM);
 		priceText = createEditableField("Seller's Price", MagicCardField.DBPRICE);
 		urlText = createEditableField("Image URL", MagicCardField.IMAGE_URL);
 	}
@@ -115,6 +117,7 @@ public class EditMagicCardDialog extends MagicDialog {
 			store.setValue(MagicCardField.IMAGE_URL.name(), card.getDefaultImageUrl());
 			priceText.setText(store.getString(MagicCardField.DBPRICE.name()));
 			urlText.setText(store.getString(MagicCardField.IMAGE_URL.name()));
+			collnumText.setText(store.getString(MagicCardField.COLLNUM.name()));
 			reloadImageFromUrl();
 		} else
 			super.buttonPressed(buttonId);
@@ -180,6 +183,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		boolean modified = false;
 		modified = setField(card, store, MagicCardField.DBPRICE) || modified;
 		modified = setField(card, store, MagicCardField.IMAGE_URL) || modified;
+		modified = setField(card, store, MagicCardField.COLLNUM) || modified;
 		if (modified && update) {
 			DataManager.getInstance().update(card);
 		}
