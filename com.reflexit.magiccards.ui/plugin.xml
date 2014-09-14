@@ -206,6 +206,10 @@
             class="com.reflexit.magiccards.ui.commands.SplitHandler"
             commandId="com.reflexit.magiccards.ui.commands.split">
       </handler>
+            <handler
+                  class="com.reflexit.magiccards.ui.commands.TakeScreenShotCommandHandler"
+                  commandId="com.reflexit.magiccards.ui.commands.takeScreenshotCommand">
+            </handler>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -285,6 +289,12 @@
             contextId="org.eclipse.ui.contexts.window"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+6">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.takeScreenshotCommand"
+            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+0">
       </key>
    </extension>
    <extension
@@ -418,9 +428,16 @@
       </command>
       
       <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
             defaultHandler="com.reflexit.magiccards.ui.commands.BackupHandler"
             id="com.reflexit.magicassistant.command.backup"
             name="Backup">
+      </command>
+
+      <command
+            categoryId="com.reflexit.magiccards.ui.commands.category"
+            id="com.reflexit.magiccards.ui.commands.takeScreenshotCommand"
+            name="Take Screenshot">
       </command>
    </extension>
    <extension
@@ -551,6 +568,14 @@
             </command>
                         
       </menuContribution>
+       <menuContribution
+             locationURI="menu:help?after=additions">
+             <command
+                   commandId="com.reflexit.magiccards.ui.commands.takeScreenshotCommand"
+                   id="com.reflexit.magiccards.ui.menus.takeScreenshotCommand"
+                   mnemonic="S">
+             </command>
+       </menuContribution>
   </extension>
   <extension
         point="org.eclipse.ui.newWizards">
