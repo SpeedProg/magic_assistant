@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.commands;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -94,6 +95,11 @@ public class TakeScreenShotCommandHandler extends AbstractHandler {
 						loader.data = new ImageData[] { image.getImageData() };
 						loader.save(file.getPath(), SWT.IMAGE_PNG);
 						dialogSettings.put("file", file.getPath());
+						 try {
+							MagicUIActivator.getDefault().saveDialogSetting(dialogSettings);
+						} catch (IOException e) {
+							MagicUIActivator.log(e);
+						}
 						super.okPressed();
 					
 					}
