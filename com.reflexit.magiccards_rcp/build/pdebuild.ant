@@ -193,9 +193,11 @@
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
+				
 				<include name="**/com.reflexit**"/>
-				<include name="*.xml"/> 
-			</fileset>
+				<include name="*.xml"/>
+	
+			</fileset> 
 		</scp>
 	</target>
 	<target name="publish.update.site.beta">
