@@ -52,8 +52,10 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportResult;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.ReportType;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -93,6 +95,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	private Button importIntoExisting;
 	private Button importIntoDb;
 	private Collection<ReportType> types;
+	private Button virtualCards;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -107,6 +110,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			final InputStream st = openInputStream();
 			final boolean newdeck = createNewDeck.getSelection();
 			final boolean dbImport = importIntoDb.getSelection();
+			final boolean virtual = virtualCards.getSelection();
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -129,7 +133,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 							Location selectedLocation = getSelectedLocation();
 							if (newdeck) {
 								// create a new deck
-								createNewDeck(getNewDeckName());
+								createNewDeck(getNewDeckName(), virtual);
 								selectedLocation = getSelectedLocation();
 							}
 							Collection<IMagicCard> result;
@@ -137,6 +141,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 								ImportResult result1 = ImportUtils.performPreImport(st, worker, header, selectedLocation,
 										new CoreMonitorAdapter(monitor));
 								result = (Collection<IMagicCard>) result1.getList();
+								fixVirtualCards(result, virtual, result1.getFields());
 							} else {
 								result = (List<IMagicCard>) previewResult.getList();
 								if (!dbImport) {
@@ -151,6 +156,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 												mcp.setLocation(sideboard);
 										}
 									}
+									fixVirtualCards(result, virtual, previewResult.getFields());
 								}
 							}
 							if (fixErrors(result, dbImport)) {
@@ -172,6 +178,20 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			displayErrorDialog(e);
 		}
 		return res;
+	}
+
+	protected void fixVirtualCards(Collection<IMagicCard> result, boolean virtual, ICardField[] fields) {
+		for (ICardField field : fields) {
+			if (field == MagicCardField.OWNERSHIP)
+				return; // not updating ownership if such column exists in import format
+		}
+		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+			IMagicCard iMagicCard = (IMagicCard) iterator.next();
+			if (iMagicCard instanceof MagicCardPhysical) {
+				MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
+				mcp.setOwn(!virtual);
+			}
+		}
 	}
 
 	private boolean fixErrors(final Collection<IMagicCard> result, final boolean dbImport) {
@@ -258,7 +278,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		return yesres[0];
 	}
 
-	protected void createNewDeck(final String newDeckName) {
+	protected void createNewDeck(final String newDeckName, boolean virtual) {
 		// create a sample file
 		ModelRoot root = DataManager.getModelRoot();
 		final CardElement resource = root.getDeckContainer();
@@ -266,7 +286,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, newDeckName, page);
-				element.setVirtual(true);
+				element.setVirtual(virtual);
 				setElement(element);
 			}
 		});
@@ -577,6 +597,11 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);
 		includeHeader.setText("Data has a header row");
 		includeHeader.setSelection(true);
+		// deck options
+		virtualCards = new Button(buttonComposite, SWT.CHECK);
+		virtualCards.setText("Imported cards will be virtual");
+		virtualCards.setSelection(false);
+		virtualCards.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
 	}
 
 	private void addComboType(ReportType reportType) {
@@ -627,23 +652,24 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a standard push
-	 * button, registers for selection events including button presses and registers default buttons
-	 * with its shell. The button id is stored as the buttons client data. Note that the parent's
-	 * layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
-	 * Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a
+	 * standard push button, registers for selection events including button
+	 * presses and registers default buttons with its shell. The button id is
+	 * stored as the buttons client data. Note that the parent's layout is
+	 * assumed to be a GridLayout and the number of columns in this layout is
+	 * incremented. Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for
-	 *            standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code>
+	 *            constants for standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button, and
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button,
+	 *            and <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar

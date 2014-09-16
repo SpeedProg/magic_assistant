@@ -363,8 +363,8 @@ public class ImportUtils {
 		worker.init(st, true, loc);
 		worker.setHeader(header);
 		// init preview
-		ImportResult previewResult = worker.getPreview();
 		worker.run(monitor);
+		ImportResult previewResult = worker.getPreview();
 		return previewResult;
 	}
 
