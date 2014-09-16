@@ -1,7 +1,10 @@
+changes in 1.4.0.5
+* Fixed issue with image loading
+* Added ability to edit collector's number
 changes in 1.4.0.3
 * Full support for dark theme (and make it default in this version to see user's feedback)
 * Added card info view action to open the editor
-* Added dialog to edit database card entry (image, price, collector number)
+* Added dialog to edit database card entry (image, price)
 * Added card image into physical card edit dialog
 * Bug 385 Tournament: Print round results in W(2) format
 changes in 1.4.0.1
