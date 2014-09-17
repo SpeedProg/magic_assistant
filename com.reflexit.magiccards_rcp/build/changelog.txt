@@ -1,5 +1,7 @@
 changes in 1.4.0.6
 * Bug 390 Importing Decks Real/Virtual - added option to make imported cards real/virtual 
+* Fixed hanging
+* Possibly fixed columns reset to only Name column
 changes in 1.4.0.5
 * Fixed issue with image loading
 * Added ability to edit collector's number
