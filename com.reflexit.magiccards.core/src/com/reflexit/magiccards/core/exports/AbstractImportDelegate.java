@@ -18,18 +18,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	private InputStream stream;
 	private boolean header;
 	private Location location;
-	protected boolean previewMode = false;
+	private boolean virtual;
 	protected ImportResult importResult;
 	protected int lineNum = 0;
 	private ReportType type;
-	protected boolean resolve = true;
 
 	public AbstractImportDelegate() {
-	}
-
-	@Override
-	public void setResolveDb(boolean resolveDbCards) {
-		this.resolve = resolveDbCards;
 	}
 
 	public InputStream getStream() {
@@ -46,10 +40,10 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return type;
 	}
 
-	public void init(InputStream st, boolean preview, Location location) {
+	public void init(InputStream st, Location location, boolean virtual) {
 		this.stream = st;
 		this.location = location;
-		this.previewMode = preview;
+		this.virtual = virtual;
 		this.importResult = new ImportResult();
 		importResult.setType(getType());
 		importResult.setFields(getNonTransientFeilds());
@@ -90,15 +84,13 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	protected MagicCardPhysical createDefaultCard() {
 		MagicCardPhysical card = new MagicCardPhysical(new MagicCard(), getLocation());
-		card.setOwn(true);
+		card.setOwn(!virtual);
 		return card;
 	}
 
 	protected void importCard(MagicCardPhysical card) {
 		if (card == null)
 			return;
-		if (resolve)
-			ImportUtils.updateCardReference(card);
 		importResult.add(card);
 	}
 
@@ -126,14 +118,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	static ICardField[] getNonTransientFeilds() {
 		return MagicCardField.allNonTransientFields(true);
-	}
-
-	public boolean isPreviewMode() {
-		return previewMode;
-	}
-
-	public void setPreviewMode(boolean previewMode) {
-		this.previewMode = previewMode;
 	}
 
 	public ImportResult getPreviewResult() {

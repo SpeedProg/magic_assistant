@@ -4,11 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.legality.Format;
+import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
+import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererLegalityTest extends TestCase {
 	private ParseGathererLegality parser;
@@ -54,5 +59,14 @@ public class ParseGathererLegalityTest extends TestCase {
 		LegalityMap deck = LegalityMap.calculateDeckLegality(maps);
 		assertEquals(Legality.RESTRICTED, deck.get("Extended"));
 		assertEquals(Legality.NOT_LEGAL, deck.get("Tribal Wars"));
+	}
+	
+
+	@Test
+	public void testLegalitiesInet() {
+		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
+		Editions editions = Editions.getInstance();
+		Edition ed = editions.getEditionByName("Theros");
+		assertEquals(Legality.LEGAL, ed.getLegalityMap().get(Format.STANDARD));
 	}
 }

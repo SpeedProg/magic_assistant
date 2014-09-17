@@ -26,6 +26,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 /*-
  Name,Edition,Qty,Foil,Market Price,Market Value,Added,Color,Type,Rarity,Cost,P/T,Text
@@ -149,8 +150,11 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 					}
 				}
 			}
-			if (!found)
+			if (!found) 
 				super.importCard(card);
+			
+			if (!found) 
+				ImportUtils.updateCardReference(card); // XXX
 			// System.err.println(card);
 		}
 		Object err = card.getError();

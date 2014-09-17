@@ -25,7 +25,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public interface IImportDelegate<T> {
 	public ReportType getType();
 
-	public void init(InputStream st, boolean preview, Location location);
+	public void init(InputStream st, Location location, boolean virtual);
 
 	public void setHeader(boolean header);
 
@@ -38,6 +38,4 @@ public interface IImportDelegate<T> {
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value);
 
 	public void setReportType(ReportType reportType);
-
-	public void setResolveDb(boolean resolveDbCards);
 }

@@ -152,34 +152,4 @@ public class EditionsTest extends TestCase {
 		Collection<Edition> editionsList = editions.getEditions();
 		assertEquals(EDITIONS_SIZE, editionsList.size());
 	}
-
-	public void testSetLoadingInet() throws IOException {
-		Collection<Edition> oldList = editions.getEditions();
-		getExFile().delete();
-		editions.init();
-		editions.save();
-		ParseGathererSets parser = new ParseGathererSets();
-		parser.load(ICoreProgressMonitor.NONE);
-		Collection<Edition> editionsList = editions.getEditions();
-		assertTrue("Expected more than 103 but was " + editionsList.size(), editionsList.size() > 103);
-		for (Iterator iterator = editionsList.iterator(); iterator.hasNext();) {
-			Edition edition = (Edition) iterator.next();
-			if (!oldList.contains(edition)) {
-				System.err.println("NEW: " + edition.getName() + " " + edition.getMainAbbreviation());
-			}
-		}
-		for (Iterator iterator = oldList.iterator(); iterator.hasNext();) {
-			Edition edition = (Edition) iterator.next();
-			if (!editionsList.contains(edition)) {
-				System.err.println("OLD: " + edition.getName() + " " + edition.getMainAbbreviation());
-			}
-		}
-	}
-
-	@Test
-	public void testLegalitiesInet() {
-		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
-		Edition ed = editions.getEditionByName("Theros");
-		assertEquals(Legality.LEGAL, ed.getLegalityMap().get(Format.STANDARD));
-	}
 }

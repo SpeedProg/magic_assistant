@@ -122,45 +122,31 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 						}
 						if (worker == null)
 							throw new IllegalArgumentException("Import is not defined for " + reportType.getLabel());
-						worker.setResolveDb(!dbImport);
+					
+						CoreMonitorAdapter monitor2 = new CoreMonitorAdapter(monitor);
+						boolean resolve = !dbImport;
 						if (preview) {
 							// if error occurs importResult.error would be set
 							// to exception
-							previewResult = ImportUtils.performPreview(st, worker, header, Location.createLocation("preview"),
-									new CoreMonitorAdapter(monitor));
+							Location location = Location.createLocation("preview");
+							previewResult = ImportUtils.performPreImport(st, worker, header, virtual, location, resolve, monitor2);
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
-							Location selectedLocation = getSelectedLocation();
+							Location location = getSelectedLocation();
 							if (newdeck) {
 								// create a new deck
 								createNewDeck(getNewDeckName(), virtual);
-								selectedLocation = getSelectedLocation();
+								location = getSelectedLocation();
 							}
-							Collection<IMagicCard> result;
 							if (previewResult == null) {
-								ImportResult result1 = ImportUtils.performPreImport(st, worker, header, selectedLocation,
-										new CoreMonitorAdapter(monitor));
-								result = (Collection<IMagicCard>) result1.getList();
-								fixVirtualCards(result, virtual, result1.getFields());
-							} else {
-								result = (List<IMagicCard>) previewResult.getList();
-								if (!dbImport) {
-									Location sideboard = selectedLocation.toSideboard();
-									for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-										IMagicCard iMagicCard = (IMagicCard) iterator.next();
-										if (iMagicCard instanceof MagicCardPhysical) {
-											MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
-											if (!mcp.isSideboard())
-												mcp.setLocation(selectedLocation);
-											else
-												mcp.setLocation(sideboard);
-										}
-									}
-									fixVirtualCards(result, virtual, previewResult.getFields());
-								}
+								previewResult = ImportUtils.performPreImport(st, worker, header, virtual, location, resolve, monitor2);
+							}
+							Collection<IMagicCard> result = (Collection<IMagicCard>) previewResult.getList();
+							if (resolve) {
+								ImportUtils.fixLocations(location, result);
 							}
 							if (fixErrors(result, dbImport)) {
-								if (!dbImport)
+								if (resolve)
 									ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
 							}
 						}
@@ -178,20 +164,6 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			displayErrorDialog(e);
 		}
 		return res;
-	}
-
-	protected void fixVirtualCards(Collection<IMagicCard> result, boolean virtual, ICardField[] fields) {
-		for (ICardField field : fields) {
-			if (field == MagicCardField.OWNERSHIP)
-				return; // not updating ownership if such column exists in import format
-		}
-		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-			IMagicCard iMagicCard = (IMagicCard) iterator.next();
-			if (iMagicCard instanceof MagicCardPhysical) {
-				MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
-				mcp.setOwn(!virtual);
-			}
-		}
 	}
 
 	private boolean fixErrors(final Collection<IMagicCard> result, final boolean dbImport) {

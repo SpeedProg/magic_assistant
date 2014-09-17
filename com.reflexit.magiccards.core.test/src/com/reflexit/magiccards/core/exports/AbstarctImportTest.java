@@ -22,6 +22,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected IMagicCard card3;
 	protected IMagicCard cardN;
 	protected List<IMagicCard> result;
+	protected boolean virtual = true;
+	protected boolean resolve = true;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -55,8 +57,9 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(),
-					deck.getCardStore(), ICoreProgressMonitor.NONE);
+			if (resolve==false) throw new IllegalArgumentException("Cannot test");
+			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual,
+					deck.getLocation(), deck.getCardStore(), ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -67,8 +70,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void preview(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), worker, header, deck.getLocation(),
-					ICoreProgressMonitor.NONE);
+			ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual,
+					deck.getLocation(), resolve, ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

@@ -34,6 +34,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -48,21 +49,26 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static ImportResult performPreImport(InputStream st, IImportDelegate worker, boolean header, Location location,
-			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		if (st != null) {
-			DataManager.getMagicDBStore().initialize();
-			worker.init(st, false, location);
-			worker.setHeader(header);
-			worker.run(monitor);
-			return worker.getPreview();
-		} else
+	public static ImportResult performPreImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual, Location location,
+			boolean resolve, ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		if (st == null)
 			return null;
+		DataManager.getMagicDBStore().initialize();
+		worker.init(st, location, virtual);
+		worker.setHeader(header);
+		worker.run(monitor);
+		ImportResult preview = worker.getPreview();
+		if (resolve)
+			for (ICard card : preview.getList()) {
+				if (card instanceof MagicCardPhysical)
+					ImportUtils.updateCardReference((MagicCardPhysical) card);
+			}
+		return preview;
 	}
 
-	public static void performImport(InputStream st, IImportDelegate worker, boolean header, Location location, ICardStore cardStore,
-			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		ImportResult result = performPreImport(st, worker, header, location, monitor);
+	public static void performImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual, Location location,
+			ICardStore cardStore, ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		ImportResult result = performPreImport(st, worker, header, virtual, location, true, monitor);
 		performImport(result.getList(), cardStore);
 	}
 
@@ -70,12 +76,6 @@ public class ImportUtils {
 		if (importedCards != null) {
 			Collection<Location> importedLocations = getLocations(importedCards);
 			createDecks(importedLocations);
-			// set the hard reference from database
-			for (Iterator iterator = importedCards.iterator(); iterator.hasNext();) {
-				IMagicCard card = (IMagicCard) iterator.next();
-				if (card instanceof MagicCardPhysical)
-					((MagicCardPhysical) card).setMagicCard(card.getBase());
-			}
 			// import into card store
 			DataManager.getInstance().add(cardStore, importedCards);
 		}
@@ -357,17 +357,6 @@ public class ImportUtils {
 		}
 	}
 
-	public static ImportResult performPreview(InputStream st, IImportDelegate<IMagicCard> worker, boolean header, Location loc,
-			ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		setupSetAliases();
-		worker.init(st, true, loc);
-		worker.setHeader(header);
-		// init preview
-		worker.run(monitor);
-		ImportResult previewResult = worker.getPreview();
-		return previewResult;
-	}
-
 	/**
 	 * Finds and associates imported cards with magic db cards. If card not
 	 * found in db creates new db cards and adds to newdbrecords
@@ -431,6 +420,20 @@ public class ImportUtils {
 				}
 				MagicCard newCard = card.getBase();
 				newCard.setSet(corr);
+			}
+		}
+	}
+
+	public static void fixLocations(Location location, Collection<IMagicCard> cards) {
+		Location sideboard = location.toSideboard();
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard iMagicCard = (IMagicCard) iterator.next();
+			if (iMagicCard instanceof MagicCardPhysical) {
+				MagicCardPhysical mcp = (MagicCardPhysical) iMagicCard;
+				if (!mcp.isSideboard())
+					mcp.setLocation(location);
+				else
+					mcp.setLocation(sideboard);
 			}
 		}
 	}

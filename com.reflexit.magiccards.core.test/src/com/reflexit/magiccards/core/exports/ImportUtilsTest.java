@@ -34,6 +34,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	private Collection<IMagicCard> preimport;
 	private ImportResult result;
 
+
 	private void parse() {
 		parse(true, tableImport);
 	}
@@ -60,8 +61,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 
 	public void preimport() {
 		try {
-			result = ImportUtils
-					.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, deck.getLocation(), monitor);
+			result = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, virtual,
+					deck.getLocation(), resolve, monitor);
 			preimport = (Collection<IMagicCard>) result.getList();
 			setout(preimport);
 		} catch (Exception e) {
@@ -136,8 +137,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreview() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Bla|2");
-		ImportResult performPreview = ImportUtils.performPreview(new ByteArrayInputStream(line.getBytes()), tableImport, true,
-				Location.createLocation("test"), monitor);
+		ImportResult performPreview = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, virtual,
+				Location.createLocation("test"), resolve, monitor);
 		List values = performPreview.getList();
 		assertEquals(1, values.size());
 		Object[] fielsValues = performPreview.getFields();
@@ -150,7 +151,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Foo|2");
 		addLine("Light|Foo|1");
-		tableImport.setResolveDb(false);
+		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
 		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
@@ -162,7 +163,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreImportWithDbOverride() {
 		addLine("NAME|SET|ARTIST|COLLNUM|IMAGE_URL");
 		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|http://magiccards.info/scans/en/mgdc/31.jpg");
-		tableImport.setResolveDb(false);
+		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
 		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
@@ -180,7 +181,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreImportWithDbOvNoUrl() {
 		addLine("NAME|SET|ARTIST|COLLNUM|TEXT");
 		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|My Text");
-		tableImport.setResolveDb(false);
+		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
 		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
@@ -217,5 +218,36 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		IDbCardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
 		LookupHash lookupHash = new ImportUtils.LookupHash(magicDBStore);
 		assertTrue(lookupHash.getCandidates("Junún Efreet").size() > 0);
+	}
+
+	@Test
+	public void testPerformPreImportVirtual() throws InvocationTargetException, InterruptedException {
+		addLine("NAME|COUNT");
+		addLine("Counterspell|2");
+		virtual = true;
+		preimport();
+		assertEquals(1, resSize);
+		assertEquals(!virtual, ((MagicCardPhysical) card1).isOwn());
+	}
+	@Test
+	public void testPerformPreImportOwn() throws InvocationTargetException, InterruptedException {
+		addLine("NAME|COUNT");
+		addLine("Counterspell|2");
+		virtual = false;
+		preimport();
+		assertEquals(1, resSize);
+		assertEquals(!virtual, ((MagicCardPhysical) card1).isOwn());
+	}
+	
+	@Test
+	public void testPerformPreImportOwnVar() throws InvocationTargetException, InterruptedException {
+		addLine("NAME|COUNT|OWNERSHIP");
+		addLine("Counterspell|2|false");
+		addLine("Lightning Bolt|2|true");
+		virtual = false;
+		preimport();
+		assertEquals(2, resSize);
+		assertEquals(false, ((MagicCardPhysical) card1).isOwn());
+		assertEquals(true, ((MagicCardPhysical) card2).isOwn());
 	}
 }
