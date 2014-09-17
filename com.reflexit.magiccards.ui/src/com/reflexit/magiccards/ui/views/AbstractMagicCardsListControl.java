@@ -1051,7 +1051,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void saveColumnLayout() {
 		final String value = manager.getColumnLayoutProperty();
-		System.err.println("Saving value "+value);
 		if (value == null || value.isEmpty())
 			return;
 		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
