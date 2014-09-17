@@ -16,10 +16,27 @@ import org.eclipse.birt.chart.exception.ChartException;
 import org.eclipse.birt.chart.factory.GeneratedChartState;
 import org.eclipse.birt.chart.factory.Generator;
 import org.eclipse.birt.chart.model.Chart;
+import org.eclipse.birt.chart.model.ChartWithAxes;
 import org.eclipse.birt.chart.model.attribute.Bounds;
 import org.eclipse.birt.chart.model.attribute.CallBackValue;
+import org.eclipse.birt.chart.model.attribute.ColorDefinition;
+import org.eclipse.birt.chart.model.attribute.FontDefinition;
+import org.eclipse.birt.chart.model.attribute.StyledComponent;
+import org.eclipse.birt.chart.model.attribute.Text;
 import org.eclipse.birt.chart.model.attribute.impl.BoundsImpl;
+import org.eclipse.birt.chart.model.attribute.impl.ColorDefinitionImpl;
+import org.eclipse.birt.chart.model.attribute.impl.FontDefinitionImpl;
+import org.eclipse.birt.chart.model.component.Axis;
+import org.eclipse.birt.chart.model.component.Series;
+import org.eclipse.birt.chart.model.data.SeriesDefinition;
+import org.eclipse.birt.chart.model.layout.Block;
+import org.eclipse.birt.chart.model.layout.LabelBlock;
+import org.eclipse.birt.chart.style.BaseStyleProcessor;
+import org.eclipse.birt.chart.style.IStyle;
+import org.eclipse.birt.chart.style.IStyleProcessor;
+import org.eclipse.birt.chart.style.SimpleStyle;
 import org.eclipse.birt.chart.util.PluginSettings;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.ImageTransfer;
@@ -28,6 +45,8 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -114,18 +133,36 @@ public class ChartCanvas extends Canvas {
 		setChart(gen.create());
 	}
 
-	private void buildChart() {
+	private void buildChart(GC gc) {
 		Point size = getSize();
 		Bounds bo = BoundsImpl.create(0, 0, size.x, size.y);
 		int resolution = this.render.getDisplayServer().getDpiResolution();
 		bo.scale(72d / resolution);
 		try {
 			Generator gr = Generator.instance();
-			this.state = gr.build(this.render.getDisplayServer(), this.chart, bo, null, null, null);
+			BaseStyleProcessor externalProcessor = createExternalStyleProcessor(gc);
+			this.state = gr.build(this.render.getDisplayServer(), this.chart, bo, null, null, externalProcessor);
 			this.state.getRunTimeContext().setActionRenderer(new ManaCurveActionRenderer());
 		} catch (ChartException ex) {
 			Activator.log(ex);
 		}
+	}
+
+	public BaseStyleProcessor createExternalStyleProcessor(GC gc) {
+		final Color fg = gc.getForeground();
+		final FontDefinition fd = FontDefinitionImpl.createEmpty();
+		FontData swtfontdata = getFont().getFontData()[0];
+		fd.setSize(swtfontdata.getHeight());
+		fd.setName(swtfontdata.getName());
+		final SimpleStyle style = new SimpleStyle();
+		style.setColor(ColorDefinitionImpl.create(fg.getRed(), fg.getGreen(), fg.getBlue()));
+		style.setFont(fd);
+		BaseStyleProcessor externalProcessor = new BaseStyleProcessor() {
+			public IStyle getStyle(Chart model, StyledComponent name) {
+				return style;
+			}
+		};
+		return externalProcessor;
 	}
 
 	public synchronized void drawToCachedImage(Rectangle size, GC gcOrig) {
@@ -149,7 +186,7 @@ public class ChartCanvas extends Canvas {
 			// rebuild
 			this.render.setProperty(IDeviceRenderer.GRAPHICS_CONTEXT, gc);
 			if (needRebuild) {
-				buildChart();
+				buildChart(gc);
 				needRebuild = false;
 			}
 			// render
