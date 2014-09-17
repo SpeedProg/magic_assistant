@@ -138,7 +138,10 @@ public class SymbolConverter {
 			return Collections.emptyList();
 		Collection<Image> res = new ArrayList<>();
 		String text = cost;
+		if (text.equals("*")) 
+			return res;
 		while (text.length() > 0) {
+			boolean cut = false;
 			for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
 				String sym = iterator.next();
 				if (sym.length() == 0)
@@ -161,12 +164,13 @@ public class SymbolConverter {
 						res.add(symImage);
 					}
 					text = text.substring(sym.length());
+					cut=true;
 				}
 			}
+			if (!cut)
+				throw new MagicException("Cannot build mana images for " + text);
 		}
-		if (text.length() > 0) {
-			throw new MagicException("Cannot build mana images for " + text);
-		}
+
 		return res;
 	}
 
