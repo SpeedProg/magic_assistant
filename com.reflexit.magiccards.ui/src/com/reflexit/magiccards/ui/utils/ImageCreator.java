@@ -51,10 +51,14 @@ public class ImageCreator {
 		// private
 		fontRegistry = new FontRegistry(Display.getCurrent());
 		String fontName = fontRegistry.defaultFont().getFontData()[0].getName();
-		fontRegistry.put(TITLE_FONT_KEY, new FontData[] { new FontData(fontName, 9, SWT.BOLD) });
-		fontRegistry.put(TYPE_FONT_KEY, new FontData[] { new FontData(fontName, 8, SWT.BOLD) });
-		fontRegistry.put(TEXT_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.NORMAL) });
-		fontRegistry.put(TEXT_ITALIC_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.ITALIC) });
+		fontRegistry.put(TITLE_FONT_KEY, new FontData[] { new FontData(
+				fontName, 9, SWT.BOLD) });
+		fontRegistry.put(TYPE_FONT_KEY, new FontData[] { new FontData(fontName,
+				8, SWT.BOLD) });
+		fontRegistry.put(TEXT_FONT_KEY, new FontData[] { new FontData(fontName,
+				7, SWT.NORMAL) });
+		fontRegistry.put(TEXT_ITALIC_FONT_KEY, new FontData[] { new FontData(
+				fontName, 7, SWT.ITALIC) });
 	}
 
 	public Font getFont(String key) {
@@ -94,7 +98,8 @@ public class ImageCreator {
 				}
 				try {
 					URL url = CardCache.createSetImageURL(card, true);
-					Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
+					Image image = MagicUIActivator.getDefault()
+							.getImageRegistry().get(key);
 					if (image == null && url != null) {
 						image = ImageCreator.createNewSetImage(url);
 						MagicUIActivator.getDefault().getImage(key, image);
@@ -106,13 +111,15 @@ public class ImageCreator {
 		}
 	};
 
-	public static Image createSetNotFoundImage(@SuppressWarnings("unused") String rarity) {
+	public static Image createSetNotFoundImage(
+			@SuppressWarnings("unused") String rarity) {
 		Display display = Display.getDefault();
 		Image im = new Image(display, 12, 12);
 		GC gc = new GC(im);
 		gc.drawText("?", 0, 0);
 		gc.dispose();
-		ImageData im2 = scaleAndCenter(im.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false);
+		ImageData im2 = scaleAndCenter(im.getImageData(), SET_IMG_WIDTH,
+				SET_IMG_HEIGHT, false);
 		im.dispose();
 		return new Image(display, im2);
 	}
@@ -122,18 +129,23 @@ public class ImageCreator {
 			ImageDescriptor imageDesc = ImageDescriptor.createFromURL(url);
 			Display display = Display.getDefault();
 			if (imageDesc.getImageData() == null) {
-				MagicUIActivator.log("Cannot load image: " + url + ": null imageData");
+				MagicUIActivator.log("Cannot load image: " + url
+						+ ": null imageData");
 				return null;
 			}
-			//ImageData scaleAndCenter = scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH, SET_IMG_HEIGHT, false);
+			// ImageData scaleAndCenter =
+			// scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH,
+			// SET_IMG_HEIGHT, false);
 			return new Image(display, imageDesc.getImageData());
 		} catch (SWTException e) {
-			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
+			MagicUIActivator.log("Cannot load image: " + url + ": "
+					+ e.getMessage());
 			return null;
 		}
 	}
 
-	public static ImageData scaleAndCenter(ImageData imageData, int nwidth, int nheight, boolean scaleUp) {
+	public static ImageData scaleAndCenter(ImageData imageData, int nwidth,
+			int nheight, boolean scaleUp) {
 		final int width = imageData.width;
 		final int height = imageData.height;
 		float zoom;
@@ -147,7 +159,8 @@ public class ImageCreator {
 		int x = (int) ((nwidth - width * zoom) / 2);
 		int y = (int) ((nheight - height * zoom) / 2);
 		Display display = Display.getDefault();
-		Image scaledImage = new Image(display, imageData.scaledTo((int) (width * zoom), (int) (height * zoom)));
+		Image scaledImage = new Image(display, imageData.scaledTo(
+				(int) (width * zoom), (int) (height * zoom)));
 		Image centeredImage = new Image(display, nwidth, nheight);
 		GC newGC = new GC(centeredImage);
 		newGC.drawImage(scaledImage, x, y);
@@ -156,7 +169,8 @@ public class ImageCreator {
 		ImageData finalImageData = centeredImage.getImageData();
 		if (finalImageData.transparentPixel == -1) {
 			try {
-				finalImageData.transparentPixel = finalImageData.palette.getPixel(new RGB(255, 255, 255));
+				finalImageData.transparentPixel = finalImageData.palette
+						.getPixel(new RGB(255, 255, 255));
 			} catch (IllegalArgumentException e) {
 				// pallete does not have white hmm
 				e.printStackTrace();
@@ -173,13 +187,15 @@ public class ImageCreator {
 			if (url == null)
 				return null;
 			String key = url.toExternalForm();
-			Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
+			Image image = MagicUIActivator.getDefault().getImageRegistry()
+					.get(key);
 			if (image == null) {
 				File file = new File(url.getFile());
 				if (file.exists()) {
 					image = ImageCreator.createNewSetImage(url);
 					if (image == null) {
-						image = ImageCreator.createSetNotFoundImage(card.getRarity());
+						image = ImageCreator.createSetNotFoundImage(card
+								.getRarity());
 					}
 					return MagicUIActivator.getDefault().getImage(key, image);
 				} else {
@@ -217,7 +233,8 @@ public class ImageCreator {
 	 *         found locally or cannot be downloaded remotely
 	 * @throws IOException
 	 */
-	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException,
+	public String createCardPath(IMagicCard card, boolean remote,
+			boolean forceUpdate) throws IOException,
 			CannotDetermineSetAbbriviation {
 		synchronized (card) {
 			if (forceUpdate)
@@ -232,7 +249,8 @@ public class ImageCreator {
 				}
 				if (remote == false)
 					throw new CachedImageNotFoundException(path);
-				file = CardCache.downloadAndSaveImage(card, remote, forceUpdate);
+				file = CardCache
+						.downloadAndSaveImage(card, remote, forceUpdate);
 				return file.getAbsolutePath();
 			} catch (IOException e) {
 				// failed to create image
@@ -244,7 +262,8 @@ public class ImageCreator {
 
 	public Image createCardImage(String path, boolean resize) {
 		try {
-			ImageData data = resize ? getResizedCardImage(new ImageData(path)) : new ImageData(path);
+			ImageData data = resize ? getResizedCardImage(new ImageData(path))
+					: new ImageData(path);
 			setAlphaBlendingForCorners(data);
 			return new Image(Display.getCurrent(), data);
 		} catch (SWTException e) {
@@ -270,23 +289,24 @@ public class ImageCreator {
 	}
 
 	public Image getResized(Image origImage, int width, int height) {
-		return new Image(Display.getDefault(), origImage.getImageData().scaledTo(width, height));
+		return new Image(Display.getDefault(), origImage.getImageData()
+				.scaledTo(width, height));
 	}
 
 	public Image getRotated(Image image, int angle) {
 		int dir = 0;
 		switch (angle) {
-			case 180:
-				dir = SWT.DOWN;
-				break;
-			case 90:
-				dir = SWT.RIGHT;
-				break;
-			case -90:
-				dir = SWT.LEFT;
-				break;
-			default:
-				break;
+		case 180:
+			dir = SWT.DOWN;
+			break;
+		case 90:
+			dir = SWT.RIGHT;
+			break;
+		case -90:
+			dir = SWT.LEFT;
+			break;
+		default:
+			break;
 		}
 		ImageData data = rotate(image.getImageData(), dir);
 		return new Image(image.getDevice(), data);
@@ -296,49 +316,57 @@ public class ImageCreator {
 		int bytesPerPixel = srcData.bytesPerLine / srcData.width;
 		int width = 0, height = 0;
 		switch (direction) {
-			case SWT.LEFT: // left 90 degrees
-				width = srcData.height;
-				height = srcData.width;
-				break;
-			case SWT.RIGHT: // right 90 degrees
-				width = srcData.height;
-				height = srcData.width;
-				break;
-			case SWT.DOWN: // 180 degrees
-				width = srcData.width;
-				height = srcData.height;
-				break;
+		case SWT.LEFT: // left 90 degrees
+			width = srcData.height;
+			height = srcData.width;
+			break;
+		case SWT.RIGHT: // right 90 degrees
+			width = srcData.height;
+			height = srcData.width;
+			break;
+		case SWT.DOWN: // 180 degrees
+			width = srcData.width;
+			height = srcData.height;
+			break;
 		}
 		int scanlinePad = srcData.scanlinePad;
-		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1)) / scanlinePad * scanlinePad;
-		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4 : bytesPerLine;
-		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine : minBytesPerLine;
-		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length : height * destBytesPerLine];
+		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1))
+				/ scanlinePad * scanlinePad;
+		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4
+				: bytesPerLine;
+		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine
+				: minBytesPerLine;
+		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length
+				: height * destBytesPerLine];
 		for (int srcY = 0; srcY < srcData.height; srcY++) {
 			for (int srcX = 0; srcX < srcData.width; srcX++) {
 				int destX = 0, destY = 0, destIndex = 0, srcIndex = 0;
 				switch (direction) {
-					case SWT.LEFT: // left 90 degrees
-						destX = srcY;
-						destY = srcData.width - srcX - 1;
-						break;
-					case SWT.RIGHT: // right 90 degrees
-						destX = srcData.height - srcY - 1;
-						destY = srcX;
-						break;
-					case SWT.DOWN: // 180 degrees
-						destX = srcData.width - srcX - 1;
-						destY = srcData.height - srcY - 1;
-						break;
+				case SWT.LEFT: // left 90 degrees
+					destX = srcY;
+					destY = srcData.width - srcX - 1;
+					break;
+				case SWT.RIGHT: // right 90 degrees
+					destX = srcData.height - srcY - 1;
+					destY = srcX;
+					break;
+				case SWT.DOWN: // 180 degrees
+					destX = srcData.width - srcX - 1;
+					destY = srcData.height - srcY - 1;
+					break;
 				}
-				destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
-				srcIndex = (srcY * srcData.bytesPerLine) + (srcX * bytesPerPixel);
-				System.arraycopy(srcData.data, srcIndex, newData, destIndex, bytesPerPixel);
+				destIndex = (destY * destBytesPerLine)
+						+ (destX * bytesPerPixel);
+				srcIndex = (srcY * srcData.bytesPerLine)
+						+ (srcX * bytesPerPixel);
+				System.arraycopy(srcData.data, srcIndex, newData, destIndex,
+						bytesPerPixel);
 			}
 		}
 		// destBytesPerLine is used as scanlinePad to ensure that no padding is
 		// required
-		return new ImageData(width, height, srcData.depth, srcData.palette, srcData.scanlinePad, newData);
+		return new ImageData(width, height, srcData.depth, srcData.palette,
+				srcData.scanlinePad, newData);
 	}
 
 	public Image createCardNotFoundImage() {
@@ -358,7 +386,8 @@ public class ImageCreator {
 		Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
 		if (image != null)
 			return image;
-		return MagicUIActivator.getDefault().getImage(key, createCardNotFoundImage());
+		return MagicUIActivator.getDefault().getImage(key,
+				createCardNotFoundImage());
 	}
 
 	public Image createCardNotFoundImage(IMagicCard card) {
@@ -372,7 +401,8 @@ public class ImageCreator {
 		Image costImage = SymbolConverter.buildCostImage(card.getCost());
 		gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
 		gc.setFont(getFont(TYPE_FONT_KEY));
-		gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);
+		gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(),
+				20, 175, true);
 		gc.setFont(getFont(TEXT_FONT_KEY));
 		gc.drawText("Image not found", 30, 46, true);
 		String oracleText = card.getOracleText();
@@ -481,25 +511,29 @@ public class ImageCreator {
 	public static Image drawBorder(Image remoteImage, int border) {
 		Rectangle bounds = remoteImage.getBounds();
 		Display display = Display.getDefault();
-		Image full = createTransparentImage(bounds.width + border * 2, bounds.height + border * 2);
+		Image full = createTransparentImage(bounds.width + border * 2,
+				bounds.height + border * 2);
 		GC gc = new GC(full);
-		//gc.setBackground(getBackground());
-		//gc.fillRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2);
+		// gc.setBackground(getBackground());
+		// gc.fillRectangle(0, 0, bounds.width + border * 2, bounds.height +
+		// border * 2);
 		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2, border * 2);
+		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height
+				+ border * 2, border * 2, border * 2);
 		gc.drawImage(remoteImage, border, border);
 		gc.dispose();
 		return full;
 	}
 
-	public static Image joinImages(Collection<Image> images, int height, int max_width) {
+	public static Image joinImages(Collection<Image> images, int max_width,
+			int height) {
 		int width = getWidth(images);
 		if (width <= 0)
-			width = 1;
+			return null;
 		else if (width > max_width)
 			width = max_width;
-		Image image = createTransparentImage(height, width);
+		Image image = createTransparentImage(width, height);
 		GC gc = new GC(image);
 		int x = 0;
 		int y = 0;
@@ -520,12 +554,12 @@ public class ImageCreator {
 	}
 
 	public static Image createTransparentImage(int width, int height) {
-		Display display = Display.getDefault();
+		Display display = Display.getCurrent();
 		Image tmpImage = new Image(display, width, height);
 		ImageData id2 = tmpImage.getImageData();
-		id2.alphaData = new byte[width * height];
-		tmpImage.dispose();
+	    id2.alphaData = new byte[width * height];
 		Image image = new Image(display, id2);
+		tmpImage.dispose();
 		return image;
 	}
 
@@ -534,7 +568,7 @@ public class ImageCreator {
 		if (width > 16)
 			return;
 		int height = fullImageData.height;
-		double cx = (width+0.5) / 2, cy = (height) / 2;
+		double cx = (width + 0.5) / 2, cy = (height) / 2;
 		byte[] alphaData = new byte[height * width];
 		int[] lineData = new int[width];
 		for (int y = 0; y < height; y++) {
@@ -569,7 +603,8 @@ public class ImageCreator {
 			if (width > from_width)
 				copy_width = from_width;
 			for (int y = 0; y < height; y++) {
-				System.arraycopy(from.alphaData, y * from_width, alphaData, y * width, copy_width);
+				System.arraycopy(from.alphaData, y * from_width, alphaData, y
+						* width, copy_width);
 			}
 			to.alphaData = alphaData;
 		}

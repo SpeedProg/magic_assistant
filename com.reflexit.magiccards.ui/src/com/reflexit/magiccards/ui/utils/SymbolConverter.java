@@ -110,8 +110,8 @@ public class SymbolConverter {
 	}
 
 	public static Image buildCostImage(String cost) {
-		if (cost == null)
-			cost = "";
+		if (cost == null || cost.length()==0)
+			return null;
 		ImageRegistry imageRegistry = MagicUIActivator.getDefault().getImageRegistry();
 		String key = "[" + cost;
 		Image costImage = imageRegistry.get(key);
@@ -119,7 +119,7 @@ public class SymbolConverter {
 			return costImage;
 		try {
 			Collection<Image> manaImages = getManaImages(cost);
-			costImage = ImageCreator.joinImages(manaImages, SYMBOL_SIZE, SYMBOL_SIZE * 10);
+			costImage = ImageCreator.joinImages(manaImages, SYMBOL_SIZE*10, SYMBOL_SIZE);
 			return costImage;
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
@@ -129,7 +129,7 @@ public class SymbolConverter {
 			gc.dispose();
 			return costImage;
 		} finally {
-			imageRegistry.put(key, costImage);
+			if (costImage!=null) imageRegistry.put(key, costImage);
 		}
 	}
 
