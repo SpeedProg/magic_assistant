@@ -11,18 +11,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.sync.GatherHelper;
@@ -148,18 +143,7 @@ public class SymbolConverter {
 					throw new MagicException();
 				while (text.startsWith(sym)) {
 					String im = manaMap.get(sym);
-					Image symImage = MagicUIActivator.getDefault().getImage(sym);
-					if (symImage == null) {
-						ImageDescriptor imageDescriptor = MagicUIActivator.getImageDescriptor(im);
-						if (imageDescriptor == null) {
-							throw new MagicException("Cannot find images for " + im + " " + text);
-						}
-						ImageData imageData = imageDescriptor.getImageData();
-						ImageCreator.setAlphaForManaCircles(imageData);
-						//
-						Image manaImage = new Image(Display.getDefault(), imageData);
-						symImage = MagicUIActivator.getDefault().getImage(sym, manaImage);
-					}
+					Image symImage = ImageCreator.getManaSymbolImage(sym, im);
 					if (symImage != null) {
 						res.add(symImage);
 					}

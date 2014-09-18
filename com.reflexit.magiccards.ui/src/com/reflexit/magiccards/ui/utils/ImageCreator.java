@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.WebUtils;
@@ -504,7 +506,8 @@ public class ImageCreator {
 		else if (width > max_width)
 			width = max_width;
 		ImageData sourceData1 = images.iterator().next().getImageData();
-		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth, sourceData1.palette);
+		PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
+		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth, palette);
 		int x = 0;
 		for (Image image : images) {
 			ImageData id = image.getImageData();
@@ -514,6 +517,40 @@ public class ImageCreator {
 			x += id.width;
 		}
 		return new Image(Display.getDefault(), targetData);
+	}
+	
+	
+	public static ImageData reEncodeIntoDirectPalette(ImageData imageData) {
+		if (imageData.palette.redMask == 0xff0000 && imageData.palette.greenMask == 0xff00) {
+			return imageData;
+		}
+		PaletteData paletteData = new PaletteData(0xff0000, 0xff00, 0xff);
+
+		ImageData result = new ImageData(imageData.width, imageData.height, 32, paletteData);
+		for (int x = 0; x < imageData.width; x++) {
+			for (int y = 0; y < imageData.height; y++) {
+				RGB rgb = imageData.palette.getRGB(imageData.getPixel(x, y));
+				result.setPixel(x, y, paletteData.getPixel(rgb));
+				result.setAlpha(x, y, imageData.getAlpha(x, y));
+			}
+		}
+		return result;
+	}
+
+	public static Image getManaSymbolImage(String sym, String imagePath) {
+		Image symImage = MagicUIActivator.getDefault().getImage(sym);
+		if (symImage == null) {
+			ImageDescriptor imageDescriptor = MagicUIActivator.getImageDescriptor(imagePath);
+			if (imageDescriptor == null) {
+				throw new MagicException("Cannot find images for " + imagePath + " " + sym);
+			}
+			ImageData imageData = reEncodeIntoDirectPalette(imageDescriptor.getImageData());
+			setAlphaForManaCircles(imageData);
+			//
+			Image manaImage = new Image(Display.getDefault(), imageData);
+			symImage = MagicUIActivator.getDefault().getImage(sym, manaImage);
+		}
+		return symImage;
 	}
 
 	public static Image createTransparentImage(int width, int height) {
