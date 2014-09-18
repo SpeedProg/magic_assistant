@@ -506,8 +506,7 @@ public class ImageCreator {
 		else if (width > max_width)
 			width = max_width;
 		ImageData sourceData1 = images.iterator().next().getImageData();
-		PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
-		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth, palette);
+		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth, sourceData1.palette);
 		int x = 0;
 		for (Image image : images) {
 			ImageData id = image.getImageData();
