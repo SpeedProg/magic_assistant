@@ -86,13 +86,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			prefStore.setValue(JUSTUPDATED, false);
 			return;
 		}
-		// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-		// public void run() {
-		// new UpdateHandler().execute(null);
-		// }
-		// });
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+		
+		new Job("Checking for Software Update") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Checking for application updates...", 100);
 				IStatus updateStatus = P2Util.checkForUpdates(agent, new SubProgressMonitor(monitor, 50), false);
 				if (updateStatus.getCode() != UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
@@ -104,14 +102,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					}
 				}
 				monitor.done();
+				return Status.OK_STATUS;
 			}
-		};
-		try {
-			new ProgressMonitorDialog(null).run(false, true, runnable);
-		} catch (InvocationTargetException e) {
-			Activator.log("Update is not configured");
-			// e.printStackTrace();
-		} catch (InterruptedException e) {
-		}
+		}.schedule(5000);
 	}
 }
