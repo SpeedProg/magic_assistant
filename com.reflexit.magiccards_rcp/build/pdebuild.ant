@@ -1,7 +1,9 @@
 <project>
 	<property file="${basedir}/build.properties" />
 	<property name="ma.version" value="${buildId}" />
-	<property name="export.dir" value="${buildDirectory}/../export" />
+	<property name="master.dir" value="${buildDirectory}/.." />
+	<property name="export.dir" value="${master.dir}/export" />
+	<property name="bins.dir" value="${export.dir}/${buildId}" />
 	<property name="export.update.dir" value="${export.dir}/update/1.4" />
 	<property name="orig.workspace.root" value="${basedir}/../.." />
 	<pathconvert property="equinox.launcher.jar">
@@ -14,13 +16,13 @@
 			</sort>
 		</first>
 	</pathconvert>
-	<property name="repack.dir" value="${buildDirectory}/${buildLabel}-install" />
-    <property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.3/bin/x86/AdvancedInstaller.com"/>
-	<property name="msiout" value="${buildDirectory}/../installer/magicassistant-SetupFiles"/>
+	<property name="repack.dir" value="${master.dir}/${ma.version}-install" />
+	<property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.3/bin/x86/AdvancedInstaller.com"/>
+	<property name="msiout" value="${master.dir}/installer/magicassistant-SetupFiles"/>
 	<property name="rsa.key" value="${user.home}/.ssh/id_rsa"/>
 	<property name="jre.home" value="C:/Program Files/Java/jre8"/>
 	<condition property="is_windows">
-	    <os family="windows"/>
+		<os family="windows"/>
 	</condition>
 	<!-- 
 	Create a self extracting archive using 7zip
@@ -35,14 +37,32 @@
 		</sync>
 	</target>
 
+	<target name="add.jre">
+		<!-- <zip update="true" destfile="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86_64.zip">
+			<mappedresources>
+				<tarfileset src="/home/elaskavaia/Downloads/jre-8u20-linux-x64.tar"
+				filemode="755"/>
+				<globmapper from="jre1.8.0_20/*" to="MagicAssistant/jre/*" /> 
+			</mappedresources> 
+			 <zipfileset dir="/home/elaskavaia/Develop/magic/build/java/jre_linux.gtk.x86_64/jre" 
+				prefix="MagicAssistant/jre"/> 
+		</zip> -->
+	    <exec dir="/home/elaskavaia/Develop/magic/build/java/jre_linux.gtk.x86_64/" executable="zip" os="Linux">
+	        <arg value="-u"/>
+	        <arg value="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86_64.zip"/>
+	        <arg value="-r"/>
+	        <arg value="MagicAssistant/jre"/>
+	    </exec>
+	</target>
+
 	<target name="install">
-		<unzip src="${buildDirectory}/${buildLabel}/magicassistant-${buildId}-${baseos}.${basews}.${basearch}.zip" dest="${repack.dir}" />
+		<unzip src="${bins.dir}/magicassistant-${buildId}-${baseos}.${basews}.${basearch}.zip" dest="${repack.dir}" />
 	</target>
 
 	<target name="install.copy" depends="install, copy.jre" if="is_windows">
 
-		<!-- <delete dir="${buildDirectory}/install"/> -->
-		<sync todir="${buildDirectory}/install"  includeEmptyDirs="true" overwrite="true">
+		<!-- <delete dir="${master.dir}/install"/> -->
+		<sync todir="${master.dir}/install"  includeEmptyDirs="true" overwrite="true">
 			<fileset dir="${repack.dir}">
 			</fileset>
 		</sync>
@@ -50,13 +70,13 @@
 
 	<target name="pack.jre" depends="install, copy.jre">
 		<delete dir="data"/>
-		<!-- <zip destfile="${buildDirectory}/${buildLabel}/magicassistant-${buildId}-win32.win32.x86.zip" update="true">
+		<!-- <zip destfile="${bins.dir}/magicassistant-${buildId}-win32.win32.x86.zip" update="true">
 			<zipfileset dir="C:/Program Files (x86)/Java/jre7_u21_x32" prefix="MagicAssistant/jre" />
 		</zip>
 		-->
 
 		<antcall target="7z">
-			<param name="destination" value="${buildDirectory}/${buildLabel}/magicassistant-intaller-${buildId}-win32.exe" />
+			<param name="destination" value="${bins.dir}/magicassistant-intaller-${buildId}-win32.exe" />
 			<param name="dir" value="${repack.dir}" />
 		</antcall>
 	</target>
@@ -66,16 +86,16 @@
 			<arg line="/edit ${msiout}/../magicassistant.aip /SetVersion ${ma.version}" />
 		</exec>
 		<exec executable="${ainstaller}">
-			<env key="EXPORT_DIR" file="${buildDirectory}/install"/>
+			<env key="EXPORT_DIR" file="${master.dir}/install"/>
 			<arg line="/execute ${msiout}/../magicassistant.aip ${msiout}/../reimport.aic" />
 		</exec>
 		<exec executable="${ainstaller}">
 			<arg line="/build ${msiout}/../magicassistant.aip" />
 		</exec>
-		<copy todir="${buildDirectory}/${buildLabel}"  includeEmptyDirs="true" overwrite="true">
-				<fileset dir="${msiout}">
-					<include name="*${ma.version}*.msi"/>
-				</fileset>
+		<copy todir="${bins.dir}"  includeEmptyDirs="true" overwrite="true">
+			<fileset dir="${msiout}">
+				<include name="*${ma.version}*.msi"/>
+			</fileset>
 		</copy>
 	</target>
 	<target name="7z">
@@ -91,23 +111,22 @@
 	</target>
 
 	<target name="run.win" depends="install, copy.jre" if="is_windows">
-			<exec executable="${repack.dir}/${archivePrefix}/magicassistant.exe" dir="${repack.dir}/${archivePrefix}">
-				<arg value="-data" />
-				<arg value="data" />
-			</exec>
+		<exec executable="${repack.dir}/${archivePrefix}/magicassistant.exe" dir="${repack.dir}/${archivePrefix}">
+			<arg value="-data" />
+			<arg value="data" />
+		</exec>
 	</target>
-	
+
 	<target name="run.notwin" depends="install" unless="is_windows">
-		   <echo message="This is not windows" />
-			<chmod file="${repack.dir}/${archivePrefix}/magicassistant" perm="+x"/>
-			<exec executable="${repack.dir}/${archivePrefix}/magicassistant" dir="${repack.dir}/${archivePrefix}">
-				<arg value="-data" />
-				<arg value="data" />
-			</exec>
+		<chmod file="${repack.dir}/${archivePrefix}/magicassistant" perm="+x"/>
+		<exec executable="${repack.dir}/${archivePrefix}/magicassistant" dir="${repack.dir}/${archivePrefix}">
+			<arg value="-data" />
+			<arg value="data" />
+		</exec>
 	</target>
-	
+
 	<target name="run" depends="run.notwin,run.win">
-	
+
 
 
 
@@ -165,6 +184,11 @@
 	<target name="build.product" depends="sync.files,fix.about">
 		<delete dir="${buildDirectory}/buildRepo"/>
 		<delete dir="${buildDirectory}/p2repo"/>
+		<delete dir="${buildDirectory}/output"/>
+		<delete>
+			<fileset dir="${buildDirectory}" includes="*.xml" />
+			<fileset dir="${buildDirectory}" includes="*.properties" />
+		</delete>
 		<echo message="Launcher ${equinox.launcher.jar}" />
 		<java jar="${equinox.launcher.jar}" fork="true" failonerror="true">
 			<arg value="-application" />
@@ -177,6 +201,12 @@
 			<arg value="-Dconfigs=${configs}" />
 			<!-- jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/ -->
 		</java>
+		<move file="${buildDirectory}/${buildLabel}" tofile="${buildDirectory}/output"/>
+		<move todir="${bins.dir}">
+			<fileset dir="${buildDirectory}/output" >
+				<exclude name="**/compilelogs/**"/>
+			</fileset>
+		</move>
 	</target>
 
 	<target name="echo.properties">
@@ -193,11 +223,11 @@
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
-				
+
 				<include name="**/com.reflexit**"/>
 				<include name="*.xml"/>
-	
-			</fileset> 
+
+			</fileset>
 		</scp>
 	</target>
 	<target name="publish.update.site.beta">
@@ -205,8 +235,8 @@
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4-beta" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
-			    <include name="**/com.reflexit**"/>
-				<include name="*.xml"/> 
+				<include name="**/com.reflexit**"/>
+				<include name="*.xml"/>
 			</fileset>
 		</scp>
 	</target>
@@ -225,15 +255,11 @@
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Magic_Assistant/" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.dir}">
-				<include name="${ma.version}/**"/>
+				<include name="${ma.version}/*linux*"/>
 			</fileset>
 		</scp>
 	</target>
 	<target name="export.release">
-		<sync todir="${export.dir}/${ma.version}">
-			<fileset dir="${buildDirectory}/${buildLabel}" >
-				<exclude name="**/compilelogs/**"/>
-			</fileset>
-		</sync>
+
 	</target>
 </project>
