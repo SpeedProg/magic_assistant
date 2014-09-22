@@ -123,7 +123,13 @@
              label="Wizards deck HTML"
              xmlFormat="true">
        </deckFormat>
-
+      <deckFormat
+            extension="csv"
+            id="deckbox"
+            importDelegate="com.reflexit.magiccards.core.exports.DeckBoxImportDelegate"
+            label="DeckBox CSV"
+            xmlFormat="false">
+      </deckFormat>
 
    </extension>
 </plugin>

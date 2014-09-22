@@ -30,6 +30,8 @@ public class CsvImporter implements Closeable {
 			String line = reader.readLine();
 			if (line == null)
 				return null;
+			if (line.trim().isEmpty())
+				continue;
 			char[] bytes = new char[line.length()];
 			line.getChars(0, line.length(), bytes, 0);
 			for (char c : bytes) {

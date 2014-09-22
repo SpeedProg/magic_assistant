@@ -75,8 +75,9 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		ICardField[] fields = getFields();
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
+			if (f==null) continue;
 			String value = list.get(i);
-			if (value != null && value.length() > 0 && f != null) {
+			if (value != null && value.length() > 0) {
 				try {
 					setFieldValue(card, f, i, value.trim());
 				} catch (Exception e) {
