@@ -56,7 +56,7 @@ public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 			if (list.get(10).equals("1"))
 				comment += "foil,";
 			comment += list.get(9);
-			x.setComment(comment);
+			x.setSpecial(comment);
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
