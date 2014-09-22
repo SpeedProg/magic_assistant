@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -38,9 +41,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
-
-import java.util.Iterator;
-import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.Cube;
 import com.reflexit.mtgtournament.core.model.Tournament;

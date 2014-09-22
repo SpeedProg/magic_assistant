@@ -18,7 +18,6 @@ import com.reflexit.magiccards.core.exports.ClassicExportDelegateTest;
 import com.reflexit.magiccards.core.exports.ClassicImportDelegateTest;
 import com.reflexit.magiccards.core.exports.CsvExportDelegateTest;
 import com.reflexit.magiccards.core.exports.CustomExportDelegateTest;
-import com.reflexit.magiccards.core.exports.DeckBoxImportDelegate;
 import com.reflexit.magiccards.core.exports.DeckBoxImportTest;
 import com.reflexit.magiccards.core.exports.DeckParserTest;
 import com.reflexit.magiccards.core.exports.ImportUtilsTest;

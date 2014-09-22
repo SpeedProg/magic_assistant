@@ -1,9 +1,9 @@
 package com.reflexit.magiccards.core.model;
 
+import junit.framework.TestCase;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-
-import junit.framework.TestCase;
 
 public class GrouppingPerformanceTest extends TestCase {
 	@Override

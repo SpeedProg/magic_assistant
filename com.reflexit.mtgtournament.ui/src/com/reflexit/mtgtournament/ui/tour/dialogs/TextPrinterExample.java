@@ -3,6 +3,11 @@ package com.reflexit.mtgtournament.ui.tour.dialogs;
 //Send questions, comments, bug reports, etc. to the authors:
 //Rob Warner (rwarner@interspatial.com)
 //Robert Harris (rbrt_harris@yahoo.com)
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -14,11 +19,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * This class demonstrates printing text

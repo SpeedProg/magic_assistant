@@ -218,11 +218,9 @@ public class RoundScheduleSection extends TSectionPart {
 				return null;
 			}
 			RoundState state = round.getState();
-			switch (state) {
-				case IN_PROGRESS:
-					if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
-						return systemColorYellow;
-					break;
+			if (state == RoundState.IN_PROGRESS) {
+				if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
+					return systemColorYellow;
 			}
 			return null;
 		}

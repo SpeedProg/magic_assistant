@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererLegalityTest extends TestCase {

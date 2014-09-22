@@ -26,7 +26,6 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 /*-
  Name,Edition,Qty,Foil,Market Price,Market Value,Added,Color,Type,Rarity,Cost,P/T,Text

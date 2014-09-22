@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -21,9 +24,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.Section;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import com.reflexit.mtgtournament.core.model.Player;
 

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.ui.tour.views;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,8 +27,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
-
-import java.io.IOException;
 
 import com.reflexit.mtgtournament.core.model.PlayerList;
 import com.reflexit.mtgtournament.core.xml.TournamentManager;

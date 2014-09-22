@@ -5,18 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.ParseGathererSets;
-import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {

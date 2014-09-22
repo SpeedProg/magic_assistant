@@ -15,10 +15,10 @@ import junit.framework.TestSuite;
 
 import com.reflexit.magiccards.core.seller.test.AllSellerTests;
 import com.reflexit.magiccards.core.sync.CurrencyConvertorTest;
-import com.reflexit.magiccards.core.sync.ParseGathererPrintedTest;
 import com.reflexit.magiccards.core.sync.ParseGathererCardLanguagesTest;
-import com.reflexit.magiccards.core.sync.ParseGathererOracleTest;
 import com.reflexit.magiccards.core.sync.ParseGathererLegalityTest;
+import com.reflexit.magiccards.core.sync.ParseGathererOracleTest;
+import com.reflexit.magiccards.core.sync.ParseGathererPrintedTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSearchChecklistTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSearchStandardTest;
 import com.reflexit.magiccards.core.sync.ParseGathererSetsTest;

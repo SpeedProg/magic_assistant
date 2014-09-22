@@ -17,10 +17,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -31,7 +29,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dnd.CopySupport;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -50,12 +47,13 @@ public class TakeScreenShotCommandHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information
 	 * from the application context.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		Display display = Display.getDefault();
 		final Shell shell = display.getActiveShell();
-		final Control control = shell != null ? shell : window.getShell();
-		final Rectangle bounds = shell.getClientArea();
+		final Shell control = shell != null ? shell : window.getShell();
+		final Rectangle bounds = control.getClientArea();
 		GC gc = new GC(control);
 		final Image image = new Image(control.getDisplay(), bounds.width, bounds.height);
 		gc.copyArea(image, 0, 0);
@@ -79,11 +77,13 @@ public class TakeScreenShotCommandHandler extends AbstractHandler {
 				return composite;
 			}
 
+			@Override
 			protected void createButtonsForButtonBar(Composite parent) {
 				createButton(parent, 3, "Save As...", true);
 				super.createButtonsForButtonBar(parent);
 			};
 
+			@Override
 			protected void buttonPressed(int buttonId) {
 				if (buttonId == 3) {
 					saveToClipboard(image);
