@@ -124,6 +124,7 @@
              xmlFormat="true">
        </deckFormat>
       <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.DeckBoxExportDelegate"
             extension="csv"
             id="deckbox"
             importDelegate="com.reflexit.magiccards.core.exports.DeckBoxImportDelegate"
