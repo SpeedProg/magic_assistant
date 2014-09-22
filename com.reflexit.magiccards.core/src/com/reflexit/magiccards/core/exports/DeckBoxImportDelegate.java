@@ -1,11 +1,10 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.IOException;
 import java.util.List;
 
+import com.reflexit.magiccards.core.exports.DeckBoxExportDelegate.ExtraFields;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class DeckBoxImportDelegate extends CsvImportDelegate {
 	public DeckBoxImportDelegate() {
@@ -19,13 +18,19 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 	 */
 	@Override
 	protected void setHeaderFields(List<String> list) {
-		ICardField fields[] = new ICardField[11];
-		fields[0] = MagicCardField.COUNT;
-		fields[1] = MagicCardField.FORTRADECOUNT;
-		fields[2] = MagicCardField.NAME;
-		fields[7] = MagicCardField.SET;
-		fields[8] = MagicCardField.SPECIAL;
-		fields[9] = MagicCardField.LANG;
+		ICardField fields[] = new ICardField[] {
+				MagicCardField.COUNT,
+				MagicCardField.FORTRADECOUNT,
+				MagicCardField.NAME,
+				ExtraFields.FOIL, 
+				ExtraFields.TEXTLESS, 
+				ExtraFields.PROMO, 
+				ExtraFields.SIGNED, 
+				MagicCardField.SET,
+				ExtraFields.CONDITION,
+				MagicCardField.LANG,
+				MagicCardField.COLLNUM
+		};
 		setFields(fields);
 	}
 

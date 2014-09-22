@@ -1,14 +1,15 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.Locale;
 
+import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class DeckBoxExportDelegate extends CsvExportDelegate {
-
 	/*-
 	 Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number
 	 1,0,Angel of Mercy,,,,,,Near Mint,English,
@@ -17,17 +18,23 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 	 */
 	@Override
 	public void printHeader() {
-		stream.println("Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language");
+		stream.println("Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number");
 	}
+
 	protected ICardField[] doGetFields() {
-		ICardField fields[] = new ICardField[10];
-		fields[0] = MagicCardField.COUNT;
-		fields[1] = MagicCardField.FORTRADECOUNT;
-		fields[2] = MagicCardField.NAME;
-		fields[7] = MagicCardField.SET;
-		fields[8] = MagicCardField.SPECIAL;
-		fields[9] = MagicCardField.LANG;
-		//fields[10] = MagicCardField.COLLNUM;
+		ICardField fields[] = new ICardField[] {
+				MagicCardField.COUNT,
+				MagicCardField.FORTRADECOUNT,
+				MagicCardField.NAME,
+				ExtraFields.FOIL, 
+				ExtraFields.TEXTLESS, 
+				ExtraFields.PROMO, 
+				ExtraFields.SIGNED, 
+				MagicCardField.SET,
+				ExtraFields.CONDITION,
+				MagicCardField.LANG,
+				MagicCardField.COLLNUM
+		};
 		return fields;
 	}
 
@@ -37,9 +44,61 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 		setColumns(doGetFields());
 		super.run(monitor);
 	}
+	
+	@Override
+	public Object getObjectByField(IMagicCard card, ICardField field) {
+		return field.aggregateValueOf(card);
+	}
 
 	@Override
 	public boolean isColumnChoiceSupported() {
 		return false;
+	}
+	
+
+	public enum ExtraFields implements ICardField {
+		FOIL,
+		TEXTLESS,
+		PROMO,
+		SIGNED,
+		CONDITION {
+			@Override
+			public Object aggregateValueOf(ICard card) {
+				String spe = card.getString(MagicCardField.SPECIAL);
+				if (spe.contains("nearmint")) return "Near Mint";
+				if (spe.contains("mint")) return "Mint";
+				if (spe.contains("played")) return "Played";
+				return "";
+			}
+		};
+
+		@Override
+		public boolean isTransient() {
+			return false;
+		}
+
+		@Override
+		public String getLabel() {
+			String name = name();
+			name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+			name = name.replace('_', ' ');
+			return name;
+		}
+
+		@Override
+		public Object aggregateValueOf(ICard card) {
+			String spe = card.getString(MagicCardField.SPECIAL);
+			if (spe.contains(getTag())) return getTag();
+			return "";
+		}
+		
+
+		@Override
+		public String getTag() {
+			String name = name();
+			name = name.toLowerCase(Locale.ENGLISH);
+			return name;
+		}
+		
 	}
 }
