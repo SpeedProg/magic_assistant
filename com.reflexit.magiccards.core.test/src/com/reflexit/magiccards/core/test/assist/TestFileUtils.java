@@ -21,6 +21,7 @@
  */
 package com.reflexit.magiccards.core.test.assist;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,7 +30,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * static utils
@@ -98,5 +102,89 @@ public class TestFileUtils {
 		if (deleteOnExit)
 			saveTo.deleteOnExit();
 		return saveTo;
+	}
+
+	/**
+	 * Returns an array of StringBuilder objects for each comment section found
+	 * preceding the named test in the source code.
+	 *
+	 * @param bundle
+	 *            the bundle containing the source, if {@code null} can try to
+	 *            load using classpath (source folder has to be in the classpath
+	 *            for this to work)
+	 * @param srcRoot
+	 *            the directory inside the bundle containing the packages
+	 * @param clazz
+	 *            the name of the class containing the test
+	 * @param testName
+	 *            the name of the test
+	 * @param numSections
+	 *            the number of comment sections preceding the named test to
+	 *            return. Pass zero to get all available sections.
+	 * @return an array of StringBuilder objects for each comment section found
+	 *         preceding the named test in the source code.
+	 * @throws IOException
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 */
+	public static StringBuilder[] getContentsForTest(String srcRoot, Class clazz, final String testName, int numSections)
+			throws IOException, NoSuchMethodException, SecurityException {
+		// Walk up the class inheritance chain until we find the test method.
+		while (clazz.getMethod(testName).getDeclaringClass() != clazz) {
+			clazz = clazz.getSuperclass();
+		}
+		while (true) {
+			// Find and open the .java file for the class clazz.
+			String fqn = clazz.getName().replace('.', '/');
+			fqn = fqn.indexOf("$") == -1 ? fqn : fqn.substring(0, fqn.indexOf("$"));
+			String classFile = fqn + ".java";
+			Class superclass = clazz.getSuperclass();
+			InputStream in = clazz.getResourceAsStream('/' + classFile);
+			if (in == null) {
+				throw new IOException(classFile + " is not found");
+//				if (superclass == null || !superclass.getPackage().equals(clazz.getPackage())) {
+//					throw new IOException(classFile + " is not found");
+//				}
+//				clazz = superclass;
+//				continue;
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			try {
+				// Read the java file collecting comments until we encounter the
+				// test method.
+				List<StringBuilder> contents = new ArrayList<StringBuilder>();
+				StringBuilder content = new StringBuilder();
+				for (String line = br.readLine(); line != null; line = br.readLine()) {
+					line = line.replaceFirst("^\\s*", ""); // Replace leading
+															// whitespace,
+															// preserve trailing
+					if (line.startsWith("//")) {
+						content.append(line.substring(2) + "\n");
+					} else {
+						if (!line.startsWith("@") && content.length() > 0) {
+							contents.add(content);
+							if (numSections > 0 && contents.size() == numSections + 1)
+								contents.remove(0);
+							content = new StringBuilder();
+						}
+						if (line.length() > 0 && !contents.isEmpty()) {
+							int idx = line.indexOf(testName);
+							if (idx != -1 && !Character.isJavaIdentifierPart(line.charAt(idx + testName.length()))) {
+								return contents.toArray(new StringBuilder[contents.size()]);
+							}
+							if (!line.startsWith("@")) {
+								contents.clear();
+							}
+						}
+					}
+				}
+			} finally {
+				br.close();
+			}
+			if (superclass == null || !superclass.getPackage().equals(clazz.getPackage())) {
+				throw new IOException("Test data not found for " + clazz.getName() + "." + testName);
+			}
+			clazz = superclass;
+		}
 	}
 }

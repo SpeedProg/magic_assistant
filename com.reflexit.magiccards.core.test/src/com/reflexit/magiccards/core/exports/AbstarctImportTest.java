@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 public class AbstarctImportTest extends junit.framework.TestCase {
 	protected MemCardHandler deck;
@@ -55,11 +56,16 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		return res;
 	}
 
+	protected void parse(IImportDelegate<IMagicCard> worker) {
+		parse(true, worker);
+	}
+
 	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			if (resolve==false) throw new IllegalArgumentException("Cannot test");
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual,
-					deck.getLocation(), deck.getCardStore(), ICoreProgressMonitor.NONE);
+			if (resolve == false)
+				throw new IllegalArgumentException("Cannot test");
+			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual, deck.getLocation(),
+					deck.getCardStore(), ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -70,8 +76,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void preview(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual,
-					deck.getLocation(), resolve, ICoreProgressMonitor.NONE);
+			ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual, deck.getLocation(), resolve,
+					ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -95,5 +101,18 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void addLine(String string) {
 		line += string + "\n";
+	}
+
+	protected String getAboveComment() {
+		return getContents(1)[0].toString();
+	}
+
+	protected StringBuilder[] getContents(int sections) {
+		try {
+			return TestFileUtils.getContentsForTest("src", getClass(), getName(), sections);
+		} catch (Exception e) {
+			fail(e.getMessage());
+			return null;
+		}
 	}
 }
