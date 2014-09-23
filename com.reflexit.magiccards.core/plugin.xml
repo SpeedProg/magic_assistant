@@ -128,9 +128,16 @@
             extension="csv"
             id="deckbox"
             importDelegate="com.reflexit.magiccards.core.exports.DeckBoxImportDelegate"
-            label="DeckBox CSV"
+            label="DeckBox Inventory CSV"
             xmlFormat="false">
       </deckFormat>
-
+      <deckFormat
+            exportDelegate="com.reflexit.magiccards.core.exports.DeckBoxWishlistExportDelegate"
+            extension="csv"
+            id="deckboxW"
+            importDelegate="com.reflexit.magiccards.core.exports.DeckBoxWishlistImportDelegate"
+            label="DeckBox Wishlist CSV"
+            xmlFormat="false">
+      </deckFormat>
    </extension>
 </plugin>

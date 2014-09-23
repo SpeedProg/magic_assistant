@@ -5,6 +5,7 @@ import java.util.List;
 import com.reflexit.magiccards.core.exports.DeckBoxExportDelegate.ExtraFields;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class DeckBoxImportDelegate extends CsvImportDelegate {
 	public DeckBoxImportDelegate() {
@@ -22,10 +23,10 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 				MagicCardField.COUNT,
 				MagicCardField.FORTRADECOUNT,
 				MagicCardField.NAME,
-				ExtraFields.FOIL, 
-				ExtraFields.TEXTLESS, 
-				ExtraFields.PROMO, 
-				ExtraFields.SIGNED, 
+				ExtraFields.FOIL,
+				ExtraFields.TEXTLESS,
+				ExtraFields.PROMO,
+				ExtraFields.SIGNED,
 				MagicCardField.SET,
 				ExtraFields.CONDITION,
 				MagicCardField.LANG,
@@ -34,6 +35,17 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 		setFields(fields);
 	}
 
+	@Override
+	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
+		if (field instanceof ExtraFields) {
+			ExtraFields efield = (ExtraFields) field;
+			efield.importInto(card, value);
+			return;
+		}
+		super.setFieldValue(card, field, i, value);
+	}
+
+	@Override
 	public boolean isHeader() {
 		return true;
 	}

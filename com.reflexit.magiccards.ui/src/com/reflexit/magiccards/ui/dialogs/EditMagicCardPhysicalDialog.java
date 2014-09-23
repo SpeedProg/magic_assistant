@@ -80,7 +80,7 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 		String special = card.getSpecial();
 		String especial = store.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
 		if (!UNCHANGED.equals(especial) && !especial.equals(special)) {
-			card.setSpecial(especial);
+			card.setSpecialTag(especial);
 			modified = true;
 		}
 		if (modified && update) {

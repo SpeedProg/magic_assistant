@@ -77,7 +77,7 @@ public class CardGenerator {
 		phi.setCount((id % 10) + 1);
 		phi.setComment("comment " + id);
 		phi.setOwn(id % 2 == 0 ? true : false);
-		phi.setSpecial("mint");
+		phi.setSpecialTag("mint");
 		return phi;
 	}
 }

@@ -76,6 +76,15 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		assertEquals("Reya Dawnbringer", card1.getName());
 	}
 
+	// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,
+	// 4,1,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English
+	@Test
+	public void testLessColumns() {
+		parseCommentAbove();
+		assertEquals(1, resSize);
+		assertEquals("Reya Dawnbringer", card1.getName());
+	}
+
 	public void testFoil() throws InvocationTargetException, InterruptedException {
 		addInvHeader();
 		addLine("3,0,Platinum Angel,foil,,,,Magic 2010,,English,218");
@@ -83,10 +92,18 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		export();
 		assertEquals(line, resline);
 	}
-	
-	public void testFoilTurn() throws InvocationTargetException, InterruptedException {
+
+	public void testTurn() throws InvocationTargetException, InterruptedException {
 		addInvHeader();
-		addLine("3,0,Platinum Angel,foil,,,,Magic 2010,Near Mint,English,218");
+		addLine("3,0,Platinum Angel,foil,textless,promo,signed,Magic 2010,Near Mint,English,218");
+		parse();
+		export();
+		assertEquals(line, resline);
+	}
+
+	public void testMint() throws InvocationTargetException, InterruptedException {
+		addInvHeader();
+		addLine("3,0,Platinum Angel,,,,,Magic 2010,Mint,English,218");
 		parse();
 		export();
 		assertEquals(line, resline);

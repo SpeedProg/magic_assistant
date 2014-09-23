@@ -62,7 +62,7 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 		MagicCardPhysical x = super.createCard(list);
 		try {
 			if (list.get(cardNameIndex).endsWith(" (premium)") || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
-				x.setSpecial("premium");
+				x.setSpecialTag("premium");
 			}
 		} catch (Exception e) {
 			MagicLogger.log(e);

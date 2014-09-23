@@ -485,39 +485,21 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return f;
 	}
 
+
+	public String getSpecial(String key) {
+		return SpecialTags.getInstance().getSpecialValue(getSpecial(), key);
+	}
+
+	public void setSpecialTag(String special) {
+		SpecialTags.getInstance().modifySpecial(this, special);
+	}
+
 	public void setSpecial(String special) {
 		if (special == null || special.trim().length() == 0) {
 			setProperty(MagicCardField.SPECIAL, null);
 			return;
-		} else {
-			String value = getSpecial();
-			String tags[] = special.trim().split(",");
-			boolean add = false;
-			for (String tag : tags) {
-				tag = tag.trim();
-				if (tag.length() == 0)
-					continue;
-				if (tag.startsWith("+")) {
-					tag = tag.substring(1);
-					value = addTag(value, tag);
-					add = true;
-				} else if (tag.startsWith("-")) {
-					tag = tag.substring(1);
-					value = removeTag(value, tag);
-					add = true;
-				} else {
-					if (add)
-						value = addTag(value, tag);
-					else {
-						value = tag + ",";
-						add = true;
-					}
-				}
-			}
-			if (value.endsWith(","))
-				value = value.substring(0, value.length() - 1);
-			setProperty(MagicCardField.SPECIAL, value);
 		}
+		setProperty(MagicCardField.SPECIAL, special);
 	}
 
 	protected String addTag(String value, String tag) {
@@ -714,4 +696,5 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
 }

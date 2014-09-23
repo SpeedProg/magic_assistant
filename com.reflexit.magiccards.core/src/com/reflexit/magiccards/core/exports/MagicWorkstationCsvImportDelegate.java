@@ -52,11 +52,11 @@ public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 			return null;
 		MagicCardPhysical x = super.createCard(list);
 		try {
-			String comment = "";
-			if (list.get(10).equals("1"))
-				comment += "foil,";
-			comment += list.get(9);
-			x.setSpecial(comment);
+			if (list.get(10).equals("1")) {
+				x.setSpecialTag("foil");
+			}
+			String comment = list.get(9);
+			x.setComment(comment);
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		}

@@ -7,6 +7,7 @@ import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class DeckBoxExportDelegate extends CsvExportDelegate {
@@ -26,10 +27,10 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 				MagicCardField.COUNT,
 				MagicCardField.FORTRADECOUNT,
 				MagicCardField.NAME,
-				ExtraFields.FOIL, 
-				ExtraFields.TEXTLESS, 
-				ExtraFields.PROMO, 
-				ExtraFields.SIGNED, 
+				ExtraFields.FOIL,
+				ExtraFields.TEXTLESS,
+				ExtraFields.PROMO,
+				ExtraFields.SIGNED,
 				MagicCardField.SET,
 				ExtraFields.CONDITION,
 				MagicCardField.LANG,
@@ -44,9 +45,11 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 		setColumns(doGetFields());
 		super.run(monitor);
 	}
-	
+
 	@Override
 	public Object getObjectByField(IMagicCard card, ICardField field) {
+		if (field == MagicCardField.LANG && card.getLanguage() == null)
+			return "English";
 		return field.aggregateValueOf(card);
 	}
 
@@ -54,7 +57,6 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 	public boolean isColumnChoiceSupported() {
 		return false;
 	}
-	
 
 	public enum ExtraFields implements ICardField {
 		FOIL,
@@ -64,14 +66,39 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 		CONDITION {
 			@Override
 			public Object aggregateValueOf(ICard card) {
-				String spe = card.getString(MagicCardField.SPECIAL);
-				if (spe.contains("nearmint")) return "Near Mint";
-				if (spe.contains("mint")) return "Mint";
-				if (spe.contains("played")) return "Played";
+				if (card instanceof MagicCardPhysical) {
+					String spe = ((MagicCardPhysical) card).getSpecial("c");
+					if (spe == null)
+						return null;
+					if (spe.equals("nearmint"))
+						return "Near Mint";
+					if (spe.equals("good"))
+						return "Good (Lightly Played)";
+					if (spe.equals("mint"))
+						return "Mint";
+					if (spe.equals("heavily_played"))
+						return "Heavily Played";
+					if (spe.equals("poor"))
+						return "Poor";
+					return spe;
+				}
 				return "";
 			}
-		};
 
+			@Override
+			public void importInto(MagicCardPhysical card, String value) {
+				String tag = null;
+				if (value.equals("Near Mint"))
+					tag = "nearmint";
+				else if (value.startsWith("Good"))
+					tag = "good";
+				else {
+					tag = value.toLowerCase().replaceAll("\\W", "_");
+				}
+				if (tag != null)
+					card.setSpecialTag("c=" + tag);
+			}
+		};
 		@Override
 		public boolean isTransient() {
 			return false;
@@ -88,10 +115,19 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 		@Override
 		public Object aggregateValueOf(ICard card) {
 			String spe = card.getString(MagicCardField.SPECIAL);
-			if (spe.contains(getTag())) return getTag();
+			if (spe.contains(getTag()))
+				return getTag();
 			return "";
 		}
-		
+
+		public void importInto(MagicCardPhysical card, String value) {
+			String tag = getTag();
+			if (value.equals(tag)) {
+				card.setSpecialTag(tag);
+			} else {
+				card.setSpecialTag("-" + tag);
+			}
+		}
 
 		@Override
 		public String getTag() {
@@ -99,6 +135,5 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 			name = name.toLowerCase(Locale.ENGLISH);
 			return name;
 		}
-		
 	}
 }

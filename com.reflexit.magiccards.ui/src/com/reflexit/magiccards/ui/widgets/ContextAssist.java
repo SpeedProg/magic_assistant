@@ -31,6 +31,10 @@ public class ContextAssist {
 			if (k >= 0) {
 				return super.getProposals(contents.substring(k + 1), position);
 			}
+			k = contents.lastIndexOf(',');
+			if (k >= 0) {
+				return super.getProposals(contents.substring(k + 1), position);
+			}
 			return super.getProposals(contents, position);
 		}
 	}
@@ -50,6 +54,9 @@ public class ContextAssist {
 					Point selection = textCon.getSelection();
 					String old = textCon.getText();
 					int k = old.lastIndexOf(' ');
+					int kz = old.lastIndexOf(',');
+					if (kz > k)
+						k = kz;
 					int l = old.length() - k - 1;
 					textCon.insert(text.substring(l));
 					// Insert will leave the cursor at the end of the inserted text.
