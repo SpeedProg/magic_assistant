@@ -21,7 +21,8 @@ public class SpecialTags {
 		conditions = new HashSet<String>();
 		usedTags = new HashSet<String>();
 		conditions.addAll(Arrays.asList(new String[] { "mint", "nearmint", "played", "poor", "good" }));
-		usedTags.addAll(Arrays.asList(new String[] { "foil", "premium", "promo", "online", "signed", "textless" }));
+		usedTags.addAll(Arrays.asList(new String[] { "foil", "premium", "promo", "online", "signed", "textless",
+				"wishlist", "fortrade" }));
 		usedTags.addAll(conditions);
 	}
 
