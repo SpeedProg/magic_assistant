@@ -83,12 +83,14 @@ public class LocationColumn extends GenColumn {
 			@Override
 			protected CellEditor getCellEditor(final Object element) {
 				final String iniLoc = (String) getValue(element);
+				final CardElement cardElement = DataManager.getModelRoot().findElement(iniLoc);
 				DialogCellEditor editor = new DialogCellEditor((Composite) viewer.getControl(), SWT.NONE) {
 					@Override
 					protected Object openDialogBox(Control cellEditorWindow) {
 						CardNavigatorSelectionDialog d = new CardNavigatorSelectionDialog(cellEditorWindow.getShell(),
-								DataManager.getModelRoot(), false, "Select location to move card into");
-						// d.setInitialLocation(iniLoc);
+								DataManager.getModelRoot().getMyCardsContainer(), false,
+								"Select location to move card into");
+						d.setInitialSelections(new Object[] { cardElement });
 						d.setValidator(new ISelectionValidator() {
 							@Override
 							public String isValid(Object selection) {

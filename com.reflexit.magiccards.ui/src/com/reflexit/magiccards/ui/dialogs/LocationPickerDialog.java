@@ -28,8 +28,8 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
+import com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard;
 import com.reflexit.magiccards.ui.wizards.NewCardElementWizard;
-import com.reflexit.magiccards.ui.wizards.NewCollectionContainerWizard;
 import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
 public class LocationPickerDialog extends TrayDialog {
@@ -67,11 +67,13 @@ public class LocationPickerDialog extends TrayDialog {
 		data.widthHint = 300;
 		listViewer.getControl().setLayoutData(data);
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				selection = (IStructuredSelection) event.getSelection();
 			}
 		});
-		createButtonsGroup(area);
+		if ((mode & SWT.READ_ONLY) == 0)
+			createButtonsGroup(area);
 		restoreWidgetValues();
 		if (initialResourceSelection != null)
 			setupBasedOnInitialSelections();
@@ -128,7 +130,7 @@ public class LocationPickerDialog extends TrayDialog {
 		button2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				openWizard(new NewCollectionContainerWizard(), listViewer.getSelection());
+				openWizard(new NewCardCollectionWizard(), listViewer.getSelection());
 			}
 		});
 	}

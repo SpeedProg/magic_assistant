@@ -48,21 +48,20 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	private ViewerFilter[] filters;
 
 	/**
-	 * Creates a resource container selection dialog rooted at the given resource. All selections
-	 * are considered valid.
+	 * Creates a resource container selection dialog rooted at the given resource. All selections are considered valid.
 	 * 
 	 * @param parentShell
 	 *            the parent shell
 	 * @param root
 	 *            the initial root in the tree
 	 * @param allowNewContainerName
-	 *            <code>true</code> to enable the user to type in a new container name, and
-	 *            <code>false</code> to restrict the user to just selecting from existing ones
+	 *            <code>true</code> to enable the user to type in a new container name, and <code>false</code> to restrict the user to just
+	 *            selecting from existing ones
 	 * @param message
-	 *            the message to be displayed at the top of this dialog, or <code>null</code> to
-	 *            display a default message
+	 *            the message to be displayed at the top of this dialog, or <code>null</code> to display a default message
 	 */
-	public CardNavigatorSelectionDialog(Shell parentShell, Object initialRoot, boolean allowNewContainerName, String message) {
+	public CardNavigatorSelectionDialog(Shell parentShell, Object initialRoot,
+			boolean allowNewContainerName, String message) {
 		super(parentShell);
 		setTitle("Container Selection");
 		this.root = initialRoot;
@@ -72,6 +71,7 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 		} else {
 			setMessage("Select a container");
 		}
+		setTitle(message);
 		this.manager = new CardsNavigatiorManager();
 	}
 
@@ -83,9 +83,10 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 		// create composite
 		Composite area = (Composite) super.createDialogArea(parent);
 		ISelectionChangedListener listener = new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (CardNavigatorSelectionDialog.this.statusMessage != null && CardNavigatorSelectionDialog.this.validator != null) {
-					String errorMsg = CardNavigatorSelectionDialog.this.validator.isValid(getSelection());
+				if (statusMessage != null && validator != null) {
+					String errorMsg = validator.isValid(getSelection());
 					if (errorMsg == null || errorMsg.equals(EMPTY_STRING)) {
 						CardNavigatorSelectionDialog.this.statusMessage.setText(EMPTY_STRING);
 						getOkButton().setEnabled(true);
@@ -102,7 +103,9 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 			getViewer().setFilters(this.filters);
 		if (this.root != null) {
 			getViewer().setInput(this.root);
-			getViewer().setSelection(new StructuredSelection(this.root), true);
+		}
+		if (getInitialElementSelections() != null) {
+			getViewer().setSelection(new StructuredSelection(getInitialElementSelections()), true);
 		}
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 200;
@@ -123,9 +126,8 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	}
 
 	/**
-	 * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method
-	 * builds a list of the selected resource containers for later retrieval by the client and
-	 * closes this dialog.
+	 * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of the selected resource
+	 * containers for later retrieval by the client and closes this dialog.
 	 */
 	@Override
 	protected void okPressed() {

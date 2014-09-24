@@ -66,6 +66,7 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 			throw new MagicException("Unknown card type:" + card.getClass());
 	}
 
+	@Override
 	public int getCount() {
 		int count = 0;
 		for (AbstractCardStoreWithStorage table : map.values()) {
@@ -95,14 +96,17 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 		return file;
 	}
 
+	@Override
 	public String getComment() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isVirtual() {
 		throw new UnsupportedOperationException();
 	}

@@ -35,12 +35,16 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		this.collumns = doGetColumnCollection(prefPageId);
 	}
 
+	protected ViewerManager(ColumnCollection columns) {
+		this.collumns = columns;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public abstract Control createContents(Composite parent);
 
 	/*
@@ -60,6 +64,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return collumns.getColumn(i);
 	}
 
+	@Override
 	public ColumnCollection getColumnsCollection() {
 		return collumns;
 	}
@@ -91,6 +96,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getControl()
 	 */
+	@Override
 	public Control getControl() {
 		return getViewer().getControl();
 	}
@@ -100,6 +106,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider ()
 	 */
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return getViewer();
 	}
@@ -118,6 +125,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getViewer()
 	 */
+	@Override
 	public abstract ColumnViewer getViewer();
 
 	/*
@@ -126,6 +134,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
 	 * .eclipse.jface.action.MenuManager)
 	 */
+	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		Menu menu = menuMgr.createContextMenu(getViewer().getControl());
 		getViewer().getControl().setMenu(menu);
@@ -137,6 +146,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookDoubleClickListener
 	 * (org.eclipse.jface.viewers.IDoubleClickListener)
 	 */
+	@Override
 	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
 		getViewer().addDoubleClickListener(doubleClickListener);
 	}
@@ -147,6 +157,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
 	 * .reflexit.magiccards.ui.views.IColumnSortAction)
 	 */
+	@Override
 	public void hookSortAction(IColumnSortAction sortAction) {
 		this.sortAction = sortAction;
 	}
@@ -165,6 +176,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#flip(boolean)
 	 */
+	@Override
 	public void flip(boolean hasGroups) {
 		// flip between tree and table if control supports it
 	}
@@ -180,6 +192,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		}
 	}
 
+	@Override
 	public void refresh() {
 		if (getViewer().getControl().isDisposed())
 			return;
@@ -193,6 +206,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 * 
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
 	 */
+	@Override
 	public void hookDragAndDrop() {
 		getViewer().getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
@@ -201,6 +215,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer()));
 	}
 
+	@Override
 	public abstract int getSortDirection();
 
 	public Font getFont() {

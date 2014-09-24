@@ -33,6 +33,7 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 		this.wrapped = wrapped;
 	}
 
+	@Override
 	public IStorage<T> getStorage() {
 		return storage;
 	}
@@ -45,6 +46,7 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 			return storage.addAll(list);
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 		return storage.iterator();
 	}
@@ -65,6 +67,7 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 			return storage.removeAll(list);
 	}
 
+	@Override
 	public int size() {
 		return storage.size();
 	}
@@ -84,18 +87,22 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 		return storage.remove(card);
 	}
 
+	@Override
 	public Location getLocation() {
 		return storage.getLocation();
 	}
 
+	@Override
 	public void setLocation(Location location) {
 		storage.setLocation(location);
 	}
 
+	@Override
 	public String getComment() {
 		return storage.getComment();
 	}
 
+	@Override
 	public String getName() {
 		return storage.getName();
 	}
@@ -108,10 +115,12 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isVirtual() {
 		return storage.isVirtual();
 	}
 
+	@Override
 	public boolean contains(T card) {
 		return storage.contains(card);
 	}

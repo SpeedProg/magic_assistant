@@ -151,12 +151,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * The constructor.
 	 */
 	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView) {
-		if (abstractCardsView == null)
-			throw new NullPointerException();
 		this.abstractCardsView = abstractCardsView;
 		prefStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
 		this.manager = createViewerManager();
-		setSite(abstractCardsView.getViewSite());
+		if (abstractCardsView != null)
+			setSite(abstractCardsView.getViewSite());
 	}
 
 	@Override

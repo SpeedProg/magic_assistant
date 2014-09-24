@@ -50,7 +50,7 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
-		Collection<IMagicCard> cards = DM.instantiate(Arrays.asList(toDropArray));
+		Collection<IMagicCard> cards = DM.resolve(Arrays.asList(toDropArray));
 		try {
 			Location targetLocation = determineLocation();
 			if (targetLocation == null)

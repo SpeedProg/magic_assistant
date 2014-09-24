@@ -43,6 +43,7 @@ public class CardsNavigatiorManager implements IDisposable {
 		return this.viewer;
 	}
 
+	@Override
 	public void dispose() {
 		this.viewer = null;
 	}
@@ -50,5 +51,6 @@ public class CardsNavigatiorManager implements IDisposable {
 	public void refresh() {
 		getViewer().getControl().setFont(MagicUIActivator.getDefault().getFont());
 		getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
+		this.viewer.refresh(true);
 	}
 }

@@ -23,11 +23,14 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 public class TableViewerManager extends ViewerManager {
 	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
 	protected TableViewer viewer;
-	protected SortOrder sortOrder;
+	protected SortOrder sortOrder = new SortOrder();
 
 	public TableViewerManager(String id) {
 		super(id);
-		sortOrder = new SortOrder();
+	}
+
+	public TableViewerManager(ColumnCollection columns) {
+		super(columns);
 	}
 
 	@Override

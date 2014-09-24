@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -12,7 +13,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -35,13 +38,18 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.dialogs.CardReconcileDialog;
+import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
@@ -63,6 +71,7 @@ public class DeckView extends AbstractMyCardsView {
 	private CTabFolder folder;
 	private ArrayList<IDeckPage> pages;
 	private Action sideboard;
+	private Action materialize;
 	private AbstractDeckListPage drawPage;
 	private SelectionProviderIntermediate selProvider = new SelectionProviderIntermediate();
 
@@ -110,9 +119,7 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
-	 * .IViewSite)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
@@ -152,6 +159,52 @@ public class DeckView extends AbstractMyCardsView {
 				runCreateSideboard();
 			}
 		};
+		this.materialize = new Action("Materialize...") {
+			{
+				setToolTipText("Attempt to materialize a deck/collection by replacing"
+						+ " all virtual cards with own cards from inventory");
+			}
+
+			@Override
+			public void run() {
+				runMaterialize();
+			}
+		};
+	}
+
+	protected IStorageInfo getStorageInfo() {
+		IStorage storage = getFilteredStore().getCardStore().getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si;
+		}
+		return null;
+	}
+
+
+	protected void runMaterialize() {
+		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE | SWT.READ_ONLY);
+		if (locationPickerDialog.open() == Window.OK) {
+			IStructuredSelection selection = locationPickerDialog.getSelection();
+			CardCollection collection = (CardCollection) selection.getFirstElement();
+			Collection<IMagicCard> orig = getFilteredStore().getCardStore().getCards();
+			Collection<MagicCardPhysical> res = DataManager.getInstance().materialize(orig,
+					collection.getStore());
+			CardReconcileDialog cardReconcileDialog = new CardReconcileDialog(getShell()) {
+				@Override
+				protected void okPressed() {
+					ICardStore cardStore = getFilteredStore().getCardStore();
+					getStorageInfo().setVirtual(false);
+					DataManager.getInstance().remove(cardStore, orig);
+					DataManager.getInstance().moveCards(elements, cardStore.getLocation());
+					DataManager.getInstance().reconcile();
+					super.okPressed();
+				}
+			};
+			cardReconcileDialog.setBlockOnOpen(false);
+			cardReconcileDialog.setInput(res);
+			cardReconcileDialog.open();
+		}
 	}
 
 	protected void runCreateSideboard() {
@@ -229,9 +282,7 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse
-	 * .swt.widgets.Composite)
+	 * @see com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse .swt.widgets.Composite)
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -348,15 +399,14 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
-	 * org.eclipse.jface.action.IMenuManager)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown( org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
 		manager.add(this.shuffle);
 		manager.add(this.sideboard);
+		manager.add(this.materialize);
 	}
 
 	@Override

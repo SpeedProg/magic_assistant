@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model.storage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.MagicException;
@@ -12,6 +13,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	protected transient boolean initialized = false;
 	protected boolean mergeOnAdd = true;
 
+	@Override
 	public final synchronized void initialize() {
 		try {
 			if (isInitialized() == false) {
@@ -35,6 +37,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	protected abstract void doInitialize() throws MagicException;
 
+	@Override
 	public boolean addAll(final Collection<? extends T> cards) {
 		initialize();
 		boolean modified = doAddAll(cards);
@@ -72,6 +75,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return modified;
 	}
 
+	@Override
 	public boolean add(final T card) {
 		initialize();
 		synchronized (this) {
@@ -83,6 +87,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return true;
 	}
 
+	@Override
 	public boolean remove(final T o) {
 		initialize();
 		boolean res;
@@ -94,6 +99,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return res;
 	}
 
+	@Override
 	public boolean removeAll(Collection<? extends T> list) {
 		initialize();
 		boolean modified = doRemoveAll(list);
@@ -103,6 +109,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return modified;
 	}
 
+	@Override
 	public boolean removeAll() {
 		initialize();
 		boolean modified = doRemoveAll();
@@ -142,10 +149,12 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		}
 	}
 
+	@Override
 	public void setMergeOnAdd(final boolean v) {
 		this.mergeOnAdd = v;
 	}
 
+	@Override
 	public boolean getMergeOnAdd() {
 		return this.mergeOnAdd;
 	}
@@ -162,10 +171,12 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	protected abstract boolean doRemoveCard(T card);
 
+	@Override
 	public void addListener(final ICardEventListener lis) {
 		addListenerObject(lis);
 	}
 
+	@Override
 	public void removeListener(final ICardEventListener lis) {
 		removeListenerObject(lis);
 	}
@@ -182,6 +193,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		}
 	}
 
+	@Override
 	public void update(final T card) {
 		initialize();
 		synchronized (this) {
@@ -201,10 +213,20 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return size();
 	}
 
+	@Override
 	public void updateList(Collection<T> cards) {
 		initialize();
 		if (isListenerAttached())
 			fireEvent(new CardEvent(this, CardEvent.UPDATE_LIST, cards));
 		return;
+	}
+
+	@Override
+	public Collection<T> getCards() {
+		ArrayList<T> list = new ArrayList<T>();
+		for (T t : this) {
+			list.add(t);
+		}
+		return list;
 	}
 }

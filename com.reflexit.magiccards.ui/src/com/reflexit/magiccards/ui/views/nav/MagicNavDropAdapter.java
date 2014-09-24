@@ -67,7 +67,7 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 				return false;
 			try {
 				Location targetLocation = ((CardElement) dropTarget).getLocation();
-				Collection<IMagicCard> list = DM.instantiate(Arrays.asList(toDropArray));
+				Collection<IMagicCard> list = DM.resolve(Arrays.asList(toDropArray));
 				if (curEvent.detail == DND.DROP_MOVE)
 					return DM.moveCards(list, targetLocation);
 				else

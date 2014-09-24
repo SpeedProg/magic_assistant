@@ -16,4 +16,6 @@ public interface ICardStore<T> extends ICardSet<T>, IMergeable<T>, ICardEventMan
 	public void initialize();
 
 	public void reindex();
+
+	public Collection<T> getCards();
 }

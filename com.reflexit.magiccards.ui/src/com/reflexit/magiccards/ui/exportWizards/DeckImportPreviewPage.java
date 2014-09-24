@@ -137,6 +137,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		return desc;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		setDescription("Import preview (10 rows)");
 		Composite comp = new Composite(parent, SWT.NONE);
@@ -146,68 +147,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL);
 		ld.heightHint = text.getLineHeight() * 5;
 		text.setLayoutData(ld);
-		manager = new TableViewerManager(null) {
-			@Override
-			protected ColumnCollection doGetColumnCollection(String prefPageId) {
-				return new MagicColumnCollection(prefPageId) {
-					@Override
-					protected GroupColumn createGroupColumn() {
-						return new GroupColumn(true, true, true) {
-							@Override
-							public Color getForeground(Object element) {
-								IMagicCard card = (IMagicCard) element;
-								if (card.getCardId() == 0) {
-									if (Editions.getInstance().getEditionByName(card.getSet()) != null)
-										return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-								}
-								return super.getForeground(element);
-							}
-						};
-					}
-
-					@Override
-					protected SetColumn createSetColumn() {
-						return new SetColumn() {
-							@Override
-							public EditingSupport getEditingSupport(ColumnViewer viewer) {
-								return new SetEditingSupport(viewer) {
-									@Override
-									protected void setValue(Object element, Object value) {
-										if (element instanceof MagicCardPhysical) {
-											MagicCardPhysical card = (MagicCardPhysical) element;
-											String set = (String) value;
-											// set
-											Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
-											boolean found = false;
-											for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-												IMagicCard base = (IMagicCard) iterator.next();
-												if (base.getSet().equals(set)) {
-													card.setMagicCard((MagicCard) base);
-													card.setError(null);
-													found = true;
-													break;
-												}
-											}
-											if (!found) {
-												NewSetDialog newdia = new NewSetDialog(getShell(), set);
-												if (newdia.open() == Window.OK) {
-													card.getBase().setSet(newdia.getSet().getName());
-													card.setError(null);
-												} else {
-													card.getBase().setSet(set);
-													card.setError(ImportError.SET_NOT_FOUND_ERROR);
-												}
-											}
-											manager.getViewer().refresh(true);
-										}
-									}
-								};
-							}
-						};
-					}
-				};
-			}
-		};
+		manager = new TableViewerManager(columns);
 		Control control = manager.createContents(comp);
 		GridData tld = new GridData(GridData.FILL_BOTH);
 		tld.widthHint = 100 * 5;
@@ -217,4 +157,62 @@ public class DeckImportPreviewPage extends WizardPage {
 	public ImportResult getPreviewResult() {
 		return previewResult;
 	}
+
+	private MagicColumnCollection columns = new MagicColumnCollection(null) {
+		@Override
+		protected GroupColumn createGroupColumn() {
+			return new GroupColumn(true, true, true) {
+				@Override
+				public Color getForeground(Object element) {
+					IMagicCard card = (IMagicCard) element;
+					if (card.getCardId() == 0) {
+						if (Editions.getInstance().getEditionByName(card.getSet()) != null)
+							return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+					}
+					return super.getForeground(element);
+				}
+			};
+		}
+
+		@Override
+		protected SetColumn createSetColumn() {
+			return new SetColumn() {
+				@Override
+				public EditingSupport getEditingSupport(ColumnViewer viewer) {
+					return new SetEditingSupport(viewer) {
+						@Override
+						protected void setValue(Object element, Object value) {
+							if (element instanceof MagicCardPhysical) {
+								MagicCardPhysical card = (MagicCardPhysical) element;
+								String set = (String) value;
+								// set
+								Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+								boolean found = false;
+								for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+									IMagicCard base = (IMagicCard) iterator.next();
+									if (base.getSet().equals(set)) {
+										card.setMagicCard((MagicCard) base);
+										card.setError(null);
+										found = true;
+										break;
+									}
+								}
+								if (!found) {
+									NewSetDialog newdia = new NewSetDialog(getShell(), set);
+									if (newdia.open() == Window.OK) {
+										card.getBase().setSet(newdia.getSet().getName());
+										card.setError(null);
+									} else {
+										card.getBase().setSet(set);
+										card.setError(ImportError.SET_NOT_FOUND_ERROR);
+									}
+								}
+								manager.getViewer().refresh(true);
+							}
+						}
+					};
+				}
+			};
+		}
+	};
 }

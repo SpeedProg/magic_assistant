@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.Predicate;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -123,9 +124,10 @@ public class DataManager {
 		boolean ownCopyAllowed = owncopy;
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			if (ownCopyAllowed == false && card instanceof MagicCardPhysical && virtual == false) {
+			if (ownCopyAllowed == false && card instanceof MagicCardPhysical && virtual == false &&
+					((MagicCardPhysical) card).isOwn()) {
 				throw new MagicException(
-						"Cannot copy real cards into non-virtual deck, use move instead - or override this protection in preferences");
+						"Cannot copy own cards into non-virtual deck, use move instead - or override this protection in preferences");
 			}
 			// copied cards will have collection ownership for virtual
 			MagicCardPhysical phi = new MagicCardPhysical(card, to, virtual);
@@ -142,24 +144,23 @@ public class DataManager {
 	}
 
 	/**
-	 * Using card representation create proper link to base or find actuall base
-	 * card to replace fake one
+	 * Using card representation create proper link to base or find actuall base card to replace fake one
 	 * 
 	 * @param input
 	 * @return
 	 */
-	public Collection<IMagicCard> instantiate(Collection<IMagicCard> input) {
-		return instantiate(input, new ArrayList<IMagicCard>(input.size()), getMagicDBStore());
+	public Collection<IMagicCard> resolve(Collection<IMagicCard> input) {
+		return resolve(input, new ArrayList<IMagicCard>(input.size()), getMagicDBStore());
 	}
 
-	Collection<IMagicCard> instantiate(Collection<IMagicCard> input, Collection<IMagicCard> output, ICardStore db) {
+	private Collection<IMagicCard> resolve(Collection<IMagicCard> input, Collection<IMagicCard> output, ICardStore db) {
 		for (Iterator iterator = input.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof CardGroup) {
-				instantiate((Collection<IMagicCard>) ((CardGroup) card).getChildrenList(), output, db);
+				resolve((Collection<IMagicCard>) ((CardGroup) card).getChildrenList(), output, db);
 			} else {
 				// Need to repair references to MagicCard instances
-				IMagicCard cardRes = instantiate(card, db);
+				IMagicCard cardRes = resolve(card, db);
 				if (cardRes != null)
 					output.add(cardRes);
 			}
@@ -167,7 +168,7 @@ public class DataManager {
 		return output;
 	}
 
-	public IMagicCard instantiate(IMagicCard card, ICardStore db) {
+	private IMagicCard resolve(IMagicCard card, ICardStore db) {
 		if (card instanceof MagicCard) {
 			card = (IMagicCard) db.getCard(card.getCardId());
 			return card;
@@ -206,6 +207,8 @@ public class DataManager {
 					if (virtual)
 						throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
 					phi.setOwn(true);
+				} else {
+					phi.setOwn(false);
 				}
 			}
 			list.add(phi);
@@ -399,9 +402,55 @@ public class DataManager {
 		}
 	}
 
+	public Collection<MagicCardPhysical> materialize(Collection<IMagicCard> cards, ICardStore<IMagicCard> from) {
+		ArrayList<MagicCardPhysical> res = new ArrayList<MagicCardPhysical>();
+		ArrayList<MagicCardPhysical> in = new ArrayList<MagicCardPhysical>();
+		CardGroup.expandGroups(in, cards, new Predicate<Object>() {
+			@Override
+			public boolean test(Object card) {
+				if (card instanceof MagicCardPhysical)
+					return true;
+				return false;
+			}
+		});
+		for (MagicCardPhysical card : in) {
+			if (card.isOwn()) {
+				res.add(new MagicCardPhysical(card, card.getLocation()));
+				continue;
+			}
+			Collection<IMagicCard> piles = from.getCards(card.getCardId());
+			MagicCardPhysical x = new MagicCardPhysical(card, null);
+			if (piles == null || piles.size() == 0) {
+				x.setOwn(false);
+				res.add(x);
+				continue;
+			}
+			int rem = card.getCount();
+			for (IMagicCard cand : piles) {
+				if (rem <= 0)
+					break;
+				if (cand instanceof MagicCardPhysical) {
+					MagicCardPhysical mcp = (MagicCardPhysical) cand;
+					int mc = mcp.getCount();
+					if (mc <= 0 || mcp.isOwn() == false)
+						continue;
+					if (mc > rem)
+						mc = rem;
+					res.add(new MagicCardPhysical(mcp, mcp.getLocation()));
+					rem = rem - mc;
+				}
+			}
+			if (rem > 0) {
+				x.setOwn(false);
+				x.setCount(rem);
+				res.add(x);
+			}
+		}
+		return res;
+	}
+
 	/**
-	 * Repairs back link between base cards and physical cards, expensive since
-	 * it reads whole database
+	 * Repairs back link between base cards and physical cards, expensive since it reads whole database
 	 */
 	public void reconcile() {
 		links.clear();

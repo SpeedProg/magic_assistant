@@ -126,7 +126,7 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 		Object contents = cb.getContents(this);
 		if (contents instanceof IMagicCard[]) {
 			IMagicCard[] cards = (IMagicCard[]) contents;
-			return DataManager.getInstance().instantiate(Arrays.asList(cards));
+			return DataManager.getInstance().resolve(Arrays.asList(cards));
 		}
 		return contents;
 	}
