@@ -46,13 +46,33 @@
 			</mappedresources> 
 			 <zipfileset dir="/home/elaskavaia/Develop/magic/build/java/jre_linux.gtk.x86_64/jre" 
 				prefix="MagicAssistant/jre"/> 
-		</zip> -->
-	    <exec dir="/home/elaskavaia/Develop/magic/build/java/jre_linux.gtk.x86_64/" executable="zip" os="Linux">
+		</zip> 
+	    <exec dir="${master.dir}/java/linux.gtk.x86_64/" executable="zip" os="Linux">
 	        <arg value="-u"/>
 	        <arg value="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86_64.zip"/>
 	        <arg value="-r"/>
 	        <arg value="MagicAssistant/jre"/>
 	    </exec>
+	    -->
+		<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+		<for param="file">
+		  <path>
+		    <fileset dir="${bins.dir}" includes="*.zip"/>
+		  </path>
+		  <sequential>
+		    <propertyregex override="yes"
+		      property="variant"  input="@{file}"
+		      regexp=".*-(.*)\.zip" replace="\1"/>
+		  	<echo message="${variant} @{file}"/>
+		    <exec dir="${master.dir}/java/${variant}" executable="zip">
+		    	<arg value="-q"/>
+		        <arg value="-u"/>
+		        <arg value="@{file}"/>
+		        <arg value="-r"/>
+		        <arg value="MagicAssistant/jre"/>
+		    </exec>
+		  </sequential>
+		</for>
 	</target>
 
 	<target name="install">
