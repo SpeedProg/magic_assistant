@@ -1,3 +1,9 @@
+changes in 1.4.0.10
+* Fixed dead lock on startup
+* Added wishlist and fortrade tags in context assist
+* Special tags can now be key value pairs, change card condition tags with key/value with key "c", i.e. c=mint
+* Added deckbox import/export
+* Fixed magic workstation import for "foil" property
 changes in 1.4.0.7
 * Bug 392 - mana symbols not generated correctly on Windows
 changes in 1.4.0.6
