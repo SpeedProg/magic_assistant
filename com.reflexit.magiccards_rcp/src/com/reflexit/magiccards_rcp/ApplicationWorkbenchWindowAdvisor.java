@@ -11,6 +11,7 @@ import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -92,14 +93,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				if (updateStatus.getCode() != UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
 					if (updateStatus.getSeverity() != IStatus.ERROR) {
 						// update is available
-						if (MessageDialog.openQuestion(null, "Updates", "New software update is available, would you like to install it?")) {
-							new UpdateHandler().execute(null);
-						}
+						PlatformUI.getWorkbench().getDisplay().asyncExec(
+								() -> {
+									if (MessageDialog.openQuestion(null, "Updates",
+											"New software update is available, would you like to install it?")) {
+										new UpdateHandler().execute(null);
+									}
+								});
 					}
 				}
 				monitor.done();
 				return Status.OK_STATUS;
 			}
-		}.schedule(5000);
+		}.schedule(15000);
 	}
 }
