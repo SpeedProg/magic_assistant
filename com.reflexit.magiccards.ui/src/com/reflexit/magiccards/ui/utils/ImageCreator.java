@@ -50,26 +50,28 @@ public class ImageCreator {
 
 	private ImageCreator() {
 		// private
-		fontRegistry = new FontRegistry(Display.getCurrent());
-		String fontName = fontRegistry.defaultFont().getFontData()[0].getName();
-		fontRegistry.put(TITLE_FONT_KEY, new FontData[] { new FontData(fontName, 9, SWT.BOLD) });
-		fontRegistry.put(TYPE_FONT_KEY, new FontData[] { new FontData(fontName, 8, SWT.BOLD) });
-		fontRegistry.put(TEXT_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.NORMAL) });
-		fontRegistry.put(TEXT_ITALIC_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.ITALIC) });
+
+	}
+
+	public synchronized void initFontRegistry() {
+		if (fontRegistry == null) {
+			fontRegistry = new FontRegistry(Display.getCurrent());
+			String fontName = fontRegistry.defaultFont().getFontData()[0].getName();
+			fontRegistry.put(TITLE_FONT_KEY, new FontData[] { new FontData(fontName, 9, SWT.BOLD) });
+			fontRegistry.put(TYPE_FONT_KEY, new FontData[] { new FontData(fontName, 8, SWT.BOLD) });
+			fontRegistry.put(TEXT_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.NORMAL) });
+			fontRegistry.put(TEXT_ITALIC_FONT_KEY, new FontData[] { new FontData(fontName, 7, SWT.ITALIC) });
+		}
 	}
 
 	public Font getFont(String key) {
+		initFontRegistry();
 		return fontRegistry.get(key);
 	}
 
 	static synchronized public ImageCreator getInstance() {
 		if (instance == null) {
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					instance = new ImageCreator();
-				}
-			});
+			instance = new ImageCreator();
 		}
 		return instance;
 	}
@@ -208,16 +210,14 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Get card image from local cache. This image is not managed - to be
-	 * disposed by called.
+	 * Get card image from local cache. This image is not managed - to be disposed by called.
 	 * 
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot
-	 *         found locally or cannot be downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be downloaded remotely
 	 * @throws IOException
 	 */
 	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
@@ -516,14 +516,12 @@ public class ImageCreator {
 		}
 		return new Image(Display.getDefault(), targetData);
 	}
-	
-	
+
 	public static ImageData reEncodeIntoDirectPalette(ImageData imageData) {
 		if (imageData.palette.redMask == 0xff0000 && imageData.palette.greenMask == 0xff00) {
 			return imageData;
 		}
 		PaletteData paletteData = new PaletteData(0xff0000, 0xff00, 0xff);
-
 		ImageData result = new ImageData(imageData.width, imageData.height, 32, paletteData);
 		for (int x = 0; x < imageData.width; x++) {
 			for (int y = 0; y < imageData.height; y++) {
