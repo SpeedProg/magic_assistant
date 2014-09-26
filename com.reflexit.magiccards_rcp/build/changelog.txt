@@ -1,5 +1,9 @@
 changes in 1.4.0.11
 * Fixed bug when doing software update on startup (it cannot show the dialog)
+* Updated database with Khans of Tarkir
+* Fixed card update handler not to block UI
+* Fixed set context assist to show newly added sets
+* Adjusted set image size to fit oversized icons like for M15
 changes in 1.4.0.10
 * Fixed dead lock on startup
 * Added wishlist and fortrade tags in context assist

@@ -176,6 +176,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		int leftMargin = 0;
 		Image image = getActualImage(row);
 		if (image != null) {
+			imageWidth = Math.max(imageWidth, image.getBounds().width);
 			leftMargin = imageWidth;
 			Rectangle imageBounds = image.getBounds();
 			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height) / 2);
