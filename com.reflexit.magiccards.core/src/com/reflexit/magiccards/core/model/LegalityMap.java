@@ -215,7 +215,7 @@ public class LegalityMap {
 			return new LegalityHashMap((Map) value).toLegalityMap();
 		}
 		if (value instanceof Format) {
-			return LegalityMap.EMPTY.put((Format) value, Legality.LEGAL);
+			return new LegalityMap().put((Format) value, Legality.LEGAL);
 		}
 		throw new IllegalArgumentException();
 	}
