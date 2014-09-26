@@ -173,7 +173,7 @@ public class MagicDbView extends AbstractCardsView {
 	protected void exportDatabase() {
 		ICardStore<IMagicCard> store = getFilteredStore().getCardStore();
 		String curset = null;
-		File dir = new File("C:/tmp/madatabase");
+		File dir = new File("/tmp/madatabase");
 		dir.mkdirs();
 		Editions editions = Editions.getInstance();
 		PrintStream ps = null;
