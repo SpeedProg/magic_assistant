@@ -1,9 +1,26 @@
 __NOTOC__
 == 1.4.0 ==
+changes in 1.4.0.11
+* Fixed bug when doing software update on startup (it cannot show the dialog)
+changes in 1.4.0.10
+* Fixed dead lock on startup
+* Added wishlist and fortrade tags in context assist
+* Special tags can now be key value pairs, change card condition tags with key/value with key "c", i.e. c=mint
+* Added deckbox import/export
+* Fixed magic workstation import for "foil" property
+changes in 1.4.0.7
+* Bug 392 - mana symbols not generated correctly on Windows
+changes in 1.4.0.6
+* Bug 390 Importing Decks Real/Virtual - added option to make imported cards real/virtual 
+* Fixed hanging
+* Possibly fixed columns reset to only Name column
+changes in 1.4.0.5
+* Fixed issue with image loading
+* Added ability to edit collector's number
 changes in 1.4.0.3
 * Full support for dark theme (and make it default in this version to see user's feedback)
 * Added card info view action to open the editor
-* Added dialog to edit database card entry (image, price, collector number)
+* Added dialog to edit database card entry (image, price)
 * Added card image into physical card edit dialog
 * Bug 385 Tournament: Print round results in W(2) format
 changes in 1.4.0.1
@@ -14,7 +31,6 @@ changes in 1.4.0.1
 * Bug 375 Missing and double split cards (hardcoded some rules) 
 * Improved parser for double cards
 * Bug 378 Deck deleted when sideboard is deleted 
-== 1.3.1 ==
 changes in 1.3.1.15
 * Fixed TCGPlayer API's
 changes in 1.3.1.14

@@ -1,3 +1,5 @@
+changes in 1.4.0.11
+* Fixed bug when doing software update on startup (it cannot show the dialog)
 changes in 1.4.0.10
 * Fixed dead lock on startup
 * Added wishlist and fortrade tags in context assist
