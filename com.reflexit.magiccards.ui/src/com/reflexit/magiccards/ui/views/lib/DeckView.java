@@ -406,7 +406,7 @@ public class DeckView extends AbstractMyCardsView {
 		super.fillLocalPullDown(manager);
 		manager.add(this.shuffle);
 		manager.add(this.sideboard);
-		manager.add(this.materialize);
+		// manager.add(this.materialize);
 	}
 
 	@Override
