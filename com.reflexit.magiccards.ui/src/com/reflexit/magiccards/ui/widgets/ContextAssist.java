@@ -39,7 +39,7 @@ public class ContextAssist {
 		}
 	}
 
-	public static void addContextAssist(Control t, String[] proposals, final boolean multi) {
+	public static ContentProposalAdapter addContextAssist(Control t, String[] proposals, final boolean multi) {
 		IControlContentAdapter controlContentAdapter = null;
 		if (t instanceof Text) {
 			controlContentAdapter = new TextContentAdapter() {
@@ -86,6 +86,6 @@ public class ContextAssist {
 						setFiltering(true);
 					}
 				};
-		ContentProposalAdapter adapter = new ContentProposalAdapter(t, controlContentAdapter, proposalProvider, null, null);
+		return new ContentProposalAdapter(t, controlContentAdapter, proposalProvider, null, null);
 	}
 }

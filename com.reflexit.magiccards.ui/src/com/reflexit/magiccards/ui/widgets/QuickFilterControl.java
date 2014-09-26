@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -43,6 +46,7 @@ public class QuickFilterControl extends Composite {
 	private Object updateLock = new Object();
 	private UpdateThread uthread;
 	private int updateDelay = 700;
+	private ContentProposalAdapter proposalAdapter;
 
 	class UpdateThread extends Thread {
 		public UpdateThread() {
@@ -154,15 +158,18 @@ public class QuickFilterControl extends Composite {
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		this.searchText.setLayoutData(td);
 		this.searchText.addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				// nothing
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				searchText.setSelection(0, searchText.getText().length());
 			}
 		});
 		this.searchText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				filterText(searchText.getText());
 			}
@@ -190,6 +197,7 @@ public class QuickFilterControl extends Composite {
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		typeCombo.setLayoutData(td);
 		typeCombo.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				filterType(typeCombo.getText());
 			}
@@ -208,16 +216,11 @@ public class QuickFilterControl extends Composite {
 
 	private void createEditionField(ToolBar toolbar) {
 		setCombo = new Text(toolbar, SWT.BORDER);
-		Collection<String> names = Editions.getInstance().getNames();
-		String proposals[] = new String[names.size()];
-		int i = 0;
-		for (String type : names) {
-			proposals[i++] = type;
-		}
-		ContextAssist.addContextAssist(setCombo, proposals, false);
+		proposalAdapter = ContextAssist.addContextAssist(setCombo, new String[0], false);
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		setCombo.setLayoutData(td);
 		setCombo.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				filterSet(setCombo.getText());
 			}
@@ -229,6 +232,26 @@ public class QuickFilterControl extends Composite {
 			}
 		});
 		setCombo.setToolTipText("Set filter");
+		setCombo.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				// ignore
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				Collection<String> names = Editions.getInstance().getNames();
+				String[] setProposals = new String[names.size()];
+				int i = 0;
+				for (String type : names) {
+					setProposals[i++] = type;
+				}
+				IContentProposalProvider contentProposalProvider = proposalAdapter.getContentProposalProvider();
+				if (contentProposalProvider instanceof SimpleContentProposalProvider) {
+					((SimpleContentProposalProvider) contentProposalProvider).setProposals(setProposals);
+				}
+			}
+		});
 		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
 		item.setControl(setCombo);
 		item.setWidth(180);
