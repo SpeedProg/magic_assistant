@@ -647,23 +647,22 @@
   </extension>
   <extension
         point="com.reflexit.magiccards.ui.deckPage">
-        <page
-        name="Info"
-        id="info"
+        		
+        <page name="Info" id="info"
         class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"
         />
-         <!--       <page
-        name="Legality"
-        id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage"
-        class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage"
-        /> -->
-                        <page
-        name="Legality"
-        id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage2"
+        <page name="Draw" id="DrawPage" class="com.reflexit.magiccards.ui.views.analyzers.DrawPage"/>
+        
+        <page name="Mana" id="ManaCurvePage" class="com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage"/>
+		<page name="Types" id="TypePage" class="com.reflexit.magiccards.ui.views.analyzers.TypePage"/>
+		<page name="Creatures" id="CreaturePage" class="com.reflexit.magiccards.ui.views.analyzers.CreaturePage"/>
+		<page name="Colors" id="SpellColourPage" class="com.reflexit.magiccards.ui.views.analyzers.SpellColourPage"/>
+		<page name="Abilities" id="AbilityPage" class="com.reflexit.magiccards.ui.views.analyzers.AbilityPage"/>
+
+        <page name="Legality" id="com.reflexit.magiccards.ui.views.lib.DeckLegalityPage2"
         class="com.reflexit.magiccards.ui.views.analyzers.DeckLegalityPage2"
         />
-                <page
-                      class="com.reflexit.magiccards.ui.views.analyzers.ExportDeckPage"
+        <page class="com.reflexit.magiccards.ui.views.analyzers.ExportDeckPage"
                       id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
                       name="Export">
                 </page>

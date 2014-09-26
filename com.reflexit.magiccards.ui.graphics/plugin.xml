@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
+   <!-- <extension
          point="com.reflexit.magiccards.ui.deckPage">
       <page
             class="com.reflexit.magiccards.ui.graphics.GraphicsDeckPage"
@@ -9,5 +9,6 @@
             name="Graphics">
       </page>
    </extension>
+   -->
 
 </plugin>

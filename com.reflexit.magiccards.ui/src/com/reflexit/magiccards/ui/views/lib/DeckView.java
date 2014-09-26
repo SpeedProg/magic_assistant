@@ -55,24 +55,16 @@ import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
-import com.reflexit.magiccards.ui.views.analyzers.AbilityPage;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
-import com.reflexit.magiccards.ui.views.analyzers.CreaturePage;
-import com.reflexit.magiccards.ui.views.analyzers.DrawPage;
-import com.reflexit.magiccards.ui.views.analyzers.ManaCurvePage;
-import com.reflexit.magiccards.ui.views.analyzers.SpellColourPage;
-import com.reflexit.magiccards.ui.views.analyzers.TypePage;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 public class DeckView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	private CardCollection deck;
-	private Action shuffle;
 	private CTabFolder folder;
 	private ArrayList<IDeckPage> pages;
 	private Action sideboard;
 	private Action materialize;
-	private AbstractDeckListPage drawPage;
 	private SelectionProviderIntermediate selProvider = new SelectionProviderIntermediate();
 
 	private static class DeckPageExtension {
@@ -143,12 +135,6 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.shuffle = new Action("Emulate Draw") {
-			@Override
-			public void run() {
-				runShuffle();
-			}
-		};
 		this.sideboard = new Action("Open Sideboard") {
 			{
 				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/sideboard16.png"));
@@ -249,20 +235,6 @@ public class DeckView extends AbstractMyCardsView {
 		});
 	}
 
-	/**
-	 *
-	 */
-	protected void runShuffle() {
-		CTabItem[] items = folder.getItems();
-		for (int i = 0; i < items.length; i++) {
-			CTabItem cTabItem = items[i];
-			if (cTabItem.getData() == drawPage) {
-				folder.setSelection(cTabItem);
-				drawPage.activate();
-			}
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -329,13 +301,6 @@ public class DeckView extends AbstractMyCardsView {
 		Control control1 = control.createPartControl(folder);
 		cardsList.setControl(control1);
 		// Pages
-		createDeckTab("Mana Curve", new ManaCurvePage());
-		createDeckTab("Types", new TypePage());
-		createDeckTab("Creatures", new CreaturePage());
-		createDeckTab("Colors", new SpellColourPage());
-		createDeckTab("Abilities", new AbilityPage());
-		drawPage = new DrawPage();
-		createDeckTab("Draw", drawPage);
 		createExtendedTabs();
 		// Common
 		folder.addSelectionListener(new SelectionAdapter() {
@@ -404,7 +369,6 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
-		manager.add(this.shuffle);
 		manager.add(this.sideboard);
 		manager.add(this.materialize);
 	}
