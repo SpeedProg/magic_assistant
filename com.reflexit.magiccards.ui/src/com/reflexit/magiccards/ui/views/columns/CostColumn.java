@@ -22,6 +22,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 		return "Cost";
 	}
 
+	@Override
 	public Image getActualImage(Object element) {
 		if (element instanceof IMagicCard) {
 			return SymbolConverter.buildCostImage(((IMagicCard) element).getCost());
@@ -65,7 +66,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 			String text = getText(row);
 			int tx = x + event.width;
 			if (text != null) {
-				tx = x + getBounds(event).width - gc.textExtent(text).x - 2;
+				tx = x + getBounds(event).width - gc.textExtent(text).x - 5;
 				gc.drawText(text, tx, y + 1, true);
 			}
 			Image costImage = getActualImage(row);
