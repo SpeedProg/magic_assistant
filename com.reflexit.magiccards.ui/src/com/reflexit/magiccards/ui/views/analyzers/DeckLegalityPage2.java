@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -61,6 +60,7 @@ import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LegalityColumn;
+import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private static final Format DEFAULT_FORMAT = Format.STANDARD;
@@ -81,14 +81,6 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private CheckControlDecoration totalDeco;
 	private CardStats stats;
 	private CheckControlDecoration maxRepeastDeco;
-
-	class ImageAction extends Action {
-		public ImageAction(String name, String iconKey, int style) {
-			super(name, style);
-			setImageDescriptor(MagicUIActivator.getImageDescriptor(iconKey));
-			setToolTipText(name);
-		}
-	}
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -212,18 +204,14 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
-		this.load = new ImageAction("Load Legality", "icons/clcl16/software_update.png", IAction.AS_PUSH_BUTTON) {
-			@Override
-			public void run() {
-				performUpdate();
-			}
-		};
-		this.refresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", IAction.AS_PUSH_BUTTON) {
-			@Override
-			public void run() {
-				activate();
-			}
-		};
+		this.load = new ImageAction("Load Legality",
+				"icons/clcl16/software_update.png",
+				IAction.AS_PUSH_BUTTON,
+				() -> performUpdate());
+		refresh = new ImageAction("Refresh",
+				"icons/clcl16/refresh.gif",
+				IAction.AS_PUSH_BUTTON,
+				() -> activate());
 	}
 
 	@Override

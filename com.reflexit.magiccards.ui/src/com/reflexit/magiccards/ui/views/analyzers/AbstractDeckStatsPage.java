@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.analyzers;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -21,10 +22,12 @@ import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
+import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	protected ChartCanvas canvas;
 	protected TreeViewer stats;
+	protected IAction actionRefresh;
 
 	public AbstractDeckStatsPage() {
 	}
@@ -42,6 +45,10 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createCardsTree(sashForm);
 		sashForm.setWeights(new int[] { 60, 40 });
+		actionRefresh = new ImageAction("Refresh",
+				"icons/clcl16/refresh.gif",
+				IAction.AS_PUSH_BUTTON,
+				() -> activate());
 		return area;
 	}
 
@@ -50,6 +57,12 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		super.createCardsTree(parent);
 		stats = (TreeViewer) getListControl().getManager().getViewer();
 		stats.setAutoExpandLevel(3);
+	}
+
+	@Override
+	public void fillLocalPullDown(IMenuManager mm) {
+		mm.add(actionRefresh);
+		super.fillLocalPullDown(mm);
 	}
 
 	@Override
@@ -74,7 +87,16 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 
 			@Override
 			public void fillLocalPullDown(IMenuManager mm) {
-				// mm.add(actionShowFind);
+				// nothing
+			}
+
+			@Override
+			protected Composite createTopBar(Composite composite) {
+				Composite bar = super.createTopBar(composite);
+				bar.setVisible(false);
+				((GridData) bar.getLayoutData()).heightHint = 0;
+				bar.getParent().layout(true, true);
+				return bar;
 			}
 		};
 	}

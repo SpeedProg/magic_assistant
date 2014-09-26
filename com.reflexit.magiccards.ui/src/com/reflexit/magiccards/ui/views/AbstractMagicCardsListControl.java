@@ -438,8 +438,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public void setStatus(String text) {
 		if (statusLine.isDisposed())
 			return;
+		if (statusLine.getText().equals(text))
+			return;
 		this.statusLine.setText(text);
 		this.statusLine.setToolTipText(text);
+		if (text.isEmpty()) {
+			statusLine.setVisible(false);
+		} else {
+			statusLine.setVisible(true);
+		}
+		statusLine.getParent().layout(true, true);
 	}
 
 	public void setWarning(boolean war) {
