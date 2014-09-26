@@ -32,9 +32,7 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-	 * ExecutionEvent)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -68,28 +66,32 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 					final Collection<Edition> newSets = setsLoader.getNew();
 					if (newSets.size() > 0) {
 						Editions.getInstance().save();
+						final boolean result[] = new boolean[1];
 						Display.getDefault().syncExec(new Runnable() {
 							@Override
 							public void run() {
 								if (MessageDialog.openQuestion(null, "New Cards", "New sets are available: " + newSets
 										+ ". Would you like to download them now?")) {
-									int k = newSets.size();
-									for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
-										Edition edition = (Edition) iterator.next();
-										try {
-											handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(
-													monitor, 60 / k));
-										} catch (MagicException e) {
-											MagicUIActivator.log(e);
-										} catch (InterruptedException e) {
-											monitor.setCanceled(true);
-										}
-										if (monitor.isCanceled())
-											break;
-									}
+									result[0] = true;
 								}
 							}
 						});
+						if (result[0]) {
+							int k = newSets.size();
+							for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
+								Edition edition = (Edition) iterator.next();
+								try {
+									handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(
+											monitor, 60 / k));
+								} catch (MagicException e) {
+									MagicUIActivator.log(e);
+								} catch (InterruptedException e) {
+									monitor.setCanceled(true);
+								}
+								if (monitor.isCanceled())
+									break;
+							}
+						}
 					}
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
