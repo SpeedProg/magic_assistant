@@ -2,7 +2,7 @@
 <feature
       id="com.reflexit.magiccards.feature"
       label="Magic Card Organizer"
-      version="1.4.0.qualifier"
+      version="1.4.1.qualifier"
       provider-name="Alena Laskavaia"
       plugin="com.reflexit.magiccards.ui">
 
