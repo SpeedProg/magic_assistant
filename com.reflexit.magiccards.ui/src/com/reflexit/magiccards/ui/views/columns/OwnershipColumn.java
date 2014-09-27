@@ -41,11 +41,18 @@ public class OwnershipColumn extends GenColumn {
 	@Override
 	public String getText(Object element) {
 		if (isOwn(element))
-			return "own";
+			return "O";
 		else
-			return "virtual";
+			return "V";
 	}
 
+	@Override
+	public String getToolTipText(Object element) {
+		if (isOwn(element))
+			return "Own (Physical or Online)";
+		else
+			return "Virtual";
+	}
 	// @Override
 	// public Color getBackground(Object element) {
 	// if (isOwn(element))
