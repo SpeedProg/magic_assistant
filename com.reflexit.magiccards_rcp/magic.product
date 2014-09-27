@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Magic Assistant" uid="com.reflexit.magiccards_rcp.product" id="com.reflexit.magiccards_rcp.product" application="com.reflexit.magiccards_rcp.application" version="1.4.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Magic Assistant" uid="com.reflexit.magiccards_rcp.product" id="com.reflexit.magiccards_rcp.product" application="com.reflexit.magiccards_rcp.application" version="1.4.1.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/com.reflexit.magiccards_rcp/splash.png"/>
       <text>
          Magic Assistant
-Version: 1.4.0
+Version: 1.4.1
 Build id: xxxxxxxx
 
 (c) Copyright 2008-2014 Alena Laskavaia.  All rights reserved.
@@ -45,6 +45,7 @@ Apache Software Foundation http://www.apache.org/
       startupMessageRect="100,25,420,20"
       startupForegroundColor="000000" />
    <launcher name="magicassistant">
+      <linux icon="/com.reflexit.magiccards_rcp/icons/m48.xpm"/>
       <solaris/>
       <win useIco="false">
          <bmp
@@ -57,9 +58,11 @@ Apache Software Foundation http://www.apache.org/
       </win>
    </launcher>
 
-
    <vm>
-      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
+      <solaris include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</solaris>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
    </vm>
 
    <license>
@@ -79,8 +82,13 @@ Apache Software Foundation http://www.apache.org/
    </plugins>
 
    <features>
-      <feature id="com.reflexit.magiccards.feature.rcp" version="1.4.0.qualifier"/>
+      <feature id="com.reflexit.magiccards.feature.rcp" version="1.4.1.qualifier"/>
    </features>
 
+
+   <repositories>
+      <repository location="http://mtgbrowser.sourceforge.net/update/1.4-beta" enabled="true" />
+      <repository location="http://mtgbrowser.sourceforge.net/update/1.4" enabled="true" />
+   </repositories>
 
 </product>
