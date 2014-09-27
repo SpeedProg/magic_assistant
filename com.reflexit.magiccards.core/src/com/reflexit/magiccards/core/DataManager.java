@@ -393,7 +393,7 @@ public class DataManager {
 				Location loc = ((ILocatable) card).getLocation();
 				ICardStore<IMagicCard> store = getCardStore(loc);
 				if (store == null)
-					throw new IllegalArgumentException("Cannot find store for " + store);
+					throw new IllegalArgumentException("Cannot find store for " + loc);
 				store.updateList(list);
 			} else {
 				getMagicDBStore().updateList(list);
