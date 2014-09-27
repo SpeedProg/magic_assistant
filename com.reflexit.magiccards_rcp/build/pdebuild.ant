@@ -30,13 +30,6 @@
 	-->
 
 
-	<target name="copy.jre"  if="is_windows">
-		<sync todir="${repack.dir}/${archivePrefix}/jre" includeEmptyDirs="true" overwrite="true">
-			<fileset dir="${jre.home}">
-			</fileset>
-		</sync>
-	</target>
-
 	<target name="add.jre">
 		<!-- <zip update="true" destfile="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86_64.zip">
 			<mappedresources>
@@ -82,29 +75,9 @@
 		</exec>
 	</target>
 
-	<target name="install.copy" depends="install, copy.jre" if="is_windows">
 
-		<!-- <delete dir="${master.dir}/install"/> -->
-		<sync todir="${master.dir}/install"  includeEmptyDirs="true" overwrite="true">
-			<fileset dir="${repack.dir}">
-			</fileset>
-		</sync>
-	</target>
 
-	<target name="pack.jre" depends="install, copy.jre">
-		<delete dir="data"/>
-		<!-- <zip destfile="${bins.dir}/magicassistant-${buildId}-win32.win32.x86.zip" update="true">
-			<zipfileset dir="C:/Program Files (x86)/Java/jre7_u21_x32" prefix="MagicAssistant/jre" />
-		</zip>
-		-->
-
-		<antcall target="7z">
-			<param name="destination" value="${bins.dir}/magicassistant-intaller-${buildId}-win32.exe" />
-			<param name="dir" value="${repack.dir}" />
-		</antcall>
-	</target>
-
-	<target name="msi" depends="install.copy">
+	<target name="msi">
 		<exec executable="${ainstaller}">
 			<arg line="/edit ${msiout}/../magicassistant.aip /SetVersion ${ma.version}" />
 		</exec>
@@ -133,7 +106,7 @@
 		</exec>
 	</target>
 
-	<target name="run.win" depends="install, copy.jre" if="is_windows">
+	<target name="run.win" depends="install" if="is_windows">
 		<exec executable="${repack.dir}/${archivePrefix}/magicassistant.exe" dir="${repack.dir}/${archivePrefix}">
 			<arg value="-data" />
 			<arg value="data" />
@@ -149,10 +122,6 @@
 	</target>
 
 	<target name="run" depends="run.notwin,run.win">
-
-
-
-
 	</target>
 
 	<target name="clean">
