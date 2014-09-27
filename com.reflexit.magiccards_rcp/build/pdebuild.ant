@@ -76,7 +76,10 @@
 	</target>
 
 	<target name="install">
-		<unzip src="${bins.dir}/magicassistant-${buildId}-${baseos}.${basews}.${basearch}.zip" dest="${repack.dir}" />
+		<!-- Use command line unzip to keep file permissions -->
+		<exec executable="unzip" spawn="true">
+		    <arg line="-o ${bins.dir}/magicassistant-${buildId}-${baseos}.${basews}.${basearch}.zip -d ${repack.dir}" />
+		</exec>
 	</target>
 
 	<target name="install.copy" depends="install, copy.jre" if="is_windows">
