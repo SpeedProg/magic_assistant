@@ -1,9 +1,12 @@
 package com.reflexit.magiccards.core.exports;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -15,6 +18,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.model.ICard;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 @SuppressWarnings("rawtypes")
 public class ReportType {
@@ -237,5 +244,72 @@ public class ReportType {
 				res.add(type);
 		}
 		return res;
+	}
+
+	public static ReportType autoDetectType(File file, Collection<ReportType> types) {
+		String fileName = file.getPath();
+		if (fileName == null || fileName.trim().length() == 0)
+			return null;
+		Collection<ReportType> candidates = new ArrayList<ReportType>();
+		int k = fileName.lastIndexOf('.');
+		String ext = "";
+		if (k > 0 && k < fileName.length() - 1) {
+			ext = fileName.substring(k + 1, fileName.length());
+		}
+		for (ReportType reportType : types) {
+			if (ext.equalsIgnoreCase(reportType.getExtension())) {
+				candidates.add(reportType);
+			}
+		}
+		if (file.exists()) {
+			try {
+				String contents = FileUtils.readFileAsString(file);
+				return autoDetectType(contents, candidates);
+			} catch (IOException e) {
+				// fall through
+			}
+		}
+		if (candidates.size() > 0)
+			return candidates.iterator().next();
+		return null;
+	}
+
+	public static ReportType autoDetectType(String contents, Collection<ReportType> candidates) {
+		ReportType selected = null;
+		int errors = Integer.MAX_VALUE;
+		for (ReportType reportType : candidates) {
+			try {
+				InputStream st = new ByteArrayInputStream(contents.getBytes());
+				IImportDelegate id = reportType.getImportDelegate();
+				id.init(st, new Location("preview"), true);
+				try {
+					id.run(ICoreProgressMonitor.NONE);
+					ImportResult result = id.getResult();
+					if (result.getError() == null && result.getList().size() > 0) {
+						int err = 0;
+						for (ICard card : result.getList()) {
+							if (card instanceof MagicCardPhysical) {
+								if (((MagicCardPhysical) card).getError() != null)
+									err++;
+							}
+						}
+						if (err < errors) {
+							selected = reportType;
+							if (err == 0)
+								break;
+							errors = err;
+						}
+					}
+				} catch (InvocationTargetException e) {
+					// continue
+				} catch (InterruptedException e) {
+					// continue
+				}
+				st.close();
+			} catch (IOException e) {
+				break;
+			}
+		}
+		return selected;
 	}
 }

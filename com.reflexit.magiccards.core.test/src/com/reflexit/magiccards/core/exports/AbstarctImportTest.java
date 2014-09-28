@@ -81,7 +81,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		result = (List) worker.getPreview().getList();
+		result = (List) worker.getResult().getList();
 		setout(result);
 	}
 

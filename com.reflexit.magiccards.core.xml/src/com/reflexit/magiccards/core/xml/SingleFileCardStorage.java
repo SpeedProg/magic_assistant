@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -116,6 +116,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		return comment;
 	}
 
+	@Override
 	public void setComment(String comment) {
 		doSetComment(comment);
 		autoSave();
@@ -125,10 +126,12 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		this.comment = comment;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
 
+	@Override
 	public void setType(String type) {
 		doSetType(type);
 		autoSave();
@@ -138,14 +141,17 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		this.type = type.intern();
 	}
 
+	@Override
 	public String getProperty(String key) {
 		return properties.getProperty(key);
 	}
 
+	@Override
 	public void setProperty(String key, String value) {
 		properties.setProperty(key, value);
 	}
 
+	@Override
 	public void setVirtual(boolean value) {
 		setProperty(VIRTUAL, String.valueOf(value));
 	}
@@ -167,8 +173,10 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			loadFields(obj);
 			updateLocations();
 			// DataManager.reconcileAdd(this);
+		} catch (MagicException e) {
+			throw e;
 		} catch (Exception e) {
-			MagicLogger.log(e);
+			throw new MagicException(e);
 		}
 	}
 

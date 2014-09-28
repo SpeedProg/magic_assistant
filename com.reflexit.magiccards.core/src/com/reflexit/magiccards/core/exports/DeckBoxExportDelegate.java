@@ -8,6 +8,7 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.SpecialTags;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class DeckBoxExportDelegate extends CsvExportDelegate {
@@ -114,8 +115,7 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 
 		@Override
 		public Object aggregateValueOf(ICard card) {
-			String spe = card.getString(MagicCardField.SPECIAL);
-			if (spe.contains(getTag()))
+			if (SpecialTags.getInstance().toMap((IMagicCard) card).containsKey(getTag()))
 				return getTag();
 			return "";
 		}
@@ -131,9 +131,7 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 
 		@Override
 		public String getTag() {
-			String name = name();
-			name = name.toLowerCase(Locale.ENGLISH);
-			return name;
+			return name().toLowerCase(Locale.ENGLISH);
 		}
 	}
 }

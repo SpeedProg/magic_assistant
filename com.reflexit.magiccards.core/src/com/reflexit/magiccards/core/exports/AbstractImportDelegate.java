@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
@@ -40,6 +39,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return type;
 	}
 
+	@Override
 	public void init(InputStream st, Location location, boolean virtual) {
 		this.stream = st;
 		this.location = location;
@@ -57,10 +57,12 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return sideboard;
 	}
 
+	@Override
 	public void setHeader(boolean header) {
 		this.header = header;
 	}
 
+	@Override
 	public void run(ICoreProgressMonitor monitor) {
 		monitor.beginTask("Importing...", 100);
 		try {
@@ -74,12 +76,9 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	protected abstract void doRun(ICoreProgressMonitor monitor) throws IOException;
 
-	public ImportResult getPreview() {
+	@Override
+	public ImportResult getResult() {
 		return importResult;
-	}
-
-	public List getImportedCards() {
-		return importResult.getList();
 	}
 
 	protected MagicCardPhysical createDefaultCard() {
@@ -94,6 +93,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		importResult.add(card);
 	}
 
+	@Override
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 		if (field == MagicCardField.EDITION_ABBR) {
 			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);

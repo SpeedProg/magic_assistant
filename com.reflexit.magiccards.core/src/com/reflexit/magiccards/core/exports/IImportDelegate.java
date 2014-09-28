@@ -12,7 +12,6 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
@@ -31,9 +30,7 @@ public interface IImportDelegate<T> {
 
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 
-	public ImportResult getPreview();
-
-	public Collection<T> getImportedCards();
+	public ImportResult getResult();
 
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value);
 

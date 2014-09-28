@@ -109,6 +109,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			final boolean virtual = virtualCards.getSelection();
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
+					@Override
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						IImportDelegate<IMagicCard> worker;
 						try {
@@ -118,7 +119,6 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 						}
 						if (worker == null)
 							throw new IllegalArgumentException("Import is not defined for " + reportType.getLabel());
-					
 						CoreMonitorAdapter monitor2 = new CoreMonitorAdapter(monitor);
 						boolean resolve = !dbImport;
 						if (preview) {
@@ -165,6 +165,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	private boolean fixErrors(final Collection<IMagicCard> result, final boolean dbImport) {
 		final boolean yesres[] = new boolean[] { true };
 		getControl().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				int size = result.size();
 				Map<String, String> badSets = ImportUtils.getSetCandidates(result);
@@ -189,7 +190,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					}
 				}
 				ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
-				ImportUtils.performPreImportWithDb(result, newdbrecords, reportType.getImportDelegate().getPreview().getFields());
+				ImportUtils.performPreImportWithDb(result, newdbrecords, reportType.getImportDelegate().getResult().getFields());
 				ArrayList<String> lerrors = new ArrayList<String>();
 				ImportUtils.validateDbRecords(newdbrecords, lerrors);
 				if (newdbrecords.size() > 0 && lerrors.size() == 0) {
@@ -251,6 +252,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		ModelRoot root = DataManager.getModelRoot();
 		final CardElement resource = root.getDeckContainer();
 		getShell().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, newDeckName, page);
@@ -275,14 +277,20 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	InputStream openInputStream() throws FileNotFoundException {
 		InputStream st = null;
 		if (clipboard) {
-			final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-			Object clipboardText = cb.getContents(TextTransfer.getInstance());
-			if (clipboardText == null)
-				clipboardText = "";
-			st = new ByteArrayInputStream(clipboardText.toString().getBytes());
+			String text = getClipboardText();
+			st = new ByteArrayInputStream(text.getBytes());
 		} else
 			st = new FileInputStream(fileName);
 		return st;
+	}
+
+	public String getClipboardText() {
+		final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+		Object clipboardText = cb.getContents(TextTransfer.getInstance());
+		if (clipboardText == null)
+			clipboardText = "";
+		String text = clipboardText.toString();
+		return text;
 	}
 
 	private Location getSelectedLocation() {
@@ -357,6 +365,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		return true;
 	}
 
+	@Override
 	public void handleEvent(final Event event) {
 		if (event.type == SWT.Selection && event.widget instanceof Combo) {
 			Object data = event.widget.getData(((Combo) event.widget).getText());
@@ -373,6 +382,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	/**
 	 * (non-Javadoc) Method declared on IDialogPage.
 	 */
+	@Override
 	public void createControl(final Composite parent) {
 		initializeDialogUnits(parent);
 		Composite composite = new Composite(parent, SWT.NULL);
@@ -471,16 +481,18 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			public void widgetSelected(SelectionEvent e) {
 				clipboard = false;
 				updateWidgetEnablements();
+				autoDetectFormat();
 				updatePageCompletion();
 			}
 		});
 		fileRadio.setSelection(true);
 		editor = new Text(fileSelectionArea, SWT.BORDER);
 		editor.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(final ModifyEvent e) {
 				File file = new File(editor.getText());
 				setFileName(file.getPath());
-				updateTypeSelection();
+				autoDetectFormat();
 				updatePageCompletion();
 			}
 		});
@@ -502,7 +514,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					fileRadio.setSelection(!clipboard);
 					clipboardRadio.setSelection(clipboard);
 					updateWidgetEnablements();
-					updateTypeSelection();
+					autoDetectFormat();
 					updatePageCompletion();
 				}
 			}
@@ -516,6 +528,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				clipboard = true;
+				autoDetectFormat();
 				updateWidgetEnablements();
 				updatePageCompletion();
 			}
@@ -526,20 +539,15 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		// fileSelectionArea.moveAbove(null);
 	}
 
-	protected void updateTypeSelection() {
-		if (fileName == null || fileName.trim().length() == 0)
-			return;
-		int k = fileName.lastIndexOf('.');
-		String ext = "";
-		if (k > 0 && k < fileName.length() - 1) {
-			ext = fileName.substring(k + 1, fileName.length());
+	protected void autoDetectFormat() {
+		ReportType type = null;
+		if (clipboard) {
+			type = ReportType.autoDetectType(getClipboardText(), types);
+		} else {
+			type = ReportType.autoDetectType(new File(fileName), types);
 		}
-		for (ReportType reportType : types) {
-			if (ext.equalsIgnoreCase(reportType.getExtension())) {
-				selectReportType(reportType);
-				break;
-			}
-		}
+		if (type != null)
+			selectReportType(type);
 	}
 
 	@Override
@@ -620,24 +628,19 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a
-	 * standard push button, registers for selection events including button
-	 * presses and registers default buttons with its shell. The button id is
-	 * stored as the buttons client data. Note that the parent's layout is
-	 * assumed to be a GridLayout and the number of columns in this layout is
-	 * incremented. Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection events
+	 * including button presses and registers default buttons with its shell. The button id is stored as the buttons client data. Note that
+	 * the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented. Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code>
-	 *            constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button,
-	 *            and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar

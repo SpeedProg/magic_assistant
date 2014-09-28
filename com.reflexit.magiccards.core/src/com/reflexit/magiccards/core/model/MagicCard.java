@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -426,8 +427,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 			if (l != null) {
 				this.lang = l.getLang();
 			} else {
-				MagicLogger.log("Unknown language: " + lang);
-				this.lang = lang.intern();
+				throw new MagicException("Unknown language: " + lang);
 			}
 		}
 	}

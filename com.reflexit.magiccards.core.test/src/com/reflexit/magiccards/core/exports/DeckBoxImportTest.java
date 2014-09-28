@@ -60,6 +60,7 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 	@Test
 	public void testGeneric() {
 		parseCommentAbove();
+		assertNull(importer.getResult().getError());
 		assertEquals(3, resSize);
 		assertEquals("Reya Dawnbringer", card1.getName());
 		assertEquals(4, ((MagicCardPhysical) card1).getCount());

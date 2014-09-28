@@ -13,7 +13,7 @@ package com.reflexit.magiccards.core.exports;
 import java.io.IOException;
 import java.util.List;
 
-import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -58,7 +58,7 @@ public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 			String comment = list.get(9);
 			x.setComment(comment);
 		} catch (Exception e) {
-			MagicLogger.log(e);
+			throw new MagicException(e);
 		}
 		return x;
 	}

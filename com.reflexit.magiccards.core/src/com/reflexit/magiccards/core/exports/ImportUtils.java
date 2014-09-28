@@ -56,7 +56,7 @@ public class ImportUtils {
 		worker.init(st, location, virtual);
 		worker.setHeader(header);
 		worker.run(monitor);
-		ImportResult preview = worker.getPreview();
+		ImportResult preview = worker.getResult();
 		if (resolve)
 			for (ICard card : preview.getList()) {
 				if (card instanceof MagicCardPhysical)

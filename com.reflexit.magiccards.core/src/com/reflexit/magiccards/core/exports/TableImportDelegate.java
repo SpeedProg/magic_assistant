@@ -17,10 +17,12 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.TextPrinter;
 
 /**
  * Import for table piped import
@@ -103,11 +105,19 @@ public class TableImportDelegate extends AbstractImportDelegate {
 	}
 
 	protected void setHeaderFields(List<String> list) {
+		int nulls = 0;
 		ICardField fields[] = new ICardField[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			String hd = list.get(i);
 			ICardField field = MagicCardField.fieldByName(hd);
 			fields[i] = field;
+			if (field == null)
+				nulls++;
+		}
+		if (nulls == list.size()) {
+			ICardField[] allNonTransientFields = MagicCardField.allNonTransientFields(true);
+			String hfields = TextPrinter.join(Arrays.asList(allNonTransientFields), ",");
+			throw new MagicException("Cannot recognize header fields: " + list + ", expecting some of these " + hfields);
 		}
 		setFields(fields);
 	}

@@ -174,7 +174,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 					return;
 				}
 			}
-			MagicLogger.log("NOT resolved " + card + ": " + err);
+			// MagicLogger.log("NOT resolved " + card + ": " + err);
 		}
 	}
 

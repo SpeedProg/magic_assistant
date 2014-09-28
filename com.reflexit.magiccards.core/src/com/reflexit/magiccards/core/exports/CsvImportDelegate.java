@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -46,8 +47,12 @@ public class CsvImportDelegate extends TableImportDelegate {
 				do {
 					lineNum++;
 					List<String> list = importer.readLine();
+
 					if (list == null)
 						break;
+					if (list.size() < 2) {
+						throw new MagicException("Line " + lineNum + ": Format error, at least 2 fields are expected");
+					}
 					if (lineNum == 1 && isHeader()) {
 						setHeaderFields(list);
 						continue;

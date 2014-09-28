@@ -28,7 +28,7 @@ public class TextPrinter {
 		return card.toString();
 	}
 
-	private static String join(Collection list, String sep) {
+	public static String join(Collection list, String sep) {
 		StringBuffer buf = new StringBuffer();
 		for (Iterator iter = list.iterator(); iter.hasNext();) {
 			Object element = iter.next();

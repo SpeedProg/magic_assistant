@@ -58,7 +58,7 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 		DeckParser parser = new DeckParser(getStream(), this) {
 			@Override
 			public boolean parseLine(MagicCardPhysical res, String sline) {
-				if (sline.length() == 0 && lineNum > 8) {
+				if (sline.length() == 0 && lineNum > 6) {
 					sideboard = true;
 					return false;
 				}

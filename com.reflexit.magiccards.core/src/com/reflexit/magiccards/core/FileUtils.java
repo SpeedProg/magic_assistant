@@ -104,6 +104,12 @@ public class FileUtils {
 			out.write(buffer, 0, count);
 	}
 
+	public static String readFileAsString(File file) throws IOException {
+		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+		String res = readFileAsString(st);
+		st.close();
+		return res;
+	}
 	public static String readFileAsString(BufferedReader reader) throws IOException {
 		int bufSize = 1024 * 256;
 		StringBuilder fileData = new StringBuilder(1024 * 4);
