@@ -14,6 +14,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 
 public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements IStorageInfo {
 	private static final transient String VIRTUAL = "virtual";
+	private static final transient String READ_ONLY = "readonly";
 	protected transient File file;
 	protected Location location;
 	protected String name;
@@ -80,13 +81,32 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		this.location = location;
 	}
 
+
 	@Override
 	public boolean removeAll() {
+		accessCheck();
 		if (size() == 0)
 			return false;
 		clearCache();
 		autoSave();
 		return true;
+	}
+
+	@Override
+	public boolean add(IMagicCard card) {
+		accessCheck();
+		return super.add(card);
+	}
+
+	@Override
+	public boolean remove(IMagicCard card) {
+		accessCheck();
+		return super.remove(card);
+	}
+
+	protected void accessCheck() {
+		if (isReadOnly())
+			throw new MagicException("Read Only");
 	}
 
 	@Override
@@ -96,10 +116,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	@Override
 	public boolean isVirtual() {
-		String vir = getProperty(VIRTUAL);
-		if (vir == null)
-			return false;
-		return Boolean.valueOf(vir);
+		return Boolean.valueOf(getProperty(VIRTUAL));
 	}
 
 	public void setName(String name) {
@@ -118,6 +135,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	@Override
 	public void setComment(String comment) {
+		accessCheck();
 		doSetComment(comment);
 		autoSave();
 	}
@@ -133,6 +151,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	@Override
 	public void setType(String type) {
+		accessCheck();
 		doSetType(type);
 		autoSave();
 	}
@@ -148,12 +167,20 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	@Override
 	public void setProperty(String key, String value) {
+		if (isReadOnly() && !key.equals(READ_ONLY))
+			throw new MagicException("Read Only");
 		properties.setProperty(key, value);
 	}
 
 	@Override
 	public void setVirtual(boolean value) {
+		accessCheck();
 		setProperty(VIRTUAL, String.valueOf(value));
+	}
+
+	@Override
+	public void setReadOnly(boolean value) {
+		setProperty(READ_ONLY, String.valueOf(value));
 	}
 
 	@Override
@@ -207,5 +234,10 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		obj.comment = getComment();
 		obj.type = getType();
 		obj.properties = properties;
+	}
+
+	@Override
+	public boolean isReadOnly() {
+		return Boolean.valueOf(getProperty(READ_ONLY));
 	}
 }

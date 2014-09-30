@@ -29,6 +29,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
+import com.reflexit.magiccards.ui.widgets.DynamicCombo;
 
 public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	private Text text;
@@ -38,7 +39,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	String prefix = "Deck";
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 	private Label colors;
-	private Label ownership;
+	private DynamicCombo ownership;
 	private Link editButton;
 	private Label decktype;
 	private Label averagecost;
@@ -47,6 +48,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	private Label loclabel;
 	private Label colorsSideboard;
 	private Label rarity;
+	private DynamicCombo protection;
+	private IStorageInfo storageInfo;
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -86,7 +89,29 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		stats.setLayout(new GridLayout(2, false));
 		decktype = createTextLabel("Type: ");
 		loclabel = createTextLabel("Location: ");
-		ownership = createTextLabel("Ownership: ");
+		ownership = createDynCombo("Ownership: ", null, "Own", "Virtual");
+		ownership.getCombo().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String value = ownership.getCombo().getText();
+				boolean virtual = value.equals("Virtual");
+				if (storageInfo.isVirtual() != virtual) {
+					storageInfo.setVirtual(virtual);
+				}
+			}
+		});
+		protection = createDynCombo("Protection: ", "If collection is read only it cannot be modfied, except for unsetting read only flag",
+				"Read Only", "Writable");
+		protection.getCombo().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String value = protection.getCombo().getText();
+				boolean b = value.equals("Read Only");
+				if (storageInfo.isReadOnly() != b) {
+					storageInfo.setReadOnly(b);
+				}
+			}
+		});
 		total = createTextLabel("Cards: ");
 		totalSideboard = createTextLabel("Cards (Sideboard): ");
 		colors = createTextLabel("Colors: ");
@@ -104,11 +129,25 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		return createTextLabel(string, null);
 	}
 
-	private Label createTextLabel(String string, String tip) {
+	private Label createTextLabel(final String string, String tip) {
 		Label label = new Label(stats, SWT.NONE);
 		label.setText(string);
 		label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
 		Label text = new Label(stats, SWT.NONE);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(gd);
+		if (tip != null) {
+			label.setToolTipText(tip);
+			text.setToolTipText(tip);
+		}
+		return text;
+	}
+
+	private DynamicCombo createDynCombo(final String string, String tip, String... values) {
+		Label label = new Label(stats, SWT.NONE);
+		label.setText(string);
+		label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
+		DynamicCombo text = new DynamicCombo(stats, SWT.READ_ONLY, values);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gd);
 		if (tip != null) {
@@ -139,19 +178,21 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		IStorageInfo si = getStorageInfo();
 		if (si == null)
 			return;
-		si.setComment(text2);
+		if (!text2.equals(si.getComment()))
+			si.setComment(text2);
 	}
 
 	@Override
 	public void activate() {
 		super.activate();
-		IStorageInfo si = getStorageInfo();
+		storageInfo = getStorageInfo();
 		String type = null;
-		if (si != null) {
-			String comment = si.getComment();
+		if (storageInfo != null) {
+			String comment = storageInfo.getComment();
 			if (comment != null)
 				text.setText(comment);
-			type = si.getType();
+			type = storageInfo.getType();
+			protection.setText(storageInfo.isReadOnly() ? "Read Only" : "Writable");
 		}
 		Location location = store.getLocation();
 		Location sideboard = location.toSideboard();

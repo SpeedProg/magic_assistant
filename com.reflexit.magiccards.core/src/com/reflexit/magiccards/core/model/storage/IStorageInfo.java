@@ -20,5 +20,9 @@ public interface IStorageInfo {
 
 	public boolean isVirtual();
 
+	public boolean isReadOnly();
+
 	public String getName();
+
+	public void setReadOnly(boolean value);
 }

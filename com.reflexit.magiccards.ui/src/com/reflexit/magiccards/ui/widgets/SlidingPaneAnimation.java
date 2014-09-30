@@ -91,7 +91,18 @@ public class SlidingPaneAnimation {
 		}
 	}
 
-	public void pushControl(final Composite comp, float startWK, float startHK, float endWK, float endHK) {
+	/**
+	 * No animation
+	 * 
+	 * @param comp
+	 */
+	public void pushControl(final Control comp) {
+		runner.cancel();
+		comp.moveAbove(null); // show control
+		comp.getParent().layout(true, true);
+	}
+
+	public void pushControl(final Control comp, float startWK, float startHK, float endWK, float endHK) {
 		runner.cancel();
 		Point size = comp.getSize();
 		int startX = (int) (size.x * startWK);
@@ -114,11 +125,11 @@ public class SlidingPaneAnimation {
 		runner.runEffect(effect1);
 	}
 
-	public void pushControl(final Composite comp, int horDir, int verDir) {
+	public void pushControl(final Control comp, int horDir, int verDir) {
 		pushControl(comp, horDir, verDir, 0, 0);
 	}
 
-	public void popControl(final Composite comp, float horDir, float verDir) {
+	public void popControl(final Control comp, float horDir, float verDir) {
 		runner.cancel();
 		final int endX = (int) (comp.getSize().x * horDir);
 		final int endY = (int) (comp.getSize().y * verDir);

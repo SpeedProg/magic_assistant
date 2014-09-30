@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.dialogs;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
 /**
@@ -33,6 +35,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 	private Combo type;
 	private Button virtual;
 	private Text text;
+	private Button protection;
 
 	public EditDeckPropertiesDialog(Shell shell, IStorageInfo info) {
 		super(shell);
@@ -51,7 +54,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite comp = new Composite(area, SWT.NONE);
 		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-		GridLayout layout = new GridLayout(5, false);
+		GridLayout layout = new GridLayout(4, false);
 		comp.setLayout(layout);
 		{
 			Label label = new Label(comp, SWT.NONE);
@@ -68,8 +71,14 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 			virtual.setSelection(info.isVirtual());
 			virtual.setText("Virtual");
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-			gd.horizontalSpan = 2;
 			virtual.setLayoutData(gd);
+		}
+		{
+			protection = new Button(comp, SWT.CHECK);
+			protection.setSelection(info.isReadOnly());
+			protection.setText("Read Only");
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			protection.setLayoutData(gd);
 		}
 		createTextArea(comp);
 		return comp;
@@ -90,13 +99,21 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		save();
-		super.okPressed();
+		try {
+			save();
+			super.okPressed();
+		} catch (MagicException e) {
+			MessageDialog.openError(getParentShell(), "Error", "Cannot save: " + e.getMessage());
+		}
 	}
 
 	private void save() {
-		info.setComment(text.getText());
-		info.setVirtual(virtual.getSelection());
-		info.setType(type.getText());
+		boolean isReadOnly = protection.getSelection();
+		info.setReadOnly(isReadOnly);
+		if (!isReadOnly) {
+			info.setComment(text.getText());
+			info.setVirtual(virtual.getSelection());
+			info.setType(type.getText());
+		}
 	}
 }
