@@ -547,4 +547,15 @@ public class DeckView extends AbstractMyCardsView {
 	public IAction getGroupAction() {
 		return ((AbstractMagicCardsListControl) control).getGroupAction();
 	}
+
+	@Override
+	protected void saveColumnLayout() {
+		CTabItem sel = folder.getSelection();
+		if (sel.isDisposed())
+			return;
+		if (sel.getControl() == control.getControl()) {
+
+			super.saveColumnLayout();
+		}
+	}
 }
