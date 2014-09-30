@@ -1,3 +1,11 @@
+changes in 1.4.1.0
+* Feature :read only collection/deck
+* Bug: columns of deck randomly resetting to one column
+* Feature: import format auto-detect
+* Ownership column just show V or O letters
+changes in 1.4.0.12
+* Bug: fixed exception when groupping (for legality column)
+* Bug: cost cc text is drawn to close to the right
 changes in 1.4.0.11
 * Fixed bug when doing software update on startup (it cannot show the dialog)
 * Updated database with Khans of Tarkir
