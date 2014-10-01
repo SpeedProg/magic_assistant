@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -56,7 +57,7 @@ public class BackupHandler extends AbstractHandler {
 									: PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 							Shell shell = window.getShell();
 							if (event.getResult() == Status.OK_STATUS) {
-								new Toast(shell, "Backup saved in " + backup).open();
+								MessageDialog.openInformation(shell, "Info", "Backup saved in " + backup);
 							} else {
 								new Toast(shell, "Backup failed:  " + event.getResult()).open();
 							}
