@@ -24,6 +24,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.sync.TextPrinter;
@@ -56,44 +57,47 @@ public class MagicDbView extends AbstractCardsView {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewmagicdb"));
 	}
 
+	class MagicDbListControl extends AbstractMagicCardsListControl {
+		public MagicDbListControl(AbstractCardsView abstractCardsView) {
+			super(abstractCardsView);
+		}
+
+		@Override
+		public IMagicColumnViewer createViewerManager() {
+			return new CompositeViewerManager(getPreferencePageId()) {
+				@Override
+				protected ColumnCollection doGetColumnCollection(String prefPageId) {
+					return new MagicColumnCollection(prefPageId) {
+						@Override
+						protected GroupColumn createGroupColumn() {
+							return new GroupColumn() {
+								@Override
+								protected int getCount(Object element) {
+									return ((IMagicCard) element).getUniqueCount();
+								}
+							};
+						}
+					};
+				}
+			};
+		}
+
+		@Override
+		public void handleEvent(CardEvent event) {
+			if (event.getSource() instanceof MagicCard) {
+				super.handleEvent(event);
+			}
+		}
+
+		@Override
+		public IFilteredCardStore doGetFilteredStore() {
+			return DataManager.getCardHandler().getMagicDBFilteredStore();
+		}
+	}
+
 	@Override
 	protected AbstractMagicCardsListControl doGetViewControl() {
-		return new AbstractMagicCardsListControl(this) {
-			@Override
-			public IMagicColumnViewer createViewerManager() {
-				return new CompositeViewerManager(getPreferencePageId()) {
-					@Override
-					protected ColumnCollection doGetColumnCollection(String prefPageId) {
-						return new MagicColumnCollection(prefPageId) {
-							@Override
-							protected GroupColumn createGroupColumn() {
-								return new GroupColumn() {
-									@Override
-									protected int getCount(Object element) {
-										return ((IMagicCard) element).getUniqueCount();
-									}
-								};
-							}
-						};
-					}
-				};
-			}
-
-			@Override
-			protected void addStoreChangeListener() {
-				// do not add library listener
-			}
-
-			@Override
-			protected void removeStoreChangeListener() {
-				// ignore
-			}
-
-			@Override
-			public IFilteredCardStore doGetFilteredStore() {
-				return DataManager.getCardHandler().getMagicDBFilteredStore();
-			}
-		};
+		return new MagicDbListControl(this);
 	}
 
 	@Override

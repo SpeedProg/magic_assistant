@@ -296,8 +296,8 @@ public class DataManager {
 	}
 
 	public void remove(ICardStore store, Collection list) {
-		reconcileRemove(list);
 		store.removeAll(list);
+		reconcile(list);
 	}
 
 	public void remove(MagicCardPhysical mcp) {
@@ -305,8 +305,8 @@ public class DataManager {
 		ICardStore<IMagicCard> store = getCardStore(from);
 		if (store == null)
 			throw new IllegalArgumentException("Cannot find store for " + from);
-		reconcileRemove(mcp);
 		store.remove(mcp);
+		reconcile(mcp);
 	}
 
 	public boolean add(MagicCardPhysical mcp) {
@@ -462,62 +462,41 @@ public class DataManager {
 
 	public void reconcile(Iterable cards) {
 		ICardStore db = getMagicDBStore();
+		ICardStore library = DataManager.getLibraryCardStore();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			Object card = iterator.next();
 			// Need to repair references to MagicCard instances
 			if (card instanceof MagicCardPhysical) {
 				MagicCardPhysical mcp = (MagicCardPhysical) card;
-				if (mcp.getName() != null)
-					reconcile(mcp, db);
+				if (mcp.getName() != null) {
+					reconcile(mcp, db, library);
+				}
 			}
 		}
 	}
 
 	private void reconcile(MagicCardPhysical mcp) {
-		reconcile(mcp, getMagicDBStore());
+		reconcile(mcp, getMagicDBStore(), DataManager.getLibraryCardStore());
 	}
 
-	private void reconcile(MagicCardPhysical mcp, ICardStore db) {
+	private void reconcile(MagicCardPhysical mcp, ICardStore db, ICardStore library) {
 		// System.err.println("reconcile " + mcp + " " +
 		// System.identityHashCode(mcp));
 		int id = mcp.getCardId();
+		if (id == 0)
+			return;
 		MagicCard base = (MagicCard) db.getCard(id);
 		if (base != null) {
 			mcp.setMagicCard(base);
 		} else {
 			MagicLogger.log("Cannot reconsile " + mcp);
 		}
-		CardGroup realcards = (CardGroup) links.get(id);
-		if (realcards == null) {
-			realcards = new CardGroup(MagicCardField.ID, mcp.getName());
-			links.put(id, realcards);
-		} else {
-			realcards.remove(mcp);
-		}
-		realcards.add(mcp);
+		CardGroup realcards = new CardGroup(MagicCardField.ID, mcp.getName());
+		realcards.addAll(library.getCards(id));
+		links.put(id, realcards);
+		update(mcp.getBase());
 	}
 
-	private void reconcileRemove(Iterable cards) {
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			Object card = iterator.next();
-			// Need to repair references to MagicCard instances
-			if (card instanceof MagicCardPhysical)
-				reconcileRemove((MagicCardPhysical) card);
-		}
-	}
-
-	private void reconcileRemove(MagicCardPhysical mcp) {
-		if (mcp.getBase() == null)
-			return;
-		int id = mcp.getCardId();
-		CardGroup realcards = (CardGroup) links.get(id);
-		if (realcards != null) {
-			realcards.remove(mcp);
-			if (realcards.size() == 0) {
-				links.remove(id);
-			}
-		}
-	}
 
 	public CardGroup getRealCards(MagicCard mc) {
 		int id = mc.getCardId();
