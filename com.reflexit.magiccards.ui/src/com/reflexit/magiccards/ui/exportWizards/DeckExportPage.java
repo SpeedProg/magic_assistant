@@ -86,19 +86,24 @@ public class DeckExportPage extends WizardDataTransferPage {
 		resourceSelection = selection == null ? null : new StructuredSelection(selection.toList());
 	}
 
-	HashMap<String, String> storeToMap(boolean sideboard) {
+	HashMap<String, String> storeToMap(boolean sideboard, boolean sideboardSupported) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		if (resourceSelection == null || resourceSelection.isEmpty())
 			return map;
 		Locations locs = Locations.getInstance();
 		CardElement myDeck = (CardElement) resourceSelection.getFirstElement();
-		String deckId = locs.getPrefConstant(myDeck.getLocation().toMainDeck());
-		String sbId = locs.getPrefConstant(myDeck.getLocation().toSideboard());
-		if (sideboard) {
-			map.put(sbId, "true");
+		if (!sideboardSupported) {
+			String deckId = locs.getPrefConstant(myDeck.getLocation());
 			map.put(deckId, "true");
 		} else {
-			map.put(deckId, "true");
+			String deckId = locs.getPrefConstant(myDeck.getLocation().toMainDeck());
+			String sbId = locs.getPrefConstant(myDeck.getLocation().toSideboard());
+			if (sideboard) {
+				map.put(sbId, "true");
+				map.put(deckId, "true");
+			} else {
+				map.put(deckId, "true");
+			}
 		}
 		return map;
 	}
@@ -121,6 +126,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		// //NON-NLS-2
 		// //$NON-NLS-1$
 		editor.getTextControl(fileSelectionArea).addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(final ModifyEvent e) {
 				setFileName(editor.getStringValue());
 				updatePageCompletion();
@@ -156,6 +162,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	/**
 	 * (non-Javadoc) Method declared on IDialogPage.
 	 */
+	@Override
 	public void createControl(final Composite parent) {
 		initializeDialogUnits(parent);
 		Composite composite = new Composite(parent, SWT.NULL);
@@ -451,23 +458,19 @@ public class DeckExportPage extends WizardDataTransferPage {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a standard push
-	 * button, registers for selection events including button presses and registers default buttons
-	 * with its shell. The button id is stored as the buttons client data. Note that the parent's
-	 * layout is assumed to be a GridLayout and the number of columns in this layout is incremented.
-	 * Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection events
+	 * including button presses and registers default buttons with its shell. The button id is stored as the buttons client data. Note that
+	 * the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented. Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for
-	 *            standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button, and
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
 	 */
 	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
 		// increment the number of columns in the button bar
@@ -610,6 +613,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 			final boolean header = getIncludeHeader();
 			final boolean sideboard = getIncludeSideBoard();
 			IRunnableWithProgress work = new IRunnableWithProgress() {
+				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException {
 					try {
 						exportDeck(outStream, monitor, reportType, header, sideboard);
@@ -637,7 +641,8 @@ public class DeckExportPage extends WizardDataTransferPage {
 	public void exportDeck(final OutputStream outStream, IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
 			throws InvocationTargetException, InterruptedException {
 		// TODO: export selection only
-		final HashMap<String, String> map = storeToMap(sideboard);
+		IExportDelegate exportDelegate = reportType.getExportDelegate();
+		final HashMap<String, String> map = storeToMap(sideboard, exportDelegate.isSideboardSupported());
 		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
 		MagicCardFilter locFilter = filteredLibrary.getFilter();
 		locFilter.update(map);
