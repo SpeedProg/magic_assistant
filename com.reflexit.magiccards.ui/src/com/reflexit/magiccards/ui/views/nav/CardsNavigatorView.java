@@ -134,6 +134,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				CardsNavigatorView.this.fillContextMenu(manager);
 			}
@@ -366,17 +367,12 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	public static CardCollection createNewDeckAction(CollectionsContainer parent, String name, IWorkbenchPage page) {
 		String filename = name + ".xml";
 		CardCollection d = parent.addDeck(filename);
-		try {
-			openDeckView(d, page);
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return d;
 	}
 
 	private void hookDoubleClickAction() {
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				CardsNavigatorView.this.doubleClickAction.run();
 			}
@@ -456,14 +452,31 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		return getViewSite().getShell();
 	}
 
+	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		switch (type) {
 			case CardEvent.ADD_CONTAINER:
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						CardsNavigatorView.this.manager.getViewer().refresh(true);
+						Object obj = event.getData();
+						if (obj instanceof CardCollection) {
+							try {
+								openDeckView((CardCollection) obj, getViewSite().getWorkbenchWindow().getActivePage());
+							} catch (PartInitException e) {
+								MagicUIActivator.log(e);
+							}
+						}
+					}
+				});
+				break;
 			case CardEvent.REMOVE_CONTAINER:
 			case CardEvent.RENAME_CONTAINER:
 			case CardEvent.UPDATE_CONTAINER:
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						CardsNavigatorView.this.manager.getViewer().refresh(true);
 					}

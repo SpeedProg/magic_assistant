@@ -43,7 +43,7 @@ public class ParseGathererLegalityTest extends TestCase {
 		assertEquals(Legality.LEGAL, map.get("Commander"));
 		assertEquals(Legality.LEGAL, map.get("Vintage"));
 		assertEquals(Legality.LEGAL, map.get("Freeform"));
-		assertEquals(Legality.LEGAL, map.get("Standard"));
+		assertEquals(Legality.NOT_LEGAL, map.get("Standard"));
 	}
 
 	public void testDeck() {

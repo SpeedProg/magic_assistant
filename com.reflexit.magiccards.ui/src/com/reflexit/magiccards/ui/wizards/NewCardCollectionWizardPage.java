@@ -28,8 +28,9 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	 */
 	public NewCardCollectionWizardPage(ISelection selection) {
 		super(selection);
-		setTitle("Create a new card collection");
-		setDescription("This wizard creates a new card collection with a given name and place it in specified parent deck container.");
+		setTitle("Create a new " + getElementTypeName());
+		setDescription("This wizard creates a new " + getElementTypeName() +
+				" with a given name and place it in specified parent container.");
 	}
 
 	@Override
@@ -73,11 +74,6 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	@Override
 	public String getElementTypeName() {
 		return "card collection";
-	}
-
-	@Override
-	public String getElementCapitalTypeName() {
-		return "Card Collection";
 	}
 
 	@Override

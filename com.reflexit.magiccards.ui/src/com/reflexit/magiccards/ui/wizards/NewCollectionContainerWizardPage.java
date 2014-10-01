@@ -58,11 +58,6 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 	}
 
 	@Override
-	public String getElementCapitalTypeName() {
-		return "Collection Container";
-	}
-
-	@Override
 	protected void createOptionsGroup(Composite container) {
 	}
 

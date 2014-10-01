@@ -75,6 +75,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
@@ -89,6 +90,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		gd.horizontalSpan = 2;
 		this.nameText.setLayoutData(gd);
 		this.nameText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
 			}
@@ -100,6 +102,7 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL);
 		this.containerText.setLayoutData(gd2);
 		this.containerText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
 			}
@@ -154,7 +157,6 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 
 	public abstract String getElementTypeName();
 
-	public abstract String getElementCapitalTypeName();
 
 	/**
 	 * Uses the standard container selection dialog to choose the new value for the container field.

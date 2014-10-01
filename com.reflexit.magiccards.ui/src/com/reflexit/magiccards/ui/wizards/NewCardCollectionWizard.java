@@ -1,20 +1,9 @@
 package com.reflexit.magiccards.ui.wizards;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
-import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
-import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
  * This is a sample new wizard. Its role is to create a new file resource in the provided container.
@@ -42,35 +31,12 @@ public class NewCardCollectionWizard extends NewCardElementWizard implements INe
 		addPage(this.page);
 	}
 
-	/**
-	 * The worker method. It will find the container, create the file if missing or just replace its
-	 * contents, and open the editor on the newly created file.
-	 */
+
+
 	@Override
-	protected void doFinish(String containerName, final String name, final boolean virtual, IProgressMonitor monitor) throws CoreException {
-		// create a sample file
-		monitor.beginTask("Creating " + name, 2);
-		ModelRoot root = DataManager.getModelRoot();
-		final CardElement resource = root.findElement(containerName);
-		if (!(resource instanceof CollectionsContainer)) {
-			throwCoreException("Container \"" + containerName + "\" does not exist.");
-		}
-		CollectionsContainer parent = (CollectionsContainer) resource;
+	protected CardCollection doCreateCardElement(CollectionsContainer parent, final String name, final boolean virtual) {
 		final CardCollection col = new CardCollection(name + ".xml", parent);
 		col.setVirtual(virtual);
-		setElement(col);
-		monitor.worked(1);
-		getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IViewPart view = page.showView(CardsNavigatorView.ID);
-					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-				} catch (PartInitException e) {
-					// ignore
-				}
-			}
-		});
-		monitor.worked(1);
+		return col;
 	}
 }

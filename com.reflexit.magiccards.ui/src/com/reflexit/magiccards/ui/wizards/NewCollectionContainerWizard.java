@@ -46,6 +46,7 @@ public class NewCollectionContainerWizard extends NewCardElementWizard implement
 		}
 		monitor.worked(1);
 		getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				CollectionsContainer parent = (CollectionsContainer) resource;
@@ -59,5 +60,10 @@ public class NewCollectionContainerWizard extends NewCardElementWizard implement
 			}
 		});
 		monitor.worked(1);
+	}
+
+	@Override
+	protected CardElement doCreateCardElement(CollectionsContainer parent, String name, boolean virtual) {
+		return new CollectionsContainer(name, parent);
 	}
 }

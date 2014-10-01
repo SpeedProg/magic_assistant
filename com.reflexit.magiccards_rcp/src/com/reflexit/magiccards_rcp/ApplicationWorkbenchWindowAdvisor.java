@@ -11,6 +11,7 @@ import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -95,7 +96,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						// update is available
 						PlatformUI.getWorkbench().getDisplay().asyncExec(
 								() -> {
-									if (MessageDialog.openQuestion(null, "Updates",
+									Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+									if (MessageDialog.openQuestion(shell, "Updates",
 											"New software update is available, would you like to install it?")) {
 										new UpdateHandler().execute(null);
 									}

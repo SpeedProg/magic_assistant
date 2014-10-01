@@ -283,7 +283,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testLANG() {
-		genericFieldText(FilterField.LANG, "Boo");
+		genericFieldText(FilterField.LANG, "French");
 	}
 
 	private static final String BLACK_COST = "{B}";

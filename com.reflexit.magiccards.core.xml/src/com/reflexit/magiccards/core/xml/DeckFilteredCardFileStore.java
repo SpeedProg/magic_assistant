@@ -11,6 +11,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
 	private ICardStore<IMagicCard> table;
 
+	@Override
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
 	}

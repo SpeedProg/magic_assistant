@@ -37,7 +37,7 @@ public class ParseGathererSearchChecklistTest extends TestCase {
 		parser.loadSet(wall + "&output=checklist", handler, monitor);
 		// assertEquals(4, handler.getRealCount());
 		Collection<MagicCard> stash = handler.getPrimary();
-		assertEquals(8, stash.size());
+		assertEquals(10, stash.size());
 		assertEquals("Bloodfire Colossus", stash.iterator().next().getName());
 	}
 

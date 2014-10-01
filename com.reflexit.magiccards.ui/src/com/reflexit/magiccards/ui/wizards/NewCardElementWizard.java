@@ -20,12 +20,22 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
  * @author Alena
@@ -67,6 +77,7 @@ public abstract class NewCardElementWizard extends Wizard {
 		final boolean virtual = page.isVirtual();
 		beforeFinish();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					doFinish(containerName, fileName, virtual, monitor);
@@ -83,10 +94,12 @@ public abstract class NewCardElementWizard extends Wizard {
 			return false;
 		} catch (MagicException e) {
 			MessageDialog.openError(getShell(), "Error", e.getMessage());
+			MagicUIActivator.log(e);
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
 			MessageDialog.openError(getShell(), "Error", realException.getMessage());
+			MagicUIActivator.log(e);
 			return false;
 		}
 		return true;
@@ -105,7 +118,39 @@ public abstract class NewCardElementWizard extends Wizard {
 	 * @param virtual
 	 * @param monitor
 	 */
-	protected abstract void doFinish(String containerName, String fileName, boolean virtual, IProgressMonitor monitor) throws CoreException;
+	/**
+	 * The worker method. It will find the container, create the file if missing or just replace its contents, and open the editor on the
+	 * newly created file.
+	 */
+	protected void doFinish(String containerName, final String name, final boolean virtual, IProgressMonitor monitor) throws CoreException {
+		// create a sample file
+		monitor.beginTask("Creating " + name, 2);
+		ModelRoot root = DataManager.getModelRoot();
+		final CardElement resource = root.findElement(containerName);
+		if (!(resource instanceof CollectionsContainer)) {
+			throwCoreException("Container \"" + containerName + "\" does not exist.");
+		}
+		DataManager.getLibraryCardStore();// forces to intialize the store
+		CollectionsContainer parent = (CollectionsContainer) resource;
+		final CardElement col = doCreateCardElement(parent, name, virtual);
+		setElement(col);
+		monitor.worked(1);
+		getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				try {
+					IViewPart view = page.showView(CardsNavigatorView.ID);
+					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
+				} catch (PartInitException e) {
+					// ignore
+				}
+			}
+		});
+		monitor.done();
+	}
+
+	protected abstract CardElement doCreateCardElement(CollectionsContainer parent, String name, boolean virtual);
 
 	protected void throwCoreException(String message) throws CoreException {
 		IStatus status = new Status(IStatus.ERROR, "com.reflexit.magiccards.ui", IStatus.OK, message, null);
