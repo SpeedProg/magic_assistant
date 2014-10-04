@@ -258,13 +258,13 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|C
 386609|Mountain||Basic Land - Mountain|||R|Khans of Tarkir|Land|0.0||3.5|Florian de Gesincourt|264||R|0|
 386623|Plains||Basic Land - Plains|||W|Khans of Tarkir|Land|0.0||3.5|Sam Burley|252||W|0|
 386683|Swamp||Basic Land - Swamp|||B|Khans of Tarkir|Land|0.0||3.5|Adam Paquette|260||B|0|
-386542|Forest||Basic Land - Forest|||G|Khans of Tarkir|Land|0.0||0.0||||G|0|
-386543|Forest||Basic Land - Forest|||G|Khans of Tarkir|Land|0.0||0.0||||G|0|
-386565|Island||Basic Land - Island|||U|Khans of Tarkir|Land|0.0||0.0||||U|0|
-386568|Island||Basic Land - Island|||U|Khans of Tarkir|Land|0.0||0.0||||U|0|
-386612|Mountain||Basic Land - Mountain|||R|Khans of Tarkir|Land|0.0||0.0||||R|0|
-386610|Mountain||Basic Land - Mountain|||R|Khans of Tarkir|Land|0.0||0.0||||R|0|
-386624|Plains||Basic Land - Plains|||W|Khans of Tarkir|Land|0.0||0.0||||W|0|
-386626|Plains||Basic Land - Plains|||W|Khans of Tarkir|Land|0.0||0.0||||W|0|
-386685|Swamp||Basic Land - Swamp|||B|Khans of Tarkir|Land|0.0||0.0||||B|0|
-386684|Swamp||Basic Land - Swamp|||B|Khans of Tarkir|Land|0.0||0.0||||B|0|
+386542|Forest||Basic Land - Forest|||G|Khans of Tarkir|Land|0.0||3.5|Sam Burley|266||G|0|
+386543|Forest||Basic Land - Forest|||G|Khans of Tarkir|Land|0.0||3.5|Adam Paquette|269||G|0|
+386565|Island||Basic Land - Island|||U|Khans of Tarkir|Land|0.0||3.5|Florian de Gesincourt|254||U|0|
+386568|Island||Basic Land - Island|||U|Khans of Tarkir|Land|0.0||3.5|Adam Paquette|257||U|0|
+386612|Mountain||Basic Land - Mountain|||R|Khans of Tarkir|Land|0.0||3.5|Noah Bradley|262||R|0|
+386610|Mountain||Basic Land - Mountain|||R|Khans of Tarkir|Land|0.0||3.5|Titus Lunter|265||R|0|
+386624|Plains||Basic Land - Plains|||W|Khans of Tarkir|Land|0.0||3.5|Noah Bradley|250||W|0|
+386626|Plains||Basic Land - Plains|||W|Khans of Tarkir|Land|0.0||3.5|Florian de Gesincourt|253||W|0|
+386685|Swamp||Basic Land - Swamp|||B|Khans of Tarkir|Land|0.0||3.5|Noah Bradley|258||B|0|
+386684|Swamp||Basic Land - Swamp|||B|Khans of Tarkir|Land|0.0||3.5|Adam Paquette|261||B|0|
