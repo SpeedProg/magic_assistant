@@ -381,10 +381,6 @@ public class DataManager {
 	public void update(MagicCard mc) {
 		getMagicDBStore().update(mc);
 	}
-	public void updateMem(MagicCard mc) {
-		IDbCardStore<IMagicCard> db = getMagicDBStore();
-		db.update(mc);
-	}
 
 	public void update(ICardStore cardStore, MagicCardPhysical mc) {
 		cardStore.update(mc);
