@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core;
 
 import static org.junit.Assert.assertNotEquals;
 
+import java.io.File;
 import java.util.Collections;
 
 import junit.framework.TestCase;
@@ -10,39 +11,59 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class DataManagerTest extends TestCase {
-	private final DataManager dm = new DataManager();
+	private final static DataManager dm = new DataManager();
 	static final int CARD_ID_MYSTICDECREE = 2952;
 	private MagicCardPhysical card;
-	private Location loc;
-	private MemoryCardStore<IMagicCard> store;
+	private CardCollection deck2;
+	private CardCollection deck1;
+	private ICardStore<IMagicCard> store2;
+	static int i = 0;
+
+	static void init() {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		File temp = new File(tmpDir, "magiccardsTest");
+		FileUtils.deleteTree(temp);
+		temp.deleteOnExit();
+		DataManager.getInstance().reset(temp);
+		ModelRoot root = DataManager.getModelRoot();
+		root.clear();
+		dm.waitForInit(10);
+		i = 1;
+	}
 
 	@Override
 	protected void setUp() throws Exception {
-		dm.waitForInit(10);
-		card = generatePhyCard(CARD_ID_MYSTICDECREE);
+		if (i == 0) {
+			init();
+		}
+		dm.getLibraryCardStore();
+		deck1 = createDeck();
+		deck2 = createDeck();
+		store2 = deck2.getStore();
+		card = phyCard(CARD_ID_MYSTICDECREE, deck1.getLocation());
+	}
+
+	public CardCollection createDeck() {
+		i++;
+		CardCollection deck2 = dm.getModelRoot().getDeckContainer().addDeck("bla" + i);
+		deck2.open();
+		ICardStore<IMagicCard> store2 = deck2.getStore();
+		assertNotNull(store2);
+		return deck2;
+	}
+
+	public MagicCardPhysical phyCard(int cardId, Location loc) {
+		IMagicCard base = DataManager.getMagicDBStore().getCard(cardId);
+		card = new MagicCardPhysical(base, loc);
 		card.setOwn(true);
-		loc = new Location("bla");
-		store = new MemoryCardStore<IMagicCard>();
-		store.setLocation(loc);
-	}
-
-	public MagicCard generateCard() {
-		return CardGenerator.generateCardWithValues();
-	}
-
-	public MagicCardPhysical generatePhyCard() {
-		return CardGenerator.generatePhysicalCardWithValues();
-	}
-
-	public MagicCardPhysical generatePhyCard(int cardId) {
-		IMagicCard card = DataManager.getMagicDBStore().getCard(cardId);
-		return CardGenerator.generatePhysicalCardWithValues(card);
+		card.setCount(1);
+		return card;
 	}
 
 	@Test
@@ -76,21 +97,30 @@ public class DataManagerTest extends TestCase {
 	@Test
 	public void testCopyCards() {
 		card.setOwn(false);
-		store.setVirtual(true);
-		dm.copyCards(Collections.singletonList(card), store, loc);
-		assertEquals(1, store.size());
-		MagicCardPhysical card1 = (MagicCardPhysical) store.get(0);
+		setVirtual(true);
+		dm.copyCards(Collections.singletonList(card), store2, store2.getLocation());
+		assertEquals(1, store2.size());
+		MagicCardPhysical card1 = getFirst();
 		assertNotEquals(card, card1);
 		assertTrue(card + " vs " + card1, card.matching(card1));
+	}
+
+	protected MagicCardPhysical getFirst() {
+		MagicCardPhysical card1 = (MagicCardPhysical) store2.iterator().next();
+		return card1;
+	}
+
+	protected void setVirtual(boolean vir) {
+		deck2.setVirtual(vir);
 	}
 
 	@Test
 	public void testCopyCardsOwn() {
 		card.setOwn(true);
-		store.setVirtual(true);
-		dm.copyCards(Collections.singletonList(card), store, loc);
-		assertEquals(1, store.size());
-		MagicCardPhysical card1 = (MagicCardPhysical) store.get(0);
+		setVirtual(true);
+		dm.copyCards(Collections.singletonList(card), store2, store2.getLocation());
+		assertEquals(1, store2.size());
+		MagicCardPhysical card1 = getFirst();
 		assertNotEquals(card, card1);
 		assertTrue(card + " vs " + card1, card.getBase().equals(card1.getBase()));
 		assertFalse(card.isOwn() == card1.isOwn());
@@ -98,9 +128,9 @@ public class DataManagerTest extends TestCase {
 
 	@Test
 	public void testCopyCardsVi() {
-		store.setVirtual(false);
+		setVirtual(false);
 		try {
-			dm.copyCards(Collections.singletonList(card), store, loc);
+			dm.copyCards(Collections.singletonList(card), store2, store2.getLocation());
 			fail("Should throw ex");
 		} catch (MagicException e) {
 			// good
@@ -121,10 +151,11 @@ public class DataManagerTest extends TestCase {
 	@Test
 	public void testMoveCardsVirVir() {
 		card.setOwn(false);
-		store.setVirtual(true);
-		dm.moveCards(Collections.singletonList(card), store, loc);
-		assertEquals(1, store.size());
-		MagicCardPhysical card1 = (MagicCardPhysical) store.get(0);
+		setVirtual(true);
+		dm.moveCards(Collections.singletonList(card), store2, store2.getLocation());
+		assertEquals(0, deck1.getStore().size());
+		assertEquals(1, store2.size());
+		MagicCardPhysical card1 = getFirst();
 		assertTrue(card + " vs " + card1, card.matching(card1));
 	}
 	// @Test
