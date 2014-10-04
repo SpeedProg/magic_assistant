@@ -6,6 +6,10 @@ changes in 1.4.1.0
 * Ownership column just show V or O letters
 * Bug: fixed exception when groupping (for legality column)
 * Bug: cost cc text is drawn to close to the right
+* Fixed land in Khans of Tarkir
+* Bug: restore to default does not work for "show only last set" filter option
+* Bug: fixed lagging on "Reset Filter"
+* Docs updates
 changes in 1.4.0.11
 * Fixed bug when doing software update on startup (it cannot show the dialog)
 * Updated database with Khans of Tarkir
