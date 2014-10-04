@@ -283,16 +283,21 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public ISelection getSelection() {
-		ISelection selection;
-		try {
-			selection = manager.getSelectionProvider().getSelection();
-		} catch (Exception e) {
-			selection = new StructuredSelection();
-		}
+		ISelection selection[] = new ISelection[] { new StructuredSelection() };
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					selection[0] = manager.getSelectionProvider().getSelection();
+				} catch (Exception e) {
+					MagicUIActivator.log(e);
+				}
+			}
+		});
 		// System.err.println("current selection 2 " +
 		// manager.getSelectionProvider() + " " +
 		// selection);
-		return selection;
+		return selection[0];
 	}
 
 	public Action getShowFilterAction() {
@@ -888,7 +893,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected void runShowFilter() {
 		if (ShowFilterHandler.execute()) {
 			reloadData();
-			quickFilter.refresh();
+			syncQuickFilter();
 		}
 		// CardFilter.open(getViewSite().getShell());
 		// Dialog cardFilterDialog = new CardFilterDialog(getShell(),
@@ -900,13 +905,24 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void runResetFilter() {
+		getSelectionProvider().setSelection(new StructuredSelection()); // remove selection
 		Collection<String> allIds = FilterField.getAllIds();
 		for (Iterator<String> iterator = allIds.iterator(); iterator.hasNext();) {
 			String id = iterator.next();
 			getFilterPreferenceStore().setToDefault(id);
 		}
 		reloadData();
-		quickFilter.refresh();
+		syncQuickFilter();
+	}
+
+	public void syncQuickFilter() {
+		boolean sup = quickFilter.isSuppressUpdates();
+		quickFilter.setSuppressUpdates(true);
+		try {
+			quickFilter.refresh();
+		} finally {
+			quickFilter.setSuppressUpdates(sup);
+		}
 	}
 
 	/**
@@ -969,6 +985,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			if (manager.getControl() == null || manager.getControl().isDisposed())
 				return;
 			ISelection selection = getSelection();
+			getSelectionProvider().setSelection(new StructuredSelection());
 			IFilteredCardStore filteredStore = getFilteredStore();
 			manager.updateViewer(filteredStore);
 			MagicLogger.trace("updateViewer", "setSelection");

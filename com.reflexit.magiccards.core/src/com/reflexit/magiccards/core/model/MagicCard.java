@@ -818,7 +818,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		CardGroup realCards = getRealCards();
 		if (realCards == null)
 			return false;
-		return (Boolean) realCards.get(MagicCardField.SIDEBOARD);
+		return realCards.getBoolean(MagicCardField.SIDEBOARD);
 	}
 
 	@Override

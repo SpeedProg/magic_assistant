@@ -47,6 +47,7 @@ public class QuickFilterControl extends Composite {
 	private UpdateThread uthread;
 	private int updateDelay = 700;
 	private ContentProposalAdapter proposalAdapter;
+	private boolean suppressUpdates = false;
 
 	class UpdateThread extends Thread {
 		public UpdateThread() {
@@ -384,6 +385,8 @@ public class QuickFilterControl extends Composite {
 	}
 
 	private void kickUpdate(@SuppressWarnings("unused") String text) {
+		if (suppressUpdates)
+			return;
 		synchronized (updateLock) {
 			lastMod = System.currentTimeMillis();
 			pendingUpdate = true;
@@ -445,5 +448,13 @@ public class QuickFilterControl extends Composite {
 			}
 		}
 		kickUpdate("set " + text);
+	}
+
+	public boolean isSuppressUpdates() {
+		return suppressUpdates;
+	}
+
+	public void setSuppressUpdates(boolean suppressUpdates) {
+		this.suppressUpdates = suppressUpdates;
 	}
 }
