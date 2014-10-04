@@ -16,11 +16,14 @@ import java.io.File;
 import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardHandler;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
@@ -361,45 +364,46 @@ public class DataManager {
 		if (cardStore == null)
 			throw new IllegalArgumentException("Cannot find store for "
 					+ cardStore);
-		cardStore.update(card);
+		Set<MagicCardField> fieldSet = Collections.singleton(MagicCardField.COUNT);
+		cardStore.update(card, fieldSet);
 		cardStore.setMergeOnAdd(false);
 		cardStore.add(card2);
 		cardStore.setMergeOnAdd(true);
-		updateList(cardStore.getCards(card.getCardId()));
+		updateList(cardStore.getCards(card.getCardId()), fieldSet);
 		return card2;
 	}
 
-	public void update(MagicCardPhysical mcp) {
+	public void update(MagicCardPhysical mcp, Set<ICardField> fieldSet) {
 		Location loc = mcp.getLocation();
 		ICardStore<IMagicCard> store = getCardStore(loc);
 		if (store == null)
 			throw new IllegalArgumentException("Cannot find store for " + store);
-		store.update(mcp);
+		store.update(mcp, fieldSet);
 		reconcile(mcp);
 	}
 
-	public void update(MagicCard mc) {
-		getMagicDBStore().update(mc);
+	public void update(MagicCard mc, Set<? extends ICardField> fieldSet) {
+		getMagicDBStore().update(mc, fieldSet);
 	}
 
-	public void update(ICardStore cardStore, MagicCardPhysical mc) {
-		cardStore.update(mc);
+	public void update(ICardStore cardStore, MagicCardPhysical mc, Set<ICardField> fieldSet) {
+		cardStore.update(mc, fieldSet);
 		reconcile(mc);
 	}
 
-	public void update(IMagicCard card) {
+	public void update(IMagicCard card, Set<? extends ICardField> fieldSet) {
 		if (card instanceof MagicCard) {
-			update((MagicCard) card);
+			update((MagicCard) card, fieldSet);
 		} else if (card instanceof MagicCardPhysical) {
-			update((MagicCardPhysical) card);
+			update((MagicCardPhysical) card, fieldSet);
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	public void updateList(Collection<IMagicCard> list) {
+	public void updateList(Collection<IMagicCard> list, Set<? extends ICardField> fieldSet) {
 		if (list == null || list.isEmpty()) {
-			getMagicDBStore().updateList(null);
+			getMagicDBStore().updateList(null, fieldSet);
 			reconcile();
 		} else {
 			IMagicCard card = list.iterator().next();
@@ -409,9 +413,9 @@ public class DataManager {
 				if (store == null)
 					throw new IllegalArgumentException("Cannot find store for "
 							+ loc);
-				store.updateList(list);
+				store.updateList(list, fieldSet);
 			} else {
-				getMagicDBStore().updateList(list);
+				getMagicDBStore().updateList(list, fieldSet);
 			}
 			reconcile(list);
 		}
@@ -512,7 +516,7 @@ public class DataManager {
 		CardGroup realcards = new CardGroup(MagicCardField.ID, mcp.getName());
 		realcards.addAll(library.getCards(id));
 		links.put(id, realcards);
-		update(mcp.getBase());
+		update(mcp.getBase(), Collections.singleton(MagicCardField.OWN_COUNT));
 	}
 
 	public CardGroup getRealCards(MagicCard mc) {

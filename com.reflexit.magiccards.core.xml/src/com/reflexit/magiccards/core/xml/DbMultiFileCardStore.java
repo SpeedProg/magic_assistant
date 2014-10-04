@@ -19,12 +19,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.TreeSet;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -188,11 +190,11 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	}
 
 	@Override
-	public void update(IMagicCard card) {
+	public void update(IMagicCard card, Set<? extends ICardField> mask) {
 		if (card instanceof MagicCardPhysical)
-			super.update(((MagicCardPhysical) card).getCard());
+			super.update(((MagicCardPhysical) card).getCard(), mask);
 		else
-			super.update(card);
+			super.update(card, mask);
 	}
 
 	@Override
@@ -212,14 +214,23 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	}
 
 	@Override
-	protected boolean doUpdate(IMagicCard card) {
+	protected boolean doUpdate(IMagicCard card, Set<? extends ICardField> mask) {
+		boolean needUpdate = true;
+		if (mask!=null && !mask.isEmpty()) {
+			needUpdate = false;
+			for (ICardField f : mask) {
+				if (!f.isTransient()) {
+					needUpdate=true; break;
+				}
+			}
+		}
 		AbstractCardStoreWithStorage storage = getStorage(getLocation(card));
 		if (storage == null) {
 			storage = newStorage(card);
 			addCardStore(storage);
 		}
-		storage.getStorage().autoSave();
-		return super.doUpdate(card);
+		if  (needUpdate) storage.getStorage().autoSave();
+		return super.doUpdate(card, mask);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -69,7 +71,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 						toRemove.add(new MagicCardPhysical(mc, mc.getLocation()));
 					} else {
 						mc.setCount(count - 1);
-						DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc);
+						DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc, Collections.singleton(MagicCardField.COUNT));
 					}
 				} else {
 					MagicCardPhysical magicCardCopy = new MagicCardPhysical(magicCard, null);

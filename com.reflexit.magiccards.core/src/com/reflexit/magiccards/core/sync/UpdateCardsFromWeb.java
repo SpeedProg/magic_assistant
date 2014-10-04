@@ -129,7 +129,7 @@ public class UpdateCardsFromWeb {
 				}
 				if (monitor.isCanceled())
 					return;
-				magicDb.update(magicCard);
+				magicDb.update(magicCard, fieldMaps);
 				if (loadImage) {
 					// load and cache image offline
 					CardCache.loadCardImageOffline(card, false);

@@ -11,7 +11,9 @@
 package com.reflexit.magiccards.ui.views.lib;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -36,6 +38,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -168,11 +171,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
+				Set<MagicCardField> of = Collections.singleton(MagicCardField.OWNERSHIP);
 				for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 					Object o = iterator.next();
 					if (o instanceof MagicCardPhysical) {
 						((MagicCardPhysical) o).setOwn(b);
-						DataManager.getInstance().update((MagicCardPhysical) o);
+						DataManager.getInstance().update((MagicCardPhysical) o,of);
 					}
 				}
 			}

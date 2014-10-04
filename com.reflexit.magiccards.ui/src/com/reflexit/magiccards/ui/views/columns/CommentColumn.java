@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -78,7 +81,8 @@ public class CommentColumn extends GenColumn {
 				if (element instanceof MagicCardPhysical) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					card.setComment((String) value);
-					DataManager.getInstance().update(card);
+					Set<MagicCardField> of = Collections.singleton(MagicCardField.COMMENT);
+					DataManager.getInstance().update(card,of);
 				}
 			}
 		};

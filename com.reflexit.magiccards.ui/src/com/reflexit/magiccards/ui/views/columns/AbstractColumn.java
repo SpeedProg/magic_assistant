@@ -110,7 +110,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		if (input instanceof IFilteredCardStore) {
 			// update
 			((IFilteredCardStore) input).getCardStore().reindex();
-			DataManager.getInstance().update(card);
+			DataManager.getInstance().update(card, null);
 		} else {
 			// update
 			viewer.refresh(true);

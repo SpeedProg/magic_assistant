@@ -154,7 +154,7 @@ public class GroupColumn extends GenColumn implements Listener {
 					ImportUtils.updateCardReference(card);
 					Object input = getViewer().getInput();
 					if (input instanceof IFilteredCardStore) {
-						DataManager.getInstance().update(card);
+						DataManager.getInstance().update(card, null);
 						// update
 					} else {
 						// update

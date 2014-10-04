@@ -335,7 +335,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 		toCard.setNonEmptyFromCard(fieldMapFilter, card);
 		if (magicDb != null) {
 			if (!addNew(toCard))
-				magicDb.update(toCard);
+				magicDb.update(toCard, fieldMapFilter);
 		}
 	}
 

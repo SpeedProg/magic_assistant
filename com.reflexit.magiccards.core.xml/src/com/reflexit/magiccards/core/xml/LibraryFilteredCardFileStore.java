@@ -86,8 +86,8 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 			}
 		} else if (event.getType() == CardEvent.UPDATE) { // XXX: UPDATE_LIST
 			// need to save xml
-			if (event.getData() instanceof MagicCardPhysical) {
-				MagicCardPhysical c = (MagicCardPhysical) event.getData();
+			if (event.getSource() instanceof MagicCardPhysical) {
+				MagicCardPhysical c = (MagicCardPhysical) event.getSource();
 				Location location = c.getLocation();
 				AbstractCardStoreWithStorage storage = table.getStorage(location);
 				if (storage != null) {

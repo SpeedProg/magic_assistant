@@ -12,12 +12,14 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.xml.CollectionSingleFileCardStore;
@@ -244,7 +246,7 @@ public class DeckStoreTest extends TestCase {
 		m2.setSet("Shawn");
 		a3.setMagicCard(m2);
 		store.reindex();
-		store.update(a3);
+		store.update(a3, Collections.singleton(MagicCardField.SET));
 		return m2;
 	}
 

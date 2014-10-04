@@ -5,6 +5,7 @@ import gnu.trove.map.TIntFloatMap;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.seller.CustomPriceProvider;
@@ -59,7 +61,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		MagicLogger.traceStart("reloadPrices");
 		final IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
 		try {
-			db.updateList(null);
+			db.updateList(null, Collections.singleton(MagicCardField.DBPRICE));
 		} finally {
 			MagicLogger.traceEnd("reloadPrices");
 		}

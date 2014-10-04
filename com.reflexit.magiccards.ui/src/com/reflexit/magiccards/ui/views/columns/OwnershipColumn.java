@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -114,7 +117,8 @@ public class OwnershipColumn extends GenColumn {
 					} else
 						card.setOwn(false);
 					// update
-					DataManager.getInstance().update(card);
+					Set<MagicCardField> of = Collections.singleton(MagicCardField.OWNERSHIP);
+					DataManager.getInstance().update(card, of);
 					// viewer.update(element, null);
 				}
 			}

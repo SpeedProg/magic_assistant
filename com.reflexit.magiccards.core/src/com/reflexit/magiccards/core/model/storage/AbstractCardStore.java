@@ -2,9 +2,11 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.EventManager;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
@@ -194,18 +196,18 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	}
 
 	@Override
-	public void update(final T card) {
+	public void update(final T card, Set<? extends ICardField> mask) {
 		initialize();
 		synchronized (this) {
-			if (!doUpdate(card))
+			if (!doUpdate(card, mask))
 				return;
 		}
 		if (isListenerAttached())
-			fireEvent(new CardEvent(card, CardEvent.UPDATE, card));
+			fireEvent(new CardEvent(card, CardEvent.UPDATE, mask));
 		return;
 	}
 
-	protected boolean doUpdate(T card) {
+	protected boolean doUpdate(T card, Set<? extends ICardField> mask) {
 		return true;
 	}
 
@@ -214,7 +216,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	}
 
 	@Override
-	public void updateList(Collection<T> cards) {
+	public void updateList(Collection<T> cards, Set<? extends ICardField> mask) {
 		initialize();
 		if (isListenerAttached())
 			fireEvent(new CardEvent(this, CardEvent.UPDATE_LIST, cards));

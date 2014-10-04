@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -185,7 +187,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		modified = setField(card, store, MagicCardField.IMAGE_URL) || modified;
 		modified = setField(card, store, MagicCardField.COLLNUM) || modified;
 		if (modified && update) {
-			DataManager.getInstance().update(card);
+			DataManager.getInstance().update(card,Collections.singleton(MagicCardField.COLLNUM));
 		}
 	}
 

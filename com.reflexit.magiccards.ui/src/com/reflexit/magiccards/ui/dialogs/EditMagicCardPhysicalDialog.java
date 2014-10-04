@@ -63,7 +63,7 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 					MagicCardPhysical card = iterator.next();
 					editCard(card, store, false);
 				}
-				DataManager.getInstance().updateList((Collection) cards);
+				DataManager.getInstance().updateList((Collection) cards, null);
 				// DataManager.reconcile();
 				return Status.OK_STATUS;
 			}
@@ -84,7 +84,7 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 			modified = true;
 		}
 		if (modified && update) {
-			DataManager.getInstance().update(card);
+			DataManager.getInstance().update(card, null);
 		}
 	}
 

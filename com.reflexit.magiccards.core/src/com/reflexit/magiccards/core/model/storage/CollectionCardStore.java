@@ -12,8 +12,10 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -36,12 +38,12 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	@Override
-	protected boolean doUpdate(IMagicCard card) {
+	protected boolean doUpdate(IMagicCard card, Set<? extends ICardField> mask) {
 		if (hashpart.getCard(card.getCardId()) == null) {
 			// hash if wrong now, fixing
 			reindex();
 		}
-		return super.doUpdate(card);
+		return super.doUpdate(card, mask);
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -85,7 +88,8 @@ public class PriceColumn extends SellerPriceColumn {
 					}
 					// save
 					card.setPrice(price);
-					DataManager.getInstance().update(card);
+					Set<MagicCardField> of = Collections.singleton(MagicCardField.PRICE);
+					DataManager.getInstance().update(card,of);
 				}
 			}
 		};

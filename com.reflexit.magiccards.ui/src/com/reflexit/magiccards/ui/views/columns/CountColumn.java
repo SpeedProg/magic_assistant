@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -103,7 +106,8 @@ public class CountColumn extends GenColumn {
 						card.setCount(count);
 						// viewer.update(element, null);
 						// save
-						DataManager.getInstance().update(card);
+						Set<MagicCardField> of = Collections.singleton(MagicCardField.COUNT);
+						DataManager.getInstance().update(card,of);
 						// IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
 						// ICardStore<IMagicCard> cardStore = target.getCardStore();
 						// cardStore.remove(card);
