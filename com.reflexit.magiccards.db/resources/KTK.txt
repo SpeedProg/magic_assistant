@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
-386540|Forest| |Basic Land - Forest| | |G|Khans of Tarkir|Land|0.0||3.5|Titus Lunter|267||G|0|
-386566|Island| |Basic Land - Island| | |U|Khans of Tarkir|Land|0.0||3.5|Florian de Gesincourt|255||U|0|
-386611|Mountain| |Basic Land - Mountain| | |R|Khans of Tarkir|Land|0.0||3.5|Noah Bradley|263||R|0|
-386625|Plains| |Basic Land - Plains| | |W|Khans of Tarkir|Land|0.0||3.5|Sam Burley|251||W|0|
-386686|Swamp| |Basic Land - Swamp| | |B|Khans of Tarkir|Land|0.0||3.5|Sam Burley|259||B|0|
+386540|Forest||Basic Land - Forest|||G|Khans of Tarkir|Land|0.0||3.5|Titus Lunter|267||G|0|
+386566|Island||Basic Land - Island|||U|Khans of Tarkir|Land|0.0||3.5|Florian de Gesincourt|255||U|0|
+386611|Mountain||Basic Land - Mountain|||R|Khans of Tarkir|Land|0.0||3.5|Noah Bradley|263||R|0|
+386625|Plains||Basic Land - Plains|||W|Khans of Tarkir|Land|0.0||3.5|Sam Burley|251||W|0|
+386686|Swamp||Basic Land - Swamp|||B|Khans of Tarkir|Land|0.0||3.5|Sam Burley|259||B|0|
 386463|Abomination of Gudul|{3}{B}{G}{U}|Creature - Horror|3|4|Flying<br>Whenever Abomination of Gudul deals combat damage to a player, you may draw a card. If you do, discard a card.<br>Morph {2}{B}{G}{U} <i>(You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.)</i>|Khans of Tarkir|Common|0.0||0.0|Erica Yang|159||Flying<br>Whenever Abomination of Gudul deals combat damage to a player, you may draw a card. If you do, discard a card.<br>Morph {2}{B}{G}{U} <i>(You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.)</i>|0|
 386464|Abzan Ascendancy|{W}{B}{G}|Enchantment|||When Abzan Ascendancy enters the battlefield, put a +1/+1 counter on each creature you control.<br>Whenever a nontoken creature you control dies, put a 1/1 white Spirit creature token with flying onto the battlefield.|Khans of Tarkir|Rare|0.0||0.0|Mark Winters|160||When Abzan Ascendancy enters the battlefield, put a +1/+1 counter on each creature you control.<br>Whenever a nontoken creature you control dies, put a 1/1 white Spirit creature token with flying onto the battlefield.|0|
 386465|Abzan Banner|{3}|Artifact|||{T}: Add {W}, {B}, or {G} to your mana pool.<br>{W}{B}{G}, {T}, Sacrifice Abzan Banner: Draw a card.|Khans of Tarkir|Common|0.0||0.0|Daniel Ljunggren|215||{T}: Add {W}, {B}, or {G} to your mana pool.<br>{W}{B}{G}, {T}, Sacrifice Abzan Banner: Draw a card.|0|

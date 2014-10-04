@@ -1,8 +1,8 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
-386333|Island| |Basic Land - Island| | |U|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Rob Alexander|75||U|0|
-386351|Mountain| |Basic Land - Mountain| | |R|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Karl Kopinski|36||R|0|
-386357|Plains| |Basic Land - Plains| | |W|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Adam Paquette|79||W|0|
-386372|Swamp| |Basic Land - Swamp| | |B|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Adam Paquette|39||B|0|
+386333|Island||Basic Land - Island|||U|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Rob Alexander|75||U|0|
+386351|Mountain||Basic Land - Mountain|||R|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Karl Kopinski|36||R|0|
+386357|Plains||Basic Land - Plains|||W|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Adam Paquette|79||W|0|
+386372|Swamp||Basic Land - Swamp|||B|Duel Decks: Speed vs. Cunning|Land|0.0||5.0|Adam Paquette|39||B|0|
 386299|Act of Treason|{2}{R}|Sorcery|||Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn.|Duel Decks: Speed vs. Cunning|Common|0.0||0.0|Eric Deschamps|26||Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn.|0|
 386300|Aquamorph Entity|{2}{U}{U}|Creature - Shapeshifter|*|*|As Aquamorph Entity enters the battlefield or is turned face up, it becomes your choice of 5/1 or 1/5.<br>Morph {2}{U} <i>(You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.)</i>|Duel Decks: Speed vs. Cunning|Common|0.0||0.0|Brian Despain|54||As Aquamorph Entity enters the battlefield or is turned face up, it becomes your choice of 5/1 or 1/5.<br>Morph {2}{U} <i>(You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.)</i>|0|
 386301|Arc Trail|{1}{R}|Sorcery|||Arc Trail deals 2 damage to target creature or player and 1 damage to another target creature or player.|Duel Decks: Speed vs. Cunning|Uncommon|0.0||0.0|Marc Simonetti|23||Arc Trail deals 2 damage to target creature or player and 1 damage to another target creature or player.|0|
