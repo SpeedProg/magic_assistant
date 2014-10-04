@@ -202,6 +202,7 @@ public class MagicDbView extends AbstractCardsView {
 				}
 				MagicCard mc = ((MagicCard) card).cloneCard();
 				mc.setProperty("LEGALITY", null);
+				mc.setDbPrice(0);
 				TextPrinter.print(mc, ps);
 			}
 		}
