@@ -122,8 +122,9 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		if (!getFile().delete()) {
-			MagicLogger.log(new IOException("Cannot delete " + getFile()));
+		File file = getFile();
+		if (file.exists() && !file.delete()) {
+			MagicLogger.log(new IOException("Cannot delete " + file));
 		}
 	}
 

@@ -18,8 +18,8 @@ public class MagicDeckTransferTest extends TestCase {
 	@Override
 	protected void setUp() {
 		trans = MagicDeckTransfer.getInstance();
+		DataManager.getInstance().reset();
 		root = DataManager.getModelRoot();
-		root.clear();
 		defaultLib = root.getDefaultLib();
 	}
 
@@ -35,7 +35,8 @@ public class MagicDeckTransferTest extends TestCase {
 		CollectionsContainer con = decks.addCollectionsContainer("cox");
 		CardElement element = this.root.findElement("My Cards/Decks/cox");
 		assertEquals(con, element);
-		byte[] byteArray = trans.toByteArray(new CardElement[] { defaultLib, con });
+		byte[] byteArray = trans.toByteArray(new CardElement[] { defaultLib,
+				con });
 		CardElement[] res = trans.fromByteArray(byteArray);
 		assertEquals(con.getLocation(), res[1].getLocation());
 	}

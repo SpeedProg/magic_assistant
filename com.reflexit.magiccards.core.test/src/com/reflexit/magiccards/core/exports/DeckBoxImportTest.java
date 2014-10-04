@@ -49,8 +49,8 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 
 	public void splitLines() {
 		resline = out.toString();
-		String x = resline.replaceAll("\\r", "");
-		lines = x.split("\n");
+		resline = resline.replaceAll("\\r", "");
+		lines = resline.split("\n");
 	}
 
 // Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number

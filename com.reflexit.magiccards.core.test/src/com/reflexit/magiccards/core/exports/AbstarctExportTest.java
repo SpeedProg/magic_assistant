@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -9,6 +8,8 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+
 
 public class AbstarctExportTest extends junit.framework.TestCase {
 	private static final DataManager DM = DataManager.getInstance();
@@ -61,12 +62,6 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 	}
 
 	static {
-		try {
-			DataManager.getRootDir();
-		} catch (NullPointerException e) {
-			File temp = new File("/tmp/magiccards");
-			DM.reset(temp);
-			DM.getModelRoot().clear();
-		}
+		TestFileUtils.resetDb();
 	}
 }

@@ -39,12 +39,13 @@ public class ModelRoot extends CardOrganizer {
 	 */
 	private ModelRoot(File dir) {
 		super("Root", null);
-		rootDir = dir;
-		initRoot();
+		resetRoot(dir);
 	}
 
-	private void initRoot() {
+	public void resetRoot(File dir) {
 		CardOrganizer root = this;
+		rootDir = dir;
+		removeChildren();
 		this.fMyCards = new CollectionsContainer("My Cards", root.getPath(), root);
 		this.fLib = new CollectionsContainer("Collections", fMyCards);
 		this.fDecks = new CollectionsContainer("Decks", fMyCards);

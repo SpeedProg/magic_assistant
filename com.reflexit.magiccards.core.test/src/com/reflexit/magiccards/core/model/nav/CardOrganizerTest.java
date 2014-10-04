@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 /**
  * @author Alena
@@ -34,11 +35,8 @@ public class CardOrganizerTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File temp = new File(tmpDir,"magiccards");
-		DataManager.getInstance().reset(temp);
-		this.root = DataManager.getModelRoot();
-		this.root.clear();
+		TestFileUtils.resetDb();
+		root = DataManager.getModelRoot();
 	}
 
 	/**

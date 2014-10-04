@@ -15,6 +15,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 public class DataManagerTest extends TestCase {
 	private final static DataManager dm = new DataManager();
@@ -26,13 +27,7 @@ public class DataManagerTest extends TestCase {
 	static int i = 0;
 
 	static void init() {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File temp = new File(tmpDir, "magiccardsTest");
-		FileUtils.deleteTree(temp);
-		temp.deleteOnExit();
-		DataManager.getInstance().reset(temp);
-		ModelRoot root = DataManager.getModelRoot();
-		root.clear();
+		TestFileUtils.resetDb();
 		dm.waitForInit(10);
 		i = 1;
 	}
@@ -51,7 +46,8 @@ public class DataManagerTest extends TestCase {
 
 	public CardCollection createDeck() {
 		i++;
-		CardCollection deck2 = dm.getModelRoot().getDeckContainer().addDeck("bla" + i);
+		CardCollection deck2 = dm.getModelRoot().getDeckContainer()
+				.addDeck("bla" + i);
 		deck2.open();
 		ICardStore<IMagicCard> store2 = deck2.getStore();
 		assertNotNull(store2);
@@ -98,7 +94,8 @@ public class DataManagerTest extends TestCase {
 	public void testCopyCards() {
 		card.setOwn(false);
 		setVirtual(true);
-		dm.copyCards(Collections.singletonList(card), store2, store2.getLocation());
+		dm.copyCards(Collections.singletonList(card), store2,
+				store2.getLocation());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
 		assertNotEquals(card, card1);
@@ -118,11 +115,13 @@ public class DataManagerTest extends TestCase {
 	public void testCopyCardsOwn() {
 		card.setOwn(true);
 		setVirtual(true);
-		dm.copyCards(Collections.singletonList(card), store2, store2.getLocation());
+		dm.copyCards(Collections.singletonList(card), store2,
+				store2.getLocation());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
 		assertNotEquals(card, card1);
-		assertTrue(card + " vs " + card1, card.getBase().equals(card1.getBase()));
+		assertTrue(card + " vs " + card1, card.getBase()
+				.equals(card1.getBase()));
 		assertFalse(card.isOwn() == card1.isOwn());
 	}
 
@@ -130,7 +129,8 @@ public class DataManagerTest extends TestCase {
 	public void testCopyCardsVi() {
 		setVirtual(false);
 		try {
-			dm.copyCards(Collections.singletonList(card), store2, store2.getLocation());
+			dm.copyCards(Collections.singletonList(card), store2,
+					store2.getLocation());
 			fail("Should throw ex");
 		} catch (MagicException e) {
 			// good
@@ -152,7 +152,8 @@ public class DataManagerTest extends TestCase {
 	public void testMoveCardsVirVir() {
 		card.setOwn(false);
 		setVirtual(true);
-		dm.moveCards(Collections.singletonList(card), store2, store2.getLocation());
+		dm.moveCards(Collections.singletonList(card), store2,
+				store2.getLocation());
 		assertEquals(0, deck1.getStore().size());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();

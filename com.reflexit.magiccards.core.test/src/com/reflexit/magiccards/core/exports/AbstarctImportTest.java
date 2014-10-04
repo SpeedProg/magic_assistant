@@ -32,18 +32,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	}
 
 	static {
-		try {
-			DataManager.getInstance().reset();
-		} catch (NullPointerException e) {
-			setLocalDbDir();
-		}
-	}
-
-	protected static void setLocalDbDir() {
-		File temp = new File("/tmp/magiccards");
-		FileUtils.deleteTree(temp);
-		DataManager.getInstance().reset(temp);
-		DataManager.getModelRoot().clear();
+		TestFileUtils.resetDb();
 	}
 
 	protected ArrayList<IMagicCard> extractStorageCards() {
@@ -64,8 +53,10 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		try {
 			if (resolve == false)
 				throw new IllegalArgumentException("Cannot test");
-			ImportUtils.performImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual, deck.getLocation(),
-					deck.getCardStore(), ICoreProgressMonitor.NONE);
+			ImportUtils.performImport(
+					new ByteArrayInputStream(line.getBytes()), worker, header,
+					virtual, deck.getLocation(), deck.getCardStore(),
+					ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -76,7 +67,9 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected void preview(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), worker, header, virtual, deck.getLocation(), resolve,
+			ImportUtils.performPreImport(
+					new ByteArrayInputStream(line.getBytes()), worker, header,
+					virtual, deck.getLocation(), resolve,
 					ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			fail(e.getMessage());
@@ -109,7 +102,8 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 
 	protected StringBuilder[] getContents(int sections) {
 		try {
-			return TestFileUtils.getContentsForTest("src", getClass(), getName(), sections);
+			return TestFileUtils.getContentsForTest("src", getClass(),
+					getName(), sections);
 		} catch (Exception e) {
 			fail(e.getMessage());
 			return null;

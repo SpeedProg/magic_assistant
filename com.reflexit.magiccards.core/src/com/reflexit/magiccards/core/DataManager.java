@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.io.File;
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -85,7 +86,8 @@ public class DataManager {
 
 	public static synchronized ModelRoot getModelRoot() {
 		if (getInstance().root == null) {
-			getInstance().root = ModelRoot.getInstance(new File(FileUtils.getWorkspaceFile(), "magiccards"));
+			getInstance().root = ModelRoot.getInstance(new File(FileUtils
+					.getWorkspaceFile(), "magiccards"));
 		}
 		return getInstance().root;
 	}
@@ -96,13 +98,15 @@ public class DataManager {
 
 	public void reset(File dir) {
 		// File locDir = new File(FileUtils.getWorkspaceFile(), "magiccards");
-		root = ModelRoot.getInstance(dir);
+		FileUtils.deleteTree(dir);
+		if (root == null)
+			root = ModelRoot.getInstance(dir);
+		else
+			getModelRoot().resetRoot(dir);
 	}
 
 	public void reset() {
-		FileUtils.deleteTree(getRootDir());
-		root = null;
-		getModelRoot();
+		reset(getRootDir());
 	}
 
 	public static File getRootDir() {
@@ -112,7 +116,8 @@ public class DataManager {
 		return rootDir;
 	}
 
-	boolean copyCards(Collection cards1, ICardStore<IMagicCard> store, Location to) {
+	boolean copyCards(Collection cards1, ICardStore<IMagicCard> store,
+			Location to) {
 		if (store == null)
 			throw new NullPointerException();
 		if (to == null)
@@ -124,8 +129,8 @@ public class DataManager {
 		boolean ownCopyAllowed = owncopy;
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			if (ownCopyAllowed == false && card instanceof MagicCardPhysical && virtual == false &&
-					((MagicCardPhysical) card).isOwn()) {
+			if (ownCopyAllowed == false && card instanceof MagicCardPhysical
+					&& virtual == false && ((MagicCardPhysical) card).isOwn()) {
 				throw new MagicException(
 						"Cannot copy own cards into non-virtual deck, use move instead - or override this protection in preferences");
 			}
@@ -144,20 +149,25 @@ public class DataManager {
 	}
 
 	/**
-	 * Using card representation create proper link to base or find actuall base card to replace fake one
+	 * Using card representation create proper link to base or find actuall base
+	 * card to replace fake one
 	 * 
 	 * @param input
 	 * @return
 	 */
 	public Collection<IMagicCard> resolve(Collection<IMagicCard> input) {
-		return resolve(input, new ArrayList<IMagicCard>(input.size()), getMagicDBStore());
+		return resolve(input, new ArrayList<IMagicCard>(input.size()),
+				getMagicDBStore());
 	}
 
-	private Collection<IMagicCard> resolve(Collection<IMagicCard> input, Collection<IMagicCard> output, ICardStore db) {
+	private Collection<IMagicCard> resolve(Collection<IMagicCard> input,
+			Collection<IMagicCard> output, ICardStore db) {
 		for (Iterator iterator = input.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof CardGroup) {
-				resolve((Collection<IMagicCard>) ((CardGroup) card).getChildrenList(), output, db);
+				resolve((Collection<IMagicCard>) ((CardGroup) card)
+						.getChildrenList(),
+						output, db);
 			} else {
 				// Need to repair references to MagicCard instances
 				IMagicCard cardRes = resolve(card, db);
@@ -190,7 +200,8 @@ public class DataManager {
 		return moveCards(cards1, sto, to);
 	}
 
-	boolean moveCards(Collection cards1, ICardStore<IMagicCard> store, Location to) {
+	boolean moveCards(Collection cards1, ICardStore<IMagicCard> store,
+			Location to) {
 		if (store == null)
 			throw new NullPointerException();
 		if (to == null)
@@ -205,7 +216,8 @@ public class DataManager {
 			if (card instanceof MagicCardPhysical) {
 				if (((IMagicCardPhysical) card).isOwn()) {
 					if (virtual)
-						throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
+						throw new MagicException(
+								"Cannot move own cards to virtual collection. Use copy instead.");
 					phi.setOwn(true);
 				} else {
 					phi.setOwn(false);
@@ -338,7 +350,8 @@ public class DataManager {
 		} else {
 			tradeLeft = trade - right;
 		}
-		MagicCardPhysical card2 = new MagicCardPhysical(card, card.getLocation());
+		MagicCardPhysical card2 = new MagicCardPhysical(card,
+				card.getLocation());
 		card.setCount(left);
 		card.setForTrade(tradeLeft);
 		card2.setCount(right);
@@ -346,7 +359,8 @@ public class DataManager {
 		Location loc = card.getLocation();
 		ICardStore<IMagicCard> cardStore = getCardStore(loc);
 		if (cardStore == null)
-			throw new IllegalArgumentException("Cannot find store for " + cardStore);
+			throw new IllegalArgumentException("Cannot find store for "
+					+ cardStore);
 		cardStore.update(card);
 		cardStore.setMergeOnAdd(false);
 		cardStore.add(card2);
@@ -366,6 +380,10 @@ public class DataManager {
 
 	public void update(MagicCard mc) {
 		getMagicDBStore().update(mc);
+	}
+	public void updateMem(MagicCard mc) {
+		IDbCardStore<IMagicCard> db = getMagicDBStore();
+		db.update(mc);
 	}
 
 	public void update(ICardStore cardStore, MagicCardPhysical mc) {
@@ -393,7 +411,8 @@ public class DataManager {
 				Location loc = ((ILocatable) card).getLocation();
 				ICardStore<IMagicCard> store = getCardStore(loc);
 				if (store == null)
-					throw new IllegalArgumentException("Cannot find store for " + loc);
+					throw new IllegalArgumentException("Cannot find store for "
+							+ loc);
 				store.updateList(list);
 			} else {
 				getMagicDBStore().updateList(list);
@@ -402,7 +421,8 @@ public class DataManager {
 		}
 	}
 
-	public Collection<MagicCardPhysical> materialize(Collection<IMagicCard> cards, ICardStore<IMagicCard> from) {
+	public Collection<MagicCardPhysical> materialize(
+			Collection<IMagicCard> cards, ICardStore<IMagicCard> from) {
 		ArrayList<MagicCardPhysical> res = new ArrayList<MagicCardPhysical>();
 		ArrayList<MagicCardPhysical> in = new ArrayList<MagicCardPhysical>();
 		CardGroup.expandGroups(in, cards, new Predicate<Object>() {
@@ -450,7 +470,8 @@ public class DataManager {
 	}
 
 	/**
-	 * Repairs back link between base cards and physical cards, expensive since it reads whole database
+	 * Repairs back link between base cards and physical cards, expensive since
+	 * it reads whole database
 	 */
 	public void reconcile() {
 		links.clear();
@@ -479,7 +500,8 @@ public class DataManager {
 		reconcile(mcp, getMagicDBStore(), DataManager.getLibraryCardStore());
 	}
 
-	private void reconcile(MagicCardPhysical mcp, ICardStore db, ICardStore library) {
+	private void reconcile(MagicCardPhysical mcp, ICardStore db,
+			ICardStore library) {
 		// System.err.println("reconcile " + mcp + " " +
 		// System.identityHashCode(mcp));
 		int id = mcp.getCardId();
@@ -496,7 +518,6 @@ public class DataManager {
 		links.put(id, realcards);
 		update(mcp.getBase());
 	}
-
 
 	public CardGroup getRealCards(MagicCard mc) {
 		int id = mc.getCardId();

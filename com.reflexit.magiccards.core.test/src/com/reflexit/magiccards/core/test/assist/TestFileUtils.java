@@ -35,12 +35,23 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
+
 /**
  * static utils
  */
 public class TestFileUtils {
 	public static boolean deleteOnExit = true;
 
+	public static void resetDb(){
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		File temp = new File(tmpDir, "magiccardsTest");
+		FileUtils.deleteTree(temp);
+		temp.deleteOnExit();
+		DataManager.getInstance().reset(temp);
+	}
+	
 	public static void readWriteStream(InputStream readStream, OutputStream writeStream) throws IOException {
 		byte[] buffer = new byte[1024 * 4];
 		int bytesRead = readStream.read(buffer);
