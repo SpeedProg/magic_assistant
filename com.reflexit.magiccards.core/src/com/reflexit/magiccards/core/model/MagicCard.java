@@ -700,7 +700,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 				String pair = split[i];
 				String[] split2 = pair.split("=");
 				if (split2.length == 1)
-					setProperty(split2[0], "");
+					setProperty(split2[0], "true");
 				else if (split2.length == 2)
 					setProperty(split2[0], split2[1]);
 			}
