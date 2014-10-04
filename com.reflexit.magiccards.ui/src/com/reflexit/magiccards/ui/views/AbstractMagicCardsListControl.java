@@ -911,6 +911,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			String id = iterator.next();
 			getFilterPreferenceStore().setToDefault(id);
 		}
+		getFilterPreferenceStore().setToDefault(EditionsFilterPreferencePage.LAST_SET);
 		reloadData();
 		syncQuickFilter();
 	}
