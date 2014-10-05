@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.nav;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;

@@ -13,7 +13,6 @@ package com.reflexit.magiccards.core;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.io.File;
-import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -395,7 +394,7 @@ public class DataManager {
 		if (card instanceof MagicCard) {
 			update((MagicCard) card, fieldSet);
 		} else if (card instanceof MagicCardPhysical) {
-			update((MagicCardPhysical) card, fieldSet);
+			update(card, fieldSet);
 		} else {
 			throw new IllegalArgumentException();
 		}

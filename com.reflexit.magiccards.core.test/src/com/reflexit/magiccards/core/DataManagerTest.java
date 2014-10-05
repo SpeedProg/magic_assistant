@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core;
 
 import static org.junit.Assert.assertNotEquals;
 
-import java.io.File;
 import java.util.Collections;
 
 import junit.framework.TestCase;
@@ -13,7 +12,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
-import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
