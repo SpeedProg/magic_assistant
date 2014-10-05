@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
@@ -41,18 +43,22 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;
 
+	@Override
 	public IFilteredCardStore getMagicDBFilteredStore() {
 		return MagicDBFilteredCardFileStore.getInstance();
 	}
 
+	@Override
 	public IDbCardStore getMagicDBStore() {
 		return (IDbCardStore) getMagicDBFilteredStore().getCardStore();
 	}
 
+	@Override
 	public IFilteredCardStore getMagicDBFilteredStoreWorkingCopy() {
 		return new BasicMagicDBFilteredCardFileStore((DbMultiFileCardStore) getMagicDBStore());
 	}
 
+	@Override
 	public IFilteredCardStore getLibraryFilteredStore() {
 		return LibraryFilteredCardFileStore.getInstance();
 	}
@@ -62,23 +68,28 @@ public class XmlCardHolder implements ICardHandler {
 		return LibraryFilteredCardFileStore.getInstance().getStore(to);
 	}
 
+	@Override
 	public IFilteredCardStore getLibraryFilteredStoreWorkingCopy() {
 		return new BasicLibraryFilteredCardFileStore((CollectionMultiFileCardStore) getLibraryCardStore());
 	}
 
+	@Override
 	public ICardStore getLibraryCardStore() {
 		return getLibraryFilteredStore().getCardStore();
 	}
 
+	@Override
 	public IFilteredCardStore getCardCollectionFilteredStore(String filename) {
 		return new DeckFilteredCardFileStore(filename);
 	}
 
+	@Override
 	public ICardStore loadFromXml(String filename) {
 		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), new Location(filename), true);
 		return store;
 	}
 
+	@Override
 	public void loadFromFlatResource(String set) throws IOException {
 		InputStream is = FileUtils.loadDbResource(set);
 		if (is != null) {
@@ -183,43 +194,51 @@ public class XmlCardHolder implements ICardHandler {
 		return file;
 	}
 
-	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException {
-		int rec;
-		try {
-			String lang = (String) options.get(UpdateCardsFromWeb.UPDATE_LANGUAGE);
-			if (lang != null && lang.length() == 0) {
-				lang = null;
+	@Override
+	public int downloadUpdates(final String set, final Properties options, ICoreProgressMonitor pm) throws MagicException,
+			InterruptedException {
+		int rec[] = new int[1];
+		DataManager.getMagicDBStore().updateOperation(new ICoreRunnableWithProgress() {
+			@Override
+			public void run(ICoreProgressMonitor pm) throws InvocationTargetException, InterruptedException {
+				try {
+					String lang = (String) options.get(UpdateCardsFromWeb.UPDATE_LANGUAGE);
+					if (lang != null && lang.length() == 0) {
+						lang = null;
+					}
+					pm.beginTask("Downloading", 110 + (lang == null ? 0 : 100));
+					pm.subTask("Initializing");
+					if (pm.isCanceled())
+						throw new InterruptedException();
+					pm.subTask("Updating set list...");
+					try {
+						new ParseGathererSets().load(new SubCoreProgressMonitor(pm, 10));
+						Editions.getInstance().save();
+					} catch (Exception e) {
+						MagicLogger.log(e); // move on if exception via set loading
+					}
+					ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
+					pm.subTask("Downloading cards...");
+					rec[0] = downloadAndStore(set, options, list, pm);
+					pm.subTask("Updating editions...");
+					Editions.getInstance().save();
+					pm.worked(10);
+					if (lang != null && lang.length() > 0) {
+						pm.subTask("Updating languages...");
+						Set<ICardField> fieldMaps = new HashSet<ICardField>();
+						fieldMaps.add(MagicCardField.LANG);
+						new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang, getMagicDBStore(),
+								new SubCoreProgressMonitor(pm, 100));
+					}
+		
+				} catch (MalformedURLException e) {
+					throw new MagicException(e);
+				} catch (IOException e) {
+					throw new MagicException(e);
+				}
 			}
-			pm.beginTask("Downloading", 110 + (lang == null ? 0 : 100));
-			pm.subTask("Initializing");
-			if (pm.isCanceled())
-				throw new InterruptedException();
-			pm.subTask("Updating set list...");
-			try {
-				new ParseGathererSets().load(new SubCoreProgressMonitor(pm, 10));
-				Editions.getInstance().save();
-			} catch (Exception e) {
-				MagicLogger.log(e); // move on if exception via set loading
-			}
-			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-			pm.subTask("Downloading cards...");
-			rec = downloadAndStore(set, options, list, pm);
-			pm.subTask("Updating editions...");
-			Editions.getInstance().save();
-			pm.worked(10);
-			if (lang != null && lang.length() > 0) {
-				pm.subTask("Updating languages...");
-				Set<ICardField> fieldMaps = new HashSet<ICardField>();
-				fieldMaps.add(MagicCardField.LANG);
-				new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang, getMagicDBStore(),
-						new SubCoreProgressMonitor(pm, 100));
-			}
-			return rec;
-		} catch (MalformedURLException e) {
-			throw new MagicException(e);
-		} catch (IOException e) {
-			throw new MagicException(e);
-		}
+		}, pm);
+		return rec[0];
 	}
 
 	public int downloadAndStore(String set, Properties options, ArrayList<IMagicCard> list, ICoreProgressMonitor pm)
@@ -272,10 +291,12 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
+	@Override
 	public IFilteredCardStore getActiveDeckHandler() {
 		return this.activeDeck;
 	}
 
+	@Override
 	public void setActiveDeckHandler(IFilteredCardStore store) {
 		this.activeDeck = store;
 	}
