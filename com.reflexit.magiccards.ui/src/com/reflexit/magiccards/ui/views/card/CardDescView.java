@@ -445,8 +445,8 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		new Job("Setting saved card id") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				DataManager.waitForInit(10);
-				IMagicCard card = DataManager.getMagicDBStore().getCard(id);
+				DataManager.getInstance().waitForInit(10);
+				IMagicCard card = (IMagicCard) DataManager.getCardHandler().getMagicDBStore().getCard(id);
 				if (card == null)
 					return Status.OK_STATUS;
 				final ISelection sel = new StructuredSelection(card);

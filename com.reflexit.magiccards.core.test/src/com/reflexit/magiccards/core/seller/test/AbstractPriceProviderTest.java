@@ -26,8 +26,12 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 	protected void setUp() {
 		store = new MemoryCardStore<IMagicCard>();
 		monitor = ICoreProgressMonitor.NONE;
-		DataManager.getMagicDBStore().initialize();
+		db().initialize();
 		setParser(getPriceProvider());
+	}
+
+	public IDbCardStore<IMagicCard> db() {
+		return DataManager.getInstance().getMagicDBStore();
 	}
 
 	protected void setParser(IPriceProvider priceProvider) {
@@ -47,7 +51,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 	}
 
 	protected MagicCard findCard(String name, String set) {
-		Collection<IMagicCard> candidates = DataManager.getMagicDBStore().getCandidates(name);
+		Collection<IMagicCard> candidates = db().getCandidates(name);
 		MagicCard card2 = null;
 		if (candidates != null) {
 			for (IMagicCard mc : candidates) {
@@ -99,7 +103,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 	}
 
 	public void xtestOneEach() {
-		IDbCardStore<IMagicCard> magicDBStore = DataManager.getMagicDBStore();
+		IDbCardStore<IMagicCard> magicDBStore = db();
 		HashMap<String, IMagicCard> onemap = new HashMap<String, IMagicCard>();
 		HashMap<String, IMagicCard> twomap = new HashMap<String, IMagicCard>();
 		for (IMagicCard mc : magicDBStore) {

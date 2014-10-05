@@ -310,7 +310,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		new Thread("Offline listeners") {
 			@Override
 			public void run() {
-				if (DataManager.waitForInit(60)) {
+				if (DataManager.getInstance().waitForInit(60)) {
 					DataManager.getCardHandler().getLibraryCardStore().addListener(AbstractMyCardsView.this);
 					DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
 				} else {

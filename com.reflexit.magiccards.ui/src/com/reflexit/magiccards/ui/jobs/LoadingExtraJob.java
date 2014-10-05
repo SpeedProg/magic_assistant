@@ -14,7 +14,8 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
@@ -71,11 +72,12 @@ public class LoadingExtraJob extends Job {
 				default:
 					return Status.CANCEL_STATUS;
 			}
-			ICardStore magicDb = DataManager.getMagicDBStore();
+			IDbCardStore<IMagicCard> db = DataManager.getInstance().getMagicDBStore();
 			UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
 			// parser.set
-			parser.updateStore(list, size, fields, lang, magicDb, new CoreMonitorAdapter(monitor));
+			parser.updateStore(list, size, fields, lang, db, new CoreMonitorAdapter(monitor));
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					view.reloadData();
 				}

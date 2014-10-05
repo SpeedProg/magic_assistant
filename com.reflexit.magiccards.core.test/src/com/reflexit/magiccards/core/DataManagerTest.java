@@ -64,7 +64,7 @@ public class DataManagerTest extends TestCase {
 	}
 
 	public MagicCardPhysical phyCard(int cardId, Location loc) {
-		IMagicCard base = DataManager.getMagicDBStore().getCard(cardId);
+		IMagicCard base = DataManager.getInstance().getMagicDBStore().getCard(cardId);
 		MagicCardPhysical card = new MagicCardPhysical(base, loc);
 		card.setOwn(true);
 		card.setCount(1);

@@ -531,7 +531,7 @@ public class DataManager {
 		owncopy = newValue;
 	}
 
-	public static boolean waitForInit(int sec) {
+	public boolean waitForInit(int sec) {
 		IDbCardStore<IMagicCard> magicDBStore = getMagicDBStore();
 		synchronized (magicDBStore) {
 			if (!magicDBStore.isInitialized())
@@ -547,7 +547,7 @@ public class DataManager {
 		}
 	}
 
-	public static void asyncInitDb() {
+	public void asyncInitDb() {
 		new Thread("Init DB") {
 			@Override
 			public void run() {

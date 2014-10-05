@@ -267,8 +267,8 @@ public class CountConfirmationDialog extends Dialog {
 		// final Shell shell = new Shell(display, SWT.CLOSE | SWT.RESIZE |
 		// SWT.DOUBLE_BUFFERED);
 		// shell.setSize(600, 600);
-		DataManager.waitForInit(5000);
-		Collection<IMagicCard> candidates = DataManager.getMagicDBStore().getCandidates("Forest");
+		DataManager.getInstance().waitForInit(5000);
+		Collection<IMagicCard> candidates = DataManager.getCardHandler().getMagicDBStore().getCandidates("Forest");
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		int i = 0;
 		for (IMagicCard base : candidates) {
