@@ -14,6 +14,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,6 +39,8 @@ import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.ICardCollection;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
 /**
  * Card Store for Magic DB
@@ -204,7 +207,6 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	@Override
 	public Collection<IMagicCard> getCards(int id) {
-		System.err.println("getCards called");
 		IMagicCard card = getCard(id);
 		if (card == null)
 			return Collections.EMPTY_LIST;
@@ -216,11 +218,12 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	@Override
 	protected boolean doUpdate(IMagicCard card, Set<? extends ICardField> mask) {
 		boolean needUpdate = true;
-		if (mask!=null && !mask.isEmpty()) {
+		if (mask != null && !mask.isEmpty()) {
 			needUpdate = false;
 			for (ICardField f : mask) {
 				if (!f.isTransient()) {
-					needUpdate=true; break;
+					needUpdate = true;
+					break;
 				}
 			}
 		}
@@ -229,7 +232,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			storage = newStorage(card);
 			addCardStore(storage);
 		}
-		if  (needUpdate) storage.getStorage().autoSave();
+		if (needUpdate)
+			storage.getStorage().autoSave();
 		return super.doUpdate(card, mask);
 	}
 
@@ -261,8 +265,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	public File getFile(final IMagicCard card) {
 		if (card instanceof MagicCard) {
 			return new File(XmlCardHolder.getDbFolder(), Location.fromCard(card).getBaseFileName());
-		} else
-			throw new MagicException("Unknown card type");
+		}
+		throw new MagicException("Unknown card type");
 	}
 
 	private boolean flatDbLoaded = false;
@@ -355,15 +359,31 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	@Override
 	public Collection<IMagicCard> getCandidates(String name) {
 		if (name == null)
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		Collection<IMagicCard> xcards = handler.getCandidates(name);
 		if (xcards == null)
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		return xcards;
 	}
 
 	@Override
 	public synchronized boolean isInitialized() {
 		return super.isInitialized();
+	}
+
+	@Override
+	public void updateOperation(ICoreRunnableWithProgress run, ICoreProgressMonitor monitor) throws InterruptedException {
+		boolean ac = isAutoCommit();
+		setAutoCommit(false);
+		try {
+			run.run(monitor);
+		} catch (InvocationTargetException e) {
+			Throwable cause = e.getCause();
+			if (cause instanceof RuntimeException)
+				throw (RuntimeException) cause;
+			throw new MagicException(cause);
+		} finally {
+			setAutoCommit(ac);
+		}
 	}
 }
