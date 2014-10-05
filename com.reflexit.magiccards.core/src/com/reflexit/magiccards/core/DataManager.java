@@ -74,7 +74,7 @@ public class DataManager {
 		return getInstance().handler;
 	}
 
-	public static ICardStore getLibraryCardStore() {
+	public ICardStore getLibraryCardStore() {
 		return getCardHandler().getLibraryCardStore();
 	}
 
@@ -229,29 +229,11 @@ public class DataManager {
 		}
 		boolean res = add(store, list);
 		if (res) {
-			boolean allthesame = true;
-			Location from = null;
-			for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-				IMagicCard card = (IMagicCard) iterator.next();
-				if (!(card instanceof MagicCardPhysical))
-					break;
-				Location from2 = ((MagicCardPhysical) card).getLocation();
-				if (from2 != null) {
-					if (from == null)
-						from = from2;
-					else if (!from.equals(from2)) {
-						allthesame = false;
-						break;
-					}
-				}
-			}
-			if (from != null && allthesame) {
+			Location from = getLocation(cards);
+			if (from != null) { // optimization
 				ICardStore<IMagicCard> sfrom2 = getCardStore(from);
 				if (sfrom2 != null) {
 					remove(sfrom2, cards);
-				}
-				if (from.equals(to)) {
-					reconcile(); // update all links too screwy to calculate
 				}
 			} else {
 				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
@@ -264,6 +246,25 @@ public class DataManager {
 			}
 		}
 		return res;
+	}
+
+	public Location getLocation(Collection<IMagicCard> cards) {
+		Location from = null;
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (!(card instanceof MagicCardPhysical))
+				break;
+			Location from2 = ((MagicCardPhysical) card).getLocation();
+			if (from2 != null) {
+				if (from == null)
+					from = from2;
+				else if (!from.equals(from2)) {
+					from = null;
+					break;
+				}
+			}
+		}
+		return from;
 	}
 
 	public List<IMagicCard> splitCards(Collection<IMagicCard> cards1, int count) {
@@ -344,6 +345,11 @@ public class DataManager {
 			return null;
 		if (right >= card.getCount())
 			return null;
+		Location loc = card.getLocation();
+		ICardStore<IMagicCard> cardStore = getCardStore(loc);
+		if (cardStore == null)
+			throw new IllegalArgumentException("Cannot find store for "
+					+ cardStore);
 		int left = card.getCount() - right;
 		int trade = card.getForTrade();
 		int tradeLeft = 0;
@@ -358,11 +364,7 @@ public class DataManager {
 		card.setForTrade(tradeLeft);
 		card2.setCount(right);
 		card2.setForTrade(trade - tradeLeft);
-		Location loc = card.getLocation();
-		ICardStore<IMagicCard> cardStore = getCardStore(loc);
-		if (cardStore == null)
-			throw new IllegalArgumentException("Cannot find store for "
-					+ cardStore);
+
 		Set<MagicCardField> fieldSet = Collections.singleton(MagicCardField.COUNT);
 		cardStore.update(card, fieldSet);
 		cardStore.setMergeOnAdd(false);
@@ -482,7 +484,7 @@ public class DataManager {
 
 	public void reconcile(Iterable cards) {
 		ICardStore db = getMagicDBStore();
-		ICardStore library = DataManager.getLibraryCardStore();
+		ICardStore library = getLibraryCardStore();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			Object card = iterator.next();
 			// Need to repair references to MagicCard instances
@@ -496,7 +498,7 @@ public class DataManager {
 	}
 
 	private void reconcile(MagicCardPhysical mcp) {
-		reconcile(mcp, getMagicDBStore(), DataManager.getLibraryCardStore());
+		reconcile(mcp, getMagicDBStore(), getLibraryCardStore());
 	}
 
 	private void reconcile(MagicCardPhysical mcp, ICardStore db,
