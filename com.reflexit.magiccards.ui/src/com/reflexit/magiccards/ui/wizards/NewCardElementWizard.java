@@ -130,7 +130,7 @@ public abstract class NewCardElementWizard extends Wizard {
 		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
 		}
-		DataManager.getLibraryCardStore();// forces to intialize the store
+		DataManager.getCardHandler().getLibraryCardStore();// forces to intialize the store
 		CollectionsContainer parent = (CollectionsContainer) resource;
 		final CardElement col = doCreateCardElement(parent, name, virtual);
 		setElement(col);

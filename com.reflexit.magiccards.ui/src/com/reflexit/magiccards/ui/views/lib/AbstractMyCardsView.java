@@ -311,7 +311,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			@Override
 			public void run() {
 				if (DataManager.waitForInit(60)) {
-					DataManager.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+					DataManager.getCardHandler().getLibraryCardStore().addListener(AbstractMyCardsView.this);
 					DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
 				} else {
 					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
@@ -327,7 +327,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 */
 	@Override
 	public void dispose() {
-		DataManager.getLibraryCardStore().removeListener(this);
+		DataManager.getCardHandler().getLibraryCardStore().removeListener(this);
 		DataManager.getModelRoot().removeListener(this);
 		super.dispose();
 	}

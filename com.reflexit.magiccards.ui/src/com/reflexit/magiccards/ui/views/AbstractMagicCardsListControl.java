@@ -408,7 +408,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void removeStoreChangeListener() {
-		DataManager.getLibraryCardStore().removeListener(this);
+		DataManager.getInstance().getLibraryCardStore().removeListener(this);
 	}
 
 	@Override
