@@ -90,7 +90,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	private void loadFromXml() {
-		File pricesDir = DataManager.getPricesDir();
+		File pricesDir = DataManager.getInstance().getPricesDir();
 		File[] listFiles = pricesDir.listFiles();
 		if (listFiles == null)
 			return;

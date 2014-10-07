@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.core;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -20,10 +21,11 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends Plugin {
 	// The plug-in ID
-	private static final String PLUGIN_ID = "com.reflexit.magiccards.core";
+	static final String PLUGIN_ID = "com.reflexit.magiccards.core";
 	// The shared instance
 	private static Activator plugin;
 	private boolean TRACE_CORE = false;
+	private boolean TRACE_PERF = false;
 
 	/**
 	 * The constructor
@@ -41,8 +43,10 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		TRACE_CORE = isDebugging();
-		MagicLogger.setTracing(TRACE_CORE);
-		MagicLogger.log("Magic Assistant started. Version " + plugin.getBundle().getVersion());
+		TRACE_PERF = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/profiling"));
+		MagicLogger.setTracing(TRACE_PERF);
+		MagicLogger.setDebugging(TRACE_CORE);
+		MagicLogger.info("Magic Assistant started. Version " + plugin.getBundle().getVersion());
 	}
 
 	/*
@@ -70,6 +74,13 @@ public class Activator extends Plugin {
 			System.err.println(message);
 		} else
 			getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message));
+	}
+
+	static void info(String message) {
+		if (getDefault() == null) {
+			System.out.println(message);
+		} else
+			getDefault().getLog().log(new Status(IStatus.INFO, PLUGIN_ID, message));
 	}
 
 	static void log(Throwable e) {

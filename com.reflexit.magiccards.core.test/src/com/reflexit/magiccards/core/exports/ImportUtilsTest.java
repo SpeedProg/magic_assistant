@@ -20,13 +20,15 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 public class ImportUtilsTest extends AbstarctImportTest {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		getDB().initialize();
+		TestFileUtils.resetDb();
+		DataManager.getInstance().waitForInit(10);
 	}
 
 	TableImportDelegate tableImport = new TableImportDelegate();
@@ -116,7 +118,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		preimport();
 		Map<String, String> setCandidates = ImportUtils.getSetCandidates(preimport);
 		assertTrue(setCandidates.containsKey("Bla"));
-		assertTrue(setCandidates.containsKey("Foot"));
+		assertTrue(setCandidates.toString(), setCandidates.containsKey("Foot"));
 		assertNull(setCandidates.get("Foot"));
 		assertEquals(2, setCandidates.size());
 		setCandidates.put("Foot", "Lorwyn");

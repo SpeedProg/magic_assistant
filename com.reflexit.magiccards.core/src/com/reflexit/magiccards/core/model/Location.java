@@ -113,6 +113,7 @@ public class Location implements Comparable<Location> {
 		return new Location(basename, parent);
 	}
 
+	@Override
 	public int compareTo(Location o) {
 		return location.compareTo(o.location);
 	}
@@ -141,7 +142,7 @@ public class Location implements Comparable<Location> {
 	}
 
 	public File getFile() {
-		return new File(DataManager.getRootDir(), location + XML_SUFFIX);
+		return new File(DataManager.getInstance().getRootDir(), location + XML_SUFFIX);
 	}
 
 	public String getBaseFileName() {

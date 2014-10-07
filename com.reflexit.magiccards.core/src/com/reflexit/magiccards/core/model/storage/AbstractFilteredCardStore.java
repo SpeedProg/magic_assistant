@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeSet;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -25,6 +26,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
 import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
@@ -341,6 +343,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return getCardStore().getLocation();
 	}
 
+	public ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
+	}
+
 	private Location findLocationFilter(Expr root) {
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
@@ -362,7 +368,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		throw new UnsupportedOperationException();
 	}
 
-	protected void reload() {
+	public void reload() {
 		initialized = false;
 		initialize();
 	}

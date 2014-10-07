@@ -32,8 +32,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.dialogs.CardNavigatorSelectionDialog;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 
@@ -216,5 +218,9 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		if (virtual != null)
 			return virtual.getSelection();
 		return false;
+	}
+
+	public ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
 	}
 }

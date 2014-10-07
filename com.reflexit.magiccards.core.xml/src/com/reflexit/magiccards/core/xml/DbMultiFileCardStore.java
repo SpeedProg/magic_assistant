@@ -327,7 +327,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			ArrayList<File> files = new ArrayList<File>();
 			File[] members;
 			try {
-				MagicDbContainter con = DataManager.getModelRoot().getMagicDBContainer();
+				MagicDbContainter con = DataManager.getInstance().getModelRoot().getMagicDBContainer();
 				members = con.getFile().listFiles();
 				for (File file : members) {
 					if (file.getName().endsWith(".xml"))

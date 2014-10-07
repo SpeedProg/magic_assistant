@@ -819,20 +819,25 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	@Override
 	protected void propertyChange(PropertyChangeEvent event) {
-		String property = event.getProperty();
-		PrefixedPreferenceStore ps = getLocalPreferenceStore();
-		Object newValue = event.getNewValue();
-		if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
-			this.manager.updateColumns((String) newValue);
-			refresh();
-		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
-			refresh();
-		} else if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
-			boolean qf = Boolean.valueOf(newValue.toString());
-			setQuickFilterVisible(qf);
-		} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
-			refresh();
-		}
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				String property = event.getProperty();
+				PrefixedPreferenceStore ps = getLocalPreferenceStore();
+				Object newValue = event.getNewValue();
+				if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
+					manager.updateColumns((String) newValue);
+					refresh();
+				} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
+					refresh();
+				} else if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
+					boolean qf = Boolean.valueOf(newValue.toString());
+					setQuickFilterVisible(qf);
+				} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
+					refresh();
+				}
+			}
+		});
 	}
 
 	@Override

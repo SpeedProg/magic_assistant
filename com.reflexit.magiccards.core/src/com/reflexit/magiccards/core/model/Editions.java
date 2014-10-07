@@ -367,7 +367,7 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public static File getStoreFile() {
-		return new File(DataManager.getTablesDir(), EDITIONS_FILE);
+		return new File(DataManager.getInstance().getTablesDir(), EDITIONS_FILE);
 	}
 
 	private void initializeEditions() throws IOException, FileNotFoundException {

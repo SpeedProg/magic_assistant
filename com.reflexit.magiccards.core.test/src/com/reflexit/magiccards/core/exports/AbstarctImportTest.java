@@ -22,14 +22,15 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected List<IMagicCard> result;
 	protected boolean virtual = true;
 	protected boolean resolve = true;
+	private boolean reset = false;
 
 	@Override
 	protected void setUp() throws Exception {
+		if (reset == false) {
+			TestFileUtils.resetDb();
+			reset = true;
+		}
 		this.deck = new MemCardHandler();
-	}
-
-	static {
-		TestFileUtils.resetDb();
 	}
 
 	protected ArrayList<IMagicCard> extractStorageCards() {

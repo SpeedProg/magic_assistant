@@ -34,6 +34,7 @@ public class NewDeckWizard extends NewCardElementWizard implements INewWizard {
 	@Override
 	protected CardElement doCreateCardElement(CollectionsContainer parent, String name, boolean virtual) {
 		CardCollection d = new CardCollection(name + ".xml", parent, true);
+		d.open();
 		d.setVirtual(virtual);
 		return d;
 	}

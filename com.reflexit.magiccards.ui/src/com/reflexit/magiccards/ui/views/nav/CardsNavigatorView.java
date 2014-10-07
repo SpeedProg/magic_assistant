@@ -60,6 +60,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.commands.DeleteHandler;
@@ -185,7 +186,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			try {
 				if (!(parent instanceof CardOrganizer))
 					throw new MagicException("Has to be folder to move to");
-				DataManager.getModelRoot().move(toDropArray, (CardOrganizer) parent);
+				getModelRoot().move(toDropArray, (CardOrganizer) parent);
 			} catch (MagicException e) {
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation: "
 						+ e.getMessage());
@@ -223,7 +224,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 				return false;
 			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 				CardElement el = (CardElement) iterator.next();
-				if (el.getParent() == DataManager.getModelRoot())
+				if (el.getParent() == getModelRoot())
 					return false;
 			}
 			return true;
@@ -305,7 +306,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 			@Override
 			public void run() {
-				DataManager.getModelRoot().refresh();
+				getModelRoot().refresh();
 				getViewer().refresh(true);
 			}
 		};
@@ -391,13 +392,16 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		DataManager.getModelRoot().addListener(this);
+		getModelRoot().addListener(this);
 		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(this);
 	}
 
+	public ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
+	}
 	@Override
 	public void dispose() {
-		DataManager.getModelRoot().removeListener(this);
+		getModelRoot().removeListener(this);
 		this.manager.dispose();
 		clipboard.dispose();
 		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(this);

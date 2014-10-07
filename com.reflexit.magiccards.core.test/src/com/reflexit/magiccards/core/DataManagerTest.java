@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 public class DataManagerTest extends TestCase {
-	private final static DataManager dm = new DataManager();
+	private static DataManager dm;
 	static final int CARD_ID_MYSTICDECREE = 2952;
 	private MagicCardPhysical card;
 	private CardCollection deck2;
@@ -29,7 +29,9 @@ public class DataManagerTest extends TestCase {
 
 	static void init() {
 		TestFileUtils.resetDb();
+		dm = DataManager.getInstance();
 		dm.waitForInit(10);
+		dm.getLibraryCardStore();
 		i = 1;
 	}
 
@@ -38,7 +40,6 @@ public class DataManagerTest extends TestCase {
 		if (i == 0) {
 			init();
 		}
-		dm.getLibraryCardStore();
 		deck1 = createDeck();
 		deck2 = createDeck();
 		store2 = deck2.getStore();
@@ -278,7 +279,6 @@ public class DataManagerTest extends TestCase {
 		assertEquals(0, deck1.getStore().size());
 		assertEquals(x - 1, base.getOwnCount());
 	}
-
 	// @Test
 	// public void testUpdateMagicCardPhysical() {
 	// fail("Not yet implemented");

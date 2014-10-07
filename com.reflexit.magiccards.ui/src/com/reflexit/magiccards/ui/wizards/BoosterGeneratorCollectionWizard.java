@@ -85,6 +85,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
 		 * .widgets.Composite)
 		 */
+		@Override
 		public void createControl(Composite parent) {
 			Composite a = new Composite(parent, SWT.NONE);
 			a.setLayout(new GridLayout(2, false));
@@ -126,6 +127,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			sp2.setMaximum(50);
 			sp2.setSelection(current);
 			sp2.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					pageChanged();
 				}
@@ -138,7 +140,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			locPage.noDefaultAndApplyButton();
 			locPage.setPreferenceStore(store);
 			locPage.createControl(parent);
-			locPage.setChecked(DataManager.getModelRoot().getCollectionsContainer(), true);
+			locPage.setChecked(DataManager.getInstance().getModelRoot().getCollectionsContainer(), true);
 			listViewer = (CheckboxTreeViewer) locPage.getViewer();
 			GridData data = new GridData(GridData.FILL_BOTH);
 			listViewer.getControl().setLayoutData(data);
@@ -146,6 +148,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			return locPage.getControl();
 		}
 
+		@Override
 		public void checkStateChanged(final CheckStateChangedEvent event) {
 			pageChanged();
 		}
@@ -224,7 +227,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		final CardElement resource = root.findElement(new LocationPath(containerName));
 		if (!(resource instanceof CardOrganizer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");

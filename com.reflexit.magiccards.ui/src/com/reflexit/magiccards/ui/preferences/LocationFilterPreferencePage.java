@@ -49,6 +49,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		this.mode = mode;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// nothing
 	}
@@ -110,7 +111,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	}
 
 	private void initializeTree() {
-		ModelRoot mroot = DataManager.getModelRoot();
+		ModelRoot mroot = DataManager.getInstance().getModelRoot();
 		top = mroot;
 		this.treeViewer.setInput(mroot);
 		treeViewer.expandToLevel(3);

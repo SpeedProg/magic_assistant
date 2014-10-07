@@ -82,7 +82,7 @@ public class PricesXmlStreamWriter {
 
 	public static File getPricesFile(IPriceProviderStore provider) {
 		Location loc = Location.createLocationFromSet(provider.getName());
-		File pricesDir = DataManager.getPricesDir();
+		File pricesDir = DataManager.getInstance().getPricesDir();
 		File file = new File(pricesDir, loc.getBaseFileName());
 		return file;
 	}

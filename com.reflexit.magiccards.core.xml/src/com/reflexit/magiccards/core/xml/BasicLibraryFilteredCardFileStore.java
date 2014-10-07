@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 public class BasicLibraryFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
 	protected CollectionMultiFileCardStore table;
 
+	@Override
 	public ICardStore<IMagicCard> getCardStore() {
 		initialize();
 		return this.table;
@@ -28,7 +29,7 @@ public class BasicLibraryFilteredCardFileStore extends AbstractFilteredCardStore
 	}
 
 	@Override
-	protected void reload() {
+	public void reload() {
 		this.table.setInitialized(false);
 		super.reload();
 		update();

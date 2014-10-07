@@ -264,7 +264,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 
 	public void setDeckSelection() {
 		try {
-			CardElement element = DataManager.getModelRoot().findElement(collection.getStringValue());
+			CardElement element = DataManager.getInstance().getModelRoot().findElement(collection.getStringValue());
 			if (element != null)
 				resourceSelection = new StructuredSelection(element);
 			else

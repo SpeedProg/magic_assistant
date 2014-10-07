@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.reflexit.magicassistant.swtbot.utils.DndUtil;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -31,6 +32,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 	}
 
 	public void createDeck(String deckName) {
+		DataManager.getInstance().getLibraryCardStore();
 		// create a deck
 		bot.menu("File").menu("New...").menu("Deck").click();
 		bot.shell("").activate();
@@ -67,7 +69,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 
 	public SWTBotTableItem selectFirstRowInDb() {
 		dbView.setFocus();
-		bot.sleep(1000);
+		bot.sleep(200);
 		SWTBot dbbot = dbView.bot();
 		SWTBotTableItem row = dbbot.table().getTableItem(0);
 		row.select();
@@ -92,8 +94,10 @@ public class CreateDeck extends AbstractSwtBotTest {
 		// drag a drop card in the new deck
 		SWTBotTableItem row = selectFirstRowInDb();
 		String name = row.getText(0);
+		row.setFocus();
 		// add card using cut & paste
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'c'));
+		bot.sleep(1000);
 		deckView.setFocus();
 		bot.sleep(1000);
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'v'));

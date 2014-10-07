@@ -25,7 +25,7 @@ public class LocationResolver {
 	public File getFile(Location location) {
 		if (locmap.containsKey(location))
 			return locmap.get(location);
-		return new File(DataManager.getRootDir(), location.getPath() + ".xml");
+		return new File(DataManager.getInstance().getRootDir(), location.getPath() + ".xml");
 	}
 
 	public void setFile(Location location, File file) {

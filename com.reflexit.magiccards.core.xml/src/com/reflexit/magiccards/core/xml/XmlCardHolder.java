@@ -101,7 +101,7 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	public static File getDbFolder() {
-		File dir = DataManager.getModelRoot().getMagicDBContainer().getFile();
+		File dir = DataManager.getInstance().getModelRoot().getMagicDBContainer().getFile();
 		return dir;
 	}
 

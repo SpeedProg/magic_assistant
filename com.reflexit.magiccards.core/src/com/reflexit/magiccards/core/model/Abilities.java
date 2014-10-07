@@ -56,6 +56,7 @@ public class Abilities {
 			this.keyword = keyword;
 		}
 
+		@Override
 		public boolean match(String text) {
 			if (text.indexOf('(') >= 0) {
 				text = text.replaceAll("\\([^)]*\\)", " ");
@@ -63,10 +64,12 @@ public class Abilities {
 			return compiledPattern.matcher(text).find();
 		}
 
+		@Override
 		public String getDisplayName() {
 			return displayName;
 		}
 
+		@Override
 		public boolean isKeyword() {
 			return keyword;
 		}
@@ -296,6 +299,7 @@ public class Abilities {
 	}
 
 	static class TextSeach implements ISearchableProperty {
+		@Override
 		public String getIdPrefix() {
 			return getFilterField().toString();
 		}
@@ -305,6 +309,7 @@ public class Abilities {
 			return FilterField.TEXT_LINE;
 		}
 
+		@Override
 		public Collection getIds() {
 			Collection list = new ArrayList<String>();
 			list.add(FilterField.TEXT_LINE);
@@ -313,11 +318,13 @@ public class Abilities {
 			return list;
 		}
 
+		@Override
 		public String getNameById(String id) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public Collection getNames() {
 			// TODO Auto-generated method stub
 			return null;
@@ -325,6 +332,7 @@ public class Abilities {
 	}
 
 	static class TextSeachNot implements ISearchableProperty {
+		@Override
 		public String getIdPrefix() {
 			return getFilterField().toString();
 		}
@@ -334,6 +342,7 @@ public class Abilities {
 			return FilterField.TEXT_LINE;
 		}
 
+		@Override
 		public Collection getIds() {
 			Collection list = new ArrayList<String>();
 			list.add(FilterField.TEXT_NOT_1);
@@ -342,11 +351,13 @@ public class Abilities {
 			return list;
 		}
 
+		@Override
 		public String getNameById(String id) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public Collection getNames() {
 			// TODO Auto-generated method stub
 			return null;
@@ -373,8 +384,13 @@ public class Abilities {
 	}
 
 	public static synchronized void save() throws FileNotFoundException {
-		File file = new File(DataManager.getTablesDir(), ABILITIES_FILE);
+		File file = getAbilitiesFile();
 		save(file);
+	}
+
+	public static File getAbilitiesFile() {
+		File file = new File(DataManager.getInstance().getTablesDir(), ABILITIES_FILE);
+		return file;
 	}
 
 	public synchronized static void save(File file) throws FileNotFoundException {
@@ -389,7 +405,7 @@ public class Abilities {
 	}
 
 	private static synchronized void load() throws IOException {
-		File file = new File(DataManager.getTablesDir(), ABILITIES_FILE);
+		File file = getAbilitiesFile();
 		if (!file.exists()) {
 			initialize();
 			save();

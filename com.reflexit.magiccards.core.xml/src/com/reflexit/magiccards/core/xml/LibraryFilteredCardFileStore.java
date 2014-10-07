@@ -24,10 +24,10 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 	@Override
 	protected synchronized void doInitialize() throws MagicException {
 		MagicLogger.traceStart("lfcs init");
-		ModelRoot container = DataManager.getModelRoot();
+		ModelRoot container = getModelRoot();
 		Collection<CardElement> colls = container.getAllElements();
 		// init super
-		CardCollection def = DataManager.getModelRoot().getDefaultLib();
+		CardCollection def = getModelRoot().getDefaultLib();
 		for (CardElement elem : colls) {
 			this.table.addFile(elem.getFile(), elem.getLocation(), false);
 		}

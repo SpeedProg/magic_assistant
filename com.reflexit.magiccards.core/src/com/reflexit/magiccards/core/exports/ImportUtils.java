@@ -85,7 +85,7 @@ public class ImportUtils {
 		for (Iterator iterator = importedLocations.iterator(); iterator.hasNext();) {
 			Location location = (Location) iterator.next();
 			if (location.isSideboard()) {
-				ModelRoot root = DataManager.getModelRoot();
+				ModelRoot root = DataManager.getInstance().getModelRoot();
 				String containerName = location.getParent().getPath();
 				if (containerName.startsWith(File.separator))
 					containerName = containerName.substring(File.separator.length());

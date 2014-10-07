@@ -90,8 +90,13 @@ public class CurrencyConvertor {
 	}
 
 	public static synchronized void save() throws FileNotFoundException {
-		File file = new File(DataManager.getTablesDir(), FILE);
+		File file = getCurrencyFile();
 		save(file);
+	}
+
+	public static File getCurrencyFile() {
+		File file = new File(DataManager.getInstance().getTablesDir(), FILE);
+		return file;
 	}
 
 	public synchronized static void save(File file) throws FileNotFoundException {
@@ -108,7 +113,7 @@ public class CurrencyConvertor {
 	}
 
 	private static synchronized void load() throws IOException {
-		File file = new File(DataManager.getTablesDir(), FILE);
+		File file = getCurrencyFile();
 		if (!file.exists()) {
 			initialize();
 			save();

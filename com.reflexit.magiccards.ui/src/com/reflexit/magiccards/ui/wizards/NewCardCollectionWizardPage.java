@@ -9,7 +9,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
@@ -57,7 +56,7 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 		super.dialogChanged();
 		if (getErrorMessage() != null)
 			return;
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		String containerName = getContainerName();
 		CardElement parent = root.findElement(containerName);
 		if (!(parent instanceof CollectionsContainer)) {
@@ -88,6 +87,6 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 
 	@Override
 	protected CardOrganizer getRootContainer() {
-		return DataManager.getModelRoot().getCollectionsContainer();
+		return getModelRoot().getCollectionsContainer();
 	}
 }

@@ -34,7 +34,7 @@ public class CardOrganizerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		TestFileUtils.resetDb();
-		root = DataManager.getModelRoot();
+		root = DataManager.getInstance().getModelRoot();
 	}
 
 	/**

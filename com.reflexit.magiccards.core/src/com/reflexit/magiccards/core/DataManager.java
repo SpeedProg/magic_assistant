@@ -32,6 +32,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.Predicate;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
@@ -46,6 +47,7 @@ public class DataManager {
 	private boolean owncopy;
 
 	protected DataManager() {
+		MagicLogger.debug("Data Manager instance " + this.hashCode());
 		instance = this;
 		try {
 			// String variant1 =
@@ -64,7 +66,7 @@ public class DataManager {
 		}
 	}
 
-	public static DataManager getInstance() {
+	public static synchronized DataManager getInstance() {
 		if (instance == null)
 			instance = new DataManager();
 		return instance;
@@ -86,32 +88,33 @@ public class DataManager {
 		return getCardHandler().getDBPriceStore();
 	}
 
-	public static synchronized ModelRoot getModelRoot() {
-		if (getInstance().root == null) {
-			getInstance().root = ModelRoot.getInstance(new File(FileUtils
-					.getWorkspaceFile(), "magiccards"));
+	public synchronized ModelRoot getModelRoot() {
+		if (root == null) {
+			root = ModelRoot.getInstance(new File(FileUtils.getWorkspaceFile(), "magiccards"));
 		}
-		return getInstance().root;
+		return root;
 	}
 
 	public ICardStore<IMagicCard> getCardStore(Location to) {
 		return getCardHandler().getCardStore(to);
 	}
 
-	public void reset(File dir) {
+	public synchronized void reset(File dir) {
 		// File locDir = new File(FileUtils.getWorkspaceFile(), "magiccards");
 		FileUtils.deleteTree(dir);
 		if (root == null)
 			root = ModelRoot.getInstance(dir);
-		else
-			getModelRoot().resetRoot(dir);
+		else {
+			root.resetRoot(dir);
+			((AbstractFilteredCardStore) (getCardHandler().getLibraryFilteredStore())).reload();
+		}
 	}
 
 	public void reset() {
 		reset(getRootDir());
 	}
 
-	public static File getRootDir() {
+	public File getRootDir() {
 		File rootDir = getModelRoot().getRootDir();
 		if (rootDir == null)
 			throw new NullPointerException();
@@ -151,8 +154,7 @@ public class DataManager {
 	}
 
 	/**
-	 * Using card representation create proper link to base or find actuall base
-	 * card to replace fake one
+	 * Using card representation create proper link to base or find actuall base card to replace fake one
 	 * 
 	 * @param input
 	 * @return
@@ -364,7 +366,6 @@ public class DataManager {
 		card.setForTrade(tradeLeft);
 		card2.setCount(right);
 		card2.setForTrade(trade - tradeLeft);
-
 		Set<MagicCardField> fieldSet = Collections.singleton(MagicCardField.COUNT);
 		cardStore.update(card, fieldSet);
 		cardStore.setMergeOnAdd(false);
@@ -471,8 +472,7 @@ public class DataManager {
 	}
 
 	/**
-	 * Repairs back link between base cards and physical cards, expensive since
-	 * it reads whole database
+	 * Repairs back link between base cards and physical cards, expensive since it reads whole database
 	 */
 	public void reconcile() {
 		links.clear();
@@ -558,7 +558,7 @@ public class DataManager {
 		}.start();
 	}
 
-	public static File getPricesDir() {
+	public File getPricesDir() {
 		File dir = getModelRoot().getMagicDBContainer().getFile();
 		File pricesDir = new File(dir, "prices");
 		if (!pricesDir.exists())
@@ -566,7 +566,7 @@ public class DataManager {
 		return pricesDir;
 	}
 
-	public static File getTablesDir() {
+	public File getTablesDir() {
 		File dir = getModelRoot().getMagicDBContainer().getFile();
 		File pricesDir = new File(dir, "tables");
 		if (!pricesDir.exists())

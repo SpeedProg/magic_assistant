@@ -125,7 +125,7 @@ public abstract class NewCardElementWizard extends Wizard {
 	protected void doFinish(String containerName, final String name, final boolean virtual, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 2);
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		final CardElement resource = root.findElement(containerName);
 		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
@@ -164,5 +164,9 @@ public abstract class NewCardElementWizard extends Wizard {
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
+	}
+
+	public ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
 	}
 }

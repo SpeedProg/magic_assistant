@@ -117,7 +117,7 @@ public class DeckView extends AbstractMyCardsView {
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		String secondaryId = getViewSite().getSecondaryId();
-		this.deck = DataManager.getModelRoot().findCardCollectionById(secondaryId);
+		this.deck = DataManager.getInstance().getModelRoot().findCardCollectionById(secondaryId);
 		if (getFilteredStore() != null && this.deck.getStore() != getFilteredStore().getCardStore()) {
 			throw new IllegalArgumentException("Bad store");
 		}

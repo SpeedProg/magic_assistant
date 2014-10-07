@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.wizards;
 
 import org.eclipse.jface.viewers.ISelection;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 
 public class NewDeckWizardPage extends NewCardCollectionWizardPage {
@@ -17,6 +16,6 @@ public class NewDeckWizardPage extends NewCardCollectionWizardPage {
 
 	@Override
 	protected CardOrganizer getRootContainer() {
-		return DataManager.getModelRoot().getDeckContainer();
+		return getModelRoot().getDeckContainer();
 	}
 }

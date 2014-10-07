@@ -66,12 +66,14 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
 		 * .widgets.Composite)
 		 */
+		@Override
 		public void createControl(Composite parent) {
 			Composite a = new Composite(parent, SWT.NONE);
 			a.setLayout(new GridLayout(2, false));
 			createAmountControl(a);
 			this.edi = new EditionsComposite(a, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION, true);
 			this.edi.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					pageChanged();
 				}
@@ -91,6 +93,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			this.sp.setMaximum(50);
 			this.sp.setSelection(3);
 			this.sp.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					pageChanged();
 				}
@@ -157,7 +160,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		final CardElement resource = root.findElement(new LocationPath(containerName));
 		if (!(resource instanceof CardOrganizer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");
@@ -173,6 +176,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 			// ignore
 		}
 		getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {

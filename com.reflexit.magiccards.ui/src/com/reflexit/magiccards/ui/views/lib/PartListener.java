@@ -22,6 +22,7 @@ public class PartListener implements IPartListener2 {
 		// singleton
 	}
 
+	@Override
 	public void partActivated(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof DeckView) {
@@ -35,7 +36,7 @@ public class PartListener implements IPartListener2 {
 		if (store != null) {
 			DataManager.getCardHandler().setActiveDeckHandler(store);
 			String id = store.getLocation().getBaseFileName();
-			CardCollection coll = DataManager.getModelRoot().findCardCollectionById(id);
+			CardCollection coll = DataManager.getInstance().getModelRoot().findCardCollectionById(id);
 			if (coll != null)
 				coll.update();
 			else
@@ -43,26 +44,32 @@ public class PartListener implements IPartListener2 {
 		}
 	}
 
+	@Override
 	public void partBroughtToTop(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void partClosed(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void partDeactivated(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void partHidden(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void partInputChanged(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void partOpened(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof DeckView) {
@@ -72,6 +79,7 @@ public class PartListener implements IPartListener2 {
 		}
 	}
 
+	@Override
 	public void partVisible(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 	}

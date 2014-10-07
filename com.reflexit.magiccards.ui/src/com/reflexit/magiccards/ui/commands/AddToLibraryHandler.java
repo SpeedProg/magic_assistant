@@ -36,7 +36,7 @@ public class AddToLibraryHandler extends AbstractHandler {
 			return null;
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		Location location = DataManager.getModelRoot().getDefaultLib().getLocation();
+		Location location = DataManager.getInstance().getModelRoot().getDefaultLib().getLocation();
 		DataManager.getInstance().copyCards(iss.toList(), location);
 		return null;
 	}

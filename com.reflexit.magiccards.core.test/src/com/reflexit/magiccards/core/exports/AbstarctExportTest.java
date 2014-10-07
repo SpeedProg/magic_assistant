@@ -19,9 +19,14 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 	protected IMagicCard card3;
 	protected ByteArrayOutputStream out;
 	String[] lines;
+	private boolean reset;
 
 	@Override
 	protected void setUp() throws Exception {
+		if (reset == false) {
+			TestFileUtils.resetDb();
+			reset = true;
+		}
 		this.deck = new MemCardHandler();
 		this.out = new ByteArrayOutputStream();
 		this.card1 = CardGenerator.generatePhysicalCardWithValues();
@@ -59,9 +64,5 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 	public void splitLines() {
 		String x = out.toString().replaceAll("\\r", "");
 		lines = x.split("\n");
-	}
-
-	static {
-		TestFileUtils.resetDb();
 	}
 }

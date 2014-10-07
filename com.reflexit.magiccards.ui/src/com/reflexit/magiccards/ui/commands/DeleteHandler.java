@@ -141,17 +141,21 @@ public class DeleteHandler extends AbstractHandler {
 
 	private static void disbandle(CardElement el) {
 		if (el instanceof CardCollection) {
-			ModelRoot root = DataManager.getModelRoot();
+			ModelRoot root = getModelRoot();
 			if (el != root.getDefaultLib()) {
 				ICardStore<IMagicCard> store = ((CardCollection) el).getStore();
 				ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(store.size());
 				for (IMagicCard card : store) {
 					cards.add(card);
 				}
-				DataManager.getInstance().moveCards(cards, DataManager.getModelRoot().getDefaultLib().getLocation());
+				DataManager.getInstance().moveCards(cards, root.getDefaultLib().getLocation());
 			}
 		}
 		remove(el);
+	}
+
+	protected static ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
 	}
 
 	public static void remove(CardElement f) {
@@ -160,7 +164,7 @@ public class DeleteHandler extends AbstractHandler {
 	}
 
 	protected static boolean isApplicable(CardElement f) {
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		if (f == root.getDefaultLib()) {
 			info("'" + f + "' is a special collection which cannot be renamed or moved. "
 					+ "Move the cards from it using multi-select if you need to.");

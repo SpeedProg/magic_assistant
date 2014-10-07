@@ -1,1 +1,2 @@
 com.reflexit.magiccards.core/debug=false
+com.reflexit.magiccards.core/debug/profiling=false

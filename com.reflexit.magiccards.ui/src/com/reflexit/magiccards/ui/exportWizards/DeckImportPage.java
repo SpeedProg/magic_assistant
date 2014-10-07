@@ -249,7 +249,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 
 	protected void createNewDeck(final String newDeckName, boolean virtual) {
 		// create a sample file
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = DataManager.getInstance().getModelRoot();
 		final CardElement resource = root.getDeckContainer();
 		getShell().getDisplay().syncExec(new Runnable() {
 			@Override
@@ -599,7 +599,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 				return false;
 			}
 			Location loc = getSelectedLocation();
-			CardElement cont = DataManager.getModelRoot().findElement(loc.toString());
+			CardElement cont = DataManager.getInstance().getModelRoot().findElement(loc.toString());
 			if (cont instanceof CardOrganizer) {
 				setErrorMessage("Invalid location selection to import cards into. Select a deck or collection");
 				return false;

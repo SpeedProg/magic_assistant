@@ -9,7 +9,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
@@ -39,7 +38,7 @@ public class NewCollectionContainerWizard extends NewCardElementWizard implement
 	protected void doFinish(String containerName, final String name, boolean virtual, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 2);
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		final CardElement resource = root.findElement(containerName);
 		if (!(resource instanceof CollectionsContainer)) {
 			throwCoreException("Container \"" + containerName + "\" does not exist.");

@@ -40,6 +40,7 @@ public class RenameHandler extends AbstractHandler {
 	 * 
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelection selection = window.getSelectionService().getSelection();
@@ -50,14 +51,14 @@ public class RenameHandler extends AbstractHandler {
 		if (iss.size() > 1)
 			return null;
 		CardElement f = (CardElement) iss.getFirstElement();
-		if (f.getParent() == DataManager.getModelRoot()) {
+		if (f.getParent() == getModelRoot()) {
 			return null;
 		}
 		boolean wasOpen = false;
 		if (f instanceof CardCollection) {
 			wasOpen = ((CardCollection) f).isOpen();
 		}
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		if (f == root.getDefaultLib()) {
 			MessageDialog.openInformation(window.getShell(), "Cannot Rename", "'" + f
 					+ "' is a special collection which cannot be renamed or moved. "
@@ -99,6 +100,10 @@ public class RenameHandler extends AbstractHandler {
 		return null;
 	}
 
+	protected ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -121,7 +126,7 @@ public class RenameHandler extends AbstractHandler {
 		}
 		if (iss.getFirstElement() instanceof CardElement) {
 			CardElement f = (CardElement) iss.getFirstElement();
-			if (f.getParent() == DataManager.getModelRoot()) {
+			if (f.getParent() == getModelRoot()) {
 				setBaseEnabled(false);
 				return;
 			}

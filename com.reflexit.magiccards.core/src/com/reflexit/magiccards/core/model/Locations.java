@@ -14,6 +14,7 @@ public class Locations implements ISearchableProperty {
 
 	static Locations instance = new Locations();
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -27,8 +28,9 @@ public class Locations implements ISearchableProperty {
 		return instance;
 	}
 
+	@Override
 	public Collection<String> getNames() {
-		ModelRoot modelRoot = DataManager.getModelRoot();
+		ModelRoot modelRoot = DataManager.getInstance().getModelRoot();
 		Map map = modelRoot.getLocationsMap();
 		ArrayList<String> list = new ArrayList<String>();
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
@@ -38,8 +40,9 @@ public class Locations implements ISearchableProperty {
 		return list;
 	}
 
+	@Override
 	public Collection<String> getIds() {
-		ModelRoot modelRoot = DataManager.getModelRoot();
+		ModelRoot modelRoot = DataManager.getInstance().getModelRoot();
 		Map map = modelRoot.getLocationsMap();
 		ArrayList<String> list = new ArrayList<String>();
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
@@ -58,6 +61,7 @@ public class Locations implements ISearchableProperty {
 		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
+	@Override
 	public String getNameById(String id1) {
 		Location loc = findLocation(id1);
 		if (loc != null)
@@ -76,7 +80,7 @@ public class Locations implements ISearchableProperty {
 	}
 
 	public Location findLocation(String locId) {
-		ModelRoot modelRoot = DataManager.getModelRoot();
+		ModelRoot modelRoot = DataManager.getInstance().getModelRoot();
 		Map map = modelRoot.getLocationsMap();
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
 			Location loc = (Location) iterator.next();

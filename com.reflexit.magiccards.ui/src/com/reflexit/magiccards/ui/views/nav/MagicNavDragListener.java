@@ -25,6 +25,7 @@ public class MagicNavDragListener implements DragSourceListener {
 	/**
 	 * Method declared on DragSourceListener
 	 */
+	@Override
 	public void dragFinished(DragSourceEvent event) {
 		if (!event.doit || event.detail == DND.DROP_NONE)
 			return;
@@ -34,6 +35,7 @@ public class MagicNavDragListener implements DragSourceListener {
 	/**
 	 * Method declared on DragSourceListener
 	 */
+	@Override
 	public void dragStart(DragSourceEvent event) {
 		event.doit = isEnabled();
 	}
@@ -42,9 +44,9 @@ public class MagicNavDragListener implements DragSourceListener {
 		IStructuredSelection sel = (IStructuredSelection) this.viewer.getSelection();
 		if (sel.isEmpty())
 			return false;
+		ModelRoot root = DataManager.getInstance().getModelRoot();
 		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 			CardElement el = (CardElement) iterator.next();
-			ModelRoot root = DataManager.getModelRoot();
 			if (el.getParent() == root)
 				return false;
 			if (el == root.getDefaultLib() || el == root.getDeckContainer() || el == root.getCollectionsContainer())
@@ -56,6 +58,7 @@ public class MagicNavDragListener implements DragSourceListener {
 	/**
 	 * Method declared on DragSourceListener
 	 */
+	@Override
 	public void dragSetData(DragSourceEvent event) {
 		this.selection = (IStructuredSelection) this.viewer.getSelection();
 		CardElement[] decks = (CardElement[]) this.selection.toList().toArray(new CardElement[this.selection.size()]);

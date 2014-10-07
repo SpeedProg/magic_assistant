@@ -5,7 +5,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
@@ -38,7 +37,7 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 		super.dialogChanged();
 		if (getErrorMessage() != null)
 			return;
-		ModelRoot root = DataManager.getModelRoot();
+		ModelRoot root = getModelRoot();
 		String containerName = getContainerName();
 		CardElement parent = root.findElement(containerName);
 		if (!(parent instanceof CollectionsContainer)) {
@@ -63,6 +62,6 @@ public class NewCollectionContainerWizardPage extends NewCardElementWizardPage {
 
 	@Override
 	protected CardOrganizer getRootContainer() {
-		return DataManager.getModelRoot().getMyCardsContainer();
+		return getModelRoot().getMyCardsContainer();
 	}
 }
