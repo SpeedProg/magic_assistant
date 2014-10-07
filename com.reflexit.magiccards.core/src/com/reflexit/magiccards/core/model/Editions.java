@@ -225,7 +225,7 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public boolean isUsed() {
-			ICardStore<IMagicCard> magicDb = DataManager.getMagicDBStore();
+			ICardStore<IMagicCard> magicDb = DataManager.getInstance().getMagicDBStore();
 			for (IMagicCard card : magicDb) {
 				if (name.equals(card.getSet())) {
 					return true;

@@ -78,7 +78,7 @@ public class DataManager {
 		return getCardHandler().getLibraryCardStore();
 	}
 
-	public static IDbCardStore<IMagicCard> getMagicDBStore() {
+	public IDbCardStore<IMagicCard> getMagicDBStore() {
 		return getCardHandler().getMagicDBStore();
 	}
 

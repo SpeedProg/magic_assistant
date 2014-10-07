@@ -32,7 +32,7 @@ public class MagicCardComparatorTest extends TestCase {
 	public static void main(String[] args) {
 		// check p/t
 		HashMap<String, Integer> pmap = new HashMap<String, Integer>();
-		IDbCardStore<IMagicCard> magicDBStore = DataManager.getMagicDBStore();
+		IDbCardStore<IMagicCard> magicDBStore = DataManager.getInstance().getMagicDBStore();
 		magicDBStore.initialize();
 		for (IMagicCard card : magicDBStore) {
 			String value = ((MagicCard) card).getCollNumber();

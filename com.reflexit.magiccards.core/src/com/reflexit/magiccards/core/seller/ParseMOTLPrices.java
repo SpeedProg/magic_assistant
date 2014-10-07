@@ -134,7 +134,7 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 	}
 
 	private void updatePrices(HashMap<String, Float> res) {
-		IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
+		IDbCardStore<IMagicCard> db = DataManager.getInstance().getMagicDBStore();
 		// System.err.println(db.isInitialized());
 		HashMap<String, CountersMap> scandmap = new HashMap();
 		Editions editions = Editions.getInstance();

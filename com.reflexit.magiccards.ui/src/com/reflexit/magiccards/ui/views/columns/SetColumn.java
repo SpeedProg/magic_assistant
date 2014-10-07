@@ -105,7 +105,7 @@ public class SetColumn extends GenColumn implements Listener {
 		@Override
 		public String[] getItems(Object element) {
 			IMagicCardPhysical card = (IMagicCardPhysical) element;
-			Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+			Collection<IMagicCard> cards = DataManager.getInstance().getMagicDBStore().getCandidates(card.getName());
 			int len = cards.size();
 			if (card.getCardId() == 0) {
 				len++;
@@ -136,7 +136,7 @@ public class SetColumn extends GenColumn implements Listener {
 			if (element instanceof MagicCardPhysical) {
 				MagicCardPhysical card = (MagicCardPhysical) element;
 				// set
-				Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(card.getName());
+				Collection<IMagicCard> cards = DataManager.getInstance().getMagicDBStore().getCandidates(card.getName());
 				String set = (String) value;
 				String oldSet = card.getSet();
 				if (oldSet != null && oldSet.equals(set))

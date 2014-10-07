@@ -198,7 +198,7 @@ public class XmlCardHolder implements ICardHandler {
 	public int downloadUpdates(final String set, final Properties options, ICoreProgressMonitor pm) throws MagicException,
 			InterruptedException {
 		int rec[] = new int[1];
-		DataManager.getMagicDBStore().updateOperation(new ICoreRunnableWithProgress() {
+		DataManager.getInstance().getMagicDBStore().updateOperation(new ICoreRunnableWithProgress() {
 			@Override
 			public void run(ICoreProgressMonitor pm) throws InvocationTargetException, InterruptedException {
 				try {

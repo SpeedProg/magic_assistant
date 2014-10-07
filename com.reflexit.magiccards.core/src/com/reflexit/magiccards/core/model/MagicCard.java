@@ -887,7 +887,7 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		if (legalityMap.isLegal(Format.STANDARD))
 			return legalityMap;
 		// check printings
-		IMagicCard magicCard = DataManager.getMagicDBStore().getPrime(name);
+		IMagicCard magicCard = db().getPrime(name);
 		if (magicCard != null && magicCard != this) {
 			LegalityMap candMap = magicCard.getLegalityMap();
 			return legalityMap.merge(candMap);

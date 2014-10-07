@@ -59,7 +59,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	@Override
 	public void reloadPrices() {
 		MagicLogger.traceStart("reloadPrices");
-		final IDbCardStore<IMagicCard> db = DataManager.getMagicDBStore();
+		final IDbCardStore<IMagicCard> db = DataManager.getInstance().getMagicDBStore();
 		try {
 			db.updateList(null, Collections.singleton(MagicCardField.DBPRICE));
 		} finally {

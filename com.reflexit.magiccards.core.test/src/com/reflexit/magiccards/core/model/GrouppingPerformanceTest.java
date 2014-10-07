@@ -8,7 +8,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 public class GrouppingPerformanceTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
-		DataManager.getMagicDBStore().initialize();
+		DataManager.getInstance().getMagicDBStore().initialize();
 	}
 
 	public void testGroupDb() {

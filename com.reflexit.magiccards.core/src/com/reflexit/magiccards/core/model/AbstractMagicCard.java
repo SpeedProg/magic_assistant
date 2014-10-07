@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 
 public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagicCard, IMagicCardPhysical, Cloneable {
 	@Override
@@ -127,13 +128,17 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 
 	@Override
 	public int getOwnTotalAll() {
-		Collection<IMagicCard> cards = DataManager.getMagicDBStore().getCandidates(getName());
+		Collection<IMagicCard> cards = db().getCandidates(getName());
 		int sum = 0;
 		for (IMagicCard card : cards) {
 			if (card instanceof MagicCard)
 				sum += ((MagicCard) card).getOwnCount();
 		}
 		return sum;
+	}
+
+	public IDbCardStore<IMagicCard> db() {
+		return DataManager.getInstance().getMagicDBStore();
 	}
 
 	@Override

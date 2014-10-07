@@ -56,6 +56,7 @@ import com.reflexit.magiccards.ui.views.AbstractCardsView;
  * 
  */
 public abstract class AbstractMyCardsView extends AbstractCardsView implements ICardEventListener {
+	private final DataManager DM = DataManager.getInstance();
 	protected Action delete;
 	private Action split;
 	private Action edit;
@@ -107,13 +108,13 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		copyToDeck = new IDeckAction() {
 			@Override
 			public void run(String id) {
-				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
+				IFilteredCardStore fstore = DM.getCardHandler().getCardCollectionFilteredStore(id);
 				Location loc = fstore.getLocation();
 				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						DataManager.getInstance().copyCards(sel.toList(), loc);
+						DM.copyCards(sel.toList(), loc);
 					}
 				}
 			}
@@ -138,8 +139,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 							if (o instanceof IMagicCard)
 								list.add((IMagicCard) o);
 						}
-						Location location = DataManager.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
-						DataManager.getInstance().moveCards(list, location);
+						Location location = DM.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
+						DM.moveCards(list, location);
 					}
 				}
 			} catch (MagicException e) {
@@ -176,7 +177,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					Object o = iterator.next();
 					if (o instanceof MagicCardPhysical) {
 						((MagicCardPhysical) o).setOwn(b);
-						DataManager.getInstance().update((MagicCardPhysical) o,of);
+						DM.update((MagicCardPhysical) o, of);
 					}
 				}
 			}
@@ -189,7 +190,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
-				DataManager.getInstance().remove(cardStore, sel.toList());
+				DM.remove(cardStore, sel.toList());
 			}
 		}
 	}
@@ -243,7 +244,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 						if (left >= count)
 							continue;
 						int right = count - left;
-						DataManager.getInstance().split(card, right);
+						DM.split(card, right);
 					}
 				}
 			}
@@ -310,9 +311,9 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		new Thread("Offline listeners") {
 			@Override
 			public void run() {
-				if (DataManager.getInstance().waitForInit(60)) {
-					DataManager.getCardHandler().getLibraryCardStore().addListener(AbstractMyCardsView.this);
-					DataManager.getModelRoot().addListener(AbstractMyCardsView.this);
+				if (DM.waitForInit(60)) {
+					DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+					DM.getModelRoot().addListener(AbstractMyCardsView.this);
 				} else {
 					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
 				}
@@ -327,8 +328,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	 */
 	@Override
 	public void dispose() {
-		DataManager.getCardHandler().getLibraryCardStore().removeListener(this);
-		DataManager.getModelRoot().removeListener(this);
+		DM.getLibraryCardStore().removeListener(this);
+		DM.getModelRoot().removeListener(this);
 		super.dispose();
 	}
 

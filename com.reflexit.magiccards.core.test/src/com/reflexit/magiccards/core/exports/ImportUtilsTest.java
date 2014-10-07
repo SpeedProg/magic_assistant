@@ -26,7 +26,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		DataManager.getMagicDBStore().initialize();
+		getDB().initialize();
 	}
 
 	TableImportDelegate tableImport = new TableImportDelegate();
@@ -74,9 +74,13 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testFindRefByName() {
 		MagicCard card = new MagicCard();
 		card.setName("Lightning Bolt");
-		MagicCard ref = ImportUtils.findRef(card, DataManager.getMagicDBStore());
+		MagicCard ref = ImportUtils.findRef(card, getDB());
 		assertNotNull(ref);
 		assertNotNull(ref.getSet());
+	}
+
+	public IDbCardStore<IMagicCard> getDB() {
+		return DataManager.getInstance().getMagicDBStore();
 	}
 
 	@Test
@@ -84,7 +88,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		MagicCard card = new MagicCard();
 		card.setName("Lightning Bolt");
 		card.setSet("Magic 2010");
-		MagicCard ref = ImportUtils.findRef(card, DataManager.getMagicDBStore());
+		MagicCard ref = ImportUtils.findRef(card, getDB());
 		assertNotNull(ref);
 		assertEquals("Magic 2010", ref.getSet());
 	}

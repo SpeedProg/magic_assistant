@@ -52,16 +52,17 @@ public class ImportUtils {
 			boolean resolve, ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		if (st == null)
 			return null;
-		DataManager.getMagicDBStore().initialize();
 		worker.init(st, location, virtual);
 		worker.setHeader(header);
 		worker.run(monitor);
 		ImportResult preview = worker.getResult();
-		if (resolve)
+		if (resolve) {
+			DataManager.getInstance().getMagicDBStore().initialize();
 			for (ICard card : preview.getList()) {
 				if (card instanceof MagicCardPhysical)
 					ImportUtils.updateCardReference((MagicCardPhysical) card);
 			}
+		}
 		return preview;
 	}
 
@@ -357,8 +358,7 @@ public class ImportUtils {
 	}
 
 	/**
-	 * Finds and associates imported cards with magic db cards. If card not
-	 * found in db creates new db cards and adds to newdbrecords
+	 * Finds and associates imported cards with magic db cards. If card not found in db creates new db cards and adds to newdbrecords
 	 */
 	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords, ICardField[] columns) {
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
@@ -399,7 +399,7 @@ public class ImportUtils {
 	}
 
 	public static void importIntoDb(Collection<IMagicCard> newdbrecords) {
-		ICardStore magicDbHandler = DataManager.getMagicDBStore();
+		ICardStore magicDbHandler = DataManager.getInstance().getMagicDBStore();
 		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			MagicCard newCard = card.getBase();
