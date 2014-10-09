@@ -887,12 +887,12 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		if (legalityMap.isLegal(Format.STANDARD))
 			return legalityMap;
 		// check printings
-		IMagicCard magicCard = db().getPrime(name);
-		if (magicCard != null && magicCard != this) {
-			LegalityMap candMap = magicCard.getLegalityMap();
+		IMagicCard prime = db().getPrime(name);
+		if (prime != null && prime != this) {
+			LegalityMap candMap = prime.getLegalityMap();
 			return legalityMap.merge(candMap);
 		}
-		return LegalityMap.EMPTY;
+		return legalityMap;
 	}
 
 	public void setLegalityMap(LegalityMap map) {
