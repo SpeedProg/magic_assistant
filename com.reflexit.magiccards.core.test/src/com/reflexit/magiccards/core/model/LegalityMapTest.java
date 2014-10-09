@@ -62,8 +62,8 @@ public class LegalityMapTest extends TestCase {
 	public void testGetLabel2() {
 		map = LegalityMap.EMPTY;
 		map = map.put(Format.MODERN, Legality.LEGAL);
-		map = map.put(Format.EXTENDED, Legality.RESTRICTED);
-		assertEquals("Extended (1)", map.getLabel());
+		map = map.put(Format.STANDARD, Legality.RESTRICTED);
+		assertEquals("Standard (1)", map.getLabel());
 	}
 
 	@Test
@@ -104,21 +104,21 @@ public class LegalityMapTest extends TestCase {
 	public void testMergeMap() {
 		map = map.put(STANDARD, Legality.LEGAL);
 		LegalityMap map2 = LegalityMap.EMPTY;
-		map2 = map2.merge(Format.EXTENDED, Legality.LEGAL);
+		map2 = map2.merge(Format.MODERN, Legality.LEGAL);
 		map2 = map2.merge(Format.STANDARD, Legality.NOT_LEGAL);
 		map = map.merge(map2);
 		assertEquals(Legality.NOT_LEGAL, map.get(STANDARD));
-		assertEquals(Legality.LEGAL, map.get(Format.EXTENDED));
+		assertEquals(Legality.LEGAL, map.get(Format.MODERN));
 	}
 
 	@Test
 	public void testFullText() {
-		map = map.put(Format.EXTENDED, Legality.RESTRICTED);
-		map = map.put(Format.MODERN, Legality.LEGAL).complete();
+		map = map.put(Format.MODERN, Legality.RESTRICTED);
+		map = map.put(Format.LEGACY, Legality.LEGAL).complete();
 		String fullText = map.fullText();
 		assertTrue(fullText.contains("Standard - Not Legal"));
 		assertTrue(fullText.contains("Legacy - Legal"));
-		assertTrue("Cannot find Extended - Restricted in " + fullText, fullText.contains("Extended - Restricted"));
+		assertTrue("Cannot find Extended - Restricted in " + fullText, fullText.contains("Modern - Restricted"));
 	}
 
 	@Test
@@ -127,15 +127,15 @@ public class LegalityMapTest extends TestCase {
 		LegalityMap card2 = LegalityMap.EMPTY;
 		card1 = card1.put(STANDARD, Legality.LEGAL);
 		card2 = card2.put(STANDARD, Legality.BANNED);
-		card1 = card1.put(Format.EXTENDED, Legality.RESTRICTED);
-		card2 = card2.put(Format.EXTENDED, Legality.LEGAL);
+		card1 = card1.put(Format.MODERN, Legality.RESTRICTED);
+		card2 = card2.put(Format.MODERN, Legality.LEGAL);
 		card1 = card1.put(BLA_BLA, Legality.LEGAL);
 		ArrayList<LegalityMap> list = new ArrayList<LegalityMap>();
 		list.add(card1);
 		list.add(card2);
 		map = LegalityMap.calculateDeckLegality(list);
 		assertEquals(Legality.BANNED, map.get(STANDARD));
-		assertEquals(Legality.RESTRICTED, map.get(Format.EXTENDED));
+		assertEquals(Legality.RESTRICTED, map.get(Format.MODERN));
 		assertEquals(Legality.NOT_LEGAL, map.get(BLA_BLA));
 	}
 

@@ -26,7 +26,6 @@ public class Format {
 	private final static LinkedHashMap<String, Format> formats = new LinkedHashMap<String, Format>();
 	static {
 		add(Format.STANDARD);
-		add(Format.EXTENDED);
 		add(Format.MODERN);
 		add(Format.LEGACY);
 		add(Format.VINTAGE);

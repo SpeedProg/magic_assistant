@@ -15,7 +15,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public class ParseSetLegality extends AbstractParseGathererPage {
-	private Pattern setPattern = Pattern.compile("<li>\\s*<i>(.+?)</i>");
+
 	private Format format;
 
 	public ParseSetLegality(String format) {
@@ -31,11 +31,10 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 	 */
 	@Override
 	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
-		int i = html.indexOf("<div class=\"article-content\"");
-		int j = html.indexOf("<div class=\"article-bottom\"");
-		String setsHtml = html.substring(i, j);
+		String setsHtml = html;
 		setsHtml = setsHtml.replaceAll("\r?\n", " ");
 		setsHtml = setsHtml.replaceAll("</?b>", "");
+		Pattern setPattern = Pattern.compile("<li>\\s*(.+?)\\s*</li>");
 		String value = extractPatternValue(setsHtml, setPattern, true);
 		String sets[] = value.split("\n");
 		Editions eds = Editions.getInstance();
@@ -59,7 +58,7 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 
 	@Override
 	protected String getUrl() {
-		return "http://www.wizards.com/Magic/TCG/Resources.aspx?x=judge/resources/sfr" + format.name().toLowerCase(Locale.ENGLISH);
+		return "http://magic.wizards.com/en/gameinfo/gameplay/formats/" + format.name().toLowerCase(Locale.ENGLISH);
 	}
 
 	public static void loadAllFormats(ICoreProgressMonitor monitor) {
@@ -87,7 +86,6 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 	private static Collection<String> getFormats() {
 		ArrayList<String> res = new ArrayList<String>();
 		res.add("Standard");
-		res.add("Extended");
 		res.add("Modern");
 		// res.add("Legacy");
 		// res.add("Vintage");
