@@ -107,6 +107,7 @@ public class DataManager {
 		else {
 			root.resetRoot(dir);
 			((AbstractFilteredCardStore) (getCardHandler().getLibraryFilteredStore())).reload();
+			reconcile();
 		}
 	}
 

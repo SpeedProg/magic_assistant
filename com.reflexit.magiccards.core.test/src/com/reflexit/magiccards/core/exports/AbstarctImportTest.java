@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
@@ -28,6 +29,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected void setUp() throws Exception {
 		if (reset == false) {
 			TestFileUtils.resetDb();
+			DataManager.getInstance().waitForInit(10);
 			reset = true;
 		}
 		this.deck = new MemCardHandler();

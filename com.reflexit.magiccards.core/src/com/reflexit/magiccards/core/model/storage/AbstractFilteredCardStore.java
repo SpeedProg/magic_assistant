@@ -232,7 +232,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected Collection<T> sortCards(MagicCardFilter filter) {
-		String key = "sort" + hashCode();
+		String key = "sort af";
 		MagicLogger.traceStart(key);
 		Collection<T> filteredList;
 		if (filter.getSortOrder().isEmpty()) {

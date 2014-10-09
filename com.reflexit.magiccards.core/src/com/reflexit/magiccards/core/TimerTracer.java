@@ -6,13 +6,14 @@ import java.util.HashMap;
 
 public class TimerTracer {
 	private static SimpleDateFormat timestampFormat = new SimpleDateFormat("<kk:mm:ss.SSS>");
+
 	private static boolean tracing = false;
 	private HashMap<String, Timer> timers = new HashMap<String, Timer>();
 
 	public static class Timer {
 		long start;
 		long end;
-		long diff;
+		long total;
 		int count;
 		private String name;
 
@@ -28,7 +29,7 @@ public class TimerTracer {
 		public long end() {
 			this.end = System.currentTimeMillis();
 			long curr = end - start;
-			diff += curr;
+			total += curr;
 			count++;
 			return curr;
 		}
@@ -36,7 +37,7 @@ public class TimerTracer {
 		public long prob() {
 			this.end = System.currentTimeMillis();
 			long curr = end - start;
-			diff += curr;
+			total += curr;
 			count++;
 			this.start = this.end;
 			return curr;
@@ -50,8 +51,14 @@ public class TimerTracer {
 			return end;
 		}
 
-		public long getDiff() {
-			return diff;
+		public long getTotal() {
+			return total;
+		}
+
+		public double getAve() {
+			if (count == 0)
+				return total;
+			return total / (double) count;
 		}
 
 		public int getCount() {
@@ -63,7 +70,7 @@ public class TimerTracer {
 		}
 
 		public void reset() {
-			diff = 0;
+			total = 0;
 			count = 0;
 			start();
 		}
@@ -75,43 +82,29 @@ public class TimerTracer {
 
 	public void trace(String timer, String message) {
 		Timer t = getTimer(timer);
-		long diff = t.prob();
-		if (tracing) {
-			long time = System.currentTimeMillis();
-			String prefix = timestampFormat.format(Calendar.getInstance().getTime());
-			Timer timerStats = getTimer(timer);
-			if (t.count == 0) {
-				System.out.println(prefix + " " + timer + ": " + message);
-			} else {
-				System.out.println(prefix + " " + timer + " +" + (diff) + "ms (" + timerStats.count + " times " + t.diff
-						/ (float) timerStats.count + " ave " + (t.diff) + "ms): " + message);
-			}
-			timerStats.end = time;
-		}
+		long diff = t.end();
+		dump(t, message, diff);
+		t.start();
 	}
 
-	public void trace(Timer t, String message) {
+	private void dump(Timer t, String message, long diff) {
 		if (tracing) {
 			String prefix = timestampFormat.format(Calendar.getInstance().getTime());
-			if (t.count == 0) {
-				System.out.println(prefix + " " + t.name + ": " + message);
-			} else {
-				System.out.println(prefix + " " + t.name + " +" + (t.end - t.start) + "ms (" + t.count + " times " + t.diff
-						/ (float) t.count + " ave " + t.diff + " ms): " + message);
-			}
+			String text = String.format("+%03d (%3d ms/%3d = %5.2f ms) %6s %s", diff, t.total, t.count, t.getAve(), message, t.name);
+			System.out.println(prefix + " " + text);
 		}
 	}
 
 	public void traceStart(String string) {
 		Timer t = getTimer(string);
+		dump(t, "start", 0);
 		t.start();
-		trace(t, "start");
 	}
 
 	public void traceEnd(String string) {
 		Timer t = getTimer(string);
-		t.end();
-		trace(t, "end");
+		long cur = t.end();
+		dump(t, "end", cur);
 	}
 
 	public void removeTimer(String t) {

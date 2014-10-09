@@ -4,12 +4,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 public class MagicLogger {
-	private static TimerTracer tracer = new TimerTracer();
+	private static TimerTracer tracer;
 	static boolean rcp = false;
 	private static boolean debugging;
 	static {
+		tracer = new TimerTracer();
 		if (System.getProperty("eclipse.home.location") != null) {
 			rcp = true;
+		}
+		if (System.getProperty("magic.tracing") != null) {
+			tracer.setTracing(true);
+		}
+		if (System.getProperty("magic.debugging") != null) {
+			debugging = true;
 		}
 	}
 

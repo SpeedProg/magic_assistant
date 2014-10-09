@@ -47,6 +47,17 @@ import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
  * 
  */
 public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
+	private boolean flatDbLoaded = false;
+	private boolean loadDefault;
+	private GlobalDbHandler handler = new GlobalDbHandler();
+
+	public void reload() {
+		flatDbLoaded = false;
+		loadDefault = true;
+		handler = new GlobalDbHandler();
+		setInitialized(false);
+	}
+
 	public class GlobalDbHandler {
 		private TIntObjectHashMap<IMagicCard> hash = new TIntObjectHashMap<IMagicCard>();
 		// map from name to latest card
@@ -161,9 +172,6 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 	}
 
-	private boolean loadDefault;
-	private GlobalDbHandler handler = new GlobalDbHandler();
-
 	public DbMultiFileCardStore(boolean load) {
 		this.loadDefault = load;
 	}
@@ -268,8 +276,6 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 		throw new MagicException("Unknown card type");
 	}
-
-	private boolean flatDbLoaded = false;
 
 	public void loadFromSoftware() throws MagicException {
 		if (flatDbLoaded)

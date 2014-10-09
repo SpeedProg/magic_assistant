@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -20,16 +19,8 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 public class ImportUtilsTest extends AbstarctImportTest {
-	@Override
-	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
-		TestFileUtils.resetDb();
-		DataManager.getInstance().waitForInit(10);
-	}
 
 	TableImportDelegate tableImport = new TableImportDelegate();
 	private ICoreProgressMonitor monitor = ICoreProgressMonitor.NONE;
@@ -112,18 +103,18 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Test
 	public void testGetSetCandidates() {
 		addLine("NAME|SET|COUNT");
-		addLine("Counterspell2|Bla|2");
-		addLine("Light|Foot|1");
-		addLine("Light|Duel decks : Ajani vs. Nicol Bolas|1");
+		addLine("Counterspell2|Bla1|2");
+		addLine("Light1|Foot1|1");
+		addLine("Light1|Duel decks : Ajani vs. Nicol Bolas|1");
 		preimport();
 		Map<String, String> setCandidates = ImportUtils.getSetCandidates(preimport);
-		assertTrue(setCandidates.containsKey("Bla"));
-		assertTrue(setCandidates.toString(), setCandidates.containsKey("Foot"));
+		assertTrue(setCandidates.containsKey("Bla1"));
+		assertTrue(setCandidates.toString(), setCandidates.containsKey("Foot1"));
 		assertNull(setCandidates.get("Foot"));
 		assertEquals(2, setCandidates.size());
-		setCandidates.put("Foot", "Lorwyn");
+		setCandidates.put("Foot1", "Lorwyn");
 		ImportUtils.fixSets(preimport, setCandidates);
-		assertEquals("Bla", card1.getSet());
+		assertEquals("Bla1", card1.getSet());
 		assertEquals("Lorwyn", card2.getSet());
 	}
 
@@ -155,14 +146,14 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Test
 	public void testPerformPreImportWithDb() {
 		addLine("NAME|SET|COUNT");
-		addLine("Counterspell|Foo|2");
-		addLine("Light|Foo|1");
+		addLine("Counterspell|Foo4|2");
+		addLine("Light|Foo4|1");
 		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
 		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		assertEquals(2, mdb.size());
-		Editions.getInstance().addEdition("Foo", null);
+		Editions.getInstance().addEdition("Foo4", null);
 		ImportUtils.importIntoDb(mdb);
 	}
 
