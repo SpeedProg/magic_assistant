@@ -327,10 +327,11 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 	public Object get(ICardField field) {
 		if (field == MagicCardField.NAME)
 			return getName();
-		if (field == MagicCardField.LEGALITY)
-			return LegalityMap.EMPTY;
-		if (size() == 0)
+		if (size() == 0) {
+			if (field == MagicCardField.LEGALITY)
+				return LegalityMap.EMPTY;
 			return null;
+		}
 		if (containsKey(field)) {
 			return super.get(field);
 		} else {

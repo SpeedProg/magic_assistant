@@ -385,6 +385,19 @@ public class CardGroupTest extends TestCase {
 		checkConsistency(MagicCardField.TOUGHNESS, group.getToughness(), String.valueOf(1.0f * count));
 	}
 
+	public void testLegalityAggr() {
+		group = new CardGroup(MagicCardField.NAME, Rarity.COMMON);
+		cards = new IMagicCard[3];
+		for (int j = 0; j < cards.length; j++) {
+			MagicCard c = (MagicCard) generateCard();
+			c.setLegalityMap(LegalityMap.createFromLegal("Standard"));
+			cards[j] = c;
+			group.add(c);
+		}
+		group.rehash();
+		checkConsistency(MagicCardField.LEGALITY);
+	}
+
 	public void preset1(MagicCardPhysical card) {
 		card.setCount(1);
 		card.setSpecialTag("foil");
@@ -407,7 +420,7 @@ public class CardGroupTest extends TestCase {
 	}
 
 	public void checkConsistency(ICardField field) {
-		MagicCardPhysical card = (MagicCardPhysical) group.getFirstCard();
+		IMagicCardPhysical card = group.getFirstCard();
 		Object c1 = card.get(field);
 		Object g1 = group.get(field);
 		assertEquals(c1, g1);
