@@ -48,15 +48,13 @@ public class EditionsFilterPreferencePage extends AbstractFilterPreferencePage {
 		this.onlyLastSet.setFont(parent.getFont());
 		this.onlyLastSet.setText("Only show the card from the latest set if multiple available");
 		this.onlyLastSet.setSelection(getPreferenceStore().getBoolean(LAST_SET));
-		final String[][] fs = new String[4][2];
+		final String[][] fs = new String[3][2];
 		fs[0][0] = FORMAT_NONE;
 		fs[0][1] = "";
 		int i = 1;
-		for (Iterator<Format> iterator = Format.getFormats().iterator(); iterator.hasNext(); i++) {
+		for (Iterator<Format> iterator = Format.getFormats().iterator(); iterator.hasNext() && i < 3; i++) {
 			Format f = iterator.next();
 			fs[i][0] = fs[i][1] = f.name();
-			if (f.ordinal() >= 3)
-				break;
 		}
 		// format
 		createAndAdd(new MFieldEditorPreferencePage() {

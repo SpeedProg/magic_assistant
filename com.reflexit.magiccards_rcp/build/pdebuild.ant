@@ -233,7 +233,7 @@
 		</scp>
 	</target>
 	<target name="publish.docs">
-		<echo message="Syncying ${orig.workspace.root}/com.reflexit.magiccards.help/" />
+		<echo message="Syncing ${orig.workspace.root}/com.reflexit.magiccards.help/" />
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/doc-plugins" 
 			keyfile="${rsa.key}" trust="true">
@@ -247,7 +247,7 @@
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Magic_Assistant/" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.dir}">
-				<include name="${ma.version}/*linux*"/>
+				<include name="${ma.version}/*"/>
 			</fileset>
 		</scp>
 	</target>
