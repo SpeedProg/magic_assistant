@@ -8,12 +8,8 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.CardFieldExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
-import com.reflexit.magiccards.core.model.expr.FilterFieldExpr;
-import com.reflexit.magiccards.core.model.expr.Node;
-import com.reflexit.magiccards.core.model.expr.NotExpr;
 import com.reflexit.magiccards.core.model.expr.Operation;
 import com.reflexit.magiccards.core.model.expr.TextValue;
-import com.reflexit.magiccards.core.model.expr.Value;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
@@ -88,7 +84,7 @@ public class MagicCardFilter implements Cloneable {
 		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
 	}
 
-	public void update(HashMap map) {
+	public void update(HashMap<String, String> map) {
 		Expr expr = TRUE;
 		if (map.containsKey(ColorTypes.IDENTITY_ID)) {
 			map.remove(ColorTypes.ONLY_ID);
@@ -114,124 +110,71 @@ public class MagicCardFilter implements Cloneable {
 				.and(createOrGroup(map, Editions.getInstance()))
 				.and(createOrGroup(map, Locations.getInstance()))
 				.and(createOrGroup(map, Rarity.getInstance()))
-				.and(createTextSearch(map, FilterField.LANG))
-				.and(createTextSearch(map, FilterField.TYPE_LINE))
-				.and(createTextSearch(map, FilterField.NAME_LINE))
-				.and(createNumericSearch(map, FilterField.POWER))
-				.and(createNumericSearch(map, FilterField.TOUGHNESS))
-				.and(createNumericSearch(map, FilterField.CCC))
-				.and(createNumericSearch(map, FilterField.COUNT))
-				.and(createNumericSearch(map, FilterField.PRICE))
-				.and(createNumericSearch(map, FilterField.DBPRICE))
-				.and(createTextSearch(map, FilterField.COMMENT))
-				.and(createTextSearch(map, FilterField.OWNERSHIP))
-				.and(createNumericSearch(map, FilterField.COMMUNITYRATING))
-				.and(createNumericSearch(map, FilterField.COLLNUM))
-				.and(createTextSearch(map, FilterField.ARTIST))
-				.and(createTextSearch(map, FilterField.SPECIAL))
-				.and(createNumericSearch(map, FilterField.FORTRADECOUNT))
-				.and(createTextSearch(map, FilterField.FORMAT));
+				.and(FilterField.LANG.valueExpr(map))
+				.and(FilterField.TYPE_LINE.valueExpr(map))
+				.and(FilterField.NAME_LINE.valueExpr(map))
+				.and(FilterField.POWER.valueExpr(map))
+				.and(FilterField.TOUGHNESS.valueExpr(map))
+				.and(FilterField.CCC.valueExpr(map))
+				.and(FilterField.COUNT.valueExpr(map))
+				.and(FilterField.PRICE.valueExpr(map))
+				.and(FilterField.DBPRICE.valueExpr(map))
+				.and(FilterField.COMMENT.valueExpr(map))
+				.and(FilterField.OWNERSHIP.valueExpr(map))
+				.and(FilterField.COMMUNITYRATING.valueExpr(map))
+				.and(FilterField.COLLNUM.valueExpr(map))
+				.and(FilterField.ARTIST.valueExpr(map))
+				.and(FilterField.SPECIAL.valueExpr(map))
+				.and(FilterField.FORTRADECOUNT.valueExpr(map))
+				.and(FilterField.FORMAT.valueExpr(map));
 		// text fields
-		Expr text = createTextSearch(map, FilterField.TEXT_LINE)
-				.or(createTextSearch(map, FilterField.TEXT_LINE_2))
-		         .or(createTextSearch(map, FilterField.TEXT_LINE_3));
-		expr = expr.and(text)
-				.and(createTextSearch(map, FilterField.TEXT_NOT_1))
-				.and(createTextSearch(map, FilterField.TEXT_NOT_2))
-				.and(createTextSearch(map, FilterField.TEXT_NOT_3));
-		this.root = expr.translate();
+		Expr text = FilterField.TEXT_LINE.valueExpr(map)
+				.or(FilterField.TEXT_LINE_2.valueExpr(map))
+				.or(FilterField.TEXT_LINE_3.valueExpr(map));
+		Expr textNot =
+				FilterField.TEXT_NOT_1.valueExpr(map)
+						.and(FilterField.TEXT_NOT_2.valueExpr(map))
+						.and(FilterField.TEXT_NOT_3.valueExpr(map))
+						.not();
+		this.root = expr.and(text).and(textNot);
 	}
 
-	private Expr createTextSearch(HashMap<String, String> map, FilterField fieldId) {
-		if (!fieldId.getPostfix().equals(FilterField.Postfix.TEXT_POSTFIX))
-			throw new IllegalArgumentException();
-
-		String value = map.get(fieldId.getPrefConstant());
-		if (value != null && value.length() > 0) {
-			return new BinaryExpr(new FilterFieldExpr(fieldId), Operation.EQUALS, new Node(value));
-		}
-		return Expr.EMPTY;
-	}
-
-	private Expr createNumericSearch(HashMap map, FilterField fieldId) {
-		if (!fieldId.getPostfix().equals(FilterField.Postfix.NUMERIC_POSTFIX))
-			throw new IllegalArgumentException();
-		Expr sub = Expr.EMPTY;
-		String valueKey = fieldId.getPrefConstant();
-		String value = (String) map.get(valueKey);
-		if (value != null && value.length() > 0) {
-			sub = new BinaryExpr(new FilterFieldExpr(fieldId), Operation.EQUALS, new Node(value));
-		}
-		return sub;
-	}
-
-	private static BinaryExpr createAndGroup(Expr a, Expr b) {
-		Expr res = null;
-		if (a == null && b == null) {
-			res = TRUE;
-		} else if (b == null)
-			res = a;
-		else if (a == null)
-			res = b;
-		else {
-			res = new BinaryExpr(a, Operation.AND, b);
-		}
-		if (res instanceof BinaryExpr)
-			return (BinaryExpr) res;
-		else
-			return new BinaryExpr(res, Operation.AND, TRUE);
-	}
-
-
-	private Expr createOrGroup(HashMap map, ISearchableProperty sp) {
+	private Expr createOrGroup(HashMap<String, String> map, ISearchableProperty sp) {
 		return createGroup(map, sp, true, false);
 	}
 
-	private Expr createAndGroup(HashMap map, ISearchableProperty sp) {
+	private Expr createAndGroup(HashMap<String, String> map, ISearchableProperty sp) {
 		return createGroup(map, sp, false, false);
 	}
 
-	private Expr createAndNotGroup(HashMap map, ISearchableProperty sp) {
+	private Expr createAndNotGroup(HashMap<String, String> map, ISearchableProperty sp) {
 		return createGroup(map, sp, false, true);
 	}
 
-	private Expr createOrNotGroup(HashMap map, ISearchableProperty sp) {
+	private Expr createOrNotGroup(HashMap<String, String> map, ISearchableProperty sp) {
 		return createGroup(map, sp, true, true);
 	}
 
-	private Expr createGroup(HashMap map, ISearchableProperty sp, boolean orOp, boolean notOp) {
-		Expr nres = Expr.TRUE;
-		FilterFieldExpr ffe = new FilterFieldExpr(sp.getFilterField());
-		if (notOp) {
-			for (Iterator<String> iterator = sp.getIds().iterator(); iterator.hasNext();) {
-				String id = iterator.next();
-				String value = (String) map.get(id);
-				if (value == null || value.equals("false") || value.isEmpty()) {
-					nres = nres.and(new NotExpr(
-							new BinaryExpr(
-									ffe,
-									Operation.EQUALS,
-									new Node(sp.getNameById(id)))
-							));
-				}
-			}
-		}
+	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp, boolean notOp) {
+		Expr nres = Expr.EMPTY;
 		Expr res = Expr.EMPTY;
+		FilterField ff = sp.getFilterField();
 		for (Iterator<String> iterator = sp.getIds().iterator(); iterator.hasNext();) {
 			String id = iterator.next();
-			String value = (String) map.get(id);
-			if (value == null || value.equals("false") || value.isEmpty())
-				continue;// skip false unless notOp defined
-			BinaryExpr expr = null;
-			if (value.equals("true")) {
-				expr = new BinaryExpr(ffe, Operation.EQUALS, new Node(sp.getNameById(id)));
-			} else {
-				expr = new BinaryExpr(ffe, Operation.EQUALS, new Value(value));
-			}
-			if (orOp)
-				res = res.or(expr);
-			else
-				res = res.and(expr);
+			String value = map.get(id);
+			if (value == null || value.equals("false") || value.isEmpty()) {
+				if (notOp) {
+					Expr expr = ff.valueExpr(sp.getNameById(id));
+					nres = nres.and(expr.not());
+				}
+			} else if (value.equals("true")) {
+				Expr expr = ff.valueExpr(sp.getNameById(id));
+				if (orOp)
+					res = res.or(expr);
+				else
+					res = res.and(expr);
+			} else
+				throw new IllegalArgumentException();
 		}
 		return nres.and(res);
 	}

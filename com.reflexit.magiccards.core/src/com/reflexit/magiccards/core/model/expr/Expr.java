@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model.expr;
 
-
 public class Expr {
 	public static Expr TRUE = new Expr() {
 		@Override
@@ -95,7 +94,6 @@ public class Expr {
 			return this;
 		};
 	};
-	boolean translated = false;
 
 	public boolean evaluate(Object o) {
 		return false;
@@ -106,28 +104,25 @@ public class Expr {
 	}
 
 	public Expr and(Expr b) {
-		if (b == Expr.EMPTY)
+		if (b == Expr.EMPTY || b == Expr.TRUE)
 			return this;
-		else
-			return new BinaryExpr(this, Operation.AND, b);
+		if (b == Expr.FALSE)
+			return Expr.FALSE;
+		return new BinaryExpr(this, Operation.AND, b);
 	}
 
 	public Expr or(Expr b) {
 		if (b == Expr.EMPTY)
 			return this;
-		else
-			return new BinaryExpr(this, Operation.OR, b);
+		if (b == Expr.TRUE)
+			return Expr.TRUE;
+		if (b == Expr.FALSE)
+			return this;
+		return new BinaryExpr(this, Operation.OR, b);
 	}
 
 	public Expr not() {
 		return new NotExpr(this);
-	}
-
-	public Expr translate() {
-		if (translated)
-			return this;
-		this.translated = true;
-		return this;
 	}
 
 	public static Expr valueOf(boolean b) {

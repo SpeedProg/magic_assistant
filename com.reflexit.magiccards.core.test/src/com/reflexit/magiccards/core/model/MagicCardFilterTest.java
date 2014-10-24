@@ -32,7 +32,7 @@ public class MagicCardFilterTest extends TestCase {
 		Expr e = BinaryExpr.textSearch(MagicCardField.ORACLE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setOracleText(text);
-		boolean res = e.translate().evaluate(mc);
+		boolean res = e.evaluate(mc);
 		assertEquals(exp, res);
 	}
 
@@ -92,7 +92,7 @@ public class MagicCardFilterTest extends TestCase {
 		Expr e = BinaryExpr.textSearch(MagicCardField.TYPE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setType(text);
-		boolean res = e.translate().evaluate(mc);
+		boolean res = e.evaluate(mc);
 		assertEquals(expected, res);
 	}
 
