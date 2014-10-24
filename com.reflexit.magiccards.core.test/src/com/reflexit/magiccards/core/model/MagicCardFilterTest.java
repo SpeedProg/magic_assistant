@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
@@ -28,7 +29,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	private void search(String expr, String text, boolean exp) {
-		Expr e = MagicCardFilter.textSearch(MagicCardField.ORACLE, expr);
+		Expr e = BinaryExpr.textSearch(MagicCardField.ORACLE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setOracleText(text);
 		boolean res = e.translate().evaluate(mc);
@@ -88,7 +89,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	private void searchType(String expr, String text, boolean expected) {
-		Expr e = MagicCardFilter.textSearch(MagicCardField.TYPE, expr);
+		Expr e = BinaryExpr.textSearch(MagicCardField.TYPE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setType(text);
 		boolean res = e.translate().evaluate(mc);

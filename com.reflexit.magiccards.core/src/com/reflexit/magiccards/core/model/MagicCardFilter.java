@@ -14,7 +14,6 @@ import com.reflexit.magiccards.core.model.expr.NotExpr;
 import com.reflexit.magiccards.core.model.expr.Operation;
 import com.reflexit.magiccards.core.model.expr.TextValue;
 import com.reflexit.magiccards.core.model.expr.Value;
-import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
@@ -87,27 +86,6 @@ public class MagicCardFilter implements Cloneable {
 			tvalue.setWordBoundary(true);
 		}
 		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
-	}
-
-	static public BinaryExpr textSearch(ICardField field, String text) {
-		SearchStringTokenizer tokenizer = new SearchStringTokenizer();
-		tokenizer.init(text);
-		SearchToken token;
-		Expr res = Expr.EMPTY;
-		while ((token = tokenizer.nextToken()) != null) {
-			BinaryExpr cur;
-			if (token.getType() == TokenType.NOT) {
-				token = tokenizer.nextToken();
-				if (token == null)
-					break;
-				cur = tokenSearch(field, token);
-				cur = new NotExpr(cur);
-			} else {
-				cur = tokenSearch(field, token);
-			}
-			res = res.and(cur);
-		}
-		return BinaryExpr.valueOf(res);
 	}
 
 	public void update(HashMap map) {

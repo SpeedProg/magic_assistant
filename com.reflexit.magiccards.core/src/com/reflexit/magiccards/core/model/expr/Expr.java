@@ -27,6 +27,11 @@ public class Expr {
 		public Expr or(Expr b) {
 			return this;
 		};
+
+		@Override
+		public Expr not() {
+			return FALSE;
+		};
 	};
 	public static Expr FALSE = new Expr() {
 		@Override
@@ -38,6 +43,11 @@ public class Expr {
 		public Object getFieldValue(Object o) {
 			return Boolean.FALSE;
 		}
+
+		@Override
+		public Expr not() {
+			return TRUE;
+		};
 
 		@Override
 		public String toString() {
@@ -79,6 +89,11 @@ public class Expr {
 		public Expr or(Expr b) {
 			return b;
 		};
+
+		@Override
+		public Expr not() {
+			return this;
+		};
 	};
 	boolean translated = false;
 
@@ -104,10 +119,8 @@ public class Expr {
 			return new BinaryExpr(this, Operation.OR, b);
 	}
 
-	public Expr not(Expr b) {
-		if (b == Expr.EMPTY)
-			return Expr.EMPTY;
-		return new NotExpr(b);
+	public Expr not() {
+		return new NotExpr(this);
 	}
 
 	public Expr translate() {

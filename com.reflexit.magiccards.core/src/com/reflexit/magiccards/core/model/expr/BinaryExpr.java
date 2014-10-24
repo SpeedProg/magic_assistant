@@ -9,6 +9,9 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Languages;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
+import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
 public class BinaryExpr extends Expr {
 	final Expr left;
@@ -188,7 +191,7 @@ public class BinaryExpr extends Expr {
 		if (translated)
 			return this;
 		BinaryExpr bin = this;
-		BinaryExpr res = null;
+		Expr res = null;
 		String value = bin.getRight().toString();
 		if (bin.getLeft() instanceof FilterFieldExpr) {
 			FilterField ff = ((FilterFieldExpr) bin.getLeft()).getFilterField();
@@ -196,7 +199,7 @@ public class BinaryExpr extends Expr {
 				case RARITY:
 				case LOCATION:
 				case EDITION:
-					res = BinaryExpr.fieldEquals(ff.getField(), value);
+					res = fieldEquals(ff.getField(), value);
 					break;
 				case TYPE_LINE:
 				case NAME_LINE:
@@ -204,7 +207,7 @@ public class BinaryExpr extends Expr {
 				case COMMENT:
 				case SPECIAL:
 				case CARD_TYPE:
-					res = MagicCardFilter.textSearch(ff.getField(), value);
+					res = textSearch(ff.getField(), value);
 					break;
 				case FORMAT:
 					TextValue tvalue = new TextValue(value, true, true, false);
@@ -217,72 +220,72 @@ public class BinaryExpr extends Expr {
 				case FORTRADECOUNT:
 				case COMMUNITYRATING:
 				case COLLNUM:
-					res = BinaryExpr.fieldInt(ff.getField(), value);
+					res = fieldInt(ff.getField(), value);
 					break;
 				case COLOR: {
 					String en;
 					if (value.equals("Multi-Color")) {
-						res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "multi");
+						res = fieldEquals(MagicCardField.CTYPE, "multi");
 					} else if (value.equals("Mono-Color")) {
-						BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
-						BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "mono");
+						BinaryExpr b1 = fieldEquals(MagicCardField.CTYPE, "colorless");
+						BinaryExpr b2 = fieldEquals(MagicCardField.CTYPE, "mono");
 						res = new BinaryExpr(b1, Operation.OR, b2);
 					} else if (value.equals("Hybrid")) {
-						res = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "hybrid");
+						res = fieldEquals(MagicCardField.CTYPE, "hybrid");
 					} else if (value.equals("Colorless")) {
-						BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "colorless");
-						BinaryExpr b2 = BinaryExpr.fieldEquals(MagicCardField.CTYPE, "land");
+						BinaryExpr b1 = fieldEquals(MagicCardField.CTYPE, "colorless");
+						BinaryExpr b2 = fieldEquals(MagicCardField.CTYPE, "land");
 						res = new BinaryExpr(b1, Operation.OR, b2);
 					} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						res = BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
+						res = fieldMatches(MagicCardField.COST, ".*" + en + ".*");
 					}
 					break;
 				}
 				case DBPRICE: {
 					BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value("0"));
-					res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.PRICE, value));
-					res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
+					res = new BinaryExpr(b1, Operation.AND, fieldInt(MagicCardField.PRICE, value));
+					res = new BinaryExpr(res, Operation.OR, fieldInt(MagicCardField.DBPRICE, value));
 					break;
 				}
 				case PRICE: {
 					BinaryExpr b1 = new BinaryExpr(new CardFieldExpr(MagicCardField.PRICE), Operation.EQ, new Value("0"));
-					res = new BinaryExpr(b1, Operation.AND, BinaryExpr.fieldInt(MagicCardField.DBPRICE, value));
-					res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldInt(MagicCardField.PRICE, value));
+					res = new BinaryExpr(b1, Operation.AND, fieldInt(MagicCardField.DBPRICE, value));
+					res = new BinaryExpr(res, Operation.OR, fieldInt(MagicCardField.PRICE, value));
 					break;
 				}
 				case OWNERSHIP: {
-					BinaryExpr b1 = BinaryExpr.fieldEquals(MagicCardField.OWNERSHIP, value);
+					BinaryExpr b1 = fieldEquals(MagicCardField.OWNERSHIP, value);
 					Expr b2;
 					if ("true".equals(value))
-						b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, ">=1");
+						b2 = fieldInt(MagicCardField.OWN_COUNT, ">=1");
 					else
-						b2 = BinaryExpr.fieldInt(MagicCardField.OWN_COUNT, "==0");
-					res = new BinaryExpr(b1, Operation.OR, b2);
+						b2 = fieldInt(MagicCardField.OWN_COUNT, "==0");
+					res = b1.or(b2);
 					break;
 				}
 				case LANG: {
 					if (value.equals("")) {
-						res = new BinaryExpr(MagicCardFilter.TRUE, Operation.AND, MagicCardFilter.TRUE);
+						res = TRUE;
 					} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
-						res = BinaryExpr.fieldEquals(MagicCardField.LANG, null);
-						res = new BinaryExpr(res, Operation.OR, BinaryExpr.fieldEquals(MagicCardField.LANG, value));
+						res = fieldEquals(MagicCardField.LANG, null)
+								.or(fieldEquals(MagicCardField.LANG, value));
 					} else {
-						res = BinaryExpr.fieldEquals(MagicCardField.LANG, value);
+						res = fieldEquals(MagicCardField.LANG, value);
 					}
 					break;
 				}
 				case TEXT_LINE:
 				case TEXT_LINE_2:
 				case TEXT_LINE_3:
-					res = MagicCardFilter.textSearch(MagicCardField.TEXT, value);
-					res = new BinaryExpr(res, Operation.OR, MagicCardFilter.textSearch(MagicCardField.ORACLE, value));
+					res = textSearch(MagicCardField.TEXT, value)
+							.or(textSearch(MagicCardField.ORACLE, value));
 					break;
 				case TEXT_NOT_1:
 				case TEXT_NOT_2:
 				case TEXT_NOT_3:
-					res = MagicCardFilter.textSearch(MagicCardField.TEXT, value);
-					res = new BinaryExpr(res, Operation.OR, MagicCardFilter.textSearch(MagicCardField.ORACLE, value));
-					res = new NotExpr(res);
+					res = textSearch(MagicCardField.TEXT, value)
+							.or(textSearch(MagicCardField.ORACLE, value))
+							.not();
 					break;
 				default:
 					break;
@@ -294,5 +297,26 @@ public class BinaryExpr extends Expr {
 		res = new BinaryExpr(bin.left.translate(), bin.op, bin.right.translate());
 		res.translated = true;
 		return res;
+	}
+
+	static public BinaryExpr textSearch(ICardField field, String text) {
+		SearchStringTokenizer tokenizer = new SearchStringTokenizer();
+		tokenizer.init(text);
+		SearchToken token;
+		Expr res = Expr.EMPTY;
+		while ((token = tokenizer.nextToken()) != null) {
+			BinaryExpr cur;
+			if (token.getType() == TokenType.NOT) {
+				token = tokenizer.nextToken();
+				if (token == null)
+					break;
+				cur = MagicCardFilter.tokenSearch(field, token);
+				cur = new NotExpr(cur);
+			} else {
+				cur = MagicCardFilter.tokenSearch(field, token);
+			}
+			res = res.and(cur);
+		}
+		return valueOf(res);
 	}
 }
