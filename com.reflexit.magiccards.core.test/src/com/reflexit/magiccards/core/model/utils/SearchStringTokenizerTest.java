@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
+import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 

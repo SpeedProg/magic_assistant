@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
+import com.reflexit.magiccards.core.model.expr.Expr;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
 public class MagicCardFilterTest extends TestCase {
@@ -31,7 +31,7 @@ public class MagicCardFilterTest extends TestCase {
 		Expr e = MagicCardFilter.textSearch(MagicCardField.ORACLE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setOracleText(text);
-		boolean res = e.evaluate(mc);
+		boolean res = e.translate().evaluate(mc);
 		assertEquals(exp, res);
 	}
 
@@ -91,7 +91,7 @@ public class MagicCardFilterTest extends TestCase {
 		Expr e = MagicCardFilter.textSearch(MagicCardField.TYPE, expr);
 		MagicCard mc = new MagicCard();
 		mc.setType(text);
-		boolean res = e.evaluate(mc);
+		boolean res = e.translate().evaluate(mc);
 		assertEquals(expected, res);
 	}
 
@@ -350,6 +350,20 @@ public class MagicCardFilterTest extends TestCase {
 		checkNotFound(wb);
 		checkFound(br);
 		checkFound(wbr);
+	}
+
+	public void testColorBlackOrRedIdentity() {
+		MagicCardPhysical b = mcpCost(BLACK_COST);
+		MagicCardPhysical r = mcpCost(RED_COST);
+		MagicCardPhysical w = mcpCost(WHITE_COST);
+		MagicCardPhysical wb = mcpCost(WHITE_COST + BLACK_COST);
+		MagicCardPhysical br = mcpCost(BLACK_COST + RED_COST);
+		setFilterTrue(black_id, red_id, ColorTypes.IDENTITY_ID);
+		checkNotFound(b);
+		checkNotFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkFound(br);
 	}
 
 	public void testColorBlackOnly() {

@@ -22,6 +22,7 @@ Export-Package: com.reflexit.magiccards.core;
  com.reflexit.magiccards.core.model;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage",
  com.reflexit.magiccards.core.model.aggr,
  com.reflexit.magiccards.core.model.events,
+ com.reflexit.magiccards.core.model.expr,
  com.reflexit.magiccards.core.model.nav;
   uses:="com.reflexit.magiccards.core.model.events,
    org.eclipse.core.runtime,

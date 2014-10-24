@@ -23,9 +23,9 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.MagicCardFilter.BinaryExpr;
-import com.reflexit.magiccards.core.model.MagicCardFilter.Expr;
-import com.reflexit.magiccards.core.model.MagicCardFilter.Node;
+import com.reflexit.magiccards.core.model.expr.BinaryExpr;
+import com.reflexit.magiccards.core.model.expr.Expr;
+import com.reflexit.magiccards.core.model.expr.Node;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 

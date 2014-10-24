@@ -3,7 +3,7 @@ package com.reflexit.magiccards.core.model;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+import com.reflexit.magiccards.core.model.expr.TextValue;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 
 public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagicCard, IMagicCardPhysical, Cloneable {

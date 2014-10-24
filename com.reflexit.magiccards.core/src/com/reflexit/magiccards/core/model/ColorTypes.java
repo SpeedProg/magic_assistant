@@ -6,17 +6,19 @@ import java.util.LinkedHashMap;
 
 public class ColorTypes implements ISearchableProperty {
 	static ColorTypes instance = new ColorTypes();
-	private LinkedHashMap names;
+	private LinkedHashMap<String, String> names;
 	static public String AND_ID = getInstance().getPrefConstant("And");
 	static public String ONLY_ID = getInstance().getPrefConstant("Only");
+	static public String IDENTITY_ID = getInstance().getPrefConstant("Identity");
 
 	private ColorTypes() {
-		this.names = new LinkedHashMap();
+		this.names = new LinkedHashMap<String, String>();
 		add("Multi-Color");
 		add("Mono-Color");
 		add("Hybrid");
 		add("And");
 		add("Only");
+		add("Identity");
 	}
 
 	private void add(String string) {
@@ -24,6 +26,7 @@ public class ColorTypes implements ISearchableProperty {
 		this.names.put(id, string);
 	}
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -37,19 +40,22 @@ public class ColorTypes implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection getNames() {
-		return new ArrayList(this.names.values());
+	@Override
+	public Collection<String> getNames() {
+		return new ArrayList<String>(this.names.values());
 	}
 
-	public Collection getIds() {
-		return new ArrayList(this.names.keySet());
+	@Override
+	public Collection<String> getIds() {
+		return new ArrayList<String>(this.names.keySet());
 	}
 
 	public String getPrefConstant(String name) {
 		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
+	@Override
 	public String getNameById(String id) {
-		return (String) this.names.get(id);
+		return this.names.get(id);
 	}
 }

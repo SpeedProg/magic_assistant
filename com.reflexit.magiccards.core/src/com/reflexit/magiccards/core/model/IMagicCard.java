@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.model;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+import com.reflexit.magiccards.core.model.expr.TextValue;
+
 
 public interface IMagicCard extends ICard {
 	public static final MagicCard DEFAULT = new MagicCard();
@@ -13,6 +14,7 @@ public interface IMagicCard extends ICard {
 
 	public abstract int getGathererId();
 
+	@Override
 	public abstract String getName();
 
 	public abstract String getOracleText();
@@ -39,6 +41,7 @@ public interface IMagicCard extends ICard {
 
 	public abstract String getRulings();
 
+	@Override
 	public IMagicCard cloneCard();
 
 	public abstract MagicCard getBase();

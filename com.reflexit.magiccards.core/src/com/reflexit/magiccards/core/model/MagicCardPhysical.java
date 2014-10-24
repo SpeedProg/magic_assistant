@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.MagicCardFilter.TextValue;
+import com.reflexit.magiccards.core.model.expr.TextValue;
 
 public class MagicCardPhysical extends AbstractMagicCard implements ICardModifiable, IMagicCardPhysical, ICard {
 	private MagicCard card;
