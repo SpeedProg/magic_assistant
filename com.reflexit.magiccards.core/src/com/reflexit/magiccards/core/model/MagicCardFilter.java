@@ -70,26 +70,8 @@ public class MagicCardFilter implements Cloneable {
 
 	public void update(HashMap<String, String> map) {
 		Expr expr = TRUE;
-		if (map.containsKey(ColorTypes.IDENTITY_ID)) {
-			map.remove(ColorTypes.ONLY_ID);
-			map.remove(ColorTypes.AND_ID);
-			map.remove(ColorTypes.IDENTITY_ID);
-			expr = createAndNotGroup(map, Colors.getInstance());
-		} else if (map.containsKey(ColorTypes.ONLY_ID) && map.containsKey(ColorTypes.AND_ID)) {
-			map.remove(ColorTypes.ONLY_ID);
-			map.remove(ColorTypes.AND_ID);
-			expr = createAndNotGroup(map, Colors.getInstance());
-		} else if (map.containsKey(ColorTypes.AND_ID)) {
-			map.remove(ColorTypes.AND_ID);
-			expr = createAndGroup(map, Colors.getInstance());
-		} else if (map.containsKey(ColorTypes.ONLY_ID)) {
-			map.remove(ColorTypes.ONLY_ID);
-			expr = createOrNotGroup(map, Colors.getInstance());
-		} else {
-			expr = createOrGroup(map, Colors.getInstance());
-		}
+		expr = expr.and(createColorGroup(map));
 		expr = expr
-				.and(createOrGroup(map, ColorTypes.getInstance()))
 				.and(createOrGroup(map, CardTypes.getInstance()))
 				.and(createOrGroup(map, Editions.getInstance()))
 				.and(createOrGroup(map, Locations.getInstance()))
@@ -123,26 +105,41 @@ public class MagicCardFilter implements Cloneable {
 		this.root = expr.and(text).and(textNot);
 	}
 
+	public Expr createColorGroup(HashMap<String, String> map) {
+		FilterField ff = FilterField.COLOR;
+		boolean orOp = true;
+		boolean only = false;
+		if (map.containsKey(ColorTypes.IDENTITY_ID)) {
+			ff = FilterField.COLOR_IDENITY;
+			only = true;
+		}
+		if (map.containsKey(ColorTypes.AND_ID)) {
+			orOp = false;
+		}
+		if (map.containsKey(ColorTypes.ONLY_ID)) {
+			only = true;
+		}
+		Expr expr = createGroup(map, Colors.getInstance(), orOp, only, ff);
+		// remaining color types
+		map.remove(ColorTypes.ONLY_ID);
+		map.remove(ColorTypes.AND_ID);
+		map.remove(ColorTypes.IDENTITY_ID);
+		expr = expr.and(createOrGroup(map, ColorTypes.getInstance()));
+		return expr;
+	}
+
 	private Expr createOrGroup(HashMap<String, String> map, ISearchableProperty sp) {
 		return createGroup(map, sp, true, false);
 	}
 
-	private Expr createAndGroup(HashMap<String, String> map, ISearchableProperty sp) {
-		return createGroup(map, sp, false, false);
-	}
-
-	private Expr createAndNotGroup(HashMap<String, String> map, ISearchableProperty sp) {
-		return createGroup(map, sp, false, true);
-	}
-
-	private Expr createOrNotGroup(HashMap<String, String> map, ISearchableProperty sp) {
-		return createGroup(map, sp, true, true);
-	}
-
 	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp, boolean notOp) {
+		FilterField ff = sp.getFilterField();
+		return createGroup(map, sp, orOp, notOp, ff);
+	}
+
+	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp, boolean notOp, FilterField ff) {
 		Expr nres = Expr.EMPTY;
 		Expr res = Expr.EMPTY;
-		FilterField ff = sp.getFilterField();
 		for (Iterator<String> iterator = sp.getIds().iterator(); iterator.hasNext();) {
 			String id = iterator.next();
 			String value = map.get(id);

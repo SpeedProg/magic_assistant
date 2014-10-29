@@ -41,7 +41,8 @@ public enum FilterField {
 	COLLNUM(MagicCardField.COLLNUM, Postfix.NUMERIC_POSTFIX),
 	SPECIAL(MagicCardField.SPECIAL, Postfix.TEXT_POSTFIX),
 	FORTRADECOUNT(MagicCardField.FORTRADECOUNT, Postfix.NUMERIC_POSTFIX),
-	FORMAT(MagicCardField.LEGALITY, Postfix.TEXT_POSTFIX);
+	FORMAT(MagicCardField.LEGALITY, Postfix.TEXT_POSTFIX),
+	COLOR_IDENITY(MagicCardField.COST, "identity", Postfix.ENUM_POSTFIX), ;
 	// fields
 	private ICardField field;
 	private String id;
@@ -87,7 +88,7 @@ public enum FilterField {
 		return PREFIX + ".filter." + sub.toString() + "." + escapeProperty(name);
 	}
 
-	public static Collection getAllIds() {
+	public static Collection<String> getAllIds() {
 		ArrayList<String> ids = new ArrayList<String>();
 		ids.addAll(Colors.getInstance().getIds());
 		ids.addAll(ColorTypes.getInstance().getIds());
@@ -179,7 +180,15 @@ public enum FilterField {
 						return fieldEquals(MagicCardField.CTYPE, "colorless").or(
 								fieldEquals(MagicCardField.CTYPE, "land"));
 					} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						return BinaryExpr.fieldMatches(MagicCardField.COST, ".*" + en + ".*");
+						return BinaryExpr.fieldMatches(MagicCardField.COST, en);
+					}
+					break;
+				}
+				case COLOR_IDENITY: {
+					String en;
+					if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
+						return BinaryExpr.fieldMatches(MagicCardField.COST, en)
+								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE, new TextValue(en, true, true, false)));
 					}
 					break;
 				}

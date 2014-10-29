@@ -50,6 +50,9 @@ public class BinaryExpr extends Expr {
 		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, new Value(value));
 	}
 
+	public static BinaryExpr fieldMatches(ICardField field, Value value) {
+		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, value);
+	}
 
 	public static BinaryExpr fieldOp(ICardField field, Operation op, String value) {
 		return new BinaryExpr(new CardFieldExpr(field), op, new Value(value));

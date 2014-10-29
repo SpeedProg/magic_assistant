@@ -360,10 +360,42 @@ public class MagicCardFilterTest extends TestCase {
 		MagicCardPhysical wb = mcpCost(WHITE_COST + BLACK_COST);
 		MagicCardPhysical br = mcpCost(BLACK_COST + RED_COST);
 		setFilterTrue(black_id, red_id, ColorTypes.IDENTITY_ID);
+		checkFound(b);
+		checkFound(r);
+		checkNotFound(w);
+		checkNotFound(wb);
+		checkFound(br);
+		b.set(MagicCardField.ORACLE, "{W} - do something"); // white in text
+		checkNotFound(b);
+		b.set(MagicCardField.ORACLE, "{R} - do something"); // red
+		checkFound(b);
+		b.set(MagicCardField.ORACLE, "{W/R} - do something"); // combined cost
+		checkNotFound(b);
+		b.set(MagicCardField.ORACLE, "Win"); // W but not cost
+		checkFound(b);
+	}
+
+	public void testColorBlackAndRedIdentity() {
+		MagicCardPhysical b = mcpCost(BLACK_COST);
+		MagicCardPhysical r = mcpCost(RED_COST);
+		MagicCardPhysical w = mcpCost(WHITE_COST);
+		MagicCardPhysical wb = mcpCost(WHITE_COST + BLACK_COST);
+		MagicCardPhysical br = mcpCost(BLACK_COST + RED_COST);
+		MagicCardPhysical brh = mcpCost("{B/R}");
+		setFilterTrue(black_id, red_id, ColorTypes.IDENTITY_ID, ColorTypes.AND_ID);
 		checkNotFound(b);
 		checkNotFound(r);
 		checkNotFound(w);
 		checkNotFound(wb);
+		checkFound(br);
+		checkFound(brh);
+		br.set(MagicCardField.ORACLE, "{W} - do something"); // white in text
+		checkNotFound(br);
+		br.set(MagicCardField.ORACLE, "{R} - do something"); // red
+		checkFound(br);
+		br.set(MagicCardField.ORACLE, "{W/R} - do something"); // combined cost
+		checkNotFound(br);
+		br.set(MagicCardField.ORACLE, "Win"); // W but not cost
 		checkFound(br);
 	}
 
