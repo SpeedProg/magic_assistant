@@ -13,22 +13,6 @@ public class BinaryExpr extends Expr {
 	final Expr left;
 	final Expr right;
 	final Operation op;
-	public static BinaryExpr BTRUE = new BinaryExpr(Expr.TRUE, Operation.AND, Expr.TRUE) {
-		@Override
-		public boolean evaluate(Object o) {
-			return true;
-		}
-
-		@Override
-		public Object getFieldValue(Object o) {
-			return Boolean.TRUE;
-		}
-
-		@Override
-		public String toString() {
-			return "true";
-		}
-	};
 
 	public BinaryExpr(Expr left, Operation op, Expr right) {
 		if (right == null)
@@ -36,14 +20,6 @@ public class BinaryExpr extends Expr {
 		this.left = left;
 		this.right = right;
 		this.op = op;
-	}
-
-	public static BinaryExpr valueOf(Expr expr) {
-		if (expr instanceof BinaryExpr)
-			return (BinaryExpr) expr;
-		if (expr == TRUE || expr == EMPTY)
-			return BTRUE;
-		return new BinaryExpr(expr, Operation.AND, TRUE);
 	}
 
 	@Override
@@ -74,9 +50,6 @@ public class BinaryExpr extends Expr {
 		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, new Value(value));
 	}
 
-	public static BinaryExpr fieldLike(ICardField field, String value) {
-		return new BinaryExpr(new CardFieldExpr(field), Operation.LIKE, new Value(value));
-	}
 
 	public static BinaryExpr fieldOp(ICardField field, Operation op, String value) {
 		return new BinaryExpr(new CardFieldExpr(field), op, new Value(value));
@@ -84,63 +57,62 @@ public class BinaryExpr extends Expr {
 
 	@Override
 	public boolean evaluate(Object o) {
-		if (this.op == Operation.AND) {
-			boolean res = this.left.evaluate(o);
-			if (res == false)
-				return false;
-			return this.right.evaluate(o);
-		} else if (this.op == Operation.OR) {
-			boolean res = this.left.evaluate(o);
-			if (res == true)
-				return true;
-			return this.right.evaluate(o);
-		} else if (this.op == Operation.NOT) {
-			boolean res = this.left.evaluate(o);
-			return !res;
-		}
-		if (this.op == Operation.EQUALS) {
-			Object x = this.left.getFieldValue(o);
-			Object y = this.right.getFieldValue(o);
-			if (x == null && y == null)
-				return true;
-			if (x == null || y == null)
-				return false;
-			if (x instanceof String && y instanceof String)
-				return x.equals(y);
-			else
-				return x.toString().equals(y.toString());
-		} else if (this.op == Operation.MATCHES) {
-			return evalutateMatches(o);
-		} else if (this.op == Operation.LIKE) {
-			return true; // processed by DB
-		} else if (this.op == Operation.EQ || this.op == Operation.LE || this.op == Operation.GE) {
-			Object x = this.left.getFieldValue(o);
-			Object y = this.right.getFieldValue(o);
-			if (x == null && y == null)
-				return true;
-			if (x == null || x.equals(""))
-				x = "0";
-			if (y == null || y.equals(""))
-				y = "0";
-			if (x.equals(y))
-				return true;
-			String sx = x.toString();
-			String sy = y.toString();
-			try {
-				float dx = Float.parseFloat(sx);
-				float dy = Float.parseFloat(sy);
-				if (this.op == Operation.EQ)
-					return Float.compare(dx, dy) == 0;
-				if (this.op == Operation.GE)
-					return dx >= dy;
-				if (this.op == Operation.LE)
-					return dx <= dy;
-			} catch (NumberFormatException e) {
-				return false;
+		switch (this.op) {
+			case AND:
+				if (this.left.evaluate(o) == false)
+					return false;
+				return this.right.evaluate(o);
+			case OR:
+				if (this.left.evaluate(o) == true)
+					return true;
+				return this.right.evaluate(o);
+
+			case EQUALS: {
+				Object x = this.left.getFieldValue(o);
+				Object y = this.right.getFieldValue(o);
+				if (x == null && y == null)
+					return true;
+				if (x == null || y == null)
+					return false;
+				if (x instanceof String && y instanceof String)
+					return x.equals(y);
+				else
+					return x.toString().equals(y.toString());
 			}
-			return false;
+			case MATCHES:
+				return evalutateMatches(o);
+			case EQ:
+			case LE:
+			case GE: {
+				Object x = this.left.getFieldValue(o);
+				Object y = this.right.getFieldValue(o);
+				if (x == null && y == null)
+					return true;
+				if (x == null || x.equals(""))
+					x = "0";
+				if (y == null || y.equals(""))
+					y = "0";
+				if (x.equals(y))
+					return true;
+				String sx = x.toString();
+				String sy = y.toString();
+				try {
+					float dx = Float.parseFloat(sx);
+					float dy = Float.parseFloat(sy);
+					if (this.op == Operation.EQ)
+						return Float.compare(dx, dy) == 0;
+					if (this.op == Operation.GE)
+						return dx >= dy;
+					if (this.op == Operation.LE)
+						return dx <= dy;
+				} catch (NumberFormatException e) {
+					return false;
+				}
+				throw new IllegalArgumentException();
+			}
+			default:
+				throw new UnsupportedOperationException();
 		}
-		return true;
 	}
 
 	boolean evalutateMatches(Object o) {
@@ -177,7 +149,7 @@ public class BinaryExpr extends Expr {
 		}
 	}
 
-	static public BinaryExpr textSearch(ICardField field, String text) {
+	static public Expr textSearch(ICardField field, String text) {
 		SearchStringTokenizer tokenizer = new SearchStringTokenizer();
 		tokenizer.init(text);
 		SearchToken token;
@@ -195,6 +167,6 @@ public class BinaryExpr extends Expr {
 			}
 			res = res.and(cur);
 		}
-		return valueOf(res);
+		return res;
 	}
 }

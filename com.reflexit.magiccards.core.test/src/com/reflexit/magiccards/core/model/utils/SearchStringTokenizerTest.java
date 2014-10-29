@@ -44,6 +44,12 @@ public class SearchStringTokenizerTest extends TestCase {
 		assertToken(0, SearchStringTokenizer.TokenType.WORD, "one");
 	}
 
+	public void testWordsM() {
+		assertEquals(2, tokenize("mama m"));
+		assertToken(0, SearchStringTokenizer.TokenType.WORD, "mama");
+		assertToken(1, SearchStringTokenizer.TokenType.WORD, "m");
+	}
+
 	public void testRegex() {
 		assertEquals(2, tokenize("one m/a.*b/"));
 		assertToken(0, SearchStringTokenizer.TokenType.WORD, "one");
@@ -74,6 +80,11 @@ public class SearchStringTokenizerTest extends TestCase {
 		assertToken(1, SearchStringTokenizer.TokenType.QUOTED, "3/3 ");
 	}
 
+	public void testQuotedUnfinished() {
+		assertEquals(1, tokenize("\"aaa"));
+		assertToken(0, SearchStringTokenizer.TokenType.QUOTED, "aaa");
+	}
+
 	public void testAbi() {
 		assertEquals(2, tokenize(" [draw] x"));
 		assertToken(0, SearchStringTokenizer.TokenType.ABI, "draw");
@@ -84,6 +95,11 @@ public class SearchStringTokenizerTest extends TestCase {
 		assertEquals(2, tokenize("x [draw]"));
 		assertToken(1, SearchStringTokenizer.TokenType.ABI, "draw");
 		assertToken(0, SearchStringTokenizer.TokenType.WORD, "x");
+	}
+
+	public void testAbiUnfinished() {
+		assertEquals(1, tokenize("[draw"));
+		assertToken(0, SearchStringTokenizer.TokenType.ABI, "draw");
 	}
 
 	public void testNot() {

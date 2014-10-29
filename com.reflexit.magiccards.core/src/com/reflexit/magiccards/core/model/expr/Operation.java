@@ -8,8 +8,7 @@ public enum Operation {
 	NOT("NOT"),
 	GE(">="),
 	LE("<="),
-	EQ("=="),
-	LIKE("LIKE"), ;
+	EQ("==");
 	private String name;
 
 	Operation(String name) {

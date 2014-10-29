@@ -9,11 +9,11 @@ public class SearchStringTokenizer {
 	}
 
 	public static enum TokenType {
-		WORD,
-		QUOTED,
-		REGEX,
-		NOT,
-		ABI;
+		WORD, // i.e. life
+		QUOTED, // i.e. "end of turn"
+		REGEX, // i.e. m/sacrifice(d)?/
+		NOT, // i.e. -gain
+		ABI; // mined ability search (i.e. [removal])
 	}
 
 	public static class SearchToken {

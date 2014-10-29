@@ -12,13 +12,13 @@ import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
 public class MagicCardFilterTest extends TestCase {
 	MagicCardFilter filter;
-	private HashMap propMap;
+	private HashMap<String, String> propMap;
 	private MagicCard mc;
 	private MagicCardPhysical mcp;
 
 	@Override
 	public void setUp() {
-		propMap = new HashMap();
+		propMap = new HashMap<>();
 		filter = new MagicCardFilter();
 		mc = CardGenerator.generateCardWithValues();
 		mcp = mcp();
@@ -102,7 +102,7 @@ public class MagicCardFilterTest extends TestCase {
 		searchType("Artifact", "Artifact Creature", true);
 	}
 
-	public void setQuickFilter(FilterField filterField, Object value) {
+	public void setQuickFilter(FilterField filterField, String value) {
 		propMap.put(filterField.getPrefConstant(), value);
 		filter.update(propMap);
 	}

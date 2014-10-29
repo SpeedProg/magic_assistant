@@ -205,4 +205,17 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		assertEquals(a3, cards[3]);
 		assertEquals(a0, cards[4]);
 	}
+
+	@Test
+	public void testFilterLastSet() {
+		add3cards();
+		MagicCard card4 = card1.cloneCard();
+		card4.setSet("New set");
+		card4.setCardId(card1.getCardId() + 10);
+		this.deck.getCardStore().add(card4);
+		this.filter.setOnlyLastSet(true);
+		Object[] cards = getFilteredCards();
+		assertEquals(3, cards.length);
+		assertEquals(card4.getCardId(), ((IMagicCard) cards[0]).getCardId());
+	}
 }

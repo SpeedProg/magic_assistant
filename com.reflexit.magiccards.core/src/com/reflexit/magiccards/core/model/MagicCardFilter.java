@@ -26,7 +26,9 @@ public class MagicCardFilter implements Cloneable {
 			MagicCardFilter ret = (MagicCardFilter) super.clone();
 			if (groupFields != null)
 				ret.groupFields = Arrays.copyOf(groupFields, groupFields.length);
-			ret.sortOrder = (SortOrder) sortOrder.clone();
+			SortOrder x = new SortOrder();
+			x.setFrom(this.sortOrder);
+			ret.sortOrder = x;
 			return ret;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e.getMessage());
@@ -42,24 +44,6 @@ public class MagicCardFilter implements Cloneable {
 
 	public Expr getRoot() {
 		return this.root;
-	}
-
-	static BinaryExpr ignoreCase1SearchDb(ICardField field, String value) {
-		char c = value.charAt(0);
-		if (Character.isLetter(c)) {
-			String altValue = value.replaceAll("['\"%]", "_");
-			if (Character.isUpperCase(c)) {
-				altValue = Character.toLowerCase(c) + value.substring(1);
-			} else if (Character.isLowerCase(c)) {
-				altValue = Character.toUpperCase(c) + value.substring(1);
-			}
-			BinaryExpr b1 = BinaryExpr.fieldLike(field, "%" + value + "%");
-			BinaryExpr b2 = BinaryExpr.fieldLike(field, "%" + altValue + "%");
-			BinaryExpr res = new BinaryExpr(b1, Operation.OR, b2);
-			return res;
-		} else {
-			return BinaryExpr.fieldLike(field, "%" + value + "%");
-		}
 	}
 
 	public static BinaryExpr tokenSearch(ICardField field, SearchToken token) {
@@ -246,11 +230,5 @@ public class MagicCardFilter implements Cloneable {
 			groupFields = null;
 		else
 			groupFields = Arrays.copyOf(fields, fields.length);
-	}
-
-	public void setSortOrder(SortOrder sortOrder) {
-		if (sortOrder == null)
-			throw new NullPointerException();
-		this.sortOrder = sortOrder;
 	}
 }
