@@ -1,5 +1,6 @@
 changes in 1.4.1.1
 * Feature Identity Support - added support for identity filter for colors (for commander)
+* Fixed invalid values in Set filter page
 changes in 1.4.1.0
 * Bug: fixed card reconcile (own count update in db view)
 * Feature :read only collection/deck

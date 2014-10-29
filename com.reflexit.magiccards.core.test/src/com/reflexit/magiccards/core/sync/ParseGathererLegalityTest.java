@@ -49,15 +49,15 @@ public class ParseGathererLegalityTest extends TestCase {
 	public void testDeck() {
 		LegalityMap map1 = LegalityMap.EMPTY
 				.put(Format.STANDARD, Legality.LEGAL)
-				.put(Format.EXTENDED, Legality.LEGAL);
+				.put(Format.MODERN, Legality.LEGAL);
 		LegalityMap map2 = LegalityMap.EMPTY
-				.put(Format.EXTENDED, Legality.RESTRICTED)
+				.put(Format.MODERN, Legality.RESTRICTED)
 				.put(Format.valueOf("Tribal Wars"), Legality.LEGAL);
 		Collection<LegalityMap> maps = new ArrayList<LegalityMap>();
 		maps.add(map1);
 		maps.add(map2);
 		LegalityMap deck = LegalityMap.calculateDeckLegality(maps);
-		assertEquals(Legality.RESTRICTED, deck.get("Extended"));
+		assertEquals(Legality.RESTRICTED, deck.get("Modern"));
 		assertEquals(Legality.NOT_LEGAL, deck.get("Tribal Wars"));
 	}
 	
