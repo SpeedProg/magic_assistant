@@ -18,7 +18,7 @@ public class MagicCardFilterTest extends TestCase {
 
 	@Override
 	public void setUp() {
-		propMap = new HashMap<>();
+		propMap = new HashMap<String, String>();
 		filter = new MagicCardFilter();
 		mc = CardGenerator.generateCardWithValues();
 		mcp = mcp();
