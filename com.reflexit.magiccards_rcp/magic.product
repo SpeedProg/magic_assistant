@@ -87,7 +87,7 @@ Apache Software Foundation http://www.apache.org/
 
 
    <repositories>
-      <repository location="http://mtgbrowser.sourceforge.net/update/1.4-beta" enabled="true" />
+      <repository location="http://mtgbrowser.sourceforge.net/update/1.4-beta" enabled="false" />
       <repository location="http://mtgbrowser.sourceforge.net/update/1.4" enabled="true" />
    </repositories>
 

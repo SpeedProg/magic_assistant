@@ -1,0 +1,24 @@
+;aic
+DelFolder APPDIR\configuration 
+DelFolder APPDIR\plugins
+DelFolder APPDIR\features
+DelFolder APPDIR\p2
+DelFolder APPDIR\readme
+DelFolder APPDIR\jre
+DelFile APPDIR\.eclipseproduct
+DelFile APPDIR\artifacts.xml
+DelFile APPDIR\epl-v10.html
+DelFile APPDIR\magicassistant.ini
+DelFile APPDIR\notice.html
+AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\configuration
+AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\plugins
+AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\features
+AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\p2
+AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\readme
+AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\jre
+AddFile APPDIR &EXPORT_DIR&\MagicAssistant\.eclipseproduct
+AddFile APPDIR &EXPORT_DIR&\MagicAssistant\artifacts.xml
+AddFile APPDIR &EXPORT_DIR&\MagicAssistant\epl-v10.html
+AddFile APPDIR &EXPORT_DIR&\MagicAssistant\magicassistant.ini
+AddFile APPDIR &EXPORT_DIR&\MagicAssistant\notice.html
+Save
