@@ -223,7 +223,7 @@ public class DataManagerTest extends TestCase {
 	}
 
 	private Collection list(Object... args) {
-		ArrayList list = new ArrayList<>();
+		ArrayList list = new ArrayList<Object>();
 		for (Object object : args) {
 			list.add(object);
 		}
