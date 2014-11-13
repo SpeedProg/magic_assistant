@@ -313,4 +313,114 @@ public class DataManagerTest extends TestCase {
 	// public void testReconcileIterable() {
 	// fail("Not yet implemented");
 	// }
+	@Test
+	public void testMaterialize() {
+		MagicCardPhysical card2 = new MagicCardPhysical(card, deck2.getLocation());
+		card2.setOwn(false);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(true, card1.isOwn());
+	}
+
+	public void testMaterializeCount() {
+		dm.remove(card);
+		card.setCount(3);
+		dm.add(card);
+		MagicCardPhysical card2 = new MagicCardPhysical(card, deck2.getLocation());
+		card2.setOwn(false);
+		card2.setCount(1);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(1, card1.getCount());
+	}
+
+	public void testMaterializeCountMis() {
+		card.setCount(1);
+		MagicCardPhysical card2 = new MagicCardPhysical(card, deck2.getLocation());
+		card2.setOwn(false);
+		card2.setCount(3);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
+		assertEquals(2, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(1, card1.getCount());
+	}
+
+	@Test
+	public void testMaterializeNotFound() {
+		card.setOwn(false);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card), deck2.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(false, card1.isOwn());
+	}
+
+	@Test
+	public void testMaterializeOwnNotFound() {
+		card.setOwn(false);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card), deck2.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(false, card1.isOwn());
+	}
+
+	public void testMaterializeOtherNotOwn() {
+		dm.remove(card);
+		card.setCount(3);
+		card.setOwn(false);
+		dm.add(card);
+		MagicCardPhysical card2 = new MagicCardPhysical(card, deck2.getLocation());
+		card2.setOwn(false);
+		card2.setCount(1);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(1, card1.getCount());
+		assertEquals(false, card1.isOwn());
+	}
+
+	public void testMaterializeOtherNotOwnAndAnother() {
+		dm.remove(card);
+		card.setCount(3);
+		card.setOwn(false);
+		dm.add(card);
+		card.setCount(2);
+		card.setOwn(true);
+		dm.add(card);
+		MagicCardPhysical card2 = new MagicCardPhysical(card, deck2.getLocation());
+		card2.setOwn(false);
+		card2.setCount(1);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+		assertTrue(card + " vs " + card1, card.matching(card1));
+		assertEquals(1, card1.getCount());
+		assertEquals(true, card1.isOwn());
+	}
+
+	public void testMaterializeOtherNotOwnAndAnother2() {
+		dm.remove(card);
+		card.setCount(2);
+		card.setOwn(true);
+		dm.add(card);
+		card.setCount(3);
+		card.setOwn(false);
+		dm.add(card);
+		MagicCardPhysical card2 = new MagicCardPhysical(card, deck2.getLocation());
+		card2.setOwn(false);
+		card2.setCount(1);
+		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
+		assertEquals(1, materialize.size());
+		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
+
+		assertEquals(1, card1.getCount());
+		assertEquals(true, card1.isOwn());
+	}
 }

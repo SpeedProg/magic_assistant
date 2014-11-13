@@ -1,10 +1,12 @@
 package com.reflexit.magiccards.ui.dialogs;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -25,14 +27,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
+import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LocationFilterPreferencePage;
 import com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard;
 import com.reflexit.magiccards.ui.wizards.NewCardElementWizard;
 import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
-public class LocationPickerDialog extends TrayDialog {
+public class LocationPickerDialog extends TitleAreaDialog {
 	private static final String IMPORTED_RESOURCES_SETTING = "importedResources"; //$NON-NLS-1$
 	private static final String ID = LocationPickerDialog.class.getName();
 	private LocationFilterPreferencePage locPage;
@@ -56,15 +60,16 @@ public class LocationPickerDialog extends TrayDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Select a deck or collection");
+		setTitle("Select a deck or collection");
 		area = (Composite) super.createDialogArea(parent);
 		locPage = new LocationFilterPreferencePage(mode);
 		locPage.noDefaultAndApplyButton();
 		locPage.setPreferenceStore(new PreferenceStore());
 		locPage.createControl(area);
+		locPage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		listViewer = locPage.getViewer();
 		GridData data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = 200;
-		data.widthHint = 300;
+		data.heightHint = 300;
 		listViewer.getControl().setLayoutData(data);
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -149,6 +154,18 @@ public class LocationPickerDialog extends TrayDialog {
 
 	public IStructuredSelection getSelection() {
 		return selection;
+	}
+
+	public List<CardCollection> getSelectedCardCollections() {
+		ArrayList<CardCollection> collections = new ArrayList<>();
+		for (Object coll : selection.toList()) {
+			if (coll instanceof CardCollection)
+				collections.add((CardCollection) coll);
+			else if (coll instanceof CardOrganizer) {
+				collections.addAll(((CardOrganizer) coll).getAllElements());
+			}
+		}
+		return collections;
 	}
 
 	public String getStringValue() {

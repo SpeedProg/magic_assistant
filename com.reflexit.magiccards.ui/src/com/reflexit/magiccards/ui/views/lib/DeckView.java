@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.lib;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -13,7 +14,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -167,15 +167,26 @@ public class DeckView extends AbstractMyCardsView {
 		return null;
 	}
 
-
 	protected void runMaterialize() {
-		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE | SWT.READ_ONLY);
+		Collection<IMagicCard> orig = getFilteredStore().getCardStore().getCards();
+		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE | SWT.READ_ONLY) {
+			@Override
+			protected Control createDialogArea(Composite parent) {
+				Control area = super.createDialogArea(parent);
+				setMessage("Pick collection(s) from which you want to pull cards to materialize this deck");
+				return area;
+			}
+		};
 		if (locationPickerDialog.open() == Window.OK) {
-			IStructuredSelection selection = locationPickerDialog.getSelection();
-			CardCollection collection = (CardCollection) selection.getFirstElement();
-			Collection<IMagicCard> orig = getFilteredStore().getCardStore().getCards();
-			Collection<MagicCardPhysical> res = DataManager.getInstance().materialize(orig,
-					collection.getStore());
+			List<CardCollection> collections = locationPickerDialog.getSelectedCardCollections();
+
+			ArrayList<ICardStore<IMagicCard>> stores = new ArrayList<>();
+			for (CardCollection collection : collections) {
+				if (collection.getStore().equals(getFilteredStore().getCardStore()))
+					continue;
+				stores.add(collection.getStore());
+			}
+			Collection<MagicCardPhysical> res = DataManager.getInstance().materialize(orig, stores);
 			CardReconcileDialog cardReconcileDialog = new CardReconcileDialog(getShell()) {
 				@Override
 				protected void okPressed() {
@@ -183,7 +194,6 @@ public class DeckView extends AbstractMyCardsView {
 					getStorageInfo().setVirtual(false);
 					DataManager.getInstance().remove(cardStore, orig);
 					DataManager.getInstance().moveCards(elements, cardStore.getLocation());
-					DataManager.getInstance().reconcile();
 					super.okPressed();
 				}
 			};
@@ -554,7 +564,6 @@ public class DeckView extends AbstractMyCardsView {
 		if (sel.isDisposed())
 			return;
 		if (sel.getControl() == control.getControl()) {
-
 			super.saveColumnLayout();
 		}
 	}

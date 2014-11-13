@@ -376,7 +376,7 @@ public class DataManager {
 		return card2;
 	}
 
-	public void update(MagicCardPhysical mcp, Set<ICardField> fieldSet) {
+	public void updateMCP(MagicCardPhysical mcp, Set<? extends ICardField> fieldSet) {
 		Location loc = mcp.getLocation();
 		ICardStore<IMagicCard> store = getCardStore(loc);
 		if (store == null)
@@ -385,7 +385,7 @@ public class DataManager {
 		reconcile(mcp);
 	}
 
-	public void update(MagicCard mc, Set<? extends ICardField> fieldSet) {
+	public void updateMC(MagicCard mc, Set<? extends ICardField> fieldSet) {
 		getMagicDBStore().update(mc, fieldSet);
 	}
 
@@ -396,9 +396,9 @@ public class DataManager {
 
 	public void update(IMagicCard card, Set<? extends ICardField> fieldSet) {
 		if (card instanceof MagicCard) {
-			update((MagicCard) card, fieldSet);
+			updateMC((MagicCard) card, fieldSet);
 		} else if (card instanceof MagicCardPhysical) {
-			update(card, fieldSet);
+			updateMCP((MagicCardPhysical) card, fieldSet);
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -425,8 +425,12 @@ public class DataManager {
 	}
 
 	public Collection<MagicCardPhysical> materialize(
-			Collection<IMagicCard> cards, ICardStore<IMagicCard> from) {
-		ArrayList<MagicCardPhysical> res = new ArrayList<MagicCardPhysical>();
+			Collection<? extends IMagicCard> cards, ICardStore<IMagicCard> from) {
+		return materialize(cards, Collections.singleton(from));
+	}
+
+	public Collection<MagicCardPhysical> materialize(
+			Collection<? extends IMagicCard> cards, Collection<ICardStore<IMagicCard>> stores) {
 		ArrayList<MagicCardPhysical> in = new ArrayList<MagicCardPhysical>();
 		CardGroup.expandGroups(in, cards, new Predicate<Object>() {
 			@Override
@@ -436,38 +440,49 @@ public class DataManager {
 				return false;
 			}
 		});
+		ArrayList<MagicCardPhysical> res = new ArrayList<MagicCardPhysical>();
 		for (MagicCardPhysical card : in) {
-			if (card.isOwn()) {
-				res.add(new MagicCardPhysical(card, card.getLocation()));
-				continue;
-			}
+			materialize(card, stores, res);
+		}
+		return res;
+	}
+
+	public ArrayList<MagicCardPhysical> materialize(MagicCardPhysical card,
+			Collection<ICardStore<IMagicCard>> stores,
+			ArrayList<MagicCardPhysical> res) {
+		if (card.isOwn()) {
+			res.add(new MagicCardPhysical(card, null));
+			return res;
+		}
+		int rem = card.getCount();
+		for (ICardStore<IMagicCard> from : stores) {
 			Collection<IMagicCard> piles = from.getCards(card.getCardId());
-			MagicCardPhysical x = new MagicCardPhysical(card, null);
 			if (piles == null || piles.size() == 0) {
-				x.setOwn(false);
-				res.add(x);
 				continue;
 			}
-			int rem = card.getCount();
 			for (IMagicCard cand : piles) {
 				if (rem <= 0)
 					break;
 				if (cand instanceof MagicCardPhysical) {
 					MagicCardPhysical mcp = (MagicCardPhysical) cand;
 					int mc = mcp.getCount();
-					if (mc <= 0 || mcp.isOwn() == false)
+					if (mc == 0 || mcp.isOwn() == false)
 						continue;
 					if (mc > rem)
 						mc = rem;
-					res.add(new MagicCardPhysical(mcp, mcp.getLocation()));
+					MagicCardPhysical grab = new MagicCardPhysical(mcp, mcp.getLocation());
+					grab.setCount(mc);
+					grab.setOwn(true);
+					res.add(grab);
 					rem = rem - mc;
 				}
 			}
-			if (rem > 0) {
-				x.setOwn(false);
-				x.setCount(rem);
-				res.add(x);
-			}
+		}
+		if (rem > 0) {
+			MagicCardPhysical x = new MagicCardPhysical(card, null);
+			x.setOwn(false);
+			x.setCount(rem);
+			res.add(x);
 		}
 		return res;
 	}
