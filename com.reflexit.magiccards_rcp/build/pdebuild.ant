@@ -17,8 +17,10 @@
 		</first>
 	</pathconvert>
 	<property name="repack.dir" value="${master.dir}/${ma.version}-install" />
-	<property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.3/bin/x86/AdvancedInstaller.com"/>
-	<property name="msiout" value="${master.dir}/installer/magicassistant-SetupFiles"/>
+	<property name="ainstaller" value="C:/Program Files (x86)/Caphyon/Advanced Installer 11.6.1/bin/x86/AdvancedInstaller.com"/>
+	<property name="msi.src" value="${orig.workspace.root}/com.reflexit.magiccards_rcp/msi"/>
+	<property name="msi.dir" value="${master.dir}/msi"/>
+	<property name="msiout" value="${master.dir}/msi/magicassistant-SetupFiles"/>
 	<property name="rsa.key" value="${user.home}/.ssh/id_rsa"/>
 	<property name="jre.home" value="C:/Program Files/Java/jre8"/>
 	<condition property="is_windows">
@@ -78,15 +80,23 @@
 
 
 	<target name="msi">
+		<mkdir dir="${msi.dir}"/>
+		<mkdir dir="${msiout}"/>
+		<copy todir="${msi.dir}"  includeEmptyDirs="true" overwrite="true">
+				<fileset dir="${msi.src}">
+					<include name="*"/>
+				</fileset>
+			</copy>
 		<exec executable="${ainstaller}">
-			<arg line="/edit ${msiout}/../magicassistant.aip /SetVersion ${ma.version}" />
+			<arg line="/edit ${msi.dir}/magicassistant.aip /SetVersion ${ma.version}" />
 		</exec>
-		<exec executable="${ainstaller}">
-			<env key="EXPORT_DIR" file="${master.dir}/install"/>
-			<arg line="/execute ${msiout}/../magicassistant.aip ${msiout}/../reimport.aic" />
+		<echo message="Install dir ${msi.dir}/../install"/>
+		<exec executable="${ainstaller}" dir="${msi.dir}">
+			<env key="EXPORT_DIR" file="${msi.dir}/../install"/>
+			<arg line="/execute ${msi.dir}/magicassistant.aip ${msi.dir}/reimport.aic" />
 		</exec>
-		<exec executable="${ainstaller}">
-			<arg line="/build ${msiout}/../magicassistant.aip" />
+		<exec executable="${ainstaller}" dir="${msi.dir}">
+			<arg line="/build ${msi.dir}/magicassistant.aip" />
 		</exec>
 		<copy todir="${bins.dir}"  includeEmptyDirs="true" overwrite="true">
 			<fileset dir="${msiout}">
