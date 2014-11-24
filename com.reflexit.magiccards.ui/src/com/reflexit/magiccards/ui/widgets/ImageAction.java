@@ -14,6 +14,13 @@ public class ImageAction extends Action {
 		this.run = run;
 	}
 
+	public ImageAction(String name, String iconKey, int style) {
+		this(name, iconKey, style, () -> {
+			throw new IllegalArgumentException("Runnable is not defined");
+		});
+		
+	}
+
 	@Override
 	public void run() {
 		if (run != null)

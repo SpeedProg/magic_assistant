@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.reflexit.magiccards.core.legality.Format;
 
-class MagicCardComparator implements Comparator {
+public class MagicCardComparator implements Comparator {
 	private ICardField field;
 	private boolean accending;
 
@@ -15,6 +15,9 @@ class MagicCardComparator implements Comparator {
 		this.accending = accending;
 	}
 
+	public void reverse() {
+		accending = !accending;
+	}
 	public ICardField getField() {
 		return field;
 	}
@@ -48,6 +51,7 @@ class MagicCardComparator implements Comparator {
 		return true;
 	}
 
+	@Override
 	public int compare(Object o1, Object o2) {
 		if (o1 == o2)
 			return 0;
@@ -150,5 +154,10 @@ class MagicCardComparator implements Comparator {
 		if (d != 0)
 			return dir * d;
 		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return field + (accending ? "^" : "v");
 	}
 }

@@ -90,13 +90,13 @@ public class CardOrganizer extends CardElement {
 	/**
 	 * @return
 	 */
-	public Collection<CardElement> getAllElements() {
-		ArrayList<CardElement> res = new ArrayList<CardElement>();
+	public Collection<CardCollection> getAllElements() {
+		ArrayList<CardCollection> res = new ArrayList<CardCollection>();
 		for (CardElement el : getChildren()) {
 			if (el instanceof CardOrganizer) {
 				res.addAll(((CardOrganizer) el).getAllElements());
-			} else {
-				res.add(el);
+			} else if (el instanceof CardCollection) {
+				res.add((CardCollection) el);
 			}
 		}
 		return res;

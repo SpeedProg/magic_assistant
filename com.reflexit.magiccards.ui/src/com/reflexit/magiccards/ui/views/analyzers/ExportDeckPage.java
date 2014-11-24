@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -32,6 +33,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -47,6 +49,7 @@ import com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -61,11 +64,12 @@ import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private Browser textBrowser;
 	private ISelectionProvider selProvider = new StoredSelectionProvider();
-	private IFilteredCardStore fstore;
+	private IFilteredCardStore<IMagicCard> fstore;
 	private IAction save;
 	private String textResult;
 	protected ReportType reportType;
@@ -80,6 +84,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private MenuManager menuSort;
 	private Action actionUnsort;
 	private MagicCardFilter filter;
+	private Action actionSort;
+	private ImageAction actionRefresh;
 
 	class ComboContributionItem extends ControlContribution {
 		private Combo control;
@@ -115,13 +121,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		}
 	}
 
-	class ImageAction extends Action {
-		public ImageAction(String name, String iconKey, int style) {
-			super(name, style);
-			setImageDescriptor(MagicUIActivator.getImageDescriptor(iconKey));
-			setToolTipText(name);
-		}
-	}
+
 
 	@Override
 	public Composite createContents(Composite parent) {
@@ -195,7 +195,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	@Override
 	public void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
-		manager.add(menuSort);
+		manager.add(actionRefresh);
 	}
 
 	@Override
@@ -205,6 +205,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		manager.add(this.actionShowPrefs);
 		manager.add(this.typeSelector);
 		manager.add(this.save);
+		manager.add(actionSort);
 		super.fillLocalToolBar(manager);
 	}
 
@@ -254,20 +255,72 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			}
 		};
 		this.menuSort = new MenuManager("Sort By");
-		this.menuSort.add(actionUnsort);
+		populateSortMenu(menuSort);
+		this.actionSort = new ImageAction("Sort By", "icons/clcl16/sort.gif", IAction.AS_DROP_DOWN_MENU) {
+			{
+				setMenuCreator(new IMenuCreator() {
+					private Menu listMenu;
+
+					@Override
+					public void dispose() {
+						if (listMenu != null)
+							listMenu.dispose();
+					}
+
+					@Override
+					public Menu getMenu(Control parent) {
+						if (listMenu != null)
+							listMenu.dispose();
+						MenuManager menuSortLocal = new MenuManager("Sort By");
+						populateSortMenu(menuSortLocal);
+						listMenu = menuSortLocal.createContextMenu(parent);
+						return listMenu;
+					}
+
+					@Override
+					public Menu getMenu(Menu parent) {
+						return null;
+					}
+				});
+			}
+
+			@Override
+			public void run() {
+				MagicCardComparator peek = filter.getSortOrder().peek();
+				peek.reverse();
+				reloadData();
+			}
+		};
+		actionRefresh = new ImageAction("Refresh",
+				"icons/clcl16/refresh.gif",
+				IAction.AS_PUSH_BUTTON,
+				() -> activate());
+	}
+
+	public void populateSortMenu(MenuManager menuSort) {
+		menuSort.add(actionUnsort);
 		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
 		Collection<AbstractColumn> columns = magicColumnCollection.getColumns();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			final AbstractColumn man = iterator.next();
 			String name = man.getColumnFullName();
+			ICardField sortField = man.getSortField();
 			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
 				@Override
 				public void run() {
-					filter.setSortField(man.getSortField(), isChecked());
-					reloadData();
+					if (isChecked()) {
+						filter.setSortField(sortField, !filter.getSortOrder().isAccending(sortField));
+						reloadData();
+					}
 				}
 			};
-			this.menuSort.add(ac);
+			if (filter != null && filter.getSortOrder().isTop(sortField)) {
+				ac.setChecked(true);
+				String sortLabel = filter.getSortOrder().isAccending() ? "ACC" : "DEC";
+				ac.setText(name + " (" + sortLabel + ")");
+			} else
+				ac.setChecked(false);
+			menuSort.add(ac);
 		}
 	}
 
@@ -341,16 +394,18 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		fstore.clear();
 		// filter = (MagicCardFilter) view.getFilter().clone();
 		if (includeSideboard) {
-			ICardStore mainStore = getCardStore(loc.toMainDeck());
+			ICardStore<IMagicCard> mainStore = getCardStore(loc.toMainDeck());
 			// if (mainStore == null)
 			// mainStore = getCardStore();
-			ICardStore sideStore = getCardStore(loc.toSideboard());
+			ICardStore<IMagicCard> sideStore = getCardStore(loc.toSideboard());
 			if (mainStore != null)
 				fstore.addAll(mainStore);
 			if (sideStore != null)
 				fstore.addAll(sideStore);
 			fstore.setLocation(loc.toMainDeck());
-			filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
+			if (filter.getSortOrder().size() == filter.getSortOrder().MIN) {
+				filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
+			}
 		} else {
 			ICardStore mainStore = getCardStore(loc);
 			fstore.addAll(mainStore);
@@ -387,8 +442,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	 */
 	public static final String CANCEL = "CANCEL"; //$NON-NLS-1$
 	/**
-	 * Return code indicating the entity should not be overwritten, but
-	 * operation should not be canceled.
+	 * Return code indicating the entity should not be overwritten, but operation should not be canceled.
 	 */
 	public static final String NO = "NO"; //$NON-NLS-1$
 	/**
@@ -497,6 +551,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 
 	@Override
 	public void refresh() {
-		// TODO Auto-generated method stub
+		activate();
 	}
 }

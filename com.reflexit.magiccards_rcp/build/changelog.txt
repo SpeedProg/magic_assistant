@@ -1,4 +1,9 @@
-changes in 1.4.1.1
+changes in 1.4.1.4
+* Added sort button to Export deck page
+changes in 1.4.1.3
+* Italian translation for types
+* Fixed materilize deck action
+changes in 1.4.1.2
 * Feature Identity Support - added support for identity filter for colors (for commander)
 * Fixed invalid values in Set filter page
 changes in 1.4.1.0

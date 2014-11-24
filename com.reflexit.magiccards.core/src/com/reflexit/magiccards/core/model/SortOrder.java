@@ -5,9 +5,9 @@ import java.util.Comparator;
 @SuppressWarnings("serial")
 public class SortOrder implements Comparator {
 	private static int MAX = 7;
-	private static int REM = 2;
+	public static int MIN = 2;
 	private final MagicCardComparator order[] = new MagicCardComparator[MAX];
-	private int curSize = REM;
+	private int curSize = MIN;
 
 
 	public SortOrder() {
@@ -43,21 +43,21 @@ public class SortOrder implements Comparator {
 
 	public void setSortField(ICardField sortField, boolean accending) {
 		MagicCardComparator elem = new MagicCardComparator(sortField, accending);
-		for (int i = REM; i < curSize; i++) {
+		for (int i = MIN; i < curSize; i++) {
 			if (elem.equals(order[i])) {
 				remove(i);
 				break;
 			}
 		}
 		while (curSize >= MAX) {
-			remove(REM);
+			remove(MIN);
 		}
 		add(elem);
 	}
 
 	public MagicCardComparator getComparator(ICardField sortField) {
 		int size = curSize;
-		for (int i = REM; i < size; i++) {
+		for (int i = MIN; i < size; i++) {
 			MagicCardComparator elem = order[i];
 			if (sortField.equals(elem.getField())) {
 				return elem;
@@ -91,7 +91,7 @@ public class SortOrder implements Comparator {
 		return curSize;
 	}
 
-	MagicCardComparator peek() {
+	public MagicCardComparator peek() {
 		return order[curSize - 1];
 	}
 
@@ -110,7 +110,7 @@ public class SortOrder implements Comparator {
 	}
 
 	public void clear() {
-		for (; curSize >= REM; curSize--) {
+		for (; curSize >= MIN; curSize--) {
 			order[curSize] = null;
 		}
 	}
@@ -123,5 +123,14 @@ public class SortOrder implements Comparator {
 		order[index] = null;
 		curSize--;
 		return c;
+	}
+
+	@Override
+	public String toString() {
+		String res = "";
+		for (int index = curSize - 1; index >= 0; index--) {
+			res += order[index] + " ";
+		}
+		return res;
 	}
 }
