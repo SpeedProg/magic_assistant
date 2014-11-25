@@ -10,6 +10,9 @@ DelFile APPDIR\artifacts.xml
 DelFile APPDIR\epl-v10.html
 DelFile APPDIR\magicassistant.ini
 DelFile APPDIR\notice.html
+DelShortcut -name "Magic Assistant" -dir DesktopFolder
+DelShortcut -name "Magic Assistant" -dir SHORTCUTDIR
+Save
 AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\configuration
 AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\plugins
 AddFolder APPDIR &EXPORT_DIR&\MagicAssistant\features
@@ -21,4 +24,7 @@ AddFile APPDIR &EXPORT_DIR&\MagicAssistant\artifacts.xml
 AddFile APPDIR &EXPORT_DIR&\MagicAssistant\epl-v10.html
 AddFile APPDIR &EXPORT_DIR&\MagicAssistant\magicassistant.ini
 AddFile APPDIR &EXPORT_DIR&\MagicAssistant\notice.html
+Save
+DelFile APPDIR\magicassistant.exe
+AddFile APPDIR &EXPORT_DIR&\MagicAssistant\magicassistant.exe
 Save
