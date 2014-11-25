@@ -35,9 +35,9 @@ public class SortOrder implements Comparator {
 	}
 
 	public void setFrom(SortOrder other) {
-		this.curSize = other.curSize;
+		curSize = other.curSize;
 		for (int i = 0; i < MAX; i++) {
-			this.order[i] = order[i];
+			order[i] = other.order[i];
 		}
 	}
 
