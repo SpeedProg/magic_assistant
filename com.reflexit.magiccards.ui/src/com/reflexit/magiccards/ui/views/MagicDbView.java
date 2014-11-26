@@ -22,7 +22,6 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -124,12 +123,13 @@ public class MagicDbView extends AbstractCardsView {
 			@Override
 			public void run(String id) {
 				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
-				Location loc = fstore.getLocation();
+
 				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
-					IStructuredSelection sel = (IStructuredSelection) selection;
-					if (!sel.isEmpty()) {
-						DataManager.getInstance().copyCards(sel.toList(), loc);
+					IStructuredSelection iss = (IStructuredSelection) selection;
+					if (!iss.isEmpty()) {
+						DataManager dm = DataManager.getInstance();
+						dm.copyCards(dm.expandGroups(iss.toList()), fstore.getCardStore());
 					}
 				}
 			}
@@ -201,7 +201,7 @@ public class MagicDbView extends AbstractCardsView {
 					curset = set;
 				}
 				MagicCard mc = ((MagicCard) card).cloneCard();
-				mc.setProperty("LEGALITY", null);
+				mc.setLegalityMap(null);
 				mc.setDbPrice(0);
 				TextPrinter.print(mc, ps);
 			}

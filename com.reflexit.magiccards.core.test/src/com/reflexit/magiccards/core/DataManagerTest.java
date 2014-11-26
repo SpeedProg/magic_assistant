@@ -104,8 +104,7 @@ public class DataManagerTest extends TestCase {
 	public void testCopyCards() {
 		card.setOwn(false);
 		setVirtual(true);
-		dm.copyCards(Collections.singletonList(card), store2,
-				store2.getLocation());
+		dm.copyCards(Collections.singletonList(card), store2);
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
 		assertNotEquals(card, card1);
@@ -125,8 +124,7 @@ public class DataManagerTest extends TestCase {
 	public void testCopyCardsOwn() {
 		card.setOwn(true);
 		setVirtual(true);
-		dm.copyCards(Collections.singletonList(card), store2,
-				store2.getLocation());
+		dm.copyCards(Collections.singletonList(card), store2);
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
 		assertNotEquals(card, card1);
@@ -139,8 +137,7 @@ public class DataManagerTest extends TestCase {
 	public void testCopyCardsVi() {
 		setVirtual(false);
 		try {
-			dm.copyCards(Collections.singletonList(card), store2,
-					store2.getLocation());
+			dm.copyCards(Collections.singletonList(card), store2);
 			fail("Should throw ex");
 		} catch (MagicException e) {
 			// good
@@ -162,8 +159,7 @@ public class DataManagerTest extends TestCase {
 	public void testMoveCardsVirVir() {
 		card.setOwn(false);
 		setVirtual(true);
-		dm.moveCards(Collections.singletonList(card), store2,
-				store2.getLocation());
+		dm.moveCards(Collections.singletonList(card), store2);
 		assertEquals(1, deck1.getStore().size());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
@@ -174,8 +170,7 @@ public class DataManagerTest extends TestCase {
 	public void testMoveCards() {
 		card.setOwn(true);
 		setVirtual(false);
-		dm.moveCards(Collections.singletonList(card), store2,
-				store2.getLocation());
+		dm.moveCards(Collections.singletonList(card), store2);
 		assertEquals(0, deck1.getStore().size());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
@@ -186,7 +181,7 @@ public class DataManagerTest extends TestCase {
 	public void testMoveCards2() {
 		card.setOwn(true);
 		setVirtual(false);
-		dm.moveCards(Collections.singletonList(card), store2.getLocation());
+		dm.moveCards(Collections.singletonList(card), store2);
 		assertEquals(0, deck1.getStore().size());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
@@ -203,7 +198,7 @@ public class DataManagerTest extends TestCase {
 		dm.add(cardA);
 		assertEquals(1, deck1.getStore().size());
 		assertEquals(1, deck3.getStore().size());
-		dm.moveCards(list(card, cardA), store2.getLocation());
+		dm.moveCards(list(card, cardA), store2);
 		assertEquals(0, deck1.getStore().size());
 		assertEquals(0, deck3.getStore().size());
 		assertEquals(1, store2.size());
@@ -214,7 +209,7 @@ public class DataManagerTest extends TestCase {
 
 	@Test
 	public void testMoveCardsDB() {
-		dm.moveCards(list(card.getBase()), store2.getLocation());
+		dm.moveCards(list(card.getBase()), store2);
 		assertEquals(1, deck1.getStore().size());
 		assertEquals(1, store2.size());
 		MagicCardPhysical card1 = getFirst();
@@ -235,8 +230,7 @@ public class DataManagerTest extends TestCase {
 		card.setOwn(true);
 		setVirtual(true);
 		try {
-			dm.moveCards(Collections.singletonList(card), store2,
-					store2.getLocation());
+			dm.moveCards(Collections.singletonList(card), store2);
 			fail();
 		} catch (MagicException e) {
 			// good
@@ -258,7 +252,7 @@ public class DataManagerTest extends TestCase {
 	@Test
 	public void testAddICardStoreCollection() {
 		MagicCardPhysical cardA = phyCard(CARD_ID_MYSTICDECREE, deck2.getLocation());
-		dm.add(store2, Collections.singleton(cardA));
+		dm.add(Collections.singleton(cardA), store2);
 		MagicCardPhysical card1 = getFirst();
 		assertTrue(cardA + " vs " + card1, card.matching(card1));
 	}
@@ -266,7 +260,7 @@ public class DataManagerTest extends TestCase {
 	@Test
 	public void testRemoveICardStoreCollection() {
 		assertEquals(1, deck1.getStore().size());
-		dm.remove(deck1.getStore(), Collections.singleton(card));
+		dm.remove(Collections.singleton(card), deck1.getStore());
 		assertEquals(0, deck1.getStore().size());
 	}
 

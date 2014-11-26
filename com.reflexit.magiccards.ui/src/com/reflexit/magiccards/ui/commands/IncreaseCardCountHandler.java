@@ -27,7 +27,7 @@ import com.reflexit.magiccards.ui.views.lib.MyCardsView;
  * Increase card number
  */
 public class IncreaseCardCountHandler extends AbstractHandler {
-	private static final DataManager DM = DataManager.getInstance();
+
 
 	/**
 	 * The constructor.
@@ -49,17 +49,18 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		IWorkbenchPart activePart = window.getPartService().getActivePart();
 		IFilteredCardStore activeDeckHandler = null;
+		DataManager dm = DataManager.getInstance();
 		if (activePart instanceof DeckView) {
 			activeDeckHandler = ((DeckView) activePart).getFilteredStore();
 			increase(window, iss, activeDeckHandler);
 		} else if (activePart instanceof MagicDbView) {
-			activeDeckHandler = DM.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = dm.getCardHandler().getActiveDeckHandler();
 			if (activeDeckHandler != null)
-				DM.copyCards(iss.toList(), activeDeckHandler.getLocation());
+				dm.copyCards(dm.expandGroups(iss.toList()), activeDeckHandler.getCardStore());
 			else
 				throw new ExecutionException("No active deck");
 		} else if (activePart instanceof MyCardsView) {
-			activeDeckHandler = DM.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = dm.getCardHandler().getActiveDeckHandler();
 			increase(window, iss, activeDeckHandler);
 		}
 		return null;
@@ -79,7 +80,7 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 					toAdd.add(magicCard);
 				}
 			}
-			DataManager.getInstance().add(activeDeckHandler.getCardStore(), toAdd);
+			DataManager.getInstance().add(toAdd, activeDeckHandler.getCardStore());
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck/collection");
 		}

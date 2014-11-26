@@ -26,6 +26,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -34,7 +35,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * 
  */
 public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTargetListener {
-	private static final DataManager DM = DataManager.getInstance();
+
 	protected DropTargetEvent curEvent;
 
 	/**
@@ -50,15 +51,19 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		IMagicCard[] toDropArray = (IMagicCard[]) data;
 		if (toDropArray.length == 0)
 			return false;
-		Collection<IMagicCard> cards = DM.resolve(Arrays.asList(toDropArray));
+		DataManager dm = DataManager.getInstance();
+		Collection<IMagicCard> cards = dm.resolve(Arrays.asList(toDropArray));
 		try {
 			Location targetLocation = determineLocation();
 			if (targetLocation == null)
 				throw new MagicException("Invalid drop target");
+			ICardStore<IMagicCard> sto = dm.getCardStore(targetLocation);
+			if (sto == null)
+				throw new MagicException("Invalid drop target: Cannot open collection " + targetLocation);
 			if (curEvent.detail == DND.DROP_MOVE)
-				return DM.moveCards(cards, targetLocation);
+				return dm.moveCards(cards, sto);
 			else
-				return DM.copyCards(cards, targetLocation);
+				return dm.copyCards(cards, sto);
 		} catch (MagicException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
 					"Cannot perform this operation: " + e.getMessage());

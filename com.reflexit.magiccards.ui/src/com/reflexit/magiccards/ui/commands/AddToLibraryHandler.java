@@ -9,7 +9,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.Location;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -36,8 +35,8 @@ public class AddToLibraryHandler extends AbstractHandler {
 			return null;
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		Location location = DataManager.getInstance().getModelRoot().getDefaultLib().getLocation();
-		DataManager.getInstance().copyCards(iss.toList(), location);
+		DataManager dm = DataManager.getInstance();
+		dm.copyCards(dm.expandGroups(iss.toList()), dm.getModelRoot().getDefaultLib().getStore());
 		return null;
 	}
 }

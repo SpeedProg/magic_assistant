@@ -31,6 +31,7 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 
@@ -68,10 +69,13 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 			try {
 				Location targetLocation = ((CardElement) dropTarget).getLocation();
 				Collection<IMagicCard> list = DM.resolve(Arrays.asList(toDropArray));
+				ICardStore<IMagicCard> sto = DM.getCardStore(targetLocation);
+				if (sto == null)
+					throw new MagicException("Invalid drop target: Cannot open collection " + targetLocation);
 				if (curEvent.detail == DND.DROP_MOVE)
-					return DM.moveCards(list, targetLocation);
+					return DM.moveCards(list, sto);
 				else
-					return DM.copyCards(list, targetLocation);
+					return DM.copyCards(list, sto);
 			} catch (MagicException e) {
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation");
 				return false;

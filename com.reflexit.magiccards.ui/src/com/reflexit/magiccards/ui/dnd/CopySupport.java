@@ -1,9 +1,7 @@
 package com.reflexit.magiccards.ui.dnd;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
@@ -17,7 +15,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
@@ -49,8 +47,7 @@ public class CopySupport {
 				final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 				TextTransfer textTransfer = TextTransfer.getInstance();
 				MagicCardTransfer mt = MagicCardTransfer.getInstance();
-				List list = new ArrayList(sel.size());
-				CardGroup.expandGroups(list, sel.toList());
+				Collection list = DataManager.expandGroups(sel.toList());
 				IMagicCard[] cards = (IMagicCard[]) list.toArray(new IMagicCard[sel.size()]);
 				cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
 			}

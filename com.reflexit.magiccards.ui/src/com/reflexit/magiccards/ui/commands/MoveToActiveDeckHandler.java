@@ -50,26 +50,26 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 		} catch (NumberFormatException e) {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		final IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+		final IFilteredCardStore<IMagicCard> activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
-			List list = iss.toList();
+			List<IMagicCard> list = iss.toList();
 			try {
-				if (count == -1)
-					moveCards(list, activeDeckHandler);
-				else if (count == 0) {
+				if (count == -1) {
+					DM.moveCards(DataManager.expandGroups(list), activeDeckHandler.getCardStore());
+				} else if (count == 0) {
 					new CountConfirmationDialog(window.getShell(), iss) {
 						@Override
 						protected void runOperation() {
 							Map<IMagicCard, Integer> map = getCountMap();
 							List<IMagicCard> list = DM.splitCards(map);
-							moveCards(list, activeDeckHandler);
+							DM.moveCards(list, activeDeckHandler.getCardStore());
 						};
 					}.open();
 					// DataManager.moveCards(list,
 					// activeDeckHandler.getLocation());
 				} else {
 					List<IMagicCard> x = DM.splitCards(list, count);
-					moveCards(x, activeDeckHandler);
+					DM.moveCards(x, activeDeckHandler.getCardStore());
 				}
 			} catch (Exception e) {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
@@ -78,9 +78,5 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");
 		}
 		return null;
-	}
-
-	private void moveCards(List<IMagicCard> x, final IFilteredCardStore activeDeckHandler) {
-		DM.moveCards(x, activeDeckHandler.getLocation());
 	}
 }

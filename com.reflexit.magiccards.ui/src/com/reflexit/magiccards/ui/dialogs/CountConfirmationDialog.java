@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -49,7 +48,7 @@ public class CountConfirmationDialog extends Dialog {
 		super(parent);
 		if (selection.isEmpty())
 			throw new IllegalArgumentException();
-		Collection res = CardGroup.expandGroups(new ArrayList(), selection.toList());
+		Collection res = DataManager.expandGroups(selection.toList());
 		cards = new IMagicCard[res.size()];
 		int i = 0;
 		for (Object object : res) {

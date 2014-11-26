@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -17,7 +16,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
-public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardModifiable, IMagicCardPhysical {
+public class MagicCard extends AbstractMagicCard {
 	private int id;
 	private String name;
 	private String cost;
@@ -90,26 +89,10 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		return this.name;
 	}
 
-	private final static Pattern mpartnamePattern = Pattern.compile("(.*)//(.*)\\s*\\((.*)\\)");
-
 	public void setName(String name) {
 		this.name = name;
-		// Matcher matcher = mpartnamePattern.matcher(name);
-		// if (matcher.matches()) {
-		// String p1 = matcher.group(1).trim();
-		// String p2 = matcher.group(2).trim();
-		// String pCur = matcher.group(3);
-		// setProperty(MagicCardField.PART, pCur);
-		// String other = pCur.equals(p1) ? p2 : p1;
-		// setProperty(MagicCardField.OTHER_PART, other);
-		// }
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getOracleText()
-	 */
 	@Override
 	public String getOracleText() {
 		return this.oracleText;
@@ -119,11 +102,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		this.oracleText = oracleText;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getRarity()
-	 */
 	@Override
 	public String getRarity() {
 		return this.rarity;
@@ -133,11 +111,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		this.rarity = rarity.intern();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getEdition()
-	 */
 	@Override
 	public String getSet() {
 		return this.edition;
@@ -147,11 +120,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		this.edition = setName.intern();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getType()
-	 */
 	@Override
 	public String getType() {
 		return this.type;
@@ -166,11 +134,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		setCardId(i);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getPower()
-	 */
 	@Override
 	public String getPower() {
 		return this.power;
@@ -180,11 +143,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		this.power = power == null ? "" : power.intern();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getToughness()
-	 */
 	@Override
 	public String getToughness() {
 		return this.toughness;
@@ -194,11 +152,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		this.toughness = toughness == null ? "" : toughness.intern();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getColorType()
-	 */
 	@Override
 	public String getColorType() {
 		return this.colorType;
@@ -208,11 +161,6 @@ public class MagicCard extends AbstractMagicCard implements IMagicCard, ICardMod
 		this.colorType = colorType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCmc()
-	 */
 	@Override
 	public int getCmc() {
 		return this.cmc;

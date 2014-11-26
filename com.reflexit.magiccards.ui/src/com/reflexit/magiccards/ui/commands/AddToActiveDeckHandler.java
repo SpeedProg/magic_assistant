@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.commands;
 
-import java.util.List;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -39,11 +37,11 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 			return null;
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		IFilteredCardStore activeDeckHandler = DataManager.getInstance().getCardHandler().getActiveDeckHandler();
+		DataManager dm = DataManager.getInstance();
+		IFilteredCardStore activeDeckHandler = dm.getCardHandler().getActiveDeckHandler();
 		if (activeDeckHandler != null) {
-			List list = iss.toList();
 			try {
-				DataManager.getInstance().copyCards(list, activeDeckHandler.getLocation());
+				dm.copyCards(dm.expandGroups(iss.toList()), activeDeckHandler.getCardStore());
 			} catch (Exception e) {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
 			}

@@ -172,6 +172,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 				card2.setRarity(rarity.trim());
 				card2.setLanguage(null);
 				card2.setText(card.getOracleText());
+				card2.setLegalityMap(null);
 				sets.add(card2);
 			}
 		}

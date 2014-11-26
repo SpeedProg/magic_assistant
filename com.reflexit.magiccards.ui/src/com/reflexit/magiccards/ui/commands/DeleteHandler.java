@@ -148,7 +148,7 @@ public class DeleteHandler extends AbstractHandler {
 				for (IMagicCard card : store) {
 					cards.add(card);
 				}
-				DataManager.getInstance().moveCards(cards, root.getDefaultLib().getLocation());
+				DataManager.getInstance().moveCards(cards, root.getDefaultLib().getStore());
 			}
 		}
 		remove(el);

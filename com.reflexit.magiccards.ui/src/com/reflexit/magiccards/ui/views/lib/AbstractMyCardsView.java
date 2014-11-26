@@ -35,9 +35,6 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -109,12 +106,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			@Override
 			public void run(String id) {
 				IFilteredCardStore fstore = DM.getCardHandler().getCardCollectionFilteredStore(id);
-				Location loc = fstore.getLocation();
+
 				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						DM.copyCards(sel.toList(), loc);
+						DM.copyCards(DM.expandGroups(sel.toList()), fstore.getCardStore());
 					}
 				}
 			}
@@ -133,14 +130,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-						for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-							Object o = iterator.next();
-							if (o instanceof IMagicCard)
-								list.add((IMagicCard) o);
-						}
-						Location location = DM.getCardHandler().getCardCollectionFilteredStore(id).getCardStore().getLocation();
-						DM.moveCards(list, location);
+						ICardStore cardStore = DM.getCardHandler().getCardCollectionFilteredStore(id).getCardStore();
+						DM.moveCards(DM.expandGroups(sel.toList()), cardStore);
 					}
 				}
 			} catch (MagicException e) {
@@ -190,7 +181,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (!sel.isEmpty()) {
-				DM.remove(cardStore, sel.toList());
+				DM.remove(DM.expandGroups(sel.toList()), cardStore);
 			}
 		}
 	}
@@ -352,7 +343,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (selection.isEmpty())
 			return;
 		ArrayList<MagicCardPhysical> cards = new ArrayList<>();
-		CardGroup.expandGroups(cards, selection.toList(), (o) -> o instanceof MagicCardPhysical);
+		DataManager.expandGroups(cards, selection.toList(), (o) -> o instanceof MagicCardPhysical);
 		if (!cards.isEmpty())
 			new EditMagicCardPhysicalDialog(getViewSite().getShell(), cards).open();
 	}

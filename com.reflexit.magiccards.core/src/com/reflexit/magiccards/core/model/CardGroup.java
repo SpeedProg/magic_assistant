@@ -19,24 +19,29 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.reflexit.magiccards.core.model.storage.ILocatable;
-
 /**
  * @author Alena
  * 
  */
-public class CardGroup extends MagicCardHash implements ICardCountable, ICard, ILocatable, IMagicCardPhysical, ICardGroup {
+public class CardGroup extends MagicCardHash implements ICardGroup {
 	private final String name;
 	private ICardField groupField;
 	private List<ICard> children;
 	private Map<String, CardGroup> subs;
+
+	public static final class NonGroupPredicate implements Predicate<Object> {
+		@Override
+		public boolean test(Object o) {
+			return !(o instanceof ICardGroup);
+		}
+	}
 
 	public CardGroup(ICardField fieldIndex, String name) {
 		if (name == null)
 			throw new NullPointerException();
 		this.groupField = fieldIndex;
 		this.name = name;
-		this.children = new ArrayList(2);
+		this.children = new ArrayList<ICard>(2);
 		this.subs = new LinkedHashMap<String, CardGroup>(4);
 	}
 
@@ -266,24 +271,21 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		return false;
 	}
 
-	public static Collection expandGroups(Collection result, Collection cards) {
-		return expandGroups(result, cards, new Predicate<Object>() {
-			@Override
-			public boolean test(Object o) {
-				return !(o instanceof CardGroup);
-			}
-		});
-	}
-
-	public static Collection expandGroups(Collection result, Collection cards, Predicate<Object> filter) {
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+	public Collection expand(Collection result, Predicate<Object> filter) {
+		if (filter.test(this))
+			result.add(this);
+		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
-			if (o instanceof CardGroup)
-				expandGroups(result, ((CardGroup) o).children, filter);
 			if (filter.test(o))
 				result.add(o);
+			if (o instanceof CardGroup)
+				((CardGroup) o).expand(result, filter);
 		}
 		return result;
+	}
+
+	public synchronized Collection<IMagicCard> expand() {
+		return expand(new ArrayList<IMagicCard>(), new NonGroupPredicate());
 	}
 
 	public static String getGroupName(IMagicCard elem, ICardField field) {
@@ -317,11 +319,6 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		}
 	}
 
-	public synchronized Collection<IMagicCard> expand() {
-		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
-		expandGroups(res, children);
-		return res;
-	}
 
 	@Override
 	public Object get(ICardField field) {
@@ -357,8 +354,8 @@ public class CardGroup extends MagicCardHash implements ICardCountable, ICard, I
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getValues() {
-		ArrayList list = new ArrayList();
+	public Collection<Object> getValues() {
+		ArrayList<Object> list = new ArrayList<Object>();
 		ICardField[] xfields = MagicCardField.allNonTransientFields(true);
 		for (ICardField field : xfields) {
 			list.add(get(field));

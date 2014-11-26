@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,7 +61,6 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.ICardCountable;
@@ -75,7 +73,6 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
@@ -869,8 +866,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 				final Clipboard cb = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 				TextTransfer textTransfer = TextTransfer.getInstance();
 				MagicCardTransfer mt = MagicCardTransfer.getInstance();
-				List list = new ArrayList(sel.size());
-				CardGroup.expandGroups(list, sel.toList());
+				Collection list = DataManager.expandGroups(sel.toList());
 				IMagicCard[] cards = (IMagicCard[]) list.toArray(new IMagicCard[sel.size()]);
 				cb.setContents(new Object[] { textData, cards }, new Transfer[] { textTransfer, mt });
 			}
@@ -1043,7 +1039,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
 		Object contents = mt.fromClipboard();
 		if (contents instanceof Collection) {
-			DM.copyCards((Collection) contents, ((ILocatable) getFilteredStore().getCardStore()).getLocation());
+			DM.copyCards(DM.resolve((Collection) contents), getFilteredStore().getCardStore());
 		} else {
 			Control fc = partControl.getDisplay().getFocusControl();
 			CopySupport.runPaste(fc);

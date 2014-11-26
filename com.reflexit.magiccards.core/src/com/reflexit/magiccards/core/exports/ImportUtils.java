@@ -77,7 +77,7 @@ public class ImportUtils {
 			Collection<Location> importedLocations = getLocations(importedCards);
 			createDecks(importedLocations);
 			// import into card store
-			DataManager.getInstance().add(cardStore, importedCards);
+			DataManager.getInstance().add(importedCards, cardStore);
 		}
 	}
 

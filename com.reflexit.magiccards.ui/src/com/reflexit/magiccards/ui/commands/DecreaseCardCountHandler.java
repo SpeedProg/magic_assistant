@@ -79,7 +79,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 					toRemove.add(magicCardCopy);
 				}
 			}
-			DataManager.getInstance().remove(activeDeckHandler.getCardStore(), toRemove);
+			DataManager.getInstance().remove(toRemove, activeDeckHandler.getCardStore());
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck");
 		}

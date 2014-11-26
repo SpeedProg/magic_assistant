@@ -122,36 +122,29 @@ public class DataManager {
 		return rootDir;
 	}
 
-	boolean copyCards(Collection cards1, ICardStore<IMagicCard> store,
+	boolean copyCards(Collection<IMagicCard> cards, ICardStore<IMagicCard> store,
 			Location to) {
 		if (store == null)
 			throw new NullPointerException();
-		if (to == null)
-			to = store.getLocation();
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
 		boolean virtual = store.isVirtual();
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		boolean ownCopyAllowed = owncopy;
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
+		for (Iterator<IMagicCard> iterator = cards.iterator(); iterator.hasNext();) {
+			IMagicCard card = iterator.next();
 			if (ownCopyAllowed == false && card instanceof MagicCardPhysical
 					&& virtual == false && ((MagicCardPhysical) card).isOwn()) {
 				throw new MagicException(
 						"Cannot copy own cards into non-virtual deck, use move instead - or override this protection in preferences");
 			}
-			// copied cards will have collection ownership for virtual
+			// copied cards will have target collection ownership
 			MagicCardPhysical phi = new MagicCardPhysical(card, to, virtual);
 			list.add(phi);
 		}
-		return add(store, list);
+		return add(list, store);
 	}
 
-	public boolean copyCards(Collection cards1, Location to) {
-		ICardStore<IMagicCard> store = getCardStore(to);
-		if (store == null)
-			return false;
-		return copyCards(cards1, store, to);
+	public boolean copyCards(Collection cards1, ICardStore<IMagicCard> sto) {
+		return copyCards(cards1, sto, sto.getLocation());
 	}
 
 	/**
@@ -198,21 +191,14 @@ public class DataManager {
 		return card;
 	}
 
-	public boolean moveCards(Collection cards1, Location to) {
-		ICardStore<IMagicCard> sto = getCardStore(to);
-		if (sto == null)
-			return false;
-		return moveCards(cards1, sto, to);
+	public boolean moveCards(Collection<IMagicCard> cards1, ICardStore<IMagicCard> sto) {
+		return moveCards(cards1, sto, sto.getLocation());
 	}
 
-	boolean moveCards(Collection cards1, ICardStore<IMagicCard> store,
+	boolean moveCards(Collection cards, ICardStore<IMagicCard> store,
 			Location to) {
 		if (store == null)
 			throw new NullPointerException();
-		if (to == null)
-			to = store.getLocation();
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
 		boolean virtual = store.isVirtual();
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(cards.size());
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
@@ -230,13 +216,13 @@ public class DataManager {
 			}
 			list.add(phi);
 		}
-		boolean res = add(store, list);
+		boolean res = add(list, store);
 		if (res) {
 			Location from = getLocation(cards);
 			if (from != null) { // optimization
 				ICardStore<IMagicCard> sfrom2 = getCardStore(from);
 				if (sfrom2 != null) {
-					remove(sfrom2, cards);
+					remove(cards, sfrom2);
 				}
 			} else {
 				for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
@@ -271,8 +257,7 @@ public class DataManager {
 	}
 
 	public List<IMagicCard> splitCards(Collection<IMagicCard> cards1, int count) {
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>(cards1.size());
-		CardGroup.expandGroups(cards, cards1);
+		Collection<IMagicCard> cards = expandGroups(cards1);
 		List<IMagicCard> x = new ArrayList<IMagicCard>();
 		for (IMagicCard o : cards) {
 			if (o instanceof MagicCardPhysical) {
@@ -307,13 +292,13 @@ public class DataManager {
 		return x;
 	}
 
-	public boolean add(ICardStore store, Collection list) {
+	public boolean add(Collection list, ICardStore store) {
 		boolean res = store.addAll(list);
 		reconcile(list);
 		return res;
 	}
 
-	public void remove(ICardStore store, Collection list) {
+	public void remove(Collection list, ICardStore store) {
 		store.removeAll(list);
 		reconcile(list);
 	}
@@ -432,7 +417,7 @@ public class DataManager {
 	public Collection<MagicCardPhysical> materialize(
 			Collection<? extends IMagicCard> cards, Collection<ICardStore<IMagicCard>> stores) {
 		ArrayList<MagicCardPhysical> in = new ArrayList<MagicCardPhysical>();
-		CardGroup.expandGroups(in, cards, new Predicate<Object>() {
+		DataManager.expandGroups(in, cards, new Predicate<Object>() {
 			@Override
 			public boolean test(Object card) {
 				if (card instanceof MagicCardPhysical)
@@ -588,5 +573,24 @@ public class DataManager {
 		if (!pricesDir.exists())
 			pricesDir.mkdirs();
 		return pricesDir;
+	}
+
+	public static Collection expandGroups(Collection cards) {
+		return expandGroups(new ArrayList(cards.size()), cards, new CardGroup.NonGroupPredicate());
+	}
+
+	public static Collection expandGroups(Collection result, Collection cards) {
+		return expandGroups(result, cards, new CardGroup.NonGroupPredicate());
+	}
+
+	public static Collection expandGroups(Collection result, Collection cards, Predicate<Object> filter) {
+		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (filter.test(o))
+				result.add(o);
+			if (o instanceof CardGroup)
+				expandGroups(result, ((CardGroup) o).getChildrenList(), filter);
+		}
+		return result;
 	}
 }
