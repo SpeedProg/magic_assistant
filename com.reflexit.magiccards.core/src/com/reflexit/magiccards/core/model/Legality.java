@@ -19,7 +19,7 @@ public enum Legality {
 			if (leg.label.equals(x))
 				return leg;
 		}
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("Unknown legality label: " + x);
 	}
 
 	public static Legality fromExt(String x) {
@@ -30,6 +30,14 @@ public enum Legality {
 		if (x.equals("*") || x.isEmpty())
 			return UNKNOWN;
 		throw new IllegalArgumentException("Unknown legality extension: " + x);
+	}
+
+	public static boolean isExt(String x) {
+		for (Legality leg : values()) {
+			if (leg.ext.equals(x))
+				return true;
+		}
+		return false;
 	}
 
 	public String getLabel() {

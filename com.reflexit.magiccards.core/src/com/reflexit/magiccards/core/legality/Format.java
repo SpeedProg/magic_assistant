@@ -15,7 +15,6 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 public class Format {
 	public static final Format STANDARD = new ConstructedFormat("Standard", 1);
-	public static final Format EXTENDED = new ConstructedFormat("Extended", 2);
 	public static final Format MODERN = new ConstructedFormat("Modern", 3);
 	public static final Format LEGACY = new ConstructedFormat("Legacy", 4);
 	public static final Format VINTAGE = new ConstructedFormat("Vintage", 5);
@@ -96,7 +95,7 @@ public class Format {
 	}
 
 	public static Format valueOf(String f) {
-		Format real = formats.get(f);
+		Format real = get(f);
 		if (real != null)
 			return real;
 		Format format = new Format(f);
@@ -106,6 +105,8 @@ public class Format {
 
 	public static Format get(String f) {
 		Format real = formats.get(f);
+		if (real == null && f.equals("Extended"))
+			return MODERN;
 		return real;
 	}
 

@@ -54,7 +54,7 @@ public class LegalityMapTest extends TestCase {
 	@Test
 	public void testGetLabel() {
 		map = map.put(STANDARD, Legality.LEGAL);
-		map = map.put(Format.EXTENDED, Legality.LEGAL);
+		map = map.put(Format.MODERN, Legality.LEGAL);
 		assertEquals("Standard", map.getLabel());
 	}
 
@@ -71,6 +71,30 @@ public class LegalityMapTest extends TestCase {
 		String value = "Bla Bla!";
 		map = LegalityMap.valueOf(value);
 		assertEquals(Legality.BANNED, map.get("Bla Bla"));
+	}
+
+	public void testValueOfExtended() {
+		map = LegalityMap.valueOf("Extended");
+		assertEquals(Legality.LEGAL, map.get(Format.MODERN));
+	}
+
+	public void testValueOfExtended1() {
+		map = LegalityMap.valueOf("Extended1");
+		assertEquals(Legality.RESTRICTED, map.get(Format.MODERN));
+	}
+
+	public void testValueOfOther() {
+		map = LegalityMap.valueOf("Other");
+		Format format = map.mapOfLegality().keySet().iterator().next();
+		assertEquals("Standard", format.name());
+		assertEquals(Legality.LEGAL, map.get("Other"));
+		map = LegalityMap.valueOf("Other1");
+		assertEquals(Legality.RESTRICTED, map.get("Other"));
+	}
+
+	public void testValueOfWild() {
+		map = LegalityMap.valueOf("*");
+		assertEquals(Legality.LEGAL, map.get(Format.LEGACY));
 	}
 
 	@Test

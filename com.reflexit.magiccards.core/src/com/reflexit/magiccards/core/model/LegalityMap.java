@@ -142,10 +142,15 @@ public class LegalityMap {
 							map.put(Format.LEGACY, Legality.LEGAL);
 						} else {
 							String ext = string.substring(string.length() - 1, string.length());
-							String f = string.substring(0, string.length() - 1);
-							Legality leg = Legality.fromExt(ext);
-							format = Format.valueOf(f);
-							map.put(format, leg);
+							if (Legality.isExt(ext)) {
+								Legality leg = Legality.fromExt(ext);
+								String f = string.substring(0, string.length() - 1);
+								format = Format.valueOf(f);
+								map.put(format, leg);
+							} else {
+								format = Format.valueOf(string);
+								map.put(format, Legality.LEGAL);
+							}
 						}
 					} else {
 						map.put(format, Legality.LEGAL);
