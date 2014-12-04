@@ -1,5 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -7,7 +10,10 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardModifiable;
+import com.reflexit.magiccards.core.model.IMagicCard;
 
 public class StringEditingSupport extends EditingSupport {
 	private AbstractColumn column;
@@ -36,6 +42,8 @@ public class StringEditingSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		ICardModifiable card = (ICardModifiable) element;
 		card.set(column.getDataField(), value);
-		getViewer().refresh(true);
+		Set<ICardField> of = Collections.singleton(column.getDataField());
+		DataManager.getInstance().update((IMagicCard) card, of);
+		// getViewer().refresh(true);
 	}
 }
