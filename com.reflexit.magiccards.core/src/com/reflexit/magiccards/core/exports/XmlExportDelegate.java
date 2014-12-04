@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +28,10 @@ public class XmlExportDelegate extends AbstractExportDelegatePerLine<IMagicCard>
 			if (store.getLocation() == Location.NO_WHERE || store instanceof MemoryFilteredCardStore) {
 				MagicXmlStreamHandler xmlHanlder = new MagicXmlStreamHandler();
 				CardCollectionStoreObject o = new CardCollectionStoreObject();
-				o.list = Arrays.asList(store.getElements());
+				o.list = new ArrayList<IMagicCard>();
+				for (Object el : store.getElements()) {
+					o.list.add((IMagicCard) el);
+				}
 				try {
 					xmlHanlder.save(o, stream);
 				} catch (Exception e) {

@@ -228,7 +228,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	 * @param obj
 	 */
 	protected void storeFields(CardCollectionStoreObject obj) {
-		obj.list = new ArrayList(this.getList());
+		obj.list = new ArrayList<IMagicCard>(this.getList());
 		obj.key = getLocation().toString();
 		obj.name = getName();
 		obj.comment = getComment();

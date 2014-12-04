@@ -130,10 +130,10 @@ public class MagicXmlStreamReader {
 					case card:
 						break;
 					case mcp:
-						store.list.add(cardp);
+						add(cardp);
 						break;
 					case mc:
-						store.list.add(cardm);
+						add(cardm);
 						break;
 					case name:
 						store.name = ttStr;
@@ -201,6 +201,14 @@ public class MagicXmlStreamReader {
 			}
 			text.delete(0, text.length());
 			state = states.pop();
+		}
+
+		public void add(MagicCardPhysical mcp) {
+			store.list.add(mcp);
+		}
+
+		public void add(MagicCard mc) {
+			store.list.add(mc);
 		}
 
 		@Override

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import com.reflexit.magiccards.core.model.IMagicCard;
+
 /**
  * Object that holds xml. Fields should not be renamed as well as class anme itself.
  * 
@@ -23,10 +25,9 @@ public class CardCollectionStoreObject {
 	public String name;
 	public String key;
 	public String comment;
-	public String cardCount;
 	public String type;
 	public Properties properties = new Properties();
-	public List list;
+	public List<IMagicCard> list;
 	public transient File file;
 	public static transient IStoreHandler formatHandler = new MagicXmlStreamHandler();
 
@@ -34,7 +35,7 @@ public class CardCollectionStoreObject {
 		// empty
 	}
 
-	public CardCollectionStoreObject(List cards) {
+	public CardCollectionStoreObject(List<IMagicCard> cards) {
 		this.list = cards;
 	}
 
