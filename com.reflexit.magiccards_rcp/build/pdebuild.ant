@@ -43,6 +43,15 @@
 				prefix="MagicAssistant/jre"/> 
 		</zip> 
 		-->
+		<copy file="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86.zip" tofile="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86-withjava.zip"/>
+	    <exec dir="${master.dir}/java/linux.gtk.x86/" executable="zip">
+	        <arg value="-u"/>
+	        <arg value="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86-withjava.zip"/>
+	        <arg value="-r"/>
+	        <arg value="MagicAssistant/jre"/>
+	    </exec>
+
+		
 		<copy file="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86_64.zip" tofile="${bins.dir}/magicassistant-${buildId}-linux.gtk.x86_64-withjava.zip"/>
 	    <exec dir="${master.dir}/java/linux.gtk.x86_64/" executable="zip">
 	        <arg value="-u"/>
@@ -231,6 +240,15 @@
 			<fileset dir="${buildDirectory}/p2repo">
 			</fileset>
 		</sync>
+	</target>
+	<target name="publish.update.site.full">
+		<scp verbose="true"
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
+			keyfile="${rsa.key}" trust="true">
+			<fileset dir="${export.update.dir}">
+
+			</fileset>
+		</scp>
 	</target>
 	<target name="publish.update.site">
 		<scp verbose="true"
