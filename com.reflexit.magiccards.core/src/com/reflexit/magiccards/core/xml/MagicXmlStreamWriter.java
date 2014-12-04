@@ -32,6 +32,7 @@ public class MagicXmlStreamWriter {
 		try {
 			writer = new MyXMLStreamWriter(st);
 			try {
+				writer.writeDirect("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
 				writer.startEl("cards");
 				writer.el("name", object.name);
 				writer.el("key", object.key);
