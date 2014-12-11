@@ -169,8 +169,6 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 				Location loc = ((MagicCardPhysical) card).getLocation();
 				if (mainDeck == !loc.isSideboard()) {
 					store2.add(card);
-				} else if (mainDeck) {
-					store2.add(card);
 				}
 			}
 		}
