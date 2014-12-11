@@ -44,14 +44,14 @@ import com.reflexit.magiccards.core.FileUtils;
 public class TestFileUtils {
 	public static boolean deleteOnExit = true;
 
-	public static void resetDb(){
+	public static void resetDb() {
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
 		File temp = new File(tmpDir, "magiccardsTest");
 		FileUtils.deleteTree(temp);
 		temp.deleteOnExit();
 		DataManager.getInstance().reset(temp);
 	}
-	
+
 	public static void readWriteStream(InputStream readStream, OutputStream writeStream) throws IOException {
 		byte[] buffer = new byte[1024 * 4];
 		int bytesRead = readStream.read(buffer);
@@ -116,13 +116,11 @@ public class TestFileUtils {
 	}
 
 	/**
-	 * Returns an array of StringBuilder objects for each comment section found
-	 * preceding the named test in the source code.
+	 * Returns an array of StringBuilder objects for each comment section found preceding the named test in the source code.
 	 *
 	 * @param bundle
-	 *            the bundle containing the source, if {@code null} can try to
-	 *            load using classpath (source folder has to be in the classpath
-	 *            for this to work)
+	 *            the bundle containing the source, if {@code null} can try to load using classpath (source folder has to be in the
+	 *            classpath for this to work)
 	 * @param srcRoot
 	 *            the directory inside the bundle containing the packages
 	 * @param clazz
@@ -130,13 +128,11 @@ public class TestFileUtils {
 	 * @param testName
 	 *            the name of the test
 	 * @param numSections
-	 *            the number of comment sections preceding the named test to
-	 *            return. Pass zero to get all available sections.
-	 * @return an array of StringBuilder objects for each comment section found
-	 *         preceding the named test in the source code.
+	 *            the number of comment sections preceding the named test to return. Pass zero to get all available sections.
+	 * @return an array of StringBuilder objects for each comment section found preceding the named test in the source code.
 	 * @throws IOException
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
 	 */
 	public static StringBuilder[] getContentsForTest(String srcRoot, Class clazz, final String testName, int numSections)
 			throws IOException, NoSuchMethodException, SecurityException {
@@ -153,49 +149,58 @@ public class TestFileUtils {
 			InputStream in = clazz.getResourceAsStream('/' + classFile);
 			if (in == null) {
 				throw new IOException(classFile + " is not found");
-//				if (superclass == null || !superclass.getPackage().equals(clazz.getPackage())) {
-//					throw new IOException(classFile + " is not found");
-//				}
-//				clazz = superclass;
-//				continue;
 			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			try {
-				// Read the java file collecting comments until we encounter the
-				// test method.
-				List<StringBuilder> contents = new ArrayList<StringBuilder>();
-				StringBuilder content = new StringBuilder();
-				for (String line = br.readLine(); line != null; line = br.readLine()) {
-					line = line.replaceFirst("^\\s*", ""); // Replace leading
-															// whitespace,
-															// preserve trailing
-					if (line.startsWith("//")) {
-						content.append(line.substring(2) + "\n");
-					} else {
-						if (!line.startsWith("@") && content.length() > 0) {
-							contents.add(content);
-							if (numSections > 0 && contents.size() == numSections + 1)
-								contents.remove(0);
-							content = new StringBuilder();
-						}
-						if (line.length() > 0 && !contents.isEmpty()) {
-							int idx = line.indexOf(testName);
-							if (idx != -1 && !Character.isJavaIdentifierPart(line.charAt(idx + testName.length()))) {
-								return contents.toArray(new StringBuilder[contents.size()]);
-							}
-							if (!line.startsWith("@")) {
-								contents.clear();
-							}
-						}
-					}
-				}
-			} finally {
-				br.close();
-			}
+			StringBuilder[] comments = extractComments(testName, numSections, in);
+			if (comments != null)
+				return comments;
 			if (superclass == null || !superclass.getPackage().equals(clazz.getPackage())) {
 				throw new IOException("Test data not found for " + clazz.getName() + "." + testName);
 			}
 			clazz = superclass;
 		}
+	}
+
+	public static StringBuilder[] extractComments(final String testName, int numSections, InputStream in) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		try {
+			// Read the java file collecting comments until we encounter the
+			// test method.
+			List<StringBuilder> contents = new ArrayList<StringBuilder>();
+			StringBuilder content = new StringBuilder();
+			boolean inComment = false;
+			for (String line1 = br.readLine(); line1 != null; line1 = br.readLine()) {
+				// Replace leading whitespace, preserve trailing
+				String line = line1.replaceFirst("^\\s*", "");
+				if (inComment && line.contains("*/")) {
+					inComment = false;
+				} else if (inComment) {
+					content.append(line1.replaceFirst("\\t+", "") + "\n");
+				} else if (line.startsWith("//")) {
+					content.append(line.substring(2) + "\n");
+				} else if (line.startsWith("@")) {
+					// ignore annotations
+				} else if (line.trim().isEmpty()) {
+					// ignore empty lines
+				} else if (line.contains("/*-")) {
+					inComment = true;
+				} else {
+					if (content.length() > 0) {
+						// add new section
+						contents.add(content);
+						if (numSections > 0 && contents.size() == numSections + 1)
+							contents.remove(0);
+						content = new StringBuilder();
+					}
+					if (line.matches("^[^=]*\\b" + testName + "\\b.*")) {
+						return contents.toArray(new StringBuilder[contents.size()]);
+					}
+					// was not our function, reset sections
+					contents.clear();
+				}
+			}
+		} finally {
+			br.close();
+		}
+		return null;
 	}
 }
