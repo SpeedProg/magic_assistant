@@ -37,12 +37,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 			this.card = phi.getCard();
 			this.count = phi.getCount();
 			this.ownership = phi.ownership;
-			setComment(phi.getComment());
-			setCustom(phi.getCustom());
-			setPrice(phi.getPrice());
-			setForTrade(phi.getForTrade());
-			setSpecial(phi.getSpecial());
-			setDate(phi.getDate());
+			this.date = phi.getDate();
+			this.properties = (HashMap<ICardField, Object>) (phi.properties == null ? null : phi.properties.clone());
 		}
 		this.location = location;
 	}
@@ -51,7 +47,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	public Object clone() {
 		try {
 			MagicCardPhysical obj = (MagicCardPhysical) super.clone();
-			if (this.properties != null)
+			if (obj.properties != null)
 				obj.properties = (HashMap<ICardField, Object>) this.properties.clone();
 			return obj;
 		} catch (CloneNotSupportedException e) {
@@ -334,9 +330,9 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 				break;
 			case FORTRADECOUNT:
 				if (value instanceof Integer)
-					setForTrade((Integer) value);
+					setProperty(MagicCardField.FORTRADECOUNT, value);
 				else
-					setForTrade(Integer.parseInt((String) value));
+					setProperty(MagicCardField.FORTRADECOUNT, Integer.parseInt((String) value));
 				break;
 			case SIDEBOARD:
 				return false; // not settable
@@ -458,23 +454,6 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getForTrade()
-	 */
-	@Override
-	public int getForTrade() {
-		Integer f = (Integer) getProperty(MagicCardField.FORTRADECOUNT);
-		if (f == null)
-			return 0;
-		return f;
-	}
-
-	public void setForTrade(int forTrade) {
-		setProperty(MagicCardField.FORTRADECOUNT, forTrade);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getSpecial()
 	 */
 	@Override
@@ -485,13 +464,34 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return f;
 	}
 
-
-	public String getSpecial(String key) {
+	public String getSpecialTagValue(String key) {
 		return SpecialTags.getInstance().getSpecialValue(getSpecial(), key);
+	}
+
+	@Override
+	public boolean isSpecialTag(String key) {
+		String str = SpecialTags.getInstance().getSpecialValue(getSpecial(), key);
+		return Boolean.valueOf(str);
+	}
+
+	public boolean isSpecialTag(MagicCardField field) {
+		return isSpecialTag(field.specialTag());
 	}
 
 	public void setSpecialTag(String special) {
 		SpecialTags.getInstance().modifySpecial(this, special);
+	}
+
+	public void setSpecialTag(MagicCardField field) {
+		setSpecialTag(field.specialTag());
+	}
+
+	public void removeSpecialTag(MagicCardField field) {
+		removeSpecialTag(field.specialTag());
+	}
+
+	public void removeSpecialTag(String tag) {
+		SpecialTags.getInstance().modifySpecial(this, "-" + tag);
 	}
 
 	public void setSpecial(String special) {
@@ -502,37 +502,6 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		setProperty(MagicCardField.SPECIAL, special);
 	}
 
-	protected String addTag(String value, String tag) {
-		if (!containsTag(value, tag)) {
-			value += tag + ",";
-		}
-		return value;
-	}
-
-	protected String removeTag(String value, String a) {
-		String res = "";
-		String tags[] = value.split(",");
-		for (String tag : tags) {
-			if (!tag.equals(a))
-				res = res + tag + ",";
-		}
-		return res;
-	}
-
-	private boolean containsTag(String value, String a) {
-		String tags[] = value.split(",");
-		for (String tag : tags) {
-			if (tag.equals(a))
-				return true;
-		}
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isSideboard()
-	 */
 	@Override
 	public boolean isSideboard() {
 		if (location == null)
@@ -697,4 +666,52 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		this.date = date;
 	}
 
+	@Override
+	public int getForTrade() {
+		Integer f = (Integer) getProperty(MagicCardField.FORTRADECOUNT);
+		if (f == null) {
+			boolean forTrade = isSpecialTag(MagicCardField.FORTRADECOUNT.specialTag());
+			if (forTrade)
+				return getCount();
+			return 0;
+		} else
+			return f;
+	}
+
+	public MagicCardPhysical tradeSplit(int count, int fcount) {
+		MagicCardPhysical mcp = this;
+		MagicLogger.log("Migration activated for '" + mcp + "' trade count " + fcount);
+		mcp.setProperty(MagicCardField.FORTRADECOUNT, null);
+		mcp.removeSpecialTag(MagicCardField.FORTRADECOUNT); // remove forTrade tag if it was set
+		count = Math.max(0, count);
+		fcount = Math.max(0, fcount);
+		// trade count is 0 or less, so card is not for trade
+		if (fcount == 0) {
+			mcp.setCount(count);
+			MagicLogger.log("** Card '" + mcp + "' is tagged with NOT fortrade with count of " + count);
+			return null;
+		}
+		// trade count is bigger or equal count, so all pile is for trade
+		if (fcount >= count) {
+			mcp.setCount(fcount);
+			mcp.setSpecialTag(MagicCardField.FORTRADECOUNT);
+			MagicLogger.log("** Card '" + mcp + "' is tagged with fortrade with count of " + fcount);
+			return null;
+		}
+		// trade count is less then count but bigger then 0
+		mcp.setCount(count - fcount); // adjust count for only count not for trade
+		MagicLogger.log("** Card '" + mcp + "' is tagged with NOT fortrade with count of " + mcp.getCount());
+		// now deal with copy
+		MagicCardPhysical mct = (MagicCardPhysical) mcp.cloneCard();
+		mct.setCount(fcount);
+		mct.setSpecialTag(MagicCardField.FORTRADECOUNT);
+		MagicLogger.log("** Card '" + mct + "' is tagged with fortrade with count of " + mct.getCount());
+		return mct;
+	}
+
+	public boolean isMigrated() {
+		if (getProperty(MagicCardField.FORTRADECOUNT) != null)
+			return false;
+		return true;
+	}
 }

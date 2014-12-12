@@ -276,7 +276,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testFORTRADECOUNT() {
-		genericFieldText(FilterField.FORTRADECOUNT, "1");
+		genericFieldText(FilterField.SPECIAL, "fortrade");
 	}
 
 	public void testSPECIAL() {

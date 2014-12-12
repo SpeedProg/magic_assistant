@@ -28,7 +28,6 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 	public static final String SPECIAL_FIELD = MagicCardField.SPECIAL.name();
 	public static final String OWNERSHIP_FIELD = MagicCardField.OWNERSHIP.name();
 	public static final String COUNT_FIELD = MagicCardField.COUNT.name();
-	public static final String COUNT_FOR_TRADE = MagicCardField.FORTRADECOUNT.name();
 	public static final String NAME_FIELD = MagicCardField.NAME.name();
 	public static final String PRICE_FIELD = MagicCardField.PRICE.name();
 	public static final String UNCHANGED = "<unchanged>";
@@ -56,8 +55,6 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 		createTextLabel(area, store.getString(NAME_FIELD));
 		// Count
 		Text count = createTextFieldEditor(area, "Count", COUNT_FIELD);
-		// count for trade
-		createTextFieldEditor(area, "Count For Trade", COUNT_FOR_TRADE);
 		// Price
 		createTextFieldEditor(area, "Price", PRICE_FIELD);
 		// ownership
@@ -66,7 +63,7 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 		createTextFieldEditor(area, "Comment", COMMENT_FIELD, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// special
 		Text special = createTextFieldEditor(area, "Special Tags", SPECIAL_FIELD, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		special.setToolTipText("Set card tags, such as foil, mint, premium, etc. Tags are separated by ','.\n To add tag use +, to remove tag use -. For example \"+foil,-online\".");
+		special.setToolTipText("Set card tags, such as foil, mint, premium, forTrade, etc. Tags are separated by ','.\n To add tag use +, to remove tag use -. For example \"+foil,-online\".");
 		ContextAssist.addContextAssist(special, SpecialTags.getTags(), true);
 		// end
 		count.setFocus();

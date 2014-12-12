@@ -385,7 +385,6 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			MagicCardPhysical pcard = new MagicCardPhysical(card, store.getLocation());
 			pcard.setOwn(!store.isVirtual());
 			pcard.setCount(1);
-			pcard.setForTrade(0);
 			IMagicCard old = store.getCard(pcard.getCardId());
 			if (old != null) {
 				int ncount = ((MagicCardPhysical) old).getCount();

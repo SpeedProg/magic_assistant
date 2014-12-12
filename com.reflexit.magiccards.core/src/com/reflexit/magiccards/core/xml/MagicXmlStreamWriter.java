@@ -89,7 +89,9 @@ public class MagicXmlStreamWriter {
 		writer.endEl();
 		MagicCardField[] values = MagicCardField.values();
 		for (MagicCardField field : values) {
-			if (field.isTransient() || !field.isPhysical())
+			if (!field.isPhysical())
+				continue;
+			if (field.isTransient())
 				continue;
 			Object o = card.get(field);
 			if (o == null)
@@ -105,6 +107,12 @@ public class MagicXmlStreamWriter {
 					continue;
 			}
 			writer.el(field.getTag(), String.valueOf(o));
+		}
+		// special hack for old forTrade
+		int forTrade = card.getForTrade();
+		if (forTrade > 0 && card.isForTrade() == false) {
+			// old style
+			writer.el(MagicCardField.FORTRADECOUNT.getTag(), String.valueOf(forTrade));
 		}
 	}
 

@@ -329,6 +329,8 @@ public class DataManager {
 	}
 
 	public MagicCardPhysical split(MagicCardPhysical card, int right) {
+		if (!card.isMigrated())
+			throw new IllegalArgumentException("Has to be migrated first");
 		if (right <= 0)
 			return null;
 		if (right >= card.getCount())
@@ -336,22 +338,12 @@ public class DataManager {
 		Location loc = card.getLocation();
 		ICardStore<IMagicCard> cardStore = getCardStore(loc);
 		if (cardStore == null)
-			throw new IllegalArgumentException("Cannot find store for "
-					+ cardStore);
+			throw new IllegalArgumentException("Cannot find store for " + cardStore);
 		int left = card.getCount() - right;
-		int trade = card.getForTrade();
-		int tradeLeft = 0;
-		if (trade <= right) {
-			tradeLeft = 0;
-		} else {
-			tradeLeft = trade - right;
-		}
 		MagicCardPhysical card2 = new MagicCardPhysical(card,
 				card.getLocation());
 		card.setCount(left);
-		card.setForTrade(tradeLeft);
 		card2.setCount(right);
-		card2.setForTrade(trade - tradeLeft);
 		Set<MagicCardField> fieldSet = Collections.singleton(MagicCardField.COUNT);
 		cardStore.update(card, fieldSet);
 		cardStore.setMergeOnAdd(false);

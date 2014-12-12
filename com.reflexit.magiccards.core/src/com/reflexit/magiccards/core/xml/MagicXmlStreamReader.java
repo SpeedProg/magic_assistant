@@ -52,6 +52,7 @@ public class MagicXmlStreamReader {
 		Tag state = Tag.cards;
 		private MagicCard cardm;
 		private MagicCardPhysical cardp;
+		private int forTradeCount = 0;
 		String last = null;
 		StringBuffer text = new StringBuffer();
 		String key;
@@ -103,6 +104,7 @@ public class MagicXmlStreamReader {
 					break;
 				case mcp:
 					cardp = new MagicCardPhysical(new MagicCard(), null);
+					forTradeCount = 0;
 					break;
 				case entry:
 					if (state == Tag.properties) {
@@ -175,6 +177,12 @@ public class MagicXmlStreamReader {
 								case card:
 								case mcp: {
 									MagicCardField field = mcpFields.get(last);
+									// transient field but should read it for backward compatibity
+									if (field == null && MagicCardField.FORTRADECOUNT.getTag().equals(last)) {
+										forTradeCount = Integer.valueOf(ttStr);
+										cardp.set(MagicCardField.FORTRADECOUNT, forTradeCount);
+										break;
+									}
 									if (field == null)
 										MagicLogger.log("Uknown element " + last);
 									else

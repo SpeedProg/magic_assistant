@@ -73,7 +73,6 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 	private void editCard(MagicCardPhysical card, PreferenceStore store, boolean update) {
 		boolean modified = false;
 		modified = setField(card, store, MagicCardField.COUNT) || modified;
-		modified = setField(card, store, MagicCardField.FORTRADECOUNT) || modified;
 		modified = setField(card, store, MagicCardField.PRICE) || modified;
 		modified = setField(card, store, MagicCardField.COMMENT) || modified;
 		modified = setField(card, store, MagicCardField.OWNERSHIP) || modified;

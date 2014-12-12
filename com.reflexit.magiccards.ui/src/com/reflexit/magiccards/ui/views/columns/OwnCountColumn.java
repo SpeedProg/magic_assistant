@@ -59,7 +59,7 @@ public class OwnCountColumn extends CountColumn {
 	}
 
 	@Override
-	protected boolean canEdit(Object element) {
+	protected boolean canEditElement(Object element) {
 		return element instanceof MagicCardPhysical && ((MagicCardPhysical) element).isOwn();
 	}
 }

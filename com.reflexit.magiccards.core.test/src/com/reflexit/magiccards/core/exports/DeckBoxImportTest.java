@@ -11,7 +11,6 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 	private final DeckBoxImportDelegate importer = new DeckBoxImportDelegate();
 	private final DeckBoxExportDelegate exporter = new DeckBoxExportDelegate();
 	private ByteArrayOutputStream out;
-	private String[] lines;
 	private String resline;
 
 	@Override
@@ -50,11 +49,10 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 	public void splitLines() {
 		resline = out.toString();
 		resline = resline.replaceAll("\\r", "");
-		lines = resline.split("\n");
 	}
 
 // Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number
-// 4,1,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13
+// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13
 // 1,0,Angel of Mercy,,,,,,Near Mint,English,
 // 3,0,Platinum Angel,,,,,Magic 2010,Near Mint,English,218
 	@Test
@@ -64,12 +62,12 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		assertEquals(3, resSize);
 		assertEquals("Reya Dawnbringer", card1.getName());
 		assertEquals(4, ((MagicCardPhysical) card1).getCount());
-		assertEquals(1, ((MagicCardPhysical) card1).getForTrade());
+		assertEquals(0, ((MagicCardPhysical) card1).getForTrade());
 		assertEquals("Duel Decks: Divine vs. Demonic", card1.getSet());
 	}
 
 // Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number,Some
-// 4,1,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13,xxx
+// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13,xxx
 	@Test
 	public void testExtraColumn() {
 		parseCommentAbove();
@@ -78,7 +76,7 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 	}
 
 	// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,
-	// 4,1,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English
+	// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English
 	@Test
 	public void testLessColumns() {
 		parseCommentAbove();
@@ -108,5 +106,24 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		parse();
 		export();
 		assertEquals(line, resline);
+	}
+
+	// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number
+	// 4,1,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13
+	@Test
+	public void testForTrade() {
+		parseCommentAbove();
+		assertNull(importer.getResult().getError());
+		assertEquals("Reya Dawnbringer", card1.getName());
+		assertEquals("Duel Decks: Divine vs. Demonic", card1.getSet());
+		if (resSize == 1) {
+			assertEquals(4, ((MagicCardPhysical) card1).getCount());
+			assertEquals(1, ((MagicCardPhysical) card1).getForTrade());
+		} else {
+			assertEquals(1, ((MagicCardPhysical) card1).getCount());
+			assertEquals(1, ((MagicCardPhysical) card1).getForTrade());
+			assertEquals(3, ((MagicCardPhysical) card2).getCount());
+			assertEquals(0, ((MagicCardPhysical) card2).getForTrade());
+		}
 	}
 }

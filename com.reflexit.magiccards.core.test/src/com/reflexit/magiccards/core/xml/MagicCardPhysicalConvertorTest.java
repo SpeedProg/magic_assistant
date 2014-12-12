@@ -33,9 +33,9 @@ public class MagicCardPhysicalConvertorTest extends TestCase {
 
 	public void testXStreamWriteNoDefaultFields() {
 		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
-		phi.setForTrade(0);
+		phi.setPrice(0);
 		String xml = xstream.toXML(phi);
-		assertTrue(!xml.contains("forTrade"));
+		assertTrue(!xml.contains("price"));
 	}
 
 	public void testXStreamWriteNoDefaultFieldsOwn() {
@@ -47,14 +47,14 @@ public class MagicCardPhysicalConvertorTest extends TestCase {
 
 	public void testXStreamWriteField() {
 		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
-		phi.setForTrade(1);
+		phi.setSpecialTag("fortrade");
 		String xml = xstream.toXML(phi);
-		assertTrue(xml.contains("<pfield>FORTRADECOUNT</pfield>"));
+		assertTrue(xml.contains("<pfield>SPECIAL</pfield>"));
 	}
 
 	public void testXStreamAround() {
 		MagicCardPhysical phi = CardGenerator.generatePhysicalCardWithValues();
-		phi.setForTrade(1);
+
 		String xml = xstream.toXML(phi);
 		Object object = xstream.fromXML(xml);
 		assertEquals(phi, object);

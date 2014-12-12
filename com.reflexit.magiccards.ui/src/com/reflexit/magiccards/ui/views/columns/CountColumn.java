@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import java.util.Collections;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -14,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -25,8 +23,6 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  * 
  */
 public class CountColumn extends GenColumn {
-	/**
-	 */
 	public CountColumn() {
 		super(MagicCardField.COUNT, "Count");
 	}
@@ -37,12 +33,7 @@ public class CountColumn extends GenColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof ICardCountable) {
-			ICardCountable m = (ICardCountable) element;
-			return String.valueOf(m.getCount());
-		} else {
-			return "";
-		}
+		return super.getText(element);
 	}
 
 	@Override
@@ -50,18 +41,12 @@ public class CountColumn extends GenColumn {
 		return 45;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport
-	 * (org.eclipse.jface.viewers.TableViewer)
-	 */
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
 		return new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
-				if (CountColumn.this.canEdit(element) && (viewer.getInput() instanceof IFilteredCardStore))
+				if (canEditElement(element) && viewer.getInput() instanceof IFilteredCardStore)
 					return true;
 				else
 					return false;
@@ -69,57 +54,57 @@ public class CountColumn extends GenColumn {
 
 			@Override
 			protected CellEditor getCellEditor(Object element) {
-				TextCellEditor editor = new TextCellEditor((Composite) viewer.getControl(), SWT.NONE);
-				((Text) editor.getControl()).setTextLimit(5);
-				((Text) editor.getControl()).addVerifyListener(new VerifyListener() {
-					@Override
-					public void verifyText(VerifyEvent e) {
-						// validation - mine was for an Integer (also allow
-						// 'enter'):
-						e.doit = "0123456789".indexOf(e.text) >= 0 || e.character == '\0';
-					}
-				});
-				return editor;
+				Composite viewerControl = (Composite) viewer.getControl();
+				return getElementCellEditor(viewerControl);
 			}
 
 			@Override
 			protected Object getValue(Object element) {
-				if (CountColumn.this.canEdit(element)) {
-					MagicCardPhysical card = (MagicCardPhysical) element;
-					int count = card.getCount();
-					return String.valueOf(count);
+				if (canEdit(element)) {
+					return getElementValue(element);
 				}
 				return null;
 			}
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				if (viewer.getInput() instanceof IFilteredCardStore) {
-					if (CountColumn.this.canEdit(element)) {
-						MagicCardPhysical card = (MagicCardPhysical) element;
-						int oldCount = card.getCount();
-						int count = value == null ? 0 : Integer.parseInt(value.toString());
-						if (oldCount == count)
-							return;
-						// MagicCardPhysical add = new MagicCardPhysical(card, card.getLocation());
-						// add.setCount(count);
-						card.setCount(count);
-						// viewer.update(element, null);
-						// save
-						Set<MagicCardField> of = Collections.singleton(MagicCardField.COUNT);
-						DataManager.getInstance().update(card,of);
-						// IFilteredCardStore target = (IFilteredCardStore) getViewer().getInput();
-						// ICardStore<IMagicCard> cardStore = target.getCardStore();
-						// cardStore.remove(card);
-						// cardStore.add(add);
-						// cardStore.update(add);
-					}
+				if (canEdit(element)) {
+					setElementValue(element, value);
 				}
 			}
 		};
 	}
 
-	protected boolean canEdit(Object element) {
+	protected void setElementValue(Object element, Object value) {
+		MagicCardPhysical card = (MagicCardPhysical) element;
+		int oldCount = card.getCount();
+		int count = value == null ? 0 : Integer.parseInt(value.toString());
+		if (oldCount == count)
+			return;
+		card.setCount(count);
+		// save
+		DataManager.getInstance().update(card, Collections.singleton(getDataField()));
+	}
+
+	protected boolean canEditElement(Object element) {
 		return element instanceof MagicCardPhysical;
+	}
+
+	protected String getElementValue(Object element) {
+		return getText(element);
+	}
+
+	protected CellEditor getElementCellEditor(Composite viewerControl) {
+		TextCellEditor editor = new TextCellEditor(viewerControl, SWT.NONE);
+		Text textControl = (Text) editor.getControl();
+		textControl.setTextLimit(5);
+		textControl.addVerifyListener(new VerifyListener() {
+			@Override
+			public void verifyText(VerifyEvent e) {
+				// validation - mine was for an Integer (also allows 'enter'):
+				e.doit = "0123456789".indexOf(e.text) >= 0 || e.character == '\0';
+			}
+		});
+		return editor;
 	}
 }

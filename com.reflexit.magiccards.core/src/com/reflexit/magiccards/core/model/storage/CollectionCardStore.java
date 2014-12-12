@@ -1,12 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2008 Alena Laskavaia.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2008 Alena Laskavaia. All rights reserved. This program and the accompanying materials are made available under the terms
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Alena Laskavaia - initial API and implementation
+ * Contributors: Alena Laskavaia - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.storage;
 
@@ -51,32 +47,31 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		Location loc = getLocation();
 		if (getMergeOnAdd()) {
 			MagicCardPhysical phi = (MagicCardPhysical) this.hashpart.getCard(card);
-			if (phi == null || loc != null && !loc.equals(phi.getLocation())) {
-				phi = (MagicCardPhysical) createNewCard(card, loc);
-				this.hashpart.storeCard(phi);
-				if (this.storage.add(phi))
-					return true;
-				else {
-					this.hashpart.removeCard(phi);
-					return false;
-				}
-			} else {
-				int count = 1;
-				int trade = 0;
-				if (card instanceof MagicCardPhysical) {
-					count = ((ICardCountable) card).getCount();
-					trade = ((MagicCardPhysical) card).getForTrade();
-				}
-				MagicCardPhysical add = new MagicCardPhysical(card, loc);
-				MagicCardPhysical old = phi;
-				add.setCount(old.getCount() + count);
-				add.setForTrade(old.getForTrade() + trade);
-				doRemoveCard(old);
-				this.hashpart.storeCard(add);
-				if (storageAdd(add))
-					return true;
-				else {
-					return false;
+			if (phi == null || phi.isMigrated()) {
+				if (phi == null || loc != null && !loc.equals(phi.getLocation())) {
+					phi = (MagicCardPhysical) createNewCard(card, loc);
+					this.hashpart.storeCard(phi);
+					if (this.storage.add(phi))
+						return true;
+					else {
+						this.hashpart.removeCard(phi);
+						return false;
+					}
+				} else {
+					int count = 1;
+					if (card instanceof MagicCardPhysical) {
+						count = ((ICardCountable) card).getCount();
+					}
+					MagicCardPhysical add = new MagicCardPhysical(card, loc);
+					MagicCardPhysical old = phi;
+					add.setCount(old.getCount() + count);
+					doRemoveCard(old);
+					this.hashpart.storeCard(add);
+					if (storageAdd(add))
+						return true;
+					else {
+						return false;
+					}
 				}
 			}
 		}
@@ -173,14 +168,17 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		}
 	}
 
+	@Override
 	public IMagicCard getCard(int id) {
 		return this.hashpart.getCard(id);
 	}
 
+	@Override
 	public Collection getCards(int id) {
 		return this.hashpart.getCards(id);
 	}
 
+	@Override
 	public int getCount() {
 		// return this.cardCount;
 		return getRealCount();

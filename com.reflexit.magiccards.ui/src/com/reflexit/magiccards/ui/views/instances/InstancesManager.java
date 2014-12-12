@@ -67,7 +67,6 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 				columns.add(new StringEditorColumn(MagicCardField.SPECIAL, "Special"));
 				columns.add(new CommentColumn());
 				columns.add(new PriceColumn());
-				columns.add(new StringEditorColumn(MagicCardField.FORTRADECOUNT, "For Trade"));
 			}
 		};
 	}

@@ -126,6 +126,16 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 		return getInt(MagicCardField.OWN_UNIQUE);
 	}
 
+
+	public boolean isForTrade() {
+		return isSpecialTag(MagicCardField.FORTRADECOUNT.specialTag());
+	}
+
+	public boolean isSpecialTag(String key) {
+		String str = SpecialTags.getInstance().getSpecialValue(getSpecial(), key);
+		return Boolean.valueOf(str);
+	}
+
 	@Override
 	public int getOwnTotalAll() {
 		Collection<IMagicCard> cards = db().getCandidates(getName());

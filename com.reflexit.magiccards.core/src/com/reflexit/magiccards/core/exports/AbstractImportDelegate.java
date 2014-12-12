@@ -90,6 +90,11 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected void importCard(MagicCardPhysical card) {
 		if (card == null)
 			return;
+		if (!card.isMigrated()) {
+			MagicCardPhysical ncard = card.tradeSplit(card.getCount(), card.getForTrade());
+			if (ncard != null)
+				importResult.add(ncard);
+		}
 		importResult.add(card);
 	}
 

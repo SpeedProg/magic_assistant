@@ -156,6 +156,12 @@ public enum MagicCardField implements ICardField {
 		protected ICardVisitor getAggregator() {
 			return new AbstractIntTransAggregator(this);
 		}
+
+		@Override
+		public boolean isTransient() {
+			return true;
+		}
+
 	},
 	SPECIAL(true), // like foil, premium, mint, played, online etc
 	SIDEBOARD(null, true) {
@@ -262,6 +268,12 @@ public enum MagicCardField implements ICardField {
 	@Override
 	public String getTag() {
 		return tag;
+	}
+
+	public String specialTag() {
+		if (getTag() == null)
+			return null;
+		return getTag().toLowerCase(Locale.ENGLISH);
 	}
 
 	@Override

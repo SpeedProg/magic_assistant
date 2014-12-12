@@ -68,7 +68,7 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 			@Override
 			public Object aggregateValueOf(ICard card) {
 				if (card instanceof MagicCardPhysical) {
-					String spe = ((MagicCardPhysical) card).getSpecial("c");
+					String spe = ((MagicCardPhysical) card).getSpecialTagValue("c");
 					if (spe == null)
 						return null;
 					if (spe.equals("nearmint"))
@@ -125,7 +125,7 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 			if (value.equals(tag)) {
 				card.setSpecialTag(tag);
 			} else {
-				card.setSpecialTag("-" + tag);
+				card.removeSpecialTag(tag);
 			}
 		}
 
