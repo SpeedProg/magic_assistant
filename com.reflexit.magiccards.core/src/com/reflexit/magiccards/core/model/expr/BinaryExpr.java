@@ -145,6 +145,8 @@ public class BinaryExpr extends Expr {
 			return fieldOp(field, Operation.LE, value.substring(2).trim());
 		} else if (value.startsWith("==")) {
 			return fieldOp(field, Operation.EQ, value.substring(2).trim());
+		} else if (value.startsWith("=")) {
+			return fieldOp(field, Operation.EQ, value.substring(1).trim());
 		} else if (value.equals("0")) {
 			return new BinaryExpr(MagicCardFilter.TRUE, Operation.AND, MagicCardFilter.TRUE);
 		} else {

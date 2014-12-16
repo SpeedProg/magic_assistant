@@ -136,8 +136,7 @@ public enum FilterField {
 	}
 
 	public Expr valueExpr(HashMap<String, String> map) {
-		String value = map.get(getPrefConstant());
-		return valueExpr(value);
+		return valueExpr(valueFrom(map));
 	}
 
 	public Expr valueExpr(String value) {

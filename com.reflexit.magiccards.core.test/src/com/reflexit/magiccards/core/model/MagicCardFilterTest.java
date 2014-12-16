@@ -166,11 +166,11 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testPOWER() {
-		genericFieldText(FilterField.POWER, "22");
+		genericFieldText(FilterField.POWER, 15);
 	}
 
 	public void testTOUGHNESS() {
-		genericFieldText(FilterField.TOUGHNESS, "22");
+		genericFieldText(FilterField.TOUGHNESS, 22);
 	}
 
 	public void testEDITION() {
@@ -183,27 +183,39 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testCCC() {
-		FilterField ff = FilterField.CCC;
 		mcp.set(MagicCardField.COST, "{3}");
-		// Object a = mcp.getObjectByField(ff.getField());
-		setQuickFilter(ff, "3");
+		intFieldCheck(FilterField.CCC, 3);
+	}
+
+	protected void genericFieldText(FilterField ff, int i) {
+		genericFieldText(ff, String.valueOf(i));
+		intFieldCheck(ff, i);
+	}
+
+	protected void intFieldCheck(FilterField ff, int value) {
+		setQuickFilter(ff, String.valueOf(value));
+		checkFound();
+		setQuickFilter(ff, "= " + value);
+		checkFound();
+		setQuickFilter(ff, "==" + value);
+		checkFound();
+		setQuickFilter(ff, ">=" + value);
+		checkFound();
+		setQuickFilter(ff, "<=" + value);
+		checkFound();
+		setQuickFilter(ff, "<= " + (value - 1));
+		checkNotFound();
+		setQuickFilter(ff, ">= 0");
+		checkFound();
+		setQuickFilter(ff, "=" + value);
 		checkFound();
 	}
 
 	public void testCOUNT() {
 		mcp.setCount(1);
-		genericFieldText(FilterField.COUNT, "3");
+		genericFieldText(FilterField.COUNT, 3);
 	}
 
-	public void testCOUNTLess() {
-		FilterField ff = FilterField.COUNT;
-		setQuickFilter(ff, "<=3");
-		mcp.set(ff.getField(), "3");
-		checkFound();
-		setQuickFilter(ff, "<=2");
-		mcp.set(ff.getField(), "3");
-		checkNotFound();
-	}
 
 	public void checkFound() {
 		checkFound(mcp);
@@ -214,19 +226,19 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testPRICE() {
-		genericFieldText(FilterField.PRICE, "2");
+		genericFieldText(FilterField.PRICE, 2);
 	}
 
 	public void testDBPRICE() {
-		genericFieldText(FilterField.DBPRICE, "2");
+		genericFieldText(FilterField.DBPRICE, 2);
 	}
 
 	public void testCOMMUNITYRATING() {
-		genericFieldText(FilterField.COMMUNITYRATING, "5");
+		genericFieldText(FilterField.COMMUNITYRATING, 5);
 	}
 
 	public void testCOLLNUM() {
-		genericFieldText(FilterField.COLLNUM, "23");
+		genericFieldText(FilterField.COLLNUM, 23);
 	}
 
 	public void testARTIST() {
