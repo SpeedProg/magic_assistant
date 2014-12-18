@@ -1,5 +1,9 @@
-changes in 1.4.1.4
+changes in 1.4.1.5
 * Added sort button to Export deck page
+* Bug 409 "equals" filter not working in filter dialog 
+* Migration to deprecate forTradeCount field (use tag instead)
+* Fixed - Wizards html deck export - sideboard correction
+* Fixed that deck is not saved when editing some string fields inline
 changes in 1.4.1.3
 * Italian translation for types
 * Fixed materilize deck action
