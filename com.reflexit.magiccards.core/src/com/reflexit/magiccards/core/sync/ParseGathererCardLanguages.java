@@ -53,10 +53,12 @@ public class ParseGathererCardLanguages extends AbstractParseGathererPage {
 
 	public void setLanguage(String string) {
 		lang = string;
+		page = 0;
 	}
 
 	public void setCardId(int i) {
 		cardId = i;
+		page = 0;
 	}
 
 	@Override
@@ -74,7 +76,8 @@ public class ParseGathererCardLanguages extends AbstractParseGathererPage {
 				break;
 			}
 		}
-		if (langId == 0 && count >= 25 && page <= 3) {
+		if (langId == 0)
+			if (count >= 25 && page <= 3) {
 			page++;
 			try {
 				load(ICoreProgressMonitor.NONE);

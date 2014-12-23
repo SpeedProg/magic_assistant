@@ -120,6 +120,7 @@ public class UpdateCardsFromWeb {
 								// newMagicCard.getName());
 							}
 						} else {
+							MagicLogger.log("Cannot load " + lang + " of " + cardId);
 							monitor.worked(40);
 							failedLangUpdate++;
 						}
