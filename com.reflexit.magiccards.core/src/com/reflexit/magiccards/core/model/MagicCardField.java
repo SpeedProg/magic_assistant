@@ -100,8 +100,8 @@ public enum MagicCardField implements ICardField {
 	},
 	UNIQUE_COUNT(null) {
 		@Override
-		public Object aggregateValueOf(ICard card) {
-			return card.accept(FieldUniqueAggregator.getInstance(), null);
+		protected ICardVisitor getAggregator() {
+			return new FieldUniqueAggregator(this);
 		}
 	}, // count of unique cards (usually only make sense for group)
 	SIDE(null) {
