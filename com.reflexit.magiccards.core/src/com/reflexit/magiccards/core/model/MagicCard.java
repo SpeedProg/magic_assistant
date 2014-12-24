@@ -846,4 +846,38 @@ public class MagicCard extends AbstractMagicCard {
 	public void setLegalityMap(LegalityMap map) {
 		setProperty(MagicCardField.LEGALITY, map);
 	}
+
+	/**
+	 * @return normalized id of the card, i.e. english card id of the same card in set
+	 */
+	public int getNormId() {
+		int x = getEnglishCardId();
+		if (x == 0)
+			return getCardId();
+		return x;
+	}
+
+	/**
+	 * @return id of the prime card of the english version of this card
+	 */
+	public int getPrimeId() {
+		int x = getNormId();
+		IMagicCard norm = db().getCard(x);
+		if (norm == null)
+			norm = this;
+		IMagicCard prime = db().getPrime(norm.getName());
+		if (prime == null)
+			prime = norm;
+		return prime.getCardId();
+	}
+
+	public String getEnglishName() {
+		int x = getEnglishCardId();
+		if (x == 0)
+			return getName();
+		IMagicCard norm = db().getCard(x);
+		if (norm == null)
+			norm = this;
+		return norm.getName();
+	}
 }

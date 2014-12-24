@@ -1,6 +1,7 @@
 changes in 1.4.1.6
-* Bug: fixed when updating localized cards - not all cards where loaded
-* Bug 252 Ignore language in Collector's View
+* Bug: fixed when updating localized cards - not all cards where loaded when updating
+* Bug 252: fixed unique count and own unique count should not consider localized cards as unique
+* Bug: fixed when groupping by name it would not consider localized cards as the same
 changes in 1.4.1.5
 * Added sort button to Export deck page
 * Bug 409 "equals" filter not working in filter dialog 

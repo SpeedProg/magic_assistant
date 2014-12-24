@@ -30,8 +30,7 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
- * Class that implements IFilteredCardStore, it is only contains filtered
- * filteredList and no physical media
+ * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no physical media
  * 
  * @author Alena
  * 
@@ -188,9 +187,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				for (Object element : filteredList) {
 					IMagicCard elem = (IMagicCard) element;
 					ICardGroup group = findGroupIndex(elem, filter);
-					if (group != null) {
-						addToNameGroup(elem, group);
-					}
+					addToNameGroup(elem, group);
 				}
 			}
 			removeEmptyGroups();
@@ -202,10 +199,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (group.getFieldIndex() == MagicCardField.NAME) {
 			group.add(elem);
 		} else {
-			String key = getEnglishName(elem);
-			ICardGroup nameGroup = null;
-			if (group instanceof CardGroup)
-				nameGroup = ((CardGroup) group).getSubGroup(key);
+			String key = elem.getEnglishName();
+			ICardGroup nameGroup = group.getSubGroup(key);
 			if (nameGroup != null) {
 				nameGroup.add(elem);
 			} else {
@@ -214,17 +209,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				group.add(nameGroup);
 			}
 		}
-	}
-
-	public String getEnglishName(IMagicCard elem) {
-		int enId = elem.getEnglishCardId();
-		if (enId != 0) {
-			Object card = getCardStore().getCard(enId);
-			if (card instanceof IMagicCard) {
-				return ((IMagicCard) card).getName();
-			}
-		}
-		return elem.getName();
 	}
 
 	protected void removeEmptyGroups() {
@@ -314,7 +298,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				continue;
 			String name = CardGroup.getGroupName(elem, field);
 			if (name == null)
-				return null;
+				name = "null";
 			CardGroup g = parent.getSubGroup(name);
 			if (g == null) {
 				g = new CardGroup(field, name);

@@ -13,9 +13,12 @@ public interface ICardGroup extends ICard {
 
 	public abstract void remove(ICard elem);
 
+	@Override
 	public abstract String getName();
 
 	public abstract ICardField getFieldIndex();
 
 	public abstract ICard getChildAtIndex(int index);
+
+	public abstract ICardGroup getSubGroup(String key);
 }

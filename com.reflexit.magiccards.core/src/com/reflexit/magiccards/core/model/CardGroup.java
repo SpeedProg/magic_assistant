@@ -1,12 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2008 Alena Laskavaia.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2008 Alena Laskavaia. All rights reserved. This program and the accompanying materials are made available under the terms
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Alena Laskavaia - initial API and implementation
+ * Contributors: Alena Laskavaia - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.model;
 
@@ -125,9 +121,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.core.model.ICardGroup#add(com.reflexit.magiccards
-	 * .core.model.ICard)
+	 * @see com.reflexit.magiccards.core.model.ICardGroup#add(com.reflexit.magiccards .core.model.ICard)
 	 */
 	@Override
 	public synchronized void add(ICard elem) {
@@ -151,8 +145,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.reflexit.magiccards.core.model.ICardGroup#remove(java.lang.Object)
+	 * @see com.reflexit.magiccards.core.model.ICardGroup#remove(java.lang.Object)
 	 */
 	@Override
 	public synchronized void remove(ICard elem) {
@@ -288,37 +281,44 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 		return expand(new ArrayList<IMagicCard>(), new NonGroupPredicate());
 	}
 
-	public static String getGroupName(IMagicCard elem, ICardField field) {
+	public static String getGroupName(IMagicCard elem, ICardField ifield) {
 		try {
-			if (field == MagicCardField.COST) {
-				return Colors.getColorName(elem.getCost());
-			} else if (field == MagicCardField.CMC) {
-				int ccc = elem.getCmc();
-				if (ccc == 0 && elem.getType() != null && elem.getType().contains("Land")) {
-					return "Land";
-				} else {
-					return String.valueOf(ccc);
+			if (ifield instanceof MagicCardField) {
+				MagicCardField field = (MagicCardField) ifield;
+				switch (field) {
+					case NAME:
+						return elem.getEnglishName();
+					case COST:
+						return Colors.getColorName(elem.getCost());
+					case CMC:
+						int ccc = elem.getCmc();
+						if (ccc == 0 && elem.getType() != null && elem.getType().contains("Land")) {
+							return "Land";
+						} else {
+							return String.valueOf(ccc);
+						}
+					case LANG:
+						String language = elem.getLanguage();
+						if (language == null)
+							return "English";
+						else
+							return language;
+					case SIDEBOARD:
+						if (elem instanceof MagicCardPhysical) {
+							if (((MagicCardPhysical) elem).isSideboard()) {
+								return "Sideboard";
+							}
+						}
+						return "Main Deck";
+					default:
+						break;
 				}
-			} else if (field == MagicCardField.LANG) {
-				if (elem.getLanguage() == null)
-					return "English";
-				else
-					return elem.getLanguage();
-			} else if (field == MagicCardField.SIDEBOARD) {
-				if (elem instanceof MagicCardPhysical) {
-					if (((MagicCardPhysical) elem).isSideboard()) {
-						return "Sideboard";
-					}
-				}
-				return "Main Deck";
-			} else {
-				return String.valueOf(elem.get(field));
 			}
+			return String.valueOf(elem.get(ifield));
 		} catch (Exception e) {
 			return "Unknown";
 		}
 	}
-
 
 	@Override
 	public Object get(ICardField field) {

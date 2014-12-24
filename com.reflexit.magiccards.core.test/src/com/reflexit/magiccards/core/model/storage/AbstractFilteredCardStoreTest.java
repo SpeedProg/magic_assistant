@@ -18,11 +18,15 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -217,5 +221,24 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		Object[] cards = getFilteredCards();
 		assertEquals(3, cards.length);
 		assertEquals(card4.getCardId(), ((IMagicCard) cards[0]).getCardId());
+	}
+
+	public void testGroupByName() {
+		add3cards();
+		card1.setName("aaa");
+		card2.setName("aaa");
+		card3.setName("aaa");
+		MagicCard card4 = card1.cloneCard();
+		card4.setCardId(card1.getCardId() + 10);
+		card4.setEnglishCardId(card1.getCardId());
+		card4.setName("le " + card1.getName());
+		card4.setLanguage(Language.FRENCH.getLang());
+		card4 = spy(card4);
+		doReturn("aaa").when(card4).getEnglishName();
+		this.deck.getCardStore().add(card4);
+		this.filter.setGroupField(MagicCardField.NAME);
+		this.deck.update();
+		Object[] cardGroups = this.deck.getCardGroupRoot().getChildren();
+		assertEquals(1, cardGroups.length);
 	}
 }

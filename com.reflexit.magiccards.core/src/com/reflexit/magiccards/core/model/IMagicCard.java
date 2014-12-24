@@ -65,4 +65,6 @@ public interface IMagicCard extends ICard {
 	public LegalityMap getLegalityMap();
 
 	public boolean isBasicLand();
+
+	public String getEnglishName();
 }

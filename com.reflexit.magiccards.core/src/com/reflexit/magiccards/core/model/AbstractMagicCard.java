@@ -329,4 +329,15 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 	public Object accept(ICardVisitor visitor, Object data) {
 		return visitor.visit(this, data);
 	}
+
+	@Override
+	public String getEnglishName() {
+		int x = getEnglishCardId();
+		if (x == 0)
+			return getName();
+		IMagicCard norm = db().getCard(x);
+		if (norm == null)
+			norm = this;
+		return norm.getName();
+	}
 }

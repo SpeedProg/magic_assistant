@@ -714,4 +714,9 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 			return false;
 		return true;
 	}
+
+	@Override
+	public String getEnglishName() {
+		return card.getEnglishName();
+	}
 }
