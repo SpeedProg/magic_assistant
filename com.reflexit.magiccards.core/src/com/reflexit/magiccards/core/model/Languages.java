@@ -82,6 +82,7 @@ public class Languages implements ISearchableProperty {
 		return instance;
 	}
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -91,10 +92,12 @@ public class Languages implements ISearchableProperty {
 		return FilterField.LANG;
 	}
 
+	@Override
 	public Collection getNames() {
 		return new ArrayList(this.names.values());
 	}
 
+	@Override
 	public Collection getIds() {
 		return new ArrayList(this.names.keySet());
 	}
@@ -103,6 +106,7 @@ public class Languages implements ISearchableProperty {
 		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
+	@Override
 	public String getNameById(String id) {
 		return (String) this.names.get(id);
 	}
@@ -114,6 +118,8 @@ public class Languages implements ISearchableProperty {
 			if (l.getLang().equals(language))
 				return l.locale;
 		}
-		throw new IllegalArgumentException("Language Not Found");
+		if (language.equals("*"))
+			return Locale.ENGLISH;
+		throw new IllegalArgumentException("Language Not Found: " + language);
 	}
 }

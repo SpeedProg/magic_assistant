@@ -825,6 +825,8 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	private LegalityMap induceLegality() {
+		if (isBasicLand())
+			return LegalityMap.createFromLegal(Format.STANDARD.name());
 		String set = getSet();
 		Edition edition = Editions.getInstance().getEditionByName(set);
 		if (edition == null)
@@ -871,6 +873,7 @@ public class MagicCard extends AbstractMagicCard {
 		return prime.getCardId();
 	}
 
+	@Override
 	public String getEnglishName() {
 		int x = getEnglishCardId();
 		if (x == 0)

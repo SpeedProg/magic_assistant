@@ -222,6 +222,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 		return name;
 	}
 
+	@Override
 	public synchronized CardGroup getSubGroup(String key) {
 		return subs.get(key);
 	}
@@ -378,5 +379,22 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 
 	public int getCreatureCount() {
 		return getInt(MagicCardField.CREATURE_COUNT);
+	}
+
+	@Override
+	public boolean isBasicLand() {
+		String cost = getCost();
+		if (cost != null && cost.length() > 0 && !cost.equals("*"))
+			return false;
+		if ("*".equals(getLanguage())) {
+			for (ICard card : getChildren()) {
+				if (card instanceof IMagicCard && ((IMagicCard) card).isBasicLand()) {
+					continue;
+				}
+				return false;
+			}
+			return true;
+		}
+		return super.isBasicLand();
 	}
 }
