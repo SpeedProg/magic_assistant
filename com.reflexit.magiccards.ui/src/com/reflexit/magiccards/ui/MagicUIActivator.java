@@ -8,11 +8,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
@@ -26,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.BundleContext;
@@ -50,6 +50,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public static boolean TRACE_TESTING = false;
 	public static Color COLOR_GREENISH;
 	public static Color COLOR_PINKINSH;
+	private IPersistentPreferenceStore preferenceStoreCore;
 
 	/**
 	 * The constructor
@@ -100,7 +101,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		getEclipsePreferences().flush();
+		if (preferenceStoreCore != null)
+			preferenceStoreCore.save();
 		super.stop(context);
 	}
 
@@ -238,15 +240,6 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		return "com.reflexit.magiccards.help." + string;
 	}
 
-	public IEclipsePreferences getEclipsePreferences() {
-		// Platform.getPreferencesService().getInt();
-		return InstanceScope.INSTANCE.getNode(DataManager.ID);
-	}
-
-	public IEclipsePreferences getEclipseDefaultPreferences() {
-		return DefaultScope.INSTANCE.getNode(DataManager.ID);
-	}
-
 	public Font getFont() {
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		ITheme currentTheme = themeManager.getCurrentTheme();
@@ -275,5 +268,12 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	@Override
 	public IPreferenceStore getPreferenceStore() {
 		return super.getPreferenceStore();
+	}
+
+	public IPreferenceStore getCorePreferenceStore() {
+		if (preferenceStoreCore == null) {
+			preferenceStoreCore = new ScopedPreferenceStore(InstanceScope.INSTANCE, DataManager.ID);
+		}
+		return preferenceStoreCore;
 	}
 }

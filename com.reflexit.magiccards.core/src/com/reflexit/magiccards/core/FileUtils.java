@@ -12,10 +12,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.Properties;
 
 import com.reflexit.magiccards.db.DbActivator;
 
 public class FileUtils {
+	public static final String MAGICCARDS = "magiccards";
+	public static final String BACKUP = ".backup";
 	public static final String UTF8 = "UTF-8";
 	public static Charset CHARSET_UTF_8 = Charset.forName("utf-8");
 	static {
@@ -110,6 +113,7 @@ public class FileUtils {
 		st.close();
 		return res;
 	}
+
 	public static String readFileAsString(BufferedReader reader) throws IOException {
 		int bufSize = 1024 * 256;
 		StringBuilder fileData = new StringBuilder(1024 * 4);
@@ -137,39 +141,6 @@ public class FileUtils {
 		return offset;
 	}
 
-	public static File getWorkspaceFile() {
-		String str = System.getProperty("osgi.instance.area");
-		if (str != null) {
-			return new File(str.replaceFirst("^file:", ""));
-		} else {
-			return new File(System.getProperty("user.home"), "MagicAssistant");
-		}
-	}
-
-	public static File getStateLocationFile() {
-		String inEclipse = System.getProperty("eclipse.home.location");
-		if (inEclipse != null) {
-			// System.err.println("Eclipse home: " + inEclipse);
-			return Activator.getDefault().getStateLocation().toFile();
-		} else {
-			return new File(getWorkspaceFile() + "/.metadata/.plugins/" + DataManager.ID);
-		}
-	}
-
-	public static InputStream loadDbResource(String name) throws IOException {
-		if (System.getProperty("eclipse.home.location") != null) {
-			return DbActivator.loadResource(name);
-		} else {
-			return FileUtils.class.getClassLoader().getResourceAsStream(name);
-		}
-	}
-
-	public static void main(String[] args) {
-		MagicLogger.log("aaa");
-		DataManager.getInstance().waitForInit(10);
-		System.err.println("Loaded " + DataManager.getInstance().getMagicDBStore().size() + " cards");
-	}
-
 	public static boolean deleteTree(File rootDir) {
 		File[] listFiles = rootDir.listFiles();
 		if (listFiles != null) {
@@ -188,5 +159,82 @@ public class FileUtils {
 		} finally {
 			fos.close();
 		}
+	}
+
+	public static File getWorkspace() {
+		String str = System.getProperty("osgi.instance.area");
+		if (str != null) {
+			return new File(str.replaceFirst("^file:", ""));
+		} else {
+			return new File(System.getProperty("user.home"), "MagicAssistant");
+		}
+	}
+
+	public static File getWorkspaceFile(String path) {
+		if (path == null || path.isEmpty())
+			return getWorkspace();
+		return new File(getWorkspace(), path);
+	}
+
+	public static File getMagicCardsDir() {
+		return getLocationPropery(CorePreferenceConstants.DIR_MAGICCARDS, MAGICCARDS);
+	}
+
+	public static File getBackupDir() {
+		return getLocationPropery(CorePreferenceConstants.DIR_BACKUP, BACKUP);
+	}
+
+	public static File getLocationPropery(String propertyKey, String defaultValue) {
+		File preferenceFile = getPreferenceFile();
+		if (preferenceFile.isFile()) {
+			try {
+				Properties prop = new Properties();
+				FileInputStream inStream = new FileInputStream(preferenceFile);
+				prop.load(inStream);
+				inStream.close();
+				String sdir = prop.getProperty(propertyKey);
+				if (sdir != null) {
+					File dir = new File(sdir);
+					if (!dir.isAbsolute())
+						return getWorkspaceFile(sdir);
+					else
+						return dir;
+				}
+			} catch (Exception e) {
+				// sad
+			}
+		}
+		return getWorkspaceFile(defaultValue);
+	}
+
+	public static File getPreferenceFile() {
+		return new File(getWorkspace(), ".metadata/.plugins/org.eclipse.core.runtime/.settings/" + DataManager.ID + ".prefs");
+	}
+
+	public static File getStateLocationFile() {
+		if (runningInWorkbench()) {
+			// System.err.println("Eclipse home: " + inEclipse);
+			return Activator.getDefault().getStateLocation().toFile();
+		} else {
+			return getWorkspaceFile(".metadata/.plugins/" + DataManager.ID);
+		}
+	}
+
+	protected static boolean runningInWorkbench() {
+		return System.getProperty("eclipse.home.location") != null;
+	}
+
+	public static InputStream loadDbResource(String name) throws IOException {
+		if (runningInWorkbench()) {
+			return DbActivator.loadResource(name);
+		} else {
+			return FileUtils.class.getClassLoader().getResourceAsStream(name);
+		}
+	}
+
+	public static void main(String[] args) {
+		MagicLogger.log("aaa");
+		DataManager.getInstance().waitForInit(10);
+		System.err.println("Loaded " + DataManager.getInstance().getMagicDBStore().size() + " cards");
 	}
 }

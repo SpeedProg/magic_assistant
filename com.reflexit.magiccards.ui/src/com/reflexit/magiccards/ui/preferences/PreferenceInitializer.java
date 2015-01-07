@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -22,6 +23,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	@Override
 	public void initializeDefaultPreferences() {
+		IPreferenceStore storeCore = MagicUIActivator.getDefault().getCorePreferenceStore();
+		storeCore.setDefault(PreferenceConstants.DIR_MAGICCARDS, FileUtils.MAGICCARDS);
+		storeCore.setDefault(PreferenceConstants.DIR_BACKUP, FileUtils.BACKUP);
 		IPreferenceStore store = getGlobalStore();
 		store.setDefault(PreferenceConstants.GATHERER_SITE, "http://ww2.wizards.com/gatherer");
 		store.setDefault(PreferenceConstants.GATHERER_UPDATE,
@@ -39,6 +43,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.WORK_OFFLINE, false);
 		store.setDefault(PreferenceConstants.PRICE_PROVIDER, PriceProviderManager.getInstance().getDefaultProvider().getName());
 		store.setDefault(PreferenceConstants.LAST_SELECTION, 205961);
+
 		// local settings
 		getMdbStore()
 				.setDefault(

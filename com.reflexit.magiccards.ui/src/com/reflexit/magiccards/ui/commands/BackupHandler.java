@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -26,9 +28,10 @@ import com.reflexit.magiccards.ui.widgets.Toast;
 public class BackupHandler extends AbstractHandler {
 	@Override
 	public Object execute(final ExecutionEvent aevent) {
-		final File ws = FileUtils.getWorkspaceFile();
-		final File backup = new File(ws, ".backup/" + System.currentTimeMillis() / 1000 / 60);
-		Job job = new Job("Backing up") {
+		final File ws = FileUtils.getWorkspace();
+		SimpleDateFormat format = new SimpleDateFormat("YYYY_MMdd_HHmmss");
+		final File backup = new File(FileUtils.getBackupDir(), format.format(new Date()));
+		Job job = new Job("Backing up...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				File[] listFiles = ws.listFiles();

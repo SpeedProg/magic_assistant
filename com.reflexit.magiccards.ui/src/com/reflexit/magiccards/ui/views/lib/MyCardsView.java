@@ -57,10 +57,6 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 		return LibViewPreferencePage.class.getName();
 	}
 
-	/**
-	 * @param preferenceStore
-	 * @param portableString
-	 */
 	public void setLocationFilter(Location loc) {
 		IPreferenceStore preferenceStore = getLocalPreferenceStore();
 		Collection ids = Locations.getInstance().getIds();

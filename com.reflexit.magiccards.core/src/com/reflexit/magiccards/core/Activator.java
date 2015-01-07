@@ -21,7 +21,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends Plugin {
 	// The plug-in ID
-	static final String PLUGIN_ID = "com.reflexit.magiccards.core";
+	static final String PLUGIN_ID = DataManager.ID;
 	// The shared instance
 	private static Activator plugin;
 	private boolean TRACE_CORE = false;

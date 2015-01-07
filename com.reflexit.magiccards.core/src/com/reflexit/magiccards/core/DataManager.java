@@ -90,7 +90,7 @@ public class DataManager {
 
 	public synchronized ModelRoot getModelRoot() {
 		if (root == null) {
-			root = ModelRoot.getInstance(new File(FileUtils.getWorkspaceFile(), "magiccards"));
+			root = ModelRoot.getInstance(FileUtils.getMagicCardsDir());
 		}
 		return root;
 	}
