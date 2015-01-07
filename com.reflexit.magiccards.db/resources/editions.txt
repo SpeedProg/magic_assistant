@@ -132,3 +132,4 @@ Magic 2015 Core Set|M15||July 2014|Core||Standard|Magic 2015
 Duel Decks: Speed vs. Cunning|DDN||September 2014|Starter|||
 From the Vault: Annihilation (2014)|V14||September 2014|Reprint|||
 Khans of Tarkir|KTK||September 2014|Expansion|Khans of Tarkir|Standard|
+Commander 2014|C14||November 2014|Starter|||
