@@ -1,14 +1,16 @@
 package com.reflexit.magiccards.core;
 
-import static org.junit.Assert.assertNotEquals;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 import junit.framework.TestCase;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+import static org.junit.Assert.assertNotEquals;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -16,8 +18,10 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.test.assist.Profiler;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
+@FixMethodOrder(MethodSorters.JVM)
 public class DataManagerTest extends TestCase {
 	private static DataManager dm;
 	static final int CARD_ID_MYSTICDECREE = 2952;
@@ -416,5 +420,11 @@ public class DataManagerTest extends TestCase {
 
 		assertEquals(1, card1.getCount());
 		assertEquals(true, card1.isOwn());
+	}
+
+	public static void main(String[] args) {
+		Profiler.testTimeAndMem(() -> init(), 1300, 18 * 1024 * 1024);
+		// Profiler.sleep(10 * 1000);
+		System.err.println("done");
 	}
 }

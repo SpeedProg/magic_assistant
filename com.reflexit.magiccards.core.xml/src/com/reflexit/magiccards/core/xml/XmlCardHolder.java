@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -93,7 +92,7 @@ public class XmlCardHolder implements ICardHandler {
 	public void loadFromFlatResource(String set) throws IOException {
 		InputStream is = FileUtils.loadDbResource(set);
 		if (is != null) {
-			BufferedReader st = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
+			BufferedReader st = new BufferedReader(new InputStreamReader(is, FileUtils.CHARSET_UTF_8));
 			ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 			loadtFromFlatIntoDB(st, list);
 			is.close();
@@ -121,14 +120,12 @@ public class XmlCardHolder implements ICardHandler {
 	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list) throws IOException {
 		String line = st.readLine(); // header ignore for now
 		ICardField[] xfields = MagicCardField.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
+		String[] fields = new String[xfields.length];
 		while ((line = st.readLine()) != null) {
 			if (line.length() == 0)
 				continue;
 			try {
-				String[] fields = linesplit(line, TextPrinter.SEPARATOR);
-				for (int i = 0; i < fields.length; i++) {
-					fields[i] = fields[i].trim();
-				}
+				linesplit(line, TextPrinter.SEPARATOR_CHAR, fields);
 				MagicCard card = new MagicCard();
 				int i = 0;
 				for (ICardField field : xfields) {
@@ -159,31 +156,24 @@ public class XmlCardHolder implements ICardHandler {
 	 * Optimized split function
 	 * 
 	 * @param line
-	 * @param ssep
+	 * @param sep
 	 * @return
 	 */
-	private String[] linesplit(String line, String ssep) {
-		char sep = ssep.charAt(0);
+	private String[] linesplit(String line, char sep, String res[]) {
+		char[] charArray = line.toCharArray();
 		int k = 0;
-		int len = line.length();
-		for (int i = 0; i < len; i++) {
-			if (line.charAt(i) == sep) {
-				k++;
+		int a = 0;
+		int i = 0;
+		for (char c : charArray) {
+			if (c == sep) {
+				res[k++] = StringCache.intern(line.substring(a, i).trim());
+				a = i + 1;
 			}
+			i++;
+			if (k >= res.length)
+				return res;
 		}
-		String res[] = new String[k + 1];
-		int ik = 0;
-		int n = line.indexOf(sep);
-		if (n < 0)
-			n = len;
-		res[ik++] = line.substring(0, n);
-		for (int i = n; i < len;) {
-			n = line.indexOf(sep, i + 1);
-			if (n < 0)
-				n = len;
-			res[ik++] = line.substring(i + 1, n);
-			i = n;
-		}
+		res[k++] = StringCache.intern(line.substring(a, i).trim());
 		return res;
 	}
 
@@ -230,7 +220,6 @@ public class XmlCardHolder implements ICardHandler {
 						new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang, getMagicDBStore(),
 								new SubCoreProgressMonitor(pm, 100));
 					}
-		
 				} catch (MalformedURLException e) {
 					throw new MagicException(e);
 				} catch (IOException e) {
@@ -304,5 +293,19 @@ public class XmlCardHolder implements ICardHandler {
 	@Override
 	public IDbPriceStore getDBPriceStore() {
 		return DbPricesMultiFileStore.getInstance();
+	}
+
+	public static void main(String[] args) {
+		String lines[] = new String[] {
+				"386463|Abomination of Gudul|{3}{B}{G}{U}|Creature - Horror|3|4|Flying<br>Whenever Abomination of Gudul deals combat damage to a player, you may draw a card. If you do, discard a card.<br>Morph {2}{B}{G}{U} <i>(You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.)</i>|Khans of Tarkir|Common|0.0||0.0|Erica Yang|159||Flying<br>Whenever Abomination of Gudul deals combat damage to a player, you may draw a card. If you do, discard a card.<br>Morph {2}{B}{G}{U} <i>(You may cast this card face down as a 2/2 creature for {3}. Turn it face up any time for its morph cost.)</i>|0|\n",
+				"386464|Abzan Ascendancy|{W}{B}{G}|Enchantment|||When Abzan Ascendancy enters the battlefield, put a +1/+1 counter on each creature you control.<br>Whenever a nontoken creature you control dies, put a 1/1 white Spirit creature token with flying onto the battlefield.|Khans of Tarkir|Rare|0.0||0.0|Mark Winters|160||When Abzan Ascendancy enters the battlefield, put a +1/+1 counter on each creature you control.<br>Whenever a nontoken creature you control dies, put a 1/1 white Spirit creature token with flying onto the battlefield.|0|\n"
+		};
+		XmlCardHolder holder = new XmlCardHolder();
+		String buf[] = new String[20];
+		for (int i = 0; i < 50000; i++) {
+			for (int j = 0; j < lines.length; j++) {
+				holder.linesplit(lines[j], TextPrinter.SEPARATOR_CHAR, buf);
+			}
+		}
 	}
 }

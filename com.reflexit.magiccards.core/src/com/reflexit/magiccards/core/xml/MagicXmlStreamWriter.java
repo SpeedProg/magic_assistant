@@ -122,8 +122,8 @@ public class MagicXmlStreamWriter {
 		writer.el("edition", String.valueOf(card.getSet()));
 	}
 
+	private static ICardField[] values = MagicCardField.allNonTransientFields(false);
 	public void marshal(MagicCard card) throws XMLStreamException {
-		ICardField[] values = MagicCardField.allNonTransientFields(false);
 		for (ICardField field : values) {
 			Object o = card.get(field);
 			if (o == null)

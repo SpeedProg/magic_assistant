@@ -8,10 +8,10 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 public class MyOutputStreamWriter {
-	final Charset UTF_8 = Charset.forName("utf-8");
-	OutputStream st;
-	int bufSize = 256 * 1024;
-	StringBuilder builder = new StringBuilder(bufSize);
+	private final static Charset UTF_8 = Charset.forName("utf-8");
+	private OutputStream st;
+	private final int bufSize = 256 * 1024;
+	private StringBuilder builder = new StringBuilder(bufSize);
 
 	public MyOutputStreamWriter(File file) throws FileNotFoundException {
 		st = new FileOutputStream(file);
@@ -23,6 +23,14 @@ public class MyOutputStreamWriter {
 
 	public void write(String string) throws IOException {
 		builder.append(string);
+		if (builder.length() > bufSize)
+			flush();
+	}
+
+	public void write(String a, String b, String c) throws IOException {
+		builder.append(a);
+		builder.append(b);
+		builder.append(c);
 		if (builder.length() > bufSize)
 			flush();
 	}

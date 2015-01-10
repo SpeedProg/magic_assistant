@@ -34,6 +34,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
+import com.reflexit.magiccards.core.xml.StringCache;
 
 /**
  * Retrieve legality info
@@ -215,7 +216,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 					return; // do not change
 				}
 			}
-			((ICardModifiable) card).set(field, value);
+			((ICardModifiable) card).set(field, StringCache.intern(value));
 		}
 	}
 

@@ -28,7 +28,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -133,10 +132,10 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 				return true;
 			} else {
 				if (old == 1) {
-					((ICardModifiable) prev).set(MagicCardField.ID, -id);
+					((MagicCard) prev).setCardId(-id);
 					return false;
 				} else if (cur == 1) {
-					((ICardModifiable) card).set(MagicCardField.ID, -id);
+					((MagicCard) card).setCardId(-id);
 					return false;
 				}
 			}

@@ -14,6 +14,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.xml.StringCache;
 
 public class StringEditingSupport extends EditingSupport {
 	private AbstractColumn column;
@@ -41,7 +42,7 @@ public class StringEditingSupport extends EditingSupport {
 	@Override
 	protected void setValue(Object element, Object value) {
 		ICardModifiable card = (ICardModifiable) element;
-		card.set(column.getDataField(), value);
+		card.set(column.getDataField(), StringCache.intern((String) value));
 		Set<ICardField> of = Collections.singleton(column.getDataField());
 		DataManager.getInstance().update((IMagicCard) card, of);
 		// getViewer().refresh(true);

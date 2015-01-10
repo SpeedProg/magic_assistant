@@ -14,6 +14,7 @@ public class TextPrinter {
 	}
 
 	public static String SEPARATOR = "|";
+	public static char SEPARATOR_CHAR = '|';
 
 	public static void print(MagicCard card, PrintStream out) {
 		out.println(join(card.getValues(), SEPARATOR));

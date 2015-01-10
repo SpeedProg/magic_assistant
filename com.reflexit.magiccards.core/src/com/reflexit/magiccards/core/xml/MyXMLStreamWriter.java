@@ -23,9 +23,7 @@ public class MyXMLStreamWriter {
 	public void startEl(String string) throws XMLStreamException {
 		try {
 			nl();
-			out.write('<');
-			out.write(string);
-			out.write('>');
+			out.write("<", string, ">");
 			stack.push(string);
 		} catch (IOException e) {
 			throw new XMLStreamException(e);
@@ -41,9 +39,7 @@ public class MyXMLStreamWriter {
 		try {
 			String string = stack.pop();
 			nl();
-			out.write("</");
-			out.write(string);
-			out.write('>');
+			out.write("</", string, ">");
 		} catch (IOException e) {
 			throw new XMLStreamException(e);
 		}
@@ -149,21 +145,30 @@ public class MyXMLStreamWriter {
 		out.write('"');
 	}
 
-	public void data(String string1) throws XMLStreamException {
-		String string = string1;
+	public void data(String string) throws XMLStreamException {
+		if (string == null || string.length() == 0)
+			return;
 		try {
-			if (string != null) {
-				if (string.indexOf('&') >= 0) {
-					string = string.replace("&", "&amp;");
+			int i = 0, a = 0;
+			int len = string.length();
+			while (i < len) {
+				char c = string.charAt(i);
+				if (c == '&') {
+					out.write(string.substring(a, i));
+					out.write("&amp;");
+					a = i + 1;
+				} else if (c == '<') {
+					out.write(string.substring(a, i));
+					out.write("&lt;");
+					a = i + 1;
+				} else if (c == '>') {
+					out.write(string.substring(a, i));
+					out.write("&gt;");
+					a = i + 1;
 				}
-				if (string.indexOf('<') >= 0) {
-					string = string.replace("<", "&lt;");
-				}
-				if (string.indexOf('>') >= 0) {
-					string = string.replace(">", "&gt;");
-				}
-				out.write(string);
+				i++;
 			}
+			out.write(string.substring(a, i));
 		} catch (IOException e) {
 			throw new XMLStreamException(e);
 		}

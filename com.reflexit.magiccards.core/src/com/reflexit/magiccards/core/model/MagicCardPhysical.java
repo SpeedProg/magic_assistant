@@ -439,23 +439,10 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		setProperty(MagicCardField.ERROR, value);
 	}
 
-	public void setCommunityRating(float parseFloat) {
-		card.setCommunityRating(parseFloat);
-	}
-
 	public void setArtist(String artist) {
 		card.setArtist(artist);
 	}
 
-	public void setRulings(String rulings) {
-		card.setRulings(rulings);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getSpecial()
-	 */
 	@Override
 	public String getSpecial() {
 		String f = (String) getProperty(MagicCardField.SPECIAL);
@@ -670,7 +657,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	public int getForTrade() {
 		Integer f = (Integer) getProperty(MagicCardField.FORTRADECOUNT);
 		if (f == null) {
-			boolean forTrade = isSpecialTag(MagicCardField.FORTRADECOUNT.specialTag());
+			boolean forTrade = isSpecialTag(MagicCardField.FORTRADECOUNT);
 			if (forTrade)
 				return getCount();
 			return 0;

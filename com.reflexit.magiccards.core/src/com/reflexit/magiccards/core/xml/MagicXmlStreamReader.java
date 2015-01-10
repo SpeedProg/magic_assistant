@@ -171,7 +171,7 @@ public class MagicXmlStreamReader {
 									if (field == null)
 										MagicLogger.log("Uknown element " + last);
 									else
-										cardm.set(field, ttStr);
+										cardm.set(field, StringCache.intern(ttStr));
 									break;
 								}
 								case card:
@@ -186,7 +186,7 @@ public class MagicXmlStreamReader {
 									if (field == null)
 										MagicLogger.log("Uknown element " + last);
 									else
-										cardp.set(field, ttStr);
+										cardp.set(field, StringCache.intern(ttStr));
 									break;
 								}
 								default:
