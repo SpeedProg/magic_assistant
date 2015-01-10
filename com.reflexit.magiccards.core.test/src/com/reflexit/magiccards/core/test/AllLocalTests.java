@@ -46,7 +46,6 @@ import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
 import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
 import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
-import com.reflexit.magiccards.core.xml.MagicCardPhysicalConvertorTest;
 import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
 
 /**
@@ -83,7 +82,6 @@ public class AllLocalTests {
 		suite.addTestSuite(CollectionStoreTest.class);
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
-		suite.addTestSuite(MagicCardPhysicalConvertorTest.class);
 		suite.addTestSuite(DataManagerTest.class);
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
