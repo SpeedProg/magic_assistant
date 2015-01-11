@@ -102,7 +102,7 @@ public class FileUtils {
 
 	public static void copyStream(InputStream in, OutputStream out) throws IOException {
 		int count;
-		byte[] buffer = new byte[1024 * 4];
+		byte[] buffer = new byte[FILE_BUFFER_SIZE];
 		while ((count = in.read(buffer)) > 0)
 			out.write(buffer, 0, count);
 	}
@@ -114,10 +114,11 @@ public class FileUtils {
 		return res;
 	}
 
+	static int FILE_BUFFER_SIZE = 1024 * 64;
+
 	public static String readFileAsString(BufferedReader reader) throws IOException {
-		int bufSize = 1024 * 256;
-		StringBuilder fileData = new StringBuilder(1024 * 4);
-		char[] buf = new char[bufSize];
+		StringBuilder fileData = new StringBuilder(FILE_BUFFER_SIZE);
+		char[] buf = new char[FILE_BUFFER_SIZE];
 		int numRead = 0;
 		while ((numRead = reader.read(buf)) != -1) {
 			fileData.append(buf, 0, numRead);
