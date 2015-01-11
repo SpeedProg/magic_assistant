@@ -133,8 +133,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	 *              alt="Hinterland Harbor" style="border:none;" />
 
 	 */
-	private static Pattern cardIdPattern = Pattern.compile("img src.*?\\?multiverseid=(.*?)&amp;type=card");
-	private static Pattern cardRotatePattern = Pattern.compile("img src.*?\\?multiverseid=.*?&amp;type=card&amp;(options=\\w+)");
+	private static Pattern cardIdPattern = Pattern.compile("multiverseid=(\\d+)&amp;type=card");
+	private static Pattern cardRotatePattern = Pattern.compile("multiverseid=\\d+&amp;type=card&amp;(options=\\w+)");
 
 	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, ICoreProgressMonitor monitor) throws IOException {
 		setCard(card);
