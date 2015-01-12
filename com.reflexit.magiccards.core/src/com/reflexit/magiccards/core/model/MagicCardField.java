@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -705,14 +704,7 @@ public enum MagicCardField implements ICardField {
 		@Override
 		protected void setM(MagicCardPhysical card, Object value) {
 			if (value instanceof String) {
-				Date dd;
-				try {
-					dd = card.DATE_PARSER.parse((String) value);
-				} catch (ParseException e) {
-					dd = null;
-					MagicLogger.log("Cannot parse date " + value);
-				}
-				card.setDate(dd);
+				card.setDate((String) value);
 			} else {
 				card.setDate((Date) value);
 			}

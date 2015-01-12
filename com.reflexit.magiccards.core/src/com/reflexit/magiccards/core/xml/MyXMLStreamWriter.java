@@ -49,6 +49,7 @@ public class MyXMLStreamWriter {
 		try {
 			switch (stack.size()) {
 				case 0:
+					out.write('\n');
 					break;
 				case 1:
 					out.write("\n  ");

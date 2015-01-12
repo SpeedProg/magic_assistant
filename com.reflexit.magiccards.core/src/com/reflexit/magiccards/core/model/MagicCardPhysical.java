@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -577,5 +578,16 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	@Override
 	public String getEnglishName() {
 		return card.getEnglishName();
+	}
+
+	public void setDate(String string) {
+		Date dd;
+		try {
+			dd = DATE_PARSER.parse(string);
+		} catch (ParseException e) {
+			dd = null;
+			MagicLogger.log("Cannot parse date " + string);
+		}
+		setDate(dd);
 	}
 }
