@@ -72,7 +72,9 @@ public class CardGroupTest extends TestCase {
 	}
 
 	public MagicCardPhysical generatePhyCard() {
-		return CardGenerator.generatePhysicalCardWithValues();
+		MagicCardPhysical card = CardGenerator.generatePhysicalCardWithValues();
+		card.setCount(1);
+		return card;
 	}
 
 	public void groupAndTest(ICardField field, Object expected) {
@@ -416,7 +418,7 @@ public class CardGroupTest extends TestCase {
 
 	public void preset1(MagicCardPhysical card) {
 		card.setCount(1);
-		card.setSpecialTag("foil");
+		card.setSpecial("foil");
 		card.setDbPrice(1.0f);
 		card.set(MagicCardField.RATING, "1");
 		card.set(MagicCardField.TOUGHNESS, "1.0");
@@ -426,7 +428,7 @@ public class CardGroupTest extends TestCase {
 
 	public void preset2(MagicCardPhysical card) {
 		card.setCount(1);
-		card.setSpecialTag("foil");
+		card.setSpecial("foil");
 		card.setDbPrice(1.0f);
 		card.set(MagicCardField.RATING, "1");
 		card.set(MagicCardField.TOUGHNESS, "");
@@ -472,7 +474,6 @@ public class CardGroupTest extends TestCase {
 		for (int j = 0; j < cards.length; j++) {
 			cards[j] = generatePhyCard();
 			preset1((MagicCardPhysical) cards[j]);
-			((ICardModifiable) cards[j]).set(MagicCardField.COUNT, "1");
 		}
 		((ICardModifiable) cards[0]).set(MagicCardField.TYPE, "Creature - Elf");
 		((ICardModifiable) cards[1]).set(MagicCardField.TYPE, "Instant");

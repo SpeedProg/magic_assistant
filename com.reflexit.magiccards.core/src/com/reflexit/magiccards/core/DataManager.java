@@ -53,7 +53,7 @@ public class DataManager {
 		try {
 			// String variant1 =
 			// "com.reflexit.magiccards.core.sql.handlers.CardHolder";
-			String variant2 = "com.reflexit.magiccards.core.xml.XmlCardHolder";
+			String variant2 = "com.reflexit.magiccards.core.model.xml.XmlCardHolder";
 			@SuppressWarnings("rawtypes")
 			Class c = Class.forName(variant2);
 			Object x = c.newInstance();
