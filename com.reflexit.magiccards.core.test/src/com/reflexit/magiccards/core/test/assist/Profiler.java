@@ -39,9 +39,11 @@ public class Profiler {
 
 	public static void testTimeAndMem(Runnable run, long maxtime, long maxmem) {
 		long before = getUsedHeap();
+		// System.err.println("memory1: " + niceMem(before));
 		long curtime = onTime(run);
 		long after = getUsedHeap();
 		long curmem = after - before;
+		// System.err.println("memory2: " + niceMem(after));
 		System.err.println("memory: " + niceMem(curmem) + ", time: " + niceTime(curtime));
 		if (curtime > maxtime)
 			throw new IllegalStateException("Timeout exceeded " + curtime + ">" + maxtime);
@@ -59,10 +61,10 @@ public class Profiler {
 	}
 
 	private static String niceMem(long curmem) {
-		if (curmem < 3000)
+		if (curmem < 1000)
 			return curmem + " bytes";
 		curmem = curmem / 1024;
-		if (curmem < 3000)
+		if (curmem < 1000)
 			return curmem + " kb";
 		curmem = curmem / 1024;
 		return curmem + " mb";

@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.model;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.expr.TextValue;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 
@@ -339,5 +340,10 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 		if (norm == null)
 			norm = this;
 		return norm.getName();
+	}
+
+	@Override
+	public Edition getEdition() {
+		return Editions.getInstance().getEditionByNameAlways(getSet());
 	}
 }

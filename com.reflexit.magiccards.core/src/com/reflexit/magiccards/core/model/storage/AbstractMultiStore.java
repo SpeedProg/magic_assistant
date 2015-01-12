@@ -16,8 +16,19 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
 	protected Location defaultLocation;
 
-	public AbstractMultiStore() {
+	{
+		init();
+	}
+
+	private void init() {
 		this.map = new HashMap<Location, AbstractCardStoreWithStorage<T>>();
+		this.defaultLocation = null;
+	}
+
+	@Override
+	public void reload() {
+		init();
+		super.reload();
 	}
 
 	public ICardStore<T> getStore(Location location) {

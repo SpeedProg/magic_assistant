@@ -1,39 +1,38 @@
 /*******************************************************************************
- * Copyright (c) 2008 Alena Laskavaia.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2008 Alena Laskavaia. All rights reserved. This program and the accompanying materials are made available under the terms
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Alena Laskavaia - initial API and implementation
+ * Contributors: Alena Laskavaia - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.model.nav;
 
 import junit.framework.TestCase;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+// import static org.junit.Assert.assertEquals;
+// import static org.junit.Assert.assertTrue;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.magiccards.core.DataManager;
 
-/**
- * @author Alena
- * 
- */
+@FixMethodOrder(MethodSorters.JVM)
 public class CardOrganizerTest extends TestCase {
 	private ModelRoot root;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeClass
+	public static void beforeClass() {
 		TestFileUtils.resetDb();
+	}
+
+	@Override
+	@Before
+	public void setUp() throws Exception {
 		root = DataManager.getInstance().getModelRoot();
 	}
 
@@ -46,6 +45,7 @@ public class CardOrganizerTest extends TestCase {
 		assertEquals(this.root.getDeckContainer(), element);
 	}
 
+	@Test
 	public void testFindElement2() {
 		CollectionsContainer decks = this.root.getDeckContainer();
 		CollectionsContainer con = decks.addCollectionsContainer("cox");

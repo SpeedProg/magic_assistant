@@ -35,13 +35,12 @@ public class MagicCard extends AbstractMagicCard {
 	private transient String colorType = "land";
 	private transient int cmc = 0;
 	private int enId;
-	private LinkedHashMap<String, Object> properties;
+	LinkedHashMap<String, Object> properties;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCost()
-	 */
+	public MagicCard() {
+		// do nothing
+	}
+
 	@Override
 	public String getCost() {
 		if (cost == null)
@@ -49,18 +48,14 @@ public class MagicCard extends AbstractMagicCard {
 		return this.cost;
 	}
 
-	public void setCost(String cost) {
-		this.cost = cost.intern();
-		Colors cl = Colors.getInstance();
-		colorType = cl.getColorType(this.cost);
-		cmc = cl.getConvertedManaCost(this.cost);
+	public synchronized void setCost(String cost) {
+		if (cost == null)
+			throw new NullPointerException();
+		this.cost = cost;
+		colorType = null;
+		cmc = Colors.getInstance().getConvertedManaCost(this.cost);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getCardId()
-	 */
 	@Override
 	public int getCardId() {
 		return this.id;
@@ -68,6 +63,10 @@ public class MagicCard extends AbstractMagicCard {
 
 	public void setCardId(int id) {
 		this.id = id;
+	}
+
+	public void setId(String id) {
+		this.id = Integer.parseInt(id);
 	}
 
 	@Override
@@ -79,11 +78,6 @@ public class MagicCard extends AbstractMagicCard {
 		this.enId = id;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getName()
-	 */
 	@Override
 	public String getName() {
 		return this.name;
@@ -108,7 +102,7 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setRarity(String rarity) {
-		this.rarity = rarity.intern();
+		this.rarity = rarity;
 	}
 
 	@Override
@@ -117,7 +111,7 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setSet(String setName) {
-		this.edition = setName.intern();
+		this.edition = setName;
 	}
 
 	@Override
@@ -129,18 +123,13 @@ public class MagicCard extends AbstractMagicCard {
 		this.type = type;
 	}
 
-	public void setId(String match) {
-		int i = Integer.parseInt(match);
-		setCardId(i);
-	}
-
 	@Override
 	public String getPower() {
 		return this.power;
 	}
 
 	public void setPower(String power) {
-		this.power = power == null ? "" : power.intern();
+		this.power = power == null ? "" : power;
 	}
 
 	@Override
@@ -149,16 +138,15 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setToughness(String toughness) {
-		this.toughness = toughness == null ? "" : toughness.intern();
+		this.toughness = toughness == null ? "" : toughness;
 	}
 
 	@Override
-	public String getColorType() {
+	public synchronized String getColorType() {
+		if (colorType == null) {
+			colorType = Colors.getInstance().getColorType(cost);
+		}
 		return this.colorType;
-	}
-
-	public void setColorType(String colorType) {
-		this.colorType = colorType;
 	}
 
 	@Override
@@ -229,101 +217,7 @@ public class MagicCard extends AbstractMagicCard {
 
 	@Override
 	public Object get(ICardField field) {
-		MagicCardField mf = (MagicCardField) field;
-		switch (mf) {
-			case ID:
-				return getCardId();
-			case NAME:
-				return (this.name);
-			case COST:
-				return (this.cost);
-			case TYPE:
-				return (this.type);
-			case POWER:
-				return (this.power);
-			case TOUGHNESS:
-				return (this.toughness);
-			case ORACLE:
-				return (this.oracleText);
-			case SET:
-				return (this.edition);
-			case RARITY:
-				return (this.rarity);
-			case CTYPE:
-				return (getColorType());
-			case CMC:
-				return getCmc();
-			case DBPRICE:
-				return getDbPrice();
-			case RATING:
-				return (this.rating);
-			case ARTIST:
-				return (this.artist);
-			case RULINGS:
-				return (this.rulings);
-			case LANG:
-				return getLanguage();
-			case COLLNUM:
-				return (this.num);
-			case TEXT:
-				return getText();
-			case ENID:
-				return (this.enId);
-			case PROPERTIES:
-				return (this.properties);
-			case FLIPID: {
-				Object flipId = getProperty(MagicCardField.FLIPID);
-				if (flipId == null)
-					return 0;
-				return flipId;
-			}
-			case OTHER_PART:
-				return getProperty(MagicCardField.OTHER_PART);
-			case PART:
-				return getProperty(MagicCardField.PART);
-			case SIDE:
-				return getSide();
-			case SET_CORE: {
-				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
-				return ed.getType();
-			}
-			case SET_BLOCK: {
-				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
-				return ed.getBlock();
-			}
-			case SET_RELEASE: {
-				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
-				return ed.getReleaseDate();
-			}
-			case EDITION_ABBR: {
-				Edition ed = Editions.getInstance().getEditionByNameAlways(edition);
-				return ed.getMainAbbreviation();
-			}
-			case UNIQUE_COUNT:
-				return getUniqueCount();
-			case IMAGE_URL:
-				return getImageUrl();
-			case LEGALITY:
-				return getLegalityMap();
-			case COLOR:
-				return getCost();
-			case COUNT:
-				return getCount();
-			case SIDEBOARD:
-				return isSideboard();
-			case LOCATION:
-				return getLocation();
-			case COUNT4:
-				return getCount4();
-			case HASHCODE:
-				return System.identityHashCode(this);
-			default:
-				if (getRealCards() != null) {
-					return getRealCards().get(field);
-				} else {
-					return null;
-				}
-		}
+		return ((MagicCardField) field).get(this);
 	}
 
 	@Override
@@ -340,10 +234,6 @@ public class MagicCard extends AbstractMagicCard {
 		return rating;
 	}
 
-	public void setCommunityRating(float rating) {
-		this.rating = rating;
-	}
-
 	@Override
 	public String getArtist() {
 		return this.artist;
@@ -356,10 +246,6 @@ public class MagicCard extends AbstractMagicCard {
 	@Override
 	public String getRulings() {
 		return this.rulings;
-	}
-
-	public void setRulings(String rulings) {
-		this.rulings = rulings;
 	}
 
 	@Override
@@ -387,119 +273,17 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setCollNumber(String collNumber) {
-		if (collNumber == null || collNumber.trim().length() == 0)
-			this.num = null;
-		else
-			this.num = collNumber.intern();
+		this.num = collNumber;
 	}
 
 	@Override
 	public boolean set(ICardField field, Object value) {
 		MagicCardField mf = (MagicCardField) field;
-		switch (mf) {
-			case ID:
-				if (value instanceof Integer)
-					setCardId((Integer) value);
-				else
-					setCardId(Integer.parseInt((String) value));
-				break;
-			case NAME:
-				setName((String) value);
-				break;
-			case COST:
-				setCost((String) value);
-				break;
-			case TYPE:
-				setType((String) value);
-				break;
-			case POWER:
-				setPower(value.toString());
-				break;
-			case TOUGHNESS:
-				setToughness(value.toString());
-				break;
-			case ORACLE:
-				setOracleText((String) value);
-				break;
-			case SET:
-				setSet((String) value);
-				break;
-			case RARITY:
-				setRarity((String) value);
-				break;
-			case CTYPE:
-				throw new IllegalArgumentException("Not settable " + mf);
-			case CMC:
-				throw new IllegalArgumentException("Not settable " + mf);
-			case DBPRICE:
-				if (value instanceof Float)
-					setDbPrice((Float) value);
-				else
-					setDbPrice(Float.parseFloat((String) value));
-				break;
-			case RATING:
-				if (value instanceof Float)
-					setCommunityRating((Float) value);
-				else
-					setCommunityRating(Float.parseFloat((String) value));
-				break;
-			case ARTIST:
-				setArtist((String) value);
-				break;
-			case RULINGS:
-				setRulings((String) value);
-				break;
-			case LANG:
-				setLanguage((String) value);
-				break;
-			case COLLNUM:
-				setCollNumber((String) value);
-				break;
-			case TEXT:
-				setText((String) value);
-				break;
-			case ENID:
-				if (value instanceof Integer)
-					setEnglishCardId((Integer) value);
-				else
-					setEnglishCardId(Integer.parseInt((String) value));
-				break;
-			case PROPERTIES:
-				if (value instanceof LinkedHashMap)
-					properties = (LinkedHashMap) ((LinkedHashMap) value).clone();
-				else
-					setProperties((String) value);
-				break;
-			case FLIPID:
-				setPropertyInteger(MagicCardField.FLIPID, value);
-				break;
-			case PART:
-				setPropertyString(MagicCardField.PART, value);
-				break;
-			case OTHER_PART:
-				setPropertyString(MagicCardField.OTHER_PART, value);
-				break;
-			case SIDE:
-				setProperty(MagicCardField.SIDE, value);
-				break;
-			case IMAGE_URL:
-				String x = getImageUrl();
-				if (x != null && x.equals(value))
-					break;
-				setPropertyString(MagicCardField.IMAGE_URL, value);
-				break;
-			case LEGALITY:
-				setProperty(MagicCardField.LEGALITY, value);
-				break;
-			case COLOR:
-				throw new IllegalArgumentException("Not settable");
-			default:
-				return false;
-		}
+		mf.set(this, value);
 		return true;
 	}
 
-	private void setPropertyInteger(MagicCardField field, Object value) {
+	void setPropertyInteger(MagicCardField field, Object value) {
 		if (value instanceof Integer) {
 			Integer v = (Integer) value;
 			if (v.intValue() == 0) {
@@ -514,7 +298,7 @@ public class MagicCard extends AbstractMagicCard {
 		}
 	}
 
-	private void setPropertyString(MagicCardField field, Object value) {
+	void setPropertyString(MagicCardField field, Object value) {
 		if (value != null) {
 			String str = value.toString();
 			if (!str.isEmpty()) {
@@ -693,7 +477,10 @@ public class MagicCard extends AbstractMagicCard {
 
 	@Override
 	public int getFlipId() {
-		return getInt(MagicCardField.FLIPID);
+		Object flipId = getProperty(MagicCardField.FLIPID);
+		if (flipId == null)
+			return 0;
+		return (Integer) flipId;
 	}
 
 	public String getPart() {
@@ -740,7 +527,7 @@ public class MagicCard extends AbstractMagicCard {
 
 	@Override
 	public int getCount() {
-		return 1;
+		return 1; // block of the set
 	}
 
 	public int getCount4() {
@@ -759,7 +546,7 @@ public class MagicCard extends AbstractMagicCard {
 		if (realCards == null)
 			return Location.NO_WHERE;
 		return (Location) realCards.get(MagicCardField.LOCATION);
-	}
+	} // block of the set
 
 	@Override
 	public boolean isSideboard() {
@@ -882,5 +669,28 @@ public class MagicCard extends AbstractMagicCard {
 		if (norm == null)
 			norm = this;
 		return norm.getName();
+	}
+
+	void setRating(float rating) {
+		this.rating = rating;
+	}
+
+	void setRulings(String rulings) {
+		this.rulings = rulings;
+	}
+
+	void setImageUrl(String value) {
+		String x = getImageUrl();
+		if (x != null && x.equals(value))
+			return;
+		setPropertyString(MagicCardField.IMAGE_URL, value);
+	}
+
+	void setFlipId(int value) {
+		setPropertyInteger(MagicCardField.FLIPID, value);
+	}
+
+	float getRating() {
+		return rating;
 	}
 }

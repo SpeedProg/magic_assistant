@@ -23,7 +23,7 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 	protected List<IMagicCard> result;
 	protected boolean virtual = true;
 	protected boolean resolve = true;
-	private boolean reset = false;
+	private static boolean reset = false;
 
 	@Override
 	protected void setUp() throws Exception {

@@ -178,7 +178,10 @@ public class FileUtils {
 	}
 
 	public static File getMagicCardsDir() {
-		return getLocationPropery(CorePreferenceConstants.DIR_MAGICCARDS, MAGICCARDS);
+		String str = System.getProperty("ma.magiccards.area");
+		if (str == null)
+			return getLocationPropery(CorePreferenceConstants.DIR_MAGICCARDS, MAGICCARDS);
+		return new File(str);
 	}
 
 	public static File getBackupDir() {

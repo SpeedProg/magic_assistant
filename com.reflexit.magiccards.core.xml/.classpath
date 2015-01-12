@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/com.reflexit.magiccards.core"/>
-	<classpathentry kind="lib" path="/com.reflexit.magiccards.core/lib/trove-3.0.3.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>

@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.expr.TextValue;
 
 
@@ -67,4 +68,6 @@ public interface IMagicCard extends ICard {
 	public boolean isBasicLand();
 
 	public String getEnglishName();
+
+	public abstract Edition getEdition();
 }

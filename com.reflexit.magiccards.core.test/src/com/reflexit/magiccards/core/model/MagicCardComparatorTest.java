@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import static org.mockito.Mockito.when;
-
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -9,6 +7,8 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.Mockito.when;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -214,7 +214,7 @@ public class MagicCardComparatorTest extends TestCase {
 		compareMcLess(MagicCardField.COLLNUM, "1", "1a");
 		compareMcLess(MagicCardField.COLLNUM, "10", "10a");
 		compareMcLess(MagicCardField.COLLNUM, "10a", "10b");
-		compareMcLess(MagicCardField.COLLNUM, "1", "");
+		compareMcLess(MagicCardField.COLLNUM, "", "1");
 		compareMcEqual(MagicCardField.COLLNUM, null, "");
 		compareMcLess(MagicCardField.COLLNUM, "1a", "10a");
 	}

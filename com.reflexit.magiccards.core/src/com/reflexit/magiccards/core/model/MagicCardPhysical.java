@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +18,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	private boolean ownership;
 	private Date date;
 	private HashMap<ICardField, Object> properties;
-	private SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+	static SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
 	public MagicCardPhysical(IMagicCard card, Location location, boolean virtual) {
 		this(card, location);
@@ -119,28 +118,18 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		setProperty(MagicCardField.PRICE, price);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getComment()
-	 */
 	@Override
 	public String getComment() {
 		return (String) getProperty(MagicCardField.COMMENT);
 	}
 
 	public void setComment(String comment) {
-		if (comment == null || comment.trim().length() == 0)
+		if (comment == null || comment.length() == 0)
 			setProperty(MagicCardField.COMMENT, null);
 		else
 			setProperty(MagicCardField.COMMENT, comment.trim());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#getLocation()
-	 */
 	@Override
 	public Location getLocation() {
 		return this.location;
@@ -217,11 +206,6 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		return this.card.getType();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCardPhysical#isOwn()
-	 */
 	@Override
 	public boolean isOwn() {
 		return this.ownership;
@@ -294,125 +278,13 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	@Override
 	public boolean set(ICardField field, Object value) {
-		switch ((MagicCardField) field) {
-			case COUNT:
-				if (value instanceof Integer)
-					setCount((Integer) value);
-				else
-					setCount(Integer.parseInt((String) value));
-				break;
-			case PRICE:
-				if (value instanceof Float)
-					setPrice((Float) value);
-				else
-					setPrice(Float.parseFloat((String) value));
-				break;
-			case COMMENT:
-				setComment((String) value);
-				break;
-			case LOCATION:
-				if (value instanceof Location)
-					setLocation((Location) value);
-				else
-					setLocation(Location.valueOf((String) value));
-				break;
-			case CUSTOM:
-				setCustom((String) value);
-				break;
-			case OWNERSHIP:
-				if (value instanceof Boolean)
-					setOwn((Boolean) value);
-				else
-					setOwn(Boolean.parseBoolean((String) value));
-				break;
-			case SPECIAL:
-				setSpecial((String) value);
-				break;
-			case FORTRADECOUNT:
-				if (value instanceof Integer)
-					setProperty(MagicCardField.FORTRADECOUNT, value);
-				else
-					setProperty(MagicCardField.FORTRADECOUNT, Integer.parseInt((String) value));
-				break;
-			case SIDEBOARD:
-				return false; // not settable
-			case OWN_COUNT:
-				break; // calculated
-			case OWN_UNIQUE:
-				break; // calculated
-			case DATE: {
-				if (value instanceof String) {
-					Date dd;
-					try {
-						dd = DATE_PARSER.parse((String) value);
-					} catch (ParseException e) {
-						dd = null;
-						MagicLogger.log("Cannot parse date " + value);
-					}
-					setDate(dd);
-				} else {
-					setDate((Date) value);
-				}
-				break;
-			}
-			case ERROR:
-				setError(value);
-				break;
-			default:
-				return card.set(field, value);
-		}
-		return false;
+		((MagicCardField) field).setM(this, value);
+		return true;
 	}
 
 	@Override
 	public Object get(ICardField field) {
-		switch ((MagicCardField) field) {
-			case COUNT:
-				return getCount();
-			case PRICE:
-				return getPrice();
-			case COMMENT:
-				return getComment();
-			case LOCATION:
-				return getLocation();
-			case CUSTOM:
-				return getCustom();
-			case OWNERSHIP:
-				return isOwn();
-			case FORTRADECOUNT:
-				return getForTrade();
-			case SPECIAL:
-				return getSpecial();
-			case SIDEBOARD:
-				return isSideboard();
-			case OWN_COUNT:
-				return getOwnCount();
-			case OWN_UNIQUE:
-				return getOwnUnique();
-			case COUNT4:
-				return getCount4();
-			case CREATURE_COUNT:
-				return getCreatureCount();
-			case ERROR:
-				return getError();
-			case PERCENT_COMPLETE: {
-				int c = getOwnCount();
-				if (c > 0)
-					return 100f;
-				else
-					return 0f;
-			}
-			case PERCENT4_COMPLETE: {
-				int c = getCount4();
-				return (float) c * 100 / 4;
-			}
-			case DATE:
-				return getDate();
-			case HASHCODE:
-				return System.identityHashCode(this);
-			default:
-				return card.get(field);
-		}
+		return ((MagicCardField) field).get(this);
 	}
 
 	public int getCreatureCount() {

@@ -23,27 +23,28 @@ import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class DataManagerTest extends TestCase {
-	private static DataManager dm;
+	private DataManager dm;
 	static final int CARD_ID_MYSTICDECREE = 2952;
 	private MagicCardPhysical card;
 	private CardCollection deck2;
 	private CardCollection deck1;
 	private ICardStore<IMagicCard> store2;
+	static boolean reset = true;
 	static int i = 0;
 
 	static void init() {
-		TestFileUtils.resetDb();
-		dm = DataManager.getInstance();
-		dm.waitForInit(10);
-		dm.getLibraryCardStore();
-		i = 1;
+		if (reset) {
+			TestFileUtils.resetDb();
+			reset = false;
+		}
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		if (i == 0) {
-			init();
-		}
+		init();
+		dm = DataManager.getInstance();
+		dm.waitForInit(10);
+		dm.getLibraryCardStore();
 		deck1 = createDeck();
 		deck2 = createDeck();
 		store2 = deck2.getStore();
@@ -69,7 +70,8 @@ public class DataManagerTest extends TestCase {
 	}
 
 	public MagicCardPhysical phyCard(int cardId, Location loc) {
-		IMagicCard base = DataManager.getInstance().getMagicDBStore().getCard(cardId);
+		IMagicCard base = dm.getMagicDBStore().getCard(cardId);
+		assertNotNull("Cannot find " + cardId + " " + FileUtils.getMagicCardsDir() + " " + dm.getMagicDBStore().size(), base);
 		MagicCardPhysical card = new MagicCardPhysical(base, loc);
 		card.setOwn(true);
 		card.setCount(1);
@@ -277,6 +279,7 @@ public class DataManagerTest extends TestCase {
 		assertEquals(0, deck1.getStore().size());
 		assertEquals(x - 1, base.getOwnCount());
 	}
+
 	// @Test
 	// public void testUpdateMagicCardPhysical() {
 	// fail("Not yet implemented");
@@ -417,7 +420,6 @@ public class DataManagerTest extends TestCase {
 		Collection<? extends IMagicCard> materialize = dm.materialize(Collections.singletonList(card2), deck1.getStore());
 		assertEquals(1, materialize.size());
 		MagicCardPhysical card1 = (MagicCardPhysical) materialize.iterator().next();
-
 		assertEquals(1, card1.getCount());
 		assertEquals(true, card1.isOwn());
 	}

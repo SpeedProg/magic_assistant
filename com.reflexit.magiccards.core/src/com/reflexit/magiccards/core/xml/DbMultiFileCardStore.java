@@ -46,15 +46,24 @@ import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
  * 
  */
 public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
-	private boolean flatDbLoaded = false;
+	private boolean flatDbLoaded;
 	private boolean loadDefault;
-	private GlobalDbHandler handler = new GlobalDbHandler();
+	private GlobalDbHandler handler;
 
+	{
+		init();
+	}
+
+	@Override
 	public void reload() {
+		init();
+		super.reload();
+	}
+
+	private void init() {
 		flatDbLoaded = false;
 		loadDefault = true;
 		handler = new GlobalDbHandler();
-		setInitialized(false);
 	}
 
 	public class GlobalDbHandler {

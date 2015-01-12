@@ -47,10 +47,28 @@ public class MyXMLStreamWriter {
 
 	public void nl() throws XMLStreamException {
 		try {
-			out.write('\n');
-			int indent = stack.size();
-			for (int i = 0; i < indent; i++) {
-				out.write("  ");
+			switch (stack.size()) {
+				case 0:
+					break;
+				case 1:
+					out.write("\n  ");
+					break;
+				case 2:
+					out.write("\n    ");
+					break;
+				case 3:
+					out.write("\n      ");
+					break;
+				case 4:
+					out.write("\n        ");
+					break;
+				default:
+					out.write('\n');
+					int indent = stack.size();
+					for (int i = 0; i < indent; i++) {
+						out.write("  ");
+					}
+					break;
 			}
 		} catch (IOException e) {
 			throw new XMLStreamException(e);

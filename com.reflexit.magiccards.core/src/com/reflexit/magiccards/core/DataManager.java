@@ -37,6 +37,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
+import com.reflexit.magiccards.core.xml.DbMultiFileCardStore;
 
 public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";
@@ -101,11 +102,13 @@ public class DataManager {
 
 	public synchronized void reset(File dir) {
 		// File locDir = new File(FileUtils.getWorkspaceFile(), "magiccards");
+		System.setProperty("ma.magiccards.area", dir.getAbsolutePath());
 		FileUtils.deleteTree(dir);
 		if (root == null)
 			root = ModelRoot.getInstance(dir);
 		else {
 			root.resetRoot(dir);
+			((DbMultiFileCardStore) (getCardHandler().getMagicDBStore())).reload();
 			((AbstractFilteredCardStore) (getCardHandler().getLibraryFilteredStore())).reload();
 			reconcile();
 		}
@@ -540,13 +543,17 @@ public class DataManager {
 		}
 	}
 
+	public void syncInitDb() {
+		getMagicDBStore().initialize();
+		getDBPriceStore().initialize();
+		getDBPriceStore().reloadPrices(); // XXX
+	}
+
 	public void asyncInitDb() {
 		new Thread("Init DB") {
 			@Override
 			public void run() {
-				getMagicDBStore().initialize();
-				getDBPriceStore().initialize();
-				getDBPriceStore().reloadPrices(); // XXX
+				syncInitDb();
 			}
 		}.start();
 	}

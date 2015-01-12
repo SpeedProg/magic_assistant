@@ -19,7 +19,7 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 	protected IMagicCard card3;
 	protected ByteArrayOutputStream out;
 	String[] lines;
-	private boolean reset;
+	private static boolean reset;
 
 	@Override
 	protected void setUp() throws Exception {
