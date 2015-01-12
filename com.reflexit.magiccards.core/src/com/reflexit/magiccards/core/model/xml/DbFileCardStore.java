@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.xml;
+package com.reflexit.magiccards.core.model.xml;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
-import com.reflexit.magiccards.core.xml.DbMultiFileCardStore.GlobalDbHandler;
+import com.reflexit.magiccards.core.model.xml.DbMultiFileCardStore.GlobalDbHandler;
 
 /**
  * Single File store with card count and caching

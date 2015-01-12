@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
-import com.reflexit.magiccards.core.xml.CollectionSingleFileCardStore;
+import com.reflexit.magiccards.core.model.xml.CollectionSingleFileCardStore;
 
 /**
  * @author Alena

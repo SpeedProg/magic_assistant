@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.xml;
+package com.reflexit.magiccards.core.model.xml;
 
 import java.io.File;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.xml;
+package com.reflexit.magiccards.core.model.xml;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;

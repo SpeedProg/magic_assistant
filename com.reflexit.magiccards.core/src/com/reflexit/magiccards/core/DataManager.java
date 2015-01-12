@@ -37,7 +37,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
-import com.reflexit.magiccards.core.xml.DbMultiFileCardStore;
+import com.reflexit.magiccards.core.model.xml.DbMultiFileCardStore;
 
 public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";

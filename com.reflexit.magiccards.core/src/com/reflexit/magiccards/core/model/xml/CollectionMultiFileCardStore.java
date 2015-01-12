@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.xml;
+package com.reflexit.magiccards.core.model.xml;
 
 import java.io.File;
 

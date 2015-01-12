@@ -13,8 +13,8 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.utils.CardGenerator;
-import com.reflexit.magiccards.core.xml.DbFileCardStore;
-import com.reflexit.magiccards.core.xml.DbMultiFileCardStore;
+import com.reflexit.magiccards.core.model.xml.DbFileCardStore;
+import com.reflexit.magiccards.core.model.xml.DbMultiFileCardStore;
 
 public class DbMultiFileCardStoreTest extends TestCase {
 	private static final String MORNINGTIDE = "Morningtide";

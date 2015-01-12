@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.xml;
+package com.reflexit.magiccards.core.model.xml;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,6 +38,7 @@ import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
+import com.reflexit.magiccards.core.xml.StringCache;
 
 public class XmlCardHolder implements ICardHandler {
 	private IFilteredCardStore activeDeck;

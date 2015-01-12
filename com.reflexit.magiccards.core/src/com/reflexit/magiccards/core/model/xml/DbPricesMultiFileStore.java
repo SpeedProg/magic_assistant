@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.xml;
+package com.reflexit.magiccards.core.model.xml;
 
 import gnu.trove.map.TIntFloatMap;
 
@@ -24,6 +24,7 @@ import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
+import com.reflexit.magiccards.core.xml.PriceProviderStoreObject;
 
 public class DbPricesMultiFileStore implements IDbPriceStore {
 	static private DbPricesMultiFileStore instance;

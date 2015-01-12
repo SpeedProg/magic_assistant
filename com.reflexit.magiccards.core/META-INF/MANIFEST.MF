@@ -32,6 +32,7 @@ Export-Package: com.reflexit.magiccards.core;
    com.reflexit.magiccards.core.model",
  com.reflexit.magiccards.core.model.storage;uses:="com.reflexit.magiccards.core.model.events,org.eclipse.core.commands.common,com.reflexit.magiccards.core.model",
  com.reflexit.magiccards.core.model.utils;uses:="com.reflexit.magiccards.core.model.storage,com.reflexit.magiccards.core.model",
+ com.reflexit.magiccards.core.model.xml,
  com.reflexit.magiccards.core.monitor,
  com.reflexit.magiccards.core.seller;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage",
  com.reflexit.magiccards.core.sync;uses:="org.eclipse.core.runtime,com.reflexit.magiccards.core.model.storage,com.reflexit.magiccards.core.model",
