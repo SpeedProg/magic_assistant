@@ -35,7 +35,7 @@ public class MagicCard extends AbstractMagicCard {
 	private transient String colorType = "land";
 	private transient int cmc = 0;
 	private int enId;
-	LinkedHashMap<String, Object> properties;
+	LinkedHashMap<ICardField, Object> properties;
 
 	public MagicCard() {
 		// do nothing
@@ -314,7 +314,7 @@ public class MagicCard extends AbstractMagicCard {
 		try {
 			MagicCard obj = (MagicCard) super.clone();
 			if (this.properties != null)
-				obj.properties = (LinkedHashMap<String, Object>) this.properties.clone();
+				obj.properties = (LinkedHashMap) this.properties.clone();
 			return obj;
 		} catch (CloneNotSupportedException e) {
 			return null;
@@ -415,7 +415,7 @@ public class MagicCard extends AbstractMagicCard {
 			this.num = null;
 	}
 
-	public Map<String, Object> getProperties() {
+	public Map<ICardField, Object> getProperties() {
 		return properties;
 	}
 
@@ -427,10 +427,10 @@ public class MagicCard extends AbstractMagicCard {
 			if (!list.startsWith("{"))
 				throw new IllegalArgumentException();
 			list = list.substring(1, list.length() - 1);
-			String[] split = list.split(" *, *");
+			String[] split = list.split(",");
 			for (int i = 0; i < split.length; i++) {
 				String pair = split[i];
-				String[] split2 = pair.split("=");
+				String[] split2 = pair.trim().split("=");
 				if (split2.length == 1)
 					setProperty(split2[0], "true");
 				else if (split2.length == 2)
@@ -440,39 +440,37 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setProperty(ICardField field, Object value) {
-		setProperty1(field.name(), value);
-	}
-
-	public void setProperty(String key, Object value) {
-		if (key == null)
-			throw new NullPointerException();
-		if (key.trim().isEmpty())
-			throw new IllegalArgumentException();
-		setProperty1(key.trim(), value);
-	}
-
-	private void setProperty1(String key, Object value) {
 		if (value != null && !isEmptyValue(value)) {
 			if (properties == null)
-				properties = new LinkedHashMap<String, Object>(3);
-			properties.put(key, value);
+				properties = new LinkedHashMap<ICardField, Object>(3);
+			properties.put(field, value);
 		} else if (properties != null) {
-			properties.remove(key);
+			properties.remove(field);
 			if (properties.size() == 0)
 				properties = null;
 		}
 	}
 
-	public Object getProperty(ICardField field) {
-		return getProperty(field.name());
-	}
-
-	public Object getProperty(String key) {
-		if (properties == null)
-			return null;
+	private void setProperty(String key, Object value) {
 		if (key == null)
 			throw new NullPointerException();
-		return properties.get(key);
+		String keyTrim = key.trim();
+		if (keyTrim.isEmpty())
+			throw new IllegalArgumentException();
+		ICardField field = MagicCardField.fieldByName(keyTrim);
+		if (field == null) {
+			MagicLogger.log("Unknown property " + keyTrim);
+			return;
+		}
+		set(field, value);
+	}
+
+	public Object getProperty(ICardField field) {
+		if (properties == null)
+			return null;
+		if (field == null)
+			throw new NullPointerException();
+		return properties.get(field);
 	}
 
 	@Override

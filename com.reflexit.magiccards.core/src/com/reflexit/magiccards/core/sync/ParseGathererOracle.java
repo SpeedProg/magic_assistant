@@ -306,7 +306,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	}
 
 	private boolean adjustUpdateFields() {
-		boolean noUpdateBasic = (fromCard.getBase().getProperty("NOUPDATE") != null);
+		boolean noUpdateBasic = (fromCard.getBase().get(MagicCardField.NOUPDATE) != null);
 		fieldMapFilter.remove(MagicCardField.ID);
 		if (noUpdateBasic) {
 			fieldMapFilter.remove(MagicCardField.NAME);

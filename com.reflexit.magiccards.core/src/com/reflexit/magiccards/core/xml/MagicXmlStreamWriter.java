@@ -151,9 +151,9 @@ public class MagicXmlStreamWriter {
 
 	private void marshalMap(Map<String, Object> properties) throws XMLStreamException {
 		for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
+			Object key = iterator.next();
 			writer.startEl("entry");
-			writer.el("string", key);
+			writer.el("string", key.toString());
 			Object value = properties.get(key);
 			writer.el("string", value instanceof String ? (String) value : String.valueOf(value));
 			writer.endEl();

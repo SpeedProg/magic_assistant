@@ -269,6 +269,20 @@ public enum MagicCardField implements ICardField {
 			return card.getEnglishCardId();
 		};
 	},
+	NOUPDATE(null) {
+		@Override
+		public void set(MagicCard card, Object value) {
+			if (value instanceof String || value == null)
+				card.setProperty(this, Boolean.valueOf((String) value));
+			else if (value instanceof Boolean)
+				card.setProperty(this, value);
+		}
+
+		@Override
+		public Object getM(MagicCard card) {
+			return card.getProperty(this);
+		};
+	},
 	PROPERTIES {
 		@Override
 		public void set(MagicCard card, Object value) {

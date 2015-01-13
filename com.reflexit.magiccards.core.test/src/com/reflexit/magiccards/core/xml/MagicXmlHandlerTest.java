@@ -184,6 +184,7 @@ public class MagicXmlHandlerTest extends TestCase {
 	      <count>5</count>
 	      <price>2.1</price>
 	      <comment>comment 40</comment>
+	      <custom>bla</custom>
 	      <ownership>true</ownership>
 	      <special>foil,c=mint</special>
 	      <date>Sun Jan 11 22:37:54 EST 2015</date>
@@ -200,11 +201,12 @@ public class MagicXmlHandlerTest extends TestCase {
 		phi.setCount(5);
 		phi.setSpecial("foil,c=mint");
 		phi.setComment("comment 40");
+		phi.setCustom("bla");
 		phi.setOwn(true);
 		phi.setPrice(2.1f);
 		phi.setDate("Sun Jan 11 22:37:54 EST 2015");
 		String xml = handler.toXML(phi);
-		System.err.println(xml);
+		//System.err.println(xml);
 		assertEquals(xml1, xml);
 	}
 
@@ -225,9 +227,9 @@ public class MagicXmlHandlerTest extends TestCase {
 	  <count>5</count>
 	  <price>2.1</price>
 	  <comment>comment 40</comment>
+	  <custom>bla</custom>
 	  <ownership>true</ownership>
 	  <special>foil,c=mint</special>
-	 	<custom>bla</custom>
 	  <date>Sun Jan 11 22:37:54 EST 2015</date>
 	</mcp>
 	</list>
@@ -332,6 +334,10 @@ public class MagicXmlHandlerTest extends TestCase {
 	    <string>FLIPID</string>
 	    <string>27168</string>
 	  </entry>
+	  <entry>
+	    <string>NOUPDATE</string>
+	    <string>true</string>
+	  </entry>
 	</properties>
 	</mc>
 	</list>
@@ -348,6 +354,7 @@ public class MagicXmlHandlerTest extends TestCase {
 		assertEquals(132, p.getCollectorNumberId());
 		assertEquals("Uncommon", p.getRarity());
 		assertEquals(4.25f, p.getRating());
+		assertEquals(true, p.getProperty(MagicCardField.NOUPDATE));
 	}
 
 	/*-

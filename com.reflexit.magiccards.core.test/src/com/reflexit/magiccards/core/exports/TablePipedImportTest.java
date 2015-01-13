@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.exports;
 
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class TablePipedImportTest extends AbstarctImportTest {
@@ -111,7 +112,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		addLine(lines);
 		parse();
 		assertEquals(1, resSize);
-		System.err.println(card1);
+
 		MagicCardPhysical p = (MagicCardPhysical) card1;
 		assertEquals(-39, p.getCardId());
 		assertEquals("name 39", p.getName());
@@ -123,5 +124,18 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("comment 40", p.getComment());
 		assertEquals(true, p.isOwn());
 		assertEquals("foil,c=mint", p.getSpecial());
+	}
+
+	//ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
+	//27166|Fire // Ice (Ice)|{1}{U}|Instant|||Tap target permanent.<br>Draw a card.|Apocalypse|Uncommon|0.0||4.488|Franz Vohwinkel|128||Tap target permanent.<br>Draw a card.|0|{PART=Ice, OTHER_PART=Fire, FLIPID=27165, NOUPDATE=true}
+	public void testParts() {
+		String lines = getAboveComment();
+		addLine(lines);
+		parse();
+		assertEquals(1, resSize);
+		MagicCardPhysical p = (MagicCardPhysical) card1;
+		assertEquals(true, p.getBase().getProperty(MagicCardField.NOUPDATE));
+		assertEquals("Ice", p.getBase().getPart());
+		assertEquals(27165, p.getBase().getFlipId());
 	}
 }

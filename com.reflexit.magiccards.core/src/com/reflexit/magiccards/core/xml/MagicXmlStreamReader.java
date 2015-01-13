@@ -153,10 +153,8 @@ public class MagicXmlStreamReader {
 					case entry:
 						if (key != null && !key.isEmpty()) {
 							ICardField field = MagicCardField.fieldByName(key);
-							if (field == null) {
+							if (field == null)
 								MagicLogger.log("Uknown property " + key);
-								cardm.setProperty(key, value);
-							}
 							else
 								cardm.set(field, StringCache.intern(value));
 						}
