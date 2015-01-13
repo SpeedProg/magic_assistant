@@ -9,10 +9,11 @@ import java.util.List;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
-public class AbstarctImportTest extends junit.framework.TestCase {
+public class AbstarctImportTest extends AbstractMagicTest {
 	protected MemCardHandler deck;
 	protected String line = "";
 	protected int resSize;
@@ -96,10 +97,12 @@ public class AbstarctImportTest extends junit.framework.TestCase {
 		line += string + "\n";
 	}
 
+	@Override
 	protected String getAboveComment() {
 		return getContents(1)[0].toString();
 	}
 
+	@Override
 	protected StringBuilder[] getContents(int sections) {
 		try {
 			return TestFileUtils.getContentsForTest("src", getClass(),

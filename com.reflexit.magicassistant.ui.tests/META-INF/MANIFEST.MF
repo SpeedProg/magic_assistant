@@ -4,12 +4,12 @@ Bundle-Activator: com.reflexit.magicassistant.ui.tests.Activator
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Name: Tests
 Import-Package: com.reflexit.magiccards.ui.widgets
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.junit,
+ org.eclipse.ui,
  org.eclipse.jface,
  org.eclipse.swt,
  org.eclipse.core.runtime,
  com.reflexit.magiccards.ui,
- org.junit,
  com.reflexit.magiccards.core
 Bundle-ActivationPolicy: lazy
 Manifest-Version: 1.0

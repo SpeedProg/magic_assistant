@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.exports;
 
 import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class CsvExportDelegateTest extends AbstarctExportTest {
 	private CsvExportDelegate exporter = new CsvExportDelegate();

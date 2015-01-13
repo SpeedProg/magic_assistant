@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.legality.Format;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.sync.TextPrinter;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class MagicCardTest extends TestCase {
 	MagicCard card;

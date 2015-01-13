@@ -30,7 +30,7 @@ import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 
 /**

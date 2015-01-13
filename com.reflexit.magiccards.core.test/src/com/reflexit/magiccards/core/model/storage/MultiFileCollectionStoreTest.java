@@ -7,9 +7,9 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.xml.CollectionMultiFileCardStore;
 import com.reflexit.magiccards.core.model.xml.CollectionSingleFileCardStore;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	private static final Location LOCATION5 = new Location("coll5");

@@ -77,10 +77,15 @@ public class MyXMLStreamWriter {
 	}
 
 	public void el(String elname, String value) throws XMLStreamException {
-		startEl(elname);
-		data(value);
-		// end tag no nl
-		endEli();
+		try {
+			nl();
+			out.write("<", elname, ">");
+			data(value);
+			// end tag no nl
+			out.write("</", elname, ">");
+		} catch (IOException e) {
+			throw new XMLStreamException(e);
+		}
 	}
 
 	public void ela(String elname, String value, String... attrs) throws XMLStreamException {
@@ -97,10 +102,7 @@ public class MyXMLStreamWriter {
 	 */
 	public void endEli() throws XMLStreamException {
 		try {
-			String string = stack.pop();
-			out.write("</");
-			out.write(string);
-			out.write('>');
+			out.write("</", stack.pop(), ">");
 		} catch (IOException e) {
 			throw new XMLStreamException(e);
 		}

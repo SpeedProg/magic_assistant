@@ -10,8 +10,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class CardGroupTest extends TestCase {
 	private CardGroup group;
@@ -74,6 +74,7 @@ public class CardGroupTest extends TestCase {
 	public MagicCardPhysical generatePhyCard() {
 		MagicCardPhysical card = CardGenerator.generatePhysicalCardWithValues();
 		card.setCount(1);
+		card.setOwn(true);
 		return card;
 	}
 

@@ -103,4 +103,25 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 		assertNotNull(((MagicCardPhysical) card1).getError());
 	}
+
+	//	ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES|COUNT|PRICE|COMMENT|LOCATION|CUSTOM|OWNERSHIP|SPECIAL|DATE
+	//	-39|name 39|{4}|type 39|4|*|bla 39|set 19|Common|1.2256411|Russian|2.39|Elena 39|39a||bla <br> bla 39|0||5|2.1|comment 40|mem||true|foil,c=mint|Sun Jan 11 22:37:54 EST 2015
+	public void testFull() {
+		String lines = getAboveComment();
+		addLine(lines);
+		parse();
+		assertEquals(1, resSize);
+		System.err.println(card1);
+		MagicCardPhysical p = (MagicCardPhysical) card1;
+		assertEquals(-39, p.getCardId());
+		assertEquals("name 39", p.getName());
+		assertEquals("set 19", p.getSet());
+		assertEquals("Russian", p.getLanguage());
+		assertEquals("bla <br> bla 39", p.getText());
+		assertEquals(5, p.getCount());
+		assertEquals(2.1f, p.getPrice());
+		assertEquals("comment 40", p.getComment());
+		assertEquals(true, p.isOwn());
+		assertEquals("foil,c=mint", p.getSpecial());
+	}
 }

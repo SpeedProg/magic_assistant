@@ -19,7 +19,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	private boolean ownership;
 	private Date date;
 	private HashMap<ICardField, Object> properties;
-	static SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+	private static SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
 	public MagicCardPhysical(IMagicCard card, Location location, boolean virtual) {
 		this(card, location);
@@ -82,9 +82,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	public Collection getHeaderNames() {
 		ArrayList list = new ArrayList();
-		list.addAll(this.card.getHeaderNames());
-		MagicCardField[] values = MagicCardField.values();
-		for (MagicCardField magicCardField : values) {
+		ICardField[] values = MagicCardField.allNonTransientFields(true);
+		for (ICardField magicCardField : values) {
 			list.add(magicCardField.toString());
 		}
 		return list;

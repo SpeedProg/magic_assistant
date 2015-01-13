@@ -812,6 +812,9 @@ public enum MagicCardField implements ICardField {
 			return SET;
 		if (field.equals("QTY"))
 			return COUNT;
+		//		// legacy
+		//		if (field.equals("CUSTOM"))
+		//			return LegacyField.INSTANCE;
 		return null;
 	}
 

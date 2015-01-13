@@ -21,6 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -150,8 +151,15 @@ public class MagicXmlStreamReader {
 						store.type = ttStr;
 						break;
 					case entry:
-						if (key != null && !key.isEmpty())
-							cardm.setProperty(key, value);
+						if (key != null && !key.isEmpty()) {
+							ICardField field = MagicCardField.fieldByName(key);
+							if (field == null) {
+								MagicLogger.log("Uknown property " + key);
+								cardm.setProperty(key, value);
+							}
+							else
+								cardm.set(field, StringCache.intern(value));
+						}
 						break;
 					case string:
 						if (key == null)

@@ -43,8 +43,7 @@ public class MagicXmlStreamWriter {
 				// list
 				if (object.list != null) {
 					writer.startEl("list");
-					int i = 0;
-					for (Iterator iterator = object.list.iterator(); iterator.hasNext(); i++) {
+					for (Iterator iterator = object.list.iterator(); iterator.hasNext();) {
 						Object o = iterator.next();
 						if (o instanceof MagicCardPhysical) {
 							writer.startEl("mcp");
@@ -145,10 +144,7 @@ public class MagicXmlStreamWriter {
 					continue;
 				else if (field == MagicCardField.LANG && o.equals("English"))
 					continue;
-				writer.startEl(((MagicCardField) field).getTag());
-				String text = String.valueOf(o);
-				writer.data(text);
-				writer.endEl();
+				writer.el(((MagicCardField) field).getTag(), String.valueOf(o));
 			}
 		}
 	}

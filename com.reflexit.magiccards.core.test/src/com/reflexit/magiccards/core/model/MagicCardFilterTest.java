@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class MagicCardFilterTest extends TestCase {
 	MagicCardFilter filter;
@@ -292,7 +292,7 @@ public class MagicCardFilterTest extends TestCase {
 	}
 
 	public void testSPECIAL() {
-		genericFieldText(FilterField.SPECIAL, "foil");
+		genericFieldText(FilterField.SPECIAL, "promo");
 	}
 
 	public void testLANG() {

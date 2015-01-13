@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class MagicCardComparatorTest extends TestCase {
 	private MagicCardComparator acc;
@@ -258,6 +258,8 @@ public class MagicCardComparatorTest extends TestCase {
 	public void testOwnCount() {
 		makeComparator(MagicCardField.OWN_COUNT);
 		genMcp();
+		((MagicCardPhysical) card1).setOwn(true);
+		((MagicCardPhysical) card2).setOwn(true);
 		setField(card1, MagicCardField.COUNT, "1");
 		setField(card2, MagicCardField.COUNT, "2");
 		checkInvariantLess(card1, card2);

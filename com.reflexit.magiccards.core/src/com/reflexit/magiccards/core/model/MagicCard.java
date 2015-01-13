@@ -490,7 +490,7 @@ public class MagicCard extends AbstractMagicCard {
 
 	@Override
 	public int getSide() {
-		String prop = (String) getProperty(MagicCardField.SIDE);
+		Integer prop = (Integer) getProperty(MagicCardField.SIDE);
 		if (prop == null) {
 			String colNum = getCollNumber();
 			if (colNum.endsWith("a"))
@@ -504,11 +504,7 @@ public class MagicCard extends AbstractMagicCard {
 				return 1;
 			}
 		} else {
-			try {
-				return Integer.parseInt(prop);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			return prop;
 		}
 		return 0;
 	}
@@ -690,7 +686,7 @@ public class MagicCard extends AbstractMagicCard {
 		setPropertyInteger(MagicCardField.FLIPID, value);
 	}
 
-	float getRating() {
+	public float getRating() {
 		return rating;
 	}
 }
