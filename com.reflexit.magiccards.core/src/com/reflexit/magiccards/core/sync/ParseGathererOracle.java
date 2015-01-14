@@ -252,6 +252,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	private void applyToDb(ICoreProgressMonitor monitor) {
 		setFilter(fieldMapFilter);
 		adjustUpdateFields();
+		if (fieldMapFilter.isEmpty())
+			return;
 		if (someWhatMatches(fromCard, cardA, cardB)) {
 			applyFromCard(cardA, fromCard);
 			addNew(cardB);
