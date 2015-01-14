@@ -151,7 +151,7 @@ public class SymbolConverter {
 				}
 			}
 			if (!cut)
-				throw new MagicException("Cannot build mana images for " + text);
+				throw new MagicException("Cannot build mana images for '" + text + "'");
 		}
 
 		return res;

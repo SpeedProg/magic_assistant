@@ -53,9 +53,9 @@ public class ParseGathererSearchStandardTest extends TestCase {
 
 	public void testDownloadAndCheck() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.loadMultiPageUrl(wallUrl, handler, "unknown", monitor);
-		assertEquals(6, handler.getRealCount());
+		assertEquals(7, handler.getRealCount());
 		Collection<MagicCard> stash = handler.getPrimary();
-		assertEquals(6, stash.size());
+		assertEquals(7, stash.size());
 		assertEquals(4, handler.getSecondary().size());
 		assertEquals("Bloodfire Colossus", stash.iterator().next().getName());
 	}

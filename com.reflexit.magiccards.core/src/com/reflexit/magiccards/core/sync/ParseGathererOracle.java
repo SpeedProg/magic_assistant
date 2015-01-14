@@ -216,6 +216,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 					return; // do not change
 				}
 			}
+			if (value != null)
+				value = value.trim();
 			((ICardModifiable) card).set(field, StringCache.intern(value));
 		}
 	}
