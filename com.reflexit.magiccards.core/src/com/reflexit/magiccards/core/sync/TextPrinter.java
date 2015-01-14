@@ -10,9 +10,10 @@ import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class TextPrinter {
+	public static String SEPARATOR = "|";
+	public static char SEPARATOR_CHAR = '|';
 	static final Collection<ICardField> magicCardExportFields;
 	static {
 		ICardField[] values = MagicCardField.allNonTransientFields(false);
@@ -44,42 +45,29 @@ public class TextPrinter {
 		return list;
 	};
 
-	public static void printHeader(MagicCard card, PrintStream out) {
-		out.println(getHeaderMC());
+	public static void printHeader(PrintStream out) {
+		out.println(getHeader());
 	}
 
-	public static String getHeaderMC() {
-		return join(headers(magicCardExportFields), SEPARATOR);
+	public static String getHeader() {
+		return join(headers(magicCardExportFields), SEPARATOR_CHAR);
 	}
 
-	public static String SEPARATOR = "|";
-	public static char SEPARATOR_CHAR = '|';
+	public static String getString(MagicCard card) {
+		return join(values(card, magicCardExportFields), SEPARATOR_CHAR);
+	}
 
 	public static void print(MagicCard card, PrintStream out) {
-		out.println(join(values(card, magicCardExportFields), SEPARATOR));
+		out.println(getString(card));
 	}
 
-	public static String toString(IMagicCard card) {
-		if (card instanceof MagicCard) {
-			return join(values(card, magicCardExportFields), SEPARATOR);
-		} else if (card instanceof MagicCardPhysical) {
-			return join(((MagicCardPhysical) card).getValues(), SEPARATOR);
-		}
-		return card.toString();
-	}
-
-	public static String join(Collection list, String sep) {
+	public static String join(Collection<?> list, char sep) {
 		StringBuffer buf = new StringBuffer();
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element != null) {
-				String string = element.toString();
-				if (string.contains("\n")) {
-					string = string.replaceAll("\n", "<br>");
-				}
-				buf.append(string);
-			} else
-				buf.append("");
+				buf.append(element.toString().replace("\n", "<br>"));
+			}
 			if (iter.hasNext()) {
 				buf.append(sep);
 			}

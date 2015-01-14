@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -67,7 +66,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		PrintStream out = System.out;
 		if (to != null)
 			out = new PrintStream(new FileOutputStream(new File(to)), true, FileUtils.UTF8);
-		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
+		TextPrinter.printHeader(out);
 		GatherHelper.OutputHandler handler = createOutputHandler(out, options);
 		try {
 			if (from.startsWith("http:")) {

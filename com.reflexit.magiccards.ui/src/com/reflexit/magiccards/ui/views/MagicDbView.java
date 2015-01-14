@@ -197,7 +197,7 @@ public class MagicDbView extends AbstractCardsView {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					TextPrinter.printHeader((MagicCard) card, ps);
+					TextPrinter.printHeader(ps);
 					curset = set;
 				}
 				MagicCard mc = ((MagicCard) card).cloneCard();

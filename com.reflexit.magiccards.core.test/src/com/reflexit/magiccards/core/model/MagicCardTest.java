@@ -29,7 +29,7 @@ public class MagicCardTest extends TestCase {
 	}
 
 	private String toExternal() {
-		return TextPrinter.toString(card);
+		return TextPrinter.getString(card);
 	}
 
 	@Test

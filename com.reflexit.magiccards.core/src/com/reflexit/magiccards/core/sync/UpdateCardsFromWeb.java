@@ -153,7 +153,7 @@ public class UpdateCardsFromWeb {
 		PrintStream out = System.out;
 		if (toFile != null)
 			out = new PrintStream(new FileOutputStream(new File(toFile)), true, FileUtils.UTF8);
-		TextPrinter.printHeader(IMagicCard.DEFAULT, out);
+		TextPrinter.printHeader(out);
 		String land = (String) options.get(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS);
 		final boolean bland = "true".equals(land);
 		String other = (String) options.get(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS);

@@ -22,7 +22,7 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 	 */
 	@Override
 	protected void setHeaderFields(List<String> list) {
-		String header = TextPrinter.join(list, ",");
+		String header = TextPrinter.join(list, ',');
 		if (!header.startsWith(HEADER)) {
 			throw new MagicException("Expecting header: " + HEADER + " but was '" + header + "'");
 		}

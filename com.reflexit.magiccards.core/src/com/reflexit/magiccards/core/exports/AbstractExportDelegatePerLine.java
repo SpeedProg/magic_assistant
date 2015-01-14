@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.ICard;
@@ -121,15 +122,14 @@ public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDel
 	public ICardField[] deterimeColumns() {
 		Collection<ICardField> fields = new ArrayList<ICardField>();
 		for (T card : store) {
-			Collection<String> names;
+			Collection<ICardField> allFields;
 			if (card instanceof MagicCardPhysical) {
-				names = ((MagicCardPhysical) card).getHeaderNames();
+				allFields = Arrays.asList(MagicCardField.allNonTransientFields(true));
 			} else if (card instanceof MagicCard) {
-				names = ((MagicCard) card).getHeaderNames();
+				allFields = Arrays.asList(MagicCardField.allNonTransientFields(false));
 			} else
 				continue;
-			for (String name : names) {
-				ICardField field = MagicCardField.fieldByName(name);
+			for (ICardField field : allFields) {
 				if (isForExport(field))
 					fields.add(field);
 			}

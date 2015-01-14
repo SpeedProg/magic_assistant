@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -35,7 +34,7 @@ public class MagicCard extends AbstractMagicCard {
 	private transient String colorType = "land";
 	private transient int cmc = 0;
 	private int enId;
-	LinkedHashMap<ICardField, Object> properties;
+	private LinkedHashMap<ICardField, Object> properties;
 
 	public MagicCard() {
 		// do nothing
@@ -195,24 +194,6 @@ public class MagicCard extends AbstractMagicCard {
 	@Override
 	public String toString() {
 		return this.id + ": " + this.name + " [" + this.edition + "]";
-	}
-
-	public Collection getHeaderNames() {
-		ICardField[] values = MagicCardField.allNonTransientFields(false);
-		ArrayList list = new ArrayList();
-		for (ICardField magicCardField : values) {
-			list.add(magicCardField.toString());
-		}
-		return list;
-	}
-
-	public Collection getValues() {
-		ArrayList list = new ArrayList();
-		ICardField[] xfields = MagicCardField.allNonTransientFields(false);
-		for (ICardField field : xfields) {
-			list.add(get(field));
-		}
-		return list;
 	}
 
 	@Override
@@ -415,6 +396,9 @@ public class MagicCard extends AbstractMagicCard {
 			this.num = null;
 	}
 
+	void setProperties(LinkedHashMap<ICardField, Object> properties) {
+		this.properties=properties;
+	}
 	public Map<ICardField, Object> getProperties() {
 		return properties;
 	}

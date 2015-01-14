@@ -2,8 +2,6 @@ package com.reflexit.magiccards.core.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -78,15 +76,6 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	@Override
 	public String getRulings() {
 		return card.getRulings();
-	}
-
-	public Collection getHeaderNames() {
-		ArrayList list = new ArrayList();
-		ICardField[] values = MagicCardField.allNonTransientFields(true);
-		for (ICardField magicCardField : values) {
-			list.add(magicCardField.toString());
-		}
-		return list;
 	}
 
 	public MagicCard getCard() {
@@ -452,15 +441,6 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	@Override
 	public boolean isPhysical() {
 		return true;
-	}
-
-	public Collection getValues() {
-		ArrayList list = new ArrayList();
-		ICardField[] xfields = MagicCardField.allNonTransientFields(true);
-		for (ICardField field : xfields) {
-			list.add(get(field));
-		}
-		return list;
 	}
 
 	@Override

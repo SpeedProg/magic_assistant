@@ -116,7 +116,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		}
 		if (nulls == list.size()) {
 			ICardField[] allNonTransientFields = MagicCardField.allNonTransientFields(true);
-			String hfields = TextPrinter.join(Arrays.asList(allNonTransientFields), ",");
+			String hfields = TextPrinter.join(Arrays.asList(allNonTransientFields), ',');
 			throw new MagicException("Cannot recognize header fields: " + list + ", expecting some of these " + hfields);
 		}
 		setFields(fields);

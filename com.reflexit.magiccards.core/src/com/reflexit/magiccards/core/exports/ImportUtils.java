@@ -381,7 +381,7 @@ public class ImportUtils {
 		for (Iterator iterator = newdbrecords.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			MagicCard newCard = card.getBase();
-			String prefix = TextPrinter.toString(newCard) + ": Cannot import new card into db: ";
+			String prefix = TextPrinter.getString(newCard) + ": Cannot import new card into db: ";
 			if (newCard.getName() == null) {
 				lerrors.add(prefix + " name is missing");
 				iterator.remove();

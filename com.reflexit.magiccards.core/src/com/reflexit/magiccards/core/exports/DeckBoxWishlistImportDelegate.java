@@ -13,7 +13,7 @@ public class DeckBoxWishlistImportDelegate extends DeckBoxImportDelegate {
 
 	@Override
 	protected void setHeaderFields(List<String> list) {
-		String header = TextPrinter.join(list, ",");
+		String header = TextPrinter.join(list, ',');
 		if (!header.startsWith(HEADER_W))
 			throw new MagicException("Expecting header: " + HEADER_W);
 		ICardField fields[] = new ICardField[] {

@@ -289,9 +289,9 @@ public enum MagicCardField implements ICardField {
 			if (value instanceof String)
 				card.setProperties((String) value);
 			else if (value == null)
-				card.properties = null;
+				card.setProperties((LinkedHashMap<ICardField, Object>) null);
 			else if (value instanceof LinkedHashMap)
-				card.properties = (LinkedHashMap) ((LinkedHashMap) value).clone();
+				card.setProperties((LinkedHashMap) ((LinkedHashMap) value).clone());
 			else
 				throw new ClassCastException();
 		}

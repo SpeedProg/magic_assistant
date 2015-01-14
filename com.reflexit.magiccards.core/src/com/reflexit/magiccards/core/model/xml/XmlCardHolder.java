@@ -141,8 +141,7 @@ public class XmlCardHolder implements ICardHandler {
 				// }
 				int id = card.getCardId();
 				if (id == 0) {
-					System.err.print("Skipped invalid: ");
-					TextPrinter.print(card, System.err);
+					System.err.print("Skipped invalid: " + TextPrinter.getString(card));
 					continue;
 				}
 				list.add(card);
