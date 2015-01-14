@@ -665,7 +665,7 @@ public class MagicCard extends AbstractMagicCard {
 		return norm.getName();
 	}
 
-	void setRating(float rating) {
+	public void setRating(float rating) {
 		this.rating = rating;
 	}
 

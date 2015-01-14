@@ -46,6 +46,7 @@ import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
 import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
 import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
+import com.reflexit.magiccards.core.sync.TextPrinterTest;
 import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
 
 /**
@@ -71,6 +72,7 @@ public class AllLocalTests {
 		suite.addTestSuite(ClassicImportDelegateTest.class);
 		suite.addTestSuite(CustomExportDelegateTest.class);
 		suite.addTestSuite(DeckBoxImportTest.class);
+		suite.addTestSuite(TextPrinterTest.class);
 		// core
 		suite.addTestSuite(MagicCardTest.class);
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);
