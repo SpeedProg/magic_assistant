@@ -1,13 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2008 Alena Laskavaia.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2008 Alena Laskavaia. All rights reserved. This program and the accompanying materials are made available under the terms
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Alena Laskavaia - initial API and implementation
- *    Terry Long - refactored ParseGathererLegality to instead retrieve rulings on cards
+ * Contributors: Alena Laskavaia - initial API and implementation Terry Long - refactored ParseGathererLegality to instead retrieve rulings
+ * on cards
  *
  *******************************************************************************/
 package com.reflexit.magiccards.core.sync;
@@ -49,6 +45,8 @@ public class ParseGathererPrinted extends ParseGathererOracle {
 				for (String sep : seps) {
 					if (text.contains(sep)) {
 						String[] split = text.split(sep);
+						if (split.length != 2)
+							continue;
 						cardA.setText(split[0]);
 						String second = split[1];
 						String parts[] = second.split("<br>", 5);
