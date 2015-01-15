@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.model.aggr;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class AbstractIntCountAggregator extends AbstractIntAggregator {
 	public AbstractIntCountAggregator(ICardField field) {

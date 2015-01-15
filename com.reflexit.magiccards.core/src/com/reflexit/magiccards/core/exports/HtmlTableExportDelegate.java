@@ -14,9 +14,9 @@ import java.net.URL;
 
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
 public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagicCard> {

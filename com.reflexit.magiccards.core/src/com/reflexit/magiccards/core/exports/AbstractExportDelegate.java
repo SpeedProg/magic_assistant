@@ -8,8 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;

@@ -27,12 +27,12 @@ import com.reflexit.magiccards.core.model.Abilities;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**

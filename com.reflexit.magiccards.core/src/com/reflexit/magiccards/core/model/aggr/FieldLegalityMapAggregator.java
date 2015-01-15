@@ -3,9 +3,9 @@ package com.reflexit.magiccards.core.model.aggr;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
 
 public class FieldLegalityMapAggregator extends AbstractGroupAggregator {
 	public FieldLegalityMapAggregator(MagicCardField f) {

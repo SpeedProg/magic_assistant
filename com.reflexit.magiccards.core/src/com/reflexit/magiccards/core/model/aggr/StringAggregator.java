@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.core.model.aggr;
 
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardVisitor;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 
 public class StringAggregator extends CollisionAggregator implements ICardVisitor {
 	private static final String MULTI = "*";

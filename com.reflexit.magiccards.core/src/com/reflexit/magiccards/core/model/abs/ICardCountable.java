@@ -8,7 +8,7 @@
  * Contributors:
  *    Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.abs;
 
 /**
  * @author Alena Interface for cards and card collection to return total card count

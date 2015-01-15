@@ -2,6 +2,8 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.LinkedHashMap;
 
+import com.reflexit.magiccards.core.model.abs.ICardField;
+
 public class MagicCardHash extends AbstractMagicCard {
 	private LinkedHashMap<ICardField, Object> fields = new LinkedHashMap<ICardField, Object>();
 

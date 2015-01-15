@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.CardFieldExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;

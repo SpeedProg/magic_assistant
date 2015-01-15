@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.core.model.aggr;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class FieldProggress4Aggregator extends FieldProggressAggregator {
 	public FieldProggress4Aggregator(ICardField field) {

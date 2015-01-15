@@ -8,9 +8,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 
 public class CreationDateColumn extends GenColumn {
 	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd MMM yyyy");

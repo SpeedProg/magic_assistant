@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.Languages.Language;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 
 public class MagicCard extends AbstractMagicCard {

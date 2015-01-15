@@ -3,8 +3,8 @@ package com.reflexit.magiccards.ui.views;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 

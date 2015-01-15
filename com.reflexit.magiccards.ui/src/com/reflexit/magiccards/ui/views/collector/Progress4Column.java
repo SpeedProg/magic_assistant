@@ -1,9 +1,9 @@
 package com.reflexit.magiccards.ui.views.collector;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 
 public class Progress4Column extends ProgressColumn {
 	public Progress4Column() {

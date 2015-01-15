@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.AbstractMagicCard;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class AbstractPowerAggregator extends AbstractFloatAggregator {
 	public AbstractPowerAggregator(ICardField field) {

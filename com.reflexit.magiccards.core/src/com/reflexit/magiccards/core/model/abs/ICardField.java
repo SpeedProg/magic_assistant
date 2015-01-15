@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.abs;
 
 public interface ICardField {
 	public boolean isTransient();

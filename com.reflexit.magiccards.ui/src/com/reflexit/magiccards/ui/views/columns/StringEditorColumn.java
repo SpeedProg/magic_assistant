@@ -3,7 +3,7 @@ package com.reflexit.magiccards.ui.views.columns;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 /**
  * @author Alena

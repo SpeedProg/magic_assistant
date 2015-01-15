@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class TextPrinter {
 	public static String SEPARATOR = "|";

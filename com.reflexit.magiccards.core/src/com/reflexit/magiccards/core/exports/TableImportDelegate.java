@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 

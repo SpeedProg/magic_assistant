@@ -27,6 +27,8 @@ import com.reflexit.magiccards.core.sync.WebUtils;
 public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	public final String PARTNER_KEY = "MGCASSTNT";
 
+	// http://magic.tcgplayer.com/db/price_guide.asp?setname=From%20the%20Vault:%20Twenty
+
 	public static enum Type {
 		Low("lowprice"),
 		Medium("avgprice"),

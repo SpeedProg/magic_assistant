@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class MagicFieldFieldEditor extends CheckedListEditor {
 	private Map<String, ICardField> allFields = new LinkedHashMap<String, ICardField>();

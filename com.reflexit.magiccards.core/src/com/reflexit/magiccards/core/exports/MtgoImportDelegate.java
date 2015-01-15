@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /*-

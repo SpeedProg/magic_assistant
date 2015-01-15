@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.model.aggr;
 
 import java.util.Date;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class DateAggregator extends CollisionAggregator {
 	public DateAggregator(ICardField field) {

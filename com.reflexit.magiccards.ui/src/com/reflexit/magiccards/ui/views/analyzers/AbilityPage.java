@@ -2,7 +2,7 @@ package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.util.Map;
 
-import com.reflexit.magiccards.core.model.ICardGroup;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.AbilityChart;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;

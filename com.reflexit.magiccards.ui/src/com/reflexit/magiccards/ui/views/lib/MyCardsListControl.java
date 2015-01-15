@@ -2,8 +2,8 @@ package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.jface.action.MenuManager;
 
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;

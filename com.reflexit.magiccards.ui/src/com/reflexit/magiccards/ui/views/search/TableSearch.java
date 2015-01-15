@@ -14,9 +14,9 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.viewers.TreePath;
 
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**

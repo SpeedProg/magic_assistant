@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.core.model;
+package com.reflexit.magiccards.core.model.abs;
 
 import java.util.List;
 

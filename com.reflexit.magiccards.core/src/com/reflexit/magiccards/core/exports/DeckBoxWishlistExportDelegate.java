@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.core.exports;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class DeckBoxWishlistExportDelegate extends DeckBoxExportDelegate {
 	@Override

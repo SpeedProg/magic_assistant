@@ -20,7 +20,7 @@ import com.reflexit.magiccards.core.exports.ImportError.Type;
 import com.reflexit.magiccards.core.exports.ImportUtils.LookupHash;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;

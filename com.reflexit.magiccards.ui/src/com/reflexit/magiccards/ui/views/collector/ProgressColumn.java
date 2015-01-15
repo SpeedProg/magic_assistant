@@ -10,14 +10,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
 public class ProgressColumn extends GenColumn implements Listener {

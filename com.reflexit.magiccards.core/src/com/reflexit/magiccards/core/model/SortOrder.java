@@ -2,6 +2,8 @@ package com.reflexit.magiccards.core.model;
 
 import java.util.Comparator;
 
+import com.reflexit.magiccards.core.model.abs.ICardField;
+
 @SuppressWarnings("serial")
 public class SortOrder implements Comparator {
 	private static int MAX = 7;

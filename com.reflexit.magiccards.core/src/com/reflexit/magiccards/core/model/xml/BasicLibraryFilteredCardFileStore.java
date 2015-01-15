@@ -3,9 +3,9 @@ package com.reflexit.magiccards.core.model.xml;
 import java.util.Collection;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 

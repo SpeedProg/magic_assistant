@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.ClassicExportDelegate;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.WebUtils;
 

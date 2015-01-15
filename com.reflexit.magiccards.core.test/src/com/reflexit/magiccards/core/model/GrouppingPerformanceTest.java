@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model;
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class GrouppingPerformanceTest extends TestCase {

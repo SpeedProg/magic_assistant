@@ -3,6 +3,8 @@ package com.reflexit.magiccards.core.model;
 import java.util.Comparator;
 
 import com.reflexit.magiccards.core.legality.Format;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class MagicCardComparator implements Comparator {
 	private ICardField field;

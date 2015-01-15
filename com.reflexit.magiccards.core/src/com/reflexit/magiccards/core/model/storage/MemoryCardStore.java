@@ -13,7 +13,7 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.Collection;
 import java.util.List;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 
 /**
  * ArrayList based implementation for AbstractCardStore

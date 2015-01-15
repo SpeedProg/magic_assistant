@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 

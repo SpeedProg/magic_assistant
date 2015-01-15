@@ -4,6 +4,10 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardModifiable;
+import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 import com.reflexit.magiccards.core.model.expr.TextValue;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 

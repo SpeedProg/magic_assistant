@@ -13,8 +13,8 @@ package com.reflexit.magiccards.core.exports;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class ImportResult {
 	private ArrayList<ICard> toImport = new ArrayList<ICard>();

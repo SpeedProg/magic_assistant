@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.xml.DbMultiFileCardStore.GlobalDbHandler;
 

@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class MagicXmlStreamWriter {
 	protected MyXMLStreamWriter writer;

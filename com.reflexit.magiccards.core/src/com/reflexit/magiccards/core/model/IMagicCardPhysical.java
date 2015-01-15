@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 
 public interface IMagicCardPhysical extends IMagicCard, ILocatable, ICardCountable {

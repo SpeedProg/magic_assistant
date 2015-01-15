@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.CardFieldExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;

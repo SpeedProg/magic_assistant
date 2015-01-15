@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.exports;
 
 import java.text.MessageFormat;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class ImportError {
 	enum Type {

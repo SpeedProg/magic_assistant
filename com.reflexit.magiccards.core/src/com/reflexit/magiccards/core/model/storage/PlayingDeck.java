@@ -17,13 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardGame;
 import com.reflexit.magiccards.core.model.MagicCardGame.MagicCardGameField;
 import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 
 /**
  * @author Alena

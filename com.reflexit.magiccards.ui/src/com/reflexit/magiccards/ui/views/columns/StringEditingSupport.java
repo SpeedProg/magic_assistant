@@ -11,9 +11,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardModifiable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 import com.reflexit.magiccards.core.xml.StringCache;
 
 public class StringEditingSupport extends EditingSupport {

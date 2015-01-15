@@ -8,7 +8,7 @@ import java.util.Collection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.reflexit.magiccards.core.model.ICardGroup;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class TableViewerContentProvider<T> implements IStructuredContentProvider {

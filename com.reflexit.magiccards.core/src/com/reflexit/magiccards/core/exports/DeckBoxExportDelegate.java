@@ -3,12 +3,12 @@ package com.reflexit.magiccards.core.exports;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.SpecialTags;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class DeckBoxExportDelegate extends CsvExportDelegate {

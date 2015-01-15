@@ -11,8 +11,8 @@
 package com.reflexit.magiccards.ui.utils;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 
 /**
  * @author Alena

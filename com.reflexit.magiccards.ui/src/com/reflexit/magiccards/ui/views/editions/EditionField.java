@@ -2,8 +2,8 @@ package com.reflexit.magiccards.ui.views.editions;
 
 import java.util.Locale;
 
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public enum EditionField implements ICardField {
 	NAME,

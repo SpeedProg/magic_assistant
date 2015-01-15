@@ -3,8 +3,8 @@ package com.reflexit.magiccards.core.exports;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;

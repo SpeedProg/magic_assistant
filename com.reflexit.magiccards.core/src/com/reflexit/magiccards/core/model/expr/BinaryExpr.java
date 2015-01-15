@@ -2,9 +2,9 @@ package com.reflexit.magiccards.core.model.expr;
 
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToken;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;

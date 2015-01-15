@@ -3,6 +3,9 @@ package com.reflexit.magiccards.core.model;
 import java.util.HashMap;
 import java.util.Locale;
 
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+
 public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 	public enum MagicCardGameField implements ICardField {
 		ZONE,

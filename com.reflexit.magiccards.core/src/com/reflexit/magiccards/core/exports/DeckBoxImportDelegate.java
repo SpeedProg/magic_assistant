@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.exports.DeckBoxExportDelegate.ExtraFields;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 
 public class DeckBoxImportDelegate extends CsvImportDelegate {

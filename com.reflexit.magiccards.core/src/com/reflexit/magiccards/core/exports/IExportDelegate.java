@@ -13,7 +13,7 @@ package com.reflexit.magiccards.core.exports;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 

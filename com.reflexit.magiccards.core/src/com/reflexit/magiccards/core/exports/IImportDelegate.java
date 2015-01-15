@@ -13,9 +13,9 @@ package com.reflexit.magiccards.core.exports;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**

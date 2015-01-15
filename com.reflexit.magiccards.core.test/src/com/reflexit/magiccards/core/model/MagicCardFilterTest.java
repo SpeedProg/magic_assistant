@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;

@@ -10,7 +10,7 @@ import java.util.List;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public abstract class ColumnCollection {
 	private final List<AbstractColumn> columns;

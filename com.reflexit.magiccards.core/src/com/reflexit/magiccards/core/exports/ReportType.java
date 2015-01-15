@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.ICard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 @SuppressWarnings("rawtypes")

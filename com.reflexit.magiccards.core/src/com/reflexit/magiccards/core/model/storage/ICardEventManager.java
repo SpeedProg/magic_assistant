@@ -3,7 +3,7 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.Collection;
 import java.util.Set;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
 public interface ICardEventManager<T> {

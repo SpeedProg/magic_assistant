@@ -2,8 +2,8 @@ package com.reflexit.magiccards.core.exports;
 
 import org.junit.Test;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class PipedTableExportText extends AbstarctExportTest {

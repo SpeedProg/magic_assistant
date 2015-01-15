@@ -7,7 +7,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 
-import com.reflexit.magiccards.core.model.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class DeckExportWizard extends Wizard implements IExportWizard {
 	private DeckExportPage mainPage;

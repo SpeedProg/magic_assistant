@@ -3,9 +3,9 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICardCountable;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 
 public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCountable {
 	public void update() throws MagicException;

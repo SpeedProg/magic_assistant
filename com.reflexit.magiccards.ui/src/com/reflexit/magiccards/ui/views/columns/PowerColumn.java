@@ -1,9 +1,9 @@
 package com.reflexit.magiccards.ui.views.columns;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 
 public class PowerColumn extends GenColumn {
 	private String fullname;

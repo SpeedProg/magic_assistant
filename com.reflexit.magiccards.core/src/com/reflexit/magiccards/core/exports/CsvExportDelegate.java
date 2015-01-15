@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 /**
  * Export of magic assistant csv

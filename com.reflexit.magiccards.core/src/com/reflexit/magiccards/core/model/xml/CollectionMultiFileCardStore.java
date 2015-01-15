@@ -13,10 +13,10 @@ package com.reflexit.magiccards.core.model.xml;
 import java.io.File;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.model.ICardCountable;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.AbstractMultiStore;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;

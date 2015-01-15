@@ -4,10 +4,10 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.AbstractMagicCard;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class AbstractIntAggregator extends AbstractGroupAggregator {
 	public AbstractIntAggregator(ICardField field) {

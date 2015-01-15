@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.AbstractMagicCard;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardVisitor;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 
 public class AbstractFloatAggregator extends AbstractGroupAggregator implements ICardVisitor {
 	public AbstractFloatAggregator(ICardField field) {

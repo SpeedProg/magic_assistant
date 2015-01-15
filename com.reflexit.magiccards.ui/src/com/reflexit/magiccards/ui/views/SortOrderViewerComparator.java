@@ -3,8 +3,8 @@ package com.reflexit.magiccards.ui.views;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.SortOrder;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class SortOrderViewerComparator extends ViewerComparator {
 	public SortOrderViewerComparator() {

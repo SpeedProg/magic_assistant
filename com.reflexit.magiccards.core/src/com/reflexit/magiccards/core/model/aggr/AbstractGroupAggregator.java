@@ -2,9 +2,9 @@ package com.reflexit.magiccards.core.model.aggr;
 
 import com.reflexit.magiccards.core.model.AbstractMagicCard;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardVisitor;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 
 public abstract class AbstractGroupAggregator implements ICardVisitor {
 	protected final ICardField field;

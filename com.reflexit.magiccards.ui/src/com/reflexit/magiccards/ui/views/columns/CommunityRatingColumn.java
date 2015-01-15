@@ -3,9 +3,9 @@ package com.reflexit.magiccards.ui.views.columns;
 import java.text.DecimalFormat;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 
 public class CommunityRatingColumn extends GenColumn {
 	/**

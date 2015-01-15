@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 import com.reflexit.magiccards.core.model.aggr.AbstractFloatCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractIntTransAggregator;
 import com.reflexit.magiccards.core.model.aggr.AbstractPowerAggregator;

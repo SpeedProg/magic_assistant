@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.core.model.expr;
 
-import com.reflexit.magiccards.core.model.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class CardFieldExpr extends Expr {
 	ICardField field;

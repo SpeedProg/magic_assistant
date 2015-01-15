@@ -3,9 +3,9 @@ package com.reflexit.magiccards.core.model.aggr;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.ICard;
-import com.reflexit.magiccards.core.model.ICardField;
-import com.reflexit.magiccards.core.model.ICardVisitor;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 
 public class AbstractIntTransAggregator extends AbstractGroupTransAggregator implements ICardVisitor {
 	public AbstractIntTransAggregator(ICardField field) {
