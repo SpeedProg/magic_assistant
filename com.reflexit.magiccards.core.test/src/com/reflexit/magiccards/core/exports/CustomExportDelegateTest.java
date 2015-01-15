@@ -1,5 +1,9 @@
 package com.reflexit.magiccards.core.exports;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class CustomExportDelegateTest extends AbstarctExportTest {
@@ -7,25 +11,27 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 	private ReportType rtype;
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		rtype = ReportType.createReportType("test");
 		rtype.setCustom(true);
 		exporter.setReportType(rtype);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		rtype.delete();
-		super.tearDown();
 	}
 
+	@Test
 	public void testDefaults() {
 		run(exporter);
 		assertEquals(3, lines.length);
 		assertTrue("Does not match " + lines[0], lines[0].equals(card1.getCount() + " " + card1.getName()));
 	}
 
+	@Test
 	public void testDefaultsSep() {
 		card1.set(MagicCardField.NAME, "My Name");
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP_QUOT);
@@ -35,6 +41,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "," + "My Name"));
 	}
 
+	@Test
 	public void testSepPipe() {
 		card1.set(MagicCardField.NAME, "My|Name");
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP);
@@ -45,6 +52,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "|" + "My|Name"));
 	}
 
+	@Test
 	public void testSepPipeQuot() {
 		card1.set(MagicCardField.NAME, "My|Name");
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP_QUOT);
@@ -55,6 +63,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "|" + "\"My|Name\""));
 	}
 
+	@Test
 	public void testSepSbField() {
 		card1.setLocation(card1.getLocation().toSideboard());
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP);
@@ -66,6 +75,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "," + card1.getName() + ",Yes"));
 	}
 
+	@Test
 	public void testSepSbField2() {
 		card1.setLocation(card1.getLocation().toSideboard());
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_SEP);
@@ -77,6 +87,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 		assertEquals(card2.getCount() + "," + card2.getName() + ",", lines[2]);
 	}
 
+	@Test
 	public void testSbField() {
 		card1.setLocation(card1.getLocation().toSideboard());
 		rtype.setProperty(CustomExportDelegate.ROW_FORMAT_TYPE_NUM, CustomExportDelegate.FORMAT_PRINTF);

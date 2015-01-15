@@ -3,9 +3,12 @@ package com.reflexit.magiccards.core.exports;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+
+import static org.junit.Assert.assertNull;
 
 public class DeckBoxImportTest extends AbstarctImportTest {
 	private final DeckBoxImportDelegate importer = new DeckBoxImportDelegate();
@@ -14,7 +17,8 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 	private String resline;
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		exporter.setReportType(ReportType.createReportType("testdeckbox"));
 		out = new ByteArrayOutputStream();
@@ -51,10 +55,10 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		resline = resline.replaceAll("\\r", "");
 	}
 
-// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number
-// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13
-// 1,0,Angel of Mercy,,,,,,Near Mint,English,
-// 3,0,Platinum Angel,,,,,Magic 2010,Near Mint,English,218
+	// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number
+	// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13
+	// 1,0,Angel of Mercy,,,,,,Near Mint,English,
+	// 3,0,Platinum Angel,,,,,Magic 2010,Near Mint,English,218
 	@Test
 	public void testGeneric() {
 		parseCommentAbove();
@@ -66,8 +70,8 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		assertEquals("Duel Decks: Divine vs. Demonic", card1.getSet());
 	}
 
-// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number,Some
-// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13,xxx
+	// Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number,Some
+	// 4,0,Reya Dawnbringer,,,,,Duel Decks: Divine vs. Demonic,Near Mint,English,13,xxx
 	@Test
 	public void testExtraColumn() {
 		parseCommentAbove();
@@ -84,6 +88,7 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		assertEquals("Reya Dawnbringer", card1.getName());
 	}
 
+	@Test
 	public void testFoil() throws InvocationTargetException, InterruptedException {
 		addInvHeader();
 		addLine("3,0,Platinum Angel,foil,,,,Magic 2010,,English,218");
@@ -92,6 +97,7 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		assertEquals(line, resline);
 	}
 
+	@Test
 	public void testTurn() throws InvocationTargetException, InterruptedException {
 		addInvHeader();
 		addLine("3,0,Platinum Angel,foil,textless,promo,signed,Magic 2010,Near Mint,English,218");
@@ -100,6 +106,7 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		assertEquals(line, resline);
 	}
 
+	@Test
 	public void testMint() throws InvocationTargetException, InterruptedException {
 		addInvHeader();
 		addLine("3,0,Platinum Angel,,,,,Magic 2010,Mint,English,218");

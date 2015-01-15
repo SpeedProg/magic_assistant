@@ -48,6 +48,8 @@ public class TableImportDelegate extends AbstractImportDelegate {
 					if (input == null)
 						break;
 					input = input.trim();
+					if (input.isEmpty())
+						continue;
 					String[] split = input.split("\\Q" + getSeparator());
 					if (split.length > 1) {
 						if (lineNum == 1 && isHeader()) {

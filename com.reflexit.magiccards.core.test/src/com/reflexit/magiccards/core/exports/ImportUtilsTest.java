@@ -20,18 +20,21 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
-public class ImportUtilsTest extends AbstarctImportTest {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 
+public class ImportUtilsTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
 	private ICoreProgressMonitor monitor = ICoreProgressMonitor.NONE;
 	private Collection<IMagicCard> preimport;
 	private ImportResult result;
 
-
 	private void parse() {
 		parse(true, tableImport);
 	}
 
+	@Test
 	public void testPerformImport() {
 		addLine("NAME|COUNT");
 		addLine("Counterspell|2");
@@ -157,6 +160,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		ImportUtils.importIntoDb(mdb);
 	}
 
+	@Test
 	public void testPerformPreImportWithDbOverride() {
 		addLine("NAME|SET|ARTIST|COLLNUM|IMAGE_URL");
 		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|http://magiccards.info/scans/en/mgdc/31.jpg");
@@ -175,6 +179,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("http://magiccards.info/scans/en/mgdc/31.jpg", card.getBase().getImageUrl());
 	}
 
+	@Test
 	public void testPerformPreImportWithDbOvNoUrl() {
 		addLine("NAME|SET|ARTIST|COLLNUM|TEXT");
 		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|My Text");
@@ -211,6 +216,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		System.err.println(errors);
 	}
 
+	@Test
 	public void testLookup() {
 		IDbCardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
 		LookupHash lookupHash = new ImportUtils.LookupHash(magicDBStore);
@@ -226,6 +232,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals(1, resSize);
 		assertEquals(!virtual, ((MagicCardPhysical) card1).isOwn());
 	}
+
 	@Test
 	public void testPerformPreImportOwn() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|COUNT");
@@ -235,7 +242,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals(1, resSize);
 		assertEquals(!virtual, ((MagicCardPhysical) card1).isOwn());
 	}
-	
+
 	@Test
 	public void testPerformPreImportOwnVar() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|COUNT|OWNERSHIP");

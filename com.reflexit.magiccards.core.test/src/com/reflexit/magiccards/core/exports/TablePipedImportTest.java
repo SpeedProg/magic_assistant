@@ -1,8 +1,12 @@
 package com.reflexit.magiccards.core.exports;
 
+import org.junit.Test;
+
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+
+import static org.junit.Assert.assertNotNull;
 
 public class TablePipedImportTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
@@ -11,6 +15,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse(true, tableImport);
 	}
 
+	@Test
 	public void test1_N_x_C() {
 		MagicLogger.log("start test");
 		addLine("NAME|COUNT");
@@ -21,6 +26,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test2_N_x_C() {
 		addLine("NAME|COUNT");
 		addLine("Blust|3");
@@ -32,6 +38,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals(3, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test3_N_x_C() {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Fifth Edition|2");
@@ -42,6 +49,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
+	@Test
 	public void test4_N_noC() {
 		addLine("NAME|SET");
 		addLine("Counterspell|Fifth Edition");
@@ -52,6 +60,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
+	@Test
 	public void test4_IgnoreField() {
 		addLine("NAME|x|SET");
 		addLine("Counterspell|22|Fifth Edition");
@@ -62,6 +71,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
+	@Test
 	public void test4_Abbr() {
 		addLine("NAME|EDITION_ABBR");
 		addLine("Risky Move|ONS");
@@ -75,6 +85,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 	/*
 	 * NAME|EDITION_ABBR Aven Brigadier|ONS
 	 */
+	@Test
 	public void test5_Abbr() {
 		addLine("NAME|EDITION_ABBR");
 		addLine("Aven Brigadier|ONS");
@@ -85,6 +96,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("Onslaught", card1.getSet());
 	}
 
+	@Test
 	public void test6_Alias() {
 		addLine("NAME|EDITION");
 		addLine("Counterspell|Fifth Edition");
@@ -95,6 +107,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
+	@Test
 	public void test_N_x_C_bad() {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Fifth Edition|2.1");
@@ -107,12 +120,12 @@ public class TablePipedImportTest extends AbstarctImportTest {
 
 	//	ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES|COUNT|PRICE|COMMENT|LOCATION|CUSTOM|OWNERSHIP|SPECIAL|DATE
 	//	-39|name 39|{4}|type 39|4|*|bla 39|set 19|Common|1.2256411|Russian|2.39|Elena 39|39a||bla <br> bla 39|0||5|2.1|comment 40|mem||true|foil,c=mint|Sun Jan 11 22:37:54 EST 2015
+	@Test
 	public void testFull() {
 		String lines = getAboveComment();
 		addLine(lines);
 		parse();
 		assertEquals(1, resSize);
-
 		MagicCardPhysical p = (MagicCardPhysical) card1;
 		assertEquals(-39, p.getCardId());
 		assertEquals("name 39", p.getName());
@@ -128,13 +141,14 @@ public class TablePipedImportTest extends AbstarctImportTest {
 
 	//ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES
 	//27166|Fire // Ice (Ice)|{1}{U}|Instant|||Tap target permanent.<br>Draw a card.|Apocalypse|Uncommon|0.0||4.488|Franz Vohwinkel|128||Tap target permanent.<br>Draw a card.|0|{PART=Ice, OTHER_PART=Fire, FLIPID=27165, NOUPDATE=true}
+	@Test
 	public void testParts() {
 		String lines = getAboveComment();
 		addLine(lines);
 		parse();
 		assertEquals(1, resSize);
 		MagicCardPhysical p = (MagicCardPhysical) card1;
-		assertEquals(true, p.getBase().getProperty(MagicCardField.NOUPDATE));
+		assertEquals(true, (Boolean) p.getBase().getProperty(MagicCardField.NOUPDATE));
 		assertEquals("Ice", p.getBase().getPart());
 		assertEquals(27165, p.getBase().getFlipId());
 	}

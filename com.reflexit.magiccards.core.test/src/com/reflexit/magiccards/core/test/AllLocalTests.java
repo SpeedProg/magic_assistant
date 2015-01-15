@@ -10,24 +10,15 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
+
 import com.reflexit.magiccards.core.DataManagerTest;
-import com.reflexit.magiccards.core.exports.ClassicExportDelegateTest;
-import com.reflexit.magiccards.core.exports.ClassicImportDelegateTest;
-import com.reflexit.magiccards.core.exports.CsvExportDelegateTest;
-import com.reflexit.magiccards.core.exports.CustomExportDelegateTest;
-import com.reflexit.magiccards.core.exports.DeckBoxImportTest;
-import com.reflexit.magiccards.core.exports.DeckParserTest;
-import com.reflexit.magiccards.core.exports.ImportUtilsTest;
-import com.reflexit.magiccards.core.exports.MTGStudioImportTest;
-import com.reflexit.magiccards.core.exports.MagicWorkstationImportTest;
-import com.reflexit.magiccards.core.exports.ManaDeckImportTest;
-import com.reflexit.magiccards.core.exports.MtgoImportTest;
-import com.reflexit.magiccards.core.exports.PipedTableExportText;
-import com.reflexit.magiccards.core.exports.ShandalarImportTest;
-import com.reflexit.magiccards.core.exports.TablePipedImportTest;
+import com.reflexit.magiccards.core.exports.ExportImportSuite;
 import com.reflexit.magiccards.core.model.AbilitiesTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
 import com.reflexit.magiccards.core.model.EditionsTest;
@@ -46,33 +37,19 @@ import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
 import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
 import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
-import com.reflexit.magiccards.core.sync.TextPrinterTest;
 import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
 
 /**
  * @author Alena
  * 
  */
+@RunWith(AllTests.class)
 public class AllLocalTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for com.reflexit.magiccards.core.test.local");
 		// $JUnit-BEGIN$
 		// import
-		suite.addTestSuite(TablePipedImportTest.class);
-		suite.addTestSuite(MtgoImportTest.class);
-		suite.addTestSuite(MagicWorkstationImportTest.class);
-		suite.addTestSuite(DeckParserTest.class);
-		suite.addTestSuite(ImportUtilsTest.class);
-		suite.addTestSuite(ManaDeckImportTest.class);
-		suite.addTestSuite(ShandalarImportTest.class);
-		suite.addTestSuite(MTGStudioImportTest.class);
-		suite.addTestSuite(PipedTableExportText.class);
-		suite.addTestSuite(CsvExportDelegateTest.class);
-		suite.addTestSuite(ClassicExportDelegateTest.class);
-		suite.addTestSuite(ClassicImportDelegateTest.class);
-		suite.addTestSuite(CustomExportDelegateTest.class);
-		suite.addTestSuite(DeckBoxImportTest.class);
-		suite.addTestSuite(TextPrinterTest.class);
+		suite.addTest(new JUnit4TestAdapter(ExportImportSuite.class));
 		// core
 		suite.addTestSuite(MagicCardTest.class);
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);

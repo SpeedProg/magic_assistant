@@ -1,16 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2008 Alena Laskavaia.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2008 Alena Laskavaia. All rights reserved. This program and the accompanying materials are made available under the terms
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Alena Laskavaia - initial API and implementation
+ * Contributors: Alena Laskavaia - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -40,36 +35,28 @@ public class CsvImportDelegate extends TableImportDelegate {
 	}
 
 	public void runCsvImport(ICoreProgressMonitor monitor) throws IOException {
+		CsvImporter importer = null;
+		importer = new CsvImporter(getStream(), getSeparator());
 		try {
-			CsvImporter importer = null;
-			try {
-				importer = new CsvImporter(getStream(), getSeparator());
-				do {
-					lineNum++;
-					List<String> list = importer.readLine();
-
-					if (list == null)
-						break;
-					if (list.size() < 2) {
-						throw new MagicException("Line " + lineNum + ": Format error, at least 2 fields are expected");
-					}
-					if (lineNum == 1 && isHeader()) {
-						setHeaderFields(list);
-						continue;
-					}
-					MagicCardPhysical card = createCard(list);
-					if (card != null)
-						importCard(card);
-					monitor.worked(1);
-				} while (true);
-			} catch (FileNotFoundException e) {
-				throw e;
-			} finally {
-				if (importer != null)
-					importer.close();
-			}
-		} catch (IOException e) {
-			throw e;
+			do {
+				lineNum++;
+				List<String> list = importer.readLine();
+				if (list == null)
+					break;
+				if (list.size() < 2) {
+					throw new MagicException("Line " + lineNum + ": Format error, at least 2 fields are expected");
+				}
+				if (lineNum == 1 && isHeader()) {
+					setHeaderFields(list);
+					continue;
+				}
+				MagicCardPhysical card = createCard(list);
+				if (card != null)
+					importCard(card);
+				monitor.worked(1);
+			} while (true);
+		} finally {
+			importer.close();
 		}
 	}
 }

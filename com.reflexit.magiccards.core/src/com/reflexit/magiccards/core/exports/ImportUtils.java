@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.ICard;
@@ -69,6 +70,8 @@ public class ImportUtils {
 	public static void performImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual, Location location,
 			ICardStore cardStore, ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		ImportResult result = performPreImport(st, worker, header, virtual, location, true, monitor);
+		if (result.getError() != null)
+			throw new MagicException(result.getError());
 		performImport(result.getList(), cardStore);
 	}
 

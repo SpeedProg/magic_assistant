@@ -3,16 +3,21 @@ package com.reflexit.magiccards.core.exports;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
-
-public class AbstarctExportTest extends junit.framework.TestCase {
-	private static final DataManager DM = DataManager.getInstance();
+@FixMethodOrder(MethodSorters.JVM)
+public class AbstarctExportTest extends AbstractMagicTest {
+	protected static final DataManager DM = DataManager.getInstance();
 	protected MemCardHandler deck;
 	protected MagicCardPhysical card1;
 	protected MagicCardPhysical card2;
@@ -21,8 +26,8 @@ public class AbstarctExportTest extends junit.framework.TestCase {
 	String[] lines;
 	private static boolean reset;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		if (reset == false) {
 			TestFileUtils.resetDb();
 			reset = true;

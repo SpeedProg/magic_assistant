@@ -1,10 +1,16 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -13,6 +19,7 @@ import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
+@FixMethodOrder(MethodSorters.JVM)
 public class AbstarctImportTest extends AbstractMagicTest {
 	protected MemCardHandler deck;
 	protected String line = "";
@@ -24,16 +31,16 @@ public class AbstarctImportTest extends AbstractMagicTest {
 	protected List<IMagicCard> result;
 	protected boolean virtual = true;
 	protected boolean resolve = true;
-	private static boolean reset = false;
 
-	@Override
-	protected void setUp() throws Exception {
-		if (reset == false) {
-			TestFileUtils.resetDb();
-			DataManager.getInstance().waitForInit(10);
-			reset = true;
-		}
+	@Before
+	public void setUp() throws Exception {
 		this.deck = new MemCardHandler();
+	}
+
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		TestFileUtils.resetDb();
+		DataManager.getInstance().waitForInit(10);
 	}
 
 	protected ArrayList<IMagicCard> extractStorageCards() {
@@ -52,16 +59,20 @@ public class AbstarctImportTest extends AbstractMagicTest {
 
 	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
-			if (resolve == false)
-				throw new IllegalArgumentException("Cannot test");
-			ImportUtils.performImport(
-					new ByteArrayInputStream(line.getBytes()), worker, header,
-					virtual, deck.getLocation(), deck.getCardStore(),
-					ICoreProgressMonitor.NONE);
+			parseonly(header, worker);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+
+	protected void parseonly(boolean header, IImportDelegate<IMagicCard> worker) throws InvocationTargetException, InterruptedException {
+		if (resolve == false)
+			throw new IllegalArgumentException("Cannot test");
+		ImportUtils.performImport(
+				new ByteArrayInputStream(line.getBytes()), worker, header,
+				virtual, deck.getLocation(), deck.getCardStore(),
+				ICoreProgressMonitor.NONE);
 		result = extractStorageCards();
 		setout(result);
 	}
@@ -88,9 +99,8 @@ public class AbstarctImportTest extends AbstractMagicTest {
 			card2 = iter.next();
 		if (resSize >= 3)
 			card3 = iter.next();
-		for (Iterator iterator = preimport.iterator(); iterator.hasNext();) {
-			cardN = (IMagicCard) iterator.next();
-		}
+		for (Object element : preimport)
+			cardN = (IMagicCard) element;
 	}
 
 	protected void addLine(String string) {

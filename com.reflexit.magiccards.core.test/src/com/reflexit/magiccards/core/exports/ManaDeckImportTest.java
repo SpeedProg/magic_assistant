@@ -1,16 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2008 Alena Laskavaia.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2008 Alena Laskavaia. All rights reserved. This program and the accompanying materials are made available under the terms
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *    Alena Laskavaia - initial API and implementation
+ * Contributors: Alena Laskavaia - initial API and implementation
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import org.junit.Test;
+
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+
+import static org.junit.Assert.assertFalse;
 
 public class ManaDeckImportTest extends AbstarctImportTest {
 	/*-
@@ -48,6 +48,7 @@ public class ManaDeckImportTest extends AbstarctImportTest {
 		parse(true, mimport);
 	}
 
+	@Test
 	public void test1() {
 		addLine("#DCK#\r\n" + "UG Madness\r\n" + "#DECK#\r\n" + "2 City of Brass\r\n" + "11 Island\r\n" + "9 Forest\r\n"
 				+ "4 Wild Mongrel\r\n" + "4 Basking Rootwalla\r\n" + "4 Aquamoeba\r\n" + "4 Arrogant Wurm\r\n" + "3 Wonder\r\n"

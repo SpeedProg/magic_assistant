@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.exports;
 
+import org.junit.Test;
+
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 public class DeckParserTest extends AbstarctImportTest {
@@ -9,6 +11,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		super.parse(false, classicImport);
 	}
 
+	@Test
 	public void test1_N_x_C() {
 		addLine("Counterspell x 2");
 		parse();
@@ -17,6 +20,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test2_N_x_C() {
 		addLine("Blust x 3");
 		addLine("Counterspell x 2");
@@ -27,6 +31,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals(3, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test3_N_x_C() {
 		addLine("Counterspell (Fifth Edition) x 2");
 		parse();
@@ -36,6 +41,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
+	@Test
 	public void test5_N_x_C() {
 		addLine("Myr Matrix x 2");
 		parse();
@@ -44,6 +50,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test4_N_x_C() {
 		addLine("Blust X 3");
 		addLine("Counterspell x2");
@@ -54,6 +61,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals(3, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test1_C_x_N() {
 		addLine("2 x Counterspell (Fifth Edition)");
 		parse();
@@ -63,6 +71,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals("Fifth Edition", card1.getSet());
 	}
 
+	@Test
 	public void test2_C_x_N() {
 		addLine("2 x Counterspell");
 		parse();
@@ -71,6 +80,7 @@ public class DeckParserTest extends AbstarctImportTest {
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 	}
 
+	@Test
 	public void test3_C_x_N() {
 		addLine("4x Counterspell");
 		parse();

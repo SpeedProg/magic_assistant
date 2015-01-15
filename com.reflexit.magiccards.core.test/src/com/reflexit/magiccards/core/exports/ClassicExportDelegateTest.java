@@ -1,28 +1,37 @@
 package com.reflexit.magiccards.core.exports;
 
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
 import com.reflexit.magiccards.core.model.MagicCardField;
 
+@FixMethodOrder(MethodSorters.JVM)
 public class ClassicExportDelegateTest extends AbstarctExportTest {
 	private ClassicExportDelegate exporter = new ClassicExportDelegate();
 
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		exporter.setReportType(ReportType.createReportType("test"));
 	}
 
+	@Test
 	public void test1() {
 		run(exporter);
 		System.err.println(out.toString());
 		assertEquals(4, lines.length);
 	}
 
+	@Test
 	public void test2() {
 		run(exporter);
 		assertEquals(4, lines.length);
 		assertTrue(lines[1].equals(card1.getCount() + "x " + card1.getName()));
 	}
 
+
+	@Test
 	public void testEscape() {
 		card1.set(MagicCardField.NAME, "My|Name");
 		run(exporter);

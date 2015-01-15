@@ -6,6 +6,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import org.junit.Test;
+
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
@@ -22,6 +24,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		parse(true, mtgoImport);
 	}
 
+	@Test
 	public void test1() {
 		addLine("Card Name,Online,For Trade,Physical#,Rarity,Set,No.");
 		addLine("Aven Brigadier,1,1,0,R,ONS,7/350");
@@ -32,6 +35,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Onslaught", card1.getSet());
 	}
 
+	@Test
 	public void test_premium() {
 		addLine("Card Name,Online,For Trade,Physical#,Rarity,Set,No.");
 		addLine("Aven Brigadier (premium),1,1,0,R,ONS,7/350");
@@ -42,6 +46,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertEquals("Onslaught", card1.getSet());
 	}
 
+	@Test
 	public void test_special() {
 		addLine("Aven Brigadier (premium),1,1,0,R,ONS,7/350");
 		parse(false, mtgoImport);
@@ -53,6 +58,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 		assertTrue(comment, comment.contains("premium"));
 	}
 
+	@Test
 	public void testNewFormat() {
 		addLine("Card Name,Online,For Trade,Rarity,Set,No.,Premium");
 		// Event Ticket,2,0,EVENT, ,No
@@ -71,6 +77,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 	Card Name,Online,For Trade,Rarity,Set,No.,Premium
 	Arrogant Bloodlord,9,5,U,ROE,94/248,Yes
 	 */
+	@Test
 	public void testForTrade() {
 		addLine("Card Name,Online,For Trade,Rarity,Set,No.,Premium");
 		// Event Ticket,2,0,EVENT, ,No

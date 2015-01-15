@@ -1,8 +1,10 @@
 package com.reflexit.magiccards.core.test.assist;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 
-public class AbstractMagicTest extends TestCase {
+public class AbstractMagicTest {
 	protected String getAboveComment() {
 		return getContents(1)[0].toString();
 	}
@@ -15,5 +17,40 @@ public class AbstractMagicTest extends TestCase {
 			fail(e.getMessage());
 			return null;
 		}
+	}
+
+	@Rule
+	public TestName name = new TestName();
+
+	public String getName() {
+		return name.getMethodName();
+	}
+
+	public void assertEquals(double a, double b) {
+		Assert.assertEquals(a, b, 0.0001);
+	}
+
+	public void assertEquals(String a, String b) {
+		Assert.assertEquals(a, b);
+	}
+
+	public void assertEquals(boolean a, boolean b) {
+		Assert.assertEquals(a, b);
+	}
+
+	public void assertEquals(int a, int b) {
+		Assert.assertEquals(a, b);
+	}
+
+	public void assertTrue(boolean equals) {
+		Assert.assertTrue(equals);
+	}
+
+	public void assertTrue(String s, boolean equals) {
+		Assert.assertTrue(s, equals);
+	}
+
+	public void fail(String message) {
+		Assert.fail(message);
 	}
 }
