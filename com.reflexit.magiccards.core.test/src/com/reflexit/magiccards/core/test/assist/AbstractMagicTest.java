@@ -1,9 +1,12 @@
 package com.reflexit.magiccards.core.test.assist;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.JVM)
 public class AbstractMagicTest {
 	protected String getAboveComment() {
 		return getContents(1)[0].toString();
@@ -52,5 +55,9 @@ public class AbstractMagicTest {
 
 	public void fail(String message) {
 		Assert.fail(message);
+	}
+
+	public void assertEquals(Object a, Object b) {
+		Assert.assertEquals(a, b);
 	}
 }

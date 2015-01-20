@@ -148,7 +148,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 		parse();
 		assertEquals(1, resSize);
 		MagicCardPhysical p = (MagicCardPhysical) card1;
-		assertEquals(true, (Boolean) p.getBase().getProperty(MagicCardField.NOUPDATE));
+		assertEquals(true, (boolean) p.getBase().getProperty(MagicCardField.NOUPDATE));
 		assertEquals("Ice", p.getBase().getPart());
 		assertEquals(27165, p.getBase().getFlipId());
 	}
