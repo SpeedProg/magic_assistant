@@ -37,7 +37,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
-	protected Collection filteredList = null;
+	protected List<T> filteredList = null;
 	protected final CardGroup rootGroup = new CardGroup(null, "All");
 	protected boolean initialized = false;
 	protected MagicCardFilter filter = new MagicCardFilter();
@@ -91,7 +91,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	protected T doGetCard(int index) {
 		Collection<T> l = getFilteredList();
 		if (l instanceof List) {
-			return ((List<T>) getFilteredList()).get(index);
+			return getFilteredList().get(index);
 		} else {
 			throw new UnsupportedOperationException(l.getClass() + " is not direct access type");
 		}
@@ -145,11 +145,11 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return getCard(index);
 	}
 
-	protected void setFilteredList(Collection list) {
+	protected void setFilteredList(List<T> list) {
 		this.filteredList = list;
 	}
 
-	public synchronized Collection<T> getFilteredList() {
+	public synchronized List<T> getFilteredList() {
 		if (this.filteredList == null)
 			this.filteredList = doCreateList();
 		return this.filteredList;
@@ -309,7 +309,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		return parent;
 	}
 
-	protected Collection<T> doCreateList() {
+	protected List<T> doCreateList() {
 		return new ArrayList<T>();
 	}
 

@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ICardStore<T> extends ICardSet<T>, IMergeable<T>, ICardEventManager<T>, ILocatable, IStorageContainer<T> {
 	public String getName();
@@ -17,7 +18,7 @@ public interface ICardStore<T> extends ICardSet<T>, IMergeable<T>, ICardEventMan
 
 	public void reindex();
 
-	public Collection<T> getCards();
+	public List<T> getCards();
 
 	public void reload();
 }

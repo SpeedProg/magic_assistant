@@ -2,6 +2,7 @@ package com.reflexit.magiccards.core.model.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.reflexit.magiccards.core.MagicException;
@@ -237,7 +238,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	}
 
 	@Override
-	public Collection<T> getCards() {
+	public List<T> getCards() {
 		ArrayList<T> list = new ArrayList<T>();
 		for (T t : this) {
 			list.add(t);
