@@ -26,6 +26,7 @@ import com.reflexit.magiccards.core.model.GrouppingPerformanceTest;
 import com.reflexit.magiccards.core.model.LegalityMapTest;
 import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
 import com.reflexit.magiccards.core.model.MagicCardFilterTest;
+import com.reflexit.magiccards.core.model.MagicCardListTest;
 import com.reflexit.magiccards.core.model.MagicCardTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
@@ -62,6 +63,7 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
 		suite.addTestSuite(DataManagerTest.class);
+
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);
@@ -70,6 +72,7 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardComparatorTest.class);
 		suite.addTestSuite(LegalityMapTest.class);
 		suite.addTestSuite(AbilitiesTest.class);
+		suite.addTest(new JUnit4TestAdapter(MagicCardListTest.class));
 		// editions
 		suite.addTestSuite(EditionsTest.class);
 		// Perf
