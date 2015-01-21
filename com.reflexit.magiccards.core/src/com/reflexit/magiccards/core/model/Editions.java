@@ -275,11 +275,17 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public String getNameByAbbr(String abbr) {
-		for (Iterator<String> iterator = name2ed.keySet().iterator(); iterator.hasNext();) {
-			String name = iterator.next();
-			Edition value = name2ed.get(name);
+		Edition ed = getEditionByAbbr(abbr);
+		if (ed != null)
+			return ed.getName();
+		return null;
+	}
+
+	public Edition getEditionByAbbr(String abbr) {
+		for (Iterator<Edition> iterator = name2ed.values().iterator(); iterator.hasNext();) {
+			Edition value = iterator.next();
 			if (value != null && value.abbreviationOf(abbr)) {
-				return name;
+				return value;
 			}
 		}
 		return null;

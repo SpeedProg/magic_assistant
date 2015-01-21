@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import static org.junit.Assert.assertFalse;
 
 public class ManaDeckImportTest extends AbstarctImportTest {
+	private ManaDeckDckImportDelegate mimport = new ManaDeckDckImportDelegate();
 	/*-
 	#DCK#
 	UG Madness
@@ -42,20 +43,10 @@ public class ManaDeckImportTest extends AbstarctImportTest {
 	2 Merfolk Looter
 	1 Krosan Reclamation
 	 */
-	private ManaDeckDckImportDelegate mimport = new ManaDeckDckImportDelegate();
-
-	private void parse() {
-		parse(true, mimport);
-	}
 
 	@Test
 	public void test1() {
-		addLine("#DCK#\r\n" + "UG Madness\r\n" + "#DECK#\r\n" + "2 City of Brass\r\n" + "11 Island\r\n" + "9 Forest\r\n"
-				+ "4 Wild Mongrel\r\n" + "4 Basking Rootwalla\r\n" + "4 Aquamoeba\r\n" + "4 Arrogant Wurm\r\n" + "3 Wonder\r\n"
-				+ "3 Roar of the Wurm\r\n" + "3 Deep Analysis\r\n" + "4 Circular Logic\r\n" + "4 Careful Study\r\n" + "2 Unsummon\r\n"
-				+ "1 Ray of Revelation\r\n" + "2 Quiet Speculation\r\n" + "#SIDEBOARD#\r\n" + "2 Ray of Revelation\r\n" + "2 Gigapede\r\n"
-				+ "2 Counterspell\r\n" + "2 Turbulent Dreams\r\n" + "2 Upheaval\r\n" + "2 Ravenous Baloth\r\n" + "2 Merfolk Looter\r\n"
-				+ "1 Krosan Reclamation\n");
+		addLine(getAboveComment());
 		preview(true, mimport);
 		assertEquals(23, resSize);
 		assertEquals("City of Brass", card1.getName());
@@ -68,5 +59,9 @@ public class ManaDeckImportTest extends AbstarctImportTest {
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
 		assertFalse(((MagicCardPhysical) card1).isSideboard());
 		assertTrue(((MagicCardPhysical) cardN).isSideboard());
+	}
+
+	private void parse() {
+		parse(true, mimport);
 	}
 }

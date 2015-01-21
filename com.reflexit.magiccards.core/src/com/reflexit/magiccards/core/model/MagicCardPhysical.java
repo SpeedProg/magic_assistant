@@ -523,7 +523,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	public MagicCardPhysical tradeSplit(int count, int fcount) {
 		MagicCardPhysical mcp = this;
-		MagicLogger.log("Migration activated for '" + mcp + "' trade count " + fcount);
+
 		mcp.setProperty(MagicCardField.FORTRADECOUNT, null);
 		mcp.removeSpecialTag(MagicCardField.FORTRADECOUNT); // remove forTrade tag if it was set
 		count = Math.max(0, count);
@@ -531,9 +531,9 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 		// trade count is 0 or less, so card is not for trade
 		if (fcount == 0) {
 			mcp.setCount(count);
-			MagicLogger.log("** Card '" + mcp + "' is tagged with NOT fortrade with count of " + count);
 			return null;
 		}
+		MagicLogger.log("Migration activated for '" + mcp + "' trade count " + fcount);
 		// trade count is bigger or equal count, so all pile is for trade
 		if (fcount >= count) {
 			mcp.setCount(fcount);

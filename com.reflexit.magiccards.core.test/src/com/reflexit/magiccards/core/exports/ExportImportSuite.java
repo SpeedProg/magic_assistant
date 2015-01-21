@@ -24,6 +24,7 @@ import com.reflexit.magiccards.core.sync.TextPrinterTest;
 	CustomExportDelegateTest.class,
 	DeckBoxImportTest.class,
 	TextPrinterTest.class,
+		HtmlTableImportTest.class,
 })
 public class ExportImportSuite {
 }

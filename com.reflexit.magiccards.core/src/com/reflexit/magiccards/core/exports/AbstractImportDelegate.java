@@ -125,14 +125,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		return MagicCardField.allNonTransientFields(true);
 	}
 
-	public ImportResult getPreviewResult() {
-		return importResult;
-	}
-
-	public void setPreviewResult(ImportResult previewResult) {
-		this.importResult = previewResult;
-	}
-
 	public void setLocation(Location location) {
 		this.location = location;
 	}

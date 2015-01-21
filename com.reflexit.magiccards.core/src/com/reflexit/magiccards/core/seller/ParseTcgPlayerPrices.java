@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
@@ -75,6 +76,10 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			}
 		}
 		setMap.put("Duel Decks: Knights vs. Dragons", "Duel Decks: Knights vs Dragons ");
+	}
+
+	public static Map<String, String> getSetAliasesMap() {
+		return setMap;
 	}
 
 	@Override

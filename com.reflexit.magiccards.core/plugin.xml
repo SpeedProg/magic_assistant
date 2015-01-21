@@ -71,8 +71,9 @@
            exportDelegate="com.reflexit.magiccards.core.exports.HtmlTableExportDelegate"
            extension="html"
            id="htmlWithSymbols"
+           importDelegate="com.reflexit.magiccards.core.exports.HtmlTableImportDelegate"
            label="Magic Assistant HTML Table "
-           xmlFormat="false">
+           xmlFormat="true">
      </deckFormat>  
       <deckFormat
             extension="mwDeck"
@@ -138,6 +139,13 @@
             importDelegate="com.reflexit.magiccards.core.exports.DeckBoxWishlistImportDelegate"
             label="DeckBox Wishlist CSV"
             xmlFormat="false">
+      </deckFormat>
+      <deckFormat
+            extension="html"
+            id="htmlTcgPlayer"
+            importDelegate="com.reflexit.magiccards.core.exports.HtmlTableImportDelegate"
+            label="TCGPlayer HTML Table "
+            xmlFormat="true">
       </deckFormat>
    </extension>
 </plugin>

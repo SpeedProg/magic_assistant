@@ -31,6 +31,7 @@ public class AbstarctImportTest extends AbstractMagicTest {
 	protected List<IMagicCard> result;
 	protected boolean virtual = true;
 	protected boolean resolve = true;
+	protected Exception exception;
 
 	@Before
 	public void setUp() throws Exception {
@@ -87,6 +88,7 @@ public class AbstarctImportTest extends AbstractMagicTest {
 			fail(e.getMessage());
 		}
 		result = (List) worker.getResult().getList();
+		exception = worker.getResult().getError();
 		setout(result);
 	}
 

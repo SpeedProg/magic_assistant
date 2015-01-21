@@ -59,7 +59,10 @@ public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagi
 
 	@Override
 	public void printHeader() {
-		stream.println("<html><head><title>" + getName() + "</title></head><body>");
+		stream.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+		stream.println("<html><head><title>" + getName() + "</title>"
+				+ "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=UTF-8\">"
+				+ "</head><body>");
 		stream.println("<table>");
 		String line = "<tr>";
 		for (int i = 0; i < columns.length; i++) {

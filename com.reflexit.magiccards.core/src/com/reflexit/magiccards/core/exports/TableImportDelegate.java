@@ -100,7 +100,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		ICardField fields[] = new ICardField[split.length];
 		for (int i = 0; i < split.length; i++) {
 			String hd = split[i];
-			ICardField field = MagicCardField.fieldByName(hd);
+			ICardField field = getFieldByName(hd);
 			fields[i] = field;
 		}
 		setFields(fields);
@@ -111,7 +111,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		ICardField fields[] = new ICardField[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			String hd = list.get(i);
-			ICardField field = MagicCardField.fieldByName(hd);
+			ICardField field = getFieldByName(hd);
 			fields[i] = field;
 			if (field == null)
 				nulls++;
@@ -122,6 +122,10 @@ public class TableImportDelegate extends AbstractImportDelegate {
 			throw new MagicException("Cannot recognize header fields: " + list + ", expecting some of these " + hfields);
 		}
 		setFields(fields);
+	}
+
+	protected ICardField getFieldByName(String th) {
+		return MagicCardField.fieldByName(th);
 	}
 
 	public void setFields(ICardField[] fields) {
