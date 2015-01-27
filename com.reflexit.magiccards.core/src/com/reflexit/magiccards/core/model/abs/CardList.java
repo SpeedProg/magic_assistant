@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class CardList implements ICardList<ICard> {
 	private Iterable<ICard> iterable;
+	private boolean copy;
 
 	public CardList(ICard[] array) {
 		this(Arrays.asList(array));
@@ -20,7 +21,12 @@ public class CardList implements ICardList<ICard> {
 	}
 
 	public CardList(Iterable<? extends ICard> iterable) {
+		this(iterable, true);
+	}
+
+	public CardList(Iterable<? extends ICard> iterable, boolean copy) {
 		this.iterable = (Iterable<ICard>) iterable;
+		this.copy = copy;
 	}
 
 	public List<Object> getAll(ICardField f) {
@@ -49,12 +55,21 @@ public class CardList implements ICardList<ICard> {
 
 	@Override
 	public int size() {
+		if (copy == false) {
+			int size = 0;
+			for (ICard card : iterable) {
+				size++;
+			}
+			return size;
+		}
 		return getList().size();
 	}
 
 	protected List<ICard> getList() {
 		if (iterable instanceof List)
 			return (List<ICard>) iterable;
+		if (copy == false)
+			return null;
 		ArrayList<ICard> list = new ArrayList<ICard>();
 		for (ICard card : this) {
 			list.add(card);

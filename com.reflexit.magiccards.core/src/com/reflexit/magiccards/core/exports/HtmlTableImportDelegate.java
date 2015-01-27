@@ -21,6 +21,12 @@ import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 
 public class HtmlTableImportDelegate extends TableImportDelegate {
 	private HashMap<String, String> setaliases = new HashMap<String, String>();
+	{ // reverse parses aliases map
+		Map<String, String> setAliasesMap = ParseTcgPlayerPrices.getSetAliasesMap();
+		for (String key : setAliasesMap.keySet()) {
+			setaliases.put(setAliasesMap.get(key), key);
+		}
+	}
 
 	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
@@ -29,27 +35,7 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 			try {
 				importer = new BufferedReader(new InputStreamReader(getStream()));
 				String text = FileUtils.readFileAsString(importer);
-				String[] tables = text.split("<table[> ]");
-				if (tables.length <= 1)
-					throw new MagicException("Tag <table> is not found");
-				String tbodymain = null;
-				if (tables.length >= 3) {
-					for (String tbody : tables) {
-						if (tbody.contains("CollectionTable")) { // TCGPlayer
-							tbodymain = tbody;
-							// reverse parses aliases map
-							Map<String, String> setAliasesMap = ParseTcgPlayerPrices.getSetAliasesMap();
-							for (String key : setAliasesMap.keySet()) {
-								setaliases.put(setAliasesMap.get(key), key);
-							}
-						}
-					}
-					if (tbodymain == null)
-						throw new MagicException("To many <table> tags are found");
-				} else {
-					tbodymain = tables[1];
-				}
-				loadTable(tbodymain);
+				doRun(text);
 			} catch (FileNotFoundException e) {
 				throw e;
 			} finally {
@@ -58,6 +44,30 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 			}
 		} catch (IOException e) {
 			throw e;
+		}
+	}
+
+	protected void doRun(String text) {
+		headers = null;
+		importResult.clear();
+		text = text.replace("<TABLE", "<table");
+		text = text.replace("<TR", "<tr");
+		text = text.replace("<TD", "<td");
+		text = text.replace("<TH", "<th");
+		text = text.replace("TR>", "tr>");
+		text = text.replace("TD>", "td>");
+		text = text.replace("TH>", "th>");
+		String[] tables = text.split("<table[> ]");
+		if (tables.length <= 1)
+			throw new MagicException("Tag <table> is not found");
+		for (String tbody : tables) {
+			if (tbody.contains("CollectionTable")) { // TCGPlayer
+				loadTable(tbody);
+				return;
+			}
+		}
+		for (String tbodymain : tables) {
+			loadTable(tbodymain);
 		}
 	}
 
@@ -74,6 +84,10 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 				return null;
 			if (hd.equals("HAVE"))
 				return MagicCardField.COUNT;
+			if (hd.equals("SET NAME"))
+				return MagicCardField.SET;
+			//			if (hd.equals("MID"))
+			//				return MagicCardField.DBPRICE;
 		}
 		return fieldByName;
 	}
@@ -84,6 +98,8 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 			value = resolveSet(value);
 		} else if (field == MagicCardField.NAME) {
 			value = resolveName(value, card);
+		} else if (field == MagicCardField.DBPRICE) {
+			value = value.replace("$", "");
 		}
 		super.setFieldValue(card, field, i, value);
 	}
@@ -115,23 +131,33 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 		return null;
 	}
 
+	private List<String> headers = null;
+
 	protected void loadTable(String string) {
 		List<String> lines = splitArray("tr", string);
-		List<String> headers = null;
 		for (String line : lines) {
 			if (line.contains("<th")) {
 				setHeaderFields(headers = purifyList(splitArray("th", line)));
+				//System.err.println("th -> " + headers);
 			} else {
 				List<String> tbody = splitArray("td", line);
 				if (headers == null) {
-					setHeaderFields(headers = purifyList(tbody));
+					try {
+						setHeaderFields(headers = purifyList(tbody));
+					} catch (MagicException e) {
+						headers = null;
+					}
+					//System.err.println("td -> " + headers);
 					continue;
 				}
-				if (tbody.size() < headers.size()) {
+				if (tbody.size() != headers.size()) {
+					//System.err.println(tbody.size() + " != " + headers.size());
 					continue;
 				}
 				MagicCardPhysical card = createCard(purifyList(tbody));
 				importCard(card);
+				//System.err.println(TextPrinter.values(card, Arrays.asList(MagicCardField.allNonTransientFields(true))));
+				//System.err.println(tbody);
 			}
 		}
 	}

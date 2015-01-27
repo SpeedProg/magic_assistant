@@ -125,12 +125,14 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	public synchronized void setDbPrice(int id, float price, Currency cur) {
-		if (id == 0)
+		if (id == 0 || price < -0.1f)
 			return;
 		if (price == 0)
 			priceMap.remove(id);
-		else
-			priceMap.put(id, CurrencyConvertor.convertFromInto(price, cur, getCurrency()));
+		else {
+			float curr = CurrencyConvertor.convertFromInto(price, cur, getCurrency());
+			priceMap.put(id, curr);
+		}
 	}
 
 	@Override

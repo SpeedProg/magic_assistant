@@ -112,4 +112,159 @@ public class HtmlTableImportTest extends AbstarctImportTest {
 		assertEquals(8, resSize);
 		assertEquals("Magic 2015 Core Set", card2.getSet());
 	}
+
+	// http://magic.tcgplayer.com/db/search_result.asp?Set_Name=From%20the%20Vault:%20Twenty
+	/*-
+	 <table border="0" width="700" align="left">
+	<tbody><tr>
+		<td class="default_9" valign="middle" width="385" align="left">
+						<img src="/images/sets/noset.jpg" onerror="this.src='/images/sets/noset.jpg'"><br><br>
+						<h1>From the Vault: Twenty</h1>
+		</td>
+		<td valign="middle" width="150" align="center"><img src="http://magic.tcgplayer.com/images/TCGlogo_black.png"></td></tr>
+	<tr>
+	<td colspan="2" class="default_8" width="700"><br>
+	<center><b>Always buy singles for the lowest price at TCGplayer.com!</b></center>
+
+	</td></tr></tbody></table>
+	<br clear="all">
+
+	<table bordercolorlight="#303030" style="font-size:13px;" border="1" cellpadding="0" cellspacing="0" height="28" width="700" align="left" bgcolor="black">
+	<tbody><tr style="page-break-inside: avoid;">
+		<td class="default_8" valign="middle" width="200" align="center"><font color="white">Name</font></td>
+		<td class="default_8" valign="middle" width="80" align="center"><font color="white">Cost</font></td>
+		<td class="default_8" valign="middle" width="120" align="center"><font color="white">Type</font></td>
+		<td class="default_8" valign="middle" width="50" align="center"><font color="white">Color</font></td>
+		<td class="default_8" valign="middle" width="30" align="center"><font color="white">Rar</font></td>
+		<td class="default_8" valign="middle" width="55" align="center"><font color="white">High</font></td>
+		<td class="default_8" valign="middle" width="55" align="center"><font color="white">Mid</font></td>
+		<td class="default_8" valign="middle" width="55" align="center"><font color="white">Low</font></td>
+	</tr>
+	</tbody></table>
+	<br clear="all">
+	<table style="font-size:11px;" border="1" cellpadding="0" cellspacing="0" width="700" align="left">
+
+
+	<tbody><tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Akroma's Vengeance</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;4WW</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Sorcery</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;White</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$3.45&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.99&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.49&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Chainer's Edict</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;1B</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Sorcery</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Black</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.34&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.36&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.89&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Chameleon Colossus</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;2GG</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Creature</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Green</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.11&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.75&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.88&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Char</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;2R</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Instant</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Red</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.64&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.78&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.25&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Cruel Ultimatum</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;UUBBBRR</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Sorcery</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Gold</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.95&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.47&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.89&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Dark Ritual</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;B</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Instant</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Black</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$18.95&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.74&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.75&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Fact or Fiction</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;3UU</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Instant</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Blue</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><center><font class="default_7">-</font></center></td><td valign="center" width="55" align="right"><center><font class="default_7">SOON</font></center></td><td valign="center" width="55" align="right"><center><font class="default_7">-</font></center></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Fact or Fiction</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;3U</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Instant</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Blue</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.49&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.86&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.99&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Fyndhorn Elves</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;G</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Creature</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Green</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.98&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$3.15&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.46&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Gilded Lotus</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;5</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Artifact</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Colorless</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$10.95&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$8.52&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$7.07&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Green Sun's Zenith</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;XG</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Sorcery</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Green</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$9.72&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$7.65&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$6.00&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Hymn to Tourach</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;BB</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Sorcery</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Black</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$14.00&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$6.25&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.00&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Impulse</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;1U</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Instant</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Blue</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$3.15&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.76&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$0.99&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Ink-Eyes, Servant of Oni</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;4BB</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Creature</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Black</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$6.95&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.26&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.99&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Jace, the Mind Sculptor</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;2UU</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Planeswalker</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Blue</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$149.99&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$88.14&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$74.89&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Kessig Wolf Run</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Land</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Land</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.99&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.75&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.00&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Swords to Plowshares</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;W</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Instant</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;White</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$15.00&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$6.99&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$5.00&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Tangle Wire</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;3</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Artifact</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$4.32&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.74&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.93&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Thran Dynamo</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;4</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Artifact</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$15.27&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$7.25&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$5.95&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Venser, Shaper Savant</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;2UU</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Creature</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Blue</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$14.56&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$11.99&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$9.50&nbsp;</font></td></tr>
+	<tr height="20"><td valign="center" width="200" align="left"><font class="default_7">&nbsp;Wall of Blossoms</font></td><td valign="center" width="80" align="left"><font class="default_7">&nbsp;1G</font></td><td valign="center" width="120" align="left"><font class="default_7">&nbsp;Creature</font></td><td valign="center" width="50" align="left"><font class="default_7">&nbsp;Green</font></td><td valign="center" width="30" align="left"><font class="default_7">&nbsp;M</font></td><td valign="center" width="55" align="right"><font class="default_7">$2.60&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.65&nbsp;</font></td><td valign="center" width="55" align="right"><font class="default_7">$1.24&nbsp;</font></td></tr>
+
+
+
+
+	</tbody></table>
+	 */
+	@Test
+	public void testTCGPlayerPrices() {
+		addLine(getAboveComment());
+		preview();
+		assertEquals(21, resSize);
+	}
+
+	/*-
+	 <table style="background: #0E5B93;" align="center" width="540">
+				<tbody><tr>
+					<td align="left" valign="middle" width="160"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('name');" class="default_7w">Name</a></td>
+					<td align="left" valign="middle" width="60"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('Cost');" class="default_7w">Cost</a></td>
+					<td align="left" valign="middle" width="140"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('Set_name');" class="default_7w">Set Name</a></td>
+					<td align="center" valign="middle" width="15"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('Rarity');" class="default_7w">R</a></td>
+					<td align="center" valign="middle" width="55"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('MaxPrice DESC');" class="default_7w">High</a></td>
+					<td align="center" valign="middle" width="55"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('MeanPrice DESC');" class="default_7w">Med</a></td>
+					<td align="center" valign="middle" width="55"><a style="color:#FFF;font-weight:bold;font-size:11px;" href="javascript: SortOrder('MinPrice DESC');" class="default_7w">Low</a></td>
+				</tr>
+			</tbody></table>	
+	<table style="font-size:11px" align="center" border="0" cellpadding="1" cellspacing="0" width="540">
+
+	<tbody><tr>
+
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="160">
+			&nbsp;<a href="magic_single_card.asp?cn=Akroma's Vengeance&amp;sn=From the Vault: Twenty">Akroma's Vengeance</a></td>
+
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="60">
+			4WW
+		</td>
+
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="140">
+			&nbsp;<a href="/db/search_result.asp?Set_Name=From+the+Vault%3A+Twenty">From the Vault: Twenty</a>
+		</td>
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="15">
+			M
+		</td>
+
+
+		<td class="default_8" align="right" bgcolor="#D9FCD1" valign="center" width="55">
+		<a href="magic_single_card.asp?cn=Akroma's Vengeance&amp;sn=From the Vault: Twenty">$3.45</a>
+		</td>
+
+		<td class="default_8" align="right" bgcolor="#D1DFFC" valign="center" width="55">
+		<a href="magic_single_card.asp?cn=Akroma's Vengeance&amp;sn=From the Vault: Twenty">$1.99</a>
+		</td>
+
+		<td class="default_8" align="right" bgcolor="#FCD1D1" valign="center" width="55">
+		<a href="magic_single_card.asp?cn=Akroma's Vengeance&amp;sn=From the Vault: Twenty">$1.49</a>
+		</td>
+
+
+	</tr>
+	
+	
+
+	<tr>
+
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="160">
+			&nbsp;<a href="magic_single_card.asp?cn=Chameleon Colossus&amp;sn=From the Vault: Twenty">Chameleon Colossus</a></td>
+
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="60">
+			2GG
+		</td>
+
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="140">
+			&nbsp;<a href="/db/search_result.asp?Set_Name=From+the+Vault%3A+Twenty">From the Vault: Twenty</a>
+		</td>
+		<td class="default_8" align="left" bgcolor="#EEEEEE" valign="center" width="15">
+			M
+		</td>
+
+
+		<td class="default_8" align="right" bgcolor="#D9FCD1" valign="center" width="55">
+		<a href="magic_single_card.asp?cn=Chameleon Colossus&amp;sn=From the Vault: Twenty">$4.11</a>
+		</td>
+
+		<td class="default_8" align="right" bgcolor="#D1DFFC" valign="center" width="55">
+		<a href="magic_single_card.asp?cn=Chameleon Colossus&amp;sn=From the Vault: Twenty">$1.75</a>
+		</td>
+
+		<td class="default_8" align="right" bgcolor="#FCD1D1" valign="center" width="55">
+		<a href="magic_single_card.asp?cn=Chameleon Colossus&amp;sn=From the Vault: Twenty">$0.95</a>
+		</td>
+
+
+	</tr>
+	 */
+	@Test
+	public void testTCGPlayerPrices2() {
+		addLine(getAboveComment());
+		preview();
+		assertEquals(2, resSize);
+		assertEquals("From the Vault: Twenty", card1.getSet());
+		assertEquals("From the Vault: Twenty", card2.getSet());
+	}
 }

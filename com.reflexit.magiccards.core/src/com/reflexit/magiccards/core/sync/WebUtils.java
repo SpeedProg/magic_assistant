@@ -65,4 +65,14 @@ public class WebUtils {
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, FileUtils.CHARSET_UTF_8));
 		return st;
 	}
+
+	public static String openUrlAndGetText(URL url) throws IOException {
+		BufferedReader st = openUrlReader(url);
+		try {
+			String xml = FileUtils.readFileAsString(st);
+			return xml;
+		} finally {
+			st.close();
+		}
+	}
 }

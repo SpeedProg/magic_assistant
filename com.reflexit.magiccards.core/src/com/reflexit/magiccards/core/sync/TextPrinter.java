@@ -29,7 +29,7 @@ public class TextPrinter {
 		magicCardExportFields = list;
 	}
 
-	private static Collection<Object> values(IMagicCard card, Collection<ICardField> fields) {
+	public static Collection<Object> values(IMagicCard card, Collection<ICardField> fields) {
 		Collection<Object> list = new ArrayList<Object>();
 		for (ICardField magicCardField : fields) {
 			list.add(card.get(magicCardField));

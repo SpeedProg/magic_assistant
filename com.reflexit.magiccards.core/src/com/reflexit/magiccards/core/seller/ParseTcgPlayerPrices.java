@@ -1,27 +1,33 @@
 package com.reflexit.magiccards.core.seller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
+import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.CardList;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
-import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.WebUtils;
 
@@ -29,7 +35,6 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	public final String PARTNER_KEY = "MGCASSTNT";
 
 	// http://magic.tcgplayer.com/db/price_guide.asp?setname=From%20the%20Vault:%20Twenty
-
 	public static enum Type {
 		Low("lowprice"),
 		Medium("avgprice"),
@@ -86,28 +91,51 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
 		if (WebUtils.isWorkOffline())
 			throw new MagicException("Online updates are disabled");
-		int size = getSize(iterable);
-		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10);
-		IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
-		monitor.worked(5);
+		CardList list = new CardList(iterable, false);
+		int size = list.size();
+		Set<Object> uniqueSets = list.getUnique(MagicCardField.SET);
+		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10 + uniqueSets.size());
 		try {
-			for (IMagicCard magicCard : iterable) {
-				if (monitor.isCanceled())
-					return null;
-				float price = getPrice(magicCard);
-				if (price < 0) {
-					int id = magicCard.getFlipId();
-					IMagicCard flipCard = (IMagicCard) db.getCard(id);
-					if (flipCard != null)
-						price = getPrice(flipCard);
-				}
-				// if (price > 0)
-				{
-					if (price == 0)
-						price = -0.0001f;
-					setDbPrice(magicCard, price, getCurrency());
+			IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
+			int processedSets = 0;
+			for (Object object : uniqueSets) {
+				String set = (String) object;
+				Map<MagicCard, Float> map = getSetPrices(set);
+				if (map.size() != 0) {
+					processedSets++;
+					for (MagicCard magicCard : map.keySet()) {
+						float price = map.get(magicCard);
+						ImportUtils.getFixedName(magicCard);// fix Aether
+						MagicCard ref = ImportUtils.findRef(magicCard, db);
+						if (ref != null) {
+							if (price == 0)
+								price = -0.0001f;
+							setDbPrice(ref, price, getCurrency());
+						}
+					}
 				}
 				monitor.worked(1);
+			}
+			if (processedSets != uniqueSets.size()) {
+				monitor.worked(5);
+				for (IMagicCard magicCard : iterable) {
+					if (monitor.isCanceled())
+						return null;
+					float price = getPrice(magicCard);
+					if (price < 0) {
+						int id = magicCard.getFlipId();
+						IMagicCard flipCard = (IMagicCard) db.getCard(id);
+						if (flipCard != null)
+							price = getPrice(flipCard);
+					}
+					// if (price > 0)
+					{
+						if (price == 0)
+							price = -0.0001f;
+						setDbPrice(magicCard, price, getCurrency());
+					}
+					monitor.worked(1);
+				}
 			}
 		} finally {
 			monitor.done();
@@ -115,8 +143,46 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		return iterable;
 	}
 
+	private Map<MagicCard, Float> getSetPrices(String set) {
+		final HashMap<MagicCard, Float> res = new HashMap<MagicCard, Float>();
+		HtmlTableImportDelegate delegate = new HtmlTableImportDelegate() {
+			@Override
+			protected ICardField getFieldByName(String hd) {
+				ICardField fieldByName = super.getFieldByName(hd);
+				if (fieldByName == null) {
+					hd = hd.toUpperCase();
+					if ((hd.equals("MID") || hd.equals("MED")) && type == Type.Medium)
+						return MagicCardField.DBPRICE;
+					if (hd.equals("LOW") && type == Type.Low)
+						return MagicCardField.DBPRICE;
+					if (hd.equals("HIGH") && type == Type.High)
+						return MagicCardField.DBPRICE;
+				}
+				return fieldByName;
+			}
+
+			@Override
+			public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
+				if (field == MagicCardField.DBPRICE) {
+					value = value.replace("$", "");
+					res.put(card.getBase(), Float.valueOf(value));
+				} else
+					super.setFieldValue(card, field, i, value);
+			}
+		};
+		try {
+			String setE = URLEncoder.encode(set, "UTF-8");
+			URL url = new URL("http://magic.tcgplayer.com/db/search_result.asp?Set_Name=" + setE);
+			delegate.init(WebUtils.openUrl(url), Location.NO_WHERE,
+					false);
+			delegate.run(ICoreProgressMonitor.NONE);
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		}
+		return res;
+	}
+
 	public float getPrice(IMagicCard magicCard) {
-		BufferedReader st = null;
 		try {
 			float price = -1;
 			String origset = magicCard.getSet();
@@ -124,16 +190,13 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			for (Iterator iterator = trysets.iterator(); iterator.hasNext();) {
 				String altset = (String) iterator.next();
 				URL url = createCardUrl(magicCard, altset);
-				InputStream openStream = null;
 				try {
-					openStream = WebUtils.openUrl(url);
+					String xml = WebUtils.openUrlAndGetText(url);
+					price = parsePrice(xml);
 				} catch (Exception e) {
 					MagicLogger.log("Failed to load price for " + url + ": " + e.getLocalizedMessage());
 					continue;
 				}
-				st = new BufferedReader(new InputStreamReader(openStream));
-				String xml = FileUtils.readFileAsString(st);
-				price = parsePrice(xml);
 				if (price < 0) {
 					MagicLogger.log("Failed to load price for " + url);
 				} else {
@@ -147,13 +210,6 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		} catch (Exception e) {
 			MagicLogger.log(e);
 			return -4;
-		} finally {
-			try {
-				if (st != null)
-					st.close();
-			} catch (IOException e) {
-				// screw it
-			}
 		}
 	}
 
@@ -228,24 +284,31 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	public static void main(String[] args) {
-		MagicCard card = new MagicCard();
-		card.setName("Flameborn Viron");
-		card.setSet("New Phyrexia");
+		DataManager.getInstance().syncInitDb();
 		ParseTcgPlayerPrices pp = new ParseTcgPlayerPrices();
-		float price = pp.getPrice(card);
+		pp.getPrice("Flameborn Viron", "New Phyrexia");
+		pp.getPrice("Coat of Arms", "Magic 2010");
+		List singletonList = Collections.singletonList(mc("Akroma's Vengeance", "From the Vault: Twenty"));
+		try {
+			pp.updatePrices(singletonList, ICoreProgressMonitor.NONE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	float getPrice(String name, String set) {
+		MagicCard card = mc(name, set);
+		float price = getPrice(card);
 		System.err.println("Price for " + card + " " + price);
-		MagicCard card1 = new MagicCard();
-		card1.setName("Coat of Arms");
-		card1.setSet("Magic 2010");
-		float price1 = pp.getPrice(card1);
-		System.err.println("Price for " + card1 + " " + price1);
-		MemoryFilteredCardStore<IMagicCard> store = new MemoryFilteredCardStore<IMagicCard>();
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
-		list.add(card);
-		list.add(card1);
-		store.addAll(list);
-		store.update();
-		pp.buy(store);
+		return price;
+	}
+
+	private static MagicCard mc(String name, String set) {
+		MagicCard card = new MagicCard();
+		card.setName(name);
+		card.setSet(set);
+		return card;
 	}
 
 	public static IPriceProvider create(Type type) {

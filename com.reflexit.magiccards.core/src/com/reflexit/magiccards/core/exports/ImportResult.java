@@ -81,4 +81,8 @@ public class ImportResult {
 	public List<? extends ICard> getList() {
 		return toImport;
 	}
+
+	public void clear() {
+		toImport.clear();
+	}
 }
