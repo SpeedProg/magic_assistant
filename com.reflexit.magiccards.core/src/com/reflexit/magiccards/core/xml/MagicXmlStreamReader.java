@@ -58,7 +58,8 @@ public class MagicXmlStreamReader {
 		StringBuffer text = new StringBuffer();
 		String key;
 		String value;
-		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(MagicCardField.values().length);
+		HashMap<String, MagicCardField> mcpFields = new HashMap<String, MagicCardField>(
+				MagicCardField.values().length);
 		private Locator locator;
 
 		public MagicHandler(CardCollectionStoreObject object) {

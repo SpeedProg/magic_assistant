@@ -31,10 +31,9 @@ public class NewCardCollectionWizard extends NewCardElementWizard implements INe
 		addPage(this.page);
 	}
 
-
-
 	@Override
-	protected CardCollection doCreateCardElement(CollectionsContainer parent, final String name, final boolean virtual) {
+	protected CardCollection doCreateCardElement(CollectionsContainer parent, final String name,
+			final boolean virtual) {
 		final CardCollection col = new CardCollection(name + ".xml", parent);
 		col.setVirtual(virtual);
 		return col;

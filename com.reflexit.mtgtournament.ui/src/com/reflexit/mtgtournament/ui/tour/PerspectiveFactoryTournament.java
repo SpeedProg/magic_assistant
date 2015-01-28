@@ -36,9 +36,11 @@ public class PerspectiveFactoryTournament implements IPerspectiveFactory {
 
 	/**
 	 * Creates a "New..." menu
-	 * @param window - workbench window
-	 * @param menu 
-	 * @return 
+	 * 
+	 * @param window
+	 *            - workbench window
+	 * @param menu
+	 * @return
 	 * 
 	 */
 	public static MenuManager createNewMenu(IWorkbenchWindow window) {

@@ -17,7 +17,8 @@ import com.reflexit.magiccards.core.CorePreferenceConstants;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
-public class FileLocationsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class FileLocationsPreferencePage extends FieldEditorPreferencePage implements
+		IWorkbenchPreferencePage {
 	public FileLocationsPreferencePage() {
 		super(GRID);
 		setPreferenceStore(MagicUIActivator.getDefault().getCorePreferenceStore());
@@ -110,7 +111,8 @@ public class FileLocationsPreferencePage extends FieldEditorPreferencePage imple
 	protected void createFieldEditors() {
 		// addField(new LocationFieldEditor("workspace.dir", "Settings (workspace):", getFieldEditorParent()));
 		addField(new LocationFieldEditor(PreferenceConstants.DIR_BACKUP, "Backup:", getFieldEditorParent()));
-		addField(new LocationFieldEditor(PreferenceConstants.DIR_MAGICCARDS, "Database (sync):", getFieldEditorParent()));
+		addField(new LocationFieldEditor(PreferenceConstants.DIR_MAGICCARDS, "Database (sync):",
+				getFieldEditorParent()));
 	}
 
 	protected File getAbsoluteFile(String path) {
@@ -123,9 +125,11 @@ public class FileLocationsPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	public boolean performOk() {
-		String old = MagicUIActivator.getDefault().getCorePreferenceStore().getString(CorePreferenceConstants.DIR_MAGICCARDS);
+		String old = MagicUIActivator.getDefault().getCorePreferenceStore()
+				.getString(CorePreferenceConstants.DIR_MAGICCARDS);
 		boolean res = super.performOk();
-		String nvalue = MagicUIActivator.getDefault().getCorePreferenceStore().getString(CorePreferenceConstants.DIR_MAGICCARDS);
+		String nvalue = MagicUIActivator.getDefault().getCorePreferenceStore()
+				.getString(CorePreferenceConstants.DIR_MAGICCARDS);
 		if (!old.equals(nvalue)) {
 			File dir = getAbsoluteFile(nvalue);
 			if (!dir.exists()) {
@@ -133,21 +137,25 @@ public class FileLocationsPreferencePage extends FieldEditorPreferencePage imple
 			}
 			String x[] = dir.list();
 			if (x == null) {
-				MessageDialog.openError(getShell(), "Error", "New location is not a directory and cannot be created");
+				MessageDialog.openError(getShell(), "Error",
+						"New location is not a directory and cannot be created");
 				return false;
 			}
 			boolean yes = false;
 			if (x.length == 0) {
-				yes = MessageDialog.openConfirm(getShell(),
-						"Import",
-						"New location does not contain cards database. "
-								+ "Would you like to import existing database into new location automatically?"
+				yes = MessageDialog
+						.openConfirm(
+								getShell(),
+								"Import",
+								"New location does not contain cards database. "
+										+ "Would you like to import existing database into new location automatically?"
 						);
 				if (yes) {
 					try {
 						FileUtils.copyTree(getAbsoluteFile(old), dir);
 					} catch (IOException e) {
-						MessageDialog.openError(getShell(), "Error", "Failed to copy database: " + e.getMessage());
+						MessageDialog.openError(getShell(), "Error",
+								"Failed to copy database: " + e.getMessage());
 						return false;
 					}
 					yes = MessageDialog.openConfirm(getShell(),

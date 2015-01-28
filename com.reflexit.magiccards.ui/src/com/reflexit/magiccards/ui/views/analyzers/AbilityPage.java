@@ -10,9 +10,11 @@ import com.reflexit.magiccards.ui.chart.IChartGenerator;
 public class AbilityPage extends AbstractDeckStatsPage {
 	@Override
 	protected IChartGenerator createChartGenerator() {
-		Map<String, Integer> affinityStatsCount = CardStoreUtils.top(10, CardStoreUtils.buildAbilityStats(store));
-		IChartGenerator gen = new AbilityChart(affinityStatsCount.values().toArray(new Integer[0]), affinityStatsCount.keySet().toArray(
-				new String[0]));
+		Map<String, Integer> affinityStatsCount = CardStoreUtils.top(10,
+				CardStoreUtils.buildAbilityStats(store));
+		IChartGenerator gen = new AbilityChart(affinityStatsCount.values().toArray(new Integer[0]),
+				affinityStatsCount.keySet().toArray(
+						new String[0]));
 		return gen;
 	}
 

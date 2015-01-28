@@ -88,7 +88,8 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		if (WebUtils.isWorkOffline())
 			throw new MagicException("Online updates are disabled");
 		CardList list = new CardList(iterable, false);
@@ -250,7 +251,8 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		name = name.replaceAll("Æ", "AE");
 		name = name.replaceAll("ö", "o");
 		name = name.replaceAll(" \\(.*$", "");
-		String url = "http://partner.tcgplayer.com/x3/phl.asmx/p?v=3&pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
+		String url = "http://partner.tcgplayer.com/x3/phl.asmx/p?v=3&pk=" + PARTNER_KEY + "&s=" + set + "&p="
+				+ name;
 		url = url.replaceAll(" ", "+");
 		url = url.replaceAll("'", "%27");
 		return new URL(url);

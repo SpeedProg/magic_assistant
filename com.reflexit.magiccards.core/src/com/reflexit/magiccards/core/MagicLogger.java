@@ -35,6 +35,7 @@ public class MagicLogger {
 			Activator.info(message);
 		}
 	}
+
 	public static void log(Throwable e) {
 		if (rcp == false) {
 			e.printStackTrace(System.err);

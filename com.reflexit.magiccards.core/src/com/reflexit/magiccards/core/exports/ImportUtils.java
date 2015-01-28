@@ -49,8 +49,10 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static ImportResult performPreImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual, Location location,
-			boolean resolve, ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public static ImportResult performPreImport(InputStream st, IImportDelegate worker, boolean header,
+			boolean virtual, Location location,
+			boolean resolve, ICoreProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		if (st == null)
 			return null;
 		worker.init(st, location, virtual);
@@ -67,8 +69,10 @@ public class ImportUtils {
 		return preview;
 	}
 
-	public static void performImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual, Location location,
-			ICardStore cardStore, ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public static void performImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual,
+			Location location,
+			ICardStore cardStore, ICoreProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		ImportResult result = performPreImport(st, worker, header, virtual, location, true, monitor);
 		if (result.getError() != null)
 			throw new MagicException(result.getError());
@@ -313,9 +317,9 @@ public class ImportUtils {
 						String x = decompose(lname);
 						x = x.replaceAll("æ", "ae");
 						// System.err.println(lname + "->" + x);
-						addToLookup(a, x);
-					}
-				}
+				addToLookup(a, x);
+			}
+		}
 		}
 
 		public void addToLookup(MagicCard a, String lname) {
@@ -342,7 +346,8 @@ public class ImportUtils {
 		}
 
 		public static String decompose(String s) {
-			return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+			return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll(
+					"\\p{InCombiningDiacriticalMarks}+", "");
 		}
 
 		public List<IMagicCard> getCandidates(String name) {
@@ -361,9 +366,11 @@ public class ImportUtils {
 	}
 
 	/**
-	 * Finds and associates imported cards with magic db cards. If card not found in db creates new db cards and adds to newdbrecords
+	 * Finds and associates imported cards with magic db cards. If card not found in db creates new db cards
+	 * and adds to newdbrecords
 	 */
-	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords, ICardField[] columns) {
+	public static void performPreImportWithDb(Collection<IMagicCard> result,
+			Collection<IMagicCard> newdbrecords, ICardField[] columns) {
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof MagicCardPhysical) {

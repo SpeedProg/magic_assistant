@@ -49,7 +49,8 @@ public class MagicCardDragListener implements DragSourceListener {
 	 */
 	public void dragSetData(DragSourceEvent event) {
 		this.selection = (IStructuredSelection) this.viewer.getSelection();
-		IMagicCard[] cards = (IMagicCard[]) this.selection.toList().toArray(new IMagicCard[this.selection.size()]);
+		IMagicCard[] cards = (IMagicCard[]) this.selection.toList().toArray(
+				new IMagicCard[this.selection.size()]);
 		if (MagicCardTransfer.getInstance().isSupportedType(event.dataType)) {
 			event.data = cards;
 		} else if (PluginTransfer.getInstance().isSupportedType(event.dataType)) {

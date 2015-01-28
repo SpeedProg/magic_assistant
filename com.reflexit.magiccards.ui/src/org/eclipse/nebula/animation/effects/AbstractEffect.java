@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.movement.IMovement;
@@ -20,7 +19,6 @@ import org.eclipse.nebula.animation.movement.IMovement;
  * 
  */
 public abstract class AbstractEffect implements IEffect {
-
 	protected boolean done = false;
 	protected IMovement easingFunction;
 	protected long length = 0;
@@ -132,7 +130,6 @@ public abstract class AbstractEffect implements IEffect {
 	public void processEnd(long time) {
 		if (done)
 			return;
-
 		if (time == length) {
 			done = true;
 			doStop();

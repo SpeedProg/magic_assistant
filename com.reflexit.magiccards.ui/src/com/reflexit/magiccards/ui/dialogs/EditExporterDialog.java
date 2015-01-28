@@ -72,10 +72,13 @@ public class EditExporterDialog extends MagicDialog {
 		Text name = createTextFieldEditor(area, "Name", PROP_NAME);
 		createTextFieldEditor(area, "File Extension", PROP_EXT, "Default file extension for exported file");
 		createFormatterControl(area);
-		createTextFieldEditor(area, "Header", CustomExportDelegate.HEADER, "Line separating multiple decks or file header, "
-				+ "leave empty to ommit.\n" + "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
-				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
-		footer = createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER, "File footer, " + "leave empty to ommit.\n"
+		createTextFieldEditor(area, "Header", CustomExportDelegate.HEADER,
+				"Line separating multiple decks or file header, "
+						+ "leave empty to ommit.\n"
+						+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
+						+ "User can also disable it from export dialog using 'Generate header row' checkbox");
+		footer = createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER, "File footer, "
+				+ "leave empty to ommit.\n"
 				+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
 				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
 		sbHeader = createTextFieldEditor(area, "Sideboard Header", CustomExportDelegate.SB_HEADER,
@@ -97,7 +100,8 @@ public class EditExporterDialog extends MagicDialog {
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
 		fparent.setLayoutData(layoutData);
-		StringButtonFieldEditor fields = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Fields", fparent) {
+		StringButtonFieldEditor fields = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS,
+				"Fields", fparent) {
 			@Override
 			protected String changePressed() {
 				new MagicFieldSelectorDialog(getParentShell(), store).open();
@@ -254,7 +258,8 @@ public class EditExporterDialog extends MagicDialog {
 	}
 
 	public void copyFromType(ReportType type) {
-		String[] preferenceNames = type.getProperties().keySet().toArray(new String[type.getProperties().size()]);
+		String[] preferenceNames = type.getProperties().keySet()
+				.toArray(new String[type.getProperties().size()]);
 		for (int i = 0; i < preferenceNames.length; i++) {
 			String key = preferenceNames[i];
 			store.setValue(key, type.getProperty(key));

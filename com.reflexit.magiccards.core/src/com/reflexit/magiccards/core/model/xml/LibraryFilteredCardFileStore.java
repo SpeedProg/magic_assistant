@@ -18,7 +18,8 @@ import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
-public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileStore implements ICardEventListener {
+public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileStore implements
+		ICardEventListener {
 	private static LibraryFilteredCardFileStore instance;
 
 	@Override
@@ -59,8 +60,9 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
 					IStorage storage = store.getStorage();
 					if (storage instanceof IStorageInfo) {
-						((IStorageInfo) storage).setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
-								: IStorageInfo.COLLECTION_TYPE);
+						((IStorageInfo) storage)
+								.setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
+										: IStorageInfo.COLLECTION_TYPE);
 					}
 					reconcile();
 					update();

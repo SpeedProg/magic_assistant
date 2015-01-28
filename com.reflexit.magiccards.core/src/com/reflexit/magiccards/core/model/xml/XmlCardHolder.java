@@ -85,7 +85,8 @@ public class XmlCardHolder implements ICardHandler {
 
 	@Override
 	public ICardStore loadFromXml(String filename) {
-		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename), new Location(filename), true);
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename),
+				new Location(filename), true);
 		return store;
 	}
 
@@ -105,7 +106,8 @@ public class XmlCardHolder implements ICardHandler {
 		return dir;
 	}
 
-	private synchronized int loadtFromFlatIntoDB(BufferedReader st, ArrayList<IMagicCard> list) throws MagicException, IOException {
+	private synchronized int loadtFromFlatIntoDB(BufferedReader st, ArrayList<IMagicCard> list)
+			throws MagicException, IOException {
 		ICardStore store = getMagicDBStore();
 		int init = store.size();
 		loadFromFlat(st, list);
@@ -118,7 +120,8 @@ public class XmlCardHolder implements ICardHandler {
 		return rec > 0 ? rec : (hasAny ? 0 : -1);
 	}
 
-	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list) throws IOException {
+	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list)
+			throws IOException {
 		String line = st.readLine(); // header ignore for now
 		ICardField[] xfields = MagicCardField.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
 		String[] fields = new String[xfields.length];
@@ -177,7 +180,8 @@ public class XmlCardHolder implements ICardHandler {
 		return res;
 	}
 
-	public String download(String set, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException, MalformedURLException,
+	public String download(String set, Properties options, ICoreProgressMonitor pm)
+			throws FileNotFoundException, MalformedURLException,
 			IOException {
 		String file = new File(FileUtils.getStateLocationFile(), "downloaded.txt").getPath();
 		UpdateCardsFromWeb.downloadUpdates(set, file, options, pm);
@@ -185,7 +189,8 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	@Override
-	public int downloadUpdates(final String set, final Properties options, ICoreProgressMonitor pm) throws MagicException,
+	public int downloadUpdates(final String set, final Properties options, ICoreProgressMonitor pm)
+			throws MagicException,
 			InterruptedException {
 		final int rec[] = new int[1];
 		DataManager.getInstance().getMagicDBStore().updateOperation(new ICoreRunnableWithProgress() {
@@ -217,7 +222,8 @@ public class XmlCardHolder implements ICardHandler {
 						pm.subTask("Updating languages...");
 						Set<ICardField> fieldMaps = new HashSet<ICardField>();
 						fieldMaps.add(MagicCardField.LANG);
-						new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang, getMagicDBStore(),
+						new UpdateCardsFromWeb().updateStore(list.iterator(), list.size(), fieldMaps, lang,
+								getMagicDBStore(),
 								new SubCoreProgressMonitor(pm, 100));
 					}
 				} catch (MalformedURLException e) {
@@ -230,7 +236,8 @@ public class XmlCardHolder implements ICardHandler {
 		return rec[0];
 	}
 
-	public int downloadAndStore(String set, Properties options, ArrayList<IMagicCard> list, ICoreProgressMonitor pm)
+	public int downloadAndStore(String set, Properties options, ArrayList<IMagicCard> list,
+			ICoreProgressMonitor pm)
 			throws FileNotFoundException, MalformedURLException, IOException, InterruptedException {
 		int rec = 0;
 		if (set.equalsIgnoreCase("All")) {
@@ -243,7 +250,8 @@ public class XmlCardHolder implements ICardHandler {
 					Edition edition = (Edition) iterator.next();
 					try {
 						pm.setTaskName("Downloading " + edition.getName() + " (" + i + " of " + n + ")");
-						rec += downloadAndStoreSet(edition.getName(), options, list, new SubCoreProgressMonitor(pm, 1000));
+						rec += downloadAndStoreSet(edition.getName(), options, list,
+								new SubCoreProgressMonitor(pm, 1000));
 					} catch (InterruptedException e) {
 						throw e;
 					} catch (Exception e) {
@@ -261,7 +269,8 @@ public class XmlCardHolder implements ICardHandler {
 		}
 	}
 
-	public int downloadAndStoreSet(String set, Properties options, ArrayList<IMagicCard> list, ICoreProgressMonitor pm)
+	public int downloadAndStoreSet(String set, Properties options, ArrayList<IMagicCard> list,
+			ICoreProgressMonitor pm)
 			throws FileNotFoundException, MalformedURLException, IOException, InterruptedException {
 		pm.beginTask("Downloading set", 100);
 		try {

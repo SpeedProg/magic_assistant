@@ -16,7 +16,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public class ScrollableCanvas extends Canvas implements MouseWheelListener, MouseListener, MouseMoveListener, MouseTrackListener {
+public class ScrollableCanvas extends Canvas implements MouseWheelListener, MouseListener, MouseMoveListener,
+		MouseTrackListener {
 	private Image image;
 	protected Point origin;
 	private boolean dragCanvas = true;
@@ -25,7 +26,8 @@ public class ScrollableCanvas extends Canvas implements MouseWheelListener, Mous
 	private ScrollBar vBar;
 
 	public ScrollableCanvas(Composite parent, Image originalImage) {
-		super(parent, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.DOUBLE_BUFFERED);
+		super(parent, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.DOUBLE_BUFFERED);
 		image = originalImage;
 		origin = new Point(0, 0);
 		hBar = this.getHorizontalBar();

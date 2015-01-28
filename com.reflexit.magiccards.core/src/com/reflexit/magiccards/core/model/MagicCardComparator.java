@@ -20,6 +20,7 @@ public class MagicCardComparator implements Comparator {
 	public void reverse() {
 		accending = !accending;
 	}
+
 	public ICardField getField() {
 		return field;
 	}
@@ -113,7 +114,8 @@ public class MagicCardComparator implements Comparator {
 							d = Rarity.compare((String) a1, (String) a2);
 							break;
 						case COLLNUM:
-							d = ((IMagicCard) c1).getCollectorNumberId() - ((IMagicCard) c2).getCollectorNumberId();
+							d = ((IMagicCard) c1).getCollectorNumberId()
+									- ((IMagicCard) c2).getCollectorNumberId();
 							if (d != 0)
 								break;
 							generic = true;

@@ -104,7 +104,8 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 		if (set != null && set.length() > 0) {
 			String abbr = Editions.getInstance().getAbbrByName(set).toLowerCase(Locale.ENGLISH);
 			card.setSet(set);
-			card.setProperty(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num + ".jpg");
+			card.setProperty(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num
+					+ ".jpg");
 		}
 		String rar = getMatch(setRarityPattern, rows[1], 2);
 		card.setRarity(rar);
@@ -130,7 +131,8 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 		return res.toString();
 	}
 
-	public boolean loadSet(String set, ILoadCardHander handler, ICoreProgressMonitor monitor) throws IOException {
+	public boolean loadSet(String set, ILoadCardHander handler, ICoreProgressMonitor monitor)
+			throws IOException {
 		try {
 			monitor.beginTask("Downloading " + set + " checklist", 100);
 			return loadSingleUrl(getSearchQuery(set), handler);

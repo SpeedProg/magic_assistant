@@ -36,7 +36,8 @@ public class XmlImportDelegate extends AbstractImportDelegate {
 			tmp.deleteOnExit();
 			try {
 				FileUtils.saveStream(getStream(), tmp);
-				ICardStore store = DataManager.getInstance().getCardHandler().loadFromXml(tmp.getAbsolutePath());
+				ICardStore store = DataManager.getInstance().getCardHandler()
+						.loadFromXml(tmp.getAbsolutePath());
 				// IStorage<IMagicCard> storage = ((IStorageContainer<IMagicCard>)
 				// store).getStorage();
 				// Location location = storage.getLocation();

@@ -156,8 +156,9 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 					return Status.CANCEL_STATUS;
 				try {
 					ICardStore store = DataManager.getCardHandler().getMagicDBStore();
-					new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(new SubProgressMonitor(
-							monitor, 90)));
+					new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(
+							new SubProgressMonitor(
+									monitor, 90)));
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
 					reloadData();
@@ -265,7 +266,8 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void runShowInstances(IWorkbenchPage page) {
 		try {
-			StructuredSelection sel = card == null ? new StructuredSelection() : new StructuredSelection(card);
+			StructuredSelection sel = card == null ? new StructuredSelection()
+					: new StructuredSelection(card);
 			InstancesView view = (InstancesView) page.showView(InstancesView.ID);
 			view.selectionChanged(this, sel);
 		} catch (PartInitException e) {

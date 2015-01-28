@@ -63,7 +63,8 @@ public class TournamentView extends ViewPart {
 				}
 			}
 		};
-		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(TNavigatorView.ID, selListener);
+		getSite().getWorkbenchWindow().getSelectionService()
+				.addSelectionListener(TNavigatorView.ID, selListener);
 		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
 	}
 
@@ -72,7 +73,8 @@ public class TournamentView extends ViewPart {
 	 */
 	@Override
 	public void dispose() {
-		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(TNavigatorView.ID, selListener);
+		getSite().getWorkbenchWindow().getSelectionService()
+				.removeSelectionListener(TNavigatorView.ID, selListener);
 		getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
 		super.dispose();
 	}
@@ -141,7 +143,8 @@ public class TournamentView extends ViewPart {
 	 * 
 	 */
 	private void setInitial() {
-		ISelection selection = getSite().getWorkbenchWindow().getSelectionService().getSelection(TNavigatorView.ID);
+		ISelection selection = getSite().getWorkbenchWindow().getSelectionService()
+				.getSelection(TNavigatorView.ID);
 		if (selection != null) {
 			setInput(selection);
 		}

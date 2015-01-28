@@ -41,7 +41,8 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 		super("Export...");
 		setId(ID);
 		setToolTipText("Export data to a file");
-		setImageDescriptor(WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_EXPORT_WIZ));
+		setImageDescriptor(WorkbenchImages
+				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_EXPORT_WIZ));
 		// prefId = DeckViewPreferencePage.class.getName();
 	}
 
@@ -69,12 +70,14 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 	}
 
 	private boolean runOpenWizard(final IStructuredSelection selection) {
-		String selcolumns = PreferenceInitializer.getLocalStore(prefId).getString(PreferenceConstants.LOCAL_COLUMNS);
+		String selcolumns = PreferenceInitializer.getLocalStore(prefId).getString(
+				PreferenceConstants.LOCAL_COLUMNS);
 		ICardField[] columns = new MagicColumnCollection(prefId).getSelectedColumnFields(selcolumns);
 		DeckExportWizard wizard = new DeckExportWizard();
 		wizard.init(PlatformUI.getWorkbench(), selection);
 		wizard.setColumns(columns);
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell(), wizard);
 		dialog.create();
 		dialog.getShell().setText(wizard.getWindowTitle());
 		int result = dialog.open();

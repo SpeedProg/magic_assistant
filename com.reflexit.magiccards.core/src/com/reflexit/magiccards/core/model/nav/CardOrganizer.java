@@ -20,7 +20,8 @@ public class CardOrganizer extends CardElement {
 	private final Collection<CardElement> children = new ArrayList<CardElement>();
 
 	public CardOrganizer(String filename, CardOrganizer parent) {
-		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(filename), parent);
+		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(
+				filename), parent);
 	}
 
 	public CardOrganizer(String name, LocationPath path, CardOrganizer parent) {

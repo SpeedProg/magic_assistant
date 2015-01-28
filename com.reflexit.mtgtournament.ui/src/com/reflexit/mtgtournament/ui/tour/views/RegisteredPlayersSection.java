@@ -98,7 +98,8 @@ public class RegisteredPlayersSection extends TSectionPart {
 		gen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputDialog inputDialog = new InputDialog(plComp.getViewer().getControl().getShell(), "Enter Players",
+				InputDialog inputDialog = new InputDialog(plComp.getViewer().getControl().getShell(),
+						"Enter Players",
 						"Enter number of players to generate", "4", new IInputValidator() {
 							public String isValid(String newText) {
 								try {

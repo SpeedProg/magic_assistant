@@ -57,6 +57,7 @@ public class TextPrinterExample {
 
 	/**
 	 * Read in the file and return its contents
+	 * 
 	 * @param fileName
 	 * @return
 	 * @throws FileNotFoundException
@@ -85,7 +86,8 @@ public class TextPrinterExample {
 	/**
 	 * The application entry point
 	 * 
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 */
 	public static void main(String[] args) {
 		new TextPrinterExample().run();
@@ -107,9 +109,13 @@ class WrappingPrinter {
 
 	/**
 	 * WrappingPrinter constructor
-	 * @param printer the printer
-	 * @param fileName the fileName
-	 * @param contents the contents
+	 * 
+	 * @param printer
+	 *            the printer
+	 * @param fileName
+	 *            the fileName
+	 * @param contents
+	 *            the contents
 	 */
 	WrappingPrinter(Printer printer, String fileName, String contents) {
 		this.printer = printer;
@@ -196,7 +202,9 @@ class WrappingPrinter {
 
 	/**
 	 * Computes the print area, including margins
-	 * @param printer the printer
+	 * 
+	 * @param printer
+	 *            the printer
 	 * @return Rectangle
 	 */
 	Rectangle computePrintArea(Printer printer) {

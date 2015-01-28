@@ -47,8 +47,9 @@ public class TournamentManager {
 		for (IResource resource : members) {
 			try {
 				if (resource.getFullPath().lastSegment().endsWith(".tour.xml")) {
-					Tournament ts = (Tournament) loadFromFile(resource.getProjectRelativePath().lastSegment(),
-					        new Tournament());
+					Tournament ts = (Tournament) loadFromFile(
+							resource.getProjectRelativePath().lastSegment(),
+							new Tournament());
 					root.addTournament(ts);
 					ts.updateLinks(); // restore transient fields
 				}
@@ -91,8 +92,9 @@ public class TournamentManager {
 		ModelLoader.save(obj, newFile.getLocation().toFile());
 	}
 
-	private static Object loadFromFile(String file, Object initObject) throws CoreException, FileNotFoundException,
-	        IOException {
+	private static Object loadFromFile(String file, Object initObject) throws CoreException,
+			FileNotFoundException,
+			IOException {
 		IResource resource = getProject().findMember(file);
 		if (resource == null || !resource.exists()) {
 			IFile newFile = getProject().getFile(file);

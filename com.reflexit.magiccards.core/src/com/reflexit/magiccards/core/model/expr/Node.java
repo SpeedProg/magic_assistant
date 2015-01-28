@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model.expr;
 
-
 public class Node extends Expr {
 	private final String name;
 

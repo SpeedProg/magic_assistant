@@ -14,6 +14,7 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 	}
 
 	public static String HEADER = "Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language";
+
 	/*-
 	 Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number
 	 1,0,Angel of Mercy,,,,,,Near Mint,English,
@@ -24,7 +25,8 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 	protected void setHeaderFields(List<String> list) {
 		String header = TextPrinter.join(list, ',');
 		if (!header.startsWith(HEADER)) {
-			throw new MagicException("Expecting header: " + HEADER + " but was '" + header + "'");
+			throw new MagicException("Expecting header: " + HEADER
+					+ " but was '" + header + "'");
 		}
 		ICardField fields[] = new ICardField[] {
 				MagicCardField.COUNT,

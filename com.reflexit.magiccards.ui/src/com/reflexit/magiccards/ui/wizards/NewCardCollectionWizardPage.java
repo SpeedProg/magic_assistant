@@ -78,7 +78,8 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	@Override
 	protected void createOptionsGroup(Composite container) {
 		virtual = new Button(container, SWT.CHECK);
-		virtual.setText("This " + getElementTypeName() + " is virtual (affect card ownership attribute and cards operations)");
+		virtual.setText("This " + getElementTypeName()
+				+ " is virtual (affect card ownership attribute and cards operations)");
 		virtual.setToolTipText("Virtual flag affect move/copy/inreaste/descrease operations on a collection. Also it automatically set flags to own for non-virtual collection.");
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = ((GridLayout) container.getLayout()).numColumns;

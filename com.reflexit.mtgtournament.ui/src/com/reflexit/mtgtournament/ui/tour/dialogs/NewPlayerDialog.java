@@ -126,6 +126,7 @@ public class NewPlayerDialog extends TitleAreaDialog {
 
 	/**
 	 * sets default pin (id)
+	 * 
 	 * @param pin
 	 */
 	public void setPin(String pin) {

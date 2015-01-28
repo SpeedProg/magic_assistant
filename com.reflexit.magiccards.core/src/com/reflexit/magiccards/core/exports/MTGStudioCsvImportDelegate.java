@@ -20,11 +20,11 @@ import com.reflexit.magiccards.core.exports.ImportError.Type;
 import com.reflexit.magiccards.core.exports.ImportUtils.LookupHash;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
-import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /*-
@@ -141,7 +141,8 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 					// String extra = ed2.getExtraAbbreviations();
 					// System.err.println("Looking for " + card.getName() + " from " + abbr +
 					// " found in " + abbr2 + " " + ed2 + " " + extra);
-					if ("TSP".equals(abbr) && "TSB".equals(abbr2) || "MED".equals(abbr) && "ME2".equals(abbr2)) {
+					if ("TSP".equals(abbr) && "TSB".equals(abbr2) || "MED".equals(abbr)
+							&& "ME2".equals(abbr2)) {
 						card.setMagicCard((MagicCard) base);
 						importResult.add(card);
 						found = true;
@@ -149,17 +150,17 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 					}
 				}
 			}
-			if (!found) 
+			if (!found)
 				super.importCard(card);
-			
-			if (!found) 
+			if (!found)
 				ImportUtils.updateCardReference(card); // XXX
 			// System.err.println(card);
 		}
 		Object err = card.getError();
 		if (err instanceof ImportError
-				&& (((ImportError) err).getType().equals(Type.NAME_NOT_FOUND_IN_DB) || ((ImportError) err).getType().equals(
-						Type.NAME_NOT_FOUND_IN_SET))) {
+				&& (((ImportError) err).getType().equals(Type.NAME_NOT_FOUND_IN_DB) || ((ImportError) err)
+						.getType().equals(
+								Type.NAME_NOT_FOUND_IN_SET))) {
 			String name = card.getName();
 			if (tryToFindName(card, name)) {
 				return;

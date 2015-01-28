@@ -54,7 +54,8 @@ public class CardCache {
 		return createSetImageURL(edition, rarity, upload);
 	}
 
-	public static URL createSetImageURL(String edition, String rarity, boolean upload) throws MalformedURLException, IOException {
+	public static URL createSetImageURL(String edition, String rarity, boolean upload)
+			throws MalformedURLException, IOException {
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
 		if (editionAbbr == null)
 			return null;
@@ -172,7 +173,8 @@ public class CardCache {
 	 * @return
 	 * @throws IOException
 	 */
-	public static File downloadAndSaveImage(IMagicCard card, boolean remote, boolean forceRemote) throws IOException {
+	public static File downloadAndSaveImage(IMagicCard card, boolean remote, boolean forceRemote)
+			throws IOException {
 		synchronized (card) {
 			String path = CardCache.createLocalImageFilePath(card);
 			File file = new File(path);
@@ -251,7 +253,8 @@ public class CardCache {
 	 *         is disabled and there is no cached image through an exception
 	 * @throws IOException
 	 */
-	public static boolean loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
+	public static boolean loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException,
+			CannotDetermineSetAbbriviation {
 		String path = createLocalImageFilePath(card);
 		File file = new File(path);
 		if (file.exists() && forceUpdate == false) {

@@ -27,8 +27,6 @@ public enum EditionField implements ICardField {
 		return null;
 	}
 
-
-
 	public boolean isTransient() {
 		return false;
 	}

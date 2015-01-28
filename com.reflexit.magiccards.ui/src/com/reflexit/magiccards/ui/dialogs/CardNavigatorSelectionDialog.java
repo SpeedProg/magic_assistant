@@ -48,17 +48,20 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	private ViewerFilter[] filters;
 
 	/**
-	 * Creates a resource container selection dialog rooted at the given resource. All selections are considered valid.
+	 * Creates a resource container selection dialog rooted at the given resource. All selections are
+	 * considered valid.
 	 * 
 	 * @param parentShell
 	 *            the parent shell
 	 * @param root
 	 *            the initial root in the tree
 	 * @param allowNewContainerName
-	 *            <code>true</code> to enable the user to type in a new container name, and <code>false</code> to restrict the user to just
+	 *            <code>true</code> to enable the user to type in a new container name, and <code>false</code>
+	 *            to restrict the user to just
 	 *            selecting from existing ones
 	 * @param message
-	 *            the message to be displayed at the top of this dialog, or <code>null</code> to display a default message
+	 *            the message to be displayed at the top of this dialog, or <code>null</code> to display a
+	 *            default message
 	 */
 	public CardNavigatorSelectionDialog(Shell parentShell, Object initialRoot,
 			boolean allowNewContainerName, String message) {
@@ -126,7 +129,8 @@ public class CardNavigatorSelectionDialog extends SelectionDialog {
 	}
 
 	/**
-	 * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of the selected resource
+	 * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a
+	 * list of the selected resource
 	 * containers for later retrieval by the client and closes this dialog.
 	 */
 	@Override

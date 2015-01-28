@@ -53,7 +53,8 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		Set<String> sets = getSets(iterable);
 		int size = getSize(iterable);
 		monitor.beginTask("Loading prices from http://findmagiccards.com ...", size + 10);
@@ -105,7 +106,8 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 		return iterable;
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
+	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor)
+			throws IOException {
 		updatePrices(fstore, monitor);
 	}
 
@@ -212,7 +214,8 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	/*-
 	 * <TD align=right>Price :</TD><TD>$ 1.23&nbsp;&nbsp;</TD>
 	 */
-	private static final Pattern cardPattern = Pattern.compile("<TD align=right>Price :</TD><TD>\\$ ([0-9.]+)");
+	private static final Pattern cardPattern = Pattern
+			.compile("<TD align=right>Price :</TD><TD>\\$ ([0-9.]+)");
 
 	private float processCard(BufferedReader st) throws IOException {
 		String line = "";

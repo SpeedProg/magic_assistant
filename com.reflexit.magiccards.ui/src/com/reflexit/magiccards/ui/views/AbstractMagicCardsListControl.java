@@ -96,7 +96,8 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  * table), and comes with actions and preferences to manipulate this list
  * 
  */
-public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl, ICardEventListener {
+public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl,
+		ICardEventListener {
 	private static final DataManager DM = DataManager.getInstance();
 
 	public class GroupAction extends Action {
@@ -491,7 +492,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @param indexCost
 	 */
 	protected void actionGroupBy(ICardField[] fields) {
-		getLocalPreferenceStore().setValue(FilterField.GROUP_FIELD.toString(), fields == null ? "" : createGroupName(fields));
+		getLocalPreferenceStore().setValue(FilterField.GROUP_FIELD.toString(),
+				fields == null ? "" : createGroupName(fields));
 		updateGroupBy(fields);
 		reloadData();
 	}
@@ -517,15 +519,18 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
+		MenuManager groupMenu = new MenuManager("Group By",
+				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
 		groupMenu.add(createGroupActionNone());
 		groupMenu.add(createGroupAction("Color", MagicCardField.COST));
 		groupMenu.add(createGroupAction("Cost", MagicCardField.CMC));
 		groupMenu.add(createGroupAction(MagicCardField.TYPE));
-		groupMenu.add(createGroupAction("Core/Block/Set/Rarity", new ICardField[] { MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
+		groupMenu.add(createGroupAction("Core/Block/Set/Rarity", new ICardField[] { MagicCardField.SET_CORE,
+				MagicCardField.SET_BLOCK,
 				MagicCardField.SET, MagicCardField.RARITY }));
 		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
+		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET,
+				MagicCardField.RARITY }));
 		groupMenu.add(createGroupAction(MagicCardField.RARITY));
 		groupMenu.add(createGroupAction(MagicCardField.NAME));
 		groupMenu.setRemoveAllWhenShown(false);
@@ -709,7 +714,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		};
 		this.actionShowFilter.setText("Filter...");
 		this.actionShowFilter.setToolTipText("Opens a Card Filter Dialog");
-		this.actionShowFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter_ps.png"));
+		this.actionShowFilter.setImageDescriptor(MagicUIActivator
+				.getImageDescriptor("icons/clcl16/filter_ps.png"));
 		this.actionResetFilter = new Action() {
 			@Override
 			public void run() {
@@ -718,7 +724,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		};
 		this.actionResetFilter.setText("Reset Filter");
 		this.actionResetFilter.setToolTipText("Resets the filter to default values");
-		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
+		this.actionResetFilter.setImageDescriptor(MagicUIActivator
+				.getImageDescriptor("icons/clcl16/reset_filter.gif"));
 		this.actionUnsort = new Action("Unsort") {
 			@Override
 			public void run() {
@@ -757,19 +764,22 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 				String id = getPreferencePageId();
 				if (id != null) {
 					saveColumnLayout();
-					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
+					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id,
+							new String[] { id }, null);
 					dialog.open();
 				}
 			}
 		};
-		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
+		this.actionShowPrefs
+				.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
 		this.actionShowFind = new Action("Find...") {
 			@Override
 			public void run() {
 				runFind();
 			}
 		};
-		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.png"));
+		this.actionShowFind
+				.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.png"));
 	}
 
 	public class GroupByToolBarAction extends Action {
@@ -1079,11 +1089,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		final String value = manager.getColumnLayoutProperty();
 		if (value == null || value.isEmpty())
 			return;
-		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
+		MagicUIActivator.getDefault().getPreferenceStore()
+				.removePropertyChangeListener(this.preferenceListener);
 		try {
 			getLocalPreferenceStore().setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 		} finally {
-			MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
+			MagicUIActivator.getDefault().getPreferenceStore()
+					.addPropertyChangeListener(this.preferenceListener);
 		}
 	}
 

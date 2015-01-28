@@ -35,7 +35,8 @@ public abstract class MagicDialog extends TitleAreaDialog {
 		return createTextFieldEditor(area, labelString, property, SWT.BORDER);
 	}
 
-	public Text createTextFieldEditor(Composite area, String labelString, final String property, String tooltip) {
+	public Text createTextFieldEditor(Composite area, String labelString, final String property,
+			String tooltip) {
 		Text text = createTextFieldEditor(area, labelString, property, SWT.BORDER);
 		text.setToolTipText(tooltip);
 		return text;
@@ -77,7 +78,8 @@ public abstract class MagicDialog extends TitleAreaDialog {
 		return text;
 	}
 
-	public Combo createComboFieldEditor(Composite area, String labelString, final String property, String[] values) {
+	public Combo createComboFieldEditor(Composite area, String labelString, final String property,
+			String[] values) {
 		createTextLabel(area, labelString);
 		final Combo combo = new Combo(area, SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

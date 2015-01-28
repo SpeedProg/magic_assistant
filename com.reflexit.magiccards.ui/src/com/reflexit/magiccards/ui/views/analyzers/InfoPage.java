@@ -55,9 +55,11 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
 		getArea().setLayout(new GridLayout(3, false));
-		createStatsArea().setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
+		createStatsArea().setLayoutData(
+				GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
 		createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		createEditButton(stats).setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.BEGINNING, SWT.END).create());
+		createEditButton(stats).setLayoutData(
+				GridDataFactory.swtDefaults().grab(true, true).align(SWT.BEGINNING, SWT.END).create());
 		return getArea();
 	}
 
@@ -100,7 +102,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 				}
 			}
 		});
-		protection = createDynCombo("Protection: ", "If collection is read only it cannot be modfied, except for unsetting read only flag",
+		protection = createDynCombo("Protection: ",
+				"If collection is read only it cannot be modfied, except for unsetting read only flag",
 				"Read Only", "Writable");
 		protection.getCombo().addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -117,7 +120,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		colors = createTextLabel("Colors: ");
 		colorsSideboard = createTextLabel("Colors (Sideboard): ");
 		averagecost = createTextLabel("Average Mana Cost: ");
-		maxRepeats = createTextLabel("Max Repeats: ", "How many time each card repeats, excluding basic land (for legality purposes)");
+		maxRepeats = createTextLabel("Max Repeats: ",
+				"How many time each card repeats, excluding basic land (for legality purposes)");
 		rarity = createTextLabel("Rarity: ");
 		// tree.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 		dbprice = createTextLabel("Price: ", "Cost of a deck using Seller's Price column,"
@@ -223,7 +227,9 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		int spellCount = spell.getCount();
 		if (spellCount > 0) {
 			rarity.setText(spell.getRarity());
-			averagecost.setText(String.valueOf(CardStoreUtils.getManaCost(spell.expand()) / (float) spellCount) + " (" + spellCount
+			averagecost.setText(String.valueOf(CardStoreUtils.getManaCost(spell.expand())
+					/ (float) spellCount)
+					+ " (" + spellCount
 					+ " spells)");
 		}
 		getArea().layout(true);

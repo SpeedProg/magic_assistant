@@ -19,7 +19,6 @@ import java.util.List;
  * 
  */
 public class ParallelEffect implements IEffect {
-
 	IEffect[] effects = null;
 	long length = 0;
 	Runnable onCancel;
@@ -45,7 +44,6 @@ public class ParallelEffect implements IEffect {
 		this.effects = effects;
 		this.onCancel = onCancel;
 		this.onStop = onStop;
-
 		// Get total length
 		if (effects != null) {
 			IEffect e = null;
@@ -89,7 +87,6 @@ public class ParallelEffect implements IEffect {
 				effects[i].cancel();
 			}
 		}
-
 		// Call cancel runnable
 		if (onCancel != null) {
 			onCancel.run();
@@ -107,7 +104,6 @@ public class ParallelEffect implements IEffect {
 				effects[i].doEffect(time);
 			}
 		}
-
 		// Call stop runnable
 		if (onStop != null && isDone()) {
 			onStop.run();
@@ -129,7 +125,6 @@ public class ParallelEffect implements IEffect {
 	 * @see org.eclipse.nebula.animation.effects.IEffect#isDone()
 	 */
 	public boolean isDone() {
-
 		if (effects != null) {
 			// Ensure all effects are done.
 			boolean done = true;
@@ -140,9 +135,7 @@ public class ParallelEffect implements IEffect {
 			}
 			return done;
 		}
-
 		// No effects ? always done.
 		return true;
 	}
-
 }

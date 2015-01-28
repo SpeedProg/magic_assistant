@@ -122,7 +122,7 @@ public class OverviewSection extends TSectionPart {
 		scheduleButton.setToolTipText("Schedule the tournament - creates rounds, and schedules if possible");
 		closeButton.setToolTipText("Close the tournament and propagate score");
 		reScheduleButton
-		        .setToolTipText("Clear all the data and resets the tournament to initial state (not scheduled)");
+				.setToolTipText("Clear all the data and resets the tournament to initial state (not scheduled)");
 		undoCloseButton.setToolTipText("Undo score propagation and re-open the tournament for modifications");
 		// layout
 		scheduleButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -131,6 +131,7 @@ public class OverviewSection extends TSectionPart {
 		undoCloseButton.setLayoutData(fill.create());
 		return comp;
 	}
+
 	private boolean initializing = false;
 
 	/**
@@ -156,8 +157,8 @@ public class OverviewSection extends TSectionPart {
 			@Override
 			protected boolean execute() {
 				boolean openQuestion = MessageDialog.openQuestion(getSection().getShell(), "Confirmation",
-				        "This action would erase all rounds and players standings in the tournament."
-				                + "Do you want to proceed?");
+						"This action would erase all rounds and players standings in the tournament."
+								+ "Do you want to proceed?");
 				if (openQuestion) {
 					tournament.setScheduled(false);
 				}
@@ -168,9 +169,9 @@ public class OverviewSection extends TSectionPart {
 			@Override
 			protected boolean execute() {
 				boolean openQuestion = MessageDialog.openQuestion(getSection().getShell(), "Confirmation",
-				        "This action would terminate all unfinished rounds "
-				                + "and propagate tournament score table into players score table. "
-				                + "Do you want to proceed?");
+						"This action would terminate all unfinished rounds "
+								+ "and propagate tournament score table into players score table. "
+								+ "Do you want to proceed?");
 				if (openQuestion) {
 					List<Round> rounds = tournament.getRounds();
 					for (Object element : rounds) {

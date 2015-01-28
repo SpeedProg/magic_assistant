@@ -45,11 +45,11 @@ import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
  * Card Store for Magic DB
  * 
  */
-public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
+public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements
+		ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
 	private boolean flatDbLoaded;
 	private boolean loadDefault;
 	private GlobalDbHandler handler;
-
 	{
 		init();
 	}
@@ -137,7 +137,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 					cur = 1;
 			}
 			if (old == cur) {
-				System.err.println("STORE DOUBLE: " + prev + " " + old + "[" + prevPart + "] -> new " + card + "[" + curPart + "] " + cur);
+				System.err.println("STORE DOUBLE: " + prev + " " + old + "[" + prevPart + "] -> new " + card
+						+ "[" + curPart + "] " + cur);
 				return true;
 			} else {
 				if (old == 1) {
@@ -280,7 +281,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 
 	public File getFile(final IMagicCard card) {
 		if (card instanceof MagicCard) {
-			return new File(XmlCardHolder.getDbFolder(), Location.fromCard(card).getBaseFileName());
+			return new File(XmlCardHolder.getDbFolder(), Location.fromCard(card)
+					.getBaseFileName());
 		}
 		throw new MagicException("Unknown card type");
 	}
@@ -304,7 +306,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 					String abbr = (Editions.getInstance().getEditionByName(set).getBaseFileName());
 					try {
 						// long time = System.currentTimeMillis();
-						File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(set).getBaseFileName());
+						File setFile = new File(XmlCardHolder.getDbFolder(), Location.createLocationFromSet(
+								set).getBaseFileName());
 						if (!setFile.exists() || setFile.length() == 0)
 							DataManager.getCardHandler().loadFromFlatResource(abbr + ".txt");
 						// long nowtime = System.currentTimeMillis() - time;
@@ -386,7 +389,8 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	}
 
 	@Override
-	public void updateOperation(ICoreRunnableWithProgress run, ICoreProgressMonitor monitor) throws InterruptedException {
+	public void updateOperation(ICoreRunnableWithProgress run, ICoreProgressMonitor monitor)
+			throws InterruptedException {
 		boolean ac = isAutoCommit();
 		setAutoCommit(false);
 		try {

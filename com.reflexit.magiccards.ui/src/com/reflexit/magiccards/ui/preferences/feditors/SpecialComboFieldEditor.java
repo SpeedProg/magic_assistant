@@ -55,7 +55,8 @@ public class SpecialComboFieldEditor extends FieldEditor {
 	 * @param parent
 	 *            the parent composite
 	 */
-	public SpecialComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues, Composite parent, int modifiers) {
+	public SpecialComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues,
+			Composite parent, int modifiers) {
 		init(name, labelText);
 		Assert.isTrue(checkArray(entryNamesAndValues));
 		this.fEntryNamesAndValues = entryNamesAndValues;

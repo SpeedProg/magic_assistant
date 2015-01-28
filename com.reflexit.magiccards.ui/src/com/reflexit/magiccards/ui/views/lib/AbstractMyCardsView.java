@@ -106,7 +106,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 			@Override
 			public void run(String id) {
 				IFilteredCardStore fstore = DM.getCardHandler().getCardCollectionFilteredStore(id);
-
 				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
@@ -130,7 +129,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						ICardStore cardStore = DM.getCardHandler().getCardCollectionFilteredStore(id).getCardStore();
+						ICardStore cardStore = DM.getCardHandler().getCardCollectionFilteredStore(id)
+								.getCardStore();
 						DM.moveCards(DM.expandGroups(sel.toList()), cardStore);
 					}
 				}
@@ -208,7 +208,8 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					}
 				}
 				if (max == 1) {
-					MessageDialog.openInformation(getShell(), "Split", "Minimum pile, cannot split any further");
+					MessageDialog.openInformation(getShell(), "Split",
+							"Minimum pile, cannot split any further");
 					return;
 				}
 				int type = PICK;

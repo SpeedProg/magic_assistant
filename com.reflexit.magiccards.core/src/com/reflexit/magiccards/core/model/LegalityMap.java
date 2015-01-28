@@ -198,7 +198,8 @@ public class LegalityMap {
 		String res = "";
 		for (Format format : map.keySet()) {
 			Legality leg = map.get(format);
-			if ((format.ordinal() >= Format.SAN_ORDINAL) && (leg == Legality.NOT_LEGAL || leg == Legality.UNKNOWN))
+			if ((format.ordinal() >= Format.SAN_ORDINAL)
+					&& (leg == Legality.NOT_LEGAL || leg == Legality.UNKNOWN))
 				continue;
 			res += format + " - " + leg.getLabel() + "\n";
 		}

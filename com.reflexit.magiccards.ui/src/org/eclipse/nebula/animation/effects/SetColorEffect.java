@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.movement.IMovement;
@@ -23,7 +22,6 @@ import org.eclipse.swt.widgets.Display;
  * 
  */
 public class SetColorEffect extends AbstractEffect {
-
 	/**
 	 * Objects on which the SetColorEffect is applied must implements this
 	 * interface. This allows to use this effect on different widgets and select
@@ -51,7 +49,6 @@ public class SetColorEffect extends AbstractEffect {
 	Color src;
 	Color dest;
 	int diffR, diffG, diffB;
-
 	IColoredObject control = null;
 
 	/**
@@ -60,9 +57,8 @@ public class SetColorEffect extends AbstractEffect {
 	 * </p>
 	 * 
 	 * <p>
-	 * Source and destination color will not be disposed during or after the
-	 * animation. All other temporary colors created by this effect will be
-	 * disposed automatically.
+	 * Source and destination color will not be disposed during or after the animation. All other temporary
+	 * colors created by this effect will be disposed automatically.
 	 * </p>
 	 * 
 	 * @param control
@@ -85,7 +81,6 @@ public class SetColorEffect extends AbstractEffect {
 		this.diffG = dest.getGreen() - src.getGreen();
 		this.diffB = dest.getBlue() - src.getBlue();
 		this.control = control;
-
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 
@@ -96,9 +91,7 @@ public class SetColorEffect extends AbstractEffect {
 	 * org.eclipse.nebula.animation.effects.AbstractEffect#applyEffect(long)
 	 */
 	public void applyEffect(final long currentTime) {
-
 		Color currentColor = control.getColor();
-
 		// Get the next color values
 		int nextRed = (int) (src.getRed() + diffR
 				* easingFunction.getValue(currentTime));
@@ -106,23 +99,17 @@ public class SetColorEffect extends AbstractEffect {
 				* easingFunction.getValue(currentTime));
 		int nextBlue = (int) (src.getBlue() + diffB
 				* easingFunction.getValue(currentTime));
-
 		RGB nextRGB = new RGB(nextRed, nextGreen, nextBlue);
-
 		if (currentColor == null || !nextRGB.equals(currentColor.getRGB())) {
-
 			Color nextColor = new Color(Display.getCurrent(), nextRed,
 					nextGreen, nextBlue);
-
 			// If this is the destination color, dispose the newly created color
 			// and use the destination one instead.
 			if (dest.getRGB().equals(nextColor.getRGB())) {
 				nextColor.dispose();
 				nextColor = dest;
 			}
-
 			control.setColor(nextColor);
-
 			// If the previous color is not the source or destination one,
 			// dispose it.
 			if (currentColor != null && !currentColor.isDisposed()) {
@@ -130,8 +117,6 @@ public class SetColorEffect extends AbstractEffect {
 					currentColor.dispose();
 				}
 			}
-
 		}
-
 	}
 }

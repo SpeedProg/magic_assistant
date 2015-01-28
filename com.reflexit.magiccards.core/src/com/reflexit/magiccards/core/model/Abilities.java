@@ -52,7 +52,8 @@ public class Abilities {
 
 		public RegexAbilityMatcher(String displayName, String searchPattern, boolean keyword) {
 			this.displayName = displayName;
-			this.compiledPattern = Pattern.compile(searchPattern, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
+			this.compiledPattern = Pattern.compile(searchPattern, Pattern.CASE_INSENSITIVE
+					| Pattern.UNICODE_CASE | Pattern.DOTALL);
 			this.keyword = keyword;
 		}
 
@@ -82,9 +83,9 @@ public class Abilities {
 
 	private static final CardTextLocal AB = CardTextLocal.getCardText(Locale.ENGLISH);
 	private static IAbilityMatcher[] abilities = new IAbilityMatcher[] {
-	/*
-	 * List from: http://wizards.custhelp.com/app/answers/detail/a_id/17/related/1
-	 */
+			/*
+			 * List from: http://wizards.custhelp.com/app/answers/detail/a_id/17/related/1
+			 */
 			// Ability Words
 			createKeywordAbility(AB.Ability_Channel),// "Channel"
 			createKeywordAbility(AB.Ability_Chroma),// "Chroma"
@@ -208,7 +209,8 @@ public class Abilities {
 			createMinedAbility("Target"), //
 			createMinedAbility("Creature", "(creatures?|[0-9]*/[0-9]*)"), //
 			createMinedAbilityS("Player"), //
-			createMinedAbilityRegex("Power/Toughness", "([\\+\\-][0-9]/[\\+\\-][0-9])|\\b(power|toughness)\\b"), //
+			createMinedAbilityRegex("Power/Toughness",
+					"([\\+\\-][0-9]/[\\+\\-][0-9])|\\b(power|toughness)\\b"), //
 			createMinedAbility("Upkeep"), //
 			createMinedAbilityD("Name"), //
 			createMinedAbility("Remove"), //
@@ -397,7 +399,8 @@ public class Abilities {
 		PrintStream st = new PrintStream(file);
 		try {
 			for (IAbilityMatcher a : abilities) {
-				st.println(a.getDisplayName() + "|" + (a.isKeyword() ? KEYWORD : MINED) + "|" + a.getPattern());
+				st.println(a.getDisplayName() + "|" + (a.isKeyword() ? KEYWORD : MINED) + "|"
+						+ a.getPattern());
 			}
 		} finally {
 			st.close();

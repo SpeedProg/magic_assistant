@@ -70,7 +70,8 @@ public class CardCollection extends CardElement {
 	}
 
 	public void open() {
-		IFilteredCardStore fi = DataManager.getInstance().getCardHandler().getCardCollectionFilteredStore(getName());
+		IFilteredCardStore fi = DataManager.getInstance().getCardHandler()
+				.getCardCollectionFilteredStore(getName());
 		if (fi != null && store == null)
 			this.store = fi.getCardStore();
 	}

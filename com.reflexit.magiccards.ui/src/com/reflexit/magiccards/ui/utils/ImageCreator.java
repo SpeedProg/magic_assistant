@@ -50,7 +50,6 @@ public class ImageCreator {
 
 	private ImageCreator() {
 		// private
-
 	}
 
 	public synchronized void initFontRegistry() {
@@ -152,7 +151,8 @@ public class ImageCreator {
 		int x = (int) ((nwidth - width * zoom) / 2);
 		int y = (int) ((nheight - height * zoom) / 2);
 		Display display = Display.getDefault();
-		Image scaledImage = new Image(display, imageData.scaledTo((int) (width * zoom), (int) (height * zoom)));
+		Image scaledImage = new Image(display,
+				imageData.scaledTo((int) (width * zoom), (int) (height * zoom)));
 		Image centeredImage = new Image(display, nwidth, nheight);
 		GC newGC = new GC(centeredImage);
 		newGC.drawImage(scaledImage, x, y);
@@ -217,10 +217,12 @@ public class ImageCreator {
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be
+	 *         downloaded remotely
 	 * @throws IOException
 	 */
-	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException, CannotDetermineSetAbbriviation {
+	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException,
+			CannotDetermineSetAbbriviation {
 		synchronized (card) {
 			if (forceUpdate)
 				remote = true;
@@ -312,8 +314,10 @@ public class ImageCreator {
 				break;
 		}
 		int scanlinePad = srcData.scanlinePad;
-		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1)) / scanlinePad * scanlinePad;
-		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4 : bytesPerLine;
+		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1)) / scanlinePad
+				* scanlinePad;
+		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4
+				: bytesPerLine;
 		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine : minBytesPerLine;
 		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length : height * destBytesPerLine];
 		for (int srcY = 0; srcY < srcData.height; srcY++) {
@@ -490,7 +494,8 @@ public class ImageCreator {
 		// border * 2);
 		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2, border * 2);
+		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2,
+				border * 2);
 		gc.drawImage(remoteImage, border, border);
 		gc.dispose();
 		return full;
@@ -505,7 +510,8 @@ public class ImageCreator {
 		else if (width > max_width)
 			width = max_width;
 		ImageData sourceData1 = images.iterator().next().getImageData();
-		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth, sourceData1.palette);
+		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth,
+				sourceData1.palette);
 		int x = 0;
 		for (Image image : images) {
 			ImageData id = image.getImageData();

@@ -18,23 +18,21 @@ import com.reflexit.magiccards.core.MagicLogger;
  * Common superclass for all message bundle classes. Provides convenience methods for manipulating
  * messages.
  * <p>
- * The <code>#bind</code> methods perform string substitution and should be considered a convenience
- * and <em>not</em> a full substitute replacement for <code>MessageFormat#format</code> method
- * calls.
+ * The <code>#bind</code> methods perform string substitution and should be considered a convenience and
+ * <em>not</em> a full substitute replacement for <code>MessageFormat#format</code> method calls.
  * </p>
  * <p>
- * Text appearing within curly braces in the given message, will be interpreted as a numeric index
- * to the corresponding substitution object in the given array. Calling the <code>#bind</code>
- * methods with text that does not map to an integer will result in an
- * {@link IllegalArgumentException}.
+ * Text appearing within curly braces in the given message, will be interpreted as a numeric index to the
+ * corresponding substitution object in the given array. Calling the <code>#bind</code> methods with text that
+ * does not map to an integer will result in an {@link IllegalArgumentException}.
  * </p>
  * <p>
- * Text appearing within single quotes is treated as a literal. A single quote is escaped by a
- * preceeding single quote.
+ * Text appearing within single quotes is treated as a literal. A single quote is escaped by a preceeding
+ * single quote.
  * </p>
  * <p>
- * Clients who wish to use the full substitution power of the <code>MessageFormat</code> class
- * should call that class directly and not use these <code>#bind</code> methods.
+ * Clients who wish to use the full substitution power of the <code>MessageFormat</code> class should call
+ * that class directly and not use these <code>#bind</code> methods.
  * </p>
  * <p>
  * Clients may subclass this type.
@@ -134,12 +132,14 @@ public abstract class NLSLocal {
 		final String[] variants = buildVariants(bundleName, locale);
 		for (int i = 0; i < variants.length; i++) {
 			// loader==null if we're launched off the Java boot classpath
-			final InputStream input = loader == null ? ClassLoader.getSystemResourceAsStream(variants[i]) : loader
-					.getResourceAsStream(variants[i]);
+			final InputStream input = loader == null ? ClassLoader.getSystemResourceAsStream(variants[i])
+					: loader
+							.getResourceAsStream(variants[i]);
 			if (input == null)
 				continue;
 			try {
-				final MessagesProperties properties = new MessagesProperties(fields, bundleName, isAccessible, obj);
+				final MessagesProperties properties = new MessagesProperties(fields, bundleName,
+						isAccessible, obj);
 				properties.load(input);
 			} catch (IOException e) {
 				log(SEVERITY_ERROR, "Error loading " + variants[i], e); //$NON-NLS-1$

@@ -36,7 +36,8 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By", MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
+		MenuManager groupMenu = new MenuManager("Group By",
+				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
 		groupMenu.add(createGroupActionNone());
 		groupMenu.add(createGroupAction(MagicCardField.SET));
 		groupMenu.add(createGroupAction(MagicCardField.LOCATION));

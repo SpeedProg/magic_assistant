@@ -346,8 +346,7 @@ public abstract class ListEditor2 extends FieldEditor {
 	}
 
 	/**
-	 * Splits the given string into a list of strings. This method is the converse of
-	 * <code>createList</code>.
+	 * Splits the given string into a list of strings. This method is the converse of <code>createList</code>.
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
@@ -380,8 +379,8 @@ public abstract class ListEditor2 extends FieldEditor {
 	 * Invoked when the selection in the list has changed.
 	 * 
 	 * <p>
-	 * The default implementation of this method utilizes the selection index and the size of the
-	 * list to toggle the enablement of the up, down and remove buttons.
+	 * The default implementation of this method utilizes the selection index and the size of the list to
+	 * toggle the enablement of the up, down and remove buttons.
 	 * </p>
 	 * 
 	 * <p>

@@ -111,7 +111,8 @@ public abstract class MagicControl implements IMagicControl {
 	}
 
 	public void dispose() {
-		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
+		MagicUIActivator.getDefault().getPreferenceStore()
+				.removePropertyChangeListener(this.preferenceListener);
 		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(preferenceListener);
 	}
 

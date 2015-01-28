@@ -107,7 +107,8 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 
 	private void deleteSet(Edition ed) {
 		if (ed.isUsed()) {
-			MessageDialog.openInformation(getShell(), "No Way", ed.getName() + " is used in database by some cards, cannot delete");
+			MessageDialog.openInformation(getShell(), "No Way", ed.getName()
+					+ " is used in database by some cards, cannot delete");
 			return;
 		}
 		Editions.getInstance().remove(ed);

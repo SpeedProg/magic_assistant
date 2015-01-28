@@ -29,7 +29,8 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 		if (d == null)
 			throw new IllegalArgumentException("Not found: " + filename);
 		if (!d.isOpen()) {
-			LibraryFilteredCardFileStore magicLibraryHandler = (LibraryFilteredCardFileStore) DataManager.getCardHandler()
+			LibraryFilteredCardFileStore magicLibraryHandler = (LibraryFilteredCardFileStore) DataManager
+					.getCardHandler()
 					.getLibraryFilteredStore();
 			ICardStore<IMagicCard> store = magicLibraryHandler.getStore(d.getLocation());
 			d.open(store);

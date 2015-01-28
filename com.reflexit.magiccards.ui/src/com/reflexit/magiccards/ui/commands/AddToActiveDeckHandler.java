@@ -46,7 +46,8 @@ public class AddToActiveDeckHandler extends AbstractHandler {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
 			}
 		} else {
-			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");
+			MessageDialog.openError(window.getShell(), "Error",
+					"No active deck, select an active deck by opening it");
 		}
 		return null;
 	}

@@ -71,7 +71,7 @@ public class CostColumn extends AbstractColumn implements Listener {
 			}
 			Image costImage = getActualImage(row);
 			if (costImage != null) {
-				gc.setClipping(x, y, tx-x, event.height);
+				gc.setClipping(x, y, tx - x, event.height);
 				gc.drawImage(costImage, x, y + 1);
 			}
 		}

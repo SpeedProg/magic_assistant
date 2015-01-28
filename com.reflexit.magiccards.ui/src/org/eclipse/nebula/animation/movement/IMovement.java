@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.movement;
 
 /**
@@ -17,7 +16,6 @@ package org.eclipse.nebula.animation.movement;
  * @author Nicolas Richeton
  */
 public interface IMovement {
-
 	/**
 	 * Set up the movement. with init( 0, 1, 50), it will take 50 steps to go
 	 * from 0 to 1. There is no garanties that getValue will return only values
@@ -41,5 +39,4 @@ public interface IMovement {
 	 * @return current value.
 	 */
 	double getValue(double step);
-
 }

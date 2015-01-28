@@ -20,7 +20,6 @@ package org.eclipse.nebula.animation.movement;
  * 
  */
 public class SinusDecreaseVariation extends AbstractMovement {
-
 	int variations = 1;
 	double amplitude;
 
@@ -34,5 +33,4 @@ public class SinusDecreaseVariation extends AbstractMovement {
 		return amplitude * (1 - step / duration)
 				* Math.sin(step / duration * Math.PI * (double) variations);
 	}
-
 }

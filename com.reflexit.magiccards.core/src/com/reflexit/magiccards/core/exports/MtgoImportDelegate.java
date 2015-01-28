@@ -61,7 +61,8 @@ public class MtgoImportDelegate extends CsvImportDelegate {
 	protected synchronized MagicCardPhysical createCard(List<String> list) {
 		MagicCardPhysical x = super.createCard(list);
 		try {
-			if (list.get(cardNameIndex).endsWith(" (premium)") || (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
+			if (list.get(cardNameIndex).endsWith(" (premium)")
+					|| (premiumIndex >= 0 && list.get(premiumIndex).equalsIgnoreCase("Yes"))) {
 				x.setSpecialTag("premium");
 			}
 		} catch (Exception e) {

@@ -40,11 +40,10 @@ import com.reflexit.mtgtournament.ui.tour.Activator;
  * this or another plug-in (e.g. the workspace). The view is connected to the
  * model using a content provider.
  * <p>
- * The view uses a label provider to define how model objects should be
- * presented in the view. Each view can present the same model objects using
- * different labels and icons, if needed. Alternatively, a single label provider
- * can be shared between views in order to ensure that objects of the same type
- * are presented in the same way everywhere.
+ * The view uses a label provider to define how model objects should be presented in the view. Each view can
+ * present the same model objects using different labels and icons, if needed. Alternatively, a single label
+ * provider can be shared between views in order to ensure that objects of the same type are presented in the
+ * same way everywhere.
  * <p>
  */
 public class TimerView extends ViewPart {
@@ -263,8 +262,11 @@ public class TimerView extends ViewPart {
 	}
 
 	protected void setTimer() {
-		InputDialog d = new InputDialog(area.getShell(), "Set Timer",
-				"Enter timer value hh:mm:ss. After timer is set press \"Play\" button to start the countdown.", lastTimerValue, null);
+		InputDialog d = new InputDialog(
+				area.getShell(),
+				"Set Timer",
+				"Enter timer value hh:mm:ss. After timer is set press \"Play\" button to start the countdown.",
+				lastTimerValue, null);
 		if (d.open() == Dialog.OK) {
 			pause.run();
 			String t = d.getValue();
@@ -274,7 +276,8 @@ public class TimerView extends ViewPart {
 				timeLeft = tt;
 				timerLabel.setText(timerFormat.format(new Date(timeLeft)));
 			} catch (ParseException e) {
-				MessageDialog.openError(area.getShell(), "Timer Error", "Cannot parse timer value, format is hh:mm:ss");
+				MessageDialog.openError(area.getShell(), "Timer Error",
+						"Cannot parse timer value, format is hh:mm:ss");
 			}
 		}
 	}

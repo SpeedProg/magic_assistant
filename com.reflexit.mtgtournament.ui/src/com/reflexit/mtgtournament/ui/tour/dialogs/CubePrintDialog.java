@@ -197,9 +197,11 @@ public class CubePrintDialog extends Dialog {
 	protected String getHeader() {
 		switch (toPrint) {
 			case ROUND_RESULTS:
-				return "Round Results for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
+				return "Round Results for "
+						+ (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
 			case ROUND_SCHEDULE:
-				return "Round Schedule for " + (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
+				return "Round Schedule for "
+						+ (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
 			case TOURNAMENT_RESULTS:
 				return "Turnament Results";
 				// case PLAYER_LIST:
@@ -254,7 +256,8 @@ public class CubePrintDialog extends Dialog {
 		StringBuffer buf = new StringBuffer();
 		buf.append(String.format("%2s %-20s %s\n", "Place", "Name", "Stats (Points)"));
 		for (PlayerTourInfo pi : playersInfo) {
-			buf.append(String.format("%5d %-20s %d-%d-%d (%2d)\n", pi.getPlace(), pi.getPlayer().getName(), pi.getWin(), pi.getDraw(),
+			buf.append(String.format("%5d %-20s %d-%d-%d (%2d)\n", pi.getPlace(), pi.getPlayer().getName(),
+					pi.getWin(), pi.getDraw(),
 					pi.getLost(), pi.getPoints()));
 		}
 		return buf.toString();
@@ -289,7 +292,8 @@ public class CubePrintDialog extends Dialog {
 		}
 
 		public int compare(TableInfo o1, TableInfo o2) {
-			return o1.getPlayerInfo(p).getPlayer().getName().compareTo(o2.getPlayerInfo(p).getPlayer().getName());
+			return o1.getPlayerInfo(p).getPlayer().getName()
+					.compareTo(o2.getPlayerInfo(p).getPlayer().getName());
 		}
 	}
 
@@ -333,7 +337,8 @@ public class CubePrintDialog extends Dialog {
 		if (results == false)
 			return String.format("[%3d] %-20s - %-20s", ti.getTableNumber(), name1, name2);
 		else {
-			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1, pi1.getWinStrDetails(),
+			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1,
+					pi1.getWinStrDetails(),
 					name2, pi2.getWinStrDetails());
 		}
 	}

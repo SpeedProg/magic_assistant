@@ -132,11 +132,13 @@ public class CheckedTreeSelectionComposite extends Composite {
 	public void initialize() {
 		BusyIndicator.showWhile(null, new Runnable() {
 			public void run() {
-				CheckedTreeSelectionComposite.this.fViewer.setCheckedElements(CheckedTreeSelectionComposite.this.fInitialSelections
-						.toArray());
+				CheckedTreeSelectionComposite.this.fViewer
+						.setCheckedElements(CheckedTreeSelectionComposite.this.fInitialSelections
+								.toArray());
 				if (CheckedTreeSelectionComposite.this.fExpandedElements != null) {
-					CheckedTreeSelectionComposite.this.fViewer.setExpandedElements(CheckedTreeSelectionComposite.this.fExpandedElements
-							.toArray());
+					CheckedTreeSelectionComposite.this.fViewer
+							.setExpandedElements(CheckedTreeSelectionComposite.this.fExpandedElements
+									.toArray());
 				}
 				updateOKStatus();
 			}

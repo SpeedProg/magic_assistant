@@ -180,25 +180,31 @@ public enum FilterField {
 						return fieldEquals(MagicCardField.CTYPE, "colorless").or(
 								fieldEquals(MagicCardField.CTYPE, "land"));
 					} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						return BinaryExpr.fieldMatches(MagicCardField.COST, en);
+						return BinaryExpr
+								.fieldMatches(MagicCardField.COST, en);
 					}
 					break;
 				}
 				case COLOR_IDENITY: {
 					String en;
 					if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						return BinaryExpr.fieldMatches(MagicCardField.COST, en)
-								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE, new TextValue(en, true, true, false)));
+						return BinaryExpr
+								.fieldMatches(MagicCardField.COST, en)
+								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE, new TextValue(en, true,
+										true,
+										false)));
 					}
 					break;
 				}
 				case DBPRICE: {
-					return new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value("0"))
+					return new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value(
+							"0"))
 							.and(fieldInt(MagicCardField.PRICE, value))
 							.or(fieldInt(MagicCardField.DBPRICE, value));
 				}
 				case PRICE: {
-					return new BinaryExpr(new CardFieldExpr(MagicCardField.PRICE), Operation.EQ, new Value("0"))
+					return new BinaryExpr(new CardFieldExpr(MagicCardField.PRICE), Operation.EQ, new Value(
+							"0"))
 							.and(fieldInt(MagicCardField.DBPRICE, value))
 							.or(fieldInt(MagicCardField.PRICE, value));
 				}

@@ -17,7 +17,8 @@ public class BrowserOpenAcknoledgementDialog extends MessageDialog {
 	private URL url;
 
 	public BrowserOpenAcknoledgementDialog(Shell parentShell, String dialogMessage, URL url) {
-		super(parentShell, "Web Browser Acknoledgment", null, dialogMessage, INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0);
+		super(parentShell, "Web Browser Acknoledgment", null, dialogMessage, INFORMATION,
+				new String[] { IDialogConstants.OK_LABEL }, 0);
 		setShellStyle(getShellStyle() | SWT.SHEET);
 		this.url = url;
 	}

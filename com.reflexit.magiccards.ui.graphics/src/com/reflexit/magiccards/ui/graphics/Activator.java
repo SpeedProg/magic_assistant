@@ -52,10 +52,13 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void log(String message) {
-		getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), message));
 	}
 
 	public static void log(Throwable e) {
-		getDefault().getLog().log(new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e.getMessage(), e));
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, Activator.getDefault().getBundle().getSymbolicName(), 1, e
+						.getMessage(), e));
 	}
 }

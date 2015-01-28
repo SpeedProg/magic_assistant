@@ -61,8 +61,7 @@ public class FileSaveFieldEditor extends FileFieldEditor {
 	 * @param labelText
 	 *            the label text of the field editor
 	 * @param enforceAbsolute
-	 *            <code>true</code> if the file path must be absolute, and <code>false</code>
-	 *            otherwise
+	 *            <code>true</code> if the file path must be absolute, and <code>false</code> otherwise
 	 * @param parent
 	 *            the parent of the field editor's control
 	 */
@@ -78,8 +77,7 @@ public class FileSaveFieldEditor extends FileFieldEditor {
 	 * @param labelText
 	 *            the label text of the field editor
 	 * @param enforceAbsolute
-	 *            <code>true</code> if the file path must be absolute, and <code>false</code>
-	 *            otherwise
+	 *            <code>true</code> if the file path must be absolute, and <code>false</code> otherwise
 	 * @param validationStrategy
 	 *            either {@link StringButtonFieldEditor#VALIDATE_ON_KEY_STROKE} to perform on the
 	 *            fly checking, or {@link StringButtonFieldEditor#VALIDATE_ON_FOCUS_LOST} (the
@@ -90,7 +88,8 @@ public class FileSaveFieldEditor extends FileFieldEditor {
 	 * @see StringButtonFieldEditor#VALIDATE_ON_KEY_STROKE
 	 * @see StringButtonFieldEditor#VALIDATE_ON_FOCUS_LOST
 	 */
-	public FileSaveFieldEditor(String name, String labelText, boolean enforceAbsolute, int validationStrategy, Composite parent) {
+	public FileSaveFieldEditor(String name, String labelText, boolean enforceAbsolute,
+			int validationStrategy, Composite parent) {
 		super(name, labelText, enforceAbsolute, validationStrategy, parent);
 	}
 

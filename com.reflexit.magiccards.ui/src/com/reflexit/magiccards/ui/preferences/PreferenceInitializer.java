@@ -41,9 +41,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.OWNED_COPY, false);
 		store.setDefault(PreferenceConstants.CURRENCY, "USD");
 		store.setDefault(PreferenceConstants.WORK_OFFLINE, false);
-		store.setDefault(PreferenceConstants.PRICE_PROVIDER, PriceProviderManager.getInstance().getDefaultProvider().getName());
+		store.setDefault(PreferenceConstants.PRICE_PROVIDER, PriceProviderManager.getInstance()
+				.getDefaultProvider().getName());
 		store.setDefault(PreferenceConstants.LAST_SELECTION, 205961);
-
 		// local settings
 		getMdbStore()
 				.setDefault(
@@ -57,11 +57,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
 						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
-		getCollectorStore().setDefault(
-				PreferenceConstants.LOCAL_COLUMNS,
-				"Group,-Name,Progress,-Progress4,-Card Id,-Cost,-Type,-Power,-Toughness,-Oracle Text,-Text,-Set,-Rarity,-Color Type,-Count,"
-						+ "Collector's Number,Artist,Location,-Color,Ownership,Price,Seller Price,-Rating,-For Trade,"
-						+ "Comment,Special,-Language");
+		getCollectorStore()
+				.setDefault(
+						PreferenceConstants.LOCAL_COLUMNS,
+						"Group,-Name,Progress,-Progress4,-Card Id,-Cost,-Type,-Power,-Toughness,-Oracle Text,-Text,-Set,-Rarity,-Color Type,-Count,"
+								+ "Collector's Number,Artist,Location,-Color,Ownership,Price,Seller Price,-Rating,-For Trade,"
+								+ "Comment,Special,-Language");
 		getDeckStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
 		getMdbStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
 		getLibStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);

@@ -62,7 +62,8 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 		// comment
 		createTextFieldEditor(area, "Comment", COMMENT_FIELD, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// special
-		Text special = createTextFieldEditor(area, "Special Tags", SPECIAL_FIELD, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		Text special = createTextFieldEditor(area, "Special Tags", SPECIAL_FIELD, SWT.BORDER | SWT.WRAP
+				| SWT.V_SCROLL);
 		special.setToolTipText("Set card tags, such as foil, mint, premium, forTrade, etc. Tags are separated by ','.\n To add tag use +, to remove tag use -. For example \"+foil,-online\".");
 		ContextAssist.addContextAssist(special, SpecialTags.getTags(), true);
 		// end

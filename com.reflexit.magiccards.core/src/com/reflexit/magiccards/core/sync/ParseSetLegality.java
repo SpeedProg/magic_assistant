@@ -15,7 +15,6 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
 public class ParseSetLegality extends AbstractParseGathererPage {
-
 	private Format format;
 
 	public ParseSetLegality(String format) {
@@ -58,7 +57,8 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 
 	@Override
 	protected String getUrl() {
-		return "http://magic.wizards.com/en/gameinfo/gameplay/formats/" + format.name().toLowerCase(Locale.ENGLISH);
+		return "http://magic.wizards.com/en/gameinfo/gameplay/formats/"
+				+ format.name().toLowerCase(Locale.ENGLISH);
 	}
 
 	public static void loadAllFormats(ICoreProgressMonitor monitor) {

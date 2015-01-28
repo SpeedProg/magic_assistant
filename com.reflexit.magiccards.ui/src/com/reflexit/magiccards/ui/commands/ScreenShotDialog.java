@@ -104,7 +104,8 @@ public final class ScreenShotDialog extends Dialog {
 		if (buttonId == 4) { // crop
 			Rectangle selection = getSelection();
 			if (selection.isEmpty()) {
-				MessageDialog.openError(getShell(), "Error", "Nothing is selected. Use mouse to select a region to crop.");
+				MessageDialog.openError(getShell(), "Error",
+						"Nothing is selected. Use mouse to select a region to crop.");
 			}
 			Image image1 = new Image(getShell().getDisplay(), selection.width, selection.height);
 			GC gc = new GC(image1);

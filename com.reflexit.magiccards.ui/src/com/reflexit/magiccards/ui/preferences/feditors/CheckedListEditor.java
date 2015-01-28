@@ -305,8 +305,7 @@ public class CheckedListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Splits the given string into a list of strings. This method is the converse of
-	 * <code>createList</code>.
+	 * Splits the given string into a list of strings. This method is the converse of <code>createList</code>.
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>

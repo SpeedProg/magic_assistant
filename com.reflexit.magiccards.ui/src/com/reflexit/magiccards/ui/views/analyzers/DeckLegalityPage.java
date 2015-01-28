@@ -296,7 +296,8 @@ public class DeckLegalityPage extends AbstractDeckPage implements IDeckPage {
 						public void run() {
 							legalityTableViewer.setInput(deckInput);
 							if (!deckInput.isEmpty()) {
-								legalityTableViewer.setSelection(new StructuredSelection(deckInput.getFirstLegal()));
+								legalityTableViewer.setSelection(new StructuredSelection(deckInput
+										.getFirstLegal()));
 							}
 						}
 					});

@@ -60,7 +60,8 @@ public class MasterPlayersSection extends TSectionPart {
 
 	protected void createButtons(Composite sectionClient) {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
-		buttons.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.BEGINNING).create());
+		buttons.setLayoutData(GridDataFactory.fillDefaults().grab(false, true)
+				.align(SWT.CENTER, SWT.BEGINNING).create());
 		GridLayout layout = new GridLayout(1, true);
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		buttons.setLayout(layout);
@@ -110,7 +111,8 @@ public class MasterPlayersSection extends TSectionPart {
 		if (input instanceof PlayerList) {
 			this.plist = (PlayerList) input;
 			if (plist.size() > 20) {
-				plComp.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 400).create());
+				plComp.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 400)
+						.create());
 			} else {
 				plComp.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 			}

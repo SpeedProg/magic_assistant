@@ -27,8 +27,6 @@ import com.reflexit.magiccards.ui.views.lib.MyCardsView;
  * Increase card number
  */
 public class IncreaseCardCountHandler extends AbstractHandler {
-
-
 	/**
 	 * The constructor.
 	 */
@@ -66,7 +64,8 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 		return null;
 	}
 
-	protected void increase(IWorkbenchWindow window, IStructuredSelection iss, IFilteredCardStore activeDeckHandler) {
+	protected void increase(IWorkbenchWindow window, IStructuredSelection iss,
+			IFilteredCardStore activeDeckHandler) {
 		if (activeDeckHandler != null) {
 			ArrayList<IMagicCard> toAdd = new ArrayList<IMagicCard>();
 			for (Iterator iterator = iss.iterator(); iterator.hasNext();) {
@@ -75,7 +74,8 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
 					int count = mc.getCount();
 					mc.setCount(count + 1);
-					DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc,Collections.singleton(MagicCardField.COUNT));
+					DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc,
+							Collections.singleton(MagicCardField.COUNT));
 				} else {
 					toAdd.add(magicCard);
 				}

@@ -42,9 +42,11 @@ public class CreaturePage extends AbstractDeckStatsPage {
 
 	@Override
 	protected IChartGenerator createChartGenerator() {
-		Map<String, Integer> creatureStatsCount = CardStoreUtils.top(10, CardStoreUtils.buildCreatureStats(store));
-		IChartGenerator gen = new CreatureChart(creatureStatsCount.values().toArray(new Integer[0]), creatureStatsCount.keySet().toArray(
-				new String[0]));
+		Map<String, Integer> creatureStatsCount = CardStoreUtils.top(10,
+				CardStoreUtils.buildCreatureStats(store));
+		IChartGenerator gen = new CreatureChart(creatureStatsCount.values().toArray(new Integer[0]),
+				creatureStatsCount.keySet().toArray(
+						new String[0]));
 		return gen;
 	}
 

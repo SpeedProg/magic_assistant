@@ -35,7 +35,8 @@ public class NewCollectionContainerWizard extends NewCardElementWizard implement
 	 * contents, and open the editor on the newly created file.
 	 */
 	@Override
-	protected void doFinish(String containerName, final String name, boolean virtual, IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(String containerName, final String name, boolean virtual, IProgressMonitor monitor)
+			throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 2);
 		ModelRoot root = getModelRoot();

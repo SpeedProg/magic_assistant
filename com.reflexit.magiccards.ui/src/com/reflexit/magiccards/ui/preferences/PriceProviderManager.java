@@ -18,7 +18,8 @@ public class PriceProviderManager implements IPropertyChangeListener {
 	}
 
 	public String getProviderName() {
-		String name = MagicUIActivator.getDefault().getPreferenceStore().getString(PreferenceConstants.PRICE_PROVIDER);
+		String name = MagicUIActivator.getDefault().getPreferenceStore()
+				.getString(PreferenceConstants.PRICE_PROVIDER);
 		return name;
 	}
 

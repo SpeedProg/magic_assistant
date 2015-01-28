@@ -264,7 +264,8 @@ public class DeckExportPage extends WizardDataTransferPage {
 
 	public void setDeckSelection() {
 		try {
-			CardElement element = DataManager.getInstance().getModelRoot().findElement(collection.getStringValue());
+			CardElement element = DataManager.getInstance().getModelRoot()
+					.findElement(collection.getStringValue());
 			if (element != null)
 				resourceSelection = new StructuredSelection(element);
 			else
@@ -375,7 +376,8 @@ public class DeckExportPage extends WizardDataTransferPage {
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
 		columnsChoiceParent.setLayoutData(layoutData);
-		columnsChoice = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Columns:", columnsChoiceParent) {
+		columnsChoice = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Columns:",
+				columnsChoiceParent) {
 			@Override
 			protected String changePressed() {
 				new MagicFieldSelectorDialog(getShell(), store).open();
@@ -458,21 +460,25 @@ public class DeckExportPage extends WizardDataTransferPage {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection events
-	 * including button presses and registers default buttons with its shell. The button id is stored as the buttons client data. Note that
-	 * the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented. Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a standard push button,
+	 * registers for selection events including button presses and registers default buttons with its shell.
+	 * The button id is stored as the buttons client data. Note that the parent's layout is assumed to be a
+	 * GridLayout and the number of columns in this layout is incremented. Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog
+	 *            button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button, and <code>false</code>
+	 *            otherwise
 	 */
-	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
+	protected Button createButton(final Composite parent, final int id, final String label,
+			final boolean defaultButton) {
 		// increment the number of columns in the button bar
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button button = new Button(parent, SWT.PUSH);
@@ -638,12 +644,14 @@ public class DeckExportPage extends WizardDataTransferPage {
 		return res;
 	}
 
-	public void exportDeck(final OutputStream outStream, IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
+	public void exportDeck(final OutputStream outStream, IProgressMonitor monitor, ReportType reportType,
+			boolean header, boolean sideboard)
 			throws InvocationTargetException, InterruptedException {
 		// TODO: export selection only
 		IExportDelegate exportDelegate = reportType.getExportDelegate();
 		final HashMap<String, String> map = storeToMap(sideboard, exportDelegate.isSideboardSupported());
-		IFilteredCardStore filteredLibrary = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
+		IFilteredCardStore filteredLibrary = DataManager.getCardHandler()
+				.getLibraryFilteredStoreWorkingCopy();
 		MagicCardFilter locFilter = filteredLibrary.getFilter();
 		locFilter.update(map);
 		if (sideboard)

@@ -65,11 +65,14 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 				return super.parseLine(res, sline);
 			}
 		};
-		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]?\\s*(\\d+)\\s*$"), new ICardField[] {
-				MagicCardField.NAME, MagicCardField.SET, MagicCardField.COUNT });
-		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]?\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"), new ICardField[] {
-				MagicCardField.COUNT, MagicCardField.NAME, MagicCardField.SET, });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET,
+		parser.addPattern(Pattern.compile("\\s*(.*?)\\s*(?:\\(([^)]*)\\))?\\s+[xX]?\\s*(\\d+)\\s*$"),
+				new ICardField[] {
+						MagicCardField.NAME, MagicCardField.SET, MagicCardField.COUNT });
+		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]?\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"),
+				new ICardField[] {
+						MagicCardField.COUNT, MagicCardField.NAME, MagicCardField.SET, });
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
+				MagicCardField.SET,
 				MagicCardField.SIDEBOARD });
 		try {
 			do {

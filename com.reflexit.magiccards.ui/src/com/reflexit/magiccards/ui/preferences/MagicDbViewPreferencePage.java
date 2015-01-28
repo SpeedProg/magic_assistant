@@ -19,8 +19,10 @@ public class MagicDbViewPreferencePage extends FieldEditorPreferencePage impleme
 	@Override
 	protected void createFieldEditors() {
 		ColumnCollection columnCollection = new MagicColumnCollection(getClass().getName());
-		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
-		addField(new ColumnFieldEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),
+		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter",
+				getFieldEditorParent()));
+		addField(new ColumnFieldEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order",
+				getFieldEditorParent(),
 				columnCollection));
 	}
 

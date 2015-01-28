@@ -86,12 +86,14 @@ public class CreatureChart implements IChartGenerator {
 		DataPoint dataPoint = sePie.getDataPoint();
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
-		DataPointComponent dpc1 = DataPointComponentImpl.create(DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
-		        JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
+		DataPointComponent dpc1 = DataPointComponentImpl.create(
+				DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
+				JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
 		DataPointComponent dpc2 = DataPointComponentImpl.create(
-		        DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL, JavaNumberFormatSpecifierImpl
-		                .create(" (##.##%)")); //$NON-NLS-1$
-		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL, null);
+				DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL, JavaNumberFormatSpecifierImpl
+						.create(" (##.##%)")); //$NON-NLS-1$
+		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL,
+				null);
 		dataPoint.getComponents().add(dpc3);
 		dataPoint.getComponents().add(dpc1);
 		dataPoint.getComponents().add(dpc2);

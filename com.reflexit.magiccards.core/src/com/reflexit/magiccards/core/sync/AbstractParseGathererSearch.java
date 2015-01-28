@@ -23,9 +23,11 @@ public abstract class AbstractParseGathererSearch extends GatherHelper {
 		}
 	}
 
-	protected abstract boolean processFromReader(BufferedReader openStringReader, ILoadCardHander handler) throws IOException;
+	protected abstract boolean processFromReader(BufferedReader openStringReader, ILoadCardHander handler)
+			throws IOException;
 
-	public abstract boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException;
+	public abstract boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon)
+			throws IOException;
 
 	public void loadFile(File file, GatherHelper.ILoadCardHander handler) throws IOException {
 		BufferedReader st = FileUtils.openFileReader(file);

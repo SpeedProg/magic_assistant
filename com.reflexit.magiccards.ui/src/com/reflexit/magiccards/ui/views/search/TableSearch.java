@@ -83,7 +83,8 @@ public class TableSearch {
 		return -1;
 	}
 
-	private static void searchTree(SearchContext context, TreePath last, boolean needWrap, Pattern pat, ICardGroup group, TreePath path) {
+	private static void searchTree(SearchContext context, TreePath last, boolean needWrap, Pattern pat,
+			ICardGroup group, TreePath path) {
 		Object[] elements = group.getChildren();
 		int lastIndex = -1;
 		int len = elements.length;
@@ -104,7 +105,8 @@ public class TableSearch {
 			end = i1;
 			off = -1;
 		}
-		for (int i = start; i * off <= end * off && context.isFound() == false && context.isCancelled() == false; i += off) {
+		for (int i = start; i * off <= end * off && context.isFound() == false
+				&& context.isCancelled() == false; i += off) {
 			int j = i % elements.length;
 			ICard card = (ICard) elements[j];
 			TreePath fullPath = path.createChildPath(card);
@@ -134,7 +136,8 @@ public class TableSearch {
 		return new TreePath(arr);
 	}
 
-	private static void searchFlat(SearchContext context, IFilteredCardStore store, Object last, boolean needWrap, Pattern pat) {
+	private static void searchFlat(SearchContext context, IFilteredCardStore store, Object last,
+			boolean needWrap, Pattern pat) {
 		if (store == null)
 			return;
 		Object[] elements = store.getElements();

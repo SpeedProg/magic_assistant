@@ -121,8 +121,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		}
 	}
 
-
-
 	@Override
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
@@ -217,7 +215,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			}
 		};
 		this.typeSelector = new ComboContributionItem("xxx");
-		this.sideboard = new ImageAction("Include Sideboard", "icons/obj16/sideboard16.png", IAction.AS_CHECK_BOX) {
+		this.sideboard = new ImageAction("Include Sideboard", "icons/obj16/sideboard16.png",
+				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				triggerSideboard(!isInludeSideboard());
@@ -231,12 +230,14 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			}
 		};
 		this.header.setChecked(isInludeHeader());
-		this.actionShowPrefs = new ImageAction("Preferences...", "icons/clcl16/table.gif", IAction.AS_PUSH_BUTTON) {
+		this.actionShowPrefs = new ImageAction("Preferences...", "icons/clcl16/table.gif",
+				IAction.AS_PUSH_BUTTON) {
 			@Override
 			public void run() {
 				String id = DeckViewPreferencePage.class.getName();
 				if (id != null) {
-					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getArea().getShell(), id, new String[] { id }, null);
+					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getArea().getShell(),
+							id, new String[] { id }, null);
 					dialog.open();
 					reloadData();
 				}
@@ -459,11 +460,14 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		if (path.getFileExtension() == null || path.segmentCount() < 2) {
 			messageString = NLS.bind("File {0} already exists, overwrite?", pathString);
 		} else {
-			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?", path.lastSegment(), path.removeLastSegments(1)
-					.toOSString());
+			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?",
+					path.lastSegment(), path.removeLastSegments(1)
+							.toOSString());
 		}
-		final MessageDialog dialog = new MessageDialog(getArea().getShell(), "Question", null, messageString, MessageDialog.QUESTION,
-				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+		final MessageDialog dialog = new MessageDialog(getArea().getShell(), "Question", null, messageString,
+				MessageDialog.QUESTION,
+				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
+						IDialogConstants.CANCEL_LABEL }, 0);
 		String[] response = new String[] { YES, NO, CANCEL };
 		// run in syncExec because callback is from an operation,
 		// which is probably not running in the UI thread.
@@ -507,7 +511,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		actionShowPrefs.setEnabled(true);
 		sideboard.setEnabled(true);
 		if (reportType.getExportDelegate() instanceof AbstractExportDelegate) {
-			AbstractExportDelegate<IMagicCard> delegate = (AbstractExportDelegate<IMagicCard>) reportType.getExportDelegate();
+			AbstractExportDelegate<IMagicCard> delegate = (AbstractExportDelegate<IMagicCard>) reportType
+					.getExportDelegate();
 			actionShowPrefs.setEnabled(delegate.isColumnChoiceSupported());
 			sideboard.setEnabled(delegate.isMultipleLocationSupported());
 		}

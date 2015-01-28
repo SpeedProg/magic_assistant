@@ -60,7 +60,8 @@ public class EditionsFilterPreferencePage extends AbstractFilterPreferencePage {
 		createAndAdd(new MFieldEditorPreferencePage() {
 			@Override
 			protected void createFieldEditors() {
-				addField(new ComboFieldEditor(FilterField.FORMAT.getPrefConstant(), "Format: ", fs, getFieldEditorParent()));
+				addField(new ComboFieldEditor(FilterField.FORMAT.getPrefConstant(), "Format: ", fs,
+						getFieldEditorParent()));
 			}
 
 			@Override

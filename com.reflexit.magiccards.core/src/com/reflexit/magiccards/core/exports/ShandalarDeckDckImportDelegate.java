@@ -48,7 +48,8 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 		parser = new DeckParser(getStream(), this);
 		parser.addPattern(Pattern.compile("^\\.\\d+\\s*(\\d+)\\s+(.*)"), //
 				new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET });
+		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
+				MagicCardField.SET });
 		lineNum = 0;
 		String set = "";
 		// read header

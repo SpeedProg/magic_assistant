@@ -119,10 +119,12 @@ public abstract class NewCardElementWizard extends Wizard {
 	 * @param monitor
 	 */
 	/**
-	 * The worker method. It will find the container, create the file if missing or just replace its contents, and open the editor on the
+	 * The worker method. It will find the container, create the file if missing or just replace its contents,
+	 * and open the editor on the
 	 * newly created file.
 	 */
-	protected void doFinish(String containerName, final String name, final boolean virtual, IProgressMonitor monitor) throws CoreException {
+	protected void doFinish(String containerName, final String name, final boolean virtual,
+			IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 2);
 		ModelRoot root = getModelRoot();
@@ -150,7 +152,8 @@ public abstract class NewCardElementWizard extends Wizard {
 		monitor.done();
 	}
 
-	protected abstract CardElement doCreateCardElement(CollectionsContainer parent, String name, boolean virtual);
+	protected abstract CardElement doCreateCardElement(CollectionsContainer parent, String name,
+			boolean virtual);
 
 	protected void throwCoreException(String message) throws CoreException {
 		IStatus status = new Status(IStatus.ERROR, "com.reflexit.magiccards.ui", IStatus.OK, message, null);

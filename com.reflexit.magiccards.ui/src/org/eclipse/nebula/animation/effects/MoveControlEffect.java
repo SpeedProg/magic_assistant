@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.AnimationRunner;
@@ -23,7 +22,6 @@ import org.eclipse.swt.widgets.Control;
  * 
  */
 public class MoveControlEffect extends AbstractEffect {
-
 	/**
 	 * @deprecated
 	 * @param w
@@ -44,24 +42,19 @@ public class MoveControlEffect extends AbstractEffect {
 	}
 
 	int startX, endX, startY, endY, stepX, stepY;
-
 	Control control = null;
 
 	public MoveControlEffect(Control control, int startX, int endX, int startY,
 			int endY, long lengthMilli, IMovement movement, Runnable onStop,
 			Runnable onCancel) {
 		super(lengthMilli, movement, onStop, onCancel);
-
 		this.startX = startX;
 		this.endX = endX;
 		stepX = endX - startX;
-
 		this.startY = startY;
 		this.endY = endY;
 		stepY = endY - startY;
-
 		easingFunction.init(0, 1, (int) lengthMilli);
-
 		this.control = control;
 	}
 
@@ -81,5 +74,4 @@ public class MoveControlEffect extends AbstractEffect {
 	public int getEnd() {
 		return endY;
 	}
-
 }

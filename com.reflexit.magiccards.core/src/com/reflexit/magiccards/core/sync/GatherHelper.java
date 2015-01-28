@@ -68,7 +68,8 @@ public class GatherHelper extends ParserHtmlHelper {
 	}
 
 	public static void saveManaSymbol(File dir, String name) throws MalformedURLException {
-		URL url = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&type=symbol&name=" + name);
+		URL url = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&type=symbol&name="
+				+ name);
 		try {
 			InputStream st = WebUtils.openUrl(url);
 			File f = new File(dir, "Symbol_" + name + "_mana.gif");

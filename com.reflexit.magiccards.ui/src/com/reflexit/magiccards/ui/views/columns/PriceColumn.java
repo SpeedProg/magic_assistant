@@ -89,7 +89,7 @@ public class PriceColumn extends SellerPriceColumn {
 					// save
 					card.setPrice(price);
 					Set<MagicCardField> of = Collections.singleton(MagicCardField.PRICE);
-					DataManager.getInstance().update(card,of);
+					DataManager.getInstance().update(card, of);
 				}
 			}
 		};

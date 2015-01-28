@@ -223,7 +223,8 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void doFinish(final String containerName, final String name, boolean virtual, final IProgressMonitor monitor)
+	protected void doFinish(final String containerName, final String name, boolean virtual,
+			final IProgressMonitor monitor)
 			throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
@@ -234,7 +235,8 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		}
 		monitor.worked(1);
 		CardOrganizer parent = (CardOrganizer) resource;
-		CardCollection col = populateLibrary(BoosterGeneratorCollectionWizard.this.sets, BoosterGeneratorCollectionWizard.this.packs, name,
+		CardCollection col = populateLibrary(BoosterGeneratorCollectionWizard.this.sets,
+				BoosterGeneratorCollectionWizard.this.packs, name,
 				parent, virtual, new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
 		if (col != null)
@@ -249,14 +251,16 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	 * @param subProgressMonitor
 	 * @return
 	 */
-	private CardCollection populateLibrary(List collections, int packs, String name, CardOrganizer parent, boolean virtual,
+	private CardCollection populateLibrary(List collections, int packs, String name, CardOrganizer parent,
+			boolean virtual,
 			IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 9 * packs + 1);
 		CardCollection col = null;
 		monitor.worked(1);
 		// ICardStore<IMagicCard> store = col.getStore();
 		HashMap<String, String> filterset = new HashMap<String, String>();
-		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler().getLibraryFilteredStoreWorkingCopy();
+		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler()
+				.getLibraryFilteredStoreWorkingCopy();
 		MagicCardFilter filter = dbcards.getFilter();
 		boolean succ = false;
 		for (Object o : collections) {
@@ -270,10 +274,12 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			col.open();
 			try {
 				// 1*packs rare cards
-				generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
+				generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE,
+						Rarity.RARE);
 				monitor.worked(3 * packs);
 				// 3*packs uncommon
-				generateRarity(countUncommon * packs, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
+				generateRarity(countUncommon * packs, filterset, filter, dbcards, col, Rarity.UNCOMMON,
+						Rarity.OTHER);
 				monitor.worked(3 * packs);
 				// 11*packs common
 				generateRarity(countCommon * packs, filterset, filter, dbcards, col, Rarity.COMMON);
@@ -292,10 +298,12 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 				col.open();
 				try {
 					// 1*packs rare cards
-					generateRarity(countRare, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE, Rarity.RARE);
+					generateRarity(countRare, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE,
+							Rarity.RARE);
 					monitor.worked(3);
 					// 3*packs uncommon
-					generateRarity(countUncommon, filterset, filter, dbcards, col, Rarity.UNCOMMON, Rarity.OTHER);
+					generateRarity(countUncommon, filterset, filter, dbcards, col, Rarity.UNCOMMON,
+							Rarity.OTHER);
 					monitor.worked(3);
 					// 11*packs common
 					generateRarity(countCommon, filterset, filter, dbcards, col, Rarity.COMMON);
@@ -347,8 +355,12 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		getShell().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				boolean ok = MessageDialog.openConfirm(getShell(), "Confirm", str
-						+ ". Press OK to continue generation and Cancel to abort and change selection and options");
+				boolean ok = MessageDialog
+						.openConfirm(
+								getShell(),
+								"Confirm",
+								str
+										+ ". Press OK to continue generation and Cancel to abort and change selection and options");
 				result[0] = ok;
 			}
 		});
@@ -364,7 +376,8 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	 * @param store
 	 * @param col
 	 */
-	private void generateRandom(int num, IFilteredCardStore<IMagicCard> dbcards, ICardStore<IMagicCard> store, CardElement col) {
+	private void generateRandom(int num, IFilteredCardStore<IMagicCard> dbcards,
+			ICardStore<IMagicCard> store, CardElement col) {
 		for (int i = 0; i < num; i++) {
 			try {
 				generateRandom(dbcards, store);

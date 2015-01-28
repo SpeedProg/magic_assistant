@@ -7,7 +7,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  *******************************************************************************/
-
 /*********************************************************************************
  * TERMS OF USE - EASING EQUATIONS 
  * 
@@ -40,7 +39,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ********************************************************************************/
-
 package org.eclipse.nebula.animation.movement;
 
 /**
@@ -55,7 +53,6 @@ package org.eclipse.nebula.animation.movement;
  * 
  */
 public class ElasticOut extends AbstractMovement {
-
 	Double a = null, p = null;
 
 	public ElasticOut(double a, double p) {
@@ -75,34 +72,26 @@ public class ElasticOut extends AbstractMovement {
 		// b: min -> min
 		// c : total increment -> max - min
 		// d: duration -> duration
-
 		double c = max - min;
 		double s;
-
 		if (step == 0) {
 			return min;
 		}
-
 		step = step / duration;
 		if ((step) == 1d)
 			return min + c;
-
 		if (p == null)
 			p = new Double(duration * .3);
-
 		if (a == null || a.doubleValue() < Math.abs(c)) {
 			a = new Double(c);
 			s = p.doubleValue() / 4d;
 		}
-
 		else
 			s = p.doubleValue() / (2d * Math.PI)
 					* Math.asin(c / a.doubleValue());
-
 		return (a.doubleValue()
 				* Math.pow(2d, -10d * step)
 				* Math.sin((step * duration - s) * (2d * Math.PI)
 						/ p.doubleValue()) + c + min);
 	}
-
 }

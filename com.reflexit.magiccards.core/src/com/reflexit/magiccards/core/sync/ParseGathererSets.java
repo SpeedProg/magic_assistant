@@ -41,7 +41,8 @@ public class ParseGathererSets extends AbstractParseGathererPage {
 	...
 	</select>
 	 */
-	private static Pattern setStartPattern = Pattern.compile("Card Set:.*?<option value=\"\"></option>(.*?)</select>");
+	private static Pattern setStartPattern = Pattern
+			.compile("Card Set:.*?<option value=\"\"></option>(.*?)</select>");
 	private static Pattern oneSetPattern = Pattern.compile("<option.*?>(.*?)</option>");
 	private Collection<Edition> newSets = new ArrayList<Editions.Edition>();
 	private Collection<String> allParsed = new ArrayList<String>();

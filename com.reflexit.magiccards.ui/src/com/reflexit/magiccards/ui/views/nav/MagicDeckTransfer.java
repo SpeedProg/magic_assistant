@@ -51,10 +51,12 @@ public class MagicDeckTransfer extends ByteArrayTransfer {
 	}
 
 	public CardElement[] fromByteArray(byte[] bytes) {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), FileUtils.CHARSET_UTF_8));
+		BufferedReader in = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes),
+				FileUtils.CHARSET_UTF_8));
 		try {
 			String name;
-			Map<Location, CardElement> locationsMap = DataManager.getInstance().getModelRoot().getLocationsMap();
+			Map<Location, CardElement> locationsMap = DataManager.getInstance().getModelRoot()
+					.getLocationsMap();
 			ArrayList<CardElement> list = new ArrayList<CardElement>();
 			while ((name = in.readLine()) != null) {
 				CardElement cardElement = locationsMap.get(new Location(name));

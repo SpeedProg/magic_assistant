@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.movement.IMovement;
@@ -23,22 +22,17 @@ import org.eclipse.swt.widgets.ScrollBar;
  * 
  */
 public class MoveScrollBarEffect extends AbstractEffect {
-
 	int start, end, step, current;
-
 	ScrollBar scrollBar = null;
 
 	public MoveScrollBarEffect(ScrollBar scrollBar, int start, int end,
 			long lengthMilli, IMovement movement, Runnable onStop,
 			Runnable onCancel) {
 		super(lengthMilli, movement, onStop, onCancel);
-
 		this.start = start;
 		this.end = end;
 		step = end - start;
-
 		easingFunction.init(0, 1, (int) lengthMilli);
-
 		this.scrollBar = scrollBar;
 		current = start;
 	}
@@ -46,7 +40,6 @@ public class MoveScrollBarEffect extends AbstractEffect {
 	public void applyEffect(final long currentTime) {
 		current = (int) (start + step
 				* easingFunction.getValue((int) currentTime));
-
 		if (!scrollBar.isDisposed()) {
 			scrollBar.setSelection(current);
 			Event event = new Event();
@@ -55,7 +48,6 @@ public class MoveScrollBarEffect extends AbstractEffect {
 			event.display = scrollBar.getDisplay();
 			event.widget = scrollBar;
 			event.doit = true;
-
 			scrollBar.notifyListeners(SWT.Selection, event);
 		}
 	}
@@ -71,5 +63,4 @@ public class MoveScrollBarEffect extends AbstractEffect {
 	public int getCurrent() {
 		return current;
 	}
-
 }

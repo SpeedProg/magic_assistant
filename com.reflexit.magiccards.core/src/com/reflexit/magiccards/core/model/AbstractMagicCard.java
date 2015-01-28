@@ -11,7 +11,8 @@ import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 import com.reflexit.magiccards.core.model.expr.TextValue;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 
-public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagicCard, IMagicCardPhysical, Cloneable {
+public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagicCard, IMagicCardPhysical,
+		Cloneable {
 	@Override
 	public String getString(ICardField field) {
 		Object v = get(field);
@@ -130,7 +131,6 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 	public int getOwnUnique() {
 		return getInt(MagicCardField.OWN_UNIQUE);
 	}
-
 
 	public boolean isForTrade() {
 		return isSpecialTag(MagicCardField.FORTRADECOUNT.specialTag());
@@ -269,7 +269,8 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 	public static boolean matches(IMagicCard card, ICardField left, TextValue right) {
 		String value = String.valueOf(card.get(left));
 		if (left == MagicCardField.TYPE && !right.regex) {
-			return CardTypes.getInstance().hasType(card, right.getText());
+			return CardTypes.getInstance().hasType(card,
+					right.getText());
 		}
 		return right.getPattern().matcher(value).find();
 	}

@@ -7,14 +7,13 @@ package com.reflexit.magiccards.core.model.events;
  * is very fast. Readers are given access to the underlying array data structure for reading, with
  * the trust that they will not modify the underlying array.
  * <p>
- * <a name="same">A listener list handles the <i>same</i> listener being added multiple times, and
- * tolerates removal of listeners that are the same as other listeners in the list. For this
- * purpose, listeners can be compared with each other using either equality or identity, as
- * specified in the list constructor.
+ * <a name="same">A listener list handles the <i>same</i> listener being added multiple times, and tolerates
+ * removal of listeners that are the same as other listeners in the list. For this purpose, listeners can be
+ * compared with each other using either equality or identity, as specified in the list constructor.
  * </p>
  * <p>
- * Use the <code>getListeners</code> method when notifying listeners. The recommended code sequence
- * for notifying all registered listeners of say, <code>FooListener.eventHappened</code>, is:
+ * Use the <code>getListeners</code> method when notifying listeners. The recommended code sequence for
+ * notifying all registered listeners of say, <code>FooListener.eventHappened</code>, is:
  * 
  * <pre>
  * Object[] listeners = myListenerList.getListeners();
@@ -119,8 +118,7 @@ public class ListenerList {
 	/**
 	 * Returns whether this listener list is empty.
 	 * 
-	 * @return <code>true</code> if there are no registered listeners, and <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if there are no registered listeners, and <code>false</code> otherwise
 	 */
 	public boolean isEmpty() {
 		return listeners.length == 0;

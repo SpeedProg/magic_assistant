@@ -133,7 +133,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		comboLegality.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
 		total = createTextLabel("Cards: ");
 		totalSideboard = createTextLabel("Cards (Sideboard): ");
-		maxRepeats = createTextLabel("Max Repeats: ", "How many time each card repeats, excluding basic land (for legality purposes)");
+		maxRepeats = createTextLabel("Max Repeats: ",
+				"How many time each card repeats, excluding basic land (for legality purposes)");
 		colors = createTextLabel("Colors: ");
 		colorsSideboard = createTextLabel("Colors (Sideboard): ");
 		rarity = createTextLabel("Rarity: ");
@@ -407,7 +408,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	private Map<Integer, LegalityMap> calculateCardLegalities(IProgressMonitor monitor) {
 		try {
-			return ParseGathererLegality.cardSetLegality(fstore.getCardStore(), new CoreMonitorAdapter(monitor));
+			return ParseGathererLegality.cardSetLegality(fstore.getCardStore(), new CoreMonitorAdapter(
+					monitor));
 		} catch (IOException e) {
 			MessageDialog.openError(getControl().getShell(), "Error", e.getMessage());
 			return null;

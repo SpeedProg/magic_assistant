@@ -15,7 +15,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T>, ILocatable {
 	protected transient boolean initialized;
 	protected boolean mergeOnAdd;
-
 	{
 		init();
 	}

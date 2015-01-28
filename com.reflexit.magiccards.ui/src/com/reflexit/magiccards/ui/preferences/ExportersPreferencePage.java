@@ -181,7 +181,8 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		return Arrays.toString(items).replace(", ", ",").replaceAll("[\\[\\]]", "");
 	}
 
-	public static String exportDeck(IProgressMonitor monitor, ReportType reportType, boolean header, boolean sideboard)
+	public static String exportDeck(IProgressMonitor monitor, ReportType reportType, boolean header,
+			boolean sideboard)
 			throws FileNotFoundException, IOException, InvocationTargetException, InterruptedException {
 		final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		IFilteredCardStore filteredLibrary = createExample(sideboard);

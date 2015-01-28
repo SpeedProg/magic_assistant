@@ -18,7 +18,6 @@ public class ImageAction extends Action {
 		this(name, iconKey, style, () -> {
 			throw new IllegalArgumentException("Runnable is not defined");
 		});
-		
 	}
 
 	@Override

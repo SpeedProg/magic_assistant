@@ -15,8 +15,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Cross fade images in a target object. The target must implement
- * {@link IImageObject}.
+ * Cross fade images in a target object. The target must implement {@link IImageObject}.
  * 
  * @author Nicolas Richeton
  */
@@ -91,14 +90,11 @@ public class CrossFadeEffect extends AbstractEffect {
 		this.obj = obj;
 		this.image1 = image1;
 		this.image2 = image2;
-
 		if (!image1.getBounds().equals(image2.getBounds())) {
 			throw new IllegalArgumentException(
 					"Both image must have the same dimensions");
 		}
-
 		easingFunction.init(0, 1, (int) lengthMilli);
-
 		buffer = new Image(image1.getDevice(), image1.getBounds().width, image1
 				.getBounds().height);
 		gc = new GC(buffer);
@@ -112,7 +108,6 @@ public class CrossFadeEffect extends AbstractEffect {
 	 */
 	public void applyEffect(long currentTime) {
 		easingValue = easingFunction.getValue(currentTime);
-
 		if (easingValue == 0) {
 			obj.setImage(image1);
 		} else if (easingValue == 1) {

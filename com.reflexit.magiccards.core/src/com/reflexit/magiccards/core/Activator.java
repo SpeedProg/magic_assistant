@@ -43,7 +43,8 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		TRACE_CORE = isDebugging();
-		TRACE_PERF = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/profiling"));
+		TRACE_PERF = isDebugging()
+				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/profiling"));
 		MagicLogger.setTracing(TRACE_PERF);
 		MagicLogger.setDebugging(TRACE_CORE);
 		MagicLogger.info("Magic Assistant started. Version " + plugin.getBundle().getVersion());

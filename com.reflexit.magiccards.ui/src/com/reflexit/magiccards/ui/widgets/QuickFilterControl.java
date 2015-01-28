@@ -247,7 +247,8 @@ public class QuickFilterControl extends Composite {
 				for (String type : names) {
 					setProposals[i++] = type;
 				}
-				IContentProposalProvider contentProposalProvider = proposalAdapter.getContentProposalProvider();
+				IContentProposalProvider contentProposalProvider = proposalAdapter
+						.getContentProposalProvider();
 				if (contentProposalProvider instanceof SimpleContentProposalProvider) {
 					((SimpleContentProposalProvider) contentProposalProvider).setProposals(setProposals);
 				}

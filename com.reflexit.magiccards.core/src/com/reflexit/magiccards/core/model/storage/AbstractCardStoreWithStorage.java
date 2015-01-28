@@ -20,7 +20,8 @@ import com.reflexit.magiccards.core.model.Location;
  * @author Alena
  * 
  */
-public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>, IStorageContainer<T> {
+public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>,
+		IStorageContainer<T> {
 	protected IStorage<T> storage;
 	protected boolean wrapped;
 

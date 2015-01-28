@@ -5,7 +5,6 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.expr.TextValue;
 
-
 public interface IMagicCard extends ICard {
 	public static final MagicCard DEFAULT = new MagicCard();
 	public static final float STAR_POWER = 0.99F;

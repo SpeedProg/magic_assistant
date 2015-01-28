@@ -37,7 +37,8 @@ public class TSectionPart extends SectionPart {
 	protected FormToolkit toolkit;
 
 	public TSectionPart(IManagedForm managedForm, int style) {
-		super(managedForm.getForm().getBody(), managedForm.getToolkit(), Section.TITLE_BAR | Section.TWISTIE | style);
+		super(managedForm.getForm().getBody(), managedForm.getToolkit(), Section.TITLE_BAR | Section.TWISTIE
+				| style);
 		initialize(managedForm);
 		this.toolkit = managedForm.getToolkit();
 	}
@@ -54,6 +55,7 @@ public class TSectionPart extends SectionPart {
 		markDirty();
 		commit(false);
 	}
+
 	class PanelAction extends Action {
 		PanelAction(String name) {
 			super(name);

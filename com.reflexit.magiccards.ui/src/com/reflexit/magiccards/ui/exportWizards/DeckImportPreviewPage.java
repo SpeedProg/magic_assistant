@@ -186,7 +186,8 @@ public class DeckImportPreviewPage extends WizardPage {
 								MagicCardPhysical card = (MagicCardPhysical) element;
 								String set = (String) value;
 								// set
-								Collection<IMagicCard> cards = DataManager.getCardHandler().getMagicDBStore().getCandidates(card.getName());
+								Collection<IMagicCard> cards = DataManager.getCardHandler().getMagicDBStore()
+										.getCandidates(card.getName());
 								boolean found = false;
 								for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 									IMagicCard base = (IMagicCard) iterator.next();

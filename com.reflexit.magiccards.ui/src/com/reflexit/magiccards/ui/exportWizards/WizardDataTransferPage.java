@@ -119,8 +119,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Creates the import/export options group controls.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
-	 * Subclasses wishing to define such components should reimplement this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing. Subclasses wishing
+	 * to define such components should reimplement this hook method.
 	 * </p>
 	 * 
 	 * @param optionsGroup
@@ -235,8 +235,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	}
 
 	/**
-	 * The <code>WizardDataTransfer</code> implementation of this <code>IOverwriteQuery</code>
-	 * method asks the user whether the existing resource at the given path should be overwritten.
+	 * The <code>WizardDataTransfer</code> implementation of this <code>IOverwriteQuery</code> method asks the
+	 * user whether the existing resource at the given path should be overwritten.
 	 * 
 	 * @param pathString
 	 * @return the user's reply: one of <code>"YES"</code>, <code>"NO"</code>, <code>"ALL"</code>,
@@ -250,11 +250,14 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 		if (path.getFileExtension() == null || path.segmentCount() < 2) {
 			messageString = NLS.bind("File {0} already exists, overwrite?", pathString);
 		} else {
-			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?", path.lastSegment(), path.removeLastSegments(1)
-					.toOSString());
+			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?",
+					path.lastSegment(), path.removeLastSegments(1)
+							.toOSString());
 		}
-		final MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", null, messageString, MessageDialog.QUESTION,
-				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL, IDialogConstants.NO_LABEL,
+		final MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", null,
+				messageString, MessageDialog.QUESTION,
+				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL,
+						IDialogConstants.NO_LABEL,
 						IDialogConstants.NO_TO_ALL_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		String[] response = new String[] { YES, ALL, NO, NO_ALL, CANCEL };
 		// run in syncExec because callback is from an operation,
@@ -276,7 +279,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * @return <code>true</code> for Yes, and <code>false</code> for No
 	 */
 	protected boolean queryYesNoQuestion(String message) {
-		MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", (Image) null, message, MessageDialog.NONE,
+		MessageDialog dialog = new MessageDialog(getContainer().getShell(), "Question", (Image) null,
+				message, MessageDialog.NONE,
 				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
 		// ensure yes is the default
 		return dialog.open() == 0;
@@ -285,8 +289,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Restores control settings that were saved in the previous instance of this page.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
-	 * Subclasses may override this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing. Subclasses may
+	 * override this hook method.
 	 * </p>
 	 */
 	protected void restoreWidgetValues() {
@@ -296,8 +300,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Saves control settings that are to be restored in the next instance of this page.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
-	 * Subclasses may override this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing. Subclasses may
+	 * override this hook method.
 	 * </p>
 	 */
 	protected void saveWidgetValues() {
@@ -318,8 +322,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Updates the enable state of this page's controls.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing.
-	 * Subclasses may extend this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing. Subclasses may
+	 * extend this hook method.
 	 * </p>
 	 */
 	protected void updateWidgetEnablements() {
@@ -330,8 +334,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * Returns whether this page's destination specification controls currently all contain valid
 	 * values.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method returns
-	 * <code>true</code>. Subclasses may reimplement this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method returns <code>true</code>.
+	 * Subclasses may reimplement this hook method.
 	 * </p>
 	 * 
 	 * @return <code>true</code> indicating validity of all controls in the destination
@@ -344,8 +348,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Returns whether this page's options group's controls currently all contain valid values.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method returns
-	 * <code>true</code>. Subclasses may reimplement this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method returns <code>true</code>.
+	 * Subclasses may reimplement this hook method.
 	 * </p>
 	 * 
 	 * @return <code>true</code> indicating validity of all controls in the options group
@@ -357,8 +361,8 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Returns whether this page's source specification controls currently all contain valid values.
 	 * <p>
-	 * The <code>WizardDataTransferPage</code> implementation of this method returns
-	 * <code>true</code>. Subclasses may reimplement this hook method.
+	 * The <code>WizardDataTransferPage</code> implementation of this method returns <code>true</code>.
+	 * Subclasses may reimplement this hook method.
 	 * </p>
 	 * 
 	 * @return <code>true</code> indicating validity of all controls in the source specification

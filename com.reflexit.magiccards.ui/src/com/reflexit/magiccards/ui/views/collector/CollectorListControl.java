@@ -21,7 +21,8 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
-	private static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY };
+	private static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
+			MagicCardField.RARITY };
 
 	public CollectorListControl(AbstractCardsView abstractCardsView) {
 		super(abstractCardsView);
@@ -36,9 +37,11 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By");
 		groupMenu.add(createGroupAction("Set/Lang/Rarity", DEF_GROUP));
-		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
+		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET,
+				MagicCardField.RARITY }));
 		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction("Core/Block/Set/Lang/Rarity", new ICardField[] { MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
+		groupMenu.add(createGroupAction("Core/Block/Set/Lang/Rarity", new ICardField[] {
+				MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
 				MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY }));
 		// groupMenu.add(createGroupAction(MagicCardField.ARTIST));
 		return groupMenu;
@@ -90,7 +93,8 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD || type == CardEvent.UPDATE_LIST) {
+		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD
+				|| type == CardEvent.UPDATE_LIST) {
 			reloadData();
 		}
 	}

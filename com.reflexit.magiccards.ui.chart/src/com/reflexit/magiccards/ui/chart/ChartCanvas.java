@@ -80,7 +80,8 @@ public class ChartCanvas extends Canvas {
 				final Rectangle chartBounds = co.getClientArea();
 				if (ChartCanvas.this.cachedImage != null) {
 					e.gc.drawImage(ChartCanvas.this.cachedImage, 0, 0);
-					if (cachedImage.getBounds().width != chartBounds.width || cachedImage.getBounds().height != chartBounds.height) {
+					if (cachedImage.getBounds().width != chartBounds.width
+							|| cachedImage.getBounds().height != chartBounds.height) {
 						needRebuild = true;
 					}
 				} else {
@@ -131,7 +132,8 @@ public class ChartCanvas extends Canvas {
 		try {
 			Generator gr = Generator.instance();
 			BaseStyleProcessor externalProcessor = createExternalStyleProcessor(gc);
-			this.state = gr.build(this.render.getDisplayServer(), this.chart, bo, null, null, externalProcessor);
+			this.state = gr.build(this.render.getDisplayServer(), this.chart, bo, null, null,
+					externalProcessor);
 			this.state.getRunTimeContext().setActionRenderer(new ManaCurveActionRenderer());
 		} catch (ChartException ex) {
 			Activator.log(ex);

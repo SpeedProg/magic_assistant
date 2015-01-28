@@ -31,7 +31,8 @@ public interface ICardHandler {
 
 	public void setActiveDeckHandler(IFilteredCardStore store);
 
-	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm) throws MagicException, InterruptedException;
+	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm)
+			throws MagicException, InterruptedException;
 
 	public ICardStore getCardStore(Location to);
 

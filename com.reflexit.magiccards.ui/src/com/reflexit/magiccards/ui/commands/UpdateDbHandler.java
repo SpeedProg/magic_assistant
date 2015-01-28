@@ -64,7 +64,8 @@ public class UpdateDbHandler extends AbstractHandler {
 					+ "This operation will take a LONG time. "
 					+ "Maybe hours. "
 					+ "If you want to update to specific set simply type it in the input field. "
-					+ "If you want to update to latest just use 'Standard'. " + "Are you sure you want to update ALL?");
+					+ "If you want to update to latest just use 'Standard'. "
+					+ "Are you sure you want to update ALL?");
 			if (!confirm)
 				return;
 		}
@@ -76,16 +77,19 @@ public class UpdateDbHandler extends AbstractHandler {
 					Properties options = new Properties();
 					options.put(UpdateCardsFromWeb.UPDATE_BASIC_LAND_PRINTINGS, updateLand);
 					options.put(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS, updatePrintings);
-					options.put(UpdateCardsFromWeb.UPDATE_SPECIAL, event.getParameter(PreferenceConstants.GATHERER_UPDATE_SPECIAL));
+					options.put(UpdateCardsFromWeb.UPDATE_SPECIAL,
+							event.getParameter(PreferenceConstants.GATHERER_UPDATE_SPECIAL));
 					if (set.equalsIgnoreCase(MagicGathererPreferencePage.ALL)) {
 						options.put(UpdateCardsFromWeb.UPDATE_OTHER_PRINTINGS, "true");
 					}
-					options.put(UpdateCardsFromWeb.UPDATE_LANGUAGE, event.getParameter(PreferenceConstants.GATHERER_UPDATE_LANGUAGE));
+					options.put(UpdateCardsFromWeb.UPDATE_LANGUAGE,
+							event.getParameter(PreferenceConstants.GATHERER_UPDATE_LANGUAGE));
 					final int rec = ch.downloadUpdates(set, options, new CoreMonitorAdapter(pm));
 					shell.getDisplay().syncExec(new Runnable() {
 						public void run() {
 							try {
-								IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+								IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+										.getActivePage()
 										.findView(MagicDbView.ID);
 								if (view != null) {
 									((MagicDbView) view).reloadData();
@@ -94,11 +98,14 @@ public class UpdateDbHandler extends AbstractHandler {
 								e.printStackTrace();
 							}
 							if (rec > 0)
-								MessageDialog.openInformation(shell, "Magic Db Update", "Data updated: " + rec + " new records");
+								MessageDialog.openInformation(shell, "Magic Db Update", "Data updated: "
+										+ rec + " new records");
 							else if (rec == 0)
-								MessageDialog.openInformation(shell, "Magic Db Update", "No new cards found for selected set");
+								MessageDialog.openInformation(shell, "Magic Db Update",
+										"No new cards found for selected set");
 							else
-								MessageDialog.openError(shell, "Magic Db Update", "Query returned empty page");
+								MessageDialog
+										.openError(shell, "Magic Db Update", "Query returned empty page");
 						}
 					});
 					return Status.OK_STATUS;

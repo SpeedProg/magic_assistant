@@ -56,12 +56,14 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 	 *
 	 */
 	@Override
-	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon) throws IOException {
+	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor mon)
+			throws IOException {
 		loadMultiPageUrl(GatherHelper.getSearchQuery("standard", set, true), handler, set, mon);
 		return true;
 	}
 
-	private void parseFileOrUrl(String from, String to, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
+	private void parseFileOrUrl(String from, String to, Properties options, ICoreProgressMonitor pm)
+			throws FileNotFoundException,
 			MalformedURLException, IOException {
 		PrintStream out = System.out;
 		if (to != null)
@@ -80,7 +82,8 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		}
 	}
 
-	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, String set, ICoreProgressMonitor monitor)
+	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, String set,
+			ICoreProgressMonitor monitor)
 			throws MalformedURLException, IOException {
 		monitor.beginTask("Downloading " + set + ":", 10000);
 		try {
@@ -103,12 +106,14 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		}
 	}
 
-	private static Pattern lastPagePattern = Pattern.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
+	private static Pattern lastPagePattern = Pattern
+			.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
 	private static Pattern itemPattern = Pattern.compile("tr class=\"cardItem");
 	private static Pattern itemEndPattern = Pattern.compile("</tr>");
 
 	@Override
-	protected boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
+	protected boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler)
+			throws IOException {
 		String line = "";
 		int state = 0;
 		boolean lastPage = false;
@@ -220,7 +225,8 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		return str;
 	}
 
-	void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm) throws FileNotFoundException,
+	void downloadUpdates(String set, String file, Properties options, ICoreProgressMonitor pm)
+			throws FileNotFoundException,
 			MalformedURLException, IOException {
 		String url;
 		if (set != null && set.startsWith("http")) {

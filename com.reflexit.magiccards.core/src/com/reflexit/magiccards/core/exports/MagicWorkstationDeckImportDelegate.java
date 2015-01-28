@@ -55,16 +55,19 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
 		DeckParser parser = new DeckParser(getStream(), this);
 		try {
-			parser.addPattern(Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
+			parser.addPattern(
+					Pattern.compile("^\\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
 					new ICardField[] { MagicCardField.COUNT, MagicCardField.EDITION_ABBR, MagicCardField.NAME });
 			parser.addPattern(Pattern.compile("^\\s*(\\d+)\\s+([^(]*)"), //
 					new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
 			parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+) \\[(.*)\\] ([^(]*)"), //
-					new ICardField[] { MagicCardField.SIDEBOARD, MagicCardField.COUNT, MagicCardField.EDITION_ABBR,
+					new ICardField[] { MagicCardField.SIDEBOARD, MagicCardField.COUNT,
+							MagicCardField.EDITION_ABBR,
 							MagicCardField.NAME });
 			parser.addPattern(Pattern.compile("^(SB): \\s*(\\d+)\\s+([^(]*)"), //
 					new ICardField[] { MagicCardField.SIDEBOARD, MagicCardField.COUNT, MagicCardField.NAME });
-			importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT, MagicCardField.SET,
+			importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
+					MagicCardField.SET,
 					MagicCardField.SIDEBOARD });
 			do {
 				lineNum++;

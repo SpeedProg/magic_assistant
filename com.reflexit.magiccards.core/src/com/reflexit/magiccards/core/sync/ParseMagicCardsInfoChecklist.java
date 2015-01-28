@@ -121,7 +121,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		if (set != null && set.length() > 0) {
 			String abbr = Editions.getInstance().getAbbrByName(set).toLowerCase(Locale.ENGLISH);
 			card.setSet(set);
-			card.setProperty(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num + ".jpg");
+			card.setProperty(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num
+					+ ".jpg");
 		}
 		card.setCardId(card.syntesizeId());
 		// print
@@ -142,7 +143,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		return res.toString();
 	}
 
-	public boolean loadSet(String set, ILoadCardHander handler, ICoreProgressMonitor monitor) throws IOException {
+	public boolean loadSet(String set, ILoadCardHander handler, ICoreProgressMonitor monitor)
+			throws IOException {
 		try {
 			monitor.beginTask("Downloading " + set + " checklist", 100);
 			return loadSingleUrl(getSearchQuery(set), handler);
@@ -188,7 +190,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		OutputHandler handler = new OutputHandler(System.out, true, true);
 		Editions.getInstance().addEdition("Duels of the Planeswalkers", "dpa");
-		new ParseMagicCardsInfoChecklist().loadSingleUrl(getSearchQuery("Duels of the Planeswalkers"), handler);
+		new ParseMagicCardsInfoChecklist().loadSingleUrl(getSearchQuery("Duels of the Planeswalkers"),
+				handler);
 		System.err.println("Total " + handler.getCardCount());
 	}
 }

@@ -252,7 +252,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	protected Collection<T> removeSetDuplicates(Collection<T> filteredList) {
 		LinkedHashMap<String, IMagicCard> unique = new LinkedHashMap<String, IMagicCard>();
-		for (Iterator<IMagicCard> iterator = (Iterator<IMagicCard>) filteredList.iterator(); iterator.hasNext();) {
+		for (Iterator<IMagicCard> iterator = (Iterator<IMagicCard>) filteredList.iterator(); iterator
+				.hasNext();) {
 			IMagicCard elem = iterator.next();
 			if (elem instanceof MagicCard) {
 				MagicCard card = (MagicCard) elem;
@@ -262,7 +263,8 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				} else {
 					Edition oldE = Editions.getInstance().getEditionByName(old.getSet());
 					Edition newE = Editions.getInstance().getEditionByName(card.getSet());
-					if (oldE != null && newE != null && oldE.getReleaseDate() != null && newE.getReleaseDate() != null) {
+					if (oldE != null && newE != null && oldE.getReleaseDate() != null
+							&& newE.getReleaseDate() != null) {
 						if (oldE.getReleaseDate().before(newE.getReleaseDate())) {
 							unique.put(card.getName(), card);
 						}
@@ -334,8 +336,10 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	private Location findLocationFilter(Expr root) {
 		if (root instanceof BinaryExpr) {
 			BinaryExpr bin = ((BinaryExpr) root);
-			if (bin.getLeft() instanceof Node && ((Node) bin.getLeft()).toString().equals(MagicCardField.LOCATION.name())) {
-				return Location.createLocation(bin.getRight().toString());
+			if (bin.getLeft() instanceof Node
+					&& ((Node) bin.getLeft()).toString().equals(MagicCardField.LOCATION.name())) {
+				return Location
+						.createLocation(bin.getRight().toString());
 			}
 			Location loc = findLocationFilter(bin.getLeft());
 			if (loc != null)

@@ -2,9 +2,8 @@ package com.reflexit.magiccards.core.model.events;
 
 /**
  * <p>
- * A manager to which listeners can be attached. This handles the management of a list of listeners
- * -- optimizing memory and performance. All the methods on this class are guaranteed to be
- * thread-safe.
+ * A manager to which listeners can be attached. This handles the management of a list of listeners --
+ * optimizing memory and performance. All the methods on this class are guaranteed to be thread-safe.
  * </p>
  * <p>
  * Clients may extend.
@@ -14,13 +13,13 @@ package com.reflexit.magiccards.core.model.events;
  */
 public abstract class EventManager {
 	/**
-	 * An empty array that can be returned from a call to {@link #getListeners()} when
-	 * {@link #listenerList} is <code>null</code>.
+	 * An empty array that can be returned from a call to {@link #getListeners()} when {@link #listenerList}
+	 * is <code>null</code>.
 	 */
 	private static final Object[] EMPTY_ARRAY = new Object[0];
 	/**
-	 * A collection of objects listening to changes to this manager. This collection is
-	 * <code>null</code> if there are no listeners.
+	 * A collection of objects listening to changes to this manager. This collection is <code>null</code> if
+	 * there are no listeners.
 	 */
 	private transient ListenerList listenerList = null;
 
@@ -62,8 +61,7 @@ public abstract class EventManager {
 	/**
 	 * Whether one or more listeners are attached to the manager.
 	 * 
-	 * @return <code>true</code> if listeners are attached to the manager; <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if listeners are attached to the manager; <code>false</code> otherwise.
 	 */
 	protected final boolean isListenerAttached() {
 		return listenerList != null;

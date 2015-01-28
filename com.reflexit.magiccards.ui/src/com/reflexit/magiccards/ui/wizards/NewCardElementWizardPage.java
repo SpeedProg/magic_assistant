@@ -132,7 +132,8 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 	 * Tests if the current workbench selection is a suitable container to use.
 	 */
 	private void initialize() {
-		if (this.selection != null && this.selection.isEmpty() == false && this.selection instanceof IStructuredSelection) {
+		if (this.selection != null && this.selection.isEmpty() == false
+				&& this.selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) this.selection;
 			if (ssel.size() > 1)
 				return;
@@ -159,7 +160,6 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 
 	public abstract String getElementTypeName();
 
-
 	/**
 	 * Uses the standard container selection dialog to choose the new value for the container field.
 	 */
@@ -167,7 +167,8 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		CardOrganizer root = getRootContainer();
 		ArrayList sup = new ArrayList();
 		sup.add(root);
-		CardNavigatorSelectionDialog dialog = new CardNavigatorSelectionDialog(getShell(), sup, true, "Select a container");
+		CardNavigatorSelectionDialog dialog = new CardNavigatorSelectionDialog(getShell(), sup, true,
+				"Select a container");
 		dialog.setFilters(new ViewerFilter[] { CardsNavigatorContentProvider.getContainerFilter() });
 		if (dialog.open() == Dialog.OK) {
 			Object[] result = dialog.getResult();

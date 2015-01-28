@@ -82,7 +82,6 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		this.location = location;
 	}
 
-
 	@Override
 	public boolean removeAll() {
 		accessCheck();

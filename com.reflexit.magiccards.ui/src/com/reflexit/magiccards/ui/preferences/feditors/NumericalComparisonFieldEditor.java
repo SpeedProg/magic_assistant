@@ -95,7 +95,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 *            the parent of the field editor's control
 	 * @since 2.0
 	 */
-	public NumericalComparisonFieldEditor(String name, String labelText, int width, int strategy, Composite parent) {
+	public NumericalComparisonFieldEditor(String name, String labelText, int width, int strategy,
+			Composite parent) {
 		init(name, labelText);
 		this.widthInChars = width;
 		setValidateStrategy(strategy);
@@ -160,8 +161,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/**
 	 * Hook for subclasses to do specific state checks.
 	 * <p>
-	 * The default implementation of this framework method does nothing and returns
-	 * <code>true</code>. Subclasses should override this method to specific state checks.
+	 * The default implementation of this framework method does nothing and returns <code>true</code>.
+	 * Subclasses should override this method to specific state checks.
 	 * </p>
 	 * 
 	 * @return <code>true</code> if the field value is valid, and <code>false</code> if invalid
@@ -173,8 +174,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/**
 	 * Fills this field editor's basic controls into the given parent.
 	 * <p>
-	 * The string field implementation of this <code>FieldEditor</code> framework method contributes
-	 * the text field. Subclasses may override but must call <code>super.doFillIntoGrid</code>.
+	 * The string field implementation of this <code>FieldEditor</code> framework method contributes the text
+	 * field. Subclasses may override but must call <code>super.doFillIntoGrid</code>.
 	 * </p>
 	 */
 	@Override
@@ -470,8 +471,8 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	 * Sets this text field's text limit.
 	 * 
 	 * @param limit
-	 *            the limit on the number of character in the text input field, or
-	 *            <code>UNLIMITED</code> for no limit
+	 *            the limit on the number of character in the text input field, or <code>UNLIMITED</code> for
+	 *            no limit
 	 */
 	public void setTextLimit(int limit) {
 		this.textLimit = limit;
@@ -483,9 +484,9 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	/**
 	 * Sets the strategy for validating the text.
 	 * <p>
-	 * Calling this method has no effect after <code>createPartControl</code> is called. Thus this
-	 * method is really only useful for subclasses to call in their constructor. However, it has
-	 * public visibility for backward compatibility.
+	 * Calling this method has no effect after <code>createPartControl</code> is called. Thus this method is
+	 * really only useful for subclasses to call in their constructor. However, it has public visibility for
+	 * backward compatibility.
 	 * </p>
 	 * 
 	 * @param value
@@ -506,11 +507,11 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Informs this field editor's listener, if it has one, about a change to the value (
-	 * <code>VALUE</code> property) provided that the old and new values are different.
+	 * Informs this field editor's listener, if it has one, about a change to the value ( <code>VALUE</code>
+	 * property) provided that the old and new values are different.
 	 * <p>
-	 * This hook is <em>not</em> called when the text is initialized (or reset to the default value)
-	 * from the preference store.
+	 * This hook is <em>not</em> called when the text is initialized (or reset to the default value) from the
+	 * preference store.
 	 * </p>
 	 */
 	protected void valueChanged() {

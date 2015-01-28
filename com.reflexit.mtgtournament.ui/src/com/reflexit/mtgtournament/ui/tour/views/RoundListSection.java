@@ -158,7 +158,8 @@ public class RoundListSection extends TSectionPart {
 			if (element instanceof Round) {
 				Round round = (Round) element;
 				RoundState action = round.getState();
-				if (columnIndex == ACTION_COL && action != RoundState.CLOSED && action != RoundState.NOT_READY) {
+				if (columnIndex == ACTION_COL && action != RoundState.CLOSED
+						&& action != RoundState.NOT_READY) {
 					return systemColorBlue;
 				}
 				switch (action) {
@@ -198,7 +199,8 @@ public class RoundListSection extends TSectionPart {
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		Table table = toolkit.createTable(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		Table table = toolkit.createTable(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.BORDER);
 		viewer = new TableViewer(table);
 		viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTable().setHeaderVisible(true);
@@ -375,7 +377,8 @@ public class RoundListSection extends TSectionPart {
 			// Create the correct editor based on the column index
 			switch (column) {
 				case ACTION_COL:
-					editor = new CheckboxCellEditor(((TableViewer) viewer).getTable(), SWT.CHECK | SWT.READ_ONLY) {
+					editor = new CheckboxCellEditor(((TableViewer) viewer).getTable(), SWT.CHECK
+							| SWT.READ_ONLY) {
 						@Override
 						protected Control createControl(Composite parent) {
 							return null;
@@ -383,7 +386,8 @@ public class RoundListSection extends TSectionPart {
 					};
 					break;
 				case SCHEDULE_COL:
-					editor = new ComboBoxCellEditor(((TableViewer) viewer).getTable(), TournamentType.stringValues());
+					editor = new ComboBoxCellEditor(((TableViewer) viewer).getTable(),
+							TournamentType.stringValues());
 					break;
 				default:
 					editor = null;

@@ -54,7 +54,8 @@ public class TypeChart implements IChartGenerator {
 		// Title
 		cwoaPie.getTitle().getLabel().getCaption().setValue("Types");//$NON-NLS-1$
 		// Data Set
-		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { CardText.Type_Land, CardText.Type_Creature,
+		TextDataSet categoryValues = TextDataSetImpl.create(new String[] { CardText.Type_Land,
+				CardText.Type_Creature,
 				CardText.Type_Non_Creature });
 		NumberDataSet seriesOneValues = NumberDataSetImpl.create(bars);
 		SampleData sdata = DataFactory.eINSTANCE.createSampleData();
@@ -87,11 +88,14 @@ public class TypeChart implements IChartGenerator {
 		DataPoint dataPoint = sePie.getDataPoint();
 		dataPoint.getComponents().clear();
 		dataPoint.setSeparator("");
-		DataPointComponent dpc1 = DataPointComponentImpl.create(DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
+		DataPointComponent dpc1 = DataPointComponentImpl.create(
+				DataPointComponentType.ORTHOGONAL_VALUE_LITERAL,
 				JavaNumberFormatSpecifierImpl.create(": \n0"));//$NON-NLS-1$
-		DataPointComponent dpc2 = DataPointComponentImpl.create(DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL,
+		DataPointComponent dpc2 = DataPointComponentImpl.create(
+				DataPointComponentType.PERCENTILE_ORTHOGONAL_VALUE_LITERAL,
 				JavaNumberFormatSpecifierImpl.create(" (##.##%)")); //$NON-NLS-1$
-		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL, null);
+		DataPointComponent dpc3 = DataPointComponentImpl.create(DataPointComponentType.BASE_VALUE_LITERAL,
+				null);
 		dataPoint.getComponents().add(dpc3);
 		dataPoint.getComponents().add(dpc1);
 		dataPoint.getComponents().add(dpc2);

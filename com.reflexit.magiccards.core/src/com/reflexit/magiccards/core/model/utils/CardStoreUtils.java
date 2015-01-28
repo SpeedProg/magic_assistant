@@ -66,7 +66,8 @@ public final class CardStoreUtils {
 		CardGroup sixNode = new CardGroup(MagicCardField.COST, "6");
 		CardGroup sevenOrMoreNode = new CardGroup(MagicCardField.COST, "7+");
 		CardGroup xNode = new CardGroup(MagicCardField.COST, "X");
-		CardGroup[] cardGroups = { zeroNode, oneNode, twoNode, threeNode, fourNode, fiveNode, sixNode, sevenOrMoreNode, xNode };
+		CardGroup[] cardGroups = { zeroNode, oneNode, twoNode, threeNode, fourNode, fiveNode, sixNode,
+				sevenOrMoreNode, xNode };
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
 			IMagicCard elem = (IMagicCard) iterator.next();
 			int cost = elem.getCmc();
@@ -359,7 +360,8 @@ public final class CardStoreUtils {
 							creatureSubSubTypeText = trimmedType.substring(subTypeSeparatorPos + 1).trim();
 							int subSubTypeSeparatorPos = creatureSubSubTypeText.indexOf(" ");
 							if (subSubTypeSeparatorPos >= 0) {
-								creatureSubSubTypeText = creatureSubSubTypeText.substring(0, subSubTypeSeparatorPos).trim();
+								creatureSubSubTypeText = creatureSubSubTypeText.substring(0,
+										subSubTypeSeparatorPos).trim();
 							}
 						}
 						if (!creatureSubTypeText.isEmpty()) {
@@ -369,9 +371,11 @@ public final class CardStoreUtils {
 								creatureNode.add(subTypeCardGroup);
 							}
 							if (!creatureSubSubTypeText.isEmpty()) {
-								CardGroup subSubTypeCardGroup = subTypeCardGroup.getSubGroup(creatureSubSubTypeText);
+								CardGroup subSubTypeCardGroup = subTypeCardGroup
+										.getSubGroup(creatureSubSubTypeText);
 								if (subSubTypeCardGroup == null) {
-									subSubTypeCardGroup = new CardGroup(MagicCardField.TYPE, creatureSubSubTypeText);
+									subSubTypeCardGroup = new CardGroup(MagicCardField.TYPE,
+											creatureSubSubTypeText);
 									subTypeCardGroup.add(subSubTypeCardGroup);
 								}
 								subSubTypeCardGroup.add(elem);

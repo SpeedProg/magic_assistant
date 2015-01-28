@@ -38,6 +38,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	protected ViewerManager(ColumnCollection columns) {
 		this.collumns = columns;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -86,7 +87,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				contextActivationRef[0] = contextService.activateContext("com.reflexit.magiccards.ui.context");
+				contextActivationRef[0] = contextService
+						.activateContext("com.reflexit.magiccards.ui.context");
 			}
 		});
 	}
@@ -183,7 +185,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	protected void updateGrid() {
 		try {
-			boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
+			boolean grid = MagicUIActivator.getDefault().getPreferenceStore()
+					.getBoolean(PreferenceConstants.SHOW_GRID);
 			setLinesVisible(grid);
 			getViewer().getControl().setFont(getFont());
 			getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());

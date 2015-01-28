@@ -398,8 +398,9 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	void setProperties(LinkedHashMap<ICardField, Object> properties) {
-		this.properties=properties;
+		this.properties = properties;
 	}
+
 	public Map<ICardField, Object> getProperties() {
 		return properties;
 	}

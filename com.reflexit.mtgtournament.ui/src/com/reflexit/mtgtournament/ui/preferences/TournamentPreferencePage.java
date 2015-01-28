@@ -16,16 +16,16 @@ import com.reflexit.mtgtournament.core.PreferenceConstants;
  * can use the field support built into JFace that allows us to create a page
  * that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the
- * preference store that belongs to the main plug-in class. That way,
- * preferences can be accessed directly via the preference store.
+ * This page is used to modify preferences only. They are stored in the preference store that belongs to the
+ * main plug-in class. That way, preferences can be accessed directly via the preference store.
  */
 public class TournamentPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public TournamentPreferencePage() {
 		super(GRID);
 		// IEclipsePreferences store =
 		// DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID);
-		IPreferenceStore store = new ScopedPreferenceStore(ConfigurationScope.INSTANCE, com.reflexit.mtgtournament.core.Activator.PLUGIN_ID);
+		IPreferenceStore store = new ScopedPreferenceStore(ConfigurationScope.INSTANCE,
+				com.reflexit.mtgtournament.core.Activator.PLUGIN_ID);
 		setPreferenceStore(store);
 		// setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("Preferences for Tournament Organizer");
@@ -39,8 +39,10 @@ public class TournamentPreferencePage extends FieldEditorPreferencePage implemen
 	@Override
 	public void createFieldEditors() {
 		addField(new IntegerFieldEditor(PreferenceConstants.P_WIN, "Points for win:", getFieldEditorParent()));
-		addField(new IntegerFieldEditor(PreferenceConstants.P_LOOSE, "Points for loss:", getFieldEditorParent()));
-		addField(new IntegerFieldEditor(PreferenceConstants.P_DRAW, "Points for draw:", getFieldEditorParent()));
+		addField(new IntegerFieldEditor(PreferenceConstants.P_LOOSE, "Points for loss:",
+				getFieldEditorParent()));
+		addField(new IntegerFieldEditor(PreferenceConstants.P_DRAW, "Points for draw:",
+				getFieldEditorParent()));
 	}
 
 	/*

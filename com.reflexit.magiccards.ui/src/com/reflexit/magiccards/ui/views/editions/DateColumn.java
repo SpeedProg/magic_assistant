@@ -64,7 +64,8 @@ final class DateColumn extends AbstractEditionColumn {
 						getViewer().update(element, null);
 						Editions.getInstance().save();
 					} catch (ParseException e) {
-						MessageDialog.openError(getViewer().getControl().getShell(), "Error", "Enter day in format like: December 2010");
+						MessageDialog.openError(getViewer().getControl().getShell(), "Error",
+								"Enter day in format like: December 2010");
 					} catch (FileNotFoundException e) {
 						// cannot save editions
 						MagicUIActivator.log(e);

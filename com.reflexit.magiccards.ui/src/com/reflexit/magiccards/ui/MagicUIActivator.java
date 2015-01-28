@@ -70,9 +70,11 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		activateCoreSettings();
-		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
+		TRACE_EXPORT = isDebugging()
+				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
-		TRACE_TESTING = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing"));
+		TRACE_TESTING = isDebugging()
+				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing"));
 		Device device = Display.getDefault();
 		COLOR_GREENISH = new Color(device, 255 - 64, 255, 255 - 64);
 		COLOR_PINKINSH = new Color(device, 255, 255 - 64, 255 - 64);

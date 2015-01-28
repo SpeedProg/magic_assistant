@@ -7,7 +7,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  *******************************************************************************/
-
 /*********************************************************************************
  * TERMS OF USE - EASING EQUATIONS 
  * 
@@ -40,7 +39,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ********************************************************************************/
-
 package org.eclipse.nebula.animation.movement;
 
 /**
@@ -51,7 +49,6 @@ package org.eclipse.nebula.animation.movement;
  * 
  */
 public class QuartInOut extends AbstractMovement {
-
 	public double getValue(double step) {
 		// Conversion from Robert Penner's action scripts
 		//
@@ -59,13 +56,10 @@ public class QuartInOut extends AbstractMovement {
 		// b: min -> min
 		// c : total increment -> max - min
 		// d: duration -> duration
-
 		double c = max - min;
 		step = step / (duration / 2d);
-
 		if ((step) < 1d)
 			return c / 2d * step * step * step * step + min;
-
 		return -c / 2d * ((step -= 2d) * step * step * step - 2d) + min;
 	}
 }

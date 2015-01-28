@@ -88,7 +88,8 @@ public class CountConfirmationDialog extends Dialog {
 		comp.setLayout(new GridLayout());
 		comp.setData(card);
 		Label label = new Label(comp, SWT.WRAP);
-		label.setText(card.getName() + " (" + card.getSet() + ") " + " x " + ((ICardCountable) card).getCount());
+		label.setText(card.getName() + " (" + card.getSet() + ") " + " x "
+				+ ((ICardCountable) card).getCount());
 		if (lazy)
 			new Thread("Loading image for " + card) {
 				@Override
@@ -267,7 +268,8 @@ public class CountConfirmationDialog extends Dialog {
 		// SWT.DOUBLE_BUFFERED);
 		// shell.setSize(600, 600);
 		DataManager.getInstance().waitForInit(5000);
-		Collection<IMagicCard> candidates = DataManager.getCardHandler().getMagicDBStore().getCandidates("Forest");
+		Collection<IMagicCard> candidates = DataManager.getCardHandler().getMagicDBStore()
+				.getCandidates("Forest");
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>();
 		int i = 0;
 		for (IMagicCard base : candidates) {

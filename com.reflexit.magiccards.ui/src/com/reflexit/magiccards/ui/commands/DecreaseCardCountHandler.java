@@ -58,7 +58,8 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 		return null;
 	}
 
-	protected void decrease(IWorkbenchWindow window, IStructuredSelection iss, IFilteredCardStore activeDeckHandler) {
+	protected void decrease(IWorkbenchWindow window, IStructuredSelection iss,
+			IFilteredCardStore activeDeckHandler) {
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
 			ArrayList<IMagicCard> toRemove = new ArrayList<IMagicCard>();
@@ -71,7 +72,8 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 						toRemove.add(new MagicCardPhysical(mc, mc.getLocation()));
 					} else {
 						mc.setCount(count - 1);
-						DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc, Collections.singleton(MagicCardField.COUNT));
+						DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc,
+								Collections.singleton(MagicCardField.COUNT));
 					}
 				} else {
 					MagicCardPhysical magicCardCopy = new MagicCardPhysical(magicCard, null);

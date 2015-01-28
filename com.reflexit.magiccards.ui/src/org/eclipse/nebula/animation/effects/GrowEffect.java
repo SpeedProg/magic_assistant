@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.AnimationRunner;
@@ -23,7 +22,6 @@ import org.eclipse.swt.widgets.Control;
  * 
  */
 public class GrowEffect extends AbstractEffect {
-
 	/**
 	 * @deprecated
 	 * @param w
@@ -42,7 +40,6 @@ public class GrowEffect extends AbstractEffect {
 	}
 
 	Rectangle src, dest, diff;
-
 	Control control = null;
 
 	public GrowEffect(Control control, Rectangle src, Rectangle dest,
@@ -54,7 +51,6 @@ public class GrowEffect extends AbstractEffect {
 		this.control = control;
 		this.diff = new Rectangle(dest.x - src.x, dest.y - src.y, dest.width
 				- src.width, dest.height - src.height);
-
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 

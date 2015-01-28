@@ -25,7 +25,14 @@ public class PricesXmlStreamReader {
 	private static SAXParserFactory factory = SAXParserFactory.newInstance();
 
 	static enum Tag {
-		cards, list, properties, property, mc, name, comment, fake,
+		cards,
+		list,
+		properties,
+		property,
+		mc,
+		name,
+		comment,
+		fake,
 	}
 
 	static class MagicHandler extends DefaultHandler {

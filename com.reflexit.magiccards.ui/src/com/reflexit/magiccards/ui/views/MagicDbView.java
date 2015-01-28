@@ -123,7 +123,6 @@ public class MagicDbView extends AbstractCardsView {
 			@Override
 			public void run(String id) {
 				IFilteredCardStore fstore = DataManager.getCardHandler().getCardCollectionFilteredStore(id);
-
 				ISelection selection = getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection iss = (IStructuredSelection) selection;

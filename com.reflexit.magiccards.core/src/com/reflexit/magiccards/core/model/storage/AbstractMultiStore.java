@@ -15,7 +15,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ICardEventListener {
 	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
 	protected Location defaultLocation;
-
 	{
 		init();
 	}

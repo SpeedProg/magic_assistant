@@ -82,7 +82,7 @@ public class CommentColumn extends GenColumn {
 					MagicCardPhysical card = (MagicCardPhysical) element;
 					card.setComment((String) value);
 					Set<MagicCardField> of = Collections.singleton(MagicCardField.COMMENT);
-					DataManager.getInstance().update(card,of);
+					DataManager.getInstance().update(card, of);
 				}
 			}
 		};

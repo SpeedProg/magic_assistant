@@ -23,7 +23,8 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 public class CompositeScheduler extends AbstractScheduler {
 	@Override
 	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
-		throw new IllegalStateException("Composite is not a real scheduler, select a specific scheduler buy editing round info");
+		throw new IllegalStateException(
+				"Composite is not a real scheduler, select a specific scheduler buy editing round info");
 	}
 
 	@Override

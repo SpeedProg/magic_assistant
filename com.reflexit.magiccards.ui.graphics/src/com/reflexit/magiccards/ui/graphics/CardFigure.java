@@ -58,7 +58,7 @@ public class CardFigure extends XFigure {
 				}
 			} catch (Exception e) {
 				// ignore
-			}
+		}
 	}
 
 	public void setImageData(ImageData imageData) {
@@ -84,7 +84,8 @@ public class CardFigure extends XFigure {
 		Rectangle in = clip.intersection(cb);
 		if (in.isEmpty())
 			return;
-		gc.drawImage(cardImage, in.x - cb.x, in.y - cb.y, in.width, in.height, in.x, in.y, in.width, in.height);
+		gc.drawImage(cardImage, in.x - cb.x, in.y - cb.y, in.width, in.height, in.x, in.y, in.width,
+				in.height);
 		if (isSelected()) {
 			gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 			gc.drawFocus(cb.x, cb.y, cb.width, cb.height);

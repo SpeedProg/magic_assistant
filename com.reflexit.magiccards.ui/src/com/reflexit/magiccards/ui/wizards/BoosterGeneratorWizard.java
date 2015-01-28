@@ -156,7 +156,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void doFinish(final String containerName, final String name, boolean virtual, final IProgressMonitor monitor)
+	protected void doFinish(final String containerName, final String name, boolean virtual,
+			final IProgressMonitor monitor)
 			throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + name, 10);
@@ -168,7 +169,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		monitor.worked(1);
 		CardOrganizer parent = (CardOrganizer) resource;
 		final CardCollection col = new CardCollection(name + ".xml", parent, false);
-		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col, new SubProgressMonitor(monitor, 7));
+		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
+				new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
 		try {
 			Thread.sleep(1000);
@@ -199,7 +201,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * @param col
 	 * @param subProgressMonitor
 	 */
-	private void populateLibrary(ArrayList<Edition> sets, int packs, CardCollection col, IProgressMonitor monitor) {
+	private void populateLibrary(ArrayList<Edition> sets, int packs, CardCollection col,
+			IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 10);
 		if (col.isOpen() == false) {
 			col.open();
@@ -207,7 +210,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		monitor.worked(1);
 		ICardStore<IMagicCard> store = col.getStore();
 		HashMap<String, String> filterset = new HashMap<String, String>();
-		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
+		IFilteredCardStore<IMagicCard> dbcards = DataManager.getCardHandler()
+				.getMagicDBFilteredStoreWorkingCopy();
 		MagicCardFilter filter = dbcards.getFilter();
 		try {
 			for (Edition ed : sets) {
@@ -253,7 +257,8 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 * @param store
 	 * @param col
 	 */
-	private void generateRandom(int packs, IFilteredCardStore<IMagicCard> dbcards, ICardStore<IMagicCard> store, CardElement col) {
+	private void generateRandom(int packs, IFilteredCardStore<IMagicCard> dbcards,
+			ICardStore<IMagicCard> store, CardElement col) {
 		int rcards = dbcards.getSize();
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);

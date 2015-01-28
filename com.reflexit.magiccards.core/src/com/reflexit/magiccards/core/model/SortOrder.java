@@ -11,7 +11,6 @@ public class SortOrder implements Comparator {
 	private final MagicCardComparator order[] = new MagicCardComparator[MAX];
 	private int curSize = MIN;
 
-
 	public SortOrder() {
 		// these are always there
 		order[0] = (new MagicCardComparator(MagicCardField.NAME, true));

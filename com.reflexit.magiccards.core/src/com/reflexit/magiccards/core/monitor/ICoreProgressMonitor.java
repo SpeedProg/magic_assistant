@@ -5,25 +5,24 @@ package com.reflexit.magiccards.core.monitor;
  * progress of an activity; the methods in this interface are invoked by code that performs the
  * activity.
  * <p>
- * All activity is broken down into a linear sequence of tasks against which progress is reported.
- * When a task begins, a <code>beginTask(String, int)
+ * All activity is broken down into a linear sequence of tasks against which progress is reported. When a task
+ * begins, a <code>beginTask(String, int)
  * </code> notification is reported, followed by any number and mixture of progress reports (
  * <code>worked()</code>) and subtask notifications (<code>subTask(String)</code>). When the task is
- * eventually completed, a <code>done()</code> notification is reported. After the
- * <code>done()</code> notification, the progress monitor cannot be reused; i.e., <code>
+ * eventually completed, a <code>done()</code> notification is reported. After the <code>done()</code>
+ * notification, the progress monitor cannot be reused; i.e., <code>
  * beginTask(String, int)</code> cannot be called again after the call to <code>done()</code>.
  * </p>
  * <p>
- * A request to cancel an operation can be signaled using the <code>setCanceled</code> method.
- * Operations taking a progress monitor are expected to poll the monitor (using
- * <code>isCanceled</code>) periodically and abort at their earliest convenience. Operation can
- * however choose to ignore cancelation requests.
+ * A request to cancel an operation can be signaled using the <code>setCanceled</code> method. Operations
+ * taking a progress monitor are expected to poll the monitor (using <code>isCanceled</code>) periodically and
+ * abort at their earliest convenience. Operation can however choose to ignore cancelation requests.
  * </p>
  * <p>
- * Since notification is synchronous with the activity itself, the listener should provide a fast
- * and robust implementation. If the handling of notifications would involve blocking operations, or
- * operations which might throw uncaught exceptions, the notifications should be queued, and the
- * actual processing deferred (or perhaps delegated to a separate thread).
+ * Since notification is synchronous with the activity itself, the listener should provide a fast and robust
+ * implementation. If the handling of notifications would involve blocking operations, or operations which
+ * might throw uncaught exceptions, the notifications should be queued, and the actual processing deferred (or
+ * perhaps delegated to a separate thread).
  * </p>
  * <p>
  * This interface can be used without OSGi running.
@@ -71,8 +70,7 @@ public interface ICoreProgressMonitor {
 	 * Returns whether cancelation of current operation has been requested. Long-running operations
 	 * should poll to see if cancelation has been requested.
 	 * 
-	 * @return <code>true</code> if cancellation has been requested, and <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if cancellation has been requested, and <code>false</code> otherwise
 	 * @see #setCanceled(boolean)
 	 */
 	public boolean isCanceled();

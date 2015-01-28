@@ -69,7 +69,6 @@ public class BinaryExpr extends Expr {
 				if (this.left.evaluate(o) == true)
 					return true;
 				return this.right.evaluate(o);
-
 			case EQUALS: {
 				Object x = this.left.getFieldValue(o);
 				Object y = this.right.getFieldValue(o);
@@ -126,7 +125,8 @@ public class BinaryExpr extends Expr {
 		if (x == null || y == null)
 			return false;
 		if (this.left instanceof CardFieldExpr && o instanceof IMagicCard && this.right instanceof TextValue) {
-			return ((IMagicCard) o).matches(((CardFieldExpr) this.left).field, (TextValue) this.right);
+			return ((IMagicCard) o)
+					.matches(((CardFieldExpr) this.left).field, (TextValue) this.right);
 		}
 		if (x instanceof String && y instanceof String) {
 			String pattern = (String) y;

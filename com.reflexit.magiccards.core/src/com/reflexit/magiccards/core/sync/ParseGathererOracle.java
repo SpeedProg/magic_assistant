@@ -40,7 +40,8 @@ import com.reflexit.magiccards.core.xml.StringCache;
  * Retrieve legality info
  */
 public class ParseGathererOracle extends AbstractParseGathererPage {
-	public static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Details.aspx?multiverseid=";
+	public static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE
+			+ "Pages/Card/Details.aspx?multiverseid=";
 	private MagicCard fromCard;
 	private Set<ICardField> fieldMapFilter;
 	private ICardStore<IMagicCard> magicDb;
@@ -71,7 +72,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	 */
 	private static Pattern rulingPattern = Pattern.compile("<td.*?rulingText.*?5px;\">(.+?)</td>");
 	private static Pattern ratingPattern = Pattern.compile("class=\"textRatingValue\">([0-9.]{1,5})</span");
-	private static Pattern artistPattern = Pattern.compile("ArtistCredit\"\\sclass=\"value\">.*?\">(.*?)</a>");
+	private static Pattern artistPattern = Pattern
+			.compile("ArtistCredit\"\\sclass=\"value\">.*?\">(.*?)</a>");
 	/*-
 	      <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_numberRow" class="row">
 	                        <div class="label">
@@ -81,7 +83,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	                    </div>
 
 	 */
-	private static Pattern cardnumPattern = Pattern.compile("Card Number:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern cardnumPattern = Pattern
+			.compile("Card Number:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	/*-
 	      <div class="cardtextbox">When Anathemancer enters the battlefield, it deals damage to target player equal to the number of nonbasic lands that player controls.</div>
 	      <div class="cardtextbox">Unearth <img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" /> <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" />: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)</i></div></div>
@@ -99,9 +102,11 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	 </div> 
 	 </div> 
 	 */
-	private static Pattern otherSetPattern = Pattern.compile("Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern otherSetPattern = Pattern
+			.compile("Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	private static Pattern expansionPattern = Pattern.compile("Expansion:</div>.*?set=\\[.*?\\]\">(.*?)</a>");
-	private static Pattern otherSetPatternEach = Pattern.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
+	private static Pattern otherSetPatternEach = Pattern
+			.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 	/*-
 	
 	<div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_typeRow" class="row">
@@ -114,19 +119,22 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 
 
 	 */
-	private static Pattern typesPattern = Pattern.compile("Types:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern typesPattern = Pattern
+			.compile("Types:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	/*-
 	 <div class="contentTitle">
 
 	 <span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay">Книга Заклинаний</span>
 	 </div>
 	 */
-	private static Pattern titleNamePattern = Pattern.compile("<div class=\"contentTitle\">\\s*<span id.*?>(.*?)</span>");
+	private static Pattern titleNamePattern = Pattern
+			.compile("<div class=\"contentTitle\">\\s*<span id.*?>(.*?)</span>");
 	/*-
 	 * <div class="label">Card Name:</div>
 	   <div class="value">Instigator Gang</div>
 	 */
-	private static Pattern cardNamePattern = Pattern.compile("Card Name:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern cardNamePattern = Pattern
+			.compile("Card Name:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	/*-
 	 *              <img src="../../Handlers/Image.ashx?multiverseid=241988&amp;type=card" 
 	 *              id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_cardImage" 
@@ -134,15 +142,18 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 
 	 */
 	private static Pattern cardIdPattern = Pattern.compile("multiverseid=(\\d+)&amp;type=card");
-	private static Pattern cardRotatePattern = Pattern.compile("multiverseid=\\d+&amp;type=card&amp;(options=\\w+)");
+	private static Pattern cardRotatePattern = Pattern
+			.compile("multiverseid=\\d+&amp;type=card&amp;(options=\\w+)");
 
-	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, ICoreProgressMonitor monitor) throws IOException {
+	void parseSingleCard(IMagicCard card, Set<ICardField> fieldMap, ICoreProgressMonitor monitor)
+			throws IOException {
 		setCard(card);
 		setFilter(fieldMap);
 		load(monitor);
 	}
 
-	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, ICoreProgressMonitor monitor) throws IOException {
+	public void updateCard(IMagicCard magicCard, Set<ICardField> fieldMap, ICoreProgressMonitor monitor)
+			throws IOException {
 		ICardHandler cardHandler = DataManager.getCardHandler();
 		if (cardHandler != null)
 			setMagicDb(cardHandler.getMagicDBStore());
@@ -179,7 +190,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 		}
 	}
 
-	protected void extractField(MagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field, Pattern pattern,
+	protected void extractField(MagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field,
+			Pattern pattern,
 			boolean multiple) {
 		if (fieldMap == null || fieldMap.contains(field)) {
 			String value = extractPatternValue(html, pattern, multiple);
@@ -263,7 +275,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 			applyFromCard(cardB, fromCard);
 			addNew(cardA);
 		} else {
-			MagicLogger.log("Problems parsing card - id mismatch " + fromCard.getCardId() + " " + cardA.getCardId());
+			MagicLogger.log("Problems parsing card - id mismatch " + fromCard.getCardId() + " "
+					+ cardA.getCardId());
 			return;
 		}
 		if (magicDb != null) {
@@ -425,7 +438,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 		Matcher matcher = textPattern.matcher(html);
 		if (matcher.find()) {
 			String text = matcher.group(1);
-			extractField(card, fieldMap, text, isOracle() ? MagicCardField.ORACLE : MagicCardField.TEXT, textPatternEach, true);
+			extractField(card, fieldMap, text, isOracle() ? MagicCardField.ORACLE : MagicCardField.TEXT,
+					textPatternEach, true);
 		}
 		return card;
 	}

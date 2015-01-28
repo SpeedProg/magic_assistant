@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.AnimationRunner;
@@ -24,7 +23,6 @@ import org.eclipse.swt.widgets.Shell;
  * 
  */
 public class AlphaEffect extends AbstractEffect {
-
 	/**
 	 * @deprecated
 	 * @param w
@@ -47,8 +45,7 @@ public class AlphaEffect extends AbstractEffect {
 	 * @param shell
 	 * @param duration
 	 * @param easing
-	 * @deprecated Use {@link #fadeOnClose(Shell,int,IMovement,AnimationRunner)}
-	 *             instead
+	 * @deprecated Use {@link #fadeOnClose(Shell,int,IMovement,AnimationRunner)} instead
 	 */
 	public static void fadeOnClose(final Shell shell, final int duration,
 			final IMovement easing) {
@@ -67,22 +64,18 @@ public class AlphaEffect extends AbstractEffect {
 	 */
 	public static void fadeOnClose(final Shell shell, final int duration,
 			final IMovement easing, AnimationRunner runner) {
-
 		final AnimationRunner useRunner;
 		if (runner != null) {
 			useRunner = runner;
 		} else {
 			useRunner = new AnimationRunner();
 		}
-
 		final Runnable closeListener = new Runnable() {
 			public void run() {
 				shell.dispose();
 			}
 		};
-
 		shell.addShellListener(new ShellListener() {
-
 			public void shellIconified(ShellEvent e) {
 				// Do nothing
 			}
@@ -104,33 +97,26 @@ public class AlphaEffect extends AbstractEffect {
 			public void shellActivated(ShellEvent e) {
 				// Do nothing
 			}
-
 		});
-
 	}
 
 	int start, end, step;
-
 	Shell shell = null;
 
 	public AlphaEffect(Shell shell, int start, int end, long lengthMilli,
 			IMovement movement, Runnable onStop, Runnable onCancel) {
 		super(lengthMilli, movement, onStop, onCancel);
-
 		this.start = start;
 		this.end = end;
 		step = end - start;
 		this.shell = shell;
 		easingFunction.init(0, 1, (int) lengthMilli);
-
 	}
 
 	public void applyEffect(final long currentTime) {
 		if (shell.isDisposed())
 			return;
-
 		shell.setAlpha((int) (start + step
 				* easingFunction.getValue((int) currentTime)));
 	}
-
 }

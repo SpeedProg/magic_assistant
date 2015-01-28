@@ -70,7 +70,8 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 						Display.getDefault().syncExec(new Runnable() {
 							@Override
 							public void run() {
-								if (MessageDialog.openQuestion(null, "New Cards", "New sets are available: " + newSets
+								if (MessageDialog.openQuestion(null, "New Cards", "New sets are available: "
+										+ newSets
 										+ ". Would you like to download them now?")) {
 									result[0] = true;
 								}
@@ -81,8 +82,9 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 							for (Iterator iterator = newSets.iterator(); iterator.hasNext();) {
 								Edition edition = (Edition) iterator.next();
 								try {
-									handler.downloadUpdates(edition.getName(), new Properties(), new SubCoreProgressMonitor(
-											monitor, 60 / k));
+									handler.downloadUpdates(edition.getName(), new Properties(),
+											new SubCoreProgressMonitor(
+													monitor, 60 / k));
 								} catch (MagicException e) {
 									MagicUIActivator.log(e);
 								} catch (InterruptedException e) {

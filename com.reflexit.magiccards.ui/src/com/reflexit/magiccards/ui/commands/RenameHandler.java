@@ -67,12 +67,17 @@ public class RenameHandler extends AbstractHandler {
 		}
 		if (f instanceof CardOrganizer) {
 			if (f == root.getDeckContainer() || f == root.getCollectionsContainer()) {
-				MessageDialog.openInformation(window.getShell(), "Cannot Rename", "This is special container which cannot be renamed");
+				MessageDialog.openInformation(window.getShell(), "Cannot Rename",
+						"This is special container which cannot be renamed");
 				return null;
 			}
-			MessageDialog.openInformation(window.getShell(), "Cannot Rename", "Rename of the containers is not implement. "
-					+ "To rename the container exit the App, "
-					+ "then go to your workspace and rename the directory in the file system, then restart the app.");
+			MessageDialog
+					.openInformation(
+							window.getShell(),
+							"Cannot Rename",
+							"Rename of the containers is not implement. "
+									+ "To rename the container exit the App, "
+									+ "then go to your workspace and rename the directory in the file system, then restart the app.");
 			return null;
 		}
 		Location loc = f.getLocation();

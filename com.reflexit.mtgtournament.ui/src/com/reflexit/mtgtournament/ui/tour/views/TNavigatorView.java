@@ -57,6 +57,7 @@ public class TNavigatorView extends ViewPart {
 	private Action sortAlpha;
 	private Action doubleClickAction;
 	private Cube cube;
+
 	/*
 	 * The content provider class is responsible for
 	 * providing objects to the view. It can wrap
@@ -80,6 +81,7 @@ public class TNavigatorView extends ViewPart {
 			return list.toArray();
 		}
 	}
+
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 		public String getColumnText(Object obj, int index) {
 			return getText(obj);
@@ -94,6 +96,7 @@ public class TNavigatorView extends ViewPart {
 			return Activator.getDefault().getImage("icons/tour_icon_16.png");
 		}
 	}
+
 	class NameSorter extends ViewerSorter {
 	}
 
@@ -102,6 +105,7 @@ public class TNavigatorView extends ViewPart {
 	 */
 	public TNavigatorView() {
 	}
+
 	private ViewerComparator alphaSorter = new ViewerComparator();
 	private ViewerComparator dateSorter = null;
 
@@ -232,7 +236,7 @@ public class TNavigatorView extends ViewPart {
 		if (selection.isEmpty())
 			return;
 		boolean delQuestion = MessageDialog.openQuestion(viewer.getControl().getShell(), "Confirmation",
-		        "You are deleting " + selection.size() + " tournament(s): " + selection + ". Proceed?");
+				"You are deleting " + selection.size() + " tournament(s): " + selection + ". Proceed?");
 		if (delQuestion) {
 			for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 				Tournament t = (Tournament) iterator.next();
@@ -251,8 +255,9 @@ public class TNavigatorView extends ViewPart {
 	 * 
 	 */
 	protected void addTournament() {
-		InputDialog dialog = new InputDialog(getSite().getShell(), "Toutnament name", "Enter a tournament name", "",
-		        null);
+		InputDialog dialog = new InputDialog(getSite().getShell(), "Toutnament name",
+				"Enter a tournament name", "",
+				null);
 		if (dialog.open() == Dialog.OK) {
 			Tournament t = new Tournament(dialog.getValue());
 			cube.addTournament(t);

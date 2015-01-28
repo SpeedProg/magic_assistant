@@ -164,7 +164,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 			bounds = ((TreeItem) item).getBounds(event.index);
 		return bounds;
 	}
-	
+
 	public void paintCellWithImage(Event event, int imageWidth) {
 		Item item = (Item) event.item;
 		Object row = item.getData();
@@ -179,7 +179,8 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 			imageWidth = Math.max(imageWidth, image.getBounds().width);
 			leftMargin = imageWidth;
 			Rectangle imageBounds = image.getBounds();
-			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height) / 2);
+			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height)
+					/ 2);
 		}
 		String text = getText(row);
 		if (text != null) {

@@ -98,13 +98,14 @@ public class SymbolConverter {
 		String bgColor = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
 		rgb = con.getForeground().getRGB();
 		String fgColor = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
-		String style = "font-size:" + height + "pt;" + "background-color: " + bgColor + ";" + "color: " + fgColor + ";" + "font-family:"
+		String style = "font-size:" + height + "pt;" + "background-color: " + bgColor + ";" + "color: "
+				+ fgColor + ";" + "font-family:"
 				+ fontName + ";";
 		return style;
 	}
 
 	public static Image buildCostImage(String cost) {
-		if (cost == null || cost.length()==0)
+		if (cost == null || cost.length() == 0)
 			return null;
 		ImageRegistry imageRegistry = MagicUIActivator.getDefault().getImageRegistry();
 		String key = "[" + cost;
@@ -113,7 +114,7 @@ public class SymbolConverter {
 			return costImage;
 		try {
 			Collection<Image> manaImages = getManaImages(cost);
-			costImage = ImageCreator.joinImages(manaImages, SYMBOL_SIZE*10, SYMBOL_SIZE);
+			costImage = ImageCreator.joinImages(manaImages, SYMBOL_SIZE * 10, SYMBOL_SIZE);
 			return costImage;
 		} catch (Exception e) {
 			MagicUIActivator.log(e);
@@ -123,7 +124,7 @@ public class SymbolConverter {
 			gc.dispose();
 			return costImage;
 		} finally {
-			if (costImage!=null) imageRegistry.put(key, costImage);
+			if (costImage != null) imageRegistry.put(key, costImage);
 		}
 	}
 
@@ -132,11 +133,12 @@ public class SymbolConverter {
 			return Collections.emptyList();
 		Collection<Image> res = new ArrayList<>();
 		String text = cost;
-		if (text.equals("*")) 
+		if (text.equals("*"))
 			return res;
 		while (text.length() > 0) {
 			boolean cut = false;
-			for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
+			for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext()
+					&& text.length() > 0;) {
 				String sym = iterator.next();
 				if (sym.length() == 0)
 					throw new MagicException();
@@ -147,13 +149,12 @@ public class SymbolConverter {
 						res.add(symImage);
 					}
 					text = text.substring(sym.length());
-					cut=true;
+					cut = true;
 				}
 			}
 			if (!cut)
 				throw new MagicException("Cannot build mana images for '" + text + "'");
 		}
-
 		return res;
 	}
 

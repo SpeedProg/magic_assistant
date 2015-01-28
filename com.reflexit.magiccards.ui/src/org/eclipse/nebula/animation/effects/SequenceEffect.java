@@ -42,7 +42,6 @@ public class SequenceEffect implements IEffect {
 		this.effects = effects;
 		this.onCancel = onCancel;
 		this.onStop = onStop;
-
 		if (effects != null) {
 			IEffect e = null;
 			for (int i = effects.length - 1; i >= 0; i--) {
@@ -61,7 +60,6 @@ public class SequenceEffect implements IEffect {
 		for (int i = currentEffect; i < effects.length; i++) {
 			effects[currentEffect].cancel();
 		}
-
 		// Call cancel runnable
 		if (onCancel != null) {
 			onCancel.run();
@@ -77,18 +75,15 @@ public class SequenceEffect implements IEffect {
 		if (currentEffect >= effects.length) {
 			return;
 		}
-
 		effects[currentEffect].doEffect(time - start);
 		if (effects[currentEffect].isDone()) {
 			start += effects[currentEffect].getLength();
 			currentEffect++;
 		}
-
 		// Call stop runnable
 		if (onStop != null && isDone()) {
 			onStop.run();
 		}
-
 	}
 
 	/*
@@ -111,5 +106,4 @@ public class SequenceEffect implements IEffect {
 		}
 		return effects[effects.length - 1].isDone();
 	}
-
 }

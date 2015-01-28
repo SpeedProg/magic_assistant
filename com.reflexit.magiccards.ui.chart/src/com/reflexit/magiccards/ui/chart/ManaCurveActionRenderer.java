@@ -23,7 +23,8 @@ public class ManaCurveActionRenderer extends ActionRendererAdapter {
 			TooltipValue tv = (TooltipValue) action.getValue();
 			if (StructureType.SERIES_DATA_POINT.equals(source.getType())) {
 				final DataPointHints dph = (DataPointHints) source.getSource();
-				String MyToolTip = dph.getDisplayValue() + " cards " + " of cost " + dph.getBaseDisplayValue();
+				String MyToolTip = dph.getDisplayValue() + " cards " + " of cost "
+						+ dph.getBaseDisplayValue();
 				tv.setText(MyToolTip);
 			}
 		}

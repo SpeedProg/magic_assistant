@@ -30,7 +30,8 @@ import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
  * Retrieve legality info
  */
 public class ParseGathererLegality extends AbstractParseGathererPage {
-	private static final String LEGALITY_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Printings.aspx?multiverseid=";
+	private static final String LEGALITY_QUERY_URL_BASE = GATHERER_URL_BASE
+			+ "Pages/Card/Printings.aspx?multiverseid=";
 	private int cardId;
 	private IMagicCard card;
 
@@ -100,7 +101,8 @@ public class ParseGathererLegality extends AbstractParseGathererPage {
 		}
 	}
 
-	public static Map<Integer, LegalityMap> cardSetLegality(ICardSet<IMagicCard> cards, ICoreProgressMonitor monitor) throws IOException {
+	public static Map<Integer, LegalityMap> cardSetLegality(ICardSet<IMagicCard> cards,
+			ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Updaing cards legality", cards.size() * 10);
 		try {
 			ParseGathererLegality parser = new ParseGathererLegality();

@@ -70,7 +70,8 @@ public class SplitDialog extends TrayDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selection = SplitDialog.this.scale.getSelection();
-				from.setText(String.valueOf(selection) + ":" + String.valueOf(SplitDialog.this.max - selection));
+				from.setText(String.valueOf(selection) + ":"
+						+ String.valueOf(SplitDialog.this.max - selection));
 				SplitDialog.this.customButton.setSelection(true);
 				SplitDialog.this.evenButton.setSelection(false);
 				SplitDialog.this.oneToNButton.setSelection(false);
@@ -82,7 +83,8 @@ public class SplitDialog extends TrayDialog {
 				if (SplitDialog.this.oneToNButton.getSelection()) {
 					int selection = 1;
 					SplitDialog.this.scale.setSelection(selection);
-					from.setText(String.valueOf(selection) + ":" + String.valueOf(SplitDialog.this.max - selection));
+					from.setText(String.valueOf(selection) + ":"
+							+ String.valueOf(SplitDialog.this.max - selection));
 				}
 			}
 		});
@@ -92,7 +94,8 @@ public class SplitDialog extends TrayDialog {
 				if (SplitDialog.this.evenButton.getSelection()) {
 					int selection = SplitDialog.this.max / 2;
 					SplitDialog.this.scale.setSelection(selection);
-					from.setText(String.valueOf(selection) + ":" + String.valueOf(SplitDialog.this.max - selection));
+					from.setText(String.valueOf(selection) + ":"
+							+ String.valueOf(SplitDialog.this.max - selection));
 				}
 			}
 		});

@@ -149,7 +149,8 @@ public class ParserHtmlHelper {
 	@NotNull
 	public static URL createImageURL(int cardId) {
 		try {
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId + "&type=card");
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId
+					+ "&type=card");
 		} catch (MalformedURLException e) {
 			throw new MagicException(e);
 		}
@@ -176,7 +177,8 @@ public class ParserHtmlHelper {
 	public static URL createSetImageURL(String editionAbbr, String rarity) {
 		try {
 			String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr + "&size=small&rarity="
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr
+					+ "&size=small&rarity="
 					+ rarLetter);
 		} catch (MalformedURLException e) {
 			throw new MagicException(e);
@@ -186,7 +188,8 @@ public class ParserHtmlHelper {
 	public static URL createManaImageURL(String symbol) {
 		String manaName = symbol.replaceAll("[{}/]", "");
 		try {
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=" + manaName + "&type=symbol");
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=" + manaName
+					+ "&type=symbol");
 		} catch (MalformedURLException e) {
 			return null;
 		}

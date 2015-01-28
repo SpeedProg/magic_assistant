@@ -20,7 +20,8 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
  * @author Alena
  * 
  */
-public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements ICardStore<IMagicCard>,
+public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements
+		ICardStore<IMagicCard>,
 		ICardCollection<IMagicCard>, IStorageContainer<IMagicCard> {
 	protected HashCollectionPart hashpart;
 

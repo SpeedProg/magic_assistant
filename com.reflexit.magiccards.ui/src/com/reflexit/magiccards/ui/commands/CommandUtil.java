@@ -14,10 +14,13 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
 public class CommandUtil {
-	public static Object executeCommandWithParameter(String commId, String paramId, String paramValue) throws ExecutionException,
+	public static Object executeCommandWithParameter(String commId, String paramId, String paramValue)
+			throws ExecutionException,
 			NotDefinedException, NotEnabledException, NotHandledException {
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(
+				ICommandService.class);
+		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+				IHandlerService.class);
 		Command command = commandService.getCommand(commId);
 		IParameter param = command.getParameter(paramId);
 		Parameterization parm = new Parameterization(param, paramValue);
@@ -26,7 +29,8 @@ public class CommandUtil {
 	}
 
 	public static boolean executeCommand(String id) {
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+				IHandlerService.class);
 		try {
 			Object result = handlerService.executeCommand(id, null);
 			if (result == Status.OK_STATUS)

@@ -13,7 +13,8 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
-public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate<IMagicCard> {
+public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress,
+		IImportDelegate<IMagicCard> {
 	private InputStream stream;
 	private boolean header;
 	private Location location;
@@ -105,7 +106,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			if (nameByAbbr == null)
 				nameByAbbr = value;
 			card.set(MagicCardField.SET, nameByAbbr);
-		} else if (field == MagicCardField.LOCATION || field == MagicCardField.CTYPE || field == MagicCardField.CMC
+		} else if (field == MagicCardField.LOCATION || field == MagicCardField.CTYPE
+				|| field == MagicCardField.CMC
 				|| field == MagicCardField.COLOR) {
 			// ignore this field
 		} else if (field == MagicCardField.SIDEBOARD) {

@@ -15,7 +15,8 @@ public interface ICardEventManager<T> {
 	 * card values were updated
 	 * 
 	 * @param card
-	 * @param mask TODO
+	 * @param mask
+	 *            TODO
 	 */
 	public void update(T card, Set<? extends ICardField> mask);
 

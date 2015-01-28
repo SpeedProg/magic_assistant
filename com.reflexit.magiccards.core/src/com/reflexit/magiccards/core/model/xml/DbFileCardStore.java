@@ -61,7 +61,8 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 		super.doInitialize();
 		setAutoCommit(false);
 		try {
-			for (Iterator iterator = ((SingleFileCardStorage) storage).getList().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = ((SingleFileCardStorage) storage).getList().iterator(); iterator
+					.hasNext();) {
 				IMagicCard card = (IMagicCard) iterator.next();
 				if (handler.hashAndResolve(card)) {
 					iterator.remove();

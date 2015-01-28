@@ -42,5 +42,4 @@ public class TakeScreenShotCommandHandler extends AbstractHandler {
 		image.dispose();
 		return null;
 	}
-
 }

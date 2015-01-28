@@ -110,7 +110,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
 					@Override
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+							InterruptedException {
 						IImportDelegate<IMagicCard> worker;
 						try {
 							worker = reportType.getImportDelegate();
@@ -118,14 +119,16 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 							throw new InvocationTargetException(e);
 						}
 						if (worker == null)
-							throw new IllegalArgumentException("Import is not defined for " + reportType.getLabel());
+							throw new IllegalArgumentException("Import is not defined for "
+									+ reportType.getLabel());
 						CoreMonitorAdapter monitor2 = new CoreMonitorAdapter(monitor);
 						boolean resolve = !dbImport;
 						if (preview) {
 							// if error occurs importResult.error would be set
 							// to exception
 							Location location = Location.createLocation("preview");
-							previewResult = ImportUtils.performPreImport(st, worker, header, virtual, location, resolve, monitor2);
+							previewResult = ImportUtils.performPreImport(st, worker, header, virtual,
+									location, resolve, monitor2);
 							((DeckImportWizard) getWizard()).setData(previewResult);
 						} else {
 							Location location = getSelectedLocation();
@@ -135,7 +138,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 								location = getSelectedLocation();
 							}
 							if (previewResult == null) {
-								previewResult = ImportUtils.performPreImport(st, worker, header, virtual, location, resolve, monitor2);
+								previewResult = ImportUtils.performPreImport(st, worker, header, virtual,
+										location, resolve, monitor2);
 							}
 							Collection<IMagicCard> result = (Collection<IMagicCard>) previewResult.getList();
 							if (resolve) {
@@ -143,7 +147,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 							}
 							if (fixErrors(result, dbImport)) {
 								if (resolve)
-									ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
+									ImportUtils.performImport(result, DataManager.getCardHandler()
+											.getLibraryCardStore());
 							}
 						}
 					}
@@ -170,7 +175,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 				int size = result.size();
 				Map<String, String> badSets = ImportUtils.getSetCandidates(result);
 				if (badSets.size() > 0) {
-					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve " + badSets.size()
+					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve "
+							+ badSets.size()
 							+ " set(s). The following sets are not found or ambigues: " + badSets.keySet()
 							+ ".\n Do you want to fix these?");
 					if (yes) {
@@ -190,19 +196,24 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					}
 				}
 				ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
-				ImportUtils.performPreImportWithDb(result, newdbrecords, reportType.getImportDelegate().getResult().getFields());
+				ImportUtils.performPreImportWithDb(result, newdbrecords, reportType.getImportDelegate()
+						.getResult().getFields());
 				ArrayList<String> lerrors = new ArrayList<String>();
 				ImportUtils.validateDbRecords(newdbrecords, lerrors);
 				if (newdbrecords.size() > 0 && lerrors.size() == 0) {
 					boolean yes2 = dbImport;
 					if (yes2 == false) {
-						yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", newdbrecords.size()
-								+ " cards are not found in the database. Do you want to add new cards into database?");
+						yes2 = MessageDialog.openQuestion(
+								getShell(),
+								"Import into DB",
+								newdbrecords.size()
+										+ " cards are not found in the database. Do you want to add new cards into database?");
 					}
 					if (yes2)
 						ImportUtils.importIntoDb(newdbrecords);
 				} else if (lerrors.size() > 0 && dbImport) {
-					String message = newdbrecords.size() + " cards are not found in the database " + lerrors.size()
+					String message = newdbrecords.size() + " cards are not found in the database "
+							+ lerrors.size()
 							+ "\nThe following errors preventing import all of them into database:\n";
 					for (Iterator iterator = lerrors.iterator(); iterator.hasNext();) {
 						String str = (String) iterator.next();
@@ -223,7 +234,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 					}
 				}
 				if (cerrors.size() != 0) {
-					String message = "After all this effort I cannot resolve " + cerrors.size() + " cards of " + size + ":\n";
+					String message = "After all this effort I cannot resolve " + cerrors.size()
+							+ " cards of " + size + ":\n";
 					int i = 0;
 					for (Iterator iterator = cerrors.iterator(); iterator.hasNext() && i < 10; i++) {
 						String str = (String) iterator.next();
@@ -255,7 +267,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardCollection element = CardsNavigatorView.createNewDeckAction((CollectionsContainer) resource, newDeckName, page);
+				CardCollection element = CardsNavigatorView.createNewDeckAction(
+						(CollectionsContainer) resource, newDeckName, page);
 				element.setVirtual(virtual);
 				setElement(element);
 			}
@@ -329,7 +342,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		importIntoExisting.addSelectionListener(updateListener);
 		final Text text = new Text(group, SWT.BORDER);
 		text.setEditable(false);
-		text.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).create());
+		text.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING)
+				.create());
 		Button browse = new Button(group, SWT.PUSH);
 		browse.setText("Browse...");
 		browse.addSelectionListener(new SelectionAdapter() {
@@ -407,11 +421,13 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		if (reportType == ReportType.XML)
 			setMessage(mess);
 		else if (reportType == ReportType.CSV)
-			setMessage(mess + "Columns: ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT");
+			setMessage(mess
+					+ "Columns: ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT");
 		else if (reportType == ReportType.TEXT_DECK_CLASSIC)
 			setMessage(mess + "Lines like 'Quagmire Druid x 3' or 'Diabolic Tutor (Tenth Edition) x4'");
 		else if (reportType == ReportType.TABLE_PIPED)
-			setMessage(mess + "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
+			setMessage(mess
+					+ "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
 		else
 			setMessage(mess);
 	}
@@ -610,7 +626,8 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 
 	@Override
 	protected boolean validateSourceGroup() {
-		if (clipboard == false && ((fileName == null) || (fileName.length() == 0) || (editor.getText().length() == 0))) {
+		if (clipboard == false
+				&& ((fileName == null) || (fileName.length() == 0) || (editor.getText().length() == 0))) {
 			setErrorMessage("Imput file is not selected");
 			return false;
 		}
@@ -628,21 +645,25 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	/**
 	 * Creates a new button with the given id.
 	 * <p>
-	 * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection events
-	 * including button presses and registers default buttons with its shell. The button id is stored as the buttons client data. Note that
-	 * the parent's layout is assumed to be a GridLayout and the number of columns in this layout is incremented. Subclasses may override.
+	 * The <code>Dialog</code> implementation of this framework method creates a standard push button,
+	 * registers for selection events including button presses and registers default buttons with its shell.
+	 * The button id is stored as the buttons client data. Note that the parent's layout is assumed to be a
+	 * GridLayout and the number of columns in this layout is incremented. Subclasses may override.
 	 * </p>
 	 * 
 	 * @param parent
 	 *            the parent composite
 	 * @param id
-	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+	 *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog
+	 *            button ids)
 	 * @param label
 	 *            the label from the button
 	 * @param defaultButton
-	 *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+	 *            <code>true</code> if the button is to be the default button, and <code>false</code>
+	 *            otherwise
 	 */
-	protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
+	protected Button createButton(final Composite parent, final int id, final String label,
+			final boolean defaultButton) {
 		// increment the number of columns in the button bar
 		((GridLayout) parent.getLayout()).numColumns++;
 		Button button = new Button(parent, SWT.PUSH);

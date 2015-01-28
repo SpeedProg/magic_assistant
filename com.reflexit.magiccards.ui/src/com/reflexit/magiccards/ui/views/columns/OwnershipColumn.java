@@ -56,6 +56,7 @@ public class OwnershipColumn extends GenColumn {
 		else
 			return "Virtual";
 	}
+
 	// @Override
 	// public Color getBackground(Object element) {
 	// if (isOwn(element))
@@ -89,7 +90,8 @@ public class OwnershipColumn extends GenColumn {
 			@Override
 			protected CellEditor getCellEditor(final Object element) {
 				final Integer pos = (Integer) getValue(element);
-				CellEditor editor = new ComboBoxCellEditor((Composite) viewer.getControl(), new String[] { "own", "virtual" },
+				CellEditor editor = new ComboBoxCellEditor((Composite) viewer.getControl(), new String[] {
+						"own", "virtual" },
 						SWT.READ_ONLY) {
 				};
 				editor.setValue(pos);

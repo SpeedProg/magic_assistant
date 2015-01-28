@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.movement;
 
 /**
@@ -17,7 +16,6 @@ package org.eclipse.nebula.animation.movement;
  * @author Nicolas Richeton
  */
 public class LinearInOut extends AbstractMovement {
-
 	double increment;
 
 	/*
@@ -38,5 +36,4 @@ public class LinearInOut extends AbstractMovement {
 		increment = (max - min) / steps;
 		super.init(min, max, steps);
 	}
-
 }

@@ -142,7 +142,8 @@ public class RoundRobinSchedule extends AbstractScheduler {
 		if (end <= 0 || end > positions.length)
 			throw new ArrayIndexOutOfBoundsException(end);
 		if (end <= start)
-			throw new IllegalArgumentException("Start index should be less or equal end index: " + start + " <= " + end);
+			throw new IllegalArgumentException("Start index should be less or equal end index: " + start
+					+ " <= " + end);
 		if (shift < 0)
 			throw new IllegalArgumentException("Shift cannot be negative");
 		shift = shift % (end - start);

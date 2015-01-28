@@ -56,7 +56,8 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		int size = getSize(iterable);
 		monitor.beginTask("Loading prices...", size + 10);
 		HashSet<String> sets = new HashSet();
@@ -165,7 +166,8 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	private static final Pattern rowStart = Pattern.compile("<tr class=\"(alt)?[Dd]ataRow\" id=\"r\\d+\">");
 	private static final Pattern rowEnd = Pattern.compile("</tr>");
 	private static final Pattern pricePattern = Pattern.compile("<td rowspan=\"\\d+\">\\$(.*?)</td>");
-	private static final Pattern namePattern = Pattern.compile("<a href=\"/store/magic/viewcard.aspx.I=MTG-MS-\\d+\">(.*?)</a>");
+	private static final Pattern namePattern = Pattern
+			.compile("<a href=\"/store/magic/viewcard.aspx.I=MTG-MS-\\d+\">(.*?)</a>");
 
 	private void processFile(BufferedReader st, HashMap<String, Float> res) throws IOException {
 		String line = "";
@@ -206,7 +208,8 @@ public class ParseMtgFanaticPrices extends AbstractPriceProvider {
 	 * </li>
 	 */
 	private static final Pattern setLinePattern = Pattern.compile("class=\"setIcon\"");
-	private static Pattern setItemPattern = Pattern.compile("<a href=\"/store/magic/viewcards.aspx\\?CatID=(\\d+)\">.*?</div>(.*?)</a>");
+	private static Pattern setItemPattern = Pattern
+			.compile("<a href=\"/store/magic/viewcards.aspx\\?CatID=(\\d+)\">.*?</div>(.*?)</a>");
 
 	public HashMap<String, String> parseSets() throws IOException {
 		HashMap<String, String> res = new HashMap<String, String>();

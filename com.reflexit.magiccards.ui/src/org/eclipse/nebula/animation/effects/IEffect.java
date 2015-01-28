@@ -8,22 +8,19 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 /**
  * All animation effects must implement this interface.
  * <p>
- * Note : an effect should not do initialization in constructor, but at the
- * first call to doEffect(). For instance, a move effect should not get the
- * initial position of an object in the constructor, because the object may have
- * moved between creation and effect start.
+ * Note : an effect should not do initialization in constructor, but at the first call to doEffect(). For
+ * instance, a move effect should not get the initial position of an object in the constructor, because the
+ * object may have moved between creation and effect start.
  * </p>
  * 
  * @author Nicolas Richeton
  */
 public interface IEffect {
-
 	/**
 	 * Set the effect as done and run the cancel runnable.
 	 */

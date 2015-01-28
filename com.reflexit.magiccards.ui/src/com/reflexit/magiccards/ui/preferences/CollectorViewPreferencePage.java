@@ -9,7 +9,8 @@ import com.reflexit.magiccards.ui.preferences.feditors.ColumnFieldEditor;
 import com.reflexit.magiccards.ui.views.collector.CollectorColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 
-public class CollectorViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class CollectorViewPreferencePage extends FieldEditorPreferencePage implements
+		IWorkbenchPreferencePage {
 	public CollectorViewPreferencePage() {
 		super(GRID);
 		setPreferenceStore(PreferenceInitializer.getCollectorStore());
@@ -19,8 +20,10 @@ public class CollectorViewPreferencePage extends FieldEditorPreferencePage imple
 	@Override
 	protected void createFieldEditors() {
 		ColumnCollection columnCollection = new CollectorColumnCollection();
-		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter", getFieldEditorParent()));
-		addField(new ColumnFieldEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order", getFieldEditorParent(),
+		addField(new BooleanFieldEditor(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, "Show quick filter",
+				getFieldEditorParent()));
+		addField(new ColumnFieldEditor(PreferenceConstants.LOCAL_COLUMNS, "Visible Columns and Order",
+				getFieldEditorParent(),
 				columnCollection));
 	}
 

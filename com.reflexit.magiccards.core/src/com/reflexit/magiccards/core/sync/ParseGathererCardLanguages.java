@@ -41,7 +41,8 @@ public class ParseGathererCardLanguages extends AbstractParseGathererPage {
 	            </td>
 	        </tr>
 	 */
-	private static Pattern rowPattern = Pattern.compile("<tr class=\"cardItem(.*?multiverseid=(\\d+).*?)</tr>");
+	private static Pattern rowPattern = Pattern
+			.compile("<tr class=\"cardItem(.*?multiverseid=(\\d+).*?)</tr>");
 
 	public static void main(String[] args) throws IOException {
 		ParseGathererCardLanguages parser = new ParseGathererCardLanguages();
@@ -78,13 +79,13 @@ public class ParseGathererCardLanguages extends AbstractParseGathererPage {
 		}
 		if (langId == 0)
 			if (count >= 25 && page <= 3) {
-			page++;
-			try {
-				load(ICoreProgressMonitor.NONE);
-			} catch (IOException e) {
-				// ignore
-			}
+				page++;
+				try {
+					load(ICoreProgressMonitor.NONE);
+				} catch (IOException e) {
+					// ignore
 		}
+	}
 	}
 
 	@Override

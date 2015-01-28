@@ -76,12 +76,14 @@ public class FileUtils {
 	}
 
 	public static BufferedReader openFileReader(File file) throws FileNotFoundException {
-		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file), FileUtils.CHARSET_UTF_8));
+		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file),
+				FileUtils.CHARSET_UTF_8));
 		return st;
 	}
 
 	public static BufferedReader openStringReader(String str) {
-		BufferedReader st = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(str.getBytes()), FileUtils.CHARSET_UTF_8));
+		BufferedReader st = new BufferedReader(new InputStreamReader(
+				new ByteArrayInputStream(str.getBytes()), FileUtils.CHARSET_UTF_8));
 		return st;
 	}
 
@@ -212,7 +214,8 @@ public class FileUtils {
 	}
 
 	public static File getPreferenceFile() {
-		return new File(getWorkspace(), ".metadata/.plugins/org.eclipse.core.runtime/.settings/" + DataManager.ID + ".prefs");
+		return new File(getWorkspace(), ".metadata/.plugins/org.eclipse.core.runtime/.settings/"
+				+ DataManager.ID + ".prefs");
 	}
 
 	public static File getStateLocationFile() {

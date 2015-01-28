@@ -57,7 +57,7 @@ class CardDescComposite extends Composite {
 		GridDataFactory.fillDefaults() //
 				.grab(true, false) //
 				.align(SWT.CENTER, SWT.BEGINNING)//
-				.hint(width+2, hight+2).applyTo(this.imageControl);
+				.hint(width + 2, hight + 2).applyTo(this.imageControl);
 		createImages();
 		this.powerProvider = new PowerColumn(MagicCardField.POWER, null, null);
 		this.toughProvider = new PowerColumn(MagicCardField.TOUGHNESS, null, null);
@@ -83,7 +83,8 @@ class CardDescComposite extends Composite {
 						int cardId = ParserHtmlHelper.extractCardIdFromURL(new URL(location));
 						if (cardId != 0) {
 							event.doit = false;
-							ICardStore<IMagicCard> magicDBStore = DataManager.getCardHandler().getMagicDBStore();
+							ICardStore<IMagicCard> magicDBStore = DataManager.getCardHandler()
+									.getMagicDBStore();
 							IMagicCard card2 = magicDBStore.getCard(cardId);
 							if (card2 != null) {
 								cardDescView.setSelection(new StructuredSelection(card2));
@@ -180,7 +181,8 @@ class CardDescComposite extends Composite {
 				String links = getLinks(card);
 				String oracle = getOracle(card, text);
 				String rulings = getCardRulingsHtml(card);
-				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, textBrowser));
+				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings,
+						textBrowser));
 				swapVisibility(textBrowser, textBackup);
 				return;
 			}

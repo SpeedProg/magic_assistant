@@ -46,7 +46,8 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 	private IStructuredSelection selection;
 	private Label epri;
 
-	public BuyCardsConfirmationDialog(Shell shell, IStructuredSelection selection, IFilteredCardStore filteredStore) {
+	public BuyCardsConfirmationDialog(Shell shell, IStructuredSelection selection,
+			IFilteredCardStore filteredStore) {
 		super(shell);
 		this.selSize = selection.size();
 		this.filSize = filteredStore.getSize();
@@ -111,7 +112,8 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 		b.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				LoadingPricesJob job = new LoadingPricesJob("Loading prices from " + priceProviderCombo.getText(), getListAsIterable());
+				LoadingPricesJob job = new LoadingPricesJob("Loading prices from "
+						+ priceProviderCombo.getText(), getListAsIterable());
 				job.setUser(true);
 				job.setSystem(false);
 				job.schedule();
@@ -156,7 +158,8 @@ public class BuyCardsConfirmationDialog extends TitleAreaDialog {
 		epri.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				epri.setText("Estimated price: $" + decimalFormat.format(fcost) + ". Not found cards: " + funknown + ".");
+				epri.setText("Estimated price: $" + decimalFormat.format(fcost) + ". Not found cards: "
+						+ funknown + ".");
 			}
 		});
 	}

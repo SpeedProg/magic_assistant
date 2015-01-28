@@ -80,7 +80,8 @@ public class TextSearchPreferenceGroup extends MFieldEditorPreferencePage {
 		ids.add(langId);
 	}
 
-	static String[] textProposals = new String[] { "Flying", "Haste", "Persist", "Wither", "Lifelink", "First Strike", "Double Strike",
+	static String[] textProposals = new String[] { "Flying", "Haste", "Persist", "Wither", "Lifelink",
+			"First Strike", "Double Strike",
 			"Protection", "Reach", "Deathtouch", "Unblockable", "Fear", "Changeling", "Trample", "Vigilance", };
 
 	/**

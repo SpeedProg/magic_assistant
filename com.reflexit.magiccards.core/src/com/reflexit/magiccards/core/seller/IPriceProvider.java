@@ -25,7 +25,8 @@ public interface IPriceProvider extends IPriceProviderStore {
 	 *            - progress monitor
 	 * @throws IOException
 	 */
-	public void updatePricesAndSync(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException;
+	public void updatePricesAndSync(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException;
 
 	void save() throws IOException;
 

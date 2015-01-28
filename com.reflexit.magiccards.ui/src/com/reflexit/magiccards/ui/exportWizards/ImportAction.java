@@ -28,7 +28,8 @@ public class ImportAction extends Action implements ISelectionChangedListener {
 		super("Import...");
 		setId(ID);
 		setToolTipText("Import data from a file");
-		setImageDescriptor(WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_IMPORT_WIZ));
+		setImageDescriptor(WorkbenchImages
+				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_IMPORT_WIZ));
 	}
 
 	@Override
@@ -50,7 +51,8 @@ public class ImportAction extends Action implements ISelectionChangedListener {
 	private boolean runOpenWizard(final IStructuredSelection selection) {
 		DeckImportWizard wizard = new DeckImportWizard();
 		wizard.init(PlatformUI.getWorkbench(), selection);
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell(), wizard);
 		dialog.create();
 		dialog.getShell().setText(wizard.getWindowTitle());
 		int result = dialog.open();

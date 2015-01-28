@@ -59,7 +59,8 @@ public class TableImportDelegate extends AbstractImportDelegate {
 						MagicCardPhysical card = createCard(Arrays.asList(split));
 						importCard(card);
 					} else {
-						throw new IllegalArgumentException("Error: Line " + lineNum + ". Fields seprated by | are not found: " + input);
+						throw new IllegalArgumentException("Error: Line " + lineNum
+								+ ". Fields seprated by | are not found: " + input);
 					}
 					monitor.worked(1);
 				} while (true);
@@ -79,7 +80,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		ICardField[] fields = getFields();
 		for (int i = 0; i < fields.length && i < list.size(); i++) {
 			ICardField f = fields[i];
-			if (f==null) continue;
+			if (f == null) continue;
 			String value = list.get(i);
 			if (value != null && value.length() > 0) {
 				try {
@@ -119,7 +120,8 @@ public class TableImportDelegate extends AbstractImportDelegate {
 		if (nulls == list.size()) {
 			ICardField[] allNonTransientFields = MagicCardField.allNonTransientFields(true);
 			String hfields = TextPrinter.join(Arrays.asList(allNonTransientFields), ',');
-			throw new MagicException("Cannot recognize header fields: " + list + ", expecting some of these " + hfields);
+			throw new MagicException("Cannot recognize header fields: " + list + ", expecting some of these "
+					+ hfields);
 		}
 		setFields(fields);
 	}

@@ -78,7 +78,8 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 	}
 
 	@Override
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		monitor.beginTask("Loading prices from " + getURL() + " ...", 100);
 		try {
 			if (updateFromWeb())
@@ -192,11 +193,13 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 			for (String missingSet : scandmap.keySet()) {
 				CountersMap countersMap = scandmap.get(missingSet);
 				String poss = countersMap.maxKey();
-				System.err.println("* Not found set " + missingSet + " possible " + poss + " " + countersMap.get(poss) + " of "
+				System.err.println("* Not found set " + missingSet + " possible " + poss + " "
+						+ countersMap.get(poss) + " of "
 						+ allsetmap.get(missingSet));
 				for (Iterator iterator = countersMap.keySet().iterator(); iterator.hasNext();) {
 					String cset = (String) iterator.next();
-					System.err.println("  possible sets " + cset + " " + editions.getAbbrByName(cset) + " " + countersMap.get(cset));
+					System.err.println("  possible sets " + cset + " " + editions.getAbbrByName(cset) + " "
+							+ countersMap.get(cset));
 				}
 			}
 		}

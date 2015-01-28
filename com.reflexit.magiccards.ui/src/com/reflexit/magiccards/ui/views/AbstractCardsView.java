@@ -222,7 +222,8 @@ public abstract class AbstractCardsView extends ViewPart {
 				reloadData();
 			}
 		};
-		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+		this.actionRefresh
+				.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
 		showInstances = new Action("Show All Instances") {
 			{
 				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/hand16.png"));
@@ -265,7 +266,8 @@ public abstract class AbstractCardsView extends ViewPart {
 					}
 					MagicLogger.log("Redirecting to " + url);
 					new BrowserOpenAcknoledgementDialog(getShell(),
-							"Browser is being open, continue with the browser to complete your order", url).open();
+							"Browser is being open, continue with the browser to complete your order", url)
+							.open();
 				} else {
 					if (!MessageDialog
 							.openConfirm(
@@ -297,7 +299,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void runLoadExtras() {
 		final IStructuredSelection selection = getSelection();
 		IFilteredCardStore filteredStore = getFilteredStore();
-		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(), filteredStore.getSize(),
+		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(),
+				filteredStore.getSize(),
 				filteredStore.getCardStore().size());
 		if (dialog.open() != Window.OK || dialog.getFields().isEmpty()) {
 			return;
@@ -428,11 +431,13 @@ public abstract class AbstractCardsView extends ViewPart {
 					continue;
 				CardCollection cardCollection = deckView.getCardCollection();
 				String active = "";
-				IFilteredCardStore activeHandler = DataManager.getInstance().getCardHandler().getActiveDeckHandler();
+				IFilteredCardStore activeHandler = DataManager.getInstance().getCardHandler()
+						.getActiveDeckHandler();
 				if (activeHandler != null && activeHandler.getCardStore() == cardCollection.getStore()) {
 					active = " (Active)";
 				}
-				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ") + cardCollection.getName()
+				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ")
+						+ cardCollection.getName()
 						+ active;
 				Action ac = new Action(name) {
 					@Override

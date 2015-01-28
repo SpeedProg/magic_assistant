@@ -257,7 +257,8 @@ public class RoundScheduleSection extends TSectionPart {
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -373,7 +374,8 @@ public class RoundScheduleSection extends TSectionPart {
 						modelUpdated();
 				}
 			} else {
-				MessageDialog.openError(overrideButton.getShell(), "Cannot Edit", "Round is started, cannot edit pairings");
+				MessageDialog.openError(overrideButton.getShell(), "Cannot Edit",
+						"Round is started, cannot edit pairings");
 			}
 		}
 	}

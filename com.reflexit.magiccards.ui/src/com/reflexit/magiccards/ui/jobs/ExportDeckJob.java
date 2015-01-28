@@ -25,7 +25,8 @@ public class ExportDeckJob extends Job {
 	private OutputStream outStream;
 	private ICardField[] columns;
 
-	public ExportDeckJob(OutputStream outStream, ReportType reportType, boolean header, IFilteredCardStore<IMagicCard> filteredLibrary) {
+	public ExportDeckJob(OutputStream outStream, ReportType reportType, boolean header,
+			IFilteredCardStore<IMagicCard> filteredLibrary) {
 		super("Exporting " + reportType.getLabel());
 		this.reportType = reportType;
 		this.header = header;
@@ -33,7 +34,8 @@ public class ExportDeckJob extends Job {
 		this.outStream = outStream;
 	}
 
-	public ExportDeckJob(OutputStream outStream2, ReportType reportType2, boolean header2, IFilteredCardStore filteredLibrary2,
+	public ExportDeckJob(OutputStream outStream2, ReportType reportType2, boolean header2,
+			IFilteredCardStore filteredLibrary2,
 			ICardField[] columns) {
 		this(outStream2, reportType2, header2, filteredLibrary2);
 		this.columns = columns;
@@ -45,7 +47,8 @@ public class ExportDeckJob extends Job {
 		try {
 			worker = reportType.getExportDelegate();
 			if (worker == null)
-				return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, "No exporter defined for " + reportType.getLabel());
+				return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, "No exporter defined for "
+						+ reportType.getLabel());
 			worker.setColumns(columns == null ? MagicCardField.allNonTransientFields(true) : columns);
 		} catch (Exception e) {
 			return new Status(IStatus.ERROR, MagicUIActivator.PLUGIN_ID, e.getMessage(), e);

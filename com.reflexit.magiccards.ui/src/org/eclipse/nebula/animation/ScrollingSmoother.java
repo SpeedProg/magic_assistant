@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation;
 
 import org.eclipse.nebula.animation.effects.IEffect;
@@ -42,23 +41,16 @@ import org.eclipse.swt.widgets.Scrollable;
  * 
  */
 public class ScrollingSmoother {
-
 	Scrollable component;
-
 	ScrollBar verticalScrollBar;
-
 	ScrollBar horizontalScrollBar;
-
 	IMovement movement = null;
-
 	int duration = 2000;
-
 	AnimationRunner animationRunner = new AnimationRunner();
 
 	/**
 	 * Create a Scrolling Smoother instance over a scrollable widget. This
-	 * effect can then be activated using
-	 * {@link ScrollingSmoother#smoothControl(boolean)}.
+	 * effect can then be activated using {@link ScrollingSmoother#smoothControl(boolean)}.
 	 * 
 	 * @see ScrollingSmoother#smoothControl(boolean)
 	 * 
@@ -74,8 +66,7 @@ public class ScrollingSmoother {
 
 	/**
 	 * Create a Scrolling Smoother instance over a scrollable widget. This
-	 * effect can then be activated using
-	 * {@link ScrollingSmoother#smoothControl(boolean)}.
+	 * effect can then be activated using {@link ScrollingSmoother#smoothControl(boolean)}.
 	 * 
 	 * @see ScrollingSmoother#smoothControl(boolean)
 	 * 
@@ -118,26 +109,20 @@ public class ScrollingSmoother {
 
 	protected ScrollBar getScrollbar(Event event) {
 		ScrollBar result = verticalScrollBar;
-
 		if (result == null) {
 			result = horizontalScrollBar;
 		}
-
 		return result;
 	}
 
 	Listener mouseWheelListener = new Listener() {
-
 		public void handleEvent(Event event) {
 			// Remove standard behavior
 			event.doit = false;
-
 			// Get scrollbar on which the event occurred.
 			ScrollBar currentScrollBar = getScrollbar(event);
-
 			int start = currentScrollBar.getSelection();
 			int end = start;
-
 			// If an effect is currently running, get the current and target
 			// values.
 			IEffect current = animationRunner.getEffect();
@@ -146,22 +131,17 @@ public class ScrollingSmoother {
 				start = mseffect.getCurrent();
 				end = mseffect.getEnd();
 			}
-
 			end -= event.count * currentScrollBar.getIncrement();
-
 			if (end > currentScrollBar.getMaximum()
 					- currentScrollBar.getThumb()) {
 				end = currentScrollBar.getMaximum()
 						- currentScrollBar.getThumb();
 			}
-
 			if (end < currentScrollBar.getMinimum()) {
 				end = currentScrollBar.getMinimum();
 			}
-
 			animationRunner.runEffect(new MoveScrollBarEffect(currentScrollBar,
 					start, end, duration, movement, null, null));
-
 		}
 	};
 
@@ -174,26 +154,20 @@ public class ScrollingSmoother {
 	public void smoothControl(boolean enable) {
 		if (enable) {
 			component.addListener(SWT.MouseWheel, mouseWheelListener);
-
 			if (verticalScrollBar != null)
 				verticalScrollBar
 						.addSelectionListener(cancelEffectIfUserSelection);
-
 			if (horizontalScrollBar != null)
 				horizontalScrollBar
 						.addSelectionListener(cancelEffectIfUserSelection);
-
 		} else {
 			component.removeListener(SWT.MouseWheel, mouseWheelListener);
-
 			if (verticalScrollBar != null)
 				verticalScrollBar
 						.removeSelectionListener(cancelEffectIfUserSelection);
-
 			if (horizontalScrollBar != null)
 				horizontalScrollBar
 						.removeSelectionListener(cancelEffectIfUserSelection);
-
 		}
 	}
 
@@ -211,5 +185,4 @@ public class ScrollingSmoother {
 			}
 		}
 	};
-
 }

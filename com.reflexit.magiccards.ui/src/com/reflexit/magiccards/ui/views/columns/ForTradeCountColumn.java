@@ -32,7 +32,8 @@ public class ForTradeCountColumn extends CountColumn {
 			int newCount = oldCount - newFCount;
 			boolean yes = MessageDialog.openQuestion(getShell(), "?",
 					"New format no longer supports combining for trade cards together with not for trade cards in one pile.\n"
-							+ "Split card into two piles " + newCount + " not for trace / " + newFCount + " for trade?");
+							+ "Split card into two piles " + newCount + " not for trace / " + newFCount
+							+ " for trade?");
 			if (yes) {
 				MagicCardPhysical clone = card.tradeSplit(oldCount, newFCount);
 				if (clone != null)

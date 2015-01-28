@@ -105,7 +105,8 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	protected ExportAction createExportAction() {
 		CardCollection col = getCardCollection();
-		return new ExportAction(col == null ? new StructuredSelection() : new StructuredSelection(col), getPreferencePageId());
+		return new ExportAction(col == null ? new StructuredSelection() : new StructuredSelection(col),
+				getPreferencePageId());
 	}
 
 	/*
@@ -169,7 +170,8 @@ public class DeckView extends AbstractMyCardsView {
 
 	protected void runMaterialize() {
 		Collection<IMagicCard> orig = getFilteredStore().getCardStore().getCards();
-		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE | SWT.READ_ONLY) {
+		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE
+				| SWT.READ_ONLY) {
 			@Override
 			protected Control createDialogArea(Composite parent) {
 				Control area = super.createDialogArea(parent);
@@ -179,7 +181,6 @@ public class DeckView extends AbstractMyCardsView {
 		};
 		if (locationPickerDialog.open() == Window.OK) {
 			List<CardCollection> collections = locationPickerDialog.getSelectedCardCollections();
-
 			ArrayList<ICardStore<IMagicCard>> stores = new ArrayList<>();
 			for (CardCollection collection : collections) {
 				if (collection.getStore().equals(getFilteredStore().getCardStore()))
@@ -234,7 +235,8 @@ public class DeckView extends AbstractMyCardsView {
 				try {
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					IViewPart deckView = page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
+					IViewPart deckView = page.showView(DeckView.ID, col.getFileName(),
+							IWorkbenchPage.VIEW_ACTIVATE);
 					if (deckView instanceof DeckView) {
 						((DeckView) deckView).refresh();
 					}
@@ -323,7 +325,9 @@ public class DeckView extends AbstractMyCardsView {
 		folder.setSimple(false);
 		Display display = folder.getDisplay();
 		// folder.setBackground(display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-		folder.setBackground(new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND), display.getSystemColor(SWT.COLOR_WHITE) },
+		folder.setBackground(
+				new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+						display.getSystemColor(SWT.COLOR_WHITE) },
 				new int[] { 50 });
 		refresh();
 	}

@@ -50,7 +50,8 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 		} catch (NumberFormatException e) {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		final IFilteredCardStore<IMagicCard> activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+		final IFilteredCardStore<IMagicCard> activeDeckHandler = DataManager.getCardHandler()
+				.getActiveDeckHandler();
 		if (activeDeckHandler != null) {
 			List<IMagicCard> list = iss.toList();
 			try {
@@ -75,7 +76,8 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
 			}
 		} else {
-			MessageDialog.openError(window.getShell(), "Error", "No active deck, select an active deck by opening it");
+			MessageDialog.openError(window.getShell(), "Error",
+					"No active deck, select an active deck by opening it");
 		}
 		return null;
 	}

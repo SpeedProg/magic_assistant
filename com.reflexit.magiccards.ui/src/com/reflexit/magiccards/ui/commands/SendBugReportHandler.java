@@ -53,10 +53,13 @@ public class SendBugReportHandler extends AbstractHandler {
 			File workspaceDirectory = workspace.getRoot().getLocation().toFile();
 			File log = new File(workspaceDirectory, ".metadata/.log");
 			CopySupport.runCopy(log.getAbsolutePath().toString());
-			MessageDialog.openInformation(window.getShell(), "Send Bug", "Web Browser is open (or will be soon)."
-					+ " Use this form to submit bug or feature. " + "You need to login first, I don't want accept anonymous submissions"
-					+ " because it is like talking to the wall if I need any feedback."
-					+ "\nIf this is a bug please attach the log file located at " + log + " (path is in clipboard already)");
+			MessageDialog.openInformation(window.getShell(), "Send Bug",
+					"Web Browser is open (or will be soon)."
+							+ " Use this form to submit bug or feature. "
+							+ "You need to login first, I don't want accept anonymous submissions"
+							+ " because it is like talking to the wall if I need any feedback."
+							+ "\nIf this is a bug please attach the log file located at " + log
+							+ " (path is in clipboard already)");
 		} catch (Exception e) {
 			MessageDialog
 					.openInformation(

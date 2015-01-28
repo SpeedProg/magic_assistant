@@ -42,7 +42,8 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 			if (wasOpen) {
 				try {
 					// Update TODO: ugly
-					DeckView deckView = (DeckView) window.getActivePage().showView(DeckView.ID, f.getFileName(),
+					DeckView deckView = (DeckView) window.getActivePage().showView(DeckView.ID,
+							f.getFileName(),
 							IWorkbenchPage.VIEW_ACTIVATE);
 					deckView.refresh();
 				} catch (PartInitException e) {

@@ -43,7 +43,8 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		getPreferenceStore().setDefault(id, "");
 		StringFieldEditor nameSfe = new StringFieldEditor(id, "Comment", getFieldEditorParent());
 		addField(nameSfe);
-		String toolTip = "Search expression can contain words separated by spaces,\n" + "which would be searched using AND connector.\n" //
+		String toolTip = "Search expression can contain words separated by spaces,\n"
+				+ "which would be searched using AND connector.\n" //
 				+ "Adding '-' in front of the word makes it NOT.\n";
 		addTooltip(nameSfe, toolTip);
 		ids.add(id);
@@ -58,8 +59,10 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 		ids.add(id);
 		// ownership
 		id = FilterField.OWNERSHIP.getPrefConstant();
-		RadioGroupFieldEditor radios = new RadioGroupFieldEditor(id, "Ownership", 1, new String[][] { { "Show all cards", "", },
-				{ "Show only own cards (determined by ownership attribute)", "true", }, { "Show only virtual cards", "false", }, },
+		RadioGroupFieldEditor radios = new RadioGroupFieldEditor(id, "Ownership", 1, new String[][] {
+				{ "Show all cards", "", },
+				{ "Show only own cards (determined by ownership attribute)", "true", },
+				{ "Show only virtual cards", "false", }, },
 				getFieldEditorParent(), true);
 		// getPreferenceStore().setDefault(id, Boolean.FALSE);
 		// BooleanFieldEditor x = new BooleanFieldEditor(id, "Only Own", getFieldEditorParent());

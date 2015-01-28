@@ -138,7 +138,8 @@ public class MagicCardFilter implements Cloneable {
 		return createGroup(map, sp, orOp, notOp, ff);
 	}
 
-	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp, boolean notOp, FilterField ff) {
+	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp,
+			boolean notOp, FilterField ff) {
 		Expr nres = Expr.EMPTY;
 		Expr res = Expr.EMPTY;
 		for (Iterator<String> iterator = sp.getIds().iterator(); iterator.hasNext();) {

@@ -76,15 +76,24 @@ public class DeleteHandler extends AbstractHandler {
 		if (toBeRemoved.size() == 1) {
 			CardElement el = toBeRemoved.get(0);
 			if (sum > 0) {
-				MessageDialog dialog = new MessageDialog(getShell(), "Removal Confirmantion", null, "Deleting " + el.getName()
-						+ " will also PERMANENTY delete " + sum + " non virtual cards from this deck. "
-						+ "You can choose to disband this deck instead, which will move all its cards to the main collection"
-						+ " (then deck will be removed)", MessageDialog.WARNING, new String[] { "Disband", "Delete", "Cancel" }, 0);
+				MessageDialog dialog = new MessageDialog(
+						getShell(),
+						"Removal Confirmantion",
+						null,
+						"Deleting "
+								+ el.getName()
+								+ " will also PERMANENTY delete "
+								+ sum
+								+ " non virtual cards from this deck. "
+								+ "You can choose to disband this deck instead, which will move all its cards to the main collection"
+								+ " (then deck will be removed)", MessageDialog.WARNING, new String[] {
+								"Disband", "Delete", "Cancel" }, 0);
 				int result = dialog.open();
 				performOperation(toBeRemoved, result);
 			} else {
 				if (!MessageDialog
-						.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete " + el.getName() + "?")) {
+						.openQuestion(getShell(), "Removal Confirmation", "Are you sure you want to delete "
+								+ el.getName() + "?")) {
 					return;
 				}
 				performOperation(toBeRemoved, 1); // remove
@@ -96,11 +105,20 @@ public class DeleteHandler extends AbstractHandler {
 					return;
 				}
 			} else {
-				MessageDialog dialog = new MessageDialog(getShell(), "Removal Confirmantion", null, "You are abount to delete "
-						+ toBeRemoved.size() + " deck/collections. " + "Deleting a deck/collection" + " will also PERMANENTY delete " + sum
-						+ " non virtual cards from it. "
-						+ "You can choose to disband them instead, which will move all their cards to the main collection"
-						+ " (then decks will be removed)", MessageDialog.WARNING, new String[] { "Disband", "Delete", "Cancel" }, 0);
+				MessageDialog dialog = new MessageDialog(
+						getShell(),
+						"Removal Confirmantion",
+						null,
+						"You are abount to delete "
+								+ toBeRemoved.size()
+								+ " deck/collections. "
+								+ "Deleting a deck/collection"
+								+ " will also PERMANENTY delete "
+								+ sum
+								+ " non virtual cards from it. "
+								+ "You can choose to disband them instead, which will move all their cards to the main collection"
+								+ " (then decks will be removed)", MessageDialog.WARNING, new String[] {
+								"Disband", "Delete", "Cancel" }, 0);
 				int result = dialog.open();
 				performOperation(toBeRemoved, result);
 			}

@@ -44,7 +44,8 @@ public abstract class CardElement extends EventManager implements ILocatable {
 	}
 
 	public CardElement(String filename, CardOrganizer parent, boolean addToParent) {
-		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(filename));
+		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(
+				filename));
 		if (addToParent)
 			setParentInit(parent);
 	}
@@ -170,7 +171,8 @@ public abstract class CardElement extends EventManager implements ILocatable {
 
 	public CardElement newParent(CardOrganizer parent) {
 		if (parent.isAncestor(this) || this.equals(parent)) {
-			throw new MagicException("Cannot move inside itself");
+			throw new MagicException(
+					"Cannot move inside itself");
 		}
 		Location oldName = getLocation();
 		if (getParent() != null) {

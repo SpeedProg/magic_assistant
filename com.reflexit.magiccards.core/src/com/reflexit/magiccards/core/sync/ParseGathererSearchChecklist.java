@@ -28,7 +28,8 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 	static Pattern numberPattern = Pattern.compile("number\">(.*)</td>");
 
 	@Override
-	public boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler) throws IOException {
+	public boolean processFromReader(BufferedReader st, GatherHelper.ILoadCardHander handler)
+			throws IOException {
 		String line = "";
 		boolean cards = false;
 		while ((line = st.readLine()) != null) {
@@ -79,7 +80,8 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 	}
 
 	@Override
-	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor) throws IOException {
+	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
+			throws IOException {
 		try {
 			monitor.beginTask("Downloading " + set + " checklist", 100);
 			return loadSingleUrl(GatherHelper.getSearchQuery("checklist", set, true), handler);
@@ -90,7 +92,8 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		GatherHelper.OutputHandler handler = new GatherHelper.OutputHandler(System.out, true, true);
-		new ParseGathererSearchChecklist().loadSingleUrl(GatherHelper.getSearchQuery("checklist&sort=cn+", "Magic 2013", false), handler);
+		new ParseGathererSearchChecklist().loadSingleUrl(
+				GatherHelper.getSearchQuery("checklist&sort=cn+", "Magic 2013", false), handler);
 		System.err.println("Total " + handler.getCardCount());
 	}
 }

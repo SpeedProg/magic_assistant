@@ -87,7 +87,8 @@ public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 			stream.close();
 	}
 
-	public abstract void export(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
+	public abstract void export(ICoreProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException;
 
 	@Override
 	public void setColumns(ICardField[] columnsForExport) {

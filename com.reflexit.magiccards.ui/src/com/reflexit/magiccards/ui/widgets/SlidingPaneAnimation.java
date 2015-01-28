@@ -121,7 +121,8 @@ public class SlidingPaneAnimation {
 				// comp.getParent().layout(true, true);
 			}
 		};
-		IEffect effect1 = new MoveControlEffect(comp, startX, endX, startY, endY, effectTime, movement, onStop, onStop);
+		IEffect effect1 = new MoveControlEffect(comp, startX, endX, startY, endY, effectTime, movement,
+				onStop, onStop);
 		runner.runEffect(effect1);
 	}
 

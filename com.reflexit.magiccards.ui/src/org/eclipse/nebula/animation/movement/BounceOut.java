@@ -7,7 +7,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  *******************************************************************************/
-
 /*********************************************************************************
  * TERMS OF USE - EASING EQUATIONS
  * 
@@ -38,7 +37,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ********************************************************************************/
-
 package org.eclipse.nebula.animation.movement;
 
 /**
@@ -48,7 +46,6 @@ package org.eclipse.nebula.animation.movement;
  * 
  */
 public class BounceOut extends AbstractMovement {
-
 	public double getValue(double step) {
 		// Conversion from Robert Penner's action scripts
 		//
@@ -56,31 +53,19 @@ public class BounceOut extends AbstractMovement {
 		// b: min -> min
 		// c : total increment -> max - min
 		// d: duration -> duration
-
 		double c = max - min;
 		step = step / duration;
-
 		if (step == 1)
 			return max;
-
 		if (step < (1 / 2.75)) {
-
 			return c * (7.5625 * step * step) + min;
-
 		} else if (step < (2 / 2.75)) {
-
 			return c * (7.5625 * (step -= (1.5 / 2.75)) * step + .75) + min;
-
 		} else if (step < (2.5 / 2.75)) {
-
 			return c * (7.5625 * (step -= (2.25 / 2.75)) * step + .9375) + min;
-
 		} else {
-
 			return c * (7.5625 * (step -= (2.625 / 2.75)) * step + .984375)
 					+ min;
 		}
-
 	}
-
 }

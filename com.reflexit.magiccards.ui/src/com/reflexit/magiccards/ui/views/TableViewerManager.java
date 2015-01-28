@@ -102,7 +102,7 @@ public class TableViewerManager extends ViewerManager {
 
 	@Override
 	public void updateColumns(String value) {
-		if (this.viewer==null || this.viewer.getTable()==null || this.viewer.getTable().isDisposed())
+		if (this.viewer == null || this.viewer.getTable() == null || this.viewer.getTable().isDisposed())
 			return;
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.updateColumnsFromPropery(value);

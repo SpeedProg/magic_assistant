@@ -42,8 +42,11 @@ public class BackupHandler extends AbstractHandler {
 					try {
 						FileUtils.copyTree(file, new File(backup, file.getName()));
 					} catch (IOException e) {
-						Activator.getDefault().getLog()
-								.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 1, "Failed to save backup " + backup, e));
+						Activator
+								.getDefault()
+								.getLog()
+								.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 1,
+										"Failed to save backup " + backup, e));
 					}
 				}
 				return Status.OK_STATUS;
@@ -56,7 +59,8 @@ public class BackupHandler extends AbstractHandler {
 					@Override
 					public void run() {
 						try {
-							final IWorkbenchWindow window = aevent != null ? HandlerUtil.getActiveWorkbenchWindowChecked(aevent)
+							final IWorkbenchWindow window = aevent != null ? HandlerUtil
+									.getActiveWorkbenchWindowChecked(aevent)
 									: PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 							Shell shell = window.getShell();
 							if (event.getResult() == Status.OK_STATUS) {

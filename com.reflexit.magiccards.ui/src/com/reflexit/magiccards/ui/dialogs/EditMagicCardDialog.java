@@ -160,7 +160,8 @@ public class EditMagicCardDialog extends MagicDialog {
 		if (WebUtils.isWorkOffline())
 			return;
 		try {
-			CardCache.saveCachedFile(new File(localPath), new URL(store.getString(MagicCardField.IMAGE_URL.name())));
+			CardCache.saveCachedFile(new File(localPath),
+					new URL(store.getString(MagicCardField.IMAGE_URL.name())));
 			reloadImage(localPath);
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
@@ -186,7 +187,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		modified = setField(card, store, MagicCardField.IMAGE_URL) || modified;
 		modified = setField(card, store, MagicCardField.COLLNUM) || modified;
 		if (modified && update) {
-			DataManager.getInstance().update(card,Collections.singleton(MagicCardField.COLLNUM));
+			DataManager.getInstance().update(card, Collections.singleton(MagicCardField.COLLNUM));
 		}
 	}
 

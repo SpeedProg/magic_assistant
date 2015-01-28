@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.AnimationRunner;
@@ -23,7 +22,6 @@ import org.eclipse.swt.widgets.Control;
  * 
  */
 public class ShakeEffect extends AbstractEffect {
-
 	/**
 	 * @deprecated
 	 * @param w
@@ -41,7 +39,6 @@ public class ShakeEffect extends AbstractEffect {
 	}
 
 	Point src, dest, diff;
-
 	Control control = null;
 
 	public ShakeEffect(Control control, Point src, Point dest,
@@ -52,7 +49,6 @@ public class ShakeEffect extends AbstractEffect {
 		this.dest = dest;
 		this.control = control;
 		this.diff = new Point(dest.x - src.x, dest.y - src.y);
-
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 

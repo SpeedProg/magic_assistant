@@ -108,14 +108,16 @@ public class SelectPlayerDialog extends TrayDialog {
 				playersListComposite.getViewer().refresh();
 			}
 		});
-		playersListComposite = new PlayersListComposite(comp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER, false);
+		playersListComposite = new PlayersListComposite(comp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER,
+				false);
 		playersListComposite.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				setSelection((IStructuredSelection) event.getSelection());
 				updateButtonsEnablement();
 			}
 		});
-		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true).hint(SWT.DEFAULT, 300).create());
+		playersListComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 0).grab(true, true)
+				.hint(SWT.DEFAULT, 300).create());
 		playersListComposite.getViewer().setInput(input);
 		Button add = new Button(comp, SWT.PUSH);
 		add.setText("New Player...");

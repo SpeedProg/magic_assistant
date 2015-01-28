@@ -33,7 +33,8 @@ public class UpdateCardsFromWeb {
 	public static final String UPDATE_LANGUAGE = "lang";
 	public static final String UPDATE_SPECIAL = "special";
 
-	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb, ICoreProgressMonitor monitor)
+	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb,
+			ICoreProgressMonitor monitor)
 			throws IOException {
 		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(1);
 		list.add(card);
@@ -42,7 +43,8 @@ public class UpdateCardsFromWeb {
 		updateStore(list.iterator(), 1, fieldMaps, lang, magicDb, monitor);
 	}
 
-	public void updateStore(Iterator<IMagicCard> iter, int size, Set<ICardField> fieldMaps, String lang, ICardStore magicDb,
+	public void updateStore(Iterator<IMagicCard> iter, int size, Set<ICardField> fieldMaps, String lang,
+			ICardStore magicDb,
 			ICoreProgressMonitor monitor) throws IOException {
 		monitor.beginTask("Loading additional info...", size * 150 + 10);
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
@@ -138,7 +140,8 @@ public class UpdateCardsFromWeb {
 				monitor.worked(1);
 			}
 			if (failedLangUpdate > 0) {
-				throw new MagicException("Localized version for " + lang + " for " + failedLangUpdate + " cards is not available");
+				throw new MagicException("Localized version for " + lang + " for "
+						+ failedLangUpdate + " cards is not available");
 			}
 		} finally {
 			storage.setAutoCommit(true);
@@ -168,7 +171,8 @@ public class UpdateCardsFromWeb {
 				Integer id = Integer.valueOf(cardId);
 				MagicCard prev = cards.get(id);
 				if (prev != null) {
-					if (prev.getCollNumber().length() > 0 && !prev.getCollNumber().equals(card.getCollNumber())) {
+					if (prev.getCollNumber().length() > 0
+							&& !prev.getCollNumber().equals(card.getCollNumber())) {
 						// land cards have mismatching id link in checklist
 						prev.setCollNumber("x");
 						prev.setArtist(null);
@@ -209,7 +213,8 @@ public class UpdateCardsFromWeb {
 			Set<ICardField> fieldMap = new HashSet<ICardField>();
 			fieldMap.add(MagicCardField.COLLNUM);
 			fieldMap.add(MagicCardField.ARTIST);
-			SubCoreProgressMonitor pm2 = new SubCoreProgressMonitor(pm, 5000, SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
+			SubCoreProgressMonitor pm2 = new SubCoreProgressMonitor(pm, 5000,
+					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 			int n = handler.getPrimary().size();
 			pm2.beginTask("Updating", n);
 			int i = 0;

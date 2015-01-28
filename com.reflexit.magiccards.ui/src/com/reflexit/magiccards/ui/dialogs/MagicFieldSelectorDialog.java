@@ -28,7 +28,8 @@ public class MagicFieldSelectorDialog extends Dialog {
 		// GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		// layoutData.horizontalSpan = 2;
 		// columns.setLayoutData(layoutData);
-		columnFieldEditor = new MagicFieldFieldEditor(CustomExportDelegate.ROW_FIELDS, "Visible Columns and Order", columns);
+		columnFieldEditor = new MagicFieldFieldEditor(CustomExportDelegate.ROW_FIELDS,
+				"Visible Columns and Order", columns);
 		columnFieldEditor.setPreferenceStore(store);
 		columnFieldEditor.load();
 		GridData listData = new GridData(GridData.FILL_HORIZONTAL);

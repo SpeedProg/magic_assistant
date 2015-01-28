@@ -43,7 +43,8 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 	private static final DataManager DM = DataManager.getInstance();
 	private DropTargetEvent curEvent;
 	private Transfer transfer;
-	private Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(), MagicDeckTransfer.getInstance() };
+	private Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(),
+			MagicDeckTransfer.getInstance() };
 
 	/**
 	 * @param viewer
@@ -77,7 +78,8 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 				else
 					return DM.copyCards(list, sto);
 			} catch (MagicException e) {
-				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation");
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
+						"Cannot perform this operation");
 				return false;
 			} catch (Exception e) {
 				MagicUIActivator.log(e);
@@ -98,8 +100,9 @@ public class MagicNavDropAdapter extends ViewerDropAdapter implements DropTarget
 			try {
 				DM.getModelRoot().move(toDropArray, dropParent);
 			} catch (MagicException e) {
-				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation: "
-						+ e.getMessage());
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
+						"Cannot perform this operation: "
+								+ e.getMessage());
 				return false;
 			} catch (Exception e) {
 				MagicUIActivator.log(e);

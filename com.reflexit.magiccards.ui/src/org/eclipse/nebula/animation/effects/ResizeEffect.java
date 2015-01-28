@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.AnimationRunner;
@@ -22,7 +21,6 @@ import org.eclipse.swt.widgets.Control;
  * @author Nicolas Richeton
  */
 public class ResizeEffect extends AbstractEffect {
-
 	/**
 	 * @deprecated
 	 * @param w
@@ -48,13 +46,10 @@ public class ResizeEffect extends AbstractEffect {
 			long lengthMilli, IMovement movement, Runnable onStop,
 			Runnable onCancel) {
 		super(lengthMilli, movement, onStop, onCancel);
-
 		this.src = src;
 		this.dest = dest;
 		this.diff = new Point(dest.x - src.x, dest.y - src.y);
-
 		easingFunction.init(0, 1, (int) lengthMilli);
-
 		this.control = control;
 	}
 
@@ -66,5 +61,4 @@ public class ResizeEffect extends AbstractEffect {
 							* easingFunction.getValue((int) currentTime)));
 		}
 	}
-
 }

@@ -113,7 +113,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 	private void addDragAndDrop() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(), MagicDeckTransfer.getInstance() };
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(),
+				MagicDeckTransfer.getInstance() };
 		Transfer[] transfers2 = new Transfer[] { MagicDeckTransfer.getInstance() };
 		getViewer().addDropSupport(ops, transfers, new MagicNavDropAdapter(getViewer()));
 		getViewer().addDragSupport(DND.DROP_MOVE, transfers2, new MagicNavDragListener(getViewer()));
@@ -161,8 +162,10 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		@Override
 		public void run() {
 			IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-			CardElement[] gadgets = (CardElement[]) selection.toList().toArray(new CardElement[selection.size()]);
-			clipboard.setContents(new Object[] { gadgets }, new Transfer[] { MagicDeckTransfer.getInstance() });
+			CardElement[] gadgets = (CardElement[]) selection.toList().toArray(
+					new CardElement[selection.size()]);
+			clipboard.setContents(new Object[] { gadgets },
+					new Transfer[] { MagicDeckTransfer.getInstance() });
 		}
 
 		@Override
@@ -180,7 +183,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		public void run() {
 			IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
 			CardElement parent = (CardElement) sel.getFirstElement();
-			CardElement[] toDropArray = (CardElement[]) clipboard.getContents(MagicDeckTransfer.getInstance());
+			CardElement[] toDropArray = (CardElement[]) clipboard
+					.getContents(MagicDeckTransfer.getInstance());
 			if (toDropArray == null)
 				return;
 			try {
@@ -188,8 +192,9 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 					throw new MagicException("Has to be folder to move to");
 				getModelRoot().move(toDropArray, (CardOrganizer) parent);
 			} catch (MagicException e) {
-				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", "Cannot perform this operation: "
-						+ e.getMessage());
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
+						"Cannot perform this operation: "
+								+ e.getMessage());
 			}
 		}
 
@@ -199,7 +204,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			CardElement parent = (CardElement) sel.getFirstElement();
 			if (!(parent instanceof CardOrganizer))
 				return false;
-			CardElement[] toDropArray = (CardElement[]) clipboard.getContents(MagicDeckTransfer.getInstance());
+			CardElement[] toDropArray = (CardElement[]) clipboard
+					.getContents(MagicDeckTransfer.getInstance());
 			if (toDropArray == null || toDropArray.length == 0)
 				return false;
 			return true;
@@ -213,13 +219,15 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 		@Override
 		public void run() {
-			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
+			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider()
+					.getSelection();
 			DeleteHandler.remove(sel);
 		}
 
 		@Override
 		public boolean isEnabled() {
-			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
+			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider()
+					.getSelection();
 			if (sel.isEmpty())
 				return false;
 			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
@@ -291,7 +299,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			public void run() {
 				// Instantiates and initializes the wizard
 				NewDeckWizard wizard = new NewDeckWizard();
-				wizard.init(getSite().getWorkbenchWindow().getWorkbench(), (IStructuredSelection) getViewer().getSelection());
+				wizard.init(getSite().getWorkbenchWindow().getWorkbench(), (IStructuredSelection) getViewer()
+						.getSelection());
 				// Instantiates the wizard container with the wizard and opens
 				// it
 				WizardDialog dialog = new WizardDialog(getShell(), wizard);
@@ -346,7 +355,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 					Object obj = ((IStructuredSelection) selection).getFirstElement();
 					MyCardsView view;
 					try {
-						view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
+						view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
+								.showView(MyCardsView.ID);
 						view.setLocationFilter(((CardElement) obj).getLocation());
 					} catch (PartInitException e) {
 						// error
@@ -365,7 +375,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		};
 	}
 
-	public static CardCollection createNewDeckAction(CollectionsContainer parent, String name, IWorkbenchPage page) {
+	public static CardCollection createNewDeckAction(CollectionsContainer parent, String name,
+			IWorkbenchPage page) {
 		String filename = name + ".xml";
 		CardCollection d = parent.addDeck(filename);
 		return d;
@@ -399,6 +410,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	public ModelRoot getModelRoot() {
 		return DataManager.getInstance().getModelRoot();
 	}
+
 	@Override
 	public void dispose() {
 		getModelRoot().removeListener(this);
@@ -438,7 +450,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			}
 		} else if (obj instanceof CardOrganizer) {
 			try {
-				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage().showView(MyCardsView.ID);
+				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
+						.showView(MyCardsView.ID);
 				view.setLocationFilter(((CardOrganizer) obj).getLocation());
 			} catch (PartInitException e) {
 				MagicUIActivator.log(e);
@@ -468,7 +481,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 						Object obj = event.getData();
 						if (obj instanceof CardCollection) {
 							try {
-								openDeckView((CardCollection) obj, getViewSite().getWorkbenchWindow().getActivePage());
+								openDeckView((CardCollection) obj, getViewSite().getWorkbenchWindow()
+										.getActivePage());
 							} catch (PartInitException e) {
 								MagicUIActivator.log(e);
 							}

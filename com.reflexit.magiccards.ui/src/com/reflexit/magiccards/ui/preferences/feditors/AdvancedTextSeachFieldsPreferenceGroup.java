@@ -29,7 +29,8 @@ public class AdvancedTextSeachFieldsPreferenceGroup extends MFieldEditorPreferen
 		getPreferenceStore().setDefault(id, "");
 		StringFieldEditor nameSfe = new StringFieldEditor(id, label, getFieldEditorParent());
 		addField(nameSfe);
-		String toolTip = "Search expression can contain words separated by spaces,\n" + "which would be searched using AND connector.\n" //
+		String toolTip = "Search expression can contain words separated by spaces,\n"
+				+ "which would be searched using AND connector.\n" //
 				+ "Special symbols can be search using {X} type syntax (i.e. {T} for tap).\n" //
 				+ "See help for details.";
 		addTooltip(nameSfe, toolTip);

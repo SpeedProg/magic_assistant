@@ -163,7 +163,8 @@ public class SubCoreProgressMonitor extends ProgressMonitorWrapper {
 		}
 		hasSubTask = true;
 		String label = name;
-		if ((style & PREPEND_MAIN_LABEL_TO_SUBTASK) != 0 && mainTaskLabel != null && mainTaskLabel.length() > 0) {
+		if ((style & PREPEND_MAIN_LABEL_TO_SUBTASK) != 0 && mainTaskLabel != null
+				&& mainTaskLabel.length() > 0) {
 			label = mainTaskLabel + ' ' + label;
 		}
 		super.subTask(label);

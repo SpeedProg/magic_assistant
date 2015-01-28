@@ -14,8 +14,10 @@ import com.reflexit.magiccards.ui.chart.SpellColorChart;
 public class SpellColourPage extends AbstractDeckStatsPage {
 	@Override
 	public IChartGenerator createChartGenerator() {
-		HashMap<String, Integer> colorStats = CardStoreUtils.countStats((ICardGroup) buildTree().getChildAtIndex(0));
-		IChartGenerator gen = new SpellColorChart(colorStats.values().toArray(new Integer[0]), colorStats.keySet().toArray(new String[0]));
+		HashMap<String, Integer> colorStats = CardStoreUtils.countStats((ICardGroup) buildTree()
+				.getChildAtIndex(0));
+		IChartGenerator gen = new SpellColorChart(colorStats.values().toArray(new Integer[0]), colorStats
+				.keySet().toArray(new String[0]));
 		return gen;
 	}
 

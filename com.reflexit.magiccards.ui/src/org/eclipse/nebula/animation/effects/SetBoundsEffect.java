@@ -8,7 +8,6 @@
  * Contributors :
  *    Nicolas Richeton (nicolas.richeton@gmail.com) - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.nebula.animation.effects;
 
 import org.eclipse.nebula.animation.movement.IMovement;
@@ -22,9 +21,7 @@ import org.eclipse.swt.widgets.Control;
  * 
  */
 public class SetBoundsEffect extends AbstractEffect {
-
 	Rectangle src, dest, diff;
-
 	Control control = null;
 
 	public SetBoundsEffect(Control control, Rectangle src, Rectangle dest,
@@ -36,7 +33,6 @@ public class SetBoundsEffect extends AbstractEffect {
 		this.control = control;
 		this.diff = new Rectangle(dest.x - src.x, dest.y - src.y, dest.width
 				- src.width, dest.height - src.height);
-
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 

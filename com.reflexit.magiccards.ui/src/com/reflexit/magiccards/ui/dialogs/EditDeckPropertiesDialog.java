@@ -62,7 +62,8 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 			type = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN);
 			type.add(IStorageInfo.DECK_TYPE);
 			type.add(IStorageInfo.COLLECTION_TYPE);
-			type.setText(IStorageInfo.DECK_TYPE.equals(info.getType()) ? IStorageInfo.DECK_TYPE : IStorageInfo.COLLECTION_TYPE);
+			type.setText(IStorageInfo.DECK_TYPE.equals(info.getType()) ? IStorageInfo.DECK_TYPE
+					: IStorageInfo.COLLECTION_TYPE);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			type.setLayoutData(gd);
 		}

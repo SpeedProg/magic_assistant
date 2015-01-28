@@ -26,7 +26,8 @@ import com.reflexit.magiccards.core.model.storage.ICardCollection;
  * @author Alena
  * 
  */
-public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements ICardCollection<IMagicCard> {
+public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements
+		ICardCollection<IMagicCard> {
 	public CollectionMultiFileCardStore() {
 		super();
 	}
@@ -39,7 +40,8 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 		return addFile(file, location, true);
 	}
 
-	public synchronized CollectionCardStore addFile(final File file, final Location location, boolean initialize) {
+	public synchronized CollectionCardStore addFile(final File file, final Location location,
+			boolean initialize) {
 		if (location != null && map.containsKey(location)) {
 			return (CollectionCardStore) map.get(location);
 		}
@@ -50,7 +52,8 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 
 	@Override
 	protected AbstractCardStoreWithStorage newStorage(IMagicCard card) {
-		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(getFile(card), getLocation(card), false);
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(getFile(card),
+				getLocation(card), false);
 		store.getStorage().setAutoCommit(getStorage().isAutoCommit());
 		return store;
 	}

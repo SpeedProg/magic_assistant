@@ -40,7 +40,8 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public void updatePricesAndSync(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public void updatePricesAndSync(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		monitor.beginTask("Loading prices from " + getURL() + " ...", 200);
 		try {
 			Iterable<IMagicCard> res = updatePrices(iterable, new SubCoreProgressMonitor(monitor, 100));
@@ -76,7 +77,8 @@ public class AbstractPriceProvider implements IPriceProvider {
 			dbPriceStore.reloadPrices();
 	}
 
-	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor) throws IOException {
+	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
+			throws IOException {
 		throw new MagicException("This price provider " + name + " does not support interactive update");
 	}
 
