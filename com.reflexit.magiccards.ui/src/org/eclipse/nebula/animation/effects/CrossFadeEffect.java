@@ -106,6 +106,7 @@ public class CrossFadeEffect extends AbstractEffect {
 	 * @see
 	 * org.eclipse.nebula.animation.effects.AbstractEffect#applyEffect(long)
 	 */
+	@Override
 	public void applyEffect(long currentTime) {
 		easingValue = easingFunction.getValue(currentTime);
 		if (easingValue == 0) {
@@ -134,6 +135,7 @@ public class CrossFadeEffect extends AbstractEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.AbstractEffect#doCancel()
 	 */
+	@Override
 	protected void doCancel() {
 		obj.setImage(image2);
 		super.doCancel();
@@ -145,6 +147,7 @@ public class CrossFadeEffect extends AbstractEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.AbstractEffect#doStop()
 	 */
+	@Override
 	protected void doStop() {
 		super.doStop();
 		cleanup();

@@ -35,6 +35,7 @@ public class MagicCardDragListener implements DragSourceListener {
 	/**
 	 * Method declared on DragSourceListener
 	 */
+	@Override
 	public void dragFinished(DragSourceEvent event) {
 		if (!event.doit || event.detail == DND.DROP_NONE)
 			return;
@@ -47,6 +48,7 @@ public class MagicCardDragListener implements DragSourceListener {
 	/**
 	 * Method declared on DragSourceListener
 	 */
+	@Override
 	public void dragSetData(DragSourceEvent event) {
 		this.selection = (IStructuredSelection) this.viewer.getSelection();
 		IMagicCard[] cards = (IMagicCard[]) this.selection.toList().toArray(
@@ -62,6 +64,7 @@ public class MagicCardDragListener implements DragSourceListener {
 	/**
 	 * Method declared on DragSourceListener
 	 */
+	@Override
 	public void dragStart(DragSourceEvent event) {
 		event.doit = !this.viewer.getSelection().isEmpty();
 	}

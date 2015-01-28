@@ -276,6 +276,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 		AbstractFilteredCardStore<IMagicCard> fstore = new AbstractFilteredCardStore<IMagicCard>() {
 			MemoryCardStore<MemoryCardStorage<IMagicCard>> store = new MemoryCardStore<MemoryCardStorage<IMagicCard>>();
 
+			@Override
 			public ICardStore getCardStore() {
 				return store;
 			}

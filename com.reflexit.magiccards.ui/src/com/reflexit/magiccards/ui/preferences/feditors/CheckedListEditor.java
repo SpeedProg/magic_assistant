@@ -233,6 +233,7 @@ public class CheckedListEditor extends FieldEditor {
 			this.buttonBox.setLayout(layout);
 			createButtons(this.buttonBox);
 			this.buttonBox.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					CheckedListEditor.this.upButton = null;
 					CheckedListEditor.this.downButton = null;
@@ -259,6 +260,7 @@ public class CheckedListEditor extends FieldEditor {
 			this.list.setFont(parent.getFont());
 			this.list.addSelectionListener(getSelectionListener());
 			this.list.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					CheckedListEditor.this.list = null;
 				}

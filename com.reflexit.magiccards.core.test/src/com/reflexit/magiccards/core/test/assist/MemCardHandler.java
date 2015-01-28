@@ -9,6 +9,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 public class MemCardHandler extends AbstractFilteredCardStore<IMagicCard> {
 	private MemoryCardStore table;
 
+	@Override
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
 	}

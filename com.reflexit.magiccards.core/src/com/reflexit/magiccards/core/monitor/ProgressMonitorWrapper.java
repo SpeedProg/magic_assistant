@@ -31,6 +31,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#beginTask(String, int)
 	 */
+	@Override
 	public void beginTask(String name, int totalWork) {
 		progressMonitor.beginTask(name, totalWork);
 	}
@@ -41,6 +42,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#done()
 	 */
+	@Override
 	public void done() {
 		progressMonitor.done();
 	}
@@ -60,6 +62,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#internalWorked(double)
 	 */
+	@Override
 	public void internalWorked(double work) {
 		progressMonitor.internalWorked(work);
 	}
@@ -70,6 +73,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#isCanceled()
 	 */
+	@Override
 	public boolean isCanceled() {
 		return progressMonitor.isCanceled();
 	}
@@ -80,6 +84,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#setCanceled(boolean)
 	 */
+	@Override
 	public void setCanceled(boolean b) {
 		progressMonitor.setCanceled(b);
 	}
@@ -90,6 +95,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#setTaskName(String)
 	 */
+	@Override
 	public void setTaskName(String name) {
 		progressMonitor.setTaskName(name);
 	}
@@ -100,6 +106,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#subTask(String)
 	 */
+	@Override
 	public void subTask(String name) {
 		progressMonitor.subTask(name);
 	}
@@ -110,6 +117,7 @@ public abstract class ProgressMonitorWrapper implements ICoreProgressMonitor {
 	 * 
 	 * @see ICoreProgressMonitor#worked(int)
 	 */
+	@Override
 	public void worked(int work) {
 		progressMonitor.worked(work);
 	}

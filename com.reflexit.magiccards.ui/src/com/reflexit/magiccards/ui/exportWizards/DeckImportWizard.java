@@ -43,6 +43,7 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 		return false;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setWindowTitle("Import"); // NON-NLS-1
 		setNeedsProgressMonitor(true);

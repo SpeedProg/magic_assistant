@@ -30,6 +30,7 @@ public class ShakeEffect extends AbstractEffect {
 	 * @param onStop
 	 * @param onCancel
 	 */
+	@Deprecated
 	public static void shake(AnimationRunner runner, Control w, int duration,
 			IMovement movement, Runnable onStop, Runnable onCancel) {
 		IEffect effect = new ShakeEffect(w, w.getLocation(), new Point(w
@@ -52,6 +53,7 @@ public class ShakeEffect extends AbstractEffect {
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 
+	@Override
 	public void applyEffect(final long currentTime) {
 		if (!control.isDisposed()) {
 			control.setLocation((int) (src.x - diff.x

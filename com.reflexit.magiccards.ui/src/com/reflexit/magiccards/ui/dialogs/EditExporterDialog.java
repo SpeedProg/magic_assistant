@@ -121,6 +121,7 @@ public class EditExporterDialog extends MagicDialog {
 		formatLabel = createTextLabel(area, "Formatter");
 		format = createTextFieldEditor(area, null, CustomExportDelegate.ROW_FORMAT, "");
 		format.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				int index = comboFormatMethod.getSelectionIndex();
 				store.setValue(CustomExportDelegate.ROW_FORMAT + "." + index, format.getText());

@@ -63,6 +63,7 @@ public class EditionsComparator implements Comparator<Edition> {
 		return new EditionsComparator(field, asc);
 	}
 
+	@Override
 	public int compare(Edition o1, Edition o2) {
 		return compare(o1, o2, field, dir);
 	}

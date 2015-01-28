@@ -114,34 +114,42 @@ public interface ICoreProgressMonitor {
 	public void worked(int work);
 
 	public static final ICoreProgressMonitor NONE = new ICoreProgressMonitor() {
+		@Override
 		public void worked(int work) {
 			// do nothing
 		}
 
+		@Override
 		public void subTask(String name) {
 			// do nothing
 		}
 
+		@Override
 		public void setTaskName(String name) {
 			// do nothing
 		}
 
+		@Override
 		public void setCanceled(boolean value) {
 			// do nothing
 		}
 
+		@Override
 		public boolean isCanceled() {
 			return false; // non cancellable
 		}
 
+		@Override
 		public void internalWorked(double work) {
 			// do nothing
 		}
 
+		@Override
 		public void done() {
 			// do nothing
 		}
 
+		@Override
 		public void beginTask(String name, int totalWork) {
 			// do nothing
 		}

@@ -8,6 +8,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 public class BasicMagicDBFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
 	protected DbMultiFileCardStore table;
 
+	@Override
 	public ICardStore<IMagicCard> getCardStore() {
 		return this.table;
 	}

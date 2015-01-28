@@ -18,11 +18,13 @@ import org.eclipse.jface.viewers.Viewer;
 public class SelectionProviderIntermediate extends StoredSelectionProvider {
 	private ISelectionProvider delegate;
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			fireSelectionChanged(event.getSelection());
 		}
 	};
 	private ISelectionChangedListener postSelectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			firePostSelectionChanged(event.getSelection());
 		}

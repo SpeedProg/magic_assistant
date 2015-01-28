@@ -131,6 +131,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 	 */
 	public void initialize() {
 		BusyIndicator.showWhile(null, new Runnable() {
+			@Override
 			public void run() {
 				CheckedTreeSelectionComposite.this.fViewer
 						.setCheckedElements(CheckedTreeSelectionComposite.this.fInitialSelections
@@ -169,6 +170,7 @@ public class CheckedTreeSelectionComposite extends Composite {
 	protected CheckboxTreeViewer createTreeViewer(Composite parent, int flags) {
 		this.fViewer = new ContainerCheckedTreeViewer(parent, flags);
 		this.fViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateOKStatus();
 			}

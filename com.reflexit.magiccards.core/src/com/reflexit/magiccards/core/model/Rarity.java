@@ -32,6 +32,7 @@ public class Rarity implements ISearchableProperty {
 		this.names.put(id, string);
 	}
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -45,10 +46,12 @@ public class Rarity implements ISearchableProperty {
 		return instance;
 	}
 
+	@Override
 	public Collection getNames() {
 		return new ArrayList(this.names.values());
 	}
 
+	@Override
 	public Collection getIds() {
 		return new ArrayList(this.names.keySet());
 	}
@@ -57,6 +60,7 @@ public class Rarity implements ISearchableProperty {
 		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
+	@Override
 	public String getNameById(String id) {
 		return (String) this.names.get(id);
 	}

@@ -31,6 +31,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		super();
 	}
 
+	@Override
 	public synchronized void load() {
 		if (isLoaded())
 			return;
@@ -53,6 +54,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	protected abstract void doLoad();
 
+	@Override
 	public synchronized void save() {
 		try {
 			doSave();
@@ -62,6 +64,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		}
 	}
 
+	@Override
 	public boolean add(T card) {
 		load();
 		boolean modified;
@@ -76,6 +79,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	protected abstract void doSave() throws IOException;
 
+	@Override
 	public boolean addAll(Collection<? extends T> list) {
 		load();
 		boolean modified = false;
@@ -91,6 +95,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		return modified;
 	}
 
+	@Override
 	public boolean removeAll(Collection<? extends T> list) {
 		load();
 		boolean modified = false;
@@ -106,6 +111,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		return modified;
 	}
 
+	@Override
 	public boolean removeAll() {
 		load();
 		boolean modified = false;
@@ -121,6 +127,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		return modified;
 	}
 
+	@Override
 	public boolean contains(T card) {
 		synchronized (this) {
 			for (T element : this) {
@@ -133,10 +140,12 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	protected abstract boolean doAddCard(T card);
 
+	@Override
 	public void setAutoCommit(boolean value) {
 		this.autocommit = value;
 	}
 
+	@Override
 	public boolean remove(T card) {
 		load();
 		synchronized (this) {
@@ -149,10 +158,12 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	protected abstract boolean doRemoveCard(T card);
 
+	@Override
 	public boolean isAutoCommit() {
 		return this.autocommit;
 	}
 
+	@Override
 	public void autoSave() {
 		if (isAutoCommit())
 			save();
@@ -160,6 +171,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 			setNeedToSave(true);
 	}
 
+	@Override
 	public boolean isNeedToBeSaved() {
 		return needToSave;
 	}
@@ -172,6 +184,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 		this.loaded = value;
 	}
 
+	@Override
 	public boolean isLoaded() {
 		return loaded;
 	}

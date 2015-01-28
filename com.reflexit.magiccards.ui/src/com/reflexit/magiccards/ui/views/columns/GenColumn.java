@@ -22,6 +22,7 @@ public class GenColumn extends AbstractColumn {
 		return null;
 	}
 
+	@Override
 	protected Image getActualImage(Object row) {
 		return null;
 	}

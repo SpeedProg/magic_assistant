@@ -45,6 +45,7 @@ public class GroupColumn extends GenColumn implements Listener {
 		showImage = show;
 	}
 
+	@Override
 	public Image getActualImage(Object element) {
 		if (showImage) {
 			if (element instanceof ICardGroup) {

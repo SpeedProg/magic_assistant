@@ -12,12 +12,15 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 
 public class CardsNavigatorContentProvider implements ITreeContentProvider {
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
+	@Override
 	public Object[] getChildren(Object element) {
 		if (element instanceof CardOrganizer) {
 			Collection children = ((CardOrganizer) element).getChildren();
@@ -29,6 +32,7 @@ public class CardsNavigatorContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof CardElement) {
 			return ((CardElement) element).getParent();
@@ -36,6 +40,7 @@ public class CardsNavigatorContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof CardOrganizer) {
 			return ((CardOrganizer) element).hasChildren();
@@ -46,6 +51,7 @@ public class CardsNavigatorContentProvider implements ITreeContentProvider {
 		return false;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}

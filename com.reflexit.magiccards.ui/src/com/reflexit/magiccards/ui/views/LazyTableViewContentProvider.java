@@ -16,6 +16,7 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 	private TableViewer tableViewer;
 	private IFilteredCardStore root;
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (viewer instanceof TableViewer) {
 			this.tableViewer = (TableViewer) viewer;
@@ -26,6 +27,7 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 			this.root = null;
 	}
 
+	@Override
 	public void dispose() {
 		this.tableViewer = null;
 		this.root = null;
@@ -38,6 +40,7 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 		return 0;
 	}
 
+	@Override
 	public void updateElement(int index) {
 		if (this.root != null) {
 			if (index >= root.getSize()) {

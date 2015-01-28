@@ -24,6 +24,7 @@ public class ExpoOut extends AbstractMovement {
 	 * 
 	 * @see org.sharemedia.gui.viewers.impl.gl.IMovement#getValue(int)
 	 */
+	@Override
 	public double getValue(double step) {
 		float currentCos = 1.0f - (float) Math.exp(((float) step) * increment);
 		if (step != duration)
@@ -37,6 +38,7 @@ public class ExpoOut extends AbstractMovement {
 	 * 
 	 * @see org.sharemedia.gui.viewers.impl.gl.IMovement#init(float, float, int)
 	 */
+	@Override
 	public void init(double min, double max, int steps) {
 		increment = -10.0f / steps;
 		super.init(min, max, steps);

@@ -12,14 +12,17 @@ import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class TableViewerContentProvider<T> implements IStructuredContentProvider {
+	@Override
 	public void dispose() {
 		// ignore
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// ignore
 	}
 
+	@Override
 	public Object[] getElements(Object element) {
 		if (element instanceof ICardGroup) {
 			return ((ICardGroup) element).getChildren();

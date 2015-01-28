@@ -41,6 +41,7 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 		}
 	}
 
+	@Override
 	public ModelRoot getModelRoot() {
 		return DataManager.getInstance().getModelRoot();
 	}

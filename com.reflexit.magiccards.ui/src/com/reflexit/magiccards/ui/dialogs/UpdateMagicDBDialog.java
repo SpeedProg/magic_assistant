@@ -45,6 +45,7 @@ public class UpdateMagicDBDialog extends TitleAreaDialog implements IPreferenceP
 		return this.updatePreference.getControl();
 	}
 
+	@Override
 	public IPreferenceStore getPreferenceStore() {
 		return MagicUIActivator.getDefault().getPreferenceStore();
 	}
@@ -62,9 +63,11 @@ public class UpdateMagicDBDialog extends TitleAreaDialog implements IPreferenceP
 		super.okPressed();
 	}
 
+	@Override
 	public void updateButtons() {
 	}
 
+	@Override
 	public void updateMessage() {
 		String message = null;
 		String errorMessage = null;
@@ -76,6 +79,7 @@ public class UpdateMagicDBDialog extends TitleAreaDialog implements IPreferenceP
 		setErrorMessage(errorMessage);
 	}
 
+	@Override
 	public void updateTitle() {
 		if (this.updatePreference != null)
 			setTitle(this.updatePreference.getTitle());

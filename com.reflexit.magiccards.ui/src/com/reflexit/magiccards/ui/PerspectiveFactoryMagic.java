@@ -28,6 +28,7 @@ import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 	public static String PERSPECTIVE_ID = "com.reflexit.magiccards.ui.perspective.magic";
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);

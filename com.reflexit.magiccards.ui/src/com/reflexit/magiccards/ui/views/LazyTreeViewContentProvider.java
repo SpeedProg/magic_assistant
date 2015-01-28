@@ -22,6 +22,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	private ICardGroup rootGroup;
 	private boolean showRoot = true;
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (viewer instanceof TreeViewer) {
 			this.treeViewer = (TreeViewer) viewer;
@@ -33,10 +34,12 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 			this.root = null;
 	}
 
+	@Override
 	public Object getParent(Object child) {
 		return null;
 	}
 
+	@Override
 	public void updateChildCount(Object element, int currentChildCount) {
 		if (root == null)
 			return;
@@ -59,6 +62,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		}
 	}
 
+	@Override
 	public void updateElement(Object parent, int index) {
 		if (root == null)
 			return;
@@ -96,6 +100,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		}
 	}
 
+	@Override
 	public void dispose() {
 		root = null;
 		rootGroup = null;

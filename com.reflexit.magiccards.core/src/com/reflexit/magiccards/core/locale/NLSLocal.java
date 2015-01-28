@@ -72,6 +72,7 @@ public abstract class NLSLocal {
 			return;
 		}
 		AccessController.doPrivileged(new PrivilegedAction() {
+			@Override
 			public Object run() {
 				load(bundleName, obj, locale);
 				return null;

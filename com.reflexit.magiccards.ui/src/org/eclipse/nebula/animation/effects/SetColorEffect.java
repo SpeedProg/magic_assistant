@@ -90,6 +90,7 @@ public class SetColorEffect extends AbstractEffect {
 	 * @see
 	 * org.eclipse.nebula.animation.effects.AbstractEffect#applyEffect(long)
 	 */
+	@Override
 	public void applyEffect(final long currentTime) {
 		Color currentColor = control.getColor();
 		// Get the next color values

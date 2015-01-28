@@ -44,6 +44,7 @@ public class UpdateDbHandler extends AbstractHandler {
 	 * 
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		performUpdate(event);
 		return null;
@@ -86,6 +87,7 @@ public class UpdateDbHandler extends AbstractHandler {
 							event.getParameter(PreferenceConstants.GATHERER_UPDATE_LANGUAGE));
 					final int rec = ch.downloadUpdates(set, options, new CoreMonitorAdapter(pm));
 					shell.getDisplay().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							try {
 								IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -111,6 +113,7 @@ public class UpdateDbHandler extends AbstractHandler {
 					return Status.OK_STATUS;
 				} catch (final InterruptedException e) {
 					shell.getDisplay().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							MessageDialog.openInformation(shell, "Info", "Operation Cancelled");
 						}
@@ -119,6 +122,7 @@ public class UpdateDbHandler extends AbstractHandler {
 				} catch (final Exception e) {
 					MagicUIActivator.log(e);
 					shell.getDisplay().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							MessageDialog.openError(shell, "Error", e.getMessage());
 						}

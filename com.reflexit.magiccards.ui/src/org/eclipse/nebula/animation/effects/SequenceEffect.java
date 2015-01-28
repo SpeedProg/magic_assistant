@@ -56,6 +56,7 @@ public class SequenceEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#cancel()
 	 */
+	@Override
 	public void cancel() {
 		for (int i = currentEffect; i < effects.length; i++) {
 			effects[currentEffect].cancel();
@@ -71,6 +72,7 @@ public class SequenceEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#doEffect(long)
 	 */
+	@Override
 	public void doEffect(long time) {
 		if (currentEffect >= effects.length) {
 			return;
@@ -91,6 +93,7 @@ public class SequenceEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#getLength()
 	 */
+	@Override
 	public long getLength() {
 		return length;
 	}
@@ -100,6 +103,7 @@ public class SequenceEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#isDone()
 	 */
+	@Override
 	public boolean isDone() {
 		if (effects == null) {
 			return true;

@@ -30,6 +30,7 @@ public abstract class MagicControl implements IMagicControl {
 	public MagicControl() {
 	}
 
+	@Override
 	public Control createPartControl(Composite parent) {
 		partControl = new Composite(parent, SWT.NONE);
 		GridLayout gl = new GridLayout();
@@ -63,11 +64,13 @@ public abstract class MagicControl implements IMagicControl {
 	}
 
 	protected IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
+		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			MagicControl.this.propertyChange(event);
 		}
 	};
 
+	@Override
 	public void init(IViewSite site) {
 		site.setSelectionProvider(getSelectionProvider());
 		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
@@ -75,6 +78,7 @@ public abstract class MagicControl implements IMagicControl {
 		this.site = site;
 	}
 
+	@Override
 	public abstract ISelectionProvider getSelectionProvider();
 
 	public IViewSite getSite() {
@@ -94,22 +98,27 @@ public abstract class MagicControl implements IMagicControl {
 	/**
 	 * @param bars
 	 */
+	@Override
 	public void setGlobalControlHandlers(IActionBars bars) {
 		// override
 	}
 
+	@Override
 	public void fillLocalPullDown(IMenuManager manager) {
 		// override
 	}
 
+	@Override
 	public void fillContextMenu(IMenuManager manager) {
 		// override
 	}
 
+	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
 		// override
 	}
 
+	@Override
 	public void dispose() {
 		MagicUIActivator.getDefault().getPreferenceStore()
 				.removePropertyChangeListener(this.preferenceListener);
@@ -131,6 +140,7 @@ public abstract class MagicControl implements IMagicControl {
 		return getControl().getShell();
 	}
 
+	@Override
 	public Control getControl() {
 		return partControl;
 	}
@@ -139,6 +149,7 @@ public abstract class MagicControl implements IMagicControl {
 		// override
 	}
 
+	@Override
 	public void refresh() {
 		// override
 	}

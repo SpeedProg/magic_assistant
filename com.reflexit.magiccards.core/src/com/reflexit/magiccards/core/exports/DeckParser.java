@@ -94,6 +94,7 @@ public class DeckParser implements Closeable {
 		return found;
 	}
 
+	@Override
 	public void close() {
 		try {
 			reader.close();

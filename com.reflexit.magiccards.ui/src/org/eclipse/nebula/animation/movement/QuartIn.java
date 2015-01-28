@@ -48,6 +48,7 @@ package org.eclipse.nebula.animation.movement;
  * 
  */
 public class QuartIn extends AbstractMovement {
+	@Override
 	public double getValue(double step) {
 		// Conversion from Robert Penner's action scripts
 		//

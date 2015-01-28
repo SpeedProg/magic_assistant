@@ -37,6 +37,7 @@ public class MoveScrollBarEffect extends AbstractEffect {
 		current = start;
 	}
 
+	@Override
 	public void applyEffect(final long currentTime) {
 		current = (int) (start + step
 				* easingFunction.getValue((int) currentTime));

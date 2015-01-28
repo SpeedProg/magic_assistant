@@ -242,6 +242,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * @return the user's reply: one of <code>"YES"</code>, <code>"NO"</code>, <code>"ALL"</code>,
 	 *         or <code>"CANCEL"</code>
 	 */
+	@Override
 	public String queryOverwrite(String pathString) {
 		Path path = new Path(pathString);
 		String messageString;
@@ -263,6 +264,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 		// run in syncExec because callback is from an operation,
 		// which is probably not running in the UI thread.
 		getControl().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				dialog.open();
 			}
@@ -397,6 +399,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 */
 	protected void displayErrorDialog(final String message) {
 		getContainer().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(getContainer().getShell(), getErrorDialogTitle(), message);
 			}

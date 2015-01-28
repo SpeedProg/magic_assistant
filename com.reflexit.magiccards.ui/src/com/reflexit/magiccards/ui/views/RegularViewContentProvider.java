@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class RegularViewContentProvider implements ITreeContentProvider {
+	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof IFilteredCardStore) {
 			IFilteredCardStore resultSet = (IFilteredCardStore) parent;
@@ -16,6 +17,7 @@ public class RegularViewContentProvider implements ITreeContentProvider {
 		}
 	}
 
+	@Override
 	public Object getParent(Object child) {
 		if (child instanceof IFilteredCardStore) {
 			return null;
@@ -23,6 +25,7 @@ public class RegularViewContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof IFilteredCardStore) {
 			return true;
@@ -30,10 +33,12 @@ public class RegularViewContentProvider implements ITreeContentProvider {
 		return false;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
@@ -41,6 +46,7 @@ public class RegularViewContentProvider implements ITreeContentProvider {
 	private TreeViewer viewer;
 	private IFilteredCardStore root;
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (viewer instanceof TreeViewer) {
 			// manager = new DeferredTreeContentManager(this, (TreeViewer)

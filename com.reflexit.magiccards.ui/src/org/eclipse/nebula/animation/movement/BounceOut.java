@@ -46,6 +46,7 @@ package org.eclipse.nebula.animation.movement;
  * 
  */
 public class BounceOut extends AbstractMovement {
+	@Override
 	public double getValue(double step) {
 		// Conversion from Robert Penner's action scripts
 		//

@@ -24,6 +24,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		mergeOnAdd = true;
 	}
 
+	@Override
 	public void reload() {
 		init();
 	}

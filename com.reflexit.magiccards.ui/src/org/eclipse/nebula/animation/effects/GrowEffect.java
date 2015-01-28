@@ -30,6 +30,7 @@ public class GrowEffect extends AbstractEffect {
 	 * @param onStop
 	 * @param onCancel
 	 */
+	@Deprecated
 	public void grow(AnimationRunner runner, Control w, int duration,
 			IMovement movement, Runnable onStop, Runnable onCancel) {
 		IEffect effect = new GrowEffect(w, w.getBounds(), new Rectangle(w
@@ -54,6 +55,7 @@ public class GrowEffect extends AbstractEffect {
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 
+	@Override
 	public void applyEffect(final long currentTime) {
 		if (!control.isDisposed()) {
 			control.setBounds((int) (src.x - diff.x

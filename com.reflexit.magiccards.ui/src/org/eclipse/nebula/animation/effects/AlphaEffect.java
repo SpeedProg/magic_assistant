@@ -32,6 +32,7 @@ public class AlphaEffect extends AbstractEffect {
 	 * @param onStop
 	 * @param onCancel
 	 */
+	@Deprecated
 	public static void setAlpha(AnimationRunner runner, Shell w, int alpha,
 			int duration, IMovement movement, Runnable onStop, Runnable onCancel) {
 		AlphaEffect effect = new AlphaEffect(w, w.getAlpha(), alpha, duration,
@@ -47,6 +48,7 @@ public class AlphaEffect extends AbstractEffect {
 	 * @param easing
 	 * @deprecated Use {@link #fadeOnClose(Shell,int,IMovement,AnimationRunner)} instead
 	 */
+	@Deprecated
 	public static void fadeOnClose(final Shell shell, final int duration,
 			final IMovement easing) {
 		fadeOnClose(shell, duration, easing, null);
@@ -71,29 +73,35 @@ public class AlphaEffect extends AbstractEffect {
 			useRunner = new AnimationRunner();
 		}
 		final Runnable closeListener = new Runnable() {
+			@Override
 			public void run() {
 				shell.dispose();
 			}
 		};
 		shell.addShellListener(new ShellListener() {
+			@Override
 			public void shellIconified(ShellEvent e) {
 				// Do nothing
 			}
 
+			@Override
 			public void shellDeiconified(ShellEvent e) {
 				// Do nothing
 			}
 
+			@Override
 			public void shellDeactivated(ShellEvent e) {
 				// Do nothing
 			}
 
+			@Override
 			public void shellClosed(ShellEvent e) {
 				e.doit = false;
 				setAlpha(useRunner, shell, 0, duration, easing, closeListener,
 						null);
 			}
 
+			@Override
 			public void shellActivated(ShellEvent e) {
 				// Do nothing
 			}
@@ -113,6 +121,7 @@ public class AlphaEffect extends AbstractEffect {
 		easingFunction.init(0, 1, (int) lengthMilli);
 	}
 
+	@Override
 	public void applyEffect(final long currentTime) {
 		if (shell.isDisposed())
 			return;

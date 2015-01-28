@@ -85,6 +85,7 @@ public class Colors implements ISearchableProperty {
 		}
 	}
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -98,10 +99,12 @@ public class Colors implements ISearchableProperty {
 		return instance;
 	}
 
+	@Override
 	public Collection<String> getNames() {
 		return new ArrayList<String>(this.names.values());
 	}
 
+	@Override
 	public Collection<String> getIds() {
 		return new ArrayList<String>(this.names.keySet());
 	}
@@ -110,6 +113,7 @@ public class Colors implements ISearchableProperty {
 		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
+	@Override
 	public String getNameById(String id) {
 		return this.names.get(id);
 	}

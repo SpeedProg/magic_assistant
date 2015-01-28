@@ -208,6 +208,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		return com;
 	}
 
+	@Override
 	public void init(IWorkbench wb) {
 		if (wb != null) {
 			Object serviceObject = wb.getAdapter(IHandlerService.class);

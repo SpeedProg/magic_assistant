@@ -60,18 +60,22 @@ public class StoredSelectionProvider implements IPostSelectionProvider {
 	}
 
 	// IPostSelectionProvider Implementation
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
 
+	@Override
 	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
 		postSelectionListeners.add(listener);
 	}
 
+	@Override
 	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
 		postSelectionListeners.remove(listener);
 	}

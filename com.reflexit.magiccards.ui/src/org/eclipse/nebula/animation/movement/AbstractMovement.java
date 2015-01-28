@@ -25,6 +25,7 @@ public abstract class AbstractMovement implements IMovement {
 	 * 
 	 * @see org.eclipse.nebula.animation.movement.IMovement#getValue(double)
 	 */
+	@Override
 	public abstract double getValue(double step);
 
 	/*
@@ -33,6 +34,7 @@ public abstract class AbstractMovement implements IMovement {
 	 * @see org.eclipse.nebula.animation.movement.IMovement#init(double, double,
 	 * int)
 	 */
+	@Override
 	public void init(double minValue, double maxValue, int steps) {
 		this.min = minValue;
 		this.max = maxValue;

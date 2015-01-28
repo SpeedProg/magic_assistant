@@ -115,6 +115,7 @@ public class TSectionPart extends SectionPart {
 		toolkit.adapt(info, true, true);
 		info.setImage(action.getImageDescriptor().createImage());
 		info.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				action.run();
 			}

@@ -81,6 +81,7 @@ public class ParallelEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#cancel()
 	 */
+	@Override
 	public void cancel() {
 		if (effects != null) {
 			for (int i = effects.length - 1; i >= 0; i--) {
@@ -98,6 +99,7 @@ public class ParallelEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#doEffect(long)
 	 */
+	@Override
 	public void doEffect(long time) {
 		if (effects != null) {
 			for (int i = effects.length - 1; i >= 0; i--) {
@@ -115,6 +117,7 @@ public class ParallelEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#getLength()
 	 */
+	@Override
 	public long getLength() {
 		return length;
 	}
@@ -124,6 +127,7 @@ public class ParallelEffect implements IEffect {
 	 * 
 	 * @see org.eclipse.nebula.animation.effects.IEffect#isDone()
 	 */
+	@Override
 	public boolean isDone() {
 		if (effects != null) {
 			// Ensure all effects are done.

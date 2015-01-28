@@ -200,6 +200,7 @@ public class SpecialComboFieldEditor extends FieldEditor {
 				}
 			});
 			this.fCombo.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					String oldValue = SpecialComboFieldEditor.this.fValue;
 					SpecialComboFieldEditor.this.fValue = SpecialComboFieldEditor.this.fCombo.getText();

@@ -126,6 +126,7 @@ public class SearchControl {
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		this.searchText.setLayoutData(td);
 		this.searchText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				resetBoxColor();
 				context.setCancelled(true);
@@ -217,6 +218,7 @@ public class SearchControl {
 					runnable.run(context);
 				} finally {
 					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							postRunnable();
 						}

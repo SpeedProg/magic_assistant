@@ -6,6 +6,7 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
 public interface IMagicCardPhysical extends IMagicCard, ILocatable, ICardCountable {
 	public String getComment();
 
+	@Override
 	public Location getLocation();
 
 	public boolean isOwn();

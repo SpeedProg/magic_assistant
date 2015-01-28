@@ -43,6 +43,7 @@ public class NewSetDialog extends TitleAreaDialog {
 		name.setTextLimit(50);
 		name.setText(setStart);
 		name.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validate();
 			}
@@ -53,6 +54,7 @@ public class NewSetDialog extends TitleAreaDialog {
 		abbr = new Text(area, SWT.BORDER);
 		abbr.setTextLimit(5);
 		abbr.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validate();
 			}

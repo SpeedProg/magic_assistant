@@ -52,6 +52,7 @@ public interface ICardSet<T> extends Iterable<T> {
 	/**
 	 * Read-only iterator
 	 */
+	@Override
 	public abstract Iterator<T> iterator();
 
 	public boolean contains(T card);

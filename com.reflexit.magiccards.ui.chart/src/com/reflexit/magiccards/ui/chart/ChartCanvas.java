@@ -150,6 +150,7 @@ public class ChartCanvas extends Canvas {
 		style.setColor(ColorDefinitionImpl.create(fg.getRed(), fg.getGreen(), fg.getBlue()));
 		style.setFont(fd);
 		BaseStyleProcessor externalProcessor = new BaseStyleProcessor() {
+			@Override
 			public IStyle getStyle(Chart model, StyledComponent name) {
 				return style;
 			}

@@ -27,10 +27,12 @@ public enum EditionField implements ICardField {
 		return null;
 	}
 
+	@Override
 	public boolean isTransient() {
 		return false;
 	}
 
+	@Override
 	public String getLabel() {
 		String name = name();
 		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);

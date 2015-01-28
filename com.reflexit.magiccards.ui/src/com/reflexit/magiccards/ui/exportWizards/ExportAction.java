@@ -100,6 +100,7 @@ public class ExportAction extends Action implements ISelectionChangedListener {
 		this.selection = selection;
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		if (event.getSelection() instanceof IStructuredSelection) {
 			selectionChanged((IStructuredSelection) event.getSelection());

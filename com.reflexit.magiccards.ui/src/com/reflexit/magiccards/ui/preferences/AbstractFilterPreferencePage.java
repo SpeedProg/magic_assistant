@@ -44,6 +44,7 @@ public abstract class AbstractFilterPreferencePage extends PreferencePage implem
 		this.dialog = dialog;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// nothing
 	}

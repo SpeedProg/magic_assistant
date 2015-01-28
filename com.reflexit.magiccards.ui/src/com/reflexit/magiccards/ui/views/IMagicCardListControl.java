@@ -19,6 +19,7 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract PrefixedPreferenceStore getFilterPreferenceStore();
 
+	@Override
 	public abstract void reloadData();
 
 	public abstract void updateSingle(ICard source);

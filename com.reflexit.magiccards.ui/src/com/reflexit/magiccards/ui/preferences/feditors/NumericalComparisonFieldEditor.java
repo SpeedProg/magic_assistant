@@ -206,6 +206,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 			this.operationControl = new Combo(parent, SWT.READ_ONLY);
 			this.operationControl.setFont(parent.getFont());
 			this.operationControl.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					NumericalComparisonFieldEditor.this.operationControl = null;
 				}
@@ -377,6 +378,7 @@ public class NumericalComparisonFieldEditor extends FieldEditor {
 					assert (false);
 			}
 			this.textField.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					NumericalComparisonFieldEditor.this.textField = null;
 				}

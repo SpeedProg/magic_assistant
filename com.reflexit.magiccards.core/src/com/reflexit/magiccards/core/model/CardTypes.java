@@ -58,6 +58,7 @@ public class CardTypes implements ISearchableProperty {
 		return Pattern.compile(type, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(text).find();
 	}
 
+	@Override
 	public String getIdPrefix() {
 		return getFilterField().toString();
 	}
@@ -71,10 +72,12 @@ public class CardTypes implements ISearchableProperty {
 		return instance;
 	}
 
+	@Override
 	public Collection<String> getNames() {
 		return new ArrayList<String>(this.names.values());
 	}
 
+	@Override
 	public Collection<String> getIds() {
 		return new ArrayList<String>(this.names.keySet());
 	}
@@ -83,6 +86,7 @@ public class CardTypes implements ISearchableProperty {
 		return FilterField.getPrefConstant(getIdPrefix(), name);
 	}
 
+	@Override
 	public String getNameById(String id) {
 		return this.names.get(id);
 	}
