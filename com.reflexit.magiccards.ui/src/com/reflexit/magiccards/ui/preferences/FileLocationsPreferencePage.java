@@ -111,8 +111,8 @@ public class FileLocationsPreferencePage extends FieldEditorPreferencePage imple
 	protected void createFieldEditors() {
 		// addField(new LocationFieldEditor("workspace.dir", "Settings (workspace):", getFieldEditorParent()));
 		addField(new LocationFieldEditor(PreferenceConstants.DIR_BACKUP, "Backup:", getFieldEditorParent()));
-		addField(new LocationFieldEditor(PreferenceConstants.DIR_MAGICCARDS, "Database (sync):",
-				getFieldEditorParent()));
+		//		addField(new LocationFieldEditor(PreferenceConstants.DIR_MAGICCARDS, "Database (sync):",
+		//				getFieldEditorParent()));
 	}
 
 	protected File getAbsoluteFile(String path) {

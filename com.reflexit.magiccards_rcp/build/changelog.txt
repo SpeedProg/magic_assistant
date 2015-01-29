@@ -1,6 +1,9 @@
 changes in 1.4.1.7
 * Bug 414: Localized version of land card are not considered basic lands
-* Added ability to specify location for backup and for database outside of workspace
+* Added ability to specify location for backup 
+* Fixed parsing on new format for legality of sets
+* Added support for import of collections from TCGPlayer collections html
+* Added support for parsing prices from TCGPlayer html instead on non working xml API's
 changes in 1.4.1.6
 * Bug: fixed when updating localized cards - not all cards where loaded when updating
 * Bug 252: fixed unique count and own unique count should not consider localized cards as unique
