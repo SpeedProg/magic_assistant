@@ -2,9 +2,10 @@ package com.reflexit.magiccards.core.xml;
 
 import gnu.trove.map.hash.TIntFloatHashMap;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ public class PricesXmlStreamReader {
 		fake,
 	}
 
-	static class MagicHandler extends DefaultHandler {
+	static class PricesXmlHandler extends DefaultHandler {
 		PriceProviderStoreObject store;
 		Stack<Tag> states = new Stack<Tag>();
 		Tag state = Tag.cards;
@@ -47,7 +48,7 @@ public class PricesXmlStreamReader {
 		String value;
 		private Locator locator;
 
-		public MagicHandler(PriceProviderStoreObject object) {
+		public PricesXmlHandler(PriceProviderStoreObject object) {
 			store = object;
 		}
 
@@ -149,14 +150,11 @@ public class PricesXmlStreamReader {
 
 	public PriceProviderStoreObject load(File file) throws IOException {
 		try {
-			long size = file.length();
-			if (size > Integer.MAX_VALUE)
-				throw new IllegalArgumentException("File " + file + " is to big " + size);
-			byte buffer[] = new byte[(int) size];
-			int len = FileUtils.readFileAsBytes(file, buffer);
-			InputStream st = new ByteArrayInputStream(buffer, 0, len);
+			BufferedInputStream st = new BufferedInputStream(new FileInputStream(file),
+					FileUtils.DEFAULT_BUFFER_SIZE);
 			PriceProviderStoreObject object = load(st);
 			object.file = file;
+			st.close();
 			return object;
 		} catch (IOException e) {
 			throw e;
@@ -169,7 +167,7 @@ public class PricesXmlStreamReader {
 		try {
 			PriceProviderStoreObject object = new PriceProviderStoreObject();
 			SAXParser parser = factory.newSAXParser();
-			MagicHandler handler = new MagicHandler(object);
+			PricesXmlHandler handler = new PricesXmlHandler(object);
 			parser.parse(st, handler);
 			return object;
 		} catch (IOException e) {
