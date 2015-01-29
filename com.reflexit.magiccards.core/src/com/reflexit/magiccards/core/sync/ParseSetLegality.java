@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -22,7 +23,7 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 	}
 
 	/*-
-	 *   
+	 *
 	 *   <li>
 	<i>Mirrodin Besieged</i>
 	</li>
@@ -40,6 +41,7 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 		for (int k = 0; k < sets.length; k++) {
 			String string = sets[k].trim();
 			string = string.replaceAll("  ", " ");
+			string = HtmlTableImportDelegate.purifyItem(string);
 			// System.err.println("Looking for " + string);
 			if (string.length() > 0) {
 				Edition ed = eds.getEditionByName(string);

@@ -1,15 +1,11 @@
 package com.reflexit.magiccards.core.sync;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -29,10 +25,7 @@ public abstract class AbstractParseGathererPage {
 		monitor.beginTask(getTitle(), 100);
 		try {
 			URL url = new URL(getUrl());
-			InputStream openStream = WebUtils.openUrl(url);
-			BufferedReader st = new BufferedReader(new InputStreamReader(openStream, UTF_8));
-			String html = FileUtils.readFileAsString(st);
-			st.close();
+			String html = WebUtils.openUrlAndGetText(url);
 			monitor.worked(50);
 			if (monitor.isCanceled())
 				return;

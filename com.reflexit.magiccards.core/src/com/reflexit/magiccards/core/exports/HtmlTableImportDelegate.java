@@ -170,7 +170,7 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 		return fields;
 	}
 
-	private String purifyItem(String in) {
+	public static String purifyItem(String in) {
 		in = in.replaceAll("<[^>]*>", "");
 		in = in.replace("&nbsp;", " ");
 		in = in.replace("&amp;", "&");
