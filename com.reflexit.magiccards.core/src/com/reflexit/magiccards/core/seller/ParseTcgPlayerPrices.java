@@ -192,7 +192,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 				String altset = (String) iterator.next();
 				URL url = createCardUrl(magicCard, altset);
 				try {
-					String xml = WebUtils.openUrlAndGetText(url);
+					String xml = WebUtils.openUrlText(url);
 					price = parsePrice(xml);
 				} catch (Exception e) {
 					MagicLogger.log("Failed to load price for " + url + ": " + e.getLocalizedMessage());

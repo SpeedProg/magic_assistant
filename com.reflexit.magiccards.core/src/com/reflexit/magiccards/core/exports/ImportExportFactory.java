@@ -17,7 +17,6 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -33,8 +32,8 @@ public class ImportExportFactory<T> {
 	}
 
 	private static void loadCustom() {
-		IPath exportersPath = ReportType.getStoragePath();
-		File[] listFiles = exportersPath.toFile().listFiles();
+		File exportersPath = ReportType.getStorageFile();
+		File[] listFiles = exportersPath.listFiles();
 		for (int i = 0; i < listFiles.length; i++) {
 			File file = listFiles[i];
 			try {
@@ -46,11 +45,15 @@ public class ImportExportFactory<T> {
 	}
 
 	private static void loadExtensions() {
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = registry.getExtensionPoint(DataManager.ID + ".deckFormat");
-		IConfigurationElement points[] = extensionPoint.getConfigurationElements();
-		for (IConfigurationElement el : points) {
-			parseExtension(el);
+		try {
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(DataManager.ID + ".deckFormat");
+			IConfigurationElement points[] = extensionPoint.getConfigurationElements();
+			for (IConfigurationElement el : points) {
+				parseExtension(el);
+			}
+		} catch (Throwable e) {
+			MagicLogger.log(e);
 		}
 	}
 

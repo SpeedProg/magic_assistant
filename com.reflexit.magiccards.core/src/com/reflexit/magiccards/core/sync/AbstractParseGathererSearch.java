@@ -12,10 +12,8 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public abstract class AbstractParseGathererSearch extends GatherHelper {
 	public boolean loadSingleUrl(URL url, GatherHelper.ILoadCardHander handler) throws IOException {
 		try {
-			BufferedReader st = WebUtils.openUrlReader(url);
-			String html = FileUtils.readFileAsString(st);
-			st.close();
-			boolean res = processFromReader(FileUtils.openStringReader(html), handler);
+			String html = WebUtils.openUrlText(url);
+			boolean res = processFromReader(FileUtils.openBufferedReader(html), handler);
 			return res;
 		} catch (IOException e) {
 			MagicLogger.log("Loading url exception: " + url + ": " + e.getMessage());
@@ -30,7 +28,7 @@ public abstract class AbstractParseGathererSearch extends GatherHelper {
 			throws IOException;
 
 	public void loadFile(File file, GatherHelper.ILoadCardHander handler) throws IOException {
-		BufferedReader st = FileUtils.openFileReader(file);
+		BufferedReader st = FileUtils.openBuferedReader(file);
 		processFromReader(st, handler);
 		st.close();
 	}

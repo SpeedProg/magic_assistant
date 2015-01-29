@@ -17,11 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
@@ -34,20 +29,9 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class CardCache {
-	private static boolean caching;
-	private static boolean loading;
-
-	public static void setCahchingEnabled(boolean enabled) {
-		caching = enabled;
-	}
-
-	public static void setLoadingEnabled(boolean enabled) {
-		loading = enabled;
-	}
-
 	public static URL createSetImageURL(IMagicCard card, boolean upload) throws IOException {
 		String edition = card.getSet();
 		String rarity = card.getRarity();
@@ -123,51 +107,70 @@ public class CardCache {
 		return file;
 	}
 
-	public static boolean isLoadingEnabled() {
-		return loading;
+	private static boolean isLoadingEnabled() {
+		return !WebUtils.isWorkOffline();
 	}
 
 	private static ArrayList<IMagicCard> cardImageQueue = new ArrayList<IMagicCard>();
-	private static Job cardImageLoadingJob = new Job("Loading card images") {
-		{
-			setSystem(true);
-		}
+	private static Thread cardImageLoadingJob = null;
 
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			while (true) {
-				IMagicCard card = null;
-				synchronized (cardImageQueue) {
-					if (cardImageQueue.size() > 0) {
-						card = cardImageQueue.iterator().next();
-						cardImageQueue.remove(card);
-					} else
-						return Status.OK_STATUS;
-				}
-				synchronized (card) {
-					try {
-						downloadAndSaveImage(card, isLoadingEnabled(), true);
-					} catch (Exception e) {
-						continue;
-					} finally {
-						card.notifyAll();
+	static synchronized void initCardImageLoading() {
+		if (cardImageLoadingJob != null) return;
+		cardImageLoadingJob =
+				new Thread("Loading card images") {
+					@Override
+					public void run() {
+						while (true) {
+							IMagicCard card = null;
+							synchronized (cardImageQueue) {
+								if (cardImageQueue.size() > 0) {
+									card = cardImageQueue.get(0);
+									cardImageQueue.remove(0);
+									cardImageQueue.notifyAll();
+								} else {
+									try {
+										cardImageQueue.wait(10000);
+									} catch (InterruptedException e) {
+										break;
+									}
+									if (cardImageQueue.size() > 0) continue;
+									break;
+								}
+							}
+							if (card == null) continue;
+							synchronized (card) {
+								try {
+									downloadAndSaveImage(card, isLoadingEnabled(), true);
+								} catch (Exception e) {
+									continue;
+								} finally {
+									card.notifyAll();
+								}
+							}
+						}
+						synchronized (CardCache.class) {
+							cardImageLoadingJob = null;
+						}
 					}
-				}
-			}
-		}
-	};
+				};
+		cardImageLoadingJob.start();
+	}
 
 	private static void queueImageLoading(IMagicCard card) {
+		initCardImageLoading();
 		synchronized (cardImageQueue) {
-			if (!cardImageQueue.contains(card))
+			if (!cardImageQueue.contains(card)) {
 				cardImageQueue.add(card);
+				cardImageQueue.notifyAll();
+			} else {
+				card.notifyAll();
+			}
 		}
-		cardImageLoadingJob.schedule(0);
 	}
 
 	/**
 	 * Download and save card image, if not already saved
-	 * 
+	 *
 	 * @param card
 	 * @param caching2
 	 * @return
@@ -190,7 +193,7 @@ public class CardCache {
 
 	/**
 	 * Save url content into a local file
-	 * 
+	 *
 	 * @param file
 	 *            - local file
 	 * @param url
@@ -247,7 +250,7 @@ public class CardCache {
 	 * Get card image or schedule a loading job if image not found. This image
 	 * is not managed - to be disposed by called. To get notified when job is
 	 * done loading, can wait on card object
-	 * 
+	 *
 	 * @param card
 	 * @return true if card image exists, schedule update otherwise. If loading
 	 *         is disabled and there is no cached image through an exception

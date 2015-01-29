@@ -54,7 +54,6 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParseGathererOracle;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.sync.WebUtils;
@@ -214,7 +213,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			try {
 				if (card.getCardId() != 0) {
 					String path = ImageCreator.getInstance().createCardPath(card,
-							CardCache.isLoadingEnabled(), forceUpdate);
+							isLoadingOnClickEnabled(), forceUpdate);
 					boolean resize = asScanned == false;
 					remoteImage1 = ImageCreator.getInstance().createCardImage(path, resize);
 				}
@@ -236,7 +235,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 					setMessage("");
 					if (e != null)
 						setMessage(e.getMessage());
-					else if (!CardCache.isLoadingEnabled())
+					else if (!isLoadingOnClickEnabled())
 						setMessage("Image loading is disabled");
 					else if (card.getGathererId() == 0)
 						setMessage("Card does not exist in dababase");
@@ -549,5 +548,10 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 				| IWorkbenchBrowserSupport.STATUS,
 				MagicUIActivator.PLUGIN_ID, "Browser", null);
 		return browser;
+	}
+
+	private boolean isLoadingOnClickEnabled() {
+		return MagicUIActivator.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.LOAD_IMAGES);
 	}
 }

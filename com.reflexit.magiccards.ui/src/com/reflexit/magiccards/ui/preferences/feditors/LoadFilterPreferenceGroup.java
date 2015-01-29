@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
@@ -120,9 +121,14 @@ public class LoadFilterPreferenceGroup extends MFieldEditorPreferencePage {
 	}
 
 	private IPath getFilterPath() {
-		IPath stateLocation = new Path(FileUtils.getStateLocationFile().toString());
-		IPath filters = stateLocation.append("/filters");
-		filters.toFile().mkdir();
-		return filters;
+		File file = new File(FileUtils.getMagicCardsDir(), ".settings/filters");
+		file.mkdirs();
+		File oldFile = new File(FileUtils.getStateLocationFile(), "filters");
+		try {
+			FileUtils.migrate(file, oldFile);
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		}
+		return new Path(file.toString());
 	}
 }

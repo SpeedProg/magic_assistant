@@ -17,10 +17,12 @@ import java.util.Properties;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class FileUtils {
+	public static final int DEFAULT_BUFFER_SIZE = 30 * 1024;
 	public static final String MAGICCARDS = "magiccards";
 	public static final String BACKUP = ".backup";
 	public static final String UTF8 = "UTF-8";
 	public static Charset CHARSET_UTF_8 = Charset.forName("utf-8");
+	//
 	static {
 		File stateLocationFile = getStateLocationFile();
 		if (!stateLocationFile.exists() && !stateLocationFile.mkdirs()) {
@@ -75,15 +77,21 @@ public class FileUtils {
 		}
 	}
 
-	public static BufferedReader openFileReader(File file) throws FileNotFoundException {
-		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-				FileUtils.CHARSET_UTF_8));
+	public static BufferedReader openBuferedReader(InputStream inst) {
+		BufferedReader st = new BufferedReader(new InputStreamReader(inst,
+				FileUtils.CHARSET_UTF_8), DEFAULT_BUFFER_SIZE);
 		return st;
 	}
 
-	public static BufferedReader openStringReader(String str) {
+	public static BufferedReader openBuferedReader(File file) throws FileNotFoundException {
+		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file),
+				FileUtils.CHARSET_UTF_8), DEFAULT_BUFFER_SIZE);
+		return st;
+	}
+
+	public static BufferedReader openBufferedReader(String str) {
 		BufferedReader st = new BufferedReader(new InputStreamReader(
-				new ByteArrayInputStream(str.getBytes()), FileUtils.CHARSET_UTF_8));
+				new ByteArrayInputStream(str.getBytes()), FileUtils.CHARSET_UTF_8), DEFAULT_BUFFER_SIZE);
 		return st;
 	}
 
@@ -104,23 +112,27 @@ public class FileUtils {
 
 	public static void copyStream(InputStream in, OutputStream out) throws IOException {
 		int count;
-		byte[] buffer = new byte[FILE_BUFFER_SIZE];
+		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 		while ((count = in.read(buffer)) > 0)
 			out.write(buffer, 0, count);
 	}
 
 	public static String readFileAsString(File file) throws IOException {
-		BufferedReader st = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-		String res = readFileAsString(st);
-		st.close();
-		return res;
+		BufferedReader st = openBuferedReader(file);
+		try {
+			return readFileAsString(st);
+		} finally {
+			try {
+				st.close();
+			} catch (Exception e) {
+				// ignore
+			}
+		}
 	}
 
-	static int FILE_BUFFER_SIZE = 1024 * 64;
-
 	public static String readFileAsString(BufferedReader reader) throws IOException {
-		StringBuilder fileData = new StringBuilder(FILE_BUFFER_SIZE);
-		char[] buf = new char[FILE_BUFFER_SIZE];
+		StringBuilder fileData = new StringBuilder(DEFAULT_BUFFER_SIZE);
+		char[] buf = new char[DEFAULT_BUFFER_SIZE];
 		int numRead = 0;
 		while ((numRead = reader.read(buf)) != -1) {
 			fileData.append(buf, 0, numRead);
@@ -236,6 +248,22 @@ public class FileUtils {
 			return DbActivator.loadResource(name);
 		} else {
 			return FileUtils.class.getClassLoader().getResourceAsStream(name);
+		}
+	}
+
+	public static void migrate(File newFile, File oldFile) throws IOException {
+		if (newFile.isDirectory() && oldFile.isDirectory()) {
+			File[] newFiles = newFile.listFiles();
+			if (newFiles != null && newFiles.length == 0) {
+				File[] oldFiles = oldFile.listFiles();
+				if (oldFiles != null && oldFiles.length > 0) {
+					FileUtils.copyTree(oldFile, newFile);
+				}
+			}
+		} else {
+			if (oldFile.exists() && !oldFile.isDirectory() && !newFile.exists()) {
+				FileUtils.copyFile(oldFile, newFile);
+			}
 		}
 	}
 

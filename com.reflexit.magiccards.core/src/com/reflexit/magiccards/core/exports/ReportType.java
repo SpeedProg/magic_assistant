@@ -14,10 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
@@ -121,9 +119,9 @@ public class ReportType {
 	}
 
 	public File getFile() {
-		IPath dir = ReportType.getStoragePath();
-		IPath fname = dir.addTrailingSeparator().append(getLabel()).addFileExtension("ini");
-		return fname.toFile();
+		File dir = ReportType.getStorageFile();
+		String name = getLabel() + ".ini";
+		return new File(dir, name);
 	}
 
 	public void save() throws IOException {
@@ -164,11 +162,16 @@ public class ReportType {
 		return type;
 	}
 
-	public static IPath getStoragePath() {
-		IPath stateLocation = new Path(FileUtils.getStateLocationFile().toString());
-		IPath filters = stateLocation.append("/exporters");
-		filters.toFile().mkdir();
-		return filters;
+	public static File getStorageFile() {
+		File file = new File(FileUtils.getMagicCardsDir(), ".settings/exporters");
+		file.mkdirs();
+		File oldFile = new File(FileUtils.getStateLocationFile(), "exporters");
+		try {
+			FileUtils.migrate(file, oldFile);
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		}
+		return file;
 	}
 
 	public IExportDelegate getExportDelegate() {

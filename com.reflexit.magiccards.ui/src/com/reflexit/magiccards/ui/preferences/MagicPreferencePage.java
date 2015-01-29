@@ -22,7 +22,6 @@ import com.reflexit.magicassistant.p2.UpdateHandlerP2;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.IPriceProviderStore;
-import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -116,13 +115,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		ld.horizontalSpan = 2;
 		onCardSelect.setLayoutData(ld);
 		BooleanFieldEditor load = new BooleanFieldEditor(PreferenceConstants.LOAD_IMAGES,
-				"Load card graphics from the web", onCardSelect) {
-			@Override
-			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
-				super.fireStateChanged(property, oldValue, newValue);
-				CardCache.setLoadingEnabled(newValue);
-			}
-		};
+				"Load card graphics from the web", onCardSelect);
 		addField(load);
 		BooleanFieldEditor rulings = new BooleanFieldEditor(PreferenceConstants.LOAD_RULINGS,
 				"Load rulings from the web", onCardSelect);
@@ -168,7 +161,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */

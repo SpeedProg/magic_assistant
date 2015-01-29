@@ -52,11 +52,10 @@ public class MagicXmlStreamHandler implements IStoreHandler {
 	}
 
 	public CardCollectionStoreObject fromXML(String xml) {
-		InputStream in = new ByteArrayInputStream(xml.getBytes(FileUtils.CHARSET_UTF_8));
 		try {
-			return load(in);
+			return load(new ByteArrayInputStream(xml.getBytes(FileUtils.CHARSET_UTF_8)));
 		} catch (IOException e) {
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 }

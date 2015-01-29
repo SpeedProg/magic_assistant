@@ -21,11 +21,11 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 	<td valign="top" width="25%">
 	    <span style="font-size: 1.2em;"><a href="/at/en/4.html">Volcanic Dragon</a></span>
 	    <p><img src="http://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies, <i>Special</i></p>
-	    
-	      <p>Creature — Dragon 4/4, 
+
+	      <p>Creature — Dragon 4/4,
 	        4RR (6)</p>
 	      <p class="ctext"><b>Flying<br><br>Haste (This creature can attack and {T} as soon as it comes under your control.)</b></p>
-	    
+
 	    <p><i>Speed and fire are always a deadly combination.</i></p>
 	    <p>Illus. Janine Johnston</p>
 	</td>
@@ -143,10 +143,8 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 
 	public boolean loadSingleUrl(URL url, ILoadCardHander handler) throws IOException {
 		try {
-			BufferedReader st = WebUtils.openUrlReader(url);
-			String html = FileUtils.readFileAsString(st);
-			st.close();
-			boolean res = processFromReader(FileUtils.openStringReader(html), handler);
+			String html = WebUtils.openUrlText(url);
+			boolean res = processFromReader(FileUtils.openBufferedReader(html), handler);
 			return res;
 		} catch (IOException e) {
 			MagicLogger.log("Loading url exception: " + url + ": " + e.getMessage());
@@ -155,7 +153,7 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 	}
 
 	public void loadFile(File file, ILoadCardHander handler) throws IOException {
-		BufferedReader st = FileUtils.openFileReader(file);
+		BufferedReader st = FileUtils.openBuferedReader(file);
 		processFromReader(st, handler);
 		st.close();
 	}

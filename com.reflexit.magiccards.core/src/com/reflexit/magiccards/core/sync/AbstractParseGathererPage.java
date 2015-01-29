@@ -25,7 +25,7 @@ public abstract class AbstractParseGathererPage {
 		monitor.beginTask(getTitle(), 100);
 		try {
 			URL url = new URL(getUrl());
-			String html = WebUtils.openUrlAndGetText(url);
+			String html = WebUtils.openUrlText(url);
 			monitor.worked(50);
 			if (monitor.isCanceled())
 				return;

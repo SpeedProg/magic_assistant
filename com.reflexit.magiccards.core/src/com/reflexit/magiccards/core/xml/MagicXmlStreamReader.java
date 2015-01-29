@@ -1,8 +1,9 @@
 package com.reflexit.magiccards.core.xml;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -245,19 +246,14 @@ public class MagicXmlStreamReader {
 
 	public CardCollectionStoreObject load(File file) throws IOException {
 		try {
-			long size = file.length();
-			if (size > Integer.MAX_VALUE)
-				throw new IllegalArgumentException("File " + file + " is to big " + size);
-			byte buffer[] = new byte[(int) size];
-			int len = FileUtils.readFileAsBytes(file, buffer);
-			InputStream st = new ByteArrayInputStream(buffer, 0, len);
+			BufferedInputStream st = new BufferedInputStream(new FileInputStream(file),
+					FileUtils.DEFAULT_BUFFER_SIZE);
 			CardCollectionStoreObject object = load(st);
 			object.file = file;
+			st.close();
 			return object;
-		} catch (IOException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException("Cannot read " + file, e);
+			throw new IOException("Cannot read file: " + file, e);
 		}
 	}
 
@@ -271,7 +267,7 @@ public class MagicXmlStreamReader {
 		} catch (IOException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException("Cannot read stream", e);
+			throw new IOException(e);
 		}
 	}
 

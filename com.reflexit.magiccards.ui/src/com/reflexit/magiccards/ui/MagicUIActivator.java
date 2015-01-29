@@ -31,7 +31,6 @@ import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.BundleContext;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -61,7 +60,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
@@ -80,22 +79,20 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		COLOR_PINKINSH = new Color(device, 255, 255 - 64, 255 - 64);
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "restriction" })
 	private void activateCoreSettings() {
 		// start the Network plugin to set proxy
 		org.eclipse.ui.internal.net.Activator.getDefault();
 		IPreferenceStore globalStore = getPreferenceStore();
-		CardCache.setCahchingEnabled(globalStore.getBoolean(PreferenceConstants.CACHE_IMAGES));
-		CardCache.setLoadingEnabled(globalStore.getBoolean(PreferenceConstants.LOAD_IMAGES));
+		WebUtils.setWorkOffline(globalStore.getBoolean(PreferenceConstants.WORK_OFFLINE));
 		DataManager.getInstance().setOwnCopyEnabled(globalStore.getBoolean(PreferenceConstants.OWNED_COPY));
 		CurrencyConvertor.setCurrency(globalStore.getString(PreferenceConstants.CURRENCY));
-		WebUtils.setWorkOffline(globalStore.getBoolean(PreferenceConstants.WORK_OFFLINE));
 		PriceProviderManager.getInstance().sync(globalStore);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
 	 * )
@@ -110,7 +107,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 * 
+	 *
 	 * @return the shared instance
 	 */
 	public static MagicUIActivator getDefault() {
@@ -120,7 +117,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	/**
 	 * Returns an image descriptor for the image file at the given plug-in
 	 * relative path
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @return the image descriptor
@@ -177,7 +174,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 
 	/**
 	 * Puts image in a registy using key
-	 * 
+	 *
 	 * @param key
 	 * @param desc
 	 * @return

@@ -49,21 +49,12 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 	}
 
 	public IMagicCard[] fromByteArray(byte[] bytes) {
-		ByteArrayInputStream in;
-		in = new ByteArrayInputStream(bytes);
 		try {
-			MagicXmlStreamHandler xmlHanlder = new MagicXmlStreamHandler();
-			CardCollectionStoreObject object = xmlHanlder.load(in);
-			return (IMagicCard[]) object.list.toArray(new IMagicCard[object.list.size()]);
+			CardCollectionStoreObject object = new MagicXmlStreamHandler().load(new ByteArrayInputStream(bytes));
+			return object.list.toArray(new IMagicCard[object.list.size()]);
 		} catch (IOException e) {
 			MagicLogger.log(e);
 			return null;
-		} finally {
-			try {
-				in.close();
-			} catch (IOException e) {
-				// ok
-			}
 		}
 	}
 

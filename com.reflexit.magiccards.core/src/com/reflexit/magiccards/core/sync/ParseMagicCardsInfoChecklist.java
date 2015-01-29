@@ -155,10 +155,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 
 	public boolean loadSingleUrl(URL url, ILoadCardHander handler) throws IOException {
 		try {
-			BufferedReader st = WebUtils.openUrlReader(url);
-			String html = FileUtils.readFileAsString(st);
-			st.close();
-			boolean res = processFromReader(FileUtils.openStringReader(html), handler);
+			String html = WebUtils.openUrlText(url);
+			boolean res = processFromReader(FileUtils.openBufferedReader(html), handler);
 			return res;
 		} catch (IOException e) {
 			MagicLogger.log("Loading url exception: " + url + ": " + e.getMessage());
@@ -167,7 +165,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	}
 
 	public void loadFile(File file, ILoadCardHander handler) throws IOException {
-		BufferedReader st = FileUtils.openFileReader(file);
+		BufferedReader st = FileUtils.openBuferedReader(file);
 		processFromReader(st, handler);
 		st.close();
 	}

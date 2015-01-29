@@ -62,17 +62,21 @@ public class WebUtils {
 
 	public static BufferedReader openUrlReader(URL url) throws IOException {
 		InputStream openStream = openUrl(url);
-		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, FileUtils.CHARSET_UTF_8));
+		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, FileUtils.CHARSET_UTF_8),
+				FileUtils.DEFAULT_BUFFER_SIZE);
 		return st;
 	}
 
-	public static String openUrlAndGetText(URL url) throws IOException {
+	public static String openUrlText(URL url) throws IOException {
 		BufferedReader st = openUrlReader(url);
 		try {
-			String xml = FileUtils.readFileAsString(st);
-			return xml;
+			return FileUtils.readFileAsString(st);
 		} finally {
-			st.close();
+			try {
+				st.close();
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 	}
 }
