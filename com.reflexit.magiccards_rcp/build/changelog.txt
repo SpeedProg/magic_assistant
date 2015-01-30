@@ -4,6 +4,8 @@ changes in 1.4.1.7
 * Fixed parsing on new format for legality of sets
 * Added support for import of collections from TCGPlayer collections html
 * Added support for parsing prices from TCGPlayer html instead on non working xml API's
+* Fixed split cards in Invasion set
+* Added Commander 2014
 changes in 1.4.1.6
 * Bug: fixed when updating localized cards - not all cards where loaded when updating
 * Bug 252: fixed unique count and own unique count should not consider localized cards as unique
