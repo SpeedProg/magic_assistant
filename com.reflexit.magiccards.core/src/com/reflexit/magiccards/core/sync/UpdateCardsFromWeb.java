@@ -73,10 +73,11 @@ public class UpdateCardsFromWeb {
 		try {
 			int failedLangUpdate = 0;
 			for (int i = 0; iter.hasNext(); i++) {
-				IMagicCard card = iter.next();
-				IMagicCard magicCard = card.getBase();
 				if (monitor.isCanceled())
 					return;
+				IMagicCard card = iter.next();
+				IMagicCard magicCard = card.getBase();
+				if (magicCard == null) continue;
 				if (magicCard.getEnglishCardId() != 0) {
 					// localized
 					localized = true;

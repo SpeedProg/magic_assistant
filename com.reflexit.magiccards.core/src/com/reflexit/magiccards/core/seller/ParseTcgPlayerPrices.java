@@ -100,42 +100,52 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			IDbCardStore db = DataManager.getCardHandler().getMagicDBStore();
 			int processedSets = 0;
 			for (Object object : uniqueSets) {
-				String set = (String) object;
-				Map<MagicCard, Float> map = getSetPrices(set);
-				if (map.size() != 0) {
-					processedSets++;
-					for (MagicCard magicCard : map.keySet()) {
-						float price = map.get(magicCard);
-						ImportUtils.getFixedName(magicCard);// fix Aether
-						MagicCard ref = ImportUtils.findRef(magicCard, db);
-						if (ref != null) {
-							if (price == 0)
-								price = -0.0001f;
-							setDbPrice(ref, price, getCurrency());
+				try {
+					String set = (String) object;
+					if (monitor.isCanceled())
+						return iterable;
+					Map<MagicCard, Float> map = getSetPrices(set);
+					if (map.size() != 0) {
+						processedSets++;
+						for (MagicCard magicCard : map.keySet()) {
+							float price = map.get(magicCard);
+							ImportUtils.getFixedName(magicCard);// fix Aether
+							MagicCard ref = ImportUtils.findRef(magicCard, db);
+							if (ref != null) {
+								if (price == 0)
+									price = -0.0001f;
+								setDbPrice(ref, price, getCurrency());
+							}
 						}
 					}
+				} catch (Exception e) {
+					MagicLogger.log(e);
 				}
 				monitor.worked(1);
 			}
+			monitor.worked(5);
 			if (processedSets != uniqueSets.size()) {
-				monitor.worked(5);
 				for (IMagicCard magicCard : iterable) {
-					if (monitor.isCanceled())
-						return null;
-					float price = getPrice(magicCard);
-					if (price < 0) {
-						int id = magicCard.getFlipId();
-						IMagicCard flipCard = (IMagicCard) db.getCard(id);
-						if (flipCard != null)
-							price = getPrice(flipCard);
+					try {
+						if (monitor.isCanceled())
+							return iterable;
+						float price = getPrice(magicCard);
+						if (price < 0) {
+							int id = magicCard.getFlipId();
+							IMagicCard flipCard = (IMagicCard) db.getCard(id);
+							if (flipCard != null)
+								price = getPrice(flipCard);
+						}
+						// if (price > 0)
+						{
+							if (price == 0)
+								price = -0.0001f;
+							setDbPrice(magicCard, price, getCurrency());
+						}
+						monitor.worked(1);
+					} catch (Exception e) {
+						MagicLogger.log(e);
 					}
-					// if (price > 0)
-					{
-						if (price == 0)
-							price = -0.0001f;
-						setDbPrice(magicCard, price, getCurrency());
-					}
-					monitor.worked(1);
 				}
 			}
 		} finally {
@@ -146,38 +156,38 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	private Map<MagicCard, Float> getSetPrices(String set) {
 		final HashMap<MagicCard, Float> res = new HashMap<MagicCard, Float>();
-		HtmlTableImportDelegate delegate = new HtmlTableImportDelegate() {
-			@Override
-			protected ICardField getFieldByName(String hd) {
-				ICardField fieldByName = super.getFieldByName(hd);
-				if (fieldByName == null) {
-					hd = hd.toUpperCase();
-					if ((hd.equals("MID") || hd.equals("MED")) && type == Type.Medium)
-						return MagicCardField.DBPRICE;
-					if (hd.equals("LOW") && type == Type.Low)
-						return MagicCardField.DBPRICE;
-					if (hd.equals("HIGH") && type == Type.High)
-						return MagicCardField.DBPRICE;
-				}
-				return fieldByName;
-			}
-
-			@Override
-			public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
-				if (field == MagicCardField.DBPRICE) {
-					value = value.replace("$", "");
-					res.put(card.getBase(), Float.valueOf(value));
-				} else
-					super.setFieldValue(card, field, i, value);
-			}
-		};
 		try {
+			HtmlTableImportDelegate delegate = new HtmlTableImportDelegate() {
+				@Override
+				protected ICardField getFieldByName(String hd) {
+					ICardField fieldByName = super.getFieldByName(hd);
+					if (fieldByName == null) {
+						hd = hd.toUpperCase();
+						if ((hd.equals("MID") || hd.equals("MED")) && type == Type.Medium)
+							return MagicCardField.DBPRICE;
+						if (hd.equals("LOW") && type == Type.Low)
+							return MagicCardField.DBPRICE;
+						if (hd.equals("HIGH") && type == Type.High)
+							return MagicCardField.DBPRICE;
+					}
+					return fieldByName;
+				}
+
+				@Override
+				public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
+					if (field == MagicCardField.DBPRICE) {
+						value = value.replace("$", "");
+						res.put(card.getBase(), Float.valueOf(value));
+					} else
+						super.setFieldValue(card, field, i, value);
+				}
+			};
 			String setE = URLEncoder.encode(set, "UTF-8");
 			URL url = new URL("http://magic.tcgplayer.com/db/search_result.asp?Set_Name=" + setE);
 			delegate.init(WebUtils.openUrl(url), Location.NO_WHERE,
 					false);
 			delegate.run(ICoreProgressMonitor.NONE);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
 		return res;
