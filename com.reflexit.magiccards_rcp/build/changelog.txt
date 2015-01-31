@@ -1,3 +1,5 @@
+changes in 1.4.1.8
+* Bug 420: NPE during price update
 changes in 1.4.1.7
 * Bug 414: Localized version of land card are not considered basic lands
 * Added ability to specify location for backup 
