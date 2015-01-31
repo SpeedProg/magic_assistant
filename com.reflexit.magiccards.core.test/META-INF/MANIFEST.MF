@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Vendor: Alena Laskavaia
 Fragment-Host: com.reflexit.magiccards.core;bundle-version="1.0.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit
+Require-Bundle: com.reflexit.unittesting;bundle-version="1.0.0"
 Export-Package: com.reflexit.magiccards.core,
  com.reflexit.magiccards.core.exports,
  com.reflexit.magiccards.core.model,
@@ -19,5 +19,4 @@ Export-Package: com.reflexit.magiccards.core,
  com.reflexit.magiccards.core.test.assist,
  com.reflexit.magiccards.core.xml
 Bundle-ClassPath: .,
- lib/mockito-all-1.9.5.jar,
  src/
