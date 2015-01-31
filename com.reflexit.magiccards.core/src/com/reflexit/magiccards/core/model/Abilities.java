@@ -325,12 +325,6 @@ public class Abilities {
 			// TODO Auto-generated method stub
 			return null;
 		}
-
-		@Override
-		public Collection getNames() {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 	static class TextSeachNot implements ISearchableProperty {
@@ -355,12 +349,6 @@ public class Abilities {
 
 		@Override
 		public String getNameById(String id) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Collection getNames() {
 			// TODO Auto-generated method stub
 			return null;
 		}

@@ -47,11 +47,6 @@ public class Rarity implements ISearchableProperty {
 	}
 
 	@Override
-	public Collection getNames() {
-		return new ArrayList(this.names.values());
-	}
-
-	@Override
 	public Collection getIds() {
 		return new ArrayList(this.names.keySet());
 	}

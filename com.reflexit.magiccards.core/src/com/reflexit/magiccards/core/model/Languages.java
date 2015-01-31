@@ -92,7 +92,6 @@ public class Languages implements ISearchableProperty {
 		return FilterField.LANG;
 	}
 
-	@Override
 	public Collection getNames() {
 		return new ArrayList(this.names.values());
 	}

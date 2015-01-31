@@ -70,7 +70,7 @@ public class Colors implements ISearchableProperty {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param abbr
 	 * @param name
 	 * @param cost
@@ -99,7 +99,6 @@ public class Colors implements ISearchableProperty {
 		return instance;
 	}
 
-	@Override
 	public Collection<String> getNames() {
 		return new ArrayList<String>(this.names.values());
 	}

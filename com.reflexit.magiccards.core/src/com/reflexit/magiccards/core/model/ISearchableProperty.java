@@ -7,8 +7,6 @@ public interface ISearchableProperty {
 
 	public FilterField getFilterField();
 
-	public Collection<String> getNames();
-
 	public Collection<String> getIds();
 
 	public String getNameById(String id);

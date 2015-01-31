@@ -529,7 +529,6 @@ public class Editions implements ISearchableProperty {
 		return idToName.get(id);
 	}
 
-	@Override
 	public Collection<String> getNames() {
 		return new ArrayList<String>(this.name2ed.keySet());
 	}

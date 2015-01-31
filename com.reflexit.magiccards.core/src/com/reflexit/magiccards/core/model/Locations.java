@@ -29,18 +29,6 @@ public class Locations implements ISearchableProperty {
 	}
 
 	@Override
-	public Collection<String> getNames() {
-		ModelRoot modelRoot = DataManager.getInstance().getModelRoot();
-		Map map = modelRoot.getLocationsMap();
-		ArrayList<String> list = new ArrayList<String>();
-		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			Location loc = (Location) iterator.next();
-			list.add(loc.toString());
-		}
-		return list;
-	}
-
-	@Override
 	public Collection<String> getIds() {
 		ModelRoot modelRoot = DataManager.getInstance().getModelRoot();
 		Map map = modelRoot.getLocationsMap();
@@ -71,12 +59,6 @@ public class Locations implements ISearchableProperty {
 
 	public boolean isSideboard(String id) {
 		return id.endsWith(Location.SIDEBOARD_SUFFIX);
-	}
-
-	public String getMainDeckId(String id) {
-		if (isSideboard(id))
-			return id.replaceAll(Location.SIDEBOARD_SUFFIX, "");
-		return id;
 	}
 
 	public Location findLocation(String locId) {

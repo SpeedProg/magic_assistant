@@ -41,11 +41,6 @@ public class ColorTypes implements ISearchableProperty {
 	}
 
 	@Override
-	public Collection<String> getNames() {
-		return new ArrayList<String>(this.names.values());
-	}
-
-	@Override
 	public Collection<String> getIds() {
 		return new ArrayList<String>(this.names.keySet());
 	}
