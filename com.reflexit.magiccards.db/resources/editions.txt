@@ -66,18 +66,18 @@ Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern|
 Future Sight|FUT||May 2007|Expansion|Time Spiral|Modern|
 Tenth Edition|10E||July 2007|Core||Modern|10th Edition
 Masters Edition|MED|DM|September 2007|Online|||
-Lorwyn|LRW|LWN|October 2007|Expansion|Lorwyn||
+Lorwyn|LRW|LWN|October 2007|Expansion|Lorwyn|Modern|
 Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter|||
 Morningtide|MOR||February 2008|Expansion|Lorwyn|Modern|
-Shadowmoor|SHM||May 2008|Expansion|Shadowmoor||
-Eventide|EVE||July 2008|Expansion|Shadowmoor||
+Shadowmoor|SHM||May 2008|Expansion|Shadowmoor|Modern|
+Eventide|EVE||July 2008|Expansion|Shadowmoor|Modern|
 Masters Edition II|ME2||September 2008|Online|||
-Shards of Alara|ALA||October 2008|Expansion|Shards of Alara||
+Shards of Alara|ALA||October 2008|Expansion|Shards of Alara|Modern|
 Duel Decks: Jace vs. Chandra|DD2|JVC|November 2008|Starter|||
-Conflux|CON||February 2009|Expansion|Shards of Alara||
+Conflux|CON||February 2009|Expansion|Shards of Alara|Modern|
 Duel Decks: Divine vs. Demonic|DDC|DVD|April 2009|Starter|||
-Alara Reborn|ARB||April 2009|Expansion|Shards of Alara||
-Magic 2010|M10||July 2009|Core|||
+Alara Reborn|ARB||April 2009|Expansion|Shards of Alara|Modern|
+Magic 2010|M10||July 2009|Core||Modern|
 Masters Edition III|ME3||September 2009|Online|||
 Duel Decks: Garruk vs. Liliana|DDD|GVL|October 2009|Starter|||
 Zendikar|ZEN||October 2009|Expansion|Zendikar|Modern|
@@ -128,9 +128,13 @@ Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
 Modern Event Deck 2014|MD1||May 2014|Starter|||
 Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Conspiracy||Conspiracy,Magic: The Gathering - Conspiracy
 Vintage Masters|VMA||June 2014|Online|||
-Magic 2015 Core Set|M15||July 2015|Core||Standard|Magic 2015
-Duel Decks: Speed vs. Cunning|DDN|_Duel_Decks__Speed_vs__Cunning|September 2014|Starter|||
-From the Vault: Annihilation (2014)|V14|_From_the_Vault__Annihilation__2014_|September 2014|Reprint|||
-Khans of Tarkir|KTK|_Khans_of_Tarkir|September 2014|Expansion|Khans of Tarkir|Standard|
+Magic 2015 Core Set|M15||July 2014|Core||Standard|Magic 2015
+Duel Decks: Speed vs. Cunning|DDN||September 2014|Starter|||
+From the Vault: Annihilation (2014)|V14||September 2014|Reprint|||
+Khans of Tarkir|KTK||September 2014|Expansion|Khans of Tarkir|Standard|
 Commander 2014|C14||November 2014|Starter|||
-Fate Reforged|FRF||January 2015|Expansion|Khans of Tarkir||
+Fate Reforged|FRF||January 2015|Expansion|Khans of Tarkir|Standard|
+Duel Decks Anthology, Divine vs. Demonic|DD3_DVD||February 2015|Starter|||
+Duel Decks Anthology, Elves vs. Dragons|DD3_EVG||February 2015|Starter|||
+Duel Decks Anthology, Garruk vs. Liliana|DD3_GVL||February 2015|Starter|||
+Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|||
