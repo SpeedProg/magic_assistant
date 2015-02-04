@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportError;
 import com.reflexit.magiccards.core.exports.ImportResult;
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -166,7 +165,7 @@ public class DeckImportPreviewPage extends WizardPage {
 				public Color getForeground(Object element) {
 					IMagicCard card = (IMagicCard) element;
 					if (card.getCardId() == 0) {
-						if (Editions.getInstance().getEditionByName(card.getSet()) != null)
+						if (!card.getEdition().isUnknown())
 							return Display.getDefault().getSystemColor(SWT.COLOR_RED);
 					}
 					return super.getForeground(element);

@@ -136,7 +136,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 			if (candidates.size() > 0) {
 				for (Iterator iterator = candidates.iterator(); iterator.hasNext();) {
 					IMagicCard base = (IMagicCard) iterator.next();
-					Edition ed2 = Editions.getInstance().getEditionByName(base.getSet());
+					Edition ed2 = base.getEdition();
 					String abbr2 = ed2.getMainAbbreviation();
 					// String extra = ed2.getExtraAbbreviations();
 					// System.err.println("Looking for " + card.getName() + " from " + abbr +

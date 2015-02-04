@@ -12,7 +12,6 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -31,9 +30,9 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
  * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no physical media
- * 
+ *
  * @author Alena
- * 
+ *
  * @param <T>
  */
 public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
@@ -49,7 +48,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.core.model.IFilteredCardStore#getSize()
 	 */
 	@Override
@@ -261,9 +260,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				if (old == null) {
 					unique.put(card.getName(), card);
 				} else {
-					Edition oldE = Editions.getInstance().getEditionByName(old.getSet());
-					Edition newE = Editions.getInstance().getEditionByName(card.getSet());
-					if (oldE != null && newE != null && oldE.getReleaseDate() != null
+					Edition oldE = old.getEdition();
+					Edition newE = card.getEdition();
+					if (oldE.getReleaseDate() != null
 							&& newE.getReleaseDate() != null) {
 						if (oldE.getReleaseDate().before(newE.getReleaseDate())) {
 							unique.put(card.getName(), card);

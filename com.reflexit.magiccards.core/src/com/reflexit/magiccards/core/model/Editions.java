@@ -242,6 +242,10 @@ public class Editions implements ISearchableProperty {
 		public void setLegalityMap(LegalityMap lm) {
 			legalityMap = lm;
 		}
+
+		public boolean isUnknown() {
+			return false;
+		}
 	}
 
 	private Editions() {
@@ -259,7 +263,12 @@ public class Editions implements ISearchableProperty {
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
-		unknown = new Edition("Unknown", "???");
+		unknown = new Edition("Unknown", "???") {
+			@Override
+			public boolean isUnknown() {
+				return true;
+			}
+		};
 		unknown.setBlock("Unknown");
 		unknown.setReleaseDate(new Date());
 	}

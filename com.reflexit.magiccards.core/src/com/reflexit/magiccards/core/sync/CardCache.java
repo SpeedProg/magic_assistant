@@ -20,10 +20,8 @@ import java.util.ArrayList;
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.NotNull;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
@@ -77,11 +75,7 @@ public class CardCache {
 
 	@NotNull
 	public static String createLocalImageFilePath(IMagicCard card) {
-		int cardId = card.getCardId();
-		Edition set = Editions.getInstance().getEditionByName(card.getSet());
-		if (set == null)
-			MagicLogger.log("Cannot determine set for " + card.getSet());
-		return createLocalImageFilePath(cardId, set == null ? null : set.getMainAbbreviation());
+		return createLocalImageFilePath(card.getCardId(), card.getEdition().getMainAbbreviation());
 	}
 
 	@NotNull

@@ -349,6 +349,10 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 
 	@Override
 	public Edition getEdition() {
-		return Editions.getInstance().getEditionByNameAlways(getSet());
+		return ed().getEditionByNameAlways(getSet());
+	}
+
+	protected Editions ed() {
+		return Editions.getInstance();
 	}
 }

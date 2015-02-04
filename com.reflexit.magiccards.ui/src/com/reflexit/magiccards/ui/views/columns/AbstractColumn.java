@@ -43,6 +43,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
+		if (!visible) return "";
 		if (element instanceof ICard) {
 			ICard card = (ICard) element;
 			try {

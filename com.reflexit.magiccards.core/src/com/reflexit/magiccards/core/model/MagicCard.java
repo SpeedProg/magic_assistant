@@ -18,6 +18,7 @@ import com.reflexit.magiccards.core.sync.GatherHelper;
 
 public class MagicCard extends AbstractMagicCard {
 	private int id;
+	private int enId;
 	private String name;
 	private String cost;
 	private String type;
@@ -27,14 +28,13 @@ public class MagicCard extends AbstractMagicCard {
 	private String rarity;
 	private String oracleText;
 	private String artist;
-	private float rating;
 	private String lang;
 	private String num;
 	private String rulings;
 	private String text;
+	private float rating;
 	private transient String colorType = "land";
 	private transient int cmc = 0;
-	private int enId;
 	private LinkedHashMap<ICardField, Object> properties;
 
 	public MagicCard() {
@@ -45,7 +45,7 @@ public class MagicCard extends AbstractMagicCard {
 	public String getCost() {
 		if (cost == null)
 			return "";
-		return this.cost;
+		return cost;
 	}
 
 	public synchronized void setCost(String cost) {
@@ -310,7 +310,7 @@ public class MagicCard extends AbstractMagicCard {
 
 	/**
 	 * Copy all fields which have default values in this card from given card
-	 * 
+	 *
 	 * @param card
 	 */
 	public void setEmptyFromCard(IMagicCard card) {
@@ -546,13 +546,19 @@ public class MagicCard extends AbstractMagicCard {
 		return false;
 	}
 
+	/**
+	 * create syntetic id
+	 * Local db bitset
+	 * [t2][s15][l4][v1][i10]
+	 *
+	 * @return
+	 */
 	public int syntesizeId() {
-		MagicCard card = this;
-		Edition ed = Editions.getInstance().getEditionByName(card.getSet());
-		if (ed == null) {
+		Edition ed = getEdition();
+		if (ed.isUnknown()) {
 			throw new IllegalStateException("Set is not registered for the card");
 		}
-		int sid = 1 << 31 | (ed.getId() & 0x7f) << 15 | card.getSide() << 10 | card.getCollectorNumberId();
+		int sid = 1 << 31 | (ed.getId() & 0x7f) << 15 | getSide() << 10 | getCollectorNumberId();
 		return sid;
 	}
 
@@ -594,9 +600,8 @@ public class MagicCard extends AbstractMagicCard {
 	private LegalityMap induceLegality() {
 		if (isBasicLand())
 			return LegalityMap.createFromLegal(Format.STANDARD.name());
-		String set = getSet();
-		Edition edition = Editions.getInstance().getEditionByName(set);
-		if (edition == null)
+		Edition edition = getEdition();
+		if (edition.isUnknown())
 			return LegalityMap.EMPTY;
 		LegalityMap legalityMap = edition.getLegalityMap();
 		if (legalityMap == null)
