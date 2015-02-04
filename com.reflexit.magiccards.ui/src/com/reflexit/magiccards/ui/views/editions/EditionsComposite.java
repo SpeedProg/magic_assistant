@@ -51,18 +51,18 @@ import com.reflexit.magiccards.ui.utils.ImageCreator;
 /**
  * Composite that contains checked tree selection for editions. If supplied with preferenceStore can
  * be also used as field editor
- * 
+ *
  * <code>
  * c = new EditionsComposite(parent,SWT.CHECK | SWT.BORDER);
  * c.setPreferenceStore(store);
  * c.initialize();
  * ...
  * // when user pressed ok in dialog call this to store values in preference store
- * c.performApply(); 
+ * c.performApply();
  * </code>
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class EditionsComposite extends Composite {
 	private static final String SORT_DIRECTION = "set_sort_direction";
@@ -207,23 +207,10 @@ public class EditionsComposite extends Composite {
 				return ImageCreator.getInstance().getSetImage(fake);
 			}
 		});
-		columns.add(new AbstractEditionColumn("Abbr", EditionField.NAME) {
-			@Override
-			public String getText(Object element) {
-				Editions.Edition ed = (Edition) element;
-				String abbrs = ed.getMainAbbreviation();
-				if (ed.getExtraAbbreviations().length() > 0)
-					abbrs += " (" + ed.getExtraAbbreviations() + ")";
-				return abbrs;
-			}
-
-			@Override
-			public int getColumnWidth() {
-				return 100;
-			}
-		});
+		columns.add(new AbbrColumn());
 		columns.add(new DateColumn());
 		columns.add(new TypeColumn());
+		columns.add(new BlockColumn());
 		columns.add(new FormatColumn());
 	}
 

@@ -9,7 +9,8 @@ public enum EditionField implements ICardField {
 	NAME,
 	DATE("release"),
 	TYPE,
-	FORMAT("legalityMap")
+	FORMAT("legalityMap"),
+	BLOCK
 	// end
 	;
 	private final String tag;

@@ -40,19 +40,24 @@ public class EditionsComparator implements Comparator<Edition> {
 				String t2 = a2.getType();
 				if (t1 != null && t2 != null) {
 					d = t1.compareTo(t2);
-					if (d == 0) {
-						return compare(a1, a2, EditionField.DATE, 1);
-					}
+				}
+				break;
+			}
+			case BLOCK: {
+				String t1 = a1.getBlock();
+				String t2 = a2.getBlock();
+				if (t1 != null && t2 != null) {
+					d = t1.compareTo(t2);
 				}
 				break;
 			}
 			case FORMAT: {
 				d = a1.getLegalityMap().compareTo(a2.getLegalityMap());
-				if (d == 0) {
-					return compare(a1, a2, EditionField.DATE, -dir);
-				}
 			}
 				break;
+		}
+		if (d == 0 && field != EditionField.DATE) {
+			d = compare(a1, a2, EditionField.DATE, -1);
 		}
 		if (d == 0)
 			d = (System.identityHashCode(a1) - System.identityHashCode(a2));

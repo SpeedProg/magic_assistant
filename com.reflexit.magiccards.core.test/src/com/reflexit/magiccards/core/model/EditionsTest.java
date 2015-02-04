@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -15,7 +16,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {
-	private static final int EDITIONS_SIZE = 136;
+	private static final int EDITIONS_SIZE = 140;
 	private static final String EDITIONS_FILE = Editions.EDITIONS_FILE;
 	protected Editions editions;
 
@@ -146,5 +147,41 @@ public class EditionsTest extends TestCase {
 		editions.init();
 		Collection<Edition> editionsList = editions.getEditions();
 		assertEquals(EDITIONS_SIZE, editionsList.size());
+	}
+
+	@Test
+	public void testBlocks() {
+		Collection<Edition> list = editions.getEditions();
+		assertEquals(EDITIONS_SIZE, list.size());
+		for (Edition edition : list) {
+			String block = edition.getBlock();
+			assertNotNull(block);
+			String type = edition.getType();
+			assertNotNull(type);
+			assertFalse(type.isEmpty());
+			String dd = "Duel Decks";
+			String ftv = "From the Vault";
+			if (edition.getName().startsWith(dd)) {
+				assertTrue("Expected " + dd + " but was " + block, block.equals(dd));
+				assertTrue("Expected " + ftv + " but was " + type,
+						type.equals("Starter"));
+			} else if (edition.getName().startsWith(ftv)) {
+				assertTrue("Expected " + ftv + " but was " + block, block.equals(ftv));
+				assertTrue("Expected " + ftv + " but was " + type,
+						type.equals("Reprint"));
+			} else
+				assertTrue("Expected type but was " + type, type.equals("Core")
+						|| type.equals("Expansion")
+						|| type.equals("Reprint")
+						|| type.equals("Starter")
+						|| type.equals("Online")
+						|| type.equals("Modifiers")
+						|| type.equals("Un_set")
+				//
+				);
+			assertNotNull("Bad date " + edition, edition.getReleaseDate());
+			Date now = new Date();
+			assertFalse("Release date in future " + edition, now.before(edition.getReleaseDate()));
+		}
 	}
 }

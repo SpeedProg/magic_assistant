@@ -2,19 +2,19 @@ package com.reflexit.magiccards.ui.views.editions;
 
 import com.reflexit.magiccards.core.model.Editions.Edition;
 
-final class TypeColumn extends AbstractEditionColumn {
-	TypeColumn() {
-		super("Type", EditionField.TYPE);
+final class BlockColumn extends AbstractEditionColumn {
+	BlockColumn() {
+		super("Block", EditionField.BLOCK);
 	}
 
 	@Override
 	public String getText(Object element) {
 		Edition ed = (Edition) element;
-		return ed.getType();
+		return ed.getBlock();
 	}
 
 	@Override
 	public void setText(Edition edition, String string) {
-		edition.setType(string);
+		edition.setBlock(string);
 	}
 }
