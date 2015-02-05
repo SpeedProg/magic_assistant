@@ -1,0 +1,303 @@
+<tournament>
+  <name>aaa</name>
+  <players>
+    <pTour>
+      <player>
+        <id>f0</id>
+        <name>Player 1</name>
+        <points>3</points>
+        <games>1</games>
+      </player>
+      <roundsWon>1</roundsWon>
+      <roundsDrawn>0</roundsDrawn>
+      <roundsLost>0</roundsLost>
+      <points>3</points>
+      <matches>1</matches>
+      <active>true</active>
+      <place>1</place>
+      <opponents>
+        <player>
+          <id>f1</id>
+          <name>Player 2</name>
+          <points>1</points>
+          <games>1</games>
+        </player>
+        <player>
+          <id>f2</id>
+          <name>Player 3</name>
+          <points>3</points>
+          <games>2</games>
+        </player>
+      </opponents>
+      <gamesWon>2</gamesWon>
+      <gamesLost>1</gamesLost>
+      <gamesDrawn>0</gamesDrawn>
+      <omw>33.0</omw>
+      <ogw>42.0</ogw>
+      <pgw>66.0</pgw>
+      <byes/>
+    </pTour>
+    <pTour>
+      <player reference="../../pTour/opponents/player"/>
+      <roundsWon>0</roundsWon>
+      <roundsDrawn>1</roundsDrawn>
+      <roundsLost>0</roundsLost>
+      <points>1</points>
+      <matches>1</matches>
+      <active>true</active>
+      <place>4</place>
+      <opponents>
+        <player reference="../../../pTour/player"/>
+        <player>
+          <id>f3</id>
+          <name>Player 4</name>
+          <points>1</points>
+          <games>2</games>
+        </player>
+      </opponents>
+      <gamesWon>1</gamesWon>
+      <gamesLost>1</gamesLost>
+      <gamesDrawn>1</gamesDrawn>
+      <omw>33.0</omw>
+      <ogw>37.0</ogw>
+      <pgw>33.0</pgw>
+      <byes/>
+    </pTour>
+    <pTour>
+      <player reference="../../pTour/opponents/player[2]"/>
+      <roundsWon>1</roundsWon>
+      <roundsDrawn>0</roundsDrawn>
+      <roundsLost>1</roundsLost>
+      <points>3</points>
+      <matches>2</matches>
+      <active>true</active>
+      <place>3</place>
+      <opponents>
+        <player reference="../../../pTour/player"/>
+        <player reference="../../../pTour[2]/opponents/player[2]"/>
+        <com.reflexit.mtgtournament.core.model.Player_-1>
+          <id>---</id>
+          <name>(dummy)</name>
+          <points>0</points>
+          <games>0</games>
+        </com.reflexit.mtgtournament.core.model.Player_-1>
+      </opponents>
+      <gamesWon>2</gamesWon>
+      <gamesLost>2</gamesLost>
+      <gamesDrawn>0</gamesDrawn>
+      <omw>33.0</omw>
+      <ogw>37.0</ogw>
+      <pgw>50.0</pgw>
+      <byes/>
+    </pTour>
+    <pTour>
+      <player reference="../../pTour[2]/opponents/player[2]"/>
+      <roundsWon>0</roundsWon>
+      <roundsDrawn>1</roundsDrawn>
+      <roundsLost>1</roundsLost>
+      <points>1</points>
+      <matches>2</matches>
+      <active>true</active>
+      <place>5</place>
+      <opponents>
+        <player>
+          <id>id1</id>
+          <name>Alena</name>
+          <points>3</points>
+          <games>1</games>
+        </player>
+        <player reference="../../../pTour/opponents/player"/>
+        <player reference="../../../pTour/opponents/player[2]"/>
+      </opponents>
+      <gamesWon>1</gamesWon>
+      <gamesLost>3</gamesLost>
+      <gamesDrawn>1</gamesDrawn>
+      <omw>50.0</omw>
+      <ogw>55.0</ogw>
+      <pgw>20.0</pgw>
+      <byes/>
+    </pTour>
+    <pTour>
+      <player reference="../../pTour[4]/opponents/player"/>
+      <roundsWon>1</roundsWon>
+      <roundsDrawn>0</roundsDrawn>
+      <roundsLost>0</roundsLost>
+      <points>3</points>
+      <matches>1</matches>
+      <active>true</active>
+      <place>2</place>
+      <opponents>
+        <player reference="../../../pTour[2]/opponents/player[2]"/>
+      </opponents>
+      <gamesWon>2</gamesWon>
+      <gamesLost>0</gamesLost>
+      <gamesDrawn>0</gamesDrawn>
+      <omw>0.0</omw>
+      <ogw>20.0</ogw>
+      <pgw>100.0</pgw>
+      <byes/>
+    </pTour>
+  </players>
+  <rounds>
+    <round>
+      <type>RANDOM</type>
+      <tables>
+        <table>
+          <table>1</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/opponents/player"/>
+              <gamesWon>-1</gamesWon>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/opponents/player[2]"/>
+              <gamesWon>-1</gamesWon>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+        <table>
+          <table>2</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour[2]/opponents/player[2]"/>
+              <gamesWon>-1</gamesWon>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/player"/>
+              <gamesWon>-1</gamesWon>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+      </tables>
+      <dateStart>2015-02-05 02:01:26.220 UTC</dateStart>
+      <dateEnd>2015-02-05 02:10:45.297 UTC</dateEnd>
+    </round>
+    <round>
+      <type>RANDOM</type>
+      <tables>
+        <table>
+          <table>1</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/player"/>
+              <gamesWon>2</gamesWon>
+              <r>WIN</r>
+              <gamesLost>1</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/opponents/player[2]"/>
+              <gamesWon>1</gamesWon>
+              <r>LOOSE</r>
+              <gamesLost>2</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+        <table>
+          <table>2</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/opponents/player"/>
+              <gamesWon>1</gamesWon>
+              <r>DRAW</r>
+              <gamesLost>1</gamesLost>
+              <gamesDraw>1</gamesDraw>
+            </pRound>
+            <pRound>
+              <p reference="../../../../../../../players/pTour[2]/opponents/player[2]"/>
+              <gamesWon>1</gamesWon>
+              <r>DRAW</r>
+              <gamesLost>1</gamesLost>
+              <gamesDraw>1</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+      </tables>
+      <dateStart>2015-02-05 02:01:48.147 UTC</dateStart>
+      <dateEnd>2015-02-05 02:10:45.298 UTC</dateEnd>
+    </round>
+    <round>
+      <type>RANDOM</type>
+      <tables>
+        <table>
+          <table>1</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/player"/>
+              <gamesWon>-1</gamesWon>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/opponents/player"/>
+              <gamesWon>-1</gamesWon>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+        <table>
+          <table>2</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour[4]/opponents/player"/>
+              <gamesWon>2</gamesWon>
+              <r>WIN</r>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+            <pRound>
+              <p reference="../../../../../../../players/pTour[2]/opponents/player[2]"/>
+              <gamesWon>0</gamesWon>
+              <r>LOOSE</r>
+              <gamesLost>2</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+        <table>
+          <table>3</table>
+          <pi>
+            <pRound>
+              <p reference="../../../../../../../players/pTour/opponents/player[2]"/>
+              <gamesWon>1</gamesWon>
+              <r>WIN</r>
+              <gamesLost>0</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+            <pRound>
+              <p class="com.reflexit.mtgtournament.core.model.Player$1" reference="../../../../../../../players/pTour[3]/opponents/com.reflexit.mtgtournament.core.model.Player_-1"/>
+              <gamesWon>0</gamesWon>
+              <r>LOOSE</r>
+              <gamesLost>1</gamesLost>
+              <gamesDraw>0</gamesDraw>
+            </pRound>
+          </pi>
+        </table>
+      </tables>
+      <dateStart>2015-02-05 02:10:45.298 UTC</dateStart>
+      <dateEnd reference="../dateStart"/>
+    </round>
+    <round>
+      <type>RANDOM</type>
+      <tables/>
+      <dateStart>2015-02-05 02:10:45.298 UTC</dateStart>
+      <dateEnd reference="../dateStart"/>
+    </round>
+  </rounds>
+  <numberOfRounds>3</numberOfRounds>
+  <type>RANDOM</type>
+  <draftRound>true</draftRound>
+  <scheduled>true</scheduled>
+  <closed>true</closed>
+  <opponentsPerGame>2</opponentsPerGame>
+</tournament>

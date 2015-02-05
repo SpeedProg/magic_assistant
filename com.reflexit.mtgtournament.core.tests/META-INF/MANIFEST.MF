@@ -8,5 +8,7 @@ Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  com.reflexit.mtgtournament.core
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ src/
