@@ -6,7 +6,6 @@ Bundle-Version: 1.4.1.qualifier
 Bundle-Activator: com.reflexit.mtgtournament.core.Activator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime,
- com.reflexit.magiccards.core;bundle-version="1.0.5",
  org.eclipse.core.resources;bundle-version="3.4.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
@@ -15,3 +14,7 @@ Export-Package: com.reflexit.mtgtournament.core,
  com.reflexit.mtgtournament.core.model,
  com.reflexit.mtgtournament.core.schedule,
  com.reflexit.mtgtournament.core.xml
+Bundle-ClassPath: .,
+ lib/xstream-1.4.2.jar,
+ lib/xmlpull-1.1.3.1.jar,
+ lib/xpp3_min-1.1.4c.jar
