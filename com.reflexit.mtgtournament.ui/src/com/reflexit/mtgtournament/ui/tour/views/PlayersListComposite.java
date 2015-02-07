@@ -37,12 +37,15 @@ public class PlayersListComposite extends Composite {
 	private TableSorter tableSorter;
 
 	class ViewContentProvider implements IStructuredContentProvider {
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
@@ -64,11 +67,13 @@ public class PlayersListComposite extends Composite {
 			return super.getText(element);
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof Player) {
 				Player p = (Player) element;
@@ -210,21 +215,32 @@ public class PlayersListComposite extends Composite {
 					case 1:
 						rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
 						break;
-					case 2:
+					case 2://Place
 						rc = p1.getPlace() - p2.getPlace();
 						break;
-					case 3:
-						rc = p1.getPoints() - p2.getPoints();
+					case 3://Points
+						rc = p1.getPlace() - p2.getPlace();
 						break;
-					case 4:
-						rc = p1.getWin() - p2.getWin();
+					case 4://W-D-L
+						rc = p1.getPlace() - p2.getPlace();
 						break;
 					case 5:
 						rc = p1.getRoundsPlayed() - p2.getRoundsPlayed();
 						break;
+					case 6: // OMW
+						rc = (int) Math.signum(p1.getOMW() - p2.getOMW());
+						break;
+					case 7: // PGW
+						rc = (int) Math.signum(p1.getPGW() - p2.getPGW());
+						break;
+					case 8: // OGW
+						rc = (int) Math.signum(p1.getOGW() - p2.getOGW());
+						break;
 					default:
 						rc = 0;
 				}
+				if (rc == 0)
+					rc = p1.getPlace() - p2.getPlace();
 			}
 			// If descending order, flip the direction
 			if (direction == DESCENDING) {
