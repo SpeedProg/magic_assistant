@@ -278,11 +278,11 @@ public class Tournament {
 		if (a.getRoundsPlayed() != b.getRoundsPlayed())
 			return a.getRoundsPlayed() - b.getRoundsPlayed();
 		if (a.getOMW() != b.getOMW())
-			return (int) (b.getOMW() - a.getOMW());
+			return (int) Math.signum(b.getOMW() - a.getOMW());
 		if (a.getPGW() != b.getPGW())
-			return (int) (b.getPGW() - a.getPGW());
+			return (int) Math.signum(b.getPGW() - a.getPGW());
 		if (a.getOGW() != b.getOGW())
-			return (int) (b.getOGW() - a.getOGW());
+			return (int) Math.signum(b.getOGW() - a.getOGW());
 		return 0;
 	}
 
