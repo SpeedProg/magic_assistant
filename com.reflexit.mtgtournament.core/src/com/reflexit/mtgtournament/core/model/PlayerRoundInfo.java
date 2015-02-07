@@ -111,4 +111,12 @@ public class PlayerRoundInfo {
 	public void setTableInfo(TableInfo tableInfo2) {
 		tableInfo = tableInfo2;
 	}
+
+	public static Player[] toPlayers(PlayerRoundInfo... ptis) {
+		Player[] res = new Player[ptis.length];
+		for (int i = 0; i < ptis.length; i++) {
+			res[i] = ptis[i].getPlayer();
+		}
+		return res;
+	}
 }

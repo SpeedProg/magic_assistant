@@ -22,7 +22,7 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class EliminationScheduler extends AbstractScheduler {
 	@Override
@@ -44,12 +44,13 @@ public class EliminationScheduler extends AbstractScheduler {
 		int x = t.getNumberOfRounds();
 		if (x == 0) {
 			int p = t.getNumberOfPlayers();
+			int opp = t.getOpponentsPerGame();
 			while (p > 1) {
-				if (p % 2 == 0) {
-					p = p / 2;
+				if (p % opp == 0) {
+					p = p / opp;
 					x++;
 				} else {
-					p = p + 1;
+					p = p + p % opp;
 					// x++;
 				}
 			}
@@ -59,12 +60,14 @@ public class EliminationScheduler extends AbstractScheduler {
 
 	@Override
 	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
+		if (players.size() == 0) return;
 		int pow = r.getTournament().getNumberOfRounds() - r.getNumber() + 1;
+		int opp = r.getOpponentsPerGame();
 		int val = 1;
 		for (int i = 1; i < pow; i++) {
-			val = val * 2;
+			val = val * opp;
 		}
-		val = val * 2;
+		val = val * opp;
 		// number of players needed for round.
 		// if more delete extra
 		while (players.size() > val) {
@@ -72,14 +75,19 @@ public class EliminationScheduler extends AbstractScheduler {
 		}
 		// if less than required add dummies
 		while (players.size() < val) {
-			players.add(new PlayerTourInfo(Player.DUMMY));
+			addDummy(players);
 		}
 		while (players.size() > 0) {
+			Player res[] = new Player[opp];
 			PlayerTourInfo pti1 = players.get(0);
-			PlayerTourInfo pti2 = players.get(players.size() - 1);
-			addTable(r, pti1, pti2);
+			res[0] = pti1.getPlayer();
 			players.remove(pti1);
-			players.remove(pti2);
+			for (int i = 1; i < opp; i++) {
+				PlayerTourInfo pti2 = players.get(players.size() - 1);
+				players.remove(pti2);
+				res[i] = pti2.getPlayer();
+			}
+			addTable(r, res);
 		}
 	}
 }

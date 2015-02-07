@@ -23,13 +23,14 @@ public class Tournament {
 	private Date dateStart;
 	private Date dateEnd;
 	private String comment;
-	private List<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>();
-	private List<Round> rounds = new ArrayList<Round>();
 	private int numberOfRounds;
 	private TournamentType type;
 	private boolean draftRound;
 	private boolean scheduled;
 	private boolean closed;
+	private int opponentsPerGame;
+	private List<PlayerTourInfo> players = new ArrayList<PlayerTourInfo>();
+	private List<Round> rounds = new ArrayList<Round>();
 
 	public Tournament() {
 	}
@@ -39,6 +40,7 @@ public class Tournament {
 		this.type = TournamentType.ROUND_ROBIN;
 		this.numberOfRounds = 4;
 		this.draftRound = true;
+		this.opponentsPerGame = 2;
 	}
 
 	public void updateLinks() {
@@ -66,7 +68,7 @@ public class Tournament {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rounds
 	 *            - number of round, 0 if optimal (max for RR)
 	 */
@@ -130,8 +132,7 @@ public class Tournament {
 		for (Object element : tables) {
 			TableInfo tableInfo = (TableInfo) element;
 			int count = 0;
-			for (int i = 0; i < tableInfo.getPlayerRoundInfo().length; i++) {
-				PlayerRoundInfo pi = tableInfo.getPlayerRoundInfo()[i];
+			for (PlayerRoundInfo pi : tableInfo.getPlayerRoundInfo()) {
 				if (pi.getPlayer() == p1)
 					count++;
 				else if (pi.getPlayer() == p2)
@@ -344,5 +345,14 @@ public class Tournament {
 
 	public int getPointsPerLoss() {
 		return PreferenceConstants.getStore().getInt(PreferenceConstants.P_LOOSE, 0);
+	}
+
+	public int getOpponentsPerGame() {
+		if (opponentsPerGame <= 1) return 2;
+		return opponentsPerGame;
+	}
+
+	public void setOpponentsPerGame(int opponentsPerGame) {
+		this.opponentsPerGame = opponentsPerGame;
 	}
 }

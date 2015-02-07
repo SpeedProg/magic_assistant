@@ -10,27 +10,44 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.model;
 
+import java.util.Arrays;
+
 public class TableInfo {
 	private transient Round round;
-	private int table;
+	private transient int table;
 	private PlayerRoundInfo[] pi;
 
-	public TableInfo(PlayerRoundInfo p1, PlayerRoundInfo p2) {
+	public TableInfo(PlayerRoundInfo... opponents) {
 		super();
+		if (opponents.length < 2)
+			throw new IllegalArgumentException("Minimum 2 oppoents are expecteds");
 		this.table = -1;
-		pi = new PlayerRoundInfo[2];
-		this.setPlayerInfo(1, p1);
-		this.setPlayerInfo(2, p2);
-		p1.setTableInfo(this);
-		p2.setTableInfo(this);
+		this.pi = opponents;
+		this.round = opponents[0].round;
+		for (PlayerRoundInfo pri : opponents) {
+			pri.setTableInfo(this);
+		}
+	}
+
+	public TableInfo(Round round, Player... ps) {
+		this.round = round;
+		PlayerRoundInfo pi[] = new PlayerRoundInfo[ps.length];
+		for (int i = 0; i < ps.length; i++) {
+			pi[i] = round.createOpponentInfo(ps[i]);
+			pi[i].setTableInfo(this);
+		}
+	}
+
+	public int getOpponentsPerGame() {
+		return pi.length;
 	}
 
 	@Override
 	public String toString() {
 		if (pi.length == 2)
-			return table + ": " + getPlayerInfo(1) + " vs " + getPlayerInfo(2);
+			return table + ": " + getOpponent(0) + " vs " + getOpponent(1);
 		else
-			return table + ": " + pi;
+			return table + ": " + Arrays.asList(pi);
 	}
 
 	public int getTableNumber() {
@@ -41,8 +58,9 @@ public class TableInfo {
 		return round;
 	}
 
-	public PlayerRoundInfo getPlayerInfo(int i) {
-		return pi[i - 1];
+	public PlayerRoundInfo getOpponent(int i) {
+		if (i >= pi.length || i < 0) return null;
+		return pi[i];
 	}
 
 	/**
@@ -53,17 +71,6 @@ public class TableInfo {
 		this.round = round;
 	}
 
-	/**
-	 * @param p1
-	 *            the p1 to set
-	 */
-	public void setPlayerInfo(int i, PlayerRoundInfo p1) {
-		this.pi[i - 1] = p1;
-	}
-
-	/**
-	 * 
-	 */
 	public void updateLinks() {
 		for (PlayerRoundInfo pp : pi) {
 			Player np = round.getTournament().findPlayer(pp.getPlayer());

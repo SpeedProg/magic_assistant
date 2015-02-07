@@ -27,7 +27,7 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
- * 
+ *
  */
 public abstract class AbstractScheduler implements IScheduler {
 	public void schedule(Tournament t) {
@@ -79,8 +79,8 @@ public abstract class AbstractScheduler implements IScheduler {
 			throw new IllegalStateException("No players");
 		scheduleByes(r, players);
 		sortForScheduling(players);
-		// add dummy
-		addEvenDummy(players);
+		// add dummies
+		addDummies(players, r.getOpponentsPerGame());
 		scheduleRound(r, players);
 		dummyLooses(r);
 	}
@@ -103,8 +103,8 @@ public abstract class AbstractScheduler implements IScheduler {
 		}
 	}
 
-	protected void addEvenDummy(List<PlayerTourInfo> players) {
-		if (players.size() % 2 == 1) {
+	protected final void addDummies(List<PlayerTourInfo> players, int opponentsPerGame) {
+		while (players.size() % opponentsPerGame != 0) {
 			addDummy(players);
 		}
 	}
@@ -117,7 +117,7 @@ public abstract class AbstractScheduler implements IScheduler {
 
 	/**
 	 * @param r
-	 * 
+	 *
 	 */
 	protected void dummyLooses(Round r) {
 		if (r.getNumber() == 0)
@@ -145,8 +145,14 @@ public abstract class AbstractScheduler implements IScheduler {
 		}
 	}
 
-	protected CmdAddTable addTable(Round r, PlayerTourInfo pti1, PlayerTourInfo pti2) {
-		CmdAddTable com = new CmdAddTable(r, pti1.getPlayer(), pti2.getPlayer());
+	protected CmdAddTable addTable(Round r, PlayerTourInfo... ptis) {
+		CmdAddTable com = new CmdAddTable(r, PlayerTourInfo.toPlayers(ptis));
+		com.execute();
+		return com;
+	}
+
+	protected CmdAddTable addTable(Round r, Player... ps) {
+		CmdAddTable com = new CmdAddTable(r, ps);
 		com.execute();
 		return com;
 	}

@@ -25,7 +25,7 @@ import com.reflexit.mtgtournament.core.model.TournamentType;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class SwissSchedule extends AbstractScheduler {
 	class StateInfo {
@@ -43,7 +43,12 @@ public class SwissSchedule extends AbstractScheduler {
 
 	@Override
 	protected void scheduleRound(Round r, List<PlayerTourInfo> players) {
-		addEvenDummy(players);
+		int opp = r.getOpponentsPerGame();
+		if (opp != 2)
+			throw new IllegalArgumentException("Cannot schedule swiss for " + opp
+					+ " opponents, this only works for 2 opponents");
+		int roundNumber = r.getNumber();
+		addDummies(players, opp);
 		// prepare undo stack
 		Tournament t = r.getTournament();
 		Stack<StateInfo> stack = new Stack<StateInfo>();
@@ -56,7 +61,7 @@ public class SwissSchedule extends AbstractScheduler {
 			for (; paired == false && cand < players.size(); cand++) {
 				PlayerTourInfo pti2 = players.get(cand);
 				Player p2 = pti2.getPlayer();
-				if (!t.hasPlayed(p1, p2, r.getNumber() - 1)) {
+				if (!t.hasPlayed(p1, p2, roundNumber - 1)) {
 					// command to schedule a table
 					CmdAddTable com = addTable(r, pti1, pti2);
 					// save backtracking info

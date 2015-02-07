@@ -20,26 +20,37 @@ import com.reflexit.mtgtournament.core.model.TableInfo;
  */
 public class CmdAddTable implements ITCommand {
 	private TableInfo tableInfo;
-	private Round round;
 
-	public CmdAddTable(Round round, Player p1, Player p2) {
+	public CmdAddTable(Round round, Player... ps) {
 		super();
-		PlayerRoundInfo pr1 = round.makePlayer(p1);
-		PlayerRoundInfo pr2 = round.makePlayer(p2);
-		this.round = round;
-		tableInfo = new TableInfo(pr1, pr2);
+		if (ps.length < 2) throw new IllegalArgumentException("Minium 2 opponents are required");
+		PlayerRoundInfo pi[] = new PlayerRoundInfo[ps.length];
+		for (int i = 0; i < ps.length; i++) {
+			pi[i] = round.createOpponentInfo(ps[i]);
+		}
+		tableInfo = new TableInfo(pi);
+	}
+
+	public CmdAddTable(PlayerRoundInfo... ps) {
+		super();
+		if (ps.length < 2) throw new IllegalArgumentException("Minium 2 opponents are required");
+		tableInfo = new TableInfo(ps);
 	}
 
 	public boolean execute() {
-		round.addTable(tableInfo);
+		getRound().addTable(tableInfo);
 		return true;
+	}
+
+	public boolean undo() {
+		return getRound().getTables().remove(tableInfo);
 	}
 
 	public TableInfo getTableInfo() {
 		return tableInfo;
 	}
 
-	public boolean undo() {
-		return tableInfo.getRound().getTables().remove(tableInfo);
+	public Round getRound() {
+		return tableInfo.getRound();
 	}
 }

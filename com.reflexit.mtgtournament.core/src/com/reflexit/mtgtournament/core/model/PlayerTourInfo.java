@@ -217,7 +217,7 @@ public class PlayerTourInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void updatePoints() {
 		points = roundsWon * getTournament().getPointsPerWin() + roundsDrawn
@@ -226,7 +226,7 @@ public class PlayerTourInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void resetPoints() {
 		roundsWon = 0;
@@ -250,7 +250,7 @@ public class PlayerTourInfo {
 
 	/**
 	 * Return list of opponents this player faced in this tournament
-	 * 
+	 *
 	 * @return
 	 */
 	public Set<Player> getOpponents() {
@@ -302,5 +302,13 @@ public class PlayerTourInfo {
 		if (b == null)
 			return false;
 		return b;
+	}
+
+	public static Player[] toPlayers(PlayerTourInfo... ptis) {
+		Player[] res = new Player[ptis.length];
+		for (int i = 0; i < ptis.length; i++) {
+			res[i] = ptis[i].getPlayer();
+		}
+		return res;
 	}
 }

@@ -46,7 +46,7 @@ public class ChangePartnerDialog extends TrayDialog {
 		comp.setLayout(new GridLayout());
 		GridDataFactory hor = GridDataFactory.fillDefaults().grab(true, false);
 		Label label = new Label(comp, SWT.NONE);
-		PlayerRoundInfo playerInfo = input.getPlayerInfo(1);
+		PlayerRoundInfo playerInfo = input.getOpponent(0);
 		label.setText(playerInfo.getPlayer().getName() + "  vs. ");
 		label.setLayoutData(hor.create());
 		combo = new Combo(parent, SWT.READ_ONLY);
@@ -59,7 +59,7 @@ public class ChangePartnerDialog extends TrayDialog {
 			else
 				combo.add(pti.getPlayer().getName());
 		}
-		combo.setText(input.getPlayerInfo(2).getPlayer().getName());
+		combo.setText(input.getOpponent(1).getPlayer().getName());
 		combo.setLayoutData(hor.create());
 		origIndex = combo.getSelectionIndex();
 		return comp;

@@ -21,8 +21,8 @@ public class ScheduleTest extends TestCase {
 			List<TableInfo> tables = r.getTables();
 			for (Object element : tables) {
 				TableInfo tableInfo = (TableInfo) element;
-				Player p1 = tableInfo.getPlayerInfo(1).getPlayer();
-				Player p2 = tableInfo.getPlayerInfo(2).getPlayer();
+				Player p1 = tableInfo.getOpponent(0).getPlayer();
+				Player p2 = tableInfo.getOpponent(1).getPlayer();
 				boolean has = tour.hasPlayed(p1, p2, i - 1);
 				if (has) {
 					if (i != tP)
@@ -79,6 +79,24 @@ public class ScheduleTest extends TestCase {
 		scheduleAndCheck(tour);
 	}
 
+	public void testRandom() {
+		Tournament tour = new Tournament();
+		tour.setType(TournamentType.RANDOM);
+		tour.setNumberOfRounds(5);
+		tour.generatePlayers(7);
+		tour.setOpponentsPerGame(3);
+		playTest(tour);
+	}
+
+	public void testPseudoRandom() {
+		Tournament tour = new Tournament();
+		tour.setType(TournamentType.PSEUDO_RANDOM);
+		tour.setNumberOfRounds(5);
+		tour.generatePlayers(7);
+		tour.setOpponentsPerGame(2);
+		scheduleAndCheck(tour);
+	}
+
 	interface IWhoWinsRunnable {
 		int getWinner(TableInfo ti);
 	}
@@ -88,8 +106,8 @@ public class ScheduleTest extends TestCase {
 	 */
 	private void generateWinnigs(Round r, IWhoWinsRunnable runnable) {
 		for (TableInfo ti : r.getTables()) {
-			PlayerRoundInfo p1 = ti.getPlayerInfo(1);
-			PlayerRoundInfo p2 = ti.getPlayerInfo(2);
+			PlayerRoundInfo p1 = ti.getOpponent(0);
+			PlayerRoundInfo p2 = ti.getOpponent(1);
 			int pw = runnable.getWinner(ti);
 			if (pw == 0) {
 				p1.setWinGames(1, 0, 0);
@@ -102,8 +120,8 @@ public class ScheduleTest extends TestCase {
 	}
 
 	public int getRandomWinner(TableInfo ti) {
-		PlayerRoundInfo p1 = ti.getPlayerInfo(1);
-		PlayerRoundInfo p2 = ti.getPlayerInfo(2);
+		PlayerRoundInfo p1 = ti.getOpponent(0);
+		PlayerRoundInfo p2 = ti.getOpponent(1);
 		int pw = random.nextInt(2);
 		if (p1.getPlayer().isDummy()) {
 			pw = 1;
@@ -139,7 +157,8 @@ public class ScheduleTest extends TestCase {
 		for (Iterator iterator = playersInfo.iterator(); iterator.hasNext();) {
 			PlayerTourInfo pti = (PlayerTourInfo) iterator.next();
 			if (pti.getGamesWon() == 0)
-				assertTrue(pti.getPlayer().getName() + " won=" + pti.getGamesWon() + " omw=" + pti.getOMW(), pti.getOMW() == 100);
+				assertTrue(pti.getPlayer().getName() + " won=" + pti.getGamesWon() + " omw=" + pti.getOMW(),
+						pti.getOMW() == 100);
 		}
 	}
 
@@ -149,6 +168,16 @@ public class ScheduleTest extends TestCase {
 		tour.setNumberOfRounds(3);
 		tour.generatePlayers(8);
 		scheduleAndCheck(tour);
+	}
+
+	public void testElimination_8_3() {
+		Tournament tour = new Tournament();
+		tour.setType(TournamentType.ELIMINATION);
+		tour.setNumberOfRounds(2);
+		tour.setOpponentsPerGame(3);
+		tour.generatePlayers(8);
+		scheduleAndCheck(tour);
+		//tour.printSchedule(System.err);
 	}
 
 	private void scheduleAndCheck(Tournament tour) {

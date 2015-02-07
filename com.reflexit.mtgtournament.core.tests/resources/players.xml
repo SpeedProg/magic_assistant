@@ -1,0 +1,10 @@
+<playerList>
+  <players class="list">
+    <player>
+      <id>id1</id>
+      <name>Alena</name>
+      <points>3</points>
+      <games>1</games>
+    </player>
+  </players>
+</playerList>

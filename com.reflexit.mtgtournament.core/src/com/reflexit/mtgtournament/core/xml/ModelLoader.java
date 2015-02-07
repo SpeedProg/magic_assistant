@@ -10,11 +10,14 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.xml;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -34,6 +37,7 @@ public class ModelLoader {
 	static {
 		xstream = new XStream();
 		xstream.alias("player", Player.class);
+		xstream.alias("playerdummy", Player.DUMMY.getClass());
 		xstream.alias("pRound", PlayerRoundInfo.class);
 		xstream.alias("pTour", PlayerTourInfo.class);
 		xstream.alias("table", TableInfo.class);
@@ -45,19 +49,40 @@ public class ModelLoader {
 
 	public static Object load(File file) throws IOException {
 		FileInputStream is = new FileInputStream(file);
-		Charset encoding = Charset.forName("utf-8");
-		Object object = xstream.fromXML(new InputStreamReader(is, encoding));
+		Object object = load(is);
 		is.close();
+		return object;
+	}
+
+	public static Object load(InputStream is) {
+		Object object = xstream.fromXML(new InputStreamReader(is, Charset.forName("utf-8")));
+		return object;
+	}
+
+	public static Object load(String str) {
+		Object object = xstream.fromXML(new InputStreamReader(new ByteArrayInputStream(str.getBytes()),
+				Charset.forName("utf-8")));
 		return object;
 	}
 
 	public static void save(Object o, File file) throws FileNotFoundException {
 		OutputStream out = new FileOutputStream(file);
-		xstream.toXML(o, new OutputStreamWriter(out, Charset.forName("utf-8")));
+		save(o, out);
 		try {
 			out.close();
 		} catch (IOException e) {
 			// ignore
 		}
+	}
+
+	public static void save(Object o, OutputStream out) {
+		OutputStreamWriter writer = new OutputStreamWriter(out, Charset.forName("utf-8"));
+		xstream.toXML(o, writer);
+	}
+
+	public static String saveToString(Object o) {
+		ByteArrayOutputStream ar;
+		save(o, ar = new ByteArrayOutputStream());
+		return ar.toString();
 	}
 }

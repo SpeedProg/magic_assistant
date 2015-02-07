@@ -22,9 +22,9 @@ public class Round implements Cloneable {
 	private transient Tournament tournament;
 	private transient int number;
 	private TournamentType type;
-	private List<TableInfo> tables = new ArrayList<TableInfo>();
 	private Date dateStart;
 	private Date dateEnd;
+	private List<TableInfo> tables = new ArrayList<TableInfo>();
 
 	public Round(int number) {
 		this.number = number;
@@ -34,14 +34,12 @@ public class Round implements Cloneable {
 		return tables.size() > 0;
 	}
 
-	public PlayerRoundInfo makeDummy() {
-		PlayerRoundInfo info = new PlayerRoundInfo(Player.DUMMY, this);
-		return info;
+	public PlayerRoundInfo createDummyOpponent() {
+		return new PlayerRoundInfo(Player.DUMMY, this);
 	}
 
-	public PlayerRoundInfo makePlayer(Player player) {
-		PlayerRoundInfo info = new PlayerRoundInfo(player, this);
-		return info;
+	public PlayerRoundInfo createOpponentInfo(Player player) {
+		return new PlayerRoundInfo(player, this);
 	}
 
 	public void addTable(TableInfo t) {
@@ -82,8 +80,14 @@ public class Round implements Cloneable {
 	public void printSchedule(PrintStream st) {
 		for (Object element : tables) {
 			TableInfo table = (TableInfo) element;
-			st.println("Table " + table.getTableNumber() + ": " + table.getPlayerInfo(1).getPlayer() + " vs "
-					+ table.getPlayerInfo(2).getPlayer());
+			st.print("Table " + table.getTableNumber() + ": ");
+			PlayerRoundInfo[] playerRoundInfo = table.getPlayerRoundInfo();
+			for (int i = 0; i < playerRoundInfo.length; i++) {
+				PlayerRoundInfo o = playerRoundInfo[i];
+				if (i != 0) st.print(" vs ");
+				st.print(o.getPlayer());
+			}
+			st.println();
 		}
 	}
 
@@ -160,7 +164,7 @@ public class Round implements Cloneable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void close() {
 		setDateEnd(Calendar.getInstance().getTime());
@@ -170,12 +174,15 @@ public class Round implements Cloneable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void updateLinks() {
+		int i = 0;
 		for (TableInfo t : tables) {
 			t.setRound(this);
 			t.updateLinks();
+			t.setNumber(i + 1);
+			i++;
 		}
 	}
 
@@ -223,5 +230,9 @@ public class Round implements Cloneable {
 
 	public boolean isEnded() {
 		return dateEnd != null;
+	}
+
+	public int getOpponentsPerGame() {
+		return getTournament().getOpponentsPerGame();
 	}
 }

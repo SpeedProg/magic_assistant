@@ -46,13 +46,15 @@ import com.reflexit.mtgtournament.ui.tour.Activator;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class CubePrintDialog extends Dialog {
 	private Object input;
 
 	enum WhatToPrint {
+		ROUND_SCHEDULE_TABLES,
 		ROUND_SCHEDULE,
+		ROUND_RESULTS_TABLES,
 		ROUND_RESULTS,
 		TOURNAMENT_RESULTS,
 		// PLAYER_LIST
@@ -197,9 +199,11 @@ public class CubePrintDialog extends Dialog {
 	protected String getHeader() {
 		switch (toPrint) {
 			case ROUND_RESULTS:
+			case ROUND_RESULTS_TABLES:
 				return "Round Results for "
 						+ (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
 			case ROUND_SCHEDULE:
+			case ROUND_SCHEDULE_TABLES:
 				return "Round Schedule for "
 						+ (selectedRound == null ? "All" : ("Round " + selectedRound.getNumber()));
 			case TOURNAMENT_RESULTS:
@@ -213,15 +217,21 @@ public class CubePrintDialog extends Dialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void generatePreview() {
 		switch (toPrint) {
 			case ROUND_RESULTS:
-				textToPrint = roundSchedule(true);
+				textToPrint = roundSchedule(true, false);
+				break;
+			case ROUND_RESULTS_TABLES:
+				textToPrint = roundSchedule(true, true);
 				break;
 			case ROUND_SCHEDULE:
-				textToPrint = roundSchedule(false);
+				textToPrint = roundSchedule(false, false);
+				break;
+			case ROUND_SCHEDULE_TABLES:
+				textToPrint = roundSchedule(false, true);
 				break;
 			case TOURNAMENT_RESULTS:
 				textToPrint = tournamentResults();
@@ -249,6 +259,7 @@ public class CubePrintDialog extends Dialog {
 	private String tournamentResults() {
 		List<PlayerTourInfo> playersInfo = new ArrayList<PlayerTourInfo>(tournament.getPlayersInfo());
 		Collections.sort(playersInfo, new Comparator<PlayerTourInfo>() {
+			@Override
 			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
 				return Tournament.comparePlayers(a, b);
 			}
@@ -267,7 +278,7 @@ public class CubePrintDialog extends Dialog {
 	 * @param b
 	 * @return
 	 */
-	private String roundSchedule(boolean results) {
+	private String roundSchedule(boolean results, boolean tables) {
 		StringBuffer buf = new StringBuffer();
 		Round r = selectedRound;
 		if (r == null) {
@@ -276,25 +287,12 @@ public class CubePrintDialog extends Dialog {
 				buf.append("Round " + r1.getNumber());
 				buf.append("\n");
 				buf.append("\n");
-				buf.append(roundSchedule(r1, results));
+				buf.append(roundSchedule(r1, results, tables));
 			}
 		} else {
-			buf.append(roundSchedule(r, results));
+			buf.append(roundSchedule(r, results, tables));
 		}
 		return buf.toString();
-	}
-
-	class TableInfoComparator implements Comparator<TableInfo> {
-		private int p;
-
-		public TableInfoComparator(int i) {
-			this.p = i;
-		}
-
-		public int compare(TableInfo o1, TableInfo o2) {
-			return o1.getPlayerInfo(p).getPlayer().getName()
-					.compareTo(o2.getPlayerInfo(p).getPlayer().getName());
-		}
 	}
 
 	/**
@@ -302,22 +300,30 @@ public class CubePrintDialog extends Dialog {
 	 * @param results
 	 * @return
 	 */
-	private String roundSchedule(Round round, boolean results) {
+	private String roundSchedule(Round round, boolean results, boolean tablesOnly) {
 		StringBuffer buf = new StringBuffer();
-		List<TableInfo> tables = round.getTables();
-		List<TableInfo> sorted = new ArrayList<TableInfo>(tables);
-		if (sorted.size() >= 5) {
-			// replicate by switching players
-			for (TableInfo ti : tables) {
-				TableInfo nti = new TableInfo(ti.getPlayerInfo(2), ti.getPlayerInfo(1));
-				nti.setNumber(ti.getTableNumber());
-				sorted.add(nti);
+		if (tablesOnly) {
+			buf.append("Tables:\n");
+			for (TableInfo ti : round.getTables()) {
+				buf.append(printTableInfo(ti, results));
+				buf.append("\n");
 			}
-		}
-		Collections.sort(sorted, new TableInfoComparator(1));
-		for (TableInfo ti : sorted) {
-			buf.append(printTableInfo(ti, true, results));
-			buf.append("\n");
+		} else {
+			List<PlayerRoundInfo> sorted = new ArrayList<PlayerRoundInfo>();
+			for (TableInfo ti : round.getTables()) {
+				PlayerRoundInfo[] pis = ti.getPlayerRoundInfo();
+				for (PlayerRoundInfo pi : pis) {
+					if (!pi.getPlayer().isDummy()) sorted.add(pi);
+					pi.setTableInfo(ti);
+				}
+			}
+			Collections.sort(sorted, (a, b) -> a.getPlayer().getName().compareTo(b.getPlayer().getName()));
+			buf.append("Table Name\n");
+			for (PlayerRoundInfo pi : sorted) {
+				buf.append(String.format("[%3d] %-20s %s\n", pi.getTableInfo().getTableNumber(), pi
+						.getPlayer()
+						.getName(), results ? pi.getWinStrDetails() : ""));
+			}
 		}
 		return buf.toString();
 	}
@@ -328,19 +334,25 @@ public class CubePrintDialog extends Dialog {
 	 * @param results
 	 * @return
 	 */
-	private String printTableInfo(TableInfo ti, boolean p1first, boolean results) {
-		int x = p1first ? 0 : 1;
-		PlayerRoundInfo pi1 = ti.getPlayerInfo(x % 2 + 1);
-		PlayerRoundInfo pi2 = ti.getPlayerInfo((x + 1) % 2 + 1);
-		String name1 = pi1.getPlayer().getName();
-		String name2 = pi2.getPlayer().getName();
-		if (results == false)
-			return String.format("[%3d] %-20s - %-20s", ti.getTableNumber(), name1, name2);
-		else {
-			return String.format("[%3d] %-20s %s - %-20s %s", ti.getTableNumber(), name1,
-					pi1.getWinStrDetails(),
-					name2, pi2.getWinStrDetails());
+	private String printTableInfo(TableInfo ti, boolean results) {
+		String res = "";
+		int i = 0;
+		int opp = 3;
+		for (PlayerRoundInfo pi : ti.getPlayerRoundInfo()) {
+			if (i % opp != 0)
+				res += " - ";
+			else
+				res += String.format("[%3d] ", ti.getTableNumber());
+			String name = pi.getPlayer().getName();
+			if (results == false)
+				res += String.format("%-20s", name);
+			else {
+				res += String.format("%-15s %s", name, pi.getWinStrDetails());
+			}
+			i++;
+			if (i % opp == 0) res += "\n";
 		}
+		return res.trim();
 	}
 
 	@Override

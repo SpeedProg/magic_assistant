@@ -50,6 +50,7 @@ public class OverviewSection extends TSectionPart {
 	private Label statusText;
 	private Button reScheduleButton;
 	private Button undoCloseButton;
+	private Combo opponents;
 
 	public OverviewSection(IManagedForm managedForm) {
 		super(managedForm, Section.EXPANDED);
@@ -91,16 +92,23 @@ public class OverviewSection extends TSectionPart {
 		for (int i = 1; i <= 9; i++) {
 			roundsCombo.add(String.valueOf(i));
 		}
-		//roundsCombo.setText("4");
 		updateTourAction.attach(roundsCombo);
-		// status
 		GridDataFactory span2 = GridDataFactory.swtDefaults().span(2, 1).align(SWT.FILL, SWT.FILL);
-		statusText = toolkit.createLabel(comp, ".");
-		statusText.setLayoutData(span2.create());
 		// has draft check
 		hasDraftButton = toolkit.createButton(comp, "Has a draft round", SWT.CHECK);
 		hasDraftButton.setLayoutData(span2.create());
 		updateTourAction.attach(hasDraftButton, false);
+		// opponents
+		toolkit.createLabel(comp, "Opponents per game: ");
+		opponents = new Combo(comp, SWT.FLAT | SWT.READ_ONLY);
+		for (int i = 2; i <= 6; i++) {
+			opponents.add(String.valueOf(i));
+		}
+		updateTourAction.attach(opponents);
+		toolkit.adapt(opponents, true, true);
+		// status
+		statusText = toolkit.createLabel(comp, ".");
+		statusText.setLayoutData(span2.create());
 		return comp;
 	}
 
@@ -135,14 +143,16 @@ public class OverviewSection extends TSectionPart {
 	private boolean initializing = false;
 
 	/**
-	 * 
+	 *
 	 */
 	protected void makeActions() {
 		updateTourAction = new PanelAction() {
 			@Override
 			protected boolean execute() {
-				if (!initializing)
+				if (!initializing) {
 					updateTournament();
+					return true;
+				}
 				return false;
 			}
 		};
@@ -236,6 +246,7 @@ public class OverviewSection extends TSectionPart {
 				tournamentTypeCombo.setText(tournament.getType().name());
 				int rounds = tournament.getNumberOfRounds();
 				roundsCombo.setText(String.valueOf(rounds));
+				opponents.setText(String.valueOf(tournament.getOpponentsPerGame()));
 			} finally {
 				initializing = false;
 			}
@@ -249,6 +260,7 @@ public class OverviewSection extends TSectionPart {
 		hasDraftButton.setEnabled(vis);
 		tournamentTypeCombo.setEnabled(vis);
 		roundsCombo.setEnabled(vis);
+		opponents.setEnabled(vis);
 		updateButtonsEnablement();
 	}
 
@@ -262,9 +274,19 @@ public class OverviewSection extends TSectionPart {
 			tournament.setType(getType());
 			tournament.setNumberOfRounds(newRounds);
 			tournament.setDraft(hasDraft());
+			tournament.setOpponentsPerGame(getOpponentsPerGame());
 			save();
 		} catch (Exception e) {
 			MessageDialog.openError(new Shell(), "Error", e.getMessage());
+		}
+	}
+
+	public int getOpponentsPerGame() {
+		try {
+			int getOpponentsPerGame = Integer.parseInt(opponents.getText());
+			return getOpponentsPerGame;
+		} catch (NumberFormatException e) {
+			return 2;
 		}
 	}
 }

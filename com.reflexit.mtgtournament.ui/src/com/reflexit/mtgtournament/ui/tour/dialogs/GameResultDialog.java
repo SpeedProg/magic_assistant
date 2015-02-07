@@ -30,13 +30,10 @@ import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.ui.tour.Activator;
 
 public class GameResultDialog extends TrayDialog {
-	private Text win1;
-	private Text win2;
+	private Text win[];
 	private TableInfo input;
-	private int nWin1;
-	private int nWin2;
-	private boolean drop1;
-	private boolean drop2;
+	private int nWin[];
+	private boolean drop[];
 	protected int nDraw;
 	private Text draw;
 
@@ -56,36 +53,29 @@ public class GameResultDialog extends TrayDialog {
 		Composite comp = (Composite) super.createDialogArea(parent);
 		comp.setLayout(new GridLayout(4, false));
 		GridDataFactory hor = GridDataFactory.fillDefaults();
-		win1 = createLabelText(comp, input.getPlayerInfo(1).getPlayer().getName());
-		win1.setLayoutData(hor.create());
-		win1.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String text = win1.getText();
-				nWin1 = validateNumber(text);
-			}
-		});
-		final Button dropBut1 = createDropButton(comp);
-		dropBut1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				drop1 = dropBut1.getSelection();
-			}
-		});
-		win2 = createLabelText(comp, input.getPlayerInfo(2).getPlayer().getName());
-		win2.setLayoutData(hor.create());
-		win2.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String text = win2.getText();
-				nWin2 = validateNumber(text);
-			}
-		});
-		final Button dropBut2 = createDropButton(comp);
-		dropBut2.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				drop2 = dropBut2.getSelection();
-			}
-		});
+		int ops = input.getOpponentsPerGame();
+		win = new Text[ops];
+		nWin = new int[ops];
+		drop = new boolean[ops];
+		for (int i = 0; i < ops; i++) {
+			final int fi = i;
+			final Text win1 = createLabelText(comp, input.getOpponent(i).getPlayer().getName());
+			win1.setLayoutData(hor.create());
+			win1.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					String text = win1.getText();
+					nWin[fi] = validateNumber(text);
+				}
+			});
+			win[i] = win1;
+			final Button dropBut1 = createDropButton(comp);
+			dropBut1.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					drop[fi] = dropBut1.getSelection();
+				}
+			});
+		}
 		Label label = new Label(comp, SWT.NONE);
 		label.setText("Draw #");
 		Label label2 = new Label(comp, SWT.NONE);
@@ -133,17 +123,18 @@ public class GameResultDialog extends TrayDialog {
 	}
 
 	/**
-	 * @return the nWin1
-	 */
-	public int getWin1() {
-		return nWin1;
-	}
-
-	/**
 	 * @return the nWin2
 	 */
-	public int getWin2() {
-		return nWin2;
+	public int getWin(int playerNumber) {
+		return nWin[playerNumber - 1];
+	}
+
+	public int getLost(int playerNumber) {
+		int sum = 0;
+		for (int i = 0; i < nWin.length; i++) {
+			if (i != playerNumber - 1) sum += nWin[i];
+		}
+		return sum;
 	}
 
 	public int getDraw() {
@@ -153,14 +144,7 @@ public class GameResultDialog extends TrayDialog {
 	/**
 	 * @return the drop1
 	 */
-	public boolean isDrop1() {
-		return drop1;
-	}
-
-	/**
-	 * @return the drop2
-	 */
-	public boolean isDrop2() {
-		return drop2;
+	public boolean isDrop(int playerNumber) {
+		return drop[playerNumber - 1];
 	}
 }

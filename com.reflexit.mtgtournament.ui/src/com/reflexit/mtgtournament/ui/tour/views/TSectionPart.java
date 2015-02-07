@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
@@ -95,6 +96,14 @@ public class TSectionPart extends SectionPart {
 					run();
 				}
 			});
+			control.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					run();
+				}
+			});
+		}
+
+		public void attach(Text control) {
 			control.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					run();

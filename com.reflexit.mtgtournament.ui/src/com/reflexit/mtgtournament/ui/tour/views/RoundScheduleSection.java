@@ -93,15 +93,14 @@ public class RoundScheduleSection extends TSectionPart {
 			GameResultDialog d = new GameResultDialog(viewer.getControl().getShell());
 			d.setInput(tinfo);
 			if (d.open() == Dialog.OK) {
-				PlayerRoundInfo p1 = tinfo.getPlayerInfo(1);
-				p1.setWinGames(d.getWin1(), d.getWin2(), d.getDraw());
-				PlayerRoundInfo p2 = tinfo.getPlayerInfo(2);
-				p2.setWinGames(d.getWin2(), d.getWin1(), d.getDraw());
-				if (d.isDrop1()) {
-					tinfo.getRound().getTournament().playerDropped(p1.getPlayer());
-				}
-				if (d.isDrop2()) {
-					tinfo.getRound().getTournament().playerDropped(p2.getPlayer());
+				PlayerRoundInfo[] playerRoundInfo = tinfo.getPlayerRoundInfo();
+				int i = 1;
+				for (PlayerRoundInfo pi : playerRoundInfo) {
+					pi.setWinGames(d.getWin(i), d.getLost(i), d.getDraw());
+					if (d.isDrop(i)) {
+						tinfo.getRound().getTournament().playerDropped(pi.getPlayer());
+					}
+					i++;
 				}
 				modelUpdated();
 			}
@@ -166,21 +165,20 @@ public class RoundScheduleSection extends TSectionPart {
 			if (element instanceof TableInfo) {
 				TableInfo pinfo = (TableInfo) element;
 				switch (columnIndex) {
-					case 1:
-						return String.valueOf(pinfo.getTableNumber());
-					case 2:
-						return pinfo.getPlayerInfo(1).getPlayer().getName();
-					case 3:
-						return pinfo.getPlayerInfo(2).getPlayer().getName();
-					case 4:
-						return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(1).getResult());
-					case 5:
-						return PlayerRoundInfo.getWinStr(pinfo.getPlayerInfo(2).getResult());
 					case 0:
 						int number = pinfo.getRound().getNumber();
 						if (number == 0)
 							return "Draft";
 						return String.valueOf(number);
+					case 1:
+						return String.valueOf(pinfo.getTableNumber());
+					default:
+						int index = columnIndex - 2;
+						PlayerRoundInfo playerInfo = pinfo.getOpponent(index);
+						if (playerInfo == null) return "";
+						String name = playerInfo.getPlayer().getName();
+						String result = PlayerRoundInfo.getWinStr(playerInfo.getResult());
+						return "(" + result + ") " + name;
 				}
 			} else if (element instanceof Round) {
 				Round round = (Round) element;
@@ -219,7 +217,7 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 			RoundState state = round.getState();
 			if (state == RoundState.IN_PROGRESS) {
-				if (tableInfo == null || tableInfo.getPlayerInfo(1).getResult() == null)
+				if (tableInfo == null || tableInfo.getOpponent(0).getResult() == null)
 					return systemColorYellow;
 			}
 			return null;
@@ -268,14 +266,25 @@ public class RoundScheduleSection extends TSectionPart {
 				updateWidgetEnablement();
 			}
 		});
-		createColumn(0, "Round", 80);
-		createColumn(1, "Table", 60);
-		createColumn(2, "Player 1", 120);
-		createColumn(3, "Player 2", 120);
-		createColumn(4, "Result 1", 60);
-		createColumn(5, "Result 2", 60);
+		createColumns(2);
 		// buttons
 		createButtonsComposite(sectionClient);
+	}
+
+	public void createColumns(int num) {
+		int x = viewer.getTree().getColumnCount();
+		if (x - 2 == num) return;
+		System.err.println("create for " + num);
+		TreeColumn[] children = viewer.getTree().getColumns();
+		for (int i = 0; i < children.length; i++) {
+			children[i].dispose();
+		}
+		createColumn(0, "Round", 80);
+		createColumn(1, "Table", 60);
+		for (int i = 0; i < num; i++) {
+			createColumn(i + 2, "Opponent " + (i + 1), 150);
+		}
+		viewer.refresh(true);
 	}
 
 	protected void updateWidgetEnablement() {
@@ -343,6 +352,7 @@ public class RoundScheduleSection extends TSectionPart {
 				viewer.setExpandedState(round, true);
 			}
 		}
+		createColumns(t.getOpponentsPerGame());
 		getManagedForm().getForm().reflow(false);
 		super.refresh();
 	}
@@ -350,6 +360,9 @@ public class RoundScheduleSection extends TSectionPart {
 	@Override
 	public boolean setFormInput(Object input) {
 		viewer.setSelection(new StructuredSelection());
+		Tournament tournament = (Tournament) input;
+		if (tournament != null)
+			createColumns(tournament.getOpponentsPerGame());
 		if (viewer.getInput() != input) {
 			viewer.setInput(input);
 			viewer.expandAll();

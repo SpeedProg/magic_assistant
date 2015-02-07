@@ -1,5 +1,6 @@
 package com.reflexit.mtgtournament.core.edit;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,12 +17,13 @@ public class CmdChangePairing implements ITCommand {
 		super();
 		this.table = table;
 		this.newpartner = player2;
-		this.oldpartner = table.getPlayerInfo(2).getPlayer();
+		this.oldpartner = table.getOpponent(table.getOpponentsPerGame() - 1).getPlayer();
 	}
 
 	public boolean execute() {
 		if (newpartner == oldpartner || newpartner == null)
 			return false;
+		int opp = table.getOpponentsPerGame();
 		if (!newpartner.isDummy()) {
 			// find where newpartner was before
 			List<TableInfo> tables = table.getRound().getTables();
@@ -36,9 +38,19 @@ public class CmdChangePairing implements ITCommand {
 				}
 			}
 		} else {
-			new CmdAddTable(table.getRound(), oldpartner, Player.DUMMY).execute();
+			ArrayList<Player> players = new ArrayList<Player>();
+			players.add(oldpartner);
+			while (players.size() % opp != 0) {
+				players.add(Player.DUMMY);
+			}
+			Player[] newpl = players.toArray(new Player[players.size()]);
+			new CmdAddTable(table.getRound(), newpl).execute();
 		}
-		table.getPlayerInfo(2).setPlayer(newpartner);
+		// shift everybody by 1 to the right
+		for (int i = 1; i < opp - 1; i++) {
+			table.getOpponent(i + 1).setPlayer(table.getOpponent(i).getPlayer());
+		}
+		table.getOpponent(1).setPlayer(newpartner);
 		deleteDummyPairing();
 		return true;
 	}
