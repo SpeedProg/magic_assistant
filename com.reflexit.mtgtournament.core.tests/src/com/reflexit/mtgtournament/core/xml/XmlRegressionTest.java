@@ -3,7 +3,6 @@ package com.reflexit.mtgtournament.core.xml;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,13 +37,6 @@ public class XmlRegressionTest extends AbstractTournamentTest {
 		List<Round> rounds = aaa.getRounds();
 		assertEquals(rounds.size(), 4);
 		PlayerTourInfo pi = playersInfo.get(2);
-		Set<Player> opponents = pi.getOpponents();
-		boolean dummy = false;
-		for (Player oo : opponents) {
-			if (oo.isDummy())
-				dummy = true;
-		}
-		assertTrue(dummy);
 		Round round = rounds.get(2);
 		TableInfo tableInfo = round.getTables().get(2);
 		PlayerRoundInfo playerInfo1 = tableInfo.getOpponent(0);

@@ -77,7 +77,7 @@ public class CmdCommitRounds implements ITCommand {
 		List<PlayerTourInfo> players = t.getPlayersInfo();
 		for (Iterator iterator = players.iterator(); iterator.hasNext();) {
 			PlayerTourInfo pti = (PlayerTourInfo) iterator.next();
-			pti.calclulateOMW();
+			pti.calclulateOMW(n);
 		}
 		PlayerTourInfo[] pti = players.toArray(new PlayerTourInfo[players.size()]);
 		Arrays.sort(pti, new Comparator<PlayerTourInfo>() {

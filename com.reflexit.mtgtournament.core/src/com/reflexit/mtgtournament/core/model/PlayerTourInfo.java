@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.reflexit.mtgtournament.core.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +30,6 @@ public class PlayerTourInfo {
 	private int matches = 0;
 	private boolean active = true;
 	private int place;
-	private HashSet<Player> opponents = new HashSet<Player>();
 	private int gamesWon;
 	private int gamesLost;
 	private int gamesDrawn;
@@ -36,6 +37,8 @@ public class PlayerTourInfo {
 	private float ogw;
 	private float pgw;
 	private Map<Integer, Boolean> byes;
+	// unused. Cannot delete because of xstream
+	private Set<Player> opponents;
 
 	public PlayerTourInfo(Player player) {
 		setPlayer(player);
@@ -141,7 +144,22 @@ public class PlayerTourInfo {
 		return roundsWon;
 	}
 
-	public void calclulateOMW() {
+	public void calclulateOMW(int n) {
+		HashSet<Player> opponents = new HashSet<Player>();
+		List<Round> rounds = tournament.getRounds();
+		for (Round round : rounds) {
+			if (round.getNumber() > n)
+				break;
+			if (round.getNumber() == 0) continue; // XXX draft round
+			for (TableInfo tableInfo : round.getTables()) {
+				for (PlayerRoundInfo pi : tableInfo.getPlayerRoundInfo()) {
+					if (pi.getPlayer() == getPlayer()) {
+						addOpponents(tableInfo, opponents);
+						break;
+					}
+				}
+			}
+		}
 		int w = 0;
 		int gw = 0;
 		int m = 0;
@@ -213,16 +231,15 @@ public class PlayerTourInfo {
 		gamesLost += roundInfo.getLost();
 		gamesDrawn += roundInfo.getDraw();
 		updatePoints();
-		addOpponents(roundInfo.getTableInfo());
 	}
 
 	/**
 	 *
 	 */
 	private void updatePoints() {
-		points = roundsWon * getTournament().getPointsPerWin() + roundsDrawn
-				* getTournament().getPointsPerDraw() + roundsLost
-				* getTournament().getPointsPerLoss();
+		points = roundsWon * getTournament().getPointsPerWin()
+				+ roundsDrawn * getTournament().getPointsPerDraw()
+				+ roundsLost * getTournament().getPointsPerLoss();
 	}
 
 	/**
@@ -248,16 +265,7 @@ public class PlayerTourInfo {
 		this.player = np;
 	}
 
-	/**
-	 * Return list of opponents this player faced in this tournament
-	 *
-	 * @return
-	 */
-	public Set<Player> getOpponents() {
-		return opponents;
-	}
-
-	private void addOpponents(TableInfo tableInfo) {
+	private void addOpponents(TableInfo tableInfo, Collection<Player> opponents) {
 		PlayerRoundInfo[] playerRoundInfo = tableInfo.getPlayerRoundInfo();
 		for (int i = 0; i < playerRoundInfo.length; i++) {
 			PlayerRoundInfo ri = playerRoundInfo[i];
