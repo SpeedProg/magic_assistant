@@ -45,6 +45,8 @@ public class ModelLoader {
 		xstream.alias("tournament", Tournament.class);
 		xstream.alias("playerList", PlayerList.class);
 		xstream.setClassLoader(ModelLoader.class.getClassLoader());
+		//xstream.setMode(XStream.ID_REFERENCES);
+		xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 	}
 
 	public static Object load(File file) throws IOException {

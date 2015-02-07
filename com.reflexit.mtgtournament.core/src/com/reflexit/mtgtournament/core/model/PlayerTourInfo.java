@@ -211,8 +211,6 @@ public class PlayerTourInfo {
 	 */
 	public void addMatchResult(PlayerRoundInfo roundInfo) {
 		PlayerGameResult result = roundInfo.getResult();
-		if (result == null)
-			return;
 		matches++;
 		switch (result) {
 			case WIN:
@@ -224,6 +222,8 @@ public class PlayerTourInfo {
 			case DRAW:
 				roundsDrawn++;
 				break;
+			case _NONE:
+				return;
 			default:
 				break;
 		}

@@ -46,6 +46,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 import com.reflexit.mtgtournament.core.edit.CmdChangePairing;
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.RoundState;
 import com.reflexit.mtgtournament.core.model.TableInfo;
@@ -66,6 +67,7 @@ public class RoundScheduleSection extends TSectionPart {
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.isEmpty())
@@ -108,12 +110,15 @@ public class RoundScheduleSection extends TSectionPart {
 	}
 
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
@@ -143,24 +148,29 @@ public class RoundScheduleSection extends TSectionPart {
 			return tinfo.toArray();
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			return getElements(parentElement);
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			return getElements(element).length > 0;
 		}
 	}
 
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof TableInfo) {
 				TableInfo pinfo = (TableInfo) element;
@@ -177,7 +187,7 @@ public class RoundScheduleSection extends TSectionPart {
 						PlayerRoundInfo playerInfo = pinfo.getOpponent(index);
 						if (playerInfo == null) return "";
 						String name = playerInfo.getPlayer().getName();
-						String result = PlayerRoundInfo.getWinStr(playerInfo.getResult());
+						String result = playerInfo.getResult().letter();
 						return "(" + result + ") " + name;
 				}
 			} else if (element instanceof Round) {
@@ -204,6 +214,7 @@ public class RoundScheduleSection extends TSectionPart {
 			systemColorBlue = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		}
 
+		@Override
 		public Color getBackground(Object element, int columnIndex) {
 			Round round;
 			TableInfo tableInfo = null;
@@ -217,12 +228,13 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 			RoundState state = round.getState();
 			if (state == RoundState.IN_PROGRESS) {
-				if (tableInfo == null || tableInfo.getOpponent(0).getResult() == null)
+				if (tableInfo == null || tableInfo.getOpponent(0).getResult() == PlayerGameResult._NONE)
 					return systemColorYellow;
 			}
 			return null;
 		}
 
+		@Override
 		public Color getForeground(Object element, int columnIndex) {
 			Round round;
 			TableInfo tableInfo = null;
@@ -262,6 +274,7 @@ public class RoundScheduleSection extends TSectionPart {
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.getTree().setHeaderVisible(true);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateWidgetEnablement();
 			}

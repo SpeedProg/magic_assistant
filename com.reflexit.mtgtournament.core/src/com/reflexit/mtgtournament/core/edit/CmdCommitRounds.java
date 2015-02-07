@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.reflexit.mtgtournament.core.model.PlayerRoundInfo;
+import com.reflexit.mtgtournament.core.model.PlayerRoundInfo.PlayerGameResult;
 import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
@@ -69,7 +70,7 @@ public class CmdCommitRounds implements ITCommand {
 		if (pi.getPlayer().isDummy())
 			return;
 		PlayerTourInfo pt = t.findPlayerTourInfo(pi.getPlayer());
-		if (pi.getResult() != null)
+		if (pi.getResult() != PlayerGameResult._NONE)
 			pt.addMatchResult(pi);
 	}
 

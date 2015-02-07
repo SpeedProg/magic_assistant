@@ -14,18 +14,24 @@ public class PlayerRoundInfo {
 	transient Round round;
 	transient TableInfo tableInfo;
 	private Player p;
-	private int gamesWon = -1;
-	private PlayerGameResult r = null;
-	private int gamesLost;
+	private int gamesWon;
 	private int gamesDraw;
+	private int gamesLost;
+	private PlayerGameResult r;
 
 	public enum PlayerGameResult {
 		WIN,
 		LOOSE,
-		DRAW
+		DRAW,
+		_NONE, ;
+		public String letter() {
+			return name().substring(0, 1);
+		}
 	}
 
 	public PlayerGameResult getResult() {
+		if (r == null)
+			updateResult();
 		return r;
 	}
 
@@ -33,9 +39,13 @@ public class PlayerRoundInfo {
 		gamesWon = w;
 		gamesLost = l;
 		gamesDraw = d;
-		if (w > l) {
+		updateResult();
+	}
+
+	private void updateResult() {
+		if (gamesWon > gamesLost) {
 			this.r = PlayerGameResult.WIN;
-		} else if (w < l) {
+		} else if (gamesWon < gamesLost) {
 			this.r = PlayerGameResult.LOOSE;
 		} else {
 			this.r = PlayerGameResult.DRAW;
@@ -43,8 +53,9 @@ public class PlayerRoundInfo {
 	}
 
 	public PlayerRoundInfo(Player player, Round round) {
-		this.setPlayer(player);
+		if (round == null) throw new NullPointerException();
 		this.round = round;
+		setPlayer(player);
 	}
 
 	@Override
@@ -53,19 +64,16 @@ public class PlayerRoundInfo {
 	}
 
 	public String getWinStrDetails() {
-		String s = getWinStr(getResult());
-		return s + "(" + (getWin() == -1 ? "_" : getWin()) + ")";
+		if (getResult() == PlayerGameResult._NONE)
+			return "_(_)";
+		return r.letter() + "(" + getWin() + ")";
 	}
 
 	public static String getWinStr(PlayerGameResult result) {
-		String s = "_";
-		if (result == PlayerGameResult.LOOSE)
-			s = "L";
-		else if (result == PlayerGameResult.DRAW)
-			s = "D";
-		else if (result == PlayerGameResult.WIN)
-			s = "W";
-		return s;
+		if (result == null)
+			return PlayerGameResult._NONE.letter();
+		else
+			return result.letter();
 	}
 
 	public Player getPlayer() {
@@ -73,12 +81,14 @@ public class PlayerRoundInfo {
 	}
 
 	/**
-	 * @param np
+	 * @param newPlayer
 	 */
-	public void setPlayer(Player np) {
-		if (np == null)
+	public final void setPlayer(Player newPlayer) {
+		if (newPlayer == null)
 			throw new NullPointerException();
-		this.p = np;
+		p = newPlayer;
+		gamesDraw = gamesLost = gamesWon = 0;
+		r = PlayerGameResult._NONE;
 	}
 
 	/**
@@ -108,8 +118,8 @@ public class PlayerRoundInfo {
 		return tableInfo;
 	}
 
-	public void setTableInfo(TableInfo tableInfo2) {
-		tableInfo = tableInfo2;
+	public void setTableInfo(TableInfo tableInfo) {
+		this.tableInfo = tableInfo;
 	}
 
 	public static Player[] toPlayers(PlayerRoundInfo... ptis) {
@@ -118,5 +128,20 @@ public class PlayerRoundInfo {
 			res[i] = ptis[i].getPlayer();
 		}
 		return res;
+	}
+
+	public boolean deepEquals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof PlayerRoundInfo)) return false;
+		PlayerRoundInfo other = (PlayerRoundInfo) obj;
+		if (gamesDraw != other.gamesDraw) return false;
+		if (gamesLost != other.gamesLost) return false;
+		if (gamesWon != other.gamesWon) return false;
+		if (p == null) {
+			if (other.p != null) return false;
+		} else if (!p.deepEquals(other.p)) return false;
+		//if (round != other.round) return false;
+		return true;
 	}
 }
