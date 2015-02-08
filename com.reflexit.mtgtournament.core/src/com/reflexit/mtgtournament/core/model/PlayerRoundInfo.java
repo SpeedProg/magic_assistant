@@ -43,6 +43,10 @@ public class PlayerRoundInfo {
 	}
 
 	private void updateResult() {
+		if (r == null && gamesWon == -1) { // old way
+			r = PlayerGameResult._NONE;
+			return;
+		}
 		if (gamesWon > gamesLost) {
 			this.r = PlayerGameResult.WIN;
 		} else if (gamesWon < gamesLost) {
@@ -69,13 +73,6 @@ public class PlayerRoundInfo {
 		return r.letter() + "(" + getWin() + ")";
 	}
 
-	public static String getWinStr(PlayerGameResult result) {
-		if (result == null)
-			return PlayerGameResult._NONE.letter();
-		else
-			return result.letter();
-	}
-
 	public Player getPlayer() {
 		return p;
 	}
@@ -89,14 +86,6 @@ public class PlayerRoundInfo {
 		p = newPlayer;
 		gamesDraw = gamesLost = gamesWon = 0;
 		r = PlayerGameResult._NONE;
-	}
-
-	/**
-	 * @param w
-	 *            the w to set
-	 */
-	void setWin(int w) {
-		this.gamesWon = w;
 	}
 
 	/**
@@ -130,11 +119,8 @@ public class PlayerRoundInfo {
 		return res;
 	}
 
-	public boolean deepEquals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (!(obj instanceof PlayerRoundInfo)) return false;
-		PlayerRoundInfo other = (PlayerRoundInfo) obj;
+	public boolean deepEquals(PlayerRoundInfo other) {
+		if (this == other) return true;
 		if (gamesDraw != other.gamesDraw) return false;
 		if (gamesLost != other.gamesLost) return false;
 		if (gamesWon != other.gamesWon) return false;

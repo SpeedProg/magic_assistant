@@ -2,6 +2,7 @@ package com.reflexit.mtgtournament.core.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -16,7 +17,6 @@ import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Round;
 import com.reflexit.mtgtournament.core.model.TableInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
-import com.reflexit.mtgtournament.core.model.TournamentType;
 import com.reflexit.mtgtournament.core.tests.AbstractTournamentTest;
 import com.reflexit.mtgtournament.core.tests.TestFileUtils;
 
@@ -88,7 +88,7 @@ public class XmlRegressionTest extends AbstractTournamentTest {
 	 */
 	@Test
 	public void testPlayer() throws Exception {
-		Player d = new Player("xxx1", "Alena Laskavaia");
+		Player d = newPlayerAlena();
 		d.setNote("note about me");
 		d.setGames(33);
 		d.setPoints(222);
@@ -107,34 +107,126 @@ public class XmlRegressionTest extends AbstractTournamentTest {
 		    <points>0</points>
 		    <games>0</games>
 		  </p>
-		  <gamesWon>0</gamesWon>
+		  <gamesWon>-1</gamesWon>
 		  <gamesDraw>0</gamesDraw>
 		  <gamesLost>0</gamesLost>
-		  <r>_NONE</r>
 		</pRound>
 	*/
 	@Test
 	public void testPlayerInfo() throws Exception {
-		Player d = new Player("xxx1", "Alena Laskavaia");
+		Player d = newPlayerAlena();
 		Round r = mock(Round.class);
 		PlayerRoundInfo info = new PlayerRoundInfo(d, r);
-		System.err.println(ModelLoader.saveToString(info));
 		String saveToString = getAboveComment();
 		PlayerRoundInfo info2 = (PlayerRoundInfo) ModelLoader.load(saveToString);
 		Player d2 = info2.getPlayer();
 		assertEquals(d, d2);
 		assertTrue(d.deepEquals(d2));
+		assertEquals(info.getWinStrDetails(), info2.getWinStrDetails());
+	}
+
+	/*-
+	<pRound>
+	  <p>
+	    <id>xxx1</id>
+	    <name>Alena Laskavaia</name>
+	  </p>
+	  <gamesWon>0</gamesWon>
+	  <gamesDraw>3</gamesDraw>
+	  <gamesLost>0</gamesLost>
+	</pRound>
+	*/
+	@Test
+	public void testPlayerInfo2() throws Exception {
+		Player d = newPlayerAlena();
+		Round r = mock(Round.class);
+		PlayerRoundInfo info = new PlayerRoundInfo(d, r);
+		info.setWinGames(0, 0, 3);
+		String saveToString = getAboveComment();
+		PlayerRoundInfo info2 = (PlayerRoundInfo) ModelLoader.load(saveToString);
+		Player d2 = info2.getPlayer();
+		assertEquals(d, d2);
+		assertTrue(d.deepEquals(d2));
+		assertEquals(info.getWinStrDetails(), info2.getWinStrDetails());
+	}
+
+	@Test
+	public void testPlayerInfoDef() throws Exception {
+		Player d = newPlayerAlena();
+		PlayerRoundInfo info = new PlayerRoundInfo(d, mock(Round.class));
+		assertEquals("_(_)", info.getWinStrDetails());
+	}
+
+	public Player newPlayerAlena() {
+		return new Player("xxx1", "Alena Laskavaia");
+	}
+
+	/*-
+	<list>
+	<player>
+	<id>xxx1</id>
+	<name>Alena Laskavaia</name>
+	<points>0</points>
+	<games>0</games>
+	</player>
+	<pRound>
+	<p reference="/list/player"/>
+	<gamesWon>0</gamesWon>
+	<gamesDraw>0</gamesDraw>
+	<gamesLost>0</gamesLost>
+	<r>_NONE</r>
+	</pRound>
+	</list>
+	*/
+	@Test
+	public void testAbsoluteLinks() throws Exception {
+		Player d = newPlayerAlena();
+		PlayerRoundInfo info = new PlayerRoundInfo(d, mock(Round.class));
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(d);
+		list.add(info);
+		String saveToString = getAboveComment();
+		List list1 = (List) ModelLoader.load(saveToString);
+		PlayerRoundInfo info2 = (PlayerRoundInfo) list1.get(1);
+		Player d2 = info2.getPlayer();
+		assertEquals(d, d2);
+		assertTrue(d.deepEquals(d2));
+		assertEquals(info.getWinStrDetails(), info2.getWinStrDetails());
 		assertTrue(info.deepEquals(info2));
 	}
 
-	//@Test
-	public void testLinks() throws Exception {
-		Tournament tour = new Tournament();
-		tour.generatePlayers(2);
-		tour.setNumberOfRounds(1);
-		tour.setDraft(false);
-		tour.setType(TournamentType.RANDOM);
-		tour.schedule();
-		System.err.println(ModelLoader.saveToString(tour));
+	/*-
+	 <list>
+	<player>
+	<id>xxx1</id>
+	<name>Alena Laskavaia</name>
+	<points>1</points>
+	<games>0</games>
+	</player>
+	<pRound>
+	<p reference="../../player"/>
+	<gamesWon>0</gamesWon>
+	<gamesDraw>0</gamesDraw>
+	<gamesLost>0</gamesLost>
+	<r>_NONE</r>
+	</pRound>
+	</list>
+
+	 */
+	public void testRelativeLinks() throws Exception {
+		Player d = newPlayerAlena();
+		d.setPoints(1);
+		PlayerRoundInfo info = new PlayerRoundInfo(d, mock(Round.class));
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(d);
+		list.add(info);
+		String saveToString = getAboveComment();
+		List list1 = (List) ModelLoader.load(saveToString);
+		PlayerRoundInfo info2 = (PlayerRoundInfo) list1.get(1);
+		Player d2 = info2.getPlayer();
+		assertEquals(d, d2);
+		assertTrue(d.deepEquals(d2));
+		assertEquals(info.getWinStrDetails(), info2.getWinStrDetails());
+		assertTrue(info.deepEquals(info2));
 	}
 }
