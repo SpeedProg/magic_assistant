@@ -63,12 +63,14 @@ public class FileUtils {
 			}
 			// list all the directory contents
 			String files[] = src.list();
-			for (String file : files) {
-				// construct the src and dest file structure
-				File srcFile = new File(src, file);
-				File destFile = new File(dest, file);
-				// recursive copy
-				copyTree(srcFile, destFile);
+			if (files != null) {
+				for (String file : files) {
+					// construct the src and dest file structure
+					File srcFile = new File(src, file);
+					File destFile = new File(dest, file);
+					// recursive copy
+					copyTree(srcFile, destFile);
+				}
 			}
 		} else {
 			// if file, then copy it
