@@ -109,6 +109,7 @@ public class SwissSchedule extends AbstractScheduler {
 
 	@Override
 	protected void sortForScheduling(List<PlayerTourInfo> players) {
+		Collections.shuffle(players); // ramdomize for player with same rating
 		Collections.sort(players, new Comparator<PlayerTourInfo>() {
 			public int compare(PlayerTourInfo a, PlayerTourInfo b) {
 				return Tournament.comparePlayers(a, b);
