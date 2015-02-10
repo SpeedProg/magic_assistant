@@ -29,7 +29,7 @@ import com.reflexit.mtgtournament.core.model.Player;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class PlayerDetailsSection extends TSectionPart {
 	private Player player;
@@ -45,7 +45,7 @@ public class PlayerDetailsSection extends TSectionPart {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void createBody() {
 		Section section = this.getSection();
@@ -55,6 +55,7 @@ public class PlayerDetailsSection extends TSectionPart {
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		modLis = new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				Text text = (Text) e.widget;
 				textModified((String) text.getData("id"), text.getText());
@@ -96,10 +97,12 @@ public class PlayerDetailsSection extends TSectionPart {
 		text.setData("id", id);
 		text.addModifyListener(modLis);
 		text.addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				save();
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				// nothing
 			}
@@ -113,7 +116,7 @@ public class PlayerDetailsSection extends TSectionPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.mtgtournament.ui.tour.views.TSectionPart#setFormInput(java.lang.Object)
 	 */
 	@Override
@@ -131,7 +134,7 @@ public class PlayerDetailsSection extends TSectionPart {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void updateFields() {
 		for (String key : fields.keySet()) {
@@ -141,5 +144,10 @@ public class PlayerDetailsSection extends TSectionPart {
 		fields.get("pin").setText(player.getId());
 		fields.get("points").setText(player.getPoints() + "");
 		fields.get("games").setText(player.getGames() + "");
+		//		DecorationSupport.bindText(fields.get("points"), player, "points",
+		//				(i) -> {
+		//					if (((Integer) i) < 0) return "Not negative please";
+		//					return null;
+		//				});
 	}
 }
