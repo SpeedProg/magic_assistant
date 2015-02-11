@@ -56,6 +56,8 @@ public class FileUtils {
 	}
 
 	public static void copyTree(File src, File dest) throws IOException {
+		if (dest.getCanonicalPath().startsWith(src.getCanonicalPath()))
+			throw new IOException("Cannot backup inside of workspace");
 		// if directory not exists, create it
 		if (src.isDirectory()) {
 			if (!dest.exists()) {

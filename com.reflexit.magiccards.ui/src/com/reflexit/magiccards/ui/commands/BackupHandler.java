@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.commands;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,18 +29,20 @@ public class BackupHandler extends AbstractHandler {
 	public Object execute(final ExecutionEvent aevent) {
 		final File ws = FileUtils.getWorkspace();
 		SimpleDateFormat format = new SimpleDateFormat("YYYY_MMdd_HHmmss");
-		final File backup = new File(FileUtils.getBackupDir(), format.format(new Date()));
+		File backupDir = FileUtils.getBackupDir();
+		final File backup = new File(backupDir, format.format(new Date()));
 		Job job = new Job("Backing up...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				File[] listFiles = ws.listFiles();
 				for (int i = 0; i < listFiles.length; i++) {
 					File file = listFiles[i];
-					if (file.getName().startsWith("."))
+					if (file.getName().startsWith(".")
+							|| file.getName().equals(backup.getParentFile().getName()))
 						continue;
 					try {
 						FileUtils.copyTree(file, new File(backup, file.getName()));
-					} catch (IOException e) {
+					} catch (Throwable e) {
 						Activator
 								.getDefault()
 								.getLog()
@@ -76,11 +77,6 @@ public class BackupHandler extends AbstractHandler {
 		});
 		job.setUser(true);
 		job.schedule();
-		try {
-			job.join();
-		} catch (InterruptedException e) {
-			// oki
-		}
 		return null;
 	}
 
