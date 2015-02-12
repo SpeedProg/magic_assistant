@@ -1,3 +1,14 @@
+changes in 1.4.1.v10
+* Bug 424 CSV import errors from older MA
+* Restored default theme back to Light
+changes in 1.4.1.9
+* Bug 418 Backing up has encountered a problem
+* Bug 425 Tournament: Randomizing 1st round swiss scheduler for player with same rank
+* Tournament: Added sort on OMW, etc columns
+* Tournament: Added multi-opponents games - beta
+* Added support for adding set abbreviations
+* Updated cards db to Feb 2015 state
+* Bug 424 Possible fix for update .exe on windows
 changes in 1.4.1.8
 * Bug 420: NPE during price update
 changes in 1.4.1.7

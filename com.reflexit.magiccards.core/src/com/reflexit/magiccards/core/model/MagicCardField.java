@@ -32,7 +32,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setCardId(castToInteger(value));
 		}
 
@@ -170,7 +170,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setDbPrice(castToFloat(value));
 		}
 
@@ -203,7 +203,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setRating(castToFloat(value));
 		}
 
@@ -263,7 +263,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setEnglishCardId(castToInteger(value));
 		}
 
@@ -274,7 +274,7 @@ public enum MagicCardField implements ICardField {
 	},
 	NOUPDATE(null) {
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			if (value instanceof String || value == null)
 				card.setProperty(this, Boolean.valueOf((String) value));
 			else if (value instanceof Boolean)
@@ -286,24 +286,6 @@ public enum MagicCardField implements ICardField {
 			return card.getProperty(this);
 		};
 	},
-	PROPERTIES {
-		@Override
-		public void set(MagicCard card, Object value) {
-			if (value instanceof String)
-				card.setProperties((String) value);
-			else if (value == null)
-				card.setProperties((LinkedHashMap<ICardField, Object>) null);
-			else if (value instanceof LinkedHashMap)
-				card.setProperties((LinkedHashMap) ((LinkedHashMap) value).clone());
-			else
-				throw new ClassCastException();
-		}
-
-		@Override
-		public Object getM(MagicCard card) {
-			return card.getProperties();
-		};
-	},
 	FLIPID(null) {
 		@Override
 		protected ICardVisitor getAggregator() {
@@ -311,7 +293,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setPropertyInteger(this, value);
 		}
 
@@ -383,7 +365,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setPropertyInteger(this, value);
 		}
 
@@ -410,7 +392,7 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
-		public void set(MagicCard card, Object value) {
+		public void setM(MagicCard card, Object value) {
 			card.setProperty(MagicCardField.LEGALITY, value);
 		};
 
@@ -424,6 +406,11 @@ public enum MagicCardField implements ICardField {
 		public Object get(IMagicCard card) {
 			return card.getCost();
 		};
+
+		@Override
+		public void set(IMagicCard card, Object value) {
+			// ignore
+		}
 	},
 	HASHCODE(null) {
 		@Override
@@ -434,6 +421,24 @@ public enum MagicCardField implements ICardField {
 		@Override
 		public Object get(IMagicCard card) {
 			return System.identityHashCode(card);
+		};
+	},
+	PROPERTIES {
+		@Override
+		public void setM(MagicCard card, Object value) {
+			if (value instanceof String)
+				card.setProperties((String) value);
+			else if (value == null)
+				card.setProperties((LinkedHashMap<ICardField, Object>) null);
+			else if (value instanceof LinkedHashMap)
+				card.setProperties((LinkedHashMap) ((LinkedHashMap) value).clone());
+			else
+				throw new ClassCastException();
+		}
+
+		@Override
+		public Object getM(MagicCard card) {
+			return card.getProperties();
 		};
 	},
 	// end of magic base fields
@@ -800,7 +805,7 @@ public enum MagicCardField implements ICardField {
 
 	/**
 	 * If field represents a special tag, what is the tag name
-	 * 
+	 *
 	 * @return
 	 */
 	String specialTag() {
@@ -862,7 +867,7 @@ public enum MagicCardField implements ICardField {
 		throw new IllegalArgumentException("Not settable " + this);
 	}
 
-	public void set(MagicCard card, Object value) {
+	public void setM(MagicCard card, Object value) {
 		if (value instanceof String || value == null) {
 			setStr(card, (String) value);
 		} else
@@ -871,14 +876,14 @@ public enum MagicCardField implements ICardField {
 
 	protected void setM(MagicCardPhysical card, Object value) {
 		if (!isPhysical())
-			set(card.getBase(), value);
+			setM(card.getBase(), value);
 		else
 			throw new IllegalArgumentException("Not settable " + this);
 	}
 
 	public void set(IMagicCard card, Object value) {
 		if (card instanceof MagicCard)
-			set((MagicCard) card, value);
+			setM((MagicCard) card, value);
 		else if (card instanceof MagicCardPhysical)
 			setM((MagicCardPhysical) card, value);
 		else

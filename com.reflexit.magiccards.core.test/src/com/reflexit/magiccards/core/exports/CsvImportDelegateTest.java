@@ -9,6 +9,8 @@ import org.junit.runners.MethodSorters;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
+import static org.junit.Assert.assertNull;
+
 @FixMethodOrder(MethodSorters.JVM)
 public class CsvImportDelegateTest extends AbstarctImportTest {
 	private CsvImportDelegate importd = new CsvImportDelegate();
@@ -16,6 +18,11 @@ public class CsvImportDelegateTest extends AbstarctImportTest {
 	private void parseAbove() {
 		addLine(getAboveComment());
 		parse(true, importd);
+	}
+
+	private void previewAbove() {
+		addLine(getAboveComment());
+		preview(importd);
 	}
 
 	//
@@ -159,5 +166,45 @@ public class CsvImportDelegateTest extends AbstarctImportTest {
 		assertEquals(1, ((MagicCardPhysical) card1).getForTrade());
 		assertEquals(3, ((MagicCardPhysical) card2).getCount());
 		assertEquals(0, ((MagicCardPhysical) card2).getForTrade());
+	}
+
+	/*-
+	NAME,ID,COST,TYPE,POWER,TOUGHNESS,ORACLE,SET,RARITY,CTYPE,COUNT,LOCATION,OWNERSHIP,COMMENT,PRICE,COLOR,DBPRICE,RATING,ARTIST,COLLNUM,SPECIAL,FORTRADECOUNT,LANG,TEXT,OWN_COUNT,OWN_UNIQUE,LEGALITY,SIDEBOARD,ERROR,DATE,SET_RELEASE
+	Blighted Agent,214383,{1}{U},Creature - Human Rogue,1,1,Infect <i>(This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)</i><br>Blighted Agent is unblockable.,New Phyrexia,Common,mono,1,Collections/main,true,,0.0,{1}{U},0.0,0.0,,29,,0,,Infect <i>(This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)</i><br>Blighted Agent is unblockable.,1,1,Extended|Commander-,false,,Wed Feb 11 19:27:06 EST 2015,Sun May 01 00:00:00 EDT 2011
+	Blind Zealot,217999,{1}{B}{B},Creature - Human Cleric,2,2,"Intimidate <i>(This creature can't be blocked except by artifact creatures and/or creatures that share a color with it.)</i><br>Whenever Blind Zealot deals combat damage to a player, you may sacrifice it. If you do, destroy target creature that player controls.",New Phyrexia,Common,mono,1,Collections/main,true,,0.0,{1}{B}{B},0.0,0.0,,52,,0,,"Intimidate <i>(This creature can't be blocked except by artifact creatures and/or creatures that share a color with it.)</i><br>Whenever Blind Zealot deals combat damage to a player, you may sacrifice it. If you do, destroy target creature that player controls.",1,1,Extended|Commander-,false,,Wed Feb 11 19:27:06 EST 2015,Sun May 01 00:00:00 EDT 2011
+	Birthing Pod,218006,{3}{GP},Artifact,,,"<i>({GP} can be paid with either {G} or 2 life.)</i><br>{1}{GP}, {T}, Sacrifice a creature: Search your library for a creature card with converted mana cost equal to 1 plus the sacrificed creature's converted mana cost, put that card onto the battlefield, then shuffle your library. Activate this ability only any time you could cast a sorcery.",New Phyrexia,Rare,mono,1,Collections/main,true,,0.0,{3}{GP},0.0,0.0,,104,,0,,"<i>({GP} can be paid with either {G} or 2 life.)</i><br>{1}{GP}, {T}, Sacrifice a creature: Search your library for a creature card with converted mana cost equal to 1 plus the sacrificed creature's converted mana cost, put that card onto the battlefield, then shuffle your library. Activate this ability only any time you could cast a sorcery.",1,1,Extended|Commander-,false,,Wed Feb 11 19:27:06 EST 2015,Sun May 01 00:00:00 EDT 2011
+	Blinding Souleater,233045,{3},Artifact Creature - Cleric,1,3,"{WP}, {T}: Tap target creature. <i>({WP} can be paid with either {W} or 2 life.)</i>",New Phyrexia,Common,colorless,1,Collections/main,true,,0.0,{3},0.0,0.0,,131,,0,,"{WP}, {T}: Tap target creature. <i>({WP} can be paid with either {W} or 2 life.)</i>",1,1,Extended|Commander-,false,,Wed Feb 11 19:27:06 EST 2015,Sun May 01 00:00:00 EDT 2011
+	Blade Splicer,233068,{2}{W},Creature - Human Artificer,1,1,"When Blade Splicer enters the battlefield, put a 3/3 colorless Golem artifact creature token onto the battlefield.<br>Golem creatures you control have first strike.",New Phyrexia,Rare,mono,1,Collections/main,true,,0.0,{2}{W},0.0,0.0,,4,,0,,"When Blade Splicer enters the battlefield, put a 3/3 colorless Golem artifact creature token onto the battlefield.<br>Golem creatures you control have first strike.",1,1,Extended|Commander-,false,,Wed Feb 11 19:27:06 EST 2015,Sun May 01 00:00:00 EDT 2011
+	*/
+	@Test
+	public void testMA1_3_1_14() {
+		parseAbove();
+		assertEquals(5, resSize);
+		assertNull(((MagicCardPhysical) card1).getError());
+	}
+
+	/*-
+	 NAME,SET,LEGALITY,IMAGE_URL
+	 My Card,My New Set,Weird,http://bla
+	 */
+	@Test
+	public void testLegality() {
+		previewAbove();
+		assertEquals(1, resSize);
+		assertEquals("http://bla", card1.getBase().getImageUrl());
+		assertEquals("Weird", card1.getBase().getLegalityMap().toExternal());
+	}
+
+	/*-
+	 NAME,SET,LEGALITY,IMAGE_URL
+	 Blighted Agent,N Set,Weird,http://bla
+	 */
+	@Test
+	public void testRegression() {
+		previewAbove();
+		assertEquals(1, resSize);
+		assertEquals("Blighted Agent", card1.getName());
+		assertEquals("http://bla", card1.getBase().getImageUrl());
+		assertEquals("Weird", card1.getBase().getLegalityMap().toExternal());
 	}
 }

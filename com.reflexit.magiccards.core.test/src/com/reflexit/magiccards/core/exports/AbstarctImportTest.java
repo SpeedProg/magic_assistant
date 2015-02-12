@@ -60,14 +60,18 @@ public class AbstarctImportTest extends AbstractMagicTest {
 
 	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
 		try {
+			exception = null;
 			parseonly(header, worker);
+			if (exception != null)
+				fail(exception.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 
-	protected void parseonly(boolean header, IImportDelegate<IMagicCard> worker) throws InvocationTargetException, InterruptedException {
+	protected void parseonly(boolean header, IImportDelegate<IMagicCard> worker)
+			throws InvocationTargetException, InterruptedException {
 		if (resolve == false)
 			throw new IllegalArgumentException("Cannot test");
 		ImportUtils.performImport(
@@ -75,7 +79,12 @@ public class AbstarctImportTest extends AbstractMagicTest {
 				virtual, deck.getLocation(), deck.getCardStore(),
 				ICoreProgressMonitor.NONE);
 		result = extractStorageCards();
+		exception = worker.getResult().getError();
 		setout(result);
+	}
+
+	protected void preview(IImportDelegate<IMagicCard> worker) {
+		preview(true, worker);
 	}
 
 	protected void preview(boolean header, IImportDelegate<IMagicCard> worker) {

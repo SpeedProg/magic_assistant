@@ -106,14 +106,41 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			if (nameByAbbr == null)
 				nameByAbbr = value;
 			card.set(MagicCardField.SET, nameByAbbr);
-		} else if (field == MagicCardField.LOCATION || field == MagicCardField.CTYPE
-				|| field == MagicCardField.CMC
-				|| field == MagicCardField.COLOR) {
-			// ignore this field
 		} else if (field == MagicCardField.SIDEBOARD) {
 			if (Boolean.valueOf(value).booleanValue()) {
 				card.setLocation(getSideboardLocation());
 			}
+		} else if (field == MagicCardField.LOCATION) {
+			// ignore
+		} else if (field.isTransient()) {
+			if (field == MagicCardField.FORTRADECOUNT
+					|| field == MagicCardField.LEGALITY
+					|| field == MagicCardField.IMAGE_URL) {
+				// special handling for transient fields, we will set it
+				card.set(field, value);
+			} else {
+				// ignore
+			}
+		} else {
+			card.set(field, value);
+		}
+	}
+
+	public void setFieldValue1(MagicCardPhysical card, ICardField field, int i, String value) {
+		if (field == MagicCardField.EDITION_ABBR) {
+			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
+			if (nameByAbbr == null)
+				nameByAbbr = value;
+			card.set(MagicCardField.SET, nameByAbbr);
+		} else if (field == MagicCardField.FORTRADECOUNT || field == MagicCardField.LOCATION) {
+			// special handling
+			card.set(field, value);
+		} else if (field == MagicCardField.SIDEBOARD) {
+			if (Boolean.valueOf(value).booleanValue()) {
+				card.setLocation(getSideboardLocation());
+			}
+		} else if (field.isTransient()) {
+			// ignore this field
 		} else {
 			card.set(field, value);
 		}

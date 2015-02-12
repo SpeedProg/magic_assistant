@@ -261,7 +261,7 @@ public class MagicCard extends AbstractMagicCard {
 	@Override
 	public boolean set(ICardField field, Object value) {
 		MagicCardField mf = (MagicCardField) field;
-		mf.set(this, value);
+		mf.setM(this, value);
 		return true;
 	}
 
@@ -665,8 +665,10 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	void setImageUrl(String value) {
-		String x = getImageUrl();
-		if (x != null && x.equals(value))
+		if (value == null || value.isEmpty())
+			return;
+		String x = getDefaultImageUrl();
+		if (value.equals(x))
 			return;
 		setPropertyString(MagicCardField.IMAGE_URL, value);
 	}

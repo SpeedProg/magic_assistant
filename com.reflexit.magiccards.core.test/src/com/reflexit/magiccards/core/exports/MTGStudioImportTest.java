@@ -16,8 +16,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class MTGStudioImportTest extends AbstarctImportTest {
@@ -98,9 +97,10 @@ public class MTGStudioImportTest extends AbstarctImportTest {
 		int err = 0;
 		for (IMagicCard iMagicCard : result) {
 			MagicCardPhysical c = (MagicCardPhysical) iMagicCard;
-			if (c.getError() != null)
-				// System.err.println(c.getError() + " " + c);
+			if (c.getError() != null) {
+				//System.err.println(c.getError() + " " + c);
 				err++;
+			}
 		}
 		assertEquals(2, err);
 	}

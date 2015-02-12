@@ -236,6 +236,23 @@
 		<echoproperties />
 	</target>
 	<target name="export.update.site">
+		<!--
+		<java jar="${equinox.launcher.jar}" fork="true" failonerror="true">
+			<arg value="-application" />
+			<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher" />
+			<arg value="-metadataRepository" />
+			<arg value="file:/${buildDirectory}/p2site" />
+			<arg value="-artifactRepository" />
+			<arg value="file:/${buildDirectory}/p2site" />
+		
+			<arg value="-source" />
+			<arg value="${buildDirectory}/p2repo" />
+			<arg value="-configs" />
+			<arg value="${configs}" />
+			
+			<arg value="-publishArtifacts" />
+		</java>
+		-->
 		<sync todir="${export.update.dir}" includeEmptyDirs="true" overwrite="true">
 			<fileset dir="${buildDirectory}/p2repo">
 			</fileset>
