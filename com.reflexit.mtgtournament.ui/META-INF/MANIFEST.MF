@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant Tournament Organizer
 Bundle-SymbolicName: com.reflexit.mtgtournament.ui;singleton:=true
-Bundle-Version: 1.4.1.qualifier
+Bundle-Version: 1.4.2.qualifier
 Bundle-Activator: com.reflexit.mtgtournament.ui.tour.Activator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.ui,

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant
 Bundle-SymbolicName: com.reflexit.magiccards_rcp;singleton:=true
-Bundle-Version: 1.4.1.qualifier
+Bundle-Version: 1.4.2.qualifier
 Bundle-Activator: com.reflexit.magiccards_rcp.Activator
 Bundle-Vendor: Alena Laskavaia
 Bundle-Localization: plugin
