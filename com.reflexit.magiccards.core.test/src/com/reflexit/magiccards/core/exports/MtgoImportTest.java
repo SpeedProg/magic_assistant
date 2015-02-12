@@ -12,9 +12,12 @@ import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
- * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of Wind,1,1,0,R,ONS,122/350 Standardize,1,1,0,R,ONS,116/350
- * Elvish Vanguard,1,1,0,R,ONS,259/350 Gigapede,1,1,0,R,ONS,264/350 Ravenous Baloth,1,1,0,R,ONS,278/350 Biorhythm,1,1,0,R,ONS,247/350 Goblin
- * Piledriver,1,1,0,R,ONS,205/350 Tephraderm,1,1,0,R,ONS,239/350 Gratuitous Violence,1,1,0,R,ONS,212/350 Risky Move,1,1,0,R,ONS,223/350 Aven
+ * Format example Card Name,Online,For Trade,Physical#,Rarity,Set,No. Words of Wind,1,1,0,R,ONS,122/350
+ * Standardize,1,1,0,R,ONS,116/350
+ * Elvish Vanguard,1,1,0,R,ONS,259/350 Gigapede,1,1,0,R,ONS,264/350 Ravenous Baloth,1,1,0,R,ONS,278/350
+ * Biorhythm,1,1,0,R,ONS,247/350 Goblin
+ * Piledriver,1,1,0,R,ONS,205/350 Tephraderm,1,1,0,R,ONS,239/350 Gratuitous Violence,1,1,0,R,ONS,212/350 Risky
+ * Move,1,1,0,R,ONS,223/350 Aven
  * Brigadier,1,1,0,R,ONS,7/350 Aven Brigadier (premium),1,1,0,R,ONS,7/350
  */
 public class MtgoImportTest extends AbstarctImportTest {
@@ -109,5 +112,23 @@ public class MtgoImportTest extends AbstarctImportTest {
 			assertEquals(true, ncard.isSpecialTag("premium"));
 			assertEquals(true, ncard.isForTrade());
 		}
+	}
+
+	/*-
+	Card Name,Quantity,ID #,Rarity,Set,Collector #,Premium,
+	"Crucible of the Spirit Dragon",1,55382,Rare,FRF,167/185,No
+	"Akoum Refuge",2,34588,Uncommon,ZEN,210/249,No
+	"Bloodfell Caves",4,55552,Common,FRF,165/185,No
+	 */
+	@Test
+	public void testFormat2015() {
+		addLine(getAboveComment());
+		parse();
+		assertEquals(3, resSize);
+		assertEquals("Crucible of the Spirit Dragon", card1.getName());
+		assertEquals(1, ((MagicCardPhysical) card1).getCount());
+		assertEquals("FRF", card1.getEdition().getMainAbbreviation());
+		assertEquals(167, card1.getCollectorNumberId());
+		assertEquals("", ((IMagicCardPhysical) card2).getSpecial());
 	}
 }

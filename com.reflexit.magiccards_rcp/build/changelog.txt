@@ -1,6 +1,7 @@
-changes in 1.4.1.v10
+changes in 1.4.2.0
 * Bug 424 CSV import errors from older MA
 * Restored default theme back to Light
+* Bug 426 MTGO Import card count incorrect 
 changes in 1.4.1.9
 * Bug 418 Backing up has encountered a problem
 * Bug 425 Tournament: Randomizing 1st round swiss scheduler for player with same rank
