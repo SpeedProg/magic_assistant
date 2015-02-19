@@ -8,9 +8,9 @@ import com.reflexit.magiccards.core.model.Location;
 
 /**
  * Specific organizer for decks and collections
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class CollectionsContainer extends CardOrganizer {
 	public CollectionsContainer(String name, CardOrganizer parent) {
@@ -31,6 +31,8 @@ public class CollectionsContainer extends CardOrganizer {
 			// System.err.println(this + "/" + name);
 			if (name.equals("MagicDB"))
 				continue; // skip this ones
+			if (name.startsWith("."))
+				continue; // skip this one too
 			CardElement el = findChieldByName(name);
 			if (mem.isDirectory()) {
 				if (el == null) {
