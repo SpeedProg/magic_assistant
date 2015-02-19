@@ -127,7 +127,6 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 
 	public void maindeckCards(MyXMLStreamWriter w) throws XMLStreamException {
 		ICardStore<IMagicCard> mainStore = filterByLocation(store, true);
-		System.err.println(mainStore);
 		CardGroup group = CardStoreUtils.buildTypeGroups(mainStore);
 		CardGroup top = (CardGroup) group.getChildAtIndex(0);
 		CardGroup land = (CardGroup) top.getChildAtIndex(0);
