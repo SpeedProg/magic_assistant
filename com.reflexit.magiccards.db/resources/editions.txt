@@ -135,6 +135,6 @@ Khans of Tarkir|KTK||September 2014|Expansion|Khans of Tarkir|Standard|
 Commander 2014|C14||November 2014|Starter|||
 Fate Reforged|FRF||January 2015|Expansion|Khans of Tarkir|Standard|
 Duel Decks Anthology, Divine vs. Demonic|DD3_DVD||February 2015|Starter|Duel Decks||
-Duel Decks Anthology, Elves vs. Dragons|DD3_EVG||February 2015|Starter|Duel Decks||
+Duel Decks Anthology, Elves vs. Goblins|DD3_EVG||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Garruk vs. Liliana|DD3_GVL||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|Duel Decks||
