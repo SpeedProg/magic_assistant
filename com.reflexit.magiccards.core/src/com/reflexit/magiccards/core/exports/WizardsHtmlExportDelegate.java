@@ -130,14 +130,14 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		CardGroup group = CardStoreUtils.buildTypeGroups(mainStore);
 		CardGroup top = (CardGroup) group.getChildAtIndex(0);
 		CardGroup land = (CardGroup) top.getChildAtIndex(0);
-		w.startEl("td", "valign", "top", "width", "185");
+		w.startEl("td", "valign", "top", "width", "200");
 		// list
 		listWithTotals(w, land, "lands");
 		CardGroup spell = (CardGroup) top.getChildAtIndex(1);
 		CardGroup creature = (CardGroup) spell.getChildAtIndex(1);
 		listWithTotals(w, creature, " creatures");
 		w.endEl(); // td
-		w.startEl("td", "valign", "top", "width", "185");
+		w.startEl("td", "valign", "top", "width", "200");
 		CardGroup other = (CardGroup) spell.getChildAtIndex(0);
 		listWithTotals(w, other, "other spells");
 		// sideboard
@@ -250,14 +250,12 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		// top
 		w.startEl("div", "class", "decktop");
 		w.startEl("div", "class", "decktopmiddle");
-		// w.startEl("div", "style", "float:left");
 		w.startEl("div", "class", "main");
-		w.el("heading", getName());
+		w.el("h2", getName());
 		w.endEl(); // main
 		w.startEl("div", "class", "sub");
 		w.data(getComment());
 		w.endEli(); // sub
-		// w.endEl(); // style
 		w.lineEl("br", "class", "clear");
 		w.endEl(); // desktopmiddle
 		w.endEl(); // desktop
