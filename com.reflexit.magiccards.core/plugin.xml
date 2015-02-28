@@ -121,7 +121,7 @@
              exportDelegate="com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate"
              extension="html"
              id="htmlWizards"
-             label="Wizards deck HTML"
+             label="Compact HTML"
              xmlFormat="true">
        </deckFormat>
       <deckFormat

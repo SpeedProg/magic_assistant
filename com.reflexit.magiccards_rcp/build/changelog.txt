@@ -1,4 +1,10 @@
-changes in 1.4.2.0
+changes in 1.4.2.001
+* Bug 430 Add set/rarity simbol to html
+* Renamed Wizard html into Compact html
+* Bug 430 Html export - description should be above table now for IE
+* Bug 433 fixed exporters folder in decks
+* Fixed Elves vs Dragons
+changes in 1.4.2.000
 * Bug 424 CSV import errors from older MA
 * Restored default theme back to Light
 * Bug 426 MTGO Import card count incorrect 

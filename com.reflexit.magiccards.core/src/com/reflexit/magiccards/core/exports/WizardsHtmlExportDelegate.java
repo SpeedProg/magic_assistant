@@ -1,21 +1,27 @@
 package com.reflexit.magiccards.core.exports;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
 import com.reflexit.magiccards.core.xml.MyXMLStreamWriter;
 import com.reflexit.magiccards.core.xml.XMLStreamException;
@@ -23,6 +29,8 @@ import com.reflexit.magiccards.core.xml.XMLStreamException;
 public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public static final String CARD_URI = "http://";
 	public static final String CARDID = "multiverseid=";
+	private static final String COLWIDTH = "250";
+	protected boolean showImage;
 
 	@Override
 	public void export(ICoreProgressMonitor monitor) throws InvocationTargetException {
@@ -34,6 +42,12 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 					location = ((ILocatable) card).getLocation();
 					if (location != null)
 						location = location.toMainDeck();
+				}
+			}
+			showImage = false;
+			for (ICardField field : columns) {
+				if (field == MagicCardField.SET || field == MagicCardField.RARITY) {
+					showImage = true;
 				}
 			}
 			try {
@@ -69,58 +83,28 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		w.startEl("head");
 		w.lineEl("link", "href", "magicexport.css", "type", "text/css", "rel", "stylesheet");
 		w.lineEl("meta", "http-equiv", "Content-Type", "content", "text/html; charset=utf-8");
-		w.endEl();
+		w.endEl(); // head
 		w.startEl("body", "style", "overflow:auto;");
 		header(w);
 		maindeck(w);
 		footer(w);
-		w.endEl();
-		w.endEl();
-	}
-
-	private void footer(MyXMLStreamWriter w) throws XMLStreamException {
-		w.endEl(); // deck
-		w.endEl(); // content
+		w.endEl(); // body
+		w.endEl(); // html
 	}
 
 	private void maindeck(MyXMLStreamWriter w) throws XMLStreamException {
-		/*-
-		<div class="maindeck">
-		<div class="maindeckmiddle">
-		<div style="position: relative;">
-		  <table class="cardgroup">
-		    <tbody><tr>
-		      <td align="center" colspan="2">
-		        <p class="decktitle">Main Deck</p>
-		        <p class="cardcount">60 cards
-									</p>
-		      </td>
-		      <td align="center" valign="top" style="width:230px">
-		    </td></tr>
-		 */
 		w.startEl("div", "class", "maindeck");
-		w.startEl("div", "class", "maindeckmiddle");
-		w.startEl("div", "style", "position: relative;");
 		w.startEl("table", "class", "cardgroup");
 		w.startEl("tbody");
-		w.startEl("tr");
-		w.startEl("td", "align", "center", "colspan", "2");
-		w.ela("p", "Main Deck", "class", "decktitle");
-		w.ela("p", ((ICardCountable) getMainStore()).getCount() + " cards", "class", "cardcount");
-		w.endEl(); // td
-		w.startEl("td", "align", "center", "valign", "top", "style", "width:230px");
-		w.endEl(); // td
-		w.endEl(); // tr
 		// cards
 		w.startEl("tr");
 		maindeckCards(w);
 		w.endEl();
+		sideboardcards(w);
 		// endcards
 		w.endEl(); // tbody
 		w.endEl(); // table
 		w.lineEl("br");
-		w.endEl(); // style
-		w.endEl(); // maindeskmiddle
 		w.endEl(); // maindesk
 		w.lineEl("br", "clear", "all");
 	}
@@ -129,35 +113,56 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		ICardStore<IMagicCard> mainStore = filterByLocation(store, true);
 		CardGroup group = CardStoreUtils.buildTypeGroups(mainStore);
 		CardGroup top = (CardGroup) group.getChildAtIndex(0);
-		CardGroup land = (CardGroup) top.getChildAtIndex(0);
-		w.startEl("td", "valign", "top", "width", "200");
+		w.startEl("td", "valign", "top", "width", COLWIDTH);
 		// list
-		listWithTotals(w, land, "lands");
 		CardGroup spell = (CardGroup) top.getChildAtIndex(1);
 		CardGroup creature = (CardGroup) spell.getChildAtIndex(1);
-		listWithTotals(w, creature, " creatures");
+		listWithTotals(w, creature, "creatures");
 		w.endEl(); // td
-		w.startEl("td", "valign", "top", "width", "200");
+		w.startEl("td", "valign", "top", "width", COLWIDTH);
 		CardGroup other = (CardGroup) spell.getChildAtIndex(0);
 		listWithTotals(w, other, "other spells");
-		// sideboard
-		ICardStore<IMagicCard> sbStore = getSideboardStore();
-		if (sbStore != null && sbStore.size() > 0) {
-			// <div class="decktitle"
-			// style="padding-bottom:8px;"><b><i>Sideboard</i></b></div>
-			w.startEl("div", "class", "decktitle", "style", "padding-bottom:8px;");
-			w.startEl("b");
-			w.el("i", "Sideboard");
-			w.endEl(); // b
-			w.endEl(); // div
-			list(w, sbStore);
-			totals(w, ((ICardCountable) sbStore).getCount() + " sideboad cards");
-		}
+		CardGroup land = (CardGroup) top.getChildAtIndex(0);
+		listWithTotals(w, land, "lands");
 		w.endEl(); // td
+		// image column
 		w.startEl("td", "valign", "top", "width", "185");
 		w.lineEl("img", "src", "", "id", "card_pic", "style",
 				"max-height: 223px; max-width: 310px; text-align: center; vertical-align: middle;", "alt", "");
 		w.endEl(); // td
+	}
+
+	public void sideboardcards(MyXMLStreamWriter w) throws XMLStreamException {
+		// sideboard
+		ICardStore<IMagicCard> sbStore = getSideboardStore();
+		if (sbStore != null && sbStore.size() > 0) {
+			int count = ((ICardCountable) sbStore).getCount();
+			// split sideboard in half
+			int i = 0;
+			int half = sbStore.size() - sbStore.size() / 2;
+			ArrayList<IMagicCard> cards1 = new ArrayList<IMagicCard>();
+			ArrayList<IMagicCard> cards2 = new ArrayList<IMagicCard>();
+			for (IMagicCard card : sbStore) {
+				if (i < half)
+					cards1.add(card);
+				else
+					cards2.add(card);
+				i++;
+			}
+			w.startEl("tr");
+			w.startEl("td");
+			totals(w, "Sideboard (" + count + ")");
+			w.endEl();
+			w.endEl();
+			w.startEl("tr");
+			w.startEl("td", "valign", "top", "width", COLWIDTH);
+			list(w, cards1);
+			w.endEl();// td
+			w.startEl("td", "valign", "top", "width", COLWIDTH);
+			list(w, cards2);
+			w.endEl();// td
+			w.endEl();
+		}
 	}
 
 	private ICardStore<IMagicCard> filterByLocation(IFilteredCardStore<IMagicCard> store, boolean mainDeck) {
@@ -190,8 +195,13 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 	}
 
 	public void listWithTotals(MyXMLStreamWriter w, CardGroup group, String type) throws XMLStreamException {
+		totals(w, type + " (" + group.getCount() + ")");
 		list(w, group.expand());
-		totals(w, group.getCount() + " " + type);
+		w.lineEl("br");
+	}
+
+	private String cap1(String str) {
+		return str.substring(0, 1).toUpperCase(Locale.ENGLISH) + str.substring(1);
 	}
 
 	private void totals(MyXMLStreamWriter w, String totals) throws XMLStreamException {
@@ -199,10 +209,10 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		<hr size="1" width="50%" align="left" class="decktotals">
 		<span class="decktotals">26 lands</span><br><br>
 		 */
+		w.startEl("b");
+		w.ela("i", cap1(totals), "class", "decltotals");
+		w.endEl();
 		w.lineEl("hr", "size", "1", "width", "50%", "align", "left", "class", "decltotals");
-		w.ela("span", totals, "class", "decltotals");
-		w.lineEl("br");
-		w.lineEl("br");
 	}
 
 	private void list(MyXMLStreamWriter w, Iterable<IMagicCard> flat) throws XMLStreamException {
@@ -220,45 +230,42 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 			w.nl();
 			if (card instanceof ICardCountable) {
 				w.data(((ICardCountable) card).getCount() + " ");
+				setAndRarity(w, card);
 				String cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
 				URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId());
-				w.ela("a", card.getName(), "href", cardDetailUrl, "onmouseover",
+				w.ela("a", cardLine(card), "href", cardDetailUrl, "onmouseover",
 						"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
 			}
 			w.lineEl("br");
 		}
 	}
 
+	protected void setAndRarity(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
+		if (showImage) {
+			try {
+				URL seturl = CardCache.createSetImageURL(card, false);
+				w.ela("img", "", "src", seturl.toExternalForm(),
+						"width", "32",
+						"height", "16",
+						"valign", "center");
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+	}
+
+	protected String cardLine(IMagicCard card) {
+		return card.getName();
+	}
+
 	private void header(MyXMLStreamWriter w) throws XMLStreamException {
-		/*-
-		<div id="content">
-		<div class="deck">
-		<div class="decktop">
-		<div class="decktopmiddle">
-		//		<div style="float:left">
-		  <div class="main">
-		    <heading>Divine</heading>
-		  </div>
-		  <div class="sub">Duel Decks: Divine vs. Demonic</div>
-		//		</div>
-		<br class="clear">
-		</div>
-		</div>
-		 */
-		w.startEl("div", "id", "content");
-		w.startEl("div", "class", "deck");
-		// top
-		w.startEl("div", "class", "decktop");
-		w.startEl("div", "class", "decktopmiddle");
-		w.startEl("div", "class", "main");
-		w.el("h2", getName());
-		w.endEl(); // main
-		w.startEl("div", "class", "sub");
+		w.el("h3", cap1(getName()) + " (" + ((ICardCountable) getMainStore()).getCount() + ")");
+		w.startEl("p", "class", "sub");
 		w.data(getComment());
-		w.endEli(); // sub
-		w.lineEl("br", "class", "clear");
-		w.endEl(); // desktopmiddle
-		w.endEl(); // desktop
+		w.endEl(); // sub title
+	}
+
+	private void footer(MyXMLStreamWriter w) throws XMLStreamException {
 	}
 
 	private String getComment() {
@@ -267,7 +274,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 
 	@Override
 	public boolean isColumnChoiceSupported() {
-		return false;
+		return true;
 	}
 
 	@Override
