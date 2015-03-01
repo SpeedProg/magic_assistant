@@ -45,7 +45,7 @@ import com.reflexit.magiccards.core.exports.AbstractExportDelegate;
 import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate;
+import com.reflexit.magiccards.core.exports.CompactHtmlExportDelegate;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
@@ -137,8 +137,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 				@Override
 				public void changing(LocationEvent event) {
 					String location = event.location;
-					if (location.startsWith(WizardsHtmlExportDelegate.CARD_URI)) {
-						location = location.substring(WizardsHtmlExportDelegate.CARD_URI.length());
+					if (location.startsWith(CompactHtmlExportDelegate.CARD_URI)) {
+						location = location.substring(CompactHtmlExportDelegate.CARD_URI.length());
 						if (location.endsWith("/")) {
 							location = location.substring(0, location.length() - 1);
 						}
@@ -148,9 +148,9 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 						String params[] = location.split("&");
 						for (int i = 0; i < params.length; i++) {
 							String string = params[i];
-							if (string.startsWith(WizardsHtmlExportDelegate.CARDID)) {
+							if (string.startsWith(CompactHtmlExportDelegate.CARDID)) {
 								event.doit = false;
-								String value = string.substring(WizardsHtmlExportDelegate.CARDID.length());
+								String value = string.substring(CompactHtmlExportDelegate.CARDID.length());
 								int cardId = Integer.valueOf(value).intValue();
 								IDbCardStore magicDBStore = DataManager.getCardHandler().getMagicDBStore();
 								IMagicCard card = (IMagicCard) magicDBStore.getCard(cardId);

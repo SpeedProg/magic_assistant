@@ -118,10 +118,17 @@
              xmlFormat="true">
        </deckFormat>
        <deckFormat
-             exportDelegate="com.reflexit.magiccards.core.exports.WizardsHtmlExportDelegate"
+             exportDelegate="com.reflexit.magiccards.core.exports.CompactHtmlExportDelegate"
              extension="html"
              id="htmlWizards"
              label="Compact HTML"
+             xmlFormat="true">
+       </deckFormat>
+       <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.CompactPlusHtmlExportDelegate"
+             extension="html"
+             id="htmlCompact2"
+             label="Compact Plus HTML"
              xmlFormat="true">
        </deckFormat>
       <deckFormat

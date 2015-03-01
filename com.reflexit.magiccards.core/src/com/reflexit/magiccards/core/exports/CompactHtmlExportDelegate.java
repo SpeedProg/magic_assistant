@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,26 +10,22 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
-import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.CardCache;
 import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
 import com.reflexit.magiccards.core.xml.MyXMLStreamWriter;
 import com.reflexit.magiccards.core.xml.XMLStreamException;
 
-public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
+public class CompactHtmlExportDelegate extends AbstractExportDelegate<IMagicCard> {
 	public static final String CARD_URI = "http://";
 	public static final String CARDID = "multiverseid=";
-	private static final String COLWIDTH = "250";
-	protected boolean showImage;
+	private static final String COLWIDTH = "40%";
 
 	@Override
 	public void export(ICoreProgressMonitor monitor) throws InvocationTargetException {
@@ -42,12 +37,6 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 					location = ((ILocatable) card).getLocation();
 					if (location != null)
 						location = location.toMainDeck();
-				}
-			}
-			showImage = false;
-			for (ICardField field : columns) {
-				if (field == MagicCardField.SET || field == MagicCardField.RARITY) {
-					showImage = true;
 				}
 			}
 			try {
@@ -94,7 +83,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 
 	private void maindeck(MyXMLStreamWriter w) throws XMLStreamException {
 		w.startEl("div", "class", "maindeck");
-		w.startEl("table", "class", "cardgroup");
+		w.startEl("table", "class", "cardgroup", "cellpadding", "10");
 		w.startEl("tbody");
 		// cards
 		w.startEl("tr");
@@ -227,31 +216,28 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 
 		 */
 		for (IMagicCard card : flat) {
-			w.nl();
-			if (card instanceof ICardCountable) {
-				w.data(((ICardCountable) card).getCount() + " ");
-				setAndRarity(w, card);
-				String cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
-				URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId());
-				w.ela("a", cardLine(card), "href", cardDetailUrl, "onmouseover",
-						"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
-			}
+			printCardElement(w, card);
 			w.lineEl("br");
 		}
 	}
 
-	protected void setAndRarity(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
-		if (showImage) {
-			try {
-				URL seturl = CardCache.createSetImageURL(card, false);
-				w.ela("img", "", "src", seturl.toExternalForm(),
-						"width", "32",
-						"height", "16",
-						"valign", "center");
-			} catch (IOException e) {
-				// ignore
-			}
+	protected void printCardElement(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
+		w.nl();
+		printCount(w, card);
+		printNameAndLink(w, card);
+	}
+
+	protected void printCount(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
+		if (card instanceof ICardCountable) {
+			w.data(((ICardCountable) card).getCount() + " ");
 		}
+	}
+
+	protected void printNameAndLink(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
+		String cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
+		URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId());
+		w.ela("a", cardLine(card), "href", cardDetailUrl, "onmouseover",
+				"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
 	}
 
 	protected String cardLine(IMagicCard card) {
@@ -274,7 +260,7 @@ public class WizardsHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 
 	@Override
 	public boolean isColumnChoiceSupported() {
-		return true;
+		return false;
 	}
 
 	@Override

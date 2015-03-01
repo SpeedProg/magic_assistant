@@ -32,7 +32,7 @@ public class MyXMLStreamWriter {
 
 	/**
 	 * End of tag with nl
-	 * 
+	 *
 	 * @throws XMLStreamException
 	 */
 	public void endEl() throws XMLStreamException {
@@ -97,7 +97,7 @@ public class MyXMLStreamWriter {
 
 	/**
 	 * End of tag, no nl
-	 * 
+	 *
 	 * @throws XMLStreamException
 	 */
 	public void endEli() throws XMLStreamException {
@@ -201,6 +201,14 @@ public class MyXMLStreamWriter {
 			for (int i = 0; i < indent; i++) {
 				out.write("  ");
 			}
+			out.write(string);
+		} catch (IOException e) {
+			throw new XMLStreamException(e);
+		}
+	}
+
+	public void write(String string) throws XMLStreamException {
+		try {
 			out.write(string);
 		} catch (IOException e) {
 			throw new XMLStreamException(e);

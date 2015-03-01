@@ -79,7 +79,8 @@ public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagi
 		stream.println(line + "</tr>");
 	}
 
-	private String replaceSymbolsWithLinksOnline(String cost) {
+	public static String replaceSymbolsWithLinksOnline(String cost) {
+		if (cost == null || cost.trim().isEmpty()) return "";
 		String text = "";
 		String[] manasplit = Colors.getInstance().manasplit(cost);
 		for (int i = 0; i < manasplit.length; i++) {
@@ -90,7 +91,7 @@ public class HtmlTableExportDelegate extends AbstractExportDelegatePerLine<IMagi
 		return text;
 	}
 
-	private String img(URL createSetImageURL, String alt) {
-		return "<img  style=\"float:left\"  src=\"" + createSetImageURL + "\" alt=\"" + alt + "\"/>";
+	private static String img(URL createSetImageURL, String alt) {
+		return "<img  style=\"float:right\"  src=\"" + createSetImageURL + "\" alt=\"" + alt + "\"/>";
 	}
 }
