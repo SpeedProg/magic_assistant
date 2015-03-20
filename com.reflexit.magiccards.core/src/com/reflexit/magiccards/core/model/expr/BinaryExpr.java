@@ -138,7 +138,7 @@ public class BinaryExpr extends Expr {
 
 	public static BinaryExpr fieldInt(ICardField field, String value) {
 		if (value.equals(">= 0")) {
-			return new BinaryExpr(MagicCardFilter.TRUE, Operation.AND, MagicCardFilter.TRUE);
+			return new BinaryExpr(Expr.TRUE, Operation.AND, Expr.TRUE);
 		} else if (value.startsWith(">=")) {
 			return fieldOp(field, Operation.GE, value.substring(2).trim());
 		} else if (value.startsWith("<=")) {
@@ -148,7 +148,7 @@ public class BinaryExpr extends Expr {
 		} else if (value.startsWith("=")) {
 			return fieldOp(field, Operation.EQ, value.substring(1).trim());
 		} else if (value.equals("0")) {
-			return new BinaryExpr(MagicCardFilter.TRUE, Operation.AND, MagicCardFilter.TRUE);
+			return new BinaryExpr(Expr.TRUE, Operation.AND, Expr.TRUE);
 		} else {
 			return fieldOp(field, Operation.EQ, value.trim());
 		}

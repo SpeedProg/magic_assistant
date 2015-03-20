@@ -16,7 +16,6 @@ import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
 public class MagicCardFilter implements Cloneable {
 	private Expr root;
-	private int limit = Integer.MAX_VALUE;
 	private SortOrder sortOrder = new SortOrder();
 	private ICardField groupFields[];
 	private boolean onlyLastSet = false;
@@ -40,8 +39,6 @@ public class MagicCardFilter implements Cloneable {
 	public String toString() {
 		return root.toString();
 	}
-
-	public static Expr TRUE = Expr.TRUE;
 
 	public Expr getRoot() {
 		return this.root;
@@ -70,7 +67,7 @@ public class MagicCardFilter implements Cloneable {
 	}
 
 	public void update(HashMap<String, String> map) {
-		Expr expr = TRUE;
+		Expr expr = Expr.TRUE;
 		expr = expr.and(createColorGroup(map));
 		expr = expr
 				.and(createOrGroup(map, CardTypes.getInstance()))
@@ -162,13 +159,9 @@ public class MagicCardFilter implements Cloneable {
 		return nres.and(res);
 	}
 
-	public int getLimit() {
-		return this.limit;
-	}
-
 	/**
 	 * sort field
-	 * 
+	 *
 	 * @param sortField
 	 */
 	public void setSortField(ICardField sortField, boolean accending) {
@@ -197,12 +190,6 @@ public class MagicCardFilter implements Cloneable {
 		if (groupFields == null)
 			groupFields = new ICardField[10];
 		this.groupFields[index] = groupField;
-	}
-
-	public void setLimit(int limit) {
-		if (limit < 0)
-			throw new IllegalArgumentException("Invalid value for limit (must be >=0)");
-		this.limit = limit;
 	}
 
 	public boolean isFiltered(Object o) {

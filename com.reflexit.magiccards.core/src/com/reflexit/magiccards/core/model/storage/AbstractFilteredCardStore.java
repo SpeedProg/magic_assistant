@@ -225,9 +225,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				if (!filter.isFiltered(elem)) {
 					filteredList.add(elem);
 				}
-				if (filteredList.size() >= filter.getLimit()) {
-					break;
-				}
 			}
 		} else {
 			Comparator<ICard> comp = getSortComparator(filter);
@@ -236,10 +233,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				T elem = iterator.next();
 				if (!filter.isFiltered(elem)) {
 					filteredList.add(elem);
-				}
-				if (filteredList.size() > filter.getLimit()) {
-					Object last = ((TreeSet) filteredList).last();
-					filteredList.remove(last);
 				}
 			}
 		}
