@@ -85,6 +85,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	private Action refresh;
 	private Clipboard clipboard;
 	private Composite top;
+	private ModelRoot modelRoot;
+	private ICardEventListener modelListener = this;
 
 	/**
 	 * The constructor.
@@ -232,7 +234,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 				return false;
 			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 				CardElement el = (CardElement) iterator.next();
-				if (el.getParent() == getModelRoot())
+				if (el.getParent() == modelRoot)
 					return false;
 			}
 			return true;
@@ -315,7 +317,12 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 			@Override
 			public void run() {
-				getModelRoot().refresh();
+				// reset listeners just in case model root changed
+				modelRoot.removeListener(modelListener);
+				modelRoot = getModelRoot();
+				modelRoot.addListener(modelListener);
+				// refresh model and view
+				modelRoot.refresh();
 				getViewer().refresh(true);
 			}
 		};
@@ -397,13 +404,14 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
 	 */
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		getModelRoot().addListener(this);
+		modelRoot = getModelRoot();
+		modelRoot.addListener(modelListener);
 		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(this);
 	}
 
@@ -413,7 +421,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 	@Override
 	public void dispose() {
-		getModelRoot().removeListener(this);
+		modelRoot.removeListener(modelListener);
 		this.manager.dispose();
 		clipboard.dispose();
 		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(this);
