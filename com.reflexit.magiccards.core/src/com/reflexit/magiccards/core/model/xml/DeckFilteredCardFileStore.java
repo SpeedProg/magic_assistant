@@ -19,6 +19,7 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 
 	@Override
 	protected void doInitialize() throws MagicException {
+		super.doInitialize();
 		this.table.initialize();
 	}
 

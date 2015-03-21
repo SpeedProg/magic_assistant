@@ -215,7 +215,7 @@ public class CardGroupTest extends TestCase {
 		group.add(set);
 		assertEquals(cards.length + 1, group.size());
 		assertEquals(cards.length, group.getUniqueCount());
-		group.removeEmptyChildren();
+		group.setFilter(new MagicCardFilter());
 		assertEquals(cards.length, group.size());
 	}
 
@@ -369,7 +369,7 @@ public class CardGroupTest extends TestCase {
 			}
 			count += ((IMagicCardPhysical) cards[j]).getCount();
 		}
-		group.rehash();
+		group.recache();
 		checkConsistency(MagicCardField.OWNERSHIP, group.isOwn());
 		checkConsistency(MagicCardField.OWN_COUNT, group.getOwnCount(), count);
 		checkConsistency(MagicCardField.OWN_UNIQUE, group.getOwnUnique(), same ? 1 : count);
@@ -417,7 +417,7 @@ public class CardGroupTest extends TestCase {
 			cards[j] = c;
 			group.add(c);
 		}
-		group.rehash();
+		group.recache();
 		checkConsistency(MagicCardField.LEGALITY);
 	}
 
@@ -467,7 +467,8 @@ public class CardGroupTest extends TestCase {
 			for (int i = 0; i < level; i++) {
 				System.err.print("--");
 			}
-			System.err.println(o.getCardId() + ": " + o.getName() + " x " + o.getCount() + " $" + o.getDbPrice());
+			System.err.println(o.getCardId() + ": " + o.getName() + " x " + o.getCount() + " $"
+					+ o.getDbPrice());
 			if (o instanceof ICardGroup) {
 				printTree((CardGroup) o, level + 1);
 			}
@@ -485,7 +486,8 @@ public class CardGroupTest extends TestCase {
 		((ICardModifiable) cards[2]).set(MagicCardField.TYPE, "Sorcery");
 		ArrayList<IMagicCard> acards = new ArrayList<IMagicCard>(Arrays.asList(cards));
 		group = CardStoreUtils.buildTypeGroups(acards);
-		group.removeEmptyChildren();
+		group.setFilter(new MagicCardFilter());
+		//	group.removeEmptyChildren();
 		// printTree(group, 0);
 		// checkConsistency(MagicCardField.POWER, group.getPower(), "6.0");
 		checkAllConsistency();

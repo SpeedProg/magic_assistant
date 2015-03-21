@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -253,9 +252,7 @@ public class DesktopFigure extends XFigure {
 
 	private int addFromGroup(ICardGroup cardGroup, HashMap<IMagicCard, Integer> map, int i) {
 		int gi = i;
-		List<? extends ICard> childrenList = cardGroup.getChildrenList();
-		for (Iterator iterator = childrenList.iterator(); iterator.hasNext();) {
-			Object el = iterator.next();
+		for (ICard el : cardGroup) {
 			if (el instanceof ICardGroup) {
 				CardGroup gr = (CardGroup) el;
 				if (gr.getFieldIndex() != MagicCardField.NAME)

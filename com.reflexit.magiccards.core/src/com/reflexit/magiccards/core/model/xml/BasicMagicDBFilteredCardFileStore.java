@@ -19,6 +19,7 @@ public class BasicMagicDBFilteredCardFileStore extends AbstractFilteredCardStore
 
 	@Override
 	protected void doInitialize() throws MagicException {
+		super.doInitialize();
 		table.initialize();
 	}
 }

@@ -1,11 +1,8 @@
 package com.reflexit.magiccards.core.model.xml;
 
-import java.util.Collection;
-
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
@@ -24,6 +21,7 @@ public class BasicLibraryFilteredCardFileStore extends AbstractFilteredCardStore
 
 	@Override
 	protected void doInitialize() throws MagicException {
+		super.doInitialize();
 		if (table == null)
 			throw new IllegalStateException();
 	}
@@ -33,20 +31,6 @@ public class BasicLibraryFilteredCardFileStore extends AbstractFilteredCardStore
 		this.table.setInitialized(false);
 		super.reload();
 		update();
-	}
-
-	@Override
-	public int getCount() {
-		initialize();
-		int count = 0;
-		Collection<IMagicCard> list = getFilteredList();
-		for (Object element : list) {
-			IMagicCard magicCard = (IMagicCard) element;
-			if (magicCard instanceof ICardCountable) {
-				count += ((ICardCountable) magicCard).getCount();
-			}
-		}
-		return count;
 	}
 
 	public ICardStore<IMagicCard> getStore(Location location) {

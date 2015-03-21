@@ -37,7 +37,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
  * @author Alena
- * 
+ *
  */
 public final class CardStoreUtils {
 	private static final String OTHERS = "Others";
@@ -251,7 +251,7 @@ public final class CardStoreUtils {
 	/**
 	 * mana curve is array 0 .. 8 of card counts, where non-land is counted,
 	 * arr[8] - is cards with X cost in it, arr[7] - is 7+
-	 * 
+	 *
 	 * @param store
 	 * @return mana curve for given store
 	 */
@@ -299,7 +299,7 @@ public final class CardStoreUtils {
 
 	public static HashMap<String, Integer> countStats(ICardGroup group) {
 		HashMap<String, Integer> groupsList = new HashMap<String, Integer>();
-		for (ICard elem : group.getChildrenList()) {
+		for (ICard elem : group) {
 			int count = 1;
 			if (elem instanceof ICardCountable) {
 				count = ((ICardCountable) elem).getCount();
@@ -405,7 +405,7 @@ public final class CardStoreUtils {
 				unknownNode.add(elem);
 			}
 		}
-		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$		
+		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
 		CardGroup typeNode = new CardGroup(MagicCardField.TYPE, "Type");
 		root.add(typeNode);
 		typeNode.add(landNode);

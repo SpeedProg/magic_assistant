@@ -2,7 +2,7 @@ package com.reflexit.magiccards.core.model.abs;
 
 import java.util.List;
 
-public interface ICardGroup extends ICard {
+public interface ICardGroup extends ICard, Iterable<ICard> {
 	public abstract List<? extends ICard> getChildrenList();
 
 	public abstract ICard[] getChildren();

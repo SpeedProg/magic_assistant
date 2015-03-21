@@ -15,8 +15,8 @@ public class LocationFilteredCardStore extends AbstractFilteredCardStore<IMagicC
 
 	@Override
 	protected void doInitialize() throws MagicException {
+		super.doInitialize();
 		this.table.initialize();
-		getFilteredList();
 	}
 
 	public LocationFilteredCardStore() {

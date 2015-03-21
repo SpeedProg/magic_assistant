@@ -1,11 +1,17 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.CardFieldExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
@@ -15,7 +21,7 @@ import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.SearchToke
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 
 public class MagicCardFilter implements Cloneable {
-	private Expr root;
+	private Expr root = Expr.TRUE;
 	private SortOrder sortOrder = new SortOrder();
 	private ICardField groupFields[];
 	private boolean onlyLastSet = false;
@@ -64,6 +70,11 @@ public class MagicCardFilter implements Cloneable {
 			tvalue.setWordBoundary(true);
 		}
 		return new BinaryExpr(new CardFieldExpr(field), Operation.MATCHES, tvalue);
+	}
+
+	public void setFilter(Expr root) {
+		if (root == null) root = Expr.TRUE;
+		this.root = root;
 	}
 
 	public void update(HashMap<String, String> map) {
@@ -193,7 +204,7 @@ public class MagicCardFilter implements Cloneable {
 	}
 
 	public boolean isFiltered(Object o) {
-		if (this.root == null)
+		if (this.root == Expr.TRUE)
 			return false;
 		boolean res = !this.root.evaluate(o);
 		return res;
@@ -211,10 +222,98 @@ public class MagicCardFilter implements Cloneable {
 		sortOrder.clear();
 	}
 
-	public void setGroupFields(ICardField[] fields) {
+	public void setGroupFields(ICardField... fields) {
 		if (fields == null)
 			groupFields = null;
 		else
 			groupFields = Arrays.copyOf(fields, fields.length);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(groupFields);
+		result = prime * result + (onlyLastSet ? 1231 : 1237);
+		result = prime * result + root.hashCode();
+		result = prime * result + ((sortOrder == null) ? 0 : sortOrder.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!(obj instanceof MagicCardFilter)) return false;
+		MagicCardFilter other = (MagicCardFilter) obj;
+		if (onlyLastSet != other.onlyLastSet) return false;
+		if (!Arrays.equals(groupFields, other.groupFields)) return false;
+		if (!sortOrder.equals(other.sortOrder)) return false;
+		if (!root.equals(other.root)) return false;
+		return true;
+	}
+
+	/**
+	 * If filter is structurally equals, i.e. everything is the same but filter
+	 * expression itself
+	 *
+	 * @param other
+	 * @return
+	 */
+	public boolean equalsStruct(MagicCardFilter other) {
+		if (this == other) return true;
+		if (onlyLastSet != other.onlyLastSet) return false;
+		if (!Arrays.equals(groupFields, other.groupFields)) return false;
+		if (!sortOrder.equals(other.sortOrder)) return false;
+		return true;
+	}
+
+	public ICard[] filterCards(Iterable<? extends ICard> childrenList) {
+		//String key = "filter cards";
+		//MagicLogger.traceStart(key);
+		Collection<ICard> filteredList = new ArrayList<ICard>();
+		for (ICard elem : childrenList) {
+			if (elem instanceof ICardGroup) {
+				if (((ICardGroup) elem).size() != 0) {
+					filteredList.add(elem);
+				}
+			} else if (!isFiltered(elem)) {
+				filteredList.add(elem);
+			}
+		}
+		if (isOnlyLastSet())
+			filteredList = removeSetDuplicates(filteredList);
+		//MagicLogger.traceEnd(key);
+		return filteredList.toArray(new ICard[filteredList.size()]);
+	}
+
+	public Collection removeSetDuplicates(Collection filteredList) {
+		LinkedHashMap<String, IMagicCard> unique = new LinkedHashMap<String, IMagicCard>();
+		for (Iterator<IMagicCard> iterator = filteredList.iterator(); iterator
+				.hasNext();) {
+			IMagicCard elem = iterator.next();
+			if (elem instanceof MagicCard) {
+				MagicCard card = (MagicCard) elem;
+				IMagicCard old = unique.get(card.getName());
+				if (old == null) {
+					unique.put(card.getName(), card);
+				} else {
+					Edition oldE = old.getEdition();
+					Edition newE = card.getEdition();
+					if (oldE.getReleaseDate() != null
+							&& newE.getReleaseDate() != null) {
+						if (oldE.getReleaseDate().before(newE.getReleaseDate())) {
+							unique.put(card.getName(), card);
+						}
+						continue;
+					}
+					if (old.getCardId() < card.getCardId()) {
+						unique.put(card.getName(), card);
+					}
+				}
+			}
+		}
+		if (unique.size() > 0)
+			return unique.values();
+		return filteredList;
 	}
 }

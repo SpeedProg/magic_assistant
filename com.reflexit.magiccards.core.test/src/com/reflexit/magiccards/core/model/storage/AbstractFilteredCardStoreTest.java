@@ -18,8 +18,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.CardTypes;
@@ -35,7 +34,7 @@ import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class AbstractFilteredCardStoreTest extends TestCase {
 	private static final String INSTANT = "Instant";
@@ -181,7 +180,6 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		MagicCard a2 = addCard(WHITE_COST, INSTANT, "a2");
 		MagicCard a3 = addCard(RED_COST, INSTANT, "a3");
 		MagicCard a4 = addCard(ONE_COST, ARTIFACT, "b2");
-		this.filter.setGroupField(MagicCardField.COST);
 		this.filter.setSortField(MagicCardField.NAME, true);
 		MagicCard[] cards = getFilteredCards();
 		assertEquals(5, cards.length);
@@ -190,6 +188,13 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		assertEquals(a3, cards[2]);
 		assertEquals(a0, cards[3]);
 		assertEquals(a4, cards[4]);
+		this.filter.setGroupField(MagicCardField.COST);
+		this.deck.update();
+		Object[] cardGroups = this.deck.getElements();
+		assertEquals(4, cardGroups.length);
+		assertEquals("Black", ((CardGroup) cardGroups[0]).getName());
+		assertEquals("Colorless", ((CardGroup) cardGroups[1]).getName());
+		assertEquals("Red", ((CardGroup) cardGroups[2]).getName());
 	}
 
 	public void testSortBy2() {

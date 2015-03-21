@@ -30,6 +30,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.Predicate;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
@@ -152,12 +153,12 @@ public class DataManager {
 
 	/**
 	 * Using card representation create proper link to base or find actuall base card to replace fake one
-	 * 
+	 *
 	 * @param input
 	 * @return
 	 */
 	public Collection<IMagicCard> resolve(Collection<IMagicCard> input) {
-		return resolve(input, new ArrayList<IMagicCard>(input.size()),
+		return resolve(input, new ArrayList<IMagicCard>(),
 				getMagicDBStore());
 	}
 
@@ -166,12 +167,27 @@ public class DataManager {
 		for (Iterator iterator = input.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof CardGroup) {
-				resolve((Collection<IMagicCard>) ((CardGroup) card)
-						.getChildrenList(),
+				resolve(((CardGroup) card).getChildren(),
 						output, db);
 			} else {
 				// Need to repair references to MagicCard instances
 				IMagicCard cardRes = resolve(card, db);
+				if (cardRes != null)
+					output.add(cardRes);
+			}
+		}
+		return output;
+	}
+
+	private Collection<IMagicCard> resolve(ICard[] input,
+			Collection<IMagicCard> output, ICardStore db) {
+		for (ICard card : input) {
+			if (card instanceof CardGroup) {
+				resolve(((CardGroup) card).getChildren(),
+						output, db);
+			} else {
+				// Need to repair references to MagicCard instances
+				IMagicCard cardRes = resolve((IMagicCard) card, db);
 				if (cardRes != null)
 					output.add(cardRes);
 			}
@@ -583,12 +599,21 @@ public class DataManager {
 	}
 
 	public static Collection expandGroups(Collection result, Collection cards, Predicate<Object> filter) {
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
+		for (Object o : cards) {
 			if (filter.test(o))
 				result.add(o);
 			if (o instanceof CardGroup)
-				expandGroups(result, ((CardGroup) o).getChildrenList(), filter);
+				expandGroups(result, ((CardGroup) o).getChildren(), filter);
+		}
+		return result;
+	}
+
+	public static Collection expandGroups(Collection result, ICard[] cards, Predicate<Object> filter) {
+		for (ICard o : cards) {
+			if (filter.test(o))
+				result.add(o);
+			if (o instanceof CardGroup)
+				expandGroups(result, ((CardGroup) o).getChildren(), filter);
 		}
 		return result;
 	}

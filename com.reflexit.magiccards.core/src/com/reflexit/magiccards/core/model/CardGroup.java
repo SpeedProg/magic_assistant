@@ -7,13 +7,14 @@
 package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -21,13 +22,15 @@ import com.reflexit.magiccards.core.model.abs.ICardGroup;
 
 /**
  * @author Alena
- * 
+ *
  */
-public class CardGroup extends MagicCardHash implements ICardGroup {
+public final class CardGroup extends MagicCardHash implements ICardGroup, Iterable<ICard> {
 	private final String name;
 	private ICardField groupField;
 	private List<ICard> children;
 	private Map<String, CardGroup> subs;
+	private MagicCardFilter filter;
+	private ICard[] elements;
 
 	public static final class NonGroupPredicate implements Predicate<Object> {
 		@Override
@@ -52,8 +55,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 
 	@Override
 	public boolean isPhysical() {
-		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
+		for (Object o : this) {
 			if (o instanceof IMagicCardPhysical) {
 				if (!((IMagicCardPhysical) o).isPhysical())
 					return false;
@@ -77,56 +79,82 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 		return this.groupField;
 	}
 
-	public void sort(Comparator comparator) {
-		if (comparator == null)
-			return;
-		if (children.size() > 1)
-			Collections.sort(children, comparator);
-		for (Iterator<CardGroup> iterator = subs.values().iterator(); iterator.hasNext();) {
-			CardGroup o = iterator.next();
-			o.sort(comparator);
+	@Override
+	public List<? extends ICard> getChildrenList() {
+		return Arrays.asList(getChildren());
+	}
+
+	@Override
+	public synchronized ICard[] getChildren() {
+		if (elements == null) {
+			if (children.size() == 0) {
+				return new ICard[0];
+			}
+			if (filter == null) {
+				elements = children.toArray(new ICard[children.size()]);
+			} else {
+				elements = filter.filterCards(children);
+				SortOrder sortOrder = filter.getSortOrder();
+				if (!sortOrder.isEmpty()) {
+					Comparator<ICard> comparator = sortOrder.getComparator();
+					Arrays.sort(elements, comparator);
+				}
+			}
+		}
+		return elements;
+	}
+
+	@Override
+	public synchronized Iterator<ICard> iterator() {
+		return new ArrayIterator<ICard>(getChildren()) {
+			private ICard cur;
+
+			@Override
+			public ICard next() {
+				return cur = super.next();
+			}
+
+			@Override
+			public void remove() {
+				children.remove(cur);
+				subs.remove(cur.getName());
+				recache();
+			}
+		};
+	}
+
+	public class ArrayIterator<T> implements Iterator<T> {
+		private T array[];
+		private int pos = 0;
+
+		public ArrayIterator(T anArray[]) {
+			array = anArray;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return pos < array.length;
+		}
+
+		@Override
+		public T next() throws NoSuchElementException {
+			if (hasNext())
+				return array[pos++];
+			else
+				throw new NoSuchElementException();
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ICardGroup#getChildrenList()
-	 */
-	@Override
-	public List<? extends ICard> getChildrenList() {
-		return children;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ICardGroup#getChildren()
-	 */
-	@Override
-	public synchronized ICard[] getChildren() {
-		return ((List<ICard>) getChildrenList()).toArray(new ICard[children.size()]);
-	}
-
-	public synchronized Iterator iterator() {
-		return children.iterator();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ICardGroup#size()
-	 */
 	@Override
 	public synchronized int size() {
-		return this.children.size();
+		return getChildren().length;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ICardGroup#add(com.reflexit.magiccards .core.model.ICard)
-	 */
 	@Override
 	public synchronized void add(ICard elem) {
 		this.children.add(elem);
@@ -134,7 +162,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 			CardGroup cardGroup = (CardGroup) elem;
 			subs.put(cardGroup.getName(), (CardGroup) elem);
 		}
-		rehash();
+		recache();
 	}
 
 	public void addToSubGroup(String subGroupName, ICard elem) {
@@ -146,14 +174,9 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 		g.add(elem);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.ICardGroup#remove(java.lang.Object)
-	 */
 	@Override
 	public synchronized void remove(ICard elem) {
-		// children.remove(elem); cannot use it, use identify removal
+		// children.remove(elem); cannot use it, use identity removal
 		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			if (o == elem) {
@@ -165,7 +188,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 			CardGroup cardGroup = (CardGroup) elem;
 			subs.remove(cardGroup.getName());
 		}
-		rehash();
+		recache();
 	}
 
 	/**
@@ -173,19 +196,16 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 	 */
 	@Override
 	public synchronized ICard getChildAtIndex(int index) {
-		ICard object = getChildrenList().get(index);
+		if (index >= getChildren().length)
+			return null;
+		ICard object = getChildren()[index];
 		return object;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.core.model.IMagicCard#getByIndex(int)
-	 */
 	public synchronized String getLabelByField(ICardField f) {
 		if (f == this.groupField)
 			return this.name;
-		if (children.size() == 0)
+		if (getChildren().length == 0)
 			return "";
 		Object value = get(f);
 		if (value == null)
@@ -207,20 +227,6 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 		return false;
 	}
 
-	public synchronized void removeEmptyChildren() {
-		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			if (o instanceof CardGroup) {
-				CardGroup cardGroup = (CardGroup) o;
-				cardGroup.removeEmptyChildren();
-				if (cardGroup.children.size() == 0) {
-					iterator.remove();
-					subs.remove(cardGroup.getName());
-				}
-			}
-		}
-	}
-
 	@Override
 	public String toString() {
 		return name;
@@ -235,17 +241,18 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 	public synchronized void clear() {
 		children.clear();
 		subs.clear();
-		rehash();
+		recache();
 	}
 
-	public synchronized void rehash() {
+	public synchronized void recache() {
 		super.clear();
+		this.elements = null;
 	}
 
 	public synchronized IMagicCardPhysical getFirstCard() {
-		if (children.size() == 0)
+		if (getChildren().length == 0)
 			return null;
-		Object card = children.get(0);
+		Object card = getChildren()[0];
 		if (card instanceof CardGroup)
 			return ((CardGroup) card).getFirstCard();
 		if (card instanceof IMagicCardPhysical)
@@ -254,8 +261,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 	}
 
 	public synchronized boolean contains(IMagicCard card) {
-		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
+		for (Object o : this) {
 			if (o instanceof CardGroup) {
 				if (((CardGroup) o).contains(card))
 					return true;
@@ -272,8 +278,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 	public Collection expand(Collection result, Predicate<Object> filter) {
 		if (filter.test(this))
 			result.add(this);
-		for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
+		for (Object o : this) {
 			if (filter.test(o))
 				result.add(o);
 			if (o instanceof CardGroup)
@@ -378,7 +383,7 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 				subs.put(cardGroup.getName(), (CardGroup) elem);
 			}
 		}
-		rehash();
+		recache();
 	}
 
 	public int getCreatureCount() {
@@ -400,5 +405,18 @@ public class CardGroup extends MagicCardHash implements ICardGroup {
 			return true;
 		}
 		return super.isBasicLand();
+	}
+
+	public MagicCardFilter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(MagicCardFilter filter) {
+		this.filter = filter;
+		recache();
+		for (Iterator<CardGroup> iterator = subs.values().iterator(); iterator.hasNext();) {
+			CardGroup o = iterator.next();
+			o.setFilter(filter);
+		}
 	}
 }
