@@ -5,13 +5,13 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class OwnUniqueColumn extends GenColumn {
 	/**
 	 */
 	public OwnUniqueColumn() {
-		super(MagicCardField.OWN_UNIQUE, "Unique");
+		super(MagicCardField.OWN_UNIQUE, "Own Unique");
 	}
 
 	@Override
