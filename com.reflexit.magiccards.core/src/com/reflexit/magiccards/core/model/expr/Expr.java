@@ -1,6 +1,6 @@
 package com.reflexit.magiccards.core.model.expr;
 
-public class Expr {
+public abstract class Expr {
 	public static Expr TRUE = new Expr() {
 		@Override
 		public boolean evaluate(Object o) {

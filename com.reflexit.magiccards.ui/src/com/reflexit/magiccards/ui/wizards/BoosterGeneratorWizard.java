@@ -62,7 +62,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
 		 * .widgets.Composite)
 		 */
@@ -120,7 +120,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
 	 */
 	@Override
@@ -138,7 +138,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
 	 */
 	@Override
@@ -151,7 +151,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java .lang.String,
 	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -259,7 +259,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 */
 	private void generateRandom(int packs, IFilteredCardStore<IMagicCard> dbcards,
 			ICardStore<IMagicCard> store, CardElement col) {
-		int rcards = dbcards.getSize();
+		int rcards = dbcards.getUniqueCount();
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);
 			IMagicCard card = (IMagicCard) dbcards.getElement(index);

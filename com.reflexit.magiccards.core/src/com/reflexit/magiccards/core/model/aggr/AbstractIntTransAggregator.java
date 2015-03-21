@@ -25,7 +25,7 @@ public class AbstractIntTransAggregator extends AbstractGroupTransAggregator imp
 		}
 		Object value = post(data);
 		if (value != null)
-			sum += ((Integer) value);
+			return sum + (Integer) value;
 		return sum;
 	}
 }

@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
@@ -23,6 +24,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -219,8 +221,9 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		colorsSideboard.setImage(SymbolConverter.buildCostImage(CardStoreUtils.buildColors(sideboardStore)));
 		ownership.setText(store.isVirtual() ? "Virtual" : "Own");
 		decktype.setText(prefix);
-		maxRepeats.setText(String.valueOf(CardStoreUtils.getMaxRepeats(group.getChildrenList())));
-		CardGroup types = CardStoreUtils.buildTypeGroups(group.getChildrenList());
+		List<? extends ICard> childrenList = group.getChildrenList();
+		maxRepeats.setText(String.valueOf(CardStoreUtils.getMaxRepeats(childrenList)));
+		CardGroup types = CardStoreUtils.buildTypeGroups(childrenList);
 		CardGroup top = (CardGroup) types.getChildAtIndex(0);
 		CardGroup land = (CardGroup) top.getChildAtIndex(0);
 		CardGroup spell = (CardGroup) top.getChildAtIndex(1);

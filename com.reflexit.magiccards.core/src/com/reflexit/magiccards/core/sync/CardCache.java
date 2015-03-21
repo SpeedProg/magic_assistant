@@ -181,6 +181,8 @@ public class CardCache {
 			if (!remote)
 				throw new CachedImageNotFoundException("Cannot find cached image for " + card.getName());
 			URL url = createRemoteImageURL(card);
+			if (url == null)
+				throw new CachedImageNotFoundException("Cannot find image for " + card.getName() + " not url");
 			return saveCachedFile(file, url);
 		}
 	}

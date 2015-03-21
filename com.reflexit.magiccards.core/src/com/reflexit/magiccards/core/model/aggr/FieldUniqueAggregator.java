@@ -16,11 +16,13 @@ public class FieldUniqueAggregator extends AbstractIntTransAggregator {
 	@Override
 	protected Object visitAbstractMagicCard(AbstractMagicCard card, Object data) {
 		if (data == null)
-			return 0;
+			return 1;
 		TIntSet uniq = (TIntHashSet) data;
 		int cardId = getUniqueCardId(card);
-		if (cardId != -1)
+		if (cardId != -1) {
 			uniq.add(cardId);
+			return 0;
+		}
 		return 0;
 	}
 
@@ -40,7 +42,7 @@ public class FieldUniqueAggregator extends AbstractIntTransAggregator {
 	@Override
 	protected Object post(Object data) {
 		if (data == null)
-			return 0;
+			return null;
 		TIntSet uniq = (TIntSet) data;
 		return uniq.size();
 	}

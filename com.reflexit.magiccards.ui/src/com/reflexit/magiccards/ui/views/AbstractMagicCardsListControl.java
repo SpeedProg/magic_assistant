@@ -94,7 +94,7 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
 /**
  * Magic card list control - MagicControl that represents list of cards (tree or
  * table), and comes with actions and preferences to manipulate this list
- * 
+ *
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl implements IMagicCardListControl,
 		ICardEventListener {
@@ -209,7 +209,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#createPartControl
 	 * (org.eclipse.swt.widgets.Composite)
@@ -224,7 +224,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilter()
 	 */
 	@Override
@@ -236,7 +236,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
@@ -275,7 +275,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
 	 */
@@ -307,7 +307,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (filteredStore == null)
 			return "";
 		ICardStore cardStore = filteredStore.getCardStore();
-		int shownSize = filteredStore.getSize();
+		int shownSize = filteredStore.getUniqueCount();
 		int storeSize = cardStore.size();
 		if (storeSize == 0)
 			return "";
@@ -355,7 +355,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
 	 * (org.eclipse.jface.action.MenuManager)
@@ -367,7 +367,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#init(org.eclipse
 	 * .ui.IViewSite)
@@ -394,7 +394,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#dispose()
 	 */
 	@Override
@@ -463,7 +463,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	@Override
 	public void updateSingle(ICard source) {
-		getViewer().update(source, null);
+		ColumnViewer viewer = getViewer();
+		if (viewer == null)
+			return;
+		viewer.update(source, null);
 		updateStatus();
 		// getSelectionProvider().setSelection(new StructuredSelection(source));
 	}
@@ -829,6 +832,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
+				if (manager.getViewer() == null || manager.getViewer().getControl() == null)
+					return;
 				String property = event.getProperty();
 				PrefixedPreferenceStore ps = getLocalPreferenceStore();
 				Object newValue = event.getNewValue();
@@ -980,7 +985,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		IFilteredCardStore filteredStore = getFilteredStore();
 		if (filteredStore != null) {
 			ICardStore cardStore = filteredStore.getCardStore();
-			int shownSize = filteredStore.getSize();
+			int shownSize = filteredStore.getUniqueCount();
 			int storeSize = cardStore.size();
 			return storeSize - shownSize;
 		}

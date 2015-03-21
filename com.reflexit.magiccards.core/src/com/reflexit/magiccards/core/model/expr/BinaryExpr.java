@@ -15,7 +15,7 @@ public class BinaryExpr extends Expr {
 	final Operation op;
 
 	public BinaryExpr(Expr left, Operation op, Expr right) {
-		if (right == null)
+		if (right == null || left == null || op == null)
 			throw new NullPointerException();
 		this.left = left;
 		this.right = right;
@@ -126,7 +126,7 @@ public class BinaryExpr extends Expr {
 			return false;
 		if (this.left instanceof CardFieldExpr && o instanceof IMagicCard && this.right instanceof TextValue) {
 			return ((IMagicCard) o)
-					.matches(((CardFieldExpr) this.left).field, (TextValue) this.right);
+					.matches(((CardFieldExpr) this.left).getField(), (TextValue) this.right);
 		}
 		if (x instanceof String && y instanceof String) {
 			String pattern = (String) y;
@@ -173,5 +173,26 @@ public class BinaryExpr extends Expr {
 			res = res.and(cur);
 		}
 		return res;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + left.hashCode();
+		result = prime * result + op.hashCode();
+		result = prime * result + right.hashCode();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!(obj instanceof BinaryExpr)) return false;
+		BinaryExpr other = (BinaryExpr) obj;
+		if (!left.equals(other.left)) return false;
+		if (op != other.op) return false;
+		if (!right.equals(other.right)) return false;
+		return true;
 	}
 }

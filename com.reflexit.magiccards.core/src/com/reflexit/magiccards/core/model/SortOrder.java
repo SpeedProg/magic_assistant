@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -133,5 +134,26 @@ public class SortOrder implements Comparator {
 			res += order[index] + " ";
 		}
 		return res;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + curSize;
+		result = prime * result + Arrays.hashCode(order);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof SortOrder)) return false;
+		SortOrder other = (SortOrder) obj;
+		if (curSize != other.curSize) return false;
+		if (!Arrays.equals(order, other.order)) return false;
+		if (isAccending() != other.isAccending()) return false;
+		return true;
 	}
 }

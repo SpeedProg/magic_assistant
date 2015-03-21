@@ -81,7 +81,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt
 		 * .widgets.Composite)
 		 */
@@ -167,11 +167,6 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#addPages()
-	 */
 	@Override
 	public void addPages() {
 		this.page2 = new BoosterGeneratorCollectionWizardPage();
@@ -193,11 +188,6 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		addPage(this.page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizard#beforeFinish()
-	 */
 	@Override
 	protected void beforeFinish() {
 		page2.locPage.performOk();
@@ -216,12 +206,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		separateCollections = page2.sep.getSelection();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.wizards.NewCardCollectionWizard#doFinish(java .lang.String,
-	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+
 	@Override
 	protected void doFinish(final String containerName, final String name, boolean virtual,
 			final IProgressMonitor monitor)
@@ -390,7 +375,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	private void generateRandom(IFilteredCardStore<IMagicCard> sourceCards, ICardStore<IMagicCard> store) {
 		boolean succ = false;
 		while (!succ) {
-			int rcards = sourceCards.getSize();
+			int rcards = sourceCards.getUniqueCount();
 			if (rcards == 0)
 				throw new MagicException("No more cards found");
 			int index = (int) (Math.random() * rcards);
@@ -402,7 +387,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			if (old != null) {
 				int ncount = ((MagicCardPhysical) old).getCount();
 				if (ncount >= ((ICardCountable) card).getCount()) {
-					((AbstractFilteredCardStore) sourceCards).getFilteredList().remove(card);
+					((AbstractFilteredCardStore) sourceCards).getCardStore().remove(card);
 					continue;
 				}
 			}
