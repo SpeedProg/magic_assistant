@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -900,7 +901,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					highlightCard(last);
+					if (last instanceof TreePath) {
+						Object sel = ((TreePath) last).getLastSegment();
+						highlightCard(sel);
+					} else
+						highlightCard(last);
 				}
 			});
 		}

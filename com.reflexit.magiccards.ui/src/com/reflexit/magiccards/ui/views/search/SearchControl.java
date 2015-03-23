@@ -43,9 +43,7 @@ public class SearchControl {
 	private boolean searchAsYouType;
 	private Composite comp;
 
-	/**
-	 * 
-	 */
+
 	public SearchControl(ISearchRunnable runnable) {
 		this.runnable = runnable;
 		this.context = new SearchContext();
@@ -70,7 +68,7 @@ public class SearchControl {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void setFocus() {
 		this.searchText.setFocus();
@@ -112,17 +110,8 @@ public class SearchControl {
 				setVisible(false);
 			}
 		});
-		// search field
-		String os = System.getProperty("osgi.os", "");
-		if (os.equals("macosx")) {
-			this.searchText = new Text(toolbar, SWT.NONE); // bug in eclipse -
-															// text is too
-															// shallow
-		} else {
-			this.searchText = new Text(toolbar, SWT.BORDER);
-		}
-		// for Mac OS remove the border
-		this.searchText.setText("search...");
+		this.searchText = new Text(toolbar, SWT.SEARCH);
+		//		this.searchText.setText("search...");
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		this.searchText.setLayoutData(td);
 		this.searchText.addModifyListener(new ModifyListener() {
@@ -201,9 +190,6 @@ public class SearchControl {
 		return MagicUIActivator.getDefault();
 	}
 
-	/**
-	 * 
-	 */
 	protected void search() {
 		if (this.context.getText() == null)
 			return;
@@ -260,7 +246,7 @@ public class SearchControl {
 
 	/**
 	 * For testing and external search if needed. Ui buttons would not be updated.
-	 * 
+	 *
 	 * @param text
 	 * @param matchCase
 	 * @param wholeWord
