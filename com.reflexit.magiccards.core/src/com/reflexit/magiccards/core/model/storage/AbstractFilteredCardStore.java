@@ -1,10 +1,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.TreeSet;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -139,36 +136,28 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		if (filter == null)
 			return;
 		String key = "udpate " + getClass().getSimpleName();
-		if (!isRefreshRequired())
+		boolean filterChanged = !filter.equals(lastUsedfilter);
+		MagicLogger.trace("changes storeChanged=" + storeChanged +
+				" filterChanged=" + filterChanged);
+		boolean nonEmpty = rootGroup.size() > 0;
+		if (storeChanged == false && filterChanged == false && nonEmpty) {
+			MagicLogger.trace("skipped " + storeChanged + " " + filterChanged);
 			return;
+		}
 		MagicLogger.traceStart(key);
 		try {
-			boolean almostEquals = false;// filter.equalsStruct(lastUsedfilter);
-			if (almostEquals && (filter.getGroupField() == null || rootGroup.size() > 0)) {
-				refilter();
+			boolean groupEquals = filter.equalsGroups(lastUsedfilter);
+			if (!storeChanged && groupEquals && nonEmpty) {
+				MagicLogger.trace("re-filter");
+				rootGroup.setFilter(filter);
 			} else {
-				filterCards();
+				MagicLogger.trace("re-group");
+				groupCards(filter, getCardStore());
 			}
 		} finally {
-			lastUsedfilter = (MagicCardFilter) filter.clone();
-			storeChanged = false;
+			this.lastUsedfilter = (MagicCardFilter) filter.clone();
+			this.storeChanged = false;
 			MagicLogger.traceEnd(key);
-		}
-	}
-
-	private void refilter() {
-		refilter(rootGroup);
-	}
-
-	private void refilter(Iterable list) {
-		if (list == null) return;
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			Object card = iterator.next();
-			if (card instanceof ICardGroup) {
-				refilter((CardGroup) card);
-			} else if (filter.isFiltered(card)) {
-				iterator.remove();
-			}
 		}
 	}
 
@@ -177,21 +166,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected boolean isRefreshRequired() {
-		boolean filterChanged = !filter.equals(lastUsedfilter);
-		boolean storeChanged = this.storeChanged;
-		MagicLogger
-				.trace("changes storeChanged=" + storeChanged + " filterChanged=" + filterChanged);
-		if (storeChanged == false && filterChanged == false && rootGroup.size() > 0) {
-			MagicLogger.trace("skipped " + storeChanged + " " + filterChanged);
-			return false;
-		}
-		return true;
-	}
-
-	private Collection<T> filterCards() throws MagicException {
-		//Collection<T> filteredList = sortCards(filter);
-		groupCards(filter, getCardStore());
-		return null;
+		return this.storeChanged;
 	}
 
 	protected void groupCards(MagicCardFilter filter, Iterable<?> filteredList) {
@@ -229,34 +204,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 				group.add(nameGroup);
 			}
 		}
-	}
-
-	protected Collection<T> sortCards(MagicCardFilter filter) {
-		String key = "sort af";
-		MagicLogger.traceStart(key);
-		Collection<T> filteredList;
-		if (filter.getSortOrder().isEmpty()) {
-			filteredList = new ArrayList<T>();
-			for (Iterator<T> iterator = getCardStore().iterator(); iterator.hasNext();) {
-				T elem = iterator.next();
-				if (!filter.isFiltered(elem)) {
-					filteredList.add(elem);
-				}
-			}
-		} else {
-			Comparator<ICard> comp = getSortComparator(filter);
-			filteredList = new TreeSet(comp);
-			for (Iterator<T> iterator = getCardStore().iterator(); iterator.hasNext();) {
-				T elem = iterator.next();
-				if (!filter.isFiltered(elem)) {
-					filteredList.add(elem);
-				}
-			}
-		}
-		if (filter.isOnlyLastSet())
-			filteredList = filter.removeSetDuplicates(filteredList);
-		MagicLogger.traceEnd(key);
-		return filteredList;
 	}
 
 	protected Comparator<ICard> getSortComparator(MagicCardFilter filter) {

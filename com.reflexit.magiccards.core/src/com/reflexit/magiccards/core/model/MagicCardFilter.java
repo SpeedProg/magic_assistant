@@ -252,19 +252,10 @@ public class MagicCardFilter implements Cloneable {
 		return true;
 	}
 
-	/**
-	 * If filter is structurally equals, i.e. everything is the same but filter
-	 * expression itself
-	 *
-	 * @param other
-	 * @return
-	 */
-	public boolean equalsStruct(MagicCardFilter other) {
+	public boolean equalsGroups(MagicCardFilter other) {
 		if (this == other) return true;
-		if (onlyLastSet != other.onlyLastSet) return false;
-		if (!Arrays.equals(groupFields, other.groupFields)) return false;
-		if (!sortOrder.equals(other.sortOrder)) return false;
-		return true;
+		if (Arrays.equals(groupFields, other.groupFields)) return true;
+		return false;
 	}
 
 	public ICard[] filterCards(Iterable<? extends ICard> childrenList) {
