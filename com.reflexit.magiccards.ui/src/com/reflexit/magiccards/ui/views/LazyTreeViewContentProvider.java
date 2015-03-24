@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reflexit.magiccards.ui.views;
 
@@ -44,22 +44,24 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		if (root == null)
 			return;
 		synchronized (root) {
-			int count = 0;
-			if (element instanceof IFilteredCardStore) {
-				if (showRoot)
-					count = 1;
-				else
-					count = rootGroup.size();
-			} else if (element instanceof ICardGroup) {
-				count = ((ICardGroup) element).size();
-			} else if (element instanceof MagicCard) {
-				// count = ((MagicCard) element).getPhysicalCards().size();
-			}
-			if (count == 0)
-				treeViewer.setChildCount(element, 0);
-			else
-				treeViewer.setChildCount(element, count);
+			int count = getChildCount(element);
+			treeViewer.setChildCount(element, count);
 		}
+	}
+
+	private int getChildCount(Object element) {
+		int count = 0;
+		if (element instanceof IFilteredCardStore) {
+			if (showRoot)
+				count = 1;
+			else
+				count = rootGroup.size();
+		} else if (element instanceof ICardGroup) {
+			count = ((ICardGroup) element).size();
+		} else if (element instanceof MagicCard) {
+			// count = ((MagicCard) element).getPhysicalCards().size();
+		}
+		return count;
 	}
 
 	@Override
@@ -72,7 +74,8 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 				group = rootGroup;
 				if (showRoot) {
 					this.treeViewer.replace(parent, index, group);
-					updateChildCount(group, group.size());
+					int count = group.size();
+					treeViewer.setChildCount(group, count);
 					return;
 				}
 			} else if (parent instanceof ICardGroup) {
@@ -84,7 +87,8 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 				return;
 			Object child = group.getChildAtIndex(index);
 			this.treeViewer.replace(parent, index, child);
-			updateChildCount(child, -1);
+			int count = getChildCount(child);
+			treeViewer.setChildCount(child, count > 0 ? Math.min(100, count) : 0);
 		}
 	}
 
