@@ -31,9 +31,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardDialog;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
-import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
-import com.reflexit.magiccards.ui.views.columns.GroupColumn;
-import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public class MagicDbView extends AbstractCardsView {
@@ -63,22 +60,7 @@ public class MagicDbView extends AbstractCardsView {
 
 		@Override
 		public IMagicColumnViewer createViewerManager() {
-			return new CompositeViewerManager(getPreferencePageId()) {
-				@Override
-				protected ColumnCollection doGetColumnCollection(String prefPageId) {
-					return new MagicColumnCollection(prefPageId) {
-						@Override
-						protected GroupColumn createGroupColumn() {
-							return new GroupColumn() {
-								@Override
-								protected int getCount(Object element) {
-									return ((IMagicCard) element).getUniqueCount();
-								}
-							};
-						}
-					};
-				}
-			};
+			return new CompositeViewerManager(getPreferencePageId());
 		}
 
 		@Override
