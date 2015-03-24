@@ -21,7 +21,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class TableSearch {
 	public static void search(SearchContext context, IFilteredCardStore store) {
@@ -231,7 +231,7 @@ public class TableSearch {
 	 * @return
 	 */
 	protected static boolean match(Pattern pat, ICard card) {
-		if (pat.matcher(card.getName()).matches())
+		if (!(card instanceof ICardGroup) && pat.matcher(card.getName()).matches())
 			return true;
 		return false;
 	}

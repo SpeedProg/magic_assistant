@@ -154,7 +154,7 @@ public class QuickFilterControl extends Composite {
 	}
 
 	private void createSearchField(ToolBar toolbar) {
-		this.searchText = new Text(toolbar, SWT.BORDER);
+		this.searchText = new Text(toolbar, SWT.SEARCH);
 		this.searchText.setText(ALL_NAMES);
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		this.searchText.setLayoutData(td);
