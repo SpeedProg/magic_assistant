@@ -17,7 +17,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -82,7 +81,9 @@ public class GroupColumn extends GenColumn implements Listener {
 	}
 
 	protected int getCount(Object element) {
-		return ((ICardCountable) element).getCount();
+		if (element instanceof ICardGroup)
+			return ((ICardGroup) element).size();
+		return 0;
 	}
 
 	public void setGroupField(ICardField field) {
