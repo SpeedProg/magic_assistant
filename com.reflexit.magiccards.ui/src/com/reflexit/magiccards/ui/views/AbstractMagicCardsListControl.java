@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -662,7 +663,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	protected void highlightCard(Object last) {
 		ISelectionProvider selectionProvider = getSelectionProvider();
-		StructuredSelection selection = new StructuredSelection(last);
+		StructuredSelection selection;
+		if (last instanceof TreePath) {
+			selection = new TreeSelection((TreePath) last);
+		} else {
+			selection = new StructuredSelection(last);
+		}
 		if (selectionProvider instanceof Viewer) {
 			((Viewer) selectionProvider).setSelection(selection, true);
 		} else {
@@ -901,10 +907,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					if (last instanceof TreePath) {
-						Object sel = ((TreePath) last).getLastSegment();
-						highlightCard(sel);
-					} else
 						highlightCard(last);
 				}
 			});
@@ -1010,7 +1012,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			getSelectionProvider().setSelection(new StructuredSelection());
 			IFilteredCardStore filteredStore = getFilteredStore();
 			manager.updateViewer(filteredStore);
-			MagicLogger.trace("updateViewer", "setSelection");
+			MagicLogger.traceStart("setSelection");
 			if (revealSelection != null) {
 				// set desired selection
 				getSelectionProvider().setSelection(revealSelection);
@@ -1019,6 +1021,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 				// restore selection
 				getSelectionProvider().setSelection(selection);
 			}
+			MagicLogger.traceEnd("setSelection");
 			updateStatus();
 		} catch (Exception e) {
 			MagicLogger.log("Exception during update operation");
