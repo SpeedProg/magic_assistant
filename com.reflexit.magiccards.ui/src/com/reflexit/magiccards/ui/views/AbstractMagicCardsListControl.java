@@ -1043,7 +1043,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			selection = revealSelection;
 			revealSelection = null;
 		}
-		System.err.println("set selection " + selection + " in " + getFilteredStore().getLocation());
+		//	System.err.println("set selection " + selection + " in " + getFilteredStore().getLocation());
 		getSelectionProvider().setSelection(selection);
 		MagicLogger.traceEnd("setSelection");
 	}
