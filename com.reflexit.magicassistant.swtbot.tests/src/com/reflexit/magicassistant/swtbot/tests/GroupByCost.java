@@ -1,7 +1,5 @@
 package com.reflexit.magicassistant.swtbot.tests;
 
-import static org.eclipse.swtbot.swt.finder.SWTBotAssert.assertMatchesRegex;
-
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
@@ -15,6 +13,8 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+
+import static org.eclipse.swtbot.swt.finder.SWTBotAssert.assertMatchesRegex;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class GroupByCost extends AbstractSwtBotTest {
@@ -49,7 +49,7 @@ public class GroupByCost extends AbstractSwtBotTest {
 		bot.sleep(1000);
 		SWTBotTree tree = bot.tree(0);
 		// System.err.println(tree.getAllItems()[0].getText());
-		tree.expandNode("All (145)", "2 (29)");
+		tree.expandNode("All (7)", "2 (29)");
 		bot.sleep(1000);
 	}
 }
