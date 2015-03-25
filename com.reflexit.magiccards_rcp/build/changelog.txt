@@ -1,3 +1,10 @@
+changes in 1.4.2.003
+* Bug 446 Adding Cards Using Keyboard Only
+* Bug 444 UI Refresh issues and slowness when using quick filter 
+* When using quick filter now top card is selected automatically
+* When adding card to add now added card is selected automatically in that deck
+* Added shortcut 'm' to move whole pile of card, compare to 1m - move 1 card
+* Bug 440 Issue of moving cards with same number of cards as pile
 changes in 1.4.2.001
 * Bug 430 Add set/rarity simbol to html
 * Renamed Wizard html into Compact html
