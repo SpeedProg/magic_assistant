@@ -418,6 +418,21 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		loadData(null);
 	}
 
+	public void refilterData() {
+		setNextSelection(null);
+		update();
+		loadData(new Runnable() {
+			@Override
+			public void run() {
+				updateViewer();
+				// select first visible element
+				if (fstore.getSize() == 0) return;
+				Object element = fstore.getElement(0);
+				getSelectionProvider().setSelection(new StructuredSelection(element));
+			}
+		});
+	}
+
 	public void runFind() {
 		searchControl.setVisible(true);
 		// actionShowFind.setEnabled(false);
@@ -551,7 +566,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		QuickFilterControl quickFilter = new QuickFilterControl(composite, new Runnable() {
 			@Override
 			public void run() {
-				reloadData();
+				refilterData();
 			}
 		}, false);
 		return quickFilter;
@@ -907,7 +922,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-						highlightCard(last);
+					highlightCard(last);
 				}
 			});
 		}
@@ -915,8 +930,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	protected void runShowFilter() {
 		if (ShowFilterHandler.execute()) {
-			reloadData();
 			syncQuickFilter();
+			refilterData();
 		}
 		// CardFilter.open(getViewSite().getShell());
 		// Dialog cardFilterDialog = new CardFilterDialog(getShell(),
@@ -935,8 +950,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			getFilterPreferenceStore().setToDefault(id);
 		}
 		getFilterPreferenceStore().setToDefault(EditionsFilterPreferencePage.LAST_SET);
-		reloadData();
 		syncQuickFilter();
+		refilterData();
 	}
 
 	public void syncQuickFilter() {
@@ -1010,18 +1025,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 				return;
 			ISelection selection = getSelection();
 			getSelectionProvider().setSelection(new StructuredSelection());
-			IFilteredCardStore filteredStore = getFilteredStore();
-			manager.updateViewer(filteredStore);
-			MagicLogger.traceStart("setSelection");
-			if (revealSelection != null) {
-				// set desired selection
-				getSelectionProvider().setSelection(revealSelection);
-				revealSelection = null;
-			} else {
-				// restore selection
-				getSelectionProvider().setSelection(selection);
-			}
-			MagicLogger.traceEnd("setSelection");
+			manager.updateViewer(getFilteredStore());
+			restoreSelection(selection);
 			updateStatus();
 		} catch (Exception e) {
 			MagicLogger.log("Exception during update operation");
@@ -1029,6 +1034,18 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		} finally {
 			MagicLogger.traceEnd("updateViewer");
 		}
+	}
+
+	private void restoreSelection(ISelection selection) {
+		MagicLogger.traceStart("setSelection");
+		if (revealSelection != null) {
+			// set desired selection
+			selection = revealSelection;
+			revealSelection = null;
+		}
+		System.err.println("set selection " + selection + " in " + getFilteredStore().getLocation());
+		getSelectionProvider().setSelection(selection);
+		MagicLogger.traceEnd("setSelection");
 	}
 
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {
@@ -1084,16 +1101,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			if (event.getData() instanceof List) {
 				List arr = (List) event.getData();
 				if (arr.size() == 1)
-					setNextSelection(new StructuredSelection(arr));
+					setNextSelection(new StructuredSelection(arr.get(0)));
 			} else if (event.getData() instanceof IMagicCard) {
 				setNextSelection(new StructuredSelection(event.getData()));
 			}
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
-			reloadData();
+			loadData(null);
 		} else if (type == CardEvent.REMOVE || type == CardEvent.UPDATE_LIST) {
 			// todo set selection to next element
-			reloadData();
+			loadData(null);
 		}
 	}
 
@@ -1116,11 +1133,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	private Job loadingJob;
 
 	public void loadData(final Runnable postLoad) {
-		Job[] jobs = Job.getJobManager().find(jobFamility);
-		if (jobs.length >= 2) {
-			// System.err.println(jobs.length +
-			// " already running skipping refresh");
-			return;
+		if (loadingJob != null) {
+			if (loadingJob.cancel() == false)
+				MagicUIActivator.log("Refresh job cancelled");
 		}
 		final Display display = PlatformUI.getWorkbench().getDisplay();
 		loadingJob = new Job("Loading cards") {
@@ -1130,37 +1145,29 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			}
 
 			@Override
-			public boolean shouldSchedule() {
-				Job[] jobs = Job.getJobManager().find(jobFamility);
-				if (jobs.length >= 2)
-					return false;
-				return super.shouldSchedule();
-			}
-
-			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				synchronized (jobFamility) {
 					try {
-						setName("Loading cards");
+						monitor.beginTask("Loading cards...", 100);
 						checkInit();
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
-						monitor.subTask("Loading cards...");
 						populateStore(monitor);
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
 						if (getFilteredStore() == null)
 							return Status.OK_STATUS;
+						monitor.worked(10);
 						getFilteredStore().update();
 					} catch (final Exception e) {
-						display.syncExec(new Runnable() {
-							@Override
-							public void run() {
-								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage());
-							}
-						});
+						display.asyncExec(() ->
+								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
+								);
 						MagicUIActivator.log(e);
-						return Status.OK_STATUS;
+						return Status.CANCEL_STATUS;
+					} finally {
+						loadingJob = null;
+						monitor.done();
 					}
 					// asyncUpdateViewer();
 					return Status.OK_STATUS;
@@ -1173,19 +1180,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			public void done(IJobChangeEvent event) {
 				if (display.isDisposed())
 					return;
-				if (postLoad != null)
-					display.syncExec(postLoad);
-				else
-					display.syncExec(new Runnable() {
-						@Override
-						public void run() {
-							updateViewer();
-						}
-					});
+				if (event.getResult().isOK()) {
+					if (postLoad != null)
+						display.syncExec(postLoad);
+					else
+						display.syncExec(() -> updateViewer());
+				}
 				super.done(event);
 			}
 		});
-		loadingJob.schedule(100);
+		loadingJob.schedule(0);
 	}
 
 	private void checkInit() {

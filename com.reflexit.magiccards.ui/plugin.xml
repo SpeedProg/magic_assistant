@@ -453,6 +453,11 @@
             name="Magic Assistant windows"
             parentId="org.eclipse.ui.contexts.window">
       </context>
+      <context
+            id="com.reflexit.magiccards.ui.context.search"
+            name="Magic Assistant Search Fields"
+            parentId="org.eclipse.ui.textEditorScope">
+      </context>
    </extension>
   <extension
         point="org.eclipse.ui.menus">

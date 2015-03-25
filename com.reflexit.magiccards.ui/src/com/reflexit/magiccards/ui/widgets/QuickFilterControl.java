@@ -29,6 +29,7 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class QuickFilterControl extends Composite {
@@ -153,6 +154,12 @@ public class QuickFilterControl extends Composite {
 		// createHideButton(comp);
 	}
 
+	class SearchContextFocusListener extends ContextFocusListener {
+		public SearchContextFocusListener() {
+			super(PerspectiveFactoryMagic.SEARCH_CONTEXT);
+		}
+	}
+
 	private void createSearchField(ToolBar toolbar) {
 		this.searchText = new Text(toolbar, SWT.SEARCH);
 		this.searchText.setText(ALL_NAMES);
@@ -185,6 +192,7 @@ public class QuickFilterControl extends Composite {
 		ToolItem text = new ToolItem(toolbar, SWT.SEPARATOR);
 		text.setControl(this.searchText);
 		text.setWidth(200);
+		searchText.addFocusListener(new SearchContextFocusListener());
 	}
 
 	private void createTypeField(ToolBar toolbar) {
@@ -213,6 +221,7 @@ public class QuickFilterControl extends Composite {
 		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
 		item.setControl(this.typeCombo);
 		item.setWidth(150);
+		typeCombo.addFocusListener(new SearchContextFocusListener());
 	}
 
 	private void createEditionField(ToolBar toolbar) {
@@ -257,6 +266,7 @@ public class QuickFilterControl extends Composite {
 		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
 		item.setControl(setCombo);
 		item.setWidth(180);
+		setCombo.addFocusListener(new SearchContextFocusListener());
 	}
 
 	private void createToolBarLabel(ToolBar toolbar, String string) {

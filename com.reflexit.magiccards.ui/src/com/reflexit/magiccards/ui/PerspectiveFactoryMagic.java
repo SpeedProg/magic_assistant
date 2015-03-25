@@ -27,6 +27,7 @@ import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
 public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 	public static String PERSPECTIVE_ID = "com.reflexit.magiccards.ui.perspective.magic";
+	public static String SEARCH_CONTEXT = "com.reflexit.magiccards.ui.context.search";
 
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
@@ -66,12 +67,12 @@ public class PerspectiveFactoryMagic implements IPerspectiveFactory {
 
 	/**
 	 * Creates a "New..." menu
-	 * 
+	 *
 	 * @param window
 	 *            - workbench window
 	 * @param menu
 	 * @return
-	 * 
+	 *
 	 */
 	public static MenuManager createNewMenu(IWorkbenchWindow window) {
 		// create the New submenu, using the same id for it as the New action
