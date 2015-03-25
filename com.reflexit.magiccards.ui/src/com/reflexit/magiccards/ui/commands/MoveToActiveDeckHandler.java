@@ -19,7 +19,7 @@ import com.reflexit.magiccards.ui.dialogs.CountConfirmationDialog;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
- * 
+ *
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
@@ -48,6 +48,7 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 		try {
 			count = Integer.parseInt(scount);
 		} catch (NumberFormatException e) {
+			// '*' - move all cards
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		final IFilteredCardStore<IMagicCard> activeDeckHandler = DataManager.getCardHandler()
@@ -70,7 +71,11 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 					// activeDeckHandler.getLocation());
 				} else {
 					List<IMagicCard> x = DM.splitCards(list, count);
-					DM.moveCards(x, activeDeckHandler.getCardStore());
+					if (x.size() == 0) {
+						DM.moveCards(list, activeDeckHandler.getCardStore());
+					} else {
+						DM.moveCards(x, activeDeckHandler.getCardStore());
+					}
 				}
 			} catch (Exception e) {
 				MessageDialog.openError(window.getShell(), "Error", e.getLocalizedMessage());
