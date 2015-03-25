@@ -168,9 +168,9 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 	}
 
 	@Override
-	public synchronized boolean doAddCard(final T card) {
+	public synchronized T doAddCard(final T card) {
 		Location key = getLocation(card);
-		AbstractCardStoreWithStorage res = this.map.get(key);
+		AbstractCardStoreWithStorage<T> res = this.map.get(key);
 		if (res == null) {
 			res = newStorage(card);
 			addCardStore(res);

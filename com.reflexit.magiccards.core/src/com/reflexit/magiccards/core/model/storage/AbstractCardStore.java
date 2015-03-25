@@ -55,6 +55,9 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 
 	@Override
 	public boolean addAll(final Collection<? extends T> cards) {
+		if (cards.size() == 1) { // XXX
+			return add(cards.iterator().next());
+		}
 		initialize();
 		boolean modified = doAddAll(cards);
 		if (modified && isListenerAttached()) {
@@ -82,7 +85,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		try {
 			for (final T element : col) {
 				final T card = element;
-				if (doAddCard(card))
+				if (doAddCard(card) != null)
 					modified = true;
 			}
 		} finally {
@@ -94,12 +97,14 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	@Override
 	public boolean add(final T card) {
 		initialize();
+		T acard = null;
 		synchronized (this) {
-			if (!doAddCard(card))
+			acard = doAddCard(card);
+			if (acard == null)
 				return false;
 		}
 		if (isListenerAttached())
-			fireEvent(new CardEvent(this, CardEvent.ADD, card));
+			fireEvent(new CardEvent(this, CardEvent.ADD, acard));
 		return true;
 	}
 
@@ -183,7 +188,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return initialized;
 	}
 
-	protected abstract boolean doAddCard(T card);
+	protected abstract T doAddCard(T card);
 
 	protected abstract boolean doRemoveCard(T card);
 

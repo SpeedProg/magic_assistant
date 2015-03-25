@@ -18,7 +18,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard> implements
 		ICardStore<IMagicCard>,
@@ -44,7 +44,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	@Override
-	public boolean doAddCard(IMagicCard card) {
+	public IMagicCard doAddCard(IMagicCard card) {
 		Location loc = getLocation();
 		if (getMergeOnAdd()) {
 			MagicCardPhysical phi = (MagicCardPhysical) this.hashpart.getCard(card);
@@ -53,10 +53,10 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 					phi = (MagicCardPhysical) createNewCard(card, loc);
 					this.hashpart.storeCard(phi);
 					if (this.storage.add(phi))
-						return true;
+						return phi;
 					else {
 						this.hashpart.removeCard(phi);
-						return false;
+						return null;
 					}
 				} else {
 					int count = 1;
@@ -69,9 +69,9 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 					doRemoveCard(old);
 					this.hashpart.storeCard(add);
 					if (storageAdd(add))
-						return true;
+						return add;
 					else {
-						return false;
+						return null;
 					}
 				}
 			}
@@ -79,9 +79,9 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 		IMagicCard phi = createNewCard(card, loc);
 		this.hashpart.storeCard(phi);
 		if (storageAdd(phi))
-			return true;
+			return phi;
 		else {
-			return false;
+			return null;
 		}
 	}
 
@@ -150,7 +150,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.core.xml.SingleFileCardStore#doInitialize()
 	 */
 	@Override

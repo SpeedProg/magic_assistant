@@ -18,7 +18,7 @@ import com.reflexit.magiccards.core.model.Location;
 
 /**
  * @author Alena
- * 
+ *
  */
 public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>,
 		IStorageContainer<T> {
@@ -26,7 +26,7 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 	protected boolean wrapped;
 
 	/**
-	 * 
+	 *
 	 */
 	public AbstractCardStoreWithStorage(final IStorage<T> storage, boolean wrapped) {
 		super();
@@ -74,8 +74,9 @@ public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<
 	}
 
 	@Override
-	protected boolean doAddCard(T card) {
-		return storage.add(card);
+	protected T doAddCard(T card) {
+		if (storage.add(card)) return card;
+		return null;
 	}
 
 	@Override

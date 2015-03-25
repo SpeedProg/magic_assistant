@@ -24,7 +24,7 @@ import com.reflexit.magiccards.core.model.storage.ICardCollection;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements
 		ICardCollection<IMagicCard> {
@@ -115,7 +115,7 @@ public class CollectionMultiFileCardStore extends AbstractMultiStore<IMagicCard>
 	}
 
 	@Override
-	public synchronized boolean doAddCard(IMagicCard card) {
+	public synchronized IMagicCard doAddCard(IMagicCard card) {
 		Location loc = getLocation();
 		if (card instanceof MagicCardPhysical)
 			loc = ((MagicCardPhysical) card).getLocation();

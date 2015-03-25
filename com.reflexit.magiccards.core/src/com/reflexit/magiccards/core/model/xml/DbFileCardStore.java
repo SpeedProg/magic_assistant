@@ -27,9 +27,9 @@ import com.reflexit.magiccards.core.model.xml.DbMultiFileCardStore.GlobalDbHandl
 
 /**
  * Single File store with card count and caching
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	private GlobalDbHandler handler;
@@ -50,10 +50,9 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	}
 
 	@Override
-	public boolean doAddCard(IMagicCard card) {
+	public IMagicCard doAddCard(IMagicCard card) {
 		// this would be called when new cards are added or loading from resources
-		storeCard(card);
-		return true;
+		return storeCard(card);
 	}
 
 	@Override
@@ -101,7 +100,7 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 	 * @param toRemove
 	 * @param b
 	 */
-	private void storeCard(IMagicCard card) {
+	private IMagicCard storeCard(IMagicCard card) {
 		int id = card.getCardId();
 		if (id == 0) {
 			// create syntetic id
@@ -115,5 +114,6 @@ public class DbFileCardStore extends AbstractCardStoreWithStorage<IMagicCard> {
 		} else {
 			storage.autoSave();
 		}
+		return card;
 	}
 }
