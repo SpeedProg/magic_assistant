@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.widgets.SearchContextFocusListener;
 
 /**
  * Control for searching stuff
@@ -42,7 +43,6 @@ public class SearchControl {
 	private Label statusImage;
 	private boolean searchAsYouType;
 	private Composite comp;
-
 
 	public SearchControl(ISearchRunnable runnable) {
 		this.runnable = runnable;
@@ -131,6 +131,7 @@ public class SearchControl {
 				search();
 			}
 		});
+		this.searchText.addFocusListener(new SearchContextFocusListener());
 		ToolItem text = new ToolItem(toolbar, SWT.SEPARATOR);
 		text.setControl(this.searchText);
 		text.setWidth(300);

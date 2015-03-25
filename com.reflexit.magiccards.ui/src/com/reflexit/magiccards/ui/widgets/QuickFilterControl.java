@@ -29,7 +29,6 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class QuickFilterControl extends Composite {
@@ -152,12 +151,6 @@ public class QuickFilterControl extends Composite {
 		createEditionField(toolbar);
 		// hide
 		// createHideButton(comp);
-	}
-
-	class SearchContextFocusListener extends ContextFocusListener {
-		public SearchContextFocusListener() {
-			super(PerspectiveFactoryMagic.SEARCH_CONTEXT);
-		}
 	}
 
 	private void createSearchField(ToolBar toolbar) {
