@@ -226,6 +226,12 @@
             sequence="INSERT">
       </key>
       <key
+            commandId="com.reflexit.magiccards.ui.commands.addToLib"
+            contextId="com.reflexit.magiccards.ui.context.search"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+INSERT">
+      </key>
+      <key
       	    commandId="com.reflexit.magiccards.ui.commands.moveToDeck"
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
@@ -289,6 +295,12 @@
             contextId="com.reflexit.magiccards.ui.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="NUMPAD_ADD">
+      </key>
+      <key
+            commandId="com.reflexit.magiccards.ui.commands.increaseCount"
+            contextId="com.reflexit.magiccards.ui.context.search"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+=">
       </key>
       <key
             commandId="com.reflexit.magiccards.ui.commands.filterCommand"
