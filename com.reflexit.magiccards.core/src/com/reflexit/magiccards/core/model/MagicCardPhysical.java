@@ -27,6 +27,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	public MagicCardPhysical(IMagicCard card, Location location, boolean virtual) {
 		this(card, location);
+		if (card == null)
+			throw new NullPointerException();
 		this.ownership = !virtual;
 	}
 
@@ -46,6 +48,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 					.clone());
 		}
 		this.location = location;
+		if (this.card == null)
+			throw new NullPointerException();
 	}
 
 	@Override
@@ -91,6 +95,8 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	public void setMagicCard(MagicCard card) {
 		this.card = card;
+		if (this.card == null)
+			throw new NullPointerException();
 	}
 
 	@Override
@@ -238,7 +244,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	/**
 	 * Kind of equals but ignores count and location
-	 * 
+	 *
 	 * @param phi2
 	 * @return
 	 */
@@ -417,7 +423,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	/**
 	 * This card total in all collections (same set)
-	 * 
+	 *
 	 * @return
 	 */
 	public int getOwnTotal() {
@@ -426,7 +432,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 
 	/**
 	 * This card total ignoring set
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
