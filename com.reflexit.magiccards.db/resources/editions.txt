@@ -138,3 +138,5 @@ Duel Decks Anthology, Divine vs. Demonic|DD3_DVD||February 2015|Starter|Duel Dec
 Duel Decks Anthology, Elves vs. Goblins|DD3_EVG||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Garruk vs. Liliana|DD3_GVL||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|Duel Decks||
+Dragons of Tarkir|DTK|||March 2015|Expansion|Khans of Tarkir|Standard|
+Duel Decks: Kiora vs. Elspeth|DDO|||March 2015|Starter|Duel Decks||

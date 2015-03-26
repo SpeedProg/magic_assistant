@@ -67,3 +67,16 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 373414|Volt Charge|{2}{R}|Instant|||Volt Charge deals 3 damage to target creature or player. Proliferate. <i>(You choose any number of permanents and/or players with counters on them, then give each another counter of a kind already there.)</i>|Duel Decks: Heroes vs. Monsters|Common|Jana Schirmer & Johannes Voss|68|Volt Charge deals 3 damage to target creature or player. Proliferate. <i>(You choose any number of permanents and/or players with counters on them, then give each another counter of a kind already there.)</i>|
 373410|Winds of Rath|{3}{W}{W}|Sorcery|||Destroy all creatures that aren't enchanted. They can't be regenerated.|Duel Decks: Heroes vs. Monsters|Rare|Drew Tucker|31|Destroy all creatures that aren't enchanted. They can't be regenerated.|
 373339|Zhur-Taa Druid|{R}{G}|Creature - Human Druid|1|1|{T}: Add {G} to your mana pool.<br>Whenever you tap Zhur-Taa Druid for mana, it deals 1 damage to each opponent.|Duel Decks: Heroes vs. Monsters|Common|Mark Winters|48|{T}: Add {G} to your mana pool.<br>Whenever you tap Zhur-Taa Druid for mana, it deals 1 damage to each opponent.|
+373349|Forest||Basic Land - Forest|||G|Duel Decks: Heroes vs. Monsters|Land|Vance Kovacs|78|G|
+373374|Forest||Basic Land - Forest|||G|Duel Decks: Heroes vs. Monsters|Land|Vance Kovacs|81|G|
+373404|Forest||Basic Land - Forest|||G|Duel Decks: Heroes vs. Monsters|Land|Vance Kovacs|80|G|
+373359|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|75|R|
+373378|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|77|R|
+373382|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|36|R|
+373387|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|35|R|
+373392|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|74|R|
+373403|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|76|R|
+373411|Mountain||Basic Land - Mountain|||R|Duel Decks: Heroes vs. Monsters|Land|Jonas De Ro|38|R|
+373341|Plains||Basic Land - Plains|||W|Duel Decks: Heroes vs. Monsters|Land|Véronique Meignaud|39|W|
+373361|Plains||Basic Land - Plains|||W|Duel Decks: Heroes vs. Monsters|Land|Véronique Meignaud|42|W|
+373386|Plains||Basic Land - Plains|||W|Duel Decks: Heroes vs. Monsters|Land|Véronique Meignaud|41|W|

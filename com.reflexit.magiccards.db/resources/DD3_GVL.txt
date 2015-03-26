@@ -1,6 +1,6 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-393892|Forest| |Basic Land - Forest| | |G|Duel Decks Anthology, Garruk vs. Liliana|Land|Glen Angus|29|G|
-393927|Swamp| |Basic Land - Swamp| | |B|Duel Decks Anthology, Garruk vs. Liliana|Land|Christopher Moeller|61|B|
+393892|Forest||Basic Land - Forest|||G|Duel Decks Anthology, Garruk vs. Liliana|Land|Glen Angus|29|G|
+393927|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Garruk vs. Liliana|Land|Christopher Moeller|61|B|
 393878|Albino Troll|{1}{G}|Creature - Troll|3|3|Echo {1}{G} <i>(At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)</i><br>{1}{G}: Regenerate Albino Troll.|Duel Decks Anthology, Garruk vs. Liliana|Uncommon|Parente|3|Echo {1}{G} <i>(At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)</i><br>{1}{G}: Regenerate Albino Troll.|
 393879|Bad Moon|{1}{B}|Enchantment|||Black creatures get +1/+1.|Duel Decks Anthology, Garruk vs. Liliana|Rare|Gary Leach|48|Black creatures get +1/+1.|
 393880|Basking Rootwalla|{G}|Creature - Lizard|1|1|{1}{G}: Basking Rootwalla gets +2/+2 until end of turn. Activate this ability only once each turn.<br>Madness {0} <i>(If you discard this card, you may cast it for its madness cost instead of putting it into your graveyard.)</i>|Duel Decks Anthology, Garruk vs. Liliana|Common|Heather Hudson|2|{1}{G}: Basking Rootwalla gets +2/+2 until end of turn. Activate this ability only once each turn.<br>Madness {0} <i>(If you discard this card, you may cast it for its madness cost instead of putting it into your graveyard.)</i>|
@@ -56,3 +56,9 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 393938|Wild Mongrel|{1}{G}|Creature - Hound|2|2|Discard a card: Wild Mongrel gets +1/+1 and becomes the color of your choice until end of turn.|Duel Decks Anthology, Garruk vs. Liliana|Common|Anthony S. Waters|5|Discard a card: Wild Mongrel gets +1/+1 and becomes the color of your choice until end of turn.|
 393939|Windstorm|{X}{G}|Instant|||Windstorm deals X damage to each creature with flying.|Duel Decks Anthology, Garruk vs. Liliana|Uncommon|Rob Alexander|25|Windstorm deals X damage to each creature with flying.|
 393940|Wirewood Savage|{2}{G}|Creature - Elf|2|2|Whenever a Beast enters the battlefield, you may draw a card.|Duel Decks Anthology, Garruk vs. Liliana|Common|DiTerlizzi|6|Whenever a Beast enters the battlefield, you may draw a card.|
+393890|Forest||Basic Land - Forest|||G|Duel Decks Anthology, Garruk vs. Liliana|Land|Vance Kovacs|30|G|
+393891|Forest||Basic Land - Forest|||G|Duel Decks Anthology, Garruk vs. Liliana|Land|Vance Kovacs|28|G|
+393893|Forest||Basic Land - Forest|||G|Duel Decks Anthology, Garruk vs. Liliana|Land|Vance Kovacs|31|G|
+393926|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Garruk vs. Liliana|Land|Véronique Meignaud|62|B|
+393928|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Garruk vs. Liliana|Land|Véronique Meignaud|60|B|
+393929|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Garruk vs. Liliana|Land|Véronique Meignaud|63|B|

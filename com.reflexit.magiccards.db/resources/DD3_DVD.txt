@@ -1,6 +1,6 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-394043|Plains| |Basic Land - Plains| | |W|Duel Decks Anthology, Divine vs. Demonic|Land|Rob Alexander|27|W|
-394059|Swamp| |Basic Land - Swamp| | |B|Duel Decks Anthology, Divine vs. Demonic|Land|Mark Tedin|60|B|
+394043|Plains||Basic Land - Plains|||W|Duel Decks Anthology, Divine vs. Demonic|Land|Rob Alexander|27|W|
+394059|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Divine vs. Demonic|Land|Mark Tedin|60|B|
 394003|Abyssal Gatekeeper|{1}{B}|Creature - Horror|1|1|When Abyssal Gatekeeper dies, each player sacrifices a creature.|Duel Decks Anthology, Divine vs. Demonic|Common|Mark Tedin|31|When Abyssal Gatekeeper dies, each player sacrifices a creature.|
 394004|Abyssal Specter|{2}{B}{B}|Creature - Specter|2|3|Flying<br>Whenever Abyssal Specter deals damage to a player, that player discards a card.|Duel Decks Anthology, Divine vs. Demonic|Uncommon|Michael Sutfin|40|Flying<br>Whenever Abyssal Specter deals damage to a player, that player discards a card.|
 394005|Akroma, Angel of Wrath|{5}{W}{W}{W}|Legendary Creature - Angel|6|6|Flying, first strike, vigilance, trample, haste, protection from black and from red|Duel Decks Anthology, Divine vs. Demonic|Mythic Rare|Chippy|1|Flying, first strike, vigilance, trample, haste, protection from black and from red|
@@ -55,3 +55,9 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 394062|Twilight Shepherd|{3}{W}{W}{W}|Creature - Angel|5|5|Flying, vigilance<br>When Twilight Shepherd enters the battlefield, return to your hand all cards in your graveyard that were put there from the battlefield this turn.<br>Persist <i>(When this creature dies, if it had no -1/-1 counters on it, return it to the battlefield under its owner's control with a -1/-1 counter on it.)</i>|Duel Decks Anthology, Divine vs. Demonic|Rare|Jason Chan|11|Flying, vigilance<br>When Twilight Shepherd enters the battlefield, return to your hand all cards in your graveyard that were put there from the battlefield this turn.<br>Persist <i>(When this creature dies, if it had no -1/-1 counters on it, return it to the battlefield under its owner's control with a -1/-1 counter on it.)</i>|
 394063|Unholy Strength|{B}|Enchantment - Aura|||Enchant creature<br>Enchanted creature gets +2/+1.|Duel Decks Anthology, Divine vs. Demonic|Common|Terese Nielsen|47|Enchant creature<br>Enchanted creature gets +2/+1.|
 394064|Venerable Monk|{2}{W}|Creature - Human Monk Cleric|2|2|When Venerable Monk enters the battlefield, you gain 2 life.|Duel Decks Anthology, Divine vs. Demonic|Common|D. Alexander Gregory|5|When Venerable Monk enters the battlefield, you gain 2 life.|
+394041|Plains||Basic Land - Plains|||W|Duel Decks Anthology, Divine vs. Demonic|Land|Véronique Meignaud|28|W|
+394042|Plains||Basic Land - Plains|||W|Duel Decks Anthology, Divine vs. Demonic|Land|Véronique Meignaud|29|W|
+394044|Plains||Basic Land - Plains|||W|Duel Decks Anthology, Divine vs. Demonic|Land|Véronique Meignaud|26|W|
+394058|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Divine vs. Demonic|Land|Véronique Meignaud|61|B|
+394060|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Divine vs. Demonic|Land|Véronique Meignaud|62|B|
+394061|Swamp||Basic Land - Swamp|||B|Duel Decks Anthology, Divine vs. Demonic|Land|Véronique Meignaud|59|B|

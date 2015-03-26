@@ -233,3 +233,18 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 370619|Xathrid Necromancer|{2}{B}|Creature - Human Wizard|2|2|Whenever Xathrid Necromancer or another Human creature you control dies, put a 2/2 black Zombie creature token onto the battlefield tapped.|Magic 2014 Core Set|Rare|Maciej Kuciara|123|Whenever Xathrid Necromancer or another Human creature you control dies, put a 2/2 black Zombie creature token onto the battlefield tapped.|
 370600|Young Pyromancer|{1}{R}|Creature - Human Shaman|2|1|Whenever you cast an instant or sorcery spell, put a 1/1 red Elemental creature token onto the battlefield.|Magic 2014 Core Set|Uncommon|Cynthia Sheppard|163|Whenever you cast an instant or sorcery spell, put a 1/1 red Elemental creature token onto the battlefield.|
 370672|Zephyr Charge|{1}{U}|Enchantment|||{1}{U}: Target creature gains flying until end of turn.|Magic 2014 Core Set|Common|Steve Prescott|82|{1}{U}: Target creature gains flying until end of turn.|
+370598|Forest||Basic Land - Forest|||G|Magic 2014 Core Set|Land|Vance Kovacs|335|G|
+370756|Forest||Basic Land - Forest|||G|Magic 2014 Core Set|Land|Vance Kovacs|335|G|
+370771|Forest||Basic Land - Forest|||G|Magic 2014 Core Set|Land|Vance Kovacs|335|G|
+370611|Island||Basic Land - Island|||U|Magic 2014 Core Set|Land|Jeremy Jarvis|323|U|
+370647|Island||Basic Land - Island|||U|Magic 2014 Core Set|Land|Jeremy Jarvis|323|U|
+370773|Island||Basic Land - Island|||U|Magic 2014 Core Set|Land|Jeremy Jarvis|323|U|
+370583|Mountain||Basic Land - Mountain|||R|Magic 2014 Core Set|Land|Jonas De Ro|331|R|
+370588|Mountain||Basic Land - Mountain|||R|Magic 2014 Core Set|Land|Jonas De Ro|331|R|
+370725|Mountain||Basic Land - Mountain|||R|Magic 2014 Core Set|Land|Jonas De Ro|331|R|
+370615|Plains||Basic Land - Plains|||W|Magic 2014 Core Set|Land|Véronique Meignaud|319|W|
+370669|Plains||Basic Land - Plains|||W|Magic 2014 Core Set|Land|Véronique Meignaud|319|W|
+370679|Plains||Basic Land - Plains|||W|Magic 2014 Core Set|Land|Véronique Meignaud|319|W|
+370703|Swamp||Basic Land - Swamp|||B|Magic 2014 Core Set|Land|Véronique Meignaud|327|B|
+370727|Swamp||Basic Land - Swamp|||B|Magic 2014 Core Set|Land|Véronique Meignaud|327|B|
+370731|Swamp||Basic Land - Swamp|||B|Magic 2014 Core Set|Land|Véronique Meignaud|327|B|

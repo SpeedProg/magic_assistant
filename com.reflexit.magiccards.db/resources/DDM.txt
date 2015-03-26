@@ -75,3 +75,15 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 380244|Vinelasher Kudzu|{1}{G}|Creature - Plant|1|1|Whenever a land enters the battlefield under your control, put a +1/+1 counter on Vinelasher Kudzu.|Duel Decks: Jace vs. Vraska|Rare|Mark Tedin|50|Whenever a land enters the battlefield under your control, put a +1/+1 counter on Vinelasher Kudzu.|
 380214|Vraska the Unseen|{3}{B}{G}|Planeswalker - Vraska||5|+1: Until your next turn, whenever a creature deals combat damage to Vraska the Unseen, destroy that creature.<br>-3: Destroy target nonland permanent.<br>-7: Put three 1/1 black Assassin creature tokens onto the battlefield with "Whenever this creature deals combat damage to a player, that player loses the game."|Duel Decks: Jace vs. Vraska|Mythic Rare|Igor Kieryluk|42|+1: Until your next turn, whenever a creature deals combat damage to Vraska the Unseen, destroy that creature.<br>-3: Destroy target nonland permanent.<br>-7: Put three 1/1 black Assassin creature tokens onto the battlefield with "Whenever this creature deals combat damage to a player, that player loses the game."|
 380207|Wight of Precinct Six|{1}{B}|Creature - Zombie|1|1|Wight of Precinct Six gets +1/+1 for each creature card in your opponents' graveyards.|Duel Decks: Jace vs. Vraska|Uncommon|Ryan Barger|46|Wight of Precinct Six gets +1/+1 for each creature card in your opponents' graveyards.|
+380192|Forest||Basic Land - Forest|||G|Duel Decks: Jace vs. Vraska|Land|Vance Kovacs|88|G|
+380198|Forest||Basic Land - Forest|||G|Duel Decks: Jace vs. Vraska|Land|Vance Kovacs|86|G|
+380208|Forest||Basic Land - Forest|||G|Duel Decks: Jace vs. Vraska|Land|Vance Kovacs|84|G|
+380229|Forest||Basic Land - Forest|||G|Duel Decks: Jace vs. Vraska|Land|Vance Kovacs|87|G|
+380194|Island||Basic Land - Island|||U|Duel Decks: Jace vs. Vraska|Land|Jeremy Jarvis|41|U|
+380222|Island||Basic Land - Island|||U|Duel Decks: Jace vs. Vraska|Land|Jeremy Jarvis|40|U|
+380223|Island||Basic Land - Island|||U|Duel Decks: Jace vs. Vraska|Land|Jeremy Jarvis|39|U|
+380261|Island||Basic Land - Island|||U|Duel Decks: Jace vs. Vraska|Land|Jeremy Jarvis|37|U|
+380237|Swamp||Basic Land - Swamp|||B|Duel Decks: Jace vs. Vraska|Land|Véronique Meignaud|81|B|
+380240|Swamp||Basic Land - Swamp|||B|Duel Decks: Jace vs. Vraska|Land|Véronique Meignaud|82|B|
+380264|Swamp||Basic Land - Swamp|||B|Duel Decks: Jace vs. Vraska|Land|Véronique Meignaud|83|B|
+380271|Swamp||Basic Land - Swamp|||B|Duel Decks: Jace vs. Vraska|Land|Véronique Meignaud|79|B|

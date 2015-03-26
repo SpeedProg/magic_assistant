@@ -233,3 +233,18 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 373622|Witches' Eye|{1}|Artifact - Equipment|||Equipped creature has "{1}, {T}: Scry 1." <i>(To scry 1, look at the top card of your library, then you may put that card on the bottom of your library.)</i><br>Equip {1}|Theros|Uncommon|Daniel Ljunggren|222|Equipped creature has "{1}, {T}: Scry 1." <i>(To scry 1, look at the top card of your library, then you may put that card on the bottom of your library.)</i><br>Equip {1}|
 373502|Xenagos, the Reveler|{2}{R}{G}|Planeswalker - Xenagos||3|+1: Add X mana in any combination of {R} and/or {G} to your mana pool, where X is the number of creatures you control.<br>0: Put a 2/2 red and green Satyr creature token with haste onto the battlefield.<br>-6: Exile the top seven cards of your library. You may put any number of creature and/or land cards from among them onto the battlefield.|Theros|Mythic Rare|Jason Chan|209|+1: Add X mana in any combination of {R} and/or {G} to your mana pool, where X is the number of creatures you control.<br>0: Put a 2/2 red and green Satyr creature token with haste onto the battlefield.<br>-6: Exile the top seven cards of your library. You may put any number of creature and/or land cards from among them onto the battlefield.|
 373572|Yoked Ox|{W}|Creature - Ox|0|4||Theros|Common|Ryan Yee|37||
+373568|Forest||Basic Land - Forest|||G|Theros|Land|Vance Kovacs|246|G|
+373615|Forest||Basic Land - Forest|||G|Theros|Land|Vance Kovacs|248|G|
+373688|Forest||Basic Land - Forest|||G|Theros|Land|Vance Kovacs|249|G|
+373558|Island||Basic Land - Island|||U|Theros|Land|Jeremy Jarvis|234|U|
+373723|Island||Basic Land - Island|||U|Theros|Land|Jeremy Jarvis|236|U|
+373736|Island||Basic Land - Island|||U|Theros|Land|Jeremy Jarvis|237|U|
+373546|Mountain||Basic Land - Mountain|||R|Theros|Land|Jonas De Ro|245|R|
+373609|Mountain||Basic Land - Mountain|||R|Theros|Land|Jonas De Ro|242|R|
+373683|Mountain||Basic Land - Mountain|||R|Theros|Land|Jonas De Ro|244|R|
+373582|Plains||Basic Land - Plains|||W|Theros|Land|Véronique Meignaud|233|W|
+373654|Plains||Basic Land - Plains|||W|Theros|Land|Véronique Meignaud|230|W|
+373700|Plains||Basic Land - Plains|||W|Theros|Land|Véronique Meignaud|232|W|
+373608|Swamp||Basic Land - Swamp|||B|Theros|Land|Véronique Meignaud|238|B|
+373681|Swamp||Basic Land - Swamp|||B|Theros|Land|Véronique Meignaud|241|B|
+373706|Swamp||Basic Land - Swamp|||B|Theros|Land|Véronique Meignaud|240|B|

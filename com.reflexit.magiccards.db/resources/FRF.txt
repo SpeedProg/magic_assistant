@@ -179,8 +179,8 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 391963|Wind-Scarred Crag||Land|||Wind-Scarred Crag enters the battlefield tapped.<br>When Wind-Scarred Crag enters the battlefield, you gain 1 life.<br>{T}: Add {R} or {W} to your mana pool.|Fate Reforged|Common|Eytan Zana|175|Wind-Scarred Crag enters the battlefield tapped.<br>When Wind-Scarred Crag enters the battlefield, you gain 1 life.<br>{T}: Add {R} or {W} to your mana pool.|
 391964|Write into Being|{2}{U}|Sorcery|||Look at the top two cards of your library. Manifest one of those cards, then put the other on the top or bottom of your library. <i>(To manifest a card, put it onto the battlefield face down as a 2/2 creature. Turn it face up any time for its mana cost if it's a creature card.)</i>|Fate Reforged|Common|Yeong-Hao Han|59|Look at the top two cards of your library. Manifest one of those cards, then put the other on the top or bottom of your library. <i>(To manifest a card, put it onto the battlefield face down as a 2/2 creature. Turn it face up any time for its mana cost if it's a creature card.)</i>|
 391965|Yasova Dragonclaw|{2}{G}|Legendary Creature - Human Warrior|4|2|Trample<br>At the beginning of combat on your turn, you may pay {1}{U/R}{U/R}. If you do, gain control of target creature an opponent controls with power less than Yasova Dragonclaw's power until end of turn, untap that creature, and it gains haste until end of turn.|Fate Reforged|Rare|Winona Nelson|148|Trample<br>At the beginning of combat on your turn, you may pay {1}{U/R}{U/R}. If you do, gain control of target creature an opponent controls with power less than Yasova Dragonclaw's power until end of turn, untap that creature, and it gains haste until end of turn.|
-391835|Forest||Basic Land - Forest|||G|Fate Reforged|Land|||G|
-391860|Island||Basic Land - Island|||U|Fate Reforged|Land|||U|
-391886|Mountain||Basic Land - Mountain|||R|Fate Reforged|Land|||R|
-391894|Plains||Basic Land - Plains|||W|Fate Reforged|Land|||W|
-391935|Swamp||Basic Land - Swamp|||B|Fate Reforged|Land|||B|
+391835|Forest||Basic Land - Forest|||G|Fate Reforged|Land|Adam Paquette|185|G|
+391860|Island||Basic Land - Island|||U|Fate Reforged|Land|Titus Lunter|179|U|
+391886|Mountain||Basic Land - Mountain|||R|Fate Reforged|Land|Florian de Gesincourt|183|R|
+391894|Plains||Basic Land - Plains|||W|Fate Reforged|Land|Sam Burley|177|W|
+391935|Swamp||Basic Land - Swamp|||B|Fate Reforged|Land|Adam Paquette|181|B|
