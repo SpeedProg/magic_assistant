@@ -160,6 +160,9 @@ public class MagicDbView extends AbstractCardsView {
 		String curset = null;
 		File dir = new File("/tmp/madatabase");
 		dir.mkdirs();
+		for (File file : dir.listFiles()) {
+			file.delete();
+		}
 		Editions editions = Editions.getInstance();
 		PrintStream ps = null;
 		for (IMagicCard magicCard : store) {
@@ -170,15 +173,21 @@ public class MagicDbView extends AbstractCardsView {
 					if (ps != null) {
 						ps.close();
 					}
+					boolean header = false;
 					try {
 						String abbr = editions.getEditionByName(set).getBaseFileName();
-						FileOutputStream fileOutputStream = new FileOutputStream(new File(dir, abbr + ".txt"));
+						File file = new File(dir, abbr + ".txt");
+						if (!file.exists())
+							header = true;
+						FileOutputStream fileOutputStream = new FileOutputStream(
+								file, true);
 						ps = new PrintStream(fileOutputStream);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					TextPrinter.printHeader(ps);
+					if (header)
+						TextPrinter.printHeader(ps);
 					curset = set;
 				}
 				MagicCard mc = ((MagicCard) card).cloneCard();
