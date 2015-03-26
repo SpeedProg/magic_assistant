@@ -132,7 +132,7 @@ public class SymbolConverter {
 		if (cost.length() == 0)
 			return Collections.emptyList();
 		Collection<Image> res = new ArrayList<>();
-		String text = cost;
+		String text = cost.trim();
 		if (text.equals("*"))
 			return res;
 		while (text.length() > 0) {
@@ -148,7 +148,7 @@ public class SymbolConverter {
 					if (symImage != null) {
 						res.add(symImage);
 					}
-					text = text.substring(sym.length());
+					text = text.substring(sym.length()).trim();
 					cut = true;
 				}
 			}
