@@ -90,7 +90,7 @@ public class PerformanceFilteringTest extends TestCase {
 	public void testNameGroupping() {
 		this.filter.setSortField(MagicCardField.NAME, true);
 		this.filter.setGroupField(MagicCardField.NAME);
-		assertFast(70, runfiltering());
+		assertFast(80, runfiltering());
 	}
 
 	@Test
@@ -113,8 +113,8 @@ public class PerformanceFilteringTest extends TestCase {
 		this.filter.setGroupField(MagicCardField.NAME);
 		this.filter.setFilter(textFilter("\"o\""));
 		assertFast(90, runfiltering());
-		assertTrue("was " + fstore.getSize(), fstore.getSize() > 13000);
-		assertTrue("was " + fstore.getSize(), fstore.getSize() < 14100);
+		assertTrue("was " + fstore.getSize(), fstore.getSize() > 13500);
+		assertTrue("was " + fstore.getSize(), fstore.getSize() < 14500);
 		this.filter.setFilter(textFilter("\"ob\""));
 		assertFast(80, runfiltering());
 		assertTrue("was " + fstore.getSize(), fstore.getSize() >= 260);
