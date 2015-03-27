@@ -170,7 +170,7 @@ public class EditionsTest extends TestCase {
 				assertTrue("Expected " + ftv + " but was " + type,
 						type.equals("Reprint"));
 			} else
-				assertTrue("Expected type but was " + type, type.equals("Core")
+				assertTrue("Expected type but was " + type + " in " + edition, type.equals("Core")
 						|| type.equals("Expansion")
 						|| type.equals("Reprint")
 						|| type.equals("Starter")
