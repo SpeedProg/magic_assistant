@@ -50,6 +50,7 @@ import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -323,12 +324,7 @@ public abstract class AbstractCardsView extends ViewPart {
 			loadingPrices.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					control.getControl().getDisplay().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							refresh();
-						}
-					});
+					WaitUtils.syncExec(() -> refresh());
 				}
 			});
 			loadingPrices.schedule();

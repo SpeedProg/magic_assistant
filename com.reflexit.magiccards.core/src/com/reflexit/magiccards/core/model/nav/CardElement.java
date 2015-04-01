@@ -14,9 +14,9 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
 /**
  * This is base class that describe card containers. It basically either Deck or
  * Deck Folder.
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public abstract class CardElement extends EventManager implements ILocatable {
 	private String name; // name
@@ -31,23 +31,25 @@ public abstract class CardElement extends EventManager implements ILocatable {
 	protected void setParentInit(CardOrganizer parent) {
 		setParent(parent);
 		if (parent != null) {
-			parent.addChild(this);
+			parent.doAddChild(this);
 		}
 	}
 
 	protected void setParent(CardOrganizer parent) {
 		this.parent = parent;
-		if (parent != null) {
-			if (!parent.isRoot())
-				this.path = parent.getPath().append(path.lastSegment());
+		if (parent != null && !parent.isRoot()) {
+			String lastSegment = this.name + this.path.getFileExtensionWithDot();
+			this.path = parent.getPath().append(lastSegment);
 		}
 	}
 
 	public CardElement(String filename, CardOrganizer parent, boolean addToParent) {
 		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(
 				filename));
-		if (addToParent)
+		if (addToParent) {
 			setParentInit(parent);
+			if (parent != null) parent.fireCreationEvent(this);
+		}
 	}
 
 	public LocationPath getPath() {
@@ -138,11 +140,6 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		return lastSegment.substring(0, index);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getName();
@@ -155,17 +152,18 @@ public abstract class CardElement extends EventManager implements ILocatable {
 	public CardElement rename(String value) {
 		Location oldName = getLocation();
 		if (getParent() != null) {
-			getParent().removeChild(this);
+			getParent().doRemoveChild(this);
 		}
 		File newFile = new File(parent.getFile(), value + ".xml");
 		getFile().renameTo(newFile);
-		CardElement x = newElement(value, getParent());
-		x.fireEvent(CardEvent.RENAME_CONTAINER, oldName);
-		return x;
+		this.name = value;
+		setParentInit(parent);
+		fireRecursiveRename(this, oldName);
+		return this;
 	}
 
 	public void update() {
-		fireEvent(CardEvent.UPDATE_CONTAINER, null);
+		fireEvent(CardEvent.UPDATE_CONTAINER, this);
 		return;
 	}
 
@@ -176,12 +174,12 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		}
 		Location oldName = getLocation();
 		if (getParent() != null) {
-			getParent().removeChild(this);
+			getParent().doRemoveChild(this);
 		}
 		File newFile = new File(parent.getFile(), getFile().getName());
 		getFile().renameTo(newFile);
 		setParentInit(parent);
-		fireRecorsiveRename(this, oldName);
+		fireRecursiveRename(this, oldName);
 		return this;
 	}
 
@@ -193,13 +191,13 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		return getParent().isAncestor(parent);
 	}
 
-	private void fireRecorsiveRename(CardElement cardElement, Location oldName) {
+	private void fireRecursiveRename(CardElement cardElement, Location oldName) {
 		cardElement.setParent(cardElement.getParent()); // that would update
 														// path
 		if (cardElement instanceof CardOrganizer) {
 			CardOrganizer org = (CardOrganizer) this;
 			for (CardElement el : org.getChildren()) {
-				fireRecorsiveRename(el, oldName.append(el.getName()));
+				fireRecursiveRename(el, oldName.append(el.getName()));
 			}
 		}
 		cardElement.fireEvent(CardEvent.RENAME_CONTAINER, oldName);

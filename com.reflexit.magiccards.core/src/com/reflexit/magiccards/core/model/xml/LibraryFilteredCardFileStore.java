@@ -5,6 +5,7 @@ import java.util.Collection;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -15,6 +16,7 @@ import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractCardStoreWithStorage;
 import com.reflexit.magiccards.core.model.storage.CollectionCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
@@ -53,28 +55,35 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 
 	@Override
 	public void handleEvent(CardEvent event) {
-		if (event.getData() instanceof CardElement) {
-			CardElement elem = (CardElement) event.getData();
-			if (event.getType() == CardEvent.ADD_CONTAINER) {
+		//System.err.println(event);
+		switch (event.getType()) {
+			case CardEvent.ADD_CONTAINER: {
+				CardElement elem = (CardElement) event.getData();
 				if (elem instanceof CardCollection) {
+					CardCollection cardCollection = (CardCollection) elem;
 					CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
 					IStorage storage = store.getStorage();
 					if (storage instanceof IStorageInfo) {
 						((IStorageInfo) storage)
-								.setType(((CardCollection) elem).isDeck() ? IStorageInfo.DECK_TYPE
+								.setType(cardCollection.isDeck() ? IStorageInfo.DECK_TYPE
 										: IStorageInfo.COLLECTION_TYPE);
 					}
-					reconcile();
+					cardCollection.open(store);
+					DataManager.getInstance().reconcile(store);
 					update();
 				}
-			} else if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-				this.table.removeLocation(elem.getLocation());
-				reconcile();
-				update();
+				break;
 			}
-		} else if (event.getSource() instanceof CardElement) {
-			CardElement elem = (CardElement) event.getSource();
-			if (event.getType() == CardEvent.RENAME_CONTAINER) {
+			case CardEvent.REMOVE_CONTAINER: {
+				CardElement elem = (CardElement) event.getData();
+				ICardStore<IMagicCard> store = getStore(elem.getLocation());
+				this.table.removeLocation(elem.getLocation());
+				DataManager.getInstance().reconcile(store);
+				update();
+				break;
+			}
+			case CardEvent.RENAME_CONTAINER: {
+				CardElement elem = (CardElement) event.getSource();
 				// System.err.println("renamed " + event.getData() + " to " +
 				// elem.getLocation());
 				if (elem instanceof CardOrganizer) {
@@ -82,20 +91,35 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					// path and name changes
 				} else {
 					this.table.renameLocation((Location) event.getData(), elem.getLocation());
-					reconcile();
+					ICardStore<IMagicCard> store = getStore(elem.getLocation());
+					DataManager.getInstance().reconcile(store);
 					update();
 				}
+				break;
 			}
-		} else if (event.getType() == CardEvent.UPDATE) { // XXX: UPDATE_LIST
-			// need to save xml
-			if (event.getSource() instanceof MagicCardPhysical) {
-				MagicCardPhysical c = (MagicCardPhysical) event.getSource();
-				Location location = c.getLocation();
-				AbstractCardStoreWithStorage storage = table.getStorage(location);
-				if (storage != null) {
-					storage.getStorage().save();
+			case CardEvent.UPDATE_CONTAINER: {
+				CardElement elem = (CardElement) event.getSource();
+				if (elem instanceof CardCollection) {
+					ICardStore<IMagicCard> store = getStore(elem.getLocation());
+					DataManager.getInstance().reconcile(store);
+					update();
 				}
+				break;
 			}
+			case CardEvent.UPDATE: {
+				// need to save xml
+				if (event.getSource() instanceof MagicCardPhysical) {
+					MagicCardPhysical c = (MagicCardPhysical) event.getSource();
+					Location location = c.getLocation();
+					AbstractCardStoreWithStorage storage = table.getStorage(location);
+					if (storage != null) {
+						storage.getStorage().save();
+					}
+				}
+				break;
+			}
+			default:
+				break;
 		}
 	}
 

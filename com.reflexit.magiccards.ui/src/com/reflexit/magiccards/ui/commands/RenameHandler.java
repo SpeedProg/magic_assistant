@@ -28,16 +28,15 @@ import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class RenameHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
 	@Override
@@ -92,9 +91,6 @@ public class RenameHandler extends AbstractHandler {
 			if (!f.getName().equals(newName)) {
 				Location sb = loc.toSideboard();
 				CardElement el = f.rename(newName);
-				if (wasOpen && el instanceof CardCollection) {
-					DeckView.openCollection((CardCollection) el);
-				}
 				CardElement fsb = f.getParent().findChieldByName(sb.getBaseFileName());
 				if (fsb != null) {
 					fsb.rename(new Location(newName).toSideboard().toString());
@@ -111,7 +107,7 @@ public class RenameHandler extends AbstractHandler {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
 	 */
 	@Override

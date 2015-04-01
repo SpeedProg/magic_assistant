@@ -64,7 +64,10 @@ public class CardsNavigatorLabelProvider extends LabelProvider implements IColor
 	public Color getBackground(Object element) {
 		boolean own = true;
 		if (element instanceof CardCollection) {
-			own = !((CardCollection) element).isVirtual();
+			CardCollection cardCollection = (CardCollection) element;
+			if (cardCollection.isOpen()) {
+				own = !cardCollection.isVirtual();
+			}
 		}
 		return MagicUIActivator.getDefault().getBgColor(own);
 	}

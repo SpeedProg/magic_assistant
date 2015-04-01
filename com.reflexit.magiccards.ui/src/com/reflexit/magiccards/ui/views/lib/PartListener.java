@@ -71,12 +71,12 @@ public class PartListener implements IPartListener2 {
 
 	@Override
 	public void partOpened(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof DeckView) {
-			DeckView deckView = (DeckView) part;
-			IFilteredCardStore store = deckView.getFilteredStore();
-			activateDeck(store);
-		}
+		//IWorkbenchPart part = partRef.getPart(false);
+		//		if (part instanceof DeckView) {
+		//			DeckView deckView = (DeckView) part;
+		//			IFilteredCardStore store = deckView.getFilteredStore();
+		//			activateDeck(store);
+		//		}
 	}
 
 	@Override

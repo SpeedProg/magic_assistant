@@ -13,9 +13,9 @@ import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 
 /**
  * It is object representing a Deck or Collection (but not the card it contains)
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class CardCollection extends CardElement {
 	transient private ICardStore<IMagicCard> store;
@@ -30,6 +30,7 @@ public class CardCollection extends CardElement {
 		this.deck = deck;
 		setParentInit(parent);
 		createFile();
+		parent.fireCreationEvent(this);
 	}
 
 	private void createFile() {
@@ -79,14 +80,10 @@ public class CardCollection extends CardElement {
 	public void open(ICardStore<IMagicCard> store) {
 		if (store == null)
 			return;
-		if (this.store == null) {
-			this.store = store;
-			IStorageInfo info = getStorageInfo();
-			if (info != null) {
-				deck = IStorageInfo.DECK_TYPE.equals(info.getType());
-			}
-		} else {
-			throw new IllegalArgumentException("Already open");
+		this.store = store;
+		IStorageInfo info = getStorageInfo();
+		if (info != null) {
+			deck = IStorageInfo.DECK_TYPE.equals(info.getType());
 		}
 	}
 
@@ -127,6 +124,8 @@ public class CardCollection extends CardElement {
 	}
 
 	public boolean isVirtual() {
+		if (!isOpen())
+			throw new IllegalArgumentException("Store is not open");
 		IStorageInfo info = getStorageInfo();
 		if (info == null)
 			return false;

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -53,6 +54,7 @@ import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
@@ -111,7 +113,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
 	 */
 	@Override
@@ -130,7 +132,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.lib.CollectionView#makeActions()
 	 */
 	@Override
@@ -223,7 +225,7 @@ public class DeckView extends AbstractMyCardsView {
 	public static void openCollection(final CardCollection col) {
 		if (col == null)
 			return;
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -235,11 +237,22 @@ public class DeckView extends AbstractMyCardsView {
 				try {
 					IViewPart view = page.showView(CardsNavigatorView.ID);
 					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					IViewPart deckView = page.showView(DeckView.ID, col.getFileName(),
-							IWorkbenchPage.VIEW_ACTIVATE);
-					if (deckView instanceof DeckView) {
-						((DeckView) deckView).refresh();
+					IViewReference[] views = page.getViewReferences();
+					for (final IViewReference viewReference : views) {
+						if (viewReference.getId().equals(DeckView.ID)) {
+							final String deckId = viewReference.getSecondaryId();
+							if (deckId.equals(col.getFileName())) {
+								DeckView deckView = (DeckView) viewReference.getPart(false);
+								if (deckView != null) {
+									deckView.refresh();
+									return;
+								}
+							}
+						}
 					}
+					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getFileName(),
+							IWorkbenchPage.VIEW_ACTIVATE);
+					deckView.refresh();
 				} catch (PartInitException e) {
 					MessageDialog.openError(new Shell(), "Error", e.getMessage());
 				}
@@ -249,7 +262,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.lib.LibView#dispose()
 	 */
 	@Override
@@ -265,7 +278,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse .swt.widgets.Composite)
 	 */
 	@Override
@@ -289,6 +302,7 @@ public class DeckView extends AbstractMyCardsView {
 			String name = s.getName();
 			if (name.length() == 0)
 				name = s.getLocation().getName();
+			//setPartProperty(name, name);
 			if (deck.getLocation().isSideboard()) {
 				setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());
 				if (sideboard != null)
@@ -377,7 +391,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown( org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
@@ -405,13 +419,9 @@ public class DeckView extends AbstractMyCardsView {
 				// event);
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
 					if (deck != null && deck.getLocation().equals(dataLocation)) {
+						close();
 						deck.close();
 						deck = null;
-						try {
-							getViewSite().getPage().hideView(DeckView.this);
-						} catch (Exception e) {
-							// ignore
-						}
 						// dispose();
 						// System.err.println("---Removing itself");
 						return;
@@ -419,11 +429,16 @@ public class DeckView extends AbstractMyCardsView {
 				} else if (event.getType() == CardEvent.ADD_CONTAINER) {
 					// ignore
 				} else if (event.getType() == CardEvent.RENAME_CONTAINER) {
-					Location srcLocation = ((CardElement) event.getSource()).getLocation();
-					if (deck.getLocation().equals(srcLocation)) {
+					String secondaryId = getViewSite().getSecondaryId();
+					Location srcLocation = (Location) event.getData();
+					if (deck.getLocation().equals(srcLocation) || deck == event.getSource()) {
+						updatePartName();
+						if (!secondaryId.equals(deck.getLocation().getBaseFileName())) {
+							openCollection(deck);// reopen newly named deck, to change secondary id
+							close();
+							return;
+						}
 						reloadData();
-						// TODO does not work properly when moving to another
-						// container
 					}
 				} else {
 					// System.err.println(event);
@@ -431,6 +446,14 @@ public class DeckView extends AbstractMyCardsView {
 				}
 			}
 		});
+	}
+
+	private void close() {
+		try {
+			getViewSite().getPage().hideView(DeckView.this);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	@Override
@@ -445,7 +468,7 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void refresh() {
 		setStore();
-		updatePartName();
+		WaitUtils.asyncExec(() -> updatePartName());
 		reloadData();
 	}
 

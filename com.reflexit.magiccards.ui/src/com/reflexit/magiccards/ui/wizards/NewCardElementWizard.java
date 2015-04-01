@@ -16,12 +16,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -39,7 +41,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
  * @author Alena
- * 
+ *
  */
 public abstract class NewCardElementWizard extends Wizard {
 	protected NewCardElementWizardPage page;
@@ -59,7 +61,7 @@ public abstract class NewCardElementWizard extends Wizard {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public NewCardElementWizard() {
 		super();
@@ -106,7 +108,7 @@ public abstract class NewCardElementWizard extends Wizard {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void beforeFinish() {
 		// let wizards store values
@@ -134,21 +136,28 @@ public abstract class NewCardElementWizard extends Wizard {
 		}
 		DataManager.getCardHandler().getLibraryCardStore();// forces to intialize the store
 		CollectionsContainer parent = (CollectionsContainer) resource;
-		final CardElement col = doCreateCardElement(parent, name, virtual);
-		setElement(col);
-		monitor.worked(1);
-		getShell().getDisplay().asyncExec(new Runnable() {
+		new Job("Adding a deck/collection " + name) {
 			@Override
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IViewPart view = page.showView(CardsNavigatorView.ID);
-					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-				} catch (PartInitException e) {
-					// ignore
-				}
+			protected IStatus run(IProgressMonitor monitor) {
+				final CardElement col = doCreateCardElement(parent, name, virtual);
+				setElement(col);
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getActivePage();
+						try {
+							IViewPart view = page.showView(CardsNavigatorView.ID);
+							view.getViewSite().getSelectionProvider()
+									.setSelection(new StructuredSelection(col));
+						} catch (PartInitException e) {
+							// ignore
+						}
+					}
+				});
+				return Status.OK_STATUS;
 			}
-		});
+		}.schedule();
 		monitor.done();
 	}
 
@@ -162,7 +171,7 @@ public abstract class NewCardElementWizard extends Wizard {
 
 	/**
 	 * We will accept the selection in the workbench to see if we can initialize from it.
-	 * 
+	 *
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {

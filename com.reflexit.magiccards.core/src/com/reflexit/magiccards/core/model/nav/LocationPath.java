@@ -41,6 +41,15 @@ public class LocationPath {
 		return lastSegment.substring(index + 1);
 	}
 
+	public String getFileExtensionWithDot() {
+		String lastSegment = new File(path).getName();
+		int index = lastSegment.lastIndexOf('.');
+		if (index == -1) {
+			return "";
+		}
+		return lastSegment.substring(index);
+	}
+
 	public boolean isAbsolute() {
 		return path.startsWith(SEP);
 	}
@@ -56,6 +65,15 @@ public class LocationPath {
 
 	public String lastSegment() {
 		return toFile().getName();
+	}
+
+	public String basename() {
+		String lastSegment = lastSegment();
+		int index = lastSegment.lastIndexOf('.');
+		if (index == -1) {
+			return lastSegment;
+		}
+		return lastSegment.substring(0, index);
 	}
 
 	public String toPortableString() {

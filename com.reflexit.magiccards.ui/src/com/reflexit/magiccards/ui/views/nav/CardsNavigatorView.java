@@ -67,6 +67,8 @@ import com.reflexit.magiccards.ui.commands.DeleteHandler;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.exportWizards.ImportAction;
+import com.reflexit.magiccards.ui.utils.UIRunnable;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
@@ -446,16 +448,12 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 				MagicUIActivator.log(e);
 			}
 		} else if (obj instanceof CardCollection) {
-			try {
-				// MyCardsView view = (MyCardsView)
-				// getViewSite().getWorkbenchWindow().getActivePage().showView(
-				// MyCardsView.ID);
-				// view.setLocationFilter(((CardCollection) obj).getLocation());
-				CardCollection d = (CardCollection) obj;
-				openDeckView(d, getViewSite().getWorkbenchWindow().getActivePage());
-			} catch (PartInitException e) {
-				MagicUIActivator.log(e);
-			}
+			// MyCardsView view = (MyCardsView)
+			// getViewSite().getWorkbenchWindow().getActivePage().showView(
+			// MyCardsView.ID);
+			// view.setLocationFilter(((CardCollection) obj).getLocation());
+			CardCollection d = (CardCollection) obj;
+			openDeckView(d);
 		} else if (obj instanceof CardOrganizer) {
 			try {
 				MyCardsView view = (MyCardsView) getViewSite().getWorkbenchWindow().getActivePage()
@@ -469,8 +467,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		}
 	}
 
-	private static void openDeckView(CardCollection d, IWorkbenchPage page) throws PartInitException {
-		page.showView(DeckView.ID, d.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
+	private void openDeckView(CardCollection d) {
+		DeckView.openCollection(d);
 	}
 
 	public Shell getShell() {
@@ -482,31 +480,20 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		int type = event.getType();
 		switch (type) {
 			case CardEvent.ADD_CONTAINER:
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						CardsNavigatorView.this.manager.getViewer().refresh(true);
-						Object obj = event.getData();
-						if (obj instanceof CardCollection) {
-							try {
-								openDeckView((CardCollection) obj, getViewSite().getWorkbenchWindow()
-										.getActivePage());
-							} catch (PartInitException e) {
-								MagicUIActivator.log(e);
-							}
-						}
-					}
-				});
+				WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
+				Object obj = event.getData();
+				if (obj instanceof CardCollection) {
+					CardCollection coll = (CardCollection) obj;
+					WaitUtils.scheduleWaitingJob(
+							() -> coll.isOpen(),
+							3000,
+							UIRunnable.syncExec(() -> openDeckView(coll)));
+				}
 				break;
 			case CardEvent.REMOVE_CONTAINER:
 			case CardEvent.RENAME_CONTAINER:
 			case CardEvent.UPDATE_CONTAINER:
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						CardsNavigatorView.this.manager.getViewer().refresh(true);
-					}
-				});
+				WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
 				break;
 			default:
 				break;

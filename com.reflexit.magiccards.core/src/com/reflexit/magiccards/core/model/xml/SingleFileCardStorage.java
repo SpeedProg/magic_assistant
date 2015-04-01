@@ -74,6 +74,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 			doSetLocation(location);
 			updateLocations();
 			this.file = LocationResolver.getInstance().getFile(location);
+			this.name = location.getName();
 			autoSave();
 		}
 	}
@@ -120,8 +121,9 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	}
 
 	public void setName(String name) {
-		doSetName(name);
-		autoSave();
+		throw new UnsupportedOperationException();
+		//		doSetName(name);
+		//		autoSave();
 	}
 
 	protected final void doSetName(String name) {

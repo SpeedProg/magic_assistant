@@ -35,12 +35,12 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class DeleteHandler extends AbstractHandler {
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands. ExecutionEvent)
 	 */
 	@Override
@@ -104,6 +104,7 @@ public class DeleteHandler extends AbstractHandler {
 						"Are you sure you want to delete these " + toBeRemoved.size() + " elements?")) {
 					return;
 				}
+				performOperation(toBeRemoved, 1);
 			} else {
 				MessageDialog dialog = new MessageDialog(
 						getShell(),
@@ -126,14 +127,14 @@ public class DeleteHandler extends AbstractHandler {
 	}
 
 	private static void performOperation(ArrayList<CardElement> toBeRemoved, int result) {
-		if (result == 0) {
+		if (result == 0) { // disband
 			for (Iterator iterator = toBeRemoved.iterator(); iterator.hasNext();) {
 				CardElement el = (CardElement) iterator.next();
 				disbandle(el);
 				if (!el.getLocation().isSideboard())
 					disbandle(el.getRelated());
 			}
-		} else if (result == 1) {
+		} else if (result == 1) { // remove
 			for (Iterator iterator = toBeRemoved.iterator(); iterator.hasNext();) {
 				CardElement el = (CardElement) iterator.next();
 				remove(el);

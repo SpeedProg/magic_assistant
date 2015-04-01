@@ -16,21 +16,18 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class EditDeckPropertiesHandler extends AbstractHandler {
 	@Override
@@ -41,15 +38,7 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 		EditDeckPropertiesDialog dialog = new EditDeckPropertiesDialog(window.getShell(), f.getStorageInfo());
 		if (dialog.open() == Dialog.OK) {
 			if (wasOpen) {
-				try {
-					// Update TODO: ugly
-					DeckView deckView = (DeckView) window.getActivePage().showView(DeckView.ID,
-							f.getFileName(),
-							IWorkbenchPage.VIEW_ACTIVATE);
-					deckView.refresh();
-				} catch (PartInitException e) {
-					MagicUIActivator.log(e);
-				}
+				DeckView.openCollection(f);
 			}
 		}
 		return null;
@@ -76,7 +65,7 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
 	 */
 	@Override

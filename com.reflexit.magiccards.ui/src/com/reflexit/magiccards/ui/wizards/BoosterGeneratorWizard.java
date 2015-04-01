@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -20,9 +19,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -39,9 +35,9 @@ import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 public class BoosterGeneratorWizard extends NewCardCollectionWizard implements INewWizard {
 	public static final String ID = "com.reflexit.magiccards.ui.wizards.BoosterGeneratorWizard";
@@ -172,26 +168,10 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
 				new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// ignore
-		}
-		getShell().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IViewPart view = page.showView(CardsNavigatorView.ID);
-					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					monitor.worked(1);
-					page.showView(DeckView.ID, col.getFileName(), IWorkbenchPage.VIEW_ACTIVATE);
-					monitor.worked(1);
-				} catch (Exception e) {
-					// ignore
-				}
-			}
-		});
+		WaitUtils.scheduleWaitingJob(
+				() -> col.isOpen(),
+				3000,
+				() -> DeckView.openCollection(col));
 		monitor.done();
 	}
 

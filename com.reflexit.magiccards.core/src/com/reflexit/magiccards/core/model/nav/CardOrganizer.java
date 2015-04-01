@@ -12,9 +12,9 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 
 /**
  * This represent a folder where decks or collections are stored (or any sort of super container)
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class CardOrganizer extends CardElement {
 	private final Collection<CardElement> children = new ArrayList<CardElement>();
@@ -28,6 +28,7 @@ public class CardOrganizer extends CardElement {
 		super(name, path);
 		setParentInit(parent);
 		createDir();
+		if (parent != null) parent.fireCreationEvent(this);
 	}
 
 	private void createDir() {
@@ -44,8 +45,16 @@ public class CardOrganizer extends CardElement {
 	}
 
 	public void addChild(CardElement a) {
-		this.children.add(a);
+		doAddChild(a);
+		fireCreationEvent(a);
+	}
+
+	void fireCreationEvent(CardElement a) {
 		fireEvent(new CardEvent(this, CardEvent.ADD_CONTAINER, a));
+	}
+
+	void doAddChild(CardElement a) {
+		this.children.add(a);
 	}
 
 	public void create() throws IOException {
@@ -65,13 +74,17 @@ public class CardOrganizer extends CardElement {
 	 * @param el
 	 */
 	public void removeChild(CardElement el) {
-		this.children.remove(el);
+		doRemoveChild(el);
 		fireEvent(new CardEvent(this, CardEvent.REMOVE_CONTAINER, el));
+	}
+
+	void doRemoveChild(CardElement el) {
+		this.children.remove(el);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#remove()
 	 */
 	@Override
