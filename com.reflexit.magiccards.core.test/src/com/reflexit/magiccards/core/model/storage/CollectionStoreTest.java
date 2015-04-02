@@ -18,12 +18,12 @@ import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class CollectionStoreTest extends DeckStoreTest {
 	@Override
 	protected void setUp() throws Exception {
-		Location loc = new Location("aaa");
+		Location loc = Location.valueOf("aaa");
 		tempFile = File.createTempFile("coll", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new CollectionMultiFileCardStore();

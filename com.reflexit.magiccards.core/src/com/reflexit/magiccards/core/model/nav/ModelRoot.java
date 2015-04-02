@@ -21,9 +21,9 @@ import com.reflexit.magiccards.core.model.Location;
 /**
  * Model Root contains access to all deck, collections and magic db container
  * (displayed in the navigator)
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class ModelRoot extends CardOrganizer {
 	private CollectionsContainer fDecks;
@@ -46,7 +46,12 @@ public class ModelRoot extends CardOrganizer {
 		CardOrganizer root = this;
 		rootDir = dir;
 		removeChildren();
-		this.fMyCards = new CollectionsContainer("My Cards", root.getPath(), root);
+		this.fMyCards = new CollectionsContainer(root.getPath(), root) {
+			@Override
+			public String getLabel() {
+				return "My Cards";
+			}
+		};
 		this.fLib = new CollectionsContainer("Collections", fMyCards);
 		this.fDecks = new CollectionsContainer("Decks", fMyCards);
 		this.db = new MagicDbContainter(root);
@@ -61,7 +66,7 @@ public class ModelRoot extends CardOrganizer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.core.model.nav.CardElement#getPath()
 	 */
 	@Override
@@ -99,7 +104,7 @@ public class ModelRoot extends CardOrganizer {
 
 	/**
 	 * @param temp
-	 * 
+	 *
 	 */
 	public void clear() {
 		getDeckContainer().removeChildren();

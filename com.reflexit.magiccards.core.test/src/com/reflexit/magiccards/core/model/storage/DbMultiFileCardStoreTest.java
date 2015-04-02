@@ -41,7 +41,7 @@ public class DbMultiFileCardStoreTest extends TestCase {
 		File tempFile1 = File.createTempFile(name, ".xml");
 		tempFile1.deleteOnExit();
 		files.put(name, tempFile1);
-		this.store.addFile(tempFile1, new Location(name), false);
+		this.store.addFile(tempFile1, Location.valueOf(name), false);
 	}
 
 	public void testAddCard() {

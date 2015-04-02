@@ -85,8 +85,9 @@ public class XmlCardHolder implements ICardHandler {
 
 	@Override
 	public ICardStore loadFromXml(String filename) {
-		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(new File(filename),
-				new Location(filename), true);
+		File file = new File(filename);
+		CollectionSingleFileCardStore store = new CollectionSingleFileCardStore(file,
+				Location.createLocation(file), true);
 		return store;
 	}
 
@@ -157,7 +158,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	/**
 	 * Optimized split function
-	 * 
+	 *
 	 * @param line
 	 * @param sep
 	 * @return

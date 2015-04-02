@@ -20,7 +20,7 @@ public class CardsNavigatorLabelProvider extends LabelProvider implements IColor
 	@Override
 	public String getText(Object element) {
 		if (element instanceof CardElement) {
-			String name = ((CardElement) element).getName();
+			String name = ((CardElement) element).getLabel();
 			IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
 			if (activeDeckHandler != null && element instanceof CardCollection) {
 				ICardStore<IMagicCard> store = ((CardCollection) element).getStore();

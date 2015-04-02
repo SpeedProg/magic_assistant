@@ -206,7 +206,6 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		separateCollections = page2.sep.getSelection();
 	}
 
-
 	@Override
 	protected void doFinish(final String containerName, final String name, boolean virtual,
 			final IProgressMonitor monitor)
@@ -255,8 +254,8 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		}
 		if (!separateCollections) {
 			col = new CardCollection(name + ".xml", parent, false);
-			col.setVirtual(virtual);
 			col.open();
+			col.setVirtual(virtual);
 			try {
 				// 1*packs rare cards
 				generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE,
@@ -279,8 +278,8 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 		} else {
 			for (int pack = 0; pack < packs; pack++) {
 				col = new CardCollection(name + "_" + (pack + 1) + ".xml", parent, false);
-				col.setVirtual(virtual);
 				col.open();
+				col.setVirtual(virtual);
 				try {
 					// 1*packs rare cards
 					generateRarity(countRare, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE,

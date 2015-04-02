@@ -12,7 +12,7 @@ import com.reflexit.magiccards.core.model.xml.CollectionSingleFileCardStore;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
-	private static final Location LOCATION5 = new Location("coll5");
+	private static final Location LOCATION5 = Location.valueOf("coll5");
 	CollectionMultiFileCardStore store;
 	protected MagicCard m1;
 	protected MagicCard m2;
@@ -23,7 +23,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 		for (int i = 0; i < 10; i++) {
 			File tempFile1 = File.createTempFile("coll" + i, ".xml");
 			tempFile1.deleteOnExit();
-			(this.store).addFile(tempFile1, new Location("coll" + i), false);
+			(this.store).addFile(tempFile1, Location.valueOf("coll" + i), false);
 		}
 		(this.store).setLocation(LOCATION5);
 		this.m1 = CardGenerator.generateRandomCard();
@@ -71,7 +71,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 
 	public void testAddCardWithLocation() {
 		MagicCardPhysical a = new MagicCardPhysical(m1, null);
-		Location loc2 = new Location("coll2");
+		Location loc2 = Location.valueOf("coll2");
 		a.setLocation(loc2);
 		this.store.add(a);
 		assertEquals(this.store.size(), 1);
@@ -88,7 +88,7 @@ public class MultiFileCollectionStoreTest extends junit.framework.TestCase {
 	public void testAddCardWithLocation2() {
 		MagicCardPhysical a = new MagicCardPhysical(m1, null);
 		this.store.add(a);
-		Location LOC2 = new Location("coll2");
+		Location LOC2 = Location.valueOf("coll2");
 		((ILocatable) this.store).setLocation(LOC2);
 		this.store.add(m1);
 		assertEquals(this.store.size(), 2);

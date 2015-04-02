@@ -20,12 +20,12 @@ public class CardOrganizer extends CardElement {
 	private final Collection<CardElement> children = new ArrayList<CardElement>();
 
 	public CardOrganizer(String filename, CardOrganizer parent) {
-		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(
+		this(parent == null ? new LocationPath(filename) : parent.getPath().append(
 				filename), parent);
 	}
 
-	public CardOrganizer(String name, LocationPath path, CardOrganizer parent) {
-		super(name, path);
+	public CardOrganizer(LocationPath path, CardOrganizer parent) {
+		super(path);
 		setParentInit(parent);
 		createDir();
 		if (parent != null) parent.fireCreationEvent(this);
@@ -144,14 +144,13 @@ public class CardOrganizer extends CardElement {
 	public CardElement findElement(LocationPath p) {
 		if (p.isRoot())
 			return this;
-		String[] parts = p.splitTop();
-		String top = parts[0];
-		LocationPath rest = new LocationPath(parts[1]);
+		String top = p.getHead();
 		for (Object element : getChildren()) {
 			CardElement el = (CardElement) element;
 			if (el.getPath().equals(p))
 				return el;
 			if (top.equals(el.getName())) {
+				LocationPath rest = p.getTail();
 				if (rest.isEmpty())
 					return el;
 				if (el instanceof CardOrganizer) {

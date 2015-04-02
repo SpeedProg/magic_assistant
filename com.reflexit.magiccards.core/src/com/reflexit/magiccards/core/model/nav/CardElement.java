@@ -19,13 +19,20 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
  *
  */
 public abstract class CardElement extends EventManager implements ILocatable {
-	private String name; // name
 	private LocationPath path; // project relative path
 	private CardOrganizer parent;
 
-	public CardElement(String name, LocationPath path) {
-		this.name = name;
+	public CardElement(LocationPath path) {
 		this.path = path;
+	}
+
+	public CardElement(String filename, CardOrganizer parent, boolean addToParent) {
+		this(parent == null ? new LocationPath(filename) : parent.getPath().append(
+				filename));
+		if (addToParent) {
+			setParentInit(parent);
+			if (parent != null) parent.fireCreationEvent(this);
+		}
 	}
 
 	protected void setParentInit(CardOrganizer parent) {
@@ -38,17 +45,8 @@ public abstract class CardElement extends EventManager implements ILocatable {
 	protected void setParent(CardOrganizer parent) {
 		this.parent = parent;
 		if (parent != null && !parent.isRoot()) {
-			String lastSegment = this.name + this.path.getFileExtensionWithDot();
+			String lastSegment = path.lastSegment();
 			this.path = parent.getPath().append(lastSegment);
-		}
-	}
-
-	public CardElement(String filename, CardOrganizer parent, boolean addToParent) {
-		this(nameFromFile(filename), parent == null ? new LocationPath(filename) : parent.getPath().append(
-				filename));
-		if (addToParent) {
-			setParentInit(parent);
-			if (parent != null) parent.fireCreationEvent(this);
 		}
 	}
 
@@ -78,7 +76,7 @@ public abstract class CardElement extends EventManager implements ILocatable {
 	}
 
 	public String getName() {
-		return this.name;
+		return path.getBaseName();
 	}
 
 	public CardOrganizer getParent() {
@@ -131,7 +129,7 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		}
 	}
 
-	public static String nameFromFile(String filename) {
+	public static String basename(String filename) {
 		String lastSegment = new File(filename).getName();
 		int index = lastSegment.lastIndexOf('.');
 		if (index == -1) {
@@ -145,19 +143,22 @@ public abstract class CardElement extends EventManager implements ILocatable {
 		return getName();
 	}
 
+	public String getLabel() {
+		return getName();
+	}
+
 	/**
 	 * @param value
 	 * @return
 	 */
 	public CardElement rename(String value) {
 		Location oldName = getLocation();
-		if (getParent() != null) {
-			getParent().doRemoveChild(this);
-		}
-		File newFile = new File(parent.getFile(), value + ".xml");
-		getFile().renameTo(newFile);
-		this.name = value;
-		setParentInit(parent);
+		String ext = path.getFileExtensionWithDot();
+		String lastSegment = value + ext;
+		File oldFile = getFile();
+		path = parent.getPath().append(lastSegment);
+		File newFile = getFile();
+		oldFile.renameTo(newFile);
 		fireRecursiveRename(this, oldName);
 		return this;
 	}

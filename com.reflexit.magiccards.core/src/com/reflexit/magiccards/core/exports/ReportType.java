@@ -284,7 +284,7 @@ public class ReportType {
 			try {
 				InputStream st = new ByteArrayInputStream(contents.getBytes());
 				IImportDelegate id = reportType.getImportDelegate();
-				id.init(st, new Location("preview"), true);
+				id.init(st, Location.valueOf("preview"), true);
 				try {
 					id.run(ICoreProgressMonitor.NONE);
 					ImportResult result = id.getResult();

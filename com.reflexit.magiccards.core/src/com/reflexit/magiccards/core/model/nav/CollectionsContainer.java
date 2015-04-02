@@ -17,8 +17,8 @@ public class CollectionsContainer extends CardOrganizer {
 		super(name, parent);
 	}
 
-	public CollectionsContainer(String name, LocationPath path, CardOrganizer parent) {
-		super(name, path, parent);
+	public CollectionsContainer(LocationPath path, CardOrganizer parent) {
+		super(path, parent);
 	}
 
 	@SuppressWarnings("unused")

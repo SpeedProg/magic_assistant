@@ -14,40 +14,40 @@ public class CardElementTest extends TestCase {
 	}
 
 	public void testNameFromFileBasic() {
-		assertEquals("b", CardElement.nameFromFile("a/b.c"));
+		assertEquals("b", CardElement.basename("a/b.c"));
 	}
 
 	public void testNameFromFileNoDir() {
-		assertEquals("b", CardElement.nameFromFile("b.c"));
+		assertEquals("b", CardElement.basename("b.c"));
 	}
 
 	public void testNameFromFileNoExt() {
-		assertEquals("b", CardElement.nameFromFile("b"));
+		assertEquals("b", CardElement.basename("b"));
 	}
 
 	public void testNameFromFileEmptyExt() {
-		assertEquals("b", CardElement.nameFromFile("b."));
+		assertEquals("b", CardElement.basename("b."));
 	}
 
 	public void testNameFromFileOnlyExt() {
-		assertEquals("", CardElement.nameFromFile(".ext"));
+		assertEquals("", CardElement.basename(".ext"));
 	}
 
 	public void testNameFromFileBasic1() {
-		assertEquals("bccc", CardElement.nameFromFile("a/bccc.c"));
+		assertEquals("bccc", CardElement.basename("a/bccc.c"));
 	}
 
 	public void testNameFromFileOnlyExtDir() {
-		assertEquals("", CardElement.nameFromFile("c/.ext"));
+		assertEquals("", CardElement.basename("c/.ext"));
 	}
 
 	public void testNameFromFileWin() {
 		if (windows)
-		assertEquals("b", CardElement.nameFromFile("c:\\dir\\b.ext"));
+		assertEquals("b", CardElement.basename("c:\\dir\\b.ext"));
 	}
 
 	public void testNameFromFileWinDouble() {
 		if (windows)
-		assertEquals("b.ext", CardElement.nameFromFile("c:\\dir\\b.ext.2"));
+		assertEquals("b.ext", CardElement.basename("c:\\dir\\b.ext.2"));
 	}
 }

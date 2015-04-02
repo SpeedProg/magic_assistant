@@ -19,13 +19,14 @@ import com.reflexit.magiccards.core.model.storage.IStorageInfo;
  */
 public class CardCollection extends CardElement {
 	transient private ICardStore<IMagicCard> store;
-	transient protected boolean deck;
+	transient protected Boolean deck;
+	transient protected Boolean virtual;
 
 	public CardCollection(String filename, CardOrganizer parent) {
-		this(filename, parent, false);
+		this(filename, parent, null);
 	}
 
-	public CardCollection(String filename, CardOrganizer parent, boolean deck) {
+	public CardCollection(String filename, CardOrganizer parent, Boolean deck) {
 		super(filename, parent, false);
 		this.deck = deck;
 		setParentInit(parent);
@@ -73,8 +74,7 @@ public class CardCollection extends CardElement {
 	public void open() {
 		IFilteredCardStore fi = DataManager.getInstance().getCardHandler()
 				.getCardCollectionFilteredStore(getName());
-		if (fi != null && store == null)
-			this.store = fi.getCardStore();
+		open(fi.getCardStore());
 	}
 
 	public void open(ICardStore<IMagicCard> store) {
@@ -83,17 +83,24 @@ public class CardCollection extends CardElement {
 		this.store = store;
 		IStorageInfo info = getStorageInfo();
 		if (info != null) {
-			deck = IStorageInfo.DECK_TYPE.equals(info.getType());
+			if (deck != null) {
+				if (deck)
+					info.setType(IStorageInfo.DECK_TYPE);
+				else
+					info.setType(IStorageInfo.COLLECTION_TYPE);
+			} else {
+				deck = IStorageInfo.DECK_TYPE.equals(info.getType());
+			}
+			if (virtual != null) {
+				info.setVirtual(virtual);
+			} else {
+				virtual = info.isVirtual();
+			}
 		}
 	}
 
 	public boolean isDeck() {
-		if (!isOpen())
-			return deck;
-		IStorageInfo info = getStorageInfo();
-		if (info != null) {
-			deck = IStorageInfo.DECK_TYPE.equals(info.getType());
-		}
+		if (deck == null) return false;
 		return deck;
 	}
 
@@ -113,22 +120,20 @@ public class CardCollection extends CardElement {
 	}
 
 	public void setVirtual(boolean virtual) {
-		if (!isOpen()) {
-			open();
-		}
-		IStorage storage = store.getStorage();
-		if (storage instanceof IStorageInfo) {
-			((IStorageInfo) storage).setVirtual(virtual);
-			storage.save();
+		this.virtual = virtual;
+		if (isOpen()) {
+			IStorageInfo info = getStorageInfo();
+			if (info != null) {
+				info.setVirtual(virtual);
+			}
 		}
 	}
 
 	public boolean isVirtual() {
-		if (!isOpen())
+		if (virtual == null && !isOpen())
 			throw new IllegalArgumentException("Store is not open");
-		IStorageInfo info = getStorageInfo();
-		if (info == null)
-			return false;
-		return info.isVirtual();
+		if (virtual != null)
+			return virtual;
+		return true;
 	}
 }

@@ -14,12 +14,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.magiccards.core.DataManager;
 // import static org.junit.Assert.assertEquals;
 // import static org.junit.Assert.assertTrue;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.test.assist.TestFileUtils;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class CardOrganizerTest extends TestCase {
@@ -37,11 +37,13 @@ public class CardOrganizerTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link com.reflexit.magiccards.core.model.nav.CardOrganizer#findElement(org.eclipse.core.runtime.IPath)} .
+	 * Test method for
+	 * {@link com.reflexit.magiccards.core.model.nav.CardOrganizer#findElement(org.eclipse.core.runtime.IPath)}
+	 * .
 	 */
 	@Test
 	public void testFindElement() {
-		CardElement element = this.root.findElement(new LocationPath("My Cards/Decks"));
+		CardElement element = this.root.findElement(new LocationPath("/Decks"));
 		assertEquals(this.root.getDeckContainer(), element);
 	}
 
@@ -49,13 +51,14 @@ public class CardOrganizerTest extends TestCase {
 	public void testFindElement2() {
 		CollectionsContainer decks = this.root.getDeckContainer();
 		CollectionsContainer con = decks.addCollectionsContainer("cox");
-		CardElement element = this.root.findElement(new LocationPath("My Cards/Decks/cox"));
+		CardElement element = this.root.findElement(new LocationPath("/Decks/cox"));
 		assertEquals(con, element);
 	}
 
 	/**
 	 * Test method for
-	 * {@link com.reflexit.magiccards.core.model.nav.CardElement#fireEvent(com.reflexit.magiccards.core.model.events.CardEvent)} .
+	 * {@link com.reflexit.magiccards.core.model.nav.CardElement#fireEvent(com.reflexit.magiccards.core.model.events.CardEvent)}
+	 * .
 	 */
 	@Test
 	public void testFireEvent() {

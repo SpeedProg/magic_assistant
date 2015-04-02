@@ -93,7 +93,7 @@ public class RenameHandler extends AbstractHandler {
 				CardElement el = f.rename(newName);
 				CardElement fsb = f.getParent().findChieldByName(sb.getBaseFileName());
 				if (fsb != null) {
-					fsb.rename(new Location(newName).toSideboard().toString());
+					fsb.rename(Location.valueOf(newName).toSideboard().toString());
 				}
 			}
 		}

@@ -4,7 +4,7 @@ import java.io.File;
 
 public class LocationPath {
 	private final String SEP = "/";
-	private String path;
+	private final String path;
 	public static final LocationPath ROOT = new LocationPath("") {
 		@Override
 		public LocationPath append(String end) {
@@ -17,41 +17,17 @@ public class LocationPath {
 		this.path = path;
 	}
 
-	public LocationPath addTrailingSeparator() {
-		return new LocationPath(path + SEP);
-	}
-
-	public boolean hasTrailingSeparator() {
-		return path.endsWith(SEP);
-	}
-
 	public LocationPath append(String end) {
-		if (hasTrailingSeparator())
-			return new LocationPath(path + end);
-		else
-			return new LocationPath(path + SEP + end);
-	}
-
-	public String getFileExtension() {
-		String lastSegment = new File(path).getName();
-		int index = lastSegment.lastIndexOf('.');
-		if (index == -1) {
-			return "";
-		}
-		return lastSegment.substring(index + 1);
+		return new LocationPath(path + SEP + end);
 	}
 
 	public String getFileExtensionWithDot() {
-		String lastSegment = new File(path).getName();
+		String lastSegment = lastSegment();
 		int index = lastSegment.lastIndexOf('.');
 		if (index == -1) {
 			return "";
 		}
 		return lastSegment.substring(index);
-	}
-
-	public boolean isAbsolute() {
-		return path.startsWith(SEP);
 	}
 
 	public File toFile() {
@@ -67,7 +43,16 @@ public class LocationPath {
 		return toFile().getName();
 	}
 
-	public String basename() {
+	public String getName() {
+		return lastSegment();
+	}
+
+	/**
+	 * Name without extension
+	 *
+	 * @return
+	 */
+	public String getBaseName() {
 		String lastSegment = lastSegment();
 		int index = lastSegment.lastIndexOf('.');
 		if (index == -1) {
@@ -80,7 +65,19 @@ public class LocationPath {
 		return path;
 	}
 
-	public String[] splitTop() {
+	public String getHead() {
+		String top = path;
+		while (top.startsWith(SEP)) {
+			top = top.substring(1);
+		}
+		int k = top.indexOf(SEP);
+		if (k > 0) {
+			top = top.substring(0, k);
+		}
+		return top;
+	}
+
+	public LocationPath getTail() {
 		String top = path;
 		while (top.startsWith(SEP)) {
 			top = top.substring(1);
@@ -89,9 +86,8 @@ public class LocationPath {
 		String rest = "";
 		if (k > 0) {
 			rest = top.substring(k + 1);
-			top = top.substring(0, k);
 		}
-		return new String[] { top, rest };
+		return new LocationPath(rest);
 	}
 
 	public boolean isEmpty() {

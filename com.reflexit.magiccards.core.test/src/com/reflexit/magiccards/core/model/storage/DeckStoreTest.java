@@ -26,7 +26,7 @@ import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class DeckStoreTest extends TestCase {
 	ICardCollection<IMagicCard> store;
@@ -36,7 +36,7 @@ public class DeckStoreTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		Location loc = new Location("Decks/aaa.xml");
+		Location loc = Location.valueOf("Decks/aaa.xml");
 		tempFile = File.createTempFile("deck", ".xml");
 		tempFile.deleteOnExit();
 		this.store = new CollectionSingleFileCardStore(tempFile, loc);

@@ -20,6 +20,6 @@ public class MemCardHandler extends AbstractFilteredCardStore<IMagicCard> {
 
 	@Override
 	public Location getLocation() {
-		return new Location("mem");
+		return Location.valueOf("mem");
 	}
 }

@@ -59,7 +59,7 @@ public class MagicDeckTransfer extends ByteArrayTransfer {
 					.getLocationsMap();
 			ArrayList<CardElement> list = new ArrayList<CardElement>();
 			while ((name = in.readLine()) != null) {
-				CardElement cardElement = locationsMap.get(new Location(name));
+				CardElement cardElement = locationsMap.get(Location.valueOf(name));
 				list.add(cardElement);
 			}
 			return list.toArray(new CardElement[list.size()]);

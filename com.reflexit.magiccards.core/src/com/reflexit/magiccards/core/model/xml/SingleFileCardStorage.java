@@ -172,6 +172,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		if (isReadOnly() && !key.equals(READ_ONLY))
 			throw new MagicException("Read Only");
 		properties.setProperty(key, value);
+		autoSave();
 	}
 
 	@Override
@@ -218,7 +219,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 		else
 			this.doSetList(new ArrayList<IMagicCard>());
 		if (getLocation() == null)
-			this.location = new Location(obj.key);
+			this.location = Location.valueOf(obj.key);
 		if (obj.name != null)
 			this.name = obj.name;
 		this.comment = obj.comment;

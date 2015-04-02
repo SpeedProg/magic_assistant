@@ -9,10 +9,7 @@ import org.mockito.Mockito;
 
 import static org.mockito.Matchers.anyString;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
@@ -128,7 +125,7 @@ public class MagicCardTest extends TestCase {
 	@Test
 	public void testGetLocation() {
 		// given
-		Location loc = new Location("test");
+		Location loc = Location.valueOf("test");
 		MagicCardPhysical mcp = new MagicCardPhysical(card, loc);
 		mockRealCards(mcp);
 		// when
@@ -162,7 +159,7 @@ public class MagicCardTest extends TestCase {
 	@Test
 	public void testIsSideboardNot() {
 		// given
-		Location loc = new Location("test");
+		Location loc = Location.valueOf("test");
 		MagicCardPhysical mcp = new MagicCardPhysical(card, loc);
 		mockRealCards(mcp);
 		card = mcp.getBase();
@@ -175,7 +172,7 @@ public class MagicCardTest extends TestCase {
 	@Test
 	public void testIsSideboardYes() {
 		// given
-		Location loc = new Location("test").toSideboard();
+		Location loc = Location.valueOf("test").toSideboard();
 		MagicCardPhysical mcp = new MagicCardPhysical(card, loc);
 		mockRealCards(mcp);
 		card = mcp.getBase();
