@@ -32,6 +32,7 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 			throws IOException {
 		String line = "";
 		boolean cards = false;
+		boolean lastpage = false;
 		while ((line = st.readLine()) != null) {
 			if (countPattern.matcher(line).find()) {
 				Matcher matcher = countPattern.matcher(line);
@@ -46,11 +47,13 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 				parseRecord(line, handler);
 				cards = true;
 				continue;
+			} else if (lastPagePattern.matcher(line).find()) {
+				lastpage = true;
 			}
 		}
 		if (cards == false)
 			throw new RuntimeException("No results");
-		return true;
+		return lastpage;
 	}
 
 	private void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
@@ -82,12 +85,8 @@ public class ParseGathererSearchChecklist extends AbstractParseGathererSearch {
 	@Override
 	public boolean loadSet(String set, GatherHelper.ILoadCardHander handler, ICoreProgressMonitor monitor)
 			throws IOException {
-		try {
-			monitor.beginTask("Downloading " + set + " checklist", 100);
-			return loadSingleUrl(GatherHelper.getSearchQuery("checklist", set, true), handler);
-		} finally {
-			monitor.done();
-		}
+		loadMultiPageUrl(GatherHelper.getSearchQuery("checklist", set, true), handler, set, monitor);
+		return true;
 	}
 
 	public static void main(String[] args) throws MalformedURLException, IOException {

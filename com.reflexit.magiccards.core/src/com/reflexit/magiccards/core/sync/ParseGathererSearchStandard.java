@@ -82,32 +82,6 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		}
 	}
 
-	public void loadMultiPageUrl(URL urlOrig, GatherHelper.ILoadCardHander handler, String set,
-			ICoreProgressMonitor monitor)
-			throws MalformedURLException, IOException {
-		monitor.beginTask("Downloading " + set + ":", 10000);
-		try {
-			int i = 0;
-			boolean lastPage = false;
-			while (lastPage == false && i < 2000 && monitor.isCanceled() == false) {
-				URL url = new URL(urlOrig.toExternalForm() + "&page=" + i);
-				lastPage = loadSingleUrl(url, handler);
-				i++;
-				if (handler.getCardCount() == 0)
-					monitor.worked(100);
-				else {
-					int pages = handler.getCardCount() / 25 + 1;
-					monitor.subTask("Page " + i + " of " + pages);
-					monitor.worked(10000 / pages);
-				}
-			}
-		} finally {
-			monitor.done();
-		}
-	}
-
-	private static Pattern lastPagePattern = Pattern
-			.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
 	private static Pattern itemPattern = Pattern.compile("tr class=\"cardItem");
 	private static Pattern itemEndPattern = Pattern.compile("</tr>");
 

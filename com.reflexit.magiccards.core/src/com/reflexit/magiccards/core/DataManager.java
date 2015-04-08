@@ -495,6 +495,8 @@ public class DataManager {
 	}
 
 	public void reconcile(Iterable cards) {
+		if (cards == null)
+			return;
 		ICardStore db = getMagicDBStore();
 		ICardStore library = getLibraryCardStore();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {

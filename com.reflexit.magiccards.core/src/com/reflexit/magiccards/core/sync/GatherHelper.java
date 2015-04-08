@@ -14,7 +14,9 @@ import com.reflexit.magiccards.core.FileUtils;
 
 public class GatherHelper extends ParserHtmlHelper {
 	protected static Pattern countPattern = Pattern
-			.compile("Search:<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"[^>]*><i>[^<]*</i>  \\((\\d+)\\)</span>");
+			.compile("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"[^>]*><i>[^<]*</i>\\s*\\((\\d+)\\)\\s*</span>");
+	protected static Pattern lastPagePattern = Pattern
+			.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
 	static String baseSearch = "http://gatherer.wizards.com/Pages/Search/Default.aspx?action=advanced&";
 	static Map manaMap = new LinkedHashMap();
 	static {
