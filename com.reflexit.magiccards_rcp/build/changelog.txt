@@ -1,3 +1,7 @@
+changes in 1.4.2.004
+* Bug 452 Laggy changes in "Card Navigation"
+* Bug 437 Card Navigator does not update
+* Bug 444 Lockups
 changes in 1.4.2.003
 * Bug 446 Adding Cards Using Keyboard Only
 * Bug 444 UI Refresh issues and slowness when using quick filter 
