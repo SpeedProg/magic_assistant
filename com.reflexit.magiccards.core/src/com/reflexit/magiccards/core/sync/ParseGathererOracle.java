@@ -51,7 +51,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	private String resultTitle;
 	/*-
 	 * single card rules
-	 * 
+	 *
 	 * <table class="cardDetails
 	 */
 	private static Pattern singleCardPattern = Pattern.compile("<table class=\"cardDetails(.+?)</table>");
@@ -85,6 +85,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	 */
 	private static Pattern cardnumPattern = Pattern
 			.compile("Card Number:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
+	private static Pattern colorIdPattern = Pattern
+			.compile("Color Indicator:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	/*-
 	      <div class="cardtextbox">When Anathemancer enters the battlefield, it deals damage to target player equal to the number of nonbasic lands that player controls.</div>
 	      <div class="cardtextbox">Unearth <img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" /> <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=5&amp;type=symbol" alt="5" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=R&amp;type=symbol" alt="Red" align="absbottom" />: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)</i></div></div>
@@ -93,14 +95,14 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	private static Pattern textPattern = Pattern.compile("Card Text:</div>(.*?)<div class=\"label\"");
 	private static Pattern textPatternEach = Pattern.compile("<div class=\"cardtextbox\"[^>]*>(.*?)</div>");
 	/*-
-	 * <div class="label"> 
-	 Other Sets:</div> 
-	 <div class="value"> 
-	 <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_otherSetsValue"> 
+	 * <div class="label">
+	 Other Sets:</div>
+	 <div class="value">
+	 <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_otherSetsValue">
 	 <a href="Details.aspx?multiverseid=19789"><img title="Mercadian Masques (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MM&amp;size=small&amp;rarity=U" alt="Mercadian Masques (Uncommon)" align="absmiddle" style="border-width:0px;" /></a>
-	 <a href="Details.aspx?multiverseid=48432"><img title="Mirrodin (Common)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MRD&amp;size=small&amp;rarity=C" alt="Mirrodin (Common)" align="absmiddle" style="border-width:0px;" /></a> 
-	 </div> 
-	 </div> 
+	 <a href="Details.aspx?multiverseid=48432"><img title="Mirrodin (Common)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MRD&amp;size=small&amp;rarity=C" alt="Mirrodin (Common)" align="absmiddle" style="border-width:0px;" /></a>
+	 </div>
+	 </div>
 	 */
 	private static Pattern otherSetPattern = Pattern
 			.compile("Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
@@ -108,7 +110,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	private static Pattern otherSetPatternEach = Pattern
 			.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 	/*-
-	
+
 	<div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_typeRow" class="row">
 	    <div class="label">
 	        Types:</div>
@@ -136,8 +138,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	private static Pattern cardNamePattern = Pattern
 			.compile("Card Name:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
 	/*-
-	 *              <img src="../../Handlers/Image.ashx?multiverseid=241988&amp;type=card" 
-	 *              id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_cardImage" 
+	 *              <img src="../../Handlers/Image.ashx?multiverseid=241988&amp;type=card"
+	 *              id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_cardImage"
 	 *              alt="Hinterland Harbor" style="border:none;" />
 
 	 */
@@ -433,6 +435,7 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 		extractField(card, fieldMap, html, MagicCardField.RATING, ratingPattern, false);
 		extractField(card, fieldMap, html, MagicCardField.ARTIST, artistPattern, false);
 		extractField(card, fieldMap, html, MagicCardField.COLLNUM, cardnumPattern, false);
+		extractField(card, fieldMap, html, MagicCardField.COLOR_INDICATOR, colorIdPattern, false);
 		extractField(card, fieldMap, html, MagicCardField.TYPE, typesPattern, false);
 		extractField(card, fieldMap, html, MagicCardField.PART, cardRotatePattern, false);
 		Matcher matcher = textPattern.matcher(html);

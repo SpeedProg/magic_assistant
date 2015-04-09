@@ -302,6 +302,22 @@ public enum MagicCardField implements ICardField {
 			return card.getFlipId();
 		};
 	},
+	COLOR_INDICATOR(null) {
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new CollisionAggregator(this, 0);
+		}
+
+		@Override
+		protected void setStr(MagicCard card, String value) {
+			card.setPropertyString(this, value);
+		}
+
+		@Override
+		public Object getM(MagicCard card) {
+			return card.getProperty(this);
+		};
+	},
 	PART(null) {
 		@Override
 		protected void setStr(MagicCard card, String value) {
