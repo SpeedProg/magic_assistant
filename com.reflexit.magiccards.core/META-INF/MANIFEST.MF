@@ -42,4 +42,4 @@ Export-Package: com.reflexit.magiccards.core;
  gnu.trove.map.hash
 Bundle-ClassPath: .,
  lib/trove-3.0.3.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
