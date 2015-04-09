@@ -11,6 +11,7 @@
 package com.reflexit.magiccards.core.model.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -65,22 +66,19 @@ public final class CardStoreUtils {
 		CardGroup fiveNode = new CardGroup(MagicCardField.COST, "5");
 		CardGroup sixNode = new CardGroup(MagicCardField.COST, "6");
 		CardGroup sevenOrMoreNode = new CardGroup(MagicCardField.COST, "7+");
-		CardGroup xNode = new CardGroup(MagicCardField.COST, "X");
 		CardGroup[] cardGroups = { zeroNode, oneNode, twoNode, threeNode, fourNode, fiveNode, sixNode,
-				sevenOrMoreNode, xNode };
+				sevenOrMoreNode };
 		for (Iterator iterator = iterable.iterator(); iterator.hasNext();) {
 			IMagicCard elem = (IMagicCard) iterator.next();
 			int cost = elem.getCmc();
-			if (elem.getCost().length() == 0)
+			if (elem.getCost() == null || elem.getCost().length() == 0)
 				continue; // land
-			if (elem.getCost().contains("X")) //$NON-NLS-1$
-				xNode.add(elem);
 			else if (cost < 7 && cost >= 0)
 				cardGroups[cost].add(elem);
 			else if (cost >= 7)
 				cardGroups[7].add(elem);
 		}
-		ICardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
+		ICardGroup root = new CardGroup(MagicCardField.COST, ""); //$NON-NLS-1$
 		for (CardGroup cardGroup : cardGroups) {
 			manaNode.add(cardGroup);
 		}
@@ -93,22 +91,20 @@ public final class CardStoreUtils {
 		if (store == null)
 			return res;
 		HashSet<String> colors = new HashSet<String>();
+		Colors instance = Colors.getInstance();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
-			if (elem.getCmc() == 0)
+			String cost = elem.getCost();
+			if (cost == null || cost.isEmpty())
 				continue;
-			String name = Colors.getColorName(elem.getCost());
-			String[] split = name.split("-"); //$NON-NLS-1$
-			for (String c : split) {
-				colors.add(c);
-			}
+			Collection<String> colorIdentify = instance.getColorIdentity(cost);
+			if (colorIdentify.isEmpty())
+				colors.add(Colors.ManaColor.COLORLESS.tag());
+			else
+				colors.addAll(colorIdentify);
 		}
-		for (Iterator iterator = Colors.getInstance().getNames().iterator(); iterator.hasNext();) {
-			String c = (String) iterator.next();
-			if (colors.contains(c)) {
-				String encodeByName = Colors.getInstance().getEncodeByName(c);
-				res += "{" + encodeByName + "}";
-			}
+		for (String tag : instance.sortTags(colors)) {
+			res += "{" + tag + "}";
 		}
 		return res;
 	}
@@ -249,14 +245,14 @@ public final class CardStoreUtils {
 	}
 
 	/**
-	 * mana curve is array 0 .. 8 of card counts, where non-land is counted,
-	 * arr[8] - is cards with X cost in it, arr[7] - is 7+
+	 * mana curve is array 0 .. 7 of card counts, where non-land is counted,
+	 * arr[7] - is 7+
 	 *
 	 * @param store
 	 * @return mana curve for given store
 	 */
 	public static int[] buildManaCurveStats(ICardStore store) {
-		int bars[] = new int[9];
+		int bars[] = new int[8];
 		for (Iterator iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard elem = (IMagicCard) iterator.next();
 			int cost = elem.getCmc();
@@ -268,9 +264,7 @@ public final class CardStoreUtils {
 			} else {
 				count = 1;
 			}
-			if (elem.getCost().contains("X")) //$NON-NLS-1$
-				bars[8] += count;
-			else if (cost < 7 && cost >= 0)
+			if (cost < 7 && cost >= 0)
 				bars[cost] += count;
 			else if (cost >= 7)
 				bars[7] += count;
