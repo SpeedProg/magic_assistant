@@ -131,7 +131,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		info = new Composite(parent, SWT.BORDER);
 		info.setLayout(new GridLayout(2, false));
 		Button update = new Button(info, SWT.PUSH);
-		update.setText("Load Deck Legality...");
+		update.setText("Check Deck Legality Online...");
 		update.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -216,7 +216,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
-		this.load = new ImageAction("Load Legality",
+		this.load = new ImageAction("Check Legality Online",
 				"icons/clcl16/software_update.png",
 				IAction.AS_PUSH_BUTTON,
 				() -> performUpdate());
