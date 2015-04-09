@@ -129,7 +129,8 @@ public class ParseGathererOracleTest extends TestCase {
 		MagicCard card = load(230074);
 		assertEquals("86", card.getCollNumber());
 		assertEquals("Gut Shot", card.getName());
-		assertEquals("<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gut Shot deals 1 damage to target creature or player.",
+		assertEquals(
+				"<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gut Shot deals 1 damage to target creature or player.",
 				card.getText());
 	}
 
@@ -157,5 +158,12 @@ public class ParseGathererOracleTest extends TestCase {
 	public void testSets() throws IOException {
 		MagicCard card = load(193767); // Serra Angel
 		assertTrue(magicDb.size() > 8);
+	}
+
+	public void testColorIndicator() throws IOException {
+		MagicCard card = load(221185, "Homicidal Brute");
+		assertEquals("47b", card.getCollNumber());
+		assertEquals("Homicidal Brute", card.getName());
+		assertEquals("Red", card.get(MagicCardField.COLOR_INDICATOR));
 	}
 }
