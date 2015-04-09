@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.DataManagerTest;
 import com.reflexit.magiccards.core.exports.ExportImportSuite;
 import com.reflexit.magiccards.core.model.AbilitiesTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
+import com.reflexit.magiccards.core.model.ColorsTest;
 import com.reflexit.magiccards.core.model.EditionsTest;
 import com.reflexit.magiccards.core.model.GrouppingPerformanceTest;
 import com.reflexit.magiccards.core.model.LegalityMapTest;
@@ -37,12 +38,13 @@ import com.reflexit.magiccards.core.model.storage.CollectionStoreTest;
 import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
 import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
 import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
+import com.reflexit.magiccards.core.model.utils.CardStoreUtilsTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
 import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
 
 /**
  * @author Alena
- * 
+ *
  */
 @RunWith(AllTests.class)
 public class AllLocalTests {
@@ -63,12 +65,13 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
 		suite.addTestSuite(DataManagerTest.class);
-
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);
+		suite.addTest(new JUnit4TestAdapter(ColorsTest.class));
 		suite.addTestSuite(SortOrderTest.class);
 		suite.addTestSuite(SearchStringTokenizerTest.class);
+		suite.addTest(new JUnit4TestAdapter(CardStoreUtilsTest.class));
 		suite.addTestSuite(MagicCardComparatorTest.class);
 		suite.addTestSuite(LegalityMapTest.class);
 		suite.addTestSuite(AbilitiesTest.class);

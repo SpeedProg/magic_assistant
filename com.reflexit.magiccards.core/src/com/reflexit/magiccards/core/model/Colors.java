@@ -3,30 +3,88 @@ package com.reflexit.magiccards.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Colors implements ISearchableProperty {
 	static Colors instance = new Colors();
-	private LinkedHashMap<String, String> names;
-	private HashMap<String, String> codes;
+	private LinkedHashMap<String, ManaColor> idmap;
+	private HashMap<String, ManaColor> namemap;
+	private final static Pattern colorpattern = Pattern.compile("[{/]([WUBRG])P?\\b");
+
+	public static enum ManaColor {
+		WHITE("W"),
+		BLUE("U"),
+		BLACK("B"),
+		RED("R"),
+		GREEN("G"),
+		COLORLESS("1");
+		String tag;
+		String label;
+
+		ManaColor(String tag) {
+			this.tag = tag;
+			this.label = name().substring(0, 1)
+					+ name().substring(1).toLowerCase(Locale.ENGLISH);
+		}
+
+		public String tag() {
+			return tag;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public String getPrefId() {
+			return FilterField.getPrefConstant(FilterField.COLOR.toString(), getLabel());
+		}
+
+		static ManaColor valueOfTag(String tag) {
+			for (ManaColor c : values()) {
+				if (c.tag.equals(tag))
+					return c;
+			}
+			return null;
+		}
+	};
 
 	private Colors() {
-		this.names = new LinkedHashMap<String, String>();
-		this.codes = new HashMap<String, String>();
-		add("White", "W");
-		add("Blue", "U");
-		add("Black", "B");
-		add("Red", "R");
-		add("Green", "G");
-		add("Colorless", "1");
+		this.idmap = new LinkedHashMap<String, ManaColor>();
+		this.namemap = new HashMap<String, ManaColor>();
+		for (ManaColor c : ManaColor.values()) {
+			idmap.put(c.getPrefId(), c);
+			namemap.put(c.getLabel(), c);
+		}
 	}
 
-	private void add(String string, String code) {
-		String id = getPrefConstant(string);
-		this.names.put(id, string);
-		this.codes.put(id, code);
+	public Collection<String> getColorIdentity(IMagicCard card) {
+		Collection<String> res = getColorIdentify(card.getCost(), new LinkedHashSet<String>());
+		getColorIdentify(card.getOracleText(), res);
+		getColorIdentify(getEncodeByName((String) card.get(MagicCardField.COLOR_INDICATOR)), res);
+		return res;
+	}
+
+	public static Collection<String> getColorIdentity(String text) {
+		return getColorIdentify(text, new LinkedHashSet<String>());
+	}
+
+	public static String getColorIdentityAsCost(String text) {
+		return toCost(getColorIdentify(text, new LinkedHashSet<String>()));
+	}
+
+	public static Collection<String> getColorIdentify(String text, Collection<String> res) {
+		if (text == null || text.length() == 0)
+			return res;
+		Matcher matcher = colorpattern.matcher(text);
+		while (matcher.find()) {
+			res.add(matcher.group(1));
+		}
+		return res;
 	}
 
 	public static String getColorName(String cost) {
@@ -34,13 +92,16 @@ public class Colors implements ISearchableProperty {
 			return "Unknown";
 		if (cost.length() == 0)
 			return "No Cost";
-		StringBuffer color = new StringBuffer();
-		addColor("W", "White", cost, color);
-		addColor("U", "Blue", cost, color);
-		addColor("B", "Black", cost, color);
-		addColor("R", "Red", cost, color);
-		addColor("G", "Green", cost, color);
-		String res = color.toString();
+		Collection<String> colorIdentity = sortTags(getColorIdentity(cost));
+		StringBuffer buf = new StringBuffer();
+		for (String c : colorIdentity) {
+			String name = ManaColor.valueOfTag(c).getLabel();
+			if (buf.length() > 0) {
+				buf.append('-');
+			}
+			buf.append(name);
+		}
+		String res = buf.toString();
 		if (res.length() == 0)
 			return "Colorless";
 		return res;
@@ -51,38 +112,21 @@ public class Colors implements ISearchableProperty {
 			return 0;
 		if (cost.length() == 0)
 			return 0;
-		int xx = 0;
-		char c[] = { 'W', 'U', 'B', 'R', 'G' };
+		int sum = 0;
 		int times = 0;
-		for (int i = 0; i < c.length; i++) {
-			char cw = c[i];
-			xx *= 10;
-			if (cost.indexOf(cw) >= 0) {
+		Collection<String> colorIdentity = getColorIdentity(cost);
+		for (ManaColor c : ManaColor.values()) {
+			sum <<= 1;
+			if (colorIdentity.contains(c.tag())) {
 				times++;
-				xx += 5 - i;
+				sum |= 0x01;
 			}
 		}
-		if (xx == 0)
+		if (sum == 0)
 			return 1;
 		if (times == 1)
-			xx *= 100000;
-		return -xx;
-	}
-
-	/**
-	 *
-	 * @param abbr
-	 * @param name
-	 * @param cost
-	 * @param buf
-	 */
-	private static void addColor(String abbr, String name, String cost, StringBuffer buf) {
-		if (cost.indexOf(abbr) >= 0) {
-			if (buf.length() > 0) {
-				buf.append('-');
-			}
-			buf.append(name);
-		}
+			sum <<= 6;
+		return -sum;
 	}
 
 	@Override
@@ -99,13 +143,9 @@ public class Colors implements ISearchableProperty {
 		return instance;
 	}
 
-	public Collection<String> getNames() {
-		return new ArrayList<String>(this.names.values());
-	}
-
 	@Override
 	public Collection<String> getIds() {
-		return new ArrayList<String>(this.names.keySet());
+		return new ArrayList<String>(this.idmap.keySet());
 	}
 
 	public String getPrefConstant(String name) {
@@ -114,33 +154,21 @@ public class Colors implements ISearchableProperty {
 
 	@Override
 	public String getNameById(String id) {
-		return this.names.get(id);
+		return this.idmap.get(id).getLabel();
 	}
 
 	public String getEncodeByName(String r) {
-		return this.codes.get(getPrefConstant(r));
+		if (r == null) return "";
+		return this.namemap.get(r).tag();
 	}
 
 	public static String getColorType(String cost) {
 		if (cost == null || cost.length() == 0)
 			return "land";
-		String[] manas = manasplit(cost);
-		Map<String, String> colors = new HashMap<String, String>();
-		for (String x : manas) {
-			char firstChar = x.charAt(0);
-			if (firstChar == 'X' || firstChar == 'Y' || firstChar == 'Z')
-				continue;
-			if (x.contains("/"))
-				return "hybrid";
-			if (Character.isDigit(firstChar))
-				continue;
-			colors.put(x, x);
-		}
-		int diff = 0;
-		for (Iterator<String> iterator = colors.keySet().iterator(); iterator.hasNext();) {
-			iterator.next();
-			diff++;
-		}
+		if (cost.contains("/"))
+			return "hybrid";
+		Collection<String> colors = getColorIdentity(cost);
+		int diff = colors.size();
 		if (diff == 0)
 			return "colorless";
 		if (diff == 1)
@@ -160,9 +188,14 @@ public class Colors implements ISearchableProperty {
 			}
 			if (Character.isDigit(x.charAt(0))) {
 				try {
+					int a = x.indexOf('/');
+					if (a > 0) {
+						res += Integer.parseInt(x.substring(0, a));
+						continue;
+					}
 					res += Integer.parseInt(x);
 					continue;
-				} catch (Exception e) {
+				} catch (NumberFormatException e) {
 					// ignore
 				}
 			}
@@ -190,5 +223,40 @@ public class Colors implements ISearchableProperty {
 			}
 		}
 		return manas;
+	}
+
+	public static List<String> sortTags(Collection<String> tags) {
+		ArrayList<String> res = new ArrayList<>();
+		for (ManaColor c : ManaColor.values()) {
+			if (tags.contains(c.tag()))
+				res.add(c.tag());
+		}
+		return res;
+	}
+
+	public String toCost(ManaColor... colors) {
+		String res = "";
+		for (ManaColor c : ManaColor.values()) {
+			for (ManaColor manaColor : colors) {
+				if (manaColor == c) {
+					res += "{" + c.tag() + "}";
+					break;
+				}
+			}
+		}
+		return res;
+	}
+
+	public static String toCost(Collection<String> tags) {
+		String res = "";
+		for (ManaColor c : ManaColor.values()) {
+			for (String manaColor : tags) {
+				if (c.tag().equals(manaColor)) {
+					res += "{" + manaColor + "}";
+					break;
+				}
+			}
+		}
+		return res;
 	}
 }
