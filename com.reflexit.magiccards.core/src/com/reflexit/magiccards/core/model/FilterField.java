@@ -188,11 +188,13 @@ public enum FilterField {
 				case COLOR_IDENITY: {
 					String en;
 					if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						return BinaryExpr
-								.fieldMatches(MagicCardField.COST, en)
-								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE, new TextValue(en, true,
-										true,
-										false)));
+						return BinaryExpr.fieldMatches(MagicCardField.COST, en)
+								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE,
+										new TextValue(en,
+												true, // word boundary
+												true, // case sensitive
+												false // regex
+										)));
 					}
 					break;
 				}
