@@ -117,7 +117,8 @@ public class MagicDeckTransfer extends ByteArrayTransfer {
 		try {
 			st = new PrintStream(byteOut, true, FileUtils.UTF8);
 			for (CardElement cardElement : decks) {
-				st.println(cardElement.getLocation().getPath());
+				st.print(cardElement.getLocation().getPath());
+				st.print('\n');
 			}
 			st.close();
 			// ok

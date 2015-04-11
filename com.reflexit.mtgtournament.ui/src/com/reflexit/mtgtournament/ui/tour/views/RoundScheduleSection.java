@@ -287,7 +287,7 @@ public class RoundScheduleSection extends TSectionPart {
 	public void createColumns(int num) {
 		int x = viewer.getTree().getColumnCount();
 		if (x - 2 == num) return;
-		System.err.println("create for " + num);
+		//System.err.println("create for " + num);
 		TreeColumn[] children = viewer.getTree().getColumns();
 		for (int i = 0; i < children.length; i++) {
 			children[i].dispose();

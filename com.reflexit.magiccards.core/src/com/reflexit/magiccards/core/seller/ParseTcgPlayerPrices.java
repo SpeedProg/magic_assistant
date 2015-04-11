@@ -312,7 +312,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	float getPrice(String name, String set) {
 		MagicCard card = mc(name, set);
 		float price = getPrice(card);
-		System.err.println("Price for " + card + " " + price);
+		//System.err.println("Price for " + card + " " + price);
 		return price;
 	}
 

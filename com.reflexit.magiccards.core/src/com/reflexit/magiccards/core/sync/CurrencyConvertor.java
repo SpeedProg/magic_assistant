@@ -105,7 +105,8 @@ public class CurrencyConvertor {
 			Date date = Calendar.getInstance().getTime();
 			for (String cu : rates.keySet()) {
 				double rate = rates.get(cu);
-				st.println(cu + "|" + rate + "|" + DATE_PARSER.format(date));
+				st.print(cu + "|" + rate + "|" + DATE_PARSER.format(date));
+				st.print('\n');
 			}
 		} finally {
 			st.close();

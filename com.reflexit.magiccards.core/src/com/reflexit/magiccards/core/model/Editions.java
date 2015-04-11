@@ -488,9 +488,10 @@ public class Editions implements ISearchableProperty {
 				}
 				Format format = ed.getFormat();
 				String sformat = format == Format.LEGACY ? "" : format.name();
-				st.println(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|"
+				st.print(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|"
 						+ rel + "|" + type + "|"
 						+ (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
+				st.print('\n'); // unix ending
 			}
 		} finally {
 			st.close();

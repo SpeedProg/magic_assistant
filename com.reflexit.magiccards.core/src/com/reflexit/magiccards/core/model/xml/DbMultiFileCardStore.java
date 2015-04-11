@@ -43,7 +43,7 @@ import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
 /**
  * Card Store for Magic DB
- * 
+ *
  */
 public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements
 		ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
@@ -137,7 +137,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 					cur = 1;
 			}
 			if (old == cur) {
-				System.err.println("STORE DOUBLE: " + prev + " " + old + "[" + prevPart + "] -> new " + card
+				MagicLogger.log("STORE DOUBLE: " + prev + " " + old + "[" + prevPart + "] -> new " + card
 						+ "[" + curPart + "] " + cur);
 				return true;
 			} else {

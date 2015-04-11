@@ -387,8 +387,9 @@ public class Abilities {
 		PrintStream st = new PrintStream(file);
 		try {
 			for (IAbilityMatcher a : abilities) {
-				st.println(a.getDisplayName() + "|" + (a.isKeyword() ? KEYWORD : MINED) + "|"
+				st.print(a.getDisplayName() + "|" + (a.isKeyword() ? KEYWORD : MINED) + "|"
 						+ a.getPattern());
+				st.print('\n');// unix ending
 			}
 		} finally {
 			st.close();
