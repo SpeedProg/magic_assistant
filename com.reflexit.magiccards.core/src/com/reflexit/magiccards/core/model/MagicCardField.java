@@ -428,6 +428,17 @@ public enum MagicCardField implements ICardField {
 			// ignore
 		}
 	},
+	COLOR_IDENTITY(null) {
+		@Override
+		public Object get(IMagicCard card) {
+			return Colors.getInstance().getColorIdentityAsCost(card);
+		};
+
+		@Override
+		public void set(IMagicCard card, Object value) {
+			// ignore
+		}
+	},
 	HASHCODE(null) {
 		@Override
 		protected ICardVisitor getAggregator() {

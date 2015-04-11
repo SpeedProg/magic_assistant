@@ -97,7 +97,7 @@ public final class CardStoreUtils {
 			String cost = elem.getCost();
 			if (cost == null || cost.isEmpty())
 				continue;
-			Collection<String> colorIdentify = instance.getColorIdentity(cost);
+			Collection<String> colorIdentify = instance.getColorPresense(cost);
 			if (colorIdentify.isEmpty())
 				colors.add(Colors.ManaColor.COLORLESS.tag());
 			else

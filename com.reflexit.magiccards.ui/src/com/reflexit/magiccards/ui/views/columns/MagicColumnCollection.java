@@ -41,6 +41,7 @@ public class MagicColumnCollection extends ColumnCollection {
 			columns.add(new PriceColumn());
 		}
 		columns.add(new ColorColumn());
+		columns.add(new ColorIdentityColumn());
 		columns.add(new SellerPriceColumn());
 		columns.add(new CommunityRatingColumn());
 		columns.add(new GenColumn(MagicCardField.ARTIST, "Artist"));

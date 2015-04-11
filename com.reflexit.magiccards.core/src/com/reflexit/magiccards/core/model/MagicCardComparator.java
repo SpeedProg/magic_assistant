@@ -104,6 +104,17 @@ public class MagicCardComparator implements Comparator {
 							}
 							break;
 						}
+						case COLOR_IDENTITY: {
+							String co1 = (String) c1.get(MagicCardField.COLOR_IDENTITY);
+							String co2 = (String) c2.get(MagicCardField.COLOR_IDENTITY);
+							d = Colors.getColorType(co1).compareTo(Colors.getColorType(co2));
+							if (d == 0) {
+								int i1 = Colors.getColorSort(co1);
+								int i2 = Colors.getColorSort(co2);
+								d = i1 - i2;
+							}
+							break;
+						}
 						case POWER:
 						case TOUGHNESS:
 							float f1 = AbstractMagicCard.convertFloat((String) a1);

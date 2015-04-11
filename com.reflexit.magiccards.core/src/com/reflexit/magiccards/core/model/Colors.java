@@ -14,7 +14,7 @@ public class Colors implements ISearchableProperty {
 	static Colors instance = new Colors();
 	private LinkedHashMap<String, ManaColor> idmap;
 	private HashMap<String, ManaColor> namemap;
-	private final static Pattern colorpattern = Pattern.compile("[{/]([WUBRG])P?\\b");
+	private final static Pattern colorpattern = Pattern.compile("\\b([WUBRG])P?\\b");
 
 	public static enum ManaColor {
 		WHITE("W"),
@@ -63,21 +63,27 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public Collection<String> getColorIdentity(IMagicCard card) {
-		Collection<String> res = getColorIdentify(card.getCost(), new LinkedHashSet<String>());
-		getColorIdentify(card.getOracleText(), res);
-		getColorIdentify(getEncodeByName((String) card.get(MagicCardField.COLOR_INDICATOR)), res);
+		Collection<String> res = getColorPresense(card.getCost(), new LinkedHashSet<String>());
+		getColorPresense(card.getOracleText(), res);
+		getColorPresense(getEncodeByName((String) card.get(MagicCardField.COLOR_INDICATOR)), res);
 		return res;
 	}
 
-	public static Collection<String> getColorIdentity(String text) {
-		return getColorIdentify(text, new LinkedHashSet<String>());
+	public static Collection<String> getColorPresense(String text) {
+		return getColorPresense(text, new LinkedHashSet<String>());
 	}
 
-	public static String getColorIdentityAsCost(String text) {
-		return toCost(getColorIdentify(text, new LinkedHashSet<String>()));
+	public static String getColorAsCost(IMagicCard card) {
+		String text = card.getCost();
+		if (text == null || text.isEmpty()) return "";
+		return toCost(getColorPresense(text, new LinkedHashSet<String>()));
 	}
 
-	public static Collection<String> getColorIdentify(String text, Collection<String> res) {
+	public String getColorIdentityAsCost(IMagicCard card) {
+		return toCost(getColorIdentity(card));
+	}
+
+	public static Collection<String> getColorPresense(String text, Collection<String> res) {
 		if (text == null || text.length() == 0)
 			return res;
 		Matcher matcher = colorpattern.matcher(text);
@@ -92,7 +98,7 @@ public class Colors implements ISearchableProperty {
 			return "Unknown";
 		if (cost.length() == 0)
 			return "No Cost";
-		Collection<String> colorIdentity = sortTags(getColorIdentity(cost));
+		Collection<String> colorIdentity = sortTags(getColorPresense(cost));
 		StringBuffer buf = new StringBuffer();
 		for (String c : colorIdentity) {
 			String name = ManaColor.valueOfTag(c).getLabel();
@@ -114,7 +120,7 @@ public class Colors implements ISearchableProperty {
 			return 0;
 		int sum = 0;
 		int times = 0;
-		Collection<String> colorIdentity = getColorIdentity(cost);
+		Collection<String> colorIdentity = getColorPresense(cost);
 		for (ManaColor c : ManaColor.values()) {
 			sum <<= 1;
 			if (colorIdentity.contains(c.tag())) {
@@ -167,7 +173,7 @@ public class Colors implements ISearchableProperty {
 			return "land";
 		if (cost.contains("/"))
 			return "hybrid";
-		Collection<String> colors = getColorIdentity(cost);
+		Collection<String> colors = getColorPresense(cost);
 		int diff = colors.size();
 		if (diff == 0)
 			return "colorless";

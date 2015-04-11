@@ -183,7 +183,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height)
 					/ 2);
 		}
-		String text = getText(row);
+		String text = getActualText(row);
 		if (text != null) {
 			event.gc.setClipping(x, y, w - 3, h);
 			event.gc.drawText(text, x + 3 + leftMargin, y + 1, true);
@@ -191,4 +191,8 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	}
 
 	protected abstract Image getActualImage(Object row);
+
+	protected String getActualText(Object row) {
+		return getText(row);
+	}
 }

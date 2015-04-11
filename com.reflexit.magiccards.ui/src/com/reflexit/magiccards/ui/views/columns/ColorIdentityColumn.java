@@ -8,23 +8,24 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
-public class ColorColumn extends AbstractImageColumn implements Listener {
-	public ColorColumn() {
-		super(MagicCardField.COLOR, "Color");
+public class ColorIdentityColumn extends AbstractImageColumn implements Listener {
+	public ColorIdentityColumn() {
+		super(MagicCardField.COLOR_IDENTITY, "Color Identity");
 	}
 
 	@Override
 	public String getText(Object element) {
-		String text = super.getText(element);
-		if (text.length() == 0)
-			return text;
-		return Colors.getColorName(text);
+		if (element instanceof IMagicCard) {
+			String icost = Colors.getInstance().getColorIdentityAsCost((IMagicCard) element);
+			return Colors.getColorName(icost);
+		}
+		return "";
 	}
 
 	@Override
 	public Image getActualImage(Object element) {
 		if (element instanceof IMagicCard) {
-			String icost = Colors.getInstance().getColorAsCost((IMagicCard) element);
+			String icost = Colors.getInstance().getColorIdentityAsCost((IMagicCard) element);
 			return SymbolConverter.buildCostImage(icost);
 		}
 		return null;
