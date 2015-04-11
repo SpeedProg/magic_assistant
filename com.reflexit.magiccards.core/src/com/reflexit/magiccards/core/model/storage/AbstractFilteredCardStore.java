@@ -161,7 +161,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		}
 	}
 
-	protected void setRefreshRequired(boolean b) {
+	public void setRefreshRequired(boolean b) {
 		this.storeChanged = b;
 	}
 

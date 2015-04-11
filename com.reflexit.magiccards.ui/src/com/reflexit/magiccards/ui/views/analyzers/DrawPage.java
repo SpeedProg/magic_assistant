@@ -58,6 +58,7 @@ public class DrawPage extends AbstractDeckListPage {
 	private ImageAction newturn;
 	private ImageAction tap;
 	private ImageAction mulligan;
+	private ImageAction refresh;
 	public static final String ID = DrawPage.class.getName();
 
 	public DrawPage() {
@@ -180,6 +181,7 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(showgrave);
 		manager.add(showexile);
 		manager.add(new Separator());
+		manager.add(refresh);
 		super.fillLocalPullDown(manager);
 	}
 
@@ -245,7 +247,7 @@ public class DrawPage extends AbstractDeckListPage {
 		@Override
 		public void run() {
 			playdeck.toZone(getCardSelection(), zone);
-			getListControl().reloadData();
+			fullReload();
 		}
 
 		@Override
@@ -261,28 +263,28 @@ public class DrawPage extends AbstractDeckListPage {
 				playdeck.restart();
 				playdeck.draw(7);
 				getListControl().unsort();
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.unsort = new ImageAction("Unsort", null, "Remove sort by column") {
 			@Override
 			public void run() {
 				getListControl().unsort();
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One") {
 			@Override
 			public void run() {
 				playdeck.draw(1);
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)") {
 			@Override
 			public void run() {
 				playdeck.newturn();
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png",
@@ -290,14 +292,14 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			public void run() {
 				playdeck.scry(1);
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.LIBRARY, isChecked());
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null,
@@ -305,21 +307,21 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.GRAVEYARD, isChecked());
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.showexile = new ImageAction("Show Exile", "icons/clcl16/palm16.png", null, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.EXILE, isChecked());
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.shuffle = new ImageAction("Suffle Library", "icons/clcl16/shuffle16.png", null) {
 			@Override
 			public void run() {
 				playdeck.shuffle();
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.mulligan = new ImageAction("Mulligan", null, null) {
@@ -328,7 +330,7 @@ public class DrawPage extends AbstractDeckListPage {
 				int i = playdeck.countInZone(Zone.HAND) - 1;
 				playdeck.restart();
 				playdeck.draw(i);
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png",
@@ -342,7 +344,7 @@ public class DrawPage extends AbstractDeckListPage {
 			public void run() {
 				playdeck.toZone(getCardSelection(), zone);
 				playdeck.pushback(getCardSelection());
-				getListControl().reloadData();
+				fullReload();
 			}
 		};
 		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png",
@@ -352,7 +354,13 @@ public class DrawPage extends AbstractDeckListPage {
 			@Override
 			public void run() {
 				playdeck.tap(getCardSelection(), true);
-				getListControl().reloadData();
+				fullReload();
+			}
+		};
+		this.refresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", "Refresh") {
+			@Override
+			public void run() {
+				fullReload();
 			}
 		};
 	}
@@ -391,6 +399,11 @@ public class DrawPage extends AbstractDeckListPage {
 	@Override
 	public void activate() {
 		super.activate();
+		fullReload();
+	}
+
+	private void fullReload() {
+		playdeck.setRefreshRequired(true);
 		getListControl().reloadData();
 	}
 }
