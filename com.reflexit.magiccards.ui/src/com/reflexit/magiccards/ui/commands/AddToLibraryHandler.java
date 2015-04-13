@@ -9,10 +9,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
- * 
+ *
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
@@ -36,7 +37,11 @@ public class AddToLibraryHandler extends AbstractHandler {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		DataManager dm = DataManager.getInstance();
-		dm.copyCards(dm.expandGroups(iss.toList()), dm.getModelRoot().getDefaultLib().getStore());
+		CardCollection defaultLib = dm.getModelRoot().getDefaultLib();
+		if (!defaultLib.isOpen()) {
+			defaultLib.open();
+		}
+		dm.copyCards(dm.expandGroups(iss.toList()), defaultLib.getStore());
 		return null;
 	}
 }
