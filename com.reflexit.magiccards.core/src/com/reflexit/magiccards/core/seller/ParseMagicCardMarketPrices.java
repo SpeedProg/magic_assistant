@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.sync.WebUtils;
 public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	private final String setURL = "https://www.magiccardmarket.eu/?mainPage=advancedSearch";
 	private final String baseURL = "https://www.magiccardmarket.eu/?mainPage=advancedSearch&idExpansion=SET&resultsPage=PAGE";
+	private final String singleCardURL = "https://www.magiccardmarket.eu/?mainPage=advancedSearch&idExpansion=SET&cardName=NAME";
 	private static final Pattern setsPattern = Pattern
 			.compile("<select name=\\\"idExpansion\\\"[^>]*>(.*?)</select>");
 	private static final Pattern setItemPattern = Pattern
@@ -71,8 +72,6 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		//		setNameMapping.put("Duel Decks: Anthology", "Duel Decks Anthology, Jace vs. Chandra");
 		setNameMapping.put("Promos", "Promo set for Gatherer");
 		// ... and more Promos
-		setNameMapping
-				.put("Premium Deck Series: Fire & Lightning", "Premium Deck Series: Fire and Lightning");
 		setNameMapping
 				.put("Premium Deck Series: Fire & Lightning", "Premium Deck Series: Fire and Lightning");
 		// seems to be unknown to MKM
@@ -196,8 +195,9 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	@Override
 	public Currency getCurrency() {
 		String cur = getProperties().getProperty("currency");
-		if (cur == null)
+		if (cur == null) {
 			return Currency.getInstance("EUR");
+		}
 		return Currency.getInstance(cur);
 	}
 
@@ -229,13 +229,36 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 			monitor.subTask("Loading set " + offlineSetName);
 			if (mappingSetID != null) {
 				try {
-					parse(mappingSetID);
-					if (!prices.isEmpty()) {
+					// Try to make single card fetch as faster as a bulk fetch for a single card 
+					// Value 10 is a guessed pagination average. If size is smaller a single card 
+					// fetch will be done.
+					if (offlineSets.get(offlineSetName).size() <= 10 ){
 						List<IMagicCard> offlineCards = offlineSets.get(offlineSetName);
+						offlineCards.size();
 						for (IMagicCard magicCard : offlineCards) {
-							if (prices.containsKey(magicCard.getName())) {
+							parseSingleCard(mappingSetID, magicCard.getEnglishName());
+							if (prices.containsKey(magicCard.getName().replaceAll("\\+", " "))) {
 								Float price = prices.get(magicCard.getName());
 								setDbPrice(magicCard, price, getCurrency());
+							}else if (prices.containsKey(magicCard.getEnglishName().replaceAll("\\+", " "))){
+								Float price = prices.get(magicCard.getEnglishName());
+								setDbPrice(magicCard, price, getCurrency());
+								
+							}
+						}
+					}else{
+						// bulk fetch for all online cards in a set
+						parse(mappingSetID);
+						if (!prices.isEmpty()) {
+							List<IMagicCard> offlineCards = offlineSets.get(offlineSetName);
+							for (IMagicCard magicCard : offlineCards) {
+								if (prices.containsKey(magicCard.getName())) {
+									Float price = prices.get(magicCard.getName());
+									setDbPrice(magicCard, price, getCurrency());
+								}else if (prices.containsKey(magicCard.getEnglishName())) {
+									Float price = prices.get(magicCard.getEnglishName());
+									setDbPrice(magicCard, price, getCurrency());
+								}
 							}
 						}
 					}
@@ -263,6 +286,35 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		private void parse(String setId) throws IOException {
 			String url = baseURL.toString().replace("SET", setId);
 			getOnlineSetCardPrices(url, 0, -1);
+		}
+		
+		private void parseSingleCard(String setId, String cardName) throws IOException {
+			String url = singleCardURL.toString().replace("SET", setId).replace("NAME", cardName.replaceAll(" ", "+"));
+			URL url2 = new URL(url);
+			String line = WebUtils.openUrlText(url2);
+			// If full content of the URL response is null it waits some time and do
+			// another request. This can run endless therefore it can be canceled with
+			// monitor. I have no clue why this appends.
+			while (line == null || line.length() <= 0) {
+				if (monitor.isCanceled()) {
+					return;
+				}
+				// Test output
+				//System.err.println("Failed loading page for provider ["+getName()+"]: " + url);
+				MagicLogger.trace("Failed loading page for provider [" + getName() + "]: " + url);
+				//
+				// milliseconds to wait.
+				int nextRetry = 10 * 1000;
+				long startTime = System.currentTimeMillis();
+				long currentTime = 0;
+				do {
+					// Do something.
+					currentTime = System.currentTimeMillis();
+				} while (startTime + (nextRetry) > currentTime);
+				// Next request
+				line = WebUtils.openUrlText(url2);
+			}
+			getPrices(line);
 		}
 
 		/**
