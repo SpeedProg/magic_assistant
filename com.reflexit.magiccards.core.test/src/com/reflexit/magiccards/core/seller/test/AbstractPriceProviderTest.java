@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.seller.test;
 
-import static org.junit.Assert.assertNotEquals;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +14,8 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
+
+import static org.junit.Assert.assertNotEquals;
 
 public abstract class AbstractPriceProviderTest extends TestCase {
 	private MemoryCardStore<IMagicCard> store;
@@ -47,6 +47,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 		store.add(card2);
 		doit();
 		store.removeAll();
+		System.err.println("Price for " + card2 + " " + centPrice(card2));
 		return card2;
 	}
 

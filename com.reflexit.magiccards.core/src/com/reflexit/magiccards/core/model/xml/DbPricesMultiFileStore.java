@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.seller.FindMagicCardsPrices;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.seller.ParseMOTLPrices;
+import com.reflexit.magiccards.core.seller.ParseMagicCardMarketPrices;
 import com.reflexit.magiccards.core.seller.ParseMtgFanaticPrices;
 import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
@@ -83,6 +84,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		add(ParseMOTLPrices.getInstance());
 		add(mtgFanatic);
 		add(findMagicCards);
+		add(ParseMagicCardMarketPrices.getInstance());
 		current = getDefaultProvider();
 	}
 

@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class AllSellerTests {
 	public static Test suite() {
@@ -24,6 +24,7 @@ public class AllSellerTests {
 		// prive providers
 		suite.addTestSuite(ParseTcgPlayerPricesTest.class);
 		suite.addTestSuite(ParseMOTLPricesTest.class);
+		suite.addTestSuite(ParseMagicCardMarketPricesTest.class);
 		// $JUnit-END$
 		return suite;
 	}

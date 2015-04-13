@@ -7,6 +7,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
@@ -23,27 +29,87 @@ public class WebUtils {
 		WebUtils.workOffline = workOffline;
 	}
 
+	private static TrustManager[] trustedCerts = new TrustManager[] {
+			new X509TrustManager() {
+				@Override
+				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+
+				@Override
+				public void checkClientTrusted(X509Certificate[] certs, String authType) {
+				}
+
+				@Override
+				public void checkServerTrusted(X509Certificate[] certs, String authType) {
+				}
+			}
+	};
+
+	/**
+	 * Open the specified URL. Works with HTTPS as well.<br/>
+	 * Do nothing if working offline only mode is enabled.<br/>
+	 * <br/>
+	 * HTTPS warning: Just to open and be able to read the content of resulting response.
+	 * This implementation accept every server certificates therefore, as an example, it is
+	 * not save against man-in-the-middle-attacks. Do not use with sensitive data thats needs
+	 * a secure connection.
+	 *
+	 * @param url
+	 *            Requested URL.
+	 * @return response of request with the specified URL as an open stream.
+	 * @throws IOException
+	 * @see {@link #isWorkOffline(boolean)}, {@link #setWorkOffline(boolean)}
+	 */
 	public static InputStream openUrl(URL url) throws IOException {
 		IOException rt = null;
 		int maxAttempts = 3;
+		// 3 attempts
 		for (int i = 0; i < maxAttempts; i++) {
-			// 3 attempts
+			// Don't do anything if offline only working is enabled.
+			if (WebUtils.isWorkOffline()) {
+				throw new MagicException("Online updates are disabled");
+			}
 			try {
 				URLConnection openConnection = url.openConnection();
-				if (openConnection instanceof HttpURLConnection) {
-					if (WebUtils.isWorkOffline())
-						throw new MagicException("Online updates are disabled");
-					HttpURLConnection huc = (HttpURLConnection) openConnection;
-					huc.setRequestProperty("Accept-Charset", FileUtils.UTF8);
-					huc.setRequestProperty("Accept-Language", "en_US");
-					// huc.setRequestProperty("User-Agent",
-					// "Mozilla/5.0 (Windows NT 5.1; rv:19.0; en_US) Gecko/20100101 Firefox/19.0");
-					huc.setConnectTimeout(60 * 1000);
-					huc.setReadTimeout(60 * 1000);
-					huc.connect();
+				// Checking if it is a HttpsURLConnection first and HttpURLConnection next.
+				// Don't change this order due to HttpsURLConnection extends HttpURLConnection.
+				if (openConnection instanceof HttpsURLConnection) {
+					// HTTPS
+					// Do stuff that trust everything.
+					// MAYBE: HTTPS security
+					try {
+						// Do basics
+						configureConnectionDefaults(openConnection);
+						// Context stuff
+						SSLContext ctx = SSLContext.getInstance("TLS");
+						ctx.init(null, trustedCerts, null);
+						HttpsURLConnection con = (HttpsURLConnection) openConnection;
+						// Additional HTTPS connection configuration
+						con.setSSLSocketFactory(ctx.getSocketFactory());
+						con.setRequestMethod("GET");
+						con.connect();
+						con.disconnect();
+						// MAYBE: HTTPS response code handling
+						// System.err.println(con.getResponseCode()+": "+url.toExternalForm());
+					} catch (IOException e) {
+						throw e;
+					} catch (Exception e) {
+						throw new IOException(e);
+					}
+				} else if (openConnection instanceof HttpURLConnection) {
+					// Do basics
+					configureConnectionDefaults(openConnection);
+					// HTTP
+					HttpURLConnection con = (HttpURLConnection) openConnection;
+					con.connect();
+					con.disconnect();
+					// MAYBE: HTTP response code handling
+					//System.err.println(con.getResponseCode()+": "+url.toExternalForm());
 				} else {
-					// not http connection
+					// Not HTTP nor HTTPS connection, it can be local file i.e. file://
 					i = maxAttempts;
+					// we will try to open it once
 				}
 				InputStream openStream = openConnection.getInputStream();
 				return openStream;
@@ -67,16 +133,32 @@ public class WebUtils {
 		return st;
 	}
 
+	/**
+	 * Open an URL and return its content.
+	 *
+	 * @param url
+	 * @return response content of specified URL.
+	 * @throws IOException
+	 *             If connection could not be established or content could not be read.
+	 */
 	public static String openUrlText(URL url) throws IOException {
-		BufferedReader st = openUrlReader(url);
-		try {
-			return FileUtils.readFileAsString(st);
-		} finally {
-			try {
-				st.close();
-			} catch (Exception e) {
-				// ignore
-			}
+		try (BufferedReader in = openUrlReader(url)) {
+			String result = FileUtils.readFileAsString(in);
+			return result;
 		}
+	}
+
+	/**
+	 * Configure specified URLConnection with some defaults like "User-Agent",
+	 * "Accept-Charset", timeouts, aso.
+	 *
+	 * @param connection
+	 */
+	private static void configureConnectionDefaults(URLConnection connection) {
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+		connection.setRequestProperty("Accept-Charset", FileUtils.UTF8);
+		connection.setRequestProperty("Accept-Language", "en_US");
+		connection.setConnectTimeout(60 * 1000);
+		connection.setReadTimeout(60 * 1000);
 	}
 }
