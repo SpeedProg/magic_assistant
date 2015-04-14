@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -51,6 +52,28 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 		return card2;
 	}
 
+	public List<IMagicCard> checkcards(String set) {
+		List<IMagicCard> card2 = findCards(set);
+		assertNotNull(card2);
+		store.addAll(card2);
+		doit();
+		store.removeAll();
+		return card2;
+	}
+
+	protected List<IMagicCard> findCards(String set) {
+		Collection<IMagicCard> candidates = db().getCards();
+		List<IMagicCard> setCards = new ArrayList<IMagicCard>();
+		if (candidates != null) {
+			for (IMagicCard mc : candidates) {
+				if (mc.getSet().equals(set)) {
+					setCards.add(mc);
+				}
+			}
+		}
+		return setCards;
+	}
+
 	protected MagicCard findCard(String name, String set) {
 		Collection<IMagicCard> candidates = db().getCandidates(name);
 		MagicCard card2 = null;
@@ -80,7 +103,9 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 	}
 
 	public void testAether() {
-		MagicCard card = checkcard("Æther Shockwave", "Saviors of Kamigawa");
+		// 		MagicCard card = checkcard("Æther Shockwave", "Saviors of Kamigawa");
+		// latin capital uppercase letter AE (U+00C6)
+		MagicCard card = checkcard("\u00C6ther Shockwave", "Saviors of Kamigawa");
 		assertNotEquals(0, centPrice(card));
 	}
 
@@ -97,6 +122,11 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 	public void testTenthEdition() {
 		MagicCard card = checkcard("Arcane Teachings", "Tenth Edition");
 		assertNotEquals(0, centPrice(card));
+	}
+
+	public void testBulkTenthEdition() {
+		List<IMagicCard> cards = checkcards("Tenth Edition");
+		assertNotEquals(0, centPrice(cards.get(0)));
 	}
 
 	protected int centPrice(IMagicCard mc) {
