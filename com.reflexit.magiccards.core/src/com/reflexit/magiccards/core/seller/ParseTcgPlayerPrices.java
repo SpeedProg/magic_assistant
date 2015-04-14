@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.core.seller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -81,6 +82,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			}
 		}
 		setMap.put("Duel Decks: Knights vs. Dragons", "Duel Decks: Knights vs Dragons ");
+		setMap.put("Tenth Edition", "10th Edition");
 	}
 
 	public static Map<String, String> getSetAliasesMap() {
@@ -154,7 +156,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		return iterable;
 	}
 
-	private Map<MagicCard, Float> getSetPrices(String set) {
+	private Map<MagicCard, Float> getSetPrices(String origset) {
 		final HashMap<MagicCard, Float> res = new HashMap<MagicCard, Float>();
 		try {
 			HtmlTableImportDelegate delegate = new HtmlTableImportDelegate() {
@@ -182,11 +184,20 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 						super.setFieldValue(card, field, i, value);
 				}
 			};
-			String setE = URLEncoder.encode(set, "UTF-8");
-			URL url = new URL("http://magic.tcgplayer.com/db/search_result.asp?Set_Name=" + setE);
-			delegate.init(WebUtils.openUrl(url), Location.NO_WHERE,
-					false);
-			delegate.run(ICoreProgressMonitor.NONE);
+			Collection<String> trysets = getSetOptions(origset);
+			for (String set : trysets) {
+				String setE = URLEncoder.encode(set, "UTF-8");
+				URL url = new URL("http://magic.tcgplayer.com/db/search_result.asp?Set_Name=" + setE);
+				try (InputStream is = WebUtils.openUrl(url)) {
+					setMap.put(origset, set);
+					delegate.init(is, Location.NO_WHERE,
+							false);
+					delegate.run(ICoreProgressMonitor.NONE);
+					break;
+				} catch (Exception e) {
+					continue;
+				}
+			}
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		}
@@ -202,7 +213,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 				String altset = (String) iterator.next();
 				URL url = createCardUrl(magicCard, altset);
 				try {
-					String xml = WebUtils.openUrlText(url);
+					String xml = WebUtils.openUrlText(url, 1);
 					price = parsePrice(xml);
 				} catch (Exception e) {
 					MagicLogger.log("Failed to load price for " + url + ": " + e.getLocalizedMessage());

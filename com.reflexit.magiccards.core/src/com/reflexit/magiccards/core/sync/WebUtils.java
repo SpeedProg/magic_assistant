@@ -62,8 +62,11 @@ public class WebUtils {
 	 * @see {@link #isWorkOffline(boolean)}, {@link #setWorkOffline(boolean)}
 	 */
 	public static InputStream openUrl(URL url) throws IOException {
+		return openUrl(url, 3);
+	}
+
+	public static InputStream openUrl(URL url, int maxAttempts) throws IOException {
 		IOException rt = null;
-		int maxAttempts = 3;
 		// 3 attempts
 		for (int i = 0; i < maxAttempts; i++) {
 			// Don't do anything if offline only working is enabled.
@@ -126,8 +129,8 @@ public class WebUtils {
 		throw new RuntimeException("Not possible");
 	}
 
-	public static BufferedReader openUrlReader(URL url) throws IOException {
-		InputStream openStream = openUrl(url);
+	public static BufferedReader openUrlReader(URL url, int attempts) throws IOException {
+		InputStream openStream = openUrl(url, attempts);
 		BufferedReader st = new BufferedReader(new InputStreamReader(openStream, FileUtils.CHARSET_UTF_8),
 				FileUtils.DEFAULT_BUFFER_SIZE);
 		return st;
@@ -142,7 +145,11 @@ public class WebUtils {
 	 *             If connection could not be established or content could not be read.
 	 */
 	public static String openUrlText(URL url) throws IOException {
-		try (BufferedReader in = openUrlReader(url)) {
+		return openUrlText(url, 3);
+	}
+
+	public static String openUrlText(URL url, int attempts) throws IOException {
+		try (BufferedReader in = openUrlReader(url, attempts)) {
 			String result = FileUtils.readFileAsString(in);
 			return result;
 		}

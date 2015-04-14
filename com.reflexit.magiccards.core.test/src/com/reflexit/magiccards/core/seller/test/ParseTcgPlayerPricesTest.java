@@ -1,10 +1,10 @@
 package com.reflexit.magiccards.core.seller.test;
 
-import static org.junit.Assert.assertNotEquals;
-
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
+
+import static org.junit.Assert.assertNotEquals;
 
 public class ParseTcgPlayerPricesTest extends AbstractPriceProviderTest {
 	@Override
@@ -26,5 +26,10 @@ public class ParseTcgPlayerPricesTest extends AbstractPriceProviderTest {
 	public void testMagic2014() {
 		MagicCard card = checkcard("Artificer's Hex", "Magic 2014 Core Set");
 		assertNotEquals(0, centPrice(card));
+	}
+
+	@Override
+	public void testBulkTenthEdition() {
+		super.testBulkTenthEdition();
 	}
 }
