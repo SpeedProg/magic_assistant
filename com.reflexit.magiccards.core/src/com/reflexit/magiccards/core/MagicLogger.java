@@ -60,7 +60,7 @@ public class MagicLogger {
 	}
 
 	public static void trace(String message) {
-		tracer.trace("m", message);
+		tracer.trace("-", message);
 	}
 
 	public static void trace(String key, String message) {

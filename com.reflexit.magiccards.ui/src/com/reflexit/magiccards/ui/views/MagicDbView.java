@@ -65,7 +65,7 @@ public class MagicDbView extends AbstractCardsView {
 
 		@Override
 		public void handleEvent(CardEvent event) {
-			if (event.getSource() instanceof MagicCard) {
+			if (event.getSource() instanceof MagicCard) {//XXX
 				super.handleEvent(event);
 			}
 		}

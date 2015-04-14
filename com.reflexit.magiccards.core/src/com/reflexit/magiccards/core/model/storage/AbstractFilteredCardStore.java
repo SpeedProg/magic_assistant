@@ -138,7 +138,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		String key = "udpate " + getClass().getSimpleName();
 		boolean filterChanged = !filter.equals(lastUsedfilter);
 		MagicLogger.trace("changes storeChanged=" + storeChanged +
-				" filterChanged=" + filterChanged);
+				" filterChanged=" + filterChanged + " " + getLocation());
 		boolean nonEmpty = rootGroup.size() > 0;
 		if (storeChanged == false && filterChanged == false && nonEmpty) {
 			MagicLogger.trace("skipped " + storeChanged + " " + filterChanged);

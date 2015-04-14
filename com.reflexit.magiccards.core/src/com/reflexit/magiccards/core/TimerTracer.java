@@ -89,9 +89,14 @@ public class TimerTracer {
 	private void dump(Timer t, String message, long diff) {
 		if (tracing) {
 			String prefix = timestampFormat.format(Calendar.getInstance().getTime());
-			String text = String.format("+%03d (%3d ms/%3d = %5.2f ms) %6s %s", diff, t.total, t.count,
-					t.getAve(), message, t.name);
-			System.out.println(prefix + " " + text);
+			if (t.getName().equals("-")) {
+				String text = String.format("+%03d %s", diff, message);
+				System.out.println(prefix + " " + text);
+			} else {
+				String text = String.format("+%03d (%3d ms/%3d = %5.2f ms) %6s %s", diff, t.total, t.count,
+						t.getAve(), message, t.name);
+				System.out.println(prefix + " " + text);
+			}
 		}
 	}
 

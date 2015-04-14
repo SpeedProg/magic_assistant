@@ -9,9 +9,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
@@ -1019,7 +1017,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void updateViewer() {
-		MagicLogger.traceStart("updateViewer");
+		String key = "updateViewer " + getFilteredStore().getLocation();
+		MagicLogger.traceStart(key);
 		try {
 			if (manager.getControl() == null || manager.getControl().isDisposed())
 				return;
@@ -1032,12 +1031,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			MagicLogger.log("Exception during update operation");
 			MagicLogger.log(e);
 		} finally {
-			MagicLogger.traceEnd("updateViewer");
+			MagicLogger.traceEnd(key);
 		}
 	}
 
 	private void restoreSelection(ISelection selection) {
-		MagicLogger.traceStart("setSelection");
+		//MagicLogger.traceStart("setSelection");
 		if (revealSelection != null) {
 			// set desired selection
 			selection = revealSelection;
@@ -1045,7 +1044,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		}
 		//	System.err.println("set selection " + selection + " in " + getFilteredStore().getLocation());
 		getSelectionProvider().setSelection(selection);
-		MagicLogger.traceEnd("setSelection");
+		//MagicLogger.traceEnd("setSelection");
 	}
 
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {
@@ -1130,15 +1129,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	private Object jobFamility = new Object();
-	private Job loadingJob;
 
 	public void loadData(final Runnable postLoad) {
-		if (loadingJob != null) {
-			if (loadingJob.cancel() == false)
-				MagicUIActivator.log("Refresh job cancelled");
-		}
 		final Display display = PlatformUI.getWorkbench().getDisplay();
-		loadingJob = new Job("Loading cards") {
+		Job loadingJob = new Job("Loading cards") {
 			@Override
 			public boolean belongsTo(Object family) {
 				return family == jobFamility;
@@ -1158,7 +1152,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 						if (getFilteredStore() == null)
 							return Status.OK_STATUS;
 						monitor.worked(10);
+						monitor.setTaskName("Loading cards for " + getFilteredStore().getLocation());
 						getFilteredStore().update();
+						// refresh ui
+						if (postLoad != null)
+							display.syncExec(postLoad);
+						else
+							display.syncExec(() -> updateViewer());
 					} catch (final Exception e) {
 						display.asyncExec(() ->
 								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
@@ -1166,29 +1166,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 						MagicUIActivator.log(e);
 						return Status.CANCEL_STATUS;
 					} finally {
-						loadingJob = null;
 						monitor.done();
 					}
-					// asyncUpdateViewer();
 					return Status.OK_STATUS;
 				}
 			}
 		};
-		// loadingJob.setRule(jobRule);
-		loadingJob.addJobChangeListener(new JobChangeAdapter() {
-			@Override
-			public void done(IJobChangeEvent event) {
-				if (display.isDisposed())
-					return;
-				if (event.getResult().isOK()) {
-					if (postLoad != null)
-						display.syncExec(postLoad);
-					else
-						display.syncExec(() -> updateViewer());
-				}
-				super.done(event);
-			}
-		});
 		loadingJob.schedule(0);
 	}
 

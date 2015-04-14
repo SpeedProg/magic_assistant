@@ -220,6 +220,8 @@ public abstract class AbstractCardsView extends ViewPart {
 		this.actionRefresh = new Action("Refresh") {
 			@Override
 			public void run() {
+				// this should force refresh update
+				getFilteredStore().getCardStore().updateList(null, null);
 				reloadData();
 			}
 		};
