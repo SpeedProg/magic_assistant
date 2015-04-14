@@ -30,6 +30,8 @@ import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.dialogs.EditDeckPropertiesDialog;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
+import com.reflexit.magiccards.ui.views.columns.PriceColumn;
+import com.reflexit.magiccards.ui.views.columns.SellerPriceColumn;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 import com.reflexit.magiccards.ui.widgets.DynamicCombo;
 
@@ -213,10 +215,10 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 			prefix = "Sideboard";
 		}
 		CardGroup group = CardStoreUtils.buildGroup(mainStore, sideboardStore);
-		float cost = group.getDbPrice();
-		float ucost = group.getPrice();
 		loclabel.setText(location.toString());
-		dbprice.setText("$" + decimalFormat.format(cost) + " ($" + decimalFormat.format(ucost) + ")");
+		String sp = new SellerPriceColumn().getText(group);
+		String up = new PriceColumn().getText(group);
+		dbprice.setText(sp + " (" + up + ")");
 		colors.setImage(SymbolConverter.buildCostImage(CardStoreUtils.buildColors(mainStore)));
 		colorsSideboard.setImage(SymbolConverter.buildCostImage(CardStoreUtils.buildColors(sideboardStore)));
 		ownership.setText(store.isVirtual() ? "Virtual" : "Own");
