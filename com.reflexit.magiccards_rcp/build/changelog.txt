@@ -1,3 +1,9 @@
+changes in 1.4.2.006
+* Fixed issues with refreshing of views (introduced 1.4.2.004)
+* Fixed issue with inserting of cards in main collection (introduced 1.4.2.004)
+* Added MagicCardMarket prices scrubber (credits Bjoern Schmidt)
+* Fixed layout of Info page
+* Fixed bug in currency showing in Info page for non dollar currency
 changes in 1.4.2.005
 * Bug 454 "Show Library" button in "Draw" view does nothing
 * Color column now will show images
