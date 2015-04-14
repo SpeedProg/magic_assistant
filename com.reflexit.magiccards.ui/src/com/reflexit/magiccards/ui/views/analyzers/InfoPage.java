@@ -6,8 +6,8 @@ import java.util.List;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -58,12 +58,13 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	@Override
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
-		getArea().setLayout(new GridLayout(3, false));
-		createStatsArea().setLayoutData(
+		getArea().setLayout(new GridLayout(1, false));
+		createTextArea().setLayoutData(
+				GridDataFactory.fillDefaults().grab(true, true).minSize(-1, 40).create());
+		createEditButton(getArea()).setLayoutData(
+				GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.END).create());
+		createStatsArea(getArea()).setLayoutData(
 				GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
-		createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		createEditButton(stats).setLayoutData(
-				GridDataFactory.swtDefaults().grab(true, true).align(SWT.BEGINNING, SWT.END).create());
 		return getArea();
 	}
 
@@ -73,13 +74,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		editButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					if (new EditDeckPropertiesDialog(editButton.getShell(), getStorageInfo()).open() == Window.OK) {
-						activate();
-					}
-				} catch (Exception x) {
-					x.printStackTrace();
-				}
+				openEdit();
 			}
 		});
 		return editButton;
@@ -90,9 +85,9 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		return "";
 	}
 
-	private Composite createStatsArea() {
-		stats = new Composite(getArea(), SWT.NONE);
-		stats.setLayout(new GridLayout(2, false));
+	private Composite createStatsArea(Composite parent) {
+		stats = new Composite(parent, SWT.NONE);
+		stats.setLayout(new GridLayout(4, false));
 		decktype = createTextLabel("Type: ");
 		loclabel = createTextLabel("Location: ");
 		ownership = createDynCombo("Ownership: ", null, "Own", "Virtual");
@@ -168,14 +163,22 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	private Group createTextArea() {
 		Group group = new Group(getArea(), SWT.NONE);
 		group.setText("Description");
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		group.setLayoutData(gd);
 		group.setLayout(new GridLayout());
 		text = new Text(group, SWT.WRAP | SWT.READ_ONLY);
-		text.addModifyListener(new ModifyListener() {
+		text.addMouseListener(new MouseListener() {
 			@Override
-			public void modifyText(ModifyEvent e) {
-				setComment(text.getText());
+			public void mouseUp(MouseEvent e) {
+				openEdit();
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// ignore
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				openEdit();
 			}
 		});
 		text.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -238,5 +241,15 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 					+ " spells)");
 		}
 		getArea().layout(true);
+	}
+
+	private void openEdit() {
+		try {
+			if (new EditDeckPropertiesDialog(editButton.getShell(), getStorageInfo()).open() == Window.OK) {
+				activate();
+			}
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
 	}
 }
