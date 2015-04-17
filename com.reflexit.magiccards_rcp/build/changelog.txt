@@ -1,3 +1,6 @@
+changes in 1.4.2.007
+* Bug 459 export not working in latest version, stack overflow
+* More fixed to MagicCardMarket prices provider
 changes in 1.4.2.006
 * Fixed issues with refreshing of views (introduced 1.4.2.004)
 * Fixed issue with inserting of cards in main collection (introduced 1.4.2.004)
