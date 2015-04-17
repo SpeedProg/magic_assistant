@@ -81,7 +81,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 
 	protected void doInitialize() throws MagicException {
 		storeChanged = true; // force update
-		reinstallListener();
 	}
 
 	private void reinstallListener() {
