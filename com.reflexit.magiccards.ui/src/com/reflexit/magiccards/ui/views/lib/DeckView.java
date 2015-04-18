@@ -162,7 +162,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected IStorageInfo getStorageInfo() {
-		IStorage storage = getFilteredStore().getCardStore().getStorage();
+		IStorage<IMagicCard> storage = getFilteredStore().getCardStore().getStorage();
 		if (storage instanceof IStorageInfo) {
 			IStorageInfo si = ((IStorageInfo) storage);
 			return si;
@@ -193,7 +193,7 @@ public class DeckView extends AbstractMyCardsView {
 			CardReconcileDialog cardReconcileDialog = new CardReconcileDialog(getShell()) {
 				@Override
 				protected void okPressed() {
-					ICardStore cardStore = getFilteredStore().getCardStore();
+					ICardStore<IMagicCard> cardStore = getFilteredStore().getCardStore();
 					getStorageInfo().setVirtual(false);
 					DataManager.getInstance().remove(orig, cardStore);
 					DataManager.getInstance().moveCards(elements, cardStore);
@@ -294,14 +294,18 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void updatePartName() {
-		IFilteredCardStore filteredStore = getFilteredStore();
+		IFilteredCardStore<IMagicCard> filteredStore = getFilteredStore();
 		if (filteredStore == null) {
 			return;
 		} else {
 			ICardStore<IMagicCard> s = filteredStore.getCardStore();
-			String name = s.getName();
+			String tooltip = deck.getLocation().getPath();
+			if(tooltip != null){
+				setTitleToolTip(tooltip);
+			}
+			String name = deck.getLocation().getName();
 			if (name.length() == 0)
-				name = s.getLocation().getName();
+				name = s.getLocation().getPath();
 			//setPartProperty(name, name);
 			if (deck.getLocation().isSideboard()) {
 				setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());
@@ -473,7 +477,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void setStore() {
-		IFilteredCardStore store = getFilteredStore();
+		IFilteredCardStore<IMagicCard> store = getFilteredStore();
 		if (store == null)
 			return;
 		for (IDeckPage deckPage : pages) {

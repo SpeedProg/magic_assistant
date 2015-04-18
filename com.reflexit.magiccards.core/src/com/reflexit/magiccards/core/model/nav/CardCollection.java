@@ -72,8 +72,8 @@ public class CardCollection extends CardElement {
 	}
 
 	public void open() {
-		IFilteredCardStore fi = DataManager.getInstance().getCardHandler()
-				.getCardCollectionFilteredStore(getName());
+		IFilteredCardStore<IMagicCard> fi = DataManager.getInstance().getCardHandler()
+				.getCardCollectionFilteredStore(getPath().toString());
 		open(fi.getCardStore());
 	}
 
@@ -116,7 +116,7 @@ public class CardCollection extends CardElement {
 	 * @return
 	 */
 	public String getFileName() {
-		return getPath().lastSegment();
+		return getPath().toString();
 	}
 
 	public void setVirtual(boolean virtual) {

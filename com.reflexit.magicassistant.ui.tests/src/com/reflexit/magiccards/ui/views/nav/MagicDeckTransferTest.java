@@ -32,8 +32,8 @@ public class MagicDeckTransferTest extends TestCase {
 
 	public void testOrg() {
 		CollectionsContainer decks = this.root.getDeckContainer();
-		CollectionsContainer con = decks.addCollectionsContainer("cox");
-		CardElement element = this.root.findElement("My Cards/Decks/cox");
+		CollectionsContainer con = decks.addCollectionsContainer("Decks/cox");
+		CardElement element = this.root.findElement("Decks/cox");
 		assertEquals(con, element);
 		byte[] byteArray = trans.toByteArray(new CardElement[] { defaultLib,
 				con });

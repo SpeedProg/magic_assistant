@@ -35,12 +35,13 @@ public class PartListener implements IPartListener2 {
 	public void activateDeck(IFilteredCardStore store) {
 		if (store != null) {
 			DataManager.getCardHandler().setActiveDeckHandler(store);
-			String id = store.getLocation().getBaseFileName();
-			CardCollection coll = DataManager.getInstance().getModelRoot().findCardCollectionById(id);
-			if (coll != null)
+			String key = store.getLocation().getPath()+".xml";
+			CardCollection coll = DataManager.getInstance().getModelRoot().findCardCollectionById(key);
+			if (coll != null) {
 				coll.update();
-			else
-				MagicUIActivator.log("Cannot find collection by id " + id);
+			} else {
+				MagicUIActivator.log("Cannot find collection by key " + key);
+			}
 		}
 	}
 

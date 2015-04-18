@@ -25,10 +25,9 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 
 	public DeckFilteredCardFileStore(String filename) {
 		CardCollection d = getModelRoot().findCardCollectionById(filename);
-		if (d == null)
-			d = getModelRoot().findCardCollectionById(filename + ".xml");
-		if (d == null)
+		if (d == null){
 			throw new IllegalArgumentException("Not found: " + filename);
+		}
 		if (!d.isOpen()) {
 			LibraryFilteredCardFileStore magicLibraryHandler = (LibraryFilteredCardFileStore) DataManager
 					.getCardHandler()
