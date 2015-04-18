@@ -45,7 +45,7 @@
          </property>
          <property
                name="aboutText"
-               value="Magic Assistant&#x0A;Version: 1.4.2&#x0A;Build id: xxxxxxxx&#x0A;&#x0A;(c) Copyright 2008-2015 Alena Laskavaia.  All rights reserved.&#x0A;Visit http://magicassistant.ca&#x0A;&#x0A;This product includes software developed by the&#x0A;Eclipse Foundation http://www.eclipse.org/&#x0A;&#x0A;This product includes software developed by the&#x0A;Apache Software Foundation http://www.apache.org/">
+               value="Magic Assistant&#x0A;Version: 1.4.3&#x0A;Build id: xxxxxxxx&#x0A;&#x0A;(c) Copyright 2008-2015 Alena Laskavaia.  All rights reserved.&#x0A;Visit http://magicassistant.ca&#x0A;&#x0A;This product includes software developed by the&#x0A;Eclipse Foundation http://www.eclipse.org/&#x0A;&#x0A;This product includes software developed by the&#x0A;Apache Software Foundation http://www.apache.org/">
          </property>
          <property
                name="aboutImage"

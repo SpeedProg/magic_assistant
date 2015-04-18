@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Magic Assistant Card Organizer
 Bundle-SymbolicName: com.reflexit.magiccards.ui;singleton:=true
-Bundle-Version: 1.4.2.qualifier
+Bundle-Version: 1.4.3.qualifier
 Bundle-Activator: com.reflexit.magiccards.ui.MagicUIActivator
 Bundle-Vendor: Alena Laskavaia
 Bundle-Localization: plugin
