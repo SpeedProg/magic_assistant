@@ -38,6 +38,7 @@ import com.reflexit.magiccards.core.model.storage.CollectionStoreTest;
 import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
 import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
 import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
+import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtilsTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
 import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
@@ -76,6 +77,7 @@ public class AllLocalTests {
 		suite.addTestSuite(LegalityMapTest.class);
 		suite.addTestSuite(AbilitiesTest.class);
 		suite.addTest(new JUnit4TestAdapter(MagicCardListTest.class));
+		suite.addTest(new JUnit4TestAdapter(PlayingDeck.class));
 		// editions
 		suite.addTestSuite(EditionsTest.class);
 		// Perf

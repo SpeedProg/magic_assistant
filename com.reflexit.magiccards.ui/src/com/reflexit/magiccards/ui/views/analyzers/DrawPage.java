@@ -24,7 +24,6 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -37,6 +36,7 @@ import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 import com.reflexit.magiccards.ui.views.columns.StringEditingSupport;
 import com.reflexit.magiccards.ui.views.columns.TypeColumn;
+import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class DrawPage extends AbstractDeckListPage {
 	private PlayingDeck playdeck = new PlayingDeck(new MemoryCardStore());
@@ -209,20 +209,6 @@ public class DrawPage extends AbstractDeckListPage {
 		super.fillContextMenu(manager);
 	}
 
-	class ImageAction extends Action {
-		public ImageAction(String name, String iconPath, String tooltip) {
-			this(name, iconPath, tooltip, IAction.AS_PUSH_BUTTON);
-		}
-
-		public ImageAction(String name, String iconPath, String tooltip, int style) {
-			super(name, style);
-			if (tooltip != null)
-				setToolTipText(tooltip);
-			if (iconPath != null)
-				setImageDescriptor(MagicUIActivator.getImageDescriptor(iconPath));
-		}
-	}
-
 	class SelectionImageAction extends ImageAction implements ISelectionChangedListener {
 		public SelectionImageAction(String name, String iconPath, String tooltip) {
 			super(name, iconPath, tooltip);
@@ -260,8 +246,7 @@ public class DrawPage extends AbstractDeckListPage {
 		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7") {
 			@Override
 			public void run() {
-				playdeck.restart();
-				playdeck.draw(7);
+				playdeck.newGame();
 				getListControl().unsort();
 				fullReload();
 			}
@@ -350,10 +335,10 @@ public class DrawPage extends AbstractDeckListPage {
 		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png",
 				"Remove from the game (Exile)");
 		this.kill = new ZoneAction(Zone.GRAVEYARD, "Kill", "icons/clcl16/graveyard.png", "Put to graveyard");
-		this.tap = new ImageAction("Tap", "icons/tap.gif", null) {
+		this.tap = new ImageAction("Tap/Untap", "icons/tap.gif", null) {
 			@Override
 			public void run() {
-				playdeck.tap(getCardSelection(), true);
+				playdeck.tap(getCardSelection());
 				fullReload();
 			}
 		};

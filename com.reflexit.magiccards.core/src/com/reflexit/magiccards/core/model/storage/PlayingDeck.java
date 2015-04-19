@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -34,8 +35,22 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	final MemoryCardStore<MagicCardGame> store;
 	private int turn;
 
-	class ZonedFilter extends MagicCardFilter {
+	public class ZonedFilter extends MagicCardFilter {
 		HashSet<Zone> hideZones = new HashSet<MagicCardGame.Zone>();
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (!(obj instanceof ZonedFilter))
+				return false;
+			ZonedFilter other = (ZonedFilter) obj;
+			if (this.hideZones.equals(other.hideZones))
+				return true;
+			return false;
+		}
 
 		@Override
 		public boolean isFiltered(Object o) {
@@ -88,8 +103,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	public void setStore(ICardStore<IMagicCard> store) {
 		if (this.original != store) {
 			this.original = store;
-			restart();
-			draw(7);
+			newGame();
 		}
 	}
 
@@ -114,6 +128,8 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 				i++;
 			}
 		}
+		if (i != cards)
+			throw new MagicException("No more cards in the library");
 	}
 
 	public void scry(int cards) {
@@ -125,6 +141,11 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 				i++;
 			}
 		}
+	}
+
+	public void newGame() {
+		restart();
+		draw(Math.min(7, store.size()));
 	}
 
 	/**
@@ -210,8 +231,8 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		throw new UnsupportedOperationException();
 	}
 
-	public void toZone(List<IMagicCard> cardSelection, Zone zone) {
-		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
+	public void toZone(List<? extends IMagicCard> cardSelection, Zone zone) {
+		for (Iterator<? extends IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
 			MagicCardGame card = (MagicCardGame) iterator.next();
 			toZone(card, zone);
 		}
@@ -236,9 +257,9 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		return true;
 	}
 
-	public void pushback(List<IMagicCard> cardSelection) {
+	public void pushback(List<? extends IMagicCard> cardSelection) {
 		ArrayList<MagicCardGame> mg = new ArrayList<MagicCardGame>();
-		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
+		for (Iterator<? extends IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
 			MagicCardGame card = (MagicCardGame) iterator.next();
 			store.remove(card);
 			mg.add(card);
@@ -248,7 +269,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 
 	public void newturn() {
 		turn++;
-		tap(false);
+		untap();
 		draw(1);
 	}
 
@@ -256,7 +277,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		return turn;
 	}
 
-	public void tap(List<IMagicCard> cardSelection, boolean value) {
+	public void tap(List<IMagicCard> cardSelection) {
 		for (Iterator<IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
 			MagicCardGame card = (MagicCardGame) iterator.next();
 			if (card.getZone() == Zone.BATTLEFIELD) {
@@ -265,11 +286,11 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		}
 	}
 
-	public void tap(boolean value) {
+	public void untap() {
 		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
 			MagicCardGame card = iterator.next();
 			if (card.getZone() == Zone.BATTLEFIELD) {
-				card.setTapped(value);
+				card.setTapped(false);
 			}
 		}
 	}
@@ -299,5 +320,16 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 
 	public List<MagicCardGame> getList() {
 		return store.getList();
+	}
+
+	public List<MagicCardGame> getListInZone(Zone zone) {
+		List<MagicCardGame> res = new ArrayList<>();
+		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
+			MagicCardGame card = iterator.next();
+			if (card.getZone() == zone) {
+				res.add(card);
+			}
+		}
+		return res;
 	}
 }
