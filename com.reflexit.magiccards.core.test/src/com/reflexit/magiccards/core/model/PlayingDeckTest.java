@@ -17,6 +17,7 @@ import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
+import com.reflexit.magiccards.core.model.storage.PlayingDeck.ZonedFilter;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class PlayingDeckTest {
@@ -29,17 +30,34 @@ public class PlayingDeckTest {
 	public void setUp() throws Exception {
 		store = new MemoryCardStore<>();
 		deck = new PlayingDeck(null);
-		for (int i = 0; i < 20; i++) {
-			MagicCardPhysical mcp = CardGenerator.generatePhysicalCardWithValues();
-			mcp.getBase().setName("name " + (i + 1));
-			mcp.getBase().setCardId(i + 1);
-			store.add(mcp);
+		for (int i = 0; i < 9; i++) {
+			addACard(i);
 		}
+		addForest();
 		deck.setStore(store);
 		assertEquals(7, deck.countDrawn());
 		decksize = store.getCount();
 		mg1 = deck.getList().get(0);
 		assertSame(Zone.HAND, mg1.getZone());
+	}
+
+	private void addACard(int i) {
+		MagicCardPhysical mcp = CardGenerator.generatePhysicalCardWithValues();
+		mcp.getBase().setName("Aname " + (i + 1));
+		mcp.getBase().setCardId(i + 1000000);
+		mcp.setCount(4);
+		store.add(mcp);
+	}
+
+	private void addForest() {
+		MagicCardPhysical mcp = CardGenerator.generatePhysicalCardWithValues();
+		MagicCard mc = mcp.getBase();
+		mc.setName("Forest");
+		mc.setCardId(1000000);
+		mc.setCost("");
+		mc.setType("Basic Land");
+		mcp.setCount(24);
+		store.add(mcp);
 	}
 
 	@Test
@@ -81,7 +99,7 @@ public class PlayingDeckTest {
 		List<MagicCardGame> before = deck.getListInZone(Zone.LIBRARY);
 		List<MagicCardGame> before2 = deck.getListInZone(Zone.LIBRARY);
 		assertEquals(before, before2);
-		deck.shuffle();
+		deck.shuffleLibrary();
 		List<MagicCardGame> after = deck.getListInZone(Zone.LIBRARY);
 		assertNotEquals(before, after);
 	}
@@ -134,7 +152,7 @@ public class PlayingDeckTest {
 		deck.toZone(mg1, Zone.BATTLEFIELD);
 		deck.tap(Collections.singletonList(mg1));
 		assertTrue(mg1.isTapped());
-		deck.newturn();
+		deck.newTurn();
 		assertEquals(7, deck.countInZone(Zone.HAND));
 		assertFalse(mg1.isTapped());
 	}
@@ -142,7 +160,7 @@ public class PlayingDeckTest {
 	@Test
 	public void testGetTurn() {
 		assertEquals(1, deck.getTurn());
-		deck.newturn();
+		deck.newTurn();
 		assertEquals(2, deck.getTurn());
 	}
 
@@ -204,10 +222,30 @@ public class PlayingDeckTest {
 		deck.update();
 		assertEquals(8, deck.countInZone(Zone.HAND));
 		MagicCardGame mg2 = (MagicCardGame) deck.getElement(0);
-		assertEquals("name 1", mg2.getName());
+		assertEquals("Aname 1", mg2.getName());
 		deck.getFilter().setNoSort();
 		deck.update();
 		mg2 = (MagicCardGame) deck.getElement(0);
 		assertEquals(mg1, mg2);
+	}
+
+	@Test
+	public void testFilterEquals() {
+		ZonedFilter clone = (ZonedFilter) deck.getFilter().clone();
+		assertEquals(clone, clone);
+		assertEquals(clone, deck.getFilter());
+		deck.showZone(Zone.LIBRARY, true);
+		deck.update();
+		assertNotEquals(clone, deck.getFilter());
+	}
+
+	@Test
+	public void testNullStore() throws Exception {
+		store = new MemoryCardStore<>();
+		deck = new PlayingDeck(null);
+		deck.newGame();
+		assertEquals(0, deck.countDrawn());
+		decksize = store.getCount();
+		assertEquals(0, decksize);
 	}
 }

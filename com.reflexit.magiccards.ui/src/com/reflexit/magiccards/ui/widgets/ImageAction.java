@@ -16,14 +16,16 @@ public class ImageAction extends Action {
 		this(name, iconPath, tooltip, IAction.AS_PUSH_BUTTON, null);
 	}
 
-	public ImageAction(String name, String iconPath, int style, Runnable run) {
-		this(name, iconPath, null, style, run);
+	public ImageAction(String name, String iconPath, Runnable run) {
+		this(name, iconPath, null, IAction.AS_PUSH_BUTTON, run);
 	}
 
 	public ImageAction(String name, String iconPath, String tooltip, int style) {
 		this(name, iconPath, tooltip, style, null);
 	}
-
+	public ImageAction(String name, String iconPath, String tooltip, Runnable run) {
+		this(name, iconPath, tooltip, IAction.AS_PUSH_BUTTON, run);
+	}
 	public ImageAction(String name, String iconPath, String tooltip, int style, Runnable run) {
 		super(name, style);
 		if (tooltip != null)
@@ -34,7 +36,7 @@ public class ImageAction extends Action {
 	}
 
 	public ImageAction(String name, String iconKey, int style) {
-		this(name, iconKey, style, () -> {
+		this(name, iconKey, null, style, () -> {
 			throw new IllegalArgumentException("Runnable is not defined");
 		});
 	}

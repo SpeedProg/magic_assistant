@@ -42,10 +42,10 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.AbstractExportDelegate;
+import com.reflexit.magiccards.core.exports.CompactHtmlExportDelegate;
 import com.reflexit.magiccards.core.exports.IExportDelegate;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
-import com.reflexit.magiccards.core.exports.CompactHtmlExportDelegate;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
@@ -294,7 +294,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		};
 		actionRefresh = new ImageAction("Refresh",
 				"icons/clcl16/refresh.gif",
-				IAction.AS_PUSH_BUTTON,
 				() -> activate());
 	}
 

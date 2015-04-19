@@ -28,7 +28,7 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	ICardStore<IMagicCard> original;
@@ -37,6 +37,10 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 
 	public class ZonedFilter extends MagicCardFilter {
 		HashSet<Zone> hideZones = new HashSet<MagicCardGame.Zone>();
+
+		public ZonedFilter() {
+			setNoSort();
+		}
 
 		@Override
 		public boolean equals(Object obj) {
@@ -50,6 +54,14 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 			if (this.hideZones.equals(other.hideZones))
 				return true;
 			return false;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public Object clone() {
+			ZonedFilter other = (ZonedFilter) super.clone();
+			other.hideZones = ((HashSet<Zone>) this.hideZones.clone());
+			return other;
 		}
 
 		@Override
@@ -107,13 +119,6 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.core.model.storage.IFilteredCardStore#getCardStore
-	 * ()
-	 */
 	@Override
 	public ICardStore<MagicCardGame> getCardStore() {
 		return this.store;
@@ -149,12 +154,14 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void restart() {
 		store.clear();
-		Collection<MagicCardGame> randomize = randomize(pullIn(original));
-		addAndNumber(randomize);
+		if (original != null) {
+			Collection<MagicCardGame> randomize = randomize(pullIn(original));
+			addAndNumber(randomize);
+		}
 		turn = 1;
 	}
 
@@ -167,7 +174,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		}
 	}
 
-	public void shuffle() {
+	public void shuffleLibrary() {
 		ArrayList<MagicCardGame> mg = new ArrayList<MagicCardGame>();
 		for (Iterator<MagicCardGame> iterator = store.iterator(); iterator.hasNext();) {
 			MagicCardGame card = iterator.next();
@@ -267,7 +274,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		addAndNumber(mg);
 	}
 
-	public void newturn() {
+	public void newTurn() {
 		turn++;
 		untap();
 		draw(1);

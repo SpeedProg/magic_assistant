@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardGame.MagicCardGameField;
@@ -243,52 +244,33 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
-		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7") {
-			@Override
-			public void run() {
-				playdeck.newGame();
-				getListControl().unsort();
-				fullReload();
-			}
-		};
-		this.unsort = new ImageAction("Unsort", null, "Remove sort by column") {
-			@Override
-			public void run() {
-				getListControl().unsort();
-				fullReload();
-			}
-		};
-		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One") {
-			@Override
-			public void run() {
-				playdeck.draw(1);
-				fullReload();
-			}
-		};
-		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)") {
-			@Override
-			public void run() {
-				playdeck.newturn();
-				fullReload();
-			}
-		};
-		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png",
-				"Look at the top card of the library (Scry)") {
-			@Override
-			public void run() {
-				playdeck.scry(1);
-				fullReload();
-			}
-		};
-		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX) {
-			@Override
-			public void run() {
-				playdeck.showZone(Zone.LIBRARY, isChecked());
-				fullReload();
-			}
-		};
-		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null,
-				IAction.AS_CHECK_BOX) {
+		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
+			playdeck.newGame();
+			getListControl().unsort();
+			fullReload();
+		} );
+		this.unsort = new ImageAction("Unsort", null, "Remove sort by column", () -> {
+			getListControl().unsort();
+			fullReload();
+		} );
+		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One", () -> {
+			playdeck.draw(1);
+			fullReload();
+		} );
+		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)", () -> {
+			playdeck.newTurn();
+			fullReload();
+		} );
+		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png", "Look at the top card of the library (Scry)",
+				() -> {
+					playdeck.scry(1);
+					fullReload();
+				} );
+		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX, () -> {
+			playdeck.showZone(Zone.LIBRARY, showlib.isChecked());
+			fullReload();
+		} );
+		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.GRAVEYARD, isChecked());
@@ -302,24 +284,19 @@ public class DrawPage extends AbstractDeckListPage {
 				fullReload();
 			}
 		};
-		this.shuffle = new ImageAction("Suffle Library", "icons/clcl16/shuffle16.png", null) {
-			@Override
-			public void run() {
-				playdeck.shuffle();
-				fullReload();
-			}
-		};
-		this.mulligan = new ImageAction("Mulligan", null, null) {
-			@Override
-			public void run() {
-				int i = playdeck.countInZone(Zone.HAND) - 1;
-				playdeck.restart();
-				playdeck.draw(i);
-				fullReload();
-			}
-		};
-		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png",
-				"Put in the battlefield");
+		this.shuffle = new ImageAction("Suffle Library", "icons/clcl16/shuffle16.png", () -> {
+			playdeck.shuffleLibrary();
+			fullReload();
+		} );
+		this.mulligan = new ImageAction("Mulligan", null, () -> {
+			if (playdeck.getTurn() > 1)
+				throw new MagicException("Only can do this on first turn");
+			int i = playdeck.countInZone(Zone.HAND) - 1;
+			playdeck.restart();
+			playdeck.draw(i);
+			fullReload();
+		} );
+		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png", "Put in the battlefield");
 		this.returnh = new ZoneAction(Zone.HAND, "Return", "icons/clcl16/arrow_left.png", "Return to hand");
 		this.libtop = new ZoneAction(Zone.LIBRARY, "Library Top", "icons/clcl16/arrow_up.png",
 				"Put on top of the library");
@@ -332,22 +309,13 @@ public class DrawPage extends AbstractDeckListPage {
 				fullReload();
 			}
 		};
-		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png",
-				"Remove from the game (Exile)");
+		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png", "Remove from the game (Exile)");
 		this.kill = new ZoneAction(Zone.GRAVEYARD, "Kill", "icons/clcl16/graveyard.png", "Put to graveyard");
-		this.tap = new ImageAction("Tap/Untap", "icons/tap.gif", null) {
-			@Override
-			public void run() {
-				playdeck.tap(getCardSelection());
-				fullReload();
-			}
-		};
-		this.refresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", "Refresh") {
-			@Override
-			public void run() {
-				fullReload();
-			}
-		};
+		this.tap = new ImageAction("Tap/Untap", "icons/tap.gif", () -> {
+			playdeck.tap(getCardSelection());
+			fullReload();
+		} );
+		this.refresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", () -> fullReload());
 	}
 
 	private List<IMagicCard> getCardSelection() {

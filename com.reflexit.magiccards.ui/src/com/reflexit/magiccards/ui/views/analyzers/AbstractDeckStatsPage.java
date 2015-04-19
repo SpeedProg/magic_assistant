@@ -47,7 +47,6 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		sashForm.setWeights(new int[] { 60, 40 });
 		actionRefresh = new ImageAction("Refresh",
 				"icons/clcl16/refresh.gif",
-				IAction.AS_PUSH_BUTTON,
 				() -> activate());
 		return area;
 	}

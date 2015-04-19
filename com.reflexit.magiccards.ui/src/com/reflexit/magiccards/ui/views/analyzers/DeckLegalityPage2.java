@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -218,11 +217,9 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	protected void makeActions() {
 		this.load = new ImageAction("Check Legality Online",
 				"icons/clcl16/software_update.png",
-				IAction.AS_PUSH_BUTTON,
 				() -> performUpdate());
 		refresh = new ImageAction("Refresh",
 				"icons/clcl16/refresh.gif",
-				IAction.AS_PUSH_BUTTON,
 				() -> activate());
 	}
 
