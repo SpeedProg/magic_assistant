@@ -31,7 +31,11 @@ public abstract class AbstractSwtBotTest {
 		mdbStore.setToDefault();
 		PrefixedPreferenceStore deckStore = (PrefixedPreferenceStore) PreferenceInitializer.getDeckStore();
 		deckStore.setToDefault();
-		bot.resetWorkbench();
+		try {
+			bot.resetWorkbench();
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	public void clickViewToolBarItemByTooltip(String viewName, String tooltip) {
