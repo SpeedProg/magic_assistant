@@ -61,19 +61,18 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.
+	 * BundleContext )
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		activateCoreSettings();
-		TRACE_EXPORT = isDebugging()
-				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
+		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
-		TRACE_TESTING = isDebugging()
-				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing"));
+		TRACE_TESTING = (isDebugging()
+				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing")))
+				|| Boolean.valueOf(System.getProperty("junit.testing"));
 		Device device = Display.getDefault();
 		COLOR_GREENISH = new Color(device, 255 - 64, 255, 255 - 64);
 		COLOR_PINKINSH = new Color(device, 255, 255 - 64, 255 - 64);
@@ -93,9 +92,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
+	 * BundleContext )
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -259,8 +257,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		ITheme currentTheme = themeManager.getCurrentTheme();
 		ColorRegistry registry = currentTheme.getColorRegistry();
-		Color color = own ? registry.get("com.reflexit.magiccards.ui.preferences.ocard.bgcolor") : registry
-				.get("com.reflexit.magiccards.ui.preferences.vcard.bgcolor");
+		Color color = own ? registry.get("com.reflexit.magiccards.ui.preferences.ocard.bgcolor")
+				: registry.get("com.reflexit.magiccards.ui.preferences.vcard.bgcolor");
 		return color;
 	}
 
