@@ -241,7 +241,7 @@ public class DeckView extends AbstractMyCardsView {
 					for (final IViewReference viewReference : views) {
 						if (viewReference.getId().equals(DeckView.ID)) {
 							final String deckId = viewReference.getSecondaryId();
-							if (deckId.equals(col.getFileName())) {
+							if (deckId.equals(col.getId())) {
 								DeckView deckView = (DeckView) viewReference.getPart(false);
 								if (deckView != null) {
 									deckView.refresh();
@@ -250,7 +250,7 @@ public class DeckView extends AbstractMyCardsView {
 							}
 						}
 					}
-					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getFileName(),
+					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getId(),
 							IWorkbenchPage.VIEW_ACTIVATE);
 					deckView.refresh();
 				} catch (PartInitException e) {
@@ -300,12 +300,12 @@ public class DeckView extends AbstractMyCardsView {
 		} else {
 			ICardStore<IMagicCard> s = filteredStore.getCardStore();
 			String tooltip = deck.getLocation().getPath();
-			if(tooltip != null){
+			if (tooltip != null) {
 				setTitleToolTip(tooltip);
 			}
-			String name = deck.getLocation().getName();
-			if (name.length() == 0)
-				name = s.getLocation().getPath();
+			String name = deck.getName();
+			if (name.isEmpty())
+				name = s.getLocation().getName();
 			//setPartProperty(name, name);
 			if (deck.getLocation().isSideboard()) {
 				setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());

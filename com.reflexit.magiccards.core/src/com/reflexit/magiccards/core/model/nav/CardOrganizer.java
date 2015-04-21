@@ -172,11 +172,20 @@ public class CardOrganizer extends CardElement {
 	 * @return
 	 */
 	public CardCollection findCardCollectionById(String id) {
+		CardElement el = findElement(id);
+		if (el instanceof CardCollection) {
+			return (CardCollection) el;
+		}
+		// backward compatibity
+		return oldFindCardCollectionById(id);
+	}
+
+	public CardCollection oldFindCardCollectionById(String id) {
 		for (Object element : this.getChildren()) {
 			CardElement o = (CardElement) element;
 			if (o instanceof CardCollection) {
 				CardCollection d = (CardCollection) o;
-				if (d.getFileName().equals(id))
+				if (d.getPath().getName().equals(id)) // old Id is file base name with ext
 					return d;
 			} else if (o instanceof CardOrganizer) {
 				CardCollection d = ((CardOrganizer) o).findCardCollectionById(id);

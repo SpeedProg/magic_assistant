@@ -35,7 +35,7 @@ public class PartListener implements IPartListener2 {
 	public void activateDeck(IFilteredCardStore store) {
 		if (store != null) {
 			DataManager.getCardHandler().setActiveDeckHandler(store);
-			String key = store.getLocation().getPath()+".xml";
+			String key = store.getLocation().getPath();
 			CardCollection coll = DataManager.getInstance().getModelRoot().findCardCollectionById(key);
 			if (coll != null) {
 				coll.update();

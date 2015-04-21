@@ -61,6 +61,23 @@ public class LocationPath {
 		return lastSegment.substring(0, index);
 	}
 
+	/**
+	 * Path without extension
+	 *
+	 * @return
+	 */
+	public String getId() {
+		int sepIndex = path.lastIndexOf(SEP);
+		int index = path.lastIndexOf('.');
+		if (sepIndex > index) {
+			return path;
+		}
+		if (index == -1) {
+			return path;
+		}
+		return path.substring(0, index);
+	}
+
 	public String toPortableString() {
 		return path;
 	}
@@ -101,6 +118,22 @@ public class LocationPath {
 		}
 		if (top.length() == 0)
 			return true;
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof LocationPath)) return false;
+		LocationPath other = (LocationPath) obj;
+		if (path.equals(other.path)) return true;
+		if (getId().equals(other.getId())) return true;
 		return false;
 	}
 }

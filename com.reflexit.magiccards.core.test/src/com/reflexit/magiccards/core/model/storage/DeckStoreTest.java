@@ -55,7 +55,7 @@ public class DeckStoreTest extends TestCase {
 	}
 
 	public void testName() {
-		assertEquals("Decks/aaa", this.store.getName());
+		assertEquals("aaa", this.store.getName());
 	}
 
 	private MagicCard createDCard() {
