@@ -20,6 +20,7 @@ FilterTest.class, //
 		CreateDeck.class, //
 		RenameDeck.class, //
 		GroupByCost.class, //
+		OverwriteDeckCheck.class,
 })
 public class SwtBotMagicTests {
 	{
