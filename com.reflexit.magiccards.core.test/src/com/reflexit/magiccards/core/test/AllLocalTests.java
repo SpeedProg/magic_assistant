@@ -29,6 +29,7 @@ import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
 import com.reflexit.magiccards.core.model.MagicCardFilterTest;
 import com.reflexit.magiccards.core.model.MagicCardListTest;
 import com.reflexit.magiccards.core.model.MagicCardTest;
+import com.reflexit.magiccards.core.model.PlayingDeckTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
 import com.reflexit.magiccards.core.model.nav.CardOrganizerTest;
@@ -38,7 +39,6 @@ import com.reflexit.magiccards.core.model.storage.CollectionStoreTest;
 import com.reflexit.magiccards.core.model.storage.DbMultiFileCardStoreTest;
 import com.reflexit.magiccards.core.model.storage.DeckStoreTest;
 import com.reflexit.magiccards.core.model.storage.MultiFileCollectionStoreTest;
-import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtilsTest;
 import com.reflexit.magiccards.core.model.utils.SearchStringTokenizerTest;
 import com.reflexit.magiccards.core.xml.MagicXmlHandlerTest;
@@ -77,7 +77,7 @@ public class AllLocalTests {
 		suite.addTestSuite(LegalityMapTest.class);
 		suite.addTestSuite(AbilitiesTest.class);
 		suite.addTest(new JUnit4TestAdapter(MagicCardListTest.class));
-		suite.addTest(new JUnit4TestAdapter(PlayingDeck.class));
+		suite.addTest(new JUnit4TestAdapter(PlayingDeckTest.class));
 		// editions
 		suite.addTestSuite(EditionsTest.class);
 		// Perf
