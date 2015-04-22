@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -12,7 +14,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import com.reflexit.magiccards.db.DbActivator;
 
@@ -53,6 +61,174 @@ public class FileUtils {
 		} finally {
 			ins.close();
 		}
+	}
+
+	/**
+	 * Create a ZIP file including specified source and its content in case of a
+	 * directory. Files in {@code exclude} will not be include in the resulting
+	 * ZIP file. If a directory is excluded all it children will excluded also.
+	 * Empty directories will be add.
+	 * 
+	 * @param src
+	 *            Source can be a directory or a single file. Directories
+	 *            includes all it content.
+	 * @param dest
+	 *            The resulting ZIP file.
+	 * @param exclude
+	 *            Files or directories that should not be added to ZIP file. Can
+	 *            be null, if nothing to exclude.
+	 * @throws IOException
+	 */
+	public static void zip(File src, File dest, List<File> exclude) throws IOException {
+		final int buffer = 2048;
+
+		// make sure destination ZIP file will not be added to itself.
+		if (exclude == null) {
+			exclude = new ArrayList<File>();
+		}
+		exclude.add(dest);
+
+		List<File> zipFiles = new ArrayList<File>();
+		if (src.isDirectory()) {
+			zipFiles = listFiles(src);
+		} else {
+			zipFiles.add(src);
+		}
+
+		if (!zipFiles.isEmpty()) {
+			FileOutputStream destZip = new FileOutputStream(dest);
+			ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(destZip));
+			BufferedInputStream fileIn = null;
+			byte data[] = new byte[buffer];
+			try {
+				for (File f : zipFiles) {
+
+					// check excludes
+					if (exclude != null && !exclude.isEmpty()) {
+						boolean skip = false;
+						for (File ex : exclude) {
+							if (f.equals(ex)) {
+								skip = true;
+								break;
+							}
+							if (ex.isDirectory() && f.getAbsolutePath().startsWith(ex.getAbsolutePath())) {
+								skip = true;
+								break;
+							}
+						}
+						if (skip) {
+							continue;
+						}
+					}
+
+					if (f.isDirectory()) {
+						// add empty directories
+						if(src.equals(f)){
+							continue;
+						}
+						String entry = f.getAbsolutePath().substring(src.getAbsolutePath().length() + 1);
+						ZipEntry zEntry = new ZipEntry(entry + "/");
+						zipOut.putNextEntry(zEntry);
+						zipOut.closeEntry();
+					} else if (f.isFile()) {
+						// add all file
+						String entry = null;
+						if (src.isFile()) {
+							entry = src.getName();
+						} else {
+							entry = f.getAbsolutePath().substring(src.getAbsolutePath().length() + 1);
+						}
+						FileInputStream fis = new FileInputStream(f);
+						fileIn = new BufferedInputStream(fis, buffer);
+						ZipEntry zEntry = new ZipEntry(entry);
+						zipOut.putNextEntry(zEntry);
+						int count;
+						while ((count = fileIn.read(data, 0, buffer)) != -1) {
+							zipOut.write(data, 0, count);
+						}
+						fileIn.close();
+					}
+				}
+				zipOut.close();
+			} finally {
+				if (fileIn != null) {
+					fileIn.close();
+				}
+				if (zipOut != null) {
+					zipOut.close();
+				}
+			}
+		}
+	}
+
+	public static void unzip(File src, File dest) throws IOException {
+		final int BUFFER = 2048;
+		if(dest.isFile()){
+			throw new IOException("Not a valid target to extract to "+dest.getAbsolutePath());
+		}
+		if(dest.isDirectory() && !dest.exists()){
+			if(!dest.mkdirs()){
+				throw new IOException("Could not create directory "+dest.getAbsolutePath());
+			}
+		}
+		BufferedOutputStream destOut = null;
+		try {
+			BufferedInputStream is = null;
+			ZipEntry entry;
+			ZipFile zipfile = new ZipFile(src);
+			Enumeration<?> e = zipfile.entries();
+			while (e.hasMoreElements()) {
+				entry = (ZipEntry) e.nextElement();
+				File destFile = new File(dest.getAbsolutePath()+File.separatorChar+entry.getName());
+				if(!entry.isDirectory()){
+					if(!destFile.getParentFile().exists()){
+						destFile.getParentFile().mkdirs();
+					}
+					is = new BufferedInputStream(zipfile.getInputStream(entry));
+					int count;
+					byte data[] = new byte[BUFFER];
+					FileOutputStream fos = new FileOutputStream(destFile);
+					destOut = new BufferedOutputStream(fos, BUFFER);
+					while ((count = is.read(data, 0, BUFFER)) != -1) {
+						destOut.write(data, 0, count);
+					}
+					destOut.flush();
+					destOut.close();
+					is.close();
+				}else{
+					destFile.mkdirs();
+				}
+			}
+			zipfile.close();
+		}finally{
+			if (destOut != null) {
+				destOut.close();
+			}
+		}
+	}
+
+	/**
+	 * Get a list of all files included in specified file if it is a directory,
+	 * if it is a file only that file will be returned.
+	 * 
+	 * @param file
+	 * @return If file is a directory, file and all childs will be returned, if
+	 *         it is a file, only that file is returned.
+	 */
+	private static List<File> listFiles(File file) {
+		List<File> result = new ArrayList<File>();
+		File[] files = file.listFiles();
+		if (files != null && files.length > 0) {
+			for (File f : files) {
+				if (f.isDirectory()) {
+					result.addAll(listFiles(f));
+				} else {
+					result.add(f);
+				}
+			}
+		}
+		result.add(file);
+		return result;
 	}
 
 	public static void copyTree(File src, File dest) throws IOException {

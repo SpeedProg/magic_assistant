@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
 
 import com.reflexit.magiccards.core.DataManagerTest;
+import com.reflexit.magiccards.core.FileUtilsTest;
 import com.reflexit.magiccards.core.exports.ExportImportSuite;
 import com.reflexit.magiccards.core.model.AbilitiesTest;
 import com.reflexit.magiccards.core.model.CardGroupTest;
@@ -66,6 +67,7 @@ public class AllLocalTests {
 		suite.addTestSuite(MagicCardFilterTest.class);
 		suite.addTestSuite(MagicXmlHandlerTest.class);
 		suite.addTestSuite(DataManagerTest.class);
+		suite.addTestSuite(FileUtilsTest.class);
 		// suite.addTestSuite(CardTextNL1Test.class); TODO
 		suite.addTestSuite(CardElementTest.class);
 		suite.addTestSuite(CardGroupTest.class);

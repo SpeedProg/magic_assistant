@@ -2,7 +2,9 @@ package com.reflexit.magiccards.ui.commands;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,25 +32,24 @@ public class BackupHandler extends AbstractHandler {
 		final File ws = FileUtils.getWorkspace();
 		SimpleDateFormat format = new SimpleDateFormat("YYYY_MMdd_HHmmss");
 		File backupDir = FileUtils.getBackupDir();
-		final File backup = new File(backupDir, format.format(new Date()));
+		final File backup = new File(backupDir, format.format(new Date())+".zip");
 		Job job = new Job("Backing up...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				File[] listFiles = ws.listFiles();
-				for (int i = 0; i < listFiles.length; i++) {
-					File file = listFiles[i];
-					if (file.getName().startsWith(".")
-							|| file.getName().equals(backup.getParentFile().getName()))
-						continue;
-					try {
-						FileUtils.copyTree(file, new File(backup, file.getName()));
-					} catch (Throwable e) {
-						Activator
-								.getDefault()
-								.getLog()
-								.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 1,
-										"Failed to save backup " + backup, e));
+				List<File> exclude = new ArrayList<File>();
+				exclude.add(FileUtils.getBackupDir());
+				exclude.add(FileUtils.getWorkspaceFile(".metadata"));
+				try {
+					FileUtils.zip(ws, backup, exclude);
+				} catch (Throwable e) {
+					if(backup.exists()){
+						backup.delete();
 					}
+					Activator
+							.getDefault()
+							.getLog()
+							.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 1,
+									"Failed to save backup " + backup, e));
 				}
 				return Status.OK_STATUS;
 			}
