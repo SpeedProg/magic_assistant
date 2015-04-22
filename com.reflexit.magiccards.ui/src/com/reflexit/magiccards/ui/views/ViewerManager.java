@@ -6,17 +6,11 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextActivation;
-import org.eclipse.ui.contexts.IContextService;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
@@ -26,6 +20,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.widgets.ContextFocusListener;
 
 public abstract class ViewerManager implements IMagicColumnViewer {
 	private ColumnCollection collumns;
@@ -41,7 +36,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
@@ -50,7 +45,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#dispose()
 	 */
 	public void dispose() {
@@ -76,26 +71,12 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	@Override
 	public void hookContext(String id) {
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		final IContextService contextService = (IContextService) workbench.getService(IContextService.class);
-		final IContextActivation[] contextActivationRef = new IContextActivation[1];
-		getViewer().getControl().addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				contextService.deactivateContext(contextActivationRef[0]);
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				contextActivationRef[0] = contextService
-						.activateContext("com.reflexit.magiccards.ui.context");
-			}
-		});
+		getViewer().getControl().addFocusListener(new ContextFocusListener(id));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getControl()
 	 */
 	@Override
@@ -105,7 +86,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider ()
 	 */
 	@Override
@@ -115,7 +96,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getShell()
 	 */
 	public Shell getShell() {
@@ -124,7 +105,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getViewer()
 	 */
 	@Override
@@ -132,7 +113,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
 	 * .eclipse.jface.action.MenuManager)
 	 */
@@ -144,7 +125,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookDoubleClickListener
 	 * (org.eclipse.jface.viewers.IDoubleClickListener)
 	 */
@@ -155,7 +136,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
 	 * .reflexit.magiccards.ui.views.IColumnSortAction)
 	 */
@@ -175,7 +156,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#flip(boolean)
 	 */
 	@Override
@@ -206,7 +187,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
 	 */
 	@Override

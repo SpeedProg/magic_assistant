@@ -75,6 +75,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -588,7 +589,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	protected void createTableControl(Composite parent) {
 		Control control = this.manager.createContents(parent);
 		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
-		this.manager.hookContext("com.reflexit.magiccards.ui.context");
+		this.manager.hookContext(PerspectiveFactoryMagic.TABLES_CONTEXT);
 	}
 
 	protected Composite createTopBar(Composite composite) {

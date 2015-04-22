@@ -27,6 +27,8 @@ public class ContextFocusListener implements FocusListener {
 	public void focusLost(FocusEvent e) {
 		IContextService contextService = (IContextService) (PlatformUI.getWorkbench()
 				.getService(IContextService.class));
-		contextService.deactivateContext(activation);
+		if (activation != null) {
+			contextService.deactivateContext(activation);
+		}
 	}
 }
