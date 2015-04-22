@@ -166,4 +166,13 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals("Homicidal Brute", card.getName());
 		assertEquals("Red", card.get(MagicCardField.COLOR_INDICATOR));
 	}
+
+	public void testColorIndicatorBG() throws IOException {
+		MagicCard card = load(245251, "Garruk, the Veil-Cursed");
+		assertEquals("181b", card.getCollNumber());
+		assertEquals("Black, Green", card.get(MagicCardField.COLOR_INDICATOR));
+		// String icost = Colors.getInstance().getColorIdentityAsCost(card);
+		Object object = card.get(MagicCardField.COLOR_IDENTITY);
+		assertEquals("{B}{G}", object);
+	}
 }

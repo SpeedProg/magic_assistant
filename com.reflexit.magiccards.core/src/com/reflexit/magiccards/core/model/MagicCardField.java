@@ -861,9 +861,7 @@ public enum MagicCardField implements ICardField {
 		if (field == null || field.length() == 0)
 			return null;
 		try {
-			MagicCardField f = valueOf(field);
-			if (f != null)
-				return f;
+			return valueOf(field);
 		} catch (Exception e) {
 			// ignore
 		}

@@ -166,13 +166,24 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public String getEncodeByName(String r) {
-		if (r == null) return "";
-		ManaColor manaColor = this.namemap.get(r);
-		if (manaColor == null) {
+		try {
+			if (r == null || r.charAt(0) == '*')
+				return "";
+			if (r.contains(",")) {
+				String colors[] = r.split(", *");
+				String res = "";
+				for (String ecolor : colors) {
+					if (res.length() > 0)
+						res += "/";
+					res += namemap.get(ecolor).tag();
+				}
+				return res;
+			}
+			return this.namemap.get(r).tag();
+		} catch (NullPointerException e) {
 			MagicLogger.log("Unknown color: " + r);
 			return "";
 		}
-		return manaColor.tag();
 	}
 
 	public static String getColorType(String cost) {

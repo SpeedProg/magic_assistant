@@ -1168,7 +1168,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			else
 				display.asyncExec(() -> updateViewer());
 		} catch (final Exception e) {
-			display.asyncExec(() -> MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage()));
+			//display.asyncExec(() -> MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage()));
 			MagicUIActivator.log(e);
 			return Status.CANCEL_STATUS;
 		} finally {
