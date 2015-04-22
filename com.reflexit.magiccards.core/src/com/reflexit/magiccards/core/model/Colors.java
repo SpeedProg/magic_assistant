@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.MagicLogger;
+
 public class Colors implements ISearchableProperty {
 	static Colors instance = new Colors();
 	private LinkedHashMap<String, ManaColor> idmap;
@@ -165,7 +167,12 @@ public class Colors implements ISearchableProperty {
 
 	public String getEncodeByName(String r) {
 		if (r == null) return "";
-		return this.namemap.get(r).tag();
+		ManaColor manaColor = this.namemap.get(r);
+		if (manaColor == null) {
+			MagicLogger.log("Unknown color: " + r);
+			return "";
+		}
+		return manaColor.tag();
 	}
 
 	public static String getColorType(String cost) {
