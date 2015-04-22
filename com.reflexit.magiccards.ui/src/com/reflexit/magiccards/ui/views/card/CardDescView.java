@@ -168,6 +168,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			res.add(MagicCardField.NAME);
 			res.add(MagicCardField.FLIPID);
 			res.add(MagicCardField.PART);
+			res.add(MagicCardField.COLOR_INDICATOR);
 			return res;
 		}
 
