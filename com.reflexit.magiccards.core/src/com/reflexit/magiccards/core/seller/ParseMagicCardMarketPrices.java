@@ -34,13 +34,11 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 			.compile("<option[ ]*value=\\\"(\\d*?)\\\">(.*?)</option>");
 	private static final Pattern paginationPattern = Pattern
 			.compile("(\\d*)?\" onmouseover=\"showMsgBox\\('Last page'\\)\"");
-
 	/* Mapping between MCM and MA set name.
 	 * Key: MCN set name
 	 * Value: MA set name
 	 */
 	private static final Map<String, String> setNameMapping = new HashMap<String, String>();
-	
 	private static final List<String> harperPrismPromosSingleCards = new ArrayList<String>();
 	private static final List<String> setName1ToNMappingDDAnthology = new ArrayList<String>();
 	static {
@@ -52,8 +50,8 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		setNameMapping.put("Commander", "Magic: The Gathering-Commander");
 		setNameMapping.put("Commander 2013", "Commander 2013 Edition");
 		setNameMapping.put("Conspiracy", "Magic: The Gathering\u2014Conspiracy");
-		setNameMapping.put("Duel Decks: Elspeth vs. Kiora", "Duel Decks: Kiora vs. Elspeth");
-		setNameMapping.put("Duel Decks: Phyrexia vs. The Coalition", "Duel Decks: Phyrexia vs. the Coalition");
+		setNameMapping
+				.put("Duel Decks: Phyrexia vs. The Coalition", "Duel Decks: Phyrexia vs. the Coalition");
 		setNameMapping.put("From the Vault: Annihilation", "From the Vault: Annihilation (2014)");
 		setNameMapping.put("Magic 2015", "Magic 2015 Core Set");
 		setNameMapping.put("Magic 2014", "Magic 2014 Core Set");
@@ -62,9 +60,9 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		setNameMapping.put("Ugin's Fate Promos", "Ugin's Fate promos");
 		setNameMapping.put("Unlimited", "Unlimited Edition");
 		setNameMapping.put("Planechase 2012", "Planechase 2012 Edition");
-		setNameMapping.put("Premium Deck Series: Fire & Lightning", "Premium Deck Series: Fire and Lightning");
+		setNameMapping
+				.put("Premium Deck Series: Fire & Lightning", "Premium Deck Series: Fire and Lightning");
 		setNameMapping.put("Prerelease Promos", "Promo set for Gatherer"); // split also into online set Harper Prism Promos
-		
 		// Seems to be unknown to MKM because they are from Magic Online Game only
 		//setNameMapping.put("", "Masters Edition");
 		//setNameMapping.put("", "Masters Edition III");
@@ -72,25 +70,21 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		//setNameMapping.put("", "Masters Edition IV");
 		//setNameMapping.put("", "Vintage Masters");
 		//setNameMapping.put("", "Tempest Remastered");
-		
 		// MApping between one online set name and multi offline names (relation 1:n)
 		setName1ToNMappingDDAnthology.add("Duel Decks Anthology, Divine vs. Demonic");
 		setName1ToNMappingDDAnthology.add("Duel Decks Anthology, Elves vs. Dragons");
 		setName1ToNMappingDDAnthology.add("Duel Decks Anthology, Elves vs. Goblins");
 		setName1ToNMappingDDAnthology.add("Duel Decks Anthology, Garruk vs. Liliana");
 		setName1ToNMappingDDAnthology.add("Duel Decks Anthology, Jace vs. Chandra");
-		
-		// Single cards that are in "Promo set for Gatherer" (offline) and must be put into 
+		// Single cards that are in "Promo set for Gatherer" (offline) and must be put into
 		// "Harper Prism Promos" (online)
 		harperPrismPromosSingleCards.add("Arena");
 		harperPrismPromosSingleCards.add("Giant Badger");
 		harperPrismPromosSingleCards.add("Mana Crypt");
 		harperPrismPromosSingleCards.add("Sewers of Estark");
 		harperPrismPromosSingleCards.add("Windseeker Centaur");
-		
 	}
 	private static final String onlineSetNameDDAnthology = "Duel Decks: Anthology";
-	
 	private static ParseMagicCardMarketPrices instance = new ParseMagicCardMarketPrices();
 
 	public static ParseMagicCardMarketPrices getInstance() {
@@ -113,32 +107,30 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 				offlineSets.get(magicCard.getSet()).add(magicCard);
 			}
 		}
-		
 		// check relation 1:n and set the offline set name to the correct online set name
-		for(String set : setName1ToNMappingDDAnthology){
-			if(offlineSets.containsKey(set)){
+		for (String set : setName1ToNMappingDDAnthology) {
+			if (offlineSets.containsKey(set)) {
 				List<IMagicCard> l = offlineSets.remove(set);
 				List<IMagicCard> addL = offlineSets.get(onlineSetNameDDAnthology);
-				if(addL == null){
+				if (addL == null) {
 					offlineSets.put(onlineSetNameDDAnthology, l);
-				}else{
+				} else {
 					addL.addAll(l);
 				}
 			}
 		}
-		
 		// Single promo card mapping
 		List<IMagicCard> promos = offlineSets.get("Promo set for Gatherer");
-		if(promos != null){
-			for(IMagicCard card : promos){
-				for(String cardname : harperPrismPromosSingleCards){
-					if(cardname.equals(card.getEnglishName())){
+		if (promos != null) {
+			for (IMagicCard card : promos) {
+				for (String cardname : harperPrismPromosSingleCards) {
+					if (cardname.equals(card.getEnglishName())) {
 						List<IMagicCard> addL = offlineSets.get("Harper Prism Promos");
-						if(addL == null){
+						if (addL == null) {
 							List<IMagicCard> l = new ArrayList<IMagicCard>();
 							l.add(card);
 							offlineSets.put("Harper Prism Promos", l);
-						}else{
+						} else {
 							addL.add(card);
 						}
 					}
@@ -146,24 +138,22 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 			}
 			// remove "Harper Prism Promos" card from "Promo set for Gatherer" list
 			List<IMagicCard> l = offlineSets.get("Harper Prism Promos");
-			if(l != null && !l.isEmpty()){
-				for(IMagicCard card : l){
+			if (l != null && !l.isEmpty()) {
+				for (IMagicCard card : l) {
 					promos.remove(card);
 				}
 			}
 		}
-		
 		// Set splits offline into two parts online it is just one
-		if(offlineSets.containsKey("Time Spiral \"Timeshifted\"")){
+		if (offlineSets.containsKey("Time Spiral \"Timeshifted\"")) {
 			List<IMagicCard> l = offlineSets.remove("Time Spiral \"Timeshifted\"");
 			List<IMagicCard> addL = offlineSets.get("Time Spiral");
-			if(addL == null){
+			if (addL == null) {
 				offlineSets.put("Time Spiral", l);
-			}else{
+			} else {
 				addL.addAll(l);
 			}
 		}
-		
 		monitor.beginTask("Loading " + getName() + " prices...", offlineSets.size() + 10);
 		Map<String, String> onlineSets = getOnlineSets();
 		Iterator<String> offlineSetNames = offlineSets.keySet().iterator();
@@ -290,10 +280,10 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 			monitor.subTask("Loading set " + offlineSetName);
 			if (mappingSetID != null) {
 				try {
-					// Try to make single card fetch as faster as a bulk fetch for a single card 
-					// Value 10 is a guessed pagination average. If size is smaller a single card 
+					// Try to make single card fetch as faster as a bulk fetch for a single card
+					// Value 10 is a guessed pagination average. If size is smaller a single card
 					// fetch will be done.
-					if (offlineSets.get(offlineSetName).size() <= 10 ){
+					if (offlineSets.get(offlineSetName).size() <= 10) {
 						List<IMagicCard> offlineCards = offlineSets.get(offlineSetName);
 						offlineCards.size();
 						String cardName;
@@ -303,23 +293,28 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 							if (prices.containsKey(cardName)) {
 								Float price = prices.get(cardName);
 								setDbPrice(magicCard, price, getCurrency());
-							}else if (prices.containsKey(changeNameHTMLToDB(magicCard.getEnglishName(), magicCard.getFlipId() != 0))){
-								Float price = prices.get(changeNameHTMLToDB(magicCard.getEnglishName(), magicCard.getFlipId() != 0));
+							} else if (prices.containsKey(changeNameHTMLToDB(magicCard.getEnglishName(),
+									magicCard.getFlipId() != 0))) {
+								Float price = prices.get(changeNameHTMLToDB(magicCard.getEnglishName(),
+										magicCard.getFlipId() != 0));
 								setDbPrice(magicCard, price, getCurrency());
 							}
 						}
-					}else{
+					} else {
 						// bulk fetch for all online cards in a set
 						parse(mappingSetID);
 						if (!prices.isEmpty()) {
 							List<IMagicCard> offlineCards = offlineSets.get(offlineSetName);
 							for (IMagicCard magicCard : offlineCards) {
-								String cardName = changeNameHTMLToDB(magicCard.getName(), magicCard.getFlipId() != 0);
+								String cardName = changeNameHTMLToDB(magicCard.getName(),
+										magicCard.getFlipId() != 0);
 								if (prices.containsKey(cardName)) {
 									Float price = prices.get(cardName);
 									setDbPrice(magicCard, price, getCurrency());
-								}else if (prices.containsKey(changeNameHTMLToDB(magicCard.getEnglishName(), magicCard.getFlipId() != 0))) {
-									Float price = prices.get(changeNameHTMLToDB(magicCard.getEnglishName(), magicCard.getFlipId() != 0));
+								} else if (prices.containsKey(changeNameHTMLToDB(magicCard.getEnglishName(),
+										magicCard.getFlipId() != 0))) {
+									Float price = prices.get(changeNameHTMLToDB(magicCard.getEnglishName(),
+											magicCard.getFlipId() != 0));
 									setDbPrice(magicCard, price, getCurrency());
 								}
 							}
@@ -337,36 +332,39 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		public String toString() {
 			return offlineSetName;
 		}
-		
+
 		/**
 		 * Change card name from HTML MCM name to MA DB name.
-		 * @param cardName Card name
-		 * @param isFlipCard Is this card a Flip Card. If so, there is some more to change.
+		 * 
+		 * @param cardName
+		 *            Card name
+		 * @param isFlipCard
+		 *            Is this card a Flip Card. If so, there is some more to change.
 		 * @return Return card name in MA format
 		 */
-		private String changeNameHTMLToDB(String cardName, boolean isFlipCard){
+		private String changeNameHTMLToDB(String cardName, boolean isFlipCard) {
 			String result = cardName.replaceAll("\\+", " ");
-			
 			// I thought that magicCard.getFlipId() != 0 do work, but is only available on a small set. so check for // also
-			if(isFlipCard || result.contains("//")){
-				if(result.indexOf('(') > 0){
+			if (isFlipCard || result.contains("//")) {
+				if (result.indexOf('(') > 0) {
 					result = result.substring(0, result.lastIndexOf('(')).trim();
 				}
 			}
 			return result;
 		}
-		
+
 		/**
 		 * Change card name from MA DB name to HTML MCM name.
+		 * 
 		 * @param cardName
 		 * @param isFlipCard
 		 * @return
 		 */
-		private String changeNameDBToHTML(String cardName, boolean isFlipCard){
+		private String changeNameDBToHTML(String cardName, boolean isFlipCard) {
 			String result = cardName.replaceAll(" ", "+");
-			if(isFlipCard || result.contains("//")){
+			if (isFlipCard || result.contains("//")) {
 				result = result.replaceAll("//", "%2F%2F");
-				if(result.indexOf('(') > 0){
+				if (result.indexOf('(') > 0) {
 					result = result.substring(0, result.lastIndexOf('(')).trim();
 				}
 			}
@@ -385,11 +383,14 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 			String url = baseURL.toString().replace("SET", setId);
 			getOnlineSetCardPrices(url, 0, -1);
 		}
-		
+
 		/**
 		 * Parse a single card from specified set
-		 * @param setId set id (online number)
-		 * @param card Card name
+		 * 
+		 * @param setId
+		 *            set id (online number)
+		 * @param card
+		 *            Card name
 		 * @throws IOException
 		 */
 		private void parseSingleCard(String setId, IMagicCard card) throws IOException {
