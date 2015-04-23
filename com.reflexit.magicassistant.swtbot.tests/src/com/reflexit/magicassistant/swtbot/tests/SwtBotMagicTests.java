@@ -22,5 +22,7 @@ FilterTest.class, //
 		GroupByCost.class, //
 })
 public class SwtBotMagicTests {
-	// nothing
+	{
+		System.setProperty("junit.testing", "true");
+	}
 }
