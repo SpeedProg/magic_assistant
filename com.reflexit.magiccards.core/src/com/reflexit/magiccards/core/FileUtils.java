@@ -25,7 +25,7 @@ import java.util.zip.ZipOutputStream;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class FileUtils {
-	public static final int DEFAULT_BUFFER_SIZE = 30 * 1024;
+	public static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
 	public static final String MAGICCARDS = "magiccards";
 	public static final String BACKUP = ".backup";
 	public static final String UTF8 = "UTF-8";
@@ -68,7 +68,7 @@ public class FileUtils {
 	 * directory. Files in {@code exclude} will not be include in the resulting
 	 * ZIP file. If a directory is excluded all it children will excluded also.
 	 * Empty directories will be add.
-	 * 
+	 *
 	 * @param src
 	 *            Source can be a directory or a single file. Directories
 	 *            includes all it content.
@@ -80,31 +80,25 @@ public class FileUtils {
 	 * @throws IOException
 	 */
 	public static void zip(File src, File dest, List<File> exclude) throws IOException {
-		final int buffer = 2048;
-
+		if (dest.isDirectory())
+			throw new IOException(dest + ": Is a directory");
 		// make sure destination ZIP file will not be added to itself.
 		if (exclude == null) {
 			exclude = new ArrayList<File>();
 		}
 		exclude.add(dest);
-
-		List<File> zipFiles = new ArrayList<File>();
+		List<File> filesToZip = new ArrayList<File>();
 		if (src.isDirectory()) {
-			zipFiles = listFiles(src);
+			filesToZip = listFiles(src);
 		} else {
-			zipFiles.add(src);
+			filesToZip.add(src);
 		}
-
-		if (!zipFiles.isEmpty()) {
-			FileOutputStream destZip = new FileOutputStream(dest);
-			ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(destZip));
-			BufferedInputStream fileIn = null;
-			byte data[] = new byte[buffer];
-			try {
-				for (File f : zipFiles) {
-
+		if (!filesToZip.isEmpty()) {
+			try (FileOutputStream destZip = new FileOutputStream(dest);
+					ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(destZip))) {
+				for (File f : filesToZip) {
 					// check excludes
-					if (exclude != null && !exclude.isEmpty()) {
+					if (!exclude.isEmpty()) {
 						boolean skip = false;
 						for (File ex : exclude) {
 							if (f.equals(ex)) {
@@ -120,10 +114,9 @@ public class FileUtils {
 							continue;
 						}
 					}
-
 					if (f.isDirectory()) {
 						// add empty directories
-						if(src.equals(f)){
+						if (src.equals(f)) {
 							continue;
 						}
 						String entry = f.getAbsolutePath().substring(src.getAbsolutePath().length() + 1);
@@ -138,71 +131,45 @@ public class FileUtils {
 						} else {
 							entry = f.getAbsolutePath().substring(src.getAbsolutePath().length() + 1);
 						}
-						FileInputStream fis = new FileInputStream(f);
-						fileIn = new BufferedInputStream(fis, buffer);
-						ZipEntry zEntry = new ZipEntry(entry);
-						zipOut.putNextEntry(zEntry);
-						int count;
-						while ((count = fileIn.read(data, 0, buffer)) != -1) {
-							zipOut.write(data, 0, count);
+						try (BufferedInputStream fileIn = new BufferedInputStream(new FileInputStream(f),
+								DEFAULT_BUFFER_SIZE)) {
+							zipOut.putNextEntry(new ZipEntry(entry));
+							copyStream(fileIn, zipOut);
+							zipOut.closeEntry();
 						}
-						fileIn.close();
 					}
-				}
-				zipOut.close();
-			} finally {
-				if (fileIn != null) {
-					fileIn.close();
-				}
-				if (zipOut != null) {
-					zipOut.close();
 				}
 			}
 		}
 	}
 
 	public static void unzip(File src, File dest) throws IOException {
-		final int BUFFER = 2048;
-		if(dest.isFile()){
-			throw new IOException("Not a valid target to extract to "+dest.getAbsolutePath());
+		if (dest.isFile()) {
+			throw new IOException("Not a valid target to extract to " + dest.getAbsolutePath());
 		}
-		if(dest.isDirectory() && !dest.exists()){
-			if(!dest.mkdirs()){
-				throw new IOException("Could not create directory "+dest.getAbsolutePath());
+		if (!dest.exists()) {
+			if (!dest.mkdirs()) {
+				throw new IOException("Could not create directory " + dest.getAbsolutePath());
 			}
 		}
-		BufferedOutputStream destOut = null;
-		try {
-			BufferedInputStream is = null;
-			ZipEntry entry;
-			ZipFile zipfile = new ZipFile(src);
+		try (ZipFile zipfile = new ZipFile(src)) {
 			Enumeration<?> e = zipfile.entries();
 			while (e.hasMoreElements()) {
-				entry = (ZipEntry) e.nextElement();
-				File destFile = new File(dest.getAbsolutePath()+File.separatorChar+entry.getName());
-				if(!entry.isDirectory()){
-					if(!destFile.getParentFile().exists()){
+				ZipEntry entry = (ZipEntry) e.nextElement();
+				File destFile = new File(dest.getAbsolutePath(), entry.getName());
+				if (!entry.isDirectory()) {
+					if (!destFile.getParentFile().exists()) {
 						destFile.getParentFile().mkdirs();
 					}
-					is = new BufferedInputStream(zipfile.getInputStream(entry));
-					int count;
-					byte data[] = new byte[BUFFER];
-					FileOutputStream fos = new FileOutputStream(destFile);
-					destOut = new BufferedOutputStream(fos, BUFFER);
-					while ((count = is.read(data, 0, BUFFER)) != -1) {
-						destOut.write(data, 0, count);
+					try (
+							BufferedOutputStream destOut = new BufferedOutputStream(new FileOutputStream(
+									destFile), DEFAULT_BUFFER_SIZE);
+							BufferedInputStream is = new BufferedInputStream(zipfile.getInputStream(entry))) {
+						copyStream(is, destOut);
 					}
-					destOut.flush();
-					destOut.close();
-					is.close();
-				}else{
+				} else {
 					destFile.mkdirs();
 				}
-			}
-			zipfile.close();
-		}finally{
-			if (destOut != null) {
-				destOut.close();
 			}
 		}
 	}
@@ -210,7 +177,7 @@ public class FileUtils {
 	/**
 	 * Get a list of all files included in specified file if it is a directory,
 	 * if it is a file only that file will be returned.
-	 * 
+	 *
 	 * @param file
 	 * @return If file is a directory, file and all childs will be returned, if
 	 *         it is a file, only that file is returned.
@@ -298,15 +265,8 @@ public class FileUtils {
 	}
 
 	public static String readFileAsString(File file) throws IOException {
-		BufferedReader st = openBuferedReader(file);
-		try {
+		try (BufferedReader st = openBuferedReader(file)) {
 			return readFileAsString(st);
-		} finally {
-			try {
-				st.close();
-			} catch (Exception e) {
-				// ignore
-			}
 		}
 	}
 
