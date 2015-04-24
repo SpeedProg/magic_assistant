@@ -18,7 +18,9 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
+ * Do not use class in the core code, I want to keep it eclipse free
  */
+@Deprecated
 public class Activator extends Plugin {
 	// The plug-in ID
 	static final String PLUGIN_ID = DataManager.ID;
@@ -36,7 +38,7 @@ public class Activator extends Plugin {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -52,7 +54,7 @@ public class Activator extends Plugin {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -63,7 +65,7 @@ public class Activator extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 * 
+	 *
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
