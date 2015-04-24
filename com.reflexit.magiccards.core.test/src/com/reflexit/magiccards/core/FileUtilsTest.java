@@ -157,7 +157,8 @@ public class FileUtilsTest extends TestCase {
 			// good
 		}
 		assertTrue(tmpFileZip.exists());
-		assertTrue(tmpFileZip.length() > 0);
+		assertTrue(tmpFileZip.isDirectory());
+		assertTrue(tmpFileZip.list().length == 0);
 		tmpFileZip.delete();
 		tmpFile.delete();
 	}
