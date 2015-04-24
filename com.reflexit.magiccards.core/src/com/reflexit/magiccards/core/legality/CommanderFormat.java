@@ -20,7 +20,8 @@ public class CommanderFormat extends Format {
 		int min = getMainDeckCount();
 		if (count == min)
 			return null;
-		return "Deck card count is " + count + " expected to be exactly " + min;
+		return "Deck card count is " + count + " expected to be exactly " + min
+				+ ". Commander should be in sideboard.";
 	}
 
 	@Override
