@@ -48,6 +48,14 @@ http://www.eclipse.org/legal/epl-v10.html
          id="com.reflexit.magicassistant.p2.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.emf.ecore"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.common"
+         version="0.0.0"/>
+
    <plugin
          id="com.reflexit.magiccards_rcp"
          download-size="0"
@@ -264,5 +272,12 @@ http://www.eclipse.org/legal/epl-v10.html
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.ui.browser"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
