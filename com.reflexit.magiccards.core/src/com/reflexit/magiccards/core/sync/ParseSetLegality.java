@@ -39,8 +39,10 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 		String sets[] = value.split("\n");
 		Editions eds = Editions.getInstance();
 		for (int k = 0; k < sets.length; k++) {
+			// 	<li><em>Dragons of Tarkir</em> (effective March 27, 2015)</li>
 			String string = sets[k].trim();
 			string = string.replaceAll("  ", " ");
+			string = string.replaceAll(" *\\(.*", "");
 			string = HtmlTableImportDelegate.purifyItem(string);
 			// System.err.println("Looking for " + string);
 			if (string.length() > 0) {
@@ -95,7 +97,7 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ParseSetLegality parser = new ParseSetLegality("Modern");
+		ParseSetLegality parser = new ParseSetLegality("Standard");
 		parser.load(ICoreProgressMonitor.NONE);
 	}
 }
