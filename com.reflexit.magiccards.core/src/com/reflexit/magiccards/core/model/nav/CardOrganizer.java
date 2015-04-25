@@ -188,7 +188,7 @@ public class CardOrganizer extends CardElement {
 				if (d.getPath().getName().equals(id)) // old Id is file base name with ext
 					return d;
 			} else if (o instanceof CardOrganizer) {
-				CardCollection d = ((CardOrganizer) o).findCardCollectionById(id);
+				CardCollection d = ((CardOrganizer) o).oldFindCardCollectionById(id);
 				if (d != null)
 					return d;
 			}

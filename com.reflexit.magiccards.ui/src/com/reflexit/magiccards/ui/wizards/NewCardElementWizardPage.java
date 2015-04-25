@@ -41,7 +41,7 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorContentProvider;
 
 /**
  * @author Alena
- * 
+ *
  */
 public abstract class NewCardElementWizardPage extends WizardPage {
 	private Text containerText;
@@ -197,6 +197,10 @@ public abstract class NewCardElementWizardPage extends WizardPage {
 		}
 		if (fileName.replace('\\', '/').indexOf('/', 1) > 0) {
 			updateStatus("Invalid name");
+			return;
+		}
+		if (fileName.contains(".")) {
+			updateStatus("Name cannot contain '.'");
 			return;
 		}
 		updateStatus(null);

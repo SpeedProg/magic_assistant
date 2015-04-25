@@ -22,7 +22,7 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 	/**
 	 * Constructor for SampleNewWizardPage.
-	 * 
+	 *
 	 * @param pageName
 	 */
 	public NewCardCollectionWizardPage(ISelection selection) {
@@ -48,7 +48,7 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.wizards.NewCardElementWizardPage#dialogChanged()
 	 */
 	@Override
@@ -64,7 +64,8 @@ public class NewCardCollectionWizardPage extends NewCardElementWizardPage {
 			return;
 		}
 		String name = getElementName();
-		if (root.findCardCollectionById(name + ".xml") != null) {
+		String id = parent.getPath().append(name).getId();
+		if (root.findCardCollectionById(id) != null) {
 			updateStatus("Collection or Deck with this name already exists");
 			return;
 		}
