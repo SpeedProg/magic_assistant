@@ -66,6 +66,7 @@ public abstract class NewCardElementWizard extends Wizard {
 	public NewCardElementWizard() {
 		super();
 		setNeedsProgressMonitor(true);
+		setWindowTitle("New");
 	}
 
 	/**

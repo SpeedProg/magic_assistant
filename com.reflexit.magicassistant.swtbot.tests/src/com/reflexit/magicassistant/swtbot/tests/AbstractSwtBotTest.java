@@ -6,16 +6,22 @@ import java.util.List;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
+import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
+import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public abstract class AbstractSwtBotTest {
 	protected static SWTWorkbenchBot bot;
@@ -31,11 +37,11 @@ public abstract class AbstractSwtBotTest {
 		mdbStore.setToDefault();
 		PrefixedPreferenceStore deckStore = (PrefixedPreferenceStore) PreferenceInitializer.getDeckStore();
 		deckStore.setToDefault();
-		try {
-			bot.resetWorkbench();
-		} catch (Exception e) {
-			// ignore
-		}
+		//		try {
+		//			bot.resetWorkbench();
+		//		} catch (Exception e) {
+		//			// ignore
+		//		}
 	}
 
 	public void clickViewToolBarItemByTooltip(String viewName, String tooltip) {
@@ -96,5 +102,36 @@ public abstract class AbstractSwtBotTest {
 				runnable.run();
 			}
 		});
+	}
+
+	public SWTBotView createDeck(String deckName) {
+		DataManager.getInstance().getLibraryCardStore();
+		// create a deck
+		bot.menu("File").menu("New...").menu("Deck").click();
+		SWTBotShell sshell = bot.shell("New");
+		sshell.activate();
+		sshell.bot().text().setText(deckName);
+		bot.button("Finish").click();
+		bot.waitUntil(Conditions.shellCloses(sshell), 1000);
+		SWTBotView deckView = bot.viewById(DeckView.ID);
+		return deckView;
+	}
+
+	public SWTBotTableItem getFirstRowInView(SWTBotView view) {
+		SWTBot dbbot = view.bot();
+		SWTBotTable table = dbbot.table();
+		SWTBotTableItem row = table.getTableItem(0);
+		return row;
+	}
+
+	public SWTBotTableItem selectFirstRowInView(SWTBotView view) {
+		view.setFocus();
+		SWTBot dbbot = view.bot();
+		SWTBotTable table = dbbot.table();
+		table.setFocus();
+		SWTBotTableItem row = table.getTableItem(0);
+		row.select();
+		row.setFocus();
+		return row;
 	}
 }
