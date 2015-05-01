@@ -39,80 +39,68 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IDbPriceStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.xml.DbMultiFileCardStore;
+import com.reflexit.magiccards.core.model.xml.XmlCardHolder;
 
 public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";
-	public static DataManager instance;
+	private static DataManager instance = new DataManager();
 	private ICardHandler handler;
 	private ModelRoot root;
 	private TIntObjectHashMap<IMagicCard> links = new TIntObjectHashMap<IMagicCard>();
 	private boolean owncopy;
 
-	protected DataManager() {
+	private DataManager() {
 		MagicLogger.debug("Data Manager instance " + this.hashCode());
-		instance = this;
-		try {
-			// String variant1 =
-			// "com.reflexit.magiccards.core.sql.handlers.CardHolder";
-			String variant2 = "com.reflexit.magiccards.core.model.xml.XmlCardHolder";
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName(variant2);
-			Object x = c.newInstance();
-			handler = (ICardHandler) x;
-		} catch (InstantiationException e) {
-			MagicLogger.log(e);
-		} catch (IllegalAccessException e) {
-			MagicLogger.log(e);
-		} catch (ClassNotFoundException e) {
-			MagicLogger.log(e);
-		}
+		handler = new XmlCardHolder();
 	}
 
-	public static synchronized DataManager getInstance() {
-		if (instance == null)
-			instance = new DataManager();
+	public static final DataManager getInstance() {
 		return instance;
 	}
 
-	public synchronized static ICardHandler getCardHandler() {
-		return getInstance().handler;
+	public static final ICardHandler getCardHandler() {
+		return instance.handler;
 	}
 
 	public ICardStore getLibraryCardStore() {
-		return getCardHandler().getLibraryCardStore();
+		return handler.getLibraryCardStore();
 	}
 
 	public IDbCardStore<IMagicCard> getMagicDBStore() {
-		return getCardHandler().getMagicDBStore();
+		return handler.getMagicDBStore();
 	}
 
 	public static IDbPriceStore getDBPriceStore() {
-		return getCardHandler().getDBPriceStore();
+		return instance.handler.getDBPriceStore();
 	}
 
-	public synchronized ModelRoot getModelRoot() {
-		if (root == null) {
-			root = ModelRoot.getInstance(FileUtils.getMagicCardsDir());
+	public ModelRoot getModelRoot() {
+		if (root != null) return root;
+		synchronized (this) {
+			if (root == null)
+				root = ModelRoot.getInstance(FileUtils.getMagicCardsDir());
+			return root;
 		}
-		return root;
 	}
 
 	public ICardStore<IMagicCard> getCardStore(Location to) {
 		return getCardHandler().getCardStore(to);
 	}
 
-	public synchronized void reset(File dir) {
+	public void reset(File dir) {
 		// File locDir = new File(FileUtils.getWorkspaceFile(), "magiccards");
-		System.setProperty("ma.magiccards.area", dir.getAbsolutePath());
-		FileUtils.deleteTree(dir);
-		if (root == null)
-			root = ModelRoot.getInstance(dir);
-		else {
+		synchronized (this) {
+			System.setProperty("ma.magiccards.area", dir.getAbsolutePath());
+			FileUtils.deleteTree(dir);
+			if (root == null) {
+				root = ModelRoot.getInstance(dir);
+				return;
+			}
 			root.resetRoot(dir);
-			((DbMultiFileCardStore) (getCardHandler().getMagicDBStore())).reload();
-			((AbstractFilteredCardStore) (getCardHandler().getLibraryFilteredStore())).reload();
-			reconcile();
 		}
+		((DbMultiFileCardStore) (getCardHandler().getMagicDBStore())).reload();
+		((AbstractFilteredCardStore) (getCardHandler().getLibraryFilteredStore())).reload();
+		reconcile();
 	}
 
 	public void reset() {
