@@ -236,8 +236,15 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	@Override
 	public void updateList(Collection<T> cards, Set<? extends ICardField> mask) {
 		initialize();
+		if (cards != null) {
+			for (T card : cards) {
+				synchronized (this) {
+					doUpdate(card, mask);
+				}
+			}
+		}
 		if (isListenerAttached())
-			fireEvent(new CardEvent(this, CardEvent.UPDATE_LIST, cards, mask));
+			fireEvent(new CardEvent(this, CardEvent.UPDATE, cards, mask));
 		return;
 	}
 

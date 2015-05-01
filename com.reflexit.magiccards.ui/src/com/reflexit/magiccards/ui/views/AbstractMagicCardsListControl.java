@@ -1089,12 +1089,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE) {
+		if (type == CardEvent.UPDATE && event.getData() instanceof ICard) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					if (event.getData() instanceof ICard)
-						updateSingle((ICard) event.getData());
+					updateSingle((ICard) event.getData());
 				}
 			});
 		} else if (type == CardEvent.ADD) {
@@ -1108,7 +1107,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
 			loadData(null);
-		} else if (type == CardEvent.REMOVE || type == CardEvent.UPDATE_LIST) {
+		} else if (type == CardEvent.REMOVE || type == CardEvent.UPDATE) {
 			// todo set selection to next element
 			loadData(null);
 		}

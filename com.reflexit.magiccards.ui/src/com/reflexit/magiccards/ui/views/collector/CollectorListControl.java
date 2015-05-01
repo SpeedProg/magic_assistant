@@ -93,8 +93,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD
-				|| type == CardEvent.UPDATE_LIST) {
+		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD) {
 			reloadData();
 		}
 	}
@@ -107,7 +106,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	 * @Override public IFilteredCardStore doGetFilteredStore() {
 	 * MemoryFilteredCardStore<IMagicCard> fstore = new MemoryFilteredCardStore<IMagicCard>();
 	 * return fstore; }
-	 * 
+	 *
 	 * @Override protected void populateStore(IProgressMonitor monitor) {
 	 * super.populateStore(monitor); ((MemoryFilteredCardStore<ICard>) fstore).clear(); ICardStore
 	 * lib = DataManager.getCardHandler().getLibraryFilteredStore().getCardStore(); // ICardStore
