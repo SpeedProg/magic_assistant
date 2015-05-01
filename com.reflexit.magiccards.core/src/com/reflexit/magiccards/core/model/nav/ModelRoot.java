@@ -98,7 +98,7 @@ public class ModelRoot extends CardOrganizer {
 	/**
 	 * @return
 	 */
-	public static synchronized ModelRoot getInstance(File dir) {
+	public static ModelRoot getInstance(File dir) {
 		return new ModelRoot(dir);
 	}
 
