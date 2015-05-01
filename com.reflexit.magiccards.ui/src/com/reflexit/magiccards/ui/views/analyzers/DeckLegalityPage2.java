@@ -266,7 +266,6 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	@Override
 	public void setFilteredStore(IFilteredCardStore fstore) {
 		super.setFilteredStore(fstore);
-		setFStore();
 	}
 
 	public void setFStore() {
