@@ -84,10 +84,14 @@ public class EnterDeck extends AbstractSwtBotTest {
 		// open main
 		SWTBotView navView = bot.viewById(CardsNavigatorView.ID);
 		navView.setFocus();
-		bot.tree().getTreeItem("My Cards").expand();
+		navView.bot().tree().getTreeItem("My Cards").expand();
 		SWTBotTreeItem decks = bot.tree().getTreeItem("My Cards").getNode("Collections");
 		decks.expand();
-		decks.getNode("main").doubleClick();
+		try {
+			decks.getNode("main").doubleClick();
+		} catch (Exception e) {
+			decks.getNode("main (Active)").doubleClick();
+		}
 		dbView.setFocus();
 		for (String name : deck.keySet()) {
 			dbView.bot().text().setFocus();
