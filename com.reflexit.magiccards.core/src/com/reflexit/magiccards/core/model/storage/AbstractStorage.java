@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.MagicException;
 
 /**
  * @author Alena
- * 
+ *
  */
 public abstract class AbstractStorage<T> implements IStorage<T> {
 	private boolean loaded = false;
@@ -25,7 +25,7 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	private boolean needToSave = false;
 
 	/**
-	 * 
+	 *
 	 */
 	public AbstractStorage() {
 		super();
@@ -143,6 +143,8 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 	@Override
 	public void setAutoCommit(boolean value) {
 		this.autocommit = value;
+		if (isAutoCommit() && isNeedToBeSaved())
+			save();
 	}
 
 	@Override

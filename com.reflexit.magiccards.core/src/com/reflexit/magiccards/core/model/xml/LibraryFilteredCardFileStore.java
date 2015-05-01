@@ -25,20 +25,20 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 	private static LibraryFilteredCardFileStore instance;
 
 	@Override
-	protected synchronized void doInitialize() throws MagicException {
+	protected void doInitialize() throws MagicException {
 		MagicLogger.traceStart("lfcs init");
 		ModelRoot container = getModelRoot();
 		Collection<CardCollection> colls = container.getAllElements();
 		// init super
 		CardCollection def = getModelRoot().getDefaultLib();
 		for (CardElement elem : colls) {
-			this.table.addFile(elem.getFile(), elem.getLocation(), false);
+			table.addFile(elem.getFile(), elem.getLocation(), false);
 		}
-		this.table.setLocation(def.getLocation());
-		this.table.initialize();
-		container.addListener(this);
+		table.setLocation(def.getLocation());
+		table.initialize();
 		table.addListener(this);
 		initialized = true;
+		container.addListener(this);
 		reconcile();
 		MagicLogger.traceEnd("lfcs init");
 	}
@@ -54,14 +54,17 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 	}
 
 	@Override
-	public void handleEvent(CardEvent event) {
-		//System.err.println(event);
+	public void handleEvent(final CardEvent event) {
 		switch (event.getType()) {
+			case CardEvent.ADD:
+			case CardEvent.REMOVE:
+				return;
 			case CardEvent.ADD_CONTAINER: {
 				CardElement elem = (CardElement) event.getData();
 				if (elem instanceof CardCollection) {
 					CardCollection cardCollection = (CardCollection) elem;
-					CollectionCardStore store = this.table.addFile(elem.getFile(), elem.getLocation());
+					CollectionCardStore store = table
+							.addFile(elem.getFile(), elem.getLocation());
 					IStorage storage = store.getStorage();
 					if (storage instanceof IStorageInfo) {
 						((IStorageInfo) storage)
@@ -69,58 +72,75 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 										: IStorageInfo.COLLECTION_TYPE);
 					}
 					cardCollection.open(store);
-					DataManager.getInstance().reconcile(store);
-					update();
-				}
-				break;
-			}
-			case CardEvent.REMOVE_CONTAINER: {
-				CardElement elem = (CardElement) event.getData();
-				ICardStore<IMagicCard> store = getStore(elem.getLocation());
-				this.table.removeLocation(elem.getLocation());
-				DataManager.getInstance().reconcile(store);
-				update();
-				break;
-			}
-			case CardEvent.RENAME_CONTAINER: {
-				CardElement elem = (CardElement) event.getSource();
-				// System.err.println("renamed " + event.getData() + " to " +
-				// elem.getLocation());
-				if (elem instanceof CardOrganizer) {
-					// ignore, individual rename per element would be sent for
-					// path and name changes
-				} else {
-					this.table.renameLocation((Location) event.getData(), elem.getLocation());
-					ICardStore<IMagicCard> store = getStore(elem.getLocation());
-					DataManager.getInstance().reconcile(store);
-					update();
-				}
-				break;
-			}
-			case CardEvent.UPDATE_CONTAINER: {
-				CardElement elem = (CardElement) event.getSource();
-				if (elem instanceof CardCollection) {
-					ICardStore<IMagicCard> store = getStore(elem.getLocation());
-					DataManager.getInstance().reconcile(store);
-					update();
-				}
-				break;
-			}
-			case CardEvent.UPDATE: {
-				// need to save xml
-				if (event.getSource() instanceof MagicCardPhysical) {
-					MagicCardPhysical c = (MagicCardPhysical) event.getSource();
-					Location location = c.getLocation();
-					AbstractCardStoreWithStorage storage = table.getStorage(location);
-					if (storage != null) {
-						storage.getStorage().save();
-					}
 				}
 				break;
 			}
 			default:
 				break;
 		}
+		new Thread("Lib event processing") {
+			@Override
+			public void run() {
+				switch (event.getType()) {
+					case CardEvent.ADD_CONTAINER: {
+						CardElement elem = (CardElement) event.getData();
+						if (elem instanceof CardCollection) {
+							ICardStore<IMagicCard> store = getStore(elem.getLocation());
+							DataManager.getInstance().reconcile(store);
+							update();
+						}
+						break;
+					}
+					case CardEvent.REMOVE_CONTAINER: {
+						CardElement elem = (CardElement) event.getData();
+						ICardStore<IMagicCard> store = getStore(elem.getLocation());
+						table.removeLocation(elem.getLocation());
+						DataManager.getInstance().reconcile(store);
+						update();
+						break;
+					}
+					case CardEvent.RENAME_CONTAINER: {
+						CardElement elem = (CardElement) event.getSource();
+						// System.err.println("renamed " + event.getData() + " to " +
+						// elem.getLocation());
+						if (elem instanceof CardOrganizer) {
+							// ignore, individual rename per element would be sent for
+							// path and name changes
+						} else {
+							table.renameLocation((Location) event.getData(), elem.getLocation());
+							ICardStore<IMagicCard> store = getStore(elem.getLocation());
+							DataManager.getInstance().reconcile(store);
+							update();
+						}
+						break;
+					}
+					case CardEvent.UPDATE_CONTAINER: {
+						CardElement elem = (CardElement) event.getSource();
+						if (elem instanceof CardCollection) {
+							ICardStore<IMagicCard> store = getStore(elem.getLocation());
+							DataManager.getInstance().reconcile(store);
+							update();
+						}
+						break;
+					}
+					case CardEvent.UPDATE: {
+						// need to save xml
+						if (event.getData() instanceof MagicCardPhysical) {
+							MagicCardPhysical c = (MagicCardPhysical) event.getData();
+							Location location = c.getLocation();
+							AbstractCardStoreWithStorage storage = table.getStorage(location);
+							if (storage != null) {
+								storage.getStorage().autoSave();
+							}
+						}
+						break;
+					}
+					default:
+						break;
+				}
+				return;
+			}
+		}.start();
 	}
 
 	private void reconcile() {

@@ -146,7 +146,6 @@ public class UpdateCardsFromWeb {
 			}
 		} finally {
 			storage.setAutoCommit(true);
-			storage.save();
 			monitor.worked(5);
 			monitor.done();
 		}

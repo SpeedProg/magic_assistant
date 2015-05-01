@@ -14,7 +14,8 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> implements ICardEventListener {
 	protected HashMap<Location, AbstractCardStoreWithStorage<T>> map;
 	protected Location defaultLocation;
-	{
+
+	protected AbstractMultiStore() {
 		init();
 	}
 
@@ -315,9 +316,6 @@ public abstract class AbstractMultiStore<T> extends AbstractCardStore<T> impleme
 			commit = value;
 			for (AbstractCardStoreWithStorage table : map.values()) {
 				table.getStorage().setAutoCommit(value);
-			}
-			if (commit == true && isNeedToBeSaved()) {
-				save();
 			}
 		}
 

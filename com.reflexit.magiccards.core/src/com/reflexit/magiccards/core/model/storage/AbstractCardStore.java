@@ -15,7 +15,8 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T>, ILocatable {
 	protected transient boolean initialized;
 	protected boolean mergeOnAdd;
-	{
+
+	protected AbstractCardStore() {
 		init();
 	}
 
@@ -74,8 +75,6 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	public void setAutoCommit(boolean commit) {
 		IStorage<T> storage = getStorage();
 		storage.setAutoCommit(commit);
-		if (commit)
-			storage.save();
 	}
 
 	protected synchronized boolean doAddAll(final Collection<? extends T> col) {
@@ -140,7 +139,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		return modified;
 	}
 
-	protected boolean doRemoveAll() {
+	protected synchronized boolean doRemoveAll() {
 		boolean modified = false;
 		boolean commit = isAutoCommit();
 		setAutoCommit(false);
@@ -155,7 +154,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 		}
 	}
 
-	protected boolean doRemoveAll(Collection<? extends T> list) {
+	protected synchronized boolean doRemoveAll(Collection<? extends T> list) {
 		boolean modified = false;
 		boolean commit = isAutoCommit();
 		setAutoCommit(false);
@@ -222,7 +221,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 				return;
 		}
 		if (isListenerAttached())
-			fireEvent(new CardEvent(card, CardEvent.UPDATE, mask));
+			fireEvent(new CardEvent(this, CardEvent.UPDATE, card, mask));
 		return;
 	}
 
@@ -238,7 +237,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 	public void updateList(Collection<T> cards, Set<? extends ICardField> mask) {
 		initialize();
 		if (isListenerAttached())
-			fireEvent(new CardEvent(this, CardEvent.UPDATE_LIST, cards));
+			fireEvent(new CardEvent(this, CardEvent.UPDATE_LIST, cards, mask));
 		return;
 	}
 

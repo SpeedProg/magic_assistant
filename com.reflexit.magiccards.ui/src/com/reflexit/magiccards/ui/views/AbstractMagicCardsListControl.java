@@ -1093,8 +1093,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					if (event.getSource() instanceof ICard)
-						updateSingle((ICard) event.getSource());
+					if (event.getData() instanceof ICard)
+						updateSingle((ICard) event.getData());
 				}
 			});
 		} else if (type == CardEvent.ADD) {

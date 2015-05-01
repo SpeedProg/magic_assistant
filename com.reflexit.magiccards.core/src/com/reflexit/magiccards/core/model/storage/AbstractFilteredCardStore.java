@@ -136,8 +136,9 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			return;
 		String key = "udpate " + getClass().getSimpleName();
 		boolean filterChanged = !filter.equals(lastUsedfilter);
-		MagicLogger.trace("changes storeChanged=" + storeChanged +
-				" filterChanged=" + filterChanged + " " + getLocation());
+		MagicLogger.trace("storeupdate storeChanged=" + storeChanged +
+				" filterChanged=" + filterChanged + " loc=" + getLocation());
+		//new Exception().printStackTrace();
 		boolean nonEmpty = rootGroup.size() > 0;
 		if (storeChanged == false && filterChanged == false && nonEmpty) {
 			MagicLogger.trace("skipped " + storeChanged + " " + filterChanged);
@@ -164,7 +165,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 		this.storeChanged = b;
 	}
 
-	protected boolean isRefreshRequired() {
+	public boolean isRefreshRequired() {
 		return this.storeChanged;
 	}
 
@@ -236,7 +237,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	@Override
-	public synchronized ICardGroup getCardGroupRoot() {
+	public ICardGroup getCardGroupRoot() {
 		return rootGroup;
 	}
 

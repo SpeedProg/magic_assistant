@@ -6,8 +6,8 @@ public interface IStorage<T> extends ICardSet<T>, ILocatable {
 	public void setAutoCommit(boolean value);
 
 	/**
-	 * Save syncs memory cached data with physical media (from mem to physical). Save would called
-	 * automatically after each data editing operation unless autoCommit is off.
+	 * Syncs cached data with physical media (from mem to physical).
+	 * Save would called automatically after each data editing operation unless autoCommit is off.
 	 */
 	public void save();
 
@@ -15,7 +15,7 @@ public interface IStorage<T> extends ICardSet<T>, ILocatable {
 
 	/**
 	 * Initiate a save command. It will result is actual save if auto-commit is on. If it is off
-	 * saving should be posponded.
+	 * saving will be postponed.
 	 */
 	public void autoSave();
 

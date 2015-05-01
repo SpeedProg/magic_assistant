@@ -12,11 +12,17 @@ public class CardEvent {
 	private Object source;
 	private int type;
 	private Object data;
+	private Object extra;
 
 	public CardEvent(Object source, int type, Object data) {
+		this(source, type, data, null);
+	}
+
+	public CardEvent(Object source, int type, Object data, Object extra) {
 		this.source = source;
 		this.type = type;
 		this.data = data;
+		this.extra = extra;
 	}
 
 	public final Object getSource() {
@@ -25,6 +31,10 @@ public class CardEvent {
 
 	public final Object getData() {
 		return this.data;
+	}
+
+	public final Object getExtra() {
+		return this.extra;
 	}
 
 	public final int getType() {

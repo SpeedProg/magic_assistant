@@ -16,14 +16,14 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 
 	/**
 	 * Size of filtered list
-	 * 
+	 *
 	 * @return
 	 */
 	public int getSize();
 
 	/**
 	 * Elements in filtered list
-	 * 
+	 *
 	 * @return
 	 */
 	public Object[] getElements();
@@ -33,16 +33,15 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 
 	/**
 	 * Returns given element in filtered list
-	 * 
+	 *
 	 * @param index
 	 * @return
 	 */
 	public Object getElement(int index);
 
 	/**
-	 * return top level cards group if grouping is enabled or null if not
-	 * enabled
-	 * 
+	 * return top level cards group, if no grouping it will contain all elements
+	 *
 	 * @return
 	 */
 	public ICardGroup getCardGroupRoot();
