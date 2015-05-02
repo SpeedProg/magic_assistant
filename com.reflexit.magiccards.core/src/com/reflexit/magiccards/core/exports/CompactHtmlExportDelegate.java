@@ -190,6 +190,7 @@ public class CompactHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 	}
 
 	private String cap1(String str) {
+		if (str.isEmpty()) return "";
 		return str.substring(0, 1).toUpperCase(Locale.ENGLISH) + str.substring(1);
 	}
 
