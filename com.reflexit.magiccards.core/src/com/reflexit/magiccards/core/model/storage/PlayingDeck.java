@@ -32,7 +32,6 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
  */
 public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	ICardStore<IMagicCard> original;
-	final MemoryCardStore<MagicCardGame> store;
 	private int turn;
 
 	public class ZonedFilter extends MagicCardFilter {
@@ -98,17 +97,16 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		}
 	}
 
-	@Override
-	public ZonedFilter getFilter() {
+	public ZonedFilter getZonedFilter() {
 		return (ZonedFilter) super.getFilter();
 	}
 
 	public PlayingDeck(ICardStore<IMagicCard> store) {
-		this.store = new SingletonDeck<MagicCardGame>();
+		super(new SingletonDeck<MagicCardGame>());
 		this.filter = new ZonedFilter();
-		getFilter().show(Zone.LIBRARY, false);
-		getFilter().show(Zone.GRAVEYARD, false);
-		getFilter().show(Zone.EXILE, false);
+		getZonedFilter().show(Zone.LIBRARY, false);
+		getZonedFilter().show(Zone.GRAVEYARD, false);
+		getZonedFilter().show(Zone.EXILE, false);
 		setStore(store);
 	}
 
@@ -117,11 +115,6 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 			this.original = store;
 			newGame();
 		}
-	}
-
-	@Override
-	public ICardStore<MagicCardGame> getCardStore() {
-		return this.store;
 	}
 
 	public void draw(int cards) {
@@ -157,7 +150,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	 *
 	 */
 	public void restart() {
-		store.clear();
+		((SingletonDeck<MagicCardGame>) store).clear();
 		if (original != null) {
 			Collection<MagicCardGame> randomize = randomize(pullIn(original));
 			addAndNumber(randomize);
@@ -233,11 +226,6 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		this.original = null;
 	}
 
-	@Override
-	public void addAll(ICardStore<MagicCardGame> store) {
-		throw new UnsupportedOperationException();
-	}
-
 	public void toZone(List<? extends IMagicCard> cardSelection, Zone zone) {
 		for (Iterator<? extends IMagicCard> iterator = cardSelection.iterator(); iterator.hasNext();) {
 			MagicCardGame card = (MagicCardGame) iterator.next();
@@ -250,7 +238,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	}
 
 	public void showZone(Zone zone, boolean show) {
-		getFilter().show(zone, show);
+		getZonedFilter().show(zone, show);
 	}
 
 	public boolean canZone(List<IMagicCard> cardSelection, Zone zone) {
@@ -326,7 +314,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 	}
 
 	public List<MagicCardGame> getList() {
-		return store.getList();
+		return ((SingletonDeck<MagicCardGame>) store).getList();
 	}
 
 	public List<MagicCardGame> getListInZone(Zone zone) {

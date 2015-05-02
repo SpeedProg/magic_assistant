@@ -399,16 +399,16 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			// mainStore = getCardStore();
 			ICardStore<IMagicCard> sideStore = getCardStore(loc.toSideboard());
 			if (mainStore != null)
-				fstore.addAll(mainStore);
+				fstore.getCardStore().addAll(mainStore.getCards());
 			if (sideStore != null)
-				fstore.addAll(sideStore);
+				fstore.getCardStore().addAll(sideStore.getCards());
 			fstore.setLocation(loc.toMainDeck());
 			if (filter.getSortOrder().size() == filter.getSortOrder().MIN) {
 				filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
 			}
 		} else {
 			ICardStore mainStore = getCardStore(loc);
-			fstore.addAll(mainStore);
+			fstore.getCardStore().addAll(mainStore.getCards());
 			fstore.setLocation(loc);
 		}
 		fstore.update();

@@ -29,7 +29,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
  *
  * @param <T>
  */
-public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
+public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	protected final CardGroup rootGroup = new CardGroup(null, "All");
 	protected boolean initialized = false;
 	protected MagicCardFilter filter = new MagicCardFilter();
@@ -41,9 +41,19 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 			setRefreshRequired(true);
 		}
 	};
+	protected ICardStore<T> store;
+
+	public AbstractFilteredCardStore(ICardStore<T> store) {
+		this.store = store;
+	}
 
 	@Override
-	public MagicCardFilter getFilter() {
+	public final ICardStore<T> getCardStore() {
+		return store;
+	};
+
+	@Override
+	public final MagicCardFilter getFilter() {
 		return filter;
 	}
 
@@ -64,6 +74,7 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	}
 
 	protected synchronized final void initialize() {
+		store.initialize();
 		try {
 			if (this.initialized == false) {
 				try {
@@ -290,12 +301,6 @@ public abstract class AbstractFilteredCardStore<T> implements IFilteredCardStore
 	@Override
 	public void clear() {
 		rootGroup.clear();
-	}
-
-	@Override
-	public void addAll(ICardStore<T> store) {
-		getCardStore().addAll(store.getCards());
-		update();
 	}
 
 	@Override

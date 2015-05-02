@@ -17,9 +17,9 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
 
 /**
  * ArrayList based implementation for AbstractCardStore
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardCountable {
 	private boolean virtutal = true;

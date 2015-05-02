@@ -16,9 +16,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
-import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.utils.CountersMap;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -241,14 +239,8 @@ public class ParseMOTLPrices extends AbstractPriceProvider {
 
 	public static void main(String[] args) throws IOException {
 		ParseMOTLPrices prices = new ParseMOTLPrices();
-		AbstractFilteredCardStore<IMagicCard> fstore = new AbstractFilteredCardStore<IMagicCard>() {
-			MemoryCardStore<MemoryCardStorage<IMagicCard>> store = new MemoryCardStore<MemoryCardStorage<IMagicCard>>();
-
-			@Override
-			public ICardStore getCardStore() {
-				return store;
-			}
-		};
+		AbstractFilteredCardStore<IMagicCard> fstore = new AbstractFilteredCardStore<>(
+				new MemoryCardStore<IMagicCard>());
 		MagicCard card = new MagicCard();
 		card.setSet("Time Spiral");
 		card.setName("Amrou Scout");
