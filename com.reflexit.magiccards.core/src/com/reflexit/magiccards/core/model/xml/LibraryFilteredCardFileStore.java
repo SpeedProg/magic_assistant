@@ -27,7 +27,6 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 	@Override
 	protected void doInitialize() throws MagicException {
 		MagicLogger.traceStart("lfcs init");
-		CollectionMultiFileCardStore table = getMultiStore();
 		ModelRoot container = getModelRoot();
 		Collection<CardCollection> colls = container.getAllElements();
 		// init super
@@ -64,7 +63,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 				CardElement elem = (CardElement) event.getData();
 				if (elem instanceof CardCollection) {
 					CardCollection cardCollection = (CardCollection) elem;
-					CollectionCardStore store = getMultiStore()
+					CollectionCardStore store = table
 							.addFile(elem.getFile(), elem.getLocation());
 					IStorage storage = store.getStorage();
 					if (storage instanceof IStorageInfo) {
@@ -95,7 +94,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					case CardEvent.REMOVE_CONTAINER: {
 						CardElement elem = (CardElement) event.getData();
 						ICardStore<IMagicCard> store = getStore(elem.getLocation());
-						getMultiStore().removeLocation(elem.getLocation());
+						table.removeLocation(elem.getLocation());
 						DataManager.getInstance().reconcile(store);
 						update();
 						break;
@@ -108,7 +107,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 							// ignore, individual rename per element would be sent for
 							// path and name changes
 						} else {
-							getMultiStore().renameLocation((Location) event.getData(), elem.getLocation());
+							table.renameLocation((Location) event.getData(), elem.getLocation());
 							ICardStore<IMagicCard> store = getStore(elem.getLocation());
 							DataManager.getInstance().reconcile(store);
 							update();
@@ -129,7 +128,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 						if (event.getData() instanceof MagicCardPhysical) {
 							MagicCardPhysical c = (MagicCardPhysical) event.getData();
 							Location location = c.getLocation();
-							AbstractCardStoreWithStorage storage = getMultiStore().getStorage(location);
+							AbstractCardStoreWithStorage storage = table.getStorage(location);
 							if (storage != null) {
 								storage.getStorage().autoSave();
 							}

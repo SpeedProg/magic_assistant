@@ -95,6 +95,9 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	public void setFilteredStore(IFilteredCardStore nfstore) {
 		super.setFilteredStore(nfstore);
+		fstore.setLocation(nfstore.getLocation());
+		fstore.clear();
+		fstore.addAll(nfstore.getCardStore());
 	}
 
 	@Override
@@ -108,9 +111,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	@Override
 	public void activate() {
 		super.activate();
-		fstore.setLocation(getCardStore().getLocation());
-		fstore.clear();
-		fstore.getCardStore().addAll(getCardStore().getCards());
 		fstore.update();
 		if (fstore.getSize() <= 100) {
 			panel.setInput(fstore);

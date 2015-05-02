@@ -17,46 +17,58 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 /**
  * @author Alena
- *
+ * 
  */
 public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
+	private MemoryCardStore cards = new MemoryCardStore();
+
 	public MemoryFilteredCardStore(Collection<T> list) {
-		super(new MemoryCardStore<T>());
+		this();
 		addAll(list);
-		update();
 	}
 
 	public MemoryFilteredCardStore() {
-		super(new MemoryCardStore<T>());
 		update();
 	}
 
 	public void addAll(Collection<T> list) {
-		store.addAll(list);
+		cards.addAll(list);
 	}
 
 	public void add(T c) {
-		store.add(c);
+		cards.add(c);
+	}
+
+	@Override
+	public ICardStore getCardStore() {
+		return this.cards;
 	}
 
 	@Override
 	public void setLocation(Location location) {
-		store.setLocation(location);
+		cards.setLocation(location);
 	}
 
 	@Override
 	public Location getLocation() {
-		return store.getLocation();
+		return cards.getLocation();
 	}
 
 	@Override
 	public void clear() {
-		store.removeAll();
+		cards.removeAll();
 	}
 
 	@Override
 	public boolean contains(T card) {
-		return store.contains(card);
+		return cards.contains(card);
+	}
+
+	@Override
+	public void addAll(ICardStore store) {
+		for (Object object : store) {
+			cards.add(object);
+		}
 	}
 
 	public void setFilter(MagicCardFilter filter) {

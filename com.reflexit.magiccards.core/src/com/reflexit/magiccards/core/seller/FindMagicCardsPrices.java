@@ -16,7 +16,9 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.WebUtils;
@@ -271,8 +273,14 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 
 	public static void main(String[] args) throws IOException {
 		FindMagicCardsPrices prices = new FindMagicCardsPrices();
-		AbstractFilteredCardStore<IMagicCard> fstore = new AbstractFilteredCardStore<>(
-				new MemoryCardStore<IMagicCard>());
+		AbstractFilteredCardStore<IMagicCard> fstore = new AbstractFilteredCardStore<IMagicCard>() {
+			MemoryCardStore<MemoryCardStorage<IMagicCard>> store = new MemoryCardStore<MemoryCardStorage<IMagicCard>>();
+
+			@Override
+			public ICardStore getCardStore() {
+				return store;
+			}
+		};
 		MagicCard card = new MagicCard();
 		card.setSet("Time Spiral");
 		card.setName("Amrou Scout");

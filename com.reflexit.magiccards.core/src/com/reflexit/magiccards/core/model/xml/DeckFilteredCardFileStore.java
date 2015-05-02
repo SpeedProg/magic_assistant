@@ -1,16 +1,30 @@
 package com.reflexit.magiccards.core.model.xml;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.LocationPath;
+import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
+	private ICardStore<IMagicCard> table;
+
+	@Override
+	public ICardStore<IMagicCard> getCardStore() {
+		return this.table;
+	}
+
+	@Override
+	protected void doInitialize() throws MagicException {
+		super.doInitialize();
+		this.table.initialize();
+	}
+
 	public DeckFilteredCardFileStore(String filename) {
-		super(null);
 		CardCollection d = getModelRoot().findCardCollectionById(new LocationPath(filename).getId());
 		if (d == null) {
 			throw new IllegalArgumentException("Not found: " + filename);
@@ -22,19 +36,24 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 			ICardStore<IMagicCard> store = magicLibraryHandler.getStore(d.getLocation());
 			d.open(store);
 		}
-		this.store = d.getStore();
-		if (store == null) {
+		this.table = d.getStore();
+		if (table == null) {
 			throw new NullPointerException(filename);
 		}
 	}
 
 	@Override
+	public ModelRoot getModelRoot() {
+		return DataManager.getInstance().getModelRoot();
+	}
+
+	@Override
 	public Location getLocation() {
-		return store.getLocation();
+		return table.getLocation();
 	}
 
 	@Override
 	public void setLocation(Location location) {
-		store.setLocation(location);
+		table.setLocation(location);
 	}
 }

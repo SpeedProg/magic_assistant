@@ -6,33 +6,38 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 
 public class LocationFilteredCardStore extends AbstractFilteredCardStore<IMagicCard> {
+	private ICardStore<IMagicCard> table;
+
+	@Override
+	public ICardStore<IMagicCard> getCardStore() {
+		return this.table;
+	}
+
 	@Override
 	protected void doInitialize() throws MagicException {
 		super.doInitialize();
-		this.store.initialize();
+		this.table.initialize();
 	}
 
 	public LocationFilteredCardStore() {
-		super(null);
 	}
 
 	public LocationFilteredCardStore(Location location) {
-		super(null);
 		setLocation(location);
 	}
 
 	@Override
 	public Location getLocation() {
-		return store.getLocation();
+		return table.getLocation();
 	}
 
 	@Override
 	public void setLocation(Location location) {
 		IFilteredCardStore lib = DataManager.getCardHandler().getLibraryFilteredStore();
 		if (lib.getCardStore() instanceof AbstractMultiStore) {
-			this.store = ((AbstractMultiStore) lib.getCardStore()).getStore(location);
+			this.table = ((AbstractMultiStore) lib.getCardStore()).getStore(location);
 		}
-		if (store == null) {
+		if (table == null) {
 			throw new NullPointerException();
 		}
 		initialize();

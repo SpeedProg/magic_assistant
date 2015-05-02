@@ -49,4 +49,6 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	public boolean contains(T card);
 
 	public void clear();
+
+	public void addAll(ICardStore<T> store);
 }
