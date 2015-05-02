@@ -277,9 +277,9 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		ICardStore mainStore = DataManager.getInstance().getCardStore(loc.toMainDeck());
 		ICardStore sideStore = DataManager.getInstance().getCardStore(loc.toSideboard());
 		if (mainStore != null)
-			mstore.addAll(mainStore);
+			mstore.getCardStore().addAll(mainStore.getCards());
 		if (sideStore != null)
-			mstore.addAll(sideStore);
+			mstore.getCardStore().addAll(sideStore.getCards());
 		mstore.setLocation(loc.toMainDeck());
 		filter.getSortOrder().setSortField(MagicCardField.LEGALITY, true);
 		filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, false);

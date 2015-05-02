@@ -56,6 +56,8 @@ public abstract class AbstractStorage<T> implements IStorage<T> {
 
 	@Override
 	public synchronized void save() {
+		if (!isLoaded())
+			return;
 		try {
 			doSave();
 			setNeedToSave(false);

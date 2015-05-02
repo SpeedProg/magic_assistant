@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStorage;
 import com.reflexit.magiccards.core.xml.CardCollectionStoreObject;
+import com.reflexit.magiccards.core.xml.StringCache;
 
 public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> implements IStorageInfo {
 	private static final transient String VIRTUAL = "virtual";
@@ -155,12 +156,15 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	@Override
 	public void setType(String type) {
 		accessCheck();
-		doSetType(type);
-		autoSave();
+		if (doSetType(type))
+			autoSave();
 	}
 
-	protected final void doSetType(String type) {
-		this.type = type.intern();
+	protected final boolean doSetType(String type) {
+		String x = StringCache.intern(type);
+		if (type == x) return false;
+		this.type = x;
+		return true;
 	}
 
 	@Override
@@ -172,7 +176,8 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 	public void setProperty(String key, String value) {
 		if (isReadOnly() && !key.equals(READ_ONLY))
 			throw new MagicException("Read Only");
-		properties.setProperty(key, value);
+		Object old = properties.setProperty(key, value);
+		if (old != null && old.equals(value)) return;
 		autoSave();
 	}
 
