@@ -1140,36 +1140,34 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				synchronized (jobFamility) {
-					try {
-						monitor.beginTask("Loading cards...", 100);
-						checkInit();
-						if (monitor.isCanceled())
-							return Status.CANCEL_STATUS;
-						populateStore(monitor);
-						if (monitor.isCanceled())
-							return Status.CANCEL_STATUS;
-						if (getFilteredStore() == null)
-							return Status.OK_STATUS;
-						monitor.worked(10);
-						monitor.setTaskName("Loading cards for " + getFilteredStore().getLocation());
-						getFilteredStore().update();
-						// refresh ui
-						if (postLoad != null)
-							display.syncExec(postLoad);
-						else
-							display.syncExec(() -> updateViewer());
-					} catch (final Exception e) {
-						display.asyncExec(() ->
-								MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
-								);
-						MagicUIActivator.log(e);
+				try {
+					monitor.beginTask("Loading cards...", 100);
+					checkInit();
+					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
-					} finally {
-						monitor.done();
-					}
-					return Status.OK_STATUS;
+					populateStore(monitor);
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+					if (getFilteredStore() == null)
+						return Status.OK_STATUS;
+					monitor.worked(10);
+					monitor.setTaskName("Loading cards for " + getFilteredStore().getLocation());
+					getFilteredStore().update();
+					// refresh ui
+					if (postLoad != null)
+						display.syncExec(postLoad);
+					else
+						display.syncExec(() -> updateViewer());
+				} catch (final Exception e) {
+					display.asyncExec(() ->
+							MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
+							);
+					MagicUIActivator.log(e);
+					return Status.CANCEL_STATUS;
+				} finally {
+					monitor.done();
 				}
+				return Status.OK_STATUS;
 			}
 		};
 		loadingJob.schedule(0);
