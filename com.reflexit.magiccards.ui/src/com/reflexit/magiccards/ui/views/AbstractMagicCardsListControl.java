@@ -380,7 +380,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void addStoreChangeListener() {
-		new Thread("Offline listeners") {
+		new Thread("Offline listeners " + getFilteredStore().getLocation()) {
 			@Override
 			public void run() {
 				if (DM.waitForInit(60)) {
@@ -1155,9 +1155,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 					getFilteredStore().update();
 					// refresh ui
 					if (postLoad != null)
-						display.syncExec(postLoad);
+						display.asyncExec(postLoad);
 					else
-						display.syncExec(() -> updateViewer());
+						display.asyncExec(() -> updateViewer());
 				} catch (final Exception e) {
 					display.asyncExec(() ->
 							MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
