@@ -116,12 +116,6 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 						break;
 					}
 					case CardEvent.UPDATE_CONTAINER: {
-						CardElement elem = (CardElement) event.getSource();
-						if (elem instanceof CardCollection) {
-							ICardStore<IMagicCard> store = getStore(elem.getLocation());
-							DataManager.getInstance().reconcile(store);
-							update();
-						}
 						break;
 					}
 					case CardEvent.UPDATE: {
