@@ -49,6 +49,8 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 
 	@Override
 	public final ICardStore<T> getCardStore() {
+		if (store == null)
+			initialize();
 		return store;
 	};
 

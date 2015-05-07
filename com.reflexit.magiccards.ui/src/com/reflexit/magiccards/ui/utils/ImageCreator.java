@@ -35,7 +35,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
  * Create or loads images for cards
- * 
+ *
  */
 public class ImageCreator {
 	public static final int SET_IMG_HEIGHT = 16;
@@ -211,7 +211,7 @@ public class ImageCreator {
 
 	/**
 	 * Get card image from local cache. This image is not managed - to be disposed by called.
-	 * 
+	 *
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
@@ -250,7 +250,7 @@ public class ImageCreator {
 		try {
 			ImageData data = resize ? getResizedCardImage(new ImageData(path)) : new ImageData(path);
 			setAlphaBlendingForCorners(data);
-			return new Image(Display.getCurrent(), data);
+			return new Image(Display.getDefault(), data);
 		} catch (SWTException e) {
 			// failed to create image
 			MagicUIActivator.log("Failed to create an image for: " + path);

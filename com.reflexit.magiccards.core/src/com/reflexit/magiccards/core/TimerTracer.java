@@ -88,7 +88,8 @@ public class TimerTracer {
 
 	private void dump(Timer t, String message, long diff) {
 		if (tracing) {
-			String prefix = timestampFormat.format(Calendar.getInstance().getTime());
+			String prefix = timestampFormat.format(Calendar.getInstance().getTime()) + "["
+					+ Thread.currentThread().getId() + "]";
 			if (t.getName().equals("-")) {
 				String text = String.format("+%03d %s", diff, message);
 				System.out.println(prefix + " " + text);

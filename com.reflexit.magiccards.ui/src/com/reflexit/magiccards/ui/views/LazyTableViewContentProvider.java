@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ILazyContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 class LazyTableViewContentProvider implements ILazyContentProvider {
@@ -47,6 +48,7 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 				// element is gone...
 			} else {
 				Object element = this.root.getElement(index);
+				MagicLogger.trace("table update element " + index + " " + element);
 				this.tableViewer.replace(element, index);
 			}
 		}

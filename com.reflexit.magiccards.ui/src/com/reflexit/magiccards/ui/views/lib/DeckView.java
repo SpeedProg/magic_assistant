@@ -121,9 +121,6 @@ public class DeckView extends AbstractMyCardsView {
 		super.init(site);
 		String secondaryId = getViewSite().getSecondaryId();
 		this.deck = DataManager.getInstance().getModelRoot().findCardCollectionById(secondaryId);
-		if (getFilteredStore() != null && this.deck.getStore() != getFilteredStore().getCardStore()) {
-			throw new IllegalArgumentException("Bad store");
-		}
 		site.getPage().addPartListener(PartListener.getInstance());
 		if (export != null && deck != null) {
 			((ExportAction) export).selectionChanged(new StructuredSelection(getCardCollection()));

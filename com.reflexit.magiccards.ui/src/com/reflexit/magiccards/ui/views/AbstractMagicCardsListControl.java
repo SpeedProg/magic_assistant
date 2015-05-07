@@ -380,7 +380,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void addStoreChangeListener() {
-		new Thread("Offline listeners " + getFilteredStore().getLocation()) {
+		new Thread("Offline listeners " + getSite().getPart().getTitle()) {
 			@Override
 			public void run() {
 				if (DM.waitForInit(60)) {

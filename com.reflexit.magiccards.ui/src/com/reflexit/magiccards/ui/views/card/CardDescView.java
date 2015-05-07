@@ -10,7 +10,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -43,9 +45,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -99,28 +103,27 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			monitor.beginTask("Loading info for " + jCard.getName(), 100);
 			panel.setCard(jCard);
 			final boolean nocard = (jCard == IMagicCard.DEFAULT);
-			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
+			new UIJob("Set temp image") {
 				@Override
-				public void run() {
+				public IStatus runInUIThread(IProgressMonitor uimonitor) {
 					CardDescView.this.panel.setVisible(!nocard);
 					if (nocard) {
 						setMessage("Click on a card to populate the view");
-						return;
+						return Status.OK_STATUS;
 					}
-					if (!isStillNeeded(jCard))
-						return;
+					if (monitor.isCanceled() || !isStillNeeded(jCard))
+						return Status.CANCEL_STATUS;
 					panel.setLoadingImage(jCard);
 					panel.setText(jCard);
+					return Status.OK_STATUS;
 				}
-			});
-			monitor.worked(10);
-			if (monitor.isCanceled())
-				return Status.CANCEL_STATUS;
+			}.schedule();
 			if (!nocard) {
+				monitor.worked(10);
+				if (monitor.isCanceled() || !isStillNeeded(jCard))
+					return Status.CANCEL_STATUS;
 				loadCardImage(new SubProgressMonitor(monitor, 45), jCard, forceUpdate);
 				loadCardExtraInfo(new SubProgressMonitor(monitor, 45), jCard);
-				if (monitor.isCanceled())
-					return Status.CANCEL_STATUS;
 			}
 			monitor.done();
 			return Status.OK_STATUS;
@@ -205,74 +208,79 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	}
 
 	protected IStatus loadCardImage(IProgressMonitor monitor, final IMagicCard card, boolean forceUpdate) {
+		MagicLogger.traceStart("loadCardImage");
 		monitor.beginTask("Loading image for " + card.getName(), 100);
 		try {
 			if (!isStillNeeded(card))
 				return Status.CANCEL_STATUS;
-			Image remoteImage1 = null;
-			IOException e1 = null;
+			Image remoteImage = null;
+			IOException e = null;
 			try {
 				if (card.getCardId() != 0) {
 					String path = ImageCreator.getInstance().createCardPath(card,
 							isLoadingOnClickEnabled(), forceUpdate);
 					boolean resize = asScanned == false;
-					remoteImage1 = ImageCreator.getInstance().createCardImage(path, resize);
+					remoteImage = ImageCreator.getInstance().createCardImage(path, resize);
 				}
-			} catch (CachedImageNotFoundException e) {
+			} catch (CachedImageNotFoundException e1) {
 				// skip
-			} catch (IOException e) {
-				e1 = e;
+			} catch (IOException e1) {
+				e = e1;
 			}
-			if (monitor.isCanceled())
-				return Status.CANCEL_STATUS;
-			if (!isStillNeeded(card))
+			MagicLogger.trace("loadCardImage remote done");
+			if (monitor.isCanceled() || !isStillNeeded(card))
 				return Status.CANCEL_STATUS;
 			monitor.worked(90);
-			final Image remoteImage = remoteImage1;
-			final IOException e = e1;
-			getViewSite().getShell().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					setMessage("");
-					if (e != null)
-						setMessage(e.getMessage());
-					else if (!isLoadingOnClickEnabled())
-						setMessage("Image loading is disabled");
-					else if (card.getGathererId() == 0)
-						setMessage("Card does not exist in dababase");
-					if (!isStillNeeded(card))
-						return;
-					Image image = remoteImage;
-					if (image == null || image.getBounds().width < 20) {
-						image = ImageCreator.getInstance().createCardNotFoundImage(card);
-					}
-					// rotate image if needed
-					String options = (String) card.get(MagicCardField.PART);
-					if (options != null && options.length() > 0 && image != null) {
-						int rotate = 0;
-						if (options.contains("rotate180")) {
-							rotate = 180;
-						} else if (options.contains("rotate90")) {
-							rotate = 90;
-						}
-						if (rotate != 0) {
-							Image rimage = ImageCreator.getInstance().getRotated(image, rotate);
-							image.dispose();
-							image = rimage;
-						}
-					}
-					if (!isStillNeeded(card))
-						return;
-					CardDescView.this.panel.setImage(card, image);
+			if (monitor.isCanceled() || !isStillNeeded(card))
+				return Status.CANCEL_STATUS;
+			if (e != null)
+				setMessage(e.getMessage());
+			else if (!isLoadingOnClickEnabled())
+				setMessage("Image loading is disabled");
+			else if (card.getGathererId() == 0)
+				setMessage("Card does not exist in dababase");
+			else
+				setMessage("");
+			MagicLogger.trace("loadCardImage message done " + Thread.currentThread());
+			if (monitor.isCanceled() || !isStillNeeded(card))
+				return Status.CANCEL_STATUS;
+			Image image = remoteImage;
+			if (image == null || image.getBounds().width < 20) {
+				image = ImageCreator.getInstance().createCardNotFoundImage(card);
+			}
+			// rotate image if needed
+			String options = (String) card.get(MagicCardField.PART);
+			if (options != null && options.length() > 0 && image != null) {
+				int rotate = 0;
+				if (options.contains("rotate180")) {
+					rotate = 180;
+				} else if (options.contains("rotate90")) {
+					rotate = 90;
 				}
-			});
+				if (rotate != 0) {
+					Image rimage = ImageCreator.getInstance().getRotated(image, rotate);
+					image.dispose();
+					image = rimage;
+				}
+			}
+			if (monitor.isCanceled() || !isStillNeeded(card))
+				return Status.CANCEL_STATUS;
+			MagicLogger.trace("loadCardImage set image start");
+			setImage(card, image);
 		} finally {
 			monitor.done();
+			MagicLogger.traceEnd("loadCardImage");
 		}
 		return Status.OK_STATUS;
 	}
 
 	public void setMessage(String text) {
+		if (Display.getCurrent() == null) {
+			//dumpUiThread();
+			Display.getDefault().syncExec(() -> setMessage(text));
+			return;
+		}
+		if (message.isDisposed()) return;
 		if (text == null || text.length() == 0) {
 			message.setText("");
 			message.setVisible(false);
@@ -283,6 +291,27 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 			((GridData) message.getLayoutData()).heightHint = SWT.DEFAULT;
 		}
 		message.getParent().layout(true);
+	}
+
+	private void dumpUiThread() {
+		if (Display.getCurrent() == null) {
+			Thread.getAllStackTraces().forEach((t, s) -> {
+				if (t.getId() == 1) {
+					for (StackTraceElement stackTraceElement : s) {
+						System.err.println(stackTraceElement.toString());
+					}
+				}
+			});
+		} else {
+			new Exception().printStackTrace();
+		}
+	}
+
+	public void setImage(IMagicCard card, Image remoteImage) {
+		if (card == panel.getCard()) {
+			//	dumpUiThread();
+			Display.getDefault().syncExec(() -> panel.setImage(card, remoteImage));
+		}
 	}
 
 	@Override
@@ -530,9 +559,17 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		final IMagicCard card = getCard(sel);
 		if (panel == null || panel.getCard() == card || sel.isEmpty())
 			return;
+		MagicLogger.trace("cancelling " + loadCardJob.jCard);
 		this.loadCardJob.cancel();
+		MagicLogger.traceStart("image " + card);
 		this.loadCardJob = new LoadCardJob(card);
 		this.loadCardJob.schedule();
+		this.loadCardJob.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				MagicLogger.traceEnd("image " + card);
+			}
+		});
 	}
 
 	public Display getDisplay() {

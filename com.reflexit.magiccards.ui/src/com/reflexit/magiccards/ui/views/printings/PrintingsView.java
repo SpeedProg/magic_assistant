@@ -40,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -54,7 +55,7 @@ import com.reflexit.magiccards.ui.views.instances.InstancesView;
 
 /**
  * Shows different prints of the same card in different sets and per collection
- * 
+ *
  */
 public class PrintingsView extends AbstractCardsView implements ISelectionListener {
 	public static final String ID = PrintingsView.class.getName();
@@ -238,7 +239,14 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		this.card = cardSel;
 		// System.err.println("Printings for " + card);
 		((PrintingListControl) control).setCard(card);
-		reloadData();
+		new Job("Printings reload") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				reloadData();
+				return Status.OK_STATUS;
+			}
+		}.schedule();
+		MagicLogger.trace("printings selection done");
 	}
 
 	@Override
