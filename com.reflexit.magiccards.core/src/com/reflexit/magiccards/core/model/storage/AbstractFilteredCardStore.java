@@ -49,8 +49,6 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 
 	@Override
 	public final ICardStore<T> getCardStore() {
-		if (store == null)
-			initialize();
 		return store;
 	};
 
@@ -94,6 +92,10 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	protected void doInitialize() throws MagicException {
 		storeChanged = true; // force update
 		store.initialize();
+	}
+
+	public boolean isInitialized() {
+		return initialized;
 	}
 
 	private void reinstallListener() {

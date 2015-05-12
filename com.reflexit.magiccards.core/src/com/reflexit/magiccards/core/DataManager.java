@@ -74,6 +74,10 @@ public class DataManager {
 		return instance.handler.getDBPriceStore();
 	}
 
+	public boolean isInitialized() {
+		return root != null;
+	}
+
 	public ModelRoot getModelRoot() {
 		if (root != null) return root;
 		synchronized (this) {

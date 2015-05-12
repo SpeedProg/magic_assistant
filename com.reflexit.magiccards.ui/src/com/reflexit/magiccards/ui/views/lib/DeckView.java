@@ -120,6 +120,7 @@ public class DeckView extends AbstractMyCardsView {
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		String secondaryId = getViewSite().getSecondaryId();
+		WaitUtils.waitForLibrary();
 		this.deck = DataManager.getInstance().getModelRoot().findCardCollectionById(secondaryId);
 		site.getPage().addPartListener(PartListener.getInstance());
 		if (export != null && deck != null) {
@@ -291,29 +292,22 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void updatePartName() {
-		IFilteredCardStore<IMagicCard> filteredStore = getFilteredStore();
-		if (filteredStore == null) {
-			return;
+		if (deck == null) return;
+		String tooltip = deck.getLocation().getPath();
+		if (tooltip != null) {
+			setTitleToolTip(tooltip);
+		}
+		String name = deck.getName();
+		//setPartProperty(name, name);
+		if (deck.getLocation().isSideboard()) {
+			setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());
+			if (sideboard != null)
+				sideboard.setEnabled(false);
 		} else {
-			ICardStore<IMagicCard> s = filteredStore.getCardStore();
-			String tooltip = deck.getLocation().getPath();
-			if (tooltip != null) {
-				setTitleToolTip(tooltip);
-			}
-			String name = deck.getName();
-			if (name.isEmpty())
-				name = s.getLocation().getName();
-			//setPartProperty(name, name);
-			if (deck.getLocation().isSideboard()) {
-				setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());
-				if (sideboard != null)
-					sideboard.setEnabled(false);
-			} else {
-				if (deck.isDeck()) {
-					setPartName("Deck: " + name);
-				} else
-					setPartName("Collection: " + name);
-			}
+			if (deck.isDeck()) {
+				setPartName("Deck: " + name);
+			} else
+				setPartName("Collection: " + name);
 		}
 	}
 

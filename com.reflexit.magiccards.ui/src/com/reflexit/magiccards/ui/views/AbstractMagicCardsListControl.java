@@ -84,6 +84,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.TextConvertor;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
@@ -724,7 +725,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		quickFilter.setPreferenceStore(getFilterPreferenceStore());
 		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
-		reloadData();
+		WaitUtils.scheduleJob(()->reloadData());
 	}
 
 	@Override
