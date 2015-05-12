@@ -59,8 +59,7 @@ public class DeckImportPreviewPage extends WizardPage {
 			String desc = getFirstDescription();
 			setErrorMessage(null);
 			DeckImportWizard wizard = (DeckImportWizard) getWizard();
-			try {
-				InputStream st = startingPage.openInputStream();
+			try (InputStream st = startingPage.openInputStream()) {
 				String textFile = getTextOfFileAsString(st, 20);
 				text.setText(textFile);
 			} catch (IOException e) {
@@ -123,7 +122,6 @@ public class DeckImportPreviewPage extends WizardPage {
 				textFile += line + "\n";
 				i++;
 			}
-			st.close();
 		}
 		return textFile;
 	}
