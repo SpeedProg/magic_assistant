@@ -3,6 +3,8 @@
  */
 package com.reflexit.magiccards.ui.views;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import org.eclipse.jface.viewers.ILazyContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -16,22 +18,27 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 
 	private TableViewer tableViewer;
 	private IFilteredCardStore root;
+	private TIntObjectHashMap<Object> map = new TIntObjectHashMap<>();
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (viewer instanceof TableViewer) {
 			this.tableViewer = (TableViewer) viewer;
 		}
-		if (newInput instanceof IFilteredCardStore)
+		if (newInput instanceof IFilteredCardStore) {
 			this.root = (IFilteredCardStore) newInput;
+			tableViewer.setItemCount(root.getSize());
+		}
 		else
 			this.root = null;
+		map.clear();
 	}
 
 	@Override
 	public void dispose() {
 		this.tableViewer = null;
 		this.root = null;
+		this.map = null;
 	}
 
 	public int getSize(Object newInput) {
@@ -46,10 +53,14 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 		if (this.root != null) {
 			if (index >= root.getSize()) {
 				// element is gone...
+				tableViewer.setItemCount(root.getSize());
 			} else {
 				Object element = this.root.getElement(index);
+				//Object cur = map.get(index);
+				//if (cur == element) return;
 				MagicLogger.trace("table update element " + index + " " + element);
 				this.tableViewer.replace(element, index);
+				map.put(index, element);
 			}
 		}
 	}

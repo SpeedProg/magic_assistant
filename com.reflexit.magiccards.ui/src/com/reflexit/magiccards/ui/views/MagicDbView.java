@@ -41,16 +41,17 @@ public class MagicDbView extends AbstractCardsView {
 	protected Action exportDatabase;
 	protected Action edit;
 
-	/**
-	 * The constructor.
-	 */
 	public MagicDbView() {
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewmagicdb"));
+	}
+
+	@Override
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewmagicdb");
 	}
 
 	class MagicDbListControl extends AbstractMagicCardsListControl {

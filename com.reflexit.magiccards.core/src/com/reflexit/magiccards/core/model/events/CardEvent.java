@@ -22,6 +22,7 @@ public class CardEvent {
 		this.type = type;
 		this.data = data;
 		this.extra = extra;
+		//System.err.println(toString());
 	}
 
 	public final Object getSource() {

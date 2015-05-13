@@ -557,4 +557,9 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	public void refresh() {
 		activate();
 	}
+
+	@Override
+	public void setStatus(String string) {
+		// no status line
+	}
 }

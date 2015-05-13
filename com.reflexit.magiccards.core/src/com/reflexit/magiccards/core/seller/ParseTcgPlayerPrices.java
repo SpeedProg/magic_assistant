@@ -66,26 +66,30 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	private static HashMap<String, String> setMap;
-	static {
-		setMap = new HashMap<String, String>();
-		Editions ed = Editions.getInstance();
-		ed.getEditions();
-		for (Iterator<Edition> iterator = ed.getEditions().iterator(); iterator.hasNext();) {
-			Edition set = iterator.next();
-			String name = set.getName();
-			if (name.startsWith("Magic 20")) {
-				String name2 = name.replaceFirst(" Core Set", "");
-				String year = name2.substring(8, 10);
-				setMap.put(name, name2 + " (M" + year + ")");
-			} else if (name.startsWith("Premium Deck Series")) {
-				setMap.put(name, name.replace("Premium Deck Series", "PDS"));
+
+	static void initSetMap() {
+		if (setMap == null) {
+			setMap = new HashMap<String, String>();
+			Editions ed = Editions.getInstance();
+			ed.getEditions();
+			for (Iterator<Edition> iterator = ed.getEditions().iterator(); iterator.hasNext();) {
+				Edition set = iterator.next();
+				String name = set.getName();
+				if (name.startsWith("Magic 20")) {
+					String name2 = name.replaceFirst(" Core Set", "");
+					String year = name2.substring(8, 10);
+					setMap.put(name, name2 + " (M" + year + ")");
+				} else if (name.startsWith("Premium Deck Series")) {
+					setMap.put(name, name.replace("Premium Deck Series", "PDS"));
+				}
 			}
+			setMap.put("Duel Decks: Knights vs. Dragons", "Duel Decks: Knights vs Dragons ");
+			setMap.put("Tenth Edition", "10th Edition");
 		}
-		setMap.put("Duel Decks: Knights vs. Dragons", "Duel Decks: Knights vs Dragons ");
-		setMap.put("Tenth Edition", "10th Edition");
 	}
 
 	public static Map<String, String> getSetAliasesMap() {
+		initSetMap();
 		return setMap;
 	}
 
@@ -157,6 +161,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	private Map<MagicCard, Float> getSetPrices(String origset) {
+		getSetAliasesMap();
 		final HashMap<MagicCard, Float> res = new HashMap<MagicCard, Float>();
 		try {
 			HtmlTableImportDelegate delegate = new HtmlTableImportDelegate() {
@@ -206,6 +211,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	public float getPrice(IMagicCard magicCard) {
 		try {
+			getSetAliasesMap();
 			float price = -1;
 			String origset = magicCard.getSet();
 			Collection<String> trysets = getSetOptions(origset);
@@ -237,7 +243,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	private Collection<String> getSetOptions(String setm) {
 		ArrayList<String> res = new ArrayList<String>();
-		String set = setMap.get(setm);
+		String set = getSetAliasesMap().get(setm);
 		if (set != null) {
 			res.add(set);
 		}

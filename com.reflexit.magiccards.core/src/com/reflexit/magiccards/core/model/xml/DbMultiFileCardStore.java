@@ -50,9 +50,6 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	private boolean flatDbLoaded;
 	private boolean loadDefault;
 	private GlobalDbHandler handler;
-	{
-		init();
-	}
 
 	@Override
 	public void reload() {
@@ -182,6 +179,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 	}
 
 	public DbMultiFileCardStore(boolean load) {
+		init();
 		this.loadDefault = load;
 	}
 
@@ -244,13 +242,15 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 				}
 			}
 		}
-		AbstractCardStoreWithStorage storage = getStorage(getLocation(card));
-		if (storage == null) {
-			storage = newStorage(card);
-			addCardStore(storage);
+		if (card.getSet() != null) {
+			AbstractCardStoreWithStorage storage = getStorage(getLocation(card));
+			if (storage == null) {
+				storage = newStorage(card);
+				addCardStore(storage);
+			}
+			if (needUpdate)
+				storage.getStorage().autoSave();
 		}
-		if (needUpdate)
-			storage.getStorage().autoSave();
 		return super.doUpdate(card, mask);
 	}
 
@@ -284,7 +284,7 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			return new File(XmlCardHolder.getDbFolder(), Location.fromCard(card)
 					.getBaseFileName());
 		}
-		throw new MagicException("Unknown card type");
+		throw new MagicException("Unknown card type " + card);
 	}
 
 	public void loadFromSoftware() throws MagicException {

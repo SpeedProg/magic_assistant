@@ -89,7 +89,10 @@ public abstract class AbstractCardsView extends ViewPart {
 		hookContextMenu();
 		contributeToActionBars();
 		getSite().setSelectionProvider(getSelectionProvider());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, getHelpId());
 	}
+
+	public abstract String getHelpId();
 
 	protected void createMainControl(Composite parent) {
 		control.createPartControl(parent);
@@ -295,8 +298,8 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 	}
 
-	public void refresh() {
-		control.refresh();
+	public void refreshView() {
+		WaitUtils.syncExec(() -> control.refresh());
 	}
 
 	protected void runLoadExtras() {
@@ -326,7 +329,7 @@ public abstract class AbstractCardsView extends ViewPart {
 			loadingPrices.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					WaitUtils.syncExec(() -> refresh());
+					refreshView();
 				}
 			});
 			loadingPrices.schedule();

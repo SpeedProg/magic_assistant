@@ -30,13 +30,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -50,7 +49,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
-import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.instances.InstancesView;
 
 /**
@@ -75,7 +73,11 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		super.createPartControl(parent);
 		((IMagicCardListControl) control).setStatus("Click on a card to populate the view");
 		loadInitial();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewprintings"));
+	}
+
+	@Override
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewprintings");
 	}
 
 	@Override
@@ -194,16 +196,8 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	protected void loadInitial() {
 		try {
-			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
-			if (page == null)
-				return;
-			ISelection sel = page.getSelection();
-			if (sel == null || sel.isEmpty()) {
-				IViewPart dbview = page.findView(MagicDbView.ID);
-				if (dbview != null) {
-					sel = dbview.getSite().getSelectionProvider().getSelection();
-				}
-			}
+			ISelectionService s = getSite().getWorkbenchWindow().getSelectionService();
+			ISelection sel = s.getSelection();
 			if (sel != null)
 				runLoadJob(sel);
 		} catch (NullPointerException e) {

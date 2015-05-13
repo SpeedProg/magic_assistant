@@ -39,4 +39,6 @@ public interface IMagicControl {
 	public abstract void updateViewer();
 
 	public abstract void reloadData();
+
+	public abstract void setStatus(String string);
 }

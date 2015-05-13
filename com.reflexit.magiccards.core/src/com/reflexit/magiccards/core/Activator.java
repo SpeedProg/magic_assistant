@@ -50,6 +50,12 @@ public class Activator extends Plugin {
 		MagicLogger.setTracing(TRACE_PERF);
 		MagicLogger.setDebugging(TRACE_CORE);
 		MagicLogger.info("Magic Assistant started. Version " + plugin.getBundle().getVersion());
+		new Thread("Loading database") {
+			@Override
+			public void run() {
+				DataManager.getInstance().asyncInitDb();
+			};
+		}.start();
 	}
 
 	/*

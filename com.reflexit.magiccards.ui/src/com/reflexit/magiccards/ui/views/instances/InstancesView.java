@@ -30,7 +30,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -51,12 +51,11 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
-import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 /**
  * Shows different prints of the same card in different sets and per collection
- * 
+ *
  */
 public class InstancesView extends AbstractCardsView implements ISelectionListener {
 	public static final String ID = InstancesView.class.getName();
@@ -76,7 +75,11 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 		super.createPartControl(parent);
 		((IMagicCardListControl) control).setStatus("Click on a card to populate the view");
 		loadInitial();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewinstances"));
+	}
+
+	@Override
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewinstances");
 	}
 
 	@Override
@@ -203,16 +206,8 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 
 	protected void loadInitial() {
 		try {
-			IWorkbenchPage page = getViewSite().getWorkbenchWindow().getActivePage();
-			if (page == null)
-				return;
-			ISelection sel = page.getSelection();
-			if (sel == null || sel.isEmpty()) {
-				IViewPart dbview = page.findView(MagicDbView.ID);
-				if (dbview != null) {
-					sel = dbview.getSite().getSelectionProvider().getSelection();
-				}
-			}
+			ISelectionService s = getSite().getWorkbenchWindow().getSelectionService();
+			ISelection sel = s.getSelection();
 			if (sel != null)
 				runLoadJob(sel);
 		} catch (NullPointerException e) {

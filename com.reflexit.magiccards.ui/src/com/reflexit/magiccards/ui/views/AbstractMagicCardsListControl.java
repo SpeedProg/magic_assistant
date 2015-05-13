@@ -63,6 +63,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.SortOrder;
@@ -244,8 +245,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public IFilteredCardStore getFilteredStore() {
-		if (fstore == null)
+		if (fstore == null) {
 			fstore = doGetFilteredStore();
+		}
 		return fstore;
 	}
 
@@ -384,7 +386,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		new Thread("Offline listeners " + getSite().getPart().getTitle()) {
 			@Override
 			public void run() {
-				if (DM.waitForInit(60)) {
+				if (WaitUtils.waitForDb()) {
 					DM.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
 					DM.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
 				} else {
@@ -522,6 +524,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 * @param indexCmc
 	 */
 	public void updateGroupBy(ICardField[] fields) {
+		if (fstore == null)
+			return;
 		MagicCardFilter filter = getFilter();
 		if (filter == null)
 			return;
@@ -725,7 +729,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		quickFilter.setPreferenceStore(getFilterPreferenceStore());
 		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
-		WaitUtils.scheduleJob(()->reloadData());
+		WaitUtils.scheduleJob("Loading cards " + this, () -> reloadData());
 	}
 
 	@Override
@@ -1091,6 +1095,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE && event.getData() instanceof ICard) {
+			System.err.println("update event for " + event.getData());
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
@@ -1130,53 +1135,22 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	private Object jobFamility = new Object();
+	private Job loadingJob;
 
 	public void loadData(final Runnable postLoad) {
-		final Display display = PlatformUI.getWorkbench().getDisplay();
-		Job loadingJob = new Job("Loading cards") {
-			@Override
-			public boolean belongsTo(Object family) {
-				return family == jobFamility;
+		synchronized (jobFamility) {
+			if (loadingJob != null) {
+				loadingJob.cancel();
 			}
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					monitor.beginTask("Loading cards...", 100);
-					checkInit();
-					if (monitor.isCanceled())
-						return Status.CANCEL_STATUS;
-					populateStore(monitor);
-					if (monitor.isCanceled())
-						return Status.CANCEL_STATUS;
-					if (getFilteredStore() == null)
-						return Status.OK_STATUS;
-					monitor.worked(10);
-					monitor.setTaskName("Loading cards for " + getFilteredStore().getLocation());
-					getFilteredStore().update();
-					// refresh ui
-					if (postLoad != null)
-						display.asyncExec(postLoad);
-					else
-						display.asyncExec(() -> updateViewer());
-				} catch (final Exception e) {
-					display.asyncExec(() ->
-							MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
-							);
-					MagicUIActivator.log(e);
-					return Status.CANCEL_STATUS;
-				} finally {
-					monitor.done();
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		loadingJob.schedule(0);
+			loadingJob = WaitUtils.scheduleJob(
+					"Loading cards for " + AbstractMagicCardsListControl.this,
+					(monitor) -> loadDataInJob(postLoad, monitor));
+		}
 	}
 
 	private void checkInit() {
 		try {
-			DM.waitForInit(20);
+			WaitUtils.waitForDb();
 		} catch (MagicException e) {
 			MagicUIActivator.log(e);
 		}
@@ -1189,4 +1163,41 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected abstract IFilteredCardStore<ICard> doGetFilteredStore();
+
+	public IStatus loadDataInJob(final Runnable postLoad, IProgressMonitor monitor) {
+		final Display display = Display.getDefault();
+		try {
+			monitor.beginTask("Loading for " + AbstractMagicCardsListControl.this, 100);
+			checkInit();
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			synchronized (AbstractMagicCardsListControl.this) {
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				populateStore(monitor);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				if (getFilteredStore() == null)
+					return Status.OK_STATUS;
+				monitor.worked(10);
+				Location location = getFilteredStore().getLocation();
+				monitor.setTaskName("Loading cards for " + location);
+				getFilteredStore().update();
+			}
+			// refresh ui
+			if (postLoad != null)
+				display.asyncExec(postLoad);
+			else
+				display.asyncExec(() -> updateViewer());
+		} catch (final Exception e) {
+			display.asyncExec(() ->
+					MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage())
+					);
+			MagicUIActivator.log(e);
+			return Status.CANCEL_STATUS;
+		} finally {
+			monitor.done();
+		}
+		return Status.OK_STATUS;
+	}
 }

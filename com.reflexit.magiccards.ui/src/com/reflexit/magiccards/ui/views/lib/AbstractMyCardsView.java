@@ -44,13 +44,14 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardPhysicalDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 /**
  * Cards view for personal cards (decks and collections)
- * 
+ *
  * @author Alena
- * 
+ *
  */
 public abstract class AbstractMyCardsView extends AbstractCardsView implements ICardEventListener {
 	private final DataManager DM = DataManager.getInstance();
@@ -187,7 +188,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void splitSelected() {
 		final int PICK = 0;
@@ -257,7 +258,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillContextMenu(org
 	 * .eclipse.jface.action.IMenuManager)
@@ -281,41 +282,38 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-	}
-
-	@Override
 	protected void runDoubleClick() {
 		edit.run();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui
-	 * .IViewSite)
-	 */
+	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		WaitUtils.scheduleJob("Initializing " + this,
+				() -> {
+					if (WaitUtils.waitForLibrary()) {
+						DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+						DM.getModelRoot().addListener(AbstractMyCardsView.this);
+					} else {
+						MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
+					}
+					loadInitial();
+				}
+				);
+	}
+
+	protected void loadInitial() {
+		// do nothing
+	}
+
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		new Thread("Offline listeners") {
-			@Override
-			public void run() {
-				if (DM.waitForInit(60)) {
-					DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
-					DM.getModelRoot().addListener(AbstractMyCardsView.this);
-				} else {
-					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
-				}
-			}
-		}.start();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#dispose()
 	 */
 	@Override

@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -111,21 +110,32 @@ public class DeckView extends AbstractMyCardsView {
 				getPreferencePageId());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#init(org.eclipse.ui .IViewSite)
-	 */
 	@Override
-	public void init(IViewSite site) throws PartInitException {
-		super.init(site);
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		updatePartName();
+	}
+
+	@Override
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewdeck");
+	}
+
+	@Override
+	protected void loadInitial() {
+		super.loadInitial();
 		String secondaryId = getViewSite().getSecondaryId();
-		WaitUtils.waitForLibrary();
 		this.deck = DataManager.getInstance().getModelRoot().findCardCollectionById(secondaryId);
-		site.getPage().addPartListener(PartListener.getInstance());
 		if (export != null && deck != null) {
 			((ExportAction) export).selectionChanged(new StructuredSelection(getCardCollection()));
 		}
+		refreshView();
+	}
+
+	@Override
+	public void init(IViewSite site) throws PartInitException {
+		super.init(site);
+		site.getPage().addPartListener(PartListener.getInstance());
 	}
 
 	/*
@@ -233,24 +243,10 @@ public class DeckView extends AbstractMyCardsView {
 				if (page == null)
 					return;
 				try {
-					IViewPart view = page.showView(CardsNavigatorView.ID);
-					view.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					IViewReference[] views = page.getViewReferences();
-					for (final IViewReference viewReference : views) {
-						if (viewReference.getId().equals(DeckView.ID)) {
-							final String deckId = viewReference.getSecondaryId();
-							if (deckId.equals(col.getId())) {
-								DeckView deckView = (DeckView) viewReference.getPart(false);
-								if (deckView != null) {
-									deckView.refresh();
-									return;
-								}
-							}
-						}
-					}
-					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getId(),
-							IWorkbenchPage.VIEW_ACTIVATE);
-					deckView.refresh();
+					IViewPart navView = page
+							.showView(CardsNavigatorView.ID, null, IWorkbenchPage.VIEW_CREATE);
+					navView.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
+					page.showView(DeckView.ID, col.getId(), IWorkbenchPage.VIEW_ACTIVATE);
 				} catch (PartInitException e) {
 					MessageDialog.openError(new Shell(), "Error", e.getMessage());
 				}
@@ -274,25 +270,19 @@ public class DeckView extends AbstractMyCardsView {
 		super.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.lib.LibView#createPartControl(org.eclipse .swt.widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-		updatePartName();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewdeck"));
-	}
-
 	@Override
 	public SelectionProviderIntermediate getSelectionProvider() {
 		return selProvider;
 	}
 
 	protected void updatePartName() {
-		if (deck == null) return;
+		if (deck == null) {
+			String secondaryId = getViewSite().getSecondaryId();
+			setPartName(secondaryId);
+			IMagicControl c = getActiveControl();
+			c.setStatus("Loading " + secondaryId + "...");
+			return;
+		}
 		String tooltip = deck.getLocation().getPath();
 		if (tooltip != null) {
 			setTitleToolTip(tooltip);
@@ -338,7 +328,6 @@ public class DeckView extends AbstractMyCardsView {
 				new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 						display.getSystemColor(SWT.COLOR_WHITE) },
 				new int[] { 50 });
-		refresh();
 	}
 
 	@Override
@@ -461,7 +450,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	@Override
-	public void refresh() {
+	public void refreshView() {
 		setStore();
 		WaitUtils.asyncExec(() -> updatePartName());
 		reloadData();

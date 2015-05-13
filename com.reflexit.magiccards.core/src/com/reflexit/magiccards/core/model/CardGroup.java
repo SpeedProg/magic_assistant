@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.reflexit.magiccards.core.model.abs.CardList;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
@@ -376,7 +377,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	public void addAll(Iterable cards) {
 		if (cards == null)
 			return;
-		for (Object elem : cards) {
+		for (Object elem : new CardList(cards, true).getList()) {
 			children.add((ICard) elem);
 			if (elem instanceof CardGroup) {
 				CardGroup cardGroup = (CardGroup) elem;

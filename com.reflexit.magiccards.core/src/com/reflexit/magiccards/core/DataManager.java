@@ -28,6 +28,7 @@ import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardList;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.Predicate;
 import com.reflexit.magiccards.core.model.abs.ICard;
@@ -48,6 +49,8 @@ public class DataManager {
 	private ModelRoot root;
 	private TIntObjectHashMap<IMagicCard> links = new TIntObjectHashMap<IMagicCard>();
 	private boolean owncopy;
+	private Thread initThread;
+	private Object initThreadLock = new Object();
 
 	private DataManager() {
 		MagicLogger.debug("Data Manager instance " + this.hashCode());
@@ -491,24 +494,28 @@ public class DataManager {
 			return;
 		ICardStore db = getMagicDBStore();
 		ICardStore library = getLibraryCardStore();
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+		List<ICard> list = new MagicCardList(cards).getList();
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Object card = iterator.next();
 			// Need to repair references to MagicCard instances
 			if (card instanceof MagicCardPhysical) {
 				MagicCardPhysical mcp = (MagicCardPhysical) card;
 				if (mcp.getName() != null) {
-					reconcile(mcp, db, library);
+					reconcile(mcp, db, library, false);
 				}
 			}
 		}
+		List<IMagicCard> list2 = new MagicCardList((List) list).getMagicBaseList();
+		getMagicDBStore().updateList(list2,
+				Collections.singleton(MagicCardField.OWN_COUNT));
 	}
 
 	private void reconcile(MagicCardPhysical mcp) {
-		reconcile(mcp, getMagicDBStore(), getLibraryCardStore());
+		reconcile(mcp, getMagicDBStore(), getLibraryCardStore(), true);
 	}
 
 	private void reconcile(MagicCardPhysical mcp, ICardStore db,
-			ICardStore library) {
+			ICardStore library, boolean update) {
 		// System.err.println("reconcile " + mcp + " " +
 		// System.identityHashCode(mcp));
 		int id = mcp.getCardId();
@@ -523,7 +530,7 @@ public class DataManager {
 		CardGroup realcards = new CardGroup(MagicCardField.ID, mcp.getName());
 		realcards.addAll(library.getCards(id));
 		links.put(id, realcards);
-		update(mcp.getBase(), Collections.singleton(MagicCardField.OWN_COUNT));
+		if (update) update(mcp.getBase(), Collections.singleton(MagicCardField.OWN_COUNT));
 	}
 
 	public CardGroup getRealCards(MagicCard mc) {
@@ -554,18 +561,32 @@ public class DataManager {
 	}
 
 	public void syncInitDb() {
+		MagicLogger.traceStart("syncDb");
+		getModelRoot();
 		getMagicDBStore().initialize();
 		getDBPriceStore().initialize();
 		getDBPriceStore().reloadPrices(); // XXX
+		getCardHandler().getLibraryFilteredStore().update();
+		MagicLogger.traceEnd("syncDb");
 	}
 
 	public void asyncInitDb() {
-		new Thread("Init DB") {
-			@Override
-			public void run() {
-				syncInitDb();
+		synchronized (initThreadLock) {
+			if (initThread == null) {
+				MagicLogger.trace("sync db thread");
+				initThread = new Thread("Init DB") {
+					@Override
+					public void run() {
+						syncInitDb();
+						initThread = null;
+					}
+				};
+				initThread.start();
+			} else {
+				MagicLogger.trace("sync db bailed");
+				return;
 			}
-		}.start();
+		}
 	}
 
 	public File getPricesDir() {

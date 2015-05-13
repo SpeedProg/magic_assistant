@@ -69,6 +69,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 		String name = row.getText(0);
 		// add card using + shortcut (well = actually)
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(0, '='));
+		bot.sleep(500);
 		assertEquals(name, selectFirstRowInView(deckView).getText(0));
 	}
 

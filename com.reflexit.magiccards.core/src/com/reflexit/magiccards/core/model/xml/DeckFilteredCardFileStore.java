@@ -13,9 +13,9 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 	public DeckFilteredCardFileStore(String filename) {
 		super(null);
 		this.filename = filename;
-		CollectionMultiFileCardStore lib = (CollectionMultiFileCardStore) DataManager
+		LibraryFilteredCardFileStore lib = (LibraryFilteredCardFileStore) DataManager
 				.getCardHandler()
-				.getLibraryCardStore();
+				.getLibraryFilteredStore();
 		ICardStore<IMagicCard> store = lib.getStore(Location.createLocation(filename));
 		this.store = store;
 		if (store == null) {

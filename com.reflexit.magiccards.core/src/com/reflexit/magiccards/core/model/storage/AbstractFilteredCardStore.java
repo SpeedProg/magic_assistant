@@ -91,7 +91,7 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 
 	protected void doInitialize() throws MagicException {
 		storeChanged = true; // force update
-		store.initialize();
+		getCardStore().initialize();
 	}
 
 	public boolean isInitialized() {
@@ -185,24 +185,26 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	}
 
 	protected void groupCards(MagicCardFilter filter, Iterable<?> filteredList) {
-		rootGroup.clear();
-		if (filter.getGroupField() != null) {
-			if (filter.getGroupField() == MagicCardField.TYPE) {
-				ICardGroup buildTypeGroups = CardStoreUtils.buildTypeGroups(filteredList);
-				for (Object gr : buildTypeGroups.getChildren()) {
-					rootGroup.add((ICard) gr);
+		synchronized (rootGroup) {
+			rootGroup.clear();
+			if (filter.getGroupField() != null) {
+				if (filter.getGroupField() == MagicCardField.TYPE) {
+					ICardGroup buildTypeGroups = CardStoreUtils.buildTypeGroups(filteredList);
+					for (Object gr : buildTypeGroups.getChildren()) {
+						rootGroup.add((ICard) gr);
+					}
+				} else {
+					for (Object element : filteredList) {
+						IMagicCard elem = (IMagicCard) element;
+						ICardGroup group = findGroupIndex(elem, filter);
+						addToNameGroup(elem, group);
+					}
 				}
 			} else {
-				for (Object element : filteredList) {
-					IMagicCard elem = (IMagicCard) element;
-					ICardGroup group = findGroupIndex(elem, filter);
-					addToNameGroup(elem, group);
-				}
+				rootGroup.addAll(filteredList);
 			}
-		} else {
-			rootGroup.addAll(filteredList);
+			rootGroup.setFilter(filter);
 		}
-		rootGroup.setFilter(filter);
 	}
 
 	public void addToNameGroup(IMagicCard elem, ICardGroup group) {

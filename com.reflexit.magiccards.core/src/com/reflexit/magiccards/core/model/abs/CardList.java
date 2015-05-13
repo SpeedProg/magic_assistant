@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class CardList implements ICardList<ICard> {
-	private Iterable<ICard> iterable;
+	protected Iterable<ICard> iterable;
 	private boolean copy;
 
 	public CardList(ICard[] array) {
@@ -65,7 +65,7 @@ public class CardList implements ICardList<ICard> {
 		return getList().size();
 	}
 
-	protected List<ICard> getList() {
+	public List<ICard> getList() {
 		if (iterable instanceof List)
 			return (List<ICard>) iterable;
 		if (copy == false)

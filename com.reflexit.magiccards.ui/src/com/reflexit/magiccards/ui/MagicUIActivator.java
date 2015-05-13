@@ -30,6 +30,7 @@ import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.BundleContext;
 
+import com.reflexit.magiccards.core.Activator;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.core.sync.WebUtils;
@@ -68,7 +69,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		activateCoreSettings();
-		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
+		TRACE_EXPORT = isDebugging()
+				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
 		TRACE_TESTING = (isDebugging()
 				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing")))
@@ -82,6 +84,8 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	private void activateCoreSettings() {
 		// start the Network plugin to set proxy
 		org.eclipse.ui.internal.net.Activator.getDefault();
+		// load core activator to start db init
+		Activator.getDefault();
 		IPreferenceStore globalStore = getPreferenceStore();
 		WebUtils.setWorkOffline(globalStore.getBoolean(PreferenceConstants.WORK_OFFLINE));
 		DataManager.getInstance().setOwnCopyEnabled(globalStore.getBoolean(PreferenceConstants.OWNED_COPY));

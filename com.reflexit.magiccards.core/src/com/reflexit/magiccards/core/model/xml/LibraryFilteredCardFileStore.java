@@ -26,22 +26,15 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 
 	@Override
 	protected void doInitialize() throws MagicException {
-		MagicLogger.traceStart("lfcs init");
+		MagicLogger.traceStart("libinit");
+		super.doInitialize();
 		CollectionMultiFileCardStore table = getMultiStore();
-		ModelRoot container = getModelRoot();
-		Collection<CardCollection> colls = container.getAllElements();
-		// init super
-		CardCollection def = getModelRoot().getDefaultLib();
-		for (CardElement elem : colls) {
-			table.addFile(elem.getFile(), elem.getLocation(), false);
-		}
-		table.setLocation(def.getLocation());
 		table.initialize();
 		table.addListener(this);
 		initialized = true;
-		container.addListener(this);
+		getModelRoot().addListener(this);
 		reconcile();
-		MagicLogger.traceEnd("lfcs init");
+		MagicLogger.traceEnd("libinit");
 	}
 
 	public synchronized static LibraryFilteredCardFileStore getInstance() {
@@ -51,7 +44,21 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 	}
 
 	private LibraryFilteredCardFileStore() {
-		super(new CollectionMultiFileCardStore());
+		super(new CollectionMultiFileCardStore() {
+			@Override
+			public synchronized void doInitialize() {
+				final ModelRoot container = DataManager.getInstance().getModelRoot();
+				CollectionMultiFileCardStore table = this;
+				Collection<CardCollection> colls = container.getAllElements();
+				// init super
+				CardCollection def = container.getDefaultLib();
+				for (CardElement elem : colls) {
+					table.addFile(elem.getFile(), elem.getLocation(), false);
+				}
+				table.setLocation(def.getLocation());
+				super.doInitialize();
+			}
+		});
 	}
 
 	@Override
@@ -76,6 +83,13 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 				}
 				break;
 			}
+			case CardEvent.UPDATE:
+				// need to save xml
+				if (event.getData() instanceof MagicCardPhysical) {
+					break;
+				} else {
+					return;
+				}
 			default:
 				break;
 		}

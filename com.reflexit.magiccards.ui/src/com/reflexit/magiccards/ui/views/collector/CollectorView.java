@@ -15,15 +15,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterField;
@@ -33,9 +29,9 @@ import com.reflexit.magiccards.ui.views.lib.AbstractMyCardsView;
 
 /**
  * Shows sets and how many cards collected per set
- * 
+ *
  */
-public class CollectorView extends AbstractMyCardsView implements ISelectionListener {
+public class CollectorView extends AbstractMyCardsView {
 	public static final String ID = CollectorView.class.getName();
 	private Action refresh;
 	private Action onlyOwn;
@@ -48,10 +44,8 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-		loadInitial();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, MagicUIActivator.helpId("viewcollector"));
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewcollector");
 	}
 
 	@Override
@@ -125,24 +119,23 @@ public class CollectorView extends AbstractMyCardsView implements ISelectionList
 	}
 
 	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+	}
+
+	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		getSite().getPage().addSelectionListener(this);
 	}
 
 	@Override
 	public void dispose() {
-		getSite().getPage().removeSelectionListener(this);
 		super.dispose();
 	}
 
-	protected void loadInitial() {
-		// TOTO remove?
-	}
-
 	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		// TODO remove?
+	protected void loadInitial() {
+		reloadData();
 	}
 
 	@Override

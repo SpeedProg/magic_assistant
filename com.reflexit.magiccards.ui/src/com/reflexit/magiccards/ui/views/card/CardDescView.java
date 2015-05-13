@@ -68,6 +68,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
@@ -81,6 +82,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private boolean asScanned;
 	private Action open;
 	private Action edit;
+	private IWebBrowser browser;
 
 	public class LoadCardJob extends Job {
 		private IMagicCard jCard;
@@ -481,7 +483,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		new Job("Setting saved card id") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				DataManager.getInstance().waitForInit(10);
+				WaitUtils.waitForDb();
 				IMagicCard card = (IMagicCard) DataManager.getCardHandler().getMagicDBStore().getCard(id);
 				if (card == null)
 					return Status.OK_STATUS;
@@ -509,7 +511,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		getSite().getPage().removeSelectionListener(this);
 		saveSelection();
 		try {
-			getBrowser().close();
+			if (browser != null) browser.close();
 		} catch (Exception e) {
 			// ignore
 		}
@@ -582,7 +584,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 
 	protected IWebBrowser getBrowser() throws PartInitException {
 		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-		IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW
+		browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW
 				| IWorkbenchBrowserSupport.STATUS,
 				MagicUIActivator.PLUGIN_ID, "Browser", null);
 		return browser;

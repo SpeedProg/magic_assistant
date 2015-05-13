@@ -67,7 +67,6 @@ import com.reflexit.magiccards.ui.commands.DeleteHandler;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.exportWizards.ImportAction;
-import com.reflexit.magiccards.ui.utils.UIRunnable;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
@@ -484,10 +483,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 				Object obj = event.getData();
 				if (obj instanceof CardCollection) {
 					CardCollection coll = (CardCollection) obj;
-					WaitUtils.scheduleWaitingJob(
-							() -> coll.isOpen(),
-							3000,
-							UIRunnable.syncExec(() -> openDeckView(coll)));
+					DeckView.openCollection(coll);
 				}
 				break;
 			case CardEvent.REMOVE_CONTAINER:

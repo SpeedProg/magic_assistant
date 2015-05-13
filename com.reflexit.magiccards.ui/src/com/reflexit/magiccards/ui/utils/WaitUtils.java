@@ -1,17 +1,20 @@
 package com.reflexit.magiccards.ui.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.BooleanSupplier;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.xml.LibraryFilteredCardFileStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class WaitUtils {
 	public static boolean waitForCondition(BooleanSupplier tester, long timeoutmillis, long intervals) {
@@ -63,11 +66,35 @@ public class WaitUtils {
 		return j;
 	}
 
-	public static Job scheduleJob(Runnable runable) {
-		Job j = new Job("working") {
+	public static Job scheduleJob(String name, Runnable runable) {
+		Job j = new Job(name) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				runable.run();
+				return Status.OK_STATUS;
+			};
+		};
+		j.schedule();
+		return j;
+	}
+
+	public static Job scheduleJob(String name, IRunnableWithProgress runable) {
+		Job j = new Job(name) {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				final String oldName = Thread.currentThread().getName();
+				Thread.currentThread().setName(name);
+				try {
+					runable.run(monitor);
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+				} catch (InvocationTargetException e) {
+					MagicUIActivator.getStatus(e.getCause());
+				} catch (InterruptedException e) {
+					return Status.CANCEL_STATUS;
+				} finally {
+					Thread.currentThread().setName(oldName);
+				}
 				return Status.OK_STATUS;
 			};
 		};
@@ -99,11 +126,13 @@ public class WaitUtils {
 		Display.getDefault().asyncExec(runnable);
 	}
 
-	public static void waitForLibrary() {
+	public static boolean waitForLibrary() {
+		if (!isLibraryInitialzed())
+			DataManager.getInstance().asyncInitDb();
 		waitForCondition(() -> {
-			DataManager.getInstance().getModelRoot();
 			return isLibraryInitialzed();
-		}, 30000, 100);
+		}, 30000, 1000);
+		return isLibraryInitialzed();
 	}
 
 	private static boolean isLibraryInitialzed() {
@@ -112,13 +141,13 @@ public class WaitUtils {
 		return lib.isInitialized();
 	}
 
-	public static void waitForDb() {
+	public static boolean waitForDb() {
 		final IDbCardStore<IMagicCard> magicDBStore = DataManager.getInstance().getMagicDBStore();
 		if (!magicDBStore.isInitialized())
 			DataManager.getInstance().asyncInitDb();
 		waitForCondition(() -> {
-			DataManager.getInstance().getModelRoot();
 			return magicDBStore.isInitialized();
-		}, 30000, 100);
+		}, 30000, 1000);
+		return magicDBStore.isInitialized();
 	}
 }
