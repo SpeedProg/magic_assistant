@@ -134,7 +134,7 @@ public class CollectorView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected void loadInitial() {
+	protected void loadInitialInBackground() {
 		reloadData();
 	}
 

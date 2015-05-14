@@ -40,6 +40,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -432,9 +433,9 @@ public abstract class AbstractCardsView extends ViewPart {
 					continue;
 				CardCollection cardCollection = deckView.getCardCollection();
 				String active = "";
-				IFilteredCardStore activeHandler = DataManager.getInstance().getCardHandler()
-						.getActiveDeckHandler();
-				if (activeHandler != null && activeHandler.getCardStore() == cardCollection.getStore()) {
+				ICardStore activeHandler = DataManager.getInstance().getCardHandler()
+						.getActiveStore();
+				if (activeHandler != null && activeHandler == cardCollection.getStore()) {
 					active = " (Active)";
 				}
 				String name = (cardCollection.isDeck() ? "Deck - " : "Collection - ")

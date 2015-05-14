@@ -55,8 +55,8 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	}
 
 	@Override
-	protected void loadInitial() {
-		super.loadInitial();
+	protected void loadInitialInBackground() {
+		super.loadInitialInBackground();
 		reloadData();
 	}
 

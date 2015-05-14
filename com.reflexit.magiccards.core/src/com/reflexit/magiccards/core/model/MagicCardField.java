@@ -898,7 +898,7 @@ public enum MagicCardField implements ICardField {
 		if (value instanceof String || value == null) {
 			setStr(card, (String) value);
 		} else
-			throw new IllegalArgumentException("Not supported type " + value.getClass());
+			throw new IllegalArgumentException("Not supported type " + value.getClass() + " for " + this);
 	}
 
 	protected void setM(MagicCardPhysical card, Object value) {

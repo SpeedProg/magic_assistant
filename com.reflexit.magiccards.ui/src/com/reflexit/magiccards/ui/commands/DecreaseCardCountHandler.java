@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
@@ -47,19 +47,19 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		IWorkbenchPart activePart = window.getPartService().getActivePart();
-		IFilteredCardStore activeDeckHandler = null;
+		ICardStore<IMagicCard> activeDeckHandler;
 		if (activePart instanceof DeckView) {
-			activeDeckHandler = ((DeckView) activePart).getFilteredStore();
+			activeDeckHandler = ((DeckView) activePart).getFilteredStore().getCardStore();
 			decrease(window, iss, activeDeckHandler);
 		} else if (activePart instanceof MagicDbView || activePart instanceof MyCardsView) {
-			activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = DataManager.getCardHandler().getActiveStore();
 			decrease(window, iss, activeDeckHandler);
 		}
 		return null;
 	}
 
 	protected void decrease(IWorkbenchWindow window, IStructuredSelection iss,
-			IFilteredCardStore activeDeckHandler) {
+			ICardStore activeDeckHandler) {
 		if (activeDeckHandler != null) {
 			List list = iss.toList();
 			ArrayList<IMagicCard> toRemove = new ArrayList<IMagicCard>();
@@ -72,7 +72,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 						toRemove.add(new MagicCardPhysical(mc, mc.getLocation()));
 					} else {
 						mc.setCount(count - 1);
-						DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc,
+						DataManager.getInstance().update(activeDeckHandler, mc,
 								Collections.singleton(MagicCardField.COUNT));
 					}
 				} else {
@@ -81,7 +81,7 @@ public class DecreaseCardCountHandler extends AbstractHandler {
 					toRemove.add(magicCardCopy);
 				}
 			}
-			DataManager.getInstance().remove(toRemove, activeDeckHandler.getCardStore());
+			DataManager.getInstance().remove(toRemove, activeDeckHandler);
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck");
 		}

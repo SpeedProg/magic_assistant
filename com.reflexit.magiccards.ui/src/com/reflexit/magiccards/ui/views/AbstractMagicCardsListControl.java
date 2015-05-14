@@ -729,7 +729,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		quickFilter.setPreferenceStore(getFilterPreferenceStore());
 		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
-		WaitUtils.scheduleJob("Loading cards " + this, () -> reloadData());
+		WaitUtils.scheduleJob("Loading cards " + getName(), () -> reloadData());
+	}
+
+	protected String getName() {
+		if (fstore == null) return "";
+		Location loc = fstore.getLocation();
+		if (loc == null) return "";
+		return loc.getName();
 	}
 
 	@Override
@@ -1167,7 +1174,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public IStatus loadDataInJob(final Runnable postLoad, IProgressMonitor monitor) {
 		final Display display = Display.getDefault();
 		try {
-			monitor.beginTask("Loading for " + AbstractMagicCardsListControl.this, 100);
+			monitor.beginTask("Loading for " + getName(), 100);
 			checkInit();
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;

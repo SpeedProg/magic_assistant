@@ -25,11 +25,13 @@ public interface ICardHandler {
 
 	public IFilteredCardStore getCardCollectionFilteredStore(String id);
 
-	public IFilteredCardStore getActiveDeckHandler();
+	public ICardStore getActiveStore();
+
+	public String getActiveDeckId();
 
 	public ICardStore loadFromXml(String filename);
 
-	public void setActiveDeckHandler(IFilteredCardStore store);
+	public void setActiveDeckId(String id);
 
 	public int downloadUpdates(String set, Properties options, ICoreProgressMonitor pm)
 			throws MagicException, InterruptedException;

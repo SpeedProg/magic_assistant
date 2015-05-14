@@ -41,7 +41,7 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.xml.StringCache;
 
 public class XmlCardHolder implements ICardHandler {
-	private IFilteredCardStore activeDeck;
+	private String activeDeck;
 
 	@Override
 	public IFilteredCardStore getMagicDBFilteredStore() {
@@ -291,13 +291,23 @@ public class XmlCardHolder implements ICardHandler {
 	}
 
 	@Override
-	public IFilteredCardStore getActiveDeckHandler() {
+	public ICardStore getActiveStore() {
+		LibraryFilteredCardFileStore lib = (LibraryFilteredCardFileStore) DataManager
+				.getCardHandler()
+				.getLibraryFilteredStore();
+		Location location = Location.createLocation(activeDeck);
+		ICardStore<IMagicCard> store = lib.getStore(location);
+		return store;
+	}
+
+	@Override
+	public String getActiveDeckId() {
 		return this.activeDeck;
 	}
 
 	@Override
-	public void setActiveDeckHandler(IFilteredCardStore store) {
-		this.activeDeck = store;
+	public void setActiveDeckId(String key) {
+		this.activeDeck = key;
 	}
 
 	@Override

@@ -13,14 +13,20 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 	public DeckFilteredCardFileStore(String filename) {
 		super(null);
 		this.filename = filename;
-		LibraryFilteredCardFileStore lib = (LibraryFilteredCardFileStore) DataManager
-				.getCardHandler()
-				.getLibraryFilteredStore();
-		ICardStore<IMagicCard> store = lib.getStore(Location.createLocation(filename));
-		this.store = store;
+		ICardStore<IMagicCard> store = getStoreForKey(filename);
 		if (store == null) {
 			throw new MagicException("Cannot open file " + filename);
 		}
+		this.store = store;
+	}
+
+	public static ICardStore<IMagicCard> getStoreForKey(String filename) {
+		LibraryFilteredCardFileStore lib = (LibraryFilteredCardFileStore) DataManager
+				.getCardHandler()
+				.getLibraryFilteredStore();
+		Location location = Location.createLocation(filename);
+		ICardStore<IMagicCard> store = lib.getStore(location);
+		return store;
 	}
 
 	@Override

@@ -47,6 +47,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
+import com.reflexit.magiccards.core.model.xml.DeckFilteredCardFileStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CardReconcileDialog;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
@@ -113,7 +114,6 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		updatePartName();
 	}
 
 	@Override
@@ -122,9 +122,9 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected void loadInitial() {
-		super.loadInitial();
-		String secondaryId = getViewSite().getSecondaryId();
+	protected void loadInitialInBackground() {
+		super.loadInitialInBackground();
+		String secondaryId = getDeckId();
 		this.deck = DataManager.getInstance().getModelRoot().findCardCollectionById(secondaryId);
 		if (export != null && deck != null) {
 			((ExportAction) export).selectionChanged(new StructuredSelection(getCardCollection()));
@@ -276,28 +276,26 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void updatePartName() {
+		String deckId = getDeckId();
+		Location location = Location.createLocation(deckId);
+		String name = location.getName();
+		setPartName(name);
+		setTitleToolTip(deckId);
 		if (deck == null) {
-			String secondaryId = getViewSite().getSecondaryId();
-			setPartName(secondaryId);
 			IMagicControl c = getActiveControl();
-			c.setStatus("Loading " + secondaryId + "...");
+			c.setStatus("Loading " + deckId + "...");
 			return;
 		}
-		String tooltip = deck.getLocation().getPath();
-		if (tooltip != null) {
-			setTitleToolTip(tooltip);
-		}
-		String name = deck.getName();
 		//setPartProperty(name, name);
 		if (deck.getLocation().isSideboard()) {
-			setPartName("Sideboard: " + deck.getLocation().toMainDeck().getName());
+			setPartName("#" + name);
 			if (sideboard != null)
 				sideboard.setEnabled(false);
+			setTitleImage(MagicUIActivator.getDefault().getImage("icons/obj16/sideboard16.png"));
 		} else {
-			if (deck.isDeck()) {
-				setPartName("Deck: " + name);
-			} else
-				setPartName("Collection: " + name);
+			if (!deck.isDeck()) {
+				setTitleImage(MagicUIActivator.getDefault().getImage("icons/lib32.png"));
+			}
 		}
 	}
 
@@ -328,6 +326,7 @@ public class DeckView extends AbstractMyCardsView {
 				new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 						display.getSystemColor(SWT.COLOR_WHITE) },
 				new int[] { 50 });
+		updatePartName();
 	}
 
 	@Override
@@ -457,6 +456,8 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void setStore() {
+		WaitUtils.waitForCondition(() -> (DeckFilteredCardFileStore.getStoreForKey(getDeckId()) != null),
+				5000, 300);
 		IFilteredCardStore<IMagicCard> store = getFilteredStore();
 		if (store == null)
 			return;
@@ -464,6 +465,10 @@ public class DeckView extends AbstractMyCardsView {
 			IDeckPage page = deckPage;
 			page.setFilteredStore(store);
 		}
+	}
+
+	public String getDeckId() {
+		return getViewSite().getSecondaryId();
 	}
 
 	@Override

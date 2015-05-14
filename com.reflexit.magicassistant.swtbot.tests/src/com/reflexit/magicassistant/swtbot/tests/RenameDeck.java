@@ -50,7 +50,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		bot.text().setText("ccc");
 		bot.button("OK").click();
 		bot.waitUntil(Conditions.shellCloses(sshell), 1000);
-		decks.getNode("ccc").select();
+		decks.getNode("ccc (Active)").select();
 		deckView = bot.viewById(DeckView.ID);
 		assertEquals(name, getFirstRowInView(deckView).getText(0));
 		assertEquals(type, getFirstRowInView(deckView).getText(3));

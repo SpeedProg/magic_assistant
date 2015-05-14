@@ -6,14 +6,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class CardsNavigatorLabelProvider extends LabelProvider implements IColorProvider {
@@ -21,13 +18,11 @@ public class CardsNavigatorLabelProvider extends LabelProvider implements IColor
 	public String getText(Object element) {
 		if (element instanceof CardElement) {
 			String name = ((CardElement) element).getLabel();
-			IFilteredCardStore activeDeckHandler = DataManager.getCardHandler().getActiveDeckHandler();
-			if (activeDeckHandler != null && element instanceof CardCollection) {
-				ICardStore<IMagicCard> store = ((CardCollection) element).getStore();
-				if (store != null) {
-					if (activeDeckHandler.getCardStore().getLocation().equals(store.getLocation())) {
-						return name + " (Active)";
-					}
+			String activeDeckId = DataManager.getCardHandler().getActiveDeckId();
+			if (activeDeckId != null && element instanceof CardCollection) {
+				String collId = ((CardCollection) element).getId();
+				if (activeDeckId.equals(collId)) {
+					return name + " (Active)";
 				}
 			}
 			return name;

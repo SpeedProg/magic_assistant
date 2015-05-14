@@ -289,7 +289,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		WaitUtils.scheduleJob("Initializing " + this,
+		WaitUtils.scheduleJob("Initializing " + getPartName(),
 				() -> {
 					if (WaitUtils.waitForLibrary()) {
 						DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
@@ -297,12 +297,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					} else {
 						MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
 					}
-					loadInitial();
+					loadInitialInBackground();
 				}
 				);
 	}
 
-	protected void loadInitial() {
+	protected void loadInitialInBackground() {
 		// do nothing
 	}
 

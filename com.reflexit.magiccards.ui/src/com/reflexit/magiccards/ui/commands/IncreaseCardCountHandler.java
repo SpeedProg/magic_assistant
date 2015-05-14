@@ -18,7 +18,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
@@ -46,26 +46,26 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		IWorkbenchPart activePart = window.getPartService().getActivePart();
-		IFilteredCardStore activeDeckHandler = null;
+		ICardStore activeDeckHandler = null;
 		DataManager dm = DataManager.getInstance();
 		if (activePart instanceof DeckView) {
-			activeDeckHandler = ((DeckView) activePart).getFilteredStore();
+			activeDeckHandler = ((DeckView) activePart).getFilteredStore().getCardStore();
 			increase(window, iss, activeDeckHandler);
 		} else if (activePart instanceof MagicDbView) {
-			activeDeckHandler = dm.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = dm.getCardHandler().getActiveStore();
 			if (activeDeckHandler != null)
-				dm.copyCards(dm.expandGroups(iss.toList()), activeDeckHandler.getCardStore());
+				dm.copyCards(dm.expandGroups(iss.toList()), activeDeckHandler);
 			else
 				throw new ExecutionException("No active deck");
 		} else if (activePart instanceof MyCardsView) {
-			activeDeckHandler = dm.getCardHandler().getActiveDeckHandler();
+			activeDeckHandler = dm.getCardHandler().getActiveStore();
 			increase(window, iss, activeDeckHandler);
 		}
 		return null;
 	}
 
 	protected void increase(IWorkbenchWindow window, IStructuredSelection iss,
-			IFilteredCardStore activeDeckHandler) {
+			ICardStore activeDeckHandler) {
 		if (activeDeckHandler != null) {
 			ArrayList<IMagicCard> toAdd = new ArrayList<IMagicCard>();
 			for (Iterator iterator = iss.iterator(); iterator.hasNext();) {
@@ -74,13 +74,13 @@ public class IncreaseCardCountHandler extends AbstractHandler {
 					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
 					int count = mc.getCount();
 					mc.setCount(count + 1);
-					DataManager.getInstance().update(activeDeckHandler.getCardStore(), mc,
+					DataManager.getInstance().update(activeDeckHandler, mc,
 							Collections.singleton(MagicCardField.COUNT));
 				} else {
 					toAdd.add(magicCard);
 				}
 			}
-			DataManager.getInstance().add(toAdd, activeDeckHandler.getCardStore());
+			DataManager.getInstance().add(toAdd, activeDeckHandler);
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck/collection");
 		}

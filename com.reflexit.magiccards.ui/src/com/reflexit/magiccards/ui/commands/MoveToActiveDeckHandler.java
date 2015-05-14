@@ -14,7 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.ui.dialogs.CountConfirmationDialog;
 
 /**
@@ -51,20 +51,20 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 			// '*' - move all cards
 		}
 		IStructuredSelection iss = (IStructuredSelection) selection;
-		final IFilteredCardStore<IMagicCard> activeDeckHandler = DataManager.getCardHandler()
-				.getActiveDeckHandler();
+		final ICardStore<IMagicCard> activeDeckHandler = DataManager.getCardHandler()
+				.getActiveStore();
 		if (activeDeckHandler != null) {
 			List<IMagicCard> list = iss.toList();
 			try {
 				if (count == -1) {
-					DM.moveCards(DataManager.expandGroups(list), activeDeckHandler.getCardStore());
+					DM.moveCards(DataManager.expandGroups(list), activeDeckHandler);
 				} else if (count == 0) {
 					new CountConfirmationDialog(window.getShell(), iss) {
 						@Override
 						protected void runOperation() {
 							Map<IMagicCard, Integer> map = getCountMap();
 							List<IMagicCard> list = DM.splitCards(map);
-							DM.moveCards(list, activeDeckHandler.getCardStore());
+							DM.moveCards(list, activeDeckHandler);
 						};
 					}.open();
 					// DataManager.moveCards(list,
@@ -72,9 +72,9 @@ public class MoveToActiveDeckHandler extends AbstractHandler {
 				} else {
 					List<IMagicCard> x = DM.splitCards(list, count);
 					if (x.size() == 0) {
-						DM.moveCards(list, activeDeckHandler.getCardStore());
+						DM.moveCards(list, activeDeckHandler);
 					} else {
-						DM.moveCards(x, activeDeckHandler.getCardStore());
+						DM.moveCards(x, activeDeckHandler);
 					}
 				}
 			} catch (Exception e) {
