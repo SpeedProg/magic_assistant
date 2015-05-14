@@ -222,8 +222,7 @@ public class DeckView extends AbstractMyCardsView {
 		CollectionsContainer parent = (CollectionsContainer) deck.getParent();
 		CardCollection s;
 		if (!deck.getParent().contains(sideboard)) {
-			s = parent.addDeck(sideboard.getBaseFileName());
-			s.setVirtual(deck.getStorageInfo().isVirtual());
+			s = parent.addDeck(sideboard.getBaseFileName(), deck.isVirtual());
 		} else {
 			s = (CardCollection) parent.findChield(sideboard);
 		}

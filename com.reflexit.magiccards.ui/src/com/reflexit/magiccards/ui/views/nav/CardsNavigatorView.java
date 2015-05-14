@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -58,7 +57,6 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
-import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -381,13 +379,6 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 				return (obj instanceof CardElement && !(obj instanceof MagicDbContainter));
 			}
 		};
-	}
-
-	public static CardCollection createNewDeckAction(CollectionsContainer parent, String name,
-			IWorkbenchPage page) {
-		String filename = name + ".xml";
-		CardCollection d = parent.addDeck(filename);
-		return d;
 	}
 
 	private void hookDoubleClickAction() {

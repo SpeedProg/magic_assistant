@@ -104,13 +104,12 @@ public class ImportUtils {
 				if (parent.contains(location)) {
 					continue;
 				}
-				CardCollection sideboard = parent.addDeck(location.getBaseFileName());
+				boolean virtual = true;
 				CardCollection maindeck = (CardCollection) parent.findChield(location.toMainDeck());
 				if (maindeck != null) {
-					maindeck.open();
-					sideboard.setVirtual(maindeck.isVirtual());
+					virtual = maindeck.isVirtual();
 				}
-				sideboard.close();
+				CardCollection sideboard = parent.addDeck(location.getBaseFileName(), virtual);
 			}
 		}
 	}

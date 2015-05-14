@@ -23,12 +23,13 @@ public class CardCollection extends CardElement {
 	transient protected Boolean virtual;
 
 	public CardCollection(String filename, CardOrganizer parent) {
-		this(filename, parent, null);
+		this(filename, parent, null, null);
 	}
 
-	public CardCollection(String filename, CardOrganizer parent, Boolean deck) {
+	public CardCollection(String filename, CardOrganizer parent, Boolean deck, Boolean virtual) {
 		super(filename, parent, false);
 		this.deck = deck;
+		this.virtual = virtual;
 		setParentInit(parent);
 		createFile();
 		parent.fireCreationEvent(this);
@@ -47,18 +48,20 @@ public class CardCollection extends CardElement {
 
 	@Override
 	public CardElement newElement(String name, CardOrganizer parent) {
-		return new CardCollection(name + ".xml", parent, isDeck());
+		return new CardCollection(name + ".xml", parent, null, null);
 	}
 
 	public ICardStore<IMagicCard> getStore() {
+		if (store == null) {
+			open();
+		}
 		return this.store;
 	}
 
 	public IStorageInfo getStorageInfo() {
-		if (!isOpen()) {
-			open();
-		}
-		IStorage storage = ((IStorageContainer) store).getStorage();
+		if (getStore() == null)
+			return null;
+		IStorage storage = ((IStorageContainer) getStore()).getStorage();
 		if (storage instanceof IStorageInfo) {
 			IStorageInfo si = ((IStorageInfo) storage);
 			return si;
@@ -77,39 +80,33 @@ public class CardCollection extends CardElement {
 		open(fi.getCardStore());
 	}
 
-	public void open(ICardStore<IMagicCard> store) {
+	public synchronized void open(ICardStore<IMagicCard> store) {
 		if (store == null)
 			return;
 		this.store = store;
 		IStorageInfo info = getStorageInfo();
 		if (info != null) {
 			if (deck != null) {
-				if (deck)
-					info.setType(IStorageInfo.DECK_TYPE);
-				else
-					info.setType(IStorageInfo.COLLECTION_TYPE);
-			} else {
-				deck = IStorageInfo.DECK_TYPE.equals(info.getType());
+				info.setType(deck ? IStorageInfo.DECK_TYPE : IStorageInfo.COLLECTION_TYPE);
 			}
 			if (virtual != null) {
 				info.setVirtual(virtual);
-			} else {
-				virtual = info.isVirtual();
 			}
 		}
 	}
 
 	public boolean isDeck() {
-		if (deck == null) return false;
-		return deck;
+		IStorageInfo info = getStorageInfo();
+		if (info != null) {
+			return IStorageInfo.DECK_TYPE.equals(info.getType());
+		}
+		if (deck != null)
+			return deck;
+		return false;
 	}
 
 	public void close() {
 		this.store = null;
-	}
-
-	public boolean isOpen() {
-		return this.store != null;
 	}
 
 	public String getId() {
@@ -118,17 +115,17 @@ public class CardCollection extends CardElement {
 
 	public void setVirtual(boolean virtual) {
 		this.virtual = virtual;
-		if (isOpen()) {
-			IStorageInfo info = getStorageInfo();
-			if (info != null) {
-				info.setVirtual(virtual);
-			}
+		IStorageInfo info = getStorageInfo();
+		if (info != null) {
+			info.setVirtual(virtual);
 		}
 	}
 
 	public boolean isVirtual() {
-		if (virtual == null && !isOpen())
-			throw new IllegalArgumentException("Store is not open");
+		IStorageInfo info = getStorageInfo();
+		if (info != null) {
+			return info.isVirtual();
+		}
 		if (virtual != null)
 			return virtual;
 		return true;

@@ -253,9 +253,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			}
 		}
 		if (!separateCollections) {
-			col = new CardCollection(name + ".xml", parent, false);
-			col.open();
-			col.setVirtual(virtual);
+			col = new CardCollection(name + ".xml", parent, false, virtual);
 			try {
 				// 1*packs rare cards
 				generateRarity(countRare * packs, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE,
@@ -277,9 +275,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 			}
 		} else {
 			for (int pack = 0; pack < packs; pack++) {
-				col = new CardCollection(name + "_" + (pack + 1) + ".xml", parent, false);
-				col.open();
-				col.setVirtual(virtual);
+				col = new CardCollection(name + "_" + (pack + 1) + ".xml", parent, false, virtual);
 				try {
 					// 1*packs rare cards
 					generateRarity(countRare, filterset, filter, dbcards, col, Rarity.MYTHIC_RARE,

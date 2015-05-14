@@ -34,12 +34,9 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		CardCollection f = getApplicableElement();
-		boolean wasOpen = f.isOpen();
 		EditDeckPropertiesDialog dialog = new EditDeckPropertiesDialog(window.getShell(), f.getStorageInfo());
 		if (dialog.open() == Dialog.OK) {
-			if (wasOpen) {
-				DeckView.openCollection(f);
-			}
+			DeckView.openCollection(f);
 		}
 		return null;
 	}

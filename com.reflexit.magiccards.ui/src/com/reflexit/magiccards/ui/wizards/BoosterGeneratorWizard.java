@@ -35,7 +35,6 @@ import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -164,14 +163,11 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		}
 		monitor.worked(1);
 		CardOrganizer parent = (CardOrganizer) resource;
-		final CardCollection col = new CardCollection(name + ".xml", parent, false);
+		final CardCollection col = new CardCollection(name + ".xml", parent, false, virtual);
 		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
 				new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
-		WaitUtils.scheduleWaitingJob(
-				() -> col.isOpen(),
-				3000,
-				() -> DeckView.openCollection(col));
+		DeckView.openCollection(col);
 		monitor.done();
 	}
 
@@ -184,9 +180,6 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	private void populateLibrary(ArrayList<Edition> sets, int packs, CardCollection col,
 			IProgressMonitor monitor) {
 		monitor.beginTask("Generating", 10);
-		if (col.isOpen() == false) {
-			col.open();
-		}
 		monitor.worked(1);
 		ICardStore<IMagicCard> store = col.getStore();
 		HashMap<String, String> filterset = new HashMap<String, String>();

@@ -162,7 +162,7 @@ public class SingleFileCardStorage extends MemoryCardStorage<IMagicCard> impleme
 
 	protected final boolean doSetType(String type) {
 		String x = StringCache.intern(type);
-		if (type == x) return false;
+		if (this.type == x) return false;
 		this.type = x;
 		return true;
 	}

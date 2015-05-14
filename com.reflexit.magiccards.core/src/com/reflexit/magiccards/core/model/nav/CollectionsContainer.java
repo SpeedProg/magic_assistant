@@ -47,7 +47,7 @@ public class CollectionsContainer extends CardOrganizer {
 				if (name.endsWith(".xml")) {
 					if (el == null) {
 						boolean deck = checkType(mem);
-						new CardCollection(name, this, deck);
+						new CardCollection(name, this, deck, null);
 					}
 				}
 			}
@@ -75,25 +75,21 @@ public class CollectionsContainer extends CardOrganizer {
 	}
 
 	public CollectionsContainer addCollectionsContainer(String name) {
-		CollectionsContainer d = new CollectionsContainer(name, this);
+		return (CollectionsContainer) newElement(name, this);
+	}
+
+	public CardCollection addDeck(String filename, boolean virtual) {
+		CardCollection d = new CardCollection(filename, this, true, virtual);
 		return d;
 	}
 
-	public CardCollection addDeck(String name) {
-		CardCollection d = new CardCollection(name, this, true);
-		return d;
-	}
-
-	/**
-	 * @param el
-	 */
 	public void removeDeck(CardCollection el) {
 		el.remove();
 	}
 
 	@Override
 	public CardElement newElement(String name, CardOrganizer parent) {
-		return new CollectionsContainer(name + ".xml", parent);
+		return new CollectionsContainer(name, parent);
 	}
 
 	public CardElement findChield(Location loc) {

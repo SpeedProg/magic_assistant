@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -63,7 +62,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CorrectSetDialog;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
-import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 /**
  * First and only page of Deck Export Wizard
@@ -260,19 +258,10 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	}
 
 	protected void createNewDeck(final String newDeckName, boolean virtual) {
-		// create a sample file
 		ModelRoot root = DataManager.getInstance().getModelRoot();
-		final CardElement resource = root.getDeckContainer();
-		getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				CardCollection element = CardsNavigatorView.createNewDeckAction(
-						(CollectionsContainer) resource, newDeckName, page);
-				element.setVirtual(virtual);
-				setElement(element);
-			}
-		});
+		final CollectionsContainer resource = root.getDeckContainer();
+		CardCollection element = resource.addDeck(newDeckName + ".xml", virtual);
+		setElement(element);
 	}
 
 	protected String getNewDeckName() {
@@ -650,7 +639,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	 * The button id is stored as the buttons client data. Note that the parent's layout is assumed to be a
 	 * GridLayout and the number of columns in this layout is incremented. Subclasses may override.
 	 * </p>
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite
 	 * @param id

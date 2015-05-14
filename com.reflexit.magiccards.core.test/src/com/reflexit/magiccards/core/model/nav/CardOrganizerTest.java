@@ -70,7 +70,7 @@ public class CardOrganizerTest extends TestCase {
 				res[0] = true;
 			}
 		});
-		deckContainer.addDeck("test");
+		deckContainer.addDeck("test", false);
 		assertTrue("Event is not received", res[0]);
 	}
 }

@@ -24,7 +24,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
@@ -52,10 +51,6 @@ public class RenameHandler extends AbstractHandler {
 		CardElement f = (CardElement) iss.getFirstElement();
 		if (f.getParent() == getModelRoot()) {
 			return null;
-		}
-		boolean wasOpen = false;
-		if (f instanceof CardCollection) {
-			wasOpen = ((CardCollection) f).isOpen();
 		}
 		ModelRoot root = getModelRoot();
 		if (f == root.getDefaultLib()) {

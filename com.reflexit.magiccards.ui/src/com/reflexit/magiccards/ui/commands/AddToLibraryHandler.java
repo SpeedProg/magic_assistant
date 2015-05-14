@@ -38,9 +38,6 @@ public class AddToLibraryHandler extends AbstractHandler {
 		IStructuredSelection iss = (IStructuredSelection) selection;
 		DataManager dm = DataManager.getInstance();
 		CardCollection defaultLib = dm.getModelRoot().getDefaultLib();
-		if (!defaultLib.isOpen()) {
-			defaultLib.open();
-		}
 		dm.copyCards(dm.expandGroups(iss.toList()), defaultLib.getStore());
 		return null;
 	}
