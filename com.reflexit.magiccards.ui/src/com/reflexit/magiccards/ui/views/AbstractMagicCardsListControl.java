@@ -1102,7 +1102,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE && event.getData() instanceof ICard) {
-			System.err.println("update event for " + event.getData());
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
