@@ -370,7 +370,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 	private void generateRandom(IFilteredCardStore<IMagicCard> sourceCards, ICardStore<IMagicCard> store) {
 		boolean succ = false;
 		while (!succ) {
-			int rcards = sourceCards.getUniqueCount();
+			int rcards = sourceCards.getSize();
 			if (rcards == 0)
 				throw new MagicException("No more cards found");
 			int index = (int) (Math.random() * rcards);

@@ -62,7 +62,7 @@ public class LoadingExtraJob extends Job {
 					list = selection.iterator();
 					break;
 				case LoadExtrasDialog.USE_FILTER:
-					size = view.getFilteredStore().getUniqueCount();
+					size = view.getFilteredStore().getSize();
 					list = view.getFilteredStore().iterator();
 					break;
 				case LoadExtrasDialog.USE_ALL:

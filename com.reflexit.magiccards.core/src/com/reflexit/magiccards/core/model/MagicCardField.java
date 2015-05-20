@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.model.aggr.FieldOwnCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldOwnUniqueAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldProggress4Aggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldProggressAggregator;
+import com.reflexit.magiccards.core.model.aggr.FieldSizeAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldUniqueAggregator;
 import com.reflexit.magiccards.core.model.aggr.StringAggregator;
 
@@ -367,6 +368,17 @@ public enum MagicCardField implements ICardField {
 		@Override
 		protected ICardVisitor getAggregator() {
 			return new FieldUniqueAggregator(this);
+		}
+
+		@Override
+		public Object get(IMagicCard card) {
+			return card.getUniqueCount();
+		};
+	},
+	SIZE(null) { // flat size of the group, size of non-groupped element is always 1
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new FieldSizeAggregator(this);
 		}
 
 		@Override

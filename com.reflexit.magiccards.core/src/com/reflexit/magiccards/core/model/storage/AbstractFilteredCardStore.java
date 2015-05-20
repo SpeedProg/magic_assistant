@@ -64,6 +64,12 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	}
 
 	@Override
+	public int getFlatSize() {
+		initialize();
+		return rootGroup.getInt(MagicCardField.SIZE);
+	}
+
+	@Override
 	public Iterator<T> iterator() {
 		return (Iterator<T>) rootGroup.iterator();
 	}

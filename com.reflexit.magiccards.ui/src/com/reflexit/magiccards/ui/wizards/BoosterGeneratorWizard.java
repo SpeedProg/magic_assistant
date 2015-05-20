@@ -232,7 +232,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 	 */
 	private void generateRandom(int packs, IFilteredCardStore<IMagicCard> dbcards,
 			ICardStore<IMagicCard> store, CardElement col) {
-		int rcards = dbcards.getUniqueCount();
+		int rcards = dbcards.getSize();
 		for (int i = 0; i < packs; i++) {
 			int index = (int) (Math.random() * rcards);
 			IMagicCard card = (IMagicCard) dbcards.getElement(index);

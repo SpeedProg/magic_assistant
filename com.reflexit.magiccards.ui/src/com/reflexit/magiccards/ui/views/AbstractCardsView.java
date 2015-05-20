@@ -307,7 +307,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		final IStructuredSelection selection = getSelection();
 		IFilteredCardStore filteredStore = getFilteredStore();
 		final LoadExtrasDialog dialog = new LoadExtrasDialog(getShell(), selection.size(),
-				filteredStore.getUniqueCount(),
+				filteredStore.getFlatSize(),
 				filteredStore.getCardStore().size());
 		if (dialog.open() != Window.OK || dialog.getFields().isEmpty()) {
 			return;

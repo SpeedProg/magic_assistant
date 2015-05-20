@@ -311,7 +311,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (filteredStore == null)
 			return "";
 		ICardStore cardStore = filteredStore.getCardStore();
-		int shownSize = filteredStore.getUniqueCount();
+		int shownSize = filteredStore.getFlatSize();
 		int storeSize = cardStore.size();
 		if (storeSize == 0)
 			return "";
@@ -1018,7 +1018,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		IFilteredCardStore filteredStore = getFilteredStore();
 		if (filteredStore != null) {
 			ICardStore cardStore = filteredStore.getCardStore();
-			int shownSize = filteredStore.getUniqueCount();
+			int shownSize = filteredStore.getFlatSize();
 			int storeSize = cardStore.size();
 			return storeSize - shownSize;
 		}

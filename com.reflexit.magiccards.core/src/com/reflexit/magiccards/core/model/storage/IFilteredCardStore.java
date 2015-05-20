@@ -15,11 +15,18 @@ public interface IFilteredCardStore<T> extends Iterable<T>, ILocatable, ICardCou
 	public ICardStore<T> getCardStore();
 
 	/**
-	 * Size of filtered list
+	 * Size of filtered list, top level
 	 *
 	 * @return
 	 */
 	public int getSize();
+
+	/**
+	 * Number of leaf elements if groups (and size if not groupped)
+	 * 
+	 * @return
+	 */
+	public int getFlatSize();
 
 	/**
 	 * Elements in filtered list
