@@ -2,8 +2,8 @@ package com.reflexit.magiccards.core.model.abs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class CardList implements ICardList<ICard> {
 	}
 
 	public Set<Object> getUnique(ICardField f) {
-		HashSet<Object> set = new HashSet<Object>();
+		LinkedHashSet<Object> set = new LinkedHashSet<Object>();
 		for (ICard card : this) {
 			Object value = card.get(f);
 			set.add(value);

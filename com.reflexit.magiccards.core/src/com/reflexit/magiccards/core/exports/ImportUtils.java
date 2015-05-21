@@ -33,6 +33,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -176,6 +177,9 @@ public class ImportUtils {
 		if (set.contains(" : ")) {
 			set = set.replaceAll(" : ", ": ");
 		}
+		Edition eset = Editions.getInstance().getEditionByName(set);
+		if (eset != null)
+			return eset;
 		String lset = set.toLowerCase(Locale.ENGLISH);
 		if (lset.startsWith("token ")) {
 			lset = lset.substring(6);
@@ -246,11 +250,19 @@ public class ImportUtils {
 				card.setMagicCard(ref);
 				return null;
 			} else {
-				if (ed == null) {
+				if (ed == null || ed.isUnknown()) {
 					base.setEmptyFromCard(ref);
 					card.setError(ImportError.SET_NOT_FOUND_ERROR);
 					return card.getBase();
 				} else {
+					int id = base.getCardId();
+					base.setEmptyFromCard(ref);
+					String imageUrl = base.getImageUrl();
+					if (id == 0) {
+						id = base.syntesizeId();
+					}
+					base.setCardId(id);// cannot use same id because set is new
+					base.set(MagicCardField.IMAGE_URL, imageUrl); // but we can use image from prev set
 					card.setError(ImportError.NAME_NOT_FOUND_IN_SET_ERROR);
 				}
 			}
@@ -380,6 +392,11 @@ public class ImportUtils {
 				if (newCard != null) {
 					// import int DB
 					newdbrecords.add(newCard);
+					Object error = ((MagicCardPhysical) card).getError();
+					if (error == ImportError.NAME_NOT_FOUND_IN_SET_ERROR
+							|| error == ImportError.NAME_NOT_FOUND_IN_DB_ERROR) {
+						((MagicCardPhysical) card).setError(null); // clear error on db import
+					}
 				} else if (oldCard != card.getBase()) {
 					// card is updated - merge
 					card.getBase().setNonEmptyFromCard(columns, oldCard);

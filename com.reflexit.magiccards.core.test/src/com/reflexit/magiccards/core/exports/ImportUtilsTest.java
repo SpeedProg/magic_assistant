@@ -20,9 +20,7 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class ImportUtilsTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
@@ -57,7 +55,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 
 	public void preimport() {
 		try {
-			result = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, virtual,
+			result = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport,
+					true, virtual,
 					deck.getLocation(), resolve, monitor);
 			preimport = (Collection<IMagicCard>) result.getList();
 			setout(preimport);
@@ -92,7 +91,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Test
 	public void testResolveSet() {
 		assertEquals("Time Spiral \"Timeshifted\"", ImportUtils.resolveSet("''Timeshifted''").getName());
-		assertEquals("Duel Decks: Ajani vs. Nicol Bolas", ImportUtils.resolveSet("Duel decks : Ajani vs. Nicol Bolas").getName());
+		assertEquals("Duel Decks: Ajani vs. Nicol Bolas",
+				ImportUtils.resolveSet("Duel decks : Ajani vs. Nicol Bolas").getName());
 		assertEquals("Lorwyn", ImportUtils.resolveSet("Token Lorwyn ").getName());
 	}
 
@@ -137,7 +137,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreview() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Bla|2");
-		ImportResult performPreview = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport, true, virtual,
+		ImportResult performPreview = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()),
+				tableImport, true, virtual,
 				Location.createLocation("test"), resolve, monitor);
 		List values = performPreview.getList();
 		assertEquals(1, values.size());
@@ -167,8 +168,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
-		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		Editions.getInstance().addEdition("Magic Game Day Cards", "MGDC");
+		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		// ImportUtils.importIntoDb(mdb);
 		assertEquals(1, mdb.size());
 		IMagicCard card = mdb.get(0);
@@ -186,8 +187,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
-		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		Editions.getInstance().addEdition("Magic Game Day Cards", "MGDC");
+		ImportUtils.performPreImportWithDb(preimport, mdb, result.getFields());
 		// ImportUtils.importIntoDb(mdb);
 		assertEquals(1, mdb.size());
 		IMagicCard card = mdb.get(0);
@@ -195,7 +196,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Seb McKinnon", card.getArtist());
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals("My Text", card.getText());
-		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card", card.getBase().getImageUrl());
+		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card", card
+				.getBase().getImageUrl());
 	}
 
 	@Test

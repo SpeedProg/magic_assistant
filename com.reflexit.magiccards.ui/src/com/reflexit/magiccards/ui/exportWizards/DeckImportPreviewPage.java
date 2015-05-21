@@ -58,7 +58,6 @@ public class DeckImportPreviewPage extends WizardPage {
 			setTitle("Importing format " + startingPage.getReportType().getLabel());
 			String desc = getFirstDescription();
 			setErrorMessage(null);
-			DeckImportWizard wizard = (DeckImportWizard) getWizard();
 			try (InputStream st = startingPage.openInputStream()) {
 				String textFile = getTextOfFileAsString(st, 20);
 				text.setText(textFile);
@@ -67,13 +66,12 @@ public class DeckImportPreviewPage extends WizardPage {
 				return;
 			}
 			startingPage.performImport(true);
-			ImportResult result = (ImportResult) wizard.getData();
-			if (result == null) {
+			previewResult = startingPage.getPreviewResult();
+			if (previewResult == null) {
 				setErrorMessage("Cannot import");
 				return;
 			}
-			previewResult = result;
-			ICardField[] fields = result.getFields();
+			ICardField[] fields = previewResult.getFields();
 			if (fields != null) {
 				ColumnCollection colls = manager.getColumnsCollection();
 				AbstractColumn errColumn = colls.getColumn(MagicCardField.ERROR);
@@ -86,7 +84,7 @@ public class DeckImportPreviewPage extends WizardPage {
 				}
 				manager.updateColumns(prefColumns);
 			}
-			List list = result.getList();
+			List list = previewResult.getList();
 			int count = 0;
 			if (list.size() > 0) {
 				manager.updateViewer(list);
@@ -97,9 +95,9 @@ public class DeckImportPreviewPage extends WizardPage {
 					}
 				}
 			}
-			if (result.getError() != null) {
-				MagicUIActivator.log(result.getError());
-				setErrorMessage("Cannot parse data file: " + result.getError().getMessage());
+			if (previewResult.getError() != null) {
+				MagicUIActivator.log(previewResult.getError());
+				setErrorMessage("Cannot parse data file: " + previewResult.getError().getMessage());
 			} else if (list.size() == 0)
 				setErrorMessage("Cannot parse data file");
 			else if (count == 0)
@@ -109,6 +107,27 @@ public class DeckImportPreviewPage extends WizardPage {
 						+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
 				// manager.setSortColumn(0, 1);
 			}
+		}
+	}
+
+	public void updateMessage() {
+		List list = previewResult.getList();
+		setErrorMessage(null);
+		if (list.size() == 0) {
+			setErrorMessage("Cannot parse data file");
+			return;
+		}
+		int count = 0;
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			IMagicCard card = (IMagicCard) iterator.next();
+			if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
+				count++;
+			}
+		}
+		if (count > 0) {
+			setErrorMessage(count
+					+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
+			// manager.setSortColumn(0, 1);
 		}
 	}
 
@@ -206,6 +225,7 @@ public class DeckImportPreviewPage extends WizardPage {
 									}
 								}
 								manager.getViewer().refresh(true);
+								updateMessage();
 							}
 						}
 					};

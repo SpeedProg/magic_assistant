@@ -8,15 +8,6 @@ import org.eclipse.ui.IWorkbench;
 public class DeckImportWizard extends Wizard implements IImportWizard {
 	private DeckImportPage mainPage;
 	private DeckImportPreviewPage previewPage;
-	private Object data;
-
-	public Object getData() {
-		return data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
 
 	public DeckImportWizard() {
 		setNeedsProgressMonitor(true);
@@ -26,12 +17,6 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 	public void addPages() {
 		addPage(mainPage);
 		addPage(previewPage);
-	}
-
-	@Override
-	public boolean canFinish() {
-		// TODO Auto-generated method stub
-		return super.canFinish();
 	}
 
 	@Override

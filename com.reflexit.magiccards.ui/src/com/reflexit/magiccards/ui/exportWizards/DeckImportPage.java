@@ -71,11 +71,12 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	private static final String REPORT_TYPE_SETTING = "reportType"; //$NON-NLS-1$
 	private static final String IMPORT_HEADER_SETTING = "headerRow"; //$NON-NLS-1$
 	private static final String IMPORT_CLIPBOARD = "clipboard"; //$NON-NLS-1$
-	Text editor;
+	private static final String INTO_CHOICE = "into"; //$NON-NLS-1$
+	private final String ID = getClass().getName();
+	private Text editor;
 	private String fileName;
 	private IStructuredSelection initialResourceSelection;
 	private Button includeHeader;
-	private static final String ID = DeckImportPage.class.getName();
 	private ReportType reportType;
 	private PreferenceStore store;
 	private boolean clipboard;
@@ -85,11 +86,11 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	private Composite fileSelectionArea;
 	private ImportResult previewResult;
 	private CardElement element;
-	private Button createNewDeck;
-	private Button importIntoExisting;
-	private Button importIntoDb;
+	protected Button createNewDeck;
+	protected Button importIntoExisting;
+	protected Button importIntoDb;
 	private Collection<ReportType> types;
-	private Button virtualCards;
+	protected Button virtualCards;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -102,8 +103,9 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		try {
 			final boolean header = includeHeader.getSelection();
 			final InputStream st = openInputStream();
-			final boolean newdeck = createNewDeck.getSelection();
-			final boolean dbImport = importIntoDb.getSelection();
+			int choice = getIntoChoice();
+			final boolean newdeck = choice == 1;
+			final boolean dbImport = choice == 3;
 			final boolean virtual = virtualCards.getSelection();
 			try {
 				IRunnableWithProgress work = new IRunnableWithProgress() {
@@ -127,7 +129,11 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 							Location location = Location.createLocation("preview");
 							previewResult = ImportUtils.performPreImport(st, worker, header, virtual,
 									location, resolve, monitor2);
-							((DeckImportWizard) getWizard()).setData(previewResult);
+							if (dbImport) {
+								ImportUtils.performPreImportWithDb((Collection<IMagicCard>) previewResult
+										.getList(), new ArrayList<>(),
+										previewResult.getFields());
+							}
 						} else {
 							Location location = getSelectedLocation();
 							if (newdeck) {
@@ -387,6 +393,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	 */
 	@Override
 	public void createControl(final Composite parent) {
+		setTitle("Import into a Deck or Collection");
 		initializeDialogUnits(parent);
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout());
@@ -397,7 +404,6 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		createDestinationGroup(composite);
 		restoreWidgetValues();
 		updateWidgetEnablements();
-		setTitle("Import to a Deck or Collection");
 		defaultPrompt();
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
@@ -444,6 +450,16 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {
 			includeHeader.setSelection(dialogSettings.getBoolean(IMPORT_HEADER_SETTING));
 		}
+		int choice = 0;
+		try {
+			choice = dialogSettings.getInt(INTO_CHOICE);
+		} catch (Exception e) {
+			// ignore
+		}
+		if (choice == 0) choice = 1;
+		if (createNewDeck != null) createNewDeck.setSelection(choice == 1);
+		if (importIntoExisting != null) importIntoExisting.setSelection(choice == 2);
+		if (importIntoDb != null) importIntoDb.setSelection(choice == 3);
 		updateWidgetEnablements();
 	}
 
@@ -464,11 +480,25 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 			// save options
 			dialogSettings.put(REPORT_TYPE_SETTING, reportType.getLabel());
 			dialogSettings.put(IMPORT_HEADER_SETTING, includeHeader.getSelection());
+			// into options
+			int choice = getIntoChoice();
+			dialogSettings.put(INTO_CHOICE, choice);
 			// save into file
 			MagicUIActivator.getDefault().saveDialogSetting(dialogSettings);
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
 		}
+	}
+
+	public int getIntoChoice() {
+		int choice = 0;
+		if (createNewDeck != null && createNewDeck.getSelection())
+			choice = 1;
+		else if (importIntoExisting != null && importIntoExisting.getSelection())
+			choice = 2;
+		else if (importIntoDb != null && importIntoDb.getSelection())
+			choice = 3;
+		return choice;
 	}
 
 	protected void createResourcesGroup(final Composite parent) {
@@ -706,5 +736,13 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 	 */
 	public CardElement getElement() {
 		return element;
+	}
+
+	public void setPreviewResult(ImportResult previewResult2) {
+		this.previewResult = previewResult2;
+	}
+
+	public ImportResult getPreviewResult() {
+		return previewResult;
 	}
 }

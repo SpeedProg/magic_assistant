@@ -678,8 +678,15 @@
         point="org.eclipse.ui.importWizards">
      <wizard
            class="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
+           icon="icons/lib32.png"
            id="com.reflexit.magiccards.ui.exportWizards.DeckImportWizard"
-           name="Import Collection">
+           name="Import Deck or Collection">
+     </wizard>
+     <wizard
+           class="com.reflexit.magiccards.ui.exportWizards.SetImportWizard"
+           icon="icons/m24.gif"
+           id="com.reflexit.magiccards.ui.exportWizards.SetImportWizard"
+           name="Import New Set (Extend Database)">
      </wizard>
   </extension>
   <extension

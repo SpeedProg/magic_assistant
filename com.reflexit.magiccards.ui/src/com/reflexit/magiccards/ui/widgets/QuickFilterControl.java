@@ -4,9 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -40,13 +37,12 @@ public class QuickFilterControl extends Composite {
 	private Runnable runnable;
 	private Combo typeCombo;
 	private ToolBar toolbar;
-	private Text setCombo;
+	private EditionTextControl setCombo;
 	private long lastMod = 0;
 	private boolean pendingUpdate = false;
 	private Object updateLock = new Object();
 	private UpdateThread uthread;
 	private int updateDelay = 700;
-	private ContentProposalAdapter proposalAdapter;
 	private boolean suppressUpdates = false;
 
 	class UpdateThread extends Thread {
@@ -218,10 +214,9 @@ public class QuickFilterControl extends Composite {
 	}
 
 	private void createEditionField(ToolBar toolbar) {
-		setCombo = new Text(toolbar, SWT.BORDER);
-		proposalAdapter = ContextAssist.addContextAssist(setCombo, new String[0], false);
-		GridData td = new GridData(GridData.FILL_HORIZONTAL);
-		setCombo.setLayoutData(td);
+		Composite parent = toolbar;
+		EditionTextControl setCombo = new EditionTextControl(parent, SWT.BORDER);
+		setCombo.setToolTipText("Set filter");
 		setCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -234,32 +229,10 @@ public class QuickFilterControl extends Composite {
 				filterSet(setCombo.getText());
 			}
 		});
-		setCombo.setToolTipText("Set filter");
-		setCombo.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				// ignore
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				Collection<String> names = Editions.getInstance().getNames();
-				String[] setProposals = new String[names.size()];
-				int i = 0;
-				for (String type : names) {
-					setProposals[i++] = type;
-				}
-				IContentProposalProvider contentProposalProvider = proposalAdapter
-						.getContentProposalProvider();
-				if (contentProposalProvider instanceof SimpleContentProposalProvider) {
-					((SimpleContentProposalProvider) contentProposalProvider).setProposals(setProposals);
-				}
-			}
-		});
+		this.setCombo = setCombo;
 		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
 		item.setControl(setCombo);
 		item.setWidth(180);
-		setCombo.addFocusListener(new SearchContextFocusListener());
 	}
 
 	private void createToolBarLabel(ToolBar toolbar, String string) {

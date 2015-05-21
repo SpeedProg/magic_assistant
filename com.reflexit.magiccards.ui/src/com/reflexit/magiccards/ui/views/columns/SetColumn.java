@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.columns;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -18,6 +19,7 @@ import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.abs.CardList;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.widgets.ComboStringEditingSupport;
@@ -107,19 +109,10 @@ public class SetColumn extends GenColumn implements Listener {
 			IMagicCardPhysical card = (IMagicCardPhysical) element;
 			Collection<IMagicCard> cards = DataManager.getInstance().getMagicDBStore()
 					.getCandidates(card.getName());
-			int len = cards.size();
-			if (card.getCardId() == 0) {
-				len++;
-			}
-			String sets[] = new String[len];
-			int i = 0;
-			for (Iterator iterator = cards.iterator(); iterator.hasNext(); i++) {
-				IMagicCard mCard = (IMagicCard) iterator.next();
-				sets[i] = mCard.getSet();
-			}
-			if (card.getCardId() == 0) {
-				sets[i] = card.getSet();
-			}
+			CardList list = new CardList(cards);
+			Set<Object> unique = list.getUnique(MagicCardField.SET);
+			unique.add(card.getSet());
+			String sets[] = unique.toArray(new String[unique.size()]);
 			return sets;
 		}
 
