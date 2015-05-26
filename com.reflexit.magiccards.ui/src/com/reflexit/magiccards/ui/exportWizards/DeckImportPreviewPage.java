@@ -12,6 +12,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -52,11 +53,10 @@ public class DeckImportPreviewPage extends WizardPage {
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		previewResult = null;
 		if (visible == true) {
-			DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
+			previewResult = null;
+			DeckImportPage startingPage = getMainPage();
 			setTitle("Importing format " + startingPage.getReportType().getLabel());
-			String desc = getFirstDescription();
 			setErrorMessage(null);
 			try (InputStream st = startingPage.openInputStream()) {
 				String textFile = getTextOfFileAsString(st, 20);
@@ -71,19 +71,7 @@ public class DeckImportPreviewPage extends WizardPage {
 				setErrorMessage("Cannot import");
 				return;
 			}
-			ICardField[] fields = previewResult.getFields();
-			if (fields != null) {
-				ColumnCollection colls = manager.getColumnsCollection();
-				AbstractColumn errColumn = colls.getColumn(MagicCardField.ERROR);
-				String prefColumns = errColumn.getColumnFullName();
-				for (int i = 0; i < fields.length; i++) {
-					ICardField field = fields[i];
-					AbstractColumn column = colls.getColumn(field);
-					if (column != null)
-						prefColumns += "," + column.getColumnFullName();
-				}
-				manager.updateColumns(prefColumns);
-			}
+			updateColumns(previewResult.getFields());
 			List list = previewResult.getList();
 			int count = 0;
 			if (list.size() > 0) {
@@ -100,13 +88,31 @@ public class DeckImportPreviewPage extends WizardPage {
 				setErrorMessage("Cannot parse data file: " + previewResult.getError().getMessage());
 			} else if (list.size() == 0)
 				setErrorMessage("Cannot parse data file");
-			else if (count == 0)
+			else if (count == 0) {
+				String desc = getFirstDescription();
 				setDescription(desc);
+			}
 			else {
 				setErrorMessage(count
 						+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
 				// manager.setSortColumn(0, 1);
 			}
+		}
+	}
+
+	public void updateColumns(ICardField[] fields) {
+		if (fields != null) {
+			ColumnCollection colls = manager.getColumnsCollection();
+			AbstractColumn errColumn = colls.getColumn(MagicCardField.ERROR);
+			String prefColumns = errColumn.getColumnFullName();
+			for (int i = 0; i < fields.length; i++) {
+				ICardField field = fields[i];
+				AbstractColumn column = colls.getColumn(field);
+				if (column != null)
+					prefColumns += "," + column.getColumnFullName();
+			}
+			final String p = prefColumns;
+			Display.getDefault().syncExec(() -> manager.updateColumns(p));
 		}
 	}
 
@@ -145,12 +151,32 @@ public class DeckImportPreviewPage extends WizardPage {
 		return textFile;
 	}
 
+	public DeckImportPage getMainPage() {
+		IWizardPage[] pages = getWizard().getPages();
+		for (IWizardPage wizardPage : pages) {
+			if (wizardPage instanceof DeckImportPage)
+				return (DeckImportPage) wizardPage;
+		}
+		return null;
+	}
+
 	public String getFirstDescription() {
-		DeckImportPage startingPage = (DeckImportPage) getPreviousPage();
-		CardElement element = startingPage.getElement();
-		String deckName = element == null ? "newdeck" : element.getName();
-		String desc = "Importing into " + deckName + ".";
-		return desc;
+		DeckImportPage startingPage = getMainPage();
+		int choice = startingPage.getIntoChoice();
+		switch (choice) {
+			case 1:
+				return "Importing into a new deck/collection";
+			case 2:
+				CardElement element = startingPage.getElement();
+				String deckName = element == null ? "newdeck" : element.getName();
+				String desc = "Importing into " + deckName + ".";
+				return desc;
+			case 3:
+				return "Extending Magic Card Database";
+			default:
+				break;
+		}
+		return "";
 	}
 
 	@Override

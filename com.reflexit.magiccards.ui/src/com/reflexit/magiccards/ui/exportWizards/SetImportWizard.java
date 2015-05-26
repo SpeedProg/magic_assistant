@@ -58,7 +58,7 @@ public class SetImportWizard extends Wizard implements IImportWizard {
 			@Override
 			protected void createDestinationGroup(Composite parent) {
 				super.createDestinationGroup(parent);
-				setTitle("Import a new set into the database");
+				setTitle("Import a new set(s) into the database");
 				importIntoDb.getParent().setVisible(false);
 				importIntoDb.getParent().setLayoutData(GridDataFactory.swtDefaults().hint(0, 0).create());
 				virtualCards.setSelection(true);
@@ -79,6 +79,10 @@ public class SetImportWizard extends Wizard implements IImportWizard {
 	public Composite createEditionGroup(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create());
+		Label desc = new Label(comp, SWT.WRAP);
+		desc.setText("Select default set where cards would be added if not specificed in the data source.\n"
+				+ "Start typing to trigger auto-complete.");
+		desc.setLayoutData(GridDataFactory.fillDefaults().span(3, 0).create());
 		Label label = new Label(comp, SWT.NONE);
 		label.setText("Card Set:");
 		EditionTextControl setCombo = new EditionTextControl(comp, SWT.BORDER);
