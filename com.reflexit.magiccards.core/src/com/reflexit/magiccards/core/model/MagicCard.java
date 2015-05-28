@@ -329,13 +329,19 @@ public class MagicCard extends AbstractMagicCard {
 		if (fieldSet == null || fieldSet.isEmpty()) {
 			setNonEmptyFromCard(MagicCardField.allNonTransientFields(false), card);
 		} else
-			for (ICardField field : fieldSet)
-				setNonEmptyFromCard(field, card);
+			for (ICardField field : fieldSet) {
+				if (field instanceof MagicCardField && !((MagicCardField) field).isPhysical()) {
+					setNonEmptyFromCard(field, card);
+				}
+			}
 	}
 
 	public void setNonEmptyFromCard(ICardField[] fieldSet, MagicCard card) {
-		for (ICardField field : fieldSet)
-			setNonEmptyFromCard(field, card);
+		for (ICardField field : fieldSet) {
+			if (field instanceof MagicCardField && !((MagicCardField) field).isPhysical()) {
+				setNonEmptyFromCard(field, card);
+			}
+		}
 	}
 
 	public boolean setNonEmptyFromCard(ICardField field, IMagicCard card) {

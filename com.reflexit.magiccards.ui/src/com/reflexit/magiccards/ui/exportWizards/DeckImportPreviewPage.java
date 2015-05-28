@@ -9,12 +9,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,6 +40,8 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
+import com.reflexit.magiccards.ui.exportWizards.DeckImportPage.InputChoice;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -45,6 +53,25 @@ public class DeckImportPreviewPage extends WizardPage {
 	private TableViewerManager manager;
 	private Text text;
 	protected ImportResult previewResult;
+	private Job thread = new Job("Modify") {
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			WaitUtils.asyncExec(() -> reload());
+			return Status.OK_STATUS;
+		}
+	};
+	private ModifyListener modifyLister = new ModifyListener() {
+		@Override
+		public void modifyText(ModifyEvent e) {
+			DeckImportPage startingPage = getMainPage();
+			startingPage.setInputChoice(InputChoice.INPUT);
+			previewResult.setText(text.getText());
+			thread.cancel();
+			thread.schedule(500);
+		}
+	};
 
 	protected DeckImportPreviewPage(String pageName) {
 		super(pageName);
@@ -54,49 +81,57 @@ public class DeckImportPreviewPage extends WizardPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible == true) {
-			previewResult = null;
-			DeckImportPage startingPage = getMainPage();
-			setTitle("Importing format " + startingPage.getReportType().getLabel());
-			setErrorMessage(null);
-			try (InputStream st = startingPage.openInputStream()) {
-				String textFile = getTextOfFileAsString(st, 20);
-				text.setText(textFile);
-			} catch (IOException e) {
-				setErrorMessage("Cannot open file: " + e.getMessage());
-				return;
-			}
-			startingPage.performImport(true);
-			previewResult = startingPage.getPreviewResult();
-			if (previewResult == null) {
-				setErrorMessage("Cannot import");
-				return;
-			}
-			updateColumns(previewResult.getFields());
-			List list = previewResult.getList();
-			int count = 0;
-			if (list.size() > 0) {
-				manager.updateViewer(list);
-				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-					IMagicCard card = (IMagicCard) iterator.next();
-					if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
-						count++;
-					}
+			reload();
+		}
+	}
+
+	public void reload() {
+		DeckImportPage startingPage = getMainPage();
+		setTitle("Importing format " + startingPage.getReportType().getLabel());
+		setErrorMessage(null);
+		setDescription(getFirstDescription());
+		previewResult = startingPage.performImport(true);
+		safeSetText(previewResult.getText());
+		updateColumns(previewResult.getFields());
+		manager.updateViewer(previewResult.getList());
+		validate();
+	}
+
+	public void safeSetText(String text2) {
+		DeckImportPage startingPage = getMainPage();
+		if (startingPage.getInputChoice() != InputChoice.INPUT) {
+			text.removeModifyListener(modifyLister);
+			text.setText(text2);
+			text.addModifyListener(modifyLister);
+		}
+	}
+
+	public void validate() {
+		if (previewResult == null) {
+			setErrorMessage("Cannot parse import source");
+			return;
+		}
+		List list = previewResult.getList();
+		int count = 0;
+		if (list.size() > 0) {
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				IMagicCard card = (IMagicCard) iterator.next();
+				if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
+					count++;
 				}
 			}
-			if (previewResult.getError() != null) {
-				MagicUIActivator.log(previewResult.getError());
-				setErrorMessage("Cannot parse data file: " + previewResult.getError().getMessage());
-			} else if (list.size() == 0)
-				setErrorMessage("Cannot parse data file");
-			else if (count == 0) {
-				String desc = getFirstDescription();
-				setDescription(desc);
-			}
-			else {
-				setErrorMessage(count
-						+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
-				// manager.setSortColumn(0, 1);
-			}
+		}
+		if (previewResult.getError() != null) {
+			MagicUIActivator.log(previewResult.getError());
+			setErrorMessage("Cannot parse data file: " + previewResult.getError().getMessage());
+		} else if (list.size() == 0)
+			setErrorMessage("Cannot parse data file");
+		else if (count == 0) {
+			setDescription(getFirstDescription());
+		} else {
+			setErrorMessage(count
+					+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
+			// manager.setSortColumn(0, 1);
 		}
 	}
 
@@ -185,10 +220,11 @@ public class DeckImportPreviewPage extends WizardPage {
 		Composite comp = new Composite(parent, SWT.NONE);
 		setControl(comp);
 		comp.setLayout(new GridLayout());
-		text = new Text(comp, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+		text = new Text(comp, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		GridData ld = new GridData(GridData.FILL_HORIZONTAL);
 		ld.heightHint = text.getLineHeight() * 5;
 		text.setLayoutData(ld);
+		text.addModifyListener(modifyLister);
 		manager = new TableViewerManager(columns);
 		Control control = manager.createContents(comp);
 		GridData tld = new GridData(GridData.FILL_BOTH);

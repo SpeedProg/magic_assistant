@@ -6,8 +6,8 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
 public class DeckImportWizard extends Wizard implements IImportWizard {
-	private DeckImportPage mainPage;
-	private DeckImportPreviewPage previewPage;
+	protected DeckImportPage mainPage;
+	protected DeckImportPreviewPage previewPage;
 
 	public DeckImportWizard() {
 		setNeedsProgressMonitor(true);
@@ -22,8 +22,8 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 	@Override
 	public boolean performFinish() {
 		mainPage.saveWidgetValues();
-		boolean ok = mainPage.performImport(false);
-		if (ok)
+		mainPage.performImport(false);
+		if (mainPage.getPreviewResult().isOk())
 			return true;
 		return false;
 	}

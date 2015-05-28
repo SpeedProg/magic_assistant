@@ -20,20 +20,21 @@ public class ImportResult {
 	private ArrayList<ICard> toImport = new ArrayList<ICard>();
 	private ICardField[] fields = new ICardField[0];
 	private ReportType type = ImportExportFactory.TEXT_DECK_CLASSIC;
-	private Exception error = null;
+	private Throwable error = null;
+	private String text = "";
 
 	/**
 	 * @param error
 	 *            the error to set
 	 */
-	public void setError(Exception error) {
+	public void setError(Throwable error) {
 		this.error = error;
 	}
 
 	/**
 	 * @return the error
 	 */
-	public Exception getError() {
+	public Throwable getError() {
 		return error;
 	}
 
@@ -84,5 +85,17 @@ public class ImportResult {
 
 	public void clear() {
 		toImport.clear();
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public boolean isOk() {
+		return getError() == null && toImport.size() > 0;
 	}
 }

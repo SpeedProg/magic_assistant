@@ -270,7 +270,7 @@ public class FileUtils {
 		}
 	}
 
-	public static String readFileAsString(BufferedReader reader) throws IOException {
+	private static String readFileAsString(BufferedReader reader) throws IOException {
 		StringBuilder fileData = new StringBuilder(DEFAULT_BUFFER_SIZE);
 		char[] buf = new char[DEFAULT_BUFFER_SIZE];
 		int numRead = 0;
@@ -278,6 +278,12 @@ public class FileUtils {
 			fileData.append(buf, 0, numRead);
 		}
 		return fileData.toString();
+	}
+
+	public static String readStreamAsStringAndClose(InputStream is) throws IOException {
+		try (BufferedReader br = openBuferedReader(is)) {
+			return readFileAsString(br);
+		}
 	}
 
 	public static int readFileAsBytes(File file, byte[] buf) throws IOException {

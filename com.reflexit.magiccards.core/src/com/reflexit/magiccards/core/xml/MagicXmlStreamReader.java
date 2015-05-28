@@ -1,10 +1,8 @@
 package com.reflexit.magiccards.core.xml;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -278,7 +276,7 @@ public class MagicXmlStreamReader {
 		CardCollectionStoreObject o = new MagicXmlStreamReader().load(new File(set));
 		o.file = new File("c:/tmp/test1.xml");
 		new MagicXmlStreamWriter().write(o);
-		String x = FileUtils.readFileAsString(new BufferedReader(new FileReader(o.file)));
+		String x = FileUtils.readFileAsString(o.file);
 		System.out.println(x);
 	}
 }

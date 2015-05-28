@@ -39,14 +39,14 @@ public class ParseGathererSearchStandardTest extends TestCase {
 
 	public void testDownloadUpdates() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.downloadUpdates(magicSet, file.toString(), options, monitor);
-		String magicFile = FileUtils.readFileAsString(FileUtils.openBuferedReader(file));
+		String magicFile = FileUtils.readFileAsString(file);
 		assertTrue(magicFile.length() > 0);
 		assertTrue(magicFile.contains("Zombie Goliath"));
 	}
 
 	public void testDownloadWall() throws FileNotFoundException, MalformedURLException, IOException {
 		parser.downloadUpdates(wall, file.toString(), options, monitor);
-		String magicFile = FileUtils.readFileAsString(FileUtils.openBuferedReader(file));
+		String magicFile = FileUtils.readFileAsString(file);
 		assertTrue(magicFile.length() > 0);
 		assertTrue(magicFile.contains("Bloodfire Colossus"));
 	}
@@ -76,7 +76,7 @@ public class ParseGathererSearchStandardTest extends TestCase {
 
 	public void testDownloadUpdatesWeb() throws FileNotFoundException, MalformedURLException, IOException {
 		UpdateCardsFromWeb.downloadUpdates(magicSet, file.toString(), options, monitor);
-		String magicFile = FileUtils.readFileAsString(FileUtils.openBuferedReader(file));
+		String magicFile = FileUtils.readFileAsString(file);
 		assertTrue(magicFile.length() > 0);
 		assertTrue(magicFile.contains("Zombie Goliath"));
 		assertTrue(magicFile.contains("Chris Rahn|147"));

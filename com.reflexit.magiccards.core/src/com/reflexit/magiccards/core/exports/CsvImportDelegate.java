@@ -35,6 +35,7 @@ public class CsvImportDelegate extends TableImportDelegate {
 	}
 
 	public void runCsvImport(ICoreProgressMonitor monitor) throws IOException {
+		monitor.beginTask("Importing csv", 100);
 		CsvImporter importer = null;
 		importer = new CsvImporter(getStream(), getSeparator());
 		try {
@@ -58,6 +59,7 @@ public class CsvImportDelegate extends TableImportDelegate {
 			} while (true);
 		} finally {
 			importer.close();
+			monitor.done();
 		}
 	}
 }

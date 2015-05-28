@@ -149,10 +149,7 @@ public class WebUtils {
 	}
 
 	public static String openUrlText(URL url, int attempts) throws IOException {
-		try (BufferedReader in = openUrlReader(url, attempts)) {
-			String result = FileUtils.readFileAsString(in);
-			return result;
-		}
+		return FileUtils.readStreamAsStringAndClose(openUrl(url, attempts));
 	}
 
 	/**

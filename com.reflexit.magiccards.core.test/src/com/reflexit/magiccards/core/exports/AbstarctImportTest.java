@@ -31,7 +31,7 @@ public class AbstarctImportTest extends AbstractMagicTest {
 	protected List<IMagicCard> result;
 	protected boolean virtual = true;
 	protected boolean resolve = true;
-	protected Exception exception;
+	protected Throwable exception;
 
 	@Before
 	public void setUp() throws Exception {

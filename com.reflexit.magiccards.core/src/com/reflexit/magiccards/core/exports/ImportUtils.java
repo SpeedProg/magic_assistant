@@ -55,11 +55,13 @@ public class ImportUtils {
 			boolean resolve, ICoreProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
 		if (st == null)
-			return null;
+			throw new NullPointerException();
 		worker.init(st, location, virtual);
 		worker.setHeader(header);
 		worker.run(monitor);
 		ImportResult preview = worker.getResult();
+		if (preview == null)
+			throw new NullPointerException();
 		if (resolve) {
 			DataManager.getInstance().getMagicDBStore().initialize();
 			for (ICard card : preview.getList()) {

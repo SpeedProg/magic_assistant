@@ -4,7 +4,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,38 +16,7 @@ import org.eclipse.ui.IWorkbench;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.widgets.EditionTextControl;
 
-public class SetImportWizard extends Wizard implements IImportWizard {
-	private DeckImportPage mainPage;
-	private DeckImportPreviewPage previewPage;
-	private Object data;
-
-	public Object getData() {
-		return data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
-
-	public SetImportWizard() {
-		setNeedsProgressMonitor(true);
-	}
-
-	@Override
-	public void addPages() {
-		addPage(mainPage);
-		addPage(previewPage);
-	}
-
-	@Override
-	public boolean performFinish() {
-		mainPage.saveWidgetValues();
-		boolean ok = mainPage.performImport(false);
-		if (ok)
-			return true;
-		return false;
-	}
-
+public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setWindowTitle("Import Set");

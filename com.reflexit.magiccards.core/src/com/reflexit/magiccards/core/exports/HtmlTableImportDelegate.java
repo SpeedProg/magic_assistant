@@ -1,9 +1,6 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,21 +27,7 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 
 	@Override
 	public void doRun(ICoreProgressMonitor monitor) throws IOException {
-		try {
-			BufferedReader importer = null;
-			try {
-				importer = new BufferedReader(new InputStreamReader(getStream()));
-				String text = FileUtils.readFileAsString(importer);
-				doRun(text);
-			} catch (FileNotFoundException e) {
-				throw e;
-			} finally {
-				if (importer != null)
-					importer.close();
-			}
-		} catch (IOException e) {
-			throw e;
-		}
+		doRun(FileUtils.readStreamAsStringAndClose(getStream()));
 	}
 
 	protected void doRun(String text) {

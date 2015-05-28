@@ -1,0 +1,36 @@
+package com.reflexit.magiccards.ui.widgets;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+
+public class MagicToolkit extends FormToolkit {
+	private static MagicToolkit instance;
+
+	private MagicToolkit() {
+		super(new FormColors(Display.getCurrent()) {
+			@Override
+			protected void initialize() {
+				background = display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+				foreground = display.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+				initializeColorTable();
+				updateBorderColor();
+			}
+		});
+	}
+
+	public static MagicToolkit getInstance() {
+		if (instance == null)
+			instance = new MagicToolkit();
+		return instance;
+	}
+
+	public Button createButton(Composite parent, String text, int style, ISingleSelectionListener lis) {
+		Button button = createButton(parent, text, style);
+		if (lis != null) button.addSelectionListener(lis);
+		return button;
+	}
+}

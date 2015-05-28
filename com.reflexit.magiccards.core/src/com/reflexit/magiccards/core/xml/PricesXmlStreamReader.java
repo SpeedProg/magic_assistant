@@ -3,10 +3,8 @@ package com.reflexit.magiccards.core.xml;
 import gnu.trove.map.hash.TIntFloatHashMap;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
@@ -184,7 +182,7 @@ public class PricesXmlStreamReader {
 		PriceProviderStoreObject o = new PricesXmlStreamReader().load(new File(set));
 		o.file = new File("c:/tmp/test1.xml");
 		new PricesXmlStreamWriter().write(o);
-		String x = FileUtils.readFileAsString(new BufferedReader(new FileReader(o.file)));
+		String x = FileUtils.readFileAsString(o.file);
 		System.out.println(x);
 	}
 }
