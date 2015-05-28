@@ -1,5 +1,9 @@
 changes in 1.4.2.011
-* Bug 474 Problem with Color Identity filtering out too many cards
+* Bug 474 Problem with Color Identity Colorless filtering out too many cards
+* Added edition aliases field in set editor (preferences)
+* Renamed: Duel Decks: Elspeth vs. Kiora|DDO||March 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth
+* Added: Modern Masters 2015 Edition|MM2||May 2015|Online|||Modern Masters 2015
+* Added: Tempest Remastered|TPR||May 2015|Online|||
 changes in 1.4.2.010
 * Update to fix update issues
 changes in 1.4.2.009
