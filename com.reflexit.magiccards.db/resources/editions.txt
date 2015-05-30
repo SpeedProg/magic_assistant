@@ -141,3 +141,5 @@ Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|Duel Decks
 Dragons of Tarkir|DTK||March 2015|Expansion|Khans of Tarkir|Standard|
 Duel Decks: Elspeth vs. Kiora|DDO||March 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth
 Ugin's Fate promos|FRF_UGIN||March 2015|Reprint|||
+Modern Masters 2015 Edition|MM2||May 2015|Online|||Modern Masters 2015
+Tempest Remastered|TPR||May 2015|Online|||
