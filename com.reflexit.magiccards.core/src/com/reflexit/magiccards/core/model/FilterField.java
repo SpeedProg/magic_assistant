@@ -188,6 +188,9 @@ public enum FilterField {
 				case COLOR_IDENITY: {
 					String en;
 					if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
+						if (Colors.ManaColor.COLORLESS.tag().equals(en)) {
+							return Expr.EMPTY;
+						}
 						return BinaryExpr.fieldMatches(MagicCardField.COST, en)
 								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE,
 										new TextValue(en,

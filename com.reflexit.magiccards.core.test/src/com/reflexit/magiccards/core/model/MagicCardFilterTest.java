@@ -217,7 +217,6 @@ public class MagicCardFilterTest extends TestCase {
 		genericFieldText(FilterField.COUNT, 3);
 	}
 
-
 	public void checkFound() {
 		checkFound(mcp);
 	}
@@ -438,5 +437,18 @@ public class MagicCardFilterTest extends TestCase {
 		checkFound(wb);
 		checkFound(br);
 		checkFound(wbr);
+	}
+
+	public void testColorlessIdentity() {
+		MagicCardPhysical c2 = mcpCost("{2}");
+		MagicCardPhysical c1 = mcpCost("{1}");
+		MagicCardPhysical c0 = mcpCost("");
+		MagicCardPhysical wc = mcpCost("{W}{1}");
+		String colorless_id = Colors.getInstance().getPrefConstant(Colors.getColorName("{1}"));
+		setFilterTrue(colorless_id, ColorTypes.IDENTITY_ID);
+		checkFound(c2);
+		checkFound(c1);
+		checkFound(c0);
+		checkNotFound(wc);
 	}
 }

@@ -1,3 +1,10 @@
+changes in 1.4.2.011
+* Bug 474 Problem with Color Identity filtering out too many cards
+changes in 1.4.2.010
+* Update to fix update issues
+changes in 1.4.2.009
+* Remove lock in refresh which is causing UI lag
+* Fixed race condition in loading collections which can cause data loss
 changes in 1.4.2.007
 * Bug 459 export not working in latest version, stack overflow
 * More fixed to MagicCardMarket prices provider
