@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
+import com.reflexit.magiccards.core.exports.ImportExportFactory;
+
 /**
  * The activator class controls the plug-in life cycle
  * Do not use class in the core code, I want to keep it eclipse free
@@ -53,6 +55,7 @@ public class Activator extends Plugin {
 		new Thread("Loading database") {
 			@Override
 			public void run() {
+				ImportExportFactory.getImportTypes(); // load extensions for report types
 				DataManager.getInstance().asyncInitDb();
 			};
 		}.start();

@@ -9,9 +9,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import com.reflexit.magiccards.core.FileUtils;
@@ -23,45 +20,24 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 @SuppressWarnings("rawtypes")
 public class ReportType {
-	private static Map<String, ReportType> types = new LinkedHashMap<String, ReportType>();
-	public static final ReportType XML = createReportType("Magic Assistant XML", "xml", true);
-	public static final ReportType CSV = createReportType("Magic Assistant CSV", "csv");
-	public static final ReportType TEXT_DECK_CLASSIC = createReportType("Deck Classic (Text)", "txt");
-	public static final ReportType TABLE_PIPED = createReportType("Piped Table", "txt");
 	private String label;
 	private Properties properties;
 	private boolean custom;
-	private Object exportWorker;
-	private Object importWorker;
+	Object exportWorker;
+	Object importWorker;
 	public static final String EXT_PROP = "ext";
 	public static final String XML_PROP = "xml";
 
-	private ReportType(String label, boolean xml, String extension) {
+	ReportType(String label, boolean xml, String extension) {
 		this.label = label;
 		properties = new Properties();
 		setXml(xml);
 		setExtension(extension == null ? "txt" : extension);
-		types.put(label, this);
 	}
 
 	private void setXml(boolean xml) {
 		if (xml)
 			properties.setProperty(XML_PROP, String.valueOf(xml));
-	}
-
-	public static ReportType createReportType(String label) {
-		return createReportType(label, "txt", false);
-	}
-
-	public static ReportType createReportType(String label, String extension) {
-		return createReportType(label, extension, false);
-	}
-
-	public static ReportType createReportType(String label, String extension, boolean xml) {
-		ReportType reportType = types.get(label);
-		if (reportType != null)
-			return reportType;
-		return new ReportType(label, xml, extension);
 	}
 
 	/**
@@ -78,12 +54,6 @@ public class ReportType {
 
 	public String getLabel() {
 		return label;
-	}
-
-	public static ReportType getByLabel(String label) {
-		if (label == null)
-			return null;
-		return types.get(label);
 	}
 
 	public String getExtension() {
@@ -140,7 +110,7 @@ public class ReportType {
 		if (!isCustom())
 			throw new IOException("Cannot delete non-custom type");
 		getFile().delete();
-		types.remove(getLabel());
+		ImportExportFactory.remove(getLabel());
 	}
 
 	public void load() throws IOException {
@@ -154,10 +124,10 @@ public class ReportType {
 
 	public static ReportType load(File file) throws IOException {
 		String name = file.getName().replaceAll("\\.ini$", "");
-		ReportType old = getByLabel(name);
+		ReportType old = ImportExportFactory.getByLabel(name);
 		if (old != null && !old.isCustom())
 			throw new IOException("Cannot override non-custom type");
-		ReportType type = ReportType.createReportType(name);
+		ReportType type = ImportExportFactory.createReportType(name);
 		type.load();
 		return type;
 	}
@@ -227,26 +197,6 @@ public class ReportType {
 
 	public void setImportDelegate(IImportDelegate delegate) {
 		importWorker = delegate;
-	}
-
-	static Collection<ReportType> getImportTypes() {
-		ArrayList<ReportType> res = new ArrayList<ReportType>();
-		for (Iterator iterator = types.values().iterator(); iterator.hasNext();) {
-			ReportType type = (ReportType) iterator.next();
-			if (type.importWorker != null)
-				res.add(type);
-		}
-		return res;
-	}
-
-	static Collection<ReportType> getExportTypes() {
-		ArrayList<ReportType> res = new ArrayList<ReportType>();
-		for (Iterator iterator = types.values().iterator(); iterator.hasNext();) {
-			ReportType type = (ReportType) iterator.next();
-			if (type.exportWorker != null)
-				res.add(type);
-		}
-		return res;
 	}
 
 	public static ReportType autoDetectType(File file, Collection<ReportType> types) {

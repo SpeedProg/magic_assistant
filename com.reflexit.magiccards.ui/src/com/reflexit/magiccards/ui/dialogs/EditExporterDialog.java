@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.exports.CustomExportDelegate;
+import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.ui.preferences.ExportersPreferencePage;
 
@@ -41,7 +42,7 @@ public class EditExporterDialog extends MagicDialog {
 		this.newexporter = orig == null;
 		this.origType = orig;
 		store.setDefault(PROP_NAME, "My Format");
-		store.setDefault(PROP_EXT, ReportType.TEXT_DECK_CLASSIC.getExtension());
+		store.setDefault(PROP_EXT, ImportExportFactory.TEXT_DECK_CLASSIC.getExtension());
 		store.setDefault(CustomExportDelegate.ROW_FIELDS, "COUNT,NAME");
 		store.setDefault(CustomExportDelegate.ROW_FORMAT, "");
 		store.setDefault(CustomExportDelegate.ROW_FORMAT_TYPE, "C Printf Format");
@@ -204,7 +205,7 @@ public class EditExporterDialog extends MagicDialog {
 		setErrorMessage(null);
 		String name = store.getString(PROP_NAME);
 		if (newexporter) {
-			if (ReportType.getByLabel(name) != null) {
+			if (ImportExportFactory.getByLabel(name) != null) {
 				setErrorMessage("Type '" + name + "'already exists");
 			}
 		}
@@ -243,7 +244,7 @@ public class EditExporterDialog extends MagicDialog {
 	}
 
 	public ReportType getReportType(String name) {
-		ReportType type = ReportType.createReportType(name);
+		ReportType type = ImportExportFactory.createReportType(name);
 		type.setCustom(true);
 		copyFromStore(type);
 		type.setExportDelegate(new CustomExportDelegate(type));

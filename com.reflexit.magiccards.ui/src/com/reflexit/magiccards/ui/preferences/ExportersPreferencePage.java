@@ -69,7 +69,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 			protected boolean removeElements(String[] selection) {
 				if (selection.length == 0)
 					return false;
-				ReportType type = ReportType.getByLabel(selection[0]);
+				ReportType type = ImportExportFactory.getByLabel(selection[0]);
 				if (type.isCustom()) {
 					try {
 						type.delete();
@@ -88,7 +88,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 				String[] selection = list.getSelection();
 				boolean custom = true;
 				for (String string : selection) {
-					ReportType type = ReportType.getByLabel(string);
+					ReportType type = ImportExportFactory.getByLabel(string);
 					if (!type.isCustom())
 						custom = false;
 				}
@@ -120,7 +120,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 	}
 
 	protected String editType(String string) {
-		ReportType type = ReportType.getByLabel(string);
+		ReportType type = ImportExportFactory.getByLabel(string);
 		if (!type.isCustom())
 			return string;
 		EditExporterDialog dialog = new EditExporterDialog(previewText.getShell(), type);
@@ -161,7 +161,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 		if (selection.length == 0) {
 			previewText.setText("");
 		} else {
-			ReportType type = ReportType.getByLabel(selection[0]);
+			ReportType type = ImportExportFactory.getByLabel(selection[0]);
 			String text;
 			try {
 				text = exportDeck(new NullProgressMonitor(), type, true, true);

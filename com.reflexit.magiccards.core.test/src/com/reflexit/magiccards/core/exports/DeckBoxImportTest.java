@@ -20,7 +20,7 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		exporter.setReportType(ReportType.createReportType("testdeckbox"));
+		exporter.setReportType(ImportExportFactory.createReportType("testdeckbox"));
 		out = new ByteArrayOutputStream();
 	}
 

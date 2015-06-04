@@ -12,7 +12,7 @@ public class PipedTableExportText extends AbstarctExportTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		exporter.setReportType(ReportType.createReportType("test"));
+		exporter.setReportType(ImportExportFactory.createReportType("test"));
 	}
 
 	@Test

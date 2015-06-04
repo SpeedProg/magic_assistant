@@ -13,7 +13,7 @@ public class ClassicExportDelegateTest extends AbstarctExportTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		exporter.setReportType(ReportType.createReportType("test"));
+		exporter.setReportType(ImportExportFactory.createReportType("test"));
 	}
 
 	@Test
@@ -29,7 +29,6 @@ public class ClassicExportDelegateTest extends AbstarctExportTest {
 		assertEquals(4, lines.length);
 		assertTrue(lines[1].equals(card1.getCount() + "x " + card1.getName()));
 	}
-
 
 	@Test
 	public void testEscape() {

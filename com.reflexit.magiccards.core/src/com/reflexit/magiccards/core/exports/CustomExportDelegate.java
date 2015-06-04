@@ -44,7 +44,7 @@ public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCa
 	private String sbFieldStr;
 
 	public CustomExportDelegate() {
-		this(ReportType.createReportType("Custom", "txt", false));
+		this(ImportExportFactory.createReportType("Custom", "txt", false));
 	}
 
 	public CustomExportDelegate(ReportType type) {

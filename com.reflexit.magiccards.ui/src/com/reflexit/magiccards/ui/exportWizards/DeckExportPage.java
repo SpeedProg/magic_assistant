@@ -215,11 +215,11 @@ public class DeckExportPage extends WizardDataTransferPage {
 		}
 		// restore options
 		String stype = dialogSettings.get(REPORT_TYPE_SETTING);
-		ReportType type = ReportType.getByLabel(stype);
+		ReportType type = ImportExportFactory.getByLabel(stype);
 		if (type != null && type.getExportDelegate() != null) {
 			selectReportType(type);
 		} else
-			selectReportType(ReportType.CSV);
+			selectReportType(ImportExportFactory.CSV);
 		// restore file
 		String file = dialogSettings.get(OUTPUT_FILE_SETTING);
 		if (file != null) {
@@ -332,7 +332,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 		for (ReportType rt : types) {
 			addComboType(rt);
 		}
-		selectReportType(ReportType.CSV);
+		selectReportType(ImportExportFactory.CSV);
 		GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
 		gd1.horizontalSpan = 1;
 		typeCombo.setLayoutData(gd1);
@@ -465,7 +465,7 @@ public class DeckExportPage extends WizardDataTransferPage {
 	 * The button id is stored as the buttons client data. Note that the parent's layout is assumed to be a
 	 * GridLayout and the number of columns in this layout is incremented. Subclasses may override.
 	 * </p>
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite
 	 * @param id

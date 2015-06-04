@@ -14,7 +14,7 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		rtype = ReportType.createReportType("test");
+		rtype = ImportExportFactory.createReportType("test");
 		rtype.setCustom(true);
 		exporter.setReportType(rtype);
 	}
@@ -72,7 +72,8 @@ public class CustomExportDelegateTest extends AbstarctExportTest {
 		run(exporter);
 		assertEquals(4, lines.length);
 		assertTrue(lines[0].startsWith("COUNT"));
-		assertTrue("Does not match " + lines[1], lines[1].startsWith(card1.getCount() + "," + card1.getName() + ",Yes"));
+		assertTrue("Does not match " + lines[1],
+				lines[1].startsWith(card1.getCount() + "," + card1.getName() + ",Yes"));
 	}
 
 	@Test

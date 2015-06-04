@@ -105,7 +105,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			control.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					setReportType(ReportType.createReportType(control.getText()));
+					setReportType(ImportExportFactory.getByLabel(control.getText()));
 				}
 			});
 			Collection<ReportType> types = ImportExportFactory.getExportTypes();

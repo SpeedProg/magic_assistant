@@ -119,7 +119,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 							throw new InvocationTargetException(e);
 						}
 						if (worker == null)
-							throw new IllegalArgumentException("Import is not defined for "
+							throw new IllegalArgumentException("Importer is not defined for "
 									+ reportType.getLabel());
 						CoreMonitorAdapter monitor2 = new CoreMonitorAdapter(monitor);
 						boolean resolve = !dbImport;
@@ -413,14 +413,14 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 
 	private void defaultPrompt() {
 		String mess = "You have selected '" + reportType.getLabel() + "' format.\n";
-		if (reportType == ReportType.XML)
+		if (reportType == ImportExportFactory.XML)
 			setMessage(mess);
-		else if (reportType == ReportType.CSV)
+		else if (reportType == ImportExportFactory.CSV)
 			setMessage(mess
 					+ "Columns: ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT");
-		else if (reportType == ReportType.TEXT_DECK_CLASSIC)
+		else if (reportType == ImportExportFactory.TEXT_DECK_CLASSIC)
 			setMessage(mess + "Lines like 'Quagmire Druid x 3' or 'Diabolic Tutor (Tenth Edition) x4'");
-		else if (reportType == ReportType.TABLE_PIPED)
+		else if (reportType == ImportExportFactory.TABLE_PIPED)
 			setMessage(mess
 					+ "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
 		else
@@ -442,11 +442,12 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		clipboardRadio.setSelection(clipboard);
 		// restore options
 		String stype = dialogSettings.get(REPORT_TYPE_SETTING);
-		ReportType type = ReportType.getByLabel(stype);
+		ReportType type = ImportExportFactory.getByLabel(stype);
 		if (type != null && type.getImportDelegate() != null) {
 			selectReportType(type);
-		} else
-			selectReportType(ReportType.TEXT_DECK_CLASSIC);
+		} else {
+			selectReportType(ImportExportFactory.TEXT_DECK_CLASSIC);
+		}
 		if (dialogSettings.get(IMPORT_HEADER_SETTING) != null) {
 			includeHeader.setSelection(dialogSettings.getBoolean(IMPORT_HEADER_SETTING));
 		}
@@ -602,7 +603,7 @@ public class DeckImportPage extends WizardDataTransferPage implements Listener {
 		for (ReportType reportType : types) {
 			addComboType(reportType);
 		}
-		selectReportType(ReportType.TEXT_DECK_CLASSIC);
+		selectReportType(ImportExportFactory.TEXT_DECK_CLASSIC);
 		typeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// options to include header
 		includeHeader = new Button(buttonComposite, SWT.CHECK | SWT.LEFT);

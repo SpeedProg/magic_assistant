@@ -12,7 +12,7 @@ public class CsvExportDelegateTest extends AbstarctExportTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		exporter.setReportType(ReportType.createReportType("test"));
+		exporter.setReportType(ImportExportFactory.createReportType("test"));
 	}
 
 	@Test
@@ -46,6 +46,7 @@ public class CsvExportDelegateTest extends AbstarctExportTest {
 		run(exporter);
 		assertEquals(2, lines.length);
 		assertTrue(lines[0].startsWith("ID,NAME"));
-		assertTrue("Does not match " + lines[1], lines[1].startsWith(card3.getCardId() + "," + card3.getName()));
+		assertTrue("Does not match " + lines[1],
+				lines[1].startsWith(card3.getCardId() + "," + card3.getName()));
 	}
 }

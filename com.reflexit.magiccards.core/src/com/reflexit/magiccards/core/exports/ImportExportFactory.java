@@ -12,7 +12,11 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -25,10 +29,20 @@ import com.reflexit.magiccards.core.MagicLogger;
 /**
  * Import/Export factory - gets instance of worker class by its type
  */
-public class ImportExportFactory<T> {
+public class ImportExportFactory {
+	private static Map<String, ReportType> types;
+	public static final ReportType XML;
+	public static final ReportType CSV;
+	public static final ReportType TEXT_DECK_CLASSIC;
+	public static final ReportType TABLE_PIPED;
 	static {
+		types = new LinkedHashMap<String, ReportType>();
 		loadExtensions();
 		loadCustom();
+		XML = getByLabel("Magic Assistant XML");
+		CSV = getByLabel("Magic Assistant CSV");
+		TEXT_DECK_CLASSIC = getByLabel("Deck Classic Text (1 x Name)");
+		TABLE_PIPED = getByLabel("Magic Assistant Piped Table");
 	}
 
 	private static void loadCustom() {
@@ -57,24 +71,65 @@ public class ImportExportFactory<T> {
 		}
 	}
 
-	private static void parseExtension(IConfigurationElement elp) {
+	private synchronized static void parseExtension(IConfigurationElement elp) {
 		// String id = elp.getAttribute("id");
 		String label = elp.getAttribute("label");
+		String ext = elp.getAttribute("extension");
 		String imp = elp.getAttribute("importDelegate");
 		String exp = elp.getAttribute("exportDelegate");
 		String sxml = elp.getAttribute("xmlFormat");
-		String ext = elp.getAttribute("extension");
 		boolean xmlFormat = Boolean.valueOf(sxml);
-		ReportType rt = ReportType.createReportType(label, ext, xmlFormat);
-		rt.setImportDelegate(imp);
-		rt.setExportDelegate(exp);
+		createReportType(label, ext, xmlFormat, imp, exp);
+	}
+
+	public static ReportType createReportType(String label, String fileExtension, boolean xmlFormat,
+			String importClass, String exportClass) {
+		ReportType rt = createReportType(label, fileExtension, xmlFormat);
+		rt.setImportDelegate(importClass);
+		rt.setExportDelegate(exportClass);
+		return rt;
 	}
 
 	public static Collection<ReportType> getImportTypes() {
-		return ReportType.getImportTypes();
+		ArrayList<ReportType> res = new ArrayList<ReportType>();
+		for (Iterator iterator = types.values().iterator(); iterator.hasNext();) {
+			ReportType type = (ReportType) iterator.next();
+			if (type.importWorker != null)
+				res.add(type);
+		}
+		return res;
 	}
 
 	public static Collection<ReportType> getExportTypes() {
-		return ReportType.getExportTypes();
+		ArrayList<ReportType> res = new ArrayList<ReportType>();
+		for (Iterator iterator = types.values().iterator(); iterator.hasNext();) {
+			ReportType type = (ReportType) iterator.next();
+			if (type.exportWorker != null)
+				res.add(type);
+		}
+		return res;
+	}
+
+	public static ReportType createReportType(String label) {
+		return createReportType(label, "txt", false);
+	}
+
+	public static synchronized ReportType createReportType(String label, String extension, boolean xml) {
+		ReportType reportType = types.get(label);
+		if (reportType != null)
+			return reportType;
+		reportType = new ReportType(label, xml, extension);
+		types.put(label, reportType);
+		return reportType;
+	}
+
+	public static ReportType getByLabel(String label) {
+		if (label == null)
+			return null;
+		return types.get(label);
+	}
+
+	static void remove(String label) {
+		types.remove(label);
 	}
 }

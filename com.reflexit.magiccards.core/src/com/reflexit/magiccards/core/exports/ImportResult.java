@@ -19,8 +19,8 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 public class ImportResult {
 	private ArrayList<ICard> toImport = new ArrayList<ICard>();
 	private ICardField[] fields = new ICardField[0];
-	private ReportType type;
-	private Exception error;
+	private ReportType type = ImportExportFactory.TEXT_DECK_CLASSIC;
+	private Exception error = null;
 
 	/**
 	 * @param error
