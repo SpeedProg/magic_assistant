@@ -9,6 +9,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -24,14 +25,14 @@ public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 		setForcePreviousAndNextButtons(true);
 		mainPage = new DeckImportPage("Import", selection) {
 			@Override
-			protected void createDestinationGroup(Composite parent) {
-				super.createDestinationGroup(parent);
+			protected Group createDestinationGroup(Composite parent) {
+				Group group = super.createDestinationGroup(parent);
 				setTitle("Import a new set(s) into the database");
-				Composite group = importIntoDb.getParent();
 				group.setVisible(false);
 				group.setLayoutData(GridDataFactory.swtDefaults().hint(0, 0).create());
 				Composite edition = createEditionGroup(parent);
 				edition.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+				return group;
 			}
 
 			@Override

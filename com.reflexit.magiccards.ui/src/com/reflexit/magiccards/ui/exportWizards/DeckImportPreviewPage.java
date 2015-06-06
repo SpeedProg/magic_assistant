@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportError;
-import com.reflexit.magiccards.core.exports.ImportResult;
+import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -52,7 +51,7 @@ import com.reflexit.magiccards.ui.views.columns.SetColumn;
 public class DeckImportPreviewPage extends WizardPage {
 	private TableViewerManager manager;
 	private Text text;
-	protected ImportResult previewResult;
+	protected ImportData previewResult;
 	private Job thread = new Job("Modify") {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
@@ -90,7 +89,8 @@ public class DeckImportPreviewPage extends WizardPage {
 		setTitle("Importing format " + startingPage.getReportType().getLabel());
 		setErrorMessage(null);
 		setDescription(getFirstDescription());
-		previewResult = startingPage.performImport(true);
+		previewResult = startingPage.getImportData();
+		startingPage.performImport(true);
 		safeSetText(previewResult.getText());
 		updateColumns(previewResult.getFields());
 		manager.updateViewer(previewResult.getList());
@@ -111,25 +111,17 @@ public class DeckImportPreviewPage extends WizardPage {
 			setErrorMessage("Cannot parse import source");
 			return;
 		}
-		List list = previewResult.getList();
-		int count = 0;
-		if (list.size() > 0) {
-			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				IMagicCard card = (IMagicCard) iterator.next();
-				if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
-					count++;
-				}
-			}
-		}
-		if (previewResult.getError() != null) {
-			MagicUIActivator.log(previewResult.getError());
-			setErrorMessage("Cannot parse data file: " + previewResult.getError().getMessage());
-		} else if (list.size() == 0)
-			setErrorMessage("Cannot parse data file");
-		else if (count == 0) {
+		int errorCount = previewResult.getErrorCount();
+		Throwable e = previewResult.getError();
+		if (e != null) {
+			MagicUIActivator.log(e);
+			setErrorMessage("Cannot parse data file: " + e.getMessage());
+		} else if (!previewResult.isOk())
+			setErrorMessage("Cannot parse data file: unknown reason");
+		else if (errorCount == 0) {
 			setDescription(getFirstDescription());
 		} else {
-			setErrorMessage(count
+			setErrorMessage(errorCount
 					+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
 			// manager.setSortColumn(0, 1);
 		}
@@ -148,27 +140,6 @@ public class DeckImportPreviewPage extends WizardPage {
 			}
 			final String p = prefColumns;
 			Display.getDefault().syncExec(() -> manager.updateColumns(p));
-		}
-	}
-
-	public void updateMessage() {
-		List list = previewResult.getList();
-		setErrorMessage(null);
-		if (list.size() == 0) {
-			setErrorMessage("Cannot parse data file");
-			return;
-		}
-		int count = 0;
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
-				count++;
-			}
-		}
-		if (count > 0) {
-			setErrorMessage(count
-					+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
-			// manager.setSortColumn(0, 1);
 		}
 	}
 
@@ -232,7 +203,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		control.setLayoutData(tld);
 	}
 
-	public ImportResult getPreviewResult() {
+	public ImportData getPreviewResult() {
 		return previewResult;
 	}
 
@@ -287,7 +258,7 @@ public class DeckImportPreviewPage extends WizardPage {
 									}
 								}
 								manager.getViewer().refresh(true);
-								updateMessage();
+								validate();
 							}
 						}
 					};

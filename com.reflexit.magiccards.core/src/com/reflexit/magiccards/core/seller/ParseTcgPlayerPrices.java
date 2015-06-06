@@ -18,11 +18,11 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
+import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -195,8 +195,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 				URL url = new URL("http://magic.tcgplayer.com/db/search_result.asp?Set_Name=" + setE);
 				try (InputStream is = WebUtils.openUrl(url)) {
 					setMap.put(origset, set);
-					delegate.init(is, Location.NO_WHERE,
-							false);
+					delegate.init(is, new ImportData());
 					delegate.run(ICoreProgressMonitor.NONE);
 					break;
 				} catch (Exception e) {

@@ -13,9 +13,6 @@ import java.util.Properties;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 @SuppressWarnings("rawtypes")
@@ -169,15 +166,14 @@ public class ReportType {
 			return (IImportDelegate) className;
 		}
 		if (className instanceof String) {
-			Class loadClass;
 			try {
-				loadClass = getClass().getClassLoader().loadClass((String) className);
+				Class loadClass = getClass().getClassLoader().loadClass((String) className);
 				IImportDelegate newInstance = (IImportDelegate) loadClass.newInstance();
 				newInstance.setReportType(this);
 				importWorker = newInstance;
 				return newInstance;
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Throwable e) {
+				MagicLogger.log(e);
 			}
 		}
 		return null;
@@ -234,18 +230,12 @@ public class ReportType {
 			try {
 				InputStream st = new ByteArrayInputStream(contents.getBytes());
 				IImportDelegate id = reportType.getImportDelegate();
-				id.init(st, Location.valueOf("preview"), true);
+				id.init(st, new ImportData());
 				try {
 					id.run(ICoreProgressMonitor.NONE);
-					ImportResult result = id.getResult();
+					ImportData result = id.getResult();
 					if (result.getError() == null && result.getList().size() > 0) {
-						int err = 0;
-						for (ICard card : result.getList()) {
-							if (card instanceof MagicCardPhysical) {
-								if (((MagicCardPhysical) card).getError() != null)
-									err++;
-							}
-						}
+						int err = result.getErrorCount();
 						if (err < errors) {
 							selected = reportType;
 							if (err == 0)

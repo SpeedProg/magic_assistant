@@ -10,16 +10,13 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,13 +24,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.MagicCardList;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -50,36 +48,23 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
  * Utils to perform import
  */
 public class ImportUtils {
-	public static ImportResult performPreImport(InputStream st, IImportDelegate worker, boolean header,
-			boolean virtual, Location location,
-			boolean resolve, ICoreProgressMonitor monitor) throws InvocationTargetException,
+	public static ImportData performPreImport(
+			IImportDelegate worker,
+			ImportData result,
+			ICoreProgressMonitor monitor)
+			throws InvocationTargetException,
 			InterruptedException {
-		if (st == null)
-			throw new NullPointerException();
-		worker.init(st, location, virtual);
-		worker.setHeader(header);
+		worker.init(new ByteArrayInputStream(result.getText().getBytes(FileUtils.CHARSET_UTF_8)), result);
 		worker.run(monitor);
-		ImportResult preview = worker.getResult();
-		if (preview == null)
-			throw new NullPointerException();
-		if (resolve) {
-			DataManager.getInstance().getMagicDBStore().initialize();
-			for (ICard card : preview.getList()) {
-				if (card instanceof MagicCardPhysical)
-					ImportUtils.updateCardReference((MagicCardPhysical) card);
-			}
-		}
-		return preview;
+		return result;
 	}
 
-	public static void performImport(InputStream st, IImportDelegate worker, boolean header, boolean virtual,
-			Location location,
-			ICardStore cardStore, ICoreProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
-		ImportResult result = performPreImport(st, worker, header, virtual, location, true, monitor);
-		if (result.getError() != null)
-			throw new MagicException(result.getError());
-		performImport(result.getList(), cardStore);
+	public static void resolve(List<? extends ICard> list) {
+		DataManager.getInstance().getMagicDBStore().initialize();
+		for (ICard card : list) {
+			if (card instanceof MagicCardPhysical)
+				ImportUtils.updateCardReference((MagicCardPhysical) card);
+		}
 	}
 
 	public static void performImport(Collection importedCards, ICardStore cardStore) {
@@ -97,8 +82,6 @@ public class ImportUtils {
 			if (location.isSideboard()) {
 				ModelRoot root = DataManager.getInstance().getModelRoot();
 				String containerName = location.getParent().getPath();
-				if (containerName.startsWith(File.separator))
-					containerName = containerName.substring(File.separator.length());
 				final CardElement resource = root.findElement(new LocationPath(containerName));
 				if (!(resource instanceof CollectionsContainer)) {
 					continue; // ???
@@ -112,19 +95,13 @@ public class ImportUtils {
 				if (maindeck != null) {
 					virtual = maindeck.isVirtual();
 				}
-				CardCollection sideboard = parent.addDeck(location.getBaseFileName(), virtual);
+				parent.addDeck(location.getBaseFileName(), virtual);
 			}
 		}
 	}
 
 	private static Collection<Location> getLocations(Collection importedCards) {
-		HashSet<Location> res = new HashSet<Location>();
-		for (Iterator iterator = importedCards.iterator(); iterator.hasNext();) {
-			IMagicCard card = (IMagicCard) iterator.next();
-			if (card instanceof MagicCardPhysical)
-				res.add(((MagicCardPhysical) card).getLocation());
-		}
-		return res;
+		return new MagicCardList(importedCards).<Location> getUnique(MagicCardField.LOCATION);
 	}
 
 	public static String getFixedSet(MagicCard card) {
@@ -137,58 +114,32 @@ public class ImportUtils {
 		return set;
 	}
 
-	static Map<String, String> setAlias;
-	static {
-		setupSetAliases();
-	}
-
-	public static void setupSetAliases() {
-		setAlias = new LinkedHashMap<String, String>();
-		setAlias.put("alpha", "Limited Edition Alpha");
-		setAlias.put("beta", "Limited Edition Beta");
-		setAlias.put("alpha edition", "Limited Edition Alpha");
-		setAlias.put("beta edition", "Limited Edition Beta");
-		setAlias.put("revised", "Revised Edition");
-		setAlias.put("sixth edition", "Classic Sixth Edition");
-		setAlias.put("timeshifted", "Time Spiral \"Timeshifted\"");
-		setAlias.put("time spiral ''timeshifted''", "Time Spiral \"Timeshifted\"");
-		setAlias.put("''timeshifted''", "Time Spiral \"Timeshifted\"");
-		setAlias.put("\"timeshifted\"", "Time Spiral \"Timeshifted\"");
-		setAlias.put("commander", "Magic: The Gathering-Commander");
-		setAlias.put("4th edition", "Fourth Edition");
-		setAlias.put("5th edition", "Fifth Edition");
-		setAlias.put("6th edition", "Classic Sixth Edition");
-		setAlias.put("7th edition", "Seventh Edition");
-		setAlias.put("8th edition", "Eighth Edition");
-		setAlias.put("9th edition", "Nineth Edition");
-		setAlias.put("10th edition", "Tenth Edition");
-		Collection<Edition> editions = Editions.getInstance().getEditions();
-		for (Iterator iterator = editions.iterator(); iterator.hasNext();) {
-			Edition edition = (Edition) iterator.next();
-			String lset = edition.getName().toLowerCase(Locale.ENGLISH);
-			setAlias.put(lset, edition.getName());
-			String nset = lset.replaceAll(" edition", "");
-			setAlias.put(nset, edition.getName());
-		}
-	}
+	static Map<String, Edition> setAlias = new HashMap<>();
 
 	public static Edition resolveSet(String origSet) {
 		if (origSet == null)
 			return null;
+		if (setAlias.containsKey(origSet))
+			return setAlias.get(origSet);
 		String set = origSet.trim();
 		if (set.contains(" : ")) {
 			set = set.replaceAll(" : ", ": ");
 		}
-		Edition eset = Editions.getInstance().getEditionByName(set);
-		if (eset != null)
-			return eset;
-		String lset = set.toLowerCase(Locale.ENGLISH);
-		if (lset.startsWith("token ")) {
-			lset = lset.substring(6);
+		if (set.contains("''")) {
+			set = set.replaceAll("''", "\"");
 		}
-		if (setAlias.containsKey(lset)) {
-			set = setAlias.get(lset);
-			return Editions.getInstance().getEditionByName(set);
+		if (set.startsWith("token ") || set.startsWith("Token ")) {
+			set = set.substring(6);
+		}
+		Edition eset = Editions.getInstance().getEditionByName(set);
+		if (eset != null) {
+			setAlias.put(origSet, eset);
+			return eset;
+		}
+		eset = Editions.getInstance().getEditionByNameIgnoreCase(set);
+		if (eset != null) {
+			setAlias.put(origSet, eset);
+			return eset;
 		}
 		return null;
 	}
@@ -207,16 +158,20 @@ public class ImportUtils {
 
 	public static Map<String, String> getSetCandidates(Iterable<IMagicCard> cards) {
 		HashMap<String, String> badSets = new HashMap<String, String>();
-		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
+		cards: for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
-			if (card.getCardId() == 0 && card.getSet() != null) {
-				String set = card.getSet();
-				Edition eset = resolveSet(set);
-				if (eset == null) {
-					badSets.put(set, null);
-				} else if (!eset.getName().equals(set)) {
-					badSets.put(set, eset.getName());
+			String set = card.getSet();
+			if (set == null) continue;
+			Edition eset = resolveSet(set);
+			if (eset == null) {
+				badSets.put(set, null);
+			} else if (!eset.getName().equals(set)) {
+				for (String alias : eset.getAliases()) {
+					if (alias.equals(set)) {
+						continue cards;
+					}
 				}
+				badSets.put(set, eset.getName());
 			}
 		}
 		return badSets;
@@ -279,10 +234,7 @@ public class ImportUtils {
 		MagicCard ref = null;
 		// by id
 		if (base.getCardId() != 0) {
-			MagicCard cand = (MagicCard) lookupStore.getCard(base.getCardId());
-			if (cand != null) {
-				ref = cand;
-			}
+			ref = (MagicCard) lookupStore.getCard(base.getCardId());
 		}
 		// by name
 		if (ref == null) {
@@ -453,7 +405,7 @@ public class ImportUtils {
 		}
 	}
 
-	public static void splitToSideboard(Location location, Collection<IMagicCard> cards) {
+	public static void updateLocation(Collection<IMagicCard> cards, Location location) {
 		Location sideboard = location.toSideboard();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard iMagicCard = (IMagicCard) iterator.next();

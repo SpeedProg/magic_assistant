@@ -13,7 +13,6 @@ package com.reflexit.magiccards.core.exports;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -21,16 +20,16 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * Import delegate interface
  */
-public interface IImportDelegate<T> {
+public interface IImportDelegate {
 	public ReportType getType();
 
-	public void init(InputStream st, Location location, boolean virtual);
+	public void init(InputStream st, ImportData result);
 
 	public void setHeader(boolean header);
 
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 
-	public ImportResult getResult();
+	public ImportData getResult();
 
 	public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value);
 

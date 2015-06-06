@@ -9,7 +9,6 @@ import java.util.Set;
 
 public class CardList implements ICardList<ICard> {
 	protected Iterable<ICard> iterable;
-	private boolean copy;
 
 	public CardList(ICard[] array) {
 		this(Arrays.asList(array));
@@ -25,23 +24,22 @@ public class CardList implements ICardList<ICard> {
 	}
 
 	public CardList(Iterable<? extends ICard> iterable, boolean copy) {
-		this.iterable = (Iterable<ICard>) iterable;
-		this.copy = copy;
+		this.iterable = copyList(iterable);
 	}
 
-	public List<Object> getAll(ICardField f) {
-		ArrayList<Object> set = new ArrayList<Object>();
+	public <T> List<T> getAll(ICardField f) {
+		ArrayList<T> set = new ArrayList<T>();
 		for (ICard card : this) {
-			Object value = card.get(f);
+			T value = (T) card.get(f);
 			set.add(value);
 		}
 		return set;
 	}
 
-	public Set<Object> getUnique(ICardField f) {
-		LinkedHashSet<Object> set = new LinkedHashSet<Object>();
+	public <T> Set<T> getUnique(ICardField f) {
+		LinkedHashSet<T> set = new LinkedHashSet<T>();
 		for (ICard card : this) {
-			Object value = card.get(f);
+			T value = (T) card.get(f);
 			set.add(value);
 		}
 		return set;
@@ -53,9 +51,10 @@ public class CardList implements ICardList<ICard> {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public int size() {
-		if (copy == false) {
+		if (!(iterable instanceof List)) {
 			int size = 0;
 			for (ICard card : iterable) {
 				size++;
@@ -68,18 +67,26 @@ public class CardList implements ICardList<ICard> {
 	public List<ICard> getList() {
 		if (iterable instanceof List)
 			return (List<ICard>) iterable;
-		if (copy == false)
-			return null;
+		return copyList(iterable);
+	}
+
+	public static List<ICard> copyList(Iterable<? extends ICard> iterable) {
 		ArrayList<ICard> list = new ArrayList<ICard>();
-		for (ICard card : this) {
+		for (ICard card : iterable) {
 			list.add(card);
 		}
-		iterable = list;
 		return list;
 	}
 
 	@Override
-	public ICard get(int i) {
-		return getList().get(i);
+	public ICard get(int k) {
+		if (!(iterable instanceof List)) {
+			int i = 0;
+			for (ICard card : iterable) {
+				if (i == k) return card;
+			}
+			throw new ArrayIndexOutOfBoundsException(k);
+		}
+		return getList().get(k);
 	}
 }

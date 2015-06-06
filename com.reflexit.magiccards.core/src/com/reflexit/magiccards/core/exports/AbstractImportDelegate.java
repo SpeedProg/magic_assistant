@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -14,12 +13,12 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
 public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress,
-		IImportDelegate<IMagicCard> {
+		IImportDelegate {
 	private InputStream stream;
 	private boolean header;
 	private Location location;
 	private boolean virtual;
-	protected ImportResult importResult;
+	protected ImportData importResult;
 	protected int lineNum = 0;
 	private ReportType type;
 
@@ -41,14 +40,16 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	}
 
 	@Override
-	public void init(InputStream st, Location location, boolean virtual) {
+	public void init(InputStream st, ImportData result) {
 		this.stream = st;
-		this.location = location;
-		this.virtual = virtual;
-		this.importResult = new ImportResult();
+		this.importResult = result;
 		importResult.setType(getType());
 		importResult.setFields(getNonTransientFeilds());
+		this.location = importResult.getLocation();
+		this.virtual = importResult.isVirtual();
 		lineNum = 0;
+		this.header = result.isHeader();
+		result.getList().clear();
 	}
 
 	public Location getSideboardLocation() {
@@ -78,7 +79,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	protected abstract void doRun(ICoreProgressMonitor monitor) throws IOException;
 
 	@Override
-	public ImportResult getResult() {
+	public ImportData getResult() {
 		return importResult;
 	}
 

@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
@@ -54,11 +54,11 @@ public class AbstarctImportTest extends AbstractMagicTest {
 		return res;
 	}
 
-	protected void parse(IImportDelegate<IMagicCard> worker) {
+	protected void parse(IImportDelegate worker) {
 		parse(true, worker);
 	}
 
-	protected void parse(boolean header, IImportDelegate<IMagicCard> worker) {
+	protected void parse(boolean header, IImportDelegate worker) {
 		try {
 			exception = null;
 			parseonly(header, worker);
@@ -70,33 +70,42 @@ public class AbstarctImportTest extends AbstractMagicTest {
 		}
 	}
 
-	protected void parseonly(boolean header, IImportDelegate<IMagicCard> worker)
+	protected void parseonly(boolean header, IImportDelegate worker)
 			throws InvocationTargetException, InterruptedException {
 		if (resolve == false)
 			throw new IllegalArgumentException("Cannot test");
-		ImportUtils.performImport(
-				new ByteArrayInputStream(line.getBytes()), worker, header,
-				virtual, deck.getLocation(), deck.getCardStore(),
-				ICoreProgressMonitor.NONE);
+		ImportData importData = new ImportData();
+		importData.setVirtual(virtual);
+		importData.setLocation(deck.getLocation());
+		importData.setHeader(header);
+		importData.setText(line);
+		ImportUtils.performPreImport(worker, importData, ICoreProgressMonitor.NONE);
+		if (importData.getError() != null)
+			throw new MagicException(importData.getError());
+		if (resolve) {
+			ImportUtils.resolve(importData.getList());
+		}
+		ImportUtils.performImport(importData.getList(), deck.getCardStore());
 		result = extractStorageCards();
 		exception = worker.getResult().getError();
 		setout(result);
 	}
 
-	protected void preview(IImportDelegate<IMagicCard> worker) {
+	protected void preview(IImportDelegate worker) {
 		preview(true, worker);
 	}
 
-	protected void preview(boolean header, IImportDelegate<IMagicCard> worker) {
+	protected void preview(boolean header, IImportDelegate worker) {
 		try {
-			ImportUtils.performPreImport(
-					new ByteArrayInputStream(line.getBytes()), worker, header,
-					virtual, deck.getLocation(), resolve,
-					ICoreProgressMonitor.NONE);
+			ImportData importData = new ImportData(virtual, deck.getLocation(), line);
+			ImportUtils.performPreImport(worker, importData, ICoreProgressMonitor.NONE);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 		result = (List) worker.getResult().getList();
+		if (resolve) {
+			ImportUtils.resolve(result);
+		}
 		exception = worker.getResult().getError();
 		setout(result);
 	}

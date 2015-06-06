@@ -23,7 +23,7 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 	public boolean performFinish() {
 		mainPage.saveWidgetValues();
 		mainPage.performImport(false);
-		if (mainPage.getPreviewResult().isOk())
+		if (mainPage.getImportData().isOk())
 			return true;
 		return false;
 	}

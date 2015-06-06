@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +25,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
 	private ICoreProgressMonitor monitor = ICoreProgressMonitor.NONE;
 	private Collection<IMagicCard> preimport;
-	private ImportResult result;
+	private ImportData result;
 
 	private void parse() {
 		parse(true, tableImport);
@@ -55,10 +54,12 @@ public class ImportUtilsTest extends AbstarctImportTest {
 
 	public void preimport() {
 		try {
-			result = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()), tableImport,
-					true, virtual,
-					deck.getLocation(), resolve, monitor);
+			ImportData importData = new ImportData(virtual, deck.getLocation(), line);
+			result = ImportUtils.performPreImport(tableImport, importData, monitor);
 			preimport = (Collection<IMagicCard>) result.getList();
+			if (resolve) {
+				ImportUtils.resolve(result.getList());
+			}
 			setout(preimport);
 		} catch (Exception e) {
 			fail(e.getMessage());
@@ -137,10 +138,13 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreview() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Bla|2");
-		ImportResult performPreview = ImportUtils.performPreImport(new ByteArrayInputStream(line.getBytes()),
-				tableImport, true, virtual,
-				Location.createLocation("test"), resolve, monitor);
+		ImportData improtData = new ImportData(virtual,
+				Location.createLocation("test"), line);
+		ImportData performPreview = ImportUtils.performPreImport(tableImport, improtData, monitor);
 		List values = performPreview.getList();
+		if (resolve) {
+			ImportUtils.resolve(values);
+		}
 		assertEquals(1, values.size());
 		Object[] fielsValues = performPreview.getFields();
 		assertEquals(3, fielsValues.length);

@@ -2,12 +2,12 @@ Limited Edition Alpha|1E|LEA,A|August 1993|Core|||Alpha Edition,Alpha
 Limited Edition Beta|2E|LEB,B|October 1993|Core|||Beta Edition,Beta
 Unlimited Edition|2U|2ED,U|December 1993|Core|||Unlimited
 Arabian Nights|AN|ARN|December 1993|Expansion|None||
-Revised Edition|3E|3ED,R|April 1994|Core|||
+Revised Edition|3E|3ED,R|April 1994|Core|||Revised
 Antiquities|AQ|ATQ|March 1994|Expansion|None||
 Legends|LE|LEG,LG|June 1994|Expansion|None||
 The Dark|DK|DRK|August 1994|Expansion|None||
 Fallen Empires|FE|FEM|November 1994|Expansion|None||
-Fourth Edition|4E|4ED|April 1995|Core|||
+Fourth Edition|4E|4ED|April 1995|Core|||4th Edition
 Ice Age|IA|ICE|June 1995|Expansion|Ice Age||
 Chronicles|CH|CHR|July 1995|Reprint|||
 Homelands|HM|HML,HL|October 1995|Expansion|None||
@@ -59,7 +59,7 @@ Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica|Modern|Ravnica
 Guildpact|GPT||February 2006|Expansion|Ravnica|Modern|
 Dissension|DIS||May 2006|Expansion|Ravnica|Modern|
 Coldsnap|CSP||July 2006|Expansion|Ice Age|Modern|
-Time Spiral "Timeshifted"|TSB||October 2006|Reprint|||Timeshifted
+Time Spiral "Timeshifted"|TSB||October 2006|Reprint|||Timeshifted,"Timeshifted"
 Promo set for Gatherer|PPR||October 2006|Online|||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral|Modern|
 Planar Chaos|PLC||February 2007|Expansion|Time Spiral|Modern|

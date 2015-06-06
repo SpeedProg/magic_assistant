@@ -11,17 +11,33 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 
-public class ImportResult {
+public class ImportData {
 	private ArrayList<ICard> toImport = new ArrayList<ICard>();
 	private ICardField[] fields = new ICardField[0];
 	private ReportType type = ImportExportFactory.TEXT_DECK_CLASSIC;
 	private Throwable error = null;
 	private String text = "";
+	private boolean header = true;
+	private boolean resolve = false;
+	private Location location = Location.createLocation("preview");
+	private boolean virtual = false;
+
+	public ImportData(boolean virtual2, Location location2, String line) {
+		virtual = virtual2;
+		location = location2;
+		text = line;
+	}
+
+	public ImportData() {
+	}
 
 	/**
 	 * @param error
@@ -83,6 +99,19 @@ public class ImportResult {
 		return toImport;
 	}
 
+	public int getErrorCount() {
+		int errorCount = 0;
+		if (toImport.size() > 0) {
+			for (Iterator<ICard> iterator = toImport.iterator(); iterator.hasNext();) {
+				ICard card = iterator.next();
+				if (card instanceof MagicCardPhysical && ((MagicCardPhysical) card).getError() != null) {
+					errorCount++;
+				}
+			}
+		}
+		return errorCount;
+	}
+
 	public void clear() {
 		toImport.clear();
 	}
@@ -97,5 +126,37 @@ public class ImportResult {
 
 	public boolean isOk() {
 		return getError() == null && toImport.size() > 0;
+	}
+
+	public boolean isHeader() {
+		return header;
+	}
+
+	public void setHeader(boolean header) {
+		this.header = header;
+	}
+
+	public boolean isResolve() {
+		return resolve;
+	}
+
+	public void setResolve(boolean resolve) {
+		this.resolve = resolve;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public boolean isVirtual() {
+		return virtual;
+	}
+
+	public void setVirtual(boolean virtual) {
+		this.virtual = virtual;
 	}
 }
