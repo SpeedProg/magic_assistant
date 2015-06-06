@@ -453,7 +453,7 @@ public class ImportUtils {
 		}
 	}
 
-	public static void fixLocations(Location location, Collection<IMagicCard> cards) {
+	public static void splitToSideboard(Location location, Collection<IMagicCard> cards) {
 		Location sideboard = location.toSideboard();
 		for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard iMagicCard = (IMagicCard) iterator.next();

@@ -27,13 +27,11 @@ public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 			protected void createDestinationGroup(Composite parent) {
 				super.createDestinationGroup(parent);
 				setTitle("Import a new set(s) into the database");
-				importIntoDb.getParent().setVisible(false);
-				importIntoDb.getParent().setLayoutData(GridDataFactory.swtDefaults().hint(0, 0).create());
-				virtualCards.setSelection(true);
-				virtualCards.setVisible(false);
-				virtualCards.setLayoutData(GridDataFactory.swtDefaults().hint(0, 0).create());
-				createEditionGroup(parent).setLayoutData(
-						GridDataFactory.fillDefaults().grab(true, false).create());
+				Composite group = importIntoDb.getParent();
+				group.setVisible(false);
+				group.setLayoutData(GridDataFactory.swtDefaults().hint(0, 0).create());
+				Composite edition = createEditionGroup(parent);
+				edition.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 			}
 
 			@Override

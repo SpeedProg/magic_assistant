@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -32,5 +33,12 @@ public class MagicToolkit extends FormToolkit {
 		Button button = createButton(parent, text, style);
 		if (lis != null) button.addSelectionListener(lis);
 		return button;
+	}
+
+	public Composite createGroup(Composite parent, String string) {
+		Group group = new Group(parent, SWT.BORDER);
+		group.setText(string);
+		adapt(group, false, false);
+		return group;
 	}
 }
