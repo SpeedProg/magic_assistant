@@ -53,8 +53,12 @@ public class EditionsComparator implements Comparator<Edition> {
 			}
 			case FORMAT: {
 				d = a1.getLegalityMap().compareTo(a2.getLegalityMap());
-			}
 				break;
+			}
+			case ALIASES: {
+				d = a1.getExtraAliases().compareTo(a2.getExtraAliases());
+				break;
+			}
 		}
 		if (d == 0 && field != EditionField.DATE) {
 			d = compare(a1, a2, EditionField.DATE, -1);
