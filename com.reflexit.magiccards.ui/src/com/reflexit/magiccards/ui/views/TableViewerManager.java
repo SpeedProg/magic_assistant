@@ -35,7 +35,7 @@ public class TableViewerManager extends ViewerManager {
 
 	@Override
 	public Control createContents(Composite parent) {
-		this.viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+		this.viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER);
 		this.viewer.getTable().setFont(getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
