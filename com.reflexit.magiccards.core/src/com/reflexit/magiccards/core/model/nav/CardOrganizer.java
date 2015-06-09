@@ -181,11 +181,14 @@ public class CardOrganizer extends CardElement {
 	}
 
 	public CardCollection oldFindCardCollectionById(String id) {
+		String fileId = id + ".xml";
 		for (Object element : this.getChildren()) {
 			CardElement o = (CardElement) element;
 			if (o instanceof CardCollection) {
 				CardCollection d = (CardCollection) o;
 				if (d.getPath().getName().equals(id)) // old Id is file base name with ext
+					return d;
+				if (d.getPath().getName().equals(fileId))
 					return d;
 			} else if (o instanceof CardOrganizer) {
 				CardCollection d = ((CardOrganizer) o).oldFindCardCollectionById(id);
