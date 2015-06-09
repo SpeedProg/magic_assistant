@@ -26,7 +26,6 @@ public class ImportData {
 	private Throwable error = null;
 	private String text = "";
 	private boolean header = true;
-	private boolean resolve = false;
 	private Location location = Location.createLocation("preview");
 	private boolean virtual = false;
 
@@ -114,6 +113,7 @@ public class ImportData {
 
 	public void clear() {
 		toImport.clear();
+		error = null;
 	}
 
 	public String getText() {
@@ -134,14 +134,6 @@ public class ImportData {
 
 	public void setHeader(boolean header) {
 		this.header = header;
-	}
-
-	public boolean isResolve() {
-		return resolve;
-	}
-
-	public void setResolve(boolean resolve) {
-		this.resolve = resolve;
 	}
 
 	public Location getLocation() {

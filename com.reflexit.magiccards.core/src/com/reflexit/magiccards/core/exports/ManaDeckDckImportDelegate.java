@@ -38,7 +38,7 @@ public class ManaDeckDckImportDelegate extends AbstractImportDelegate {
 		};
 		parser.addPattern(Pattern.compile("^\\s*(\\d+)\\s+([^(]*)"), //
 				new ICardField[] { MagicCardField.COUNT, MagicCardField.NAME });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
+		importData.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
 				MagicCardField.SET,
 				MagicCardField.SIDEBOARD });
 		sideboard = false;

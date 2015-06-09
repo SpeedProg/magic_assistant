@@ -15,10 +15,7 @@ import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress,
 		IImportDelegate {
 	private InputStream stream;
-	private boolean header;
-	private Location location;
-	private boolean virtual;
-	protected ImportData importResult;
+	protected ImportData importData;
 	protected int lineNum = 0;
 	private ReportType type;
 
@@ -42,26 +39,23 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	@Override
 	public void init(InputStream st, ImportData result) {
 		this.stream = st;
-		this.importResult = result;
-		importResult.setType(getType());
-		importResult.setFields(getNonTransientFeilds());
-		this.location = importResult.getLocation();
-		this.virtual = importResult.isVirtual();
+		this.importData = result;
+		importData.clear();
+		importData.setType(getType());
+		importData.setFields(getNonTransientFeilds());
 		lineNum = 0;
-		this.header = result.isHeader();
-		result.getList().clear();
 	}
 
 	public Location getSideboardLocation() {
-		if (location == null)
+		if (getLocation() == null)
 			return Location.createLocation("sideboard");
-		Location sideboard = location.toSideboard();
+		Location sideboard = getLocation().toSideboard();
 		return sideboard;
 	}
 
 	@Override
 	public void setHeader(boolean header) {
-		this.header = header;
+		this.importData.setHeader(header);
 	}
 
 	@Override
@@ -70,7 +64,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		try {
 			doRun(monitor);
 		} catch (Exception e) {
-			importResult.setError(e);
+			importData.setError(e);
 		} finally {
 			monitor.done();
 		}
@@ -80,13 +74,17 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	@Override
 	public ImportData getResult() {
-		return importResult;
+		return importData;
 	}
 
 	protected MagicCardPhysical createDefaultCard() {
 		MagicCardPhysical card = new MagicCardPhysical(new MagicCard(), getLocation());
-		card.setOwn(!virtual);
+		card.setOwn(!isVirutal());
 		return card;
+	}
+
+	protected boolean isVirutal() {
+		return importData.isVirtual();
 	}
 
 	protected void importCard(MagicCardPhysical card) {
@@ -95,9 +93,9 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		if (!card.isMigrated()) {
 			MagicCardPhysical ncard = card.tradeSplit(card.getCount(), card.getForTrade());
 			if (ncard != null)
-				importResult.add(ncard);
+				importData.add(ncard);
 		}
-		importResult.add(card);
+		importData.add(card);
 	}
 
 	@Override
@@ -148,7 +146,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	}
 
 	protected Location getLocation() {
-		return location;
+		return importData.getLocation();
 	}
 
 	static ICardField[] getNonTransientFeilds() {
@@ -156,10 +154,10 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	}
 
 	public void setLocation(Location location) {
-		this.location = location;
+		this.importData.setLocation(location);
 	}
 
 	public boolean isHeader() {
-		return header;
+		return importData.isHeader();
 	}
 }

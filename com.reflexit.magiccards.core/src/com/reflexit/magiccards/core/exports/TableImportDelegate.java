@@ -94,7 +94,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 	}
 
 	public ICardField[] getFields() {
-		return importResult.getFields();
+		return importData.getFields();
 	}
 
 	public void setHeaderFields(String[] split) {
@@ -131,6 +131,6 @@ public class TableImportDelegate extends AbstractImportDelegate {
 	}
 
 	public void setFields(ICardField[] fields) {
-		importResult.setFields(fields);
+		importData.setFields(fields);
 	}
 }

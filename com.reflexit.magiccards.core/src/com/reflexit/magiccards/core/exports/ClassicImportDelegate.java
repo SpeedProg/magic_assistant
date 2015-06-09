@@ -71,7 +71,7 @@ public class ClassicImportDelegate extends AbstractImportDelegate {
 		parser.addPattern(Pattern.compile("\\s*(\\d+)\\s*[xX]?\\s+([^(]*[^\\s(])(?:\\s*\\(([^)]*)\\))?"),
 				new ICardField[] {
 						MagicCardField.COUNT, MagicCardField.NAME, MagicCardField.SET, });
-		importResult.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
+		importData.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.COUNT,
 				MagicCardField.SET,
 				MagicCardField.SIDEBOARD });
 		try {

@@ -129,7 +129,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 		if (candidates.size() > 0) {
 			IMagicCard base = candidates.get(0);
 			card.setMagicCard((MagicCard) base);
-			importResult.add(card);
+			importData.add(card);
 		} else {
 			candidates = lookup.getCandidates(card.getName());
 			boolean found = false;
@@ -144,7 +144,7 @@ public class MTGStudioCsvImportDelegate extends CsvImportDelegate {
 					if ("TSP".equals(abbr) && "TSB".equals(abbr2) || "MED".equals(abbr)
 							&& "ME2".equals(abbr2)) {
 						card.setMagicCard((MagicCard) base);
-						importResult.add(card);
+						importData.add(card);
 						found = true;
 						break;
 					}

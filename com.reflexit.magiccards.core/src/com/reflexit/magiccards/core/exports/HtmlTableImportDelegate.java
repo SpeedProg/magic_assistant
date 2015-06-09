@@ -32,7 +32,7 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 
 	protected void doRun(String text) {
 		headers = null;
-		importResult.clear();
+		importData.clear();
 		text = text.replace("<TABLE", "<table");
 		text = text.replace("<TR", "<tr");
 		text = text.replace("<TD", "<td");
