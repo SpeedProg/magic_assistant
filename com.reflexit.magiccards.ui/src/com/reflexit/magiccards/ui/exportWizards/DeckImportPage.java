@@ -11,6 +11,7 @@ import java.util.Random;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -44,6 +45,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.exports.IImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
@@ -125,11 +127,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 		} catch (InvocationTargetException ite) {
 			Throwable e = ite.getCause();
 			importData.setError(e);
-			setErrorMessage(e.getMessage());
-			MagicUIActivator.log(e);
+			if (e instanceof RuntimeException && !(e instanceof MagicException))
+				MagicUIActivator.log(e);
 		} catch (InterruptedException e) {
 			importData.setError(e);
-			setErrorMessage(e.getMessage());
 		}
 	}
 
@@ -386,6 +387,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 		composite.setFont(parent.getFont());
+		setControl(composite);
 		createResourcesGroup(composite);
 		createOptionsGroup(composite);
 		createDestinationGroup(composite);
@@ -394,12 +396,18 @@ public class DeckImportPage extends WizardDataTransferPage {
 		defaultPrompt();
 		setPageComplete(determinePageCompletion());
 		setErrorMessage(null); // should not initially have error message
-		setControl(composite);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, MagicUIActivator.PLUGIN_ID + ".export");
 	}
 
 	private void defaultPrompt() {
 		String mess = "You have selected '" + reportType.getLabel() + "' format.\n";
+		if (importData.getError() != null) {
+			mess += "Warning: cannot parse data.";
+		} else {
+			int errcount = importData.getErrorCount();
+			mess += "Found " + importData.size() + " record(s) and " + errcount + " error(s).";
+		}
+		mess += " Press Next to preview.\n";
 		if (reportType == ImportExportFactory.XML)
 			setMessage(mess);
 		else if (reportType == ImportExportFactory.CSV)
@@ -460,6 +468,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			return;
 		reportType = type;
 		typeCombo.setText(type.getLabel());
+		typeCombo.setToolTipText(type.getExample());
 	}
 
 	@Override
@@ -489,22 +498,25 @@ public class DeckImportPage extends WizardDataTransferPage {
 		// clipboard control
 		clipboardRadio = toolkit.createButton(fileSelectionArea, "Clipboard",
 				SWT.RADIO | SWT.LEFT,
-				(e) -> onInputChoice(InputChoice.CLIPBOARD));
+				(e) -> onInputChoice(e, InputChoice.CLIPBOARD));
 		clipboardRadio.setLayoutData(GridDataFactory.fillDefaults().create());
 		// editor controls
 		inputRadio = toolkit.createButton(fileSelectionArea, "Editor",
 				SWT.RADIO | SWT.LEFT,
-				(e) -> onInputChoice(InputChoice.INPUT));
+				(e) -> onInputChoice(e, InputChoice.INPUT));
 		inputRadio.setLayoutData(GridDataFactory.fillDefaults().create());
 		// file selector
 		fileRadio = toolkit.createButton(fileSelectionArea, "File", SWT.RADIO,
-				(e) -> onInputChoice(InputChoice.FILE));
+				(e) -> onInputChoice(e, InputChoice.FILE));
 		fileRadio.setSelection(true);
 		fileText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
 		fileText.addModifyListener(
 				(e) -> {
 					fileName = fileText.getText();
-					onInputChoice(InputChoice.FILE);
+					if (inputChoice != InputChoice.FILE) {
+						setInputChoice(InputChoice.FILE);
+					}
+					onInputChoice(null, InputChoice.FILE);
 				}
 				);
 		fileText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false)
@@ -523,11 +535,13 @@ public class DeckImportPage extends WizardDataTransferPage {
 				);
 	}
 
-	public void onInputChoice(InputChoice choice) {
-		inputChoice = choice;
-		autoDetectFormat();
-		updateWidgetEnablements();
-		updatePageCompletion();
+	public void onInputChoice(SelectionEvent event, InputChoice choice) {
+		if (event == null || ((Button) event.widget).getSelection()) {
+			inputChoice = choice;
+			autoDetectFormat();
+			updateWidgetEnablements();
+			updatePageCompletion();
+		}
 	}
 
 	protected void autoDetectFormat() {
@@ -549,6 +563,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 				break;
 		}
 		selectReportType(type);
+		performImport(true);
 	}
 
 	@Override
@@ -566,11 +581,42 @@ public class DeckImportPage extends WizardDataTransferPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				reportType = ImportExportFactory.getByLabel(typeCombo.getText());
+				typeCombo.setToolTipText(reportType.getExample());
+				performImport(true);
 				updateWidgetEnablements();
 				updatePageCompletion();
 			}
 		});
 		typeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		toolkit.createHyperlink(buttonComposite, "Example...", SWT.NONE).addHyperlinkListener(
+				new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						InputDialog inputDialog = new InputDialog(getShell(), "Example",
+								reportType.getLabel(),
+								reportType.getExample(), null) {
+							@Override
+							protected int getShellStyle() {
+								return super.getShellStyle() | SWT.RESIZE;
+							}
+
+							@Override
+							protected int getInputTextStyle() {
+								return SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP;
+							}
+
+							@Override
+							protected Control createDialogArea(Composite parent) {
+								Control x = super.createDialogArea(parent);
+								getText().setLayoutData(
+										GridDataFactory.fillDefaults().hint(600, 400).create());
+								return x;
+							}
+						};
+						inputDialog.setBlockOnOpen(false);
+						inputDialog.open();
+					}
+				});
 	}
 
 	@Override
@@ -580,7 +626,16 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateDestinationGroup() {
+		if (!importData.isOk()) {
+			setErrorMessage(null);
+			return false;
+		}
 		return true;
+	}
+
+	@Override
+	public boolean canFlipToNextPage() {
+		return getNextPage() != null;
 	}
 
 	@Override
@@ -616,7 +671,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected void updatePageCompletion() {
 		super.updatePageCompletion();
-		if (isPageComplete()) {
+		if (isPageComplete() || getErrorMessage() == null) {
 			defaultPrompt(); // set default prompt, otherwise it empty ugly
 		}
 	}

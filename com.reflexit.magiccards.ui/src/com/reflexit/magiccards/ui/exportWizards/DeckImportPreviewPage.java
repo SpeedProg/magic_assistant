@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.exports.ImportError;
 import com.reflexit.magiccards.core.exports.ImportData;
+import com.reflexit.magiccards.core.exports.ImportError;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -107,10 +107,6 @@ public class DeckImportPreviewPage extends WizardPage {
 	}
 
 	public void validate() {
-		if (previewResult == null) {
-			setErrorMessage("Cannot parse import source");
-			return;
-		}
 		int errorCount = previewResult.getErrorCount();
 		Throwable e = previewResult.getError();
 		if (e != null) {

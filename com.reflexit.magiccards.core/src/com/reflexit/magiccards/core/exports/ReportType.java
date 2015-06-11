@@ -255,4 +255,15 @@ public class ReportType {
 		}
 		return selected;
 	}
+
+	public String getExample() {
+		IExportDelegate export = getExportDelegate();
+		if (export != null) {
+			return export.getExample();
+		}
+		if (getImportDelegate() != null) {
+			return getImportDelegate().getExample();
+		}
+		return null;
+	}
 }

@@ -19,20 +19,41 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-/**
- * Format example "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
- * "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
- * "Throne of Bone";"1";"U";"4E";"Art";"1";"";"Artifact";"1";"353";""
- * "Cursed Rack";"1";"U";"4E";"Art";"4";"";"Artifact";"4";"312";""
- * "Amulet of Kroog";"2";"C";"4E";"Art";"2";"";"Artifact";"2";"293";""
- * "Strip Mine";"1";"U";"4E";"Lnd";"";"";"Land";"0";"363";""
- * "Swamp (3)";"2";"C";"4E";"Lnd";"";"";"Land";"0";"378";""
- * "Swamp (1)";"3";"C";"4E";"Lnd";"";"";"Land";"0";"376";""
+/*-
+  Format example
+
+  "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
+  "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
+  "Throne of Bone";"1";"U";"4E";"Art";"1";"";"Artifact";"1";"353";""
+  "Cursed Rack";"1";"U";"4E";"Art";"4";"";"Artifact";"4";"312";""
+  "Amulet of Kroog";"2";"C";"4E";"Art";"2";"";"Artifact";"2";"293";""
+  "Strip Mine";"1";"U";"4E";"Lnd";"";"";"Land";"0";"363";""
+  "Swamp (3)";"2";"C";"4E";"Lnd";"";"";"Land";"0";"378";""
+  "Swamp (1)";"3";"C";"4E";"Lnd";"";"";"Land";"0";"376";""
  */
 public class MagicWorkstationCsvImportDelegate extends CsvImportDelegate {
 	@Override
 	public char getSeparator() {
 		return ';';
+	}
+
+	@Override
+	public String getExample() {
+		return ""
+				+
+				"\"Name\";\"Qty\";\"Rarity\";\"Edition\";\"Color\";\"Cost\";\"P/T\";\"Type\";\"Mana\";\"Number\";\"Foil\"\n"
+				+
+				"\"Disrupting Scepter\";\"1\";\"R\";\"4E\";\"Art\";\"3\";\"\";\"Artifact\";\"3\";\"316\";\"\"\n"
+				+
+				"\"Throne of Bone\";\"1\";\"U\";\"4E\";\"Art\";\"1\";\"\";\"Artifact\";\"1\";\"353\";\"\"\n"
+				+
+				"\"Cursed Rack\";\"1\";\"U\";\"4E\";\"Art\";\"4\";\"\";\"Artifact\";\"4\";\"312\";\"\"\n"
+				+
+				"\"Amulet of Kroog\";\"2\";\"C\";\"4E\";\"Art\";\"2\";\"\";\"Artifact\";\"2\";\"293\";\"\"\n"
+				+
+				"\"Strip Mine\";\"1\";\"U\";\"4E\";\"Lnd\";\"\";\"\";\"Land\";\"0\";\"363\";\"\"\n" +
+				"\"Swamp (3)\";\"2\";\"C\";\"4E\";\"Lnd\";\"\";\"\";\"Land\";\"0\";\"378\";\"\"\n" +
+				"\"Swamp (1)\";\"3\";\"C\";\"4E\";\"Lnd\";\"\";\"\";\"Land\";\"0\";\"376\";\"\"";
 	}
 
 	@Override

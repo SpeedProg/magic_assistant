@@ -9,12 +9,43 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
- * 
+ *
  * @author Alena
  */
 public class ManaDeckDckImportDelegate extends AbstractImportDelegate {
 	private DeckParser parser;
 	private boolean sideboard;
+
+	@Override
+	public String getExample() {
+		return "#DCK#\n" +
+				"UG Madness\n" +
+				"#DECK#\n" +
+				"2 City of Brass\n" +
+				"11 Island\n" +
+				"9 Forest\n" +
+				"4 Wild Mongrel\n" +
+				"4 Basking Rootwalla\n" +
+				"4 Aquamoeba\n" +
+				"4 Arrogant Wurm\n" +
+				"3 Wonder\n" +
+				"3 Roar of the Wurm\n" +
+				"3 Deep Analysis\n" +
+				"4 Circular Logic\n" +
+				"4 Careful Study\n" +
+				"2 Unsummon\n" +
+				"1 Ray of Revelation\n" +
+				"2 Quiet Speculation\n" +
+				"#SIDEBOARD#\n" +
+				"2 Ray of Revelation\n" +
+				"2 Gigapede\n" +
+				"2 Counterspell\n" +
+				"2 Turbulent Dreams\n" +
+				"2 Upheaval\n" +
+				"2 Ravenous Baloth\n" +
+				"2 Merfolk Looter\n" +
+				"1 Krosan Reclamation";
+	}
 
 	@Override
 	public synchronized void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {

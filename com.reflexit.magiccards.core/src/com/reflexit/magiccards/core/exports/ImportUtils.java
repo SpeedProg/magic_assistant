@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -54,7 +52,7 @@ public class ImportUtils {
 			ICoreProgressMonitor monitor)
 			throws InvocationTargetException,
 			InterruptedException {
-		worker.init(new ByteArrayInputStream(result.getText().getBytes(FileUtils.CHARSET_UTF_8)), result);
+		worker.init(null, result);
 		worker.run(monitor);
 		return result;
 	}

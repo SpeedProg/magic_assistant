@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
- * 
+ *
  * @author Alena
  */
 public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
@@ -52,6 +52,42 @@ public class MagicWorkstationDeckImportDelegate extends AbstractImportDelegate {
 	SB: 4 [EX] Spellshock
 
 	 */
+	@Override
+	public String getExample() {
+		return ""
+				+ "// Deck file for Magic Workstation (http://www.magicworkstation.com)\n"
+				+ "\n"
+				+ "// Lands\n"
+				+ "3 [TE] Ancient Tomb\n"
+				+ "4 [EX] City of Traitors\n"
+				+ "13 [US] Mountain (1)\n"
+				+ "\n"
+				+ "// Creatures\n"
+				+ "4 [UD] Covetous Dragon\n"
+				+ "1 [US] Karn, Silver Golem\n"
+				+ "3 [UD] Masticore\n"
+				+ "\n"
+				+ "// Spells\n"
+				+ "4 [TE] Cursed Scroll\n"
+				+ "4 [6E] Fire Diamond\n"
+				+ "4 [UL] Grim Monolith\n"
+				+ "2 [US] Mishra's Helix\n"
+				+ "4 [US] Temporal Aperture\n"
+				+ "4 [UD] Thran Dynamo\n"
+				+ "4 [US] Voltaic Key\n"
+				+ "4 [US] Wildfire\n"
+				+ "2 [US] Worn Powerstone\n"
+				+ "\n"
+				+ "// Sideboard\n"
+				+ "SB: 1 [US] Mishra's Helix\n"
+				+ "SB: 2 [TE] Boil\n"
+				+ "SB: 3 [6E] Earthquake\n"
+				+ "SB: 1 [US] Phyrexian Processor\n"
+				+ "SB: 2 [UL] Rack and Ruin\n"
+				+ "SB: 2 [EX] Shattering Pulse\n"
+				+ "SB: 4 [EX] Spellshock\n";
+	}
+
 	public void runDeckImport(ICoreProgressMonitor monitor) throws IOException {
 		DeckParser parser = new DeckParser(getStream(), this);
 		try {

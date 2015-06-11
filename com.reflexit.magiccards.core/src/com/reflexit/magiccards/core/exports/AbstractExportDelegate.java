@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -115,5 +116,32 @@ public abstract class AbstractExportDelegate<T> implements IExportDelegate<T> {
 	@Override
 	public boolean isSideboardSupported() {
 		return true;
+	}
+
+	public IFilteredCardStore<T> getExampleData() {
+		MemoryFilteredCardStore<T> fstore = new MemoryFilteredCardStore<>();
+		IImportDelegate del = ImportExportFactory.TABLE_PIPED.getImportDelegate();
+		del.init(null, new ImportData(true, Location.NO_WHERE,
+				ImportExportFactory.TABLE_PIPED.getExample()));
+		try {
+			del.run(ICoreProgressMonitor.NONE);
+			fstore.addAll((List) del.getResult().getList());
+			fstore.update();
+		} catch (InvocationTargetException | InterruptedException e) {
+			MagicLogger.log(e);
+		}
+		return fstore;
+	}
+
+	@Override
+	public String getExample() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		this.init(out, true, getExampleData());
+		try {
+			this.run(ICoreProgressMonitor.NONE);
+		} catch (InvocationTargetException | InterruptedException e) {
+			MagicLogger.log(e);
+		}
+		return out.toString();
 	}
 }

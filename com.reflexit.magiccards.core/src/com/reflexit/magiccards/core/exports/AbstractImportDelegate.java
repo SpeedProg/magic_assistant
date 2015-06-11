@@ -1,8 +1,10 @@
 package com.reflexit.magiccards.core.exports;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -38,7 +40,8 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	@Override
 	public void init(InputStream st, ImportData result) {
-		this.stream = st;
+		this.stream = st == null ? new ByteArrayInputStream(result.getText()
+				.getBytes(FileUtils.CHARSET_UTF_8)) : st;
 		this.importData = result;
 		importData.clear();
 		importData.setType(getType());
@@ -159,5 +162,10 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	public boolean isHeader() {
 		return importData.isHeader();
+	}
+
+	@Override
+	public String getExample() {
+		return null;
 	}
 }

@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
- * 
+ *
  * @author Alena
  */
 public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
@@ -76,5 +76,36 @@ public class ShandalarDeckDckImportDelegate extends AbstractImportDelegate {
 			}
 		} while (true);
 		parser.close();
+	}
+
+	@Override
+	public String getExample() {
+		return ""
+				+ ";Azaar - Lichlord\n"
+				+ ";Black\n"
+				+ ";Coyote Tex\n"
+				+ ";Coyote Tex@AOL.Com\n"
+				+ ";September 19, 1996\n"
+				+ ";7\n"
+				+ ";4th Edition\n"
+				+ ";comments\n"
+				+ "\n"
+				+ ".239	22	Swamp\n"
+				+ ".55	4	Dark Ritual\n"
+				+ ".230	1	Sol Ring\n"
+				+ ".166	1	Mox Jet\n"
+				+ ".17	1	Black Lotus\n"
+				+ ".18	1	Black Vise\n"
+				+ ".162	1	Mind Twist\n"
+				+ ".68	4	Drain Life\n"
+				+ ".117	4	Hypnotic Specter\n"
+				+ ".220	4	Sengir Vampire\n"
+				+ ".534	3	Tetravus\n"
+				+ ".151	2	Lord of the Pit\n"
+				+ ".661	2	Greed\n"
+				+ ".286	3	Will-O'-The-Wisp\n"
+				+ ".100	1	Gloom\n"
+				+ ".336	3	Bog Imp\n"
+				+ ".113	4	Howl from Beyond\n";
 	}
 }

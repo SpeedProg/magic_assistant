@@ -28,7 +28,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * <p>
  * This class is not intended to be subclassed outside of the workbench.
  * </p>
- * 
+ *
  * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class WizardDataTransferPage extends WizardPage implements IOverwriteQuery {
@@ -38,7 +38,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Creates a new wizard page.
-	 * 
+	 *
 	 * @param pageName
 	 *            the name of the page
 	 */
@@ -50,7 +50,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * Adds an entry to a history, while taking care of duplicate history items and excessively long
 	 * histories. The assumption is made that all histories should be of length
 	 * <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
-	 * 
+	 *
 	 * @param history
 	 *            the current history
 	 * @param newEntry
@@ -68,7 +68,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * Adds an entry to a history, while taking care of duplicate history items and excessively long
 	 * histories. The assumption is made that all histories should be of length
 	 * <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
-	 * 
+	 *
 	 * @param history
 	 *            the current history
 	 * @param newEntry
@@ -90,7 +90,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * <p>
 	 * Subclasses must implement this method.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> if new ones are okay, and <code>false</code> if only existing ones
 	 *         are allowed
 	 */
@@ -98,7 +98,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Creates a new label with a bold font.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @param text
@@ -122,7 +122,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * The <code>WizardDataTransferPage</code> implementation of this method does nothing. Subclasses wishing
 	 * to define such components should reimplement this hook method.
 	 * </p>
-	 * 
+	 *
 	 * @param optionsGroup
 	 *            the parent control
 	 */
@@ -132,7 +132,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Creates a new label with a bold font.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @param text
@@ -152,7 +152,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Creates a horizontal spacer line that fills the width of its container.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 */
@@ -169,13 +169,13 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * contents of this page's controls. Subclasses wishing to include their controls in this
 	 * determination should override the hook methods <code>validateSourceGroup</code> and/or
 	 * <code>validateOptionsGroup</code>.
-	 * 
+	 *
 	 * @return <code>true</code> if this page is complete, and <code>false</code> if incomplete
 	 * @see #validateSourceGroup
 	 * @see #validateOptionsGroup
 	 */
 	protected boolean determinePageCompletion() {
-		boolean complete = validateSourceGroup() && validateDestinationGroup() && validateOptionsGroup();
+		boolean complete = validateSourceGroup() && validateOptionsGroup() && validateDestinationGroup();
 		// Avoid draw flicker by not clearing the error
 		// message unless all is valid.
 		if (complete) {
@@ -186,7 +186,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Get a path from the supplied text widget.
-	 * 
+	 *
 	 * @return org.eclipse.core.runtime.IPath
 	 */
 	protected IPath getPathFromText(Text textField) {
@@ -200,7 +200,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Queries the user to supply a container resource.
-	 * 
+	 *
 	 * @return the path to an existing or new container, or <code>null</code> if the user cancelled
 	 *         the dialog
 	 */
@@ -210,11 +210,11 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Queries the user to supply a container resource.
-	 * 
+	 *
 	 * @param initialSelection
 	 * @param msg
 	 * @param title
-	 * 
+	 *
 	 * @return the path to an existing or new container, or <code>null</code> if the user cancelled
 	 *         the dialog
 	 */
@@ -237,7 +237,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * The <code>WizardDataTransfer</code> implementation of this <code>IOverwriteQuery</code> method asks the
 	 * user whether the existing resource at the given path should be overwritten.
-	 * 
+	 *
 	 * @param pathString
 	 * @return the user's reply: one of <code>"YES"</code>, <code>"NO"</code>, <code>"ALL"</code>,
 	 *         or <code>"CANCEL"</code>
@@ -275,7 +275,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	/**
 	 * Displays a Yes/No question to the user with the specified message and returns the user's
 	 * response.
-	 * 
+	 *
 	 * @param message
 	 *            the question to ask
 	 * @return <code>true</code> for Yes, and <code>false</code> for No
@@ -339,7 +339,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * The <code>WizardDataTransferPage</code> implementation of this method returns <code>true</code>.
 	 * Subclasses may reimplement this hook method.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> indicating validity of all controls in the destination
 	 *         specification group
 	 */
@@ -353,7 +353,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * The <code>WizardDataTransferPage</code> implementation of this method returns <code>true</code>.
 	 * Subclasses may reimplement this hook method.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> indicating validity of all controls in the options group
 	 */
 	protected boolean validateOptionsGroup() {
@@ -366,7 +366,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 	 * The <code>WizardDataTransferPage</code> implementation of this method returns <code>true</code>.
 	 * Subclasses may reimplement this hook method.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> indicating validity of all controls in the source specification
 	 *         group
 	 */
@@ -376,7 +376,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Create the options specification widgets.
-	 * 
+	 *
 	 * @param parent
 	 *            org.eclipse.swt.widgets.Composite
 	 */
@@ -393,7 +393,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Display an error dialog with the specified message.
-	 * 
+	 *
 	 * @param message
 	 *            the error message
 	 */
@@ -408,7 +408,7 @@ public abstract class WizardDataTransferPage extends WizardPage implements IOver
 
 	/**
 	 * Display an error dislog with the information from the supplied exception.
-	 * 
+	 *
 	 * @param exception
 	 *            Throwable
 	 */

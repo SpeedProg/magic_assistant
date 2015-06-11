@@ -12,6 +12,7 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,6 +26,10 @@ import org.eclipse.core.runtime.Platform;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
  * Import/Export factory - gets instance of worker class by its type
@@ -131,5 +136,20 @@ public class ImportExportFactory {
 
 	static void remove(String label) {
 		types.remove(label);
+	}
+
+	public static IFilteredCardStore getExampleData() {
+		MemoryFilteredCardStore fstore = new MemoryFilteredCardStore<>();
+		IImportDelegate del = new TableImportDelegate();
+		del.init(null, new ImportData(true, Location.NO_WHERE,
+				TableExportDelegate.getTablePiped()));
+		try {
+			del.run(ICoreProgressMonitor.NONE);
+			fstore.addAll(del.getResult().getList());
+			fstore.update();
+		} catch (InvocationTargetException | InterruptedException e) {
+			MagicLogger.log(e);
+		}
+		return fstore;
 	}
 }

@@ -98,6 +98,10 @@ public class ImportData {
 		return toImport;
 	}
 
+	public int size() {
+		return toImport.size();
+	}
+
 	public int getErrorCount() {
 		int errorCount = 0;
 		if (toImport.size() > 0) {

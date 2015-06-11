@@ -30,4 +30,17 @@ public class TableExportDelegate extends AbstractExportDelegatePerLine<IMagicCar
 		}
 		return element;
 	}
+
+	@Override
+	public String getExample() {
+		return getTablePiped();
+	}
+
+	public static String getTablePiped() {
+		return "NAME|ID|COST|TYPE|POWER|TOUGHNESS|SET|COUNT|SPECIAL|TEXT|SIDEBOARD\n"
+				+ "Reya Dawnbringer|106384|{6}{W}{W}{W}|Legendary Creature - Angel|4|6|Tenth Edition|4||Flying<br>At the beginning of your upkeep, you may return target creature card from your graveyard to the battlefield.|false\n"
+				+ "Platinum Angel|191313|{7}|Artifact Creature - Angel|4|4|Magic 2010|3|foil,c=good|Flying<br>You can't lose the game and your opponents can't win the game.|false\n"
+				+ "Reya Dawnbringer|196998|{6}{W}{W}{W}|Legendary Creature - Angel|4|6|Duel Decks: Divine vs. Demonic|3|c=heavily_played|Flying<br>At the beginning of your upkeep, you may return target creature card from your graveyard to the battlefield.|false\n"
+				+ "Reya Dawnbringer|196998|{6}{W}{W}{W}|Legendary Creature - Angel|4|6|Duel Decks: Divine vs. Demonic|1|c=heavily_played,fortrade|Flying<br>At the beginning of your upkeep, you may return target creature card from your graveyard to the battlefield.|false\n";
+	}
 }

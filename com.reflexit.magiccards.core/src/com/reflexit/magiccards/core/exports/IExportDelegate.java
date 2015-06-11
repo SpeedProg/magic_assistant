@@ -36,4 +36,6 @@ public interface IExportDelegate<T> {
 	public boolean isColumnChoiceSupported();
 
 	public boolean isMultipleLocationSupported();
+
+	public String getExample();
 }
