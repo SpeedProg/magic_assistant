@@ -4,13 +4,12 @@ public class Node extends Expr {
 	private final String name;
 
 	public Node(String name) {
-		if (name == null) throw new NullPointerException();
 		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return this.name;
+		return name == null ? "null" : this.name;
 	}
 
 	public String name() {
@@ -24,7 +23,7 @@ public class Node extends Expr {
 
 	@Override
 	public int hashCode() {
-		return 29 + name.hashCode();
+		return name == null ? 0 : 29 + name.hashCode();
 	}
 
 	@Override
@@ -32,6 +31,10 @@ public class Node extends Expr {
 		if (this == obj) return true;
 		if (!(obj instanceof Node)) return false;
 		Node other = (Node) obj;
+		if (name == null) {
+			if (other.name == null) return true;
+			return false;
+		}
 		if (!name.equals(other.name)) return false;
 		return true;
 	}
