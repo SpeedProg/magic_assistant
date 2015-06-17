@@ -1,0 +1,21 @@
+== Installing from p2repo ==
+
+Note: you don't need this if update site works, this is replacement
+technique to get updates published on update site if connection is not great.
+
+# Download http://sourceforge.net/projects/mtgbrowser/files/Patches/p2repo.zip
+# Unzip it in the root of installation for example, it will have root directory p2repo
+# Window->Preferences->Magic Preferences click on Add Software Update Site... 
+# Click Local... and select <where you unzipped it>/p2repo. Click OK.
+# In the name field type something like "Local Repo". Exit preferences
+# Click File->Check for Software Updates
+
+Now it be updating from local disk.
+
+Sample shell script
+
+bc. cd ~/MagicAssistant;
+wget http://sourceforge.net/projects/mtgbrowser/files/Patches/p2repo.zip;
+unzip p2repo.zip;
+
+

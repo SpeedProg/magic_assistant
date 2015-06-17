@@ -258,7 +258,7 @@
 			</fileset>
 		</sync>
 	</target>
-	<target name="publish.update.site.full">
+	<target name="publish.update.site.full" depends="publish.repo">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
 			keyfile="${rsa.key}" trust="true">
@@ -267,15 +267,43 @@
 			</fileset>
 		</scp>
 	</target>
-	<target name="publish.update.site">
+	<target name="publish.repo">
+		<delete file="${export.dir}/p2repo.zip"/>
+	    <exec dir="${buildDirectory}" executable="zip">
+	        <arg value="-r"/>
+	        <arg value="${export.dir}/p2repo.zip"/>
+	        <arg value="p2repo"/>
+	    </exec>
+		<scp verbose="true"
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Patches/" 
+			keyfile="${rsa.key}" trust="true">
+			<fileset dir="${export.dir}">
+				<include name="p2repo.zip"/>
+			</fileset>
+		</scp>
+		<scp verbose="true"
+			file="${basedir}/README_repo.textile"
+			remoteTofile="elaskavaia,mtgbrowser@web.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Patches/README.textile"
+		
+			keyfile="${rsa.key}" trust="true">
+		</scp>
+		<echo message="Published ${ma.version} ${export.dir}/p2repo.zip" />
+	</target>
+	<target name="publish.update.site" depends="publish.repo">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
-
 				<include name="**/com.reflexit**"/>
 				<include name="*.xml"/>
-
+				<include name="*.zip"/>
+			</fileset>
+		</scp>
+		<scp verbose="true"
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:/home/frs/project/m/mt/mtgbrowser/Patches/" 
+			keyfile="${rsa.key}" trust="true">
+			<fileset dir="${export.dir}">
+				<include name="p2repo-${ma.version}.zip"/>
 			</fileset>
 		</scp>
 	</target>
@@ -286,6 +314,7 @@
 			<fileset dir="${export.update.dir}">
 				<include name="**/com.reflexit**"/>
 				<include name="*.xml"/>
+				<include name="*.zip"/>
 			</fileset>
 		</scp>
 	</target>
