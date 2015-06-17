@@ -410,21 +410,32 @@ public class QuickFilterControl extends Composite {
 		kickUpdate("type " + text);
 	}
 
-	protected void filterSet(String text) {
-		if (ADVANCED.equals(text))
+	protected void filterSet(String set) {
+		if (ADVANCED.equals(set))
 			return;
-		if (ALL_TYPES.equals(text))
-			text = "";
+		if (ALL_TYPES.equals(set))
+			set = "";
 		Editions editions = Editions.getInstance();
-		String ltext = text.toLowerCase(Locale.ENGLISH);
-		for (Iterator<String> iterator = editions.getIds().iterator(); iterator.hasNext();) {
+		String lset = set.toLowerCase(Locale.ENGLISH);
+		boolean exactMatch = false;
+		Collection<String> ids = editions.getIds();
+		for (Iterator<String> iterator = ids.iterator(); iterator.hasNext();) {
 			String id = iterator.next();
 			store.setValue(id, "false");
-			if (text.length() > 0 && editions.getNameById(id).toLowerCase().contains(ltext)) {
+			if (editions.getNameById(id).toLowerCase().equals(lset)) {
 				store.setValue(id, "true");
+				exactMatch = true;
 			}
 		}
-		kickUpdate("set " + text);
+		if (!exactMatch && lset.length() > 0) {
+			for (Iterator<String> iterator = ids.iterator(); iterator.hasNext();) {
+				String id = iterator.next();
+				if (editions.getNameById(id).toLowerCase().contains(lset)) {
+					store.setValue(id, "true");
+				}
+			}
+		}
+		kickUpdate("set " + set);
 	}
 
 	public boolean isSuppressUpdates() {
