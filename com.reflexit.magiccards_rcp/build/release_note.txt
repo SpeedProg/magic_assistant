@@ -2,8 +2,8 @@ For the list of changes in this release see http://sourceforge.net/apps/mediawik
 
 Notes
 * Requires java at least 1.8 to run
-* Has to be unzipped before running using any unzip program, windows XP zipped folder copy action does not work properly
-* For Linux 32 use specific binary distribution (different than linux default)
-* Ubuntu 13.10+ requires additional installation of libwebkit
+* Has to be unzipped before running using any unzip program
+* For Linux 32 use specific binary distribution (different than platform default)
+* Ubuntu usually requires additional installations 
 
 For more installation notes see http://sourceforge.net/apps/mediawiki/mtgbrowser/index.php?title=Installation

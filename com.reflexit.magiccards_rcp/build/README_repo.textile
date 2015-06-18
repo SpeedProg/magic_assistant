@@ -1,5 +1,7 @@
 == Installing from p2repo ==
 
+This is not a full installer, you need to download and install application itself first
+
 Note: you don't need this if update site works, this is replacement
 technique to get updates published on update site if connection is not great.
 
