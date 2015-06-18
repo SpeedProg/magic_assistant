@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,6 +28,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -354,11 +356,15 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 				MagicLogger.log(e);
 				return;
 			}
+			Set<Location> hiddenSets = getHiddenSets();
 			setInitialized(false);
 			try {
 				for (File file : files) {
 					Location setLocation = Location.createLocation(file, Location.NO_WHERE);
-					addFile(file, setLocation, true);
+					if (!hiddenSets.contains(setLocation))
+						addFile(file, setLocation, true);
+					else
+						MagicLogger.log("Not loading set - hidden - " + setLocation);
 				}
 			} finally {
 				setInitialized(true);
@@ -366,6 +372,16 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		} finally {
 			MagicLogger.traceEnd("db init");
 		}
+	}
+
+	private Set<Location> getHiddenSets() {
+		HashSet<Location> sets = new HashSet<Location>();
+		for (Edition edition : Editions.getInstance().getEditions()) {
+			if (edition.isHidden()) {
+				sets.add(Location.createLocationFromSet(edition.getName()));
+			}
+		}
+		return sets;
 	}
 
 	@Override

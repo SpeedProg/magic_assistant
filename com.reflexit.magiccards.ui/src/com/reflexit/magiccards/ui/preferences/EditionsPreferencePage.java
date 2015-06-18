@@ -106,12 +106,19 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 	}
 
 	private void deleteSet(Edition ed) {
-		if (ed.isUsed()) {
-			MessageDialog.openInformation(getShell(), "No Way", ed.getName()
-					+ " is used in database by some cards, cannot delete");
-			return;
+		if (ed.isUsedByPrintings()) {
+			if (ed.isUsedByInstances()) {
+				MessageDialog.openInformation(getShell(), "Info", ed.getName()
+						+ " has card instances, delete cards that use that set first.");
+				return;
+			}
+			MessageDialog.openInformation(getShell(), "Info", ed.getName()
+					+ " is not empty, it will be hidden instead. "
+					+ "Restart Magic Assistant to take effect.");
+			ed.setHidden(true);
+		} else if (!ed.isHidden()) {
+			Editions.getInstance().remove(ed);
 		}
-		Editions.getInstance().remove(ed);
 		try {
 			Editions.getInstance().save();
 		} catch (FileNotFoundException e) {

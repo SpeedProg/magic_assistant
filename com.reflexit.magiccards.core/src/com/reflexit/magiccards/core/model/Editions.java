@@ -224,9 +224,19 @@ public class Editions implements ISearchableProperty {
 			return id;
 		}
 
-		public boolean isUsed() {
+		public boolean isUsedByPrintings() {
 			ICardStore<IMagicCard> magicDb = DataManager.getInstance().getMagicDBStore();
 			for (IMagicCard card : magicDb) {
+				if (name.equals(card.getSet())) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public boolean isUsedByInstances() {
+			ICardStore<IMagicCard> store = DataManager.getInstance().getLibraryCardStore();
+			for (IMagicCard card : store) {
 				if (name.equals(card.getSet())) {
 					return true;
 				}
@@ -245,6 +255,18 @@ public class Editions implements ISearchableProperty {
 
 		public boolean isUnknown() {
 			return false;
+		}
+
+		public boolean isHidden() {
+			return getType().contains("--");
+		}
+
+		public void setHidden(boolean hidden) {
+			if (hidden == isHidden()) return;
+			if (hidden)
+				setType("--" + getType());
+			else
+				setType(getType().replace("--", ""));
 		}
 	}
 
