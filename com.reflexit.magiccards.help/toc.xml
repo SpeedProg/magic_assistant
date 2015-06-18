@@ -35,4 +35,10 @@
    </topic>
    <topic href="http://www.wizards.com/Magic/TCG/Article.aspx?x=magic/rules" label="Magic: The Gathering Rules Online">
    </topic>
+   <topic label="New and Noteworthy">
+      <topic label="New in 1.4.2" href="http://mtgbrowser.sourceforge.net/wiki/index.php/What_is_New_in_1.4.2"/>
+      <topic label="New in 1.4.1" href="http://mtgbrowser.sourceforge.net/wiki/index.php/What_is_New_in_1.4.1"/>
+      <topic label="New in 1.4.0" href="http://mtgbrowser.sourceforge.net/wiki/index.php/What_is_New_in_1.4.0"/>
+      <topic label="Full Change Log" href="http://mtgbrowser.sourceforge.net/wiki/index.php/Change_Log"/>
+   </topic>
 </toc>
