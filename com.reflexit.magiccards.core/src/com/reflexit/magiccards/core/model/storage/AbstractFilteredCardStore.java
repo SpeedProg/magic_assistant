@@ -111,8 +111,9 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 
 	@Override
 	protected void finalize() throws Throwable {
+		if (getCardStore() != null)
+			getCardStore().removeListener(cardStoreListener);
 		super.finalize();
-		getCardStore().removeListener(cardStoreListener);
 	}
 
 	protected T doGetCard(int index) {

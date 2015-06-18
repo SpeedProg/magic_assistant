@@ -1,5 +1,6 @@
 changes in 1.4.2.012
 * Bug 478 Filtering English is broken
+changes in 1.4.2.011
 * Bug 474 Problem with Color Identity Colorless filtering out too many cards
 * Added edition aliases field in set editor (preferences)
 * Renamed: Duel Decks: Elspeth vs. Kiora|DDO||March 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth
