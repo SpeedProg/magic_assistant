@@ -31,7 +31,7 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 	public static final String NAME_FIELD = MagicCardField.NAME.name();
 	public static final String PRICE_FIELD = MagicCardField.PRICE.name();
 	public static final String UNCHANGED = "<unchanged>";
-	private Composite area;
+	protected Composite area;
 
 	public EditCardsPropertiesDialog(Shell parentShell, PreferenceStore store) {
 		super(parentShell, store);

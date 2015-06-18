@@ -10,9 +10,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -50,6 +57,27 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 				}
 				store.setDefault(EditCardsPropertiesDialog.NAME_FIELD, "<Multiple Cards>: " + cards.size());
 			}
+		}
+	}
+
+	@Override
+	protected void createBodyArea(Composite parent) {
+		super.createBodyArea(parent);
+		if (cards.size() > 0) {
+			new Label(area, SWT.NONE);
+			Link link = new Link(area, SWT.NONE);
+			link.setText("<a>Edit card printing instead</a>");
+			link.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					Object el = cards.iterator().next();
+					if (el instanceof MagicCardPhysical) {
+						MagicCard card = ((MagicCardPhysical) el).getBase();
+						new EditMagicCardDialog(getShell(), card).open();
+						close();
+					}
+				}
+			});
 		}
 	}
 

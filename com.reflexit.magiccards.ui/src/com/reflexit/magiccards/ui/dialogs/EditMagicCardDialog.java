@@ -66,6 +66,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		GridData gda = new GridData(GridData.FILL_BOTH);
 		gda.widthHint = convertWidthInCharsToPixels(80);
 		area.setLayoutData(gda);
+		createReadOnlyField("Id", MagicCardField.ID);
 		createReadOnlyField("Name", MagicCardField.NAME);
 		createReadOnlyField("Language", MagicCardField.LANG);
 		collnumText = createEditableField("Collector's Number", MagicCardField.COLLNUM);
@@ -104,6 +105,8 @@ public class EditMagicCardDialog extends MagicDialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, 5, "Remove", false);
+		createButton(parent, 4, "Duplicate", false);
 		createButton(parent, 2, "Reload Image", false);
 		createButton(parent, 3, "Restore Defaults", false);
 		super.createButtonsForButtonBar(parent);
@@ -111,17 +114,51 @@ public class EditMagicCardDialog extends MagicDialog {
 
 	@Override
 	protected void buttonPressed(int buttonId) {
-		if (buttonId == 2) {// reload
-			reloadImageFromUrl();
-		} else if (buttonId == 3) { // restore default
-			store.setValue(MagicCardField.DBPRICE.name(), 0);
-			store.setValue(MagicCardField.IMAGE_URL.name(), card.getDefaultImageUrl());
-			priceText.setText(store.getString(MagicCardField.DBPRICE.name()));
-			urlText.setText(store.getString(MagicCardField.IMAGE_URL.name()));
-			collnumText.setText(store.getString(MagicCardField.COLLNUM.name()));
-			reloadImageFromUrl();
-		} else
-			super.buttonPressed(buttonId);
+		try {
+			if (buttonId == 2) {// reload
+				reloadImageFromUrl();
+			} else if (buttonId == 3) { // restore default
+				store.setValue(MagicCardField.DBPRICE.name(), 0);
+				String defaultImageUrl = card.getDefaultImageUrl();
+				if (defaultImageUrl != null)
+					store.setValue(MagicCardField.IMAGE_URL.name(), defaultImageUrl);
+				else
+					store.setValue(MagicCardField.IMAGE_URL.name(), "");
+				priceText.setText(store.getString(MagicCardField.DBPRICE.name()));
+				urlText.setText(store.getString(MagicCardField.IMAGE_URL.name()));
+				collnumText.setText(store.getString(MagicCardField.COLLNUM.name()));
+				reloadImageFromUrl();
+			} else if (buttonId == 4) { // duplicate
+				MagicCard card2 = card.cloneCard();
+				card2.setCardId(card2.syntesizeId());
+				card2.setProperty(MagicCardField.IMAGE_URL, card.getImageUrl());
+				DataManager.getInstance().getMagicDBStore().add(card2);
+				new EditMagicCardDialog(getShell(), card2).open();
+				close();
+			} else if (buttonId == 5) { // remove
+				int id = card.getCardId();
+				int enId = card.getEnglishCardId();
+				if (id <= 0 || enId > 0) {
+					if (card.getRealCards().size() > 0) {
+						throw new UnsupportedOperationException(
+								"Cannot delete this card, it has instances: " + card.getRealCards().size());
+					}
+					if (MessageDialog.openConfirm(getParentShell(), "Delete",
+							"Are you sure you want to delete "
+									+ card.getName() + " from database?")) {
+						DataManager.getInstance().getMagicDBStore().remove(card);
+					}
+				} else {
+					throw new UnsupportedOperationException(
+							"Cannot delete this card, it is synced to gatherer");
+				}
+				close();
+			} else
+				super.buttonPressed(buttonId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			MessageDialog.openError(getParentShell(), "Error", e.getMessage());
+		}
 	}
 
 	private Text createEditableField(String label, MagicCardField field) {
@@ -132,6 +169,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		Text text = createTextFieldEditor(area, label, field.name());
 		text.setEditable(false);
 		text.setToolTipText("Not editable");
+		text.setEnabled(false);
 		return text;
 	}
 
