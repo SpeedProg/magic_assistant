@@ -377,7 +377,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	public void addAll(Iterable cards) {
 		if (cards == null)
 			return;
-		for (Object elem : new CardList(cards, true).getList()) {
+		for (Object elem : new CardList(cards).getList()) {
 			children.add((ICard) elem);
 			if (elem instanceof CardGroup) {
 				CardGroup cardGroup = (CardGroup) elem;

@@ -71,6 +71,7 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
+import com.reflexit.magiccards.core.model.events.CardEventUpdate;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -1101,11 +1102,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE && event.getData() instanceof ICard) {
+		if (type == CardEvent.UPDATE && ((CardEventUpdate) event).getCardList().size() == 1) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					updateSingle((ICard) event.getData());
+					updateSingle(((CardEventUpdate) event).getCardList().get(0));
 				}
 			});
 		} else if (type == CardEvent.ADD) {

@@ -2,7 +2,9 @@ package com.reflexit.magiccards.ui.dialogs;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,6 +65,10 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 	@Override
 	protected void createBodyArea(Composite parent) {
 		super.createBodyArea(parent);
+		createLinkToCardPritingEditor();
+	}
+
+	public void createLinkToCardPritingEditor() {
 		if (cards.size() > 0) {
 			new Label(area, SWT.NONE);
 			Link link = new Link(area, SWT.NONE);
@@ -87,35 +93,39 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 		new Job("Updating edited cards") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				HashSet<ICardField> set = new HashSet<ICardField>();
 				for (Iterator<MagicCardPhysical> iterator = cards.iterator(); iterator.hasNext();) {
 					MagicCardPhysical card = iterator.next();
-					editCard(card, store, false);
+					editCard(card, store, false, set);
 				}
-				DataManager.getInstance().updateList((Collection) cards, null);
+				DataManager.getInstance().updateList((Collection) cards, set);
 				// DataManager.reconcile();
 				return Status.OK_STATUS;
 			}
 		}.schedule();
 	}
 
-	private void editCard(MagicCardPhysical card, PreferenceStore store, boolean update) {
+	private void editCard(MagicCardPhysical card, PreferenceStore store, boolean update,
+			Set<ICardField> fieldSet) {
 		boolean modified = false;
-		modified = setField(card, store, MagicCardField.COUNT) || modified;
-		modified = setField(card, store, MagicCardField.PRICE) || modified;
-		modified = setField(card, store, MagicCardField.COMMENT) || modified;
-		modified = setField(card, store, MagicCardField.OWNERSHIP) || modified;
+		modified = setField(card, store, MagicCardField.COUNT, fieldSet) || modified;
+		modified = setField(card, store, MagicCardField.PRICE, fieldSet) || modified;
+		modified = setField(card, store, MagicCardField.COMMENT, fieldSet) || modified;
+		modified = setField(card, store, MagicCardField.OWNERSHIP, fieldSet) || modified;
 		String special = card.getSpecial();
 		String especial = store.getString(EditCardsPropertiesDialog.SPECIAL_FIELD);
 		if (!UNCHANGED.equals(especial) && !especial.equals(special)) {
 			card.setSpecialTag(especial);
+			fieldSet.add(MagicCardField.SPECIAL);
 			modified = true;
 		}
 		if (modified && update) {
-			DataManager.getInstance().update(card, null);
+			DataManager.getInstance().update(card, fieldSet);
 		}
 	}
 
-	protected boolean setField(MagicCardPhysical card, PreferenceStore store, ICardField field) {
+	protected boolean setField(MagicCardPhysical card, PreferenceStore store, ICardField field,
+			Set<ICardField> fieldSet) {
 		Boolean modified = false;
 		String orig = String.valueOf(card.get(field));
 		String edited = store.getString(field.name());

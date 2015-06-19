@@ -14,12 +14,13 @@ import java.util.Collection;
 
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.abs.ICard;
 
 /**
  * @author Alena
  *
  */
-public class MemoryFilteredCardStore<T> extends AbstractFilteredCardStore<T> {
+public class MemoryFilteredCardStore<T extends ICard> extends AbstractFilteredCardStore<T> {
 	public MemoryFilteredCardStore(Collection<T> list) {
 		super(new MemoryCardStore<T>());
 		addAll(list);

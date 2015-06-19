@@ -7,12 +7,15 @@ import java.util.Set;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
+import com.reflexit.magiccards.core.model.events.CardEventUpdate;
 import com.reflexit.magiccards.core.model.events.EventManager;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 
-public abstract class AbstractCardStore<T> extends EventManager implements ICardStore<T>, ILocatable {
+public abstract class AbstractCardStore<T extends ICard> extends EventManager implements ICardStore<T>,
+		ILocatable {
 	protected transient boolean initialized;
 	protected boolean mergeOnAdd;
 
@@ -221,7 +224,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 				return;
 		}
 		if (isListenerAttached())
-			fireEvent(new CardEvent(this, CardEvent.UPDATE, card, mask));
+			fireEvent(new CardEventUpdate(this, card, mask));
 		return;
 	}
 
@@ -244,7 +247,7 @@ public abstract class AbstractCardStore<T> extends EventManager implements ICard
 			}
 		}
 		if (isListenerAttached())
-			fireEvent(new CardEvent(this, CardEvent.UPDATE, cards, mask));
+			fireEvent(new CardEventUpdate(this, cards, mask));
 		return;
 	}
 

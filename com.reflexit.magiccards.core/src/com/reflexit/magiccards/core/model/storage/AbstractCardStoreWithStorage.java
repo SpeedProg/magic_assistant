@@ -15,12 +15,14 @@ import java.util.Iterator;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.abs.ICard;
 
 /**
  * @author Alena
  *
  */
-public abstract class AbstractCardStoreWithStorage<T> extends AbstractCardStore<T> implements ICardStore<T>,
+public abstract class AbstractCardStoreWithStorage<T extends ICard> extends AbstractCardStore<T> implements
+		ICardStore<T>,
 		IStorageContainer<T> {
 	protected IStorage<T> storage;
 	protected boolean wrapped;

@@ -98,7 +98,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			throws IOException {
 		if (WebUtils.isWorkOffline())
 			throw new MagicException("Online updates are disabled");
-		CardList list = new CardList(iterable, false);
+		CardList list = new CardList(iterable);
 		int size = list.size();
 		Set<Object> uniqueSets = list.getUnique(MagicCardField.SET);
 		monitor.beginTask("Loading prices from " + getURL() + " ...", size + 10 + uniqueSets.size());

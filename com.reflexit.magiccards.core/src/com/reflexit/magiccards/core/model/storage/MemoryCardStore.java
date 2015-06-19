@@ -13,6 +13,7 @@ package com.reflexit.magiccards.core.model.storage;
 import java.util.Collection;
 import java.util.List;
 
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 
 /**
@@ -21,7 +22,8 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
  * @author Alena
  *
  */
-public class MemoryCardStore<T> extends AbstractCardStoreWithStorage<T> implements ICardCountable {
+public class MemoryCardStore<T extends ICard> extends AbstractCardStoreWithStorage<T> implements
+		ICardCountable {
 	private boolean virtutal = true;
 
 	/**

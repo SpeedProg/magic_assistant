@@ -24,6 +24,7 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardGame;
 import com.reflexit.magiccards.core.model.MagicCardGame.MagicCardGameField;
 import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 
 /**
@@ -90,7 +91,7 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 		}
 	}
 
-	static class SingletonDeck<T> extends MemoryCardStore<T> {
+	static class SingletonDeck<T extends ICard> extends MemoryCardStore<T> {
 		@Override
 		public int getCount() {
 			return size();

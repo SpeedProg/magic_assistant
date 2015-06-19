@@ -13,7 +13,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
-public abstract class AbstractExportDelegatePerLine<T> extends AbstractExportDelegate<T> {
+public abstract class AbstractExportDelegatePerLine<T extends ICard> extends AbstractExportDelegate<T> {
 	@Override
 	public void export(ICoreProgressMonitor monitor) {
 		try {

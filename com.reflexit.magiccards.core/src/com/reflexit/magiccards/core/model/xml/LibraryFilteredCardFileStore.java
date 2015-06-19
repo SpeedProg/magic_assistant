@@ -1,14 +1,18 @@
 package com.reflexit.magiccards.core.model.xml;
 
 import java.util.Collection;
+import java.util.Set;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.core.model.abs.CardList;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
+import com.reflexit.magiccards.core.model.events.CardEventUpdate;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.CardElement;
@@ -85,11 +89,7 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 			}
 			case CardEvent.UPDATE:
 				// need to save xml
-				if (event.getData() instanceof MagicCardPhysical) {
-					break;
-				} else {
-					return;
-				}
+				break;
 			default:
 				break;
 		}
@@ -134,9 +134,10 @@ public class LibraryFilteredCardFileStore extends BasicLibraryFilteredCardFileSt
 					}
 					case CardEvent.UPDATE: {
 						// need to save xml
-						if (event.getData() instanceof MagicCardPhysical) {
-							MagicCardPhysical c = (MagicCardPhysical) event.getData();
-							Location location = c.getLocation();
+						CardEventUpdate evupdate = (CardEventUpdate) event;
+						CardList<? extends ICard> cardList = evupdate.getCardList();
+						Set<Location> locations = cardList.getUnique(MagicCardField.LOCATION);
+						for (Location location : locations) {
 							AbstractCardStoreWithStorage storage = getMultiStore().getStorage(location);
 							if (storage != null) {
 								storage.getStorage().autoSave();

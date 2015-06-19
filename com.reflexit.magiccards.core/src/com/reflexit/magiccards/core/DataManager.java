@@ -494,7 +494,7 @@ public class DataManager {
 			return;
 		ICardStore db = getMagicDBStore();
 		ICardStore library = getLibraryCardStore();
-		List<ICard> list = new MagicCardList(cards).getList();
+		List<IMagicCard> list = new MagicCardList(cards).getList();
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Object card = iterator.next();
 			// Need to repair references to MagicCard instances
@@ -505,7 +505,7 @@ public class DataManager {
 				}
 			}
 		}
-		List<IMagicCard> list2 = new MagicCardList((List) list).getMagicBaseList();
+		Collection<IMagicCard> list2 = new MagicCardList(list).getMagicBaseList();
 		getMagicDBStore().updateList(list2,
 				Collections.singleton(MagicCardField.OWN_COUNT));
 	}
