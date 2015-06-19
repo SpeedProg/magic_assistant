@@ -114,6 +114,11 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 		}
 
 		@Override
+		public String getTag() {
+			return name().toLowerCase(Locale.ENGLISH);
+		}
+
+		@Override
 		public Object aggregateValueOf(ICard card) {
 			if (SpecialTags.getInstance().toMap((IMagicCard) card).containsKey(getTag()))
 				return getTag();
@@ -127,11 +132,6 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 			} else {
 				card.removeSpecialTag(tag);
 			}
-		}
-
-		@Override
-		public String getTag() {
-			return name().toLowerCase(Locale.ENGLISH);
 		}
 	}
 }

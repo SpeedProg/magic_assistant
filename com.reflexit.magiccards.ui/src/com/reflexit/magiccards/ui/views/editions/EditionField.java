@@ -37,7 +37,9 @@ public enum EditionField implements ICardField {
 	@Override
 	public String getLabel() {
 		String name = name();
-		return name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+		name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
+		name = name.replace('_', ' ');
+		return name;
 	}
 
 	@Override

@@ -32,9 +32,7 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 
 		@Override
 		public String getTag() {
-			String name = name();
-			name = name.toLowerCase(Locale.ENGLISH);
-			return name;
+			return name().toLowerCase(Locale.ENGLISH);
 		}
 	};
 
