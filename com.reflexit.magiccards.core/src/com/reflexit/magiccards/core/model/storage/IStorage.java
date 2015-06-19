@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
+import com.reflexit.magiccards.core.model.abs.ICardSet;
+
 public interface IStorage<T> extends ICardSet<T>, ILocatable {
 	public boolean isAutoCommit();
 
