@@ -837,7 +837,6 @@ public enum MagicCardField implements ICardField {
 	/**
 	 * How this field is written to external source, such as xml
 	 */
-	@Override
 	public String getTag() {
 		return tag;
 	}

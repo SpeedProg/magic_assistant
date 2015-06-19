@@ -7,21 +7,14 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public enum EditionField implements ICardField {
 	NAME,
-	DATE("release"),
+	DATE,
 	TYPE,
-	FORMAT("legalityMap"),
+	FORMAT,
 	BLOCK,
 	ALIASES,
 	// end
 	;
-	private final String tag;
-
-	EditionField(String javaField) {
-		tag = null;
-	}
-
 	EditionField() {
-		tag = name().toLowerCase(Locale.ENGLISH);
 	}
 
 	@Override
@@ -40,10 +33,5 @@ public enum EditionField implements ICardField {
 		name = name.charAt(0) + name.substring(1).toLowerCase(Locale.ENGLISH);
 		name = name.replace('_', ' ');
 		return name;
-	}
-
-	@Override
-	public String getTag() {
-		return tag;
 	}
 }

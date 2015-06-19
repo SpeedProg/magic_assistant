@@ -29,11 +29,6 @@ public class MagicCardGame extends AbstractMagicCard implements IMagicCard {
 		public Object aggregateValueOf(ICard card) {
 			return card.get(this);
 		}
-
-		@Override
-		public String getTag() {
-			return name().toLowerCase(Locale.ENGLISH);
-		}
 	};
 
 	public enum Zone {

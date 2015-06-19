@@ -113,7 +113,6 @@ public class DeckBoxExportDelegate extends CsvExportDelegate {
 			return name;
 		}
 
-		@Override
 		public String getTag() {
 			return name().toLowerCase(Locale.ENGLISH);
 		}

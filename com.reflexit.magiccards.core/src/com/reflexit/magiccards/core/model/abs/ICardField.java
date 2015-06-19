@@ -8,6 +8,4 @@ public interface ICardField {
 	public String getLabel();
 
 	public Object aggregateValueOf(ICard card);
-
-	public String getTag();
 }
