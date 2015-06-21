@@ -391,7 +391,7 @@ public class DataManager {
 		} else if (card instanceof MagicCardPhysical) {
 			updateMCP((MagicCardPhysical) card, fieldSet);
 		} else {
-			throw new IllegalArgumentException();
+			//ignore
 		}
 	}
 
