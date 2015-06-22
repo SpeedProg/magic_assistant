@@ -794,5 +794,45 @@ class="org.eclipse.ui.ExtensionFactory:progressView"
 id="org.eclipse.ui.views.ProgressView">
 </view>
 </extension>
+  <extension point="org.eclipse.ui.activities">
+      <activity
+            id="com.reflexit.magiccards.activity.cardorganizer"
+            name="Card Organizer">
+      </activity>
 
+      <activityPatternBinding
+            activityId="com.reflexit.magiccards.activity.cardorganizer"
+            pattern="com\.reflexit\.magiccards\..*/.*">
+      </activityPatternBinding>
+
+      <categoryActivityBinding
+            activityId="com.reflexit.magiccards.activity.cardorganizer"
+            categoryId="com.reflexit.magiccards.activity.category">
+      </categoryActivityBinding>
+      
+      <defaultEnablement
+            id="com.reflexit.magiccards.activity.cardorganizer">
+      </defaultEnablement>
+   </extension>
+     <extension point="org.eclipse.ui.activities">
+      <activity
+            id="com.reflexit.magiccards.activity.dbextend"
+            name="Extending Card Database">
+      </activity>
+
+      <activityPatternBinding
+            activityId="com.reflexit.magiccards.activity.dbextend"
+            pattern="com\.reflexit\.magiccards\.ui/.*SetImportWizard">
+      </activityPatternBinding>
+
+      <categoryActivityBinding
+            activityId="com.reflexit.magiccards.activity.dbextend"
+            categoryId="com.reflexit.magiccards.activity.category">
+      </categoryActivityBinding>
+      
+      <activityRequirementBinding
+ 		 activityId="com.reflexit.magiccards.activity.dbextend"
+ 		 requiredActivityId="com.reflexit.magiccards.activity.cardorganizer">
+	</activityRequirementBinding>
+   </extension>
 </plugin>

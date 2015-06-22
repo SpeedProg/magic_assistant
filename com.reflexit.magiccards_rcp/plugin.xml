@@ -60,7 +60,7 @@
    </extension>
  <extension
          point="org.eclipse.ui.preferencePages">
-               <page
+      <page
             name="%PreferencePages.Workbench"
             class="org.eclipse.ui.ExtensionFactory:workbenchPreferencePage"
             id="org.eclipse.ui.preferencePages.Workbench">
@@ -104,6 +104,15 @@
             id="org.eclipse.ui.preferencePages.Keys">
          <keywordReference id="org.eclipse.ui.ide.keys"/>
       </page>
+      <page
+            name="%PreferencePages.Capabilities"
+            category="org.eclipse.ui.preferencePages.Workbench"
+        
+            id="org.eclipse.sdk.capabilities">
+            <class     class="org.eclipse.ui.activities.ActivityCategoryPreferencePage">
+             <parameter name="allowAdvanced" value="true"/>
+            </class>
+      </page>
    </extension>
  <extension
        point="org.eclipse.core.runtime.preferences">
@@ -142,4 +151,21 @@
    </stylesheet>
 </extension>
 
+
+   <extension
+
+         point="org.eclipse.ui.activities">
+
+      <category
+
+            description="Magic Assistant Activities. To Enable/Disable Features Use &quot;Advanced&quot; Button."
+
+            id="com.reflexit.magiccards.activity.category"
+
+            name="Magic Assistant">
+
+      </category>
+
+
+   </extension>
 </plugin>

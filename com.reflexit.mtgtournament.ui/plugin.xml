@@ -73,4 +73,25 @@
             name="Tournament">
       </page>
    </extension>
+   
+  <extension point="org.eclipse.ui.activities">
+      <activity
+            id="com.reflexit.magiccards.activity.tournament"
+            name="Tournament Organizer">
+      </activity>
+
+      <activityPatternBinding
+            activityId="com.reflexit.magiccards.activity.tournament"
+            pattern="com\.reflexit\.mtgtournament\..*/.*">
+      </activityPatternBinding>
+
+      <categoryActivityBinding
+            activityId="com.reflexit.magiccards.activity.tournament"
+            categoryId="com.reflexit.magiccards.activity.category">
+      </categoryActivityBinding>
+      
+      <defaultEnablement
+            id="com.reflexit.magiccards.activity.tournament">
+      </defaultEnablement>
+   </extension>
 </plugin>
