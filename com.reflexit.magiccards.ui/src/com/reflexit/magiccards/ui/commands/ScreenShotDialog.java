@@ -29,17 +29,22 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
-public final class ScreenShotDialog extends Dialog {
+public final class ScreenShotDialog extends Dialog implements Listener {
 	private final Image imageOrig;
 	private Image image;
 	private IDialogSettings dialogSettings;
 	private boolean drag = false;
 	private Rectangle selection;
-	private int startX;
-	private int startY;
 	private int endX;
 	private int endY;
 	private Canvas canvas;
+
+	private enum Mode {
+		DRAG,
+		PANE
+	};
+
+	private Mode mode = Mode.DRAG;
 
 	public ScreenShotDialog(Shell parentShell, Image image) {
 		super(parentShell);
@@ -77,12 +82,14 @@ public final class ScreenShotDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, 3, "Save As...", true);
 		createButton(parent, 4, "Crop", false);
+		createButton(parent, 5, "600x400", false);
+		createButton(parent, 6, "Restore", false);
 		super.createButtonsForButtonBar(parent);
 	}
 
 	@Override
 	protected void buttonPressed(int buttonId) {
-		if (buttonId == 3) {
+		if (buttonId == 3) { // save
 			saveToClipboard(image);
 			String fileStr = dialogSettings.get("file");
 			File defaultFile = fileStr == null ? null : new File(fileStr);
@@ -100,8 +107,7 @@ public final class ScreenShotDialog extends Dialog {
 				super.okPressed();
 			}
 			return;
-		}
-		if (buttonId == 4) { // crop
+		} else if (buttonId == 4) { // crop
 			Rectangle selection = getSelection();
 			if (selection.isEmpty()) {
 				MessageDialog.openError(getShell(), "Error",
@@ -116,7 +122,6 @@ public final class ScreenShotDialog extends Dialog {
 					0, 0,
 					selection.width, selection.height);
 			gc.dispose();
-			startX = startY = endX = endY = 0;
 			// image.dispose();
 			image = image1;
 			GridData layoutData = new GridData(GridData.FILL_BOTH);
@@ -124,13 +129,33 @@ public final class ScreenShotDialog extends Dialog {
 			layoutData.widthHint = bounds.width;
 			layoutData.heightHint = bounds.height;
 			canvas.setLayoutData(layoutData);
+			setEmptySelection();
+			mode = Mode.DRAG;
 			getShell().pack(true);
-		}
-		if (IDialogConstants.OK_ID == buttonId) {
+		} else if (buttonId == 5) { // frame
+			selection.width = 600;
+			selection.height = 400;
+			mode = Mode.PANE;
+			canvas.redraw();
+		} else if (buttonId == 6) { // undo
+			this.image = new Image(getShell().getDisplay(), imageOrig.getImageData());
+			setEmptySelection();
+			mode = Mode.DRAG;
+			canvas.redraw();
+		} else if (IDialogConstants.OK_ID == buttonId) {
 			// save to clipboard
 			saveToClipboard(image);
 		}
 		super.buttonPressed(buttonId);
+	}
+
+	public void setEmptySelection() {
+		selection.x = 0;
+		selection.y = 0;
+		selection.width = 0;
+		selection.height = 0;
+		endX = 0;
+		endY = 0;
 	}
 
 	public void saveToClipboard(final Image image) {
@@ -140,59 +165,89 @@ public final class ScreenShotDialog extends Dialog {
 	}
 
 	public Rectangle getSelection() {
-		int minX = Math.min(startX, endX);
-		int minY = Math.min(startY, endY);
-		int maxX = Math.max(startX, endX);
-		int maxY = Math.max(startY, endY);
-		int width = maxX - minX;
-		int height = maxY - minY;
-		selection.x = minX;
-		selection.y = minY;
-		selection.width = width;
-		selection.height = height;
 		return selection;
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		switch (event.type) {
+			case SWT.MouseDown:
+				if (mode == Mode.DRAG) {
+					selection.x = event.x;
+					selection.y = event.y;
+					selection.width = 0;
+					selection.height = 0;
+				}
+				endX = event.x;
+				endY = event.y;
+				drag = true;
+				break;
+			case SWT.MouseUp:
+				if (drag) {
+					drag = false;
+					onMove(event);
+				}
+				break;
+			case SWT.MouseMove:
+				if (drag) {
+					onMove(event);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void onMove(Event event) {
+		int offX = event.x - endX;
+		int offY = event.y - endY;
+		endX = event.x;
+		endY = event.y;
+		switch (mode) {
+			case DRAG:
+				selection.width += offX;
+				selection.height += offY;
+				if (selection.width < 0)
+					selection.width = 0;
+				if (selection.height < 0)
+					selection.height = 0;
+				break;
+			case PANE:
+				selection.x += offX;
+				selection.y += offY;
+				Rectangle bounds = image.getBounds();
+				if (selection.x < 0)
+					selection.x = 0;
+				else if (selection.x + selection.width >= bounds.width)
+					selection.x = bounds.width - 1 - selection.width;
+				if (selection.y < 0)
+					selection.y = 0;
+				else if (selection.y + selection.height >= bounds.height)
+					selection.y = bounds.height - 1 - selection.height;
+				break;
+		}
+		canvas.redraw();
 	}
 
 	public void setUpCanvas() {
 		selection = new Rectangle(0, 0, 0, 0);
-		canvas.addListener(SWT.MouseDown, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				startX = event.x;
-				startY = event.y;
-				drag = true;
-			}
-		});
-		canvas.addListener(SWT.MouseUp, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				endX = event.x;
-				endY = event.y;
-				drag = false;
-				canvas.redraw();
-			}
-		});
-		canvas.addListener(SWT.MouseMove, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				if (drag) {
-					endX = event.x;
-					endY = event.y;
-					canvas.redraw();
-				}
-			}
-		});
+		canvas.addListener(SWT.MouseDown, this);
+		canvas.addListener(SWT.MouseUp, this);
+		canvas.addListener(SWT.MouseMove, this);
 		canvas.addListener(SWT.Paint, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
+				// draw original image
 				e.gc.drawImage(image, 0, 0);
 				if (getSelection().isEmpty() && !drag)
 					return;
 				Rectangle bounds = image.getBounds();
 				GC gc = e.gc;
+				// draw black on it with transparency to dim it
 				gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 				gc.setAlpha(64);
 				gc.fillRectangle(0, 0, bounds.width, bounds.height);
+				// draw selected image region with full color
 				gc.setAlpha(255);
 				gc.drawImage(image,
 						selection.x, selection.y,
