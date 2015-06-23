@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -55,9 +56,9 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void initManager() {
+	protected void loadInitial() {
 		getLocalPreferenceStore().setDefault(FilterField.GROUP_FIELD.toString(), createGroupName(DEF_GROUP));
-		super.initManager();
+		super.loadInitial();
 	}
 
 	@Override
@@ -94,7 +95,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD) {
-			reloadData();
+			WaitUtils.asyncExec(() -> reloadData());
 		}
 	}
 

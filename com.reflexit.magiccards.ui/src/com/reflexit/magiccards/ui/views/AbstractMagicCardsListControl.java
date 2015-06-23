@@ -144,10 +144,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			// selection changes on own view
-			setStatus(getStatusMessage());
+			updateStatus();
 		}
 	};
 	private Label warning;
+	private String statusMessage = "";
+	private boolean isFiltered = false;
 
 	/**
 	 * The constructor.
@@ -209,19 +211,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 			res[i] = MagicCardField.fieldByName(sfields[i]);
 		}
 		return res;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#createPartControl
-	 * (org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public Control createPartControl(Composite parent) {
-		initManager();
-		return super.createPartControl(parent);
 	}
 
 	public abstract IMagicColumnViewer createViewerManager();
@@ -416,6 +405,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	@Override
 	public void reloadData() {
+		MagicLogger.trace("reload data " + getClass());
 		setNextSelection(getSelection());
 		update();
 		loadData(null);
@@ -592,10 +582,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		this.searchControl.setSearchAsYouType(true);
 	}
 
-	protected void createTableControl(Composite parent) {
+	protected Control createTableControl(Composite parent) {
 		Control control = this.manager.createContents(parent);
-		((Composite) control).setLayoutData(new GridData(GridData.FILL_BOTH));
+		control.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.manager.hookContext(PerspectiveFactoryMagic.TABLES_CONTEXT);
+		this.manager.hookSortAction((i) -> sort(i));
+		return control;
 	}
 
 	protected Composite createTopBar(Composite composite) {
@@ -696,7 +688,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		}
 	}
 
-	@Override
 	protected void hookDoubleClickAction() {
 		this.manager.hookDoubleClickListener(new IDoubleClickListener() {
 			@Override
@@ -704,21 +695,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 				AbstractMagicCardsListControl.this.doubleClickAction.run();
 			}
 		});
-	}
-
-	/**
-	 *
-	 */
-	protected void initManager() {
-		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
-		updateGroupBy(getGroupFieldsByName(field));
-		IColumnSortAction sortAction = new IColumnSortAction() {
-			@Override
-			public void sort(int i) {
-				AbstractMagicCardsListControl.this.sort(i);
-			}
-		};
-		this.manager.hookSortAction(sortAction);
 	}
 
 	@Override
@@ -730,7 +706,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		quickFilter.setPreferenceStore(getFilterPreferenceStore());
 		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
-		WaitUtils.scheduleJob("Loading cards " + getName(), () -> reloadData());
+		if (fstore == null) {
+			getFilteredStore();
+		}
+		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
+		updateGroupBy(getGroupFieldsByName(field));
+		//WaitUtils.scheduleJob("Loading cards " + getName(), () -> reloadData());
 	}
 
 	protected String getName() {
@@ -743,6 +724,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	@Override
 	protected void makeActions() {
 		super.makeActions();
+		// double cick
+		this.doubleClickAction = new Action() {
+			@Override
+			public void run() {
+				runDoubleClick();
+			}
+		};
+		hookDoubleClickAction();
 		this.actionShowFilter = new Action() {
 			@Override
 			public void run() {
@@ -896,7 +885,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void runCopy() {
-		Control fc = partControl.getDisplay().getFocusControl();
+		Control fc = getControl().getDisplay().getFocusControl();
 		if (fc instanceof Text)
 			((Text) fc).copy();
 		else if (fc instanceof Combo)
@@ -988,7 +977,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	protected void setQuickFilterVisible(boolean qf) {
 		quickFilter.setVisible(qf);
-		partControl.layout(true);
 	}
 
 	protected void sort(int index) {
@@ -1011,8 +999,18 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	protected void updateStatus() {
-		setStatus(getStatusMessage());
-		setWarning(getFiltered() != 0);
+		new Job("Status update") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				statusMessage = getStatusMessage();
+				isFiltered = (getFiltered() != 0);
+				WaitUtils.asyncExec(() -> {
+					setStatus(statusMessage);
+					setWarning(isFiltered);
+				});
+				return Status.OK_STATUS;
+			}
+		}.schedule();
 	}
 
 	protected int getFiltered() {
@@ -1031,14 +1029,19 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void updateViewer() {
-		String key = "updateViewer " + getFilteredStore().getLocation();
+		final String key = "updateViewer";
 		MagicLogger.traceStart(key);
 		try {
+			IFilteredCardStore filteredStore = getFilteredStore();
+			Location location = filteredStore.getLocation();
+			Object object = location == null ? getClass() : location;
+			MagicLogger.trace("updateViewer " + object);
 			if (manager.getControl() == null || manager.getControl().isDisposed())
 				return;
 			ISelection selection = getSelection();
 			getSelectionProvider().setSelection(new StructuredSelection());
-			manager.updateViewer(getFilteredStore());
+			MagicLogger.trace("updateViewer manager update");
+			manager.updateViewer(filteredStore);
 			restoreSelection(selection);
 			updateStatus();
 		} catch (Exception e) {
@@ -1050,7 +1053,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	}
 
 	private void restoreSelection(ISelection selection) {
-		//MagicLogger.traceStart("setSelection");
+		//MagicLogger.traceStart("restoreSelection");
 		if (revealSelection != null) {
 			// set desired selection
 			selection = revealSelection;
@@ -1058,7 +1061,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		}
 		//	System.err.println("set selection " + selection + " in " + getFilteredStore().getLocation());
 		getSelectionProvider().setSelection(selection);
-		//MagicLogger.traceEnd("setSelection");
+		//MagicLogger.traceEnd("restoreSelection");
 	}
 
 	protected void viewMenuIsAboutToShow(IMenuManager manager) {
@@ -1094,7 +1097,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 		if (contents instanceof Collection) {
 			DM.copyCards(DM.resolve((Collection) contents), getFilteredStore().getCardStore());
 		} else {
-			Control fc = partControl.getDisplay().getFocusControl();
+			Control fc = getControl().getDisplay().getFocusControl();
 			CopySupport.runPaste(fc);
 		}
 	}
@@ -1143,6 +1146,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 
 	private Object jobFamility = new Object();
 	private Job loadingJob;
+	protected Action doubleClickAction;
 
 	public void loadData(final Runnable postLoad) {
 		synchronized (jobFamility) {

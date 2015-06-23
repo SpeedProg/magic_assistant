@@ -1,15 +1,14 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -20,47 +19,25 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class MagicControl implements IMagicControl {
-	protected Composite partControl;
+	private Composite partControl;
 	private IViewSite site;
-	protected Action doubleClickAction;
 
-	/**
-	 * The constructor.
-	 */
 	public MagicControl() {
 	}
 
 	@Override
 	public Control createPartControl(Composite parent) {
 		partControl = new Composite(parent, SWT.NONE);
-		GridLayout gl = new GridLayout();
-		gl.marginHeight = 0;
-		gl.marginWidth = 0;
-		partControl.setLayout(gl);
+		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
+		partControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		createMainControl(partControl);
-		partControl.setLayoutData(new GridData(GridData.FILL_BOTH));
 		makeActions();
-		hookDoubleClickAction();
 		loadInitial();
 		return partControl;
 	}
 
 	protected void makeActions() {
 		// make view actions if any
-		// double cick
-		this.doubleClickAction = new Action() {
-			@Override
-			public void run() {
-				runDoubleClick();
-			}
-		};
-	}
-
-	/**
-	 * override to hook double click to something
-	 */
-	protected void hookDoubleClickAction() {
-		//
 	}
 
 	protected IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
@@ -72,10 +49,16 @@ public abstract class MagicControl implements IMagicControl {
 
 	@Override
 	public void init(IViewSite site) {
-		site.setSelectionProvider(getSelectionProvider());
-		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
-		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(preferenceListener);
 		this.site = site;
+		site.setSelectionProvider(getSelectionProvider());
+		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
+		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(preferenceListener);
+	}
+
+	@Override
+	public void dispose() {
+		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
+		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(preferenceListener);
 	}
 
 	@Override
@@ -116,13 +99,6 @@ public abstract class MagicControl implements IMagicControl {
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
 		// override
-	}
-
-	@Override
-	public void dispose() {
-		MagicUIActivator.getDefault().getPreferenceStore()
-				.removePropertyChangeListener(this.preferenceListener);
-		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(preferenceListener);
 	}
 
 	/**

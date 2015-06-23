@@ -312,7 +312,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	public void setImage(IMagicCard card, Image remoteImage) {
 		if (card == panel.getCard()) {
 			//	dumpUiThread();
-			Display.getDefault().syncExec(() -> panel.setImage(card, remoteImage));
+			Display.getDefault().asyncExec(() -> panel.setImage(card, remoteImage));
 		}
 	}
 
