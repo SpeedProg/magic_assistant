@@ -8,6 +8,8 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,16 +96,25 @@ public class EnterDeck extends AbstractSwtBotTest {
 			decks.getNode("main (Active)").doubleClick();
 		}
 		dbView.setFocus();
+		SWTBotToolbarDropDownButton groupBy = dbView.toolbarDropDownButton("Group By");
+		groupBy.click();
+		bot.sleep(10);
+		final SWTBotMenu menuItem = groupBy.menuItem("None");
+		clickMenuItem(menuItem);
+		dbView.show();
+		dbView.bot().comboBox().setText("");
+		//dbView.bot().text(1).setText("Alara Reborn");
+		bot.sleep(400);
 		for (String name : deck.keySet()) {
 			dbView.bot().text().setFocus();
 			dbView.bot().text().setText(name);
-			bot.sleep(500);
+			bot.sleep(400);
 			dbView.bot().table().setFocus();
 			selectFirstRowInView(dbView);
-			bot.sleep(500);
+			bot.sleep(100);
 			//KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance(0, SWT.INSERT));
 			KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("m"));
-			bot.sleep(500);
+			bot.sleep(100);
 			dbView.bot().text().setText("");
 		}
 		collView.setFocus();
