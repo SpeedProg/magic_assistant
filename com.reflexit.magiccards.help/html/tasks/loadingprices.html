@@ -7,40 +7,42 @@
 </head>
 
 <body>
-<h1>Loading sellers prices</h1>
+<h1>Loading online prices</h1>
 
-Seller's Price is a price of cards of a card for sale by a given provider. Magic Assistant supports
-two prices columns - seller price - on the magic database cards, and user price on owned instances of these cards.
+Online Price is a price of cards of a card for sale by a given provider. Magic Assistant supports
+two prices columns - Online Price (SPrice) - on the magic database cards, and user price on owned instances of these cards.
 First one is for how much you can buy, and second one for how much your actually bought it. 
 
 <h2>Selecting default price provider</h2>
 
-Currently there are few supported providers (in US dollars).
+Currently there are few supported providers.
 If you have preference between these you can go to Window->Preferences->Magic Preferences
 and select one in the "Card Prices Provider".
+Prices will be converted in default location currency using online currency convertor.
+You can override preffered currency on the preference page.
 
-<h2>Loading sellers prices from the web</h2>
+<h2>Loading online prices</h2>
 <li>Step 1:  Click on the preferences button which is the spreadsheet looking button
 that is second from the left in the line of buttons in the upper right hand
 corner.</li>
 
 <li>
-Step 2:  Once that is open, scroll down and add a check to the "Seller Price"
+Step 2:  Once that is open, scroll down and add a check to the "Online Price"
 item (which represents a column in a view).  After that click apply and then OK.</li>
 
 <li>
 Step 3: In the same upper right hand corner of the view, you'll see an upside down
-pyramid (icon is third from the right next to the minimize and maximize button.),
-click it.
+pyramid (icon is third from the right next to the minimize and maximize button),
+click it (this is view menu button).
 </li>
 
 <li>
-Step 4:  In the menu that will appear, click "Load Extra Fields".
+Step 4:  In the menu that will appear, click "Load Extra Fields...".
 </li>
 
 <li>
 Step 5:  Add a check to the "Price" field and click OK.  This will update the
-cards and adding the price to the "Seller Price" field.
+cards and adding the price to the "Online Price" field.
 </li>
 
 
@@ -69,6 +71,7 @@ That defines new provider called "My_Provider" and sets the price of a card with
 in USD (US Dollars) currency. You can have multiple mc records there. URL can be specified if
 prices are published online in exact same format as this file, in this case when user selects
 update prices, it will re-load the file from this url, and store back to this xml file locally.
+If this a local file skip this property.
 <p/>
 The second option is to import prices via db extension import. You can define prices in any import format with flexible columns that MA supports,
 and DBPRICE is the column name for the sellers price. I.e. in CSV format it will be

@@ -134,7 +134,7 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 	}
 
 	protected void createPriceFields() {
-		final Button p = createFieldCheck("Price", MagicCardField.DBPRICE, false);
+		final Button p = createFieldCheck("Online Price", MagicCardField.DBPRICE, false);
 		priceProviderCombo = new Combo(buttons, SWT.DROP_DOWN | SWT.READ_ONLY);
 		priceProviderCombo.setItems(getPriceProviders());
 		priceProviderCombo.setText(PriceProviderManager.getInstance().getProviderName());

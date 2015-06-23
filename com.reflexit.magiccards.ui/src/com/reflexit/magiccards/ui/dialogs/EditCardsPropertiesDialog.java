@@ -56,7 +56,7 @@ public class EditCardsPropertiesDialog extends MagicDialog {
 		// Count
 		Text count = createTextFieldEditor(area, "Count", COUNT_FIELD);
 		// Price
-		createTextFieldEditor(area, "Price", PRICE_FIELD);
+		createTextFieldEditor(area, "User Price", PRICE_FIELD);
 		// ownership
 		createOwnershipFieldEditor(area);
 		// comment

@@ -26,7 +26,7 @@ public class UserFieldsPreferenceGroup extends MFieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		String id = FilterField.PRICE.getPrefConstant();
 		getPreferenceStore().setDefault(id, "0");
-		addField(new NumericalComparisonFieldEditor(id, "Price", getFieldEditorParent()));
+		addField(new NumericalComparisonFieldEditor(id, "User Price", getFieldEditorParent()));
 		ids.add(id);
 		// count
 		id = FilterField.COUNT.getPrefConstant();

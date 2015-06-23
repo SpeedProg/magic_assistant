@@ -17,7 +17,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
 	 * initializeDefaultPreferences()
 	 */
@@ -48,20 +48,20 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		getMdbStore()
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Seller Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Online Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
 		getLibStore()
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		getDeckStore()
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-Price,-Seller Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
+						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		getCollectorStore()
 				.setDefault(
 						PreferenceConstants.LOCAL_COLUMNS,
 						"Group,-Name,Progress,-Progress4,-Card Id,-Cost,-Type,-Power,-Toughness,-Oracle Text,-Text,-Set,-Rarity,-Color Type,-Count,"
-								+ "Collector's Number,Artist,Location,-Color,Ownership,Price,Seller Price,-Rating,-For Trade,"
+								+ "Collector's Number,Artist,Location,-Color,Ownership,User Price,Online Price,-Rating,-For Trade,"
 								+ "Comment,Special,-Language");
 		getDeckStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
 		getMdbStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);

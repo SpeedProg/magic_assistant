@@ -60,10 +60,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	}
 
 	public String getColumnTooltip() {
-		if (getColumnName().equals(getColumnFullName()))
-			return "";
-		else
-			return getColumnFullName();
+		return getColumnFullName();
 	}
 
 	public int getColumnWidth() {

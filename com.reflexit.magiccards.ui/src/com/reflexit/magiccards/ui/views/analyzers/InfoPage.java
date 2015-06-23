@@ -123,8 +123,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 				"How many time each card repeats, excluding basic land (for legality purposes)");
 		rarity = createTextLabel("Rarity: ");
 		// tree.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-		dbprice = createTextLabel("Price: ", "Cost of a deck using Seller's Price column,"
-				+ " in brackets cost of a deck using User's Price column");
+		dbprice = createTextLabel("Price: ", "Cost of a deck using Online Price column,"
+				+ " in brackets cost of a deck using User Price column");
 		return stats;
 	}
 

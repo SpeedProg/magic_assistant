@@ -17,7 +17,7 @@ public class LoadingPricesJob extends Job {
 	private Iterable list;
 
 	public LoadingPricesJob(Iterable list) {
-		this("Loading prices (To view enable Price columns)", list);
+		this("Loading prices (To view enable Online Price column)", list);
 	}
 
 	public LoadingPricesJob(String name, Iterable list) {

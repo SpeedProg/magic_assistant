@@ -19,7 +19,7 @@ public class SellerPriceColumn extends GenColumn {
 
 	@Override
 	public String getColumnFullName() {
-		return "Seller Price";
+		return "Online Price";
 	}
 
 	DecimalFormat decimalFormat = new DecimalFormat("#0.00");

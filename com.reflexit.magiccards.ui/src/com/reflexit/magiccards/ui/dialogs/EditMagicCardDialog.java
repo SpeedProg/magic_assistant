@@ -70,7 +70,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		createReadOnlyField("Name", MagicCardField.NAME);
 		createReadOnlyField("Language", MagicCardField.LANG);
 		collnumText = createEditableField("Collector's Number", MagicCardField.COLLNUM);
-		priceText = createEditableField("Seller's Price", MagicCardField.DBPRICE);
+		priceText = createEditableField("Online Price", MagicCardField.DBPRICE);
 		urlText = createEditableField("Image URL", MagicCardField.IMAGE_URL);
 	}
 

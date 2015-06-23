@@ -38,7 +38,7 @@ public class NumbericalPreferenceGroup extends MFieldEditorPreferencePage {
 		ids.add(id);
 		id = FilterField.DBPRICE.getPrefConstant();
 		getPreferenceStore().setDefault(id, "0");
-		addField(new NumericalComparisonFieldEditor(id, "Seller's Price", getFieldEditorParent()));
+		addField(new NumericalComparisonFieldEditor(id, "Online Price", getFieldEditorParent()));
 		ids.add(id);
 		id = FilterField.COMMUNITYRATING.getPrefConstant();
 		getPreferenceStore().setDefault(id, "0");

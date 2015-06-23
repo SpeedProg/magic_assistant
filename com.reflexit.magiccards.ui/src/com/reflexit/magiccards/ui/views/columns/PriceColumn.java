@@ -19,24 +19,24 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
  * @author Alena
- * 
+ *
  */
 public class PriceColumn extends SellerPriceColumn {
 	/**
 	 * @param columnName
 	 */
 	public PriceColumn() {
-		super(MagicCardField.PRICE, "Price");
+		super(MagicCardField.PRICE, "User Price");
 	}
 
 	@Override
 	public String getColumnFullName() {
-		return "Price";
+		return "User Price";
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.reflexit.magiccards.ui.views.columns.ColumnManager#getEditingSupport(org.eclipse.jface
 	 * .viewers.TableViewer)
