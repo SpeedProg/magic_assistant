@@ -27,6 +27,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 
 public class QuickFilterControl extends Composite {
 	private static final String ALL_TYPES = "";
@@ -42,7 +43,7 @@ public class QuickFilterControl extends Composite {
 	private boolean pendingUpdate = false;
 	private Object updateLock = new Object();
 	private UpdateThread uthread;
-	private int updateDelay = 700;
+	private int updateDelay = 300;
 	private boolean suppressUpdates = false;
 
 	class UpdateThread extends Thread {
@@ -66,18 +67,36 @@ public class QuickFilterControl extends Composite {
 								// MagicLogger.trace("QUPDATE", "got update on wait " +
 								// (System.currentTimeMillis() - lastMod));
 							}
+							if (pendingUpdate == false)
+								continue;
 							// we got more than 500 ms timeout
 						}
 						// pendingUpdate is true now
-						pendingUpdate = false;
 					}
 					// System.err.println(System.currentTimeMillis() + "  running now");
-					runnable.run();
+					doUpdate();
 				}
 			} catch (InterruptedException e) {
 				return;
 			}
 		}
+	}
+
+	private void doUpdate() {
+		synchronized (updateLock) {
+			pendingUpdate = false;
+			updateLock.notifyAll();
+		}
+		updateStore();
+		runnable.run();
+	}
+
+	private void updateStore() {
+		WaitUtils.syncExec(() -> {
+			filterSet(setCombo.getText());
+			filterText(searchText.getText());
+			filterType(typeCombo.getText());
+		});
 	}
 
 	public QuickFilterControl(Composite composite, Runnable run, boolean visible) {
@@ -97,24 +116,20 @@ public class QuickFilterControl extends Composite {
 	public void setVisible(boolean vis) {
 		super.setVisible(vis);
 		GridData gd = (GridData) getLayoutData();
+		gd.exclude = !vis;
+		getParent().getParent().layout(true);
 		if (!vis) {
-			gd.heightHint = 0;
-			gd.widthHint = 0;
 			if (uthread != null) {
 				uthread.interrupt();
 				uthread = null;
 			}
 		} else {
-			gd.heightHint = SWT.DEFAULT;
-			gd.widthHint = SWT.DEFAULT;
-			// gd.minimumHeight = 32;
 			setFocus();
 			if (uthread != null)
 				uthread.interrupt();
 			uthread = new UpdateThread();
 			uthread.start();
 		}
-		getParent().layout(true);
 	}
 
 	@Override
@@ -168,13 +183,13 @@ public class QuickFilterControl extends Composite {
 		this.searchText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				filterText(searchText.getText());
+				kickUpdate();
 			}
 		});
 		this.searchText.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				filterText(searchText.getText());
+				doUpdate();
 			}
 		});
 		searchText.setToolTipText("Name filter");
@@ -197,13 +212,13 @@ public class QuickFilterControl extends Composite {
 		typeCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				filterType(typeCombo.getText());
+				kickUpdate();
 			}
 		});
 		typeCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				filterType(typeCombo.getText());
+				doUpdate();
 			}
 		});
 		typeCombo.setToolTipText("Type filter");
@@ -220,13 +235,13 @@ public class QuickFilterControl extends Composite {
 		setCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				filterSet(setCombo.getText());
+				kickUpdate();
 			}
 		});
 		setCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				filterSet(setCombo.getText());
+				doUpdate();
 			}
 		});
 		this.setCombo = setCombo;
@@ -254,7 +269,7 @@ public class QuickFilterControl extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				store.setValue(id, button.getSelection());
-				kickUpdate("color " + id);
+				kickUpdate();
 			}
 		});
 		button.setSelection(false);
@@ -361,7 +376,7 @@ public class QuickFilterControl extends Composite {
 		this.runnable = run;
 	}
 
-	private void kickUpdate(@SuppressWarnings("unused") String text) {
+	private void kickUpdate() {
 		if (suppressUpdates)
 			return;
 		synchronized (updateLock) {
@@ -383,7 +398,6 @@ public class QuickFilterControl extends Composite {
 		} else {
 			this.store.setValue(textId, "\"" + text + "\"");
 		}
-		kickUpdate(text);
 	}
 
 	protected void filterType(String text) {
@@ -407,7 +421,6 @@ public class QuickFilterControl extends Composite {
 			store.setValue(textId, "");
 			store.setValue(selId, "true");
 		}
-		kickUpdate("type " + text);
 	}
 
 	protected void filterSet(String set) {
@@ -435,7 +448,6 @@ public class QuickFilterControl extends Composite {
 				}
 			}
 		}
-		kickUpdate("set " + set);
 	}
 
 	public boolean isSuppressUpdates() {
