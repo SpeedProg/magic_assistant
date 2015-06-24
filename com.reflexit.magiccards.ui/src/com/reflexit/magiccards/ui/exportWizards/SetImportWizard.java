@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.widgets.EditionTextControl;
 
@@ -23,6 +24,7 @@ public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 		setWindowTitle("Import Set");
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
+		MagicUIActivator.setActivityEnabled(MagicUIActivator.ACTIVITY_DB_EXTEND, true);
 		mainPage = new DeckImportPage("Import", selection) {
 			@Override
 			protected Group createDestinationGroup(Composite parent) {

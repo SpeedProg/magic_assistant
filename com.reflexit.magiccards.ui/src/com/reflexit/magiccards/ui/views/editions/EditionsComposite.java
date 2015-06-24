@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -94,7 +95,7 @@ public class EditionsComposite extends Composite {
 
 	protected Control createContents(Composite parent, int treeStyle) {
 		this.panel = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(1, false);
 		this.panel.setLayout(layout);
 		this.panel.setFont(parent.getFont());
 		PatternFilter filter = new PatternFilter();
@@ -127,10 +128,11 @@ public class EditionsComposite extends Composite {
 		treeViewer.getControl().setFont(parent.getFont());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 300;
-		gd.horizontalSpan = 3;
 		filteredTree.setLayoutData(gd);
 		createDefaultColumns();
-		createButtonsControls(panel);
+		Composite buttons = new Composite(parent, SWT.NONE);
+		buttons.setLayout(GridLayoutFactory.fillDefaults().numColumns(5).create());
+		createButtonsControls(buttons);
 		this.treeViewer.setInput(Editions.getInstance());
 		return this.panel;
 	}

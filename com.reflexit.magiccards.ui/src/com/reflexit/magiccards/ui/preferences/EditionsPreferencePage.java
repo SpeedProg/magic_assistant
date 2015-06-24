@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.Iterator;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -23,12 +24,14 @@ import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.views.editions.EditionsComposite;
+import com.reflexit.magiccards.ui.widgets.ActivityEnablerLink;
 
 public class EditionsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private EditionsComposite comp;
+	private Button update;
 	private Button addSet;
 	private Button delSet;
-	private Button update;
+	private Control link;
 
 	public EditionsPreferencePage() {
 		setTitle("Magic Card Sets");
@@ -57,9 +60,9 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 	}
 
 	protected void createButtonsControls(Composite panel) {
-		this.addSet = new Button(panel, SWT.PUSH);
-		this.addSet.setText("Add Set...");
-		this.addSet.addSelectionListener(new SelectionAdapter() {
+		addSet = new Button(panel, SWT.PUSH);
+		addSet.setText("Add...");
+		addSet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				addSet();
@@ -68,9 +71,9 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 			}
 		});
 		addSet.setFont(panel.getFont());
-		this.delSet = new Button(panel, SWT.PUSH);
-		this.delSet.setText("Delete Selected");
-		this.delSet.addSelectionListener(new SelectionAdapter() {
+		delSet = new Button(panel, SWT.PUSH);
+		delSet.setText("Remove");
+		delSet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				deleteSets();
@@ -79,9 +82,9 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 			}
 		});
 		delSet.setFont(panel.getFont());
-		this.update = new Button(panel, SWT.PUSH);
+		update = new Button(panel, SWT.PUSH);
 		update.setText("Update from Internet");
-		this.update.addSelectionListener(new SelectionAdapter() {
+		update.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
@@ -89,6 +92,26 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 				comp.initialize();
 			}
 		});
+		link = new ActivityEnablerLink(panel, MagicUIActivator.ACTIVITY_DB_EXTEND,
+				"Enable <a>Editing Database</a> activity to add more sets", true) {
+			@Override
+			protected void clicked(String id, boolean enabled) {
+				super.clicked(id, enabled);
+				updateWidgetEnablement();
+			};
+		};
+		updateWidgetEnablement();
+	}
+
+	public void updateWidgetEnablement() {
+		boolean dben = MagicUIActivator.isActivityEnabled(MagicUIActivator.ACTIVITY_DB_EXTEND);
+		addSet.setLayoutData(GridDataFactory.swtDefaults().exclude(!dben).create());
+		addSet.setVisible(dben);
+		delSet.setLayoutData(GridDataFactory.swtDefaults().exclude(!dben).create());
+		delSet.setVisible(dben);
+		link.setLayoutData(GridDataFactory.swtDefaults().exclude(dben).create());
+		link.setVisible(!dben);
+		link.getParent().getParent().layout(true);
 	}
 
 	protected void addSet() {

@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +26,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.IActivityManager;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.themes.ITheme;
@@ -276,5 +280,23 @@ public class MagicUIActivator extends AbstractUIPlugin {
 			preferenceStoreCore = new ScopedPreferenceStore(InstanceScope.INSTANCE, DataManager.ID);
 		}
 		return preferenceStoreCore;
+	}
+
+	public static String ACTIVITY_DB_EXTEND = "com.reflexit.magiccards.activity.dbextend";
+
+	public static boolean isActivityEnabled(String id) {
+		IWorkbenchActivitySupport activitySupport = PlatformUI.getWorkbench().getActivitySupport();
+		IActivityManager activityManager = activitySupport.getActivityManager();
+		return activityManager.getActivity(id).isEnabled();
+	}
+
+	public static void setActivityEnabled(String id, boolean enabled) {
+		IWorkbenchActivitySupport activitySupport = PlatformUI.getWorkbench().getActivitySupport();
+		Set<String> enabledActivities = new HashSet<String>();
+		if (enabled)
+			enabledActivities.add(id);
+		else
+			enabledActivities.remove(id);
+		activitySupport.setEnabledActivityIds(enabledActivities);
 	}
 }

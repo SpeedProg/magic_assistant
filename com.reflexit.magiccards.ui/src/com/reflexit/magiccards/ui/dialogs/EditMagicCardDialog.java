@@ -105,10 +105,12 @@ public class EditMagicCardDialog extends MagicDialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, 5, "Remove", false);
-		createButton(parent, 4, "Duplicate", false);
 		createButton(parent, 2, "Reload Image", false);
 		createButton(parent, 3, "Restore Defaults", false);
+		if (MagicUIActivator.isActivityEnabled(MagicUIActivator.ACTIVITY_DB_EXTEND)) {
+			createButton(parent, 4, "Duplicate", false);
+			createButton(parent, 5, "Remove", false);
+		}
 		super.createButtonsForButtonBar(parent);
 	}
 

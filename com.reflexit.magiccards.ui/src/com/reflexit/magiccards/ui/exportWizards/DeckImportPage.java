@@ -102,7 +102,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		super(pageName);
 		store = new PreferenceStore();
 		types = ImportExportFactory.getImportTypes();
-		if (selection != null && !selection.isEmpty()) {
+		if (selection != null && selection.getFirstElement() instanceof CardElement) {
 			element = (CardElement) selection.getFirstElement();
 		} else {
 			element = getDefaultElement();

@@ -822,7 +822,9 @@ id="org.eclipse.ui.views.ProgressView">
 
       <activityPatternBinding
             activityId="com.reflexit.magiccards.activity.dbextend"
-            pattern="com\.reflexit\.magiccards\.ui/.*SetImportWizard">
+            pattern="com.reflexit.magiccards.ui/com.reflexit.magiccards.ui.exportWizards.SetImportWizard"
+            isEqualityPattern="true"
+            >
       </activityPatternBinding>
 
       <categoryActivityBinding
