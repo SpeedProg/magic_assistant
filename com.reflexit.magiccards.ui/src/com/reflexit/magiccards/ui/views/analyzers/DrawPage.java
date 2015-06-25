@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -14,7 +15,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Spinner;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -60,7 +66,50 @@ public class DrawPage extends AbstractDeckListPage {
 	private ImageAction tap;
 	private ImageAction mulligan;
 	private ImageAction refresh;
+	private SpinnerContributionItem spinner;
 	public static final String ID = DrawPage.class.getName();
+
+	class SpinnerContributionItem extends ControlContribution {
+		private Spinner control;
+		private int value = 20;
+
+		public void setValue(int x) {
+			value = x;
+			if (control != null)
+				control.setSelection(x);
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		@Override
+		protected int computeWidth(Control control) {
+			return 50;
+		}
+
+		protected SpinnerContributionItem(String id) {
+			super(id);
+		}
+
+		@Override
+		protected Control createControl(Composite parent) {
+			control = new Spinner(parent, SWT.NONE);
+			control.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					value = control.getSelection();
+				}
+			});
+			control.setValues(value, 0, Integer.MAX_VALUE, 0, 1, 10);
+			control.setToolTipText("Life Counter");
+			return control;
+		}
+
+		public Spinner getControl() {
+			return control;
+		}
+	}
 
 	public DrawPage() {
 		this.columns = new ColumnCollection() {
@@ -188,6 +237,7 @@ public class DrawPage extends AbstractDeckListPage {
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(spinner);
 		manager.add(showlib);
 		manager.add(showgrave);
 		manager.add(showexile);
@@ -244,33 +294,39 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
-		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
-			playdeck.newGame();
-			getListControl().unsort();
-			fullReload();
-		} );
+		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7",
+				() -> {
+					playdeck.newGame();
+					getListControl().unsort();
+					spinner.setValue(20);
+					fullReload();
+				});
 		this.unsort = new ImageAction("Unsort", null, "Remove sort by column", () -> {
 			getListControl().unsort();
 			fullReload();
-		} );
+		});
 		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One", () -> {
 			playdeck.draw(1);
 			fullReload();
-		} );
-		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)", () -> {
-			playdeck.newTurn();
-			fullReload();
-		} );
-		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png", "Look at the top card of the library (Scry)",
+		});
+		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)",
+				() -> {
+					playdeck.newTurn();
+					fullReload();
+				});
+		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png",
+				"Look at the top card of the library (Scry)",
 				() -> {
 					playdeck.scry(1);
 					fullReload();
-				} );
-		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX, () -> {
-			playdeck.showZone(Zone.LIBRARY, showlib.isChecked());
-			fullReload();
-		} );
-		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null, IAction.AS_CHECK_BOX) {
+				});
+		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX,
+				() -> {
+					playdeck.showZone(Zone.LIBRARY, showlib.isChecked());
+					fullReload();
+				});
+		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null,
+				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.GRAVEYARD, isChecked());
@@ -287,7 +343,7 @@ public class DrawPage extends AbstractDeckListPage {
 		this.shuffle = new ImageAction("Suffle Library", "icons/clcl16/shuffle16.png", () -> {
 			playdeck.shuffleLibrary();
 			fullReload();
-		} );
+		});
 		this.mulligan = new ImageAction("Mulligan", null, () -> {
 			if (playdeck.getTurn() > 1)
 				throw new MagicException("Only can do this on first turn");
@@ -295,8 +351,9 @@ public class DrawPage extends AbstractDeckListPage {
 			playdeck.restart();
 			playdeck.draw(i);
 			fullReload();
-		} );
-		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png", "Put in the battlefield");
+		});
+		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png",
+				"Put in the battlefield");
 		this.returnh = new ZoneAction(Zone.HAND, "Return", "icons/clcl16/arrow_left.png", "Return to hand");
 		this.libtop = new ZoneAction(Zone.LIBRARY, "Library Top", "icons/clcl16/arrow_up.png",
 				"Put on top of the library");
@@ -309,13 +366,15 @@ public class DrawPage extends AbstractDeckListPage {
 				fullReload();
 			}
 		};
-		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png", "Remove from the game (Exile)");
+		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png",
+				"Remove from the game (Exile)");
 		this.kill = new ZoneAction(Zone.GRAVEYARD, "Kill", "icons/clcl16/graveyard.png", "Put to graveyard");
 		this.tap = new ImageAction("Tap/Untap", "icons/tap.gif", () -> {
 			playdeck.tap(getCardSelection());
 			fullReload();
-		} );
+		});
 		this.refresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", () -> fullReload());
+		this.spinner = new SpinnerContributionItem("spinner");
 	}
 
 	private List<IMagicCard> getCardSelection() {
