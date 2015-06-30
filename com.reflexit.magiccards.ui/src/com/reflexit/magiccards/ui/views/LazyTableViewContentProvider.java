@@ -59,8 +59,12 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 				//Object cur = map.get(index);
 				//if (cur == element) return;
 				MagicLogger.trace("table update element " + index + " " + element);
+				//map.put(index, element);
+				if (element == null) {
+					tableViewer.setItemCount(root.getSize());
+					return;
+				}
 				this.tableViewer.replace(element, index);
-				map.put(index, element);
 			}
 		}
 	}
