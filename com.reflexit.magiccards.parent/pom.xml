@@ -11,30 +11,43 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.version>0.23.0</tycho.version>
 	</properties>
-	<modules>
-		<module>com.reflexit.magiccards.target</module>
-		<module>com.reflexit.magiccards.core</module>
-		<module>com.reflexit.magiccards.core.nl1</module>
-		<module>com.reflexit.magicassistant.p2</module>
-		<module>com.reflexit.magiccards.db</module>
-		<module>com.reflexit.magiccards.help</module>
-		<module>com.reflexit.magiccards.ui</module>
-		<module>com.reflexit.magiccards.ui.chart</module>
-		<module>com.reflexit.magiccards.ui.graphics</module>
-		<module>com.reflexit.mtgtournament.core</module>
-		<module>com.reflexit.mtgtournament.ui</module>
-		
-		<module>com.reflexit.magiccards_rcp</module>
-		<module>com.reflexit.mtgtournament.feature</module>
-		<module>com.reflexit.magicassistant.p2.feature</module>
-		<module>com.reflexit.magiccards.feature</module>
-		<module>com.reflexit.magiccards.feature.rcp</module>
 
-		<module>com.reflexit.unittesting</module>
-		<module>com.reflexit.magiccards.core.test</module>
-		<module>com.reflexit.magicassistant.ui.tests</module>
-		<module>com.reflexit.magicassistant.swtbot.tests</module>
-		<module>com.reflexit.mtgtournament.core.tests</module>
+	<repositories>
+		<repository>
+			<id>mars</id>
+			<url>http://download.eclipse.org/releases/mars</url>
+			<layout>p2</layout>
+		</repository>
+
+	</repositories>
+
+	<modules>
+		<module>../com.reflexit.magiccards.target</module>
+		<module>../com.reflexit.magiccards.core</module>
+		<module>../com.reflexit.magiccards.core.nl1</module>
+		<module>../com.reflexit.magicassistant.p2</module>
+		<module>../com.reflexit.magiccards.db</module>
+		<module>../com.reflexit.magiccards.help</module>
+		<module>../com.reflexit.magiccards.ui</module>
+		<module>../com.reflexit.magiccards.ui.chart</module>
+		<module>../com.reflexit.magiccards.ui.graphics</module>
+		<module>../com.reflexit.mtgtournament.core</module>
+		<module>../com.reflexit.mtgtournament.ui</module>
+
+		<module>../com.reflexit.magiccards_rcp</module>
+		<module>../com.reflexit.mtgtournament.feature</module>
+		<module>../com.reflexit.magicassistant.p2.feature</module>
+		<module>../com.reflexit.magiccards.feature</module>
+		<module>../com.reflexit.magiccards.feature.rcp</module>
+
+<!--  
+		<module>../com.reflexit.unittesting</module>
+		<module>../com.reflexit.magiccards.core.test</module>
+		<module>../com.reflexit.magicassistant.ui.tests</module>
+		<module>../com.reflexit.magicassistant.swtbot.tests</module>
+		<module>../com.reflexit.mtgtournament.core.tests</module>
+-->
+		<module>../com.reflexit.magiccards.product</module>
 
 	</modules>
 	<build>

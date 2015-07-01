@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="rcp_mars" sequenceNumber="50">
+<?pde version="3.8"?><target name="rcp_mars" sequenceNumber="55">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
 <unit id="org.eclipse.swtbot.generator.feature.feature.group" version="2.3.0.201506081302"/>
 <unit id="org.hamcrest.library.source" version="1.3.0.v201305281000"/>
@@ -16,7 +16,7 @@
 <unit id="org.eclipse.swtbot.ide.feature.group" version="2.3.0.201506081302"/>
 <repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.platform.ide" version="4.5.0.I20150603-2000"/>
 <unit id="org.eclipse.sdk.ide" version="4.5.0.I20150603-2000"/>
 <unit id="org.eclipse.pde.api.tools.ee.feature.feature.group" version="1.0.1.v20140424-1723"/>
@@ -30,11 +30,12 @@
 <unit id="org.eclipse.releng.tools.feature.group" version="3.6.0.v20150527-0145"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.5"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="3.10.0.v20150512-1727"/>
-<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.5.0.v201506092134"/>
 <unit id="org.eclipse.birt.feature.group" version="4.5.0.v201506092134"/>
+<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.5.0.v201506092134"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.10.0.v20150512-1727"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.11.0.v20150601-0402"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 </locations>

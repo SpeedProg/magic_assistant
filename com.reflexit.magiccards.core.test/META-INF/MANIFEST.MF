@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.reflexit.magiccards.core.test
 Bundle-Version: 1.0.0
 Bundle-Vendor: Alena Laskavaia
 Fragment-Host: com.reflexit.magiccards.core;bundle-version="1.0.2"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.reflexit.unittesting;bundle-version="1.0.0"
 Export-Package: com.reflexit.magiccards.core,
  com.reflexit.magiccards.core.exports,

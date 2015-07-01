@@ -1,6 +1,6 @@
 <project name="copy.src" basedir="." default="copy.src">
 	<target name="copy.src">
-		<copy todir="bin">
+		<copy todir="target/classes">
 			<fileset dir="src" includes="**/*.java" />
 		</copy>
 	</target>

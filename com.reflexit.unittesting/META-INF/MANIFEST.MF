@@ -202,3 +202,4 @@ Export-Package: javassist,
  org.powermock.reflect.spi,
  org.powermock.tests.utils,
  org.powermock.tests.utils.impl
+Require-Bundle: org.junit;bundle-version="4.0.0"

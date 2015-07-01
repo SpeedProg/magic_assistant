@@ -6,9 +6,8 @@
     <groupId>com.reflexit.magiccards</groupId>
     <artifactId>com.reflexit.magiccards.parent</artifactId>
     <version>1.4.3-SNAPSHOT</version>
+    		<relativePath>../com.reflexit.magiccards.parent</relativePath>
   </parent>
-  <groupId>com.reflexit.magiccards</groupId>
   <artifactId>com.reflexit.magiccards.ui.graphics</artifactId>
-  <version>1.4.3-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
