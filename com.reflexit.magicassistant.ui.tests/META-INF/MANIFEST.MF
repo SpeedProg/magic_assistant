@@ -1,9 +1,8 @@
 Bundle-Vendor: Alena Laskavaia
 Bundle-ManifestVersion: 2
 Bundle-Activator: com.reflexit.magicassistant.ui.tests.Activator
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Tests
-Import-Package: com.reflexit.magiccards.ui.widgets
 Require-Bundle: org.junit,
  org.eclipse.ui,
  org.eclipse.jface,

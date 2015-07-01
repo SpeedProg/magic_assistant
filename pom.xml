@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.reflexit.magiccards</groupId>
+	<artifactId>com.reflexit.magiccards.parent</artifactId>
+	<version>1.4.3-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<tycho.version>0.23.0</tycho.version>
+	</properties>
+	<modules>
+		<module>com.reflexit.magiccards.target</module>
+		<module>com.reflexit.magiccards.core</module>
+		<module>com.reflexit.magiccards.core.nl1</module>
+		<module>com.reflexit.magicassistant.p2</module>
+		<module>com.reflexit.magiccards.db</module>
+		<module>com.reflexit.magiccards.help</module>
+		<module>com.reflexit.magiccards.ui</module>
+		<module>com.reflexit.magiccards.ui.chart</module>
+		<module>com.reflexit.magiccards.ui.graphics</module>
+		<module>com.reflexit.mtgtournament.core</module>
+		<module>com.reflexit.mtgtournament.ui</module>
+		
+		<module>com.reflexit.magiccards_rcp</module>
+		<module>com.reflexit.mtgtournament.feature</module>
+		<module>com.reflexit.magicassistant.p2.feature</module>
+		<module>com.reflexit.magiccards.feature</module>
+		<module>com.reflexit.magiccards.feature.rcp</module>
+
+		<module>com.reflexit.unittesting</module>
+		<module>com.reflexit.magiccards.core.test</module>
+		<module>com.reflexit.magicassistant.ui.tests</module>
+		<module>com.reflexit.magicassistant.swtbot.tests</module>
+		<module>com.reflexit.mtgtournament.core.tests</module>
+
+	</modules>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>com.reflexit.magiccards</groupId>
+							<artifactId>rcp_mars</artifactId>
+							<version>1.4.3-SNAPSHOT</version>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<useUIHarness>false</useUIHarness>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
