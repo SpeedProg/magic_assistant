@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import junit.framework.TestCase;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -13,6 +11,8 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+
+import junit.framework.TestCase;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class PerformanceFilteringTest extends TestCase {
@@ -47,8 +47,7 @@ public class PerformanceFilteringTest extends TestCase {
 	void assertFast(long expected, long actual) {
 		String msg = " expected <" + expected + "> but was <" + actual + ">";
 		System.out.println(getName() + msg);
-		assertTrue("test was slower then expected," + msg,
-				expected >= actual);
+		assertTrue("test was slower then expected," + msg, expected >= actual);
 	}
 
 	private long time(Runnable runnable, int samples) {
@@ -65,7 +64,7 @@ public class PerformanceFilteringTest extends TestCase {
 		runnable.run();
 		long end = System.currentTimeMillis();
 		long diff = end - start;
-		//System.out.println(getName() + " " + diff);
+		// System.out.println(getName() + " " + diff);
 		return diff;
 	}
 
@@ -74,7 +73,7 @@ public class PerformanceFilteringTest extends TestCase {
 			fstore.clear();
 			fstore.update();
 			fstore.getElements();
-		}, 5);
+		} , 5);
 	}
 
 	private Expr textFilter(String string) {
@@ -116,7 +115,7 @@ public class PerformanceFilteringTest extends TestCase {
 		assertTrue("was " + fstore.getSize(), fstore.getSize() > 13500);
 		assertTrue("was " + fstore.getSize(), fstore.getSize() < 14500);
 		this.filter.setFilter(textFilter("\"ob\""));
-		assertFast(80, runfiltering());
+		assertFast(90, runfiltering());
 		assertTrue("was " + fstore.getSize(), fstore.getSize() >= 260);
 		assertTrue("was " + fstore.getSize(), fstore.getSize() < 300);
 	}

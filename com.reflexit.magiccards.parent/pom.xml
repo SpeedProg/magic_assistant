@@ -40,13 +40,12 @@
 		<module>../com.reflexit.magiccards.feature</module>
 		<module>../com.reflexit.magiccards.feature.rcp</module>
 
-<!--  
+
 		<module>../com.reflexit.unittesting</module>
 		<module>../com.reflexit.magiccards.core.test</module>
+		<module>../com.reflexit.mtgtournament.core.tests</module>
 		<module>../com.reflexit.magicassistant.ui.tests</module>
 		<module>../com.reflexit.magicassistant.swtbot.tests</module>
-		<module>../com.reflexit.mtgtournament.core.tests</module>
--->
 		<module>../com.reflexit.magiccards.product</module>
 
 	</modules>
@@ -105,6 +104,13 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<useUIHarness>false</useUIHarness>
+					<useUIThread>false</useUIThread>
+					<dependencies>
+						<dependency>
+							<artifactId>org.eclipse.platform.feature.group</artifactId>
+							<type>p2-installable-unit</type>
+						</dependency>
+					</dependencies>
 				</configuration>
 			</plugin>
 

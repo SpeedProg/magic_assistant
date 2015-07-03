@@ -12,4 +12,28 @@
 
 	<artifactId>com.reflexit.magicassistant.ui.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
+	
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<configuration>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>true</useUIThread>
+					<includes>
+						<include>**/AllUiTests.*</include>
+					</includes>
+
+					<dependencies>
+						<dependency>
+							<artifactId>org.eclipse.platform.feature.group</artifactId>
+							<type>p2-installable-unit</type>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

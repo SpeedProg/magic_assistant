@@ -7,7 +7,7 @@ Bundle-Activator: com.reflexit.mtgtournament.core.Activator
 Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.4.1"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.reflexit.mtgtournament.core,
  com.reflexit.mtgtournament.core.edit,

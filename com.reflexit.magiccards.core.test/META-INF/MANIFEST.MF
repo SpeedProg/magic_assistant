@@ -19,4 +19,5 @@ Export-Package: com.reflexit.magiccards.core,
  com.reflexit.magiccards.core.test.assist,
  com.reflexit.magiccards.core.xml
 Bundle-ClassPath: .,
- src/
+ src/,
+ resources/
