@@ -43,9 +43,10 @@
 
 		<module>../com.reflexit.unittesting</module>
 		<module>../com.reflexit.magiccards.core.test</module>
-		<module>../com.reflexit.mtgtournament.core.tests</module>
+
 		<module>../com.reflexit.magicassistant.ui.tests</module>
 		<module>../com.reflexit.magicassistant.swtbot.tests</module>
+		<module>../com.reflexit.mtgtournament.core.tests</module>
 		<module>../com.reflexit.magiccards.product</module>
 
 	</modules>
@@ -105,6 +106,7 @@
 				<configuration>
 					<useUIHarness>false</useUIHarness>
 					<useUIThread>false</useUIThread>
+					<testFailureIgnore>true</testFailureIgnore>
 					<dependencies>
 						<dependency>
 							<artifactId>org.eclipse.platform.feature.group</artifactId>

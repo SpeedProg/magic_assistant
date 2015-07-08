@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import org.eclipse.swt.graphics.Image;
-
 import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class GenColumn extends AbstractColumn {
@@ -15,15 +13,5 @@ public class GenColumn extends AbstractColumn {
 	@Override
 	public String getColumnName() {
 		return this.colName;
-	}
-
-	@Override
-	public Image getImage(Object element) {
-		return null;
-	}
-
-	@Override
-	protected Image getActualImage(Object row) {
-		return null;
 	}
 }

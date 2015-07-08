@@ -8,6 +8,5 @@ Bundle-Vendor: Reflex IT
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.swtbot.go,
  com.reflexit.magiccards.ui,
- com.reflexit.magicassistant.ui.tests,
- com.reflexit.mtgtournament.core.tests,
- com.reflexit.magiccards.core
+ com.reflexit.magiccards.core,
+ com.reflexit.magiccards_rcp

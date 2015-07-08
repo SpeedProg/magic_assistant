@@ -26,21 +26,28 @@ public class InstallNewSoftwareHandler extends PreloadingRepositoryHandler {
 		super();
 	}
 
+	@Override
 	protected void doExecute(LoadMetadataRepositoryJob job) {
+		String x = System.getProperty("junit.testing");
+		if ("true".equals(x))
+			return; // skip this is running from junits
 		getProvisioningUI().openInstallWizard(null, null, job);
 	}
 
+	@Override
 	protected boolean waitForPreload() {
 		// If the user cannot see repositories, then we may as well wait
-		// for existing repos to load so that content is available.  
-		// If the user can manipulate the repositories, then we don't wait, 
+		// for existing repos to load so that content is available.
+		// If the user can manipulate the repositories, then we don't wait,
 		// because we don't know which ones they want to work with.
 		return !getProvisioningUI().getPolicy().getRepositoriesVisible();
 	}
 
+	@Override
 	protected void setLoadJobProperties(Job loadJob) {
 		super.setLoadJobProperties(loadJob);
-		// If we are doing a background load, we do not wish to authenticate, as the
+		// If we are doing a background load, we do not wish to authenticate, as
+		// the
 		// user is unaware that loading was needed
 		if (!waitForPreload()) {
 			loadJob.setProperty(LoadMetadataRepositoryJob.SUPPRESS_AUTHENTICATION_JOB_MARKER, Boolean.toString(true));

@@ -13,8 +13,8 @@ package com.reflexit.magiccards.core.model.storage;
 import java.io.File;
 
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.xml.CollectionMultiFileCardStore;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 /**
  * @author Alena

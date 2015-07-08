@@ -44,7 +44,8 @@ public class EditionNameColumn extends AbstractEditionColumn {
 
 	@Override
 	public void setText(Edition edition, String string) {
-		if (string.equals(edition.getName())) return;
+		if (string.equals(edition.getName()))
+			return;
 		throw new UnsupportedOperationException("Cannot change edition name (unsupported)");
 	}
 }

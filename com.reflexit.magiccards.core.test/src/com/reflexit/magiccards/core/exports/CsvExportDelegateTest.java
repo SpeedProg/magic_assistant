@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
 public class CsvExportDelegateTest extends AbstarctExportTest {
 	private CsvExportDelegate exporter = new CsvExportDelegate();

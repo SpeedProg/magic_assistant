@@ -9,7 +9,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
 public class MagicCardTransferTest extends TestCase {
 	private MagicCardTransfer trans;

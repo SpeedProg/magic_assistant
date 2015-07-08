@@ -14,8 +14,8 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.abs.ICardModifiable;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 public class CardGroupTest extends TestCase {
 	private CardGroup group;

@@ -18,9 +18,10 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
+import com.reflexit.magiccards.ui.views.columns.AbstractImageColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
-public class ProgressColumn extends GenColumn implements Listener {
+public class ProgressColumn extends AbstractImageColumn {
 	protected MagicCardField getPercentKey() {
 		return MagicCardField.PERCENT_COMPLETE;
 	}

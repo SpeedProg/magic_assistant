@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
@@ -10,16 +10,12 @@ import org.eclipse.swt.widgets.Listener;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
-public class CostColumn extends AbstractColumn implements Listener {
+public class CostColumn extends AbstractImageColumn {
 	public CostColumn() {
-		super(MagicCardField.COST);
-	}
-
-	@Override
-	public String getColumnName() {
-		return "Cost";
+		super(MagicCardField.COST, "Cost");
 	}
 
 	@Override
@@ -31,11 +27,6 @@ public class CostColumn extends AbstractColumn implements Listener {
 	}
 
 	@Override
-	protected void handleEraseEvent(Event event) {
-		event.detail &= ~SWT.FOREGROUND;
-	}
-
-	@Override
 	public ICardField getSortField() {
 		return MagicCardField.CMC;
 	}
@@ -43,7 +34,14 @@ public class CostColumn extends AbstractColumn implements Listener {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IMagicCard) { // cost
-			return String.valueOf(((IMagicCard) element).get(MagicCardField.CMC));
+			String cmc = String.valueOf(((IMagicCard) element).get(MagicCardField.CMC));
+			if (imageNative) {
+				String cost = ((IMagicCard) element).getCost();
+				if (cost.equals("*"))
+					return cost;
+				return cost + " = " + cmc;
+			}
+			return cmc;
 		}
 		return null;
 	}
@@ -60,13 +58,15 @@ public class CostColumn extends AbstractColumn implements Listener {
 			Object row = item.getData();
 			if (!(row instanceof IMagicCard))
 				return;
-			int x = event.x;
+			Rectangle bounds = getBounds(event);
+			// int x = event.x;
+			int x = bounds.x; // bug in gtk?
 			int y = event.y;
 			GC gc = event.gc;
 			String text = getText(row);
 			int tx = x + event.width;
 			if (text != null) {
-				tx = x + getBounds(event).width - gc.textExtent(text).x - 5;
+				tx = x + bounds.width - gc.textExtent(text).x - 5;
 				gc.drawText(text, tx, y + 1, true);
 			}
 			Image costImage = getActualImage(row);

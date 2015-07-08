@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.internal.gtk.OS;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableItem;
@@ -43,7 +44,8 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (!visible) return "";
+		if (!visible)
+			return "";
 		if (element instanceof ICard) {
 			ICard card = (ICard) element;
 			try {
@@ -129,67 +131,8 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 		return getColumnName();
 	}
 
-	public void handleEvent(Event event) {
-		if (event.index == this.columnIndex) {
-			if (event.type == SWT.EraseItem) {
-				handleEraseEvent(event);
-			} else if (event.type == SWT.MeasureItem) {
-				handleMeasureEvent(event);
-			} else if (event.type == SWT.PaintItem) {
-				handlePaintEvent(event);
-			}
-		}
-	}
-
-	protected void handleMeasureEvent(Event event) {
-		// do nothing
-	}
-
-	protected void handleEraseEvent(Event event) {
-		// do nothing
-	}
-
-	protected void handlePaintEvent(Event event) {
-		// do nothing
-	}
-
-	protected static Rectangle getBounds(Event event) {
-		Item item = (Item) event.item;
-		Rectangle bounds = null;
-		if (item instanceof TableItem)
-			bounds = ((TableItem) item).getBounds(event.index);
-		else if (item instanceof TreeItem)
-			bounds = ((TreeItem) item).getBounds(event.index);
-		return bounds;
-	}
-
-	public void paintCellWithImage(Event event, int imageWidth) {
-		Item item = (Item) event.item;
-		Object row = item.getData();
-		int x = event.x;
-		int y = event.y;
-		Rectangle bounds = getBounds(event);
-		int w = bounds.width;
-		int h = bounds.height;
-		int leftMargin = 0;
-		Image image = getActualImage(row);
-		if (image != null) {
-			imageWidth = Math.max(imageWidth, image.getBounds().width);
-			leftMargin = imageWidth;
-			Rectangle imageBounds = image.getBounds();
-			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height)
-					/ 2);
-		}
-		String text = getActualText(row);
-		if (text != null) {
-			event.gc.setClipping(x, y, w - 3, h);
-			event.gc.drawText(text, x + 3 + leftMargin, y + 1, true);
-		}
-	}
-
-	protected abstract Image getActualImage(Object row);
-
-	protected String getActualText(Object row) {
-		return getText(row);
+	@Override
+	public Image getImage(Object element) {
+		return null;
 	}
 }

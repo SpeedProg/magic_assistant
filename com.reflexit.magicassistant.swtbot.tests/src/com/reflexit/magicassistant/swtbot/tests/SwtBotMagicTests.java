@@ -13,10 +13,12 @@ package com.reflexit.magicassistant.swtbot.tests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.reflexit.magiccards.ui.MagicUIActivator;
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ //
-//
-FilterTest.class, //
+		//
+		FilterTest.class, //
 		CreateDeck.class, //
 		RenameDeck.class, //
 		GroupByCost.class, //
@@ -26,5 +28,6 @@ FilterTest.class, //
 public class SwtBotMagicTests {
 	{
 		System.setProperty("junit.testing", "true");
+		MagicUIActivator.TRACE_TESTING = true;
 	}
 }

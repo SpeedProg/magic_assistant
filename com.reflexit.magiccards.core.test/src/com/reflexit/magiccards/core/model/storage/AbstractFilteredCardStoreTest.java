@@ -26,10 +26,10 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Languages.Language;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
 
 /**

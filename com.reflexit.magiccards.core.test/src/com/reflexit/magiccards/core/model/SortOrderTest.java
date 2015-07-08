@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.abs.ICardField;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
+import com.reflexit.magiccards.core.model.utils.CardGenerator;
 
 public class SortOrderTest extends TestCase {
 	private IMagicCard theCard;

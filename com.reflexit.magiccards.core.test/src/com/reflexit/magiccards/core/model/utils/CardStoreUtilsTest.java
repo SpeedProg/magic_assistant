@@ -8,7 +8,6 @@ import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Colors.ManaColor;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.test.assist.CardGenerator;
 
 import static org.junit.Assert.assertEquals;
 

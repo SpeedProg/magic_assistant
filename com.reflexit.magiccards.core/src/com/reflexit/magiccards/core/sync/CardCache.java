@@ -39,9 +39,8 @@ public class CardCache {
 	public static URL createSetImageURL(String edition, String rarity, boolean upload)
 			throws MalformedURLException, IOException {
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
-		if (editionAbbr == null)
-			return null;
-		String path = createLocalSetImageFilePath(editionAbbr, rarity);
+		String name = (editionAbbr == null ? edition : editionAbbr) + "-" + rarity;
+		String path = createLocalSetImageFilePath(name);
 		File file = new File(path);
 		URL localUrl = file.toURI().toURL();
 		if (upload == false)
@@ -50,6 +49,8 @@ public class CardCache {
 			return localUrl;
 		}
 		if (WebUtils.isWorkOffline())
+			return null;
+		if (editionAbbr == null)
 			return null;
 		try {
 			URL url = createSetImageRemoteURL(editionAbbr, rarity);
@@ -83,20 +84,23 @@ public class CardCache {
 		String editionAbbr = abbr;
 		if (abbr == null)
 			editionAbbr = "unknown";
-		else if (abbr.equals("CON")) // special hack for windows, which cannot create CON directory
+		else if (abbr.equals("CON")) // special hack for windows, which cannot
+										// create CON directory
 			editionAbbr = "CONFL";
 		String part;
 		if (cardId == 0) {
 			part = "Cards/0.jpg";
 		} else {
-			part = "Cards/" + editionAbbr + "/" + "EN" + "/Card" + cardId + ".jpg"; // XXX remove EN
+			part = "Cards/" + editionAbbr + "/" + "EN" + "/Card" + cardId + ".jpg"; // XXX
+																					// remove
+																					// EN
 		}
 		return new File(FileUtils.getStateLocationFile(), part).getPath();
 	}
 
-	public static String createLocalSetImageFilePath(String editionAbbr, String rarity) {
+	private static String createLocalSetImageFilePath(String name) {
 		File loc = FileUtils.getStateLocationFile();
-		String part = "Sets/" + editionAbbr + "-" + rarity + ".jpg";
+		String part = "Sets/" + name + ".jpg";
 		String file = new File(loc, part).getPath();
 		return file;
 	}
@@ -109,44 +113,46 @@ public class CardCache {
 	private static Thread cardImageLoadingJob = null;
 
 	static synchronized void initCardImageLoading() {
-		if (cardImageLoadingJob != null) return;
-		cardImageLoadingJob =
-				new Thread("Loading card images") {
-					@Override
-					public void run() {
-						while (true) {
-							IMagicCard card = null;
-							synchronized (cardImageQueue) {
-								if (cardImageQueue.size() > 0) {
-									card = cardImageQueue.get(0);
-									cardImageQueue.remove(0);
-									cardImageQueue.notifyAll();
-								} else {
-									try {
-										cardImageQueue.wait(10000);
-									} catch (InterruptedException e) {
-										break;
-									}
-									if (cardImageQueue.size() > 0) continue;
-									break;
-								}
+		if (cardImageLoadingJob != null)
+			return;
+		cardImageLoadingJob = new Thread("Loading card images") {
+			@Override
+			public void run() {
+				while (true) {
+					IMagicCard card = null;
+					synchronized (cardImageQueue) {
+						if (cardImageQueue.size() > 0) {
+							card = cardImageQueue.get(0);
+							cardImageQueue.remove(0);
+							cardImageQueue.notifyAll();
+						} else {
+							try {
+								cardImageQueue.wait(10000);
+							} catch (InterruptedException e) {
+								break;
 							}
-							if (card == null) continue;
-							synchronized (card) {
-								try {
-									downloadAndSaveImage(card, isLoadingEnabled(), true);
-								} catch (Exception e) {
-									continue;
-								} finally {
-									card.notifyAll();
-								}
-							}
-						}
-						synchronized (CardCache.class) {
-							cardImageLoadingJob = null;
+							if (cardImageQueue.size() > 0)
+								continue;
+							break;
 						}
 					}
-				};
+					if (card == null)
+						continue;
+					synchronized (card) {
+						try {
+							downloadAndSaveImage(card, isLoadingEnabled(), true);
+						} catch (Exception e) {
+							continue;
+						} finally {
+							card.notifyAll();
+						}
+					}
+				}
+				synchronized (CardCache.class) {
+					cardImageLoadingJob = null;
+				}
+			}
+		};
 		cardImageLoadingJob.start();
 	}
 
@@ -170,8 +176,7 @@ public class CardCache {
 	 * @return
 	 * @throws IOException
 	 */
-	public static File downloadAndSaveImage(IMagicCard card, boolean remote, boolean forceRemote)
-			throws IOException {
+	public static File downloadAndSaveImage(IMagicCard card, boolean remote, boolean forceRemote) throws IOException {
 		synchronized (card) {
 			String path = CardCache.createLocalImageFilePath(card);
 			File file = new File(path);
@@ -252,8 +257,8 @@ public class CardCache {
 	 *         is disabled and there is no cached image through an exception
 	 * @throws IOException
 	 */
-	public static boolean loadCardImageOffline(IMagicCard card, boolean forceUpdate) throws IOException,
-			CannotDetermineSetAbbriviation {
+	public static boolean loadCardImageOffline(IMagicCard card, boolean forceUpdate)
+			throws IOException, CannotDetermineSetAbbriviation {
 		String path = createLocalImageFilePath(card);
 		File file = new File(path);
 		if (file.exists() && forceUpdate == false) {

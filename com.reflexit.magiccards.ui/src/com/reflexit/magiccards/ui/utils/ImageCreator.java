@@ -39,7 +39,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  */
 public class ImageCreator {
 	public static final int SET_IMG_HEIGHT = 16;
-	public static final int SET_IMG_WIDTH = 30;
+	public static final int SET_IMG_WIDTH = 32;
 	private static final String TEXT_ITALIC_FONT_KEY = "text_italic";
 	private static final String TEXT_FONT_KEY = "text";
 	private static final String TYPE_FONT_KEY = "type";
@@ -127,17 +127,17 @@ public class ImageCreator {
 				MagicUIActivator.log("Cannot load image: " + url + ": null imageData");
 				return null;
 			}
-			// ImageData scaleAndCenter =
 			// scaleAndCenter(imageDesc.getImageData(), SET_IMG_WIDTH,
 			// SET_IMG_HEIGHT, false);
-			return new Image(display, imageDesc.getImageData());
+			ImageData scaleAndCenter = imageDesc.getImageData();
+			return new Image(display, scaleAndCenter);
 		} catch (SWTException e) {
 			MagicUIActivator.log("Cannot load image: " + url + ": " + e.getMessage());
 			return null;
 		}
 	}
 
-	public static ImageData scaleAndCenter(ImageData imageData, int nwidth, int nheight, boolean scaleUp) {
+	public static ImageData scaleAndCenter(ImageData imageData, int nwidth, int nheight, boolean scale) {
 		final int width = imageData.width;
 		final int height = imageData.height;
 		float zoom;
@@ -146,16 +146,30 @@ public class ImageCreator {
 		} else {
 			zoom = nheight / (float) height;
 		}
-		if (scaleUp == false && zoom > 1)
-			zoom = 1; // do not scale up
-		int x = (int) ((nwidth - width * zoom) / 2);
-		int y = (int) ((nheight - height * zoom) / 2);
+		if (scale == false)
+			zoom = 1; // do not scale
+		int zwdth = (int) (width * zoom);
+		int zheight = (int) (height * zoom);
+		int x = (nwidth - zwdth) / 2;
+		int y = (nheight - zheight) / 2;
+		int ox = 0;
+		int oy = 0;
+		if (x < 0) {
+			ox = -x;
+			x = 0;
+		}
+		if (y < 0) {
+			oy = -y;
+			y = 0;
+		}
 		Display display = Display.getDefault();
-		Image scaledImage = new Image(display,
-				imageData.scaledTo((int) (width * zoom), (int) (height * zoom)));
+		ImageData scaledData = imageData.scaledTo(zwdth, zheight);
+		Image scaledImage = new Image(display, scaledData);
 		Image centeredImage = new Image(display, nwidth, nheight);
 		GC newGC = new GC(centeredImage);
-		newGC.drawImage(scaledImage, x, y);
+		int dwidth = zoom != 1 ? nwidth : scaledData.width - 2 * ox;
+		int dheight = zoom != 1 ? nheight : scaledData.height - 2 * oy;
+		newGC.drawImage(scaledImage, ox, oy, dwidth, dheight, x, y, dwidth, dheight);
 		newGC.dispose();
 		scaledImage.dispose();
 		ImageData finalImageData = centeredImage.getImageData();
@@ -172,6 +186,8 @@ public class ImageCreator {
 	}
 
 	public Image getSetImage(IMagicCard card) {
+		if (card == null)
+			return null;
 		URL url = null;
 		try {
 			url = CardCache.createSetImageURL(card, false);
@@ -210,19 +226,20 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Get card image from local cache. This image is not managed - to be disposed by called.
+	 * Get card image from local cache. This image is not managed - to be
+	 * disposed by called.
 	 *
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be
-	 *         downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot
+	 *         found locally or cannot be downloaded remotely
 	 * @throws IOException
 	 */
-	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException,
-			CannotDetermineSetAbbriviation {
+	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate)
+			throws IOException, CannotDetermineSetAbbriviation {
 		synchronized (card) {
 			if (forceUpdate)
 				remote = true;
@@ -280,17 +297,17 @@ public class ImageCreator {
 	public Image getRotated(Image image, int angle) {
 		int dir = 0;
 		switch (angle) {
-			case 180:
-				dir = SWT.DOWN;
-				break;
-			case 90:
-				dir = SWT.RIGHT;
-				break;
-			case -90:
-				dir = SWT.LEFT;
-				break;
-			default:
-				break;
+		case 180:
+			dir = SWT.DOWN;
+			break;
+		case 90:
+			dir = SWT.RIGHT;
+			break;
+		case -90:
+			dir = SWT.LEFT;
+			break;
+		default:
+			break;
 		}
 		ImageData data = rotate(image.getImageData(), dir);
 		return new Image(image.getDevice(), data);
@@ -300,42 +317,40 @@ public class ImageCreator {
 		int bytesPerPixel = srcData.bytesPerLine / srcData.width;
 		int width = 0, height = 0;
 		switch (direction) {
-			case SWT.LEFT: // left 90 degrees
-				width = srcData.height;
-				height = srcData.width;
-				break;
-			case SWT.RIGHT: // right 90 degrees
-				width = srcData.height;
-				height = srcData.width;
-				break;
-			case SWT.DOWN: // 180 degrees
-				width = srcData.width;
-				height = srcData.height;
-				break;
+		case SWT.LEFT: // left 90 degrees
+			width = srcData.height;
+			height = srcData.width;
+			break;
+		case SWT.RIGHT: // right 90 degrees
+			width = srcData.height;
+			height = srcData.width;
+			break;
+		case SWT.DOWN: // 180 degrees
+			width = srcData.width;
+			height = srcData.height;
+			break;
 		}
 		int scanlinePad = srcData.scanlinePad;
-		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1)) / scanlinePad
-				* scanlinePad;
-		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4
-				: bytesPerLine;
+		int bytesPerLine = (((width * srcData.depth + 7) / 8) + (scanlinePad - 1)) / scanlinePad * scanlinePad;
+		int minBytesPerLine = srcData.type == SWT.IMAGE_PNG ? ((((width + 7) / 8) + 3) / 4) * 4 : bytesPerLine;
 		int destBytesPerLine = (direction == SWT.DOWN) ? srcData.bytesPerLine : minBytesPerLine;
 		byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.data.length : height * destBytesPerLine];
 		for (int srcY = 0; srcY < srcData.height; srcY++) {
 			for (int srcX = 0; srcX < srcData.width; srcX++) {
 				int destX = 0, destY = 0, destIndex = 0, srcIndex = 0;
 				switch (direction) {
-					case SWT.LEFT: // left 90 degrees
-						destX = srcY;
-						destY = srcData.width - srcX - 1;
-						break;
-					case SWT.RIGHT: // right 90 degrees
-						destX = srcData.height - srcY - 1;
-						destY = srcX;
-						break;
-					case SWT.DOWN: // 180 degrees
-						destX = srcData.width - srcX - 1;
-						destY = srcData.height - srcY - 1;
-						break;
+				case SWT.LEFT: // left 90 degrees
+					destX = srcY;
+					destY = srcData.width - srcX - 1;
+					break;
+				case SWT.RIGHT: // right 90 degrees
+					destX = srcData.height - srcY - 1;
+					destY = srcX;
+					break;
+				case SWT.DOWN: // 180 degrees
+					destX = srcData.width - srcX - 1;
+					destY = srcData.height - srcY - 1;
+					break;
 				}
 				destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
 				srcIndex = (srcY * srcData.bytesPerLine) + (srcX * bytesPerPixel);
@@ -494,8 +509,7 @@ public class ImageCreator {
 		// border * 2);
 		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2,
-				border * 2);
+		gc.fillRoundRectangle(0, 0, bounds.width + border * 2, bounds.height + border * 2, border * 2, border * 2);
 		gc.drawImage(remoteImage, border, border);
 		gc.dispose();
 		return full;
@@ -510,8 +524,7 @@ public class ImageCreator {
 		else if (width > max_width)
 			width = max_width;
 		ImageData sourceData1 = images.iterator().next().getImageData();
-		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth,
-				sourceData1.palette);
+		ImageData targetData = new ImageData(width, sourceData1.height, sourceData1.depth, sourceData1.palette);
 		int x = 0;
 		for (Image image : images) {
 			ImageData id = image.getImageData();

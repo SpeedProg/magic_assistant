@@ -12,8 +12,8 @@
 	<artifactId>com.reflexit.magicassistant.swtbot.tests</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
-	
-		
+
+
 	<build>
 		<plugins>
 			<plugin>
@@ -21,17 +21,36 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<configuration>
 					<useUIHarness>true</useUIHarness>
+					<application>com.reflexit.magiccards_rcp.application</application>
+					<product>com.reflexit.magiccards_rcp.product</product>
 					<useUIThread>false</useUIThread>
 					<includes>
 						<include>**/SwtBotMagicTests.*</include>
 					</includes>
-
+					<testFailureIgnore>true</testFailureIgnore>
 					<dependencies>
 						<dependency>
 							<artifactId>org.eclipse.platform.feature.group</artifactId>
 							<type>p2-installable-unit</type>
 						</dependency>
 					</dependencies>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+
+					<dependency-resolution>
+						<extraRequirements>
+							<requirement>
+								<type>p2-installable-unit</type>
+								<id>com.reflexit.magiccards_rcp.product</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+						</extraRequirements>
+					</dependency-resolution>
 				</configuration>
 			</plugin>
 		</plugins>

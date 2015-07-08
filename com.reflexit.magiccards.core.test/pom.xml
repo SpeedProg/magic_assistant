@@ -22,7 +22,8 @@
 					<useUIHarness>false</useUIHarness>
 
 					<includes>
-						<include>**/AllCoreTests.*</include>
+						<!--   <include>**/AllCoreTests.*</include> -->
+						<include>**/AllLocalTests.*</include>
 					</includes>
 
 					<dependencies>

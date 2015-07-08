@@ -6,7 +6,9 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -20,14 +22,16 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
-public class GroupColumn extends GenColumn implements Listener {
+public class GroupColumn extends AbstractImageColumn implements Listener {
 	public static final String COL_NAME = "Name";
 	private ICardField groupField;
 	protected final boolean showCount;
 	protected boolean showImage;
 	protected final boolean canEdit;
+	private SetColumn setColumn = new SetColumn(true);
 
 	public GroupColumn() {
 		this(true, true, false);
@@ -47,18 +51,17 @@ public class GroupColumn extends GenColumn implements Listener {
 	@Override
 	public Image getActualImage(Object element) {
 		if (showImage) {
-			if (element instanceof ICardGroup) {
-				CardGroup cardGroup = (CardGroup) element;
-				String set = cardGroup.getSet();
-				if (set != null && set.length() > 0 && !set.equals("*")) {
-					return ImageCreator.getInstance().getSetImage(cardGroup.getFirstCard());
-				}
-			} else if (element instanceof IMagicCard) {
-				IMagicCard card = (IMagicCard) element;
-				return ImageCreator.getInstance().getSetImage(card);
-			}
+			return setColumn.getActualImage(element);
 		}
 		return null;
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		if (imageNative) {
+			return setColumn.getClippedImage(element);
+		}
+		return super.getImage(element);
 	}
 
 	@Override
