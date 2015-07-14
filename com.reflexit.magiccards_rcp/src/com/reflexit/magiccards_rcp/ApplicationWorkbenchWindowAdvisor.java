@@ -56,7 +56,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	private void checkForCardUpdates() {
-		boolean updates = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.CHECK_FOR_CARDS);
+		boolean updates = MagicUIActivator.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.CHECK_FOR_CARDS);
 		if (updates == false || MagicUIActivator.TRACE_TESTING)
 			return;
 		new Job("Checking for Card Update") {
@@ -69,11 +70,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	protected void installSoftwareUpdate() {
-		boolean updates = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.CHECK_FOR_UPDATES);
+		boolean updates = MagicUIActivator.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.CHECK_FOR_UPDATES);
 		if (updates == false || MagicUIActivator.TRACE_TESTING)
 			return;
-		final IProvisioningAgent agent = (IProvisioningAgent) ServiceHelper.getService(Activator.getDefault().getBundle()
-				.getBundleContext(), IProvisioningAgent.SERVICE_NAME);
+		final IProvisioningAgent agent = (IProvisioningAgent) ServiceHelper
+				.getService(Activator.getDefault().getBundle().getBundleContext(), IProvisioningAgent.SERVICE_NAME);
 		if (agent == null) {
 			Activator.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
 					"No provisioning agent found.  This application is not set up for updates."));
@@ -84,8 +86,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			prefStore.setValue(JUSTUPDATED, false);
 			return;
 		}
-
-		
 		new Job("Checking for Software Update") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -94,14 +94,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				if (updateStatus.getCode() != UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
 					if (updateStatus.getSeverity() != IStatus.ERROR) {
 						// update is available
-						PlatformUI.getWorkbench().getDisplay().asyncExec(
-								() -> {
-									Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-									if (MessageDialog.openQuestion(shell, "Updates",
-											"New software update is available, would you like to install it?")) {
-										new UpdateHandler().execute(null);
-									}
-								});
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+								if (MessageDialog.openQuestion(shell, "Updates",
+										"New software update is available, would you like to install it?")) {
+									new UpdateHandler().execute(null);
+								}
+							}
+						});
 					}
 				}
 				monitor.done();

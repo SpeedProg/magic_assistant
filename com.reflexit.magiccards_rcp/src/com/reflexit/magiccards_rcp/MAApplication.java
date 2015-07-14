@@ -52,13 +52,13 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	private static final String WORKSPACE_VERSION_VALUE = "1"; //$NON-NLS-1$
 	private static final String PROP_EXIT_CODE = "eclipse.exitcode"; //$NON-NLS-1$
 	/**
-	 * A special return code that will be recognized by the launcher and used to restart the
-	 * workbench.
+	 * A special return code that will be recognized by the launcher and used to
+	 * restart the workbench.
 	 */
 	private static final Integer EXIT_RELAUNCH = new Integer(24);
 	/**
-	 * A special return code that will be recognized by the PDE launcher and used to show an error
-	 * dialog if the workspace is locked.
+	 * A special return code that will be recognized by the PDE launcher and
+	 * used to show an error dialog if the workspace is locked.
 	 */
 	private static final Integer EXIT_WORKSPACE_LOCKED = new Integer(15);
 
@@ -72,9 +72,10 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext
-	 * context)
+	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.
+	 * IApplicationContext context)
 	 */
+	@Override
 	public Object start(IApplicationContext appContext) throws Exception {
 		System.setProperty("file.encoding", "utf-8");
 		Display display = createDisplay();
@@ -83,9 +84,12 @@ public class MAApplication implements IApplication, IExecutableExtension {
 			// look and see if there's a splash shell we can parent off of
 			Shell shell = WorkbenchPlugin.getSplashShell(display);
 			if (shell != null) {
-				// should should set the icon and message for this shell to be the
-				// same as the chooser dialog - this will be the guy that lives in
-				// the task bar and without these calls you'd have the default icon
+				// should should set the icon and message for this shell to be
+				// the
+				// same as the chooser dialog - this will be the guy that lives
+				// in
+				// the task bar and without these calls you'd have the default
+				// icon
 				// with no message.
 				shell.setText(ChooseWorkspaceDialog.getWindowTitle());
 				shell.setImages(Dialog.getDefaultImages());
@@ -126,28 +130,50 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	 * @return the display used by the application
 	 */
 	protected Display createDisplay() {
-		return PlatformUI.createDisplay();
+		try {
+			return PlatformUI.createDisplay();
+		} catch (UnsatisfiedLinkError e) {
+			try {
+				AwtFatalErrorDialog.openError(
+						"Error: Your default java is not 64 bit. Please check installation guide for solution.");
+			} catch (Throwable e1) {
+				// ignore
+				e1.printStackTrace();
+			}
+			throw e;
+		} catch (Error e) {
+			try {
+				AwtFatalErrorDialog
+						.openError("Error: " + e.getMessage() + ". Please check installation guide for solution.");
+			} catch (Throwable e1) {
+				// ignore
+			}
+			throw e;
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime
-	 * .IConfigurationElement, java.lang.String, java.lang.Object)
+	 * org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.
+	 * eclipse.core.runtime .IConfigurationElement, java.lang.String,
+	 * java.lang.Object)
 	 */
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
 		// There is nothing to do for IDEApplication
 	}
 
 	/**
-	 * Return <code>null</code> if a valid workspace path has been set and an exit code otherwise.
-	 * Prompt for and set the path if possible and required.
+	 * Return <code>null</code> if a valid workspace path has been set and an
+	 * exit code otherwise. Prompt for and set the path if possible and
+	 * required.
 	 * 
 	 * @param applicationArguments
 	 *            the command line arguments
-	 * @return <code>null</code> if a valid instance location has been set and an exit code
-	 *         otherwise
+	 * @return <code>null</code> if a valid instance location has been set and
+	 *         an exit code otherwise
 	 */
 	private Object checkInstanceLocation(Shell shell, Map applicationArguments) {
 		// -data @none was specified but an ide requires workspace
@@ -231,17 +257,18 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	}
 
 	/**
-	 * Open a workspace selection dialog on the argument shell, populating the argument data with
-	 * the user's selection. Perform first level validation on the selection by comparing the
-	 * version information. This method does not examine the runtime state (e.g., is the workspace
-	 * already locked?).
+	 * Open a workspace selection dialog on the argument shell, populating the
+	 * argument data with the user's selection. Perform first level validation
+	 * on the selection by comparing the version information. This method does
+	 * not examine the runtime state (e.g., is the workspace already locked?).
 	 * 
 	 * @param shell
 	 * @param launchData
 	 * @param force
-	 *            setting to true makes the dialog open regardless of the showDialog value
-	 * @return An URL storing the selected workspace or null if the user has canceled the launch
-	 *         operation.
+	 *            setting to true makes the dialog open regardless of the
+	 *            showDialog value
+	 * @return An URL storing the selected workspace or null if the user has
+	 *         canceled the launch operation.
 	 */
 	private URL promptForWorkspace(Shell shell, ChooseWorkspaceData launchData, boolean force) {
 		URL url = null;
@@ -268,7 +295,8 @@ public class MAApplication implements IApplication, IExecutableExtension {
 				workspace.mkdir();
 			}
 			try {
-				// Don't use File.toURL() since it adds a leading slash that Platform does not
+				// Don't use File.toURL() since it adds a leading slash that
+				// Platform does not
 				// handle properly. See bug 54081 for more details.
 				String path = workspace.getAbsolutePath().replace(File.separatorChar, '/');
 				url = new URL("file", null, path); //$NON-NLS-1$
@@ -282,11 +310,13 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	}
 
 	/**
-	 * Return true if the argument directory is ok to use as a workspace and false otherwise. A
-	 * version check will be performed, and a confirmation box may be displayed on the argument
-	 * shell if an older version is detected.
+	 * Return true if the argument directory is ok to use as a workspace and
+	 * false otherwise. A version check will be performed, and a confirmation
+	 * box may be displayed on the argument shell if an older version is
+	 * detected.
 	 * 
-	 * @return true if the argument URL is ok to use as a workspace and false otherwise.
+	 * @return true if the argument URL is ok to use as a workspace and false
+	 *         otherwise.
 	 */
 	private boolean checkValidWorkspace(Shell shell, URL url) {
 		// a null url is not a valid workspace
@@ -319,8 +349,8 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	}
 
 	/**
-	 * Look at the argument URL for the workspace's version information. Return that version if
-	 * found and null otherwise.
+	 * Look at the argument URL for the workspace's version information. Return
+	 * that version if found and null otherwise.
 	 */
 	private static String readWorkspaceVersion(URL workspace) {
 		File versionFile = getVersionFile(workspace, false);
@@ -346,8 +376,9 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	}
 
 	/**
-	 * Write the version of the metadata into a known file overwriting any existing file contents.
-	 * Writing the version file isn't really crucial, so the function is silent about failure
+	 * Write the version of the metadata into a known file overwriting any
+	 * existing file contents. Writing the version file isn't really crucial, so
+	 * the function is silent about failure
 	 */
 	private static void writeWorkspaceVersion() {
 		Location instanceLoc = Platform.getInstanceLocation();
@@ -377,15 +408,15 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	}
 
 	/**
-	 * The version file is stored in the metadata area of the workspace. This method returns an URL
-	 * to the file or null if the directory or file does not exist (and the create parameter is
-	 * false).
+	 * The version file is stored in the metadata area of the workspace. This
+	 * method returns an URL to the file or null if the directory or file does
+	 * not exist (and the create parameter is false).
 	 * 
 	 * @param create
-	 *            If the directory and file does not exist this parameter controls whether it will
-	 *            be created.
-	 * @return An url to the file or null if the version file does not exist or could not be
-	 *         created.
+	 *            If the directory and file does not exist this parameter
+	 *            controls whether it will be created.
+	 * @return An url to the file or null if the version file does not exist or
+	 *         could not be created.
 	 */
 	private static File getVersionFile(URL workspaceUrl, boolean create) {
 		if (workspaceUrl == null) {
@@ -414,12 +445,14 @@ public class MAApplication implements IApplication, IExecutableExtension {
 	 * 
 	 * @see org.eclipse.equinox.app.IApplication#stop()
 	 */
+	@Override
 	public void stop() {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench == null)
 			return;
 		final Display display = workbench.getDisplay();
 		display.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (!display.isDisposed())
 					workbench.close();

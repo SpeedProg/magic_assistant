@@ -37,7 +37,7 @@ Apache Software Foundation http://www.apache.org/
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/com.reflexit.magiccards_rcp/icons/m16.gif" i32="/com.reflexit.magiccards_rcp/icons/m.gif"/>
+   <windowImages i16="../com.reflexit.magiccards_rcp/icons/m16.gif" i32="../com.reflexit.magiccards_rcp/icons/m.gif"/>
 
    <splash
       location="com.reflexit.magiccards_rcp"
@@ -59,7 +59,6 @@ Apache Software Foundation http://www.apache.org/
       </win>
    </launcher>
 
-
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
@@ -80,13 +79,19 @@ Apache Software Foundation http://www.apache.org/
          </text>
    </license>
 
-   <plugins>
-   </plugins>
 
    <features>
       <feature id="com.reflexit.magiccards.feature.rcp" version="1.4.3.qualifier"/>
    </features>
 
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+   </configurations>
 
    <repositories>
       <repository location="http://mtgbrowser.sourceforge.net/update/1.4-beta" enabled="false" />
