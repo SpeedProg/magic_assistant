@@ -17,15 +17,23 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 	protected boolean imageNative = false;
 
 	static {
-		if (OS.GTK3 && OS.GTK_VERSION <= OS.VERSION(3, 14, 8)) {
-			linuxHack = true;
+		try {
+			if (OS.GTK3 && OS.GTK_VERSION <= OS.VERSION(3, 14, 8)) {
+				linuxHack = true;
+			}
+		} catch (Throwable e) {
+			// ignore
 		}
 	}
 
 	public AbstractImageColumn(ICardField field, String name) {
 		super(field, name);
-		if (Boolean.valueOf(System.getProperty("com.reflexit.magicassistant.nativeImages"))) {
+		String sni = System.getProperty("com.reflexit.magicassistant.nativeImages");
+		if (Boolean.valueOf(sni)) {
 			imageNative = true;
+			linuxHack = false;
+		} else if (sni != null && sni.equals("false")) {
+			imageNative = false;
 			linuxHack = false;
 		}
 	}
