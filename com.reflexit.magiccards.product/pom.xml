@@ -52,6 +52,31 @@
 					</products>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>prepare-package</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<target>
+								<replaceregexp file="magic.p2.inf" match="properties.0.value =.*end = end"
+									flags="gis" 
+									replace="properties.0.value = Magic Assistant ${qualifiedVersion}\\\\nSee what is new at http://www.magicassistant.ca/ChangeLog.html${line.separator}end = end" 
+									byline="false" />
+
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>
