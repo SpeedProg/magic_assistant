@@ -3,181 +3,45 @@ instructions.configure=\
    addRepository(name:Magic Assistant Update Site,type:1,location:http${#58}//mtgbrowser.sourceforge.net/update/1.4);\
    setProgramProperty(propName:osgi.instance.area.default,propValue:@user.home/MagicAssistantWorkspace);
 properties.0.name = org.eclipse.equinox.p2.description
-properties.0.value = Magic Assistant 1.4.3.201507151228\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\n\
-changes in 1.4.2.012\n\
-* Bug 478 Filtering English is broken\n\
-changes in 1.4.2.011\n\
-* Bug 474 Problem with Color Identity Colorless filtering out too many cards\n\
+properties.0.value = Magic Assistant 1.4.3.201507160048\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\n\
+== changes in 1.4.3.0 ==\n\
+* Not a user feature but building now with Tycho/Maven\n\
+* Bug: Fixed tree paining issue on linux gtk 3.10\n\
+* Feature: added life counter for draw/play page\n\
+* Feature: disable some buttons if edit database activity is not enabled\n\
+* fixed enter deck text\n\
+* Card loading optimizations\n\
+* Optimizing quick filter control\n\
+* Renamed Seller Price to Online Price and Price to User Price to avoid confusion\n\
+* Added pane mode 600x400 into screenshot tool\n\
+* Fixed editing comment in draw tab\n\
+* Bug 469 Special Tag not (directly) written to main.xml\n\
+* Bug 463 Option to ignore online-only sets and purge any already added\n\
+* Bug 479 added duplicate and remove cards into edit dialog\n\
+* Bug 480 Filtering sets - when multiple match\n\
+* Added import/export examples\n\
+* Fixed backward compatibility workspace loading\n\
 * Added edition aliases field in set editor (preferences)\n\
-* Renamed: Duel Decks: Elspeth vs. Kiora|DDO||March 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth\n\
-* Added: Modern Masters 2015 Edition|MM2||May 2015|Online|||Modern Masters 2015\n\
-* Added: Tempest Remastered|TPR||May 2015|Online|||\n\
-changes in 1.4.2.010\n\
-* Update to fix update issues\n\
-changes in 1.4.2.009\n\
-* Remove lock in refresh which is causing UI lag\n\
-* Fixed race condition in loading collections which can cause data loss\n\
-changes in 1.4.2.007\n\
-* Bug 459 export not working in latest version, stack overflow\n\
-* More fixed to MagicCardMarket prices provider\n\
-changes in 1.4.2.006\n\
-* Fixed issues with refreshing of views (introduced 1.4.2.004)\n\
-* Fixed issue with inserting of cards in main collection (introduced 1.4.2.004)\n\
-* Added MagicCardMarket prices scrubber (credits Bjoern Schmidt)\n\
-* Fixed layout of Info page\n\
-* Fixed bug in currency showing in Info page for non dollar currency\n\
-changes in 1.4.2.005\n\
-* Bug 454 "Show Library" button in "Draw" view does nothing\n\
-* Color column now will show images\n\
-* Fixed CMC cost for 2/B type mana (is 2 before was 1)\n\
-* Removed columns for X mana cost in mana curve chart\n\
-* Support for Color Indicator field (For color identity)\n\
-changes in 1.4.2.004\n\
-* Bug 452 Laggy changes in "Card Navigation"\n\
-* Bug 437 Card Navigator does not update\n\
-* Bug 444 Lockups\n\
-changes in 1.4.2.003\n\
-* Bug 446 Adding Cards Using Keyboard Only\n\
-* Bug 444 UI Refresh issues and slowness when using quick filter \n\
-* When using quick filter now top card is selected automatically\n\
-* When adding card to add now added card is selected automatically in that deck\n\
-* Added shortcut 'm' to move whole pile of card, compare to 1m - move 1 card\n\
-* Bug 440 Issue of moving cards with same number of cards as pile\n\
-changes in 1.4.2.001\n\
-* Bug 430 Add set/rarity simbol to html\n\
-* Renamed Wizard html into Compact html\n\
-* Bug 430 Html export - description should be above table now for IE\n\
-* Bug 433 fixed exporters folder in decks\n\
-* Fixed Elves vs Dragons\n\
-changes in 1.4.2.000\n\
-* Bug 424 CSV import errors from older MA\n\
-* Restored default theme back to Light\n\
-* Bug 426 MTGO Import card count incorrect \n\
-changes in 1.4.1.9\n\
-* Bug 418 Backing up has encountered a problem\n\
-* Bug 425 Tournament: Randomizing 1st round swiss scheduler for player with same rank\n\
-* Tournament: Added sort on OMW, etc columns\n\
-* Tournament: Added multi-opponents games - beta\n\
-* Added support for adding set abbreviations\n\
-* Updated cards db to Feb 2015 state\n\
-* Bug 424 Possible fix for update .exe on windows\n\
-changes in 1.4.1.8\n\
-* Bug 420: NPE during price update\n\
-changes in 1.4.1.7\n\
-* Bug 414: Localized version of land card are not considered basic lands\n\
-* Added ability to specify location for backup \n\
-* Fixed parsing on new format for legality of sets\n\
-* Added support for import of collections from TCGPlayer collections html\n\
-* Added support for parsing prices from TCGPlayer html instead on non working xml API's\n\
-* Fixed split cards in Invasion set\n\
-* Added Commander 2014\n\
-changes in 1.4.1.6\n\
-* Bug: fixed when updating localized cards - not all cards where loaded when updating\n\
-* Bug 252: fixed unique count and own unique count should not consider localized cards as unique\n\
-* Bug: fixed when groupping by name it would not consider localized cards as the same\n\
-changes in 1.4.1.5\n\
-* Added sort button to Export deck page\n\
-* Bug 409 "equals" filter not working in filter dialog \n\
-* Migration to deprecate forTradeCount field (use tag instead)\n\
-* Fixed - Wizards html deck export - sideboard correction\n\
-* Fixed that deck is not saved when editing some string fields inline\n\
-changes in 1.4.1.3\n\
-* Italian translation for types\n\
-* Fixed materilize deck action\n\
-changes in 1.4.1.2\n\
-* Feature Identity Support - added support for identity filter for colors (for commander)\n\
-* Fixed invalid values in Set filter page\n\
-changes in 1.4.1.0\n\
-* Bug: fixed card reconcile (own count update in db view)\n\
-* Feature :read only collection/deck\n\
-* Bug: columns of deck randomly resetting to one column\n\
-* Feature: import format auto-detect\n\
-* Ownership column just show V or O letters\n\
-* Bug: fixed exception when groupping (for legality column)\n\
-* Bug: cost cc text is drawn to close to the right\n\
-* Fixed land in Khans of Tarkir\n\
-* Bug: restore to default does not work for "show only last set" filter option\n\
-* Bug: fixed lagging on "Reset Filter"\n\
-* Docs updates\n\
-changes in 1.4.0.11\n\
-* Fixed bug when doing software update on startup (it cannot show the dialog)\n\
-* Updated database with Khans of Tarkir\n\
-* Fixed card update handler not to block UI\n\
-* Fixed set context assist to show newly added sets\n\
-* Adjusted set image size to fit oversized icons like for M15\n\
-changes in 1.4.0.10\n\
-* Fixed dead lock on startup\n\
-* Added wishlist and fortrade tags in context assist\n\
-* Special tags can now be key value pairs, change card condition tags with key/value with key "c", i.e. c=mint\n\
-* Added deckbox import/export\n\
-* Fixed magic workstation import for "foil" property\n\
-changes in 1.4.0.7\n\
-* Bug 392 - mana symbols not generated correctly on Windows\n\
-changes in 1.4.0.6\n\
-* Bug 390 Importing Decks Real/Virtual - added option to make imported cards real/virtual \n\
-* Fixed hanging\n\
-* Possibly fixed columns reset to only Name column\n\
-changes in 1.4.0.5\n\
-* Fixed issue with image loading\n\
-* Added ability to edit collector's number\n\
-changes in 1.4.0.3\n\
-* Full support for dark theme (and make it default in this version to see user's feedback)\n\
-* Added card info view action to open the editor\n\
-* Added dialog to edit database card entry (image, price)\n\
-* Added card image into physical card edit dialog\n\
-* Bug 385 Tournament: Print round results in W(2) format\n\
-changes in 1.4.0.1\n\
-* Added Print Proxies exporter\n\
-* Added ability to sort on export page\n\
-* Added action to open card info in browser from card navigator view\n\
-* Bug 376 Wizards deck HTML improvements (contributor Bjoern Schmidt)\n\
-* Bug 375 Missing and double split cards (hardcoded some rules) \n\
-* Improved parser for double cards\n\
-* Bug 378 Deck deleted when sideboard is deleted \n\
-changes in 1.3.1.15\n\
-* Fixed TCGPlayer API's\n\
-changes in 1.3.1.14\n\
-* Bug 365 Corrupt text in tree view of collections and decks\n\
-* Bug 367 M15 isn't auto-downloading from gatherer.\n\
-* Bug 366 New sideboards do not inherit "virtual" ownership from main deck\n\
-changes in 1.3.1.13\n\
-* Bug 357 - Conspiracy aliases\n\
-* Added Conspiracy and  Vintage Masters to default db\n\
-changes in 1.3.1.12 beta\n\
-* Tournament - Added ability to edit pairing in the round and specify byes\n\
-changes in 1.3.1.11\n\
-* Bug 345 Shuffle library issue in Draw tab\n\
-* Added log file path to bug report submission window\n\
-* Bug 354 Text of card disappears on select -  Gatherer updated their web-site again.\n\
-* Bug 353 Fixed - No localized English cards message\n\
-changes in 1.3.1.10\n\
-* Bug 352 Win points on the tournament organizer \n\
-* Added simple Backup support\n\
-changes in 1.3.1.9\n\
-* Bug 350: Fixed possible data loss due to parsing error in collection and decks\n\
-changes in 1.3.1.8 \n\
-* Feature 349: Added "group by" card name, so can see total regardless of set\n\
-* Icon for Name column now should not take lots of space in tree mode, making groupping more useful\n\
-changes in 1.3.1.7 beta\n\
-* Feature 346 added commands to move & split and just split which can be triggered from keyboard with a counter\n\
-changes in 1.3.1.6 beta\n\
-* Feature 326 Sort by Date Added \n\
-changes in 1.3.1.5\n\
-* More fixes in test play deck, added Notes columns for other stuff (like counters, face down, etc)\n\
-changes in 1.3.1.4\n\
-* Feature 179 Added feature to Play Test a Deck (via Draw page)\n\
-changes in 1.3.1.3\n\
-* Bug 343 Tournament perspective no longer works\n\
-* Bug 344 java.lang.NullPointerException on click \n\
-changes in 1.3.1.2\n\
-* added preferences "work offline"\n\
-* supporting url in the custom price provider xml\n\
-changes in 1.3.1.1\n\
-* Currency type is now read from provider xml (only for custom providers)\n\
-* Bug 342 Sideboard issue when moving decks \n\
-* Added Modern Event Deck set\n\
-* Feature 341 Add Set's date column as option for main view \n\
-changes before that\n\
-* See full log at http://sourceforge.net/apps/mediawiki/mtgbrowser/index.php?title=Change_Log\n\
+* Redid UI for import wizard\n\
+* Added extending database wizard\n\
+* Fixed issues with default import report type (Deck Classic)\n\
+* Bug 474 Problem with Color Identity filtering out too many cards\n\
+* DB updates Masters 2015 and Tempest Remastered\n\
+* Fixed issues with fantom filter\n\
+* Fixed some issues with virtual settings\n\
+* Fixed race conditions when opening non-existing decks and activation\n\
+* Updated icon for deck view when it shows collection\n\
+* Fixed major delay on clicking in Collections or Deck view\n\
+* Update platform to eclipse 4.5 (Mars)\n\
+* Fixed race conditions between saving properties and loading from disk\n\
+* Bug in export when some category of cards is missing in HTML format\n\
+* Bug 456 Error with legality entering Dragons of Tarkir cards\n\
+* Bug 461 Fixed feature dependencies\n\
+* Clarified error message for commander format\n\
+* Reduced backup size by compressing in a ZIP file\n\
+* Added filter control into column selector\n\
+* Bug 460 Rename 'Kiora vs. Elspeth' to 'Elspeth vs. Kiora'**\n\
+* Fixed updating color indicator on refresh\n\
+* Bug 458: NPE in ColorIdentity\n\
 
 end = end

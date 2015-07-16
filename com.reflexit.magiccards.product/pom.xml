@@ -65,7 +65,7 @@
 							<target>
 								<!-- Add change log into update description -->
 								<loadfile property="changeLog"
-									srcFile="../com.reflexit.magiccards_rcp/build/changelog.txt">
+									srcFile="../com.reflexit.magiccards_rcp/build/changelog_1_4_3.txt">
 									<filterchain>
 										<suffixlines suffix="\\\\n\\\\" />
 										<!--  <striplinebreaks />-->

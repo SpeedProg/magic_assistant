@@ -128,48 +128,5 @@ changes in 1.4.0.1
 * Bug 375 Missing and double split cards (hardcoded some rules) 
 * Improved parser for double cards
 * Bug 378 Deck deleted when sideboard is deleted 
-changes in 1.3.1.15
-* Fixed TCGPlayer API's
-changes in 1.3.1.14
-* Bug 365 Corrupt text in tree view of collections and decks
-* Bug 367 M15 isn't auto-downloading from gatherer.
-* Bug 366 New sideboards do not inherit "virtual" ownership from main deck
-changes in 1.3.1.13
-* Bug 357 - Conspiracy aliases
-* Added Conspiracy and  Vintage Masters to default db
-changes in 1.3.1.12 beta
-* Tournament - Added ability to edit pairing in the round and specify byes
-changes in 1.3.1.11
-* Bug 345 Shuffle library issue in Draw tab
-* Added log file path to bug report submission window
-* Bug 354 Text of card disappears on select -  Gatherer updated their web-site again.
-* Bug 353 Fixed - No localized English cards message
-changes in 1.3.1.10
-* Bug 352 Win points on the tournament organizer 
-* Added simple Backup support
-changes in 1.3.1.9
-* Bug 350: Fixed possible data loss due to parsing error in collection and decks
-changes in 1.3.1.8 
-* Feature 349: Added "group by" card name, so can see total regardless of set
-* Icon for Name column now should not take lots of space in tree mode, making groupping more useful
-changes in 1.3.1.7 beta
-* Feature 346 added commands to move & split and just split which can be triggered from keyboard with a counter
-changes in 1.3.1.6 beta
-* Feature 326 Sort by Date Added 
-changes in 1.3.1.5
-* More fixes in test play deck, added Notes columns for other stuff (like counters, face down, etc)
-changes in 1.3.1.4
-* Feature 179 Added feature to Play Test a Deck (via Draw page)
-changes in 1.3.1.3
-* Bug 343 Tournament perspective no longer works
-* Bug 344 java.lang.NullPointerException on click 
-changes in 1.3.1.2
-* added preferences "work offline"
-* supporting url in the custom price provider xml
-changes in 1.3.1.1
-* Currency type is now read from provider xml (only for custom providers)
-* Bug 342 Sideboard issue when moving decks 
-* Added Modern Event Deck set
-* Feature 341 Add Set's date column as option for main view 
 changes before that
 * See full log at http://sourceforge.net/apps/mediawiki/mtgbrowser/index.php?title=Change_Log

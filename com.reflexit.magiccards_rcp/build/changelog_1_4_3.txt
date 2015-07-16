@@ -1,0 +1,39 @@
+== changes in 1.4.3.0 ==
+* Not a user feature but building now with Tycho/Maven
+* Bug: Fixed tree paining issue on linux gtk 3.10
+* Feature: added life counter for draw/play page
+* Feature: disable some buttons if edit database activity is not enabled
+* fixed enter deck text
+* Card loading optimizations
+* Optimizing quick filter control
+* Renamed Seller Price to Online Price and Price to User Price to avoid confusion
+* Added pane mode 600x400 into screenshot tool
+* Fixed editing comment in draw tab
+* Bug 469 Special Tag not (directly) written to main.xml
+* Bug 463 Option to ignore online-only sets and purge any already added
+* Bug 479 added duplicate and remove cards into edit dialog
+* Bug 480 Filtering sets - when multiple match
+* Added import/export examples
+* Fixed backward compatibility workspace loading
+* Added edition aliases field in set editor (preferences)
+* Redid UI for import wizard
+* Added extending database wizard
+* Fixed issues with default import report type (Deck Classic)
+* Bug 474 Problem with Color Identity filtering out too many cards
+* DB updates Masters 2015 and Tempest Remastered
+* Fixed issues with fantom filter
+* Fixed some issues with virtual settings
+* Fixed race conditions when opening non-existing decks and activation
+* Updated icon for deck view when it shows collection
+* Fixed major delay on clicking in Collections or Deck view
+* Update platform to eclipse 4.5 (Mars)
+* Fixed race conditions between saving properties and loading from disk
+* Bug in export when some category of cards is missing in HTML format
+* Bug 456 Error with legality entering Dragons of Tarkir cards
+* Bug 461 Fixed feature dependencies
+* Clarified error message for commander format
+* Reduced backup size by compressing in a ZIP file
+* Added filter control into column selector
+* Bug 460 Rename 'Kiora vs. Elspeth' to 'Elspeth vs. Kiora'**
+* Fixed updating color indicator on refresh
+* Bug 458: NPE in ColorIdentity
