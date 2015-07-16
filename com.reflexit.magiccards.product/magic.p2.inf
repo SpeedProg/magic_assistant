@@ -3,45 +3,5 @@ instructions.configure=\
    addRepository(name:Magic Assistant Update Site,type:1,location:http${#58}//mtgbrowser.sourceforge.net/update/1.4);\
    setProgramProperty(propName:osgi.instance.area.default,propValue:@user.home/MagicAssistantWorkspace);
 properties.0.name = org.eclipse.equinox.p2.description
-properties.0.value = Magic Assistant 1.4.3.201507160048\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\n\
-== changes in 1.4.3.0 ==\n\
-* Not a user feature but building now with Tycho/Maven\n\
-* Bug: Fixed tree paining issue on linux gtk 3.10\n\
-* Feature: added life counter for draw/play page\n\
-* Feature: disable some buttons if edit database activity is not enabled\n\
-* fixed enter deck text\n\
-* Card loading optimizations\n\
-* Optimizing quick filter control\n\
-* Renamed Seller Price to Online Price and Price to User Price to avoid confusion\n\
-* Added pane mode 600x400 into screenshot tool\n\
-* Fixed editing comment in draw tab\n\
-* Bug 469 Special Tag not (directly) written to main.xml\n\
-* Bug 463 Option to ignore online-only sets and purge any already added\n\
-* Bug 479 added duplicate and remove cards into edit dialog\n\
-* Bug 480 Filtering sets - when multiple match\n\
-* Added import/export examples\n\
-* Fixed backward compatibility workspace loading\n\
-* Added edition aliases field in set editor (preferences)\n\
-* Redid UI for import wizard\n\
-* Added extending database wizard\n\
-* Fixed issues with default import report type (Deck Classic)\n\
-* Bug 474 Problem with Color Identity filtering out too many cards\n\
-* DB updates Masters 2015 and Tempest Remastered\n\
-* Fixed issues with fantom filter\n\
-* Fixed some issues with virtual settings\n\
-* Fixed race conditions when opening non-existing decks and activation\n\
-* Updated icon for deck view when it shows collection\n\
-* Fixed major delay on clicking in Collections or Deck view\n\
-* Update platform to eclipse 4.5 (Mars)\n\
-* Fixed race conditions between saving properties and loading from disk\n\
-* Bug in export when some category of cards is missing in HTML format\n\
-* Bug 456 Error with legality entering Dragons of Tarkir cards\n\
-* Bug 461 Fixed feature dependencies\n\
-* Clarified error message for commander format\n\
-* Reduced backup size by compressing in a ZIP file\n\
-* Added filter control into column selector\n\
-* Bug 460 Rename 'Kiora vs. Elspeth' to 'Elspeth vs. Kiora'**\n\
-* Fixed updating color indicator on refresh\n\
-* Bug 458: NPE in ColorIdentity\n\
-
+properties.0.value = Magic Assistant\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\n\
 end = end

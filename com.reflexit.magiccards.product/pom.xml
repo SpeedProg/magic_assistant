@@ -68,7 +68,7 @@
 									srcFile="../com.reflexit.magiccards_rcp/build/changelog_1_4_3.txt">
 									<filterchain>
 										<suffixlines suffix="\\\\n\\\\" />
-										<!--  <striplinebreaks />-->
+										<!-- <striplinebreaks /> -->
 									</filterchain>
 								</loadfile>
 								<replaceregexp file="magic.p2.inf"
@@ -76,6 +76,22 @@
 									replace="properties.0.value = Magic Assistant ${qualifiedVersion}\\\\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\\\\n\\\\${line.separator}${changeLog}${line.separator}end = end"
 									byline="false" />
 
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<!--  Restore previous value -->
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+							<replaceregexp file="magic.p2.inf"
+									match="properties.0.value =.*end = end" flags="gis"
+									replace="properties.0.value = Magic Assistant\\\\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\\\\n\\\\${line.separator}end = end"
+									byline="false" />
 							</target>
 						</configuration>
 						<goals>
