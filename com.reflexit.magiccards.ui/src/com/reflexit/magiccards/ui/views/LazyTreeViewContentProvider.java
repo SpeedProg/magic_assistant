@@ -14,7 +14,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 		ILazyTreeContentProvider {
-	LazyTreeViewContentProvider() {
+	public LazyTreeViewContentProvider() {
 	}
 
 	private TreeViewer treeViewer;
