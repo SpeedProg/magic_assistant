@@ -8,6 +8,9 @@ Bundle-Vendor: Alena Laskavaia
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.reflexit.magiccards.ui,
- com.reflexit.magiccards.core
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+ com.reflexit.magiccards.core,
+ org.eclipse.nebula.widgets.gallery,
+ org.eclipse.jface,
+ org.eclipse.swt
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
