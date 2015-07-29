@@ -215,7 +215,7 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	}
 
 	public void addToNameGroup(IMagicCard elem, ICardGroup group) {
-		if (group.getFieldIndex() == MagicCardField.NAME) {
+		if (group.getFieldIndex() == MagicCardField.NAME || !filter.isNameGroupping()) {
 			group.add(elem);
 		} else {
 			String key = elem.getEnglishName();

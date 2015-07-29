@@ -25,6 +25,7 @@ public class MagicCardFilter implements Cloneable {
 	private SortOrder sortOrder = new SortOrder();
 	private ICardField groupFields[];
 	private boolean onlyLastSet = false;
+	private boolean nameGroupping = true;
 
 	@Override
 	public Object clone() {
@@ -306,5 +307,13 @@ public class MagicCardFilter implements Cloneable {
 		if (unique.size() > 0)
 			return unique.values();
 		return filteredList;
+	}
+
+	public void setNameGroupping(boolean nameGroupping) {
+		this.nameGroupping = nameGroupping;
+	}
+
+	public boolean isNameGroupping() {
+		return nameGroupping;
 	}
 }
