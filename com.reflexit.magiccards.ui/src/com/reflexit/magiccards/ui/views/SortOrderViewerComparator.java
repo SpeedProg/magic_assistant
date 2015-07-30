@@ -15,6 +15,9 @@ public class SortOrderViewerComparator extends ViewerComparator {
 		((SortOrder) getComparator()).setSortField(field, asc);
 	}
 
+	public SortOrder getComparator() {
+		return (SortOrder) super.getComparator();
+	}
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		return getComparator().compare(e1, e2);

@@ -54,4 +54,6 @@ public interface IMagicColumnViewer {
 	public abstract String getColumnLayoutProperty();
 
 	public abstract void hookContext(String id);
+
+	public abstract void dispose();
 }

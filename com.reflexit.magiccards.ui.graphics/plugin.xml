@@ -10,11 +10,12 @@
       </page>
    </extension>
    -->
-     <extension
+   
+   <extension
          point="com.reflexit.magiccards.ui.deckPage">
       <page
             class="com.reflexit.magiccards.ui.gallery.GalleryDeckPage"
-            id="com.reflexit.magiccards.ui.gallery.page"
+            id="com.reflexit.magiccards.ui.gallery.page2"
             name="Gallery">
       </page>
    </extension>

@@ -393,9 +393,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl impleme
 	 */
 	@Override
 	public void dispose() {
-		// this.manager.dispose(); TODO
 		removeStoreChangeListener();
 		getSelectionProvider().removeSelectionChangedListener(selectionListener);
+		this.manager.dispose();
 		super.dispose();
 	}
 

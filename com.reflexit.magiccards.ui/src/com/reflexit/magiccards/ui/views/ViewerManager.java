@@ -185,19 +185,16 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		getViewer().refresh(true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookDragAndDrop()
-	 */
 	@Override
 	public void hookDragAndDrop() {
-		getViewer().getControl().setDragDetect(true);
+		ColumnViewer viewer = getViewer();
+		viewer.getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
-		getViewer().addDropSupport(ops, transfers, new MagicCardDropAdapter(getViewer()));
+		viewer.addDragSupport(ops, transfers, new MagicCardDragListener(viewer));
+		viewer.addDropSupport(ops, transfers, new MagicCardDropAdapter(viewer));
 	}
+
 
 	@Override
 	public abstract int getSortDirection();

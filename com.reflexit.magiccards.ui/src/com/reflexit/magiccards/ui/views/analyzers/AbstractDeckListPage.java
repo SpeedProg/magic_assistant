@@ -57,4 +57,15 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	public AbstractMagicCardsListControl getListControl() {
 		return listControl;
 	}
+
+	@Override
+	public void dispose() {
+		getListControl().dispose();
+		super.dispose();
+	}
+
+	@Override
+	public void activate() {
+		super.activate();
+	}
 }

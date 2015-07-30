@@ -119,13 +119,17 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		Widget w = findItem(element);
 		if (w instanceof GalleryItem) {
 			disassociate((GalleryItem) w);
+			((GalleryItem) w).clearAll();
 			associateAndUpdate((GalleryItem) w, element);
 		} else if (w == gallery) {
 			gallery.setData(element);
-			if (usingElementMap()) {
-				disassociateChildren(gallery);
+			if (doStruct) {
+				if (usingElementMap()) {
+					disassociateChildren(gallery);
+				}
+				gallery.removeAll();
+				createChildren(gallery);
 			}
-			createChildren(gallery);
 		}
 	}
 
@@ -140,7 +144,6 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		// have to override this because parent class does not allow to do it
 		expandToLevel = level;
 	}
-
 
 	@Override
 	public int getAutoExpandLevel() {
@@ -157,6 +160,14 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		if (selection.length > 0) {
 			showItem(selection[selection.length - 1]);
 		} else {
+			if (expanded.length > 0) {
+				Object elementOrTreePath = expanded[0];
+				Widget w = internalExpand(elementOrTreePath, true);
+				if (w instanceof Item) {
+					Item child = getChild(w, 0);
+					showItem((Item) child);
+				}
+			}
 			// can use gallery.translation
 			// gallery.getVerticalBar().setSelection(vpos);
 			// gallery.redraw();

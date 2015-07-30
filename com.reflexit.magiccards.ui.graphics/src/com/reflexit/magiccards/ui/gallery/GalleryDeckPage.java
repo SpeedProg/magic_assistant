@@ -1,219 +1,195 @@
 package com.reflexit.magiccards.ui.gallery;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 
-import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
-import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.abs.ICardGroup;
+import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
-import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
-import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
-import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.utils.ImageCreator;
-import com.reflexit.magiccards.ui.views.TreeViewContentProvider;
-import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckPage;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
+import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.widgets.ImageAction;
 
-public class GalleryDeckPage extends AbstractDeckPage {
-	private LazyGalleryTreeViewer panel;
-	private Label status;
-	private IFilteredCardStore fstore = new MemoryFilteredCardStore<>();
-	private Action refresh;
-	private LabelProvider lp = new LabelProvider() {
-		HashMap<IMagicCard, Image> map = new HashMap<>();
-
-		public void dispose() {
-			for (Image im : map.values()) {
-				im.dispose();
-			}
-			map.clear();
-		}
-
-		public String getText(Object element) {
-			if (element instanceof ICardGroup)
-				return ((ICardGroup) element).getName();
-			if (element instanceof IMagicCard) {
-				return ((IMagicCard) element).getName();
-			}
-			return "";
-		};
-
-		public Image getImage(Object element) {
-			// System.err.println("getting image for " + element + " " +
-			// element.getClass());
-			if (element instanceof CardGroup && ((CardGroup) element).getFieldIndex() != MagicCardField.NAME)
-				return null;
-			if (map.containsKey(element))
-				return map.get(element);
-			// System.err.println("loaidng");
-			new Job("loading card") {
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					try {
-						final IMagicCard card = (IMagicCard) element;
-						if (card == null) {
-							return Status.OK_STATUS;
-						}
-						String path = ImageCreator.getInstance().createCardPath(card, true, false);
-						final Image image = ImageCreator.getInstance().createCardImage(path, false);
-						if (image == null) {
-							Image it = ImageCreator.getInstance().getCardNotFoundImageTemplate();
-							Image itCopy = new Image(Display.getDefault(), it, SWT.IMAGE_COPY);
-							map.put(card, itCopy);
-						} else {
-							map.put(card, image);
-						}
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								panel.getViewer().refresh(element, true);
-								// System.err.println("setting real image for "
-								// + card);
-								// item.setImage(image);
-								// item.getParent().redraw();
-							}
-						});
-					} catch (CannotDetermineSetAbbriviation e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return Status.OK_STATUS;
-				}
-			}.schedule();
-			return ImageCreator.getInstance().getCardNotFoundImageTemplate();
-		};
-	};
+public class GalleryDeckPage extends AbstractDeckListPage {
+	protected IAction actionRefresh;
+	private IFilteredCardStore fistore;
+	private MagicCardFilter filter;
+	private Action actionUnsort;
+	private MenuManager menuSort;
+	private ImageAction actionSort;
 
 	@Override
 	public Composite createContents(Composite parent) {
-		super.createContents(parent);
-		status = createStatusLine(getArea());
-		final LazyGalleryTreeViewer galleryViewer = new LazyGalleryTreeViewer(getArea());
-		// getArea().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_CYAN));
-
-		panel = galleryViewer;
-		panel.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		Composite area = super.createContents(parent);
+		area.setLayout(new GridLayout());
+		createCardsTree(area);
 		makeActions();
-		hookDragAndDrop();
-		fstore.getFilter().setNameGroupping(false);
-		fstore.getFilter().setGroupFields(MagicCardField.CMC);
-		getViewer().setContentProvider(new TreeViewContentProvider<>());
-		getViewer().setLabelProvider(lp);
-		return getArea();
+		return area;
 	}
 
 	protected void makeActions() {
-		this.refresh = new Action("Refresh", SWT.NONE) {
+		actionRefresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", () -> activate());
+		this.actionUnsort = new Action("Unsort") {
+			@Override
+			public void run() {
+				filter.setNoSort();
+				reloadData();
+			}
+
+			@Override
+			public String getToolTipText() {
+				return "Remove current sorting order";
+			}
+		};
+		this.menuSort = new MenuManager("Sort By");
+		populateSortMenu(menuSort);
+		this.actionSort = new ImageAction("Sort By", "icons/clcl16/sort.gif", IAction.AS_DROP_DOWN_MENU) {
 			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+				setMenuCreator(new IMenuCreator() {
+					private Menu listMenu;
+
+					@Override
+					public void dispose() {
+						if (listMenu != null)
+							listMenu.dispose();
+					}
+
+					@Override
+					public Menu getMenu(Control parent) {
+						if (listMenu != null)
+							listMenu.dispose();
+						MenuManager menuSortLocal = new MenuManager("Sort By");
+						populateSortMenu(menuSortLocal);
+						listMenu = menuSortLocal.createContextMenu(parent);
+						return listMenu;
+					}
+
+					@Override
+					public Menu getMenu(Menu parent) {
+						return null;
+					}
+				});
 			}
 
 			@Override
 			public void run() {
-				activate();
+				MagicCardComparator peek = filter.getSortOrder().peek();
+				peek.reverse();
+				reloadData();
 			}
 		};
 	}
 
 	@Override
-	public ISelectionProvider getSelectionProvider() {
-		return panel.getSelectionProvider();
+	public void createCardsTree(Composite parent) {
+		super.createCardsTree(parent);
 	}
 
 	@Override
-	public void dispose() {
-		lp.dispose();
-		panel.getControl().dispose();
-		super.dispose();
+	public void fillLocalPullDown(IMenuManager mm) {
+		mm.add(actionRefresh);
+		super.fillLocalPullDown(mm);
 	}
 
-	public void hookDragAndDrop() {
-		//// panel.setDragDetect(true);
-		StructuredViewer viewer = getViewer();
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		viewer.addDragSupport(operations, transfers, new MagicCardDragListener(viewer));
-		viewer.addDropSupport(operations, transfers, new MagicCardDropAdapter(viewer) {
+	@Override
+	public void fillLocalToolBar(IToolBarManager manager) {
+		super.fillLocalToolBar(manager);
+		manager.add(actionSort);
+		manager.add(actionRefresh);
+	}
+
+	public void reloadData() {
+		activate();
+	}
+
+	@Override
+	public AbstractMagicCardsListControl doGetMagicCardListControl() {
+		return new AbstractMagicCardsListControl(view) {
 			@Override
-			public boolean performDrop(Object data) {
-				boolean did = super.performDrop(data);
-				if (did) {
-					StructuredSelection sel = new StructuredSelection(Arrays.asList(data));
-					getViewer().setSelection(sel, true);
-				}
-				return did;
+			protected Control createTableControl(Composite parent) {
+				Control c = super.createTableControl(parent);
+				manager.hookDragAndDrop();
+				return c;
 			}
-		});
-	}
 
-	private StructuredViewer getViewer() {
-		return panel.getViewer();
+			@Override
+			public IMagicColumnViewer createViewerManager() {
+				return new GalleryViewerManager(getPreferencePageId());
+			}
+
+			@Override
+			protected IFilteredCardStore<ICard> doGetFilteredStore() {
+				return fistore;
+			}
+		};
 	}
 
 	@Override
-	public void setFilteredStore(IFilteredCardStore nfstore) {
-		super.setFilteredStore(nfstore);
-	}
-
-	@Override
-	public String getStatusMessage() {
-		if (fstore.getSize() > 100) {
-			return "Cannot show graphics for " + fstore.getSize() + " cards";
+	public void setFilteredStore(IFilteredCardStore parentfstore) {
+		super.setFilteredStore(parentfstore);
+		fistore = parentfstore;
+		if (parentfstore != null) {
+			filter = fistore.getFilter();
+			filter.setNameGroupping(false);
+			filter.setGroupFields(MagicCardField.CMC);
 		}
-		return "This page is under contruction...";
 	}
 
 	@Override
 	public void activate() {
 		super.activate();
-		fstore.setLocation(getCardStore().getLocation());
-		fstore.clear();
-		fstore.getCardStore().addAll(getCardStore().getCards());
-		fstore.update();
-		if (fstore.getSize() <= 100) {
-			getViewer().setInput(fstore);
-			panel.getControl().forceFocus();
+		getListControl().refresh();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
+
+	public void populateSortMenu(MenuManager menuSort) {
+		menuSort.add(actionUnsort);
+		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
+		Collection<AbstractColumn> columns = magicColumnCollection.getColumns();
+		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
+			final AbstractColumn man = iterator.next();
+			String name = man.getColumnFullName();
+			ICardField sortField = man.getSortField();
+			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
+				@Override
+				public void run() {
+					if (isChecked()) {
+						filter.setSortField(sortField, !filter.getSortOrder().isAccending(sortField));
+						reloadData();
+					}
+				}
+			};
+			if (filter != null && filter.getSortOrder().isTop(sortField)) {
+				ac.setChecked(true);
+				String sortLabel = filter.getSortOrder().isAccending() ? "ACC" : "DEC";
+				ac.setText(name + " (" + sortLabel + ")");
+			} else
+				ac.setChecked(false);
+			menuSort.add(ac);
 		}
-		status.setText(getStatusMessage());
-	}
-
-	@Override
-	public void fillLocalPullDown(IMenuManager viewMenuManager) {
-		super.fillLocalPullDown(viewMenuManager);
-	}
-
-	@Override
-	public void fillLocalToolBar(IToolBarManager toolBarManager) {
-		super.fillLocalToolBar(toolBarManager);
-		// toolBarManager.add(view.getGroupAction());
-		toolBarManager.add(refresh);
+		if (filter == null || filter.getSortOrder().isEmpty()) {
+			actionUnsort.setChecked(true);
+		}
 	}
 }

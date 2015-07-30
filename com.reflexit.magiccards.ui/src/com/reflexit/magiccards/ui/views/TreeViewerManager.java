@@ -114,24 +114,6 @@ public class TreeViewerManager extends ViewerManager {
 		this.viewer.getTree().setLinesVisible(grid);
 	}
 
-	public void setSortColumn2(int index, int direction) {
-		boolean sort = index >= 0;
-		if (sort) {
-			int sortDirection;
-			if (direction == -1)
-				sortDirection = SWT.DOWN;
-			else if (direction == 0)
-				sortDirection = SWT.NONE;
-			else
-				sortDirection = SWT.UP;
-			this.viewer.getTree().setSortDirection(sortDirection);
-			TreeColumn column = this.viewer.getTree().getColumn(index);
-			this.viewer.getTree().setSortColumn(column);
-		} else {
-			this.viewer.getTree().setSortColumn(null);
-		}
-	}
-
 	@Override
 	public void setSortColumn(int index, int direction) {
 		boolean sort = index >= 0;

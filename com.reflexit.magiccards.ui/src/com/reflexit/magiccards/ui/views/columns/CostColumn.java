@@ -5,12 +5,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Listener;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
-import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class CostColumn extends AbstractImageColumn {
@@ -37,6 +34,8 @@ public class CostColumn extends AbstractImageColumn {
 			String cmc = String.valueOf(((IMagicCard) element).get(MagicCardField.CMC));
 			if (imageNative) {
 				String cost = ((IMagicCard) element).getCost();
+				if (cost == null)
+					cost = "";
 				if (cost.equals("*"))
 					return cost;
 				return cost + " = " + cmc;
