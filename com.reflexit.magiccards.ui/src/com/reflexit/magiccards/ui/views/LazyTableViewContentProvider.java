@@ -3,22 +3,16 @@
  */
 package com.reflexit.magiccards.ui.views;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-
 import org.eclipse.jface.viewers.ILazyContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-class LazyTableViewContentProvider implements ILazyContentProvider {
-	LazyTableViewContentProvider() {
-	}
-
+public class LazyTableViewContentProvider implements ILazyContentProvider {
+	private boolean inChange = false;
 	private TableViewer tableViewer;
 	private IFilteredCardStore root;
-	private TIntObjectHashMap<Object> map = new TIntObjectHashMap<>();
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -28,17 +22,14 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 		if (newInput instanceof IFilteredCardStore) {
 			this.root = (IFilteredCardStore) newInput;
 			tableViewer.setItemCount(root.getSize());
-		}
-		else
+		} else
 			this.root = null;
-		map.clear();
 	}
 
 	@Override
 	public void dispose() {
 		this.tableViewer = null;
 		this.root = null;
-		this.map = null;
 	}
 
 	public int getSize(Object newInput) {
@@ -49,23 +40,28 @@ class LazyTableViewContentProvider implements ILazyContentProvider {
 	}
 
 	@Override
-	public void updateElement(int index) {
-		if (this.root != null) {
-			if (index >= root.getSize()) {
-				// element is gone...
-				tableViewer.setItemCount(root.getSize());
-			} else {
-				Object element = this.root.getElement(index);
-				//Object cur = map.get(index);
-				//if (cur == element) return;
-				MagicLogger.trace("table update element " + index + " " + element);
-				//map.put(index, element);
-				if (element == null) {
+	public synchronized void updateElement(int index) {
+		if (inChange)
+			return;
+		inChange = true;
+		try {
+			if (this.root != null) {
+				if (index >= root.getSize()) {
+					// element is gone...
 					tableViewer.setItemCount(root.getSize());
-					return;
+				} else {
+					Object element = this.root.getElement(index);
+					// MagicLogger.trace("table update element " + index + " " +
+					// element);
+					if (element == null) {
+						tableViewer.setItemCount(root.getSize());
+						return;
+					}
+					this.tableViewer.replace(element, index);
 				}
-				this.tableViewer.replace(element, index);
 			}
+		} finally {
+			inChange = false;
 		}
 	}
 }
