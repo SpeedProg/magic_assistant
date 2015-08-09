@@ -18,8 +18,10 @@ Require-Bundle: com.reflexit.magiccards.core,
  com.reflexit.magicassistant.p2,
  org.eclipse.core.filesystem,
  org.eclipse.ui.browser,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.ui.navigator;bundle-version="3.6.0"
 Export-Package: com.reflexit.magiccards.ui,
+ com.reflexit.magiccards.ui.actions,
  com.reflexit.magiccards.ui.commands,
  com.reflexit.magiccards.ui.dialogs,
  com.reflexit.magiccards.ui.dnd,

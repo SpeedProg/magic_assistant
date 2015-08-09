@@ -13,13 +13,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-
+import org.eclipse.ui.IActionBars;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
@@ -32,6 +33,7 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	private IFilteredCardStore fistore;
 	private MagicCardFilter filter;
 	private Action actionUnsort;
+	private CopyPasteActionGroup actionGroupCopyPaste;
 	private MenuManager menuSort;
 	private ImageAction actionSort;
 
@@ -45,6 +47,7 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
+		actionGroupCopyPaste = new CopyPasteActionGroup(getSelectionProvider());
 		actionRefresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", () -> activate());
 		this.actionUnsort = new Action("Unsort") {
 			@Override
@@ -103,9 +106,22 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	}
 
 	@Override
+	public void setGlobalControlHandlers(IActionBars bars) {
+		super.setGlobalControlHandlers(bars);
+		actionGroupCopyPaste.setGlobalControlHandlers(bars);
+	}
+
+	@Override
 	public void fillLocalPullDown(IMenuManager mm) {
 		mm.add(actionRefresh);
 		super.fillLocalPullDown(mm);
+	}
+
+	@Override
+	public void fillContextMenu(IMenuManager manager) {
+		actionGroupCopyPaste.fillContextMenu(manager);
+		// manager.add(view.actionCopy);
+		super.fillContextMenu(manager);
 	}
 
 	@Override
@@ -137,6 +153,11 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 			@Override
 			protected IFilteredCardStore<ICard> doGetFilteredStore() {
 				return fistore;
+			}
+
+			@Override
+			protected String getPreferencePageId() {
+				return GalleryPreferencePage.getId();
 			}
 		};
 	}

@@ -60,6 +60,11 @@ public class MagicDbView extends AbstractCardsView {
 		}
 
 		@Override
+		protected String getPreferencePageId() {
+			return getViewPreferencePageId();
+		}
+
+		@Override
 		public IMagicColumnViewer createViewerManager() {
 			return new CompositeViewerManager(getPreferencePageId());
 		}

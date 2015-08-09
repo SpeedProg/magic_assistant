@@ -20,7 +20,7 @@ import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
-public class GroupListControl extends AbstractMagicCardsListControl {
+public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	public class GroupTreeManager extends TreeViewerManager implements IDisposable {
 		protected GroupTreeManager(String id) {
 			super(id);

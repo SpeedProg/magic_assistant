@@ -19,4 +19,13 @@
             name="Gallery">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.gallery.GalleryPreferencePage"
+             id="com.reflexit.magiccards.ui.gallery.GalleryPreferencePage"
+             name="View: Deck/Gallery">
+       </page>
+   </extension>
 </plugin>

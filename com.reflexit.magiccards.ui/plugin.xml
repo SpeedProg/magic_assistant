@@ -22,19 +22,19 @@
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage"
-             name="View: Magic Database">
+             name="View: MTG Database">
        </page>
        <page
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.LibViewPreferencePage"
-             name="View: Library">
+             name="View: My Cards">
        </page>
        <page
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
              id="com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage"
-             name="View: Deck">
+             name="View: Deck/Cards">
        </page>
        <page
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
@@ -837,4 +837,14 @@ id="org.eclipse.ui.views.ProgressView">
  		 requiredActivityId="com.reflexit.magiccards.activity.cardorganizer">
 	</activityRequirementBinding>
    </extension>
+     <extension
+           point="org.eclipse.core.runtime.adapters">
+        <factory
+              adaptableType="java.lang.Object"
+              class="com.reflexit.magiccards.ui.utils.MagicAdapterFactory">
+           <adapter
+                 type="com.reflexit.magiccards.core.model.storage.ICardStore">
+           </adapter>
+        </factory>
+     </extension>
 </plugin>

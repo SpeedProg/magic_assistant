@@ -86,23 +86,27 @@ public class AbstractDeckPage implements IDeckPage {
 
 	@Override
 	public void activate() {
-		// toolbar
 		IActionBars bars = view.getViewSite().getActionBars();
-		IToolBarManager toolBarManager = bars.getToolBarManager();
+		fillActionBars(bars);
+		// selection provider
+		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
+		getCardStore();
+	}
+
+	public void fillActionBars(IActionBars actionBars) {
+		// toolbar
+		IToolBarManager toolBarManager = actionBars.getToolBarManager();
 		toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
 		// local view menu
-		IMenuManager viewMenuManager = bars.getMenuManager();
+		IMenuManager viewMenuManager = actionBars.getMenuManager();
 		viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
 		// global handlers
-		setGlobalControlHandlers(bars);
-		bars.updateActionBars();
-		// selection provider
-		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
-		getCardStore();
+		setGlobalControlHandlers(actionBars);
+		actionBars.updateActionBars();
 	}
 
 	public ISelectionProvider getSelectionProvider() {

@@ -322,10 +322,19 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 			}
 
 			@Override
+			protected String getPreferencePageId() {
+				return DeckLegalityPage2.this.getPreferencePageId();
+			}
+
+			@Override
 			public String getStatusMessage() {
 				return DeckLegalityPage2.this.getStatusMessage();
 			}
 		};
+	}
+
+	protected String getPreferencePageId() {
+		return null;
 	}
 
 	protected void createPageCustomColumns(List<AbstractColumn> columns) {

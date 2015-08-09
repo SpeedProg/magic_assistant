@@ -22,6 +22,11 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
+	protected String getPreferencePageId() {
+		return getViewPreferencePageId();
+	}
+
+	@Override
 	protected MenuManager createGroupMenu() {
 		MenuManager x = super.createGroupMenu();
 		x.add(createGroupAction(MagicCardField.LOCATION));

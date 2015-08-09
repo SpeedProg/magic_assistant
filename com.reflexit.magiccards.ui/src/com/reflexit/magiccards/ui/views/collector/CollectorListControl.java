@@ -126,4 +126,9 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	 * (IMagicCard) iterator2.next(); if (!cardStore.contains(card)) { cardStore.add(card); } } }
 	 * getFilteredStore().update(); }
 	 */
+
+	@Override
+	protected String getPreferencePageId() {
+		return getViewPreferencePageId();
+	}
 }

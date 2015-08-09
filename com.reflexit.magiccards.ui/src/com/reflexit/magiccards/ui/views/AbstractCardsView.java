@@ -44,6 +44,8 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.MagicCopyAction;
+import com.reflexit.magiccards.ui.actions.MagicPasteAction;
 import com.reflexit.magiccards.ui.dialogs.BrowserOpenAcknoledgementDialog;
 import com.reflexit.magiccards.ui.dialogs.BuyCardsConfirmationDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
@@ -134,8 +136,8 @@ public abstract class AbstractCardsView extends ViewPart {
 	 * @param bars
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
-		activateActionHandler(actionCopy, "org.eclipse.ui.edit.copy");
-		activateActionHandler(actionPaste, "org.eclipse.ui.edit.paste");
+		// activateActionHandler(actionCopy, "org.eclipse.ui.edit.copy");
+		// activateActionHandler(actionPaste, "org.eclipse.ui.edit.paste");
 		setGlobalControlHandlers(bars);
 	}
 
@@ -189,26 +191,8 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	protected void makeActions() {
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.actionCopy = new Action("Copy") {
-			@Override
-			public void run() {
-				try {
-					runCopy();
-				} catch (Exception e) {
-					MessageDialog.openError(getShell(), "Error", e.getMessage());
-				}
-			}
-		};
-		this.actionPaste = new Action("Paste") {
-			@Override
-			public void run() {
-				try {
-					runPaste();
-				} catch (Exception e) {
-					MessageDialog.openError(getShell(), "Error", e.getMessage());
-				}
-			}
-		};
+		this.actionCopy = new MagicCopyAction(getSelectionProvider());
+		this.actionPaste = new MagicPasteAction(getSelectionProvider());
 		this.loadExtras = new Action("Load Extra Fields...") {
 			@Override
 			public void run() {

@@ -35,6 +35,11 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
+	protected String getPreferencePageId() {
+		return getViewPreferencePageId();
+	}
+
+	@Override
 	protected MenuManager createGroupMenu() {
 		MenuManager groupMenu = new MenuManager("Group By",
 				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);

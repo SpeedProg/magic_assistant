@@ -69,13 +69,18 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		return new GroupListControl(view) {
 			@Override
 			public IMagicColumnViewer createViewerManager() {
-				return new GroupTreeManager(getPreferencePageId()) {
+				return new GroupTreeManager(AbstractDeckStatsPage.this.getPreferencePageId()) {
 					@Override
 					protected void createCustomColumns(List<AbstractColumn> columns) {
 						super.createCustomColumns(columns);
 						AbstractDeckStatsPage.this.createCustomColumns(columns);
 					}
 				};
+			}
+
+			@Override
+			protected String getPreferencePageId() {
+				return AbstractDeckStatsPage.this.getPreferencePageId();
 			}
 
 			@Override
@@ -98,6 +103,10 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 				return bar;
 			}
 		};
+	}
+
+	protected String getPreferencePageId() {
+		return null;
 	}
 
 	protected void createCustomColumns(List<AbstractColumn> columns) {

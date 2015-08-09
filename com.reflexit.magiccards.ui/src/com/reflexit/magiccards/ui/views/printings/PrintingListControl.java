@@ -26,6 +26,11 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
+	protected String getPreferencePageId() {
+		return getViewPreferencePageId();
+	}
+
+	@Override
 	public IMagicColumnViewer createViewerManager() {
 		return new PrintingsManager(getPreferencePageId());
 	}
