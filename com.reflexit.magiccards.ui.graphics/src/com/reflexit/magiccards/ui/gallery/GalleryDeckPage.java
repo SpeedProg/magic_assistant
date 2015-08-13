@@ -3,7 +3,6 @@ package com.reflexit.magiccards.ui.gallery;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuManager;
@@ -21,6 +20,8 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
+import com.reflexit.magiccards.ui.actions.SortAction;
+import com.reflexit.magiccards.ui.actions.UnsortAction;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
@@ -32,9 +33,8 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	protected IAction actionRefresh;
 	private IFilteredCardStore fistore;
 	private MagicCardFilter filter;
-	private Action actionUnsort;
 	private CopyPasteActionGroup actionGroupCopyPaste;
-	private MenuManager menuSort;
+
 	private ImageAction actionSort;
 
 	@Override
@@ -49,20 +49,7 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	protected void makeActions() {
 		actionGroupCopyPaste = new CopyPasteActionGroup(getSelectionProvider());
 		actionRefresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", () -> activate());
-		this.actionUnsort = new Action("Unsort") {
-			@Override
-			public void run() {
-				filter.setNoSort();
-				reloadData();
-			}
 
-			@Override
-			public String getToolTipText() {
-				return "Remove current sorting order";
-			}
-		};
-		this.menuSort = new MenuManager("Sort By");
-		populateSortMenu(menuSort);
 		this.actionSort = new ImageAction("Sort By", "icons/clcl16/sort.gif", IAction.AS_DROP_DOWN_MENU) {
 			{
 				setMenuCreator(new IMenuCreator() {
@@ -114,6 +101,11 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	@Override
 	public void fillLocalPullDown(IMenuManager mm) {
 		mm.add(actionRefresh);
+		if (filter != null) {
+			MenuManager menuSort = new MenuManager("Sort By");
+			populateSortMenu(menuSort);
+			mm.add(menuSort);
+		}
 		super.fillLocalPullDown(mm);
 	}
 
@@ -185,32 +177,25 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	}
 
 	public void populateSortMenu(MenuManager menuSort) {
-		menuSort.add(actionUnsort);
-		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
+		menuSort.removeAll();
+		menuSort.add(new UnsortAction("Unsort", filter) {
+			@Override
+			public void reload() {
+				reloadData();
+			}
+		});
+		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(GalleryPreferencePage.getId());
 		Collection<AbstractColumn> columns = magicColumnCollection.getColumns();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			final AbstractColumn man = iterator.next();
 			String name = man.getColumnFullName();
 			ICardField sortField = man.getSortField();
-			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
+			menuSort.add(new SortAction(name, sortField, filter) {
 				@Override
-				public void run() {
-					if (isChecked()) {
-						filter.setSortField(sortField, !filter.getSortOrder().isAccending(sortField));
-						reloadData();
-					}
+				public void reload() {
+					reloadData();
 				}
-			};
-			if (filter != null && filter.getSortOrder().isTop(sortField)) {
-				ac.setChecked(true);
-				String sortLabel = filter.getSortOrder().isAccending() ? "ACC" : "DEC";
-				ac.setText(name + " (" + sortLabel + ")");
-			} else
-				ac.setChecked(false);
-			menuSort.add(ac);
-		}
-		if (filter == null || filter.getSortOrder().isEmpty()) {
-			actionUnsort.setChecked(true);
+			});
 		}
 	}
 }
