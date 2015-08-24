@@ -289,7 +289,7 @@
 		</scp>
 		<echo message="Published ${ma.version} ${export.dir}/p2repo.zip" />
 	</target>
-	<target name="publish.update.site" depends="publish.repo">
+	<target name="publish.update.site" depends="export.update.site">
 		<scp verbose="true"
 			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
 			keyfile="${rsa.key}" trust="true">
