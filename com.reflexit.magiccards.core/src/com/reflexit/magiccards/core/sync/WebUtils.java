@@ -50,10 +50,9 @@ public class WebUtils {
 	 * Open the specified URL. Works with HTTPS as well.<br/>
 	 * Do nothing if working offline only mode is enabled.<br/>
 	 * <br/>
-	 * HTTPS warning: Just to open and be able to read the content of resulting response.
-	 * This implementation accept every server certificates therefore, as an example, it is
-	 * not save against man-in-the-middle-attacks. Do not use with sensitive data thats needs
-	 * a secure connection.
+	 * HTTPS warning: Just to open and be able to read the content of resulting response. This implementation
+	 * accept every server certificates therefore, as an example, it is not save against
+	 * man-in-the-middle-attacks. Do not use with sensitive data thats needs a secure connection.
 	 *
 	 * @param url
 	 *            Requested URL.
@@ -91,9 +90,7 @@ public class WebUtils {
 						// Additional HTTPS connection configuration
 						con.setSSLSocketFactory(ctx.getSocketFactory());
 						con.setRequestMethod("GET");
-						con.connect();
-						con.disconnect();
-						// MAYBE: HTTPS response code handling
+						con.connect();						// MAYBE: HTTPS response code handling
 						// System.err.println(con.getResponseCode()+": "+url.toExternalForm());
 					} catch (IOException e) {
 						throw e;
@@ -105,14 +102,11 @@ public class WebUtils {
 					configureConnectionDefaults(openConnection);
 					// HTTP
 					HttpURLConnection con = (HttpURLConnection) openConnection;
-					con.connect();
-					con.disconnect();
-					// MAYBE: HTTP response code handling
-					//System.err.println(con.getResponseCode()+": "+url.toExternalForm());
+					con.connect();					// MAYBE: HTTP response code handling
+					// System.err.println(con.getResponseCode()+": "+url.toExternalForm());
 				} else {
 					// Not HTTP nor HTTPS connection, it can be local file i.e. file://
-					i = maxAttempts;
-					// we will try to open it once
+					i = maxAttempts; // we will try to open it only once
 				}
 				InputStream openStream = openConnection.getInputStream();
 				return openStream;
@@ -149,17 +143,23 @@ public class WebUtils {
 	}
 
 	public static String openUrlText(URL url, int attempts) throws IOException {
-		return FileUtils.readStreamAsStringAndClose(openUrl(url, attempts));
+		MagicLogger.traceStart("reading: " + url.toExternalForm());
+		try {
+			return FileUtils.readStreamAsStringAndClose(openUrl(url, attempts));
+		} finally {
+			MagicLogger.traceEnd("reading: " + url.toExternalForm());
+		}
 	}
 
 	/**
-	 * Configure specified URLConnection with some defaults like "User-Agent",
-	 * "Accept-Charset", timeouts, aso.
+	 * Configure specified URLConnection with some defaults like "User-Agent", "Accept-Charset", timeouts,
+	 * aso.
 	 *
 	 * @param connection
 	 */
 	private static void configureConnectionDefaults(URLConnection connection) {
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+		connection.setRequestProperty("User-Agent",
+				"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:40.0) Gecko/20100101 Firefox/40.0");
 		connection.setRequestProperty("Accept-Charset", FileUtils.UTF8);
 		connection.setRequestProperty("Accept-Language", "en_US");
 		connection.setConnectTimeout(60 * 1000);
