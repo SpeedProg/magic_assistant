@@ -65,9 +65,14 @@ public class Colors implements ISearchableProperty {
 	}
 
 	public Collection<String> getColorIdentity(IMagicCard card) {
-		Collection<String> res = getColorPresense(card.getCost(), new LinkedHashSet<String>());
-		getColorPresense(card.getOracleText(), res);
-		getColorPresense(getEncodeByName((String) card.get(MagicCardField.COLOR_INDICATOR)), res);
+		Collection<String> res = new LinkedHashSet<String>();
+		try {
+			getColorPresense(card.getCost(), res);
+			getColorPresense(card.getOracleText(), res);
+			getColorPresense(getEncodeByName((String) card.get(MagicCardField.COLOR_INDICATOR)), res);
+		} catch (Exception e) {
+			MagicLogger.log("Cannot get identity for card: " + e);
+		}
 		return res;
 	}
 

@@ -16,7 +16,7 @@ public class ColorIdentityColumn extends AbstractImageColumn implements Listener
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IMagicCard) {
-			String icost = Colors.getInstance().getColorIdentityAsCost((IMagicCard) element);
+			String icost = ((IMagicCard) element).getString(MagicCardField.COLOR_IDENTITY);
 			return Colors.getColorName(icost);
 		}
 		return "";
@@ -25,7 +25,7 @@ public class ColorIdentityColumn extends AbstractImageColumn implements Listener
 	@Override
 	public Image getActualImage(Object element) {
 		if (element instanceof IMagicCard) {
-			String icost = Colors.getInstance().getColorIdentityAsCost((IMagicCard) element);
+			String icost = ((IMagicCard) element).getString(MagicCardField.COLOR_IDENTITY);
 			return SymbolConverter.buildCostImage(icost);
 		}
 		return null;

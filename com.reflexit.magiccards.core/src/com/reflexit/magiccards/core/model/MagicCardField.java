@@ -306,7 +306,7 @@ public enum MagicCardField implements ICardField {
 	COLOR_INDICATOR(null) {
 		@Override
 		protected ICardVisitor getAggregator() {
-			return new CollisionAggregator(this, 0);
+			return new StringAggregator(this);
 		}
 
 		@Override
@@ -441,6 +441,11 @@ public enum MagicCardField implements ICardField {
 		}
 	},
 	COLOR_IDENTITY(null) {
+		@Override
+		protected ICardVisitor getAggregator() {
+			return new StringAggregator(this);
+		}
+
 		@Override
 		public Object get(IMagicCard card) {
 			return Colors.getInstance().getColorIdentityAsCost(card);

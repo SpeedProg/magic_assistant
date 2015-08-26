@@ -1,10 +1,14 @@
 changes in 1.4.2.014
 * Optimized web url requests
 * Fixed editions file and tests
+* Bug 458: NPE in ColorIdentity
+* Fixed updating color indicator on refresh
+* Bug 494: Fixed updating color groupping
 changes in 1.4.2.013
 * Bug 480 Filtering sets in quick filter is broken - when multiple match
 * Bug 494 - error when processing with multi-color color indicator
-* Updated to Magic Origins
+* Added: From the Vault: Angels|V15||July 2015|Reprint|From the Vault||
+* Added: Magic Origins|ORI||July 2015|Core||Standard|Magic Origins||
 changes in 1.4.2.012
 * Bug 478 Filtering English is broken
 changes in 1.4.2.011
