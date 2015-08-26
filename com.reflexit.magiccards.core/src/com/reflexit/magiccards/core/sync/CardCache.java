@@ -39,6 +39,8 @@ public class CardCache {
 	public static URL createSetImageURL(String edition, String rarity, boolean upload)
 			throws MalformedURLException, IOException {
 		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
+		if ("Land".equals(rarity))
+			rarity = "Common";
 		String name = (editionAbbr == null ? edition : editionAbbr) + "-" + rarity;
 		String path = createLocalSetImageFilePath(name);
 		File file = new File(path);

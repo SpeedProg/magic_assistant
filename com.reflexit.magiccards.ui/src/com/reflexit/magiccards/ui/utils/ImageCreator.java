@@ -83,7 +83,7 @@ public class ImageCreator {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			while (true) {
+			while (MagicUIActivator.getDefault() != null) {
 				IMagicCard card = null;
 				String key;
 				synchronized (editionImageQueue) {
@@ -99,12 +99,13 @@ public class ImageCreator {
 					Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
 					if (image == null && url != null) {
 						image = ImageCreator.createNewSetImage(url);
-						MagicUIActivator.getDefault().getImage(key, image);
+						MagicUIActivator.getDefault().getImageRegistry().put(key, image);
 					}
 				} catch (Exception e) {
 					// no image, skip
 				}
 			}
+			return Status.CANCEL_STATUS;
 		}
 	};
 
