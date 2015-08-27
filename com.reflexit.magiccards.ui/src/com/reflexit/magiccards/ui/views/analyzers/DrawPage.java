@@ -85,7 +85,8 @@ public class DrawPage extends AbstractDeckListPage {
 
 		@Override
 		protected int computeWidth(Control control) {
-			return 50;
+			control.pack();
+			return control.getSize().x;
 		}
 
 		protected SpinnerContributionItem(String id) {
@@ -94,15 +95,16 @@ public class DrawPage extends AbstractDeckListPage {
 
 		@Override
 		protected Control createControl(Composite parent) {
-			control = new Spinner(parent, SWT.NONE);
+			control = new Spinner(parent, SWT.BORDER);
 			control.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
 					value = control.getSelection();
+					control.setToolTipText("Life Counter " + value);
 				}
 			});
-			control.setValues(value, 0, Integer.MAX_VALUE, 0, 1, 10);
-			control.setToolTipText("Life Counter");
+			control.setValues(value, 0, 99, 0, 1, 10);
+			control.setToolTipText("Life Counter " + value);
 			return control;
 		}
 
@@ -294,13 +296,12 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	protected void makeActions() {
-		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7",
-				() -> {
-					playdeck.newGame();
-					getListControl().unsort();
-					spinner.setValue(20);
-					fullReload();
-				});
+		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
+			playdeck.newGame();
+			getListControl().unsort();
+			spinner.setValue(20);
+			fullReload();
+		});
 		this.unsort = new ImageAction("Unsort", null, "Remove sort by column", () -> {
 			getListControl().unsort();
 			fullReload();
@@ -309,24 +310,20 @@ public class DrawPage extends AbstractDeckListPage {
 			playdeck.draw(1);
 			fullReload();
 		});
-		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)",
-				() -> {
-					playdeck.newTurn();
-					fullReload();
-				});
-		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png",
-				"Look at the top card of the library (Scry)",
+		this.newturn = new ImageAction("New Turn", "icons/obj16/one_card16.png", "New Turn (Untap and Draw)", () -> {
+			playdeck.newTurn();
+			fullReload();
+		});
+		this.scry = new ImageAction("Scry", "icons/obj16/hand16.png", "Look at the top card of the library (Scry)",
 				() -> {
 					playdeck.scry(1);
 					fullReload();
 				});
-		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX,
-				() -> {
-					playdeck.showZone(Zone.LIBRARY, showlib.isChecked());
-					fullReload();
-				});
-		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null,
-				IAction.AS_CHECK_BOX) {
+		this.showlib = new ImageAction("Show Library", "icons/obj16/lib16.png", null, IAction.AS_CHECK_BOX, () -> {
+			playdeck.showZone(Zone.LIBRARY, showlib.isChecked());
+			fullReload();
+		});
+		this.showgrave = new ImageAction("Show Graveyard", "icons/clcl16/graveyard.png", null, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				playdeck.showZone(Zone.GRAVEYARD, isChecked());
@@ -352,8 +349,7 @@ public class DrawPage extends AbstractDeckListPage {
 			playdeck.draw(i);
 			fullReload();
 		});
-		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png",
-				"Put in the battlefield");
+		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png", "Put in the battlefield");
 		this.returnh = new ZoneAction(Zone.HAND, "Return", "icons/clcl16/arrow_left.png", "Return to hand");
 		this.libtop = new ZoneAction(Zone.LIBRARY, "Library Top", "icons/clcl16/arrow_up.png",
 				"Put on top of the library");
@@ -366,8 +362,7 @@ public class DrawPage extends AbstractDeckListPage {
 				fullReload();
 			}
 		};
-		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png",
-				"Remove from the game (Exile)");
+		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png", "Remove from the game (Exile)");
 		this.kill = new ZoneAction(Zone.GRAVEYARD, "Kill", "icons/clcl16/graveyard.png", "Put to graveyard");
 		this.tap = new ImageAction("Tap/Untap", "icons/tap.gif", () -> {
 			playdeck.tap(getCardSelection());
