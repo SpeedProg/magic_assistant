@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class TreeViewContentProvider<T> implements ITreeContentProvider {
+public class TreeViewContentProvider implements ITreeContentProvider {
 	@Override
 	public void dispose() {
 	}
@@ -28,7 +28,7 @@ public class TreeViewContentProvider<T> implements ITreeContentProvider {
 			Collection children = (Collection) element;
 			return children.toArray(new Object[children.size()]);
 		} else if (element instanceof IFilteredCardStore) {
-			IFilteredCardStore<T> fstore = (IFilteredCardStore<T>) element;
+			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			return fstore.getCardGroupRoot().getChildren();
 		}
 		return null;
@@ -47,7 +47,7 @@ public class TreeViewContentProvider<T> implements ITreeContentProvider {
 			Collection children = (Collection) element;
 			return children.size() > 0;
 		} else if (element instanceof IFilteredCardStore) {
-			IFilteredCardStore<T> fstore = (IFilteredCardStore<T>) element;
+			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			return fstore.getCardGroupRoot().size() > 0;
 		}
 		return false;

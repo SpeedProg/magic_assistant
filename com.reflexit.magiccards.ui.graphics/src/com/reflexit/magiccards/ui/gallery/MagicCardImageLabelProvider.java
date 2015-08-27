@@ -1,8 +1,8 @@
 package com.reflexit.magiccards.ui.gallery;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,9 +36,23 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 		map.clear();
 	}
 
+	private static String join(Iterable<Object> strings, String separator) {
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+		for (Object s : strings) {
+			sb.append(sep).append(s);
+			sep = separator;
+		}
+		return sb.toString();
+	}
+
 	public String getText(Object element) {
 		if (element instanceof ICardGroup)
 			return ((ICardGroup) element).getName();
+		if (element instanceof Collection) {
+			// collection of groups
+			return join(((Collection) element), "/");
+		}
 		if (element instanceof IMagicCard) {
 			return ((IMagicCard) element).getName();
 		}
@@ -48,6 +62,9 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		// System.err.println("getting image for " + element + " " +
 		// element.getClass());
+		if (!(element instanceof IMagicCard)) {
+			return null;
+		}
 		if (element instanceof CardGroup && ((CardGroup) element).getFieldIndex() != MagicCardField.NAME)
 			return null;
 		if (map.containsKey(element))

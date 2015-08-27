@@ -5,8 +5,8 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
 import com.reflexit.magiccards.ui.views.SortOrderViewerComparator;
-import com.reflexit.magiccards.ui.views.TreeViewContentProvider;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -26,7 +26,9 @@ public class GalleryViewerManager extends ViewerManager {
 		this.viewer.getControl().setFont(getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
-		this.viewer.setContentProvider(new TreeViewContentProvider());
+		FlatTreeContentProvider provider = new FlatTreeContentProvider();
+		provider.setLevel(4);
+		this.viewer.setContentProvider(provider);
 		getViewer().setLabelProvider(new MagicCardImageLabelProvider(viewer));
 		this.viewer.setUseHashlookup(true);
 		updateGrid();

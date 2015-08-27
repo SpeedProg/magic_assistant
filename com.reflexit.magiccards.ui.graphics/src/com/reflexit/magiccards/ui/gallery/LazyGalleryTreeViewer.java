@@ -13,11 +13,14 @@ package com.reflexit.magiccards.ui.gallery;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.nebula.jface.galleryviewer.GalleryTreeViewer;
+import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
+import org.eclipse.nebula.widgets.gallery.NoGroupRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -27,6 +30,7 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 /**
@@ -50,11 +54,18 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 				associate((GalleryItem) event.item);
 			}
 		});
-		DefaultGalleryGroupRenderer gr = new DefaultGalleryGroupRenderer();
+		setGroupsVisible(true);
+	}
+
+	public void setGroupsVisible(boolean visible) {
+		if (visible)
+			gallery.setGroupRenderer(new DefaultGalleryGroupRenderer());
+		else
+			gallery.setGroupRenderer(new NoGroupRenderer());
 		Image v = ImageCreator.getInstance().getCardNotFoundImageTemplate();
-		gr.setItemSize(v.getBounds().width + 8, v.getBounds().height + 20 + 8);
-		gr.setMinMargin(4);
-		gallery.setGroupRenderer(gr);
+		AbstractGridGroupRenderer groupRenderer = (AbstractGridGroupRenderer) gallery.getGroupRenderer();
+		groupRenderer.setItemSize(v.getBounds().width + 8, v.getBounds().height + 20 + 8);
+		groupRenderer.setMinMargin(4);
 	}
 
 	public void associate(GalleryItem item) {
@@ -156,6 +167,12 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		super.inputChanged(input, oldInput);
 		if (oldInput != null)
 			setExpandedElements(expanded);
+		if (input instanceof IFilteredCardStore) {
+			IFilteredCardStore fsrore = (IFilteredCardStore) input;
+			if (!fsrore.getFilter().isGroupped()) {
+				setExpandedElements(new Object[] { fsrore.getCardGroupRoot() });
+			}
+		}
 		GalleryItem[] selection = gallery.getSelection();
 		if (selection.length > 0) {
 			showItem(selection[selection.length - 1]);
@@ -293,5 +310,14 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		Item item = newItem(parent, SWT.NULL, i);
 		associateAndUpdate(item, element);
 		return item;
+	}
+
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		try {
+			super.setSelection(selection, reveal);
+		} catch (NullPointerException e) {
+			// sadly. This will happend if item was not instantiated
+		}
 	}
 }

@@ -194,6 +194,10 @@ public class MagicCardFilter implements Cloneable {
 		return this.groupFields;
 	}
 
+	public boolean isGroupped() {
+		return groupFields != null;
+	}
+
 	public void setGroupField(ICardField groupField) {
 		setGroupField(0, groupField);
 	}

@@ -76,7 +76,7 @@ public class ColumnFieldEditor extends CheckedTreeEditor {
 				return super.getText(element);
 			}
 		});
-		viewer.setContentProvider(new TreeViewContentProvider<>());
+		viewer.setContentProvider(new TreeViewContentProvider());
 		viewer.setCheckStateProvider(new ICheckStateProvider() {
 			@Override
 			public boolean isGrayed(Object element) {

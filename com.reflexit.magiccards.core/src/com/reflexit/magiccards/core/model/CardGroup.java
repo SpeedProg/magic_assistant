@@ -238,6 +238,10 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 		return subs.get(key);
 	}
 
+	public Collection<CardGroup> getSubGroups() {
+		return subs.values();
+	}
+
 	@Override
 	public synchronized void clear() {
 		children.clear();

@@ -23,6 +23,9 @@ public class LocationFilteredCardStore extends AbstractFilteredCardStore<IMagicC
 
 	@Override
 	public Location getLocation() {
+		if (store == null) {
+			return Location.NO_WHERE;
+		}
 		return store.getLocation();
 	}
 
