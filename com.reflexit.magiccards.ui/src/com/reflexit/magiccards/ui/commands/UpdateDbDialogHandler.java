@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.UpdateMagicDBDialog;
 
 /**
@@ -33,7 +34,7 @@ public class UpdateDbDialogHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbench wb = PlatformUI.getWorkbench();
-		final Shell shell = wb != null ? wb.getActiveWorkbenchWindow().getShell() : new Shell();
+		final Shell shell = MagicUIActivator.getShell();
 		Dialog dialog = new UpdateMagicDBDialog(shell);
 		dialog.open();
 		return null;

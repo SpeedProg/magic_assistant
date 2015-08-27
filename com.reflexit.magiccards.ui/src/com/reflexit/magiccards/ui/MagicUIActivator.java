@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IActivityManager;
@@ -73,8 +74,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		activateCoreSettings();
-		TRACE_EXPORT = isDebugging()
-				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
+		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
 		TRACE_TESTING = (isDebugging()
 				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing")))
@@ -298,5 +298,29 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		else
 			enabledActivities.remove(id);
 		activitySupport.setEnabledActivityIds(enabledActivities);
+	}
+
+	public static Shell getShell() {
+		Shell shell = null;
+		try {
+			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		} catch (Exception e) {
+		}
+		if (shell != null)
+			return shell;
+		Display display = Display.getDefault();
+		shell = display.getActiveShell();
+		if (shell == null) {
+			Shell[] shells = display.getShells();
+			for (Shell shell1 : shells) {
+				if (shell1.getShells().length == 0) {
+					shell = shell1;
+					break;
+				}
+			}
+		}
+		if (shell != null)
+			return shell;
+		return new Shell();
 	}
 }

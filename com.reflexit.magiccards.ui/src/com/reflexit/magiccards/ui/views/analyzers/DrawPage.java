@@ -240,6 +240,7 @@ public class DrawPage extends AbstractDeckListPage {
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(spinner);
+		manager.add(new Separator());
 		manager.add(showlib);
 		manager.add(showgrave);
 		manager.add(showexile);
@@ -349,8 +350,9 @@ public class DrawPage extends AbstractDeckListPage {
 			playdeck.draw(i);
 			fullReload();
 		});
-		this.play = new ZoneAction(Zone.BATTLEFIELD, "Play", "icons/clcl16/arrow_right.png", "Put in the battlefield");
-		this.returnh = new ZoneAction(Zone.HAND, "Return", "icons/clcl16/arrow_left.png", "Return to hand");
+		this.play = new ZoneAction(Zone.BATTLEFIELD, "Battlefield", "icons/clcl16/arrow_right.png",
+				"Put in the battlefield");
+		this.returnh = new ZoneAction(Zone.HAND, "Hand", "icons/clcl16/arrow_left.png", "Return to hand");
 		this.libtop = new ZoneAction(Zone.LIBRARY, "Library Top", "icons/clcl16/arrow_up.png",
 				"Put on top of the library");
 		this.libbottom = new ZoneAction(Zone.LIBRARY, "Library Bottom", "icons/clcl16/arrow_down.png",
@@ -363,7 +365,7 @@ public class DrawPage extends AbstractDeckListPage {
 			}
 		};
 		this.exile = new ZoneAction(Zone.EXILE, "Exile", "icons/clcl16/palm16.png", "Remove from the game (Exile)");
-		this.kill = new ZoneAction(Zone.GRAVEYARD, "Kill", "icons/clcl16/graveyard.png", "Put to graveyard");
+		this.kill = new ZoneAction(Zone.GRAVEYARD, "Graveyard", "icons/clcl16/graveyard.png", "Put to graveyard");
 		this.tap = new ImageAction("Tap/Untap", "icons/tap.gif", () -> {
 			playdeck.tap(getCardSelection());
 			fullReload();

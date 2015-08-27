@@ -23,7 +23,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -235,7 +234,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 					MagicGathererPreferencePage.this.service
 							.getCurrentState()));
 		} catch (ExecutionException e1) {
-			MessageDialog.openError(new Shell(), "Error", e1.getMessage());
+			MessageDialog.openError(MagicUIActivator.getShell(), "Error", e1.getMessage());
 		}
 	}
 }

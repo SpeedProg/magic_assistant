@@ -13,8 +13,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.Editions;
@@ -41,7 +39,8 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					MessageDialog.openInformation(new Shell(), "Disabled", "Online updates are disabled");
+					MessageDialog.openInformation(MagicUIActivator.getShell(), "Disabled",
+							"Online updates are disabled");
 				}
 			});
 			return null;

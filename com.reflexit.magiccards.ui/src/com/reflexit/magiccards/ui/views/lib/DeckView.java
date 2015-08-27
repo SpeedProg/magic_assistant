@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
@@ -247,7 +246,7 @@ public class DeckView extends AbstractMyCardsView {
 					navView.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
 					page.showView(DeckView.ID, col.getId(), IWorkbenchPage.VIEW_ACTIVATE);
 				} catch (PartInitException e) {
-					MessageDialog.openError(new Shell(), "Error", e.getMessage());
+					MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
 				}
 			}
 		});

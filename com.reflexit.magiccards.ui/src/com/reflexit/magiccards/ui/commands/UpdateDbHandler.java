@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -51,8 +50,7 @@ public class UpdateDbHandler extends AbstractHandler {
 	}
 
 	public void performUpdate(final ExecutionEvent event) {
-		IWorkbench wb = PlatformUI.getWorkbench();
-		final Shell shell = wb != null ? wb.getActiveWorkbenchWindow().getShell() : new Shell();
+		final Shell shell = MagicUIActivator.getShell();
 		String u1 = event.getParameter(PreferenceConstants.GATHERER_UPDATE_SET);
 		if (u1 == null) {
 			u1 = MagicGathererPreferencePage.STANDARD;
