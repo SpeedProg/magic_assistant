@@ -184,13 +184,13 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	 * @throws IOException
 	 */
 	public Map<String, String> getOnlineSets() throws IOException {
-		Map<String, String> res = new HashMap<String, String>();
 		try {
 			return processSetFile(new URL(setURL));
+		} catch (IOException e) {
+			throw e;
 		} catch (Exception e) {
-			new IOException(e);
+			throw new IOException(e);
 		}
-		return res;
 	}
 
 	/**

@@ -47,7 +47,7 @@ public class CollectionsContainer extends CardOrganizer {
 				if (name.endsWith(".xml")) {
 					if (el == null) {
 						boolean deck = checkType(mem);
-						new CardCollection(name, this, deck, null);
+						CardCollection cardCollection = new CardCollection(name, this, deck, null);
 					}
 				}
 			}

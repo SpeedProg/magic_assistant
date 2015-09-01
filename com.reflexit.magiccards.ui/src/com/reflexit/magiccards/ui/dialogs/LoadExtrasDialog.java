@@ -123,7 +123,8 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 		langCombo.setItems(Languages.getLangValues());
 		langCombo.setText("English");
 		langCombo.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
-		new Label(buttons, SWT.NONE); // spacer
+		@SuppressWarnings("unused")
+		Label label = new Label(buttons, SWT.NONE); // spacer
 		p.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -154,7 +155,8 @@ public class LoadExtrasDialog extends TitleAreaDialog {
 			}
 		});
 		setSelectionAndNotify(p, p.getSelection());
-		new Label(buttons, SWT.NONE); // spacer
+		@SuppressWarnings("unused")
+		Label label = new Label(buttons, SWT.NONE); // spacer
 	}
 
 	protected void createListChoiceGroup(Composite panel) {
