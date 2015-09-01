@@ -34,14 +34,12 @@ import com.reflexit.magiccards.ui.commands.UpdateDbHandler;
 import com.reflexit.magiccards.ui.preferences.feditors.SpecialComboFieldEditor;
 import com.reflexit.magiccards.ui.widgets.ContextAssist;
 
-public class MagicGathererPreferencePage extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage {
+public class MagicGathererPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public static final String STANDARD = "Standard";
 	public static final String ALL = "All";
 	private SpecialComboFieldEditor fSet;
 	private IHandlerService service;
 	private boolean hasUpdateButton = true;
-	private SpecialComboFieldEditor lang;
 
 	public MagicGathererPreferencePage() {
 		super(GRID);
@@ -78,20 +76,16 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 		// }
 		// });
 		String[][] array = createSetArray();
-		addField(this.fSet = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:",
-				array, getFieldEditorParent(),
-				SWT.DROP_DOWN));
+		addField(this.fSet = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_SET, "Set:", array,
+				getFieldEditorParent(), SWT.DROP_DOWN));
 		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_LAND,
-				"Load all versions of art for basic lands",
-				getFieldEditorParent()));
+				"Load all versions of art for basic lands", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_PRINT,
-				"Load all printed versions of the same card (vs only version for latest set)",
-				getFieldEditorParent()));
+				"Load all printed versions of the same card (vs only version for latest set)", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.GATHERER_UPDATE_SPECIAL, "Load special items",
 				getFieldEditorParent()));
-		addField(this.lang = new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_LANGUAGE,
-				"Also load localized version in:",
-				createLanguagesArray(), getFieldEditorParent(), SWT.DROP_DOWN));
+		addField(new SpecialComboFieldEditor(PreferenceConstants.GATHERER_UPDATE_LANGUAGE,
+				"Also load localized version in:", createLanguagesArray(), getFieldEditorParent(), SWT.DROP_DOWN));
 		Collection<String> names = Editions.getInstance().getNames();
 		String proposals[] = new String[names.size()];
 		int i = 0;
@@ -147,7 +141,8 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
 	 * (org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	@Override
@@ -231,8 +226,7 @@ public class MagicGathererPreferencePage extends FieldEditorPreferencePage imple
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_SPECIAL);
 			propagateParam(parameters, PreferenceConstants.GATHERER_UPDATE_LANGUAGE);
 			new UpdateDbHandler().execute(new ExecutionEvent(null, parameters, null,
-					MagicGathererPreferencePage.this.service
-							.getCurrentState()));
+					MagicGathererPreferencePage.this.service.getCurrentState()));
 		} catch (ExecutionException e1) {
 			MessageDialog.openError(MagicUIActivator.getShell(), "Error", e1.getMessage());
 		}

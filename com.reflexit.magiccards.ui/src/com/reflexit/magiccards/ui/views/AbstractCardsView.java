@@ -154,7 +154,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		}
 		action.setActionDefinitionId(actionId);
 		ActionHandler handler = new ActionHandler(action);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		IHandlerService service = (getSite()).getService(IHandlerService.class);
 		activation = service.activateHandler(actionId, handler);
 		// System.err.println("activating " + activation.getCommandId());
 		activations.put(actionId, activation);
@@ -163,7 +163,7 @@ public abstract class AbstractCardsView extends ViewPart {
 
 	public void deactivateActionHandler(IHandlerActivation activation) {
 		// stem.err.println("deactivating " + activation.getCommandId());
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		IHandlerService service = (getSite()).getService(IHandlerService.class);
 		service.deactivateHandler(activation);
 		activations.remove(activation);
 	}

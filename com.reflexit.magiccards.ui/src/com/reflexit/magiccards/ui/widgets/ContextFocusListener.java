@@ -16,7 +16,7 @@ public class ContextFocusListener implements FocusListener {
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		IContextService contextService = (IContextService) (PlatformUI.getWorkbench()
+		IContextService contextService = (PlatformUI.getWorkbench()
 				.getService(IContextService.class));
 		if (contextService != null) {
 			activation = contextService.activateContext(contextId);
@@ -25,7 +25,7 @@ public class ContextFocusListener implements FocusListener {
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		IContextService contextService = (IContextService) (PlatformUI.getWorkbench()
+		IContextService contextService = (PlatformUI.getWorkbench()
 				.getService(IContextService.class));
 		if (activation != null) {
 			contextService.deactivateContext(activation);

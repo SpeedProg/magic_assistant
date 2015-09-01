@@ -12,9 +12,10 @@ public class SortOrderViewerComparator extends ViewerComparator {
 	}
 
 	public void setOrder(ICardField field, boolean asc) {
-		((SortOrder) getComparator()).setSortField(field, asc);
+		getComparator().setSortField(field, asc);
 	}
 
+	@Override
 	public SortOrder getComparator() {
 		return (SortOrder) super.getComparator();
 	}

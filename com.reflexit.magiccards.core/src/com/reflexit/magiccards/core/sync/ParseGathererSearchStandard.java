@@ -126,7 +126,6 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 	static Pattern setPattern = Pattern.compile("title=\"(.*) \\((.*)\\)\" src=.*set=(\\w+)");
 	static Pattern namePattern = Pattern.compile(".*>(.*)</a></span>");
 	static Pattern powPattern = Pattern.compile("\\(([+*\\d]+/)?([+*\\d]+)\\)");
-	private static Pattern costSymPattern = Pattern.compile("name=([^&]*)");
 
 	private void parseRecord(String line, GatherHelper.ILoadCardHander handler) {
 		MagicCard card = new MagicCard();

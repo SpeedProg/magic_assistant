@@ -248,14 +248,6 @@ public class CubePrintDialog extends Dialog {
 	/**
 	 * @return
 	 */
-	private String playersList() {
-		// TODO Auto-generated method stub
-		return "not implemented";
-	}
-
-	/**
-	 * @return
-	 */
 	private String tournamentResults() {
 		List<PlayerTourInfo> playersInfo = new ArrayList<PlayerTourInfo>(tournament.getPlayersInfo());
 		Collections.sort(playersInfo, new Comparator<PlayerTourInfo>() {

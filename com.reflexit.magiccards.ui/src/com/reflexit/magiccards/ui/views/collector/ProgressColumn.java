@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.model.CardGroup;
@@ -19,7 +18,6 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.views.columns.AbstractImageColumn;
-import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
 public class ProgressColumn extends AbstractImageColumn {
 	protected MagicCardField getPercentKey() {

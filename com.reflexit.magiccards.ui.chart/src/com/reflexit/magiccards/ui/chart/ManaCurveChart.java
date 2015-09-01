@@ -21,7 +21,6 @@ import org.eclipse.birt.chart.model.attribute.Interactivity;
 import org.eclipse.birt.chart.model.attribute.LegendBehaviorType;
 import org.eclipse.birt.chart.model.attribute.LineAttributes;
 import org.eclipse.birt.chart.model.attribute.LineStyle;
-import org.eclipse.birt.chart.model.attribute.MarkerType;
 import org.eclipse.birt.chart.model.attribute.Orientation;
 import org.eclipse.birt.chart.model.attribute.Position;
 import org.eclipse.birt.chart.model.attribute.RiserType;
@@ -47,9 +46,7 @@ import org.eclipse.birt.chart.model.layout.Legend;
 import org.eclipse.birt.chart.model.layout.Plot;
 import org.eclipse.birt.chart.model.layout.TitleBlock;
 import org.eclipse.birt.chart.model.type.BarSeries;
-import org.eclipse.birt.chart.model.type.LineSeries;
 import org.eclipse.birt.chart.model.type.impl.BarSeriesImpl;
-import org.eclipse.birt.chart.model.type.impl.LineSeriesImpl;
 
 public class ManaCurveChart implements IChartGenerator {
 	String[] sa = { "0", "1", "2", "3", "4", "5", "6", "7+" };
@@ -159,22 +156,22 @@ public class ManaCurveChart implements IChartGenerator {
 		return this.cwaBar;
 	}
 
-	private LineSeries createLineSeries(NumberDataSet seriesTwoValues) {
-		LineSeries ls1 = (LineSeries) LineSeriesImpl.create();
-		ls1.setSeriesIdentifier("Average");//$NON-NLS-1$
-		ls1.setDataSet(seriesTwoValues);
-		// ls1.getLineAttributes().setColor(ColorDefinitionImpl.RED());
-		for (int i = 0; i < ls1.getMarkers().size(); i++) {
-			(ls1.getMarkers().get(i)).setType(MarkerType.BOX_LITERAL);
-		}
-		ls1.setCurve(true);
-		ls1.getTriggers().add(
-				TriggerImpl.create(
-						TriggerCondition.ONMOUSEOVER_LITERAL,
-						ActionImpl.create(ActionType.SHOW_TOOLTIP_LITERAL,
-								TooltipValueImpl.create(500, "dph.getDisplayValue()"))));
-		return ls1;
-	}
+	// private LineSeries createLineSeries(NumberDataSet seriesTwoValues) {
+	// LineSeries ls1 = (LineSeries) LineSeriesImpl.create();
+	// ls1.setSeriesIdentifier("Average");//$NON-NLS-1$
+	// ls1.setDataSet(seriesTwoValues);
+	// // ls1.getLineAttributes().setColor(ColorDefinitionImpl.RED());
+	// for (int i = 0; i < ls1.getMarkers().size(); i++) {
+	// (ls1.getMarkers().get(i)).setType(MarkerType.BOX_LITERAL);
+	// }
+	// ls1.setCurve(true);
+	// ls1.getTriggers().add(
+	// TriggerImpl.create(
+	// TriggerCondition.ONMOUSEOVER_LITERAL,
+	// ActionImpl.create(ActionType.SHOW_TOOLTIP_LITERAL,
+	// TooltipValueImpl.create(500, "dph.getDisplayValue()"))));
+	// return ls1;
+	// }
 
 	private BarSeries createBarSeries(NumberDataSet seriesOneValues, String name) {
 		BarSeries bs1 = (BarSeries) BarSeriesImpl.create();

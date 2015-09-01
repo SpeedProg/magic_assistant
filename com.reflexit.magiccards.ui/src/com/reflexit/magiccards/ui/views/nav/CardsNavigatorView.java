@@ -241,7 +241,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	}
 
 	protected void setGlobalHandlers() {
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		IHandlerService service = (getSite()).getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", new ActionHandler(new DeleteAction()));
 		service.activateHandler("org.eclipse.ui.edit.cut", new ActionHandler(new CutAction()));
 		service.activateHandler("org.eclipse.ui.edit.paste", new ActionHandler(new PasteAction()));

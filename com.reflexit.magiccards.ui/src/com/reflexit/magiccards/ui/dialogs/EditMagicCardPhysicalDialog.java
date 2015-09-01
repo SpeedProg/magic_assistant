@@ -70,7 +70,8 @@ public class EditMagicCardPhysicalDialog extends EditCardsPropertiesDialog {
 
 	public void createLinkToCardPritingEditor() {
 		if (cards.size() > 0) {
-			new Label(area, SWT.NONE);
+			@SuppressWarnings("unused")
+			Label label = new Label(area, SWT.NONE);
 			Link link = new Link(area, SWT.NONE);
 			link.setText("<a>Edit card printing instead</a>");
 			link.addSelectionListener(new SelectionAdapter() {

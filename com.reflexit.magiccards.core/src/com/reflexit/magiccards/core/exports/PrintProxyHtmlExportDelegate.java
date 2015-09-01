@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
-import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.CardCache;
@@ -107,10 +106,6 @@ public class PrintProxyHtmlExportDelegate extends AbstractExportDelegate<IMagicC
 			// oki
 		}
 		w.lineEl("img", "src", url, "alt", card.getName());
-	}
-
-	private ICardStore<IMagicCard> getCardStore() {
-		return store.getCardStore();
 	}
 
 	@Override

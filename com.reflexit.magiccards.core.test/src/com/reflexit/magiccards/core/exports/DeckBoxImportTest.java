@@ -28,9 +28,10 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 		addLine("Count,Tradelist Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number");
 	}
 
-	private void addWishHeader() {
-		addLine("Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card Number");
-	}
+	// private void addWishHeader() {
+	// addLine("Count,Name,Foil,Textless,Promo,Signed,Edition,Condition,Language,Card
+	// Number");
+	// }
 
 	public void parseCommentAbove() {
 		line += getAboveComment();

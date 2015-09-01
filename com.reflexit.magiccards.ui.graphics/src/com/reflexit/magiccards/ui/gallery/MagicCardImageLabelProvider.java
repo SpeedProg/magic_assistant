@@ -29,6 +29,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 
 	HashMap<IMagicCard, Image> map = new HashMap<>();
 
+	@Override
 	public void dispose() {
 		for (Image im : map.values()) {
 			im.dispose();
@@ -46,6 +47,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 		return sb.toString();
 	}
 
+	@Override
 	public String getText(Object element) {
 		if (element instanceof ICardGroup)
 			return ((ICardGroup) element).getName();
@@ -59,6 +61,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 		return "";
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		// System.err.println("getting image for " + element + " " +
 		// element.getClass());
@@ -75,9 +78,6 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					final IMagicCard card = (IMagicCard) element;
-					if (card == null) {
-						return Status.OK_STATUS;
-					}
 					String path = ImageCreator.getInstance().createCardPath(card, true, false);
 					final Image image = ImageCreator.getInstance().createCardImage(path, false);
 					if (image == null) {

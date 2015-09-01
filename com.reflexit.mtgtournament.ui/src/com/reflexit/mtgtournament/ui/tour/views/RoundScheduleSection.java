@@ -175,31 +175,32 @@ public class RoundScheduleSection extends TSectionPart {
 			if (element instanceof TableInfo) {
 				TableInfo pinfo = (TableInfo) element;
 				switch (columnIndex) {
-					case 0:
-						int number = pinfo.getRound().getNumber();
-						if (number == 0)
-							return "Draft";
-						return String.valueOf(number);
-					case 1:
-						return String.valueOf(pinfo.getTableNumber());
-					default:
-						int index = columnIndex - 2;
-						PlayerRoundInfo playerInfo = pinfo.getOpponent(index);
-						if (playerInfo == null) return "";
-						String name = playerInfo.getPlayer().getName();
-						String result = playerInfo.getResult().letter();
-						return "(" + result + ") " + name;
+				case 0:
+					int number = pinfo.getRound().getNumber();
+					if (number == 0)
+						return "Draft";
+					return String.valueOf(number);
+				case 1:
+					return String.valueOf(pinfo.getTableNumber());
+				default:
+					int index = columnIndex - 2;
+					PlayerRoundInfo playerInfo = pinfo.getOpponent(index);
+					if (playerInfo == null)
+						return "";
+					String name = playerInfo.getPlayer().getName();
+					String result = playerInfo.getResult().letter();
+					return "(" + result + ") " + name;
 				}
 			} else if (element instanceof Round) {
 				Round round = (Round) element;
 				switch (columnIndex) {
-					case 0:
-						int number = round.getNumber();
-						if (number == 0)
-							return "Draft";
-						return "Round " + String.valueOf(number);
-					default:
-						return "";
+				case 0:
+					int number = round.getNumber();
+					if (number == 0)
+						return "Draft";
+					return "Round " + String.valueOf(number);
+				default:
+					return "";
 				}
 			}
 			return "";
@@ -207,11 +208,10 @@ public class RoundScheduleSection extends TSectionPart {
 
 		private Color systemColorYellow;
 		private Color systemColorGray;
-		private Color systemColorBlue;
+
 		{
 			systemColorYellow = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
 			systemColorGray = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-			systemColorBlue = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		}
 
 		@Override
@@ -248,10 +248,10 @@ public class RoundScheduleSection extends TSectionPart {
 			}
 			RoundState state = round.getState();
 			switch (state) {
-				case CLOSED:
-					return systemColorGray;
-				default:
-					return null;
+			case CLOSED:
+				return systemColorGray;
+			default:
+				return null;
 			}
 		}
 	}
@@ -267,8 +267,8 @@ public class RoundScheduleSection extends TSectionPart {
 		GridLayout layout = new GridLayout(2, false);
 		sectionClient.setLayout(layout);
 		// players table
-		viewer = new TreeViewer(sectionClient, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER);
+		viewer = new TreeViewer(sectionClient,
+				SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -286,8 +286,9 @@ public class RoundScheduleSection extends TSectionPart {
 
 	public void createColumns(int num) {
 		int x = viewer.getTree().getColumnCount();
-		if (x - 2 == num) return;
-		//System.err.println("create for " + num);
+		if (x - 2 == num)
+			return;
+		// System.err.println("create for " + num);
 		TreeColumn[] children = viewer.getTree().getColumns();
 		for (int i = 0; i < children.length; i++) {
 			children[i].dispose();

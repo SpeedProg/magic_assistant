@@ -102,6 +102,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		return this;
 	}
 
+	@Override
 	protected void disassociate(Item item) {
 		Object element = item.getData();
 		Assert.isNotNull(element);
@@ -124,6 +125,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		}
 	}
 
+	@Override
 	protected void internalRefresh(Widget widget, Object element, boolean doStruct, boolean updateLabels) {
 		if (element == null)
 			return;
@@ -144,6 +146,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		}
 	}
 
+	@Override
 	protected void internalInitializeTree(Control tree) {
 		// this is overriden so we can call getAutoExpandLevel which we override
 		createChildren(tree);
@@ -182,7 +185,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 				Widget w = internalExpand(elementOrTreePath, true);
 				if (w instanceof Item) {
 					Item child = getChild(w, 0);
-					showItem((Item) child);
+					showItem(child);
 				}
 			}
 			// can use gallery.translation
@@ -191,6 +194,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		}
 	}
 
+	@Override
 	public void setExpandedElements(Object[] elements) {
 		assertElementsNotNull(elements);
 		if (checkBusy()) {
@@ -230,6 +234,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		return null;
 	}
 
+	@Override
 	protected Widget internalGetWidgetToSelect(Object elementOrTreePath) {
 		if (elementOrTreePath instanceof TreePath) {
 			TreePath treePath = (TreePath) elementOrTreePath;
@@ -264,6 +269,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		return findItem(elementOrTreePath);
 	}
 
+	@Override
 	public Object[] getExpandedElements() {
 		ArrayList<Object> result = new ArrayList<Object>();
 		Item[] items = gallery.getItems();
@@ -278,6 +284,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		return result.toArray();
 	}
 
+	@Override
 	protected void createChildren(final Widget widget) {
 		Object element = widget.getData();
 		Object[] children = getSortedChildren(element);

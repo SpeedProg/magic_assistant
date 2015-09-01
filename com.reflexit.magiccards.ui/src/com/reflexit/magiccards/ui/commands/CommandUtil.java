@@ -17,9 +17,9 @@ public class CommandUtil {
 	public static Object executeCommandWithParameter(String commId, String paramId, String paramValue)
 			throws ExecutionException,
 			NotDefinedException, NotEnabledException, NotHandledException {
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(
+		ICommandService commandService = PlatformUI.getWorkbench().getService(
 				ICommandService.class);
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+		IHandlerService handlerService = PlatformUI.getWorkbench().getService(
 				IHandlerService.class);
 		Command command = commandService.getCommand(commId);
 		IParameter param = command.getParameter(paramId);
@@ -29,7 +29,7 @@ public class CommandUtil {
 	}
 
 	public static boolean executeCommand(String id) {
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+		IHandlerService handlerService = PlatformUI.getWorkbench().getService(
 				IHandlerService.class);
 		try {
 			Object result = handlerService.executeCommand(id, null);

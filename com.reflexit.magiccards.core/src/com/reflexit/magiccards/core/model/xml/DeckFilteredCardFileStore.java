@@ -9,11 +9,8 @@ import com.reflexit.magiccards.core.model.storage.AbstractFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 
 public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicCard> {
-	private String filename;
-
 	public DeckFilteredCardFileStore(String filename) {
 		super(null);
-		this.filename = filename;
 		ICardStore<IMagicCard> store = getStoreForKey(filename);
 		if (store == null) {
 			throw new MagicException("Cannot open file " + filename);
@@ -29,8 +26,7 @@ public class DeckFilteredCardFileStore extends AbstractFilteredCardStore<IMagicC
 		if (store != null)
 			return store;
 		// backward compat
-		CardCollection coll = DataManager.getInstance().getModelRoot()
-				.findCardCollectionById(location.getName());
+		CardCollection coll = DataManager.getInstance().getModelRoot().findCardCollectionById(location.getName());
 		if (coll != null) {
 			return coll.getStore();
 		}

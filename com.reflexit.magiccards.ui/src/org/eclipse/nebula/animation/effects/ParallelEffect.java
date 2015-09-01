@@ -48,7 +48,7 @@ public class ParallelEffect implements IEffect {
 		if (effects != null) {
 			IEffect e = null;
 			for (int i = effects.length - 1; i >= 0; i--) {
-				e = (IEffect) effects[i];
+				e = effects[i];
 				if (e.getLength() > length) {
 					length = e.getLength();
 				}

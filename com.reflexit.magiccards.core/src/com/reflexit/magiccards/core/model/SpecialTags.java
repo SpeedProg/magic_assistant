@@ -113,13 +113,13 @@ public class SpecialTags {
 		}
 	}
 
-	private void removeTag(Map<String, String> map, String key) {
-		if (conditions.contains(key)) {
-			map.remove("c");
-		} else {
-			map.remove(key);
-		}
-	}
+	// private void removeTag(Map<String, String> map, String key) {
+	// if (conditions.contains(key)) {
+	// map.remove("c");
+	// } else {
+	// map.remove(key);
+	// }
+	// }
 
 	public String getSpecialValue(String string, String key) {
 		Map<String, String> map = toMap(string);

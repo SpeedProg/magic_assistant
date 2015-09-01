@@ -31,10 +31,6 @@ public class SortOrderTest extends TestCase {
 		return CardGenerator.generatePhysicalCardWithValues();
 	}
 
-	private void setField(IMagicCard y, ICardField field, String value) {
-		((MagicCardPhysical) y).set(field, value);
-	}
-
 	private void setField(IMagicCard y, ICardField field, Object value) {
 		((MagicCardPhysical) y).set(field, String.valueOf(value));
 	}

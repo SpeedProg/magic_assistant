@@ -37,16 +37,10 @@ public class CustomPriceProvider extends AbstractPriceProvider {
 		}
 	}
 
-	private long lastUpdate;
-
 	public boolean updateFromWeb(URL url) throws IOException {
-		// if (lastUpdate != 0 && System.currentTimeMillis() - lastUpdate < 60 *
-		// 1000)
-		// return false;
-		InputStream openStream = WebUtils.openUrl(url);
-		loadPrices(openStream);
-		openStream.close();
-		lastUpdate = System.currentTimeMillis();
+		try (InputStream openStream = WebUtils.openUrl(url)) {
+			loadPrices(openStream);
+		}
 		return true;
 	}
 

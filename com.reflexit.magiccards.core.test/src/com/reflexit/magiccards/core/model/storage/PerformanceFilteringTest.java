@@ -10,19 +10,15 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.expr.BinaryExpr;
 import com.reflexit.magiccards.core.model.expr.Expr;
-import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-
 import junit.framework.TestCase;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class PerformanceFilteringTest extends TestCase {
 	private IFilteredCardStore fstore;
-	private ICoreProgressMonitor monitor;
 	private MagicCardFilter filter;
 
 	@Override
 	protected void setUp() {
-		monitor = ICoreProgressMonitor.NONE;
 		db().initialize();
 		fstore = DataManager.getInstance().getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 		filter = fstore.getFilter();

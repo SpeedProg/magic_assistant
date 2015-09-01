@@ -85,7 +85,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
 		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (IHandlerService) (getSite()).getService(IHandlerService.class);
+		IHandlerService service = (getSite()).getService(IHandlerService.class);
 		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
 	}
 

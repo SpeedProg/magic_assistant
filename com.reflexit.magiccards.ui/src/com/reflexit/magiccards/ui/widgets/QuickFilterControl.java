@@ -16,7 +16,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -25,7 +24,6 @@ import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
-import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 
@@ -250,13 +248,13 @@ public class QuickFilterControl extends Composite {
 		item.setWidth(180);
 	}
 
-	private void createToolBarLabel(ToolBar toolbar, String string) {
-		Label label = new Label(toolbar, SWT.NONE);
-		label.setText(string);
-		ToolItem text = new ToolItem(toolbar, SWT.SEPARATOR);
-		text.setControl(label);
-		text.setWidth(50);
-	}
+	// private void createToolBarLabel(ToolBar toolbar, String string) {
+	// Label label = new Label(toolbar, SWT.NONE);
+	// label.setText(string);
+	// ToolItem text = new ToolItem(toolbar, SWT.SEPARATOR);
+	// text.setControl(label);
+	// text.setWidth(50);
+	// }
 
 	private void createColorButton(ToolBar toolbar, String name) {
 		Colors colors = Colors.getInstance();
@@ -288,20 +286,20 @@ public class QuickFilterControl extends Composite {
 		}
 	}
 
-	private void createHideButton(Composite comp) {
-		ToolBar toolbar = new ToolBar(comp, SWT.FLAT);
-		GridData gd = new GridData();
-		gd.horizontalAlignment = GridData.END;
-		//
-		ToolItem hideButton = new ToolItem(toolbar, SWT.PUSH);
-		hideButton.setImage(MagicUIActivator.getDefault().getImage("icons/clcl16/delete_obj.gif"));
-		hideButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setVisible(false);
-			}
-		});
-	}
+	// private void createHideButton(Composite comp) {
+	// ToolBar toolbar = new ToolBar(comp, SWT.FLAT);
+	// GridData gd = new GridData();
+	// gd.horizontalAlignment = GridData.END;
+	// //
+	// ToolItem hideButton = new ToolItem(toolbar, SWT.PUSH);
+	// hideButton.setImage(MagicUIActivator.getDefault().getImage("icons/clcl16/delete_obj.gif"));
+	// hideButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// setVisible(false);
+	// }
+	// });
+	// }
 
 	public void setPreferenceStore(IPreferenceStore store) {
 		this.store = store;

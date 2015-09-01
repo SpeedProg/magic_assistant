@@ -295,7 +295,10 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		message.getParent().layout(true);
 	}
 
-	private void dumpUiThread() {
+	/**
+	 * debugging method
+	 */
+	public void dumpUiThread() {
 		if (Display.getCurrent() == null) {
 			Thread.getAllStackTraces().forEach((t, s) -> {
 				if (t.getId() == 1) {

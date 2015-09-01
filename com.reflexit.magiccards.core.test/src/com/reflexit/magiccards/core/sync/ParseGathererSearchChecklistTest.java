@@ -5,15 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
-import java.util.Properties;
-
 import junit.framework.TestCase;
 
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererSearchChecklistTest extends TestCase {
-	private Properties options;
 	private ICoreProgressMonitor monitor;
 	private File file;
 	private String magicSet;
@@ -24,7 +21,6 @@ public class ParseGathererSearchChecklistTest extends TestCase {
 	@Override
 	public void setUp() throws Exception {
 		parser = new ParseGathererSearchChecklist();
-		options = new Properties();
 		monitor = ICoreProgressMonitor.NONE;
 		file = File.createTempFile("magic", "txt");
 		file.deleteOnExit();

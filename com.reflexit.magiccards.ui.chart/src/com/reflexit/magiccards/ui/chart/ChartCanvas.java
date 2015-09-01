@@ -57,7 +57,6 @@ public class ChartCanvas extends Canvas {
 	protected Image cachedImage;
 	private Chart chart;
 	private GeneratedChartState state;
-	private IChartGenerator gen;
 	private CallBackNotifier notifier;
 	private boolean needRebuild = false;
 	private boolean needRender = false;
@@ -120,7 +119,6 @@ public class ChartCanvas extends Canvas {
 	}
 
 	public void setChartGenerator(IChartGenerator gen) {
-		this.gen = gen;
 		setChart(gen.create());
 	}
 
