@@ -29,6 +29,7 @@ public abstract class AbstractSwtBotTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		bot = new SWTWorkbenchBot();
+		System.setProperty("junit.testing", "true");
 	}
 
 	@Before

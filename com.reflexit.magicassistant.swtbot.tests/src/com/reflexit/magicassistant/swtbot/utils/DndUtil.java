@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
@@ -79,6 +80,7 @@ public class DndUtil {
 	protected Rectangle absoluteLocation(final Control control) {
 		final Rectangle result[] = new Rectangle[] { null };
 		display.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				result[0] = display.map(control.getParent(), null, control.getBounds());
 			}
@@ -119,9 +121,15 @@ public class DndUtil {
 	 * @see #after(AbstractSWTBot)
 	 */
 	public void dragAndDrop(final AbstractSWTBot<? extends Widget> source, final Point target) {
+		// Rectangle sourceBounds = getBounds(source);
 		final Rectangle sourceLocation = absoluteLocation(source);
 		final Point slightOffset = Geometry.add(Geometry.getLocation(sourceLocation), new Point(DRAG_THRESHOLD, DRAG_THRESHOLD));
-		doDragAndDrop(Geometry.min(Geometry.centerPoint(sourceLocation), slightOffset), target);
+		// System.err.println(sourceBounds);
+		System.err.println(sourceLocation);
+		Point sourceCenter = Geometry.centerPoint(sourceLocation);
+		System.err.println(sourceCenter);
+		System.err.println(target);
+		doDragAndDrop(sourceCenter, target);
 	}
 
 	/**
@@ -146,11 +154,13 @@ public class DndUtil {
 		// source.x, source.y, dest.x, dest.y));
 		try {
 			final Robot awtRobot = new Robot();
+			awtRobot.setAutoDelay(DRAG_DELAY);
 			// the x+10 motion is needed to let native functions register a drag
 			// detect. It did not work under Windows
 			// otherwise and has been reported to be required for linux, too.
 			// But I could not test that.
 			syncExec(new VoidResult() {
+				@Override
 				public void run() {
 					awtRobot.mouseMove(source.x, source.y);
 					awtRobot.mousePress(InputEvent.BUTTON1_MASK);
@@ -160,6 +170,7 @@ public class DndUtil {
 			/* drag delay */
 			SWTUtils.sleep(DRAG_DELAY);
 			syncExec(new VoidResult() {
+				@Override
 				public void run() {
 					awtRobot.mouseMove(dest.x + DRAG_THRESHOLD, dest.y);
 					awtRobot.mouseMove(dest.x, dest.y);
@@ -168,6 +179,7 @@ public class DndUtil {
 			/* drop delay */
 			SWTUtils.sleep(DRAG_DELAY);
 			syncExec(new VoidResult() {
+				@Override
 				public void run() {
 					awtRobot.mouseRelease(InputEvent.BUTTON1_MASK);
 				}
@@ -285,10 +297,12 @@ public class DndUtil {
 		@Override
 		protected Rectangle absoluteLocation() {
 			return UIThreadRunnable.syncExec(new Result<Rectangle>() {
+				@Override
 				public Rectangle run() {
 					return display.map(widget.getParent(), null, widget.getBounds());
 				}
 			});
+
 		}
 	}
 
@@ -300,8 +314,16 @@ public class DndUtil {
 		@Override
 		protected Rectangle absoluteLocation() {
 			return UIThreadRunnable.syncExec(new Result<Rectangle>() {
+				@Override
 				public Rectangle run() {
-					return display.map(widget.getParent(), null, widget.getBounds());
+					Table table = widget.getParent();
+					Rectangle rectangle = widget.getBounds();
+					int h = 0;
+					if (table.getHeaderVisible()) {
+						h = table.getHeaderHeight();
+					}
+					return display.map(widget.getParent(), null, rectangle.x, rectangle.y + h, rectangle.width,
+							rectangle.height);
 				}
 			});
 		}

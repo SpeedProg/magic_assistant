@@ -1,7 +1,10 @@
 package com.reflexit.magicassistant.swtbot.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -14,8 +17,6 @@ import org.junit.runner.RunWith;
 
 import com.reflexit.magicassistant.swtbot.utils.DndUtil;
 import com.reflexit.magiccards.ui.views.MagicDbView;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class CreateDeck extends AbstractSwtBotTest {
@@ -44,9 +45,16 @@ public class CreateDeck extends AbstractSwtBotTest {
 	public void testDandD() throws Exception {
 		createDeck("deckDnd");
 		// drag a drop card in the new deck
-		String name = selectFirstRowInDb().getText(0);
+		SWTBotTableItem dbRow = selectFirstRowInDb();
+		String name = dbRow.getText(0);
 		// add card using DND
-		new DndUtil(bot.getDisplay()).dragAndDrop(selectFirstRowInDb(), deckView);
+		bot.sleep(1000);
+		UIThreadRunnable.syncExec(() -> {
+			dbView.bot().table().widget.redraw();
+		});
+		
+		// dbRow.dragAndDrop(deckView.bot().table());
+		new DndUtil(bot.getDisplay()).dragAndDrop(dbRow, deckView);
 		bot.sleep(1000);
 		SWTBotTableItem row2 = selectFirstRowInView(deckView);
 		assertEquals(name, row2.getText(0));

@@ -77,11 +77,14 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		TRACE_EXPORT = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/export"));
 		TRACE_UI = isDebugging() && "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/ui"));
 		TRACE_TESTING = (isDebugging()
-				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing")))
-				|| Boolean.valueOf(System.getProperty("junit.testing"));
+				&& "true".equalsIgnoreCase(Platform.getDebugOption(PLUGIN_ID + "/debug/testing"))) || isJunitRunning();
 		Device device = Display.getDefault();
 		COLOR_GREENISH = new Color(device, 255 - 64, 255, 255 - 64);
 		COLOR_PINKINSH = new Color(device, 255, 255 - 64, 255 - 64);
+	}
+
+	public static boolean isJunitRunning() {
+		return Boolean.valueOf(System.getProperty("junit.testing"));
 	}
 
 	@SuppressWarnings({ "restriction" })

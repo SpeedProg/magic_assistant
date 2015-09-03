@@ -4,10 +4,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
@@ -38,8 +40,8 @@ public class PrintingsManager extends TreeViewerManager implements IDisposable {
 	public void hookDragAndDrop() {
 		this.getViewer().getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		getViewer().addDragSupport(ops, transfers, new MagicCardDragListener(getViewer()));
+		viewer.addDragSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), TextTransfer.getInstance(),
+				PluginTransfer.getInstance() }, new MagicCardDragListener(viewer));
 	}
 
 	public void setInput(Collection<Object> input) {

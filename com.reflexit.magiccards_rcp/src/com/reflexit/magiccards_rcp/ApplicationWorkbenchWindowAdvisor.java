@@ -56,13 +56,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	private void checkForCardUpdates() {
-		boolean updates = MagicUIActivator.getDefault().getPreferenceStore()
+		final boolean updates = MagicUIActivator.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.CHECK_FOR_CARDS);
-		if (updates == false || MagicUIActivator.TRACE_TESTING)
+		if (updates == false || MagicUIActivator.TRACE_TESTING || MagicUIActivator.isJunitRunning())
 			return;
 		new Job("Checking for Card Update") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				if (updates == false || MagicUIActivator.TRACE_TESTING || MagicUIActivator.isJunitRunning())
+					return Status.CANCEL_STATUS;
 				CheckForUpdateDbHandler.doCheckForCardUpdates();
 				return Status.OK_STATUS;
 			}
@@ -70,9 +72,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	protected void installSoftwareUpdate() {
-		boolean updates = MagicUIActivator.getDefault().getPreferenceStore()
+		final boolean updates = MagicUIActivator.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.CHECK_FOR_UPDATES);
-		if (updates == false || MagicUIActivator.TRACE_TESTING)
+		if (updates == false || MagicUIActivator.TRACE_TESTING || MagicUIActivator.isJunitRunning())
 			return;
 		final IProvisioningAgent agent = (IProvisioningAgent) ServiceHelper
 				.getService(Activator.getDefault().getBundle().getBundleContext(), IProvisioningAgent.SERVICE_NAME);
@@ -89,6 +91,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		new Job("Checking for Software Update") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				if (updates == false || MagicUIActivator.TRACE_TESTING || MagicUIActivator.isJunitRunning())
+					return Status.CANCEL_STATUS;
 				monitor.beginTask("Checking for application updates...", 100);
 				IStatus updateStatus = P2Util.checkForUpdates(agent, new SubProgressMonitor(monitor, 50), false);
 				if (updateStatus.getCode() != UpdateOperation.STATUS_NOTHING_TO_UPDATE) {

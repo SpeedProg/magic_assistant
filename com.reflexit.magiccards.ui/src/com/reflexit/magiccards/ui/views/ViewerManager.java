@@ -5,12 +5,14 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.part.PluginTransfer;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
@@ -37,7 +39,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#createContents(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -48,6 +51,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	 *
 	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// override to dispose resources
 	}
@@ -87,7 +91,9 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider ()
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#getSelectionProvider
+	 * ()
 	 */
 	@Override
 	public ISelectionProvider getSelectionProvider() {
@@ -114,7 +120,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookContextMenu(org
 	 * .eclipse.jface.action.MenuManager)
 	 */
 	@Override
@@ -126,8 +133,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookDoubleClickListener
-	 * (org.eclipse.jface.viewers.IDoubleClickListener)
+	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#
+	 * hookDoubleClickListener (org.eclipse.jface.viewers.IDoubleClickListener)
 	 */
 	@Override
 	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
@@ -137,7 +144,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicColumnViewer#hookSortAction(com
 	 * .reflexit.magiccards.ui.views.IColumnSortAction)
 	 */
 	@Override
@@ -166,8 +174,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	protected void updateGrid() {
 		try {
-			boolean grid = MagicUIActivator.getDefault().getPreferenceStore()
-					.getBoolean(PreferenceConstants.SHOW_GRID);
+			boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
 			setLinesVisible(grid);
 			getViewer().getControl().setFont(getFont());
 			getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
@@ -190,11 +197,11 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		ColumnViewer viewer = getViewer();
 		viewer.getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance() };
-		viewer.addDragSupport(ops, transfers, new MagicCardDragListener(viewer));
-		viewer.addDropSupport(ops, transfers, new MagicCardDropAdapter(viewer));
+		viewer.addDragSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), TextTransfer.getInstance(),
+				PluginTransfer.getInstance() }, new MagicCardDragListener(viewer));
+		viewer.addDropSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), PluginTransfer.getInstance() },
+				new MagicCardDropAdapter(viewer));
 	}
-
 
 	@Override
 	public abstract int getSortDirection();

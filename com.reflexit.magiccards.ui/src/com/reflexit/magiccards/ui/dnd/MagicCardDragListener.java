@@ -15,9 +15,11 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.PluginTransferData;
 
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.IMagicCard;
 
 /**
@@ -58,6 +60,9 @@ public class MagicCardDragListener implements DragSourceListener {
 		} else if (PluginTransfer.getInstance().isSupportedType(event.dataType)) {
 			byte[] data = MagicCardTransfer.getInstance().toByteArray(cards);
 			event.data = new PluginTransferData("com.reflexit.ui.drop", data);
+		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
+			byte[] data = MagicCardTransfer.getInstance().toByteArray(cards);
+			event.data = new String(data, FileUtils.CHARSET_UTF_8);
 		}
 	}
 
