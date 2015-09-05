@@ -384,35 +384,40 @@ public class ImageCreator {
 	}
 
 	public Image createCardNotFoundImage(IMagicCard card) {
-		Image im1 = getCardNotFoundImageTemplate();
-		Image im = new Image(Display.getCurrent(), im1, SWT.IMAGE_COPY);
-		GC gc = new GC(im);
-		// gc.setAntialias(SWT.ON);
-		// gc.setInterpolation(SWT.HIGH);
-		gc.setFont(getFont(TITLE_FONT_KEY));
-		gc.drawText(card.getName(), 20, 17, true);
-		Image costImage = SymbolConverter.buildCostImage(card.getCost());
-		gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
-		gc.setFont(getFont(TYPE_FONT_KEY));
-		gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);
-		gc.setFont(getFont(TEXT_FONT_KEY));
-		gc.drawText("Image not found", 30, 46, true);
-		String oracleText = card.getOracleText();
-		renderHtml(gc, 18, 195, 180, 80, oracleText == null ? "" : oracleText);
-		// oracleText = oracleText.replaceAll("<br>", "\n");
-		// gc.drawText(oracleText, 20, 200, true);
-		gc.setFont(getFont(TITLE_FONT_KEY));
-		String pt = "";
-		String tou = card.getToughness();
-		if (tou != null && tou.length() > 0) {
-			pt = card.getPower() + "/" + tou;
-		}
-		gc.drawText(pt, 204 - 20, 283, true);
-		Image set = getSetImage(card);
-		if (set != null)
-			gc.drawImage(set, 204 - set.getBounds().width, 177);
-		gc.dispose();
-		return im;
+		final Display d = Display.getDefault();
+		Image[] imres = new Image[1];
+		d.syncExec(() -> {
+			Image im1 = getCardNotFoundImageTemplate();
+			Image im = new Image(Display.getCurrent(), im1, SWT.IMAGE_COPY);
+			GC gc = new GC(im);
+			// gc.setAntialias(SWT.ON);
+			// gc.setInterpolation(SWT.HIGH);
+			gc.setFont(getFont(TITLE_FONT_KEY));
+			gc.drawText(card.getName(), 20, 17, true);
+			Image costImage = SymbolConverter.buildCostImage(card.getCost());
+			gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
+			gc.setFont(getFont(TYPE_FONT_KEY));
+			gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);
+			gc.setFont(getFont(TEXT_FONT_KEY));
+			gc.drawText("Image not found", 30, 46, true);
+			String oracleText = card.getOracleText();
+			renderHtml(gc, 18, 195, 180, 80, oracleText == null ? "" : oracleText);
+			// oracleText = oracleText.replaceAll("<br>", "\n");
+			// gc.drawText(oracleText, 20, 200, true);
+			gc.setFont(getFont(TITLE_FONT_KEY));
+			String pt = "";
+			String tou = card.getToughness();
+			if (tou != null && tou.length() > 0) {
+				pt = card.getPower() + "/" + tou;
+			}
+			gc.drawText(pt, 204 - 20, 283, true);
+			Image set = getSetImage(card);
+			if (set != null)
+				gc.drawImage(set, 204 - set.getBounds().width, 177);
+			gc.dispose();
+			imres[0] = im;
+		});
+		return imres[0];
 	}
 
 	private void renderHtml(GC parentGc, int x, int y, int w, int h, String html) {
