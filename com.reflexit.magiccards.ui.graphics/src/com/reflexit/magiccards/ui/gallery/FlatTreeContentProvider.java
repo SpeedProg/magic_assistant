@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -46,19 +45,10 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 		if (element instanceof CardGroup) {
 			Collection children = ((CardGroup) element).expand();
 			return children.toArray(new Object[children.size()]);
-		} else if (element instanceof List) {
-			// groups list
-			List list = (List) element;
-			if (list.size() == 0)
-				return null;
-			Object last = list.get(list.size() - 1);
-			if (last instanceof CardGroup) {
-				return getChildren(last);
-			}
 		} else if (element instanceof IFilteredCardStore) {
 			if (groupped) {
 				if (level > 1) {
-					Collection children = leafs(fstore.getCardGroupRoot());
+					Collection<ICardGroup> children = leafs(fstore.getCardGroupRoot());
 					return children.toArray(new Object[children.size()]);
 				}
 				return fstore.getCardGroupRoot().getChildren();
@@ -68,27 +58,30 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
-	private Collection<IMagicCard> leafs(ICardGroup cardGroup) {
-		return leafs((CardGroup) cardGroup, new ArrayList<>(), new ArrayList<>());
+	private Collection<ICardGroup> leafs(ICardGroup cardGroup) {
+		return leafs((CardGroup) cardGroup, new ArrayList<>());
 	}
 
-	private Collection<IMagicCard> leafs(CardGroup cardGroup, List glist, List result) {
+	private Collection<ICardGroup> leafs(CardGroup cardGroup, List<ICardGroup> result) {
 		Collection<CardGroup> subs = cardGroup.getSubGroups();
-		if (subs.size() == 0 || level == glist.size()) {
+		if (subs.size() == 0 || level == depth(cardGroup)) {
 			// this is leaf node
-			List newGList = new ArrayList<>(glist);
-			result.add(newGList);
+			result.add(cardGroup);
 			return result;
 		}
 		for (Iterator<? extends ICard> iterator = subs.iterator(); iterator.hasNext();) {
 			ICard card = iterator.next();
 			if (card instanceof CardGroup) {
-				List newGList = new ArrayList<>(glist);
-				newGList.add(card);
-				leafs((CardGroup) card, newGList, result);
+				leafs((CardGroup) card, result);
 			}
 		}
 		return result;
+	}
+
+	private int depth(ICardGroup cardGroup) {
+		if (cardGroup.getParent() == null)
+			return 1;
+		return depth(cardGroup.getParent()) + 1;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 public class GalleryViewerManager extends ViewerManager {
 	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
 	protected LazyGalleryTreeViewer viewer;
+	private FlatTreeContentProvider flatTreeContentProvider;
 
 	public GalleryViewerManager(String id) {
 		super(id);
@@ -26,9 +27,9 @@ public class GalleryViewerManager extends ViewerManager {
 		this.viewer.getControl().setFont(getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
-		FlatTreeContentProvider provider = new FlatTreeContentProvider();
-		provider.setLevel(4);
-		this.viewer.setContentProvider(provider);
+		flatTreeContentProvider = new FlatTreeContentProvider();
+		flatTreeContentProvider.setLevel(5);
+		this.viewer.setContentProvider(flatTreeContentProvider);
 		getViewer().setLabelProvider(new MagicCardImageLabelProvider(viewer));
 		this.viewer.setUseHashlookup(true);
 		updateGrid();

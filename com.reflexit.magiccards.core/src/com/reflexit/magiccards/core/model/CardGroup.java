@@ -31,7 +31,8 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	private List<ICard> children;
 	private Map<String, CardGroup> subs;
 	private MagicCardFilter filter;
-	private ICard[] elements;
+	private ICard[] visibleElements;
+	private CardGroup parent;
 
 	public static final class NonGroupPredicate implements Predicate<Object> {
 		@Override
@@ -87,22 +88,22 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 
 	@Override
 	public synchronized ICard[] getChildren() {
-		if (elements == null) {
+		if (visibleElements == null) {
 			if (children.size() == 0) {
 				return new ICard[0];
 			}
 			if (filter == null) {
-				elements = children.toArray(new ICard[children.size()]);
+				visibleElements = children.toArray(new ICard[children.size()]);
 			} else {
-				elements = filter.filterCards(children);
+				visibleElements = filter.filterCards(children);
 				SortOrder sortOrder = filter.getSortOrder();
 				if (!sortOrder.isEmpty()) {
 					Comparator<ICard> comparator = sortOrder.getComparator();
-					Arrays.sort(elements, comparator);
+					Arrays.sort(visibleElements, comparator);
 				}
 			}
 		}
-		return elements;
+		return visibleElements;
 	}
 
 	@Override
@@ -158,12 +159,17 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 
 	@Override
 	public synchronized void add(ICard elem) {
+		doAdd(elem);
+		recache();
+	}
+
+	private void doAdd(ICard elem) {
 		this.children.add(elem);
 		if (elem instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) elem;
 			subs.put(cardGroup.getName(), (CardGroup) elem);
+			cardGroup.parent = this;
 		}
-		recache();
 	}
 
 	public void addToSubGroup(String subGroupName, ICard elem) {
@@ -216,21 +222,36 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object arg0) {
-		if (arg0 instanceof CardGroup) {
-			CardGroup group = (CardGroup) arg0;
-			return name.equals(group.name) && children.equals(group.children);
-		}
-		return false;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		return result;
 	}
 
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof CardGroup))
+			return false;
+		CardGroup other = (CardGroup) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		return true;
 	}
 
 	@Override
@@ -251,7 +272,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 
 	public synchronized void recache() {
 		super.clear();
-		this.elements = null;
+		this.visibleElements = null;
 	}
 
 	public synchronized IMagicCardPhysical getFirstCard() {
@@ -382,11 +403,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 		if (cards == null)
 			return;
 		for (Object elem : new CardList(cards).getList()) {
-			children.add((ICard) elem);
-			if (elem instanceof CardGroup) {
-				CardGroup cardGroup = (CardGroup) elem;
-				subs.put(cardGroup.getName(), (CardGroup) elem);
-			}
+			doAdd((ICard) elem);
 		}
 		recache();
 	}
@@ -423,5 +440,10 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 			CardGroup o = iterator.next();
 			o.setFilter(filter);
 		}
+	}
+
+	@Override
+	public ICardGroup getParent() {
+		return parent;
 	}
 }

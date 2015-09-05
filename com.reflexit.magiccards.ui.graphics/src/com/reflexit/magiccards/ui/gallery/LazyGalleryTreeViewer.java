@@ -168,12 +168,12 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 	protected void inputChanged(Object input, Object oldInput) {
 		Object[] expanded = getExpandedElements();
 		super.inputChanged(input, oldInput);
-		if (oldInput != null)
-			setExpandedElements(expanded);
 		if (input instanceof IFilteredCardStore) {
 			IFilteredCardStore fsrore = (IFilteredCardStore) input;
 			if (!fsrore.getFilter().isGroupped()) {
 				setExpandedElements(new Object[] { fsrore.getCardGroupRoot() });
+			} else {
+				setExpandedElements(expanded);
 			}
 		}
 		GalleryItem[] selection = gallery.getSelection();
@@ -204,6 +204,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 			Object element = elements[i];
 			// Ensure item exists for element.
 			Widget w = internalExpand(element, false);
+			if (w == null)
+				w = doFindItem(element);
 			if (w instanceof Item)
 				setExpanded((Item) w, true);
 		}
@@ -211,7 +213,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 
 	@Override
 	protected Widget doFindItem(Object element) {
-		return null; // only using cached items
+		// this will only find group elements but its ok
+		return doFindItem(gallery, element);
 	}
 
 	protected Widget doFindItem(Widget parent, Object element) {
@@ -268,6 +271,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		}
 		return findItem(elementOrTreePath);
 	}
+
 
 	@Override
 	public Object[] getExpandedElements() {
