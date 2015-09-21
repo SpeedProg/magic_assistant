@@ -1,3 +1,6 @@
 /bin
+<<<<<<< master1
 /target/
+=======
+>>>>>>> 44ec71b gitignore for screenshots
 /screenshots/
