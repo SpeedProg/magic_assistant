@@ -21,6 +21,7 @@ public class CardCollection extends CardElement {
 	transient private ICardStore<IMagicCard> store;
 	transient protected Boolean deck;
 	transient protected Boolean virtual;
+	transient protected boolean opening = false;
 
 	public CardCollection(String filename, CardOrganizer parent) {
 		this(filename, parent, null, null);
@@ -74,10 +75,17 @@ public class CardCollection extends CardElement {
 		return super.getName();
 	}
 
-	public void open() {
-		IFilteredCardStore<IMagicCard> fi = DataManager.getInstance().getCardHandler()
-				.getCardCollectionFilteredStore(getId());
-		open(fi.getCardStore());
+	public synchronized void open() {
+		if (opening)
+			return;
+		opening = true;
+		try {
+			IFilteredCardStore<IMagicCard> fi = DataManager.getInstance().getCardHandler()
+					.getCardCollectionFilteredStore(getId());
+			open(fi.getCardStore());
+		} finally {
+			opening = false;
+		}
 	}
 
 	public synchronized void open(ICardStore<IMagicCard> store) {

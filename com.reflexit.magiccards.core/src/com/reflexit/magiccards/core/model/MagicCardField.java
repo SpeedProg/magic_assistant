@@ -28,7 +28,7 @@ import com.reflexit.magiccards.core.model.aggr.StringAggregator;
 public enum MagicCardField implements ICardField {
 	ID {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, 0);
 		}
 
@@ -77,7 +77,7 @@ public enum MagicCardField implements ICardField {
 	},
 	POWER {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractPowerAggregator(this);
 		}
 
@@ -93,7 +93,7 @@ public enum MagicCardField implements ICardField {
 	},
 	TOUGHNESS {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractPowerAggregator(this);
 		}
 
@@ -166,7 +166,7 @@ public enum MagicCardField implements ICardField {
 	},
 	DBPRICE() {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractFloatCountAggregator(this);
 		}
 
@@ -199,7 +199,7 @@ public enum MagicCardField implements ICardField {
 	},
 	RATING {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractFloatCountAggregator(this);
 		}
 
@@ -259,7 +259,7 @@ public enum MagicCardField implements ICardField {
 	},
 	ENID("enId") {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, 0);
 		}
 
@@ -289,7 +289,7 @@ public enum MagicCardField implements ICardField {
 	},
 	FLIPID(null) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, 0);
 		}
 
@@ -305,7 +305,7 @@ public enum MagicCardField implements ICardField {
 	},
 	COLOR_INDICATOR(null) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new StringAggregator(this);
 		}
 
@@ -355,7 +355,7 @@ public enum MagicCardField implements ICardField {
 	},
 	SET_RELEASE(null) { // release date of the set
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new DateAggregator(this);
 		}
 
@@ -366,7 +366,7 @@ public enum MagicCardField implements ICardField {
 	},
 	UNIQUE_COUNT(null) { // count of unique cards (usually only make sense for group)
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldUniqueAggregator(this);
 		}
 
@@ -377,7 +377,7 @@ public enum MagicCardField implements ICardField {
 	},
 	SIZE(null) { // flat size of the group, size of non-groupped element is always 1
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldSizeAggregator(this);
 		}
 
@@ -388,7 +388,7 @@ public enum MagicCardField implements ICardField {
 	},
 	SIDE(null) { // for multi sides/duble/flip card represent version of card (0 or 1)
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, 0);
 		}
 
@@ -415,7 +415,7 @@ public enum MagicCardField implements ICardField {
 	},
 	LEGALITY(null) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldLegalityMapAggregator(this);
 		}
 
@@ -442,7 +442,7 @@ public enum MagicCardField implements ICardField {
 	},
 	COLOR_IDENTITY(null) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new StringAggregator(this);
 		}
 
@@ -458,7 +458,7 @@ public enum MagicCardField implements ICardField {
 	},
 	HASHCODE(null) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, 0);
 		}
 
@@ -488,7 +488,7 @@ public enum MagicCardField implements ICardField {
 	// end of magic base fields
 	COUNT(true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractIntTransAggregator(this);
 		}
 
@@ -512,7 +512,7 @@ public enum MagicCardField implements ICardField {
 	},
 	PRICE(true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractFloatCountAggregator(this);
 		}
 
@@ -542,7 +542,7 @@ public enum MagicCardField implements ICardField {
 	},
 	LOCATION(true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, Location.NO_WHERE);
 		}
 
@@ -577,7 +577,7 @@ public enum MagicCardField implements ICardField {
 	},
 	OWNERSHIP(true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, Boolean.TRUE);
 		}
 
@@ -596,7 +596,7 @@ public enum MagicCardField implements ICardField {
 	},
 	FORTRADECOUNT("forTrade", true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new AbstractIntTransAggregator(this);
 		}
 
@@ -652,7 +652,7 @@ public enum MagicCardField implements ICardField {
 	},
 	OWN_COUNT(null, true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldOwnCountAggregator(this);
 		}
 
@@ -668,7 +668,7 @@ public enum MagicCardField implements ICardField {
 	}, // count of own card (normal count counts own and virtual)
 	OWN_UNIQUE(null, true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldOwnUniqueAggregator(this);
 		}
 
@@ -684,7 +684,7 @@ public enum MagicCardField implements ICardField {
 	}, // count of own unique cards (only applies to groups usually)
 	CREATURE_COUNT(null, true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldCreatureCountAggregator(this);
 		}
 
@@ -700,7 +700,7 @@ public enum MagicCardField implements ICardField {
 	},
 	COUNT4(null, true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldCount4Aggregator(this);
 		}
 
@@ -721,7 +721,7 @@ public enum MagicCardField implements ICardField {
 	},
 	PERCENT_COMPLETE(null, true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldProggressAggregator(this);
 		}
 
@@ -741,7 +741,7 @@ public enum MagicCardField implements ICardField {
 	},
 	PERCENT4_COMPLETE(null, true) {
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new FieldProggress4Aggregator(this);
 		}
 
@@ -758,7 +758,7 @@ public enum MagicCardField implements ICardField {
 	},
 	DATE(true) { // creation date of the card instance
 		@Override
-		protected ICardVisitor getAggregator() {
+		public ICardVisitor getAggregator() {
 			return new DateAggregator(this);
 		}
 
@@ -813,7 +813,7 @@ public enum MagicCardField implements ICardField {
 		aggregator = getAggregator();
 	}
 
-	protected ICardVisitor getAggregator() {
+	public ICardVisitor getAggregator() {
 		return new StringAggregator(this);
 	}
 

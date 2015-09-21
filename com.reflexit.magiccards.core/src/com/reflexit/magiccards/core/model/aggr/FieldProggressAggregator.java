@@ -22,12 +22,15 @@ public class FieldProggressAggregator extends AbstractGroupAggregator {
 	}
 
 	@Override
-	protected Object visitGroup(CardGroup g, Object data) {
-		int size = getTotal(g);
-		int count = getProgressSize(g);
+	public Object visitIterable(Iterable it, Object data) {
 		float per = 0;
-		if (size > 0) {
-			per = count * 100 / (float) size;
+		if (it instanceof CardGroup) {
+			CardGroup g = (CardGroup) it;
+			int size = getTotal(g);
+			int count = getProgressSize(g);
+			if (size > 0) {
+				per = count * 100 / (float) size;
+			}
 		}
 		return per;
 	}

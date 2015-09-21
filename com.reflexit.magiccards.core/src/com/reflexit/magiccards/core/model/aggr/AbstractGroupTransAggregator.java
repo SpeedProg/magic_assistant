@@ -22,16 +22,17 @@ public class AbstractGroupTransAggregator implements ICardVisitor {
 	@Override
 	public Object visit(ICard card, Object data) {
 		if (card instanceof CardGroup)
-			return visitGroup((CardGroup) card, data);
+			return visitIterable((CardGroup) card, data);
 		if (card instanceof AbstractMagicCard)
 			return visitAbstractMagicCard((AbstractMagicCard) card, data);
 		return null;
 	}
 
-	protected Object visitGroup(CardGroup group, Object data1) {
+	@Override
+	public Object visitIterable(Iterable iterable, Object data1) {
 		Object sum = null;
-		Object data = pre(group);
-		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
+		Object data = pre(iterable);
+		for (Iterator<ICard> iterator = iterable.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
 			Object value = object.accept(this, data);
 			sum = aggr(sum, value);
@@ -67,7 +68,7 @@ public class AbstractGroupTransAggregator implements ICardVisitor {
 		return null;
 	}
 
-	protected Object pre(CardGroup group) {
+	protected Object pre(Object data) {
 		return null;
 	}
 

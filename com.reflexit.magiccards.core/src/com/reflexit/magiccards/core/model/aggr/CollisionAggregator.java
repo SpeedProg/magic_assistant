@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.model.aggr;
 
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 
@@ -15,7 +14,7 @@ public class CollisionAggregator extends AbstractGroupAggregator {
 	}
 
 	@Override
-	protected Object visitGroup(CardGroup group, Object data1) {
+	public Object visitIterable(Iterable group, Object data1) {
 		Object data = null;
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();

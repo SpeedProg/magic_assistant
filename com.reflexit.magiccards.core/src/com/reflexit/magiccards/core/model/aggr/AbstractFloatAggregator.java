@@ -14,7 +14,7 @@ public class AbstractFloatAggregator extends AbstractGroupAggregator implements 
 	}
 
 	@Override
-	protected Object visitGroup(CardGroup group, Object data) {
+	public Object visitIterable(Iterable group, Object data) {
 		float sum = 0;
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();
@@ -34,7 +34,7 @@ public class AbstractFloatAggregator extends AbstractGroupAggregator implements 
 	@Override
 	public Object visit(ICard card, Object data) {
 		if (card instanceof CardGroup)
-			return visitGroup((CardGroup) card, data);
+			return visitIterable((CardGroup) card, data);
 		if (card instanceof AbstractMagicCard)
 			return getFloat(card);
 		return null;

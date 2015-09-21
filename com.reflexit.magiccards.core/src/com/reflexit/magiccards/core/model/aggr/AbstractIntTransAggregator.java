@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.model.aggr;
 
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardVisitor;
@@ -13,7 +12,7 @@ public class AbstractIntTransAggregator extends AbstractGroupTransAggregator imp
 	}
 
 	@Override
-	protected Object visitGroup(CardGroup group, Object data1) {
+	public Object visitIterable(Iterable group, Object data1) {
 		int sum = 0;
 		Object data = pre(group);
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {

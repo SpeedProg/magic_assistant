@@ -1,12 +1,11 @@
 package com.reflexit.magiccards.core.model.aggr;
 
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-
 import com.reflexit.magiccards.core.model.AbstractMagicCard;
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
+
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 public class FieldUniqueAggregator extends AbstractIntTransAggregator {
 	public FieldUniqueAggregator(MagicCardField field) {
@@ -35,7 +34,7 @@ public class FieldUniqueAggregator extends AbstractIntTransAggregator {
 	}
 
 	@Override
-	protected Object pre(CardGroup group) {
+	protected Object pre(Object group) {
 		return new TIntHashSet();
 	}
 

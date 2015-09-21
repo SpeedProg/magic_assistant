@@ -2,7 +2,6 @@ package com.reflexit.magiccards.core.model.aggr;
 
 import java.util.Iterator;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
@@ -13,7 +12,7 @@ public class FieldLegalityMapAggregator extends AbstractGroupAggregator {
 	}
 
 	@Override
-	protected Object visitGroup(CardGroup group, Object data) {
+	public Object visitIterable(Iterable group, Object data) {
 		LegalityMap res = null;
 		for (Iterator<ICard> iterator = group.iterator(); iterator.hasNext();) {
 			ICard object = iterator.next();

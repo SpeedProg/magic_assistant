@@ -1,5 +1,6 @@
 changes in 1.4.2.016
 * Bug 501 Planechase cards' expansion becomes the artist name
+* Bug 488 Hidden Cards problem
 changes in 1.4.2.014
 * Optimized web url requests
 * Fixed editions file and tests
