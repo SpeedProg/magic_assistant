@@ -63,7 +63,6 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
-import com.reflexit.magiccards.core.model.events.CardEventUpdate;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -461,16 +460,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		warning.setVisible(war);
 		warning.setToolTipText("There are " + getFiltered() + " hidden cards!\nChange filter to see more");
 		warning.getParent().layout(true, true);
-	}
-
-	@Override
-	public void updateSingle(ICard source) {
-		ColumnViewer viewer = getViewer();
-		if (viewer == null)
-			return;
-		viewer.update(source, null);
-		updateStatus();
-		// getSelectionProvider().setSelection(new StructuredSelection(source));
 	}
 
 	private Label createStatusLine(Composite composite) {
@@ -1074,13 +1063,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	@Override
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
-		if (type == CardEvent.UPDATE && ((CardEventUpdate) event).getCardList().size() == 1) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					updateSingle(((CardEventUpdate) event).getCardList().get(0));
-				}
-			});
+		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE) {
+			loadData(null);
 		} else if (type == CardEvent.ADD) {
 			if (event.getData() instanceof List) {
 				List arr = (List) event.getData();
@@ -1091,9 +1075,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			}
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
-			loadData(null);
-		} else if (type == CardEvent.REMOVE || type == CardEvent.UPDATE) {
-			// todo set selection to next element
 			loadData(null);
 		}
 	}
