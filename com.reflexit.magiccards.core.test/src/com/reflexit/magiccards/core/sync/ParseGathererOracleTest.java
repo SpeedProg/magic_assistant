@@ -155,6 +155,12 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals("Alara Reborn", card.getSet());
 	}
 
+	public void testPlancechase() throws IOException {
+		MagicCard card = load(205371);
+		assertEquals("Planechase", card.getSet());
+		// 205371: Rorix Bladewing [Planechase]
+	}
+
 	public void testSets() throws IOException {
 		MagicCard card = load(193767); // Serra Angel
 		assertTrue(magicDb.size() > 8);

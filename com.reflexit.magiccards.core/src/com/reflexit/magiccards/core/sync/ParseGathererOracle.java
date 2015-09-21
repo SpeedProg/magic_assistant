@@ -106,7 +106,8 @@ public class ParseGathererOracle extends AbstractParseGathererPage {
 	 */
 	private static Pattern otherSetPattern = Pattern
 			.compile("Sets:</div>\\s*<div class=\"value\">\\s*(.*?)</div>");
-	private static Pattern expansionPattern = Pattern.compile("Expansion:</div>.*?set=\\[.*?\\]\">(.*?)</a>");
+	private static Pattern expansionPattern = Pattern
+			.compile("Expansion:</div>.*?set=\\[.*?\\].*?\">(.*?)</a>");
 	private static Pattern otherSetPatternEach = Pattern
 			.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
 	/*-
