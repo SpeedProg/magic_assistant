@@ -24,6 +24,8 @@ import com.reflexit.magiccards.core.model.CardTypes;
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.FilterField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 
@@ -56,13 +58,15 @@ public class QuickFilterControl extends Composite {
 					synchronized (updateLock) {
 						if (pendingUpdate == false) {
 							updateLock.wait();
-							// MagicLogger.trace("QUPDATE", "got update on wait");
+							// MagicLogger.trace("QUPDATE", "got update on
+							// wait");
 							// we got notification
 							if (pendingUpdate == false)
 								continue; // hmm misfire?
 							while (pendingUpdate && System.currentTimeMillis() - lastMod < updateDelay) {
 								updateLock.wait(updateDelay);
-								// MagicLogger.trace("QUPDATE", "got update on wait " +
+								// MagicLogger.trace("QUPDATE", "got update on
+								// wait " +
 								// (System.currentTimeMillis() - lastMod));
 							}
 							if (pendingUpdate == false)
@@ -71,7 +75,8 @@ public class QuickFilterControl extends Composite {
 						}
 						// pendingUpdate is true now
 					}
-					// System.err.println(System.currentTimeMillis() + "  running now");
+					// System.err.println(System.currentTimeMillis() + " running
+					// now");
 					doUpdate();
 				}
 			} catch (InterruptedException e) {
@@ -146,7 +151,8 @@ public class QuickFilterControl extends Composite {
 		// toolbar
 		toolbar = new ToolBar(comp, SWT.FLAT);
 		toolbar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// createToolBarLabel(toolbar, "Text:");
+		// this has to be first to set proper hight of toolbar
+		createActions(toolbar);
 		// search field
 		createSearchField(toolbar);
 		createColorButton(toolbar, "White");
@@ -160,6 +166,28 @@ public class QuickFilterControl extends Composite {
 		createEditionField(toolbar);
 		// hide
 		// createHideButton(comp);
+	}
+
+	private void createActions(ToolBar toolbar) {
+		final ToolItem button = new ToolItem(toolbar, SWT.PUSH);
+		button.setImage(MagicUIActivator.getDefault().getImage("icons/clcl16/reset_filter.gif"));
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				resetFilter();
+				refresh();
+				kickUpdate();
+			}
+		});
+	}
+
+	private void resetFilter() {
+		Collection<String> allIds = FilterField.getAllIds();
+		for (Iterator<String> iterator = allIds.iterator(); iterator.hasNext();) {
+			String id = iterator.next();
+			store.setToDefault(id);
+		}
+		store.setToDefault(EditionsFilterPreferencePage.LAST_SET);
 	}
 
 	private void createSearchField(ToolBar toolbar) {
@@ -255,7 +283,6 @@ public class QuickFilterControl extends Composite {
 	// text.setControl(label);
 	// text.setWidth(50);
 	// }
-
 	private void createColorButton(ToolBar toolbar, String name) {
 		Colors colors = Colors.getInstance();
 		final String id = colors.getPrefConstant(name);
@@ -300,7 +327,6 @@ public class QuickFilterControl extends Composite {
 	// }
 	// });
 	// }
-
 	public void setPreferenceStore(IPreferenceStore store) {
 		this.store = store;
 		refresh();
@@ -380,7 +406,8 @@ public class QuickFilterControl extends Composite {
 		synchronized (updateLock) {
 			lastMod = System.currentTimeMillis();
 			pendingUpdate = true;
-			// MagicLogger.trace("QUPDATE", "Sending notification for '" + text + "'");
+			// MagicLogger.trace("QUPDATE", "Sending notification for '" + text
+			// + "'");
 			updateLock.notifyAll();
 		}
 	}

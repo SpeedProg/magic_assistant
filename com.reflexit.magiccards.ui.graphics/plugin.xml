@@ -28,4 +28,16 @@
              name="View: Deck/Gallery">
        </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.gallery.GalleryView"
+            icon="icons/gallery.png"
+            id="com.reflexit.magiccards.ui.gallery.GalleryView"
+            name="Gallery"
+            restorable="true">
+      </view>
+   </extension>
 </plugin>
