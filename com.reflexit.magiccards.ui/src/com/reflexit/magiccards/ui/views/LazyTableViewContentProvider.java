@@ -3,7 +3,10 @@
  */
 package com.reflexit.magiccards.ui.views;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.viewers.ILazyContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -39,11 +42,34 @@ public class LazyTableViewContentProvider implements ILazyContentProvider {
 		return 0;
 	}
 
+	public int[] getIndices(IStructuredSelection selection) {
+		if (root == null || selection.isEmpty())
+			return new int[] {};
+		ArrayList<Integer> res = new ArrayList<>();
+		Object[] elements = this.root.getElements();
+		for (Object element : selection.toArray()) {
+			int i = 0;
+			for (Object object : elements) {
+				if (element.equals(object)) {
+					res.add(i);
+				}
+				i++;
+			}
+		}
+		int[] ind = new int[res.size()];
+		for (int i = 0; i < ind.length; i++) {
+			ind[i] = res.get(i);
+		}
+		return ind;
+	}
+
 	@Override
-	public synchronized void updateElement(int index) {
-		if (inChange)
-			return;
-		inChange = true;
+	public void updateElement(int index) {
+		synchronized (this) {
+			if (inChange)
+				return;
+			inChange = true;
+		}
 		try {
 			if (this.root != null) {
 				if (index >= root.getSize()) {
@@ -61,7 +87,9 @@ public class LazyTableViewContentProvider implements ILazyContentProvider {
 				}
 			}
 		} finally {
-			inChange = false;
+			synchronized (this) {
+				inChange = false;
+			}
 		}
 	}
 }

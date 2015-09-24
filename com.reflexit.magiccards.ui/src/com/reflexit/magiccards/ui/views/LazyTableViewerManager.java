@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -16,6 +18,16 @@ public class LazyTableViewerManager extends TableViewerManager {
 		@Override
 		public void unmapAllElements() {
 			super.unmapAllElements();
+		}
+
+		@Override
+		public void setSelection(ISelection selection, boolean reveal) {
+			if (selection instanceof IStructuredSelection) {
+				LazyTableViewContentProvider provider = (LazyTableViewContentProvider) getContentProvider();
+				int[] indices = provider.getIndices((IStructuredSelection) selection);
+				getTable().setSelection(indices);
+				getTable().showSelection();
+			}
 		}
 	}
 
