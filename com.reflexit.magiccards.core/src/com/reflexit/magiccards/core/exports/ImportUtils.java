@@ -353,6 +353,8 @@ public class ImportUtils {
 					// card is updated - merge
 					card.getBase().setNonEmptyFromCard(columns, oldCard);
 				}
+			} else if (card instanceof MagicCard) {
+				newdbrecords.add(card);
 			}
 		}
 	}

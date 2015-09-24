@@ -128,26 +128,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		}
 	}
 
-	public void setFieldValue1(MagicCardPhysical card, ICardField field, int i, String value) {
-		if (field == MagicCardField.EDITION_ABBR) {
-			String nameByAbbr = Editions.getInstance().getNameByAbbr(value);
-			if (nameByAbbr == null)
-				nameByAbbr = value;
-			card.set(MagicCardField.SET, nameByAbbr);
-		} else if (field == MagicCardField.FORTRADECOUNT || field == MagicCardField.LOCATION) {
-			// special handling
-			card.set(field, value);
-		} else if (field == MagicCardField.SIDEBOARD) {
-			if (Boolean.valueOf(value).booleanValue()) {
-				card.setLocation(getSideboardLocation());
-			}
-		} else if (field.isTransient()) {
-			// ignore this field
-		} else {
-			card.set(field, value);
-		}
-	}
-
 	protected Location getLocation() {
 		return importData.getLocation();
 	}

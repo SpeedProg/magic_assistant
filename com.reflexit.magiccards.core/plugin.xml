@@ -154,5 +154,12 @@
             label="TCGPlayer HTML Table "
             xmlFormat="true">
       </deckFormat>
+      <deckFormat
+            extension="html"
+            id="htmlMagicCardInfoList"
+            importDelegate="com.reflexit.magiccards.core.exports.MagicCardsInfoImportDelegate"
+            label="http://magiccards.info"
+            xmlFormat="true">
+      </deckFormat>
    </extension>
 </plugin>

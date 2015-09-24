@@ -30,8 +30,17 @@ public class MagicToolkit extends FormToolkit {
 	}
 
 	public Button createButton(Composite parent, String text, int style, ISingleSelectionListener lis) {
-		Button button = createButton(parent, text, style);
-		if (lis != null) button.addSelectionListener(lis);
+		Button button = new Button(parent, style);
+		if (text != null)
+			button.setText(text);
+		if ((style & SWT.RADIO) == 0) {
+			adapt(button, false, false);
+		} else {
+			// button.setBackground(parent.getBackground());
+			button.setForeground(parent.getForeground());
+		}
+		if (lis != null)
+			button.addSelectionListener(lis);
 		return button;
 	}
 

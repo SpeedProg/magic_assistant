@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
@@ -57,6 +58,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	static Pattern plainPattern = Pattern.compile(".*>(.*)</td>");
 	static Pattern namePattern = Pattern.compile("html\">(.*)</a></td>");
 	static Pattern typeCreaturePattern = Pattern.compile("(.*) ([^ ]*)/([^ ]*)");
+	private URL url;
 
 	public boolean processFromReader(BufferedReader st, ILoadCardHander handler) throws IOException {
 		String line = "";
@@ -119,8 +121,11 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		card.setArtist(artist);
 		String set = getMatch(plainPattern, rows[7]);
 		if (set != null && set.length() > 0) {
-			String abbr = Editions.getInstance().getAbbrByName(set).toLowerCase(Locale.ENGLISH);
+			String abbr = Editions.getInstance().getAbbrByName(set);
 			card.setSet(set);
+			if (abbr == null)
+				throw new CannotDetermineSetAbbriviation(card);
+			abbr = abbr.toLowerCase(Locale.ENGLISH);
 			card.set(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num
 					+ ".jpg");
 		}
@@ -155,6 +160,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 
 	public boolean loadSingleUrl(URL url, ILoadCardHander handler) throws IOException {
 		try {
+			this.url = url;
 			String html = WebUtils.openUrlText(url);
 			boolean res = processFromReader(FileUtils.openBufferedReader(html), handler);
 			return res;
@@ -188,7 +194,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		OutputHandler handler = new OutputHandler(System.out, true, true);
 		Editions.getInstance().addEdition("Duels of the Planeswalkers", "dpa");
-		new ParseMagicCardsInfoChecklist().loadSingleUrl(getSearchQuery("Duels of the Planeswalkers"),
+		URL searchQuery = getSearchQuery("Duels of the Planeswalkers");
+		new ParseMagicCardsInfoChecklist().loadSingleUrl(searchQuery,
 				handler);
 		System.err.println("Total " + handler.getCardCount());
 	}

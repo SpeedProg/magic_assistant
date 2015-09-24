@@ -45,6 +45,15 @@ public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 		previewPage = new DeckImportPreviewPage("Preview");
 	}
 
+	@Override
+	public boolean canFinish() {
+		if (mainPage.isPageComplete())
+			return true;
+		if (previewPage.isPageComplete())
+			return true;
+		return false;
+	}
+
 	public Composite createEditionGroup(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create());

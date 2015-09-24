@@ -121,6 +121,7 @@ public class DeckImportPreviewPage extends WizardPage {
 					+ " errors during import. Review the cards and fix errors by editing set or name of the card using cell editor");
 			// manager.setSortColumn(0, 1);
 		}
+		setPageComplete(getErrorMessage() == null);
 	}
 
 	public void updateColumns(ICardField[] fields) {

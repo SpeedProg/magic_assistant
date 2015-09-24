@@ -33,7 +33,11 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 		setWindowTitle("Import"); // NON-NLS-1
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
-		mainPage = new DeckImportPage("Import", selection);
+		mainPage = createMainPage(selection);
 		previewPage = new DeckImportPreviewPage("Preview");
+	}
+
+	public DeckImportPage createMainPage(IStructuredSelection selection) {
+		return new DeckImportPage("Import", selection);
 	}
 }

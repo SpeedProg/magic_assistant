@@ -3,6 +3,8 @@ package com.reflexit.magiccards.ui.exportWizards;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -58,6 +60,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CorrectSetDialog;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
@@ -91,11 +94,12 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private ImportData importData;
 	private String fileName;
 	private ReportType reportType;
+	private Button urlRadio;
+	private Text urlText;
+	private String urlName;
 
 	enum InputChoice {
-		FILE,
-		CLIPBOARD,
-		INPUT
+		FILE, CLIPBOARD, INPUT, URL
 	};
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
@@ -118,8 +122,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		try {
 			IRunnableWithProgress work = new IRunnableWithProgress() {
 				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					importRunnable(preview, dbImport, monitor);
 				}
 			};
@@ -142,10 +145,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 				int size = result.size();
 				Map<String, String> badSets = ImportUtils.getSetCandidates(result);
 				if (badSets.size() > 0) {
-					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error", "Cannot resolve "
-							+ badSets.size()
-							+ " set(s). The following sets are not found or ambigues: " + badSets.keySet()
-							+ ".\n Do you want to fix these?");
+					boolean yes = MessageDialog.openQuestion(getShell(), "Import Error",
+							"Cannot resolve " + badSets.size()
+									+ " set(s). The following sets are not found or ambigues: " + badSets.keySet()
+									+ ".\n Do you want to fix these?");
 					if (yes) {
 						// ask user to fix sets
 						for (Iterator<String> iterator = badSets.keySet().iterator(); iterator.hasNext();) {
@@ -163,24 +166,20 @@ public class DeckImportPage extends WizardDataTransferPage {
 					}
 				}
 				ArrayList<IMagicCard> newdbrecords = new ArrayList<IMagicCard>();
-				ImportUtils.performPreImportWithDb(result, newdbrecords, reportType.getImportDelegate()
-						.getResult().getFields());
+				ImportUtils.performPreImportWithDb(result, newdbrecords,
+						reportType.getImportDelegate().getResult().getFields());
 				ArrayList<String> lerrors = new ArrayList<String>();
 				ImportUtils.validateDbRecords(newdbrecords, lerrors);
 				if (newdbrecords.size() > 0 && lerrors.size() == 0) {
 					boolean yes2 = dbImport;
 					if (yes2 == false) {
-						yes2 = MessageDialog.openQuestion(
-								getShell(),
-								"Import into DB",
-								newdbrecords.size()
-										+ " cards are not found in the database. Do you want to add new cards into database?");
+						yes2 = MessageDialog.openQuestion(getShell(), "Import into DB", newdbrecords.size()
+								+ " cards are not found in the database. Do you want to add new cards into database?");
 					}
 					if (yes2)
 						ImportUtils.importIntoDb(newdbrecords);
 				} else if (lerrors.size() > 0 && dbImport) {
-					String message = newdbrecords.size() + " cards are not found in the database "
-							+ lerrors.size()
+					String message = newdbrecords.size() + " cards are not found in the database " + lerrors.size()
 							+ "\nThe following errors preventing import all of them into database:\n";
 					for (Iterator iterator = lerrors.iterator(); iterator.hasNext();) {
 						String str = (String) iterator.next();
@@ -201,8 +200,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 					}
 				}
 				if (cerrors.size() != 0) {
-					String message = "After all this effort I cannot resolve " + cerrors.size()
-							+ " cards of " + size + ":\n";
+					String message = "After all this effort I cannot resolve " + cerrors.size() + " cards of " + size
+							+ ":\n";
 					int i = 0;
 					for (Iterator iterator = cerrors.iterator(); iterator.hasNext() && i < 10; i++) {
 						String str = (String) iterator.next();
@@ -252,19 +251,23 @@ public class DeckImportPage extends WizardDataTransferPage {
 	String readSource() throws IOException {
 		String text = "";
 		switch (inputChoice) {
-			case FILE:
-				text = FileUtils.readFileAsString(new File(fileName));
-				importData.setText(text);
-				break;
-			case CLIPBOARD:
-				text = getClipboardText();
-				importData.setText(text);
-				break;
-			case INPUT:
-				text = importData.getText();
-				break;
-			default:
-				break;
+		case FILE:
+			text = FileUtils.readFileAsString(new File(fileName));
+			importData.setText(text);
+			break;
+		case CLIPBOARD:
+			text = getClipboardText();
+			importData.setText(text);
+			break;
+		case INPUT:
+			text = importData.getText();
+			break;
+		case URL:
+			text = WebUtils.openUrlText(new URL(urlName));
+			importData.setText(text);
+			break;
+		default:
+			break;
 		}
 		return text;
 	}
@@ -315,7 +318,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 					@Override
 					protected Control createDialogArea(Composite parent) {
 						Control x = super.createDialogArea(parent);
-						setMessage("Select a deck or collection to add cards into,\nor select card folder to have auto-generated deck name");
+						setMessage(
+								"Select a deck or collection to add cards into,\nor select card folder to have auto-generated deck name");
 						return x;
 					}
 				};
@@ -340,8 +344,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		virtualCards.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
 		// db import
 		Hyperlink hyperlink = toolkit.createHyperlink(group,
-				"Extends cards database (do not create new deck or collection)",
-				SWT.NONE);
+				"Extends cards database (do not create new deck or collection)", SWT.NONE);
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -356,8 +359,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	private int openWizard(IWorkbenchWizard wizard, final IStructuredSelection selection) {
 		wizard.init(PlatformUI.getWorkbench(), selection);
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.create();
 		dialog.getShell().setText(wizard.getWindowTitle());
 		return dialog.open();
@@ -402,7 +404,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private void defaultPrompt() {
 		String mess = "You have selected '" + reportType.getLabel() + "' format.\n";
 		if (importData.getError() != null) {
-			mess += "Warning: cannot parse data.";
+			mess += "Warning: cannot parse data (" + importData.getError().getMessage() + "). ";
 		} else {
 			int errcount = importData.getErrorCount();
 			mess += "Found " + importData.size() + " record(s) and " + errcount + " error(s).";
@@ -411,13 +413,11 @@ public class DeckImportPage extends WizardDataTransferPage {
 		if (reportType == ImportExportFactory.XML)
 			setMessage(mess);
 		else if (reportType == ImportExportFactory.CSV)
-			setMessage(mess
-					+ "Columns: ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT");
+			setMessage(mess + "Columns: ID,NAME,COST,TYPE,P,T,TEXT,SET,RARITY,DBPRICE,LANG,COUNT,PRICE,COMMENT");
 		else if (reportType == ImportExportFactory.TEXT_DECK_CLASSIC)
 			setMessage(mess + "Lines like 'Quagmire Druid x 3' or 'Diabolic Tutor (Tenth Edition) x4'");
 		else if (reportType == ImportExportFactory.TABLE_PIPED)
-			setMessage(mess
-					+ "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
+			setMessage(mess + "Columns: ID|NAME|COST|TYPE|P|T|TEXT|SET|RARITY|RESERVED|LANG|COUNT|PRICE|COMMENT");
 		else
 			setMessage(mess);
 	}
@@ -461,6 +461,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		fileRadio.setSelection(inputChoice == InputChoice.FILE);
 		clipboardRadio.setSelection(inputChoice == InputChoice.CLIPBOARD);
 		inputRadio.setSelection(inputChoice == InputChoice.INPUT);
+		urlRadio.setSelection(inputChoice == InputChoice.URL);
 	}
 
 	private void selectReportType(final ReportType type) {
@@ -494,45 +495,50 @@ public class DeckImportPage extends WizardDataTransferPage {
 	protected void createResourcesGroup(final Composite parent) {
 		Composite fileSelectionArea = toolkit.createGroup(parent, "Import Source");
 		fileSelectionArea.setLayoutData(GridDataFactory.fillDefaults().create());
-		fileSelectionArea.setLayout(GridLayoutFactory.swtDefaults().numColumns(5).create());
+		fileSelectionArea.setLayout(GridLayoutFactory.swtDefaults().numColumns(4).create());
 		// clipboard control
-		clipboardRadio = toolkit.createButton(fileSelectionArea, "Clipboard",
-				SWT.RADIO | SWT.LEFT,
+		clipboardRadio = toolkit.createButton(fileSelectionArea, "Clipboard", SWT.RADIO,
 				(e) -> onInputChoice(e, InputChoice.CLIPBOARD));
 		clipboardRadio.setLayoutData(GridDataFactory.fillDefaults().create());
-		// editor controls
-		inputRadio = toolkit.createButton(fileSelectionArea, "Editor",
-				SWT.RADIO | SWT.LEFT,
-				(e) -> onInputChoice(e, InputChoice.INPUT));
-		inputRadio.setLayoutData(GridDataFactory.fillDefaults().create());
+
 		// file selector
 		fileRadio = toolkit.createButton(fileSelectionArea, "File", SWT.RADIO,
 				(e) -> onInputChoice(e, InputChoice.FILE));
 		fileRadio.setSelection(true);
 		fileText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
-		fileText.addModifyListener(
-				(e) -> {
-					fileName = fileText.getText();
-					if (inputChoice != InputChoice.FILE) {
-						setInputChoice(InputChoice.FILE);
-					}
-					onInputChoice(null, InputChoice.FILE);
-				}
-				);
-		fileText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false)
-				.create());
-		toolkit.createButton(fileSelectionArea, "Browse...", SWT.PUSH,
-				(e) -> {
-					FileDialog fileDialog = new FileDialog(parent.getShell());
-					fileDialog.setFileName(fileText.getText());
-					String file = fileDialog.open();
-					if (file != null) {
-						setInputChoice(InputChoice.FILE);
-						fileText.setText(file);
-						fileText.setSelection(file.length(), file.length());
-					}
-				}
-				);
+		fileText.addModifyListener((e) -> {
+			fileName = fileText.getText();
+			if (inputChoice != InputChoice.FILE) {
+				setInputChoice(InputChoice.FILE);
+			}
+			onInputChoice(null, InputChoice.FILE);
+		});
+		fileText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
+		toolkit.createButton(fileSelectionArea, "Browse...", SWT.PUSH, (e) -> {
+			FileDialog fileDialog = new FileDialog(parent.getShell());
+			fileDialog.setFileName(fileText.getText());
+			String file = fileDialog.open();
+			if (file != null) {
+				setInputChoice(InputChoice.FILE);
+				fileText.setText(file);
+				fileText.setSelection(file.length(), file.length());
+			}
+		});
+		// editor controls
+		inputRadio = toolkit.createButton(fileSelectionArea, "Text Input", SWT.RADIO,
+				(e) -> onInputChoice(e, InputChoice.INPUT));
+		inputRadio.setLayoutData(GridDataFactory.fillDefaults().create());
+		// url selector
+		urlRadio = toolkit.createButton(fileSelectionArea, "URL", SWT.RADIO, (e) -> onInputChoice(e, InputChoice.URL));
+		urlText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
+		urlText.addModifyListener((e) -> {
+			urlName = urlText.getText();
+			if (inputChoice != InputChoice.URL) {
+				setInputChoice(InputChoice.URL);
+			}
+			onInputChoice(null, InputChoice.URL);
+		});
+		urlText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
 	}
 
 	public void onInputChoice(SelectionEvent event, InputChoice choice) {
@@ -547,20 +553,22 @@ public class DeckImportPage extends WizardDataTransferPage {
 	protected void autoDetectFormat() {
 		ReportType type = null;
 		switch (inputChoice) {
-			case FILE:
-				type = ReportType.autoDetectType(new File(fileName), types);
-				break;
-			case CLIPBOARD:
-				type = ReportType.autoDetectType(getClipboardText(), types);
-				break;
-			case INPUT:
-				if (importData != null) {
-					String text = importData.getText();
-					type = ReportType.autoDetectType(text, types);
-				}
-				break;
-			default:
-				break;
+		case FILE:
+			type = ReportType.autoDetectType(new File(fileName), types);
+			break;
+		case CLIPBOARD:
+			type = ReportType.autoDetectType(getClipboardText(), types);
+			break;
+		case INPUT:
+			if (importData != null) {
+				String text = importData.getText();
+				type = ReportType.autoDetectType(text, types);
+			}
+			break;
+		case URL:
+			break;
+		default:
+			break;
 		}
 		selectReportType(type);
 		performImport(true);
@@ -588,35 +596,32 @@ public class DeckImportPage extends WizardDataTransferPage {
 			}
 		});
 		typeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		toolkit.createHyperlink(buttonComposite, "Example...", SWT.NONE).addHyperlinkListener(
-				new HyperlinkAdapter() {
+		toolkit.createHyperlink(buttonComposite, "Example...", SWT.NONE).addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				InputDialog inputDialog = new InputDialog(getShell(), "Example", reportType.getLabel(),
+						reportType.getExample(), null) {
 					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						InputDialog inputDialog = new InputDialog(getShell(), "Example",
-								reportType.getLabel(),
-								reportType.getExample(), null) {
-							@Override
-							protected int getShellStyle() {
-								return super.getShellStyle() | SWT.RESIZE;
-							}
-
-							@Override
-							protected int getInputTextStyle() {
-								return SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP;
-							}
-
-							@Override
-							protected Control createDialogArea(Composite parent) {
-								Control x = super.createDialogArea(parent);
-								getText().setLayoutData(
-										GridDataFactory.fillDefaults().hint(600, 400).create());
-								return x;
-							}
-						};
-						inputDialog.setBlockOnOpen(false);
-						inputDialog.open();
+					protected int getShellStyle() {
+						return super.getShellStyle() | SWT.RESIZE;
 					}
-				});
+
+					@Override
+					protected int getInputTextStyle() {
+						return SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP;
+					}
+
+					@Override
+					protected Control createDialogArea(Composite parent) {
+						Control x = super.createDialogArea(parent);
+						getText().setLayoutData(GridDataFactory.fillDefaults().hint(600, 400).create());
+						return x;
+					}
+				};
+				inputDialog.setBlockOnOpen(false);
+				inputDialog.open();
+			}
+		});
 	}
 
 	@Override
@@ -664,6 +669,19 @@ public class DeckImportPage extends WizardDataTransferPage {
 				setErrorMessage("Not a file");
 				return false;
 			}
+			return true;
+		}
+		if (inputChoice == InputChoice.URL) {
+			if (((urlName == null) || (urlName.length() == 0) || (urlText.getText().length() == 0))) {
+				setErrorMessage("URL is selected by empty");
+				return false;
+			}
+			try {
+				URL url = new URL(urlName);
+			} catch (MalformedURLException e) {
+				setErrorMessage("Malformed URL: " + e.getMessage());
+				return false;
+			}
 		}
 		return true;
 	}
@@ -679,6 +697,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected void updateWidgetEnablements() {
 		fileText.setEnabled(inputChoice == InputChoice.FILE);
+		urlText.setEnabled(inputChoice == InputChoice.URL);
 	}
 
 	public ReportType getReportType() {
@@ -705,8 +724,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			monitor.worked(10);
 			IImportDelegate worker = reportType.getImportDelegate();
 			if (worker == null)
-				throw new IllegalArgumentException("Importer is not defined for "
-						+ reportType.getLabel());
+				throw new IllegalArgumentException("Importer is not defined for " + reportType.getLabel());
 			boolean resolve = !dbImport;
 			if (preview) {
 				monitor.worked(10);
@@ -716,8 +734,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 				if (!dbImport) {
 					ImportUtils.resolve(importData.getList());
 				} else {
-					ImportUtils.performPreImportWithDb((Collection<IMagicCard>) importData
-							.getList(), new ArrayList<>(),
+					ImportUtils.performPreImportWithDb((Collection<IMagicCard>) importData.getList(), new ArrayList<>(),
 							importData.getFields());
 				}
 				monitor.worked(10);
@@ -730,8 +747,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 					if (resolve) {
 						ImportUtils.resolve(importData.getList());
 						if (element instanceof CollectionsContainer) {
-							createNewDeck(getNewDeckName(), importData.isVirtual(),
-									(CollectionsContainer) element);
+							createNewDeck(getNewDeckName(), importData.isVirtual(), (CollectionsContainer) element);
 						}
 						if (!(element instanceof CardCollection)) {
 							throw new IllegalArgumentException("Cannot import into " + element);
@@ -744,8 +760,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 					if (fixErrors(result, dbImport)) {
 						monitor.worked(10);
 						if (resolve)
-							ImportUtils.performImport(result, DataManager.getCardHandler()
-									.getLibraryCardStore());
+							ImportUtils.performImport(result, DataManager.getCardHandler().getLibraryCardStore());
 					}
 				}
 			}
@@ -762,5 +777,12 @@ public class DeckImportPage extends WizardDataTransferPage {
 			throw new InvocationTargetException(importData.getError());
 		else
 			throw new InvocationTargetException(new IllegalArgumentException("Cannot import"));
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible)
+			updatePageCompletion();
+		super.setVisible(visible);
 	}
 }
