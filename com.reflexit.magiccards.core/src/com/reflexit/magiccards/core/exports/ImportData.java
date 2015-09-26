@@ -12,8 +12,9 @@ package com.reflexit.magiccards.core.exports;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-
+import java.util.Map;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
@@ -28,6 +29,7 @@ public class ImportData {
 	private boolean header = true;
 	private Location location = Location.createLocation("preview");
 	private boolean virtual = false;
+	private LinkedHashMap<String, Object> props = new LinkedHashMap<>();
 
 	public ImportData(boolean virtual2, Location location2, String line) {
 		virtual = virtual2;
@@ -154,5 +156,17 @@ public class ImportData {
 
 	public void setVirtual(boolean virtual) {
 		this.virtual = virtual;
+	}
+
+	public Map<String, Object> getProperties() {
+		return props;
+	}
+
+	public <T> T getProperty(String key) {
+		return (T) getProperties().get(key);
+	}
+
+	public void setProperty(String key, Object value) {
+		getProperties().put(key, value);
 	}
 }

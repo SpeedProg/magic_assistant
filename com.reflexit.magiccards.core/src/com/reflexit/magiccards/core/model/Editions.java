@@ -244,6 +244,17 @@ public class Editions implements ISearchableProperty {
 			return false;
 		}
 
+		public void addNameAlias(String alias) {
+			for (String a : aliases) {
+				if (a.equals(alias))
+					return;
+			}
+			String[] naliases = new String[aliases.length + 1];
+			System.arraycopy(naliases, 0, aliases, 0, aliases.length);
+			naliases[aliases.length] = alias;
+			aliases = naliases;
+		}
+
 		public void setNameAliases(String aliases[]) {
 			this.aliases = new String[aliases.length];
 			System.arraycopy(aliases, 0, this.aliases, 0, aliases.length);
@@ -262,7 +273,8 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setHidden(boolean hidden) {
-			if (hidden == isHidden()) return;
+			if (hidden == isHidden())
+				return;
 			if (hidden)
 				setType("--" + getType());
 			else
@@ -313,6 +325,8 @@ public class Editions implements ISearchableProperty {
 	}
 
 	public Edition getEditionByAbbr(String abbr) {
+		if (abbr == null)
+			return null;
 		for (Iterator<Edition> iterator = name2ed.values().iterator(); iterator.hasNext();) {
 			Edition value = iterator.next();
 			if (value != null && value.abbreviationOf(abbr)) {
@@ -510,9 +524,8 @@ public class Editions implements ISearchableProperty {
 				}
 				Format format = ed.getFormat();
 				String sformat = format == Format.LEGACY ? "" : format.name();
-				st.print(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|"
-						+ rel + "|" + type + "|"
-						+ (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
+				st.print(name + "|" + ed.getMainAbbreviation() + "|" + ed.getExtraAbbreviations() + "|" + rel + "|"
+						+ type + "|" + (ed.block == null ? "" : ed.block) + "|" + sformat + "|" + ed.getExtraAliases());
 				st.print('\n'); // unix ending
 			}
 		} finally {

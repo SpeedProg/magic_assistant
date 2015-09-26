@@ -37,6 +37,10 @@ public class Languages implements ISearchableProperty {
 			return lang;
 		}
 
+		public Locale getLocale() {
+			return locale;
+		}
+
 		public static Language fromName(String s) {
 			Language[] values = Language.values();
 			for (int i = 0; i < values.length; i++) {
@@ -46,6 +50,16 @@ public class Languages implements ISearchableProperty {
 			}
 			if (s.equals("Chinese Standard"))
 				return CHINESE_SIMPLIFIED;
+			return null;
+		}
+
+		public static Language fromLocale(String s) {
+			Language[] values = Language.values();
+			for (int i = 0; i < values.length; i++) {
+				Language language = values[i];
+				if (language.getLocale().getLanguage().equals(s))
+					return language;
+			}
 			return null;
 		}
 	}

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -17,11 +16,18 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 	private ParseMagicCardsInfoChecklist parser;
 
 	@Override
+	public void setReportType(ReportType reportType) {
+		super.setReportType(reportType);
+		reportType.setProperty("url_regex", "http://magiccards.info.*");
+	}
+
+	@Override
 	public void init(InputStream st, ImportData result) {
 		super.init(st, result);
 		parser = new ParseMagicCardsInfoChecklist();
-		importData.setFields(new ICardField[] { MagicCardField.NAME, MagicCardField.TYPE, MagicCardField.COST,
-				MagicCardField.RARITY, MagicCardField.ARTIST, MagicCardField.SET });
+		importData.setFields(
+				new ICardField[] { MagicCardField.NAME, MagicCardField.TYPE, MagicCardField.COST, MagicCardField.SET,
+						MagicCardField.LANG, MagicCardField.RARITY, MagicCardField.COLLNUM, MagicCardField.ARTIST });
 	}
 
 	/**
@@ -45,6 +51,5 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 		};
 		parser.processFromReader(new BufferedReader(new InputStreamReader(getStream(), FileUtils.CHARSET_UTF_8)),
 				handler);
-
 	}
 }

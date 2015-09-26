@@ -7,10 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -38,7 +38,8 @@ public class ReportType {
 	}
 
 	/**
-	 * Return true if given format is table format. Table format can have header.
+	 * Return true if given format is table format. Table format can have
+	 * header.
 	 */
 	public boolean isXmlFormat() {
 		return Boolean.valueOf(properties.getProperty(XML_PROP));
@@ -210,12 +211,33 @@ public class ReportType {
 				candidates.add(reportType);
 			}
 		}
+		if (candidates.size() == 1)
+			return candidates.iterator().next();
 		if (file.exists()) {
 			try {
 				String contents = FileUtils.readFileAsString(file);
 				return autoDetectType(contents, candidates);
 			} catch (IOException e) {
 				// fall through
+			}
+		}
+		if (candidates.size() > 0)
+			return candidates.iterator().next();
+		return null;
+	}
+
+	public static ReportType autoDetectType(URL url, Collection<ReportType> types) {
+		if (url == null || url.getPath().isEmpty())
+			return null;
+		Collection<ReportType> candidates = new ArrayList<ReportType>();
+		for (ReportType reportType : types) {
+			IImportDelegate delegate = reportType.getImportDelegate(); // inst
+																		// deelgate
+			String regex = reportType.getProperty("url_regex");
+			if (regex == null)
+				continue;
+			if (url.toExternalForm().matches(regex)) {
+				candidates.add(reportType);
 			}
 		}
 		if (candidates.size() > 0)

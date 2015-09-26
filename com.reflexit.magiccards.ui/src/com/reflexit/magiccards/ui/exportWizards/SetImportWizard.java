@@ -5,6 +5,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -14,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.widgets.EditionTextControl;
@@ -64,6 +67,12 @@ public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 		Label label = new Label(comp, SWT.NONE);
 		label.setText("Card Set:");
 		EditionTextControl setCombo = new EditionTextControl(comp, SWT.BORDER);
+		setCombo.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				mainPage.getImportData().setProperty(MagicCardField.SET.name(), setCombo.getText());
+			}
+		});
 		setCombo.setToolTipText("Set into which cards will be imported");
 		Button button = new Button(comp, SWT.PUSH);
 		button.setText("New Set...");

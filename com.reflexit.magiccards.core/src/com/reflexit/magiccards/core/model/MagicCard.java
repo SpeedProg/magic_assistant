@@ -243,7 +243,11 @@ public class MagicCard extends AbstractMagicCard {
 			if (l != null) {
 				this.lang = l.getLang();
 			} else {
-				throw new MagicException("Unknown language: " + lang);
+				l = Languages.Language.fromLocale(lang);
+				if (l != null)
+					this.lang = l.getLang();
+				else
+					throw new MagicException("Unknown language: " + lang);
 			}
 		}
 	}
@@ -553,9 +557,7 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	/**
-	 * create syntetic id
-	 * Local db bitset
-	 * [t2][s15][l4][v1][i10]
+	 * create syntetic id Local db bitset [t2][s15][l4][v1][i10]
 	 *
 	 * @return
 	 */
@@ -628,7 +630,8 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	/**
-	 * @return normalized id of the card, i.e. english card id of the same card in set
+	 * @return normalized id of the card, i.e. english card id of the same card
+	 *         in set
 	 */
 	public int getNormId() {
 		int x = getEnglishCardId();

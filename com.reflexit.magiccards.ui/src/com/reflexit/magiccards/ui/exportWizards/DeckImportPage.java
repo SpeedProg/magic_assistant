@@ -250,25 +250,31 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	String readSource() throws IOException {
 		String text = "";
+		importData.setProperty("choice", inputChoice.name());
 		switch (inputChoice) {
 		case FILE:
 			text = FileUtils.readFileAsString(new File(fileName));
 			importData.setText(text);
+			importData.setProperty(inputChoice.name(), fileName);
 			break;
 		case CLIPBOARD:
 			text = getClipboardText();
 			importData.setText(text);
+			importData.setProperty(inputChoice.name(), text);
 			break;
 		case INPUT:
 			text = importData.getText();
+			importData.setProperty(inputChoice.name(), text);
 			break;
 		case URL:
 			text = WebUtils.openUrlText(new URL(urlName));
 			importData.setText(text);
+			importData.setProperty(inputChoice.name(), urlName);
 			break;
 		default:
 			break;
 		}
+
 		return text;
 	}
 
@@ -566,6 +572,11 @@ public class DeckImportPage extends WizardDataTransferPage {
 			}
 			break;
 		case URL:
+			try {
+				type = ReportType.autoDetectType(new URL(urlName), types);
+			} catch (MalformedURLException e) {
+				return;
+			}
 			break;
 		default:
 			break;

@@ -9,10 +9,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -28,8 +28,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	<th><b>Artist</b></th>
 	<th><b>Edition</b></th>
 	</tr>
-
-
+	
+	
 	<tr class="even">
 	<td align="right">1</td>
 	<td><a href="/at/en/1.html">Nevinyrral's Disk</a></td>
@@ -39,8 +39,8 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	<td>Mark Tedin</td>
 	<td><img src="http://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies</td>
 	</tr>
-
-
+	
+	
 	<tr class="odd">
 	<td align="right">2</td>
 	<td><a href="/at/en/2.html">Goblin King</a></td>
@@ -56,7 +56,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	private static final Pattern cardItemPatternEnd = Pattern.compile("</tr>");
 	static final Pattern countPattern = Pattern.compile("(\\d+) cards\\s*");
 	static Pattern plainPattern = Pattern.compile(".*>(.*)</td>");
-	static Pattern namePattern = Pattern.compile("html\">(.*)</a></td>");
+	static Pattern namePattern = Pattern.compile("<a href=\"/([a-z0-9]+)/([a-z]+)/[0-9a-z]+.html\">(.*)</a></td>");
 	static Pattern typeCreaturePattern = Pattern.compile("(.*) ([^ ]*)/([^ ]*)");
 	private URL url;
 
@@ -102,8 +102,10 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 			return;
 		String num = getMatch(plainPattern, rows[1]);
 		card.setCollNumber(num);
-		String name = getMatch(namePattern, rows[2]);
+		String name = getMatch(namePattern, rows[2], 3);
 		card.setName(name);
+		String abbr = getMatch(namePattern, rows[2], 1);
+		String lang = getMatch(namePattern, rows[2], 2);
 		String type = getMatch(plainPattern, rows[3]);
 		Matcher typeMatcher = typeCreaturePattern.matcher(type);
 		if (typeMatcher.matches()) {
@@ -120,16 +122,16 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		String artist = getMatch(plainPattern, rows[6]);
 		card.setArtist(artist);
 		String set = getMatch(plainPattern, rows[7]);
-		if (set != null && set.length() > 0) {
-			String abbr = Editions.getInstance().getAbbrByName(set);
-			card.setSet(set);
-			if (abbr == null)
-				throw new CannotDetermineSetAbbriviation(card);
-			abbr = abbr.toLowerCase(Locale.ENGLISH);
-			card.set(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num
-					+ ".jpg");
+		Edition ed = new Editions.Edition(set, abbr.toUpperCase(Locale.ENGLISH));
+		handler.handleEdition(ed);
+		card.setSet(set);
+		String regset = Editions.getInstance().getNameByAbbr(ed.getMainAbbreviation());
+		if (regset != null) {
+			card.setSet(regset);
 		}
+		card.set(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/" + lang + "/" + abbr + "/" + num + ".jpg");
 		card.setCardId(card.syntesizeId());
+		card.setLanguage(lang);
 		// print
 		handler.handleCard(card);
 	}
@@ -138,9 +140,21 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		int l = cost.length();
 		if (cost.trim().length() == 0)
 			return "";
+		boolean inMana = false;
 		StringBuilder res = new StringBuilder(l * 3);
 		for (int i = 0; i < l; i++) {
 			char c = cost.charAt(i);
+			if (c == '{') {
+				inMana = true;
+				res.append(c);
+				continue;
+			}
+			if (inMana) {
+				res.append(c);
+				if (c == '}')
+					inMana = false;
+				continue;
+			}
 			res.append('{');
 			res.append(c);
 			res.append('}');
@@ -148,8 +162,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		return res.toString();
 	}
 
-	public boolean loadSet(String set, ILoadCardHander handler, ICoreProgressMonitor monitor)
-			throws IOException {
+	public boolean loadSet(String set, ILoadCardHander handler, ICoreProgressMonitor monitor) throws IOException {
 		try {
 			monitor.beginTask("Downloading " + set + " checklist", 100);
 			return loadSingleUrl(getSearchQuery(set), handler);
@@ -193,9 +206,17 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		OutputHandler handler = new OutputHandler(System.out, true, true);
-		Editions.getInstance().addEdition("Duels of the Planeswalkers", "dpa");
-		URL searchQuery = getSearchQuery("Duels of the Planeswalkers");
-		new ParseMagicCardsInfoChecklist().loadSingleUrl(searchQuery,
+		// Editions.getInstance().addEdition("Duels of the Planeswalkers",
+		// "dpa");
+		// http://magiccards.info/query?q=Spite&v=list&s=cname
+		// URL searchQuery = getSearchQuery("dpa");
+		// new ParseMagicCardsInfoChecklist().loadSingleUrl(searchQuery,
+		// handler);
+		String german = "http://magiccards.info/query?q=e%3Adtk%2Fde&v=list&s=cname";
+		String doubles = "http://magiccards.info/query?q=Spite&v=list&s=cname";
+		String wc = "http://magiccards.info/query?q=e%3Awmcq%2Fen&v=list&s=cname";
+		String surl = german;
+		new ParseMagicCardsInfoChecklist().loadSingleUrl(new URL(surl),
 				handler);
 		System.err.println("Total " + handler.getCardCount());
 	}

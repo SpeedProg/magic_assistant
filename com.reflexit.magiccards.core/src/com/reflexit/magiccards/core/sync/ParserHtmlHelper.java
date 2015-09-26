@@ -118,7 +118,17 @@ public class ParserHtmlHelper {
 
 		@Override
 		public void handleEdition(Edition ed) {
-			Editions.getInstance().addEdition(ed);
+			Editions eds = Editions.getInstance();
+			String abbr = ed.getMainAbbreviation();
+			Edition exitsing = eds.getEditionByAbbr(abbr);
+			if (exitsing != null) {
+				if (!exitsing.getName().equals(ed.getName()))
+					exitsing.addNameAlias(ed.getName());
+			} else {
+				Edition res = eds.addEdition(ed.getName(), abbr);
+				if (res.getReleaseDate() == null)
+					res.setReleaseDate(Calendar.getInstance().getTime());
+			}
 		}
 
 		@Override
