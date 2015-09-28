@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.core.sync;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,7 +18,7 @@ import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCard;
 
-public class ParserHtmlHelper {
+public abstract class ParserHtmlHelper {
 	public static interface ILoadCardHander {
 		void handleCard(MagicCard card);
 
@@ -255,4 +256,6 @@ public class ParserHtmlHelper {
 	public ParserHtmlHelper() {
 		super();
 	}
+
+	public abstract boolean loadSingleUrl(URL url, ILoadCardHander handler) throws IOException;
 }

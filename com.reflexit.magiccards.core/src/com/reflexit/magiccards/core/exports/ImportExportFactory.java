@@ -40,6 +40,7 @@ public class ImportExportFactory {
 	public static final ReportType CSV;
 	public static final ReportType TEXT_DECK_CLASSIC;
 	public static final ReportType TABLE_PIPED;
+
 	static {
 		types = new LinkedHashMap<String, ReportType>();
 		loadExtensions();
@@ -66,10 +67,12 @@ public class ImportExportFactory {
 	private static void loadExtensions() {
 		try {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(DataManager.ID + ".deckFormat");
-			IConfigurationElement points[] = extensionPoint.getConfigurationElements();
-			for (IConfigurationElement el : points) {
-				parseExtension(el);
+			if (registry != null) {
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(DataManager.ID + ".deckFormat");
+				IConfigurationElement points[] = extensionPoint.getConfigurationElements();
+				for (IConfigurationElement el : points) {
+					parseExtension(el);
+				}
 			}
 		} catch (Throwable e) {
 			MagicLogger.log(e);
@@ -87,8 +90,8 @@ public class ImportExportFactory {
 		createReportType(label, ext, xmlFormat, imp, exp);
 	}
 
-	public static ReportType createReportType(String label, String fileExtension, boolean xmlFormat,
-			String importClass, String exportClass) {
+	public static ReportType createReportType(String label, String fileExtension, boolean xmlFormat, String importClass,
+			String exportClass) {
 		ReportType rt = createReportType(label, fileExtension, xmlFormat);
 		rt.setImportDelegate(importClass);
 		rt.setExportDelegate(exportClass);
@@ -141,8 +144,7 @@ public class ImportExportFactory {
 	public static IFilteredCardStore getExampleData() {
 		MemoryFilteredCardStore fstore = new MemoryFilteredCardStore<>();
 		IImportDelegate del = new TableImportDelegate();
-		del.init(new ImportData(true, Location.NO_WHERE,
-				TableExportDelegate.getTablePiped()));
+		del.init(new ImportData(true, Location.NO_WHERE, TableExportDelegate.getTablePiped()));
 		try {
 			del.run(ICoreProgressMonitor.NONE);
 			fstore.addAll(del.getResult().getList());

@@ -1,20 +1,19 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Map;
 
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseMagicCardsInfoChecklist;
 import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
+import com.reflexit.magiccards.core.sync.WebUtils;
 
 public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
-	private ParseMagicCardsInfoChecklist parser;
+	private ParserHtmlHelper parser;
 
 	@Override
 	public void setReportType(ReportType reportType) {
@@ -25,7 +24,6 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 	@Override
 	public void init(ImportData result) {
 		super.init(result);
-
 		importData.setFields(
 				new ICardField[] { MagicCardField.NAME, MagicCardField.TYPE, MagicCardField.COST, MagicCardField.SET,
 						MagicCardField.LANG, MagicCardField.RARITY, MagicCardField.COLLNUM, MagicCardField.ARTIST });
@@ -52,10 +50,15 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 		};
 		String property = importData.getProperty(ImportSource.URL.name());
 		URL url = new URL(property);
-		String query = url.getQuery();
-
+		Map<String, String> map = WebUtils.splitQuery(url);
+		String vparam = map.get("v");
+		if (vparam == null)
+			throw new IOException("Cannot parser this url, missing v param");
+		if (!vparam.equals("list")) {
+			property = property.replace("v=" + vparam, "v=list");
+			url = new URL(property);
+		}
 		parser = new ParseMagicCardsInfoChecklist();
-		parser.processFromReader(new BufferedReader(new InputStreamReader(getStream(), FileUtils.CHARSET_UTF_8)),
-				handler);
+		parser.loadSingleUrl(url, handler);
 	}
 }

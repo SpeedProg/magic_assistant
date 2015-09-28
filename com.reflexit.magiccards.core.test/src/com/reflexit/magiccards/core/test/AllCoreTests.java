@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.reflexit.magiccards.core.exports.MagicCardsInfoImportTest;
 import com.reflexit.magiccards.core.model.storage.PerformanceFilteringTest;
 import com.reflexit.magiccards.core.seller.test.AllSellerTests;
 import com.reflexit.magiccards.core.sync.CurrencyConvertorTest;
@@ -43,6 +45,8 @@ public class AllCoreTests {
 		suite.addTestSuite(ParseGathererSearchChecklistTest.class);
 		suite.addTestSuite(CurrencyConvertorTest.class);
 		suite.addTestSuite(PerformanceFilteringTest.class);
+		// online import
+		suite.addTest(new JUnit4TestAdapter(MagicCardsInfoImportTest.class));
 		// price providers
 		suite.addTest(AllSellerTests.suite());
 		// $JUnit-END$

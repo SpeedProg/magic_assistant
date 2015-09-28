@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
 
-public class GatherHelper extends ParserHtmlHelper {
+public abstract class GatherHelper extends ParserHtmlHelper {
 	protected static Pattern countPattern = Pattern
 			.compile("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"[^>]*><i>[^<]*</i>\\s*\\((\\d+)\\)\\s*</span>");
 	protected static Pattern lastPagePattern = Pattern
