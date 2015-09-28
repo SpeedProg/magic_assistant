@@ -52,6 +52,7 @@ import com.reflexit.magiccards.core.exports.IImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ImportUtils;
+import com.reflexit.magiccards.core.exports.ImportSource;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -88,7 +89,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private MagicToolkit toolkit;
 	// data elements
 	private PreferenceStore store;
-	private InputChoice inputChoice;
+	private ImportSource inputChoice;
 	private CardElement element;
 	private Collection<ReportType> types;
 	private ImportData importData;
@@ -97,10 +98,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button urlRadio;
 	private Text urlText;
 	private String urlName;
-
-	enum InputChoice {
-		FILE, CLIPBOARD, INPUT, URL
-	};
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -115,7 +112,6 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	public void performImport(final boolean preview) {
-		importData.setHeader(true);
 		importData.setVirtual(virtualCards.getSelection());
 		int choice = getIntoChoice();
 		final boolean dbImport = choice == 3;
@@ -237,7 +233,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	protected String getNewDeckName() {
-		if (inputChoice != InputChoice.FILE) {
+		if (inputChoice != ImportSource.FILE) {
 			return "imported";
 		} else {
 			String basename = new File(fileName).getName();
@@ -250,7 +246,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	String readSource() throws IOException {
 		String text = "";
-		importData.setProperty("choice", inputChoice.name());
+		importData.setImportSource(inputChoice);
 		switch (inputChoice) {
 		case FILE:
 			text = FileUtils.readFileAsString(new File(fileName));
@@ -441,10 +437,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 			fileText.setSelection(file.length(), file.length());
 		}
 		String sfrom = dialogSettings.get(FROM_CHOICE);
-		inputChoice = InputChoice.CLIPBOARD;
+		inputChoice = ImportSource.CLIPBOARD;
 		if (sfrom != null) {
 			try {
-				inputChoice = InputChoice.valueOf(sfrom);
+				inputChoice = ImportSource.valueOf(sfrom);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -462,12 +458,12 @@ public class DeckImportPage extends WizardDataTransferPage {
 		updateWidgetEnablements();
 	}
 
-	public void setInputChoice(InputChoice inputChoice) {
+	public void setInputChoice(ImportSource inputChoice) {
 		this.inputChoice = inputChoice;
-		fileRadio.setSelection(inputChoice == InputChoice.FILE);
-		clipboardRadio.setSelection(inputChoice == InputChoice.CLIPBOARD);
-		inputRadio.setSelection(inputChoice == InputChoice.INPUT);
-		urlRadio.setSelection(inputChoice == InputChoice.URL);
+		fileRadio.setSelection(inputChoice == ImportSource.FILE);
+		clipboardRadio.setSelection(inputChoice == ImportSource.CLIPBOARD);
+		inputRadio.setSelection(inputChoice == ImportSource.INPUT);
+		urlRadio.setSelection(inputChoice == ImportSource.URL);
 	}
 
 	private void selectReportType(final ReportType type) {
@@ -504,20 +500,20 @@ public class DeckImportPage extends WizardDataTransferPage {
 		fileSelectionArea.setLayout(GridLayoutFactory.swtDefaults().numColumns(4).create());
 		// clipboard control
 		clipboardRadio = toolkit.createButton(fileSelectionArea, "Clipboard", SWT.RADIO,
-				(e) -> onInputChoice(e, InputChoice.CLIPBOARD));
+				(e) -> onInputChoice(e, ImportSource.CLIPBOARD));
 		clipboardRadio.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		// file selector
 		fileRadio = toolkit.createButton(fileSelectionArea, "File", SWT.RADIO,
-				(e) -> onInputChoice(e, InputChoice.FILE));
+				(e) -> onInputChoice(e, ImportSource.FILE));
 		fileRadio.setSelection(true);
 		fileText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
 		fileText.addModifyListener((e) -> {
 			fileName = fileText.getText();
-			if (inputChoice != InputChoice.FILE) {
-				setInputChoice(InputChoice.FILE);
+			if (inputChoice != ImportSource.FILE) {
+				setInputChoice(ImportSource.FILE);
 			}
-			onInputChoice(null, InputChoice.FILE);
+			onInputChoice(null, ImportSource.FILE);
 		});
 		fileText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
 		toolkit.createButton(fileSelectionArea, "Browse...", SWT.PUSH, (e) -> {
@@ -525,29 +521,29 @@ public class DeckImportPage extends WizardDataTransferPage {
 			fileDialog.setFileName(fileText.getText());
 			String file = fileDialog.open();
 			if (file != null) {
-				setInputChoice(InputChoice.FILE);
+				setInputChoice(ImportSource.FILE);
 				fileText.setText(file);
 				fileText.setSelection(file.length(), file.length());
 			}
 		});
 		// editor controls
 		inputRadio = toolkit.createButton(fileSelectionArea, "Text Input", SWT.RADIO,
-				(e) -> onInputChoice(e, InputChoice.INPUT));
+				(e) -> onInputChoice(e, ImportSource.INPUT));
 		inputRadio.setLayoutData(GridDataFactory.fillDefaults().create());
 		// url selector
-		urlRadio = toolkit.createButton(fileSelectionArea, "URL", SWT.RADIO, (e) -> onInputChoice(e, InputChoice.URL));
+		urlRadio = toolkit.createButton(fileSelectionArea, "URL", SWT.RADIO, (e) -> onInputChoice(e, ImportSource.URL));
 		urlText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
 		urlText.addModifyListener((e) -> {
 			urlName = urlText.getText();
-			if (inputChoice != InputChoice.URL) {
-				setInputChoice(InputChoice.URL);
+			if (inputChoice != ImportSource.URL) {
+				setInputChoice(ImportSource.URL);
 			}
-			onInputChoice(null, InputChoice.URL);
+			onInputChoice(null, ImportSource.URL);
 		});
 		urlText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
 	}
 
-	public void onInputChoice(SelectionEvent event, InputChoice choice) {
+	public void onInputChoice(SelectionEvent event, ImportSource choice) {
 		if (event == null || ((Button) event.widget).getSelection()) {
 			inputChoice = choice;
 			autoDetectFormat();
@@ -666,7 +662,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateSourceGroup() {
-		if (inputChoice == InputChoice.FILE) {
+		if (inputChoice == ImportSource.FILE) {
 			if (((fileName == null) || (fileName.length() == 0) || (fileText.getText().length() == 0))) {
 				setErrorMessage("Input file is not selected");
 				return false;
@@ -682,7 +678,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			}
 			return true;
 		}
-		if (inputChoice == InputChoice.URL) {
+		if (inputChoice == ImportSource.URL) {
 			if (((urlName == null) || (urlName.length() == 0) || (urlText.getText().length() == 0))) {
 				setErrorMessage("URL is selected by empty");
 				return false;
@@ -707,8 +703,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected void updateWidgetEnablements() {
-		fileText.setEnabled(inputChoice == InputChoice.FILE);
-		urlText.setEnabled(inputChoice == InputChoice.URL);
+		fileText.setEnabled(inputChoice == ImportSource.FILE);
+		urlText.setEnabled(inputChoice == ImportSource.URL);
 	}
 
 	public ReportType getReportType() {
@@ -723,7 +719,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		return importData;
 	}
 
-	public InputChoice getInputChoice() {
+	public ImportSource getInputChoice() {
 		return inputChoice;
 	}
 

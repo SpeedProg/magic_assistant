@@ -122,7 +122,7 @@ public abstract class AbstractExportDelegate<T extends ICard> implements IExport
 	public IFilteredCardStore<T> getExampleData() {
 		MemoryFilteredCardStore<T> fstore = new MemoryFilteredCardStore<>();
 		IImportDelegate del = ImportExportFactory.TABLE_PIPED.getImportDelegate();
-		del.init(null, new ImportData(true, Location.NO_WHERE,
+		del.init(new ImportData(true, Location.NO_WHERE,
 				ImportExportFactory.TABLE_PIPED.getExample()));
 		try {
 			del.run(ICoreProgressMonitor.NONE);

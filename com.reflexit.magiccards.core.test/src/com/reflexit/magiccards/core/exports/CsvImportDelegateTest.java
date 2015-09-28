@@ -17,7 +17,7 @@ public class CsvImportDelegateTest extends AbstarctImportTest {
 
 	private void parseAbove() {
 		addLine(getAboveComment());
-		parse(true, importd);
+		parse(importd);
 	}
 
 	private void previewAbove() {
@@ -102,7 +102,7 @@ public class CsvImportDelegateTest extends AbstarctImportTest {
 	@Test(expected = MagicException.class)
 	public void test_Inval() throws InvocationTargetException, InterruptedException {
 		addLine(getAboveComment());
-		parseonly(true, importd);
+		parseonly(importd);
 	}
 
 	// Name,Qty
@@ -110,7 +110,7 @@ public class CsvImportDelegateTest extends AbstarctImportTest {
 	@Test(expected = MagicException.class)
 	public void test_InvalHeader() throws InvocationTargetException, InterruptedException {
 		addLine(getAboveComment());
-		parseonly(true, importd);
+		parseonly(importd);
 	}
 
 	// NAME,QTY,EDITION_ABBR

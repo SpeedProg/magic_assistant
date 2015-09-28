@@ -52,7 +52,7 @@ public class ImportUtils {
 			ICoreProgressMonitor monitor)
 			throws InvocationTargetException,
 			InterruptedException {
-		worker.init(null, result);
+		worker.init(result);
 		worker.run(monitor);
 		return result;
 	}

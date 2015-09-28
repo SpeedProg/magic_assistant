@@ -47,7 +47,7 @@ public class ManaDeckImportTest extends AbstarctImportTest {
 	@Test
 	public void test1() {
 		addLine(getAboveComment());
-		preview(true, mimport);
+		preview(mimport);
 		assertEquals(23, resSize);
 		assertEquals("City of Brass", card1.getName());
 		assertEquals(2, ((MagicCardPhysical) card1).getCount());
@@ -62,6 +62,6 @@ public class ManaDeckImportTest extends AbstarctImportTest {
 	}
 
 	private void parse() {
-		parse(true, mimport);
+		parse(mimport);
 	}
 }

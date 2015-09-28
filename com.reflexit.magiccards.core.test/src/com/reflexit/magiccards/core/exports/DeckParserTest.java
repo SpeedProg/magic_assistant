@@ -8,7 +8,7 @@ public class DeckParserTest extends AbstarctImportTest {
 	private ClassicImportDelegate classicImport = new ClassicImportDelegate();
 
 	private void parse() {
-		super.parse(false, classicImport);
+		super.parse(classicImport);
 	}
 
 	@Test

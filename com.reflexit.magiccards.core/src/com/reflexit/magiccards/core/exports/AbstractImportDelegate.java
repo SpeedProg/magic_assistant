@@ -3,7 +3,6 @@ package com.reflexit.magiccards.core.exports;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Location;
@@ -14,8 +13,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 
-public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress,
-		IImportDelegate {
+public abstract class AbstractImportDelegate implements ICoreRunnableWithProgress, IImportDelegate {
 	private InputStream stream;
 	protected ImportData importData;
 	protected int lineNum = 0;
@@ -39,10 +37,9 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 	}
 
 	@Override
-	public void init(InputStream st, ImportData result) {
-		this.stream = st == null ? new ByteArrayInputStream(result.getText()
-				.getBytes(FileUtils.CHARSET_UTF_8)) : st;
+	public void init(ImportData result) {
 		this.importData = result;
+		this.stream = new ByteArrayInputStream(result.getText().getBytes(FileUtils.CHARSET_UTF_8));
 		importData.clear();
 		importData.setType(getType());
 		importData.setFields(getNonTransientFeilds());
@@ -54,11 +51,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 			return Location.createLocation("sideboard");
 		Location sideboard = getLocation().toSideboard();
 		return sideboard;
-	}
-
-	@Override
-	public void setHeader(boolean header) {
-		this.importData.setHeader(header);
 	}
 
 	@Override
@@ -115,8 +107,7 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 		} else if (field == MagicCardField.LOCATION) {
 			// ignore
 		} else if (field.isTransient()) {
-			if (field == MagicCardField.FORTRADECOUNT
-					|| field == MagicCardField.LEGALITY
+			if (field == MagicCardField.FORTRADECOUNT || field == MagicCardField.LEGALITY
 					|| field == MagicCardField.IMAGE_URL) {
 				// special handling for transient fields, we will set it
 				card.set(field, value);
@@ -138,10 +129,6 @@ public abstract class AbstractImportDelegate implements ICoreRunnableWithProgres
 
 	public void setLocation(Location location) {
 		this.importData.setLocation(location);
-	}
-
-	public boolean isHeader() {
-		return importData.isHeader();
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class CsvImportDelegate extends TableImportDelegate {
 					throw new MagicException("Line " + lineNum
 							+ ": Format error, at least 2 fields are expected");
 				}
-				if (lineNum == 1 && isHeader()) {
+				if (lineNum == 1) {
 					setHeaderFields(list);
 					continue;
 				}

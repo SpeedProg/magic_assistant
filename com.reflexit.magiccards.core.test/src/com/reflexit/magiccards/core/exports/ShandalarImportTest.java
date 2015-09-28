@@ -50,9 +50,9 @@ public class ShandalarImportTest extends AbstarctImportTest {
 
 	void ppd(int i) {
 		if (i == 0)
-			preview(true, mimport);
+			preview(mimport);
 		else
-			parse(true, mimport);
+			parse(mimport);
 	}
 
 	@Test

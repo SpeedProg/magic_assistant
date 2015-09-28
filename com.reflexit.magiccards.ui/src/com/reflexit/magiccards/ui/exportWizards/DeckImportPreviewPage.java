@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportError;
+import com.reflexit.magiccards.core.exports.ImportSource;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -39,7 +40,6 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
-import com.reflexit.magiccards.ui.exportWizards.DeckImportPage.InputChoice;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
@@ -65,7 +65,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		@Override
 		public void modifyText(ModifyEvent e) {
 			DeckImportPage startingPage = getMainPage();
-			startingPage.setInputChoice(InputChoice.INPUT);
+			startingPage.setInputChoice(ImportSource.INPUT);
 			previewResult.setText(text.getText());
 			thread.cancel();
 			thread.schedule(500);
@@ -99,7 +99,7 @@ public class DeckImportPreviewPage extends WizardPage {
 
 	public void safeSetText(String text2) {
 		DeckImportPage startingPage = getMainPage();
-		if (startingPage.getInputChoice() != InputChoice.INPUT) {
+		if (startingPage.getInputChoice() != ImportSource.INPUT) {
 			text.removeModifyListener(modifyLister);
 			text.setText(text2);
 			text.addModifyListener(modifyLister);

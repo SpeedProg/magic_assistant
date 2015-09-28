@@ -55,13 +55,9 @@ public class AbstarctImportTest extends AbstractMagicTest {
 	}
 
 	protected void parse(IImportDelegate worker) {
-		parse(true, worker);
-	}
-
-	protected void parse(boolean header, IImportDelegate worker) {
 		try {
 			exception = null;
-			parseonly(header, worker);
+			parseonly(worker);
 			if (exception != null)
 				fail(exception.getMessage());
 		} catch (Exception e) {
@@ -70,14 +66,12 @@ public class AbstarctImportTest extends AbstractMagicTest {
 		}
 	}
 
-	protected void parseonly(boolean header, IImportDelegate worker)
-			throws InvocationTargetException, InterruptedException {
+	protected void parseonly(IImportDelegate worker) throws InvocationTargetException, InterruptedException {
 		if (resolve == false)
 			throw new IllegalArgumentException("Cannot test");
 		ImportData importData = new ImportData();
 		importData.setVirtual(virtual);
 		importData.setLocation(deck.getLocation());
-		importData.setHeader(header);
 		importData.setText(line);
 		ImportUtils.performPreImport(worker, importData, ICoreProgressMonitor.NONE);
 		if (importData.getError() != null)
@@ -92,10 +86,6 @@ public class AbstarctImportTest extends AbstractMagicTest {
 	}
 
 	protected void preview(IImportDelegate worker) {
-		preview(true, worker);
-	}
-
-	protected void preview(boolean header, IImportDelegate worker) {
 		try {
 			ImportData importData = new ImportData(virtual, deck.getLocation(), line);
 			ImportUtils.performPreImport(worker, importData, ICoreProgressMonitor.NONE);
@@ -135,8 +125,7 @@ public class AbstarctImportTest extends AbstractMagicTest {
 	@Override
 	protected StringBuilder[] getContents(int sections) {
 		try {
-			return TestFileUtils.getContentsForTest("src", getClass(),
-					getName(), sections);
+			return TestFileUtils.getContentsForTest("src", getClass(), getName(), sections);
 		} catch (Exception e) {
 			fail(e.getMessage());
 			return null;

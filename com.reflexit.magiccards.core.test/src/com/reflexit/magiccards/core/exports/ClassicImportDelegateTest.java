@@ -20,7 +20,7 @@ public class ClassicImportDelegateTest extends AbstarctImportTest {
 	private ClassicImportDelegate mimport = new ClassicImportDelegate();
 
 	private void parse() {
-		parse(true, mimport);
+		parse(mimport);
 	}
 
 	@Test

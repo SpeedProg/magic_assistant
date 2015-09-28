@@ -2,8 +2,9 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -22,9 +23,9 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 	}
 
 	@Override
-	public void init(InputStream st, ImportData result) {
-		super.init(st, result);
-		parser = new ParseMagicCardsInfoChecklist();
+	public void init(ImportData result) {
+		super.init(result);
+
 		importData.setFields(
 				new ICardField[] { MagicCardField.NAME, MagicCardField.TYPE, MagicCardField.COST, MagicCardField.SET,
 						MagicCardField.LANG, MagicCardField.RARITY, MagicCardField.COLLNUM, MagicCardField.ARTIST });
@@ -49,6 +50,11 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 				importData.add(card);
 			}
 		};
+		String property = importData.getProperty(ImportSource.URL.name());
+		URL url = new URL(property);
+		String query = url.getQuery();
+
+		parser = new ParseMagicCardsInfoChecklist();
 		parser.processFromReader(new BufferedReader(new InputStreamReader(getStream(), FileUtils.CHARSET_UTF_8)),
 				handler);
 	}

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
@@ -23,9 +22,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 public interface IImportDelegate {
 	public ReportType getType();
 
-	public void init(InputStream st, ImportData result);
-
-	public void setHeader(boolean header);
+	public void init(ImportData result);
 
 	public void run(ICoreProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
 

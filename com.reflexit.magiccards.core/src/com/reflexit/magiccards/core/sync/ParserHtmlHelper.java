@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,11 +33,7 @@ public class ParserHtmlHelper {
 	}
 
 	static {
-		try {
-			LONG_MINUS = new String(new byte[] { (byte) 0xe2, (byte) 0x80, (byte) 0x94 }, FileUtils.UTF8);
-		} catch (UnsupportedEncodingException e) {
-			// hmm
-		}
+		LONG_MINUS = new String(new byte[] { (byte) 0xe2, (byte) 0x80, (byte) 0x94 }, FileUtils.CHARSET_UTF_8);
 	}
 
 	public static class OutputHandler implements ILoadCardHander {

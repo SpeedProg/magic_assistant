@@ -11,9 +11,11 @@ import org.junit.Test;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 
 /**
- * "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";"Foil"
- * "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";"" "Throne of Bone";"1";"U";"4E";"Art";"1";"";"Artifact";"1";"353";""
- * "Hanabi Blast";"1";"U";"CHK";"R";"1RR";"";"Instant";"3";"170";"" "Feral Lightning";"1";"U";"SOK";"R";"3RRR";"";"Sorcery";"6";"101";""
+ * "Name";"Qty";"Rarity";"Edition";"Color";"Cost";"P/T";"Type";"Mana";"Number";
+ * "Foil" "Disrupting Scepter";"1";"R";"4E";"Art";"3";"";"Artifact";"3";"316";""
+ * "Throne of Bone";"1";"U";"4E";"Art";"1";"";"Artifact";"1";"353";""
+ * "Hanabi Blast";"1";"U";"CHK";"R";"1RR";"";"Instant";"3";"170";""
+ * "Feral Lightning";"1";"U";"SOK";"R";"3RRR";"";"Sorcery";"6";"101";""
  * "Forest (2)";"1";"C";"8E";"Lnd";"";"";"Basic Land - Forest";"0";"348";""
  */
 public class MagicWorkstationImportTest extends AbstarctImportTest {
@@ -21,12 +23,12 @@ public class MagicWorkstationImportTest extends AbstarctImportTest {
 	private final MagicWorkstationCsvImportDelegate worker = new MagicWorkstationCsvImportDelegate();
 
 	private void parse() {
-		parse(true, worker);
+		parse(worker);
 	}
 
 	private void parseLine(String str) {
 		addLine(str);
-		parse(false, worker);
+		parse(worker);
 	}
 
 	@Test
@@ -40,14 +42,20 @@ public class MagicWorkstationImportTest extends AbstarctImportTest {
 		assertEquals("Fourth Edition", card1.getSet());
 	}
 
+	private void header() {
+		addLine("\"Name\";\"Qty\";\"Rarity\";\"Edition\";\"Color\";\"Cost\";\"P/T\";\"Type\";\"Mana\";\"Number\";\"Foil\"");
+	}
+
 	@Test
 	public void test2() {
+		header();
 		parseLine("\"Hanabi Blast\";\"1\";\"U\";\"CHK\";\"R\";\"1RR\";\"\";\"Instant\";\"3\";\"170\";\"\"");
 		assertEquals("Champions of Kamigawa", card1.getSet());
 	}
 
 	@Test
 	public void test_brackets() {
+		header();
 		parseLine("\"Forest (2)\";\"1\";\"C\";\"8E\";\"Lnd\";\"\";\"\";\"Basic Land - Forest\";\"0\";\"348\";\"\"");
 		assertEquals("Land", card1.getRarity());
 		assertEquals("Eighth Edition", card1.getSet());

@@ -26,9 +26,9 @@ public class ImportData {
 	private ReportType type = ImportExportFactory.TEXT_DECK_CLASSIC;
 	private Throwable error = null;
 	private String text = "";
-	private boolean header = true;
 	private Location location = Location.createLocation("preview");
 	private boolean virtual = false;
+	private ImportSource importSource;
 	private LinkedHashMap<String, Object> props = new LinkedHashMap<>();
 
 	public ImportData(boolean virtual2, Location location2, String line) {
@@ -134,14 +134,6 @@ public class ImportData {
 		return getError() == null && toImport.size() > 0;
 	}
 
-	public boolean isHeader() {
-		return header;
-	}
-
-	public void setHeader(boolean header) {
-		this.header = header;
-	}
-
 	public Location getLocation() {
 		return location;
 	}
@@ -168,5 +160,13 @@ public class ImportData {
 
 	public void setProperty(String key, Object value) {
 		getProperties().put(key, value);
+	}
+
+	public ImportSource getImportSource() {
+		return importSource;
+	}
+
+	public void setImportSource(ImportSource importSource) {
+		this.importSource = importSource;
 	}
 }

@@ -24,13 +24,13 @@ public class MTGStudioImportTest extends AbstarctImportTest {
 	private final MTGStudioCsvImportDelegate worker = new MTGStudioCsvImportDelegate();
 
 	private void parse() {
-		parse(true, worker);
+		parse(worker);
 	}
 
 	private void parseLine(String str) {
 		addLine("Name,Qty,Edition");
 		addLine(str);
-		parse(true, worker);
+		parse(worker);
 		assertEquals(1, resSize);
 	}
 

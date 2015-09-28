@@ -28,7 +28,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	private ImportData result;
 
 	private void parse() {
-		parse(true, tableImport);
+		parse(tableImport);
 	}
 
 	@Test

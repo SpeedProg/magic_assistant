@@ -14,11 +14,11 @@ public class HtmlTableImportTest extends AbstarctImportTest {
 	private HtmlTableImportDelegate mimport = new HtmlTableImportDelegate();
 
 	private void parse() {
-		parse(true, mimport);
+		parse(mimport);
 	}
 
 	private void preview() {
-		preview(true, mimport);
+		preview(mimport);
 		if (exception != null)
 			fail(exception.getMessage());
 	}

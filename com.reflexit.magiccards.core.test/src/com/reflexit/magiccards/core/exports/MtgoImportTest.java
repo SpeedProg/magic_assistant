@@ -24,7 +24,7 @@ public class MtgoImportTest extends AbstarctImportTest {
 	private MtgoImportDelegate mtgoImport = new MtgoImportDelegate();
 
 	private void parse() {
-		parse(true, mtgoImport);
+		parse(mtgoImport);
 	}
 
 	@Test
@@ -51,8 +51,9 @@ public class MtgoImportTest extends AbstarctImportTest {
 
 	@Test
 	public void test_special() {
+		addLine("Card Name,Online,For Trade,Physical#,Rarity,Set,No.");
 		addLine("Aven Brigadier (premium),1,1,0,R,ONS,7/350");
-		parse(false, mtgoImport);
+		parse(mtgoImport);
 		assertEquals(1, resSize);
 		assertEquals("Aven Brigadier", card1.getName());
 		assertEquals(1, ((MagicCardPhysical) card1).getCount());

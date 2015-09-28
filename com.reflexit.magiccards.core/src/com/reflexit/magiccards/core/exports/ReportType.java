@@ -1,11 +1,9 @@
 package com.reflexit.magiccards.core.exports;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -249,30 +247,26 @@ public class ReportType {
 		ReportType selected = null;
 		int errors = Integer.MAX_VALUE;
 		for (ReportType reportType : candidates) {
+			IImportDelegate id = reportType.getImportDelegate();
+			ImportData importData = new ImportData();
+			importData.setText(contents);
+			id.init(importData);
 			try {
-				InputStream st = new ByteArrayInputStream(contents.getBytes());
-				IImportDelegate id = reportType.getImportDelegate();
-				id.init(st, new ImportData());
-				try {
-					id.run(ICoreProgressMonitor.NONE);
-					ImportData result = id.getResult();
-					if (result.getError() == null && result.getList().size() > 0) {
-						int err = result.getErrorCount();
-						if (err < errors) {
-							selected = reportType;
-							if (err == 0)
-								break;
-							errors = err;
-						}
+				id.run(ICoreProgressMonitor.NONE);
+				ImportData result = id.getResult();
+				if (result.getError() == null && result.getList().size() > 0) {
+					int err = result.getErrorCount();
+					if (err < errors) {
+						selected = reportType;
+						if (err == 0)
+							break;
+						errors = err;
 					}
-				} catch (InvocationTargetException e) {
-					// continue
-				} catch (InterruptedException e) {
-					// continue
 				}
-				st.close();
-			} catch (IOException e) {
-				break;
+			} catch (InvocationTargetException e) {
+				// continue
+			} catch (InterruptedException e) {
+				// continue
 			}
 		}
 		return selected;

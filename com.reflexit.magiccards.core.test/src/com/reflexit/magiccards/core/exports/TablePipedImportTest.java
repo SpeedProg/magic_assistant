@@ -12,7 +12,7 @@ public class TablePipedImportTest extends AbstarctImportTest {
 	TableImportDelegate tableImport = new TableImportDelegate();
 
 	private void parse() {
-		parse(true, tableImport);
+		parse(tableImport);
 	}
 
 	@Test

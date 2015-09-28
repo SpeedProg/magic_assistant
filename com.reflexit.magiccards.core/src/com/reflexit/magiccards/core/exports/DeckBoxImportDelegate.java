@@ -53,9 +53,4 @@ public class DeckBoxImportDelegate extends CsvImportDelegate {
 		}
 		super.setFieldValue(card, field, i, value);
 	}
-
-	@Override
-	public boolean isHeader() {
-		return true;
-	}
 }

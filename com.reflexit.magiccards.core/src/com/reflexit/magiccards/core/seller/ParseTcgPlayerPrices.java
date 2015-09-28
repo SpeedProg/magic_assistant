@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.seller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -19,6 +18,7 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportData;
+import com.reflexit.magiccards.core.exports.ImportSource;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
@@ -37,9 +37,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	// http://magic.tcgplayer.com/db/price_guide.asp?setname=From%20the%20Vault:%20Twenty
 	public static enum Type {
-		Low("lowprice"),
-		Medium("avgprice"),
-		High("hiprice"), ;
+		Low("lowprice"), Medium("avgprice"), High("hiprice"),;
 		String tag;
 
 		Type(String tag) {
@@ -48,11 +46,13 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	private static ParseTcgPlayerPrices[] providers = new ParseTcgPlayerPrices[Type.values().length];
+
 	static {
 		for (Type type : Type.values()) {
 			providers[type.ordinal()] = new ParseTcgPlayerPrices(type);
 		}
 	}
+
 	private Type type;
 
 	private ParseTcgPlayerPrices() {
@@ -193,12 +193,16 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 			for (String set : trysets) {
 				String setE = URLEncoder.encode(set, "UTF-8");
 				URL url = new URL("http://magic.tcgplayer.com/db/search_result.asp?Set_Name=" + setE);
-				try (InputStream is = WebUtils.openUrl(url)) {
-					setMap.put(origset, set);
-					delegate.init(is, new ImportData());
+				setMap.put(origset, set);
+				try {
+					ImportData importData = new ImportData();
+					importData.setImportSource(ImportSource.URL);
+					importData.setProperty(ImportSource.URL.name(), url.toExternalForm());
+					importData.setText(WebUtils.openUrlText(url));
+					delegate.init(importData);
 					delegate.run(ICoreProgressMonitor.NONE);
 					break;
-				} catch (Exception e) {
+				} catch (IOException e) {
 					continue;
 				}
 			}
@@ -277,8 +281,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		name = name.replaceAll("Æ", "AE");
 		name = name.replaceAll("ö", "o");
 		name = name.replaceAll(" \\(.*$", "");
-		String url = "http://partner.tcgplayer.com/x3/phl.asmx/p?v=3&pk=" + PARTNER_KEY + "&s=" + set + "&p="
-				+ name;
+		String url = "http://partner.tcgplayer.com/x3/phl.asmx/p?v=3&pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
 		url = url.replaceAll(" ", "+");
 		url = url.replaceAll("'", "%27");
 		return new URL(url);
@@ -328,7 +331,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	float getPrice(String name, String set) {
 		MagicCard card = mc(name, set);
 		float price = getPrice(card);
-		//System.err.println("Price for " + card + " " + price);
+		// System.err.println("Price for " + card + " " + price);
 		return price;
 	}
 

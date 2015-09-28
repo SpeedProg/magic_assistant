@@ -141,7 +141,7 @@ public class ImportExportFactory {
 	public static IFilteredCardStore getExampleData() {
 		MemoryFilteredCardStore fstore = new MemoryFilteredCardStore<>();
 		IImportDelegate del = new TableImportDelegate();
-		del.init(null, new ImportData(true, Location.NO_WHERE,
+		del.init(new ImportData(true, Location.NO_WHERE,
 				TableExportDelegate.getTablePiped()));
 		try {
 			del.run(ICoreProgressMonitor.NONE);

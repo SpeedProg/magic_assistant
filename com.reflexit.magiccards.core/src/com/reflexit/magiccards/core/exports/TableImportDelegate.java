@@ -52,7 +52,7 @@ public class TableImportDelegate extends AbstractImportDelegate {
 						continue;
 					String[] split = input.split("\\Q" + getSeparator());
 					if (split.length > 1) {
-						if (lineNum == 1 && isHeader()) {
+						if (lineNum == 1) {
 							setHeaderFields(split);
 							continue;
 						}
