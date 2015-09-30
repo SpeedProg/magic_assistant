@@ -40,6 +40,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
+import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.TableViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
@@ -65,7 +66,8 @@ public class DeckImportPreviewPage extends WizardPage {
 		@Override
 		public void modifyText(ModifyEvent e) {
 			DeckImportPage startingPage = getMainPage();
-			startingPage.setInputChoice(ImportSource.INPUT);
+			startingPage.setInputChoice(ImportSource.TEXT);
+			CopySupport.runCopy(text.getText());
 			previewResult.setText(text.getText());
 			thread.cancel();
 			thread.schedule(500);
@@ -99,11 +101,9 @@ public class DeckImportPreviewPage extends WizardPage {
 
 	public void safeSetText(String text2) {
 		DeckImportPage startingPage = getMainPage();
-		if (startingPage.getInputChoice() != ImportSource.INPUT) {
-			text.removeModifyListener(modifyLister);
-			text.setText(text2);
-			text.addModifyListener(modifyLister);
-		}
+		text.removeModifyListener(modifyLister);
+		text.setText(text2);
+		text.addModifyListener(modifyLister);
 	}
 
 	public void validate() {
@@ -167,17 +167,17 @@ public class DeckImportPreviewPage extends WizardPage {
 		DeckImportPage startingPage = getMainPage();
 		int choice = startingPage.getIntoChoice();
 		switch (choice) {
-			case 1:
-				return "Importing into a new deck/collection";
-			case 2:
-				CardElement element = startingPage.getElement();
-				String deckName = element == null ? "newdeck" : element.getName();
-				String desc = "Importing into " + deckName + ".";
-				return desc;
-			case 3:
-				return "Extending Magic Card Database";
-			default:
-				break;
+		case 1:
+			return "Importing into a new deck/collection";
+		case 2:
+			CardElement element = startingPage.getElement();
+			String deckName = element == null ? "newdeck" : element.getName();
+			String desc = "Importing into " + deckName + ".";
+			return desc;
+		case 3:
+			return "Extending Magic Card Database";
+		default:
+			break;
 		}
 		return "";
 	}

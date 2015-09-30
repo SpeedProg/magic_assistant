@@ -151,8 +151,15 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		}
 	}
 
-	public Image getImage(String key) {
-		ImageRegistry registry = getImageRegistry();
+	public static Image getImage(String key) {
+		if (getDefault() == null) {
+			try {
+				return new Image(Display.getDefault(), key);
+			} catch (Throwable e) {
+				return null;
+			}
+		}
+		ImageRegistry registry = getDefault().getImageRegistry();
 		Image image = registry.get(key);
 		if (image == null) {
 			ImageDescriptor descriptor = imageDescriptorFromPlugin(PLUGIN_ID, key);

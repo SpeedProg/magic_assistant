@@ -23,11 +23,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -51,8 +54,8 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.exports.IImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportExportFactory;
-import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.ImportSource;
+import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
@@ -64,7 +67,9 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.CorrectSetDialog;
+import com.reflexit.magiccards.ui.dialogs.EditTextDialog;
 import com.reflexit.magiccards.ui.dialogs.LocationPickerDialog;
+import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.widgets.MagicToolkit;
@@ -98,6 +103,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button urlRadio;
 	private Text urlText;
 	private String urlName;
+	private Text clipboardPreviewText;
 
 	protected DeckImportPage(final String pageName, final IStructuredSelection selection) {
 		super(pageName);
@@ -249,28 +255,27 @@ public class DeckImportPage extends WizardDataTransferPage {
 		importData.setImportSource(inputChoice);
 		switch (inputChoice) {
 		case FILE:
-			text = FileUtils.readFileAsString(new File(fileName));
-			importData.setText(text);
-			importData.setProperty(inputChoice.name(), fileName);
+			if (fileName != null) {
+				text = FileUtils.readFileAsString(new File(fileName));
+				importData.setText(text);
+				importData.setProperty(inputChoice.name(), fileName);
+			}
 			break;
-		case CLIPBOARD:
+		case TEXT:
 			text = getClipboardText();
 			importData.setText(text);
 			importData.setProperty(inputChoice.name(), text);
 			break;
-		case INPUT:
-			text = importData.getText();
-			importData.setProperty(inputChoice.name(), text);
-			break;
 		case URL:
-			text = WebUtils.openUrlText(new URL(urlName));
-			importData.setText(text);
-			importData.setProperty(inputChoice.name(), urlName);
+			if (urlName != null) {
+				text = WebUtils.openUrlText(new URL(urlName));
+				importData.setText(text);
+				importData.setProperty(inputChoice.name(), urlName);
+			}
 			break;
 		default:
 			break;
 		}
-
 		return text;
 	}
 
@@ -437,7 +442,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 			fileText.setSelection(file.length(), file.length());
 		}
 		String sfrom = dialogSettings.get(FROM_CHOICE);
-		inputChoice = ImportSource.CLIPBOARD;
+		inputChoice = ImportSource.TEXT;
 		if (sfrom != null) {
 			try {
 				inputChoice = ImportSource.valueOf(sfrom);
@@ -461,8 +466,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 	public void setInputChoice(ImportSource inputChoice) {
 		this.inputChoice = inputChoice;
 		fileRadio.setSelection(inputChoice == ImportSource.FILE);
-		clipboardRadio.setSelection(inputChoice == ImportSource.CLIPBOARD);
-		inputRadio.setSelection(inputChoice == ImportSource.INPUT);
+		clipboardRadio.setSelection(inputChoice == ImportSource.TEXT);
+		// inputRadio.setSelection(inputChoice == ImportSource.INPUT);
 		urlRadio.setSelection(inputChoice == ImportSource.URL);
 	}
 
@@ -497,12 +502,27 @@ public class DeckImportPage extends WizardDataTransferPage {
 	protected void createResourcesGroup(final Composite parent) {
 		Composite fileSelectionArea = toolkit.createGroup(parent, "Import Source");
 		fileSelectionArea.setLayoutData(GridDataFactory.fillDefaults().create());
-		fileSelectionArea.setLayout(GridLayoutFactory.swtDefaults().numColumns(4).create());
+		fileSelectionArea.setLayout(GridLayoutFactory.swtDefaults().numColumns(3).create());
 		// clipboard control
 		clipboardRadio = toolkit.createButton(fileSelectionArea, "Clipboard", SWT.RADIO,
-				(e) -> onInputChoice(e, ImportSource.CLIPBOARD));
+				(e) -> onInputChoice(e, ImportSource.TEXT));
 		clipboardRadio.setLayoutData(GridDataFactory.fillDefaults().create());
-
+		clipboardPreviewText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
+		clipboardPreviewText.setEditable(false);
+		clipboardPreviewText.setText(getClipboardClipped());
+		clipboardPreviewText.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				openEditDialog();
+			}
+		});
+		GridDataFactory textBoxFc = GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false);
+		GridDataFactory buttFc = GridDataFactory.swtDefaults().hint(100, SWT.DEFAULT).grab(true, false);
+		clipboardPreviewText.setLayoutData(textBoxFc.create());
+		Button edit = toolkit.createButton(fileSelectionArea, "Edit...", SWT.PUSH, (e) -> {
+			openEditDialog();
+		});
+		edit.setLayoutData(buttFc.create());
 		// file selector
 		fileRadio = toolkit.createButton(fileSelectionArea, "File", SWT.RADIO,
 				(e) -> onInputChoice(e, ImportSource.FILE));
@@ -515,8 +535,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 			}
 			onInputChoice(null, ImportSource.FILE);
 		});
-		fileText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
-		toolkit.createButton(fileSelectionArea, "Browse...", SWT.PUSH, (e) -> {
+		fileText.setLayoutData(textBoxFc.create());
+		Button browse = toolkit.createButton(fileSelectionArea, "Browse...", SWT.PUSH, (e) -> {
 			FileDialog fileDialog = new FileDialog(parent.getShell());
 			fileDialog.setFileName(fileText.getText());
 			String file = fileDialog.open();
@@ -526,13 +546,19 @@ public class DeckImportPage extends WizardDataTransferPage {
 				fileText.setSelection(file.length(), file.length());
 			}
 		});
+		browse.setLayoutData(buttFc.create());
 		// editor controls
-		inputRadio = toolkit.createButton(fileSelectionArea, "Text Input", SWT.RADIO,
-				(e) -> onInputChoice(e, ImportSource.INPUT));
-		inputRadio.setLayoutData(GridDataFactory.fillDefaults().create());
+		// inputRadio = toolkit.createButton(fileSelectionArea, "Editor",
+		// SWT.RADIO,
+		// (e) -> onInputChoice(e, ImportSource.INPUT));
+		// inputRadio.setToolTipText("Text editor will appear on the next page
+		// where you enter the text (or paste");
+		// inputRadio.setLayoutData(GridDataFactory.fillDefaults().create());
 		// url selector
 		urlRadio = toolkit.createButton(fileSelectionArea, "URL", SWT.RADIO, (e) -> onInputChoice(e, ImportSource.URL));
 		urlText = toolkit.createText(fileSelectionArea, "", SWT.BORDER);
+		urlText.setToolTipText(
+				"You can select an url by copying it from browser, but only if there is a parser that understans its format it can be parsed");
 		urlText.addModifyListener((e) -> {
 			urlName = urlText.getText();
 			if (inputChoice != ImportSource.URL) {
@@ -540,7 +566,25 @@ public class DeckImportPage extends WizardDataTransferPage {
 			}
 			onInputChoice(null, ImportSource.URL);
 		});
-		urlText.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
+		urlText.setLayoutData(textBoxFc.create());
+	}
+
+	private void openEditDialog() {
+		EditTextDialog dialog = new EditTextDialog(new SameShellProvider(getShell()));
+		dialog.setContents(getClipboardText());
+		if (dialog.open() == Window.OK) {
+			String text = dialog.getText();
+			CopySupport.runCopy(text);
+			clipboardPreviewText.setText(getClipboardClipped());
+			setInputChoice(ImportSource.TEXT);
+			onInputChoice(null, inputChoice);
+		}
+	}
+
+	private String getClipboardClipped() {
+		String cl = getClipboardText();
+		String clipped = cl.length() > 80 ? cl.subSequence(0, 80) + "..." : cl;
+		return clipped;
 	}
 
 	public void onInputChoice(SelectionEvent event, ImportSource choice) {
@@ -556,20 +600,16 @@ public class DeckImportPage extends WizardDataTransferPage {
 		ReportType type = null;
 		switch (inputChoice) {
 		case FILE:
-			type = ReportType.autoDetectType(new File(fileName), types);
+			if (fileName != null)
+				type = ReportType.autoDetectType(new File(fileName), types);
 			break;
-		case CLIPBOARD:
+		case TEXT:
 			type = ReportType.autoDetectType(getClipboardText(), types);
-			break;
-		case INPUT:
-			if (importData != null) {
-				String text = importData.getText();
-				type = ReportType.autoDetectType(text, types);
-			}
 			break;
 		case URL:
 			try {
-				type = ReportType.autoDetectType(new URL(urlName), types);
+				if (urlName != null)
+					type = ReportType.autoDetectType(new URL(urlName), types);
 			} catch (MalformedURLException e) {
 				return;
 			}
@@ -652,6 +692,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateOptionsGroup() {
+		if (reportType == null) {
+			setErrorMessage("Reporter is not defined");
+			return false;
+		}
 		IImportDelegate worker = reportType.getImportDelegate();
 		if (worker == null) {
 			setErrorMessage("Importer is not defined for " + reportType.getLabel());
@@ -680,7 +724,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		}
 		if (inputChoice == ImportSource.URL) {
 			if (((urlName == null) || (urlName.length() == 0) || (urlText.getText().length() == 0))) {
-				setErrorMessage("URL is selected by empty");
+				setErrorMessage("URL is selected but empty");
 				return false;
 			}
 			try {

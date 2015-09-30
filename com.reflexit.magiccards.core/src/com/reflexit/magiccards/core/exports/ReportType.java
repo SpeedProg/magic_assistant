@@ -229,8 +229,7 @@ public class ReportType {
 			return null;
 		Collection<ReportType> candidates = new ArrayList<ReportType>();
 		for (ReportType reportType : types) {
-			IImportDelegate delegate = reportType.getImportDelegate(); // inst
-																		// deelgate
+			reportType.getImportDelegate(); // instanciate delegate // deelgate
 			String regex = reportType.getProperty("url_regex");
 			if (regex == null)
 				continue;

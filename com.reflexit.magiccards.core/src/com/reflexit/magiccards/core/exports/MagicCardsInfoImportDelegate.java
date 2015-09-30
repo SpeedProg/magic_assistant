@@ -49,6 +49,8 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 			}
 		};
 		String property = importData.getProperty(ImportSource.URL.name());
+		if (property == null)
+			throw new IOException("URL is not defined");
 		URL url = new URL(property);
 		Map<String, String> map = WebUtils.splitQuery(url);
 		String vparam = map.get("v");
