@@ -8,8 +8,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
-
 public abstract class MFieldEditorPreferencePage extends FieldEditorPreferencePage {
 	public MFieldEditorPreferencePage() {
 		super(GRID);
@@ -19,12 +17,10 @@ public abstract class MFieldEditorPreferencePage extends FieldEditorPreferencePa
 	@Override
 	public void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
-		if (store instanceof PrefixedPreferenceStore) {
-			Collection<String> ids = getIds();
-			for (String id : ids) {
-				store.setToDefault(id);
-			}
+		for (String id : getIds()) {
+			store.setToDefault(id);
 		}
+
 		super.performDefaults();
 	}
 

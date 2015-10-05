@@ -1,11 +1,11 @@
 package com.reflexit.magiccards.ui.views;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 
 public interface IMagicCardListControl extends IMagicControl {
 	public abstract MagicCardFilter getFilter();
@@ -14,15 +14,16 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract ISelection getSelection();
 
-	public abstract PrefixedPreferenceStore getLocalPreferenceStore();
+	public abstract IPreferenceStore getLocalPreferenceStore();
 
-	public abstract PrefixedPreferenceStore getFilterPreferenceStore();
+	public abstract IPreferenceStore getFilterPreferenceStore();
 
 	@Override
 	public abstract void reloadData();
 
 	public abstract void setNextSelection(ISelection structuredSelection);
 
+	@Override
 	public abstract void setStatus(String string);
 
 	public abstract IMenuManager getGroupMenu();

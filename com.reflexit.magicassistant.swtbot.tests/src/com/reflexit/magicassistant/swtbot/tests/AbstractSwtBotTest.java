@@ -3,6 +3,7 @@ package com.reflexit.magicassistant.swtbot.tests;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -20,7 +21,6 @@ import org.junit.BeforeClass;
 import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public abstract class AbstractSwtBotTest {
@@ -34,10 +34,10 @@ public abstract class AbstractSwtBotTest {
 
 	@Before
 	public void setUp() {
-		PrefixedPreferenceStore mdbStore = (PrefixedPreferenceStore) PreferenceInitializer.getMdbStore();
-		mdbStore.setToDefault();
-		PrefixedPreferenceStore deckStore = (PrefixedPreferenceStore) PreferenceInitializer.getDeckStore();
-		deckStore.setToDefault();
+		IPreferenceStore mdbStore = PreferenceInitializer.getMdbStore();
+		PreferenceInitializer.setToDefault(mdbStore);
+		IPreferenceStore deckStore = PreferenceInitializer.getDeckStore();
+		PreferenceInitializer.setToDefault(deckStore);
 		//		try {
 		//			bot.resetWorkbench();
 		//		} catch (Exception e) {

@@ -6,11 +6,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class ColumnCollection {
 	private final List<AbstractColumn> columns;
@@ -102,9 +104,17 @@ public abstract class ColumnCollection {
 			}
 			AbstractColumn column = oldorder.get(key);
 			if (column == null) {
+				String colname = key;
 				// how did manage to have column which is not in the set?
-				// lets pretend it never happened
-				continue;
+				try {
+					column = columns.stream().filter((c) -> c.getColumnFullName().equals(colname)).findAny().get();
+				} catch (NoSuchElementException e) {
+					MagicUIActivator.log("Cannot find column " + colname);
+					continue;
+				}
+			}
+			if (colsep < 0) {
+				width = column.getColumnWidth();
 			}
 			column.setVisible(visible);
 			if (width > 0)

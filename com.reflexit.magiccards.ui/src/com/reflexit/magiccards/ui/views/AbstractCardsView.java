@@ -13,6 +13,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -53,7 +54,6 @@ import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
@@ -379,13 +379,13 @@ public abstract class AbstractCardsView extends ViewPart {
 	/**
 	 * @return
 	 */
-	public PrefixedPreferenceStore getLocalPreferenceStore() {
+	public IPreferenceStore getLocalPreferenceStore() {
 		if (control instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) control).getLocalPreferenceStore();
 		return null;
 	}
 
-	public PrefixedPreferenceStore getFilterPreferenceStore() {
+	public IPreferenceStore getFilterPreferenceStore() {
 		if (control instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) control).getFilterPreferenceStore();
 		return getLocalPreferenceStore();

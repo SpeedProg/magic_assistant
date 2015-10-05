@@ -93,8 +93,14 @@ public class TreeViewerManager extends ViewerManager {
 			AbstractColumn mcol = getColumn(i);
 			boolean visible = mcol.isVisible();
 			if (visible || mcol instanceof GroupColumn) {
-				if (acol.getWidth() != mcol.getUserWidth())
-					acol.setWidth(mcol.getUserWidth());
+				int w = mcol.getUserWidth();
+				if (w < 16)
+					w = 16; // min reasonable width
+				if (w > 500)
+					w = 500;
+				if (acol.getWidth() != w) {
+					acol.setWidth(w);
+				}
 			} else {
 				acol.setWidth(0);
 			}

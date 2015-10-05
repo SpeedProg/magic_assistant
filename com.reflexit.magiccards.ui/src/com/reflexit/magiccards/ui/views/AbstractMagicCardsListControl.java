@@ -75,7 +75,6 @@ import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
@@ -86,8 +85,8 @@ import com.reflexit.magiccards.ui.views.search.TableSearch;
 import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
 
 /**
- * Magic card list control - MagicControl that represents list of cards (tree or
- * table), and comes with actions and preferences to manipulate this list
+ * Magic card list control - MagicControl that represents list of cards (tree or table), and comes with actions and
+ * preferences to manipulate this list
  *
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl
@@ -115,7 +114,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	public static final String FIND = "org.eclipse.ui.edit.findReplace";
 	protected final AbstractCardsView abstractCardsView;
 	private MenuManager menuGroup;
-	private PrefixedPreferenceStore prefStore;
+	private IPreferenceStore prefStore;
 	private QuickFilterControl quickFilter;
 	private SearchControl searchControl;
 	private Label statusLine;
@@ -220,8 +219,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
 	@Override
 	public IFilteredCardStore getFilteredStore() {
@@ -244,12 +242,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	 * @return
 	 */
 	@Override
-	public PrefixedPreferenceStore getLocalPreferenceStore() {
+	public IPreferenceStore getLocalPreferenceStore() {
 		return this.prefStore;
 	}
 
 	@Override
-	public PrefixedPreferenceStore getFilterPreferenceStore() {
+	public IPreferenceStore getFilterPreferenceStore() {
 		return this.prefStore;
 	}
 
@@ -260,8 +258,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
 	 */
 	@Override
 	public ISelection getSelection() {
@@ -340,8 +337,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
+	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
 	 * (org.eclipse.jface.action.MenuManager)
 	 */
 	@Override
@@ -349,17 +345,20 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		manager.hookContextMenu(menuMgr);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#init(org.eclipse
-	 * .ui.IViewSite)
-	 */
 	@Override
 	public void init(IViewSite site) {
 		super.init(site);
 		addStoreChangeListener();
+		getLocalPreferenceStore().addPropertyChangeListener(preferenceListener);
+	}
+
+	@Override
+	public void dispose() {
+		removeStoreChangeListener();
+		getSelectionProvider().removeSelectionChangedListener(selectionListener);
+		this.manager.dispose();
+		getLocalPreferenceStore().removePropertyChangeListener(preferenceListener);
+		super.dispose();
 	}
 
 	protected void addStoreChangeListener() {
@@ -376,18 +375,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}.start();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#dispose()
-	 */
-	@Override
-	public void dispose() {
-		removeStoreChangeListener();
-		getSelectionProvider().removeSelectionChangedListener(selectionListener);
-		this.manager.dispose();
-		super.dispose();
-	}
+
 
 	protected void removeStoreChangeListener() {
 		DataManager.getInstance().getLibraryCardStore().removeListener(this);
@@ -680,7 +668,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	@Override
 	protected void loadInitial() {
-		PrefixedPreferenceStore ps = getLocalPreferenceStore();
+		IPreferenceStore ps = getLocalPreferenceStore();
 		// update manager columns
 		String value = ps.getString(PreferenceConstants.LOCAL_COLUMNS);
 		AbstractMagicCardsListControl.this.manager.updateColumns(value);
@@ -832,27 +820,28 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	@Override
 	protected void propertyChange(PropertyChangeEvent event) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (manager.getViewer() == null || manager.getViewer().getControl() == null)
-					return;
-				String property = event.getProperty();
-				PrefixedPreferenceStore ps = getLocalPreferenceStore();
-				Object newValue = event.getNewValue();
-				if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_COLUMNS))) {
+		if (manager.getViewer() == null || manager.getViewer().getControl() == null)
+			return;
+		String property = event.getProperty();
+		Object newValue = event.getNewValue();
+		if (property.equals(PreferenceConstants.LOCAL_COLUMNS)) {
+			// System.err.println(getFilteredStore().getLocation() + " proprty change event: " + event.getProperty()
+			// + "\n " + event.getOldValue() + "\n " + event.getNewValue());
+			// new Exception().printStackTrace();
+			WaitUtils.syncExec(() -> {
+				synchronized (AbstractMagicCardsListControl.this) {
 					manager.updateColumns((String) newValue);
-					refresh();
-				} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
-					refresh();
-				} else if (property.equals(ps.toGlobal(PreferenceConstants.LOCAL_SHOW_QUICKFILTER))) {
-					boolean qf = Boolean.valueOf(newValue.toString());
-					setQuickFilterVisible(qf);
-				} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
-					refresh();
 				}
-			}
-		});
+			});
+			WaitUtils.asyncExec(() -> refresh());
+		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
+			WaitUtils.asyncExec(() -> refresh());
+		} else if (property.equals(PreferenceConstants.LOCAL_SHOW_QUICKFILTER)) {
+			boolean qf = Boolean.valueOf(newValue.toString());
+			WaitUtils.asyncExec(() -> setQuickFilterVisible(qf));
+		} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
+			WaitUtils.asyncExec(() -> refresh());
+		}
 	}
 
 	@Override
@@ -1084,13 +1073,17 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		final String value = manager.getColumnLayoutProperty();
 		if (value == null || value.isEmpty())
 			return;
-		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
-		try {
-			getLocalPreferenceStore().setValue(PreferenceConstants.LOCAL_COLUMNS, value);
-		} finally {
-			MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
+		synchronized (this) {
+			IPreferenceStore store = getLocalPreferenceStore();
+			store.removePropertyChangeListener(this.preferenceListener);
+			try {
+				store.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
+			} finally {
+				store.addPropertyChangeListener(this.preferenceListener);
+			}
 		}
 	}
+
 
 	private Object jobFamility = new Object();
 	private Job loadingJob;
@@ -1148,7 +1141,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			else
 				display.asyncExec(() -> updateViewer());
 		} catch (final Exception e) {
-			//display.asyncExec(() -> MessageDialog.openError(display.getActiveShell(), "Error", e.getMessage()));
+			// display.asyncExec(() ->
+			// MessageDialog.openError(display.getActiveShell(), "Error",
+			// e.getMessage()));
 			MagicUIActivator.log(e);
 			return Status.CANCEL_STATUS;
 		} finally {

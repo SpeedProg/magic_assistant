@@ -80,7 +80,7 @@ public class ManaCurveChart implements IChartGenerator {
 		// cwaBar.getBlock().setBackground(ColorDefinitionImpl.WHITE());
 		Plot p = this.cwaBar.getPlot();
 		// p.getClientArea().setBackground(ColorDefinitionImpl.create(255, 255, 225));
-		System.err.println(p.getColumn() + " - " + p.getRow());
+		// System.err.println(p.getColumn() + " - " + p.getRow());
 		// Legend
 		Legend lg = this.cwaBar.getLegend();
 		lg.setPosition(Position.ABOVE_LITERAL);

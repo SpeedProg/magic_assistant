@@ -103,9 +103,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 	@Override
 	public void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
-		if (store instanceof PrefixedPreferenceStore) {
-			((PrefixedPreferenceStore) store).setToDefault();
-		}
+		PreferenceInitializer.setToDefault(store);
 		initializeTree();
 		super.performDefaults();
 	}

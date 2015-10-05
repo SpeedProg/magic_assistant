@@ -11,21 +11,22 @@ import org.junit.runner.RunWith;
 
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
-import com.reflexit.magiccards.ui.preferences.PrefixedPreferenceStore;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 import static org.eclipse.swtbot.swt.finder.SWTBotAssert.assertMatchesRegex;
+
+import org.eclipse.jface.preference.IPreferenceStore;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class GroupByCost extends AbstractSwtBotTest {
 	@Override
 	@Before
 	public void setUp() {
-		PrefixedPreferenceStore mdbStore = (PrefixedPreferenceStore) PreferenceInitializer.getMdbStore();
-		mdbStore.setToDefault();
+		IPreferenceStore mdbStore = PreferenceInitializer.getMdbStore();
+		PreferenceInitializer.setToDefault(mdbStore);
 		mdbStore.setValue(Editions.getInstance().getPrefConstantByName("Alara Reborn"), true);
-		PrefixedPreferenceStore deckStore = (PrefixedPreferenceStore) PreferenceInitializer.getDeckStore();
-		deckStore.setToDefault();
+		IPreferenceStore deckStore = PreferenceInitializer.getDeckStore();
+		PreferenceInitializer.setToDefault(deckStore);
 		bot.resetWorkbench();
 		SWTBotView dbView = bot.viewById(MagicDbView.ID);
 		dbView.setFocus();

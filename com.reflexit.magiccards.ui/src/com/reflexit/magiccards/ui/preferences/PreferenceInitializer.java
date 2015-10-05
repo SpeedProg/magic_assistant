@@ -1,7 +1,12 @@
 package com.reflexit.magiccards.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.service.prefs.BackingStoreException;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -73,13 +78,22 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		return MagicUIActivator.getDefault().getPreferenceStore();
 	}
 
-	public static PrefixedPreferenceStore getLocalStore(String id) {
-		return new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(), id);
+	public static IPreferenceStore getLocalStore(String id) {
+		if (id == null)
+			id = MagicUIActivator.PLUGIN_ID;
+		IPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, id);
+		return store; // new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(), id);
 	}
 
+	public static IEclipsePreferences getPreferences(String id) {
+		if (id == null)
+			id = MagicUIActivator.PLUGIN_ID;
+		return InstanceScope.INSTANCE.getNode(id);
+	}
 	public static IPreferenceStore getDeckStore() {
 		if (deckStore == null)
 			deckStore = getLocalStore(DeckViewPreferencePage.class.getName());
+
 		return deckStore;
 	}
 
@@ -99,5 +113,30 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		if (collectorStore == null)
 			collectorStore = getLocalStore(CollectorViewPreferencePage.class.getName());
 		return collectorStore;
+	}
+
+	public static void setToDefault(IPreferenceStore store) {
+		String[] preferenceNames = preferenceNames(store);
+		for (String id : preferenceNames) {
+			store.setToDefault(id);
+		}
+	}
+
+	public static String[] preferenceNames(IPreferenceStore store) {
+		String res[] = null;
+		if (store instanceof PreferenceStore) {
+			res = ((PreferenceStore) store).preferenceNames();
+		} else if (store instanceof ScopedPreferenceStore) {
+			IEclipsePreferences[] preferenceNodes = ((ScopedPreferenceStore) store).getPreferenceNodes(false);
+			try {
+				if (preferenceNodes.length > 0)
+					res = preferenceNodes[0].keys();
+			} catch (BackingStoreException e) {
+				// res = null;
+			}
+		}
+		if (res == null)
+			return null;
+		return res;
 	}
 }
