@@ -68,7 +68,7 @@ select the fields, and select "Update only cards in the filtered list" (or if no
 
 <img src="../screenshots/dialogs/loadextrafields.png" alt="load extra fields"/> 
 
-<h2>Extending database</h2>
+<h2>Extending database: Import</h2>
  You can extended
 database (to add promo cards or some weird sets which gatherer does not support) by importing using table format (csv, pipe, etc).
 
@@ -83,6 +83,23 @@ In Card Navigator view select Import button, select Extend database options in t
 <img src="../screenshots/dialogs/extenddb.png" alt="extend db dialog"/>
  
 When you press Finish it will tell you that set does not exist and you should create a new set and enter abbreviation for this set.
-Then your cards should be in the database, and you can add them to your collection or decks (as separate step). 
+Then your cards should be in the database, and you can add them to your collection or decks (as separate step).
+
+<h2>Extending database: Advanced</h2>
+If you brave or know how to program you can extend database by editing xml file representing sets directly.
+Sets are located in workspace/magiccards/MagicDb/ folder.
+<p>
+To add set you have to add a line in tables/editions.txt in the folder mentioned above definining properties
+or the set or you can do the same from UI by going to Window->Preferences->Magic Preferences->Card Sets-> button Add...
+</p>
+Then you create a set as .xml file with the name of the set but where all non-letter symbols are replaces with _ (underscore).
+For example Urza's Legacy is called Urza_s_Legacy.xml. Open any of these file to see example of the format.
+Once you done both steps and restart the app it should pick up new set. The good example is Anthologies.xml - this set is only
+one that I ship which is not connected to gatherer online database. It shows how to set images URL. 
+Cards id's have to be negative too (positive are
+used for gatherer now). Html tags in text fields have to be escaped (like &lt;br&gt;)
+<p>
+<img src="../screenshots/other/dbxml.png" alt="xml example"/>
+</p>
 </body>
 </html>
