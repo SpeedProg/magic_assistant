@@ -8,9 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TreeColumn;
-
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -223,29 +220,7 @@ public abstract class ColumnCollection {
 		return columns.get(i);
 	}
 
-	public void setColumnProperties(TreeColumn[] acolumns) {
-		for (int i = 0; i < acolumns.length; i++) {
-			TreeColumn acol = acolumns[i];
-			AbstractColumn mcol = getColumn(i);
-			int w = acol.getWidth();
-			if (w > 0) {
-				mcol.setUserWidth(w);
-				mcol.setVisible(true);
-			} else
-				mcol.setVisible(false);
-		}
-	}
-
-	public void setColumnProperties(TableColumn[] acolumns) {
-		for (int i = 0; i < acolumns.length; i++) {
-			TableColumn acol = acolumns[i];
-			AbstractColumn mcol = getColumn(i);
-			int w = acol.getWidth();
-			if (w > 0) {
-				mcol.setUserWidth(w);
-				mcol.setVisible(true);
-			} else
-				mcol.setVisible(false);
-		}
+	public String getId() {
+		return null;
 	}
 }

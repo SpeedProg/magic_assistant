@@ -8,7 +8,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.services.IDisposable;
 
@@ -75,8 +74,7 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 
 	@Override
 	protected void updateTableHeader() {
-		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
-		hideColumn(0, !groupped, acolumns);
+		showColumn(0, groupped);
 	}
 
 	@Override
@@ -84,8 +82,7 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 		groupped = hasGroups;
 		if (viewer == null)
 			return;
-		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
-		hideColumn(0, !hasGroups, acolumns);
+		updateTableHeader();
 	}
 
 	@Override

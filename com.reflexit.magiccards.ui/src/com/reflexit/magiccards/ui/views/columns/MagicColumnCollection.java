@@ -81,4 +81,8 @@ public class MagicColumnCollection extends ColumnCollection {
 	public SetColumn getSetColumn() {
 		return setColumn;
 	}
+
+	public String getId() {
+		return id;
+	}
 }

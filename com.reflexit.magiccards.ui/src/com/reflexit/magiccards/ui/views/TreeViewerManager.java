@@ -1,25 +1,34 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Arrays;
+
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class TreeViewerManager extends ViewerManager {
-	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
+
 	protected TreeViewer viewer;
 
 	public TreeViewerManager(String id) {
@@ -71,8 +80,39 @@ public class TreeViewerManager extends ViewerManager {
 			}
 			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}
+		createFillerColumn();
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
 		this.viewer.getTree().setHeaderVisible(true);
+	}
+
+	private Tree getTControl() {
+		return this.viewer.getTree();
+	}
+
+	private void createFillerColumn() {
+		TreeViewerColumn colv = new TreeViewerColumn(this.viewer, SWT.LEFT);
+		TreeColumn col = colv.getColumn();
+		col.setText("");
+		col.setWidth(16);
+		col.setToolTipText("This is just a filler");
+		col.setMoveable(false);
+		colv.setLabelProvider(new CellLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				// empty
+			}
+		});
+		String id = getColumnsCollection().getId();
+		if (id != null) {
+			col.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id,
+							new String[] { id }, null);
+					dialog.open();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -86,9 +126,12 @@ public class TreeViewerManager extends ViewerManager {
 		columnsCollection.updateColumnsFromPropery(value);
 		columnsCollection.moveColumnOnTop(columnsCollection.getColumn(GroupColumn.COL_NAME));
 		int[] columnsOrder = getColumnsCollection().getColumnsOrder();
-		this.viewer.getTree().setColumnOrder(columnsOrder);
+		int length = columnsOrder.length;
+		int[] order1 = Arrays.copyOf(columnsOrder, length + 1);
+		order1[length] = length; // last column
+		this.viewer.getTree().setColumnOrder(order1);
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
-		for (int i = 0; i < acolumns.length; i++) {
+		for (int i = 0; i < acolumns.length - 1; i++) {
 			TreeColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
 			boolean visible = mcol.isVisible();
@@ -110,9 +153,23 @@ public class TreeViewerManager extends ViewerManager {
 	@Override
 	public String getColumnLayoutProperty() {
 		ColumnCollection columnsCollection = getColumnsCollection();
-		columnsCollection.setColumnProperties(viewer.getTree().getColumns());
-		columnsCollection.setColumnOrder(viewer.getTree().getColumnOrder());
+		setColumnProperties(viewer.getTree().getColumns());
+		int[] order = viewer.getTree().getColumnOrder();
+		columnsCollection.setColumnOrder(Arrays.copyOf(order, order.length - 1));
 		return columnsCollection.getColumnLayoutProperty();
+	}
+
+	public void setColumnProperties(TreeColumn[] acolumns) {
+		for (int i = 0; i < acolumns.length - 1; i++) {
+			TreeColumn acol = acolumns[i];
+			AbstractColumn mcol = getColumn(i);
+			int w = acol.getWidth();
+			if (w > 0) {
+				mcol.setUserWidth(w);
+				mcol.setVisible(true);
+			} else
+				mcol.setVisible(false);
+		}
 	}
 
 	@Override
@@ -120,24 +177,11 @@ public class TreeViewerManager extends ViewerManager {
 		this.viewer.getTree().setLinesVisible(grid);
 	}
 
+
 	@Override
-	public void setSortColumn(int index, int direction) {
-		boolean sort = index >= 0;
-		TreeColumn column = sort ? this.viewer.getTree().getColumn(index) : null;
-		this.viewer.getTree().setSortColumn(column);
-		if (sort) {
-			int sortDirection = getSortDirection();
-			if (sortDirection != SWT.DOWN)
-				sortDirection = SWT.DOWN;
-			else
-				sortDirection = SWT.UP;
-			this.viewer.getTree().setSortDirection(sortDirection);
-			AbstractColumn man = (AbstractColumn) this.viewer.getLabelProvider(index);
-			vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
-			this.viewer.setComparator(vcomp);
-		} else {
-			this.viewer.setComparator(null);
-		}
+	protected void setControlSortColumn(int index, int sortDirection) {
+		getTControl().setSortColumn((TreeColumn) (index >= 0 ? getTColumn(index) : null));
+		getTControl().setSortDirection(sortDirection);
 	}
 
 	@Override
@@ -164,13 +208,44 @@ public class TreeViewerManager extends ViewerManager {
 		this.viewer.refresh(true);
 	}
 
-	protected void hideColumn(int i, boolean hide, TreeColumn[] acolumns) {
+	protected void showColumn(int i, boolean show) {
+		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		TreeColumn column = acolumns[i];
-		if (hide)
-			column.setWidth(0);
-		else if (column.getWidth() <= 0) {
-			int def = getColumn(i).getColumnWidth();
-			column.setWidth(def);
+		if (!show) {
+			hide(column);
+		} else {
+			if (column.getWidth() < 16) {
+				int def = getColumn(i).getColumnWidth();
+				column.setWidth(def);
+			}
+			column.setResizable(true);
 		}
+	}
+
+	@Override
+	protected int getColumnIndex(Point pt) {
+		int prev = 0;
+		int[] order = getTControl().getColumnOrder();
+		int x = pt.x;
+		for (int j = 0; j < order.length; j++) {
+			int i = order[j];
+			int w = getTControl().getColumn(i).getWidth();
+			if (x < prev + w) {
+				return i;
+			}
+			prev += w;
+		}
+		return -1;
+	}
+
+	@Override
+	protected Item getTColumn(int index) {
+		return getTControl().getColumn(index);
+	}
+
+	@Override
+	protected void hide(final Item column) {
+		((TreeColumn) column).setWidth(0);
+		((TreeColumn) column).setResizable(false);
 	}
 }

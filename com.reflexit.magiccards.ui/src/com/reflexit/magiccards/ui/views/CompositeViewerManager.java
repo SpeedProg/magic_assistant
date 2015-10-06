@@ -52,14 +52,6 @@ public class CompositeViewerManager extends ViewerManager {
 		this.selectionProvider.setSelectionProviderDelegate(getViewer());
 	}
 
-	public TreeViewerManager getTreeViewerManager() {
-		return (TreeViewerManager) managers[1];
-	}
-
-	public TableViewerManager getTableViewerManager() {
-		return (TableViewerManager) managers[0];
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
