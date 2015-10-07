@@ -57,7 +57,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	@Override
 	public void dispose() {
 		// override to dispose resources
-		menuManager.dispose();
+		if (menuManager != null)
+			menuManager.dispose();
 	}
 
 	protected ColumnCollection doGetColumnCollection(String prefPageId) {
@@ -145,7 +146,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	@Override
 	public void refresh() {
-		if (getViewer().getControl().isDisposed())
+		if (getViewer() == null || getViewer().getControl().isDisposed())
 			return;
 		updateTableHeader();
 		updateGrid();
