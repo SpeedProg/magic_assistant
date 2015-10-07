@@ -69,6 +69,8 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					final IMagicCard card = (IMagicCard) element;
+					if (card instanceof CardGroup)
+						return Status.OK_STATUS;
 					String path = ImageCreator.getInstance().createCardPath(card, true, false);
 					final Image image = ImageCreator.getInstance().createCardImage(path, false);
 					if (image == null) {

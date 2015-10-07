@@ -5,7 +5,6 @@ package com.reflexit.magiccards.ui.gallery;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -49,6 +48,10 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 			if (groupped) {
 				if (level > 1) {
 					Collection<ICardGroup> children = leafs(fstore.getCardGroupRoot());
+					if (children.size() > 500) {
+						// gallery cannot handle more than 1400 groups now
+						children = regroup(children);
+					}
 					return children.toArray(new Object[children.size()]);
 				}
 				return fstore.getCardGroupRoot().getChildren();
@@ -58,21 +61,30 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
-	private Collection<ICardGroup> leafs(ICardGroup cardGroup) {
-		return leafs((CardGroup) cardGroup, new ArrayList<>());
+	private Collection<ICardGroup> regroup(Collection<ICardGroup> children) {
+		CardGroup cardGroup = new CardGroup(null, "Too many groups: " + children.size());
+		Collection<ICardGroup> res = new ArrayList<>();
+		for (ICardGroup group : children) {
+			cardGroup.addAll(group.getChildrenList());
+		}
+		res.add(cardGroup);
+		return res;
 	}
 
-	private Collection<ICardGroup> leafs(CardGroup cardGroup, List<ICardGroup> result) {
+	private Collection<ICardGroup> leafs(ICardGroup cardGroup) {
+		return leafGroups((CardGroup) cardGroup, new ArrayList<>());
+	}
+
+	private Collection<ICardGroup> leafGroups(CardGroup cardGroup, List<ICardGroup> result) {
 		Collection<CardGroup> subs = cardGroup.getSubGroups();
 		if (subs.size() == 0 || level == depth(cardGroup)) {
 			// this is leaf node
 			result.add(cardGroup);
 			return result;
 		}
-		for (Iterator<? extends ICard> iterator = subs.iterator(); iterator.hasNext();) {
-			ICard card = iterator.next();
+		for (ICard card : cardGroup.getChildren()) {
 			if (card instanceof CardGroup) {
-				leafs((CardGroup) card, result);
+				leafGroups((CardGroup) card, result);
 			}
 		}
 		return result;

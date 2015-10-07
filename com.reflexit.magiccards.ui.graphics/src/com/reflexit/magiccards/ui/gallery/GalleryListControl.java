@@ -3,7 +3,6 @@ package com.reflexit.magiccards.ui.gallery;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -13,14 +12,14 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class GalleryListControl extends AbstractMagicCardsListControl {
-	private IFilteredCardStore fistore;
+
 
 	public GalleryListControl(AbstractCardsView abstractCardsView) {
 		super(abstractCardsView);
-		fistore = new LocationFilteredCardStore();
+		IFilteredCardStore<ICard> fistore = getFilteredStore();
 		MagicCardFilter filter = fistore.getFilter();
 		filter.setNameGroupping(false);
-		filter.setGroupFields(MagicCardField.CMC);
+		// filter.setGroupFields(MagicCardField.CMC);
 	}
 
 	@Override
@@ -37,6 +36,7 @@ public class GalleryListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public IFilteredCardStore<ICard> doGetFilteredStore() {
+		IFilteredCardStore fistore = new LocationFilteredCardStore();
 		return fistore;
 	}
 

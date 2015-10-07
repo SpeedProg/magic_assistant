@@ -29,13 +29,13 @@ public class GalleryView extends MagicDbView {
 
 			@Override
 			public IFilteredCardStore doGetFilteredStore() {
-				return DataManager.getCardHandler().getMagicDBFilteredStore();
+				return DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 			}
 		};
 	}
 
 	@Override
 	public String getPreferencePageId() {
-		return super.getPreferencePageId();
+		return GalleryPreferencePage.getId();
 	}
 }

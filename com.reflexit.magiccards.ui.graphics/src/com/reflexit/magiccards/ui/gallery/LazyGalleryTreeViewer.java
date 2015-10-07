@@ -34,8 +34,8 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 /**
- * This is super lazy viewer which works with non-lazy provider. It will not
- * create tree items or ask for labels of element until they are visible.
+ * This is super lazy viewer which works with non-lazy provider. It will not create tree items or ask for labels of
+ * element until they are visible.
  * 
  * @author elaskavaia
  *
@@ -166,31 +166,36 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
-		Object[] expanded = getExpandedElements();
-		super.inputChanged(input, oldInput);
-		if (input instanceof IFilteredCardStore) {
-			IFilteredCardStore fsrore = (IFilteredCardStore) input;
-			if (!fsrore.getFilter().isGroupped()) {
-				setExpandedElements(new Object[] { fsrore.getCardGroupRoot() });
-			} else {
-				setExpandedElements(expanded);
-			}
-		}
-		GalleryItem[] selection = gallery.getSelection();
-		if (selection.length > 0) {
-			showItem(selection[selection.length - 1]);
-		} else {
-			if (expanded.length > 0) {
-				Object elementOrTreePath = expanded[0];
-				Widget w = internalExpand(elementOrTreePath, true);
-				if (w instanceof Item) {
-					Item child = getChild(w, 0);
-					showItem(child);
+		gallery.setRedraw(false);
+		try {
+			Object[] expanded = getExpandedElements();
+			super.inputChanged(input, oldInput);
+			if (input instanceof IFilteredCardStore) {
+				IFilteredCardStore fsrore = (IFilteredCardStore) input;
+				if (!fsrore.getFilter().isGroupped()) {
+					setExpandedElements(new Object[] { fsrore.getCardGroupRoot() });
+				} else {
+					setExpandedElements(expanded);
 				}
 			}
-			// can use gallery.translation
-			// gallery.getVerticalBar().setSelection(vpos);
-			// gallery.redraw();
+			GalleryItem[] selection = gallery.getSelection();
+			if (selection.length > 0) {
+				showItem(selection[selection.length - 1]);
+			} else {
+				if (expanded.length > 0) {
+					Object elementOrTreePath = expanded[0];
+					Widget w = internalExpand(elementOrTreePath, true);
+					if (w instanceof Item) {
+						Item child = getChild(w, 0);
+						showItem(child);
+					}
+				}
+				// can use gallery.translation
+				// gallery.getVerticalBar().setSelection(vpos);
+				// gallery.redraw();
+			}
+		} finally {
+			gallery.setRedraw(true);
 		}
 	}
 
@@ -272,7 +277,6 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		return findItem(elementOrTreePath);
 	}
 
-
 	@Override
 	public Object[] getExpandedElements() {
 		ArrayList<Object> result = new ArrayList<Object>();
@@ -308,8 +312,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 	}
 
 	/**
-	 * How many of category items (top level) we create non-lazily. If all lazy
-	 * it its lagging on first repaint
+	 * How many of category items (top level) we create non-lazily. If all lazy it its lagging on first repaint
 	 * 
 	 * @return
 	 */
