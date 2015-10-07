@@ -222,7 +222,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
 	@Override
-	public IFilteredCardStore getFilteredStore() {
+	public synchronized IFilteredCardStore getFilteredStore() {
 		if (fstore == null) {
 			fstore = doGetFilteredStore();
 		}
@@ -1108,9 +1108,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void populateStore(IProgressMonitor monitor) {
-		if (fstore == null) {
-			fstore = doGetFilteredStore();
-		}
+		getFilteredStore();
 	}
 
 	protected abstract IFilteredCardStore<ICard> doGetFilteredStore();
