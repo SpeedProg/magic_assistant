@@ -374,7 +374,7 @@
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.checkForUpdateMagicDb"
-            name="Check for Updates to Magic Cards Database...">
+            name="Check for Card Updates...">
       </command>
       
       <command
@@ -382,10 +382,7 @@
             id="com.reflexit.magiccards.ui.commands.EditDeckProperties"
             name="Edit Properties...">
       </command>
-      <category
-            id="com.reflexit.magiccards.ui.commands.category"
-            name="Sample Category">
-      </category>
+
       <command
             categoryId="com.reflexit.magiccards.ui.commands.category"
             id="com.reflexit.magiccards.ui.commands.filterCommand"
@@ -395,7 +392,7 @@
                name="viewId"
                optional="true"
                typeId="string"
-               values="org.eclipse.ui.internal.registry.ViewParameterValues">
+               values="com.reflexit.magiccards.ui.commands.MagicViewParameterValues">
          </commandParameter>
       </command>
       <command
@@ -762,7 +759,7 @@
          point="org.eclipse.ui.commands">
       <command
             id="com.reflexit.magicassistant.command.update"
-            name="Check for Software Updates">
+            name="Check for Software Updates...">
       </command>
 
    </extension>
@@ -776,7 +773,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:file?after=additions">
+            locationURI="menu:help?after=additions">
             <command
                   commandId="com.reflexit.magicassistant.command.update"
             	  mnemonic="U"
