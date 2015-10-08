@@ -495,10 +495,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		if (fields != null) {
 			filter.setSortField(fields[0], true);
 			filter.setGroupFields(fields);
-			manager.flip(true);
+			manager.setGrouppingEnabled(true);
 		} else {
 			filter.setGroupFields(null);
-			manager.flip(false);
+			manager.setGrouppingEnabled(false);
 		}
 	}
 

@@ -404,7 +404,7 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 		};
 		this.open = new Action("Open card in browser", SWT.NONE) {
 			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/forward_2.png"));
+				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/discovery.gif"));
 			}
 
 			@Override

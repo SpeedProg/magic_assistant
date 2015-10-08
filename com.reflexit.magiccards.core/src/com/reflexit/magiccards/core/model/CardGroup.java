@@ -275,6 +275,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 		this.visibleElements = null;
 	}
 
+	@Override
 	public synchronized IMagicCardPhysical getFirstCard() {
 		if (getChildren().length == 0)
 			return null;
@@ -445,5 +446,19 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	@Override
 	public ICardGroup getParent() {
 		return parent;
+	}
+
+	@Override
+	public int depth() {
+		if (getParent() == null)
+			return 1;
+		return getParent().depth() + 1;
+	}
+
+	@Override
+	public void removeAll() {
+		children.clear();
+		subs.clear();
+		recache();
 	}
 }

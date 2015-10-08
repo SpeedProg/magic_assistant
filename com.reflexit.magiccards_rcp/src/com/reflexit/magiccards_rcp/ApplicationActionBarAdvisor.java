@@ -4,6 +4,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -16,6 +17,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchMessages;
@@ -44,6 +46,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction dynamicHelpAction;
 	private IWorkbenchAction importAction;
 	private IAction exportAction;
+	private MenuManager showViewMenuMgr;
+	private IContributionItem showViewItem;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -85,6 +89,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(this.importAction);
 		this.exportAction = ActionFactory.EXPORT.create(window);
 		register(this.exportAction);
+		showViewMenuMgr = new MenuManager("Show View", "showView");
+		showViewItem = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
 	}
 
 	class OpenPerspectiveAction extends Action {
@@ -120,6 +126,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		winMenu.add(new OpenPerspectiveAction(PerspectiveFactoryMagic.PERSPECTIVE_ID, "Cards Organizer"));
 		winMenu.add(new OpenPerspectiveAction(PerspectiveFactoryTournament.PERSPECTIVE_ID, "Tournament Organizer"));
 		winMenu.add(new Separator());
+
+		showViewMenuMgr.add(showViewItem);
+		winMenu.add(showViewMenuMgr);
 		winMenu.add(this.resetAction);
 		winMenu.add(new Separator());
 		winMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));

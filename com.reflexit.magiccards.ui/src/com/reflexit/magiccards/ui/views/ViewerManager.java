@@ -129,7 +129,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	}
 
 	@Override
-	public void flip(boolean hasGroups) {
+	public void setGrouppingEnabled(boolean hasGroups) {
 		// flip between tree and table if control supports it
 	}
 
@@ -202,6 +202,10 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		} else {
 			getViewer().setComparator(null);
 		}
+	}
+
+	public SortOrderViewerComparator getViewerComparator() {
+		return vcomp;
 	}
 
 	protected Item getTColumn(int index) {
@@ -297,5 +301,10 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	protected void hide(final Item column) {
 		throw new UnsupportedOperationException();
+	}
+
+	public boolean supportsGroupping(boolean groupped) {
+		return true;
 	};
+
 }

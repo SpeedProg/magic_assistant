@@ -12,8 +12,6 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class GalleryListControl extends AbstractMagicCardsListControl {
-
-
 	public GalleryListControl(AbstractCardsView abstractCardsView) {
 		super(abstractCardsView);
 		IFilteredCardStore<ICard> fistore = getFilteredStore();
@@ -44,4 +42,5 @@ public class GalleryListControl extends AbstractMagicCardsListControl {
 	protected String getPreferencePageId() {
 		return GalleryPreferencePage.getId();
 	}
+
 }

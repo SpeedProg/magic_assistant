@@ -39,5 +39,14 @@
             name="Gallery"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
+            icon="icons/gallery.png"
+            id="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
+            name="Selection"
+            restorable="true">
+      </view>
    </extension>
 </plugin>

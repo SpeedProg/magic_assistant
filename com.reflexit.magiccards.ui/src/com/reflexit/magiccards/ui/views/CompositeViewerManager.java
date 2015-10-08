@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -52,13 +54,29 @@ public class CompositeViewerManager extends ViewerManager {
 		this.selectionProvider.setSelectionProviderDelegate(getViewer());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.ViewerManager#createContents(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
+	public int findManager(IMagicColumnViewer man) {
+		for (int i = 0; i < managers.length; i++) {
+			ViewerManager m = managers[i];
+			if (m == man)
+				return i;
+		}
+		return -1;
+	}
+
+	public int addManager(ViewerManager man) {
+		int i = findManager(man);
+		if (i >= 0)
+			return i;
+		i = managers.length;
+		Arrays.copyOf(managers, i + 1);
+		managers[i] = man;
+		if (stackLayout != null) {
+			man.createContents(comp);
+			man.hookDragAndDrop();
+		}
+		return i;
+	}
+
 	@Override
 	public Control createContents(Composite parent) {
 		this.comp = new Composite(parent, SWT.NONE);
@@ -75,7 +93,7 @@ public class CompositeViewerManager extends ViewerManager {
 
 	@Override
 	public ColumnCollection getColumnsCollection() {
-		return this.managers[this.activeIndex].getColumnsCollection();
+		return managers[activeIndex].getColumnsCollection();
 	}
 
 	@Override
@@ -97,19 +115,16 @@ public class CompositeViewerManager extends ViewerManager {
 	}
 
 	public void setActivePage(int i) {
-		this.stackLayout.topControl = this.managers[i].getViewer().getControl();
+		activeIndex = i;
+		if (stackLayout != null)
+			stackLayout.topControl = this.managers[i].getViewer().getControl();
 		// this.view.getSite().setSelectionProvider(selectionProvider);
 		this.selectionProvider.setSelectionProviderDelegate(managers[i].getViewer());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.reflexit.magiccards.ui.views.ViewerManager#getViewer()
-	 */
 	@Override
 	public ColumnViewer getViewer() {
-		return this.managers[this.activeIndex].getViewer();
+		return managers[activeIndex].getViewer();
 	}
 
 	@Override
@@ -127,23 +142,28 @@ public class CompositeViewerManager extends ViewerManager {
 	}
 
 	@Override
-	public void flip(boolean hasGroups) {
-		if (hasGroups) {
-			// flip to tree
-			this.activeIndex = 1;
-		} else {
-			// flip to table
-			this.activeIndex = 0;
+	public void setGrouppingEnabled(boolean hasGroups) {
+		if (managers[activeIndex].supportsGroupping(hasGroups))
+			return;
+		for (int i = 0; i < managers.length; i++) {
+			if (managers[i].supportsGroupping(hasGroups)) {
+				activeIndex = i;
+				break;
+			}
 		}
-		if (this.stackLayout != null)
-			setActivePage(this.activeIndex);
+		setActivePage(this.activeIndex);
 	}
 
 	@Override
 	public void updateViewer(Object input) {
 		if (this.comp.isDisposed())
 			return;
-		this.managers[this.activeIndex].updateViewer(input);
+		for (int i = 0; i < managers.length; i++) {
+			if (i != activeIndex)
+				managers[i].updateViewer(null);
+			else
+				managers[activeIndex].updateViewer(input);
+		}
 		this.comp.layout();
 	}
 
@@ -151,7 +171,7 @@ public class CompositeViewerManager extends ViewerManager {
 	public void refresh() {
 		if (this.comp.isDisposed())
 			return;
-		this.managers[this.activeIndex].refresh();
+		managers[activeIndex].refresh();
 		this.comp.layout();
 	}
 
@@ -196,7 +216,7 @@ public class CompositeViewerManager extends ViewerManager {
 
 	@Override
 	public int getSortDirection() {
-		return this.managers[this.activeIndex].getSortDirection();
+		return managers[activeIndex].getSortDirection();
 	}
 
 	@Override
@@ -204,6 +224,6 @@ public class CompositeViewerManager extends ViewerManager {
 		for (IMagicColumnViewer m : this.managers) {
 			m.getColumnLayoutProperty();
 		}
-		return this.managers[this.activeIndex].getColumnLayoutProperty();
+		return managers[activeIndex].getColumnLayoutProperty();
 	}
 }

@@ -36,6 +36,10 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 	public void updateViewer(Object input) {
 		updateTableHeader();
 		updateGrid();
+		if (input == null) {
+			viewer.setInput(null);
+			return;
+		}
 		synchronized (input) {
 			// long time = System.currentTimeMillis();
 			// if (this.viewer.getInput() != this.getDataHandler()) {

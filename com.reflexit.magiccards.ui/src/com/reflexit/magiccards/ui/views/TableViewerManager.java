@@ -270,4 +270,11 @@ public class TableViewerManager extends ViewerManager {
 		((TableColumn) column).setWidth(0);
 		((TableColumn) column).setResizable(false);
 	}
+
+	@Override
+	public boolean supportsGroupping(boolean groupped) {
+		if (groupped)
+			return false;
+		return true;
+	};
 }

@@ -248,4 +248,11 @@ public class TreeViewerManager extends ViewerManager {
 		((TreeColumn) column).setWidth(0);
 		((TreeColumn) column).setResizable(false);
 	}
+
+	@Override
+	public boolean supportsGroupping(boolean groupped) {
+		if (groupped)
+			return true;
+		return false;
+	};
 }

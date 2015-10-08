@@ -13,7 +13,6 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class GalleryViewerManager extends ViewerManager {
-	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
 	protected LazyGalleryTreeViewer viewer;
 	private FlatTreeContentProvider flatTreeContentProvider;
 
@@ -35,6 +34,13 @@ public class GalleryViewerManager extends ViewerManager {
 		updateGrid();
 		// viewer.setSorter(new NameSorter());
 		// createDefaultColumns();
+		// hookDoubleClickListener(new IDoubleClickListener() {
+		// @Override
+		// public void doubleClick(DoubleClickEvent event) {
+		// flatTreeContentProvider.setDetails(event.getSelection());
+		// viewer.refresh();
+		// }
+		// });
 		return this.viewer.getControl();
 	}
 
@@ -73,9 +79,14 @@ public class GalleryViewerManager extends ViewerManager {
 		boolean sort = index >= 0;
 		if (sort) {
 			AbstractColumn man = getColumn(index);
+			SortOrderViewerComparator vcomp = getViewerComparator();
+			if (direction == 0) {
 			boolean oldAccending = vcomp.getComparator().getComparator(man.getSortField()).isAccending();
-			boolean newAccending = !oldAccending;
-			vcomp.setOrder(man.getSortField(), newAccending);
+				boolean newAccending = !oldAccending;
+				vcomp.setOrder(man.getSortField(), newAccending);
+			} else {
+				vcomp.setOrder(man.getSortField(), direction == -1);
+			}
 			this.viewer.setComparator(vcomp);
 		} else {
 			this.viewer.setComparator(null);

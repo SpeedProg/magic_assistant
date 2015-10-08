@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Display;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
@@ -42,7 +41,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 			ICardGroup group = (ICardGroup) element;
 			ICardGroup parent = group.getParent();
 			String parentText = getText(parent);
-			if (parentText.isEmpty() || parentText.equals("All"))
+			if (parentText.isEmpty() || parentText.equals("All") || parent.depth() == 1)
 				return group.getName();
 			else
 				return parentText + "/" + group.getName();
@@ -56,19 +55,21 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		// System.err.println("getting image for " + element + " " +
 		// element.getClass());
+		if (element instanceof CardGroup) {
+			CardGroup cardGroup = (CardGroup) element;
+			element = cardGroup.getFirstCard();
+		}
 		if (!(element instanceof IMagicCard)) {
 			return null;
 		}
-		if (element instanceof CardGroup && ((CardGroup) element).getFieldIndex() != MagicCardField.NAME)
-			return null;
 		if (map.containsKey(element))
 			return map.get(element);
+		final IMagicCard card = (IMagicCard) element;
 		// System.err.println("loaidng");
 		new Job("loading card") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					final IMagicCard card = (IMagicCard) element;
 					if (card instanceof CardGroup)
 						return Status.OK_STATUS;
 					String path = ImageCreator.getInstance().createCardPath(card, true, false);
@@ -83,7 +84,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							viewer.refresh(element, true);
+							viewer.refresh(card, true);
 							// System.err.println("setting real image for "
 							// + card);
 							// item.setImage(image);

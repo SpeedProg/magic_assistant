@@ -5,7 +5,9 @@ package com.reflexit.magiccards.ui.gallery;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -15,16 +17,22 @@ import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class FlatTreeContentProvider implements ITreeContentProvider {
+	private static final Object[] EMPTY_CHILDREN = new Object[] {};
 	private IFilteredCardStore fstore;
 	private boolean groupped;
 	private int level = 1;
+	private HashMap<Object, Object[]> cache = new HashMap<>();
+	private ICardGroup top;
 
 	@Override
 	public void dispose() {
 	}
 
 	public void setLevel(int level) {
-		this.level = level;
+		if (this.level != level) {
+			this.level = level;
+			cache.clear();
+		}
 	}
 
 	public int getLevel() {
@@ -36,48 +44,53 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 		if (newInput instanceof IFilteredCardStore) {
 			this.fstore = (IFilteredCardStore) newInput;
 			groupped = this.fstore.getFilter().isGroupped();
+			cache.clear();
+			top = new CardGroup(null, "Groups");
 		}
 	}
 
 	@Override
 	public Object[] getChildren(Object element) {
-		if (element instanceof CardGroup) {
+		if (cache.containsKey(element))
+			return cache.get(element);
+		Object[] res = null;
+		if (element.equals(top) && top instanceof CardGroup) {
+			res = top.getChildren();
+		} else if (element instanceof CardGroup) {
 			Collection children = ((CardGroup) element).expand();
-			return children.toArray(new Object[children.size()]);
+			res = children.toArray(new Object[children.size()]);
 		} else if (element instanceof IFilteredCardStore) {
+			ICardGroup root = fstore.getCardGroupRoot();
 			if (groupped) {
 				if (level > 1) {
-					Collection<ICardGroup> children = leafs(fstore.getCardGroupRoot());
-					if (children.size() > 500) {
-						// gallery cannot handle more than 1400 groups now
-						children = regroup(children);
-					}
-					return children.toArray(new Object[children.size()]);
+					Collection<ICardGroup> children = leafGroups(root);
+					if (children.size() > 20) {
+						((CardGroup) top).addAll(children);
+						res = new Object[] { top };
+						cache.put(top, top.getChildren());
+					} else
+						res = children.toArray(new Object[children.size()]);
 				}
-				return fstore.getCardGroupRoot().getChildren();
-			} else
-				return new Object[] { fstore.getCardGroupRoot() };
+				if (res == null) {
+					res = root.getChildren();
+				}
+			} else {
+				res = new Object[] { root };
+			}
 		}
-		return null;
-	}
-
-	private Collection<ICardGroup> regroup(Collection<ICardGroup> children) {
-		CardGroup cardGroup = new CardGroup(null, "Too many groups: " + children.size());
-		Collection<ICardGroup> res = new ArrayList<>();
-		for (ICardGroup group : children) {
-			cardGroup.addAll(group.getChildrenList());
-		}
-		res.add(cardGroup);
+		if (res == null)
+			res = EMPTY_CHILDREN;
+		cache.put(element, res);
 		return res;
 	}
 
-	private Collection<ICardGroup> leafs(ICardGroup cardGroup) {
+	private Collection<ICardGroup> leafGroups(ICardGroup cardGroup) {
 		return leafGroups((CardGroup) cardGroup, new ArrayList<>());
 	}
 
 	private Collection<ICardGroup> leafGroups(CardGroup cardGroup, List<ICardGroup> result) {
 		Collection<CardGroup> subs = cardGroup.getSubGroups();
-		if (subs.size() == 0 || level == depth(cardGroup)) {
+		if (subs.size() == 0 || level == cardGroup.depth()) {
 			// this is leaf node
 			result.add(cardGroup);
 			return result;
@@ -88,12 +101,6 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 			}
 		}
 		return result;
-	}
-
-	private int depth(ICardGroup cardGroup) {
-		if (cardGroup.getParent() == null)
-			return 1;
-		return depth(cardGroup.getParent()) + 1;
 	}
 
 	@Override

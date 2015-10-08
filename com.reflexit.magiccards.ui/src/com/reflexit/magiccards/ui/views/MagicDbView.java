@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -65,7 +66,8 @@ public class MagicDbView extends AbstractCardsView {
 
 		@Override
 		public IMagicColumnViewer createViewerManager() {
-			return new CompositeViewerManager(getPreferencePageId());
+			CompositeViewerManager m = new CompositeViewerManager(getPreferencePageId());
+			return m;
 		}
 
 		@Override
@@ -149,6 +151,22 @@ public class MagicDbView extends AbstractCardsView {
 				editCard();
 			}
 		};
+	}
+
+	public void showViewer(IMagicColumnViewer v) {
+		IMagicColumnViewer m = ((AbstractMagicCardsListControl) control).getManager();
+		CompositeViewerManager cm = (CompositeViewerManager) m;
+		int i = cm.findManager(v);
+		if (i < 0)
+			i = cm.addManager((ViewerManager) v);
+		cm.setActivePage(i);
+		control.updateViewer();
+	}
+
+	public void showPage(int i) {
+		IMagicColumnViewer m = ((AbstractMagicCardsListControl) control).getManager();
+		((CompositeViewerManager) m).setActivePage(i);
+		control.updateViewer();
 	}
 
 	protected void editCard() {

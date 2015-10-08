@@ -41,7 +41,7 @@ public interface IMagicColumnViewer {
 
 	public abstract void refresh();
 
-	public abstract void flip(boolean hasGroups);
+	public abstract void setGrouppingEnabled(boolean hasGroups);
 
 	public abstract void setLinesVisible(boolean grid);
 

@@ -23,4 +23,10 @@ public interface ICardGroup extends ICard, Iterable<ICard> {
 	public abstract ICardGroup getSubGroup(String key);
 
 	public abstract ICardGroup getParent();
+
+	public ICard getFirstCard();
+
+	public int depth();
+
+	public abstract void removeAll();
 }
