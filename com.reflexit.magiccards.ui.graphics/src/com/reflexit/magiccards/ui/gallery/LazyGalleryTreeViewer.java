@@ -187,7 +187,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 					Widget w = internalExpand(elementOrTreePath, true);
 					if (w instanceof Item) {
 						Item child = getChild(w, 0);
-						showItem(child);
+						if (child != null)
+							showItem(child);
 					}
 				}
 				// can use gallery.translation

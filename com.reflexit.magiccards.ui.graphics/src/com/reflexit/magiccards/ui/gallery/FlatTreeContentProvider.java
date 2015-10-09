@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
@@ -64,8 +63,13 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 			if (groupped) {
 				if (level > 1) {
 					Collection<ICardGroup> children = leafGroups(root);
-					if (children.size() > 20) {
-						((CardGroup) top).addAll(children);
+					if (children.size() > 200) {
+						CardGroup tg = (CardGroup) top;
+						for (ICardGroup group : children) {
+							CardGroup ng = new CardGroup(group.getFieldIndex(), getRecName(group));
+							tg.add(ng);
+							ng.addAll(group.getChildrenList());
+						}
 						res = new Object[] { top };
 						cache.put(top, top.getChildren());
 					} else
@@ -82,6 +86,17 @@ public class FlatTreeContentProvider implements ITreeContentProvider {
 			res = EMPTY_CHILDREN;
 		cache.put(element, res);
 		return res;
+	}
+
+	private String getRecName(ICardGroup group) {
+		ICardGroup parent = group.getParent();
+		if (parent == null)
+			return group.getName();
+		String parentText = getRecName(parent);
+		if (parentText.isEmpty() || parentText.equals("All") || parent.depth() == 1)
+			return group.getName();
+		else
+			return parentText + "/" + group.getName();
 	}
 
 	private Collection<ICardGroup> leafGroups(ICardGroup cardGroup) {

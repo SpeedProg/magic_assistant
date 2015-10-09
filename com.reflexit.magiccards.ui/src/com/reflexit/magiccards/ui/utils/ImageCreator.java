@@ -26,7 +26,6 @@ import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.CachedImageNotFoundException;
-import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.sync.CardCache;
@@ -227,20 +226,18 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Get card image from local cache. This image is not managed - to be
-	 * disposed by called.
+	 * Get card image from local cache. This image is not managed - to be disposed by called.
 	 *
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot
-	 *         found locally or cannot be downloaded remotely
+	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be downloaded
+	 *         remotely
 	 * @throws IOException
 	 */
-	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate)
-			throws IOException, CannotDetermineSetAbbriviation {
+	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException {
 		synchronized (card) {
 			if (forceUpdate)
 				remote = true;

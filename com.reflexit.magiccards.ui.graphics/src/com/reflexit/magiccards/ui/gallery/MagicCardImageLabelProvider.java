@@ -1,22 +1,14 @@
 package com.reflexit.magiccards.ui.gallery;
 
-import java.io.IOException;
-import java.util.HashMap;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
-import com.reflexit.magiccards.ui.utils.ImageCreator;
+import com.reflexit.magiccards.ui.utils.ImageCache;
 
 final class MagicCardImageLabelProvider extends LabelProvider {
 	private StructuredViewer viewer;
@@ -25,14 +17,10 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 		this.viewer = viewer;
 	}
 
-	HashMap<IMagicCard, Image> map = new HashMap<>();
+	private ImageCache cache = ImageCache.INSTANCE;
 
 	@Override
 	public void dispose() {
-		for (Image im : map.values()) {
-			im.dispose();
-		}
-		map.clear();
 	}
 
 	@Override
@@ -40,6 +28,8 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 		if (element instanceof ICardGroup) {
 			ICardGroup group = (ICardGroup) element;
 			ICardGroup parent = group.getParent();
+			if (parent == null)
+				return group.getName();
 			String parentText = getText(parent);
 			if (parentText.isEmpty() || parentText.equals("All") || parent.depth() == 1)
 				return group.getName();
@@ -52,55 +42,35 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 	}
 
 	@Override
-	public Image getImage(Object element) {
+	public Image getImage(final Object element) {
 		// System.err.println("getting image for " + element + " " +
 		// element.getClass());
+		Object candidate = element;
 		if (element instanceof CardGroup) {
 			CardGroup cardGroup = (CardGroup) element;
-			element = cardGroup.getFirstCard();
+			candidate = cardGroup.getFirstCard();
 		}
-		if (!(element instanceof IMagicCard)) {
+		if (!(candidate instanceof IMagicCard)) {
 			return null;
 		}
-		if (map.containsKey(element))
-			return map.get(element);
-		final IMagicCard card = (IMagicCard) element;
-		// System.err.println("loaidng");
-		new Job("loading card") {
+		final IMagicCard card = (IMagicCard) candidate;
+		Image im = cache.getImage(card, () -> refreshCallback(card, element));
+		if (im != null)
+			return im;
+		return cache.CARD_NOT_FOUND_IMAGE_TEMPLATE;
+	}
+
+	protected void refreshCallback(final IMagicCard card, final Object element) {
+		Display.getDefault().asyncExec(new Runnable() {
 			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					if (card instanceof CardGroup)
-						return Status.OK_STATUS;
-					String path = ImageCreator.getInstance().createCardPath(card, true, false);
-					final Image image = ImageCreator.getInstance().createCardImage(path, false);
-					if (image == null) {
-						Image it = ImageCreator.getInstance().getCardNotFoundImageTemplate();
-						Image itCopy = new Image(Display.getDefault(), it, SWT.IMAGE_COPY);
-						map.put(card, itCopy);
-					} else {
-						map.put(card, image);
-					}
-					Display.getDefault().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							viewer.refresh(card, true);
-							// System.err.println("setting real image for "
-							// + card);
-							// item.setImage(image);
-							// item.getParent().redraw();
-						}
-					});
-				} catch (CannotDetermineSetAbbriviation e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			public void run() {
+				if (cache.getCachedImage(card) != null) {
+					viewer.refresh(element, true);
+					// System.err.println("setting real image for " + element);
 				}
-				return Status.OK_STATUS;
+				// item.setImage(image);
+				// item.getParent().redraw();
 			}
-		}.schedule();
-		return ImageCreator.getInstance().getCardNotFoundImageTemplate();
+		});
 	}
 }
