@@ -164,7 +164,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		Group group = new Group(getArea(), SWT.NONE);
 		group.setText("Description");
 		group.setLayout(new GridLayout());
-		text = new Text(group, SWT.WRAP | SWT.READ_ONLY);
+		text = new Text(group, SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 		text.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -181,7 +181,7 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 				openEdit();
 			}
 		});
-		text.setLayoutData(new GridData(GridData.FILL_BOTH));
+		text.setLayoutData(GridDataFactory.fillDefaults().hint(600, 80).grab(true, false).create());
 		return group;
 	}
 

@@ -12,6 +12,7 @@ package com.reflexit.magiccards.ui.dialogs;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -93,8 +94,7 @@ public class EditDeckPropertiesDialog extends TitleAreaDialog {
 		group.setLayoutData(gd);
 		group.setLayout(new GridLayout());
 		text = new Text(group, SWT.WRAP | SWT.BORDER);
-		GridData gd1 = new GridData(GridData.FILL_BOTH);
-		text.setLayoutData(gd1);
+		text.setLayoutData(GridDataFactory.fillDefaults().hint(600, 200).create());
 		text.setText(info.getComment() == null ? "" : info.getComment());
 	}
 
