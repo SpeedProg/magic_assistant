@@ -66,7 +66,7 @@ public class ParseGathererLegalityTest extends TestCase {
 	public void testLegalitiesInet() {
 		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
 		Editions editions = Editions.getInstance();
-		Edition ed = editions.getEditionByName("Theros");
+		Edition ed = editions.getEditionByName("Fate Reforged");
 		assertEquals(Legality.LEGAL, ed.getLegalityMap().get(Format.STANDARD));
 	}
 }
