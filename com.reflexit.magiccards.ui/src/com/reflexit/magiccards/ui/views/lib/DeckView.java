@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -37,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -82,6 +84,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	private static ArrayList<DeckPageExtension> extensionPages;
+
 	static {
 		loadExtensions();
 	}
@@ -179,8 +182,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	protected void runMaterialize() {
 		Collection<IMagicCard> orig = getFilteredStore().getCardStore().getCards();
-		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE
-				| SWT.READ_ONLY) {
+		LocationPickerDialog locationPickerDialog = new LocationPickerDialog(getShell(), SWT.SINGLE | SWT.READ_ONLY) {
 			@Override
 			protected Control createDialogArea(Composite parent) {
 				Control area = super.createDialogArea(parent);
@@ -225,12 +227,13 @@ public class DeckView extends AbstractMyCardsView {
 		} else {
 			s = (CardCollection) parent.findChield(sideboard);
 		}
-		openCollection(s);
+		openCollection(s, getSelection());
 	}
 
-	public static void openCollection(final CardCollection col) {
+	public static DeckView openCollection(final CardCollection col, IStructuredSelection sel) {
 		if (col == null)
-			return;
+			return null;
+		DeckView deckViewRes[] = new DeckView[1];
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -241,21 +244,25 @@ public class DeckView extends AbstractMyCardsView {
 				if (page == null)
 					return;
 				try {
-					IViewPart navView = page
-							.showView(CardsNavigatorView.ID, null, IWorkbenchPage.VIEW_CREATE);
+					IViewPart navView = page.showView(CardsNavigatorView.ID, null, IWorkbenchPage.VIEW_CREATE);
 					navView.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					page.showView(DeckView.ID, col.getId(), IWorkbenchPage.VIEW_ACTIVATE);
+					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getId(),
+							IWorkbenchPage.VIEW_ACTIVATE);
+					if (deckView != null && sel != null && !sel.isEmpty())
+						deckView.setSelection(sel);
+					deckViewRes[0] = deckView;
 				} catch (PartInitException e) {
 					MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
 				}
 			}
 		});
+		return deckViewRes[0];
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.lib.LibView#dispose()
+	 * @see com.reflexit.magiccards.ui.views.lib.MyCardsView#dispose()
 	 */
 	@Override
 	public void dispose() {
@@ -284,7 +291,7 @@ public class DeckView extends AbstractMyCardsView {
 			c.setStatus("Loading " + deckId + "...");
 			return;
 		}
-		//setPartProperty(name, name);
+		// setPartProperty(name, name);
 		if (deck.getLocation().isSideboard()) {
 			setPartName("#" + name);
 			if (sideboard != null)
@@ -320,10 +327,8 @@ public class DeckView extends AbstractMyCardsView {
 		folder.setSimple(false);
 		Display display = folder.getDisplay();
 		// folder.setBackground(display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-		folder.setBackground(
-				new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-						display.getSystemColor(SWT.COLOR_WHITE) },
-				new int[] { 50 });
+		folder.setBackground(new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+				display.getSystemColor(SWT.COLOR_WHITE) }, new int[] { 50 });
 		updatePartName();
 	}
 
@@ -415,7 +420,7 @@ public class DeckView extends AbstractMyCardsView {
 					if (deck.getLocation().equals(srcLocation) || deck == event.getSource()) {
 						updatePartName();
 						if (!secondaryId.equals(deck.getLocation().getBaseFileName())) {
-							openCollection(deck);// reopen newly named deck, to change secondary id
+							openCollection(deck, getSelection());// reopen newly named deck, to change secondary id
 							close();
 							return;
 						}
@@ -454,8 +459,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void setStore() {
-		WaitUtils.waitForCondition(() -> (DeckFilteredCardFileStore.getStoreForKey(getDeckId()) != null),
-				5000, 300);
+		WaitUtils.waitForCondition(() -> (DeckFilteredCardFileStore.getStoreForKey(getDeckId()) != null), 5000, 300);
 		IFilteredCardStore<IMagicCard> store = getFilteredStore();
 		if (store == null)
 			return;
@@ -580,5 +584,18 @@ public class DeckView extends AbstractMyCardsView {
 		if (sel.getControl() == control.getControl()) {
 			super.saveColumnLayout();
 		}
+	}
+
+	public void setSelection(IStructuredSelection structuredSelection) {
+		ArrayList<Object> l = new ArrayList<Object>();
+		for (Object o : structuredSelection.toList()) {
+			if (o instanceof MagicCard) {
+				l.addAll(((MagicCard) o).getRealCards().getChildrenList());
+				continue;
+			} else if (o instanceof IMagicCard) {
+				l.add(o);
+			}
+		}
+		getSelectionProvider().setSelection(new StructuredSelection(l));
 	}
 }

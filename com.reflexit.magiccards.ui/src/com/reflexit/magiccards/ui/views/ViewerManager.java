@@ -103,6 +103,8 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		this.menuManager = menuMgr;
+		Menu menu = getMenuManager().createContextMenu(getControl());
+		getControl().setMenu(menu);
 	}
 
 	public MenuManager getMenuManager() {

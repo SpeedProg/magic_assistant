@@ -167,7 +167,7 @@ public class BoosterGeneratorWizard extends NewCardCollectionWizard implements I
 		populateLibrary(BoosterGeneratorWizard.this.sets, BoosterGeneratorWizard.this.packs, col,
 				new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
-		DeckView.openCollection(col);
+		DeckView.openCollection(col, null);
 		monitor.done();
 	}
 

@@ -36,7 +36,7 @@ public class EditDeckPropertiesHandler extends AbstractHandler {
 		CardCollection f = getApplicableElement();
 		EditDeckPropertiesDialog dialog = new EditDeckPropertiesDialog(window.getShell(), f.getStorageInfo());
 		if (dialog.open() == Dialog.OK) {
-			DeckView.openCollection(f);
+			DeckView.openCollection(f, null);
 		}
 		return null;
 	}

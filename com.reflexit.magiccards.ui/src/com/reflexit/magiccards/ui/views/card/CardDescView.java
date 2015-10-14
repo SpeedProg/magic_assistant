@@ -44,6 +44,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
@@ -72,7 +74,7 @@ import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
-public class CardDescView extends ViewPart implements ISelectionListener {
+public class CardDescView extends ViewPart implements ISelectionListener, IShowInTarget {
 	public static final String ID = CardDescView.class.getName();
 	private CardDescComposite panel;
 	private Label message;
@@ -596,5 +598,11 @@ public class CardDescView extends ViewPart implements ISelectionListener {
 	private boolean isLoadingOnClickEnabled() {
 		return MagicUIActivator.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.LOAD_IMAGES);
+	}
+
+	@Override
+	public boolean show(ShowInContext context) {
+		setSelection(context.getSelection());
+		return true;
 	}
 }

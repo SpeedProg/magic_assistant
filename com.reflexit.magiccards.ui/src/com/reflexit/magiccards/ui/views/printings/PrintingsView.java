@@ -33,10 +33,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.ShowInContext;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -49,7 +49,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
-import com.reflexit.magiccards.ui.views.instances.InstancesView;
 
 /**
  * Shows different prints of the same card in different sets and per collection
@@ -98,6 +97,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	protected void fillContextMenu(IMenuManager manager) {
 		// manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
 		// drillDownAdapter.addNavigationActions(manager);
+		fillShowInMenu(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -107,7 +107,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 		// drillDownAdapter.addNavigationActions(manager);
 		manager.add(sync);
 		// manager.add(this.groupMenuButton);
-		manager.add(showInstances);
 		manager.add(refresh);
 	}
 
@@ -266,14 +265,9 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	}
 
 	@Override
-	protected void runShowInstances(IWorkbenchPage page) {
-		try {
-			StructuredSelection sel = card == null ? new StructuredSelection()
-					: new StructuredSelection(card);
-			InstancesView view = (InstancesView) page.showView(InstancesView.ID);
-			view.selectionChanged(this, sel);
-		} catch (PartInitException e) {
-			MagicUIActivator.log(e);
-		}
+	public ShowInContext getShowInContext() {
+		IStructuredSelection selection = getSelection();
+		return new ShowInContext(card,
+				(selection.isEmpty() && card != null) ? new StructuredSelection(card) : selection);
 	}
 }

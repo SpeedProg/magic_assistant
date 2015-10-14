@@ -224,7 +224,7 @@ public class BoosterGeneratorCollectionWizard extends NewCardCollectionWizard im
 				parent, virtual, new SubProgressMonitor(monitor, 7));
 		monitor.worked(1);
 		if (col != null)
-			DeckView.openCollection(col);
+			DeckView.openCollection(col, null);
 		monitor.done();
 	}
 

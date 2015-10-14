@@ -98,7 +98,7 @@
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.views.lib.MyCardsView"
             icon="icons/card_coll24.png"
-            id="com.reflexit.magiccards.ui.views.lib.LibView"
+            id="com.reflexit.magiccards.ui.views.lib.MyCardsView"
             name="My Cards"
             restorable="true">
       </view>
@@ -156,6 +156,31 @@
             id="com.reflexit.magiccards.ui.perspective.magic"
             name="Magic Cards">
       </perspective>
+   </extension>
+    <extension
+      point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="com.reflexit.magiccards.ui.perspective.magic">
+      <showInPart id = "com.reflexit.magiccards.ui.views.card.CardDescView"/>
+           <showInPart id = "com.reflexit.magiccards.ui.views.lib.MyCardsView"/>
+
+           <showInPart
+                 id="com.reflexit.magiccards.ui.views.MagicDbView">
+           </showInPart>
+           <showInPart
+                 id="com.reflexit.magiccards.ui.views.collector.CollectorView">
+           </showInPart>
+           <showInPart
+                 id="com.reflexit.magiccards.ui.views.instances.InstancesView">
+           </showInPart>
+                      <showInPart
+                 id="com.reflexit.magiccards.ui.views.printings.PrintingsView">
+           </showInPart>
+                      <showInPart
+                            id="com.reflexit.magiccards.ui.views.nav.CardsNavigatorView">
+                      </showInPart>
+
+      
+      </perspectiveExtension>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -510,7 +535,7 @@
       </menuContribution>
 
      <menuContribution
-           locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.MyCardsView">
         <command
               commandId="org.eclipse.ui.edit.delete"
               mode="FORCE_TEXT"
@@ -550,7 +575,7 @@
        
      </menuContribution>
      <menuContribution
-           locationURI="popup:com.reflexit.magiccards.ui.views.lib.LibView">
+           locationURI="popup:com.reflexit.magiccards.ui.views.lib.MyCardsView">
         <command  commandId="com.reflexit.magiccards.ui.commands.addToDeck" label="Copy to Active Collection"/>    
      </menuContribution>
      

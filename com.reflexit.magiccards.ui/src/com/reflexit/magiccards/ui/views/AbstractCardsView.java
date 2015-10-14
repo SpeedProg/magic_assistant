@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -28,13 +29,16 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.IShowInSource;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -55,18 +59,19 @@ import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
 import com.reflexit.magiccards.ui.jobs.LoadingPricesJob;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.instances.InstancesView;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
-public abstract class AbstractCardsView extends ViewPart {
+public abstract class AbstractCardsView extends ViewPart implements IShowInTarget, IShowInSource {
 	protected Action loadExtras;
 	protected IMagicControl control;
 	private Composite partControl;
 	private Action actionRefresh;
 	protected Action actionCopy;
 	protected Action actionPaste;
-	protected Action showInstances;
 	protected Action buyCards;
+
+	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
+
 
 	/**
 	 * The constructor.
@@ -125,7 +130,7 @@ public abstract class AbstractCardsView extends ViewPart {
 		return control.getSelectionProvider();
 	}
 
-	private void contributeToActionBars() {
+	protected void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
@@ -146,7 +151,6 @@ public abstract class AbstractCardsView extends ViewPart {
 		control.setGlobalControlHandlers(bars);
 	}
 
-	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
 
 	public IHandlerActivation activateActionHandler(Action action, String actionId) {
 		IHandlerActivation activation = activations.get(actionId);
@@ -180,8 +184,22 @@ public abstract class AbstractCardsView extends ViewPart {
 	protected void fillContextMenu(IMenuManager manager) {
 		control.fillContextMenu(manager);
 		manager.add(this.loadExtras);
+
+		fillShowInMenu(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	protected void fillShowInMenu(IMenuManager manager) {
+		IMenuManager showInMenu = new MenuManager("Show In");
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		IContributionItem showViewItem = ContributionItemFactory.VIEWS_SHOW_IN.create(window);
+		// if (showViewItem.isEnabled())
+		{
+			showInMenu.add(showViewItem);
+		}
+		manager.add(showInMenu);
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
@@ -215,23 +233,6 @@ public abstract class AbstractCardsView extends ViewPart {
 			}
 		};
 		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
-		showInstances = new Action("Show All Instances") {
-			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/obj16/hand16.png"));
-			}
-
-			@Override
-			public void run() {
-				IWorkbench workbench = PlatformUI.getWorkbench();
-				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-				if (window != null) {
-					IWorkbenchPage page = window.getActivePage();
-					if (page != null) {
-						runShowInstances(page);
-					}
-				}
-			}
-		};
 	}
 
 	protected void runBuyCards() {
@@ -455,12 +456,14 @@ public abstract class AbstractCardsView extends ViewPart {
 		saveColumnLayout();
 	}
 
-	protected void runShowInstances(IWorkbenchPage page) {
-		try {
-			InstancesView view = (InstancesView) page.showView(InstancesView.ID);
-			view.selectionChanged(AbstractCardsView.this, getSelection());
-		} catch (PartInitException e) {
-			MagicUIActivator.log(e);
-		}
+	@Override
+	public boolean show(ShowInContext context) {
+		getSelectionProvider().setSelection(context.getSelection());
+		return true;
+	}
+
+	@Override
+	public ShowInContext getShowInContext() {
+		return new ShowInContext(null, getSelection());
 	}
 }

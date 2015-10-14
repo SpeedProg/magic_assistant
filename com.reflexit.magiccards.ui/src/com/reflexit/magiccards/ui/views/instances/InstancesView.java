@@ -40,6 +40,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.ShowInContext;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -99,6 +100,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	protected void fillContextMenu(IMenuManager manager) {
 		// manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
 		// drillDownAdapter.addNavigationActions(manager);
+		fillShowInMenu(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -266,5 +268,12 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	@Override
+	public ShowInContext getShowInContext() {
+		IStructuredSelection selection = getSelection();
+		return new ShowInContext(card,
+				(selection.isEmpty() && card != null) ? new StructuredSelection(card) : selection);
 	}
 }

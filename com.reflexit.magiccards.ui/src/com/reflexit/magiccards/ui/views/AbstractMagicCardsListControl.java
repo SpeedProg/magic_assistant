@@ -385,13 +385,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	public void reloadData() {
 		MagicLogger.trace("reload data " + getClass());
 		setNextSelection(getSelection());
-		update();
+		syncFilter();
 		loadData(null);
 	}
 
 	public void refilterData() {
 		setNextSelection(null);
-		update();
+		syncFilter();
 		loadData(new Runnable() {
 			@Override
 			public void run() {
@@ -889,14 +889,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void runResetFilter() {
-		getSelectionProvider().setSelection(new StructuredSelection()); // remove
-																		// selection
-		Collection<String> allIds = FilterField.getAllIds();
-		for (Iterator<String> iterator = allIds.iterator(); iterator.hasNext();) {
-			String id = iterator.next();
-			getFilterPreferenceStore().setToDefault(id);
-		}
-		getFilterPreferenceStore().setToDefault(EditionsFilterPreferencePage.LAST_SET);
+		getSelectionProvider().setSelection(new StructuredSelection()); // remove selection
+		PreferenceInitializer.setToDefault(getFilterPreferenceStore());
 		syncQuickFilter();
 		refilterData();
 	}
@@ -934,7 +928,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		updateSortColumn(-1);
 	}
 
-	protected void update() {
+	protected void syncFilter() {
 		MagicCardFilter filter = getFilter();
 		if (filter == null)
 			return;

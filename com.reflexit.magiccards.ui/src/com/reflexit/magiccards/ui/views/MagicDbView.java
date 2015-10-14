@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -12,12 +13,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.ShowInContext;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
@@ -30,13 +29,12 @@ import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardDialog;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
-import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
 public class MagicDbView extends AbstractCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.MagicDbView";
 	protected MenuManager addToDeck;
-	protected Action showPrintings;
 	protected IDeckAction copyToDeck;
 	protected Action exportDatabase;
 	protected Action edit;
@@ -72,7 +70,7 @@ public class MagicDbView extends AbstractCardsView {
 
 		@Override
 		public void handleEvent(CardEvent event) {
-			if (event.getData() instanceof MagicCard) {//XXX
+			if (event.getData() instanceof MagicCard) {// XXX
 				super.handleEvent(event);
 			}
 		}
@@ -118,23 +116,6 @@ public class MagicDbView extends AbstractCardsView {
 					if (!iss.isEmpty()) {
 						DataManager dm = DataManager.getInstance();
 						dm.copyCards(dm.expandGroups(iss.toList()), fstore.getCardStore());
-					}
-				}
-			}
-		};
-		showPrintings = new Action("Show Other Sets") {
-			@Override
-			public void run() {
-				IWorkbench workbench = PlatformUI.getWorkbench();
-				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-				if (window != null) {
-					IWorkbenchPage page = window.getActivePage();
-					if (page != null) {
-						try {
-							page.showView(PrintingsView.ID);
-						} catch (PartInitException e) {
-							MagicUIActivator.log(e);
-						}
 					}
 				}
 			}
@@ -202,8 +183,7 @@ public class MagicDbView extends AbstractCardsView {
 						File file = new File(dir, abbr + ".txt");
 						if (!file.exists())
 							header = true;
-						FileOutputStream fileOutputStream = new FileOutputStream(
-								file, true);
+						FileOutputStream fileOutputStream = new FileOutputStream(file, true);
 						ps = new PrintStream(fileOutputStream);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -243,8 +223,6 @@ public class MagicDbView extends AbstractCardsView {
 		super.fillContextMenu(manager);
 		manager.add(this.addToDeck);
 		manager.add(this.actionCopy);
-		manager.add(this.showPrintings);
-		manager.add(this.showInstances);
 		manager.add(this.edit);
 	}
 
@@ -256,5 +234,29 @@ public class MagicDbView extends AbstractCardsView {
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	@Override
+	public boolean show(ShowInContext context) {
+		ArrayList<Object> l = new ArrayList<Object>();
+		for (Object o : ((IStructuredSelection) context.getSelection()).toList()) {
+			if (o instanceof IMagicCard) {
+				l.add(((IMagicCard) o).getBase());
+			}
+		}
+		if (l.size() > 0) {
+			getSelectionProvider().setSelection(new StructuredSelection(l));
+			if (getSelection().isEmpty()) {
+				if (MessageDialog.openQuestion(getShell(), "Error", "Cards are not visible, reset filter?")) {
+					PreferenceInitializer.setToDefault(getFilterPreferenceStore());
+					AbstractMagicCardsListControl lcon = (AbstractMagicCardsListControl) control;
+					lcon.syncQuickFilter();
+					lcon.setNextSelection(new StructuredSelection(l));
+					lcon.syncFilter();
+					lcon.loadData(null);
+				}
+			}
+		}
+		return true;
 	}
 }

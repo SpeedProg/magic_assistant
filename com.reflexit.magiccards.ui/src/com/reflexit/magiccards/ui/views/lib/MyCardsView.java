@@ -8,7 +8,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
-
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
@@ -20,7 +19,7 @@ import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 
 public class MyCardsView extends AbstractMyCardsView implements ICardEventListener {
-	public static final String ID = "com.reflexit.magiccards.ui.views.lib.LibView";
+	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
 
 	/**
 	 * The constructor.
@@ -72,6 +71,11 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 			public IFilteredCardStore doGetFilteredStore() {
 				return DataManager.getCardHandler().getLibraryFilteredStore();
 			}
+
+			@Override
+			protected void runDoubleClick() {
+				MyCardsView.this.runDoubleClick();
+			}
 		};
 	}
 
@@ -105,6 +109,15 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 	}
 
 	@Override
+	protected void runDoubleClick() {
+		super.runDoubleClick();
+		// IViewPart showView =
+		// getViewSite().getWorkbenchWindow().getActivePage().showView(GallerySelectionView.ID);
+		// ((GallerySelectionView) showView).setDetails(getSelection());
+
+	}
+
+	@Override
 	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
 		int type = event.getType();
@@ -113,4 +126,5 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 			reloadData();
 		}
 	}
+
 }

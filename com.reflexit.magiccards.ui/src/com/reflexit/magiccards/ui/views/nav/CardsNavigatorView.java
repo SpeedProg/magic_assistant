@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -48,10 +49,13 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -59,6 +63,7 @@ import com.reflexit.magiccards.core.model.nav.CardElement;
 import com.reflexit.magiccards.core.model.nav.CardOrganizer;
 import com.reflexit.magiccards.core.model.nav.MagicDbContainter;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
+import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.commands.DeleteHandler;
@@ -71,7 +76,7 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 import com.reflexit.magiccards.ui.wizards.NewDeckWizard;
 
-public class CardsNavigatorView extends ViewPart implements ICardEventListener, IPropertyChangeListener {
+public class CardsNavigatorView extends ViewPart implements ICardEventListener, IPropertyChangeListener, IShowInTarget {
 	public static final String ID = CardsNavigatorView.class.getName();
 	private Action doubleClickAction;
 	private CardsNavigatiorManager manager;
@@ -114,8 +119,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 	private void addDragAndDrop() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(),
-				MagicDeckTransfer.getInstance() };
+		Transfer[] transfers = new Transfer[] { MagicCardTransfer.getInstance(), MagicDeckTransfer.getInstance() };
 		Transfer[] transfers2 = new Transfer[] { MagicDeckTransfer.getInstance() };
 		getViewer().addDropSupport(ops, transfers, new MagicNavDropAdapter(getViewer()));
 		getViewer().addDragSupport(DND.DROP_MOVE, transfers2, new MagicNavDragListener(getViewer()));
@@ -163,10 +167,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		@Override
 		public void run() {
 			IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-			CardElement[] gadgets = (CardElement[]) selection.toList().toArray(
-					new CardElement[selection.size()]);
-			clipboard.setContents(new Object[] { gadgets },
-					new Transfer[] { MagicDeckTransfer.getInstance() });
+			CardElement[] gadgets = (CardElement[]) selection.toList().toArray(new CardElement[selection.size()]);
+			clipboard.setContents(new Object[] { gadgets }, new Transfer[] { MagicDeckTransfer.getInstance() });
 		}
 
 		@Override
@@ -184,8 +186,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		public void run() {
 			IStructuredSelection sel = (IStructuredSelection) getViewer().getSelection();
 			CardElement parent = (CardElement) sel.getFirstElement();
-			CardElement[] toDropArray = (CardElement[]) clipboard
-					.getContents(MagicDeckTransfer.getInstance());
+			CardElement[] toDropArray = (CardElement[]) clipboard.getContents(MagicDeckTransfer.getInstance());
 			if (toDropArray == null)
 				return;
 			try {
@@ -194,8 +195,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 				getModelRoot().move(toDropArray, (CardOrganizer) parent);
 			} catch (MagicException e) {
 				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error",
-						"Cannot perform this operation: "
-								+ e.getMessage());
+						"Cannot perform this operation: " + e.getMessage());
 			}
 		}
 
@@ -205,8 +205,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			CardElement parent = (CardElement) sel.getFirstElement();
 			if (!(parent instanceof CardOrganizer))
 				return false;
-			CardElement[] toDropArray = (CardElement[]) clipboard
-					.getContents(MagicDeckTransfer.getInstance());
+			CardElement[] toDropArray = (CardElement[]) clipboard.getContents(MagicDeckTransfer.getInstance());
 			if (toDropArray == null || toDropArray.length == 0)
 				return false;
 			return true;
@@ -220,15 +219,13 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 
 		@Override
 		public void run() {
-			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider()
-					.getSelection();
+			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
 			DeleteHandler.remove(sel);
 		}
 
 		@Override
 		public boolean isEnabled() {
-			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider()
-					.getSelection();
+			IStructuredSelection sel = (IStructuredSelection) getViewSite().getSelectionProvider().getSelection();
 			if (sel.isEmpty())
 				return false;
 			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
@@ -300,8 +297,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 			public void run() {
 				// Instantiates and initializes the wizard
 				NewDeckWizard wizard = new NewDeckWizard();
-				wizard.init(getSite().getWorkbenchWindow().getWorkbench(), (IStructuredSelection) getViewer()
-						.getSelection());
+				wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
+						(IStructuredSelection) getViewer().getSelection());
 				// Instantiates the wizard container with the wizard and opens
 				// it
 				WizardDialog dialog = new WizardDialog(getShell(), wizard);
@@ -458,7 +455,7 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	}
 
 	private void openDeckView(CardCollection d) {
-		DeckView.openCollection(d);
+		DeckView.openCollection(d, null);
 	}
 
 	public Shell getShell() {
@@ -469,21 +466,21 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		switch (type) {
-			case CardEvent.ADD_CONTAINER:
-				WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
-				Object obj = event.getData();
-				if (obj instanceof CardCollection) {
-					CardCollection coll = (CardCollection) obj;
-					DeckView.openCollection(coll);
-				}
-				break;
-			case CardEvent.REMOVE_CONTAINER:
-			case CardEvent.RENAME_CONTAINER:
-			case CardEvent.UPDATE_CONTAINER:
-				WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
-				break;
-			default:
-				break;
+		case CardEvent.ADD_CONTAINER:
+			WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
+			Object obj = event.getData();
+			if (obj instanceof CardCollection) {
+				CardCollection coll = (CardCollection) obj;
+				DeckView.openCollection(coll, null);
+			}
+			break;
+		case CardEvent.REMOVE_CONTAINER:
+		case CardEvent.RENAME_CONTAINER:
+		case CardEvent.UPDATE_CONTAINER:
+			WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -497,5 +494,29 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		manager.refresh();
+	}
+
+	@Override
+	public boolean show(ShowInContext context) {
+		ISelection selection = context.getSelection();
+		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
+			selection = new StructuredSelection(context.getInput());
+		}
+		IStructuredSelection iss = (IStructuredSelection) selection;
+		Object element = iss.getFirstElement();
+		if (element instanceof ILocatable) {
+			Location loc = ((ILocatable) element).getLocation();
+			if (loc == null || loc == Location.NO_WHERE) {
+				return false;
+			}
+			final ModelRoot container = DataManager.getInstance().getModelRoot();
+			CardCollection col = container.findCardCollectionById(loc.getName());
+			if (col != null) {
+				getViewer().setSelection(new StructuredSelection(col), true);
+				DeckView.openCollection(col, iss);
+				return true;
+			}
+		}
+		return false;
 	}
 }
