@@ -12,6 +12,7 @@ import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,7 +42,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 		// XXX delete deck
 	}
 
-	@Test
+	@Ignore
 	public void testDandD() throws Exception {
 		createDeck("deckDnd");
 		// drag a drop card in the new deck
