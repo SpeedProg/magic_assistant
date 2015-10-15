@@ -33,7 +33,7 @@ public class HashCollectionPart {
 	 * @param key
 	 * @return first card in the list
 	 */
-	public IMagicCard getCard(Integer key) {
+	public synchronized IMagicCard getCard(Integer key) {
 		Object obj = this.hash.get(key);
 		if (obj == null) {
 			return null;
@@ -51,7 +51,7 @@ public class HashCollectionPart {
 		return null;
 	}
 
-	public IMagicCard getCard(IMagicCard card) {
+	public synchronized IMagicCard getCard(IMagicCard card) {
 		Object obj = this.hash.get(card.getCardId());
 		if (obj == null) {
 			return null;
@@ -86,7 +86,7 @@ public class HashCollectionPart {
 	/**
 	 * @param card
 	 */
-	public void storeCard(IMagicCard card) {
+	public synchronized void storeCard(IMagicCard card) {
 		Object obj = this.hash.get(card.getCardId());
 		if (obj == null) {
 			this.hash.put(card.getCardId(), card);
@@ -110,7 +110,7 @@ public class HashCollectionPart {
 	/**
 	 * @param card
 	 */
-	public void removeCard(IMagicCard card) {
+	public synchronized void removeCard(IMagicCard card) {
 		Object obj = this.hash.get(card.getCardId());
 		if (obj == null) {
 			return;
@@ -132,7 +132,7 @@ public class HashCollectionPart {
 	 * @param id
 	 * @return
 	 */
-	public Collection<IMagicCard> getCards(int id) {
+	public synchronized Collection<IMagicCard> getCards(int id) {
 		Object obj = this.hash.get(id);
 		if (obj == null) {
 			return null;

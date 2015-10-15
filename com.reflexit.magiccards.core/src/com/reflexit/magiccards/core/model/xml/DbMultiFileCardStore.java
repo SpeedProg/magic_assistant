@@ -125,10 +125,12 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			}
 			int id = card.getCardId();
 			// redo
-			Integer old = (Integer) prev.get(MagicCardField.SIDE);
-			Integer cur = (Integer) card.get(MagicCardField.SIDE);
+			Integer oldI = (Integer) prev.get(MagicCardField.SIDE);
+			Integer curI = (Integer) card.get(MagicCardField.SIDE);
 			Object prevPart = prev.get(MagicCardField.PART);
 			Object curPart = card.get(MagicCardField.PART);
+			int old = oldI != null ? oldI.intValue() : 0;
+			int cur = curI != null ? curI.intValue() : 0;
 			if (old == 0 && cur == 0) {
 				if (prevPart != null)
 					old = 1;
@@ -344,13 +346,15 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 			// loadDefault card from xml in memory
 			// System.err.println("Initializing DB");
 			ArrayList<File> files = new ArrayList<File>();
-			File[] members;
+
 			try {
 				MagicDbContainter con = DataManager.getInstance().getModelRoot().getMagicDBContainer();
-				members = con.getFile().listFiles();
-				for (File file : members) {
-					if (file.getName().endsWith(".xml"))
-						files.add(file);
+				File[] members = con.getFile().listFiles();
+				if (members != null) {
+					for (File file : members) {
+						if (file.getName().endsWith(".xml"))
+							files.add(file);
+					}
 				}
 			} catch (MagicException e) {
 				MagicLogger.log(e);

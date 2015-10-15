@@ -124,6 +124,8 @@ public class XmlCardHolder implements ICardHandler {
 	private ArrayList<IMagicCard> loadFromFlat(BufferedReader st, ArrayList<IMagicCard> list)
 			throws IOException {
 		String line = st.readLine(); // header ignore for now
+		if (line == null)
+			throw new IOException("Empty set file");
 		ICardField[] xfields = MagicCardField.toFields(line, "\\Q" + TextPrinter.SEPARATOR);
 		String[] fields = new String[xfields.length];
 		while ((line = st.readLine()) != null) {

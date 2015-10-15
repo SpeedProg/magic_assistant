@@ -24,7 +24,10 @@ public class CollectionsContainer extends CardOrganizer {
 	@SuppressWarnings("unused")
 	public void loadChildren() {
 		File dir = getFile();
-		for (File mem : dir.listFiles()) {
+		File[] listFiles = dir.listFiles();
+		if (listFiles == null)
+			return;
+		for (File mem : listFiles) {
 			if (!mem.exists())
 				continue;
 			String name = mem.getName();

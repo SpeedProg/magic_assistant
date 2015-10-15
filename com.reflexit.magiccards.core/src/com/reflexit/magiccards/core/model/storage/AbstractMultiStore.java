@@ -205,7 +205,7 @@ public abstract class AbstractMultiStore<T extends ICard> extends AbstractCardSt
 	}
 
 	@Override
-	public T getCard(int id) {
+	public synchronized T getCard(int id) {
 		for (AbstractCardStoreWithStorage<T> table : map.values()) {
 			T card = table.getCard(id);
 			if (card != null) {
@@ -216,7 +216,7 @@ public abstract class AbstractMultiStore<T extends ICard> extends AbstractCardSt
 	}
 
 	@Override
-	public Collection<T> getCards(int id) {
+	public synchronized Collection<T> getCards(int id) {
 		ArrayList<T> arr = new ArrayList<T>();
 		for (AbstractCardStoreWithStorage<T> table : map.values()) {
 			Collection<T> cards = table.getCards(id);

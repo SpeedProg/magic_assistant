@@ -54,12 +54,14 @@ public class ImportExportFactory {
 	private static void loadCustom() {
 		File exportersPath = ReportType.getStorageFile();
 		File[] listFiles = exportersPath.listFiles();
-		for (int i = 0; i < listFiles.length; i++) {
-			File file = listFiles[i];
-			try {
-				ReportType.load(file);
-			} catch (IOException e) {
-				MagicLogger.log(e);
+		if (listFiles != null) {
+			for (int i = 0; i < listFiles.length; i++) {
+				File file = listFiles[i];
+				try {
+					ReportType.load(file);
+				} catch (IOException e) {
+					MagicLogger.log(e);
+				}
 			}
 		}
 	}

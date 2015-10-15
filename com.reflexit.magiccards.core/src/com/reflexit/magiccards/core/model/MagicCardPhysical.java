@@ -573,13 +573,15 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	}
 
 	public void setDate(String string) {
-		Date dd;
-		try {
-			dd = DATE_PARSER.parse(string);
-		} catch (ParseException e) {
-			dd = null;
-			MagicLogger.log("Cannot parse date " + string);
+		synchronized (DATE_PARSER) {
+			Date dd;
+			try {
+				dd = DATE_PARSER.parse(string);
+			} catch (ParseException e) {
+				dd = null;
+				MagicLogger.log("Cannot parse date " + string);
+			}
+			setDate(dd);
 		}
-		setDate(dd);
 	}
 }

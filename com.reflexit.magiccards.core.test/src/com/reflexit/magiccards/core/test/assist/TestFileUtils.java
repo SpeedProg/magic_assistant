@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 
 /**
  * static utils
@@ -44,9 +45,11 @@ public class TestFileUtils {
 	public static boolean deleteOnExit = true;
 
 	public static void resetDb() {
+		String user = System.getProperty("user.name");
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File temp = new File(tmpDir, "magiccardsTest");
+		File temp = new File(tmpDir, "magiccardsTest-" + user);
 		temp.deleteOnExit();
+		FileUtils.deleteTree(temp);
 
 		DataManager.getInstance().reset(temp);
 		DataManager.getInstance().syncInitDb();

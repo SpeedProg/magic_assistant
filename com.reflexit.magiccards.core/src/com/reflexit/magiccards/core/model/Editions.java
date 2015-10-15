@@ -41,7 +41,7 @@ public class Editions implements ISearchableProperty {
 		private LegalityMap legalityMap = LegalityMap.EMPTY;
 		private String block;
 		private int id;
-		private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+		private final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
 		public Edition(String name, String abbr) {
 			this.name = name;
@@ -96,12 +96,6 @@ public class Editions implements ISearchableProperty {
 				arr[abbrs.length] = abbr;
 				abbrs = arr;
 			}
-		}
-
-		public boolean isLegal(String format) {
-			if (format == null)
-				return false;
-			return format.contains(format);
 		}
 
 		private boolean isAbbreviationFake() {
@@ -517,7 +511,7 @@ public class Editions implements ISearchableProperty {
 				Edition ed = getEditionByName(name);
 				String rel = "";
 				if (ed.getReleaseDate() != null)
-					rel = Edition.formatter.format(ed.getReleaseDate());
+					rel = ed.formatter.format(ed.getReleaseDate());
 				String type = "";
 				if (ed.getType() != null) {
 					type = ed.getType();

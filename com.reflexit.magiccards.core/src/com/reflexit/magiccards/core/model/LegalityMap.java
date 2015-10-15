@@ -368,7 +368,7 @@ public class LegalityMap {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof LegalityMap))
 			return false;
 		LegalityMap other = (LegalityMap) obj;
 		String x = toExternal();

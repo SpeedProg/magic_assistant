@@ -69,7 +69,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 		}
 	}
 
-	public static IDbPriceStore getInstance() {
+	public synchronized static IDbPriceStore getInstance() {
 		if (instance == null) {
 			instance = new DbPricesMultiFileStore();
 		}
@@ -155,7 +155,7 @@ public class DbPricesMultiFileStore implements IDbPriceStore {
 	}
 
 	@Override
-	public float getDbPrice(IMagicCard card) {
+	public synchronized float getDbPrice(IMagicCard card) {
 		return current.getDbPrice(card, CurrencyConvertor.getCurrency());
 	}
 

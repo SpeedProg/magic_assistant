@@ -43,7 +43,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 public final class CardStoreUtils {
 	private static final String OTHERS = "Others";
 
-	public static CardStoreUtils getInstance() {
+	public synchronized static CardStoreUtils getInstance() {
 		if (instance == null)
 			instance = new CardStoreUtils();
 		return instance;
@@ -91,19 +91,19 @@ public final class CardStoreUtils {
 		if (store == null)
 			return res;
 		HashSet<String> colors = new HashSet<String>();
-		Colors instance = Colors.getInstance();
+		Colors cinstance = Colors.getInstance();
 		for (Object element : store) {
 			IMagicCard elem = (IMagicCard) element;
 			String cost = elem.getCost();
 			if (cost == null || cost.isEmpty())
 				continue;
-			Collection<String> colorIdentify = instance.getColorPresense(cost);
+			Collection<String> colorIdentify = cinstance.getColorPresense(cost);
 			if (colorIdentify.isEmpty())
 				colors.add(Colors.ManaColor.COLORLESS.tag());
 			else
 				colors.addAll(colorIdentify);
 		}
-		for (String tag : instance.sortTags(colors)) {
+		for (String tag : cinstance.sortTags(colors)) {
 			res += "{" + tag + "}";
 		}
 		return res;

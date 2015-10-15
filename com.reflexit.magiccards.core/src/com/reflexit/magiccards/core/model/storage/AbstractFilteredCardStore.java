@@ -158,9 +158,9 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 			return;
 		String key = "udpate " + getClass().getSimpleName();
 		boolean filterChanged = !filter.equals(lastUsedfilter);
-		MagicLogger.trace("storeupdate storeChanged=" + storeChanged +
-				" filterChanged=" + filterChanged + " loc=" + getLocation());
-		//new Exception().printStackTrace();
+		MagicLogger.trace("storeupdate storeChanged=" + storeChanged + " filterChanged=" + filterChanged + " loc="
+				+ getLocation());
+		// new Exception().printStackTrace();
 		boolean nonEmpty = rootGroup.size() > 0;
 		if (storeChanged == false && filterChanged == false && nonEmpty) {
 			MagicLogger.trace("skipped " + storeChanged + " " + filterChanged);
@@ -192,7 +192,7 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	}
 
 	protected void groupCards(MagicCardFilter filter, Iterable<?> filteredList) {
-		synchronized (rootGroup) {
+		synchronized (filteredList) {
 			rootGroup.clear();
 			if (filter.getGroupField() != null) {
 				if (filter.getGroupField() == MagicCardField.TYPE) {
@@ -283,8 +283,7 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 			BinaryExpr bin = ((BinaryExpr) root);
 			if (bin.getLeft() instanceof Node
 					&& ((Node) bin.getLeft()).toString().equals(MagicCardField.LOCATION.name())) {
-				return Location
-						.createLocation(bin.getRight().toString());
+				return Location.createLocation(bin.getRight().toString());
 			}
 			Location loc = findLocationFilter(bin.getLeft());
 			if (loc != null)

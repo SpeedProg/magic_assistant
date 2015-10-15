@@ -160,7 +160,7 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	@Override
-	public void reindex() {
+	public synchronized void reindex() {
 		this.hashpart = new HashCollectionPart();
 		// load in hash
 		for (Object element : this) {
@@ -170,12 +170,12 @@ public class CollectionCardStore extends AbstractCardStoreWithStorage<IMagicCard
 	}
 
 	@Override
-	public IMagicCard getCard(int id) {
+	public synchronized IMagicCard getCard(int id) {
 		return this.hashpart.getCard(id);
 	}
 
 	@Override
-	public Collection getCards(int id) {
+	public synchronized Collection getCards(int id) {
 		return this.hashpart.getCards(id);
 	}
 

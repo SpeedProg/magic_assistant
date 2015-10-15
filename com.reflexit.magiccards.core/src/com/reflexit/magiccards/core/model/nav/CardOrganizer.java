@@ -60,7 +60,7 @@ public class CardOrganizer extends CardElement {
 	public void create() throws IOException {
 		File dir = getFile();
 		if (!dir.exists()) {
-			if (!dir.mkdir()) {
+			if (!dir.mkdirs()) {
 				throw new IOException("Cannot create " + dir);
 			}
 		}

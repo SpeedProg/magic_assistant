@@ -37,13 +37,13 @@ public class CardCollection extends CardElement {
 	}
 
 	private void createFile() {
+		File file = getFile();
 		try {
-			File file = getFile();
 			if (!file.exists()) {
 				file.createNewFile();
 			}
 		} catch (Exception e) {
-			throw new MagicException(e);
+			throw new MagicException("Cannot create: " + file, e);
 		}
 	}
 
