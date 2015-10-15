@@ -1,4 +1,4 @@
-== changes in 1.4.3.0 ==
+== changes in 1.5.0.0 ==
 * Not a user feature but building now with Tycho/Maven
 * Bug: Fixed tree paining issue on linux gtk 3.10
 * Feature: added life counter for draw/play page

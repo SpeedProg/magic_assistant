@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="rcp_mars" sequenceNumber="67">
+<?pde version="3.8"?><target name="rcp_mars" sequenceNumber="68">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
@@ -42,7 +42,7 @@
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201508281602"/>
+<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201509301423"/>
 <repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
 </location>
 </locations>

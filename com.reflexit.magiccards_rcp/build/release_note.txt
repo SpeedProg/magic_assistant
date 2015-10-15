@@ -1,4 +1,4 @@
-This is alpha release of Magic Assistant 1.4.3,
+This is alpha release of Magic Assistant 1.5.0,
 I switched platform to eclipse 4.5 (Mars) and I switched to a new build system
 so resulting artifacts may contain lots of bugs. Appreciate any help testing especially
 on mac os. Please backup you cards or use a different workspace to test it.
