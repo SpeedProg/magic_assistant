@@ -408,6 +408,7 @@ public class Editions implements ISearchableProperty {
 		} else {
 			InputStream st = new FileInputStream(file);
 			loadEditions(st);
+			st.close();
 		}
 	}
 
@@ -430,7 +431,9 @@ public class Editions implements ISearchableProperty {
 			InputStream ist = FileUtils.loadDbResource(EDITIONS_FILE);
 			if (ist != null) {
 				loadEditions(ist);
+				ist.close();
 			}
+
 		}
 	}
 

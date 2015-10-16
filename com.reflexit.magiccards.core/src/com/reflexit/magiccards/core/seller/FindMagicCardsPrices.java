@@ -104,8 +104,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 		return iterable;
 	}
 
-	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor)
-			throws IOException {
+	public void updateStore(IFilteredCardStore<IMagicCard> fstore, ICoreProgressMonitor monitor) throws IOException {
 		updatePrices(fstore, monitor);
 	}
 
@@ -131,13 +130,18 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 		try {
 			URL url = new URL(baseURL.toString().replace("${SetAbbr}", abbr));
 			InputStream openStream = WebUtils.openUrl(url);
-			BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
-			st.readLine();
-			st.readLine();
-			String title = st.readLine();
-			if (title.contains("404"))
-				return false;
-			openStream.close();
+			try {
+				BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
+				if (st.readLine() == null)
+					throw new IOException();
+				if (st.readLine() == null)
+					throw new IOException();
+				String title = st.readLine();
+				if (title.contains("404"))
+					return false;
+			} finally {
+				openStream.close();
+			}
 			return true;
 		} catch (MalformedURLException e) {
 			return false;
@@ -173,7 +177,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 			"<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
 					+ ".*" //
 					+ "<TD>([0-9.]+).nbsp;</TD>$" // price
-			);
+	);
 
 	/*-
 	 * no NL
@@ -212,8 +216,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	/*-
 	 * <TD align=right>Price :</TD><TD>$ 1.23&nbsp;&nbsp;</TD>
 	 */
-	private static final Pattern cardPattern = Pattern
-			.compile("<TD align=right>Price :</TD><TD>\\$ ([0-9.]+)");
+	private static final Pattern cardPattern = Pattern.compile("<TD align=right>Price :</TD><TD>\\$ ([0-9.]+)");
 
 	private float processCard(BufferedReader st) throws IOException {
 		String line = "";
@@ -236,7 +239,7 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	private static final Pattern set2Pattern = Pattern.compile( //
 			"<TD>([A-Z]+).nbsp;</TD>" + // abbr
 					"<TD><a href='[^']*'>(.*)</a>.nbsp;</TD>" // name
-			);
+	);
 
 	/*- no NL
 	 * <TR class=defRowEven>

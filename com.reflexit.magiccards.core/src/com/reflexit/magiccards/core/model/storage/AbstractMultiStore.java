@@ -212,7 +212,7 @@ public abstract class AbstractMultiStore<T extends ICard> extends AbstractCardSt
 				return card;
 			}
 		}
-		return (T) null;
+		return null;
 	}
 
 	@Override

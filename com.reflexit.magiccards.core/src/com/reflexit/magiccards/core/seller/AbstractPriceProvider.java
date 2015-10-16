@@ -138,7 +138,7 @@ public class AbstractPriceProvider implements IPriceProvider {
 	}
 
 	@Override
-	public float getDbPrice(IMagicCard card, Currency cur) {
+	public synchronized float getDbPrice(IMagicCard card, Currency cur) {
 		int id = card.getCardId();
 		if (priceMap.containsKey(id)) {
 			float price = priceMap.get(id);

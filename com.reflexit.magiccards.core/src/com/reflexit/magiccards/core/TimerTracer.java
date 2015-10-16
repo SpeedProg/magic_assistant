@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class TimerTracer {
-	private static SimpleDateFormat timestampFormat = new SimpleDateFormat("<kk:mm:ss.SSS>");
+	private SimpleDateFormat timestampFormat = new SimpleDateFormat("<kk:mm:ss.SSS>");
 	private static boolean tracing = false;
 	private HashMap<String, Timer> timers = new HashMap<String, Timer>();
 
@@ -125,7 +125,7 @@ public class TimerTracer {
 		return timerStats;
 	}
 
-	public void setTracing(boolean tr) {
+	public static void setTracing(boolean tr) {
 		tracing = tr;
 	}
 }

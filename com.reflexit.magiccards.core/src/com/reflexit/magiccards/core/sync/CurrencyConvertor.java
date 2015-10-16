@@ -35,7 +35,7 @@ public class CurrencyConvertor {
 		return loadRate(from + to);
 	}
 
-	public static double loadRate(String cu) {
+	public static synchronized double loadRate(String cu) {
 		try {
 			URL url = getURL(cu);
 			CsvImporter importer = new CsvImporter(WebUtils.openUrl(url), ',');
@@ -129,7 +129,7 @@ public class CurrencyConvertor {
 		}
 	}
 
-	private static void initialize() throws IOException, FileNotFoundException {
+	private static synchronized void initialize() throws IOException, FileNotFoundException {
 		Date date;
 		try {
 			date = DATE_PARSER.parse("5/6/2014 8:42pm");

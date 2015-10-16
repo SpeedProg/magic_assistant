@@ -88,7 +88,7 @@ public class PricesXmlStreamReader {
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			try {
-				String ttStr = text != null ? text.toString().trim() : null;
+				String ttStr = text.toString().trim();
 				switch (state) {
 					case mc:
 						store.map.put(id, price);

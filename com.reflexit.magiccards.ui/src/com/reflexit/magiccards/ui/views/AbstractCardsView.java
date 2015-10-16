@@ -155,7 +155,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	public IHandlerActivation activateActionHandler(Action action, String actionId) {
 		IHandlerActivation activation = activations.get(actionId);
 		if (activation != null) {
-			deactivateActionHandler(activation);
+			deactivateActionHandler(actionId, activation);
 		}
 		action.setActionDefinitionId(actionId);
 		ActionHandler handler = new ActionHandler(action);
@@ -166,11 +166,11 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		return activation;
 	}
 
-	public void deactivateActionHandler(IHandlerActivation activation) {
+	public void deactivateActionHandler(String actionId, IHandlerActivation activation) {
 		// stem.err.println("deactivating " + activation.getCommandId());
 		IHandlerService service = (getSite()).getService(IHandlerService.class);
 		service.deactivateHandler(activation);
-		activations.remove(activation);
+		activations.remove(actionId);
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {

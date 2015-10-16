@@ -180,15 +180,14 @@ public class MagicCard extends AbstractMagicCard {
 			String part2 = ma.getPart();
 			if (part != null)
 				return part.equals(part2);
-			return part == part2;
+			return part2 == null;
 		} else {
 			if (this.name != null)
 				if (!this.name.equals(ma.name))
 					return false;
 			if (this.edition != null)
 				return this.edition.equals(ma.edition);
-			else
-				return this.edition == ma.edition;
+			return ma.edition == null;
 		}
 	}
 
@@ -630,8 +629,7 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	/**
-	 * @return normalized id of the card, i.e. english card id of the same card
-	 *         in set
+	 * @return normalized id of the card, i.e. english card id of the same card in set
 	 */
 	public int getNormId() {
 		int x = getEnglishCardId();

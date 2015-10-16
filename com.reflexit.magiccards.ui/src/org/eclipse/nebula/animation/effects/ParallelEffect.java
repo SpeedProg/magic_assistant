@@ -72,8 +72,8 @@ public class ParallelEffect implements IEffect {
 	 * @param onStop
 	 * @param onCancel
 	 */
-	public ParallelEffect(List effects, Runnable onStop, Runnable onCancel) {
-		this((IEffect[]) effects.toArray(), onStop, onCancel);
+	public ParallelEffect(List<IEffect> effects, Runnable onStop, Runnable onCancel) {
+		this(effects.toArray(new IEffect[0]), onStop, onCancel);
 	}
 
 	/*

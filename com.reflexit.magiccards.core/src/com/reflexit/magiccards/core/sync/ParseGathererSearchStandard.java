@@ -205,7 +205,8 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		if (set != null && set.startsWith("http")) {
 			url = set;
 		} else {
-			options.put("set", set);
+			if (set != null)
+				options.put("set", set);
 			boolean special = false;
 			if (options.get(UpdateCardsFromWeb.UPDATE_SPECIAL) != null)
 				special = Boolean.valueOf((String) options.get(UpdateCardsFromWeb.UPDATE_SPECIAL));

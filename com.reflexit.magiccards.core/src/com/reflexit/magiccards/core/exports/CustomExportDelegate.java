@@ -77,7 +77,7 @@ public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCa
 		String ftype = rtype.getProperty(ROW_FORMAT_TYPE_NUM);
 		itype = 1;
 		if (ftype != null) {
-			itype = Integer.valueOf(ftype);
+			itype = Integer.parseInt(ftype);
 		}
 		if (format == null) {
 			if (isFieldSeparated())

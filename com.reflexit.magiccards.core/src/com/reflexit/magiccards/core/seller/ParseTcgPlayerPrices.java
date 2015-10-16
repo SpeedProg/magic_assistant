@@ -67,7 +67,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	private static HashMap<String, String> setMap;
 
-	static void initSetMap() {
+	static synchronized void initSetMap() {
 		if (setMap == null) {
 			setMap = new HashMap<String, String>();
 			Editions ed = Editions.getInstance();

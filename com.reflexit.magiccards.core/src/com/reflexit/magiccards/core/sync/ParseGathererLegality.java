@@ -83,7 +83,7 @@ public class ParseGathererLegality extends AbstractParseGathererPage {
 		this.cardId = cardId;
 	}
 
-	protected int getCardId() {
+	protected synchronized int getCardId() {
 		return cardId;
 	}
 
