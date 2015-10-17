@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 
 public class MagicColumnCollection extends ColumnCollection {
 	private String id;
@@ -18,9 +17,6 @@ public class MagicColumnCollection extends ColumnCollection {
 	@Override
 	protected void createColumns(List<AbstractColumn> columns) {
 		boolean myCards = true;
-		if (id != null && id.equals(MagicDbViewPreferencePage.class.getName())) {
-			myCards = false;
-		}
 		groupColumn = createGroupColumn();
 		columns.add(groupColumn);
 		columns.add(new IdColumn());
@@ -82,6 +78,7 @@ public class MagicColumnCollection extends ColumnCollection {
 		return setColumn;
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}

@@ -11,7 +11,6 @@
 package com.reflexit.magiccards.ui.views.editions;
 
 import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -170,8 +169,6 @@ public class EditionsComposite extends Composite {
 		ColumnViewerToolTipSupport.enableFor(treeViewer, ToolTip.NO_RECREATE);
 		treeViewer.getTree().setHeaderVisible(true);
 	}
-
-	static SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
 
 	private void createColumnLabelProviders() {
 		columns = new ArrayList<AbstractEditionColumn>();

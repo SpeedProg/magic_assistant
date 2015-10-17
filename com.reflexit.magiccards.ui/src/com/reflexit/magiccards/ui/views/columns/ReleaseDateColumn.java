@@ -7,7 +7,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 
 public class ReleaseDateColumn extends GenColumn {
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
+	private final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
 
 	public ReleaseDateColumn() {
 		super(MagicCardField.SET_RELEASE, "Release Date");

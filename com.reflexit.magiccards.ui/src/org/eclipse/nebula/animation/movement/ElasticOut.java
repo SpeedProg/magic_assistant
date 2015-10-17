@@ -79,7 +79,7 @@ public class ElasticOut extends AbstractMovement {
 			return min;
 		}
 		step = step / duration;
-		if ((step) == 1d)
+		if (((int) step) == 1)
 			return min + c;
 		if (p == null)
 			p = new Double(duration * .3);

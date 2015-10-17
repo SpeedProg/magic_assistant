@@ -68,7 +68,7 @@ public class CompositeViewerManager extends ViewerManager {
 		if (i >= 0)
 			return i;
 		i = managers.length;
-		Arrays.copyOf(managers, i + 1);
+		managers = Arrays.copyOf(managers, i + 1);
 		managers[i] = man;
 		if (stackLayout != null) {
 			man.createContents(comp);

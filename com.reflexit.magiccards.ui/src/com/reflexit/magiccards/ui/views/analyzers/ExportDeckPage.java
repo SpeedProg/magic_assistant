@@ -383,8 +383,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			fstore = new MemoryFilteredCardStore<IMagicCard>();
 			filter = this.fstore.getFilter();
 		}
-		if (parentfstore != null)
-			filter.getSortOrder().setFrom(parentfstore.getFilter().getSortOrder());
+		filter.getSortOrder().setFrom(parentfstore.getFilter().getSortOrder());
 	}
 
 	public void setFStore() {

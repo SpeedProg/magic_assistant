@@ -19,6 +19,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ShowInContext;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -163,10 +164,7 @@ public class MagicDbView extends AbstractCardsView {
 		ICardStore<IMagicCard> store = getFilteredStore().getCardStore();
 		String curset = null;
 		File dir = new File("/tmp/madatabase");
-		dir.mkdirs();
-		for (File file : dir.listFiles()) {
-			file.delete();
-		}
+		FileUtils.deleteTree(dir);
 		Editions editions = Editions.getInstance();
 		PrintStream ps = null;
 		for (IMagicCard magicCard : store) {

@@ -129,18 +129,15 @@ public class FindMagicCardsPrices extends AbstractPriceProvider {
 	private boolean testSetUrl(String abbr) {
 		try {
 			URL url = new URL(baseURL.toString().replace("${SetAbbr}", abbr));
-			InputStream openStream = WebUtils.openUrl(url);
-			try {
-				BufferedReader st = new BufferedReader(new InputStreamReader(openStream));
+			try (InputStream openStream = WebUtils.openUrl(url);
+					BufferedReader st = new BufferedReader(new InputStreamReader(openStream))) {
 				if (st.readLine() == null)
-					throw new IOException();
-				if (st.readLine() == null)
-					throw new IOException();
-				String title = st.readLine();
-				if (title.contains("404"))
 					return false;
-			} finally {
-				openStream.close();
+				if (st.readLine() == null)
+					return false;
+				String title = st.readLine();
+				if (title == null || title.contains("404"))
+					return false;
 			}
 			return true;
 		} catch (MalformedURLException e) {

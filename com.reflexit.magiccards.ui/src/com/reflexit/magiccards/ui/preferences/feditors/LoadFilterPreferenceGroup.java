@@ -74,9 +74,11 @@ public class LoadFilterPreferenceGroup extends MFieldEditorPreferencePage {
 				IPath filters = getFilterPath();
 				File[] listFiles = filters.toFile().listFiles();
 				ArrayList<String> names = new ArrayList<String>();
-				for (File file : listFiles) {
-					String name = file.getName().replaceAll("\\.ini$", "");
-					names.add(name);
+				if (listFiles != null) {
+					for (File file : listFiles) {
+						String name = file.getName().replaceAll("\\.ini$", "");
+						names.add(name);
+					}
 				}
 				return names.toArray(new String[names.size()]);
 			}

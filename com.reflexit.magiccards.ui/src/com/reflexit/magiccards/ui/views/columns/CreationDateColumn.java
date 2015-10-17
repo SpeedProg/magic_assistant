@@ -13,7 +13,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 
 public class CreationDateColumn extends GenColumn {
-	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd MMM yyyy");
+	public final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd MMM yyyy");
 
 	public CreationDateColumn() {
 		super(MagicCardField.DATE, "Date");
