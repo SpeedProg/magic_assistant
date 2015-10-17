@@ -311,7 +311,7 @@ public class RoundScheduleSection extends TSectionPart {
 		Composite buttons = toolkit.createComposite(parent);
 		buttons.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).create());
 		buttons.setLayout(new GridLayout());
-		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(70, -1);
+		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(80, -1);
 		Button printButton = toolkit.createButton(buttons, "Print...", SWT.PUSH);
 		printButton.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -64,6 +64,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 		plComp = new PlayersListComposite(sectionClient, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER, true);
 		plComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 		plComp.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateButtonsEnablement();
 			}
@@ -76,7 +77,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 		Composite buttons = new Composite(sectionClient, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
 		buttons.setLayout(layout);
-		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(70, -1);
+		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(80, -1);
 		add = toolkit.createButton(buttons, "Add...", SWT.PUSH);
 		add.setLayoutData(buttonLD.create());
 		add.addSelectionListener(new SelectionAdapter() {
@@ -93,7 +94,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 				}
 			}
 		});
-		gen = toolkit.createButton(buttons, "Generate...", SWT.PUSH);
+		gen = toolkit.createButton(buttons, "Generate", SWT.PUSH);
 		gen.setLayoutData(buttonLD.create());
 		gen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -101,6 +102,7 @@ public class RegisteredPlayersSection extends TSectionPart {
 				InputDialog inputDialog = new InputDialog(plComp.getViewer().getControl().getShell(),
 						"Enter Players",
 						"Enter number of players to generate", "4", new IInputValidator() {
+							@Override
 							public String isValid(String newText) {
 								try {
 									int x = Integer.parseInt(newText);

@@ -171,7 +171,7 @@ public class PlayerTourInfo {
 				w += oppInfo.getWin();
 				m += oppInfo.getRoundsPlayed();
 				gw += oppInfo.getGamesWon();
-				gm += oppInfo.getGamesWon() + oppInfo.getGamesLost() + oppInfo.getGamesDrawn();
+				gm += oppInfo.getGamesPlayed();
 			}
 		}
 		if (m == 0)
@@ -184,7 +184,7 @@ public class PlayerTourInfo {
 			ogw = 100 * gw / gm;
 		PlayerTourInfo playerInfo = this;
 		gw = playerInfo.getGamesWon();
-		gm = playerInfo.getGamesWon() + playerInfo.getGamesLost() + playerInfo.getGamesDrawn();
+		gm = playerInfo.getGamesPlayed();
 		if (gm == 0)
 			pgw = 0;
 		else
@@ -273,6 +273,10 @@ public class PlayerTourInfo {
 				opponents.add(ri.getPlayer());
 			}
 		}
+	}
+
+	public int getGamesPlayed() {
+		return gamesWon + gamesLost + gamesDrawn;
 	}
 
 	public int getGamesWon() {

@@ -1012,7 +1012,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	protected void updateSortColumn(final int index) {
 		if (index >= 0) {
 			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
-			ICardField sortField = man.getSortField();
+			ICardField sortField = man != null ? man.getSortField() : null;
 			if (sortField == null && man instanceof GroupColumn)
 				sortField = getFilter().getGroupField();
 			if (sortField == null)

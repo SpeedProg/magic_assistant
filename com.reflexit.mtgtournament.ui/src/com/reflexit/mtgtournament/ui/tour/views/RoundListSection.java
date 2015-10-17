@@ -72,12 +72,15 @@ public class RoundListSection extends TSectionPart {
 	}
 
 	class ViewContentProvider implements IStructuredContentProvider {
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
 			if (parent instanceof Tournament) {
 				Tournament t = (Tournament) parent;
@@ -103,10 +106,12 @@ public class RoundListSection extends TSectionPart {
 			systemColorBlue = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof Round) {
 				Round round = (Round) element;
@@ -140,6 +145,7 @@ public class RoundListSection extends TSectionPart {
 			return format.format(d);
 		}
 
+		@Override
 		public Color getBackground(Object element, int columnIndex) {
 			if (element instanceof Round) {
 				Round round = (Round) element;
@@ -154,6 +160,7 @@ public class RoundListSection extends TSectionPart {
 			return null;
 		}
 
+		@Override
 		public Color getForeground(Object element, int columnIndex) {
 			if (element instanceof Round) {
 				Round round = (Round) element;
@@ -214,6 +221,7 @@ public class RoundListSection extends TSectionPart {
 		ViewLabelProvider labelProvider = new ViewLabelProvider();
 		viewer.setLabelProvider(labelProvider);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (!selection.isEmpty()) {
@@ -260,7 +268,7 @@ public class RoundListSection extends TSectionPart {
 		GridLayout layout = new GridLayout(1, true);
 		buttons.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 		buttons.setLayout(layout);
-		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(70, -1);
+		GridDataFactory buttonLD = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).hint(80, -1);
 		//
 		action = toolkit.createButton(buttons, "Action", SWT.PUSH);
 		action.setLayoutData(buttonLD.create());

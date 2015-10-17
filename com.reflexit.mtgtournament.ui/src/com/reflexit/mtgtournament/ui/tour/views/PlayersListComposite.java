@@ -31,6 +31,17 @@ import com.reflexit.mtgtournament.core.model.PlayerTourInfo;
 import com.reflexit.mtgtournament.core.model.Tournament;
 
 public class PlayersListComposite extends Composite {
+	private static final int NAME_COLUMN_INDEX = 0;
+	private static final int ID_COLUMN_INDEX = 1;
+	private static final int PLACE_COLUMN_INDEX = 2;
+	private static final int POINTS_COLUMN_INDEX = 3;
+	private static final int WDL_COLUMN_INDEX = 4;
+	private static final int ROUNDS_PLAYED_COLUMN_INDEX = 5;
+	private static final int GAMES_PLAYED_COLUMN_INDEX = 6;
+	private static final int OMW_COLUMN_INDEX = 7;
+	private static final int PGW_COLUMN_INDEX = 8;
+	private static final int OGW_COLUMN_INDEX = 9;
+
 	private TableViewer viewer;
 	private boolean forTournamentStanding;
 	private int treeStyle;
@@ -78,45 +89,48 @@ public class PlayersListComposite extends Composite {
 			if (element instanceof Player) {
 				Player p = (Player) element;
 				switch (columnIndex) {
-					case 0:
-						return getText(element);
-					case 1:
-						return p.getId();
-					case 2:
-						return "";
-					case 3:
-						return String.valueOf(p.getPoints());
-					case 4:
-						return "";
-					case 5:
-						return String.valueOf(p.getGames());
-					default:
-						break;
+				case NAME_COLUMN_INDEX:
+					return getText(element);
+				case ID_COLUMN_INDEX:
+					return p.getId();
+				case PLACE_COLUMN_INDEX:
+					return "";
+				case POINTS_COLUMN_INDEX:
+					return String.valueOf(p.getPoints());
+				case WDL_COLUMN_INDEX:
+					return "";
+				case ROUNDS_PLAYED_COLUMN_INDEX:
+					return String.valueOf(p.getGames());
+				default:
+					break;
 				}
 			} else if (element instanceof PlayerTourInfo) {
 				PlayerTourInfo pi = (PlayerTourInfo) element;
 				Player p = pi.getPlayer();
 				switch (columnIndex) {
-					case 0:
-						return p.getName();
-					case 1:
-						return p.getId();
-					case 2:
-						return String.valueOf(pi.getPlace());
-					case 3:
-						return String.valueOf(pi.getPoints());
-					case 4:
-						return getStats(pi);
-					case 5:
-						return String.valueOf(pi.getRoundsPlayed());
-					case 6:
-						return String.valueOf(pi.getOMW());
-					case 7:
-						return String.valueOf(pi.getPGW());
-					case 8:
-						return String.valueOf(pi.getOGW());
-					default:
-						break;
+				case NAME_COLUMN_INDEX:
+					return p.getName();
+				case ID_COLUMN_INDEX:
+					return p.getId();
+				case PLACE_COLUMN_INDEX:
+					return String.valueOf(pi.getPlace());
+				case POINTS_COLUMN_INDEX:
+					return String.valueOf(pi.getPoints());
+				case WDL_COLUMN_INDEX:
+					return getStats(pi);
+				case ROUNDS_PLAYED_COLUMN_INDEX:
+					return String.valueOf(pi.getRoundsPlayed());
+				case GAMES_PLAYED_COLUMN_INDEX:
+					int pg = pi.getGamesPlayed();
+					return String.valueOf(pg);
+				case OMW_COLUMN_INDEX:
+					return String.valueOf(pi.getOMW());
+				case PGW_COLUMN_INDEX:
+					return String.valueOf(pi.getPGW());
+				case OGW_COLUMN_INDEX:
+					return String.valueOf(pi.getOGW());
+				default:
+					break;
 				}
 			}
 			return null;
@@ -145,16 +159,17 @@ public class PlayersListComposite extends Composite {
 		this.viewer.setContentProvider(new ViewContentProvider());
 		this.viewer.setLabelProvider(new ViewLabelProvider());
 		this.viewer.getTable().setHeaderVisible(true);
-		createColumn(0, "Name", 140);
-		createColumn(1, "PIN", 120);
+		createColumn(NAME_COLUMN_INDEX, "Name", 140);
+		createColumn(ID_COLUMN_INDEX, "PIN", 120);
 		if (forTournamentStanding) {
-			createColumn(2, "Place", 60);
-			createColumn(3, "Points", 60);
-			createColumn(4, "W-D-L", 60);
-			createColumn(5, "Matches", 60);
-			createColumn(6, "OMW%", 60);
-			createColumn(7, "PGW%", 60);
-			createColumn(8, "OGW%", 60);
+			createColumn(PLACE_COLUMN_INDEX, "Place", 70);
+			createColumn(POINTS_COLUMN_INDEX, "Points", 70);
+			createColumn(WDL_COLUMN_INDEX, "W-D-L", "Wins-Draws-Looses in Matches", 70);
+			createColumn(ROUNDS_PLAYED_COLUMN_INDEX, "Matches", "Complete Matches (Rounds)", 70);
+			createColumn(GAMES_PLAYED_COLUMN_INDEX, "Games", "Complete Games (Usually 3 games per match)", 70);
+			createColumn(OMW_COLUMN_INDEX, "OMW%", "Opponents Matches Won/Opponents Matches Played", 70);
+			createColumn(PGW_COLUMN_INDEX, "PGW%", "Player Games Won/Player Games Played", 70);
+			createColumn(OGW_COLUMN_INDEX, "OGW%", "Opponents Games Won/Opponents Games Played", 70);
 		}
 		// Set the sorter for the table
 		tableSorter = new TableSorter();
@@ -165,6 +180,7 @@ public class PlayersListComposite extends Composite {
 		private int propertyIndex;
 		// private static final int ASCENDING = 0;
 		private static final int DESCENDING = 1;
+
 		private int direction = DESCENDING;
 
 		public TableSorter() {
@@ -190,54 +206,58 @@ public class PlayersListComposite extends Composite {
 				Player p1 = (Player) e1;
 				Player p2 = (Player) e2;
 				switch (propertyIndex) {
-					case 0:
-						rc = p1.getName().compareTo(p2.getName());
-						break;
-					case 1:
-						rc = p1.getId().compareTo(p2.getId());
-						break;
-					case 3:
-						rc = p1.getPoints() - p2.getPoints();
-						break;
-					case 5:
-						rc = p1.getGames() - p2.getGames();
-						break;
-					default:
-						rc = 0;
+				case NAME_COLUMN_INDEX:
+					rc = p1.getName().compareTo(p2.getName());
+					break;
+				case ID_COLUMN_INDEX:
+					rc = p1.getId().compareTo(p2.getId());
+					break;
+				case POINTS_COLUMN_INDEX:
+					rc = p1.getPoints() - p2.getPoints();
+					break;
+				case ROUNDS_PLAYED_COLUMN_INDEX:
+					rc = p1.getGames() - p2.getGames();
+					break;
+
+				default:
+					rc = 0;
 				}
 			} else if (e1 instanceof PlayerTourInfo && e2 instanceof PlayerTourInfo) {
 				PlayerTourInfo p1 = (PlayerTourInfo) e1;
 				PlayerTourInfo p2 = (PlayerTourInfo) e2;
 				switch (propertyIndex) {
-					case 0:
-						rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
-						break;
-					case 1:
-						rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
-						break;
-					case 2://Place
-						rc = p1.getPlace() - p2.getPlace();
-						break;
-					case 3://Points
-						rc = p1.getPlace() - p2.getPlace();
-						break;
-					case 4://W-D-L
-						rc = p1.getPlace() - p2.getPlace();
-						break;
-					case 5:
-						rc = p1.getRoundsPlayed() - p2.getRoundsPlayed();
-						break;
-					case 6: // OMW
-						rc = (int) Math.signum(p1.getOMW() - p2.getOMW());
-						break;
-					case 7: // PGW
-						rc = (int) Math.signum(p1.getPGW() - p2.getPGW());
-						break;
-					case 8: // OGW
-						rc = (int) Math.signum(p1.getOGW() - p2.getOGW());
-						break;
-					default:
-						rc = 0;
+				case NAME_COLUMN_INDEX:
+					rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
+					break;
+				case ID_COLUMN_INDEX:
+					rc = compare(viewer, p1.getPlayer(), p2.getPlayer());
+					break;
+				case PLACE_COLUMN_INDEX:// Place
+					rc = p1.getPlace() - p2.getPlace();
+					break;
+				case POINTS_COLUMN_INDEX:// Points
+					rc = p1.getPlace() - p2.getPlace();
+					break;
+				case WDL_COLUMN_INDEX:// W-D-L
+					rc = p1.getPlace() - p2.getPlace();
+					break;
+				case ROUNDS_PLAYED_COLUMN_INDEX:
+					rc = p1.getRoundsPlayed() - p2.getRoundsPlayed();
+					break;
+				case GAMES_PLAYED_COLUMN_INDEX:
+					rc = p1.getGamesPlayed() - p2.getGamesPlayed();
+					break;
+				case OMW_COLUMN_INDEX: // OMW
+					rc = (int) Math.signum(p1.getOMW() - p2.getOMW());
+					break;
+				case PGW_COLUMN_INDEX: // PGW
+					rc = (int) Math.signum(p1.getPGW() - p2.getPGW());
+					break;
+				case OGW_COLUMN_INDEX: // OGW
+					rc = (int) Math.signum(p1.getOGW() - p2.getOGW());
+					break;
+				default:
+					rc = 0;
 				}
 				if (rc == 0)
 					rc = p1.getPlace() - p2.getPlace();
@@ -250,10 +270,16 @@ public class PlayersListComposite extends Composite {
 		}
 	}
 
-	private void createColumn(final int index, String name, int width) {
+	private TableColumn createColumn(final int index, String name, String tooltip, int width) {
+		TableColumn column = createColumn(index, name, width);
+		column.setToolTipText(tooltip);
+		return column;
+	}
+	private TableColumn createColumn(final int index, String name, int width) {
 		final TableColumn column = new TableColumn(viewer.getTable(), SWT.NONE, index);
 		column.setText(name);
 		column.setWidth(width);
+
 		// Setting the right sorter
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -270,6 +296,7 @@ public class PlayersListComposite extends Composite {
 				viewer.refresh();
 			}
 		});
+		return column;
 	}
 
 	public TableViewer getViewer() {
