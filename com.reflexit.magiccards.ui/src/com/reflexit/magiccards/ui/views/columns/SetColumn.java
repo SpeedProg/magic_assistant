@@ -75,7 +75,7 @@ public class SetColumn extends AbstractImageColumn implements Listener {
 
 	@Override
 	public Image getImage(Object element) {
-		if (imageNative) {
+		if (cannotPaintImage) {
 			return getClippedImage(element);
 		}
 		return null;

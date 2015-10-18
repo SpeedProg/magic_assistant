@@ -97,6 +97,9 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 
 	protected void doInitialize() throws MagicException {
 		storeChanged = true; // force update
+		if (getCardStore() == null) {
+			MagicLogger.log("Cannot initialize " + this + ". Store is null");
+		} else
 		getCardStore().initialize();
 	}
 

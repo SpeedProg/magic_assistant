@@ -14,10 +14,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -74,7 +77,6 @@ public class TableViewerManager extends ViewerManager {
 
 	protected void createDefaultColumns() {
 		// define the menu and assign to the table
-		Table table = viewer.getTable();
 		int num = getColumnsNumber();
 		for (int i = 0; i < num; i++) {
 			AbstractColumn man = getColumn(i);
@@ -102,11 +104,34 @@ public class TableViewerManager extends ViewerManager {
 		createFillerColumn();
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
 		getTControl().setHeaderVisible(true);
-		hookMenuDetect(table);
+		hookMenuDetect(getTControl());
 	}
 
 	private Table getTControl() {
 		return this.viewer.getTable();
+	}
+
+	protected void hookMenuDetect(Table tcontrol) {
+		tcontrol.addListener(SWT.MenuDetect, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				Point ptm = new Point(event.x, event.y);
+				Point pt = tcontrol.getDisplay().map(null, tcontrol, ptm);
+				Rectangle clientArea = tcontrol.getClientArea();
+				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + tcontrol.getHeaderHeight());
+				Menu oldMenu = tcontrol.getMenu();
+				if (oldMenu != null && !oldMenu.isDisposed()) {
+					oldMenu.dispose();
+				}
+				if (header) {
+					int columnIndex = getColumnIndex(pt);
+					tcontrol.setMenu(createColumnHeaderContextMenu(columnIndex));
+				} else {
+					Menu menu = getMenuManager().createContextMenu(tcontrol);
+					tcontrol.setMenu(menu);
+				}
+			}
+		});
 	}
 
 	private void createFillerColumn() {

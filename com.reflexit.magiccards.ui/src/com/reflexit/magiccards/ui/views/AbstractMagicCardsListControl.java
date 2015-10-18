@@ -982,7 +982,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			getSelectionProvider().setSelection(new StructuredSelection());
 			MagicLogger.trace("updateViewer manager update");
 			manager.updateViewer(filteredStore);
-			restoreSelection(selection);
+			if (!selection.isEmpty())
+				restoreSelection(selection);
 			updateStatus();
 		} catch (Exception e) {
 			MagicLogger.log("Exception during update operation");

@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Listener;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.exports.ImportUtils;
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -20,6 +21,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.utils.SymbolConverter;
 
 public class GroupColumn extends AbstractImageColumn implements Listener {
 	public static final String COL_NAME = "Name";
@@ -47,6 +49,15 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 	@Override
 	public Image getActualImage(Object element) {
 		if (showImage) {
+			if (cannotPaintImage == false) {
+				if (element instanceof CardGroup) {
+					CardGroup cardGroup = (CardGroup) element;
+					if (cardGroup.getFieldIndex() == MagicCardField.COST) {
+						String icost = Colors.getInstance().getCostByName(cardGroup.getName());
+						return SymbolConverter.buildCostImage(icost);
+					}
+				}
+			}
 			return setColumn.getActualImage(element);
 		}
 		return null;
@@ -54,7 +65,7 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 
 	@Override
 	public Image getImage(Object element) {
-		if (imageNative) {
+		if (cannotPaintImage) {
 			return setColumn.getClippedImage(element);
 		}
 		return super.getImage(element);
@@ -81,7 +92,7 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 
 	protected int getCount(Object element) {
 		if (element instanceof ICardGroup)
-			return ((ICardGroup) element).size();
+			return ((ICardGroup) element).getInt(MagicCardField.COUNT);
 		return 0;
 	}
 

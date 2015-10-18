@@ -27,14 +27,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof ICardGroup) {
 			ICardGroup group = (ICardGroup) element;
-			ICardGroup parent = group.getParent();
-			if (parent == null)
-				return group.getName();
-			String parentText = getText(parent);
-			if (parentText.isEmpty() || parentText.equals("All") || parent.depth() == 1)
-				return group.getName();
-			else
-				return parentText + "/" + group.getName();
+			return group.getName();
 		} else if (element instanceof IMagicCard) {
 			return ((IMagicCard) element).getName();
 		}

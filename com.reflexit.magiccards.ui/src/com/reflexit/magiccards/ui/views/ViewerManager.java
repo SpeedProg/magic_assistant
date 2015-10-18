@@ -5,6 +5,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -13,12 +14,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -41,7 +39,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
 	private ColumnCollection collumns;
 	private IColumnSortAction sortAction;
-	private MenuManager menuManager;
+	protected MenuManager menuManager;
 
 	protected ViewerManager(String prefPageId) {
 		this.collumns = doGetColumnCollection(prefPageId);
@@ -103,6 +101,10 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		this.menuManager = menuMgr;
+		createContentMenu();
+	}
+
+	protected void createContentMenu() {
 		Menu menu = getMenuManager().createContextMenu(getControl());
 		getControl().setMenu(menu);
 	}
@@ -157,7 +159,10 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 
 	@Override
 	public void hookDragAndDrop() {
-		ColumnViewer viewer = getViewer();
+		hookDragAndDrop(getViewer());
+	}
+
+	public void hookDragAndDrop(StructuredViewer viewer) {
 		viewer.getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDragSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), TextTransfer.getInstance(),
@@ -270,29 +275,6 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return menu;
 	}
 
-	protected void hookMenuDetect(Table table) {
-		table.addListener(SWT.MenuDetect, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				Point ptm = new Point(event.x, event.y);
-				Point pt = table.getDisplay().map(null, table, ptm);
-				Rectangle clientArea = table.getClientArea();
-				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + table.getHeaderHeight());
-				Menu oldMenu = table.getMenu();
-				if (oldMenu != null && !oldMenu.isDisposed()) {
-					oldMenu.dispose();
-				}
-				if (header) {
-					int columnIndex = getColumnIndex(pt);
-					table.setMenu(createColumnHeaderContextMenu(columnIndex));
-				} else {
-					Menu menu = getMenuManager().createContextMenu(table);
-					table.setMenu(menu);
-				}
-			}
-		});
-	}
-
 	protected void setControlSortColumn(int index, int sortDirection) {
 		throw new UnsupportedOperationException();
 	}
@@ -308,5 +290,4 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	public boolean supportsGroupping(boolean groupped) {
 		return true;
 	};
-
 }

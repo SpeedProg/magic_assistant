@@ -3,7 +3,6 @@ package com.reflexit.magiccards.ui.views.columns;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.internal.gtk.OS;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
@@ -13,29 +12,10 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public abstract class AbstractImageColumn extends GenColumn implements Listener {
-	private static boolean linuxHack;
-	protected boolean imageNative = false;
-
-	static {
-		try {
-			if (OS.GTK3 && OS.GTK_VERSION <= OS.VERSION(3, 14, 8)) {
-				linuxHack = true;
-			}
-		} catch (Throwable e) {
-			// ignore
-		}
-	}
+	protected boolean cannotPaintImage = true;
 
 	public AbstractImageColumn(ICardField field, String name) {
 		super(field, name);
-		String sni = System.getProperty("com.reflexit.magicassistant.nativeImages");
-		if (Boolean.valueOf(sni)) {
-			imageNative = true;
-			linuxHack = false;
-		} else if (sni != null && sni.equals("false")) {
-			imageNative = false;
-			linuxHack = false;
-		}
 	}
 
 	@Override
@@ -86,21 +66,13 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 
 	@Override
 	public void handleEvent(Event event) {
-		if (linuxHack) {
-			Item item = (Item) event.item;
-			if (item instanceof TreeItem)
-				imageNative = true;
-			else
-				imageNative = false;
-		}
-		if (imageNative)
-			return;
 		if (event.index == this.columnIndex) {
 			if (event.type == SWT.EraseItem) {
 				handleEraseEvent(event);
 			} else if (event.type == SWT.MeasureItem) {
 				handleMeasureEvent(event);
 			} else if (event.type == SWT.PaintItem) {
+				cannotPaintImage = false;
 				handlePaintEvent(event);
 			}
 		}
@@ -111,13 +83,13 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 	}
 
 	protected void handleEraseEvent(Event event) {
+		if (cannotPaintImage)
+			return;
 		event.detail &= ~SWT.FOREGROUND;
 	}
 
 	public void handlePaintEvent(Event event) {
-		if (event.index == this.columnIndex) { // our column
-			paintCellWithImage(event, -1);
-		}
+		paintCellWithImage(event, -1);
 	}
 
 	protected static Rectangle getBounds(Event event) {
@@ -128,5 +100,12 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 		else if (item instanceof TreeItem)
 			bounds = ((TreeItem) item).getBounds(event.index);
 		return bounds;
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		// if (cannotPaintImage)
+		// return getActualImage(element);
+		return super.getImage(element);
 	}
 }

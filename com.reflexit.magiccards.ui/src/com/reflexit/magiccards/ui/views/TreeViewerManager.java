@@ -6,7 +6,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -15,10 +14,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -28,8 +30,8 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
 public class TreeViewerManager extends ViewerManager {
-
 	protected TreeViewer viewer;
+	private int filler;
 
 	public TreeViewerManager(String id) {
 		super(id);
@@ -52,12 +54,15 @@ public class TreeViewerManager extends ViewerManager {
 
 	@Override
 	public void dispose() {
+		this.viewer.getLabelProvider().dispose();
 		this.viewer.getControl().dispose();
 		this.viewer = null;
 	}
 
 	protected void createDefaultColumns() {
-		for (int i = 0; i < getColumnsNumber(); i++) {
+		// define the menu and assign to the table
+		int num = getColumnsNumber();
+		for (int i = 0; i < num; i++) {
 			AbstractColumn man = getColumn(i);
 			TreeViewerColumn colv = new TreeViewerColumn(this.viewer, i);
 			TreeColumn col = colv.getColumn();
@@ -74,22 +79,47 @@ public class TreeViewerManager extends ViewerManager {
 			col.setMoveable(true);
 			colv.setLabelProvider(man);
 			if (man instanceof Listener) {
-				this.viewer.getTree().addListener(SWT.PaintItem, (Listener) man);
-				this.viewer.getTree().addListener(SWT.EraseItem, (Listener) man);
-				this.viewer.getTree().addListener(SWT.MeasureItem, (Listener) man);
+				getTControl().addListener(SWT.EraseItem, (Listener) man);
+				getTControl().addListener(SWT.PaintItem, (Listener) man);
+				getTControl().addListener(SWT.MeasureItem, (Listener) man);
 			}
 			colv.setEditingSupport(man.getEditingSupport(this.viewer));
 		}
 		createFillerColumn();
 		ColumnViewerToolTipSupport.enableFor(this.viewer, ToolTip.NO_RECREATE);
-		this.viewer.getTree().setHeaderVisible(true);
+		getTControl().setHeaderVisible(true);
+		hookMenuDetect(getTControl());
 	}
 
 	private Tree getTControl() {
 		return this.viewer.getTree();
 	}
 
-	private void createFillerColumn() {
+	protected void hookMenuDetect(Tree tcontrol) {
+		tcontrol.addListener(SWT.MenuDetect, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				Point ptm = new Point(event.x, event.y);
+				Point pt = tcontrol.getDisplay().map(null, tcontrol, ptm);
+				Rectangle clientArea = tcontrol.getClientArea();
+				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + tcontrol.getHeaderHeight());
+				Menu oldMenu = tcontrol.getMenu();
+				if (oldMenu != null && !oldMenu.isDisposed()) {
+					oldMenu.dispose();
+				}
+				if (header) {
+					int columnIndex = getColumnIndex(pt);
+					tcontrol.setMenu(createColumnHeaderContextMenu(columnIndex));
+				} else {
+					Menu menu = getMenuManager().createContextMenu(tcontrol);
+					tcontrol.setMenu(menu);
+				}
+			}
+		});
+	}
+
+	protected void createFillerColumn() {
+		filler = 1;
 		TreeViewerColumn colv = new TreeViewerColumn(this.viewer, SWT.LEFT);
 		TreeColumn col = colv.getColumn();
 		col.setText("");
@@ -122,16 +152,21 @@ public class TreeViewerManager extends ViewerManager {
 
 	@Override
 	public void updateColumns(String value) {
+		getColumnsCollection().updateColumnsFromPropery(value);
+		syncColumns();
+	}
+
+	protected void syncColumns() {
 		ColumnCollection columnsCollection = getColumnsCollection();
-		columnsCollection.updateColumnsFromPropery(value);
 		columnsCollection.moveColumnOnTop(columnsCollection.getColumn(GroupColumn.COL_NAME));
 		int[] columnsOrder = getColumnsCollection().getColumnsOrder();
-		int length = columnsOrder.length;
-		int[] order1 = Arrays.copyOf(columnsOrder, length + 1);
-		order1[length] = length; // last column
-		this.viewer.getTree().setColumnOrder(order1);
+		if (filler == 1) {
+			int length = columnsOrder.length;
+			columnsOrder = Arrays.copyOf(columnsOrder, length + 1);
+			columnsOrder[length] = length; // last column
+		}
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
-		for (int i = 0; i < acolumns.length - 1; i++) {
+		for (int i = 0; i < acolumns.length - filler; i++) {
 			TreeColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
 			boolean visible = mcol.isVisible();
@@ -177,7 +212,6 @@ public class TreeViewerManager extends ViewerManager {
 		this.viewer.getTree().setLinesVisible(grid);
 	}
 
-
 	@Override
 	protected void setControlSortColumn(int index, int sortDirection) {
 		getTControl().setSortColumn((TreeColumn) (index >= 0 ? getTColumn(index) : null));
@@ -187,10 +221,6 @@ public class TreeViewerManager extends ViewerManager {
 	@Override
 	public int getSortDirection() {
 		return this.viewer.getTree().getSortDirection();
-	}
-
-	protected IContentProvider getContentProvider() {
-		return getViewer().getContentProvider();
 	}
 
 	@Override

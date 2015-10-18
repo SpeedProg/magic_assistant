@@ -32,7 +32,7 @@ public class CostColumn extends AbstractImageColumn {
 	public String getText(Object element) {
 		if (element instanceof IMagicCard) { // cost
 			String cmc = String.valueOf(((IMagicCard) element).get(MagicCardField.CMC));
-			if (imageNative) {
+			if (cannotPaintImage) {
 				String cost = ((IMagicCard) element).getCost();
 				if (cost == null)
 					cost = "";

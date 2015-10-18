@@ -16,6 +16,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -85,7 +86,7 @@ public class CompositeViewerManager extends ViewerManager {
 		for (IMagicColumnViewer m : this.managers) {
 			m.createContents(this.comp);
 		}
-		hookDragAndDrop();
+		hookDragAndDrop(getViewer());
 		setActivePage(this.activeIndex);
 		this.comp.layout();
 		return this.comp;
@@ -97,7 +98,7 @@ public class CompositeViewerManager extends ViewerManager {
 	}
 
 	@Override
-	public final void hookDragAndDrop() {
+	public final void hookDragAndDrop(StructuredViewer viewer) {
 		for (IMagicColumnViewer m : this.managers) {
 			hookDragAndDrop(m);
 		}

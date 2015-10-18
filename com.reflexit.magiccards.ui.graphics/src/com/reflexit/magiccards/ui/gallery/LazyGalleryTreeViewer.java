@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 /**
@@ -104,6 +103,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 
 	@Override
 	protected void disassociate(Item item) {
+		if (item.isDisposed())
+			return;
 		Object element = item.getData();
 		Assert.isNotNull(element);
 		// Clear the map before we clear the data
@@ -170,14 +171,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		try {
 			Object[] expanded = getExpandedElements();
 			super.inputChanged(input, oldInput);
-			if (input instanceof IFilteredCardStore) {
-				IFilteredCardStore fsrore = (IFilteredCardStore) input;
-				if (!fsrore.getFilter().isGroupped()) {
-					setExpandedElements(new Object[] { fsrore.getCardGroupRoot() });
-				} else {
-					setExpandedElements(expanded);
-				}
-			}
+			setExpandedElements(expanded);
 			GalleryItem[] selection = gallery.getSelection();
 			if (selection.length > 0) {
 				showItem(selection[selection.length - 1]);
@@ -190,6 +184,10 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 						if (child != null)
 							showItem(child);
 					}
+				} else {
+					Item child = getChild(gallery, 0);
+					if (child != null)
+						setExpanded(child, true);
 				}
 				// can use gallery.translation
 				// gallery.getVerticalBar().setSelection(vpos);
@@ -198,6 +196,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		} finally {
 			gallery.setRedraw(true);
 		}
+		gallery.redraw();
 	}
 
 	@Override
@@ -299,13 +298,14 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		Object[] children = getSortedChildren(element);
 		widget.setData(CHILDREN, children);
 		if (widget == gallery) {
-			if (children.length < getNonLazyCategoryCount()) {
-				for (int i = 0; i < children.length; i++) {
-					Object child = children[i];
-					materializeItem(widget, child, i);
-				}
-			} else
-				gallery.setItemCount(children.length); // lazy
+			int nonlazy = getNonLazyCategoryCount();
+			if (children.length < nonlazy)
+				nonlazy = children.length;
+			for (int i = 0; i < nonlazy; i++) {
+				Object child = children[i];
+				materializeItem(widget, child, i);
+			}
+			gallery.setItemCount(children.length); // lazy
 		} else {
 			// do not actually create items, we are ui lazy, but we create count
 			((GalleryItem) widget).setItemCount(children.length);

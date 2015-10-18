@@ -19,19 +19,13 @@ public class Colors implements ISearchableProperty {
 	private final static Pattern colorpattern = Pattern.compile("\\b([WUBRG])P?\\b");
 
 	public static enum ManaColor {
-		WHITE("W"),
-		BLUE("U"),
-		BLACK("B"),
-		RED("R"),
-		GREEN("G"),
-		COLORLESS("1");
+		WHITE("W"), BLUE("U"), BLACK("B"), RED("R"), GREEN("G"), COLORLESS("1");
 		String tag;
 		String label;
 
 		ManaColor(String tag) {
 			this.tag = tag;
-			this.label = name().substring(0, 1)
-					+ name().substring(1).toLowerCase(Locale.ENGLISH);
+			this.label = name().substring(0, 1) + name().substring(1).toLowerCase(Locale.ENGLISH);
 		}
 
 		public String tag() {
@@ -82,7 +76,8 @@ public class Colors implements ISearchableProperty {
 
 	public static String getColorAsCost(IMagicCard card) {
 		String text = card.getCost();
-		if (text == null || text.isEmpty()) return "";
+		if (text == null || text.isEmpty())
+			return "";
 		return toCost(getColorPresense(text, new LinkedHashSet<String>()));
 	}
 
@@ -185,6 +180,22 @@ public class Colors implements ISearchableProperty {
 				return res;
 			}
 			return this.namemap.get(r).tag();
+		} catch (NullPointerException e) {
+			MagicLogger.log("Unknown color: " + r);
+			return "";
+		}
+	}
+
+	public String getCostByName(String r) {
+		try {
+			if (r == null || r.charAt(0) == '*' | r.equals("No Cost"))
+				return "";
+			String colors[] = r.split("-");
+			String res = "";
+			for (String ecolor : colors) {
+				res += "{" + namemap.get(ecolor).tag() + "}";
+			}
+			return res;
 		} catch (NullPointerException e) {
 			MagicLogger.log("Unknown color: " + r);
 			return "";

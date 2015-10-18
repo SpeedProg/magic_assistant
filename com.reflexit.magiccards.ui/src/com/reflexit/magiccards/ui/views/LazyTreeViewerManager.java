@@ -27,7 +27,6 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 		return this.viewer.getControl();
 	}
 
-	@Override
 	protected LazyTreeViewContentProvider getContentProvider() {
 		return (LazyTreeViewContentProvider) getViewer().getContentProvider();
 	}

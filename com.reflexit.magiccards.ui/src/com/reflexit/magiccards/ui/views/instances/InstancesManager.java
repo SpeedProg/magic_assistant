@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.instances;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -38,12 +39,12 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 	public Control createContents(Composite parent) {
 		super.createContents(parent);
 		this.viewer.setComparator(null);
-		hookDragAndDrop();
+		hookDragAndDrop(getViewer());
 		return this.viewer.getControl();
 	}
 
 	@Override
-	public void hookDragAndDrop() {
+	public void hookDragAndDrop(StructuredViewer viewer) {
 		this.getViewer().getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDragSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), TextTransfer.getInstance(),

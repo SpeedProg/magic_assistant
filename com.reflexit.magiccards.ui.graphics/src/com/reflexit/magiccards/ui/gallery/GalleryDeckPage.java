@@ -156,7 +156,9 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	public void activate() {
 		super.activate();
 		updateStore();
-		getListControl().loadData(null);
+		if (getFilteredStore().getCardStore() != null) {
+			getListControl().loadData(null);
+		}
 	}
 
 	@Override
