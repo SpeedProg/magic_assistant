@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -14,7 +15,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -380,13 +381,13 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	/**
 	 * @return
 	 */
-	public IPreferenceStore getLocalPreferenceStore() {
+	public IPersistentPreferenceStore getLocalPreferenceStore() {
 		if (control instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) control).getLocalPreferenceStore();
 		return null;
 	}
 
-	public IPreferenceStore getFilterPreferenceStore() {
+	public IPersistentPreferenceStore getFilterPreferenceStore() {
 		if (control instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) control).getFilterPreferenceStore();
 		return getLocalPreferenceStore();
@@ -454,6 +455,11 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
 		saveColumnLayout();
+		try {
+			getFilterPreferenceStore().save();
+		} catch (IOException e) {
+			MagicUIActivator.log(e);
+		}
 	}
 
 	@Override

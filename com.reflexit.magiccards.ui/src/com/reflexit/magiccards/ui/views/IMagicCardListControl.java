@@ -1,7 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -14,9 +14,9 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract ISelection getSelection();
 
-	public abstract IPreferenceStore getLocalPreferenceStore();
+	public abstract IPersistentPreferenceStore getLocalPreferenceStore();
 
-	public abstract IPreferenceStore getFilterPreferenceStore();
+	public abstract IPersistentPreferenceStore getFilterPreferenceStore();
 
 	@Override
 	public abstract void reloadData();

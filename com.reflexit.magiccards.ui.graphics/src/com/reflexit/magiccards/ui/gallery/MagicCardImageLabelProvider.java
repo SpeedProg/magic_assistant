@@ -31,7 +31,7 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 		} else if (element instanceof IMagicCard) {
 			return ((IMagicCard) element).getName();
 		}
-		return "";
+		return String.valueOf(element);
 	}
 
 	@Override

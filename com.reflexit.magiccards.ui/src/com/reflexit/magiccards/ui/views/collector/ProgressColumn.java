@@ -102,42 +102,47 @@ public class ProgressColumn extends AbstractImageColumn {
 	}
 
 	@Override
+	protected void handleEraseEvent(Event event) {
+		// use standard text paint
+		// super.handleEraseEvent(event);
+	}
+
+	@Override
 	public void handlePaintEvent(Event event) {
-		if (event.index == this.columnIndex) {
-			Item item = (Item) event.item;
-			Object row = item.getData();
-			int x = event.x;
-			int y = event.y;
-			Rectangle bounds = getBounds(event);
-			int w = bounds.width;
-			int h = bounds.height;
-			float per = 100;
-			if (row instanceof ICardGroup) {
-				Float per1 = (Float) ((CardGroup) row).get(getPercentKey());
-				if (per1 == null)
-					per = Float.valueOf(0);
-				else
-					per = per1;
-			} else if (row instanceof MagicCard && ((MagicCard) row).getOwnCount() == 0) {
-				per = 0;
-			} else if (row instanceof MagicCardPhysical
-					&& (((MagicCardPhysical) row).getCount() == 0 || ((IMagicCardPhysical) row).isOwn() == false)) {
-				per = 0;
-			}
-			GC gc = event.gc;
-			if (per > 0) {
-				int width = (int) (w * (per > 60 ? 60 : per) / 100);
-				gc.setBackground(barColor);
-				gc.setForeground(partColor);
-				gc.setAlpha(64);
-				gc.fillGradientRectangle(x, y, w - width, h, false);
-				gc.fillRectangle(x + w - width, y, width, h);
-			} else {
-				gc.setBackground(missColor);
-				gc.setForeground(partColor);
-				gc.setAlpha(64);
-				gc.fillRectangle(x, y, w, h);
-			}
+		Item item = (Item) event.item;
+		Object row = item.getData();
+		int x = event.x;
+		int y = event.y;
+		Rectangle bounds = getBounds(event);
+		x = bounds.x;
+		int w = bounds.width;
+		int h = bounds.height;
+		float per = 100;
+		if (row instanceof ICardGroup) {
+			Float per1 = (Float) ((CardGroup) row).get(getPercentKey());
+			if (per1 == null)
+				per = Float.valueOf(0);
+			else
+				per = per1;
+		} else if (row instanceof MagicCard && ((MagicCard) row).getOwnCount() == 0) {
+			per = 0;
+		} else if (row instanceof MagicCardPhysical
+				&& (((MagicCardPhysical) row).getCount() == 0 || ((IMagicCardPhysical) row).isOwn() == false)) {
+			per = 0;
+		}
+		GC gc = event.gc;
+		if (per > 0) {
+			int width = (int) (w * (per > 60 ? 60 : per) / 100);
+			gc.setBackground(barColor);
+			gc.setForeground(partColor);
+			gc.setAlpha(64);
+			gc.fillGradientRectangle(x, y, w - width, h, false);
+			gc.fillRectangle(x + w - width, y, width, h);
+		} else {
+			gc.setBackground(missColor);
+			gc.setForeground(partColor);
+			gc.setAlpha(64);
+			gc.fillRectangle(x, y, w, h);
 		}
 	}
 

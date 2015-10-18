@@ -18,6 +18,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -114,7 +115,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	public static final String FIND = "org.eclipse.ui.edit.findReplace";
 	protected final AbstractCardsView abstractCardsView;
 	private MenuManager menuGroup;
-	private IPreferenceStore prefStore;
+	private IPersistentPreferenceStore prefStore;
 	private QuickFilterControl quickFilter;
 	private SearchControl searchControl;
 	private Label statusLine;
@@ -242,12 +243,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	 * @return
 	 */
 	@Override
-	public IPreferenceStore getLocalPreferenceStore() {
+	public IPersistentPreferenceStore getLocalPreferenceStore() {
 		return this.prefStore;
 	}
 
 	@Override
-	public IPreferenceStore getFilterPreferenceStore() {
+	public IPersistentPreferenceStore getFilterPreferenceStore() {
 		return this.prefStore;
 	}
 

@@ -4,21 +4,24 @@
 package com.reflexit.magiccards.ui.gallery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import com.reflexit.magiccards.core.model.CardGroup;
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.views.TreeViewContentProvider;
 
-public class GroupExpandContentProvider implements ITreeContentProvider {
+public class GroupExpandContentProvider2 implements ITreeContentProvider {
 	private Object input;
-	private String top;
-	private Object[] topChildren;
+	private Collection<?> top;
 
 	@Override
 	public void dispose() {
@@ -28,35 +31,67 @@ public class GroupExpandContentProvider implements ITreeContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (this.input == newInput)
 			return;
-		Object[] res = getChildren(newInput);
 		this.input = newInput;
-		this.top = "Cards";
-		this.topChildren = res;
+		this.top = getTopLevel(newInput);
+
 		// viewer.refresh();
+	}
+
+	public Collection getTopLevel(Object element) {
+		if (element instanceof CardGroup) {
+			CardGroup group = (CardGroup) element;
+			Collection<CardGroup> subGroups = group.getSubGroups();
+			if (subGroups.size() == 0) {
+				return Collections.singletonList(element);
+			}
+			if (subGroups.size() > 1) {
+				CardGroup first = subGroups.iterator().next();
+				if (first.getFieldIndex() == MagicCardField.NAME)
+					return Collections.singletonList(element);
+			}
+			return group.getChildrenList();
+		} else if (element instanceof IFilteredCardStore) {
+			ICardGroup root = ((IFilteredCardStore<?>) element).getCardGroupRoot();
+			return root.getChildrenList();
+		} else if (element instanceof Collection) {
+			Collection list = (Collection) element;
+			if (list.size() == 1) {
+				Object first = list.iterator().next();
+				if (first instanceof CardGroup) {
+					if (((CardGroup) first).getFieldIndex() == MagicCardField.NAME)
+						return list;
+				}
+				return getTopLevel(first);
+			}
+			return list;
+		} else if (element instanceof Object[]) {
+			return Arrays.asList((Object[]) element);
+		} else if (element instanceof ICard) {
+			CardGroup cardGroup = new CardGroup(null, "All");
+			cardGroup.add((ICard) element);
+			return Collections.singletonList(cardGroup);
+		}
+		return new ArrayList<>();
 	}
 
 	@Override
 	public Object[] getChildren(Object element) {
 		Object[] res = null;
 		if (element == input) {
-			return new Object[] { top };
+			return top.toArray();
 		}
 		if (element == top) {
-			return topChildren;
+			return top.toArray();
 		}
 		if (element instanceof CardGroup) {
 			CardGroup group = (CardGroup) element;
 			Collection<ICard> children = daexpand(group);
-			res = children.toArray(new Object[children.size()]);
-		} else if (element instanceof IFilteredCardStore) {
-			ICardGroup root = ((IFilteredCardStore<?>) element).getCardGroupRoot();
-			res = getChildren(root);
-		} else if (element instanceof Collection) {
-			Collection<ICard> list = daexpand((Collection<?>) element);
-			res = list.toArray(new Object[list.size()]);
-		} else if (element instanceof Object[]) {
-			return (Object[]) element;
+			return children.toArray(new Object[children.size()]);
 		}
+		if (element instanceof IMagicCard) {
+			return TreeViewContentProvider.EMPTY_CHILDREN;
+		}
+		System.err.println("Unknonwn chold " + element);
 		return res;
 	}
 

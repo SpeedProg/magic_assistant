@@ -8,19 +8,19 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class LazyTreeViewContentProvider implements // IStructuredContentProvider,
 		ILazyTreeContentProvider {
-	public LazyTreeViewContentProvider() {
-	}
-
 	private TreeViewer treeViewer;
 	private IFilteredCardStore root;
-	private ICardGroup rootGroup;
 	private boolean showRoot = true;
+	private int maxCount = 1000;
+
+	@Override
+	public void dispose() {
+	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -29,7 +29,6 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		}
 		if (newInput instanceof IFilteredCardStore) {
 			this.root = (IFilteredCardStore) newInput;
-			this.rootGroup = root.getCardGroupRoot();
 		} else
 			this.root = null;
 	}
@@ -49,18 +48,25 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 		}
 	}
 
-	private int getChildCount(Object element) {
-		int count = 0;
-		if (element instanceof IFilteredCardStore) {
-			if (showRoot)
-				count = 1;
-			else
-				count = rootGroup.size();
-		} else if (element instanceof ICardGroup) {
-			count = ((ICardGroup) element).size();
-		} else if (element instanceof MagicCard) {
-			// count = ((MagicCard) element).getPhysicalCards().size();
+	private int getChildRealCount(Object element) {
+		synchronized (root) {
+			int count = 0;
+			if (element instanceof IFilteredCardStore) {
+				if (showRoot)
+					count = 1;
+				else
+					count = root.getCardGroupRoot().size();
+			} else if (element instanceof ICardGroup) {
+				count = ((ICardGroup) element).size();
+			}
+			return count;
 		}
+	}
+
+	private int getChildCount(Object element) {
+		int count = getChildRealCount(element);
+		if (count > maxCount)
+			count = maxCount;
 		return count;
 	}
 
@@ -68,45 +74,56 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	public void updateElement(Object parent, int index) {
 		if (root == null)
 			return;
+		if (index >= maxCount)
+			return;
 		synchronized (root) {
-			ICardGroup group = null;
+			Object child = null;
+			if (index == maxCount - 1) {
+				child = createOverflow(getChildRealCount(parent));
+				treeViewer.replace(parent, index, child);
+				treeViewer.setChildCount(child, -1);
+				return;
+			}
 			if (parent instanceof IFilteredCardStore) {
-				group = rootGroup;
 				if (showRoot) {
-					this.treeViewer.replace(parent, index, group);
-					int count = group.size();
-					treeViewer.setChildCount(group, count);
-					return;
+					child = root.getCardGroupRoot();
+				} else {
+					child = root.getCardGroupRoot().getChildAtIndex(index);
 				}
 			} else if (parent instanceof ICardGroup) {
-				group = (CardGroup) parent;
-			} else if (parent instanceof MagicCard) {
-				// group = ((MagicCard) parent).getPhysicalCardsGroup();
+				child = ((CardGroup) parent).getChildAtIndex(index);
 			}
-			if (group == null)
+			if (child == null)
 				return;
-			Object child = group.getChildAtIndex(index);
-			this.treeViewer.replace(parent, index, child);
-			int count = getChildCount(child);
-			treeViewer.setChildCount(child, count > 0 ? Math.min(100, count) : 0);
+			treeViewer.replace(parent, index, child);
+			treeViewer.setChildCount(child, getChildCount(child));
 		}
+	}
+
+	protected Object createOverflow(int len) {
+		return new CardGroup(null, "Too many tree items " + len + " max is " + getMaxCount());
 	}
 
 	public int getSize(Object input) {
 		if (!(input instanceof IFilteredCardStore)) {
 			return 0;
 		}
-		if (showRoot)
-			return 1;
-		synchronized (root) {
-			int size = rootGroup.size();
-			return size;
-		}
+		return getChildCount(((IFilteredCardStore) input).getCardGroupRoot());
 	}
 
-	@Override
-	public void dispose() {
-		root = null;
-		rootGroup = null;
+	public boolean isShowRoot() {
+		return showRoot;
+	}
+
+	public void setShowRoot(boolean showRoot) {
+		this.showRoot = showRoot;
+	}
+
+	public int getMaxCount() {
+		return maxCount;
+	}
+
+	public void setMaxCount(int maxCount) {
+		this.maxCount = maxCount;
 	}
 }

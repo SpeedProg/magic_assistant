@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.views.RootTreeViewContentProvider;
 import com.reflexit.magiccards.ui.views.TreeViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
@@ -35,26 +36,19 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		super.createContents(comp);
-		this.viewer.setContentProvider(new GroupContentProvider());
+		// this.viewer.setContentProvider(new LazyTreeViewContentProvider());
+		this.viewer.setContentProvider(new RootTreeViewContentProvider());
 		this.viewer.getControl()
 				.setLayoutData(GridDataFactory.fillDefaults().hint(300, 600).grab(false, true).create());
 		this.viewer.setAutoExpandLevel(2);
+		this.viewer.getTree().setHeaderVisible(false);
 		this.galleryviewer = new LazyGalleryTreeViewer(comp);
 		this.galleryviewer.getControl().setFont(getFont());
 		this.galleryviewer.getControl()
 				.setLayoutData(GridDataFactory.fillDefaults().hint(600, 600).grab(true, false).create());
-		// drillDownAdapter = new DrillDownAdapter(viewer);
-		// this.viewer.setContentProvider(new RegularViewContentProvider());
 		this.galleryviewer.setContentProvider(new GroupExpandContentProvider());
 		this.galleryviewer.setLabelProvider(new MagicCardImageLabelProvider(galleryviewer));
 		this.galleryviewer.setGroupsVisible(false);
-		// hookDoubleClickListener(new IDoubleClickListener() {
-		// @Override
-		// public void doubleClick(DoubleClickEvent event) {
-		// flatTreeContentProvider.setDetails(event.getSelection());
-		// viewer.refresh();
-		// }
-		// });
 		this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {

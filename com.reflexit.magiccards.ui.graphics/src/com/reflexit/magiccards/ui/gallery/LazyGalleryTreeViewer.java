@@ -151,7 +151,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 	protected void internalInitializeTree(Control tree) {
 		// this is overriden so we can call getAutoExpandLevel which we override
 		createChildren(tree);
-		internalExpandToLevel(tree, getAutoExpandLevel());
+		// internalExpandToLevel(tree, getAutoExpandLevel());
 	}
 
 	@Override
@@ -169,29 +169,14 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 	protected void inputChanged(Object input, Object oldInput) {
 		gallery.setRedraw(false);
 		try {
-			Object[] expanded = getExpandedElements();
+			// Object[] expanded = getExpandedElements();
 			super.inputChanged(input, oldInput);
-			setExpandedElements(expanded);
+			// setExpandedElements(expanded);
 			GalleryItem[] selection = gallery.getSelection();
 			if (selection.length > 0) {
-				showItem(selection[selection.length - 1]);
-			} else {
-				if (expanded.length > 0) {
-					Object elementOrTreePath = expanded[0];
-					Widget w = internalExpand(elementOrTreePath, true);
-					if (w instanceof Item) {
-						Item child = getChild(w, 0);
-						if (child != null)
-							showItem(child);
-					}
-				} else {
-					Item child = getChild(gallery, 0);
-					if (child != null)
-						setExpanded(child, true);
-				}
-				// can use gallery.translation
-				// gallery.getVerticalBar().setSelection(vpos);
-				// gallery.redraw();
+				GalleryItem item = selection[selection.length - 1];
+				if (!item.isDisposed())
+					showItem(item);
 			}
 		} finally {
 			gallery.setRedraw(true);
@@ -303,7 +288,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 				nonlazy = children.length;
 			for (int i = 0; i < nonlazy; i++) {
 				Object child = children[i];
-				materializeItem(widget, child, i);
+				Item item = materializeItem(widget, child, i);
+				((GalleryItem) item).setExpanded(true);
 			}
 			gallery.setItemCount(children.length); // lazy
 		} else {

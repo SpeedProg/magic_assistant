@@ -6,6 +6,7 @@ import org.eclipse.ui.PartInitException;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
@@ -23,6 +24,11 @@ public class GalleryView extends MagicDbView {
 	}
 
 	@Override
+	protected String getPreferencePageId() {
+		return MagicDbViewPreferencePage.class.getName();
+	}
+
+	@Override
 	protected AbstractMagicCardsListControl doGetViewControl() {
 		return new GalleryListControl(this) {
 			@Override
@@ -32,7 +38,7 @@ public class GalleryView extends MagicDbView {
 
 			@Override
 			public IFilteredCardStore doGetFilteredStore() {
-				return DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
+				return DataManager.getCardHandler().getMagicDBFilteredStore();
 			}
 
 			@Override
@@ -43,8 +49,8 @@ public class GalleryView extends MagicDbView {
 	}
 
 	@Override
-	public String getPreferencePageId() {
-		return GalleryPreferencePage.getId();
+	protected void saveColumnLayout() {
+		// do not touch
 	}
 
 	@Override

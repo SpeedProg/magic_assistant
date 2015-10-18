@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -78,11 +79,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		return MagicUIActivator.getDefault().getPreferenceStore();
 	}
 
-	public static IPreferenceStore getLocalStore(String id) {
+	public static IPersistentPreferenceStore getLocalStore(String id) {
 		if (id == null)
 			id = MagicUIActivator.PLUGIN_ID;
-		IPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, id);
-		return store; // new PrefixedPreferenceStore(MagicUIActivator.getDefault().getPreferenceStore(), id);
+		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, id);
+		return store;
 	}
 
 	public static IEclipsePreferences getPreferences(String id) {
