@@ -13,16 +13,20 @@ package com.reflexit.magiccards.ui.gallery;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.nebula.jface.galleryviewer.GalleryTreeViewer;
 import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.DefaultGalleryGroupRenderer;
+import org.eclipse.nebula.widgets.gallery.DefaultGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.nebula.widgets.gallery.NoGroupRenderer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -51,6 +55,17 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 			@Override
 			public void handleEvent(Event event) {
 				associate((GalleryItem) event.item);
+			}
+		});
+		gallery.setItemRenderer(new DefaultGalleryItemRenderer() {
+			@Override
+			protected void drawAllOverlays(GC gc, GalleryItem item, int x, int y, Point imageSize, int xShift,
+					int yShift) {
+				super.drawAllOverlays(gc, item, x, y, imageSize, xShift, yShift);
+				IBaseLabelProvider lp = getLabelProvider();
+				if (lp instanceof IImageOverlayRenderer) {
+					((IImageOverlayRenderer) lp).drawAllOverlays(gc, item.getData(), x, y, imageSize, xShift, yShift);
+				}
 			}
 		});
 		setGroupsVisible(true);

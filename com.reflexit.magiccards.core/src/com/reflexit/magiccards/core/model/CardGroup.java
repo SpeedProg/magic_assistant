@@ -276,14 +276,14 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	}
 
 	@Override
-	public synchronized IMagicCardPhysical getFirstCard() {
+	public synchronized IMagicCard getFirstCard() {
 		if (getChildren().length == 0)
 			return null;
 		Object card = getChildren()[0];
 		if (card instanceof CardGroup)
 			return ((CardGroup) card).getFirstCard();
-		if (card instanceof IMagicCardPhysical)
-			return (IMagicCardPhysical) card;
+		if (card instanceof IMagicCard)
+			return (IMagicCard) card;
 		return null;
 	}
 

@@ -2,15 +2,19 @@ package com.reflexit.magiccards.ui.gallery;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.IMagicCardPhysical;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.utils.ImageCache;
 
-final class MagicCardImageLabelProvider extends LabelProvider {
+final class MagicCardImageLabelProvider extends LabelProvider implements IImageOverlayRenderer {
 	private StructuredViewer viewer;
 
 	public MagicCardImageLabelProvider(StructuredViewer viewer) {
@@ -65,5 +69,26 @@ final class MagicCardImageLabelProvider extends LabelProvider {
 				// item.getParent().redraw();
 			}
 		});
+	}
+
+	@Override
+	public void drawAllOverlays(GC gc, Object element, int x, int y, Point imageSize, int xShift, int yShift) {
+		String text = getCountDecoration(element);
+		if (!text.isEmpty())
+			gc.drawText(text, x + xShift, y + yShift + imageSize.y, true);
+	}
+
+	private String getCountDecoration(Object element) {
+		if (element instanceof MagicCard) {
+			return "";
+		}
+		if (element instanceof CardGroup && ((CardGroup) element).getFirstCard() instanceof MagicCard) {
+			return "";
+		}
+		if (element instanceof IMagicCardPhysical) {
+			String text = "x" + ((IMagicCardPhysical) element).getCount();
+			return text;
+		}
+		return "";
 	}
 }

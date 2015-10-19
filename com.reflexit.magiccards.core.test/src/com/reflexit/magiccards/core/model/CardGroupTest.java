@@ -443,7 +443,7 @@ public class CardGroupTest extends TestCase {
 	}
 
 	public void checkConsistency(ICardField field) {
-		IMagicCardPhysical card = group.getFirstCard();
+		IMagicCard card = group.getFirstCard();
 		Object c1 = card.get(field);
 		Object g1 = group.get(field);
 		assertEquals(c1, g1);

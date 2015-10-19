@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -33,9 +34,11 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 
 	@Override
 	public Control createContents(Composite parent) {
-		Composite comp = new Composite(parent, SWT.NONE);
-		comp.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		// Composite comp = new Composite(parent, SWT.NONE);
+		SashForm form = new SashForm(parent, SWT.HORIZONTAL);
+		Composite comp = form;
 		super.createContents(comp);
+		comp.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		// this.viewer.setContentProvider(new LazyTreeViewContentProvider());
 		this.viewer.setContentProvider(new RootTreeViewContentProvider());
 		this.viewer.getControl()
@@ -57,6 +60,7 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 					galleryviewer.setInput(ssel.toList());
 			}
 		});
+		form.setWeights(new int[] { 30, 70 });
 		return comp;
 	}
 
