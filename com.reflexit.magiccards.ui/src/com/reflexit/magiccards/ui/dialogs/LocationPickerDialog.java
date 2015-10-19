@@ -8,6 +8,8 @@ import java.util.List;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -77,6 +79,12 @@ public class LocationPickerDialog extends TitleAreaDialog {
 				selection = (IStructuredSelection) event.getSelection();
 			}
 		});
+		listViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				okPressed();
+			}
+		});
 		if ((mode & SWT.READ_ONLY) == 0)
 			createButtonsGroup(area);
 		restoreWidgetValues();
@@ -124,8 +132,8 @@ public class LocationPickerDialog extends TitleAreaDialog {
 	protected final void createButtonsGroup(final Composite parent) {
 		Composite buttons = new Composite(parent, SWT.NONE);
 		buttons.setLayout(new GridLayout());
-		Button button1 = createButton(buttons, 1, "Create new deck...", true);
-		Button button2 = createButton(buttons, 2, "Create new collection...", false);
+		Button button1 = createButton(buttons, 3, "Create new deck...", true);
+		Button button2 = createButton(buttons, 4, "Create new collection...", false);
 		button1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -145,11 +153,13 @@ public class LocationPickerDialog extends TitleAreaDialog {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		wizard.init(workbench, (IStructuredSelection) selection);
 		// Open the wizard dialog with the given wizard.
-		WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(listViewer.getControl().getShell(), wizard);
 		dialog.open();
 		CardElement element = wizard.getElement();
-		listViewer.refresh(true);
-		listViewer.setSelection(new StructuredSelection(element));
+		if (element != null) {
+			listViewer.refresh(true);
+			listViewer.setSelection(new StructuredSelection(element));
+		}
 	}
 
 	public IStructuredSelection getSelection() {

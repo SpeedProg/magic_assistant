@@ -137,7 +137,7 @@ public abstract class NewCardElementWizard extends Wizard {
 		}
 		DataManager.getCardHandler().getLibraryCardStore();// forces to intialize the store
 		CollectionsContainer parent = (CollectionsContainer) resource;
-		new Job("Adding a deck/collection " + name) {
+		Job job = new Job("Adding a deck/collection " + name) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				final CardElement col = doCreateCardElement(parent, name, virtual);
@@ -158,7 +158,13 @@ public abstract class NewCardElementWizard extends Wizard {
 				});
 				return Status.OK_STATUS;
 			}
-		}.schedule();
+		};
+		job.schedule();
+		try {
+			job.join();
+		} catch (InterruptedException e) {
+			// ok
+		}
 		monitor.done();
 	}
 
