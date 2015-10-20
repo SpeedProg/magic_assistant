@@ -87,7 +87,9 @@ public class DeckImportPage extends WizardDataTransferPage {
 	private Button fileRadio;
 	private Text fileText;
 	private Button clipboardRadio;
-	private Button inputRadio;
+	private Button intoDeck;
+	private Button intoCollection;
+	private Button intoExisting;
 	private Combo typeCombo;
 	private Button virtualCards;
 	private Text deckText;
@@ -111,8 +113,10 @@ public class DeckImportPage extends WizardDataTransferPage {
 		types = ImportExportFactory.getImportTypes();
 		if (selection != null && selection.getFirstElement() instanceof CardElement) {
 			element = (CardElement) selection.getFirstElement();
+			if (!(element instanceof CardOrganizer))
+				element = element.getParent();
 		} else {
-			element = getDefaultElement();
+			element = getDeckContainer();
 		}
 		importData = new ImportData();
 	}
@@ -291,8 +295,12 @@ public class DeckImportPage extends WizardDataTransferPage {
 		return text[0];
 	}
 
-	private CollectionsContainer getDefaultElement() {
+	private CollectionsContainer getDeckContainer() {
 		return DataManager.getInstance().getModelRoot().getDeckContainer();
+	}
+
+	private CollectionsContainer getCollectionContainer() {
+		return DataManager.getInstance().getModelRoot().getCollectionsContainer();
 	}
 
 	private Location getSelectedLocation() {
@@ -311,44 +319,61 @@ public class DeckImportPage extends WizardDataTransferPage {
 		Group group = new Group(parent, SWT.NONE);
 		group.setLayoutData(GridDataFactory.fillDefaults().create());
 		group.setText("Import Destination");
-		group.setLayout(new GridLayout(3, false));
-		toolkit.createLabel(group, "Add cards into");
+		group.setLayout(new GridLayout(2, false));
+		GridDataFactory spanAll = GridDataFactory.fillDefaults().grab(true, false).span(2, 1);
+		Composite buttons = new Composite(group, SWT.NONE);
+		buttons.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		buttons.setLayoutData(spanAll.create());
+		intoDeck = new Button(buttons, SWT.RADIO);
+		intoDeck.setText("New Deck");
+		intoDeck.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (intoDeck.getSelection())
+					deckText.setText(getDeckContainer().getLocation().getPath() + "/" + AUTO_NAME);
+			}
+		});
+		intoCollection = new Button(buttons, SWT.RADIO);
+		intoCollection.setText("New Collection");
+		intoCollection.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (intoCollection.getSelection())
+					deckText.setText(getCollectionContainer().getLocation().getPath() + "/" + AUTO_NAME);
+			}
+		});
+		intoExisting = new Button(group, SWT.RADIO);
+		intoExisting.setText("Existing Deck/Collection");
+		intoExisting.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (intoExisting.getSelection())
+					openImportIntoElementSelectionDialog();
+			}
+		});
+		// toolkit.createLabel(group, "Add cards into");
 		deckText = new Text(group, SWT.BORDER);
 		deckText.setEditable(false);
 		deckText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		Button browse = new Button(group, SWT.PUSH);
-		browse.setText("Browse...");
-		browse.addSelectionListener(new SelectionAdapter() {
+		deckText.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				LocationPickerDialog dialog = new LocationPickerDialog(getShell(), SWT.SINGLE) {
-					@Override
-					protected Control createDialogArea(Composite parent) {
-						Control x = super.createDialogArea(parent);
-						setMessage(
-								"Select a deck or collection to add cards into,\nor select card folder to have auto-generated deck name");
-						return x;
-					}
-				};
-				dialog.setSelection(new StructuredSelection(getElement()));
-				if (dialog.open() == Window.OK) {
-					if (dialog.getSelection() != null && !dialog.getSelection().isEmpty()) {
-						element = (CardElement) dialog.getSelection().getFirstElement();
-						if (element instanceof CardCollection) {
-							virtualCards.setSelection(((CardCollection) element).isVirtual());
-						}
-						updateImportIntoText();
-					}
-					updatePageCompletion();
-					updateWidgetEnablements();
-				}
+			public void mouseDown(final MouseEvent e) {
+				openImportIntoElementSelectionDialog();
 			}
 		});
+		// Button browse = new Button(group, SWT.PUSH);
+		// browse.setText("Browse...");
+		// browse.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// openImportIntoElementSelectionDialog();
+		// }
+		// });
 		// deck options
 		virtualCards = new Button(group, SWT.CHECK);
 		virtualCards.setText("Imported cards will be virtual");
 		virtualCards.setSelection(false);
-		virtualCards.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
+		virtualCards.setLayoutData(spanAll.create());
 		// db import
 		Hyperlink hyperlink = toolkit.createHyperlink(group,
 				"Extends cards database (do not create new deck or collection)", SWT.NONE);
@@ -360,7 +385,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 				openWizard(new SetImportWizard(), new StructuredSelection(getElement()));
 			}
 		});
-		hyperlink.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
+		hyperlink.setLayoutData(spanAll.create());
 		return group;
 	}
 
@@ -372,10 +397,25 @@ public class DeckImportPage extends WizardDataTransferPage {
 		return dialog.open();
 	}
 
+	private void resetInto() {
+		intoDeck.setSelection(false);
+		intoCollection.setSelection(false);
+		intoExisting.setSelection(false);
+	}
+
 	private void updateImportIntoText() {
+		resetInto();
 		deckText.setText(element.getLocation().getPath());
 		if (element instanceof CardOrganizer) {
 			deckText.setText(element.getLocation().getPath() + "/" + AUTO_NAME);
+			CollectionsContainer deckCon = getDeckContainer();
+			if (deckCon == element || element.isAncestor(deckCon)) {
+				intoDeck.setSelection(true);
+			} else {
+				intoCollection.setSelection(true);
+			}
+		} else {
+			intoExisting.setSelection(true);
 		}
 	}
 
@@ -835,5 +875,29 @@ public class DeckImportPage extends WizardDataTransferPage {
 		if (visible)
 			updatePageCompletion();
 		super.setVisible(visible);
+	}
+
+	protected void openImportIntoElementSelectionDialog() {
+		LocationPickerDialog dialog = new LocationPickerDialog(getShell(), SWT.SINGLE) {
+			@Override
+			protected Control createDialogArea(Composite parent) {
+				Control x = super.createDialogArea(parent);
+				setMessage(
+						"Select a deck or collection to add cards into,\nor select card folder to have auto-generated deck name");
+				return x;
+			}
+		};
+		dialog.setSelection(new StructuredSelection(getElement()));
+		if (dialog.open() == Window.OK) {
+			if (dialog.getSelection() != null && !dialog.getSelection().isEmpty()) {
+				element = (CardElement) dialog.getSelection().getFirstElement();
+				if (element instanceof CardCollection) {
+					virtualCards.setSelection(((CardCollection) element).isVirtual());
+				}
+			}
+		}
+		updateImportIntoText();
+		updatePageCompletion();
+		updateWidgetEnablements();
 	}
 }
