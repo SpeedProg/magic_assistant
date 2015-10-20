@@ -165,6 +165,7 @@ public class TreeViewerManager extends ViewerManager {
 			columnsOrder = Arrays.copyOf(columnsOrder, length + 1);
 			columnsOrder[length] = length; // last column
 		}
+		getTControl().setColumnOrder(columnsOrder);
 		TreeColumn[] acolumns = this.viewer.getTree().getColumns();
 		for (int i = 0; i < acolumns.length - filler; i++) {
 			TreeColumn acol = acolumns[i];

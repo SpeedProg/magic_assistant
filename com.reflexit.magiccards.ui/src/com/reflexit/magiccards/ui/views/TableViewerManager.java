@@ -32,6 +32,7 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 public class TableViewerManager extends ViewerManager {
 	protected TableViewer viewer;
 	protected SortOrder sortOrder = new SortOrder();
+	private int filler = 0;
 
 	public TableViewerManager(String id) {
 		super(id);
@@ -134,7 +135,8 @@ public class TableViewerManager extends ViewerManager {
 		});
 	}
 
-	private void createFillerColumn() {
+	protected void createFillerColumn() {
+		filler = 1;
 		TableViewerColumn colv = new TableViewerColumn(this.viewer, SWT.LEFT);
 		TableColumn col = colv.getColumn();
 		col.setText("");
@@ -169,13 +171,15 @@ public class TableViewerManager extends ViewerManager {
 			return;
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.updateColumnsFromPropery(value);
-		int[] order = columnsCollection.getColumnsOrder();
-		int length = order.length;
-		int[] order1 = Arrays.copyOf(order, length + 1);
-		order1[length] = length; // last column
-		getTControl().setColumnOrder(order1);
+		int[] columnsOrder = columnsCollection.getColumnsOrder();
+		if (filler == 1) {
+			int length = columnsOrder.length;
+			columnsOrder = Arrays.copyOf(columnsOrder, length + 1);
+			columnsOrder[length] = length; // last column
+		}
+		getTControl().setColumnOrder(columnsOrder);
 		TableColumn[] acolumns = getTControl().getColumns();
-		for (int i = 0; i < acolumns.length - 1; i++) {
+		for (int i = 0; i < acolumns.length - filler; i++) {
 			TableColumn acol = acolumns[i];
 			AbstractColumn mcol = getColumn(i);
 			boolean visible = mcol.isVisible();
