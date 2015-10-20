@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -1070,12 +1071,17 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		if (value == null || value.isEmpty())
 			return;
 		synchronized (this) {
-			IPreferenceStore store = getLocalPreferenceStore();
+			IPersistentPreferenceStore store = getLocalPreferenceStore();
 			store.removePropertyChangeListener(this.preferenceListener);
 			try {
 				store.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 			} finally {
 				store.addPropertyChangeListener(this.preferenceListener);
+			}
+			try {
+				store.save();
+			} catch (IOException e) {
+				// ignore
 			}
 		}
 	}
