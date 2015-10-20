@@ -68,6 +68,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 				}
 			}
 		});
+		gallery.setBackground(parent.getBackground());
+		gallery.setForeground(parent.getForeground());
 		setGroupsVisible(true);
 	}
 
@@ -197,6 +199,16 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 			gallery.setRedraw(true);
 		}
 		gallery.redraw();
+	}
+
+	@Override
+	protected Widget internalExpand(Object elementOrPath, boolean expand) {
+		try {
+			return super.internalExpand(elementOrPath, expand);
+		} catch (NullPointerException e) {
+			// ignore
+			return null;
+		}
 	}
 
 	@Override
