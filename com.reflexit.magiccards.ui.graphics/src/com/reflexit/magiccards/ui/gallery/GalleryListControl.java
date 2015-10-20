@@ -41,6 +41,11 @@ public class GalleryListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
+	public void saveColumnLayout() {
+		// we don't save columns here
+	}
+
+	@Override
 	protected String getPreferencePageId() {
 		return GalleryPreferencePage.getId();
 	}
