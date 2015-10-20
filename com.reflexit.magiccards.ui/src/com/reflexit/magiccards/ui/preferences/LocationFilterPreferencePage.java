@@ -97,6 +97,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 		this.treeViewer.getControl().setLayoutData(gd);
 		this.treeViewer.getControl().setFont(parent.getFont());
 		initializeTree();
+		treeViewer.getControl().setFocus();
 		return this.panel;
 	}
 
@@ -167,6 +168,7 @@ public class LocationFilterPreferencePage extends PreferencePage implements IWor
 
 	public void loadPreferenceFromSelection(IStructuredSelection sel) {
 		IPreferenceStore store = getPreferenceStore();
+		PreferenceInitializer.setToDefault(store);
 		for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 			CardElement el = (CardElement) iterator.next();
 			String id = Locations.getInstance().getPrefConstant(el.getLocation());

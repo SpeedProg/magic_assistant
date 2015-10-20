@@ -90,6 +90,7 @@ public class LocationPickerDialog extends TitleAreaDialog {
 		restoreWidgetValues();
 		if (initialResourceSelection != null)
 			setupBasedOnInitialSelections();
+		listViewer.getControl().setFocus();
 		return area;
 	}
 
