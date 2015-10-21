@@ -104,8 +104,8 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 
 	@Override
 	public Image getImage(Object element) {
-		// if (cannotPaintImage)
-		// return getActualImage(element);
+		if (cannotPaintImage)
+			return getActualImage(element);
 		return super.getImage(element);
 	}
 }

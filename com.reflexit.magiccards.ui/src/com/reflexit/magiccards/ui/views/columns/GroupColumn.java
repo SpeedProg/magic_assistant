@@ -49,25 +49,33 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 	@Override
 	public Image getActualImage(Object element) {
 		if (showImage) {
-			if (cannotPaintImage == false) {
-				if (element instanceof CardGroup) {
-					CardGroup cardGroup = (CardGroup) element;
-					if (cardGroup.getFieldIndex() == MagicCardField.COST) {
-						String icost = Colors.getInstance().getCostByName(cardGroup.getName());
+			if (element instanceof CardGroup) {
+				CardGroup cardGroup = (CardGroup) element;
+				ICardField fieldIndex = cardGroup.getFieldIndex();
+				if (fieldIndex == MagicCardField.SET || fieldIndex == MagicCardField.RARITY
+						|| fieldIndex == MagicCardField.NAME) {
+					if (cannotPaintImage) {
+						return setColumn.getClippedImage(element);
+					} else {
+						return setColumn.getActualImage(element);
+					}
+				}
+				if (fieldIndex == MagicCardField.COST) {
+					String icost = Colors.getInstance().getCostByName(cardGroup.getName());
+					if (cannotPaintImage) {
+						return null;
+					} else {
 						return SymbolConverter.buildCostImage(icost);
 					}
 				}
-			}
-			return setColumn.getActualImage(element);
+			} else
+				return setColumn.getActualImage(element);
 		}
 		return null;
 	}
 
 	@Override
 	public Image getImage(Object element) {
-		if (cannotPaintImage) {
-			return setColumn.getClippedImage(element);
-		}
 		return super.getImage(element);
 	}
 
