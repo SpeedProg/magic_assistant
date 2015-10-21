@@ -30,19 +30,31 @@ public class CostColumn extends AbstractImageColumn {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof IMagicCard) { // cost
-			String cmc = String.valueOf(((IMagicCard) element).get(MagicCardField.CMC));
-			if (cannotPaintImage) {
-				String cost = ((IMagicCard) element).getCost();
-				if (cost == null)
-					cost = "";
-				if (cost.equals("*"))
-					return cost;
-				return cost + " = " + cmc;
-			}
-			return cmc;
+		if (element instanceof IMagicCard) {
+			return getFullCost((IMagicCard) element, cannotPaintImage);
 		}
 		return null;
+	}
+
+	@Override
+	public String getToolTipText(Object element) {
+		if (element instanceof IMagicCard) {
+			return getFullCost((IMagicCard) element, true);
+		}
+		return null;
+	}
+
+	protected String getFullCost(IMagicCard element, boolean withColors) {
+		String cmc = String.valueOf(element.get(MagicCardField.CMC));
+		if (withColors) {
+			String cost = element.getCost();
+			if (cost == null)
+				cost = "";
+			if (cost.equals("*"))
+				return cost;
+			return cost + " = " + cmc;
+		}
+		return cmc;
 	}
 
 	@Override
