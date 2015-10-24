@@ -105,10 +105,7 @@ public class LazyTreeViewContentProvider implements // IStructuredContentProvide
 	}
 
 	public int getSize(Object input) {
-		if (!(input instanceof IFilteredCardStore)) {
-			return 0;
-		}
-		return getChildCount(((IFilteredCardStore) input).getCardGroupRoot());
+		return getChildCount(input);
 	}
 
 	public boolean isShowRoot() {
