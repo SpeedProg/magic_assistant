@@ -15,6 +15,12 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
+/**
+ * Flat contents of the object with one root. Expanded up "Name" groups.
+ * 
+ * @author elaskavaia
+ *
+ */
 public class GroupExpandContentProvider implements ITreeContentProvider {
 	private Object input;
 	private String top;
@@ -81,13 +87,17 @@ public class GroupExpandContentProvider implements ITreeContentProvider {
 
 	private Collection<ICard> daexpand(CardGroup cardGroup, List<ICard> result) {
 		for (Object object : cardGroup.getChildrenList()) {
-			if (object instanceof CardGroup && ((CardGroup) object).getFieldIndex() != MagicCardField.NAME) {
+			if (object instanceof CardGroup && !isLeafGroup((CardGroup) object)) {
 				daexpand((CardGroup) object, result);
 			} else if (object instanceof ICard) {
 				result.add((ICard) object);
 			}
 		}
 		return result;
+	}
+
+	protected boolean isLeafGroup(CardGroup group) {
+		return group.getFieldIndex() == MagicCardField.NAME;
 	}
 
 	@Override
@@ -97,6 +107,9 @@ public class GroupExpandContentProvider implements ITreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
+		if (element == input) {
+			return true;
+		}
 		if (element instanceof ICardGroup) {
 			return ((ICardGroup) element).size() > 0;
 		} else if (element instanceof IFilteredCardStore) {
