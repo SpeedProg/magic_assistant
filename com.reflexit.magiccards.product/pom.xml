@@ -20,6 +20,10 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
+
+					<profileProperties>
+						<macosx-bundled>true</macosx-bundled>
+					</profileProperties>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -47,6 +51,10 @@
 							<id>com.reflexit.magiccards_rcp.product</id>
 							<!-- optional parameters -->
 							<rootFolder>MagicAssistant</rootFolder>
+							<rootFolders>
+								<macosx>MagicAssistant.app</macosx>
+							</rootFolders>
+
 							<archiveFileName>magicassistant-${qualifiedVersion}</archiveFileName>
 						</product>
 					</products>
@@ -82,13 +90,13 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
-					<!--  Restore previous value -->
+					<!-- Restore previous value -->
 					<execution>
 						<id>package</id>
 						<phase>package</phase>
 						<configuration>
 							<target>
-							<replaceregexp file="magic.p2.inf"
+								<replaceregexp file="magic.p2.inf"
 									match="properties.0.value =.*end = end" flags="gis"
 									replace="properties.0.value = Magic Assistant\\\\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\\\\n\\\\${line.separator}end = end"
 									byline="false" />

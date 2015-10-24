@@ -47,7 +47,7 @@ public class AwtFatalErrorDialog {
 			public void run() {
 				try {
 					new AwtFatalErrorDialog1(message).setVisible(true);
-					Thread.sleep(3000);
+					Thread.sleep(15000);
 				} catch (Throwable e2) {
 					e2.printStackTrace();
 				}
@@ -55,7 +55,7 @@ public class AwtFatalErrorDialog {
 		};
 		thread.start();
 		try {
-			thread.join(3000);
+			thread.join(15000);
 		} catch (InterruptedException e) {
 			// ok
 		}
