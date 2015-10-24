@@ -13,5 +13,6 @@ Notes
 * For Linux 32 and Windows 32 use specific binary distribution (different than platform default)
 * Ubuntu usually requires additional installations 
 * If it does not start it picked wrong java, see installation notes below
+* On Mac OS if you double click on application it may say it is damaged, don't believe it, run it from command line instead.
 
 For more installation notes see http://sourceforge.net/apps/mediawiki/mtgbrowser/index.php?title=Installation
