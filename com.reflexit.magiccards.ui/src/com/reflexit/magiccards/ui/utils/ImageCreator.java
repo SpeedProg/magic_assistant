@@ -533,6 +533,8 @@ public class ImageCreator {
 			ImageData id = image.getImageData();
 			if (id.depth != sourceData1.depth)
 				throw new IllegalArgumentException("Cannot merge images");
+			if (x + id.width > width)
+				break;
 			overlay(id, targetData, x, 0);
 			x += id.width;
 		}

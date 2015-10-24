@@ -124,7 +124,10 @@ public class SymbolConverter {
 			gc.dispose();
 			return costImage;
 		} finally {
-			if (costImage != null) imageRegistry.put(key, costImage);
+			if (costImage != null) {
+				imageRegistry.remove(key);
+				imageRegistry.put(key, costImage);
+			}
 		}
 	}
 
