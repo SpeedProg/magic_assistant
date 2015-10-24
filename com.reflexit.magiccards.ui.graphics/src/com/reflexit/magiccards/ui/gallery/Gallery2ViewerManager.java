@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.gallery;
 
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -12,6 +10,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -38,17 +37,13 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 		SashForm form = new SashForm(parent, SWT.HORIZONTAL);
 		Composite comp = form;
 		super.createContents(comp);
-		comp.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		comp.setLayout(new FillLayout());
 		// this.viewer.setContentProvider(new LazyTreeViewContentProvider());
 		this.viewer.setContentProvider(new RootTreeViewContentProvider());
-		this.viewer.getControl()
-				.setLayoutData(GridDataFactory.fillDefaults().hint(300, 600).grab(false, true).create());
 		this.viewer.setAutoExpandLevel(2);
 		this.viewer.getTree().setHeaderVisible(false);
 		this.galleryviewer = new LazyGalleryTreeViewer(comp);
 		this.galleryviewer.getControl().setFont(getFont());
-		this.galleryviewer.getControl()
-				.setLayoutData(GridDataFactory.fillDefaults().hint(600, 600).grab(true, false).create());
 		this.galleryviewer.setContentProvider(new GroupExpandContentProvider());
 		this.galleryviewer.setLabelProvider(new MagicCardImageLabelProvider(galleryviewer));
 		this.galleryviewer.setGroupsVisible(false);
