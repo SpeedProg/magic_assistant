@@ -120,13 +120,14 @@ public class CardOrganizer extends CardElement {
 		return contains(loc.getBaseFileName());
 	}
 
-	public boolean contains(String name) {
+	private boolean contains(String name) {
 		return findChieldByName(name) != null;
 	}
 
 	public CardElement findChieldByName(String name) {
 		for (CardElement el : getChildren()) {
-			if (el.getFile().getName().equals(name)) {
+			String baseFileName = el.getFile().getName();
+			if (baseFileName.equals(name)) {
 				return el;
 			}
 		}

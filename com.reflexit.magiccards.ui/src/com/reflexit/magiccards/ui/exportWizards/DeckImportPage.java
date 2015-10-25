@@ -232,14 +232,14 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	protected void createNewDeck(final String base, boolean virtual, CollectionsContainer resource) {
-		String name = base;
 		int attempts = 1000;
-		while (resource.contains(name) && attempts-- > 0) {
-			name = base + new Random().nextInt(1000);
+		Location newloc = Location.createLocation(base);
+		while (resource.contains(newloc) && attempts-- > 0) {
+			newloc = Location.createLocation(base + new Random().nextInt(1000));
 		}
 		if (attempts <= 0)
 			throw new IllegalArgumentException("Cannot generate deck name");
-		this.element = resource.addDeck(base + ".xml", virtual);
+		this.element = resource.addDeck(newloc.getBaseFileName(), virtual);
 	}
 
 	protected String getNewDeckName() {
