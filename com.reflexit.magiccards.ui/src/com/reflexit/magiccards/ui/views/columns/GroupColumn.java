@@ -61,10 +61,10 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 					}
 				}
 				if (fieldIndex == MagicCardField.COST) {
-					String icost = Colors.getInstance().getCostByName(cardGroup.getName());
 					if (cannotPaintImage) {
 						return null;
 					} else {
+						String icost = Colors.getInstance().getCostByName(cardGroup.getName());
 						return SymbolConverter.buildCostImage(icost);
 					}
 				}
@@ -192,8 +192,27 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 
 	@Override
 	public void handlePaintEvent(Event event) {
-		if (event.index == this.columnIndex) { // our column
-			paintCellWithImage(event, SetColumn.SET_IMAGE_WIDTH);
+		paintCellWithImage(event, SetColumn.SET_IMAGE_WIDTH);
+	}
+
+	@Override
+	public String getToolTipText(Object element) {
+		return getText(element);
+	}
+
+	@Override
+	protected void paintCellText(Event event, Object element, int y, int x, int w, int h, int imwidth) {
+		if (element instanceof ICardGroup) {
+			if (imwidth > 0 && ((ICardGroup) element).getFieldIndex() == MagicCardField.COST) {
+				if (showCount) {
+					imwidth = Math.max(15 * 5, imwidth);
+					String text = "(" + getCount(element) + ")";
+					event.gc.setClipping(x + imwidth, y, w - 3, h);
+					event.gc.drawText(text, x + imwidth + 3, y + 1, true);
+				}
+				return; // skip text
+			}
 		}
+		super.paintCellText(event, element, y, x, w, h, imwidth);
 	}
 }

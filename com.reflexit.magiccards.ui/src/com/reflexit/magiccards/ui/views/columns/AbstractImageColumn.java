@@ -57,10 +57,15 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 			Rectangle imageBounds = image.getBounds();
 			event.gc.drawImage(image, x + (imageWidth - imageBounds.width) / 2, y + (h - imageBounds.height) / 2);
 		}
+		paintCellText(event, row, y, x, w, h, leftMargin);
+	}
+
+	protected void paintCellText(Event event, Object row, int y, int x, int w, int h, int leftMargin) {
 		String text = getText(row);
 		if (text != null) {
+			x += leftMargin;
 			event.gc.setClipping(x, y, w - 3, h);
-			event.gc.drawText(text, x + 3 + leftMargin, y + 1, true);
+			event.gc.drawText(text, x + 3, y + 1, true);
 		}
 	}
 
