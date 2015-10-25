@@ -2,6 +2,8 @@ package com.reflexit.magiccards.ui.gallery;
 
 import java.util.Collection;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -53,6 +55,16 @@ public class GallerySelectionView extends GalleryView {
 			@Override
 			public IFilteredCardStore doGetFilteredStore() {
 				return getGsstore();
+			}
+
+			@Override
+			public void fillLocalToolBar(IToolBarManager manager) {
+				// no action on toolbar
+			}
+
+			@Override
+			public void fillLocalPullDown(IMenuManager manager) {
+				// no actions on toolbar
 			}
 
 			@Override
