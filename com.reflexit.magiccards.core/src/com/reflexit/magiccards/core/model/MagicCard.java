@@ -529,6 +529,15 @@ public class MagicCard extends AbstractMagicCard {
 		return c;
 	}
 
+	public int getCreatureCount() {
+		if (getPower() == null)
+			return 0;
+		if (!getPower().isEmpty()) {
+			return 1;
+		}
+		return 0;
+	}
+
 	@Override
 	public Location getLocation() {
 		CardGroup realCards = getRealCards();

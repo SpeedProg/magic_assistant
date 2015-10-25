@@ -694,6 +694,11 @@ public enum MagicCardField implements ICardField {
 		}
 
 		@Override
+		public Object getM(MagicCard card) {
+			return card.getCreatureCount();
+		}
+
+		@Override
 		protected void setM(MagicCardPhysical card, Object value) {
 			// ignore
 		}
