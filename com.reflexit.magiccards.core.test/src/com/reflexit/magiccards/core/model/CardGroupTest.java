@@ -546,4 +546,20 @@ public class CardGroupTest extends TestCase {
 		assertEquals("2.0", group.getPower());
 		assertEquals(2, group.getInt(MagicCardField.CREATURE_COUNT));
 	}
+
+	public void testPowerAggrMC() {
+		group = new CardGroup(MagicCardField.POWER, "power");
+		for (int j = 0; j < cards.length; j++) {
+			cards[j] = CardGenerator.generateRandomCard();
+			MagicCard card = (MagicCard) cards[j];
+			card.setName("name " + j);
+		}
+		((MagicCard) cards[0]).setPower("1");
+		((MagicCard) cards[1]).setPower("2");
+		group.add(cards[0]);
+		group.add(cards[1]);
+		group.add(cards[2]);
+		assertEquals("3.0", group.getPower());
+		assertEquals(2, group.getInt(MagicCardField.CREATURE_COUNT));
+	}
 }
