@@ -664,7 +664,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 	@Override
 	protected void createOptionsGroupButtons(final Group optionsPanel) {
 		// top level group
-		Composite buttonComposite = toolkit.createComposite(optionsPanel);
+		Composite buttonComposite = new Composite(optionsPanel, SWT.NONE);
 		buttonComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(3).create());
 		// create report type
 		toolkit.createLabel(buttonComposite, "Import Format:");

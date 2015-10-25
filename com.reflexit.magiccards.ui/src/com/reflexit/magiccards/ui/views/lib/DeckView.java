@@ -246,11 +246,13 @@ public class DeckView extends AbstractMyCardsView {
 				try {
 					IViewPart navView = page.showView(CardsNavigatorView.ID, null, IWorkbenchPage.VIEW_CREATE);
 					navView.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getId(),
-							IWorkbenchPage.VIEW_ACTIVATE);
-					if (deckView != null && sel != null && !sel.isEmpty())
-						deckView.setSelection(sel);
-					deckViewRes[0] = deckView;
+					IViewPart view = page.showView(DeckView.ID, col.getId(), IWorkbenchPage.VIEW_ACTIVATE);
+					if (view instanceof DeckView) {
+						DeckView deckView = (DeckView) view;
+						if (sel != null && !sel.isEmpty())
+							deckView.setSelection(sel);
+						deckViewRes[0] = deckView;
+					}
 				} catch (PartInitException e) {
 					MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
 				}
@@ -378,7 +380,9 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown( org.eclipse.jface.action.IMenuManager)
+	 * @see
+	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
+	 * org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
@@ -420,7 +424,12 @@ public class DeckView extends AbstractMyCardsView {
 					if (deck.getLocation().equals(srcLocation) || deck == event.getSource()) {
 						updatePartName();
 						if (!secondaryId.equals(deck.getLocation().getBaseFileName())) {
-							openCollection(deck, getSelection());// reopen newly named deck, to change secondary id
+							openCollection(deck, getSelection());// reopen newly
+																	// named
+																	// deck, to
+																	// change
+																	// secondary
+																	// id
 							close();
 							return;
 						}

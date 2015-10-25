@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -29,6 +30,13 @@ public class MagicToolkit extends FormToolkit {
 		return instance;
 	}
 
+	@Override
+	public Label createLabel(Composite parent, String text) {
+		Label label = super.createLabel(parent, text);
+		label.setBackground(parent.getBackground());
+		return label;
+	}
+	
 	public Button createButton(Composite parent, String text, int style, ISingleSelectionListener lis) {
 		Button button = new Button(parent, style);
 		if (text != null)

@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -60,8 +61,13 @@ public class CardCollection extends CardElement {
 	}
 
 	public IStorageInfo getStorageInfo() {
-		if (getStore() == null)
+		try {
+			if (getStore() == null)
+				return null;
+		} catch (MagicException e) {
+			//MagicLogger.log(e);
 			return null;
+		}
 		IStorage storage = ((IStorageContainer) getStore()).getStorage();
 		if (storage instanceof IStorageInfo) {
 			IStorageInfo si = ((IStorageInfo) storage);

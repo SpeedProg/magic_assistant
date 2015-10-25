@@ -99,7 +99,8 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -467,11 +468,18 @@ public class CardsNavigatorView extends ViewPart implements ICardEventListener, 
 		int type = event.getType();
 		switch (type) {
 		case CardEvent.ADD_CONTAINER:
-			WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
+
 			Object obj = event.getData();
 			if (obj instanceof CardCollection) {
-				CardCollection coll = (CardCollection) obj;
-				DeckView.openCollection(coll, null);
+				WaitUtils.scheduleJob("Openinh deck", () -> {
+					CardCollection coll = (CardCollection) obj;
+					boolean gotit = WaitUtils.waitForCondition(()->(coll.getStorageInfo()!=null), 3000, 100);
+					WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
+					if (gotit) DeckView.openCollection(coll, null);
+					
+				});
+			} else {
+				WaitUtils.asyncExec(() -> manager.getViewer().refresh(true));
 			}
 			break;
 		case CardEvent.REMOVE_CONTAINER:
