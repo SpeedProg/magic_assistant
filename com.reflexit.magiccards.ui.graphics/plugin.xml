@@ -43,7 +43,7 @@
             allowMultiple="false"
             category="com.reflexit.magiccards"
             class="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
-            icon="icons/gallery.png"
+            icon="icons/selection_view.png"
             id="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
             name="Selection"
             restorable="true">
