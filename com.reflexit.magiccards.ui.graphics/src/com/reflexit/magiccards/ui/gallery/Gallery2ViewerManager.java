@@ -138,16 +138,23 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 
 	@Override
 	public void updateViewer(Object input) {
+		if (viewer == null || this.viewer.getControl().isDisposed())
+			return;
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+		viewer.setSelection(new StructuredSelection());
 		super.updateViewer(input);
 		if (galleryviewer == null || this.galleryviewer.getControl().isDisposed())
 			return;
-		if (viewer.getSelection().isEmpty()) {
-			if (input instanceof IFilteredCardStore) {
+		if (input instanceof IFilteredCardStore) {
+			if (selection.isEmpty()) {
 				IFilteredCardStore fstore = (IFilteredCardStore) input;
 				ICardGroup group = fstore.getCardGroupRoot();
-				StructuredSelection selection = new StructuredSelection(group);
+				selection = new StructuredSelection(group);
+				viewer.setSelection(selection, true);
+			} else {
 				viewer.setSelection(selection, true);
 			}
+			galleryviewer.refresh(true);
 		}
 	}
 }
