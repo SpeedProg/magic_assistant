@@ -6,20 +6,23 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 
 public class UnsortAction extends Action {
 	private MagicCardFilter filter;
+	private Runnable run;
 
-	public UnsortAction(String text, MagicCardFilter filter) {
-		super(text, Action.AS_PUSH_BUTTON);
+	public UnsortAction(String text, MagicCardFilter filter, Runnable update) {
+		super(text, Action.AS_RADIO_BUTTON);
 		this.filter = filter;
+		this.run = update;
+		boolean checked = filter != null && filter.getSortOrder().isEmpty();
+		setChecked(checked);
 	}
 
 	@Override
 	public void run() {
-		filter.setNoSort();
-		reload();
-	}
-
-	public void reload() {
-		// XXX
+		if (isChecked()) {
+			filter.setNoSort();
+			if (run != null)
+				run.run();
+		}
 	}
 
 	@Override

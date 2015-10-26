@@ -7,15 +7,16 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 
 @SuppressWarnings("serial")
 public class SortOrder implements Comparator {
-	private static int MAX = 7;
-	public static int MIN = 2;
+	private static final int MAX = 7;
+	private static final int MIN = 2;
 	private final MagicCardComparator order[] = new MagicCardComparator[MAX];
-	private int curSize = MIN;
+	private int curSize;
 
 	public SortOrder() {
 		// these are always there
 		order[0] = (new MagicCardComparator(MagicCardField.NAME, true));
 		order[1] = (new MagicCardComparator(MagicCardField.ID, true));
+		curSize = MIN;
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class SortOrder implements Comparator {
 
 	public void setFrom(SortOrder other) {
 		curSize = other.curSize;
-		for (int i = 0; i < MAX; i++) {
+		for (int i = MIN; i < MAX; i++) {
 			order[i] = other.order[i];
 		}
 	}
@@ -68,6 +69,17 @@ public class SortOrder implements Comparator {
 		return null;
 	}
 
+	public int getPriority(ICardField sortField) {
+		int size = curSize;
+		for (int i = MIN; i < size; i++) {
+			MagicCardComparator elem = order[i];
+			if (sortField.equals(elem.getField())) {
+				return size - i;
+			}
+		}
+		return -1;
+	}
+
 	public boolean hasSortField(ICardField sortField) {
 		return getComparator(sortField) != null;
 	}
@@ -80,12 +92,11 @@ public class SortOrder implements Comparator {
 	}
 
 	public boolean isAccending() {
-		MagicCardComparator elem = order[curSize - 1];
-		return elem.isAccending();
+		return peek().isAccending();
 	}
 
 	public boolean isTop(ICardField sortField) {
-		MagicCardComparator elem = order[curSize - 1];
+		MagicCardComparator elem = peek();
 		return elem.getField().equals(sortField);
 	}
 
@@ -97,10 +108,6 @@ public class SortOrder implements Comparator {
 		return order[curSize - 1];
 	}
 
-	public MagicCardComparator get(int index) {
-		return order[index];
-	}
-
 	private boolean add(MagicCardComparator e) {
 		order[curSize] = e;
 		curSize++;
@@ -108,12 +115,12 @@ public class SortOrder implements Comparator {
 	}
 
 	public boolean isEmpty() {
-		return curSize <= 2;
+		return curSize <= MIN;
 	}
 
 	public void clear() {
-		for (; curSize >= MIN; curSize--) {
-			order[curSize] = null;
+		for (; curSize > MIN; curSize--) {
+			order[curSize - 1] = null;
 		}
 	}
 
@@ -147,13 +154,19 @@ public class SortOrder implements Comparator {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (!(obj instanceof SortOrder)) return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof SortOrder))
+			return false;
 		SortOrder other = (SortOrder) obj;
-		if (curSize != other.curSize) return false;
-		if (!Arrays.equals(order, other.order)) return false;
-		if (isAccending() != other.isAccending()) return false;
+		if (curSize != other.curSize)
+			return false;
+		if (!Arrays.equals(order, other.order))
+			return false;
+		if (isAccending() != other.isAccending())
+			return false;
 		return true;
 	}
 }

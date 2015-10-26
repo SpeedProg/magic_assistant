@@ -230,12 +230,7 @@ public class TreeViewerManager extends ViewerManager {
 			return;
 		updateTableHeader();
 		updateGrid();
-		// long time = System.currentTimeMillis();
-		// if (this.viewer.getInput() != this.getDataHandler()) {
-		// if (this.viewer.getInput() != input)
-		{
-			this.viewer.setInput(input);
-		}
+		this.viewer.setInput(input);
 		this.viewer.refresh(true);
 	}
 

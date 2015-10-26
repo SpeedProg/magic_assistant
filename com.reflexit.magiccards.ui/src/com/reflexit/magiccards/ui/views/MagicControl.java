@@ -131,6 +131,4 @@ public abstract class MagicControl implements IMagicControl {
 	}
 
 	public abstract ISelection getSelection();
-
-	public abstract void saveColumnLayout();
 }

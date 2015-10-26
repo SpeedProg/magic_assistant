@@ -402,7 +402,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			if (sideStore != null)
 				fstore.getCardStore().addAll(sideStore.getCards());
 			fstore.setLocation(loc.toMainDeck());
-			if (filter.getSortOrder().size() == filter.getSortOrder().MIN) {
+			if (filter.getSortOrder().isEmpty()) {
 				filter.getSortOrder().setSortField(MagicCardField.SIDEBOARD, true);
 			}
 		} else {

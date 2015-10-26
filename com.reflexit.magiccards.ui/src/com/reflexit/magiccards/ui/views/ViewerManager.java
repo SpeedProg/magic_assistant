@@ -229,14 +229,6 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 			return null;
 		final Item column = getTColumn(index);
 		Menu menu = new Menu(getControl());
-		final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
-		itemShow.setText("Show Column... ");
-		itemShow.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openColumnPreferences(getPreferencesId());
-			}
-		});
 		String name = column.getText();
 		if (!name.isEmpty()) {
 			final MenuItem itemHide = new MenuItem(menu, SWT.PUSH);
@@ -248,7 +240,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 				}
 			});
 			final MenuItem itemSort = new MenuItem(menu, SWT.PUSH);
-			itemSort.setText("Sort Accending");
+			itemSort.setText("Sort Accending: " + name);
 			itemSort.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -256,7 +248,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 				}
 			});
 			final MenuItem itemSortD = new MenuItem(menu, SWT.PUSH);
-			itemSortD.setText("Sort Descending");
+			itemSortD.setText("Sort Descending: " + name);
 			itemSortD.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -269,6 +261,14 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					setSortColumn(-1, 0);
+				}
+			});
+			final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
+			itemShow.setText("Show Column... ");
+			itemShow.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					openColumnPreferences(getPreferencesId());
 				}
 			});
 		}

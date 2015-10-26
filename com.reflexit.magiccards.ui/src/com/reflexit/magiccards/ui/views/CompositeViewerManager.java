@@ -85,8 +85,8 @@ public class CompositeViewerManager extends ViewerManager {
 		this.comp.setLayout(this.stackLayout);
 		for (IMagicColumnViewer m : this.managers) {
 			m.createContents(this.comp);
+			m.hookDragAndDrop();
 		}
-		hookDragAndDrop(getViewer());
 		setActivePage(this.activeIndex);
 		this.comp.layout();
 		return this.comp;
@@ -100,7 +100,7 @@ public class CompositeViewerManager extends ViewerManager {
 	@Override
 	public final void hookDragAndDrop(StructuredViewer viewer) {
 		for (IMagicColumnViewer m : this.managers) {
-			hookDragAndDrop(m);
+			m.hookDragAndDrop();
 		}
 	}
 
@@ -109,10 +109,6 @@ public class CompositeViewerManager extends ViewerManager {
 		for (IMagicColumnViewer m : this.managers) {
 			m.hookContext(id);
 		}
-	}
-
-	protected void hookDragAndDrop(IMagicColumnViewer m) {
-		m.hookDragAndDrop();
 	}
 
 	public void setActivePage(int i) {

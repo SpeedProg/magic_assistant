@@ -70,9 +70,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected Action actionCopy;
 	protected Action actionPaste;
 	protected Action buyCards;
-
 	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
-
 
 	/**
 	 * The constructor.
@@ -84,8 +82,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected abstract AbstractMagicCardsListControl doGetViewControl();
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
+	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -152,7 +149,6 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		control.setGlobalControlHandlers(bars);
 	}
 
-
 	public IHandlerActivation activateActionHandler(Action action, String actionId) {
 		IHandlerActivation activation = activations.get(actionId);
 		if (activation != null) {
@@ -185,21 +181,17 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected void fillContextMenu(IMenuManager manager) {
 		control.fillContextMenu(manager);
 		manager.add(this.loadExtras);
-
 		fillShowInMenu(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	protected void fillShowInMenu(IMenuManager manager) {
-		IMenuManager showInMenu = new MenuManager("Show In");
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		IContributionItem showViewItem = ContributionItemFactory.VIEWS_SHOW_IN.create(window);
-		// if (showViewItem.isEnabled())
-		{
-			showInMenu.add(showViewItem);
-		}
+		IMenuManager showInMenu = new MenuManager("Show In");
+		showInMenu.add(showViewItem);
 		manager.add(showInMenu);
 	}
 
@@ -273,8 +265,8 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 
 	protected void saveColumnLayout() {
 		String id = getPreferencePageId();
-		if (id != null && control instanceof MagicControl) {
-			((MagicControl) control).saveColumnLayout();
+		if (id != null && control instanceof AbstractMagicCardsListControl) {
+			((AbstractMagicCardsListControl) control).saveColumnLayout();
 		}
 	}
 

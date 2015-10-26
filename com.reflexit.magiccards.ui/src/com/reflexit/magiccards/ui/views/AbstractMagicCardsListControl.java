@@ -71,6 +71,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
+import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -79,6 +80,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.search.ISearchRunnable;
 import com.reflexit.magiccards.ui.views.search.SearchContext;
@@ -96,11 +98,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	private static final DataManager DM = DataManager.getInstance();
 
 	public class GroupAction extends Action {
-		ICardField field[];
+		ICardField fields[];
 
 		public GroupAction(String name, ICardField fields[], boolean checked) {
 			super(name, IAction.AS_RADIO_BUTTON);
-			this.field = fields;
+			this.fields = fields;
 			if (checked) {
 				setChecked(true);
 			}
@@ -109,7 +111,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		@Override
 		public void run() {
 			if (isChecked())
-				actionGroupBy(this.field);
+				actionGroupBy(fields);
 		}
 	}
 
@@ -126,9 +128,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	protected Action actionResetFilter;
 	protected Action actionShowFind;
 	protected Action actionShowPrefs;
-	protected Action actionUnsort;
+	protected SortByAction actionSortBy;
 	protected IMagicColumnViewer manager;
-	private MenuManager menuSort;
 	protected ISelection revealSelection;
 	protected IFilteredCardStore<ICard> fstore;
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
@@ -377,8 +378,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}.start();
 	}
 
-
-
 	protected void removeStoreChangeListener() {
 		DataManager.getInstance().getLibraryCardStore().removeListener(this);
 	}
@@ -605,7 +604,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		manager.add(this.actionResetFilter);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowPrefs);
-		manager.add(this.menuSort);
+		manager.add(this.actionSortBy.createMenuManager());
 		manager.add(this.getGroupMenu());
 		manager.add(new Separator());
 		manager.addMenuListener(new IMenuListener() {
@@ -620,6 +619,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	public void fillLocalToolBar(IToolBarManager manager) {
 		if (actionGroupMenu != null)
 			manager.add(this.actionGroupMenu);
+		if (actionSortBy != null)
+			manager.add(this.actionSortBy);
 		manager.add(this.actionShowPrefs);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
@@ -724,35 +725,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setText("Reset Filter");
 		this.actionResetFilter.setToolTipText("Resets the filter to default values");
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
-		this.actionUnsort = new Action("Unsort") {
-			@Override
-			public void run() {
-				unsort();
-				reloadData();
-			}
-
-			@Override
-			public String getToolTipText() {
-				return "Remove current sorting order";
-			}
-		};
-		this.menuSort = new MenuManager("Sort By");
-		this.menuSort.add(actionUnsort);
-		Collection columns = getManager().getColumnsCollection().getColumns();
-		int i = 0;
-		for (Iterator iterator = columns.iterator(); iterator.hasNext(); i++) {
-			final AbstractColumn man = (AbstractColumn) iterator.next();
-			String name = man.getColumnFullName();
-			final int index = i;
-			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
-				@Override
-				public void run() {
-					updateSortColumn(index);
-					reloadData();
-				}
-			};
-			this.menuSort.add(ac);
-		}
+		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), this::reloadData);
 		createGroupAction();
 		this.menuGroup = createGroupMenu();
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
@@ -776,6 +749,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			}
 		};
 		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.png"));
+	}
+
+	public ColumnCollection getSortColumnCollection() {
+		return getManager().getColumnsCollection();
 	}
 
 	public class GroupByToolBarAction extends Action {
@@ -1065,7 +1042,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 	}
 
-	@Override
 	public void saveColumnLayout() {
 		final String value = manager.getColumnLayoutProperty();
 		if (value == null || value.isEmpty())
@@ -1085,7 +1061,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			}
 		}
 	}
-
 
 	private Object jobFamility = new Object();
 	private Job loadingJob;
